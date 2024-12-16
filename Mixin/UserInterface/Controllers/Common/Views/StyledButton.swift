@@ -37,7 +37,12 @@ final class StyledButton: BusyButton {
     }
     
     func applyDefaultContentInsets() {
-        contentEdgeInsets = UIEdgeInsets(top: 14, left: 0, bottom: 15, right: 0)
+        // TODO: Refactor with UIButton.Configuration
+        if configuration != nil {
+            configuration?.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 0, bottom: 15, trailing: 0)
+        } else {
+            contentEdgeInsets = UIEdgeInsets(top: 14, left: 0, bottom: 15, right: 0)
+        }
     }
     
     private func updateAppearance(style: Style, isEnabled: Bool) {

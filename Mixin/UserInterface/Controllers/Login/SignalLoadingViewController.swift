@@ -1,50 +1,30 @@
 import UIKit
-import WebKit
 import MixinServices
 
-class SignalLoadingViewController: UIViewController {
+final class SignalLoadingViewController: LoginLoadingViewController {
     
-    private var isUsernameJustInitialized = false
-    
-    private var allUsersInitialBots: [String] {
-        [BotUserID.teamMixin]
+    static var isLoaded: Bool {
+        AppGroupUserDefaults.Crypto.isPrekeyLoaded
+        && AppGroupUserDefaults.Crypto.isSessionSynchronized
+        && AppGroupUserDefaults.User.isCircleSynchronized
     }
     
-    class func instance(isUsernameJustInitialized: Bool) -> SignalLoadingViewController {
-        let controller = R.storyboard.home.signal()!
-        controller.isUsernameJustInitialized = isUsernameJustInitialized
-        return controller
-    }
+    var onFinished: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         Logger.general.info(category: "SignalLoading", message: "isPrekeyLoaded:\(AppGroupUserDefaults.Crypto.isPrekeyLoaded), isSessionSynchronized:\(AppGroupUserDefaults.Crypto.isSessionSynchronized), isCircleSynchronized:\(AppGroupUserDefaults.User.isCircleSynchronized)")
         let startTime = Date()
         DispatchQueue.global().async {
-            AppGroupKeychain.encryptedTIPPriv = nil
-            AppGroupKeychain.ephemeralSeed = nil
-            AppGroupKeychain.encryptedSalt = nil
-            Logger.tip.info(category: "SignalLoading", message: "TIP Secrets cleared")
-            
             SignalDatabase.reloadCurrent()
 
             self.syncSignalKeys()
             self.syncSession()
             self.syncCircles()
             
-            if !self.isUsernameJustInitialized {
-                ContactAPI.syncContacts()
-            }
-            
-            DispatchQueue.main.async {
-                let time = Date().timeIntervalSince(startTime)
-                if time < 2 {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + (2 - time), execute: {
-                        self.dismiss()
-                    })
-                } else {
-                    self.dismiss()
-                }
+            let delay = max(0, 2 + startTime.timeIntervalSinceNow)
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                self.onFinished?()
             }
         }
     }
@@ -63,9 +43,6 @@ class SignalLoadingViewController: UIViewController {
             switch SignalKeyAPI.pushSignalKeys(key: try! PreKeyUtil.generateKeys()) {
             case .success:
                 AppGroupUserDefaults.Crypto.isPrekeyLoaded = true
-                DispatchQueue.main.async {
-                    WKWebsiteDataStore.default().removeAuthenticationRelatedData()
-                }
                 return
             case .failure(.unauthorized):
                 return
@@ -228,17 +205,6 @@ class SignalLoadingViewController: UIViewController {
                 return
             }
         } while true
-    }
-    
-    private func dismiss() {
-        let vc = makeInitialViewController(isUsernameJustInitialized: isUsernameJustInitialized)
-        AppDelegate.current.mainWindow.rootViewController = vc
-        if vc is HomeContainerViewController {
-            for id in allUsersInitialBots {
-                let job = InitializeBotJob(userID: id)
-                ConcurrentJobQueue.shared.addJob(job: job)
-            }
-        }
     }
     
 }

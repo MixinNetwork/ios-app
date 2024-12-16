@@ -132,7 +132,7 @@ extension PinSettingsViewController: UITableViewDelegate {
             alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
             present(alert, animated: true, completion: nil)
         } else if (indexPath.section == 1 && BiometryType.payment != .none) || (indexPath.section == 0 && BiometryType.payment == .none) {
-            let change = TIPNavigationViewController(intent: .change, destination: nil)
+            let change = TIPNavigationController(intent: .change)
             present(change, animated: true)
         }
     }

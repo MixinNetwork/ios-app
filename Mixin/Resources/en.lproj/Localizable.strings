@@ -567,6 +567,7 @@
 "floats_allows_up_to_count" = "Floats allows up to %d ones";
 "follow_us_on_facebook" = "Follow us on Facebook";
 "follow_us_on_x" = "Follow us on X";
+"forget_pin" = "Forget PIN?";
 "forward" = "Forward";
 "fourth_pin_confirm_hint" = "Yes, there is a fourth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
 "free" = "FREE";
@@ -1193,6 +1194,7 @@
 "swap_not_supported" = "%@ swapping is not supported.";
 "swap_receive" = "Receive";
 "swap_send" = "Send";
+"switch_account" = "Switch Account";
 "symbol" = "Symbol";
 "symbol_withdrawal" = "%@ Withdrawal";
 "syncing_and_verifying_tip" = "Please keep the app in the foreground while verifying and synchronizing shard keys to the TIP network; do not force quit the app during the setup process.";

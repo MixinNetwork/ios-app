@@ -1,6 +1,6 @@
 import UIKit
 
-final class LoginNavigationController: UINavigationController {
+final class LoginNavigationController: GeneralAppearanceNavigationController {
     
     init() {
         let onboarding = OnboardingViewController()
@@ -9,13 +9,6 @@ final class LoginNavigationController: UINavigationController {
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard not supported")
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationBar.standardAppearance = .general
-        navigationBar.scrollEdgeAppearance = .general
-        navigationBar.tintColor = R.color.icon_tint()
     }
     
 }

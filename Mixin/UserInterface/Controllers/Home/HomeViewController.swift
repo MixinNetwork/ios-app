@@ -116,7 +116,6 @@ class HomeViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(groupConversationParticipantDidChange(_:)), name: ReceiveMessageService.groupConversationParticipantDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(circleNameDidChange), name: AppGroupUserDefaults.User.circleNameDidChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateBulletinView), name: TIP.didUpdateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(cancelSearchingSilently(_:)), name: dismissSearchNotification, object: nil)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -137,10 +136,8 @@ class HomeViewController: UIViewController {
             ConcurrentJobQueue.shared.addJob(job: job)
         }
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
-        if WalletConnectService.isAvailable {
-            WalletConnectService.shared.reloadSessions()
-            Web3Chain.synchronize()
-        }
+        WalletConnectService.shared.reloadSessions()
+        Web3Chain.synchronize()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -166,14 +163,8 @@ class HomeViewController: UIViewController {
             }))
             present(alert, animated: true, completion: nil)
         }
-        if AppGroupUserDefaults.User.isTIPInitialized {
-            ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())
-            ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
-        } else {
-            let initialization = InitializeTIPViewController()
-            let authentication = AuthenticationViewController(intent: initialization)
-            present(authentication, animated: true)
-        }
+        ConcurrentJobQueue.shared.addJob(job: RecoverRawTransactionJob())
+        ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         if UIApplication.shared.applicationState == .active {
             startAppsFlyer()
         } else {
@@ -558,7 +549,7 @@ extension HomeViewController {
                 return
             }
             WebSocketService.shared.disconnect()
-            AppDelegate.current.mainWindow.rootViewController = UpdateViewController.instance()
+            AppDelegate.current.mainWindow.rootViewController = UpdateViewController()
         }
     }
     

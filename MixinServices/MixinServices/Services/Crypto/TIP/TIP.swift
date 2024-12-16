@@ -49,27 +49,6 @@ public enum TIP {
         case migrate
     }
     
-    @frozen public enum Status {
-        
-        case ready
-        case needsInitialize
-        case needsMigrate
-        case unknown
-        
-        public init(account: Account) {
-            if account.tipCounter == 0 {
-                if account.hasPIN {
-                    self = .needsMigrate
-                } else {
-                    self = .needsInitialize
-                }
-            } else {
-                self = .ready
-            }
-        }
-        
-    }
-    
     @frozen public enum Progress {
         case creating
         case connecting
@@ -101,16 +80,6 @@ public enum TIP {
         #endif
     }
     
-    public static let didUpdateNotification = Notification.Name("one.mixin.service.tip.update")
-    
-    public static var status: Status {
-        if let account = LoginManager.shared.account {
-            return Status(account: account)
-        } else {
-            return .unknown
-        }
-    }
-    
 }
 
 extension TIP {
@@ -122,7 +91,7 @@ extension TIP {
         legacyPIN: String?,
         forRecover: Bool,
         progressHandler: (@MainActor (Progress) -> Void)?
-    ) async throws -> Data {
+    ) async throws -> (tipPriv: Data, account: Account?) {
         Logger.tip.info(category: "TIP", message: "createTIPPriv with failedSigners: \(failedSigners.map(\.index)), legacyPIN: \(legacyPIN != nil), forRecover: \(forRecover)")
         guard let pinData = pin.data(using: .utf8) else {
             throw Error.invalidPIN
@@ -160,7 +129,7 @@ extension TIP {
         if forRecover {
             Logger.tip.info(category: "TIP", message: "Recovering")
             try await encryptAndSaveTIPPriv(pinData: pinData, tipPriv: tipPriv, aesKey: aesKey)
-            return tipPriv
+            return (tipPriv: tipPriv, account: nil)
         }
         
         let oldEncryptedPIN: String?
@@ -201,10 +170,7 @@ extension TIP {
         
         try encryptAndSaveTIPPriv(pinData: pinData, tipPriv: tipPriv, aesKey: aesKey)
         Logger.tip.info(category: "TIP", message: "TIP Priv is saved")
-        await MainActor.run {
-            NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
-        }
-        return tipPriv
+        return (tipPriv: tipPriv, account: account)
     }
     
     @discardableResult
@@ -214,7 +180,7 @@ extension TIP {
         isCounterBalanced: Bool,
         failedSigners: [TIPSigner],
         progressHandler: (@MainActor (Progress) -> Void)?
-    ) async throws -> Data {
+    ) async throws -> Account {
         Logger.tip.info(category: "TIP", message: "Update priv with oldPIN: \(oldPIN != nil), failedSigners: \(failedSigners.map(\.index))")
         guard let oldPINData = oldPIN.data(using: .utf8) else {
             throw Error.invalidPIN
@@ -343,10 +309,7 @@ extension TIP {
         Logger.tip.info(category: "TIP", message: "TIP Priv is saved")
         AppGroupKeychain.encryptedSalt = encryptedSaltToSave
         Logger.tip.info(category: "TIP", message: "Encrypted salt(\(encryptedSaltToSave == nil)) is saved")
-        await MainActor.run {
-            NotificationCenter.default.post(name: Self.didUpdateNotification, object: self)
-        }
-        return tipPriv
+        return account
     }
     
     public static func checkCounter(with freshAccount: Account? = nil, timeoutInterval: TimeInterval = 15) async throws -> InterruptionContext? {
@@ -424,127 +387,108 @@ extension TIP {
         return try await getOrRecoverTIPPriv(pin: pin, pinToken: pinToken)
     }
     
-    // Register to safe, or just perform a validation
-    public static func initializeIfNeeded(account: Account?, pin: String) async throws {
-        guard !AppGroupUserDefaults.User.isTIPInitialized else {
-            // Since the interface for initializing/changing the PIN is reused, this function may be called multiple times
-            Logger.tip.info(category: "TIP", message: "Already initialized")
+    public static func registerToSafeIfNeeded(account: Account?, pin: String) async throws {
+        Logger.tip.info(category: "TIP", message: "Register to safe")
+        let account = if let account {
+            account
+        } else {
+            try await AccountAPI.me()
+        }
+        guard !account.hasSafe else {
+            Logger.tip.info(category: "TIP", message: "Already safe")
             return
         }
-        Logger.tip.info(category: "TIP", message: "Initialize")
         guard let pinData = pin.data(using: .utf8) else {
             throw Error.invalidPIN
         }
         guard let pinToken = AppGroupKeychain.pinToken else {
             throw Error.missingPINToken
         }
-        let account = if let account {
-            account
-        } else {
-            try await AccountAPI.me()
+        
+        guard
+            let userIDData = account.userID.data(using: .utf8),
+            let userIDHash = SHA3_256.hash(data: userIDData)
+        else {
+            throw Error.invalidUserID
         }
         
-        if account.hasSafe {
-            Logger.tip.info(category: "TIP", message: "Already had safe")
-            try await withCheckedThrowingContinuation { continuation in
-                AccountAPI.verify(pin: pin) { result in
-                    switch result {
-                    case .success:
-                        continuation.resume()
-                    case .failure(let error):
-                        continuation.resume(throwing: error)
-                    }
-                }
-            }
-        } else {
-            Logger.tip.info(category: "TIP", message: "Register to safe")
-            guard
-                let userIDData = account.userID.data(using: .utf8),
-                let userIDHash = SHA3_256.hash(data: userIDData)
-            else {
-                throw Error.invalidUserID
-            }
+        var step1 = "PIN: \(pin.count)"
+        var step2 = ""
+        do {
+            let tipPriv = try await getOrRecoverTIPPriv(pin: pin)
+            step1 += ", TIP Priv: \(tipPriv.count)"
             
-            var step1 = "PIN: \(pin.count)"
-            var step2 = ""
-            do {
-                let tipPriv = try await getOrRecoverTIPPriv(pin: pin)
-                step1 += ", TIP Priv: \(tipPriv.count)"
-                
-                let mnemonics: Mnemonics
-                if let entropy = AppGroupKeychain.mnemonics {
-                    step1 += ", Using saved entropy"
-                    mnemonics = try Mnemonics(entropy: entropy)
+            let mnemonics: Mnemonics
+            if let entropy = AppGroupKeychain.mnemonics {
+                step1 += ", Using saved entropy"
+                mnemonics = try Mnemonics(entropy: entropy)
+            } else {
+                if account.isAnonymous {
+                    step1 += ", Missing entropy"
+                    // No phone, no mnemonics, a wasted account
+                    throw Error.missingMnemonics
                 } else {
-                    if account.isAnonymous {
-                        step1 += ", Missing entropy"
-                        // No phone, no mnemonics, a wasted account
-                        throw Error.missingMnemonics
-                    } else {
-                        // Sign up with phone, generate a random entropy
-                        step1 += ", Using random entropy"
-                        mnemonics = try .random()
-                        // Save mnemonics to keychain, in case of upcoming request failure
-                        AppGroupKeychain.mnemonics = mnemonics.entropy
-                    }
+                    // Sign up with phone, generate a random entropy
+                    step1 += ", Using random entropy"
+                    mnemonics = try .random()
+                    // Save mnemonics to keychain, in case of upcoming request failure
+                    AppGroupKeychain.mnemonics = mnemonics.entropy
                 }
-                let masterKey = try MasterKey.key(from: mnemonics)
-                
-                let salt = if account.isAnonymous {
-                    Data(count: Mnemonics.EntropyCount.default.rawValue)
-                } else {
-                    mnemonics.entropy
-                }
-                let saltAESKey = try saltAESKey(pin: pinData, tipPriv: tipPriv)
-                step1 += ", salt: \(salt.count), saltAESKey: \(saltAESKey.count)"
-                
-                let encryptedSalt = try AESCryptor.encrypt(salt, with: saltAESKey)
-                step1 += ", encryptedSalt: \(encryptedSalt.count)"
-                
-                let pinTokenEncryptedSalt = try AESCryptor.encrypt(encryptedSalt, with: pinToken)
-                step1 += ", ptEncryptedSalt: \(pinTokenEncryptedSalt.count)"
-                
-                let spendSeed = try spendPriv(salt: mnemonics.entropy, tipPriv: tipPriv)
-                step1 += ", spendSeed: \(spendSeed.count)"
-                
-                let keyPair = try Curve25519.Signing.PrivateKey(rawRepresentation: spendSeed)
-                step2 += "KeyPair Ready"
-                
-                let pkHex = keyPair.publicKey.rawRepresentation.hexEncodedString()
-                step2 = ", pkHex: \(pkHex.count)"
-                
-                let registerSignature = try keyPair.signature(for: userIDHash)
-                step2 += ", signature: \(registerSignature.count)"
-                
-                let body = try TIPBody.registerSequencer(userID: account.userID, publicKey: pkHex)
-                let pin = try encryptTIPPIN(tipPriv: tipPriv, target: body)
-                step2 += ", pin ready"
-                
-                let account = try await SafeAPI.register(
-                    publicKey: pkHex,
-                    signature: registerSignature.base64RawURLEncodedString(),
-                    pin: pin,
-                    salt: pinTokenEncryptedSalt.base64RawURLEncodedString(),
-                    masterPublicKey: masterKey.publicKey.rawRepresentation.hexEncodedString(),
-                    masterSignature: try masterKey.signature(for: userIDData).hexEncodedString()
-                )
-                LoginManager.shared.setAccount(account)
-                Logger.tip.info(category: "TIP", message: "Local account is updated with registration")
-                if !account.isAnonymous {
-                    AppGroupKeychain.mnemonics = nil
-                    Logger.tip.info(category: "TIP", message: "AppGroupKeychain.mnemonics cleared")
-                }
-                AppGroupKeychain.encryptedSalt = encryptedSalt
-                Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
-            } catch {
-                Logger.tip.error(category: "TIP", message: "Error: \(error), step1: \(step1), step2: \(step2)")
-                Crashes.trackError(error, properties: ["error": "\(error)", "step1": step1, "step2": step2], attachments: nil)
-                reporter.report(error: error)
-                throw error
             }
+            let masterKey = try MasterKey.key(from: mnemonics)
+            
+            let salt = if account.isAnonymous {
+                Data(count: Mnemonics.EntropyCount.default.rawValue)
+            } else {
+                mnemonics.entropy
+            }
+            let saltAESKey = try saltAESKey(pin: pinData, tipPriv: tipPriv)
+            step1 += ", salt: \(salt.count), saltAESKey: \(saltAESKey.count)"
+            
+            let encryptedSalt = try AESCryptor.encrypt(salt, with: saltAESKey)
+            step1 += ", encryptedSalt: \(encryptedSalt.count)"
+            
+            let pinTokenEncryptedSalt = try AESCryptor.encrypt(encryptedSalt, with: pinToken)
+            step1 += ", ptEncryptedSalt: \(pinTokenEncryptedSalt.count)"
+            
+            let spendSeed = try spendPriv(salt: mnemonics.entropy, tipPriv: tipPriv)
+            step1 += ", spendSeed: \(spendSeed.count)"
+            
+            let keyPair = try Curve25519.Signing.PrivateKey(rawRepresentation: spendSeed)
+            step2 += "KeyPair Ready"
+            
+            let pkHex = keyPair.publicKey.rawRepresentation.hexEncodedString()
+            step2 = ", pkHex: \(pkHex.count)"
+            
+            let registerSignature = try keyPair.signature(for: userIDHash)
+            step2 += ", signature: \(registerSignature.count)"
+            
+            let body = try TIPBody.registerSequencer(userID: account.userID, publicKey: pkHex)
+            let pin = try encryptTIPPIN(tipPriv: tipPriv, target: body)
+            step2 += ", pin ready"
+            
+            let account = try await SafeAPI.register(
+                publicKey: pkHex,
+                signature: registerSignature.base64RawURLEncodedString(),
+                pin: pin,
+                salt: pinTokenEncryptedSalt.base64RawURLEncodedString(),
+                masterPublicKey: masterKey.publicKey.rawRepresentation.hexEncodedString(),
+                masterSignature: try masterKey.signature(for: userIDData).hexEncodedString()
+            )
+            LoginManager.shared.setAccount(account)
+            Logger.tip.info(category: "TIP", message: "Local account is updated with registration")
+            if !account.isAnonymous {
+                AppGroupKeychain.mnemonics = nil
+                Logger.tip.info(category: "TIP", message: "AppGroupKeychain.mnemonics cleared")
+            }
+            AppGroupKeychain.encryptedSalt = encryptedSalt
+            Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
+        } catch {
+            Logger.tip.error(category: "TIP", message: "Error: \(error), step1: \(step1), step2: \(step2)")
+            Crashes.trackError(error, properties: ["error": "\(error)", "step1": step1, "step2": step2], attachments: nil)
+            reporter.report(error: error)
+            throw error
         }
-        
-        AppGroupUserDefaults.User.isTIPInitialized = true
     }
     
     public static func spendPriv(pin: String) async throws -> Data {
@@ -695,11 +639,14 @@ extension TIP {
             }
         }
         Logger.tip.info(category: "TIP", message: "Using new created priv")
-        return try await createTIPPriv(pin: pin,
-                                       failedSigners: [],
-                                       legacyPIN: nil,
-                                       forRecover: true,
-                                       progressHandler: nil)
+        let (tipPriv, _) = try await createTIPPriv(
+            pin: pin,
+            failedSigners: [],
+            legacyPIN: nil,
+            forRecover: true,
+            progressHandler: nil
+        )
+        return tipPriv
     }
     
     static func pinIterator() -> UInt64 {

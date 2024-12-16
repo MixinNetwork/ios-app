@@ -24,7 +24,7 @@ final class RefreshAccountJob: AsynchronousJob {
                         }
                         await MainActor.run {
                             let intro = TIPIntroViewController(context: context)
-                            let navigation = TIPNavigationViewController(intro: intro, destination: nil)
+                            let navigation = TIPNavigationController(intro: intro)
                             UIApplication.homeNavigationController?.present(navigation, animated: true)
                         }
                     } catch {

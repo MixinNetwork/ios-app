@@ -14,15 +14,6 @@ final class WalletConnectService {
     
     static let shared = WalletConnectService()
     
-    static var isAvailable: Bool {
-        switch TIP.status {
-        case .ready:
-            return true
-        case .needsMigrate, .needsInitialize, .unknown:
-            return false
-        }
-    }
-    
     @Published
     private(set) var sessions: [WalletConnectSession] = []
     

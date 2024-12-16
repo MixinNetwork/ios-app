@@ -2,7 +2,7 @@ import UIKit
 import AppCenterCrashes
 import MixinServices
 
-class TIPPopupInputViewController: PinValidationViewController {
+final class TIPPopupInputViewController: PinValidationViewController {
     
     enum Action {
         case migrate((_ pin: String) -> Void)
@@ -127,14 +127,17 @@ class TIPPopupInputViewController: PinValidationViewController {
         Logger.tip.info(category: "TIPPopupInput", message: "Continue create with failed signers: \(failedSigners.map(\.index))")
         Task {
             do {
-                try await TIP.createTIPPriv(pin: pin,
-                                            failedSigners: failedSigners,
-                                            legacyPIN: nil,
-                                            forRecover: false,
-                                            progressHandler: nil)
+                let (_, account) = try await TIP.createTIPPriv(
+                    pin: pin,
+                    failedSigners: failedSigners,
+                    legacyPIN: nil,
+                    forRecover: false,
+                    progressHandler: nil
+                )
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
-                try await TIP.initializeIfNeeded(account: nil, pin: pin)
+                try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
                 Logger.tip.info(category: "TIPPopupInput", message: "Registered to safe")
+                AppGroupUserDefaults.User.loginPINValidated = true
                 await MainActor.run(body: onSuccess)
             } catch {
                 Crashes.trackError(error, properties: ["error": "\(error)", "location": "PI.ContinueCreate"], attachments: nil)
@@ -167,12 +170,15 @@ class TIPPopupInputViewController: PinValidationViewController {
         Logger.tip.info(category: "TIPPopupInput", message: "Continue change with failed signers: \(failedSigners.map(\.index))")
         Task {
             do {
+                let account: Account?
                 if isOldPINLegacy {
-                    try await TIP.createTIPPriv(pin: new,
-                                                failedSigners: failedSigners,
-                                                legacyPIN: old,
-                                                forRecover: false,
-                                                progressHandler: nil)
+                    (_, account) = try await TIP.createTIPPriv(
+                        pin: new,
+                        failedSigners: failedSigners,
+                        legacyPIN: old,
+                        forRecover: false,
+                        progressHandler: nil
+                    )
                 } else {
                     let isCounterBalanced: Bool
                     switch action {
@@ -181,18 +187,21 @@ class TIPPopupInputViewController: PinValidationViewController {
                     case .migrate:
                         isCounterBalanced = true
                     }
-                    try await TIP.updateTIPPriv(oldPIN: old,
-                                                newPIN: new,
-                                                isCounterBalanced: isCounterBalanced,
-                                                failedSigners: failedSigners,
-                                                progressHandler: nil)
+                    account = try await TIP.updateTIPPriv(
+                        oldPIN: old,
+                        newPIN: new,
+                        isCounterBalanced: isCounterBalanced,
+                        failedSigners: failedSigners,
+                        progressHandler: nil
+                    )
                 }
-                try await TIP.initializeIfNeeded(account: nil, pin: new)
+                try await TIP.registerToSafeIfNeeded(account: account, pin: new)
                 if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
                     Keychain.shared.storePIN(pin: new)
                 }
                 AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
+                AppGroupUserDefaults.User.loginPINValidated = true
                 Logger.tip.info(category: "TIPPopupInput", message: "Changed successfully")
                 await MainActor.run(body: onSuccess)
             } catch let error as TIPNode.Error {

@@ -19,7 +19,42 @@ open class MixinAPI {
         
     }
     
+    public enum PINEncryptor {
+        
+        static func encrypt<Response>(
+            pin: String,
+            tipBody: @escaping () throws -> Data,
+            onFailure: @escaping (MixinAPI.Result<Response>) -> Void,
+            onSuccess: @escaping (String) -> Void
+        ) {
+            Task {
+                do {
+                    let priv = try await TIP.getOrRecoverTIPPriv(pin: pin)
+                    let body = try tipBody()
+                    let encrypted = try await TIP.encryptTIPPIN(tipPriv: priv, target: body)
+                    await MainActor.run {
+                        onSuccess(encrypted)
+                    }
+                } catch {
+                    await MainActor.run {
+                        Logger.tip.error(category: "PINEncryptor", message: "Failed to encrypt: \(error)")
+                        if let error = error as? MixinAPIError {
+                            onFailure(.failure(error))
+                        } else {
+                            onFailure(.failure(.pinEncryptionFailed(error)))
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+    
     public static let userAgent = "Mixin/\(Bundle.main.shortVersionString) (iOS \(UIDevice.current.systemVersion); \(Device.current.machineName); \(Locale.current.languageCode ?? "")-\(Locale.current.regionCode ?? ""))"
+    
+}
+
+extension MixinAPI {
     
     // Async version, model as parameter
     public static func request<Parameters: Encodable, Response: Decodable>(
@@ -216,7 +251,7 @@ extension MixinAPI {
                     completion(.failure(.requestSigningTimeout))
                 }
             } else if abs(serverTime.timeIntervalSinceNow) > 5 * secondsPerMinute {
-                AppGroupUserDefaults.Account.isClockSkewed = true
+                AppGroupUserDefaults.isClockSkewed = true
                 DispatchQueue.main.async {
                     WebSocketService.shared.disconnect()
                     NotificationCenter.default.post(name: MixinService.clockSkewDetectedNotification, object: self)

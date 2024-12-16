@@ -44,24 +44,16 @@ extension DeleteAccountSettingViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            switch indexPath.section {
+        switch indexPath.section {
+        case 0:
+            verifyPIN()
+        default:
+            switch indexPath.row {
             case 0:
-                verifyPIN()
+                presentLogoutConfirmationAlert()
             default:
-                switch indexPath.row {
-                case 0:
-                    presentLogoutConfirmationAlert()
-                default:
-                    changeNumber()
-                }
+                changeNumber()
             }
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            present(tip, animated: true)
-        case .unknown:
-            break
         }
     }
     

@@ -23,10 +23,7 @@ class CircleEditorViewController: PeerViewController<[CircleMember], CheckmarkPe
         let editor = CircleEditorViewController()
         editor.name = name
         editor.circleId = circleId
-        let navigationController = UINavigationController(rootViewController: editor)
-        navigationController.navigationBar.standardAppearance = .general
-        navigationController.navigationBar.scrollEdgeAppearance = .general
-        navigationController.navigationBar.tintColor = R.color.icon_tint()
+        let navigationController = GeneralAppearanceNavigationController(rootViewController: editor)
         return navigationController
     }
     

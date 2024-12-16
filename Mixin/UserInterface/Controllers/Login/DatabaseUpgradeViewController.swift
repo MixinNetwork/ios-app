@@ -1,21 +1,14 @@
 import UIKit
 import MixinServices
 
-class DatabaseUpgradeViewController: UIViewController {
+final class DatabaseUpgradeViewController: UIViewController, CheckSessionEnvironmentChild {
     
     class var needsUpgrade: Bool {
         !AppGroupUserDefaults.isDocumentsMigrated
             || AppGroupUserDefaults.User.needsUpgradeInMainApp
     }
     
-    class func instance(isUsernameJustInitialized: Bool) -> DatabaseUpgradeViewController {
-        let controller = R.storyboard.home.database()!
-        controller.isUsernameJustInitialized = isUsernameJustInitialized
-        return controller
-    }
-    
     private var isUpgrading = false
-    private var isUsernameJustInitialized = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +31,7 @@ class DatabaseUpgradeViewController: UIViewController {
         isUpgrading = true
         
         let startTime = Date()
-        DispatchQueue.global().async { [weak self] in
+        DispatchQueue.global().async {
             let localVersion = AppGroupUserDefaults.User.localVersion
             
             AppGroupContainer.migrateIfNeeded()
@@ -78,21 +71,11 @@ class DatabaseUpgradeViewController: UIViewController {
             AppGroupUserDefaults.User.needsRebuildDatabase = false
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
             
-            let time = Date().timeIntervalSince(startTime)
-            if time < 2 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + (2 - time), execute: {
-                    self?.dismiss()
-                })
-            } else {
-                DispatchQueue.main.async {
-                    self?.dismiss()
-                }
+            let delay = max(0, 2 + startTime.timeIntervalSinceNow)
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                self.checkSessionEnvironmentAgain()
             }
         }
-    }
-    
-    private func dismiss() {
-        AppDelegate.current.mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: isUsernameJustInitialized)
     }
     
     @objc private func applicationDidBecomeActive(_ notification: Notification) {

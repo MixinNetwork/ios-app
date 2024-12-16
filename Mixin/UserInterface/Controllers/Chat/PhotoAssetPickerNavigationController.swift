@@ -5,17 +5,9 @@ protocol PhotoAssetPickerDelegate: AnyObject {
     func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset)
 }
 
-class PhotoAssetPickerNavigationController: UINavigationController {
+final class PhotoAssetPickerNavigationController: GeneralAppearanceNavigationController {
     
     weak var pickerDelegate: PhotoAssetPickerDelegate?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = R.color.background()
-        navigationBar.standardAppearance = .general
-        navigationBar.scrollEdgeAppearance = .general
-        navigationBar.tintColor = R.color.icon_tint()
-    }
     
     class func instance(pickerDelegate: PhotoAssetPickerDelegate?, showImageOnly: Bool = false, scrollToOffset: CGPoint = CGPoint.zero) -> UIViewController {
         let vc = PhotoAssetPickerNavigationController()

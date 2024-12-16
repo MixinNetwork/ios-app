@@ -52,16 +52,8 @@ extension ExportMnemonicPhrasesViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch TIP.status {
-        case .ready, .needsMigrate:
-            let introduction = ExportMnemonicPhrasesIntroductionViewController()
-            navigationController?.pushViewController(replacingCurrent: introduction, animated: true)
-        case .needsInitialize:
-            let tip = TIPNavigationViewController(intent: .create, destination: nil)
-            navigationController?.present(tip, animated: true)
-        case .unknown:
-            break
-        }
+        let introduction = ExportMnemonicPhrasesIntroductionViewController()
+        navigationController?.pushViewController(replacingCurrent: introduction, animated: true)
     }
     
 }

@@ -20,16 +20,11 @@ enum BiometryType {
     }
     
     static var payment: BiometryType {
-        guard !UIDevice.isJailbreak else {
-            return .none
+        if UIDevice.isJailbreak {
+            .none
+        } else {
+            biometryType
         }
-        switch TIP.status {
-        case .needsInitialize, .unknown:
-            return .none
-        case .needsMigrate, .ready:
-            break
-        }
-        return biometryType
     }
     
     static var lockScreen: BiometryType {

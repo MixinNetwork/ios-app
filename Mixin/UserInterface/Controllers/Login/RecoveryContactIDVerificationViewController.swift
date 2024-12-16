@@ -29,7 +29,7 @@ class RecoveryContactIDVerificationViewController: LoginInfoInputViewController 
         textField.becomeFirstResponder()
     }
     
-    override func continueAction(_ sender: Any) {
+    override func continueToNext(_ sender: Any) {
         continueButton.isBusy = true
         var context = self.context
         let identityNumber = self.trimmedText
@@ -59,7 +59,7 @@ extension RecoveryContactIDVerificationViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if !continueButton.isHidden {
-            continueAction(textField)
+            continueToNext(textField)
         }
         return false
     }

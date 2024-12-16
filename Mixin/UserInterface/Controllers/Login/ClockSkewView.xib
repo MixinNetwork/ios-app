@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ClockSkewViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="continueButton" destination="b74-lw-8Cu" id="wvB-DX-hqm"/>
+                <outlet property="tipsLabel" destination="Bmp-LW-R5R" id="WaS-mf-wpp"/>
+                <outlet property="view" destination="KWp-UI-NAy" id="K5h-za-o82"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="KWp-UI-NAy">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_clock_skew" translatesAutoresizingMaskIntoConstraints="NO" id="8hy-Xv-cG8">
+                    <rect key="frame" x="160.66666666666666" y="153" width="72" height="72"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="System time is unusual" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bmp-LW-R5R">
+                    <rect key="frame" x="50" y="275" width="293" height="21.666666666666686"/>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                    <color key="textColor" name="text"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="system_time_is_unusual"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b74-lw-8Cu" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="144.66666666666666" y="714" width="104" height="44"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                    <inset key="contentEdgeInsets" minX="20" minY="12" maxX="18" maxY="12"/>
+                    <state key="normal" title="Continue">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="continue"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="continueAction:" destination="-1" eventType="touchUpInside" id="hRG-kN-iKS"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="751" text="Please continue to use again after correction. Settings &gt; General &gt; Date &amp; Time &gt; Turn on Set Automatically" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ES-1H-bAm">
+                    <rect key="frame" x="36" y="326.66666666666669" width="321" height="58"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                    <color key="textColor" name="text_tertiary"/>
+                    <nil key="highlightedColor"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="clock_skew_hint"/>
+                    </userDefinedRuntimeAttributes>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="D1j-Nh-XbM"/>
+            <color key="backgroundColor" name="background_secondary"/>
+            <constraints>
+                <constraint firstItem="D1j-Nh-XbM" firstAttribute="trailing" secondItem="7ES-1H-bAm" secondAttribute="trailing" constant="36" id="8f0-El-Ml9"/>
+                <constraint firstItem="7ES-1H-bAm" firstAttribute="top" secondItem="Bmp-LW-R5R" secondAttribute="bottom" constant="30" id="B6z-7c-m74"/>
+                <constraint firstItem="8hy-Xv-cG8" firstAttribute="centerX" secondItem="D1j-Nh-XbM" secondAttribute="centerX" id="KXH-so-kVe"/>
+                <constraint firstItem="b74-lw-8Cu" firstAttribute="centerX" secondItem="D1j-Nh-XbM" secondAttribute="centerX" id="SaB-tC-j4o"/>
+                <constraint firstItem="D1j-Nh-XbM" firstAttribute="trailing" secondItem="Bmp-LW-R5R" secondAttribute="trailing" constant="50" id="ULm-Gd-rGr"/>
+                <constraint firstItem="8hy-Xv-cG8" firstAttribute="top" secondItem="D1j-Nh-XbM" secondAttribute="top" constant="94" id="XBD-nt-Gdr" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="60"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="7ES-1H-bAm" firstAttribute="leading" secondItem="D1j-Nh-XbM" secondAttribute="leading" constant="36" id="Zle-OP-3Gv"/>
+                <constraint firstItem="Bmp-LW-R5R" firstAttribute="leading" secondItem="D1j-Nh-XbM" secondAttribute="leading" constant="50" id="dbn-Im-SkM"/>
+                <constraint firstItem="Bmp-LW-R5R" firstAttribute="top" secondItem="8hy-Xv-cG8" secondAttribute="bottom" constant="50" id="iEv-Pf-bkR"/>
+                <constraint firstItem="D1j-Nh-XbM" firstAttribute="bottom" secondItem="b74-lw-8Cu" secondAttribute="bottom" constant="60" id="wLe-cJ-n9Z"/>
+            </constraints>
+            <point key="canvasLocation" x="100" y="30"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_clock_skew" width="72" height="72"/>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

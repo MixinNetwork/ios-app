@@ -3,7 +3,7 @@ import AVFoundation
 import DeviceCheck
 import MixinServices
 
-class HomeNavigationController: UINavigationController {
+class HomeNavigationController: GeneralAppearanceNavigationController {
     
     private lazy var presentFromBottomAnimator = PresentFromBottomAnimator()
     
@@ -33,15 +33,10 @@ class HomeNavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = R.color.background()
-        navigationBar.standardAppearance = .general
-        navigationBar.scrollEdgeAppearance = .general
-        navigationBar.tintColor = R.color.icon_tint()
-        
         self.interactivePopGestureRecognizer?.isEnabled = true
         self.interactivePopGestureRecognizer?.delegate = self
         self.delegate = self
-        if AppGroupUserDefaults.Crypto.isPrekeyLoaded && AppGroupUserDefaults.Crypto.isSessionSynchronized && !AppGroupUserDefaults.Account.isClockSkewed && LoginManager.shared.isLoggedIn {
+        if AppGroupUserDefaults.Crypto.isPrekeyLoaded && AppGroupUserDefaults.Crypto.isSessionSynchronized && !AppGroupUserDefaults.isClockSkewed && LoginManager.shared.isLoggedIn {
             reporter.registerUserInformation()
             DCDevice.current.generateToken { (data, error) in
                 guard let token = data?.base64EncodedString() else {

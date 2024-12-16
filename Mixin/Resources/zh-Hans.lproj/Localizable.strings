@@ -567,6 +567,7 @@
 "floats_allows_up_to_count" = "最多支持 %d 个浮窗";
 "follow_us_on_facebook" = "关注我们的 Facebook";
 "follow_us_on_x" = "关注我们的 X";
+"forget_pin" = "忘记 PIN？";
 "forward" = "转发";
 "fourth_pin_confirm_hint" = "这是最后一次确认 PIN，记住：PIN 丢失将永远无法找回！";
 "free" = "免手续费";
@@ -1193,6 +1194,7 @@
 "swap_not_supported" = "不支持 %@ 交易。";
 "swap_receive" = "获得";
 "swap_send" = "支付";
+"switch_account" = "切换账号";
 "symbol" = "符号";
 "symbol_withdrawal" = "%@ 提现";
 "syncing_and_verifying_tip" = "正在验证并同步密钥分片到 TIP 网络，请保持应用在前台，设置过程中不要强制关闭应用";

@@ -2,7 +2,7 @@ import UIKit
 import Alamofire
 import MixinServices
 
-class TIPIntroViewController: IntroViewController {
+final class TIPIntroViewController: IntroViewController {
     
     enum Interruption {
         case unknown
@@ -17,27 +17,13 @@ class TIPIntroViewController: IntroViewController {
         case waitingForUser
     }
     
-    var isDismissAllowed: Bool {
-        switch intent {
-        case .create, .migrate:
-            return false
-        case .change:
-            switch interruption {
-            case .none, .noInputNeeded:
-                return true
-            case .unknown, .inputNeeded:
-                return false
-            }
-        }
-    }
-    
     private let intent: TIP.Action
-    private let checkCounterTimeoutInterval: TimeInterval = 5
+    private let checkCounterTimeoutInterval: TimeInterval = 10
     
     private var interruption: Interruption
     
-    private var tipNavigationController: TIPNavigationViewController? {
-        navigationController as? TIPNavigationViewController
+    private var tipNavigationController: TIPNavigationController? {
+        navigationController as? TIPNavigationController
     }
     
     convenience init(intent: TIP.Action) {
@@ -76,6 +62,7 @@ class TIPIntroViewController: IntroViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateNavigationItem()
         iconImageView.image = R.image.ic_tip()
         let description: String
         switch intent {
@@ -138,32 +125,20 @@ class TIPIntroViewController: IntroViewController {
                 let input = TIPFullscreenInputViewController(action: .create(.input))
                 navigationController?.pushViewController(input, animated: true)
             case .change:
-                let fromLegacy: Bool
-                switch TIP.status {
-                case .ready:
-                    fromLegacy = false
-                case .needsMigrate:
-                    fromLegacy = true
-                case .unknown, .needsInitialize:
-                    Logger.tip.error(category: "TIPIntro", message: "Invalid status: \(TIP.status)")
-                    assertionFailure("Invalid TIP status")
-                    return
-                }
+                let fromLegacy = false
                 let input = TIPFullscreenInputViewController(action: .change(fromLegacy, .verify))
                 navigationController?.pushViewController(input, animated: true)
             case .migrate:
                 let validator = TIPPopupInputViewController(action: .migrate({ pin in
                     let action = TIPActionViewController(action: .migrate(pin: pin))
-                    self.navigationController?.pushViewController(action, animated: true)
+                    self.navigationController?.setViewControllers([action], animated: true)
                 }))
                 present(validator, animated: true)
             }
         case .inputNeeded(let context):
-            let validator = TIPPopupInputViewController(action: .continue(context, {
-                let tipNavigationController = self.tipNavigationController
-                self.dismiss(animated: true) {
-                    tipNavigationController?.dismissToDestination(animated: true)
-                }
+            let navigationController = self.tipNavigationController
+            let validator = TIPPopupInputViewController(action: .continue(context, { [weak navigationController] in
+                navigationController?.finish()
             }))
             present(validator, animated: true)
         case let .noInputNeeded(action, _):
@@ -172,9 +147,26 @@ class TIPIntroViewController: IntroViewController {
         }
     }
     
+    @objc private func close(_ sender: Any) {
+        navigationController?.presentingViewController?.dismiss(animated: true)
+    }
+    
 }
 
 extension TIPIntroViewController {
+    
+    private func updateNavigationItem() {
+        switch (intent, interruption) {
+        case (.change, .none):
+            navigationItem.leftBarButtonItem = .tintedIcon(
+                image: R.image.ic_title_close(),
+                target: self,
+                action: #selector(close(_:))
+            )
+        default:
+            navigationItem.leftBarButtonItem = nil
+        }
+    }
     
     private func setNoticeHidden(_ hidden: Bool) {
         if hidden {
@@ -221,8 +213,8 @@ extension TIPIntroViewController {
                         navigationController?.setViewControllers([intro], animated: true)
                     } else {
                         interruption = .none
-                        tipNavigationController?.updateBackButtonAlpha(animated: true)
                         updateNextButtonAndStatusLabel(with: .waitingForUser)
+                        updateNavigationItem()
                     }
                 }
             } catch {

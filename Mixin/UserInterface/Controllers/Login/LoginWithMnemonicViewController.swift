@@ -176,6 +176,7 @@ extension LoginWithMnemonicViewController {
             guard let idData = context.verificationID.data(using: .utf8) else {
                 throw LoginError.loadVerificationID
             }
+            SignalProtocol.shared.initSignal()
             let masterSignature = try context.masterKey.signature(for: idData)
             let registrationID = Int(SignalProtocol.shared.getRegistrationId())
             let sessionSecret = context.sessionKey.publicKey.rawRepresentation

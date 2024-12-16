@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class UsernameViewController: LoginInfoInputViewController {
+final class UsernameViewController: LoginInfoInputViewController, CheckSessionEnvironmentChild {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -10,17 +10,14 @@ class UsernameViewController: LoginInfoInputViewController {
         editingChangedAction(self)
     }
     
-    override func continueAction(_ sender: Any) {
+    override func continueToNext(_ sender: Any) {
         continueButton.isBusy = true
         AccountAPI.update(fullName: trimmedText) { [weak self] (account) in
-            guard let weakSelf = self else {
-                return
-            }
-            weakSelf.continueButton.isBusy = false
+            self?.continueButton.isBusy = false
             switch account {
             case let .success(account):
                 LoginManager.shared.setAccount(account)
-                AppDelegate.current.mainWindow.rootViewController = makeInitialViewController(isUsernameJustInitialized: true)
+                self?.checkSessionEnvironmentAgain(freshAccount: account)
             case let .failure(error):
                 reporter.report(error: error)
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)

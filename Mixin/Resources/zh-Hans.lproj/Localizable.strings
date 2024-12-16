@@ -513,7 +513,7 @@
 "error_invalid_pin_format" = "错误 20118：PIN 格式不正确";
 "error_invalid_quote_amount" = "错误 10614: 输入金额太小或太大，请重新输入。";
 "error_invalid_swap" = "错误 10611: 暂无报价，请稍后重试。";
-"error_legacy_pin" = "错误 20118：为了加强 Mixin 网络的安全，Mixin API 现已暂停 D3M-PIN 升级到TIP，详情请查看文档并登记等待处理。";
+"error_legacy_pin" = "错误 20118：为了加强 Mixin 网络的安全，Mixin API 现已暂停 D3M-PIN 升级到 TIP，详情请查看文档并登记等待处理。";
 "error_network_task_failed" = "网络连接失败。检查或切换网络并重试";
 "error_no_available_quote" = "错误 10615: 暂不支持该交易对，请尝试切换币种。";
 "error_not_found" = "错误 404：没有找到相应的信息";

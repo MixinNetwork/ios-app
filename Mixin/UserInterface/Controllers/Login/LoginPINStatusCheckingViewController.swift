@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class TIPLoadingViewController: LoginLoadingViewController {
+final class LoginPINStatusCheckingViewController: LoginLoadingViewController {
     
     private let freshAccount: Account?
     

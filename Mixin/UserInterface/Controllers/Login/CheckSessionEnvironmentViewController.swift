@@ -122,7 +122,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                 } else {
                     Logger.general.debug(category: "CheckSessionEnvironment", message: "Load TIP with account: \(freshAccount != nil)")
                     let freshAccount = isAccountFresh ? account : nil
-                    root = TIPLoadingViewController(freshAccount: freshAccount)
+                    root = LoginPINStatusCheckingViewController(freshAccount: freshAccount)
                 }
             }
             AppDelegate.current.mainWindow.rootViewController = root

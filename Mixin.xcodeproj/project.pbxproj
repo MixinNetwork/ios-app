@@ -1193,7 +1193,7 @@
 		94E978D12D09B7D600FFCC12 /* LegacyPINView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E978D02D09B7D600FFCC12 /* LegacyPINView.xib */; };
 		94E978D22D09B7D600FFCC12 /* LegacyPINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E978CF2D09B7D600FFCC12 /* LegacyPINViewController.swift */; };
 		94E979232D0B408100FFCC12 /* LoginLoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E979222D0B407B00FFCC12 /* LoginLoadingViewController.swift */; };
-		94E979252D0B40B000FFCC12 /* TIPLoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E979242D0B40AB00FFCC12 /* TIPLoadingViewController.swift */; };
+		94E979252D0B40B000FFCC12 /* LoginPINStatusCheckingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E979242D0B40AB00FFCC12 /* LoginPINStatusCheckingViewController.swift */; };
 		94E9792D2D0B43B100FFCC12 /* UpdateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E9792C2D0B43B100FFCC12 /* UpdateView.xib */; };
 		94E979672D0C16C300FFCC12 /* LoginPINValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E979662D0C16C300FFCC12 /* LoginPINValidationViewController.swift */; };
 		94E9C0962BC6978F00D6157C /* Web3PopupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E9C0952BC6978F00D6157C /* Web3PopupCoordinator.swift */; };
@@ -2679,7 +2679,7 @@
 		94E978CF2D09B7D600FFCC12 /* LegacyPINViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyPINViewController.swift; sourceTree = "<group>"; };
 		94E978D02D09B7D600FFCC12 /* LegacyPINView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LegacyPINView.xib; sourceTree = "<group>"; };
 		94E979222D0B407B00FFCC12 /* LoginLoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLoadingViewController.swift; sourceTree = "<group>"; };
-		94E979242D0B40AB00FFCC12 /* TIPLoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPLoadingViewController.swift; sourceTree = "<group>"; };
+		94E979242D0B40AB00FFCC12 /* LoginPINStatusCheckingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPINStatusCheckingViewController.swift; sourceTree = "<group>"; };
 		94E9792C2D0B43B100FFCC12 /* UpdateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpdateView.xib; sourceTree = "<group>"; };
 		94E979662D0C16C300FFCC12 /* LoginPINValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPINValidationViewController.swift; sourceTree = "<group>"; };
 		94E9C0952BC6978F00D6157C /* Web3PopupCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3PopupCoordinator.swift; sourceTree = "<group>"; };
@@ -3290,7 +3290,7 @@
 				94DC18A82D018D46006501B3 /* LoginLoadingView.xib */,
 				94E979222D0B407B00FFCC12 /* LoginLoadingViewController.swift */,
 				7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */,
-				94E979242D0B40AB00FFCC12 /* TIPLoadingViewController.swift */,
+				94E979242D0B40AB00FFCC12 /* LoginPINStatusCheckingViewController.swift */,
 				94E979662D0C16C300FFCC12 /* LoginPINValidationViewController.swift */,
 				94E9792C2D0B43B100FFCC12 /* UpdateView.xib */,
 				DF75FF4324FE61E1008A7CF3 /* UpdateViewController.swift */,
@@ -6598,7 +6598,7 @@
 				7CB0954F26CCED2E0049F4C7 /* PinMessageBannerView.swift in Sources */,
 				7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */,
 				7B710DFC243637A5008F0D73 /* CirclesTableFooterView.swift in Sources */,
-				94E979252D0B40B000FFCC12 /* TIPLoadingViewController.swift in Sources */,
+				94E979252D0B40B000FFCC12 /* LoginPINStatusCheckingViewController.swift in Sources */,
 				9497AEA92C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift in Sources */,
 				7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */,
 				7C7579DF29DC61890002DA0B /* TransferToPhoneQRCodeViewController.swift in Sources */,

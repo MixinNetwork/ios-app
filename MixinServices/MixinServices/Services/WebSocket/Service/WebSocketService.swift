@@ -83,7 +83,7 @@ public class WebSocketService {
             self.heartbeat = heartbeat
 
             var request = URLRequest(url: url)
-            request.timeoutInterval = 5
+            request.timeoutInterval = 10
             request.allHTTPHeaderFields = RequestSigning.signedHeaders(for: request)
             if isAppExtension {
                 request.setValue("Mixin-Notification-Extension-1", forHTTPHeaderField: "Sec-WebSocket-Protocol")

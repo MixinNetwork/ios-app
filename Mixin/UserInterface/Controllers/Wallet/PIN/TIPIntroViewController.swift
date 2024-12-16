@@ -18,7 +18,7 @@ final class TIPIntroViewController: IntroViewController {
     }
     
     private let intent: TIP.Action
-    private let checkCounterTimeoutInterval: TimeInterval = 5
+    private let checkCounterTimeoutInterval: TimeInterval = 10
     
     private var interruption: Interruption
     

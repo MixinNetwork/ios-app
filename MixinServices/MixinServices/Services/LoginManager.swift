@@ -111,6 +111,7 @@ public final class LoginManager {
 
         if !isAppExtension {
             AppGroupUserDefaults.Account.serializedAccount = nil
+            AppGroupUserDefaults.Wallet.payWithBiometricAuthentication = false
             Queue.main.autoSync {
                 INInteraction.deleteAll(completion: nil)
                 UserDatabase.current.clearSentSenderKey()

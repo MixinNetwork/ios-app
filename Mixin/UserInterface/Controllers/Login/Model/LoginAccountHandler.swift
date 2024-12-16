@@ -29,6 +29,7 @@ extension LoginAccountHandler where Self: UIViewController {
         AppGroupKeychain.encryptedTIPPriv = nil
         AppGroupKeychain.ephemeralSeed = nil
         AppGroupKeychain.encryptedSalt = nil
+        Keychain.shared.clearPIN()
         Logger.tip.info(category: "Login", message: "TIP Secrets cleared")
         LoginManager.shared.setAccount(account, updateUserTable: false)
         
@@ -44,6 +45,7 @@ extension LoginAccountHandler where Self: UIViewController {
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
         }
         AppGroupUserDefaults.User.loginPINValidated = false
+        AppGroupUserDefaults.Wallet.payWithBiometricAuthentication = false
         
         if account.fullName.isEmpty {
             reporter.report(event: .signUp)

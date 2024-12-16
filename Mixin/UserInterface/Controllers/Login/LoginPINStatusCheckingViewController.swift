@@ -46,6 +46,12 @@ final class LoginPINStatusCheckingViewController: LoginLoadingViewController {
                         AppDelegate.current.mainWindow.rootViewController = navigation
                     }
                 }
+            } catch MixinAPIError.httpTransport {
+                await MainActor.run {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                        self?.reload(sender)
+                    }
+                }
             } catch {
                 await MainActor.run {
                     activityIndicator.stopAnimating()
@@ -56,7 +62,7 @@ final class LoginPINStatusCheckingViewController: LoginLoadingViewController {
                     button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
                     button.style = .filled
                     button.addTarget(self, action: #selector(reload(_:)), for: .touchUpInside)
-                    button.applyDefaultContentInsets()
+                    button.contentEdgeInsets = UIEdgeInsets(top: 14, left: 36, bottom: 15, right: 36)
                     self.retryButton = button
                     self.bottomStackView.addArrangedSubview(button)
                 }

@@ -26,17 +26,17 @@
                     <rect key="frame" x="156.66666666666666" y="153" width="80" height="80"/>
                 </imageView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="1hM-1U-2aX">
-                    <rect key="frame" x="0.0" y="712" width="393" height="46"/>
+                    <rect key="frame" x="20" y="712" width="353" height="46"/>
                     <subviews>
                         <view opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="GHF-fd-1FX" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="186.66666666666666" y="0.0" width="20" height="20"/>
+                            <rect key="frame" x="166.66666666666666" y="0.0" width="20" height="20"/>
                             <color key="tintColor" red="0.73725490199999999" green="0.74509803919999995" blue="0.76470588240000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="YES"/>
                             </userDefinedRuntimeAttributes>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Initializing" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GBu-hh-nII">
-                            <rect key="frame" x="162.33333333333334" y="28" width="68.333333333333343" height="18"/>
+                            <rect key="frame" x="142.33333333333334" y="28" width="68.333333333333343" height="18"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                             <color key="textColor" name="text_tertiary"/>
                             <nil key="highlightedColor"/>
@@ -74,10 +74,10 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </constraint>
-                <constraint firstItem="Vmd-4x-KUI" firstAttribute="trailing" secondItem="1hM-1U-2aX" secondAttribute="trailing" id="JDl-Qr-6a2"/>
+                <constraint firstItem="Vmd-4x-KUI" firstAttribute="trailing" secondItem="1hM-1U-2aX" secondAttribute="trailing" constant="20" id="JDl-Qr-6a2"/>
                 <constraint firstItem="Vmd-4x-KUI" firstAttribute="trailing" secondItem="9z2-2l-kxA" secondAttribute="trailing" constant="36" id="Q5Z-2o-Y07"/>
                 <constraint firstItem="9z2-2l-kxA" firstAttribute="top" secondItem="XyQ-Dj-wtM" secondAttribute="bottom" constant="16" id="cK0-qM-64J"/>
-                <constraint firstItem="1hM-1U-2aX" firstAttribute="leading" secondItem="Vmd-4x-KUI" secondAttribute="leading" id="fbe-bn-rdM"/>
+                <constraint firstItem="1hM-1U-2aX" firstAttribute="leading" secondItem="Vmd-4x-KUI" secondAttribute="leading" constant="20" id="fbe-bn-rdM"/>
                 <constraint firstItem="9z2-2l-kxA" firstAttribute="leading" secondItem="Vmd-4x-KUI" secondAttribute="leading" constant="36" id="rQ9-2F-8sg"/>
                 <constraint firstItem="XyQ-Dj-wtM" firstAttribute="centerX" secondItem="Vmd-4x-KUI" secondAttribute="centerX" id="w4X-O4-XPN"/>
             </constraints>

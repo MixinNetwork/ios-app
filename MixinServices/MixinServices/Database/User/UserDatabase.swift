@@ -893,6 +893,18 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("update_participant_session_bad_data") { db in
+            let sql = """
+            UPDATE participant_session SET sent_to_server = NULL
+            WHERE conversation_id IN (
+                SELECT conversation_id FROM participant_session 
+                GROUP BY conversation_id 
+                HAVING COUNT(conversation_id) > 384
+            )
+            """
+            try db.execute(sql: sql)
+        }
+        
         return migrator
     }
     

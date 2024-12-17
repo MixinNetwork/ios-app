@@ -936,9 +936,10 @@ extension UserDatabase {
 
 extension UserDatabase {
     
-    public func clearSentSenderKey() {
+    public func clearSentSenderKey(sessionId: String) {
         try! pool.barrierWriteWithoutTransaction { (db) -> Void in
-            try ParticipantSession.updateAll(db, [ParticipantSession.column(of: .sentToServer).set(to: nil)])
+            try db.execute(sql: "UPDATE participant_session SET sent_to_server = NULL")
+            try db.execute(sql: "DELETE FROM participant_session WHERE session_id = ?", arguments: [sessionId])
         }
     }
     

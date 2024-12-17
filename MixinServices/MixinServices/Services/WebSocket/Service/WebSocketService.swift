@@ -321,7 +321,7 @@ extension WebSocketService {
             reporter.report(error: MixinServicesError.gzipFailed)
             return (false, true)
         }
-        guard gzipped.count < 2 * 1024 * 1024 else {
+        guard gzipped.count < 2 * bytesPerMegaByte else {
             let conversationId = message.params?.conversationId ?? ""
             let category = message.params?.category ?? ""
             reporter.report(error: MixinServicesError.messageTooBig(gzipSize: gzipped.count, category: category, conversationId: conversationId))

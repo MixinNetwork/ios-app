@@ -104,7 +104,7 @@ public final class LoginManager {
             WebSocketService.shared.disconnect()
             return
         }
-        guard account != nil, let sessionId = account?.sessionID else {
+        guard let sessionID = account?.sessionID else {
             return
         }
 
@@ -119,7 +119,7 @@ public final class LoginManager {
             AppGroupUserDefaults.Account.serializedAccount = nil
             Queue.main.autoSync {
                 INInteraction.deleteAll(completion: nil)
-                UserDatabase.current.clearSentSenderKey(sessionId: sessionId)
+                UserDatabase.current.clearSentSenderKey(sessionID: sessionID)
                 Keychain.shared.clearPIN()
                 WebSocketService.shared.disconnect()
                 AppGroupUserDefaults.Account.clearAll()

@@ -35,7 +35,7 @@ extension HomeTip {
         
         lazy var walletUSDBalance = TokenDAO.shared.usdBalanceSum()
         
-        if userDismissalOutdated(tip: .appUpdate, dismissalDate: AppGroupUserDefaults.appUpdateTipDismissalDate),
+        if userDismissalOutdates(tip: .appUpdate, dismissalDate: AppGroupUserDefaults.appUpdateTipDismissalDate),
            let latestVersion = account.system?.messenger.version,
            let currentVersion = Bundle.main.shortVersion,
            currentVersion < latestVersion
@@ -45,12 +45,12 @@ extension HomeTip {
         
         if account.isAnonymous,
            !account.hasSaltExported,
-           userDismissalOutdated(tip: .backupMnemonics, dismissalDate: AppGroupUserDefaults.User.backupMnemonicsTipDismissalDate)
+           userDismissalOutdates(tip: .backupMnemonics, dismissalDate: AppGroupUserDefaults.User.backupMnemonicsTipDismissalDate)
         {
             return .backupMnemonics
         }
         
-        if userDismissalOutdated(tip: .notification, dismissalDate: AppGroupUserDefaults.notificationTipDismissalDate),
+        if userDismissalOutdates(tip: .notification, dismissalDate: AppGroupUserDefaults.notificationTipDismissalDate),
            await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .denied,
            walletUSDBalance > 0
         {
@@ -58,14 +58,14 @@ extension HomeTip {
         }
         
         if !account.hasEmergencyContact,
-           userDismissalOutdated(tip: .recoveryContact, dismissalDate: AppGroupUserDefaults.User.recoveryContactTipDismissalDate),
+           userDismissalOutdates(tip: .recoveryContact, dismissalDate: AppGroupUserDefaults.User.recoveryContactTipDismissalDate),
            walletUSDBalance > 100
         {
             return .recoveryContact
         }
         
         if AppGroupUserDefaults.User.hasPerformedTransfer,
-           userDismissalOutdated(tip: .appRating, dismissalDate: AppGroupUserDefaults.appRatingRequestDate),
+           userDismissalOutdates(tip: .appRating, dismissalDate: AppGroupUserDefaults.appRatingRequestDate),
            let firstLaunchDate = AppGroupUserDefaults.firstLaunchDate,
            -firstLaunchDate.timeIntervalSinceNow > 7 * .day
         {
@@ -75,7 +75,7 @@ extension HomeTip {
         return nil
     }
     
-    private static func userDismissalOutdated(tip: HomeTip, dismissalDate: Date?) -> Bool {
+    static func userDismissalOutdates(tip: HomeTip, dismissalDate: Date?) -> Bool {
         if let date = dismissalDate {
             -date.timeIntervalSinceNow > tip.detectInterval
         } else {

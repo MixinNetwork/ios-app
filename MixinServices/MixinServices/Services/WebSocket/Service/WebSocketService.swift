@@ -321,10 +321,15 @@ extension WebSocketService {
             reporter.report(error: MixinServicesError.gzipFailed)
             return (false, true)
         }
-        guard gzipped.count < 120 * 1024 else {
+        guard gzipped.count < 2 * bytesPerMegaByte else {
             let conversationId = message.params?.conversationId ?? ""
             let category = message.params?.category ?? ""
             reporter.report(error: MixinServicesError.messageTooBig(gzipSize: gzipped.count, category: category, conversationId: conversationId))
+            if conversationId.isEmpty {
+                Logger.general.error(category: "WebSocketService", message: "Message too big, size:\(gzipped.count / 1024)k")
+            } else {
+                Logger.conversation(id: conversationId).info(category: "WebSocketService", message: "Message too big, size:\(gzipped.count / 1024)k")
+            }
             return (false, true)
         }
         

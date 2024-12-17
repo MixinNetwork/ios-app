@@ -510,8 +510,10 @@
 "error_invalid_address_plain" = "ERROR 30102: Invalid address format.";
 "error_invalid_code_too_frequent" = "ERROR 20129: Send verification code too frequent, please try again later.";
 "error_invalid_emergency_contact" = "ERROR 20130: Invalid recovery contact";
+"error_invalid_pin_format" = "ERROR 20118: Invalid PIN format.";
 "error_invalid_quote_amount" = "ERROR 10614: The input amount is either too small or too large, please adjust the amount.";
 "error_invalid_swap" = "ERROR 10611: No quotes available at the moment, please try again later.";
+"error_legacy_pin" = "ERROR 20118: To enhance the security of the Mixin network, Mixin API has temporarily suspended the upgrading from D3M-PIN to TIP. Please refer to the documentation for details and register for processing.";
 "error_network_task_failed" = "Network connection failed. Check or switch your network and try again";
 "error_no_available_quote" = "ERROR 10615: This trading pair is currently not supported, please try switching to a different token.";
 "error_not_found" = "ERROR 404: Not found";
@@ -1322,7 +1324,15 @@
 "upload_mobile_contacts" = "Upload Mobile Contacts";
 "uploading" = "Uploading...";
 "uploading_progress" = "Uploading: %@ of %@ (%@)";
+"url_api_upgrade" = "https://support.mixin.one/en/article/mixin-api-upgrade-notification-1cfmdc9/";
+"url_delete_account" = "https://support.mixin.one/en/article/how-to-delete-my-account-19fkagl/";
+"url_deposit" = "https://support.mixin.one/en/article/how-to-deposit-assets-to-mixin-messenger-1usvjod/";
+"url_deposit_suspended" = "https://support.mixin.one/en/article/the-explanation-about-mixin-stopped-support-for-some-assets-deposits-1im32px/";
+"url_disappearing_message" = "https://support.mixin.one/en/article/how-to-enable-disappearing-messages-2nzaz8/";
+"url_forget_pin" = "https://support.mixin.one/en/article/how-to-do-if-i-forget-the-pin-g12pmo/";
+"url_recovery_contact" = "https://support.mixin.one/en/article/how-to-set-up-an-emergency-contact-1kvd6g8/";
 "url_unrecognized_hint" = "%@ failed to recognize, please upgrade Mixin to the latest version or contact the developer to check the link";
+"url_unsupported_message" = "https://support.mixin.one/en/article/how-to-do-when-you-receive-a-message-like-this-this-type-of-message-is-not-supported-please-upgrade-mixin-17j1t3p/";
 "use_biometry" = "Use %@";
 "use_system_text_size" = "Use System Text Size";
 "user_delete_hint" = "The user has deleted his own account.";
@@ -1340,6 +1350,7 @@
 "videos" = "Videos";
 "view_all" = "View All";
 "view_authorization" = "View Authorization";
+"view_document" = "View Document";
 "view_emergency_contact" = "View recovery contact";
 "view_on_explorer" = "View on Explorer";
 "view_on_marketplace" = "View on Marketplace";

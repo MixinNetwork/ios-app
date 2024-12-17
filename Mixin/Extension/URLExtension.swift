@@ -3,20 +3,22 @@ import MobileCoreServices
 
 extension URL {
     
-    static let blank = URL(string: "about:blank")!
-    static let mixinMessenger = URL(string: "https://messenger.mixin.one")!
-    static let shortMixinMessenger = URL(string: "https://mixin.one/mm")!
-    static let terms = URL(string: "https://mixin.one/pages/terms")!
-    static let privacy = URL(string: "https://mixin.one/pages/privacy")!
-    static let aboutEncryption = URL(string: "https://mixin.one/pages/1000007")!
-    static let emergencyContact = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360029154692")!
-    static let unknownCategory = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360043776071")!
-    static let tip = URL(string: "https://tip.id")!
-    static let deleteAccount = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/4414170627988")!
-    static let expiredMessage = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/5127869180564")!
-    static let deposit = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360018789931")!
-    static let notSupportedDeposit = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/9954148870676")!
-    static let customerService = URL(string: "https://go.crisp.chat/chat/embed/?website_id=52662bba-be49-4b06-9edc-7baa9a78f714")!
+    static let blank                = URL(string: "about:blank")!
+    static let mixinMessenger       = URL(string: "https://messenger.mixin.one")!
+    static let shortMixinMessenger  = URL(string: "https://mixin.one/mm")!
+    static let terms                = URL(string: "https://mixin.one/pages/terms")!
+    static let privacy              = URL(string: "https://mixin.one/pages/privacy")!
+    static let aboutEncryption      = URL(string: "https://mixin.one/pages/1000007")!
+    static let tip                  = URL(string: "https://tip.id")!
+    static let customerService      = URL(string: "https://go.crisp.chat/chat/embed/?website_id=52662bba-be49-4b06-9edc-7baa9a78f714")!
+    static let recoveryContact      = URL(string: R.string.localizable.url_recovery_contact())!
+    static let unsupportedMessage   = URL(string: R.string.localizable.url_unsupported_message())!
+    static let deleteAccount        = URL(string: R.string.localizable.url_delete_account())!
+    static let disappearingMessage  = URL(string: R.string.localizable.url_disappearing_message())!
+    static let deposit              = URL(string: R.string.localizable.url_deposit())!
+    static let depositSuspended     = URL(string: R.string.localizable.url_deposit_suspended())!
+    static let forgetPIN            = URL(string: R.string.localizable.url_forget_pin())!
+    static let apiUpgrade           = URL(string: R.string.localizable.url_api_upgrade())!
     
     func getKeyVals() -> [String: String] {
         return URLComponents(url: self, resolvingAgainstBaseURL: true)?.getKeyVals() ?? [:]

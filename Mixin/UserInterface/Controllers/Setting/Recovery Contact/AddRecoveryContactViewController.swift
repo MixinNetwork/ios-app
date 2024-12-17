@@ -23,7 +23,7 @@ final class AddRecoveryContactViewController: SettingsTableViewController {
     }
     
     @objc private func help(_ sender: Any) {
-        UIApplication.shared.openURL(url: .emergencyContact)
+        UIApplication.shared.openURL(url: .recoveryContact)
     }
     
 }

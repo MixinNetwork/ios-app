@@ -22,7 +22,7 @@ class ExpiredMessageTableHeaderView: UIView {
         textLabel.text = text
         let linkRange = (text as NSString).range(of: R.string.localizable.learn_more(), options: [.backwards, .caseInsensitive])
         if linkRange.location != NSNotFound && linkRange.length != 0 {
-            textLabel.additionalLinksMap = [linkRange: URL.expiredMessage]
+            textLabel.additionalLinksMap = [linkRange: URL.disappearingMessage]
         }
     }
 

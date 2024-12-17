@@ -49,6 +49,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 } else {
                     try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
                 }
+                AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 AppGroupUserDefaults.User.loginPINValidated = true
                 await MainActor.run {
                     AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController()
@@ -77,7 +78,12 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
     @objc private func presentMoreActions(_ sender: Any) {
         let sheet = UIAlertController(title: R.string.localizable.help(), message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.forget_pin(), style: .default, handler: { _ in
-            // FIXME: Forget PIN Document
+            let document = PopupTitledWebViewController(
+                title: R.string.localizable.forget_pin(),
+                subtitle: R.string.localizable.url_forget_pin(),
+                url: .forgetPIN
+            )
+            self.present(document, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.switch_account(), style: .default, handler: { _ in
             LoginManager.shared.logout(reason: "Switch Account")

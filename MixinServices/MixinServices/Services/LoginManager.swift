@@ -41,13 +41,7 @@ public final class LoginManager {
     }
     
     private var hasValidSessionSecret: Bool {
-        if let secret = AppGroupUserDefaults.Account.sessionSecret {
-            return !secret.isEmpty
-        } else if let secret = AppGroupKeychain.sessionSecret {
-            return true
-        } else {
-            return false
-        }
+        AppGroupKeychain.sessionSecret != nil
     }
     
     private init() {
@@ -117,6 +111,7 @@ public final class LoginManager {
 
         if !isAppExtension {
             AppGroupUserDefaults.Account.serializedAccount = nil
+            AppGroupUserDefaults.Wallet.payWithBiometricAuthentication = false
             Queue.main.autoSync {
                 INInteraction.deleteAll(completion: nil)
                 UserDatabase.current.clearSentSenderKey(sessionID: sessionID)

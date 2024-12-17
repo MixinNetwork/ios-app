@@ -48,7 +48,9 @@ extension RequestSigning {
         guard let sig = sig(from: request) else {
             return nil
         }
-        
+        guard let key = edDSAPrivateKey else {
+            return nil
+        }
         let date = Date()
         let claims = Jwt.Claims(uid: account.userID,
                                 sid: account.sessionID,
@@ -57,24 +59,12 @@ extension RequestSigning {
                                 jti: requestId,
                                 sig: sig,
                                 scp: "FULL")
-        
-        let token: String
-        if let secret = AppGroupUserDefaults.Account.sessionSecret, !secret.isEmpty {
-            let pem = KeyUtil.stripRsaPrivateKeyHeaders(secret)
-            guard let key = KeyUtil.getPrivateKeyFromPem(pemString: pem) else {
-                return nil
-            }
-            guard let signedToken = try? Jwt.signedToken(claims: claims, privateKey: key) else {
-                return nil
-            }
-            token = signedToken
-        } else if let key = edDSAPrivateKey, let signedToken = try? Jwt.signedToken(claims: claims, key: key) {
-            token = signedToken
-        } else {
+        do {
+            let token = try Jwt.signedToken(claims: claims, key: key)
+            return "Bearer " + token
+        } catch {
             return nil
         }
-        
-        return "Bearer " + token
     }
     
     private static func sig(from request: URLRequest) -> String? {

@@ -481,8 +481,10 @@
 "enable_bioauth_description" = "What about %@? Once enabled, you can expedite authentication with %@.";
 "enable_emergency_contact" = "Enable Recovery Contact";
 "enable_face_pay_hint" = "PINコードを確認して顔認証を利用可能にしてください";
+"enable_notifications" = "Enable Notifications";
 "enable_pay" = "%@の支払いを有効化";
 "enable_pay_confirmation" = "%@の支払いを有効化しますか？";
+"enable_push_notification" = "通知をオンにする";
 "enable_touch_pay_hint" = "PINコードを確認して指紋認証を利用可能にしてください";
 "end" = "End";
 "end_to_end_encryption" = "E2E暗号化";
@@ -806,7 +808,7 @@
 "not_turn_off_screen_hint" = "Please do not turn off the screen and keep Mixin in the foreground when synchronizing.";
 "note" = "Note";
 "notification_and_confirmation" = "通知・送金確認";
-"notification_content" = "友達からのメッセージを見逃さないで！";
+"notification_content" = "Enable push notifications to stay updated on price alerts and messages in real time.";
 "notification_message_preview_description" = "通知でメッセージ内容を表示する";
 "now_an_addmin" = "%@は管理者です";
 "number_of_assets" = "%d Assets";
@@ -1119,7 +1121,7 @@
 "setting_delete_account_tip" = "警告：Mixinウォレット内に他のウォレットや取引所に送金可能な仮想通貨が残っています。アカウントを削除すると、仮想通貨を永遠に引き出すことができませんが、よろしいでしょうか？";
 "setting_duplicate_transfer_desc" = "6時間以内に同じ人に同額の送金を実行する際、確認を行う。";
 "setting_emergency_change_mobile" = "新しい電話番号の登録をしますか？";
-"setting_emergency_content" = "The recovery contact is designed to help you log in to your account if you are lost and can not retrieve your mobile number.";
+"setting_emergency_content" = "The Recovery Contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number.";
 "setting_emergency_desc" = "When your lost your mobile number, please contact your recovery contact by phone or other means to get the Mixin ID and verification code. Read our Recovery Contact to learn more.";
 "setting_emergency_pin_tip" = "Your recovery contact is protected by PIN";
 "setting_emergency_send_code" = "Mixin ID: %@に送信された4桁のコードを入力してください";
@@ -1269,7 +1271,6 @@
 "try_again" = "もう一度試す";
 "trying_connect_tip_network" = "Connecting the TIP network";
 "trying_connect_tip_node" = "Trying connect TIP node";
-"turn_on_notifications" = "通知をオンにする";
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";

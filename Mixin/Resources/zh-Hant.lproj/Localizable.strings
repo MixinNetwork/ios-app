@@ -481,8 +481,10 @@
 "enable_bioauth_description" = "想要啟用%@支付嗎？啟用後，轉賬時可驗證%@快速完成付款。";
 "enable_emergency_contact" = "啟用恢復聯絡人";
 "enable_face_pay_hint" = "輸入 PIN 啟用面容支付";
+"enable_notifications" = "啟用通知";
 "enable_pay" = "啟用%@支付";
 "enable_pay_confirmation" = "啟用%@支付？";
+"enable_push_notification" = "啟用推送通知";
 "enable_touch_pay_hint" = "輸入 PIN 啟用指紋支付";
 "end" = "結束";
 "end_to_end_encryption" = "端到端加密";
@@ -806,7 +808,7 @@
 "not_turn_off_screen_hint" = "同步時請不要關閉螢幕並保持 Mixin 在前臺執行。";
 "note" = "備註";
 "notification_and_confirmation" = "通知和確認";
-"notification_content" = "不再遺漏好友的訊息。";
+"notification_content" = "啟用推送通知以即時更新價格警報和訊息。";
 "notification_message_preview_description" = "在推送通知中顯示訊息內容。";
 "now_an_addmin" = "%@現在是管理員";
 "number_of_assets" = "%d 資產";
@@ -1269,7 +1271,6 @@
 "try_again" = "請重試";
 "trying_connect_tip_network" = "正在連線 TIP 網路";
 "trying_connect_tip_node" = "正在連線節點...";
-"turn_on_notifications" = "開啟通知";
 "unable_connect_to_desktop" = "無法連線到桌面，請稍後重試";
 "unable_synced_between_different_account" = "不同賬戶之間無法同步聊天記錄";
 "unable_to_decode_the_request" = "無法解析請求: %@";

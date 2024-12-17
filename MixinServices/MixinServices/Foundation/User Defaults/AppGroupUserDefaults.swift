@@ -122,12 +122,15 @@ extension AppGroupUserDefaults {
     
     @Default(namespace: nil, key: "check_status_in_app_extension", defaultValue: Date())
     public static var checkStatusTimeInAppExtension: Date
-
+    
     @Default(namespace: nil, key: "notification_bulletin_dismissal_date", defaultValue: nil)
-    public static var notificationBulletinDismissalDate: Date?
+    public static var notificationTipDismissalDate: Date?
     
     @Default(namespace: nil, key: "app_update_bulletin_dismissal_date", defaultValue: nil)
-    public static var appUpdateBulletinDismissalDate: Date?
+    public static var appUpdateTipDismissalDate: Date?
+    
+    @Default(namespace: nil, key: "app_rating_request_date", defaultValue: nil)
+    public static var appRatingRequestDate: Date?
     
     // Key is chain id
     @Default(namespace: nil, key: "web3_rpc", defaultValue: [:])

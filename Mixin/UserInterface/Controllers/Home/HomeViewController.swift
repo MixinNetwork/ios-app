@@ -6,15 +6,8 @@ import FirebaseAnalytics
 import AppsFlyerLib
 import MixinServices
 
-class HomeViewController: UIViewController {
+final class HomeViewController: UIViewController {
     
-    private enum BulletinDetectInterval {
-        static let notificationAuthorization: TimeInterval = 2 * .day
-        static let emergencyContact: TimeInterval = 7 * .day
-        static let appUpdate: TimeInterval = .day
-    }
-    
-    static var hasTriedToRequestReview = false
     static var showChangePhoneNumberTips = false
     
     @IBOutlet weak var navigationBarView: UIView!
@@ -26,19 +19,14 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var guideButton: UIButton!
     @IBOutlet weak var connectingView: ActivityIndicatorView!
     @IBOutlet weak var titleButton: HomeTitleButton!
-    @IBOutlet weak var bulletinWrapperView: UIView!
     @IBOutlet weak var myAvatarImageView: AvatarImageView!
     
-    @IBOutlet weak var bulletinWrapperViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchContainerTopConstraint: NSLayoutConstraint!
     
     private let dragDownThreshold: CGFloat = 80
     private let dragDownIndicator = DragDownIndicator()
     private let feedback = UISelectionFeedbackGenerator()
     private let messageCountPerPage = 30
-    private let bulletinContentTopMargin: CGFloat = 10
-    private let emergencyContactAlertingUSDBalance = 100
-    private let insufficientBalanceForEmergencyContactBulletinReconfirmInterval = secondsPerHour
     
     private var conversations = [ConversationItem]()
     private var needRefresh = true
@@ -51,31 +39,13 @@ class HomeViewController: UIViewController {
     private var insufficientBalanceForEmergencyContactBulletinConfirmedDate: Date?
     private var isShowingSearch = false
     
-    private var bulletinContent: BulletinContent? = nil {
-        didSet {
-            layoutBulletinView()
-        }
-    }
-    
     private var topLeftTitle: String {
         AppGroupUserDefaults.User.circleName ?? R.string.localizable.mixin()
     }
     
-    private weak var bulletinContentViewIfLoaded: BulletinContentView?
     private weak var appsFlyerStartingObserver: AnyObject?
     
     private lazy var circlesViewController = R.storyboard.home.circles()!
-    private lazy var bulletinContentView: BulletinContentView = {
-        let view = R.nib.bulletinContentView(withOwner: self)!
-        bulletinWrapperView.addSubview(view)
-        view.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().offset(bulletinContentTopMargin)
-            make.leading.equalToSuperview().offset(14)
-            make.trailing.equalToSuperview().offset(-14)
-        }
-        bulletinContentViewIfLoaded = view
-        return view
-    }()
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -94,7 +64,7 @@ class HomeViewController: UIViewController {
         if let account = LoginManager.shared.account {
             myAvatarImageView.setImage(with: account)
         }
-        updateBulletinView()
+        presentPopupTipIfNeeded()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant
         searchViewController.cancelButton.addTarget(self, action: #selector(cancelSearching(_:)), for: .touchUpInside)
         tableView.dataSource = self
@@ -181,12 +151,6 @@ class HomeViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         dragDownIndicator.center.x = tableView.frame.width / 2
-        layoutBulletinView()
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        DispatchQueue.main.async(execute: layoutBulletinView)
     }
     
     @IBAction func scanQRCode() {
@@ -220,42 +184,6 @@ class HomeViewController: UIViewController {
         }
     }
     
-    @IBAction func bulletinContinueAction(_ sender: Any) {
-        switch bulletinContent {
-        case .backupMnemonics:
-            let introduction = ExportMnemonicPhrasesIntroductionViewController()
-            navigationController?.pushViewController(introduction, animated: true)
-        case .notification:
-            UIApplication.shared.openNotificationSettings()
-        case .emergencyContact:
-            let vc = AddRecoveryContactViewController()
-            navigationController?.pushViewController(vc, animated: true)
-        case .appUpdate:
-            UIApplication.shared.openAppStorePage()
-        case .none:
-            break
-        }
-    }
-    
-    @IBAction func bulletinDismissAction(_ sender: Any) {
-        switch bulletinContent {
-        case .backupMnemonics:
-            break
-        case .notification:
-            AppGroupUserDefaults.notificationBulletinDismissalDate = Date()
-        case .emergencyContact:
-            AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate = Date()
-        case .appUpdate:
-            AppGroupUserDefaults.appUpdateBulletinDismissalDate = Date()
-        case .none:
-            break
-        }
-        UIView.animate(withDuration: 0.3) {
-            self.bulletinContent = nil
-            self.view.layoutIfNeeded()
-        }
-    }
-    
     @IBAction func toggleCircles(_ sender: Any) {
         if circlesContainerView.isHidden {
             if circlesViewController.parent == nil {
@@ -276,7 +204,7 @@ class HomeViewController: UIViewController {
     }
     
     @objc private func applicationDidBecomeActive(_ sender: Notification) {
-        updateBulletinView()
+        presentPopupTipIfNeeded()
         fetchConversations()
         initializeFTSIfNeeded()
         refreshExternalSchemesIfNeeded()
@@ -307,7 +235,7 @@ class HomeViewController: UIViewController {
         }
         DispatchQueue.main.async {
             self.myAvatarImageView.setImage(with: account)
-            self.updateBulletinView()
+            self.presentPopupTipIfNeeded()
         }
     }
     
@@ -752,116 +680,39 @@ extension HomeViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    private func requestAppStoreReviewIfNeeded() {
-        guard let firstLaunchDate = AppGroupUserDefaults.firstLaunchDate else {
-            return
-        }
-        let sevenDays: Double = 7 * 24 * 60 * 60
-        let shouldRequestReview = !HomeViewController.hasTriedToRequestReview
-            && AppGroupUserDefaults.User.hasPerformedTransfer
-            && -firstLaunchDate.timeIntervalSinceNow > sevenDays
-        if shouldRequestReview {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                let scene = UIApplication.shared.connectedScenes.lazy
-                    .compactMap({ $0 as? UIWindowScene })
-                    .first(where: { $0.activationState == .foregroundActive })
-                if let scene {
-                    SKStoreReviewController.requestReview(in: scene)
-                }
-            }
-        }
-        HomeViewController.hasTriedToRequestReview = true
-    }
-    
-    private func layoutBulletinView() {
-        if bulletinContent == nil {
-            bulletinWrapperViewHeightConstraint.constant = 0
-            bulletinContentViewIfLoaded?.alpha = 0
-        } else {
-            UIView.performWithoutAnimation(bulletinContentView.layoutIfNeeded)
-            bulletinWrapperViewHeightConstraint.constant = bulletinContentTopMargin + bulletinContentView.frame.height
-            bulletinContentView.alpha = 1
-        }
-    }
-    
-    @objc private func updateBulletinView() {
-        Task {
-            func isDate(_ date: Date?, fallsInto interval: TimeInterval) -> Bool {
-                if let date = date {
-                    return -date.timeIntervalSinceNow < interval
-                } else {
-                    return false
-                }
-            }
-            
-            guard let account = LoginManager.shared.account else {
+    @objc private func presentPopupTipIfNeeded() {
+        Task { [weak self] in
+            guard let tip = await HomeTip.next() else {
                 return
             }
-            
-            var content: BulletinContent?
-            
-            if account.isAnonymous, !account.hasSaltExported {
-                content = .backupMnemonics
-            }
-            
-            if content == nil {
-                let userJustDismissedNotificationBulletin = isDate(AppGroupUserDefaults.notificationBulletinDismissalDate, fallsInto: BulletinDetectInterval.notificationAuthorization)
-                if !userJustDismissedNotificationBulletin, await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .denied {
-                    content = .notification
-                }
-            }
-            
-            if content == nil, !account.isAnonymous {
-                let checkWalletBalance = await MainActor.run {
-                    if account.hasEmergencyContact {
-                        // User has emergency contact set
-                        return false
-                    } else if isDate(AppGroupUserDefaults.User.emergencyContactBulletinDismissalDate, fallsInto: BulletinDetectInterval.emergencyContact) {
-                        // User just dismissed the bulletin of emergency contact
-                        return false
-                    } else if isDate(insufficientBalanceForEmergencyContactBulletinConfirmedDate, fallsInto: insufficientBalanceForEmergencyContactBulletinReconfirmInterval) {
-                        // Just confirmed user doesn't have enough money
-                        return false
-                    } else {
-                        return true
-                    }
-                }
-                if checkWalletBalance {
-                    let isRichEnough: Bool = await withCheckedContinuation { continuation in
-                        DispatchQueue.global().async {
-                            let balance = TokenDAO.shared.usdBalanceSum()
-                            DispatchQueue.main.async {
-                                if balance > self.emergencyContactAlertingUSDBalance {
-                                    continuation.resume(returning: true)
-                                } else {
-                                    self.insufficientBalanceForEmergencyContactBulletinConfirmedDate = Date()
-                                    continuation.resume(returning: false)
-                                }
-                            }
-                        }
-                    }
-                    if isRichEnough {
-                        content = .emergencyContact
-                    }
-                }
-            }
-            
-            if content == nil {
-                let userJustDismissedUpdateBulletin = isDate(AppGroupUserDefaults.appUpdateBulletinDismissalDate, fallsInto: BulletinDetectInterval.appUpdate)
-                if !userJustDismissedUpdateBulletin,
-                   let latestVersion = account.system?.messenger.version,
-                   let currentVersion = Bundle.main.shortVersion,
-                   currentVersion < latestVersion
-                {
-                    content = .appUpdate
-                }
-            }
-            
             await MainActor.run {
-                bulletinContentView.content = content
-                bulletinContent = content
-                if view.window != nil {
-                    view.layoutIfNeeded()
+                guard
+                    let self,
+                    let tabBarController = UIApplication.homeContainerViewController?.homeTabBarController,
+                    tabBarController.navigationController?.topViewController == tabBarController,
+                    tabBarController.selectedViewController == self,
+                    self.presentedViewController == nil
+                else {
+                    return
+                }
+                switch tip {
+                case .appRating:
+                    let scene = UIApplication.shared.connectedScenes.lazy
+                        .compactMap({ $0 as? UIWindowScene })
+                        .first(where: { $0.activationState == .foregroundActive })
+                    if let scene {
+                        AppGroupUserDefaults.appRatingRequestDate = Date()
+#if RELEASE
+                        if #available(iOS 16.0, *) {
+                            AppStore.requestReview(in: scene)
+                        } else {
+                            SKStoreReviewController.requestReview(in: scene)
+                        }
+#endif
+                    }
+                default:
+                    let controller = PopupTipViewController(tip: tip)
+                    self.present(controller, animated: true)
                 }
             }
         }

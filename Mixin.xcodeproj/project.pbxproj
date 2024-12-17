@@ -5360,7 +5360,6 @@
 				94656C142795395D006C3F1D /* Frameworks */,
 				94656C152795395D006C3F1D /* Resources */,
 				5668966CF221134CFFE9FBB4 /* [CP] Embed Pods Frameworks */,
-				572942E70C825A85F5A73089 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -5379,7 +5378,6 @@
 				DFE861B52422673B009B1833 /* Sources */,
 				DFE861B62422673B009B1833 /* Frameworks */,
 				DFE861B72422673B009B1833 /* Resources */,
-				308530AE84F340A62742D7C2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -5402,7 +5400,6 @@
 				E090B9F323B3957E0088355B /* Sources */,
 				E090B9F423B3957E0088355B /* Frameworks */,
 				E090B9F523B3957E0088355B /* Resources */,
-				8A066F4E957516F9EDEDD35B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -5477,9 +5474,9 @@
 				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
 				944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 				94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */,
-				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */,
+				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */,
 				94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
-				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */,
+				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */,
 			);
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
 			projectDirPath = "";
@@ -5813,28 +5810,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		308530AE84F340A62742D7C2 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MixinShare/Pods-MixinShare-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenterAnalytics.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenter.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenterCrashes.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenterAnalytics.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenter.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenterCrashes.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MixinShare/Pods-MixinShare-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		5668966CF221134CFFE9FBB4 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -5845,6 +5820,7 @@
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/GRDB.swift/GRDB.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
+				"${BUILT_PRODUCTS_DIR}/Sentry/Sentry.framework",
 				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
 				"${BUILT_PRODUCTS_DIR}/Sodium/Sodium.framework",
 				"${BUILT_PRODUCTS_DIR}/Zip/Zip.framework",
@@ -5855,6 +5831,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRDB.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sentry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sodium.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Zip.framework",
@@ -5863,50 +5840,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MixinDebug/Pods-MixinDebug-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		572942E70C825A85F5A73089 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MixinDebug/Pods-MixinDebug-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenterAnalytics.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenter.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenterCrashes.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenterAnalytics.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenter.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenterCrashes.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MixinDebug/Pods-MixinDebug-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8A066F4E957516F9EDEDD35B /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenterAnalytics.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenter.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenterCrashes.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenterAnalytics.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenter.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenterCrashes.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A4B665A98EE2333D67BFCC9D /* [CP] Check Pods Manifest.lock */ = {
@@ -5999,16 +5932,10 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenterAnalytics.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenter.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenterCrashes.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/AppsFlyerFramework/AppsFlyerLib_Privacy.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenterAnalytics.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenter.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenterCrashes.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppsFlyerLib_Privacy.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6046,6 +5973,7 @@
 				"${BUILT_PRODUCTS_DIR}/SDWebImageLottieCoder/SDWebImageLottieCoder.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImageSVGKitPlugin/SDWebImageSVGKitPlugin.framework",
 				"${BUILT_PRODUCTS_DIR}/SVGKit/SVGKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Sentry/Sentry.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SocketRocket/SocketRocket.framework",
 				"${BUILT_PRODUCTS_DIR}/Sodium/Sodium.framework",
@@ -6080,6 +6008,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImageLottieCoder.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImageSVGKitPlugin.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVGKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sentry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketRocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sodium.framework",
@@ -7250,15 +7179,15 @@
 /* Begin PBXTargetDependency section */
 		94881FAE2AD0361100CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */;
+			productRef = 94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */;
 		};
 		94881FB02AD0361700CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */;
+			productRef = 94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */;
 		};
 		94C957E52ACFECDE00C1412F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */;
+			productRef = 94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */;
 		};
 		DFE861C22422673B009B1833 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -7898,7 +7827,7 @@
 				version = 14.3.1;
 			};
 		};
-		9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */ = {
+		9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MixinNetwork/web3.swift";
 			requirement = {
@@ -7914,7 +7843,7 @@
 				version = 3.1.2;
 			};
 		};
-		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */ = {
+		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mac-cain13/R.swift";
 			requirement = {
@@ -7955,7 +7884,7 @@
 		};
 		9479B7842BBBE589002A2C4F /* web3.swift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */;
+			package = 9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */;
 			productName = web3.swift;
 		};
 		9481C03B2A49A9AA0009DAF8 /* Starscream */ = {
@@ -7965,28 +7894,28 @@
 		};
 		94881FA72AD035C300CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
 			productName = RswiftLibrary;
 		};
 		94881FA92AD035CC00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
 			productName = RswiftLibrary;
 		};
 		94881FAB2AD035ED00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
 			productName = RswiftLibrary;
 		};
-		94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */ = {
+		94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */ = {
+		94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */ = {
+		94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};

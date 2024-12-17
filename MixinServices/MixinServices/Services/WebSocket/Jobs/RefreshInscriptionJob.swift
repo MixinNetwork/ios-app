@@ -1,5 +1,4 @@
 import Foundation
-import AppCenterCrashes
 
 public final class RefreshInscriptionJob: BaseJob {
     
@@ -62,7 +61,7 @@ public final class RefreshInscriptionJob: BaseJob {
                     } else {
                         let description = "\(error)"
                         Logger.general.error(category: "Inscription", message: description)
-                        Crashes.trackError(error, properties: ["error": description], attachments: nil)
+                        reporter.report(error: error)
                         return
                     }
                 }

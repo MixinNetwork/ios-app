@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-enum HomeTip {
+enum PopupTip {
     
     case appUpdate
     case backupMnemonics
@@ -26,9 +26,9 @@ enum HomeTip {
     
 }
 
-extension HomeTip {
+extension PopupTip {
     
-    static func next() async -> HomeTip? {
+    static func next() async -> PopupTip? {
         guard let account = LoginManager.shared.account else {
             return nil
         }
@@ -75,7 +75,7 @@ extension HomeTip {
         return nil
     }
     
-    static func userDismissalOutdates(tip: HomeTip, dismissalDate: Date?) -> Bool {
+    static func userDismissalOutdates(tip: PopupTip, dismissalDate: Date?) -> Bool {
         if let date = dismissalDate {
             -date.timeIntervalSinceNow > tip.detectInterval
         } else {

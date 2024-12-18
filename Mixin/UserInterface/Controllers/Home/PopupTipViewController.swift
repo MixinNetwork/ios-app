@@ -10,10 +10,10 @@ final class PopupTipViewController: UIViewController {
     @IBOutlet weak var continueButton: StyledButton!
     @IBOutlet weak var cancelButton: UIButton!
     
-    private let tip: HomeTip
+    private let tip: PopupTip
     private let presentationManager = PopupPresentationManager()
     
-    init(tip: HomeTip) {
+    init(tip: PopupTip) {
         self.tip = tip
         let nib = R.nib.popupTipView
         super.init(nibName: nib.name, bundle: nib.bundle)

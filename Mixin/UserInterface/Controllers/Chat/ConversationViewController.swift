@@ -1239,7 +1239,7 @@ class ConversationViewController: UIViewController {
         guard !AppGroupUserDefaults.User.hasSentMessage else {
             return
         }
-        guard HomeTip.userDismissalOutdates(tip: .notification, dismissalDate: AppGroupUserDefaults.notificationTipDismissalDate) else {
+        guard PopupTip.userDismissalOutdates(tip: .notification, dismissalDate: AppGroupUserDefaults.notificationTipDismissalDate) else {
             return
         }
         guard let message = notification.userInfo?[MessageDAO.UserInfoKey.message] as? MessageItem else {

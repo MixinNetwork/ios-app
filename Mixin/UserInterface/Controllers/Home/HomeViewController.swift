@@ -682,7 +682,7 @@ extension HomeViewController {
     
     @objc private func presentPopupTipIfNeeded() {
         Task { [weak self] in
-            guard let tip = await HomeTip.next() else {
+            guard let tip = await PopupTip.next() else {
                 return
             }
             await MainActor.run {

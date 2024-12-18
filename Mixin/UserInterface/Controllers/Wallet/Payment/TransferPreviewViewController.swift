@@ -123,17 +123,17 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                 .doubleLineInfo(
                     caption: .price,
                     primary: SwapQuote.priceRepresentation(
-                        sendToken: operation.token,
                         sendAmount: operation.amount,
-                        receiveToken: context.receiveToken,
+                        sendSymbol: operation.token.symbol,
                         receiveAmount: context.receiveAmount,
+                        receiveSymbol: context.receiveToken.symbol,
                         unit: .send
                     ),
                     secondary: SwapQuote.priceRepresentation(
-                        sendToken: operation.token,
                         sendAmount: operation.amount,
-                        receiveToken: context.receiveToken,
+                        sendSymbol: operation.token.symbol,
                         receiveAmount: context.receiveAmount,
+                        receiveSymbol: context.receiveToken.symbol,
                         unit: .receive
                     )
                 ),

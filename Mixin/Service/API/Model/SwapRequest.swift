@@ -42,7 +42,7 @@ struct SwapRequest: Encodable {
     }
     
     static func mixin(
-        sendToken: TokenItem,
+        sendToken: SwappableToken,
         sendAmount: Decimal,
         receiveToken: SwappableToken,
         source: RouteTokenSource,

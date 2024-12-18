@@ -374,7 +374,7 @@
 "copy_user_id" = "Copy User ID";
 "create" = "Create";
 "create_account" = "Create Account";
-"create_introduction" = "MPC Wallet, %@, Self-custody, Social Recovery";
+"create_introduction" = "MPC Wallet, 2FA, %@, Self-custody, Social Recovery";
 "create_mnemonic_phrase" = "Create Mnemonic Phrase";
 "create_pin" = "Create PIN";
 "created_this_group" = "%@ created this group";

@@ -374,7 +374,7 @@
 "copy_user_id" = "複製使用者 ID";
 "create" = "建立";
 "create_account" = "建立帳戶";
-"create_introduction" = "MPC 錢包，%@，自我保管，社交恢復";
+"create_introduction" = "MPC 錢包，2FA，%@，自我保管，社交恢復";
 "create_mnemonic_phrase" = "建立助記詞";
 "create_pin" = "建立錢包";
 "created_this_group" = "%@建立了這個群組";

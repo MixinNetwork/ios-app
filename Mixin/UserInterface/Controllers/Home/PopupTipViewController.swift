@@ -92,8 +92,24 @@ final class PopupTipViewController: UIViewController {
                 UIApplication.homeNavigationController?.pushViewController(introduction, animated: true)
             }
         case .notification:
-            UIApplication.shared.openNotificationSettings()
             presentingViewController?.dismiss(animated: true)
+            let center: UNUserNotificationCenter = .current()
+            center.getNotificationSettings { settings in
+                switch settings.authorizationStatus {
+                case .notDetermined:
+                    center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+                        DispatchQueue.main.async {
+                            NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
+                        }
+                    }
+                case .denied:
+                    DispatchQueue.main.async(execute: UIApplication.shared.openNotificationSettings)
+                case .authorized, .provisional, .ephemeral:
+                    assertionFailure()
+                @unknown default:
+                    break
+                }
+            }
         case .recoveryContact:
             presentingViewController?.dismiss(animated: true) {
                 let add = AddRecoveryContactViewController()

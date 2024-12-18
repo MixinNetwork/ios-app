@@ -674,7 +674,7 @@ extension MarketViewController: PillActionView.Delegate {
                 }
             }
         case .alert:
-            NotificationManager.shared.requestAuthorization { isAuthorized in
+            NotificationManager.shared.getAuthorized { isAuthorized in
                 if isAuthorized {
                     let coin = MarketAlertCoin(market: market)
                     let alert = CoinMarketAlertsViewController(coin: coin)
@@ -684,7 +684,7 @@ extension MarketViewController: PillActionView.Delegate {
                 }
             }
         case .addAlert:
-            NotificationManager.shared.requestAuthorization { isAuthorized in
+            NotificationManager.shared.getAuthorized { isAuthorized in
                 if isAuthorized {
                     let coin = MarketAlertCoin(market: market)
                     let addAlert = AddMarketAlertViewController(coin: coin)

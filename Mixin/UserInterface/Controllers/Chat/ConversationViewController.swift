@@ -1249,12 +1249,17 @@ class ConversationViewController: UIViewController {
             return
         }
         AppGroupUserDefaults.User.hasSentMessage = true
-        NotificationManager.shared.requestAuthorization { [weak self] isAuthorized in
-            guard !isAuthorized, let self, self.presentedViewController == nil else {
-                return
+        NotificationManager.shared.getAuthorized { [weak self] isAuthorized in
+            if !isAuthorized {
+                guard var presenter: UIViewController = self else {
+                    return
+                }
+                while let presentedViewController = presenter.presentedViewController {
+                    presenter = presentedViewController
+                }
+                let tip = PopupTipViewController(tip: .notification)
+                presenter.present(tip, animated: true)
             }
-            let tip = PopupTipViewController(tip: .notification)
-            self.present(tip, animated: true)
         }
     }
     

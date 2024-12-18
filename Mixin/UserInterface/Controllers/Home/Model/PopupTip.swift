@@ -51,7 +51,7 @@ extension PopupTip {
         }
         
         if userDismissalOutdates(tip: .notification, dismissalDate: AppGroupUserDefaults.notificationTipDismissalDate),
-           await UNUserNotificationCenter.current().notificationSettings().authorizationStatus == .denied,
+           await !NotificationManager.shared.getAuthorized(),
            walletUSDBalance > 0
         {
             return .notification

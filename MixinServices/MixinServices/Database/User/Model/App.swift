@@ -20,10 +20,6 @@ public enum AppCategory: String, Codable {
 
 public struct App {
     
-    public static let scanAppId = "1cc9189a-ddcd-4b95-a18b-4411da1b8d80"
-    public static let cameraAppId = "15366a81-077c-414b-8829-552c5c87a2ae"
-    public static let teamMixinAppId = "773e5e77-4107-45c2-b648-8fc722ed77f5"
-    
     public let appId: String
     public let appNumber: String
     public let redirectUri: String

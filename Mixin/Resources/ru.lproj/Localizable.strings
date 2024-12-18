@@ -481,8 +481,10 @@
 "enable_bioauth_description" = "What about %@? Once enabled, you can expedite authentication with %@.";
 "enable_emergency_contact" = "Enable Recovery Contact";
 "enable_face_pay_hint" = "Подтвердите PIN-код, чтобы включить Face Pay";
+"enable_notifications" = "Enable Notifications";
 "enable_pay" = "Включить %@ Pay";
 "enable_pay_confirmation" = "Включить %@ Pay?";
+"enable_push_notification" = "Включить уведомления";
 "enable_touch_pay_hint" = "Подтвердите PIN-код, чтобы включить Touch Pay";
 "end" = "End";
 "end_to_end_encryption" = "Сквозное шифрование";
@@ -806,7 +808,7 @@
 "not_turn_off_screen_hint" = "Please do not turn off the screen and keep Mixin in the foreground when synchronizing.";
 "note" = "Note";
 "notification_and_confirmation" = "Уведомление и подтверждение";
-"notification_content" = "Не пропустите сообщения от друзей.";
+"notification_content" = "Enable push notifications to stay updated on price alerts and messages in real time.";
 "notification_message_preview_description" = "Предварительный просмотр текста сообщения в уведомлениях о новых сообщениях.";
 "now_an_addmin" = "%@ теперь администратор";
 "number_of_assets" = "%d Assets";
@@ -1119,7 +1121,7 @@
 "setting_delete_account_tip" = "В вашем кошельке Mixin все еще есть активы, которые можно вывести на другие кошельки или биржи. После удаления учетной записи эти активы будут закрыты вместе с кошельком и их нельзя будет восстановить.";
 "setting_duplicate_transfer_desc" = "Отображение диалогового окна подтверждения при переводе одной и той же суммы одному и тому же человеку в течение 6 часов.";
 "setting_emergency_change_mobile" = "Вы хотите изменить свой номер мобильного телефона сейчас?";
-"setting_emergency_content" = "The recovery contact is designed to help you log in to your account if you are lost and can not retrieve your mobile number.";
+"setting_emergency_content" = "The Recovery Contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number.";
 "setting_emergency_desc" = "When your lost your mobile number, please contact your recovery contact by phone or other means to get the Mixin ID and verification code. Read our Recovery Contact to learn more.";
 "setting_emergency_pin_tip" = "Your recovery contact is protected by PIN";
 "setting_emergency_send_code" = "Введите 4-значный код, отправленный на Mixin ID: %@.";
@@ -1269,7 +1271,6 @@
 "try_again" = "Попробуйте еще раз";
 "trying_connect_tip_network" = "Connecting the TIP network";
 "trying_connect_tip_node" = "Trying connect TIP node";
-"turn_on_notifications" = "Включить уведомления";
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";

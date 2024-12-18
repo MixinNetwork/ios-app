@@ -1162,9 +1162,7 @@
 		94D7E8532CC025420020BC24 /* RecentSearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D7E8522CC025360020BC24 /* RecentSearchHeaderView.swift */; };
 		94D7E8582CC025760020BC24 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D7E8572CC025760020BC24 /* RecentSearchHeaderView.xib */; };
 		94D8426C2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */; };
-		94D9DF5725F889BC00FC2F28 /* BulletinContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DF5625F889BC00FC2F28 /* BulletinContentView.swift */; };
-		94D9DF5C25F889C600FC2F28 /* BulletinContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D9DF5B25F889C600FC2F28 /* BulletinContentView.xib */; };
-		94D9DF6125F89D6E00FC2F28 /* BulletinContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DF6025F89D6E00FC2F28 /* BulletinContent.swift */; };
+		94D9DF6125F89D6E00FC2F28 /* PopupTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DF6025F89D6E00FC2F28 /* PopupTip.swift */; };
 		94DA5E61279694E200FCE99A /* AppGroupServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DA5E60279694E200FCE99A /* AppGroupServer.swift */; };
 		94DA83762588E595006B0F16 /* WebRTC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; };
 		94DA83772588E595006B0F16 /* WebRTC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -1186,6 +1184,8 @@
 		94E34124261D829200E2F9D3 /* highlight.js in Resources */ = {isa = PBXBuildFile; fileRef = 94E34121261D829200E2F9D3 /* highlight.js */; };
 		94E35CA3298B836300ADB40D /* WalletConnectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E35CA2298B836300ADB40D /* WalletConnectService.swift */; };
 		94E619B92645BAA000A38049 /* SuspiciousLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E619B82645BAA000A38049 /* SuspiciousLinkView.xib */; };
+		94E66CC02D11518A00578F19 /* PopupTipViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E66CBF2D11518400578F19 /* PopupTipViewController.swift */; };
+		94E66CC22D11542100578F19 /* PopupTipView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E66CC12D11542100578F19 /* PopupTipView.xib */; };
 		94E82DBC2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E82DBB2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib */; };
 		94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */; };
 		94E978B32D09818B00FFCC12 /* ClockSkewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E978B22D09818B00FFCC12 /* ClockSkewView.xib */; };
@@ -2649,9 +2649,7 @@
 		94D7E8522CC025360020BC24 /* RecentSearchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchHeaderView.swift; sourceTree = "<group>"; };
 		94D7E8572CC025760020BC24 /* RecentSearchHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecentSearchHeaderView.xib; sourceTree = "<group>"; };
 		94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
-		94D9DF5625F889BC00FC2F28 /* BulletinContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletinContentView.swift; sourceTree = "<group>"; };
-		94D9DF5B25F889C600FC2F28 /* BulletinContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BulletinContentView.xib; sourceTree = "<group>"; };
-		94D9DF6025F89D6E00FC2F28 /* BulletinContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletinContent.swift; sourceTree = "<group>"; };
+		94D9DF6025F89D6E00FC2F28 /* PopupTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTip.swift; sourceTree = "<group>"; };
 		94DA5E60279694E200FCE99A /* AppGroupServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroupServer.swift; sourceTree = "<group>"; };
 		94DA83722588E58B006B0F16 /* WebRTC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WebRTC.xcframework; sourceTree = "<group>"; };
 		94DC18A82D018D46006501B3 /* LoginLoadingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginLoadingView.xib; sourceTree = "<group>"; };
@@ -2672,6 +2670,8 @@
 		94E34121261D829200E2F9D3 /* highlight.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = highlight.js; sourceTree = "<group>"; };
 		94E35CA2298B836300ADB40D /* WalletConnectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectService.swift; sourceTree = "<group>"; };
 		94E619B82645BAA000A38049 /* SuspiciousLinkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SuspiciousLinkView.xib; sourceTree = "<group>"; };
+		94E66CBF2D11518400578F19 /* PopupTipViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTipViewController.swift; sourceTree = "<group>"; };
+		94E66CC12D11542100578F19 /* PopupTipView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupTipView.xib; sourceTree = "<group>"; };
 		94E82DBB2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingIndicatorTableFooterView.xib; sourceTree = "<group>"; };
 		94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Pods-Mixin-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		94E978B22D09818B00FFCC12 /* ClockSkewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClockSkewView.xib; sourceTree = "<group>"; };
@@ -3358,7 +3358,7 @@
 				7B7D279F2528682B006BBFAB /* ClipSwitcherThumbnailFlowLayout.swift */,
 				7BA24D7225342575004906AD /* HomeOverlaysCoordinator.swift */,
 				7BA24D76253438B9004906AD /* ViewPanningController.swift */,
-				94D9DF6025F89D6E00FC2F28 /* BulletinContent.swift */,
+				94D9DF6025F89D6E00FC2F28 /* PopupTip.swift */,
 				94B577862B5EC11500AE576E /* ExploreAction.swift */,
 				943EDC472C833B55007E160B /* Market+Localization.swift */,
 			);
@@ -3432,8 +3432,6 @@
 				9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */,
 				9406978625E7F30800E7FDA0 /* PlaylistSlider.swift */,
 				947B36B225DEB79100146111 /* PlaylistView.xib */,
-				94D9DF5B25F889C600FC2F28 /* BulletinContentView.xib */,
-				94D9DF5625F889BC00FC2F28 /* BulletinContentView.swift */,
 				94658CB82B358E3100F5EB21 /* TabBar.swift */,
 				94B5777C2B5E755100AE576E /* SeparatorHeaderFooterView.swift */,
 				94CF1F2B2BA1BB9800BC52C1 /* Web3AccountLockedHeaderView.xib */,
@@ -4721,6 +4719,8 @@
 				94CF1F262BA1B74A00BC52C1 /* ExploreWeb3ViewController.swift */,
 				941952482BFF5E6D0046DE50 /* ExploreEVMViewController.swift */,
 				9419524D2BFF60430046DE50 /* ExploreSolanaViewController.swift */,
+				94E66CC12D11542100578F19 /* PopupTipView.xib */,
+				94E66CBF2D11518400578F19 /* PopupTipViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -5679,6 +5679,7 @@
 				94CA5C572CE5F5F80086C484 /* PaymentCollectibleCell.xib in Resources */,
 				7B7E7144217D87860052C7DD /* CallView.xib in Resources */,
 				946331CB2C626FEE00C54B76 /* TransactionHistoryFilterPickerView.xib in Resources */,
+				94E66CC22D11542100578F19 /* PopupTipView.xib in Resources */,
 				7B2A115D22C1EAC900AD029C /* GalleryVideoControlView.xib in Resources */,
 				940AE02D2BA0D88100E7A9FE /* ExploreSegmentCell.xib in Resources */,
 				7B9A18162428932A00187693 /* PageControlView.xib in Resources */,
@@ -5740,7 +5741,6 @@
 				944C61F82B6BFAA100C7DF06 /* PaymentUserItemView.xib in Resources */,
 				7BB06F45228EA7720048C2D6 /* NotificationView.xib in Resources */,
 				94ADE11A2CD809280040A426 /* RecoveryContactView.xib in Resources */,
-				94D9DF5C25F889C600FC2F28 /* BulletinContentView.xib in Resources */,
 				7BE73BFC230A8D0300B97FC6 /* group_separator_3.png in Resources */,
 				9427D51525E0D31100B1EF0E /* MusicInfoView.xib in Resources */,
 				943CAA062CC6908F00346677 /* OnboardingView.xib in Resources */,
@@ -6163,9 +6163,9 @@
 				9412AF4E2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				94D7E8532CC025420020BC24 /* RecentSearchHeaderView.swift in Sources */,
-				94D9DF5725F889BC00FC2F28 /* BulletinContentView.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
 				9458A08D2CC943E900A51154 /* SignUpWithMobileNumberViewController.swift in Sources */,
+				94E66CC02D11518A00578F19 /* PopupTipViewController.swift in Sources */,
 				52589AE32BEA52260081C2BF /* SymbolTextAttachment.swift in Sources */,
 				7BF071C02244E6A1007240AD /* UploadContactCell.swift in Sources */,
 				7B7DACA823505B41006AA2AC /* SharedMediaAudioMessagePlayingManager.swift in Sources */,
@@ -7151,7 +7151,7 @@
 				7B36920C233B36D4007321A7 /* MediaTypeOverlayView.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
 				52589AE52BEA52910081C2BF /* Web3TokenHeaderView.swift in Sources */,
-				94D9DF6125F89D6E00FC2F28 /* BulletinContent.swift in Sources */,
+				94D9DF6125F89D6E00FC2F28 /* PopupTip.swift in Sources */,
 				7B3CDA6824FFF2D8003A3E80 /* AnimatedStickerView.swift in Sources */,
 				7C8FA8F62768926D00855AFD /* SecuritySettingViewController.swift in Sources */,
 				DF1F278421A5637B009A74C6 /* BackupJob.swift in Sources */,

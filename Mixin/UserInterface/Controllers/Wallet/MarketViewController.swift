@@ -367,17 +367,9 @@ final class MarketViewController: UIViewController {
         }
     }
     
-    private func requestTurnOnNotifications() {
-        let alert = UIAlertController(
-            title: R.string.localizable.turn_on_notifications(),
-            message: R.string.localizable.price_alert_notification_permission(),
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
-        alert.addAction(UIAlertAction(title: R.string.localizable.settings(), style: .default, handler: { _ in
-            UIApplication.shared.openNotificationSettings()
-        }))
-        present(alert, animated: true)
+    private func requestEnableNotifications() {
+        let tip = PopupTipViewController(tip: .notification)
+        present(tip, animated: true)
     }
     
 }
@@ -682,23 +674,23 @@ extension MarketViewController: PillActionView.Delegate {
                 }
             }
         case .alert:
-            NotificationManager.shared.requestAuthorization { isAuthorized in
+            NotificationManager.shared.getAuthorized { isAuthorized in
                 if isAuthorized {
                     let coin = MarketAlertCoin(market: market)
                     let alert = CoinMarketAlertsViewController(coin: coin)
                     self.navigationController?.pushViewController(alert, animated: true)
                 } else {
-                    self.requestTurnOnNotifications()
+                    self.requestEnableNotifications()
                 }
             }
         case .addAlert:
-            NotificationManager.shared.requestAuthorization { isAuthorized in
+            NotificationManager.shared.getAuthorized { isAuthorized in
                 if isAuthorized {
                     let coin = MarketAlertCoin(market: market)
                     let addAlert = AddMarketAlertViewController(coin: coin)
                     self.navigationController?.pushViewController(addAlert, animated: true)
                 } else {
-                    self.requestTurnOnNotifications()
+                    self.requestEnableNotifications()
                 }
             }
         }

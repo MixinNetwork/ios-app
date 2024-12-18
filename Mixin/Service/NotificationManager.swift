@@ -20,15 +20,13 @@ final class NotificationManager: NSObject {
     }
     
     func registerForRemoteNotificationsIfAuthorized() {
-        requestAuthorization { (isAuthorized) in
-            DispatchQueue.main.async {
-                self.notificationWasAuthorized = isAuthorized
-                if isAuthorized {
-                    PushNotificationDiagnostic.global.token = .requested(Date())
-                    UIApplication.shared.registerForRemoteNotifications()
-                } else {
-                    PushNotificationDiagnostic.global.token = .unauthorized
-                }
+        getAuthorized { isAuthorized in
+            self.notificationWasAuthorized = isAuthorized
+            if isAuthorized {
+                PushNotificationDiagnostic.global.token = .requested(Date())
+                UIApplication.shared.registerForRemoteNotifications()
+            } else {
+                PushNotificationDiagnostic.global.token = .unauthorized
             }
         }
     }
@@ -227,24 +225,25 @@ extension NotificationManager {
 // MARK: - Authorization
 extension NotificationManager {
     
-    func requestAuthorization(completion: @escaping (_ isAuthorized: Bool) -> Void) {
-        let center: UNUserNotificationCenter = .current()
-        center.getNotificationSettings { (settings) in
+    func getAuthorized(completion: @escaping (Bool) -> Void) {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
             DispatchQueue.main.async {
                 switch settings.authorizationStatus {
                 case .authorized, .provisional, .ephemeral:
                     completion(true)
-                case .notDetermined:
-                    center.requestAuthorization(options: [.alert, .sound, .badge]) { (isGranted, _) in
-                        DispatchQueue.main.async {
-                            completion(isGranted)
-                        }
-                    }
-                case .denied:
+                case .notDetermined, .denied:
                     completion(false)
                 @unknown default:
                     completion(false)
                 }
+            }
+        }
+    }
+    
+    func getAuthorized() async -> Bool {
+        await withCheckedContinuation { continuation in
+            getAuthorized { isAuthorized in
+                continuation.resume(returning: isAuthorized)
             }
         }
     }

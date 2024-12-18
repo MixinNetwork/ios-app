@@ -157,7 +157,12 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func usdBalanceSum() -> Int {
-        db.select(with: "SELECT SUM(balance * price_usd) FROM assets") ?? 0
+        let sql = """
+        SELECT SUM(ifnull(te.balance,'0') * t.price_usd)
+        FROM tokens t
+            LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
+        """
+        return db.select(with: sql) ?? 0
     }
     
     public func save(assets: [Token], completion: (() -> Void)? = nil) {

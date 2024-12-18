@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "tips_notification.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

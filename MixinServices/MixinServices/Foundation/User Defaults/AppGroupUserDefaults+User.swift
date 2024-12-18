@@ -41,7 +41,6 @@ extension AppGroupUserDefaults {
             case circleName = "circle_name"
             case isCircleSynchronized = "is_circle_synchronized"
             
-            case homeApp = "home_app"
             case clips = "clips"
             case assetSearchHistory = "asset_search_history"
             case recentSearches = "recent_searches"
@@ -187,13 +186,6 @@ extension AppGroupUserDefaults {
         public static var circleName: String? {
             didSet {
                 NotificationCenter.default.post(onMainThread: circleNameDidChangeNotification, object: self)
-            }
-        }
-        
-        @Default(namespace: .user, key: Key.homeApp, defaultValue: [App.scanAppId, App.cameraAppId, App.teamMixinAppId])
-        public static var homeAppIds: [String] {
-            didSet {
-                NotificationCenter.default.post(onMainThread: homeAppIdsDidChangeNotification, object: self)
             }
         }
         

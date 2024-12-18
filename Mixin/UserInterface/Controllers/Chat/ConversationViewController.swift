@@ -371,7 +371,6 @@ class ConversationViewController: UIViewController {
         center.addObserver(self, selector: #selector(pinMessageBannerDidChange), name: AppGroupUserDefaults.User.pinMessageBannerDidChangeNotification, object: nil)
         center.addObserver(self, selector: #selector(expiredMessageDidDelete(_:)), name: ExpiredMessageDAO.expiredMessageDidDeleteNotification, object: nil)
         center.addObserver(self, selector: #selector(wallpaperDidChange), name: Wallpaper.wallpaperDidChangeNotification, object: nil)
-        center.addObserver(self, selector: #selector(messageDaoDidInsertMessage(_:)), name: MessageDAO.didInsertMessageNotification, object: nil)
         
         if dataSource.category == .group {
             updateGroupCallIndicatorViewHidden()
@@ -1233,34 +1232,6 @@ class ConversationViewController: UIViewController {
             return
         }
         wallpaperImageView.wallpaper = Wallpaper.wallpaper(for: .conversation(conversationId))
-    }
-    
-    @objc private func messageDaoDidInsertMessage(_ notification: Notification) {
-        guard !AppGroupUserDefaults.User.hasSentMessage else {
-            return
-        }
-        guard PopupTip.userDismissalOutdates(tip: .notification, dismissalDate: AppGroupUserDefaults.notificationTipDismissalDate) else {
-            return
-        }
-        guard let message = notification.userInfo?[MessageDAO.UserInfoKey.message] as? MessageItem else {
-            return
-        }
-        guard message.userId == myUserId else {
-            return
-        }
-        AppGroupUserDefaults.User.hasSentMessage = true
-        NotificationManager.shared.getAuthorized { [weak self] isAuthorized in
-            if !isAuthorized {
-                guard var presenter: UIViewController = self else {
-                    return
-                }
-                while let presentedViewController = presenter.presentedViewController {
-                    presenter = presentedViewController
-                }
-                let tip = PopupTipViewController(tip: .notification)
-                presenter.present(tip, animated: true)
-            }
-        }
     }
     
     // MARK: - Interface

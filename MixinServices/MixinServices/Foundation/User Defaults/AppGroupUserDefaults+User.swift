@@ -13,7 +13,6 @@ extension AppGroupUserDefaults {
             case loginPINValidated = "tip_initialized"
             case hasShownRecallTips = "session_secret"
             case hasPerformedTransfer = "has_performed_transfer"
-            case hasSentMessage = "has_sent_message"
             
             case autoBackup = "auto_backup"
             case backupVideos = "backup_videos"
@@ -119,9 +118,6 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.hasPerformedTransfer, defaultValue: false)
         public static var hasPerformedTransfer: Bool
-        
-        @Default(namespace: .user, key: Key.hasSentMessage, defaultValue: false)
-        public static var hasSentMessage: Bool
         
         @RawRepresentableDefault(namespace: .user, key: Key.autoBackup, defaultValue: .off)
         public static var autoBackup: AutoBackup

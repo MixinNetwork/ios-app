@@ -120,9 +120,6 @@ final class HomeViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        #if RELEASE
-        requestAppStoreReviewIfNeeded()
-        #endif
         if HomeViewController.showChangePhoneNumberTips {
             HomeViewController.showChangePhoneNumberTips = false
             let alert = UIAlertController(title: R.string.localizable.setting_emergency_change_mobile(), message: nil, preferredStyle: .alert)

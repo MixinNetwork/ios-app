@@ -33,7 +33,7 @@ struct QuoteRequest {
     }
     
     static func mixin(
-        sendToken: TokenItem,
+        sendToken: SwappableToken,
         sendAmount: Decimal,
         receiveToken: SwappableToken,
         slippage: Decimal

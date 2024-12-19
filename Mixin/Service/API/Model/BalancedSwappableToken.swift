@@ -6,6 +6,10 @@ final class BalancedSwappableToken {
     let decimalBalance: Decimal
     let decimalUSDPrice: Decimal
     
+    var assetID: String {
+        token.assetID
+    }
+    
     init(token: SwappableToken, balance: Decimal, usdPrice: Decimal) {
         self.token = token
         self.decimalBalance = balance

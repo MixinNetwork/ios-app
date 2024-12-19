@@ -340,7 +340,6 @@ final class MarketViewController: UIViewController {
                 Logger.general.debug(category: "MarketView", message: "Load missing asset: \(missingAssetIDs)")
                 switch SafeAPI.assets(ids: missingAssetIDs) {
                 case .success(let missingTokens):
-                    TokenDAO.shared.save(assets: missingTokens)
                     let missingTokenItems = missingTokens.map { token in
                         TokenItem(token: token, balance: "0", isHidden: false, chain: nil)
                     }

@@ -1,4 +1,5 @@
 import UIKit
+import OrderedCollections
 import Alamofire
 import MixinServices
 
@@ -8,10 +9,9 @@ final class MixinSwapViewController: SwapViewController {
     private let arbitraryReceiveAssetID: String?
     
     // Key is asset id
-    private var swappableTokensMap: [String: TokenItem] = [:]
+    private var swappableTokens: OrderedDictionary<String, BalancedSwappableToken> = [:]
     
-    private var sendTokens: [TokenItem]?
-    private var sendToken: TokenItem? {
+    private var sendToken: BalancedSwappableToken? {
         didSet {
             if let sendToken {
                 self.updateSendView(style: .token(sendToken))
@@ -21,7 +21,6 @@ final class MixinSwapViewController: SwapViewController {
         }
     }
     
-    private var receiveTokens: [BalancedSwappableToken]?
     private var receiveToken: BalancedSwappableToken? {
         didSet {
             if let receiveToken {
@@ -80,12 +79,12 @@ final class MixinSwapViewController: SwapViewController {
     }
     
     override func changeSendToken(_ sender: Any) {
-        guard let sendTokens else {
-            return
+        let tokens = swappableTokens.values.filter { token in
+            token.decimalBalance > 0
         }
-        let selector = Web3TransferTokenSelectorViewController<TokenItem>()
+        let selector = Web3TransferTokenSelectorViewController<BalancedSwappableToken>()
         selector.onSelected = { token in
-            if token.assetID == self.receiveToken?.token.assetID {
+            if token.assetID == self.receiveToken?.assetID {
                 self.swapSendingReceiving(sender)
             } else {
                 self.sendToken = token
@@ -93,17 +92,15 @@ final class MixinSwapViewController: SwapViewController {
                 self.saveTokenIDs()
             }
         }
-        selector.reload(tokens: sendTokens)
+        selector.reload(tokens: tokens)
         present(selector, animated: true)
     }
     
     override func changeReceiveToken(_ sender: Any) {
-        guard let receiveTokens else {
-            return
-        }
+        let tokens = Array(swappableTokens.values)
         let selector = Web3TransferTokenSelectorViewController<BalancedSwappableToken>()
         selector.onSelected = { token in
-            if token.token.assetID == self.sendToken?.assetID {
+            if token.assetID == self.sendToken?.assetID {
                 self.swapSendingReceiving(sender)
             } else {
                 self.receiveToken = token
@@ -111,7 +108,7 @@ final class MixinSwapViewController: SwapViewController {
                 self.saveTokenIDs()
             }
         }
-        selector.reload(tokens: receiveTokens)
+        selector.reload(tokens: tokens)
         present(selector, animated: true)
     }
     
@@ -119,10 +116,8 @@ final class MixinSwapViewController: SwapViewController {
         guard
             let sendToken,
             let receiveToken,
-            let newSendToken = swappableTokensMap[receiveToken.token.assetID],
-            let newReceiveToken = receiveTokens?.first(where: {
-                $0.token.assetID == sendToken.assetID
-            })
+            let newSendToken = swappableTokens[receiveToken.assetID],
+            let newReceiveToken = swappableTokens[sendToken.assetID]
         else {
             return
         }
@@ -151,7 +146,7 @@ final class MixinSwapViewController: SwapViewController {
         }
         sender.isBusy = true
         let request = SwapRequest.mixin(
-            sendToken: quote.sendToken,
+            sendToken: quote.sendToken.token,
             sendAmount: quote.sendAmount,
             receiveToken: quote.receiveToken,
             source: quote.source,
@@ -278,13 +273,7 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
 
 extension MixinSwapViewController {
     
-    private enum SendTokenSelectorStyle {
-        case loading
-        case selectable
-        case token(TokenItem)
-    }
-    
-    private enum ReceiveTokenSelectorStyle {
+    private enum TokenSelectorStyle {
         case loading
         case selectable
         case token(BalancedSwappableToken)
@@ -308,62 +297,44 @@ extension MixinSwapViewController {
     
     private func reloadData(swappableTokens: [SwappableToken]) {
         DispatchQueue.global().async { [weak self, arbitrarySendAssetID, arbitraryReceiveAssetID] in
-            let swappableAssetIDs: [String] = swappableTokens.map(\.assetID)
-            let missingAssetIDs = TokenDAO.shared.inexistAssetIDs(in: swappableAssetIDs)
-            if !missingAssetIDs.isEmpty {
-                switch SafeAPI.assets(ids: missingAssetIDs) {
-                case .success(let tokens):
-                    TokenDAO.shared.save(assets: tokens)
-                case .failure(let error):
-                    Logger.general.error(category: "MixinSwap", message: "\(error)")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        self?.reloadData(swappableTokens: swappableTokens)
-                    }
-                    return
-                }
-            }
-            
-            let swappableTokenItems = TokenDAO.shared.tokenItems(with: swappableAssetIDs)
             let lastTokenIDs = Self.loadTokenIDs()
-            
-            let sendTokens = swappableTokenItems.sorted { (one, another) in
-                let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
-                let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
-                return left > right
-            }
-            let sendToken: TokenItem? = if let id = arbitrarySendAssetID ?? lastTokenIDs?.send {
-                sendTokens.first { token in
-                    token.assetID == id
+            let tokens: OrderedDictionary<String, BalancedSwappableToken> = {
+                let ids = swappableTokens.map(\.assetID)
+                let tokenItems = TokenDAO.shared.tokenItems(with: ids)
+                    .reduce(into: [:]) { result, item in
+                        result[item.assetID] = item
+                    }
+                return swappableTokens.map { token in
+                    if let item = tokenItems[token.assetID] {
+                        BalancedSwappableToken(token: token, balance: item.decimalBalance, usdPrice: item.decimalUSDPrice)
+                    } else {
+                        BalancedSwappableToken(token: token, balance: 0, usdPrice: 0)
+                    }
+                }.sorted { (one, another) in
+                    let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
+                    let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
+                    return left > right
+                }.reduce(into: OrderedDictionary()) { result, token in
+                    result[token.assetID] = token
                 }
+            }()
+            
+            let sendToken: BalancedSwappableToken? = if let id = arbitrarySendAssetID ?? lastTokenIDs?.send {
+                tokens[id]
             } else {
-                sendTokens.first { token in
+                tokens.values.first { token in
                     token.assetID != arbitraryReceiveAssetID
-                }
-            }
-            
-            let swappableTokensMap = swappableTokenItems.reduce(into: [:]) { result, item in
-                result[item.assetID] = item
-            }
-            let receiveTokens = swappableTokens.map { token in
-                if let item = swappableTokensMap[token.assetID] {
-                    return BalancedSwappableToken(token: token, balance: item.decimalBalance, usdPrice: item.decimalUSDPrice)
-                } else {
-                    // This is not supposed to happen. Missing tokens should be retrieved by API calls
-                    Logger.general.warn(category: "MixinSwap", message: "Missing token: \(token.assetID)")
-                    return BalancedSwappableToken(token: token, balance: 0, usdPrice: 0)
                 }
             }
             let receiveToken: BalancedSwappableToken? = if let id = arbitraryReceiveAssetID ?? lastTokenIDs?.receive {
                 if id == sendToken?.assetID {
                     nil
                 } else {
-                    receiveTokens.first { token in
-                        token.token.assetID == id
-                    }
+                    tokens[id]
                 }
             } else {
-                receiveTokens.first { token in
-                    token.token.assetID != sendToken?.assetID
+                tokens.values.first { token in
+                    token.assetID != sendToken?.assetID
                 }
             }
             
@@ -372,7 +343,7 @@ extension MixinSwapViewController {
                 missingAssetID = nil
             } else if let id = arbitrarySendAssetID, sendToken?.assetID != id {
                 missingAssetID = id
-            } else if let id = arbitraryReceiveAssetID, receiveToken?.token.assetID != id {
+            } else if let id = arbitraryReceiveAssetID, receiveToken?.assetID != id {
                 missingAssetID = id
             } else {
                 missingAssetID = nil
@@ -387,10 +358,8 @@ extension MixinSwapViewController {
                 guard let self else {
                     return
                 }
-                self.swappableTokensMap = swappableTokensMap
-                self.sendTokens = sendTokens
+                self.swappableTokens = tokens
                 self.sendToken = sendToken
-                self.receiveTokens = receiveTokens
                 self.receiveToken = receiveToken
                 if let missingAssetSymbol {
                     let description = R.string.localizable.swap_not_supported(missingAssetSymbol)
@@ -400,7 +369,7 @@ extension MixinSwapViewController {
         }
     }
     
-    private func updateSendView(style: SendTokenSelectorStyle) {
+    private func updateSendView(style: TokenSelectorStyle) {
         switch style {
         case .loading:
             sendTokenStackView.alpha = 0
@@ -420,14 +389,10 @@ extension MixinSwapViewController {
             let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
             sendBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
             sendIconView.isHidden = false
-            sendIconView.setIcon(token: token)
+            sendIconView.setIcon(token: token.token)
             sendSymbolLabel.text = token.symbol
-            if let network = token.chain?.name {
-                sendNetworkLabel.text = network
-                sendNetworkLabel.alpha = 1
-            } else {
-                sendNetworkLabel.alpha = 0 // Keeps the height
-            }
+            sendNetworkLabel.text = token.token.chain.name
+            sendNetworkLabel.alpha = 1
             sendLoadingIndicator.stopAnimating()
         }
         updateSendValueLabel()
@@ -450,7 +415,7 @@ extension MixinSwapViewController {
         )
     }
     
-    private func updateReceiveView(style: ReceiveTokenSelectorStyle) {
+    private func updateReceiveView(style: TokenSelectorStyle) {
         switch style {
         case .loading:
             receiveStackView.alpha = 0
@@ -553,7 +518,7 @@ extension MixinSwapViewController {
     private func saveTokenIDs() {
         guard
             let sendID = sendToken?.assetID,
-            let receiveID = receiveToken?.token.assetID
+            let receiveID = receiveToken?.assetID
         else {
             return
         }

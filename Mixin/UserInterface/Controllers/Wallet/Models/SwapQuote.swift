@@ -12,7 +12,7 @@ final class SwapQuote: SwapQuoteDraft {
     }
     
     init(
-        sendToken: TokenItem, sendAmount: Decimal, receiveToken: SwappableToken,
+        sendToken: BalancedSwappableToken, sendAmount: Decimal, receiveToken: SwappableToken,
         receiveAmount: Decimal, source: RouteTokenSource, payload: String
     ) {
         self.receiveAmount = receiveAmount
@@ -42,10 +42,10 @@ extension SwapQuote {
     }
     
     static func priceRepresentation(
-        sendToken: TokenItem,
         sendAmount: Decimal,
-        receiveToken: SwappableToken,
+        sendSymbol: String,
         receiveAmount: Decimal,
+        receiveSymbol: String,
         unit: PriceUnit
     ) -> String {
         switch unit {
@@ -55,23 +55,23 @@ extension SwapQuote {
                 format: .precision,
                 sign: .never
             )
-            return "1 \(sendToken.symbol) ≈ \(price) \(receiveToken.symbol)"
+            return "1 \(sendSymbol) ≈ \(price) \(receiveSymbol)"
         case .receive:
             let price = CurrencyFormatter.localizedString(
                 from: sendAmount / receiveAmount,
                 format: .precision,
                 sign: .never
             )
-            return "1 \(receiveToken.symbol) ≈ \(price) \(sendToken.symbol)"
+            return "1 \(receiveSymbol) ≈ \(price) \(sendSymbol)"
         }
     }
     
     func priceRepresentation(unit: PriceUnit) -> String {
         Self.priceRepresentation(
-            sendToken: sendToken,
             sendAmount: sendAmount,
-            receiveToken: receiveToken,
+            sendSymbol: sendToken.symbol,
             receiveAmount: receiveAmount,
+            receiveSymbol: receiveToken.symbol,
             unit: unit
         )
     }

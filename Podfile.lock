@@ -1,13 +1,5 @@
 PODS:
   - Alamofire (5.10.2)
-  - AppCenter (5.0.5):
-    - AppCenter/Analytics (= 5.0.5)
-    - AppCenter/Crashes (= 5.0.5)
-  - AppCenter/Analytics (5.0.5):
-    - AppCenter/Core
-  - AppCenter/Core (5.0.5)
-  - AppCenter/Crashes (5.0.5):
-    - AppCenter/Core
   - AppsFlyerFramework (6.15.3):
     - AppsFlyerFramework/Main (= 6.15.3)
   - AppsFlyerFramework/Main (6.15.3)
@@ -167,19 +159,19 @@ PODS:
     - libwebp/sharpyuv
   - MixinServices (0.1.0):
     - Alamofire
-    - AppCenter
     - GRDB.swift
     - libsignal-protocol-c
     - SDWebImage
+    - Sentry (~> 8.41.0)
     - SocketRocket
     - Sodium
     - Zip
   - MixinServices/Tests (0.1.0):
     - Alamofire
-    - AppCenter
     - GRDB.swift
     - libsignal-protocol-c
     - SDWebImage
+    - Sentry (~> 8.41.0)
     - SocketRocket
     - Sodium
     - Zip
@@ -206,6 +198,9 @@ PODS:
   - SDWebImageSVGKitPlugin (1.4.0):
     - SDWebImage/Core (~> 5.10)
     - SVGKit (~> 3.0)
+  - Sentry (8.41.0):
+    - Sentry/Core (= 8.41.0)
+  - Sentry/Core (8.41.0)
   - SnapKit (5.7.1)
   - SocketRocket (0.7.1)
   - Sodium (0.9.1)
@@ -232,7 +227,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Alamofire
-    - AppCenter
     - AppsFlyerFramework
     - CocoaLumberjack
     - Firebase
@@ -260,6 +254,7 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageLottieCoder
     - SDWebImageSVGKitPlugin
+    - Sentry
     - SnapKit
     - SocketRocket
     - Sodium
@@ -288,7 +283,6 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
-  AppCenter: 994875ea7941b9e168babb98299f900a94bcef13
   AppsFlyerFramework: ad7ff0d22aa36c7f8cc4f71a5424e19b89ccb8ae
   CocoaLumberjack: 6a459bc897d6d80bd1b8c78482ec7ad05dffc3f0
   Firebase: 374a441a91ead896215703a674d58cdb3e9d772b
@@ -311,7 +305,7 @@ SPEC CHECKSUMS:
   librlottie: 31aadd1f842008260fa7387f7fcb837b2fabeeea
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
-  MixinServices: 887fc4c64eb1946455013b98ad93d2c66d3188ef
+  MixinServices: 5fc43b7fd0ef2f32b3e4b709e3675a1a2cefa2bb
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PhoneNumberKit: a74155066daa6450475f6a029068eb919fb00d5d
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
@@ -319,6 +313,7 @@ SPEC CHECKSUMS:
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
   SDWebImageLottieCoder: 827c9c82bbaae89627391b4d6fdf39bb89be3336
   SDWebImageSVGKitPlugin: 7542dd07c344ec3415ded0461a1161a6f087e0c9
+  Sentry: 54d0fe6c0df448497c8ed4cce66ccf7027e1823e
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Sodium: 23d11554ecd556196d313cf6130d406dfe7ac6da

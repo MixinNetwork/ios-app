@@ -1,5 +1,4 @@
 import UIKit
-import AppCenterCrashes
 import MixinServices
 
 final class TIPActionViewController: UIViewController {
@@ -185,8 +184,7 @@ final class TIPActionViewController: UIViewController {
     }
     
     private func handle(error: Error, accountCounterBefore: UInt64) async {
-        Crashes.trackError(error, properties: ["error": "\(error)", "counter": "\(accountCounterBefore)", "location": "TIPAction"], attachments: nil)
-        reporter.report(error: error)
+        reporter.report(error: error, userInfo: ["counter": "\(accountCounterBefore)", "location": "TIPAction"])
         Logger.tip.error(category: "TIPAction", message: "Failed with: \(error)")
         do {
             if let context = try await TIP.checkCounter() {

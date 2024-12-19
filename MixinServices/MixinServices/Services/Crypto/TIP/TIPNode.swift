@@ -1,5 +1,4 @@
 import Foundation
-import AppCenterCrashes
 import Alamofire
 import TIP
 
@@ -195,7 +194,8 @@ public enum TIPNode {
         }
         guard signature.count == 64 else {
             let error = Error.invalidSignatureSize(signature.count)
-            Crashes.trackError(error, properties: ["size": "\(signature.count)"], attachments: nil)
+            Logger.tip.error(category: "TIPNode", message: "Invalid signature size, error: \(error)")
+            reporter.report(error: error, userInfo: ["size": "\(signature.count)"])
             throw error
         }
         let maxCounter = data.map(\.counter).max() ?? data[0].counter

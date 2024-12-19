@@ -693,6 +693,7 @@
 "lost_your_mobile_number" = "手机丢失？";
 "low_24h" = "24 小时最低";
 "make_group_admin" = "设定为群组管理员";
+"malicious_instruction_set_authority" = "此交易将更改 SPL 代币的所有者。这将允许新的所有者在未经您允许的情况下转移代币。";
 "manage" = "管理";
 "manage_your_apps" = "管理你所有的机器人";
 "manage_your_circles" = "管理你所有的圈子";

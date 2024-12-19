@@ -693,6 +693,7 @@
 "lost_your_mobile_number" = "電話番号をお忘れですか？";
 "low_24h" = "24H LOW";
 "make_group_admin" = "管理者権限を付与";
+"malicious_instruction_set_authority" = "This transaction change the owner of your SPL tokens. This allow the new owner to transfer the tokens without your permission.";
 "manage" = "管理";
 "manage_your_apps" = "Manage your bots";
 "manage_your_circles" = "Manage your circles";

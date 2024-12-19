@@ -13,6 +13,7 @@ class PeerInfoView: UIView, XibDesignable {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var badgeImageView: SDAnimatedImageView!
     @IBOutlet weak var superscriptLabel: UILabel!
+    @IBOutlet weak var descriptionStackView: UIStackView!
     @IBOutlet weak var prefixIconImageView: UIImageView!
     @IBOutlet weak var descriptionLabel: UILabel!
     
@@ -82,6 +83,9 @@ class PeerInfoView: UIView, XibDesignable {
         case let result as AppUserSearchResult:
             let user = result.user
             avatarImageView.setImage(with: user.avatarUrl ?? "", userId: user.userId, name: user.fullName ?? "")
+        case let result as MAONameSearchResult:
+            let user = result.user
+            avatarImageView.setImage(with: user.avatarUrl, userId: user.userId, name: user.fullName)
         default:
             break
         }

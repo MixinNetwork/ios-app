@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,6 +13,7 @@
                 <outlet property="avatarImageView" destination="R81-tG-vlH" id="Yeu-sF-ADl"/>
                 <outlet property="badgeImageView" destination="2GW-tO-hq0" id="HQq-uF-Anb"/>
                 <outlet property="descriptionLabel" destination="BTU-Zc-Jm3" id="NZi-OO-z9d"/>
+                <outlet property="descriptionStackView" destination="EkD-sb-FRA" id="fMV-s2-bNR"/>
                 <outlet property="prefixIconImageView" destination="ARz-ep-P8K" id="mZ4-fW-Gpg"/>
                 <outlet property="superscriptLabel" destination="PMO-A2-8p8" id="ORU-mi-m5F"/>
                 <outlet property="titleLabel" destination="HEO-9n-GVa" id="dft-2V-fJu"/>

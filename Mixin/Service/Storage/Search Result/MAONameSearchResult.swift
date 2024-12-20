@@ -3,13 +3,14 @@ import MixinServices
 
 final class MAONameSearchResult: SearchResult {
     
+    let keyword: String
+    let name: String
     let user: UserItem
     let app: App?
     
-    private let name: String
-    
-    init(name: String, response: UserResponse) {
+    init(keyword: String, name: String, response: UserResponse) {
         let user = UserItem.createUser(from: response)
+        self.keyword = keyword
         self.name = name
         self.user = user
         self.app = response.app

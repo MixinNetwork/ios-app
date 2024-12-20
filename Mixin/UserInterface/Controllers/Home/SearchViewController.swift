@@ -146,7 +146,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                                 guard let self, self.trimmedKeyword == keyword else {
                                     return
                                 }
-                                self.maoUser = MAONameSearchResult(name: name, response: response)
+                                self.maoUser = MAONameSearchResult(keyword: keyword, name: name, response: response)
                                 var sections = IndexSet(integer: Section.maoUser.rawValue)
                                 let firstNotEmptySectionAfterMAOUser = Section.allCases.filter { section in
                                     section.rawValue > Section.maoUser.rawValue
@@ -179,7 +179,9 @@ class SearchViewController: UIViewController, HomeSearchViewController {
             }
             DispatchQueue.main.sync {
                 self.quickAccess = quickAccess
-                self.maoUser = nil
+                if self.maoUser?.keyword != keyword {
+                    self.maoUser = nil
+                }
                 self.assets = assets
                 self.users = users
                 self.conversationsByName = conversationsByName

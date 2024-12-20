@@ -30,7 +30,7 @@ final class MAONameSearchResultCell: UITableViewCell {
         peerInfoView.render(result: result)
         peerInfoView.prefixIconImageView.isHidden = false
         peerInfoView.prefixIconImageView.image = R.image.mao_name()
-        appDisclosureImageView.isHidden = result.user.appId == nil
+        appDisclosureImageView.isHidden = result.app == nil
     }
     
 }

@@ -382,9 +382,14 @@ extension SearchViewController: UITableViewDelegate {
                 self?.present(profile, animated: true)
             }
         case .maoUser:
-            if let user = maoUser?.user, user.isCreatedByMessenger {
-                let vc = ConversationViewController.instance(ownerUser: user)
-                homeNavigationController?.pushViewController(vc, animated: true)
+            if let navigationController = homeNavigationController {
+                if let app = maoUser?.app {
+                    let webView = MixinWebViewController.instance(with: .init(conversationId: "", app: app))
+                    webView.presentAsChild(of: navigationController, completion: nil)
+                } else if let user = maoUser?.user, user.isCreatedByMessenger {
+                    let vc = ConversationViewController.instance(ownerUser: user)
+                    navigationController.pushViewController(vc, animated: true)
+                }
             }
         case .asset:
             pushTokenViewController(token: assets[indexPath.row].asset)

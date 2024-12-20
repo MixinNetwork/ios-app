@@ -4,6 +4,7 @@ import MixinServices
 final class MAONameSearchResult: SearchResult {
     
     let user: UserItem
+    let app: App?
     
     private let name: String
     
@@ -11,6 +12,7 @@ final class MAONameSearchResult: SearchResult {
         let user = UserItem.createUser(from: response)
         self.name = name
         self.user = user
+        self.app = response.app
         super.init(
             iconUrl: response.avatarUrl,
             badgeImage: user.badgeImage,

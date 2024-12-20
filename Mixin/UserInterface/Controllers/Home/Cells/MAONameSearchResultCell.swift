@@ -6,6 +6,7 @@ final class MAONameSearchResultCell: UITableViewCell {
     
     @IBOutlet weak var peerInfoBackgroundView: UIView!
     @IBOutlet weak var peerInfoView: PeerInfoView!
+    @IBOutlet weak var appDisclosureImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -29,6 +30,7 @@ final class MAONameSearchResultCell: UITableViewCell {
         peerInfoView.render(result: result)
         peerInfoView.prefixIconImageView.isHidden = false
         peerInfoView.prefixIconImageView.image = R.image.mao_name()
+        appDisclosureImageView.isHidden = result.user.appId == nil
     }
     
 }

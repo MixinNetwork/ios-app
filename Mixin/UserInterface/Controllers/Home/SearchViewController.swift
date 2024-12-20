@@ -126,14 +126,19 @@ class SearchViewController: UIViewController, HomeSearchViewController {
             case .number:
                 break
             case .link, .none:
-                let range = NSRange(keyword.startIndex..<keyword.endIndex, in: keyword)
+                let name = if keyword.hasSuffix(".mao") {
+                    String(keyword[keyword.startIndex..<keyword.index(keyword.endIndex, offsetBy: -4)])
+                } else {
+                    keyword
+                }
+                let range = NSRange(name.startIndex..<name.endIndex, in: name)
                 if let regex = try? NSRegularExpression(pattern: #"^[^\sA-Z]{1,128}$"#),
-                   regex.firstMatch(in: keyword, range: range) != nil,
-                   let encodedKeyword = keyword.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
+                   regex.firstMatch(in: name, range: range) != nil,
+                   let encodedName = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
                    !op.isCancelled
                 {
                     DispatchQueue.main.sync {
-                        self.maoNameSearchRequest = UserAPI.search(keyword: encodedKeyword) { [weak self] result in
+                        self.maoNameSearchRequest = UserAPI.search(keyword: encodedName) { [weak self] result in
                             switch result {
                             case .failure(let error):
                                 Logger.general.debug(category: "Search", message: "\(error)")
@@ -141,7 +146,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                                 guard let self, self.trimmedKeyword == keyword else {
                                     return
                                 }
-                                self.maoUser = MAONameSearchResult(name: keyword, response: response)
+                                self.maoUser = MAONameSearchResult(name: name, response: response)
                                 var sections = IndexSet(integer: Section.maoUser.rawValue)
                                 let firstNotEmptySectionAfterMAOUser = Section.allCases.filter { section in
                                     section.rawValue > Section.maoUser.rawValue

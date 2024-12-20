@@ -693,6 +693,7 @@
 "lost_your_mobile_number" = "Потеряли номер мобильного?";
 "low_24h" = "24H LOW";
 "make_group_admin" = "Сделать администратором группы";
+"malicious_instruction_set_authority" = "This transaction change the owner of your SPL tokens. This allow the new owner to transfer the tokens without your permission.";
 "manage" = "Управлять";
 "manage_your_apps" = "Manage your bots";
 "manage_your_circles" = "Manage your circles";

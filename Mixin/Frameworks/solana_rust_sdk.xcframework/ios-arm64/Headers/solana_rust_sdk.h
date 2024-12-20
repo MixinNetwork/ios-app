@@ -49,6 +49,8 @@ enum SolanaErrorCode solana_base64_encode_transaction(const void *txn, const cha
 
 const void *solana_deserialize_transaction(const uint8_t *txn, size_t txn_len);
 
+bool solana_transaction_contains_set_authority(const void *txn);
+
 enum SolanaErrorCode solana_sign_transaction(const void *txn,
                                              const uint8_t *recent_blockhash,
                                              size_t recent_blockhash_len,

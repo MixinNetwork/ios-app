@@ -172,6 +172,10 @@ extension Solana {
             solana_free_transaction(pointer)
         }
         
+        func containsSetAuthority() -> Bool {
+            solana_transaction_contains_set_authority(pointer)
+        }
+        
         func sign(withPrivateKeyFrom seed: Data, recentBlockhash: Data) throws -> String {
             try recentBlockhash.withUnsafeBytes { recentBlockhash in
                 try seed.withUnsafeBytes { seed in

@@ -141,10 +141,16 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                                     return
                                 }
                                 self.maoUser = MAONameSearchResult(name: keyword, response: response)
-                                let sections = IndexSet([
-                                    Section.maoUser.rawValue,
-                                    Section.asset.rawValue, // Update the header
-                                ])
+                                var sections = IndexSet(integer: Section.maoUser.rawValue)
+                                let firstNotEmptySectionAfterMAOUser = Section.allCases.filter { section in
+                                    section.rawValue > Section.maoUser.rawValue
+                                }.first { section in
+                                    !self.isEmptySection(section)
+                                }
+                                if let section = firstNotEmptySectionAfterMAOUser {
+                                    // Update the header
+                                    sections.insert(section.rawValue)
+                                }
                                 UIView.performWithoutAnimation {
                                     self.tableView.reloadSections(sections, with: .none)
                                 }

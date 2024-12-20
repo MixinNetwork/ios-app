@@ -129,13 +129,14 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                 let range = NSRange(keyword.startIndex..<keyword.endIndex, in: keyword)
                 if let regex = try? NSRegularExpression(pattern: #"^[^\sA-Z]{1,128}$"#),
                    regex.firstMatch(in: keyword, range: range) != nil,
+                   let encodedKeyword = keyword.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
                    !op.isCancelled
                 {
                     DispatchQueue.main.sync {
-                        self.maoNameSearchRequest = UserAPI.search(keyword: keyword) { [weak self] result in
+                        self.maoNameSearchRequest = UserAPI.search(keyword: encodedKeyword) { [weak self] result in
                             switch result {
-                            case .failure:
-                                break
+                            case .failure(let error):
+                                Logger.general.debug(category: "Search", message: "\(error)")
                             case .success(let response):
                                 guard let self, self.trimmedKeyword == keyword else {
                                     return

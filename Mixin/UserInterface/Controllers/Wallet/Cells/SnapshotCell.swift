@@ -7,18 +7,18 @@ protocol SnapshotCellDelegate: AnyObject {
 
 final class SnapshotCell: ModernSelectedBackgroundCell {
     
-    @IBOutlet weak var pendingDepositProgressView: UIView!
     @IBOutlet weak var iconImageView: AvatarImageView!
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var amountLabel: InsetLabel!
     @IBOutlet weak var symbolLabel: UILabel!
     
-    @IBOutlet weak var pendingDepositProgressConstraint: NSLayoutConstraint!
-    
     weak var delegate: SnapshotCellDelegate?
     
     private weak var inscriptionIconView: InscriptionIconView?
+    private weak var progressLayer: CAGradientLayer?
+    
+    private var progress: CGFloat = 0
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -29,32 +29,53 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         iconImageView.prepareForReuse()
+        progress = 0
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layoutProgressLayer()
     }
     
     @IBAction func selectIconAction(_ sender: Any) {
         delegate?.walletSnapshotCellDidSelectIcon(self)
     }
     
-    func render(snapshot: SafeSnapshotItem, token: TokenItem? = nil) {
+    func render(snapshot: SafeSnapshotItem) {
+        CATransaction.begin() // Disable alpha animation for `progressLayer`
+        CATransaction.setDisableActions(true)
         switch SafeSnapshot.SnapshotType(rawValue: snapshot.type) {
         case .pending:
             iconImageView.imageView.contentMode = .center
             iconImageView.image = R.image.wallet.snapshot_deposit()
-            if let finished = snapshot.confirmations, let total = token?.confirmations {
-                setTitle(R.string.localizable.pending_confirmations(finished, total))
-                pendingDepositProgressView.isHidden = false
-                let multiplier = CGFloat(finished) / CGFloat(total)
-                if abs(pendingDepositProgressConstraint.multiplier - multiplier) > 0.1 {
-                    NSLayoutConstraint.deactivate([pendingDepositProgressConstraint])
-                    pendingDepositProgressConstraint = pendingDepositProgressView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: multiplier)
-                    NSLayoutConstraint.activate([pendingDepositProgressConstraint])
+            if let finished = snapshot.confirmations, let total = snapshot.tokenConfirmations {
+                progress = min(1, CGFloat(finished) / CGFloat(total))
+                let progressLayer: CAGradientLayer
+                if let layer = self.progressLayer {
+                    layer.isHidden = false
+                    progressLayer = layer
+                } else {
+                    let layer = CAGradientLayer()
+                    layer.startPoint = CGPoint(x: 0, y: 0.5)
+                    layer.endPoint = CGPoint(x: 1, y: 0.5)
+                    layer.locations = [0, 1]
+                    contentView.layer.insertSublayer(layer, at: 0)
+                    self.progressLayer = layer
+                    progressLayer = layer
                 }
+                progressLayer.colors = [
+                    R.color.market_green()!.withAlphaComponent(progress == 1 ? 0.2 : 0).cgColor,
+                    R.color.market_green()!.withAlphaComponent(0.2).cgColor,
+                ]
+                layoutProgressLayer()
+                setTitle(R.string.localizable.pending_confirmations(finished, total))
             } else {
-                pendingDepositProgressView.isHidden = true
+                progressLayer?.isHidden = true
                 setTitle(snapshot.deposit?.sender)
             }
             amountLabel.textColor = R.color.text_tertiary()!
         default:
+            progressLayer?.isHidden = true
             if let deposit = snapshot.deposit {
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_deposit()
@@ -72,7 +93,6 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
                 iconImageView.image = R.image.wallet.snapshot_anonymous()
                 setTitle(nil)
             }
-            pendingDepositProgressView.isHidden = true
             if snapshot.amount.hasMinusPrefix {
                 amountLabel.textColor = R.color.market_red()
             } else {
@@ -99,9 +119,10 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
         } else {
             amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.decimalAmount, format: .precision, sign: .always)
             symbolLabel.isHidden = false
-            symbolLabel.text = token?.symbol ?? snapshot.tokenSymbol
+            symbolLabel.text = snapshot.tokenSymbol
             inscriptionIconView?.isHidden = true
         }
+        CATransaction.commit()
     }
     
     private func setTitle(_ title: String?) {
@@ -111,6 +132,23 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
         } else {
             titleLabel.text = notApplicable
             titleLabel.textColor = R.color.text_tertiary()!
+        }
+    }
+    
+    private func layoutProgressLayer() {
+        guard let progressLayer else {
+            return
+        }
+        let iconTopLeft: CGPoint = iconImageView.convert(.zero, to: contentView)
+        let progressLeft = iconTopLeft.x + iconImageView.frame.width / 2
+        let fullWidth = contentView.bounds.width - progressLeft
+        CATransaction.performWithoutAnimation {
+            progressLayer.frame = CGRect(
+                x: progressLeft + fullWidth * (1 - progress),
+                y: iconTopLeft.y,
+                width: fullWidth * progress,
+                height: iconImageView.frame.height
+            )
         }
     }
     

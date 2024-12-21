@@ -220,6 +220,15 @@ extension Database {
         }
     }
     
+    public func select<Value: DatabaseValueConvertible>(
+        with query: GRDB.SQL
+    ) -> [Value] {
+        try! read { (db) -> [Value] in
+            let (sql, arguments) = try query.build(db)
+            return try Value.fetchAll(db, sql: sql, arguments: arguments)
+        }
+    }
+    
     public func select<Record: TableRecord, Value: DatabaseValueConvertible>(
         column: Column,
         from table: Record.Type,

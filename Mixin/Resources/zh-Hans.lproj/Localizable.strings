@@ -427,11 +427,13 @@
 "deposit_confirmation_count" = "充值到账需要 %d 个区块确认。";
 "deposit_dust" = "最小充值数：%1$@ %2$@";
 "deposit_hash" = "充值哈希";
+"deposit_pending_confirmation" = "%@ 充值确认中";
 "deposit_tip_btc" = "该充值地址仅支持 BTC。";
 "deposit_tip_common" = "该充值地址仅支持 %@。";
 "deposit_tip_eos" = "支持所有基于 EOS 发行的代币。";
 "deposit_tip_eth" = "支持所有符合 ERC-20 标准的代币，例如 ETH、XIN 等。";
 "deposit_tip_trx" = "支持 TRX 和所有符合 TRC-10、TRC-20 标准的代币。";
+"deposits_pending_confirmation" = "有 %d 笔充值确认中";
 "depost_address_updated" = "%@ 充值地址已更新";
 "depost_address_updated_description" = "您的 %@ 充值地址已更新，充值地址将随着系统或网络升级而自动更新，旧的地址仍可充值并会自动入账，但是不推荐使用。";
 "desktop_login" = "登录 Mixin Messenger 桌面端";
@@ -856,6 +858,7 @@
 "pay_withdrawal_memo" = "数量 %@ %@\n手续费 %@ %@";
 "peer_closed" = "Peer 已关闭";
 "peer_not_found" = "Peer 无效";
+"pending" = "确认中";
 "pending_confirmation" = "%1$d/%2$d 区块确认数";
 "pending_confirmation_count" = "%1$d/%2$d 区块确认数";
 "pending_confirmations" = "%d/%d 区块确认数";

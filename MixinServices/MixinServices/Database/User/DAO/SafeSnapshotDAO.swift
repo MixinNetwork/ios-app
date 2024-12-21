@@ -8,20 +8,22 @@ public final class SafeSnapshotDAO: UserDatabaseDAO {
     public static let snapshotsUserInfoKey = "s"
     
     private static let querySQL = """
-        SELECT s.*, t.symbol AS \(SafeSnapshotItem.JoinedQueryCodingKeys.tokenSymbol.rawValue),
-            t.price_usd AS \(SafeSnapshotItem.JoinedQueryCodingKeys.tokenUSDPrice.rawValue),
-            u.user_id AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentUserID.rawValue),
-            u.full_name AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentFullname.rawValue),
-            u.avatar_url AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentAvatarURL.rawValue),
-            ii.content_type AS \(SafeSnapshotItem.JoinedQueryCodingKeys.inscriptionContentType.rawValue),
-            ii.content_url AS \(SafeSnapshotItem.JoinedQueryCodingKeys.inscriptionContentURL.rawValue),
-            ic.icon_url AS \(SafeSnapshotItem.JoinedQueryCodingKeys.inscriptionCollectionIconURL.rawValue)
-        FROM safe_snapshots s
-            LEFT JOIN tokens t ON s.asset_id = t.asset_id
-            LEFT JOIN users u ON s.opponent_id = u.user_id
-            LEFT JOIN inscription_items ii ON s.inscription_hash = ii.inscription_hash
-            LEFT JOIN inscription_collections ic ON ii.collection_hash = ic.collection_hash
-        
+    SELECT s.*,
+        t.symbol AS \(SafeSnapshotItem.JoinedQueryCodingKeys.tokenSymbol.rawValue),
+        t.price_usd AS \(SafeSnapshotItem.JoinedQueryCodingKeys.tokenUSDPrice.rawValue),
+        t.confirmations AS \(SafeSnapshotItem.JoinedQueryCodingKeys.tokenConfirmations.rawValue),
+        u.user_id AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentUserID.rawValue),
+        u.full_name AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentFullname.rawValue),
+        u.avatar_url AS \(SafeSnapshotItem.JoinedQueryCodingKeys.opponentAvatarURL.rawValue),
+        ii.content_type AS \(SafeSnapshotItem.JoinedQueryCodingKeys.inscriptionContentType.rawValue),
+        ii.content_url AS \(SafeSnapshotItem.JoinedQueryCodingKeys.inscriptionContentURL.rawValue),
+        ic.icon_url AS \(SafeSnapshotItem.JoinedQueryCodingKeys.inscriptionCollectionIconURL.rawValue)
+    FROM safe_snapshots s
+        LEFT JOIN tokens t ON s.asset_id = t.asset_id
+        LEFT JOIN users u ON s.opponent_id = u.user_id
+        LEFT JOIN inscription_items ii ON s.inscription_hash = ii.inscription_hash
+        LEFT JOIN inscription_collections ic ON ii.collection_hash = ic.collection_hash
+    
     """
     private static let queryWithIDSQL = querySQL + "WHERE s.snapshot_id = ?"
     
@@ -67,6 +69,26 @@ extension SafeSnapshotDAO {
         db.select(with: "SELECT inscription_hash FROM safe_snapshots WHERE snapshot_id=?", arguments: [id])
     }
     
+    public func snapshots(
+        assetID: String,
+        pending: Bool,
+        limit: Int?
+    ) -> [SafeSnapshotItem] {
+        let types: [SafeSnapshot.SnapshotType] = if pending {
+            [.pending]
+        } else {
+            [.snapshot, .withdrawal]
+        }
+        var sql = GRDB.SQL(sql: Self.querySQL) + """
+        WHERE s.asset_id = \(assetID) AND s.type IN \(types.map(\.rawValue))
+        ORDER BY s.created_at DESC
+        """
+        if let limit {
+            sql.append(literal: "\nLIMIT \(limit)")
+        }
+        return db.select(with: sql)
+    }
+    
     // The returned data will be ordered according to its display sequence.
     // For example, when requesting `newest`, the first item will be the most recent;
     // When requesting `biggestAmount`, the first item will have the largest amount.
@@ -89,6 +111,8 @@ extension SafeSnapshotDAO {
             case .transfer:
                 conditions.append("s.deposit IS NULL")
                 conditions.append("s.withdrawal IS NULL")
+            case .pending:
+                conditions.append("s.type = \(SafeSnapshot.SnapshotType.pending.rawValue)")
             }
         }
         

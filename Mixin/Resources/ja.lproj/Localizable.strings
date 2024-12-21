@@ -427,11 +427,13 @@
 "deposit_confirmation_count" = "入金した仮想通貨は、%dブロック確認後に着金します";
 "deposit_dust" = "Minimum deposit: %1$@ %2$@";
 "deposit_hash" = "Deposit Hash";
+"deposit_pending_confirmation" = "%@ Pending Confirmation";
 "deposit_tip_btc" = "このアドレスはビットコインのみサポートしています";
 "deposit_tip_common" = "このアドレスは%@のみサポートしています";
 "deposit_tip_eos" = "このアドレスはEOSベースの全てのトークンをサポートしています";
 "deposit_tip_eth" = "このアドレスはETHやXINなど全てのERC-20トークンをサポートしています";
 "deposit_tip_trx" = "このアドレスは全てのTRC-10/TRC-20トークンをサポートしています";
+"deposits_pending_confirmation" = "%d Deposits Pending Confirmation";
 "depost_address_updated" = "%@ Deposit Address Updated";
 "depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
 "desktop_login" = "Login to Mixin Messenger Desktop";
@@ -856,6 +858,7 @@
 "pay_withdrawal_memo" = "額 %@ %@\n手数料 %@ %@";
 "peer_closed" = "ピアが閉じています";
 "peer_not_found" = "ピアが見つかりません";
+"pending" = "Pending";
 "pending_confirmation" = "%1$d/%2$d 承認";
 "pending_confirmation_count" = "%1$d/%2$d 承認";
 "pending_confirmations" = "%d/%d 承認";

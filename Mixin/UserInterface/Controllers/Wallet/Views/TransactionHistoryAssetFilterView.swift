@@ -11,7 +11,7 @@ final class TransactionHistoryAssetFilterView: TransactionHistoryFilterView {
             view.removeFromSuperview()
         }
         let iconViews = tokens.prefix(maxIconCount).map { token in
-            let view = IconWrapperView<PlainTokenIconView>()
+            let view = StackedIconWrapperView<PlainTokenIconView>()
             view.backgroundColor = .clear
             iconsStackView.addArrangedSubview(view)
             view.iconView.setIcon(token: token)
@@ -40,7 +40,7 @@ final class TransactionHistoryAssetFilterView: TransactionHistoryFilterView {
             view.removeFromSuperview()
         }
         let iconViews = coins.prefix(maxIconCount).map { coin in
-            let view = IconWrapperView<PlainTokenIconView>()
+            let view = StackedIconWrapperView<PlainTokenIconView>()
             view.backgroundColor = .clear
             iconsStackView.addArrangedSubview(view)
             view.iconView.setIcon(coin: coin)

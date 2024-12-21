@@ -11,6 +11,7 @@ final class TokenViewController: UIViewController, MnemonicsBackupChecking {
     private(set) var token: TokenItem
     
     private var performSendOnAppear: Bool
+    private var pendingSnapshots: [SafeSnapshotItem] = []
     private var transactionRows: [TransactionRow] = []
     private var market: MarketResult
     private var chartPoints: [ChartView.Point]?
@@ -133,6 +134,26 @@ final class TokenViewController: UIViewController, MnemonicsBackupChecking {
         }
     }
     
+    @objc private func showMoreActions(_ sender: Any) {
+        let token = self.token
+        let wasHidden = token.isHidden
+        let title = wasHidden ? R.string.localizable.show_asset() : R.string.localizable.hide_asset()
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: title, style: .default, handler: { _ in
+            DispatchQueue.global().async {
+                let extra = TokenExtra(assetID: token.assetID,
+                                       kernelAssetID: token.kernelAssetID,
+                                       isHidden: !wasHidden,
+                                       balance: token.balance,
+                                       updatedAt: Date().toUTCString())
+                TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
+            }
+            self.navigationController?.popViewController(animated: true)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true, completion: nil)
+    }
+    
     @objc private func balanceDidUpdate(_ notification: Notification) {
         guard let id = notification.userInfo?[UTXOService.assetIDUserInfoKey] as? String else {
             return
@@ -209,6 +230,7 @@ extension TokenViewController {
     private enum Section: Int, CaseIterable {
         case balance
         case market
+        case pending
         case transactions
     }
     
@@ -324,34 +346,33 @@ extension TokenViewController {
     }
     
     private func reloadSnapshots() {
-        var filter = SafeSnapshot.Filter()
-        filter.tokens = [token]
-        queue.async { [limit=transactionsCount, weak self] in
-            let limitExceededSnapshots = SafeSnapshotDAO.shared.snapshots(filter: filter, order: .newest, limit: limit + 1)
-            let hasMoreSnapshots = limitExceededSnapshots.count > limit
-            let snapshots = Array(limitExceededSnapshots.prefix(limit))
-            let transactionRows: [TransactionRow] = if snapshots.isEmpty {
+        queue.async { [limit=transactionsCount, assetID=token.assetID, weak self] in
+            let dao: SafeSnapshotDAO = .shared
+            
+            let pendingSnapshots = dao.snapshots(assetID: assetID, pending: true, limit: nil)
+            
+            let limitExceededTransactionSnapshots = dao.snapshots(assetID: assetID, pending: false, limit: limit + 1)
+            let hasMoreSnapshots = limitExceededTransactionSnapshots.count > limit
+            let transactionSnapshots = Array(limitExceededTransactionSnapshots.prefix(limit))
+            let transactionRows: [TransactionRow] = if transactionSnapshots.isEmpty {
                 [.title, .emptyIndicator]
             } else {
                 if hasMoreSnapshots {
-                    [.title] + snapshots.map({ .transaction($0) }) + [.viewAll, .bottomSeparator]
+                    [.title] + transactionSnapshots.map({ .transaction($0) }) + [.viewAll, .bottomSeparator]
                 } else {
-                    [.title] + snapshots.map({ .transaction($0) }) + [.bottomSeparator]
+                    [.title] + transactionSnapshots.map({ .transaction($0) }) + [.bottomSeparator]
                 }
             }
+            
             DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
-                let hadTransactionSection = !self.transactionRows.isEmpty
+                self.pendingSnapshots = pendingSnapshots
                 self.transactionRows = transactionRows
-                let sections = IndexSet(integer: Section.transactions.rawValue)
                 UIView.performWithoutAnimation {
-                    if hadTransactionSection {
-                        self.tableView.reloadSections(sections, with: .none)
-                    } else {
-                        self.tableView.insertSections(sections, with: .none)
-                    }
+                    let sections = IndexSet([Section.transactions.rawValue, Section.pending.rawValue])
+                    self.tableView.reloadSections(sections, with: .none)
                 }
             }
         }
@@ -384,24 +405,19 @@ extension TokenViewController {
         present(selector, animated: true, completion: nil)
     }
     
-    @objc private func showMoreActions(_ sender: Any) {
-        let token = self.token
-        let wasHidden = token.isHidden
-        let title = wasHidden ? R.string.localizable.show_asset() : R.string.localizable.hide_asset()
-        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: title, style: .default, handler: { _ in
-            DispatchQueue.global().async {
-                let extra = TokenExtra(assetID: token.assetID,
-                                       kernelAssetID: token.kernelAssetID,
-                                       isHidden: !wasHidden,
-                                       balance: token.balance,
-                                       updatedAt: Date().toUTCString())
-                TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
-            }
-            self.navigationController?.popViewController(animated: true)
-        }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        present(sheet, animated: true, completion: nil)
+    private func view(snapshot: SafeSnapshotItem) {
+        let inscriptionItem: InscriptionItem? = if let hash = snapshot.inscriptionHash {
+            InscriptionDAO.shared.inscriptionItem(with: hash)
+        } else {
+            nil
+        }
+        let viewController = SafeSnapshotViewController(
+            token: token,
+            snapshot: snapshot,
+            messageID: nil,
+            inscription: inscriptionItem
+        )
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
 }
@@ -409,11 +425,7 @@ extension TokenViewController {
 extension TokenViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        var count = Section.allCases.count
-        if transactionRows.isEmpty {
-            count -= 1
-        }
-        return count
+        Section.allCases.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -422,6 +434,8 @@ extension TokenViewController: UITableViewDataSource {
             1
         case .market:
             MarketRow.allCases.count
+        case .pending:
+            pendingSnapshots.isEmpty ? 0 : pendingSnapshots.count + 2 // Title and bottom separator
         case .transactions:
             transactionRows.count
         }
@@ -467,18 +481,37 @@ extension TokenViewController: UITableViewDataSource {
                 }
                 return cell
             }
+        case .pending:
+            switch indexPath.row {
+            case 0:
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
+                cell.label.text = R.string.localizable.pending()
+                cell.disclosureIndicatorView.isHidden = true
+                return cell
+            case pendingSnapshots.count + 1:
+                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.emptyCell, for: indexPath)
+                cell.backgroundConfiguration = .groupedCell
+                cell.contentConfiguration = nil
+                return cell
+            default:
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
+                cell.render(snapshot: pendingSnapshots[indexPath.row - 1])
+                cell.delegate = self
+                return cell
+            }
         case .transactions:
             let row = transactionRows[indexPath.row]
             switch row {
             case .title:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.inset_grouped_title, for: indexPath)!
                 cell.label.text = R.string.localizable.transactions()
+                cell.disclosureIndicatorView.isHidden = false
                 return cell
             case .emptyIndicator:
                 return tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.no_transaction_indicator, for: indexPath)!
             case .transaction(let snapshot):
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
-                cell.render(snapshot: snapshot, token: token)
+                cell.render(snapshot: snapshot)
                 cell.delegate = self
                 return cell
             case .bottomSeparator:
@@ -509,24 +542,37 @@ extension TokenViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch Section(rawValue: indexPath.section)! {
         case .balance, .market:
-            return UITableView.automaticDimension
+            UITableView.automaticDimension
+        case .pending:
+            switch indexPath.row {
+            case 0:
+                UITableView.automaticDimension
+            case pendingSnapshots.count + 1:
+                10
+            default:
+                62
+            }
         case .transactions:
-            let row = transactionRows[indexPath.row]
-            switch row {
+            switch transactionRows[indexPath.row] {
             case .title, .emptyIndicator:
-                return UITableView.automaticDimension
+                UITableView.automaticDimension
             case .transaction:
-                return 62
+                62
             case .bottomSeparator:
-                return 10
+                10
             case .viewAll:
-                return UITableView.automaticDimension
+                UITableView.automaticDimension
             }
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        10
+        switch Section(rawValue: section) {
+        case .pending where pendingSnapshots.isEmpty:
+                .leastNormalMagnitude
+        default:
+            10
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -552,6 +598,9 @@ extension TokenViewController: UITableViewDelegate {
             let market = MarketViewController(token: token, chartPoints: chartPoints)
             market.pushingViewController = self
             navigationController?.pushViewController(market, animated: true)
+        case .pending:
+            let snapshot = pendingSnapshots[indexPath.row - 1]
+            view(snapshot: snapshot)
         case .transactions:
             let row = transactionRows[indexPath.row]
             switch row {
@@ -559,18 +608,7 @@ extension TokenViewController: UITableViewDelegate {
                 let history = TransactionHistoryViewController(token: token)
                 navigationController?.pushViewController(history, animated: true)
             case .transaction(let snapshot):
-                let inscriptionItem: InscriptionItem? = if let hash = snapshot.inscriptionHash {
-                    InscriptionDAO.shared.inscriptionItem(with: hash)
-                } else {
-                    nil
-                }
-                let viewController = SafeSnapshotViewController(
-                    token: token,
-                    snapshot: snapshot,
-                    messageID: nil,
-                    inscription: inscriptionItem
-                )
-                navigationController?.pushViewController(viewController, animated: true)
+                view(snapshot: snapshot)
             case .emptyIndicator, .bottomSeparator:
                 break
             }

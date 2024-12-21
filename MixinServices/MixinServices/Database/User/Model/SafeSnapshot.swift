@@ -229,6 +229,7 @@ extension SafeSnapshot {
         case deposit
         case withdrawal
         case transfer
+        case pending
     }
     
     public enum SnapshotType: String {
@@ -260,13 +261,20 @@ extension SafeSnapshot {
             "<Filter type: \(type), tokens: \(tokens.map(\.symbol)), users: \(users.map(\.fullName)), addresses: \(addresses.map(\.label)), startDate: \(startDate), endDate: \(endDate)>"
         }
         
-        public init() {
-            type = nil
-            tokens = []
-            users = []
-            addresses = []
-            startDate = nil
-            endDate = nil
+        public init(
+            type: SafeSnapshot.DisplayType? = nil,
+            tokens: [TokenItem] = [],
+            users: [UserItem] = [],
+            addresses: [AddressItem] = [],
+            startDate: Date? = nil,
+            endDate: Date? = nil
+        ) {
+            self.type = type
+            self.tokens = tokens
+            self.users = users
+            self.addresses = addresses
+            self.startDate = startDate
+            self.endDate = endDate
         }
         
         public func isIncluded(snapshot: SafeSnapshot) -> Bool {

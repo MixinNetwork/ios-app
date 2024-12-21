@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,10 +22,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="414" height="62"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uZv-Qf-jhM">
-                        <rect key="frame" x="290" y="0.0" width="124" height="62"/>
-                        <color key="backgroundColor" name="background_input"/>
-                    </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ITh-bd-CG3">
                         <rect key="frame" x="19" y="10" width="42" height="42"/>
                         <subviews>
@@ -94,14 +90,10 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="ITh-bd-CG3" firstAttribute="leading" secondItem="z2Z-lz-lZP" secondAttribute="leading" constant="19" id="6hk-dK-N7g"/>
-                    <constraint firstAttribute="bottom" secondItem="uZv-Qf-jhM" secondAttribute="bottom" id="9xv-Wf-jwd"/>
                     <constraint firstAttribute="bottom" secondItem="mI8-4d-1QY" secondAttribute="bottom" id="DGy-7D-Xs6"/>
                     <constraint firstItem="mI8-4d-1QY" firstAttribute="leading" secondItem="ITh-bd-CG3" secondAttribute="trailing" constant="16" id="GO6-yX-eni"/>
                     <constraint firstItem="ITh-bd-CG3" firstAttribute="centerY" secondItem="z2Z-lz-lZP" secondAttribute="centerY" id="JaM-A6-rTE"/>
-                    <constraint firstItem="uZv-Qf-jhM" firstAttribute="top" secondItem="z2Z-lz-lZP" secondAttribute="top" id="L5w-T8-pg4"/>
                     <constraint firstAttribute="trailing" secondItem="mI8-4d-1QY" secondAttribute="trailing" constant="20" id="NRT-PY-DfA"/>
-                    <constraint firstItem="uZv-Qf-jhM" firstAttribute="width" secondItem="z2Z-lz-lZP" secondAttribute="width" multiplier="0.3" id="S35-bw-lYC"/>
-                    <constraint firstAttribute="trailing" secondItem="uZv-Qf-jhM" secondAttribute="trailing" id="qVV-6q-6Z8"/>
                     <constraint firstItem="mI8-4d-1QY" firstAttribute="top" secondItem="z2Z-lz-lZP" secondAttribute="top" id="veW-Jz-HuR"/>
                 </constraints>
             </tableViewCellContentView>
@@ -110,8 +102,6 @@
                 <outlet property="amountLabel" destination="3Eq-Iz-C6X" id="lic-rB-TNz"/>
                 <outlet property="contentStackView" destination="mI8-4d-1QY" id="wtE-nn-Uor"/>
                 <outlet property="iconImageView" destination="dvX-OJ-H0b" id="eeu-vd-xVw"/>
-                <outlet property="pendingDepositProgressConstraint" destination="S35-bw-lYC" id="0kT-sJ-2Zw"/>
-                <outlet property="pendingDepositProgressView" destination="uZv-Qf-jhM" id="IS2-2s-rtZ"/>
                 <outlet property="symbolLabel" destination="gns-Tw-VaL" id="nxd-iD-gje"/>
                 <outlet property="titleLabel" destination="o1a-sz-8up" id="3zw-Xa-dLS"/>
             </connections>
@@ -121,9 +111,6 @@
     <resources>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="background_input">
-            <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

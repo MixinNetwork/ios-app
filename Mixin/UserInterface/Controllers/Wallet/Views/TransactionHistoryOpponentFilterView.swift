@@ -11,7 +11,7 @@ final class TransactionHistoryOpponentFilterView: TransactionHistoryFilterView {
             view.removeFromSuperview()
         }
         let userIconViews = users.prefix(maxIconCount).map { user in
-            let view = IconWrapperView<AvatarImageView>()
+            let view = StackedIconWrapperView<AvatarImageView>()
             view.backgroundColor = .clear
             view.iconView.titleFontSize = 9
             view.iconView.setImage(with: user)
@@ -19,7 +19,7 @@ final class TransactionHistoryOpponentFilterView: TransactionHistoryFilterView {
             return view
         }
         let addressIconViews = addresses.prefix(maxIconCount - userIconViews.count).map { address in
-            let view = IconWrapperView<PlainTokenIconView>()
+            let view = StackedIconWrapperView<PlainTokenIconView>()
             view.backgroundColor = .clear
             view.iconView.setIcon(address: address)
             iconsStackView.addArrangedSubview(view)

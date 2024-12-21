@@ -22,6 +22,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     
     private var queue = OperationQueue()
     private var quickAccess: QuickAccessSearchResult?
+    private var maoUser: MAONameSearchResult?
     private var assets = [AssetSearchResult]()
     private var users = [SearchResult]()
     private var conversationsByName = [SearchResult]()
@@ -30,6 +31,8 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     private var recentAppsViewController: RecentAppsViewController?
     private var lastSearchFieldText: String?
     private var snapshot: DatabaseSnapshot?
+    
+    private weak var maoNameSearchRequest: Request?
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -51,6 +54,7 @@ class SearchViewController: UIViewController, HomeSearchViewController {
                            forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.register(SearchFooterView.self,
                            forHeaderFooterViewReuseIdentifier: ReuseId.footer)
+        tableView.register(R.nib.maoNameSearchResultCell)
         tableView.register(R.nib.peerCell)
         tableView.register(R.nib.assetCell)
         tableView.register(R.nib.quickAccessResultCell)
@@ -89,22 +93,24 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     
     @IBAction func searchAction(_ sender: Any) {
         guard let keyword = trimmedKeyword else {
+            cancelOperation()
+            maoNameSearchRequest?.cancel()
             showRecentApps()
             lastKeyword = nil
-            cancelOperation()
             navigationSearchBoxView.isBusy = false
             return
         }
-        cancelOperation()
         guard keyword != lastKeyword else {
             navigationSearchBoxView.isBusy = false
             return
         }
+        cancelOperation()
         quickAccess?.cancelPreviousPerformRequest()
+        maoNameSearchRequest?.cancel()
         let limit = self.resultLimit + 1 // Query 1 more object to see if there's more objects than the limit
         let op = BlockOperation()
         op.addExecutionBlock { [unowned op] in
-            usleep(200 * 1000)
+            Thread.sleep(forTimeInterval: 0.5)
             guard !op.isCancelled else {
                 return
             }
@@ -115,7 +121,51 @@ class SearchViewController: UIViewController, HomeSearchViewController {
             guard !op.isCancelled else {
                 return
             }
-
+            
+            switch quickAccess?.content {
+            case .number:
+                break
+            case .link, .none:
+                let name = if keyword.hasSuffix(".mao") {
+                    String(keyword[keyword.startIndex..<keyword.index(keyword.endIndex, offsetBy: -4)])
+                } else {
+                    keyword
+                }
+                let range = NSRange(name.startIndex..<name.endIndex, in: name)
+                if let regex = try? NSRegularExpression(pattern: #"^[^\sA-Z]{1,128}$"#),
+                   regex.firstMatch(in: name, range: range) != nil,
+                   let encodedName = name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
+                   !op.isCancelled
+                {
+                    DispatchQueue.main.sync {
+                        self.maoNameSearchRequest = UserAPI.search(keyword: encodedName) { [weak self] result in
+                            switch result {
+                            case .failure(let error):
+                                Logger.general.debug(category: "Search", message: "\(error)")
+                            case .success(let response):
+                                guard let self, self.trimmedKeyword == keyword else {
+                                    return
+                                }
+                                self.maoUser = MAONameSearchResult(keyword: keyword, name: name, response: response)
+                                var sections = IndexSet(integer: Section.maoUser.rawValue)
+                                let firstNotEmptySectionAfterMAOUser = Section.allCases.filter { section in
+                                    section.rawValue > Section.maoUser.rawValue
+                                }.first { section in
+                                    !self.isEmptySection(section)
+                                }
+                                if let section = firstNotEmptySectionAfterMAOUser {
+                                    // Update the header
+                                    sections.insert(section.rawValue)
+                                }
+                                UIView.performWithoutAnimation {
+                                    self.tableView.reloadSections(sections, with: .none)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
             let users = UserDAO.shared.getUsers(keyword: keyword, limit: limit)
                 .map { UserSearchResult(user: $0, keyword: keyword) }
             guard !op.isCancelled else {
@@ -129,6 +179,9 @@ class SearchViewController: UIViewController, HomeSearchViewController {
             }
             DispatchQueue.main.sync {
                 self.quickAccess = quickAccess
+                if self.maoUser?.keyword != keyword {
+                    self.maoUser = nil
+                }
                 self.assets = assets
                 self.users = users
                 self.conversationsByName = conversationsByName
@@ -167,6 +220,8 @@ class SearchViewController: UIViewController, HomeSearchViewController {
     func prepareForReuse() {
         cancelOperation()
         showRecentApps()
+        quickAccess = nil
+        maoUser = nil
         assets = []
         users = []
         conversationsByName = []
@@ -192,24 +247,32 @@ extension SearchViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
-        case .top:
-            return quickAccess == nil ? 0 : 1
+        case .quickAccess:
+            quickAccess == nil ? 0 : 1
+        case .maoUser:
+            maoUser == nil ? 0 : 1
         case .asset:
-            return min(resultLimit, assets.count)
+            min(resultLimit, assets.count)
         case .user:
-            return min(resultLimit, users.count)
+            min(resultLimit, users.count)
         case .group:
-            return min(resultLimit, conversationsByName.count)
+            min(resultLimit, conversationsByName.count)
         case .conversation:
-            return min(resultLimit, conversationsByMessage.count)
+            min(resultLimit, conversationsByMessage.count)
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
-        case .top:
+        case .quickAccess:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.quick_access, for: indexPath)!
             cell.result = quickAccess
+            return cell
+        case .maoUser:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.mao_name_search_result, for: indexPath)!
+            if let result = maoUser {
+                cell.load(result: result)
+            }
             return cell
         case .asset:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
@@ -232,7 +295,7 @@ extension SearchViewController: UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return Section.allCases.count
+        Section.allCases.count
     }
     
 }
@@ -240,19 +303,20 @@ extension SearchViewController: UITableViewDataSource {
 extension SearchViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let section = Section(rawValue: indexPath.section)!
-        switch section {
-        case .top:
-            return UITableView.automaticDimension
+        switch Section(rawValue: indexPath.section)! {
+        case .quickAccess:
+            UITableView.automaticDimension
+        case .maoUser:
+            MAONameSearchResultCell.height
         case .asset, .user, .group, .conversation:
-            return PeerCell.height
+            PeerCell.height
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         let section = Section(rawValue: section)!
         switch section {
-        case .top:
+        case .quickAccess, .maoUser:
             return .leastNormalMagnitude
         case .asset, .user, .group, .conversation:
             if isEmptySection(section) {
@@ -266,7 +330,7 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         let section = Section(rawValue: section)!
         switch section {
-        case .top:
+        case .quickAccess, .maoUser:
             return .leastNormalMagnitude
         case .asset, .user, .group, .conversation:
             return isEmptySection(section) ? .leastNormalMagnitude : SearchFooterView.height
@@ -276,7 +340,7 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let section = Section(rawValue: section)!
         switch section {
-        case .top:
+        case .quickAccess, .maoUser:
             return nil
         case .asset, .user, .group, .conversation:
             if isEmptySection(section) {
@@ -296,7 +360,7 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let section = Section(rawValue: section)!
         switch section {
-        case .top:
+        case .quickAccess, .maoUser:
             return nil
         case .asset, .user, .group, .conversation:
             if isEmptySection(section) {
@@ -311,13 +375,23 @@ extension SearchViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         searchTextField.resignFirstResponder()
         switch Section(rawValue: indexPath.section)! {
-        case .top:
+        case .quickAccess:
             quickAccess?.performQuickAccess() { [weak self] item in
                 guard let item else {
                     return
                 }
                 let profile = UserProfileViewController(user: item)
                 self?.present(profile, animated: true)
+            }
+        case .maoUser:
+            if let navigationController = homeNavigationController {
+                if let app = maoUser?.app {
+                    let webView = MixinWebViewController.instance(with: .init(conversationId: "", app: app))
+                    webView.presentAsChild(of: navigationController, completion: nil)
+                } else if let user = maoUser?.user, user.isCreatedByMessenger {
+                    let vc = ConversationViewController.instance(ownerUser: user)
+                    navigationController.pushViewController(vc, animated: true)
+                }
             }
         case .asset:
             pushTokenViewController(token: assets[indexPath.row].asset)
@@ -340,7 +414,7 @@ extension SearchViewController: SearchHeaderViewDelegate {
         }
         let vc = R.storyboard.home.search_category()!
         switch section {
-        case .top:
+        case .quickAccess, .maoUser:
             return
         case .asset:
             vc.category = .asset
@@ -359,13 +433,15 @@ extension SearchViewController: SearchHeaderViewDelegate {
 
 extension SearchViewController {
     
-    enum ReuseId {
-        static let header = "header"
-        static let footer = "footer"
+    private enum ReuseId {
+        static let header = "h"
+        static let footer = "f"
     }
     
-    enum Section: Int, CaseIterable {
-        case top = 0
+    private enum Section: Int, CaseIterable {
+        
+        case quickAccess = 0
+        case maoUser
         case asset
         case user
         case group
@@ -373,16 +449,16 @@ extension SearchViewController {
         
         var title: String? {
             switch self {
-            case .top:
-                return nil
+            case .quickAccess, .maoUser:
+                nil
             case .asset:
-                return R.string.localizable.assets()
+                R.string.localizable.assets()
             case .user:
-                return R.string.localizable.contact_title()
+                R.string.localizable.contact_title()
             case .group:
-                return R.string.localizable.conversations()
+                R.string.localizable.conversations()
             case .conversation:
-                return R.string.localizable.messages()
+                R.string.localizable.messages()
             }
         }
         
@@ -411,7 +487,7 @@ extension SearchViewController {
     
     private func models(forSection section: Section) -> [Any] {
         switch section {
-        case .top:
+        case .quickAccess, .maoUser:
             return []
         case .asset:
             return assets
@@ -426,26 +502,29 @@ extension SearchViewController {
     
     private func isEmptySection(_ section: Section) -> Bool {
         switch section {
-        case .top:
-            return quickAccess == nil
+        case .quickAccess:
+            quickAccess == nil
+        case .maoUser:
+            maoUser == nil
         case .asset, .user, .group, .conversation:
-            return models(forSection: section).isEmpty
+            models(forSection: section).isEmpty
         }
     }
     
     private func isFirstSection(_ section: Section) -> Bool {
-        let showTopResult = quickAccess != nil
-        switch section {
-        case .top:
-            return showTopResult
+        return switch section {
+        case .quickAccess:
+            quickAccess != nil
+        case .maoUser:
+            quickAccess == nil && maoUser != nil
         case .asset:
-            return !showTopResult
+            quickAccess == nil && maoUser == nil
         case .user:
-            return !showTopResult && assets.isEmpty
+            quickAccess == nil && maoUser == nil && assets.isEmpty
         case .group:
-            return !showTopResult && assets.isEmpty && users.isEmpty
+            quickAccess == nil && maoUser == nil && assets.isEmpty && users.isEmpty
         case .conversation:
-            return !showTopResult && assets.isEmpty && users.isEmpty && conversationsByName.isEmpty
+            quickAccess == nil && maoUser == nil && assets.isEmpty && users.isEmpty && conversationsByName.isEmpty
         }
     }
     

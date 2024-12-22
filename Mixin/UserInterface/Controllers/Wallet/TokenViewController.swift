@@ -599,8 +599,13 @@ extension TokenViewController: UITableViewDelegate {
             market.pushingViewController = self
             navigationController?.pushViewController(market, animated: true)
         case .pending:
-            let snapshot = pendingSnapshots[indexPath.row - 1]
-            view(snapshot: snapshot)
+            switch indexPath.row {
+            case 0, pendingSnapshots.count + 1:
+                break
+            default:
+                let snapshot = pendingSnapshots[indexPath.row - 1]
+                view(snapshot: snapshot)
+            }
         case .transactions:
             let row = transactionRows[indexPath.row]
             switch row {

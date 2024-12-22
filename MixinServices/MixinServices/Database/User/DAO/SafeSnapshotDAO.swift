@@ -70,7 +70,7 @@ extension SafeSnapshotDAO {
     }
     
     public func snapshots(
-        assetID: String,
+        assetID: String?,
         pending: Bool,
         limit: Int?
     ) -> [SafeSnapshotItem] {
@@ -79,10 +79,11 @@ extension SafeSnapshotDAO {
         } else {
             [.snapshot, .withdrawal]
         }
-        var sql = GRDB.SQL(sql: Self.querySQL) + """
-        WHERE s.asset_id = \(assetID) AND s.type IN \(types.map(\.rawValue))
-        ORDER BY s.created_at DESC
-        """
+        var sql = GRDB.SQL(sql: Self.querySQL) + "WHERE s.type IN \(types.map(\.rawValue))"
+        if let assetID {
+            sql.append(literal: " AND s.asset_id = \(assetID)")
+        }
+        sql.append(literal: "\nORDER BY s.created_at DESC")
         if let limit {
             sql.append(literal: "\nLIMIT \(limit)")
         }

@@ -329,45 +329,61 @@ extension WalletViewController {
     }
     
     @objc private func reloadPendingDeposits() {
-        SafeAPI.allDeposits(queue: .global()) { result in
-            guard case .success(let deposits) = result else {
-                return
-            }
-            let entries = DepositEntryDAO.shared.compactEntries()
-            let myDeposits = deposits.filter { deposit in
-                // `SafeAPI.allDeposits` returns all deposits, whether it's mine or other's
-                // Filter with my entries to get my deposits
-                entries.contains(where: { (entry) in
-                    let isDestinationMatch = entry.destination == deposit.destination
-                    let isTagMatch: Bool
-                    if entry.tag.isNilOrEmpty && deposit.tag.isNilOrEmpty {
-                        isTagMatch = true
-                    } else if entry.tag == deposit.tag {
-                        isTagMatch = true
-                    } else {
-                        isTagMatch = false
-                    }
-                    return isDestinationMatch && isTagMatch
-                })
-            }
-            let assetIDs = Set(myDeposits.map(\.assetID))
-            
-            var tokens = TokenDAO.shared.tokens(with: assetIDs)
-            let missingAssetIDs = TokenDAO.shared.inexistAssetIDs(in: assetIDs)
-            if !missingAssetIDs.isEmpty {
-                switch SafeAPI.assets(ids: missingAssetIDs) {
-                case .failure(let error):
-                    Logger.general.debug(category: "Wallet", message: "\(error)")
-                case .success(let missingTokens):
-                    TokenDAO.shared.save(assets: missingTokens)
-                    tokens.append(contentsOf: missingTokens)
-                }
-            }
-            
-            SafeSnapshotDAO.shared.replaceAllPendingSnapshots(with: myDeposits)
+        DispatchQueue.global().async { [weak self] in
+            let pendingSnapshots = SafeSnapshotDAO.shared.snapshots(assetID: nil, pending: true, limit: nil)
+            let assetIDs = Set(pendingSnapshots.map(\.assetID))
+            let tokens = TokenDAO.shared.tokens(with: assetIDs)
             DispatchQueue.main.async {
-                self.tableHeaderView.reloadPendingDeposits(tokens: tokens, deposits: myDeposits)
+                guard let self else {
+                    return
+                }
+                self.tableHeaderView.reloadPendingDeposits(tokens: tokens, snapshots: pendingSnapshots)
                 self.layoutTableHeaderView()
+            }
+            SafeAPI.allDeposits(queue: .global()) { result in
+                guard case .success(let deposits) = result else {
+                    return
+                }
+                let entries = DepositEntryDAO.shared.compactEntries()
+                let myDeposits = deposits.filter { deposit in
+                    // `SafeAPI.allDeposits` returns all deposits, whether it's mine or other's
+                    // Filter with my entries to get my deposits
+                    entries.contains(where: { (entry) in
+                        let isDestinationMatch = entry.destination == deposit.destination
+                        let isTagMatch: Bool
+                        if entry.tag.isNilOrEmpty && deposit.tag.isNilOrEmpty {
+                            isTagMatch = true
+                        } else if entry.tag == deposit.tag {
+                            isTagMatch = true
+                        } else {
+                            isTagMatch = false
+                        }
+                        return isDestinationMatch && isTagMatch
+                    })
+                }
+                let assetIDs = Set(myDeposits.map(\.assetID))
+                
+                var tokens = TokenDAO.shared.tokens(with: assetIDs)
+                let missingAssetIDs = TokenDAO.shared.inexistAssetIDs(in: assetIDs)
+                if !missingAssetIDs.isEmpty {
+                    switch SafeAPI.assets(ids: missingAssetIDs) {
+                    case .failure(let error):
+                        Logger.general.debug(category: "Wallet", message: "\(error)")
+                    case .success(let missingTokens):
+                        TokenDAO.shared.save(assets: missingTokens)
+                        tokens.append(contentsOf: missingTokens)
+                    }
+                }
+                
+                SafeSnapshotDAO.shared.replaceAllPendingSnapshots(with: myDeposits)
+                let snapshots = myDeposits.map(SafeSnapshot.init(pendingDeposit:))
+                DispatchQueue.main.async {
+                    guard let self else {
+                        return
+                    }
+                    self.tableHeaderView.reloadPendingDeposits(tokens: tokens, snapshots: snapshots)
+                    self.layoutTableHeaderView()
+                }
             }
         }
     }

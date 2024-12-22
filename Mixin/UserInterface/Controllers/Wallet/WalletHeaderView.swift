@@ -178,8 +178,8 @@ final class WalletHeaderView: InfiniteTopView {
         }
     }
     
-    func reloadPendingDeposits(tokens: [Token], deposits: [SafePendingDeposit]) {
-        if tokens.isEmpty || deposits.isEmpty {
+    func reloadPendingDeposits(tokens: [Token], snapshots: [SafeSnapshot]) {
+        if tokens.isEmpty || snapshots.isEmpty {
             pendingDepositView.isHidden = true
         } else {
             pendingDepositView.isHidden = false
@@ -220,9 +220,9 @@ final class WalletHeaderView: InfiniteTopView {
                         .multipliedBy(multiplier)
                 }
             }
-            if deposits.count == 1,
-               let amount = Decimal(string: deposits[0].amount, locale: .enUSPOSIX),
-               let token = tokens.first(where: { $0.assetID == deposits[0].assetID })
+            if snapshots.count == 1,
+               let amount = Decimal(string: snapshots[0].amount, locale: .enUSPOSIX),
+               let token = tokens.first(where: { $0.assetID == snapshots[0].assetID })
             {
                 let item = CurrencyFormatter.localizedString(
                     from: amount,
@@ -232,7 +232,7 @@ final class WalletHeaderView: InfiniteTopView {
                 )
                 pendingDepositLabel.text = R.string.localizable.deposit_pending_confirmation(item)
             } else {
-                pendingDepositLabel.text = R.string.localizable.deposits_pending_confirmation(deposits.count)
+                pendingDepositLabel.text = R.string.localizable.deposits_pending_confirmation(snapshots.count)
             }
         }
     }

@@ -52,13 +52,17 @@ public class SafeSnapshot: Codable, DatabaseColumnConvertible, MixinFetchableRec
         !(inscriptionHash?.isEmpty ?? true)
     }
     
-    public var displayType: DisplayType {
+    public var displayTypes: Set<DisplayType> {
         if deposit != nil {
-            .deposit
+            if type == SnapshotType.pending.rawValue {
+                [.deposit, .pending]
+            } else {
+                [.deposit]
+            }
         } else if withdrawal != nil {
-            .withdrawal
+            [.withdrawal]
         } else {
-            .transfer
+            [.transfer]
         }
     }
     
@@ -280,7 +284,7 @@ extension SafeSnapshot {
         public func isIncluded(snapshot: SafeSnapshot) -> Bool {
             var isIncluded = true
             if let type {
-                isIncluded = isIncluded && snapshot.displayType == type
+                isIncluded = isIncluded && snapshot.displayTypes.contains(type)
             }
             if !tokens.isEmpty {
                 isIncluded = isIncluded && tokens.contains(where: { $0.assetID == snapshot.assetID })

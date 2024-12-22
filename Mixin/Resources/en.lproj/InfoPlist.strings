@@ -6,4 +6,3 @@
 "NSFaceIDUsageDescription" = "Mixin uses Face ID to authorize payment";
 "NSLocationWhenInUseUsageDescription" = "Turn on location services to send your current location or nearby places in conversation.";
 "NSLocalNetworkUsageDescription" = "Mixin uses the local network to transfer or restore your chat history.";
-"NSUserTrackingUsageDescription" = "Mixin uses tracking data for personalized analysis to provide you with better services.";

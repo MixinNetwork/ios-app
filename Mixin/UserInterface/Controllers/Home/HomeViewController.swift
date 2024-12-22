@@ -1,7 +1,5 @@
 import UIKit
 import StoreKit
-import AppTrackingTransparency
-import AdSupport
 import FirebaseAnalytics
 import AppsFlyerLib
 import MixinServices
@@ -303,23 +301,8 @@ final class HomeViewController: UIViewController {
         if let id = FirebaseAnalytics.Analytics.appInstanceID() {
             AppsFlyerLib.shared().customData = ["app_instance_id": id]
         }
-        AppsFlyerLib.shared().waitForATTUserAuthorization(timeoutInterval: 60)
+        AppsFlyerLib.shared().disableAdvertisingIdentifier = true
         AppsFlyerLib.shared().start()
-        ATTrackingManager.requestTrackingAuthorization { (status) in
-            switch status {
-            case .notDetermined:
-                Logger.general.debug(category: "Home", message: "Tracking auth: notDetermined")
-            case .restricted:
-                Logger.general.debug(category: "Home", message: "Tracking auth: restricted")
-            case .denied:
-                Logger.general.debug(category: "Home", message: "Tracking auth: denied")
-            case .authorized:
-                let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString
-                Logger.general.debug(category: "Home", message: "Tracking auth: \(idfa)")
-            @unknown default:
-                Logger.general.debug(category: "Home", message: "Tracking auth: \(status)")
-            }
-        }
         if let observer = appsFlyerStartingObserver {
             NotificationCenter.default.removeObserver(observer)
         }

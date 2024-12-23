@@ -484,7 +484,7 @@ extension TIP {
             Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
         } catch {
             Logger.tip.error(category: "TIP", message: "Error: \(error), step1: \(step1), step2: \(step2)")
-            reporter.report(error: error, userInfo: ["step1": step1, "step2": "step2"])
+            reporter.report(error: error, userInfo: ["step1": step1, "step2": step2])
             throw error
         }
     }

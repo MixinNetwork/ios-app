@@ -17,7 +17,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="0ce-wp-arb" customClass="WalletHeaderView" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="393" height="259"/>
+            <rect key="frame" x="0.0" y="0.0" width="393" height="266"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="48b-kN-ade">
@@ -283,7 +283,7 @@
                     </subviews>
                 </stackView>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cea-tl-cwe" userLabel="Separator View">
-                    <rect key="frame" x="0.0" y="249" width="393" height="10"/>
+                    <rect key="frame" x="0.0" y="256" width="393" height="10"/>
                     <color key="backgroundColor" name="background_secondary"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="10" id="hOz-iK-Ubm"/>
@@ -294,7 +294,7 @@
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="Cea-tl-cwe" secondAttribute="bottom" id="1hf-uv-oH3"/>
                 <constraint firstAttribute="trailing" secondItem="48b-kN-ade" secondAttribute="trailing" id="3l7-2T-y4K"/>
-                <constraint firstItem="Cea-tl-cwe" firstAttribute="top" secondItem="48b-kN-ade" secondAttribute="bottom" constant="10" id="8HU-uU-8uV"/>
+                <constraint firstItem="Cea-tl-cwe" firstAttribute="top" secondItem="48b-kN-ade" secondAttribute="bottom" constant="17" id="8HU-uU-8uV"/>
                 <constraint firstItem="Cea-tl-cwe" firstAttribute="trailing" secondItem="0ce-wp-arb" secondAttribute="trailing" id="WJv-ji-VDc"/>
                 <constraint firstItem="Cea-tl-cwe" firstAttribute="leading" secondItem="0ce-wp-arb" secondAttribute="leading" id="aJs-Xi-X2E"/>
                 <constraint firstItem="48b-kN-ade" firstAttribute="leading" secondItem="0ce-wp-arb" secondAttribute="leading" id="dvW-0W-IQd"/>
@@ -307,7 +307,7 @@
                 <outlet property="assetChartWrapperView" destination="pij-OH-ggw" id="YIw-VX-I5B"/>
                 <outlet property="btcValueLabel" destination="BIn-gQ-RCY" id="8W0-P4-ig5"/>
                 <outlet property="contentView" destination="48b-kN-ade" id="NOm-Rt-GZh"/>
-                <outlet property="contentViewTopConstraint" destination="gD1-21-bJ1" id="AVA-u6-SVG"/>
+                <outlet property="contentViewBottomConstraint" destination="8HU-uU-8uV" id="Pqd-jn-rtQ"/>
                 <outlet property="fiatMoneySymbolLabel" destination="zXv-bX-7yn" id="N4f-jY-KfI"/>
                 <outlet property="fiatMoneyValueLabel" destination="jYm-0O-WDg" id="gGt-al-RgV"/>
                 <outlet property="leftAssetPercentLabel" destination="HLB-e7-vRy" id="mPL-zz-huv"/>
@@ -344,7 +344,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

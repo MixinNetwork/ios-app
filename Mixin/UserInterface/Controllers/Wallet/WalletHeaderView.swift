@@ -32,7 +32,7 @@ final class WalletHeaderView: InfiniteTopView {
     @IBOutlet weak var pendingDepositIconStackView: UIStackView!
     @IBOutlet weak var pendingDepositLabel: UILabel!
     
-    @IBOutlet weak var contentViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
     
     var showSnowfallEffect = false {
         didSet {
@@ -91,6 +91,7 @@ final class WalletHeaderView: InfiniteTopView {
         super.awakeFromNib()
         btcValueLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
         contentView.setCustomSpacing(30, after: assetChartWrapperView)
+        contentView.setCustomSpacing(13, after: actionView)
         pendingDepositButton.layer.masksToBounds = true
         pendingDepositButton.layer.cornerRadius = 18
     }
@@ -181,8 +182,10 @@ final class WalletHeaderView: InfiniteTopView {
     func reloadPendingDeposits(tokens: [Token], snapshots: [SafeSnapshot]) {
         if tokens.isEmpty || snapshots.isEmpty {
             pendingDepositView.isHidden = true
+            contentViewBottomConstraint.constant = 17
         } else {
             pendingDepositView.isHidden = false
+            contentViewBottomConstraint.constant = 10
             for iconView in pendingDepositIconStackView.arrangedSubviews {
                 iconView.removeFromSuperview()
             }

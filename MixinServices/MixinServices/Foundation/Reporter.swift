@@ -34,10 +34,15 @@ open class Reporter {
     }
     
     public required init() {
+        
     }
-
+    
     open func configure() {
-        guard let path = Bundle.main.path(forResource: "Mixin-Keys", ofType: "plist"), let keys = NSDictionary(contentsOfFile: path) as? [String: Any], let sentryKey = keys["Sentry"] as? String else {
+        guard
+            let path = Bundle.main.path(forResource: "Mixin-Keys", ofType: "plist"),
+            let keys = NSDictionary(contentsOfFile: path) as? [String: Any],
+            let sentryKey = keys["Sentry"] as? String
+        else {
             return
         }
         
@@ -45,14 +50,13 @@ open class Reporter {
             options.dsn = sentryKey
             options.enablePerformanceV2 = true
 #if DEBUG
-            options.debug = true // Enabled debug when first installing is always helpful
             options.tracesSampleRate = 1.0
 #else
             options.tracesSampleRate = 0.1
 #endif
         }
     }
-
+    
     open func registerUserInformation() {
         guard let account = LoginManager.shared.account else {
             return

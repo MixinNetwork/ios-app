@@ -296,11 +296,11 @@ final class AuthenticationViewController: UIViewController {
             failureView.continueButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
         case .inputPINAgain:
             customTryAgainAction = nil
-            failureView.continueButton.setTitle(R.string.localizable.try_again(), for: .normal)
+            failureView.continueButton.setTitle(R.string.localizable.retry(), for: .normal)
             failureView.continueButton.addTarget(self, action: #selector(tryAgain(_:)), for: .touchUpInside)
         case .custom(let action):
             customTryAgainAction = action
-            failureView.continueButton.setTitle(R.string.localizable.try_again(), for: .normal)
+            failureView.continueButton.setTitle(R.string.localizable.retry(), for: .normal)
             failureView.continueButton.addTarget(self, action: #selector(tryAgain(_:)), for: .touchUpInside)
         }
         self.view.addSubview(failureView)
@@ -311,6 +311,11 @@ final class AuthenticationViewController: UIViewController {
         self.failureView = failureView
         self.view.layoutIfNeeded()
         self.validatingIndicator.stopAnimating()
+        if let intentViewController = intent as? UIViewController,
+           intent.options.contains(.viewUnderPINField)
+        {
+            intentViewController.view.alpha = 0
+        }
         
         UIView.animate(withDuration: 0.3) {
             self.pinField.resignFirstResponder()
@@ -456,6 +461,14 @@ extension AuthenticationViewController {
     }
     
     @objc private func tryAgain(_ sender: Any) {
+        func showIntentView() {
+            if let intentViewController = intent as? UIViewController,
+               intent.options.contains(.viewUnderPINField)
+            {
+                intentViewController.view.alpha = 1
+            }
+        }
+        
         pinField.clear()
         pinField.isHidden = false
         pinField.receivesInput = true
@@ -463,9 +476,11 @@ extension AuthenticationViewController {
         failureView?.removeFromSuperview()
         pinFieldWrapperHeightConstraint.priority = .almostRequired
         if let action = customTryAgainAction {
+            showIntentView()
             action()
         } else {
             UIView.animate(withDuration: 0.3) {
+                showIntentView()
                 self.pinField.becomeFirstResponder()
                 self.view.layoutIfNeeded()
             }

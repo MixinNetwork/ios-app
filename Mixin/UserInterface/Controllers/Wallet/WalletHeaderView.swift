@@ -32,13 +32,15 @@ final class WalletHeaderView: InfiniteTopView {
     @IBOutlet weak var pendingDepositIconStackView: UIStackView!
     @IBOutlet weak var pendingDepositLabel: UILabel!
     
+    @IBOutlet weak var separatorView: UIView!
+    
     @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
     
     var showSnowfallEffect = false {
         didSet {
             if showSnowfallEffect {
                 if snowfallLayer.superlayer == nil {
-                    layer.insertSublayer(snowfallLayer, at: 0)
+                    layer.insertSublayer(snowfallLayer, below: separatorView.layer)
                 }
             } else {
                 snowfallLayerIfLoaded?.removeFromSuperlayer()
@@ -56,7 +58,7 @@ final class WalletHeaderView: InfiniteTopView {
     private lazy var snowfallLayer: CAEmitterLayer = {
         let cell = CAEmitterCell()
         cell.birthRate = 3
-        cell.lifetime = 10
+        cell.lifetime = 15
         cell.emissionRange = .pi
         cell.velocity = 5
         cell.velocityRange = 10

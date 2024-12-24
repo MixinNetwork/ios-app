@@ -1,6 +1,5 @@
 import Foundation
 import CryptoKit
-import AppCenterCrashes
 import Alamofire
 
 public enum TIP {
@@ -485,8 +484,7 @@ extension TIP {
             Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
         } catch {
             Logger.tip.error(category: "TIP", message: "Error: \(error), step1: \(step1), step2: \(step2)")
-            Crashes.trackError(error, properties: ["error": "\(error)", "step1": step1, "step2": step2], attachments: nil)
-            reporter.report(error: error)
+            reporter.report(error: error, userInfo: ["step1": step1, "step2": step2])
             throw error
         }
     }
@@ -635,7 +633,8 @@ extension TIP {
                     "key": "\(tipPrivKey.count)",
                     "decrypted": "\(decrypted.count)"
                 ]
-                Crashes.trackError(Error.invalidSize, properties: sizeInfo, attachments: nil)
+                Logger.tip.error(category: "TIP", message: "Invalid size", userInfo: sizeInfo)
+                reporter.report(error: Error.invalidSize, userInfo: sizeInfo)
             }
         }
         Logger.tip.info(category: "TIP", message: "Using new created priv")

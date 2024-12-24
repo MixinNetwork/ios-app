@@ -1,7 +1,5 @@
 import Foundation
-import AppCenter
-import AppCenterAnalytics
-import AppCenterCrashes
+import Sentry
 
 open class Reporter {
     
@@ -36,45 +34,53 @@ open class Reporter {
     }
     
     public required init() {
+        
     }
-
+    
     open func configure() {
-        guard let path = Bundle.main.path(forResource: "Mixin-Keys", ofType: "plist"), let keys = NSDictionary(contentsOfFile: path) as? [String: Any], let key = keys["AppCenter"] as? String else {
+        guard
+            let path = Bundle.main.path(forResource: "Mixin-Keys", ofType: "plist"),
+            let keys = NSDictionary(contentsOfFile: path) as? [String: Any],
+            let sentryKey = keys["Sentry"] as? String
+        else {
             return
         }
         
-        AppCenter.start(withAppSecret: key, services: [Analytics.self, Crashes.self])
-        
-        if !isAppExtension, Crashes.hasCrashedInLastSession, let report = Crashes.lastSessionCrashReport {
-            Logger.general.info(category: "LastCrash", message: "Signal: \(report.signal), exception: \(report.exceptionName ?? "(null)"), reason: \(report.exceptionReason ?? "(null)")")
+        SentrySDK.start { options in
+            options.dsn = sentryKey
+            options.enablePerformanceV2 = true
+#if DEBUG
+            options.tracesSampleRate = 1.0
+#else
+            options.tracesSampleRate = 0.1
+#endif
         }
     }
-
+    
     open func registerUserInformation() {
         guard let account = LoginManager.shared.account else {
             return
         }
-        AppCenter.userId = account.userID
+        SentrySDK.setUser(Sentry.User(userId: account.userID))
     }
     
     open func report(event: Event, userInfo: UserInfo? = nil) {
-        if let userInfo = userInfo {
-            var properties = [String: String]()
-            userInfo.forEach { (key, value) in
-                properties[key] = "\(value)"
-            }
-            Analytics.trackEvent(event.name, withProperties: properties)
-        } else {
-            Analytics.trackEvent(event.name)
-        }
+        let event = Sentry.Event(level: .info)
+        event.extra = userInfo
+        SentrySDK.capture(event: event)
     }
 
     open func report(error: MixinAPIError) {
-
+        SentrySDK.capture(error: error)
     }
 
-    open func report(error: Error) {
-
+    open func report(error: Error, userInfo: UserInfo? = nil) {
+        if let info = userInfo {
+            let event = Sentry.Event(level: .error)
+            event.extra = userInfo
+            SentrySDK.capture(event: event)
+        } else {
+            SentrySDK.capture(error: error)
+        }
     }
-    
 }

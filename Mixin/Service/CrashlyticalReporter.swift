@@ -20,8 +20,8 @@ class CrashlyticalReporter: Reporter {
         Analytics.logEvent(event.name, parameters: userInfo)
     }
     
-    override func report(error: Error) {
-        super.report(error: error)
+    override func report(error: Error, userInfo: UserInfo? = nil) {
+        super.report(error: error, userInfo: userInfo)
         Crashlytics.crashlytics().record(error: error)
     }
     

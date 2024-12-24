@@ -296,11 +296,11 @@ final class AuthenticationViewController: UIViewController {
             failureView.continueButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
         case .inputPINAgain:
             customTryAgainAction = nil
-            failureView.continueButton.setTitle(R.string.localizable.try_again(), for: .normal)
+            failureView.continueButton.setTitle(R.string.localizable.retry(), for: .normal)
             failureView.continueButton.addTarget(self, action: #selector(tryAgain(_:)), for: .touchUpInside)
         case .custom(let action):
             customTryAgainAction = action
-            failureView.continueButton.setTitle(R.string.localizable.try_again(), for: .normal)
+            failureView.continueButton.setTitle(R.string.localizable.retry(), for: .normal)
             failureView.continueButton.addTarget(self, action: #selector(tryAgain(_:)), for: .touchUpInside)
         }
         self.view.addSubview(failureView)

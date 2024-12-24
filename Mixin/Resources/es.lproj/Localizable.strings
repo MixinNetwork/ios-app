@@ -427,11 +427,13 @@
 "deposit_confirmation_count" = "El depósito llegará %d bloquear confirmaciones";
 "deposit_dust" = "Minimum deposit: %1$@ %2$@";
 "deposit_hash" = "Deposit Hash";
+"deposit_pending_confirmation" = "%@ Pending Confirmation";
 "deposit_tip_btc" = "Esta dirección solo admite BTC.";
 "deposit_tip_common" = "Esta dirección solo admite %@.";
 "deposit_tip_eos" = "Esta dirección es compatible con todos los tokens basados en EOS.";
 "deposit_tip_eth" = "Esta dirección admite todos los tokens ERC-20, como ETH, XIN, etc.";
 "deposit_tip_trx" = "Esta dirección admite todos los tokens TRC-10 y TRC-20.";
+"deposits_pending_confirmation" = "%d Deposits Pending Confirmation";
 "depost_address_updated" = "%@ Deposit Address Updated";
 "depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
 "desktop_login" = "Login to Mixin Messenger Desktop";
@@ -856,6 +858,7 @@
 "pay_withdrawal_memo" = "Importe %@ %@\nTarifa %@ %@";
 "peer_closed" = "Par cerrado";
 "peer_not_found" = "Par no encontrado";
+"pending" = "Pending";
 "pending_confirmation" = "%1$d/%2$d confirmación";
 "pending_confirmation_count" = "%1$d/%2$d confirmaciones";
 "pending_confirmations" = "%d/%d confirmaciones";

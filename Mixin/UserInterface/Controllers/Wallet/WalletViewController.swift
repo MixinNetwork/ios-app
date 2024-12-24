@@ -5,9 +5,9 @@ import MixinServices
 final class WalletViewController: UIViewController, MixinNavigationAnimating, MnemonicsBackupChecking {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var tableHeaderView: WalletHeaderView!
     
     private let searchAppearingAnimationDistance: CGFloat = 20
+    private let tableHeaderView = R.nib.walletHeaderView(withOwner: nil)!
     
     private var searchCenterYConstraint: NSLayoutConstraint?
     private var searchViewController: WalletSearchViewController?
@@ -25,6 +25,8 @@ final class WalletViewController: UIViewController, MixinNavigationAnimating, Mn
     override func viewDidLoad() {
         super.viewDidLoad()
         tableHeaderView.actionView.delegate = self
+        tableHeaderView.pendingDepositButton.addTarget(self, action: #selector(revealPendingDeposits(_:)), for: .touchUpInside)
+        tableView.tableHeaderView = tableHeaderView
         updateTableViewContentInset()
         tableView.register(R.nib.assetCell)
         tableView.tableFooterView = UIView()
@@ -36,6 +38,7 @@ final class WalletViewController: UIViewController, MixinNavigationAnimating, Mn
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: ChainDAO.chainsDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: TokenExtraDAO.tokenVisibilityDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: UTXOService.balanceDidUpdateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadPendingDeposits), name: UTXOService.balanceDidUpdateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTableHeaderVisualEffect), name: UIApplication.significantTimeChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dismissSearch), name: dismissSearchNotification, object: nil)
         reloadData()
@@ -59,6 +62,12 @@ final class WalletViewController: UIViewController, MixinNavigationAnimating, Mn
                 self.hasAssetInLegacyNetwork = hasAssetInLegacyNetwork
             }
         }
+        reloadPendingDeposits()
+    }
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        layoutTableHeaderView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -105,8 +114,7 @@ final class WalletViewController: UIViewController, MixinNavigationAnimating, Mn
     @IBAction func moreAction(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in
-            self.reloadPendingDeposits()
-            let history = TransactionHistoryViewController()
+            let history = TransactionHistoryViewController(type: nil)
             self.navigationController?.pushViewController(history, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
@@ -278,6 +286,25 @@ extension WalletViewController {
         }
     }
     
+    private func layoutTableHeaderView() {
+        let fittingSize = CGSize(
+            width: view.bounds.width,
+            height: UIView.layoutFittingExpandedSize.height
+        )
+        let headerSize = tableHeaderView.systemLayoutSizeFitting(
+            fittingSize,
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        )
+        tableHeaderView.frame.size.height = headerSize.height
+        tableView.tableHeaderView = tableHeaderView
+    }
+    
+    @objc private func revealPendingDeposits(_ sender: Any) {
+        let transactionHistory = TransactionHistoryViewController(type: .pending)
+        navigationController?.pushViewController(transactionHistory, animated: true)
+    }
+    
     @objc private func reloadData() {
         DispatchQueue.global().async { [weak self] in
             let tokens = TokenDAO.shared.notHiddenTokens()
@@ -288,8 +315,8 @@ extension WalletViewController {
                 }
                 self.tokens = tokens
                 self.sendableTokens = sendableTokens
-                self.tableHeaderView.render(tokens: tokens)
-                self.tableHeaderView.sizeToFit()
+                self.tableHeaderView.reloadValues(tokens: tokens)
+                self.layoutTableHeaderView()
                 self.tableView.reloadData()
             }
         }
@@ -299,6 +326,66 @@ extension WalletViewController {
         let now = Date()
         let showSnowfall = now.isChristmas || now.isChineseNewYear
         tableHeaderView.showSnowfallEffect = showSnowfall
+    }
+    
+    @objc private func reloadPendingDeposits() {
+        DispatchQueue.global().async { [weak self] in
+            let pendingSnapshots = SafeSnapshotDAO.shared.snapshots(assetID: nil, pending: true, limit: nil)
+            let assetIDs = Set(pendingSnapshots.map(\.assetID))
+            let tokens = TokenDAO.shared.tokens(with: assetIDs)
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                self.tableHeaderView.reloadPendingDeposits(tokens: tokens, snapshots: pendingSnapshots)
+                self.layoutTableHeaderView()
+            }
+            SafeAPI.allDeposits(queue: .global()) { result in
+                guard case .success(let deposits) = result else {
+                    return
+                }
+                let entries = DepositEntryDAO.shared.compactEntries()
+                let myDeposits = deposits.filter { deposit in
+                    // `SafeAPI.allDeposits` returns all deposits, whether it's mine or other's
+                    // Filter with my entries to get my deposits
+                    entries.contains(where: { (entry) in
+                        let isDestinationMatch = entry.destination == deposit.destination
+                        let isTagMatch: Bool
+                        if entry.tag.isNilOrEmpty && deposit.tag.isNilOrEmpty {
+                            isTagMatch = true
+                        } else if entry.tag == deposit.tag {
+                            isTagMatch = true
+                        } else {
+                            isTagMatch = false
+                        }
+                        return isDestinationMatch && isTagMatch
+                    })
+                }
+                let assetIDs = Set(myDeposits.map(\.assetID))
+                
+                var tokens = TokenDAO.shared.tokens(with: assetIDs)
+                let missingAssetIDs = TokenDAO.shared.inexistAssetIDs(in: assetIDs)
+                if !missingAssetIDs.isEmpty {
+                    switch SafeAPI.assets(ids: missingAssetIDs) {
+                    case .failure(let error):
+                        Logger.general.debug(category: "Wallet", message: "\(error)")
+                    case .success(let missingTokens):
+                        TokenDAO.shared.save(assets: missingTokens)
+                        tokens.append(contentsOf: missingTokens)
+                    }
+                }
+                
+                SafeSnapshotDAO.shared.replaceAllPendingSnapshots(with: myDeposits)
+                let snapshots = myDeposits.map(SafeSnapshot.init(pendingDeposit:))
+                DispatchQueue.main.async {
+                    guard let self else {
+                        return
+                    }
+                    self.tableHeaderView.reloadPendingDeposits(tokens: tokens, snapshots: snapshots)
+                    self.layoutTableHeaderView()
+                }
+            }
+        }
     }
     
     private func performAssetMigration(_ sender: Any) {
@@ -334,32 +421,6 @@ extension WalletViewController {
                                    balance: token.balance,
                                    updatedAt: Date().toUTCString())
             TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
-        }
-    }
-    
-    private func reloadPendingDeposits() {
-        SafeAPI.allDeposits(queue: .global()) { result in
-            guard case .success(let deposits) = result else {
-                return
-            }
-            let entries = DepositEntryDAO.shared.compactEntries()
-            let myDeposits = deposits.filter { deposit in
-                // `SafeAPI.allDeposits` returns all deposits, whether it's mine or other's
-                // Filter with my entries to get my deposits
-                entries.contains(where: { (entry) in
-                    let isDestinationMatch = entry.destination == deposit.destination
-                    let isTagMatch: Bool
-                    if entry.tag.isNilOrEmpty && deposit.tag.isNilOrEmpty {
-                        isTagMatch = true
-                    } else if entry.tag == deposit.tag {
-                        isTagMatch = true
-                    } else {
-                        isTagMatch = false
-                    }
-                    return isDestinationMatch && isTagMatch
-                })
-            }
-            SafeSnapshotDAO.shared.replaceAllPendingSnapshots(with: myDeposits)
         }
     }
     

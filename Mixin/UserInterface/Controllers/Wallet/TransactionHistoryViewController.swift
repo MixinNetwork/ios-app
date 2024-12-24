@@ -18,10 +18,9 @@ final class TransactionHistoryViewController: UIViewController {
     private let headerReuseIdentifier = "h"
     private let queue = OperationQueue()
     
-    private var filter = SafeSnapshot.Filter()
+    private var filter: SafeSnapshot.Filter
     private var order: SafeSnapshot.Order = .newest
     private var dataSource: DiffableDataSource!
-    private var tokens: [String: TokenItem] = [:] // Key is asset id
     private var items: [SnapshotID: SafeSnapshotItem] = [:]
     
     private var loadPreviousPageIndexPath: IndexPath?
@@ -30,25 +29,27 @@ final class TransactionHistoryViewController: UIViewController {
     private var loadNextPageIndexPath: IndexPath?
     private var lastItem: SafeSnapshotItem?
     
-    init() {
+    private init(filter: SafeSnapshot.Filter) {
+        self.filter = filter
         let nib = R.nib.transactionHistoryView
         super.init(nibName: nib.name, bundle: nib.bundle)
         self.queue.maxConcurrentOperationCount = 1
     }
     
     convenience init(token: TokenItem) {
-        self.init()
-        self.filter.tokens = [token]
+        self.init(filter: .init(tokens: [token]))
     }
     
     convenience init(user: UserItem) {
-        self.init()
-        self.filter.users = [user]
+        self.init(filter: .init(users: [user]))
     }
     
     convenience init(address: AddressItem) {
-        self.init()
-        self.filter.addresses = [address]
+        self.init(filter: .init(addresses: [address]))
+    }
+    
+    convenience init(type: SafeSnapshot.DisplayType?) {
+        self.init(filter: .init(type: type))
     }
     
     required init?(coder: NSCoder) {
@@ -80,8 +81,7 @@ final class TransactionHistoryViewController: UIViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
             if let self {
                 let snapshot = self.items[snapshotID]!
-                let token = self.tokens[snapshot.assetID]
-                cell.render(snapshot: snapshot, token: token)
+                cell.render(snapshot: snapshot)
             }
             return cell
         }
@@ -111,7 +111,7 @@ final class TransactionHistoryViewController: UIViewController {
         switch filter.type {
         case .none:
             picker = .init(segments: [.user, .address], users: filter.users, addresses: filter.addresses)
-        case .deposit, .withdrawal:
+        case .deposit, .withdrawal, .pending:
             picker = .init(segments: [.address], users: [], addresses: filter.addresses)
         case .transfer:
             picker = .init(segments: [.user], users: filter.users, addresses: filter.addresses)
@@ -207,6 +207,12 @@ final class TransactionHistoryViewController: UIViewController {
                 state: .off,
                 handler: { [weak self] _ in self?.reloadData(filterType: .transfer) }
             ),
+            UIAction(
+                title: R.string.localizable.pending(),
+                image: R.image.filter_pending(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: .pending) }
+            ),
         ]
         switch type {
         case .none:
@@ -217,6 +223,8 @@ final class TransactionHistoryViewController: UIViewController {
             actions[2].state = .on
         case .transfer:
             actions[3].state = .on
+        case .pending:
+            actions[4].state = .on
         }
         return actions
     }

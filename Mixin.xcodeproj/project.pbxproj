@@ -1048,6 +1048,7 @@
 		9497AEEE2C5E69B000966946 /* TransactionHistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9497AEED2C5E69B000966946 /* TransactionHistoryView.xib */; };
 		94980FC72A5D653A0051AE6D /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94980FC62A5D653A0051AE6D /* IntroViewController.swift */; };
 		949A3686261D9C5C004251B2 /* post.css in Resources */ = {isa = PBXBuildFile; fileRef = 949A3685261D9C5C004251B2 /* post.css */; };
+		949B03C32D15922300A34EE3 /* StackedIconWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949B03C22D15921E00A34EE3 /* StackedIconWrapperView.swift */; };
 		94A0C8C22C77259E00BDE672 /* AddressReceiversCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */; };
 		94A0C8C32C77259E00BDE672 /* AddressReceiversCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */; };
 		94A1B1DF25BFD7CB0098586D /* LinkLocatingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */; };
@@ -1184,6 +1185,7 @@
 		94E34123261D829200E2F9D3 /* code.css in Resources */ = {isa = PBXBuildFile; fileRef = 94E34120261D829200E2F9D3 /* code.css */; };
 		94E34124261D829200E2F9D3 /* highlight.js in Resources */ = {isa = PBXBuildFile; fileRef = 94E34121261D829200E2F9D3 /* highlight.js */; };
 		94E35CA3298B836300ADB40D /* WalletConnectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E35CA2298B836300ADB40D /* WalletConnectService.swift */; };
+		94E594D62D1563AD00525538 /* WalletHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E594D52D1563AD00525538 /* WalletHeaderView.xib */; };
 		94E619B92645BAA000A38049 /* SuspiciousLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E619B82645BAA000A38049 /* SuspiciousLinkView.xib */; };
 		94E66CC02D11518A00578F19 /* PopupTipViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E66CBF2D11518400578F19 /* PopupTipViewController.swift */; };
 		94E66CC22D11542100578F19 /* PopupTipView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E66CC12D11542100578F19 /* PopupTipView.xib */; };
@@ -2538,6 +2540,7 @@
 		9497AEED2C5E69B000966946 /* TransactionHistoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionHistoryView.xib; sourceTree = "<group>"; };
 		94980FC62A5D653A0051AE6D /* IntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		949A3685261D9C5C004251B2 /* post.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = post.css; sourceTree = "<group>"; };
+		949B03C22D15921E00A34EE3 /* StackedIconWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedIconWrapperView.swift; sourceTree = "<group>"; };
 		94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressReceiversCell.swift; sourceTree = "<group>"; };
 		94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressReceiversCell.xib; sourceTree = "<group>"; };
 		94A1B1DE25BFD7CB0098586D /* LinkLocatingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLocatingTextView.swift; sourceTree = "<group>"; };
@@ -2673,6 +2676,7 @@
 		94E34120261D829200E2F9D3 /* code.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = code.css; sourceTree = "<group>"; };
 		94E34121261D829200E2F9D3 /* highlight.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = highlight.js; sourceTree = "<group>"; };
 		94E35CA2298B836300ADB40D /* WalletConnectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectService.swift; sourceTree = "<group>"; };
+		94E594D52D1563AD00525538 /* WalletHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletHeaderView.xib; sourceTree = "<group>"; };
 		94E619B82645BAA000A38049 /* SuspiciousLinkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SuspiciousLinkView.xib; sourceTree = "<group>"; };
 		94E66CBF2D11518400578F19 /* PopupTipViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTipViewController.swift; sourceTree = "<group>"; };
 		94E66CC12D11542100578F19 /* PopupTipView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupTipView.xib; sourceTree = "<group>"; };
@@ -4407,6 +4411,7 @@
 				942D90F72B06145F00E81358 /* TouchEventBypassView.swift */,
 				94CF1F322BA1CD7700BC52C1 /* BulletDescriptionView.swift */,
 				94C56D3D2C560DD6009F3AB8 /* CircularProgressView.swift */,
+				949B03C22D15921E00A34EE3 /* StackedIconWrapperView.swift */,
 				946331B02C6227D500C54B76 /* TransactionHistoryFilterView.swift */,
 				946331B52C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift */,
 				946331BA2C622BE200C54B76 /* TransactionHistoryAssetFilterView.swift */,
@@ -4737,7 +4742,6 @@
 			children = (
 				7B4D1125205B8D380074BF60 /* AddressCell.swift */,
 				DF87949B207505F4004A1E55 /* TransactionCell.swift */,
-				7B71F5252191CC1500F93B98 /* WalletHeaderView.swift */,
 				7BEC4DF021A7D054003336F2 /* AssetCell.xib */,
 				7B9916D321945A6800C11401 /* AssetCell.swift */,
 				7BCE296521AC132E00B1A507 /* SnapshotCell.xib */,
@@ -4939,6 +4943,8 @@
 				94BE6E922BA0622B00CE65A3 /* Authentication Preview */,
 				94F952512AE60CED0025B995 /* Payment */,
 				94E9795E2D0C151B00FFCC12 /* PIN */,
+				94E594D52D1563AD00525538 /* WalletHeaderView.xib */,
+				7B71F5252191CC1500F93B98 /* WalletHeaderView.swift */,
 				948664FC2CF867DC0032B9BE /* WalletView.xib */,
 				DFA5B5921FB051BB00549728 /* WalletViewController.swift */,
 				7BDFAE8F2559008800296F8B /* WalletSearchViewController.swift */,
@@ -5557,6 +5563,7 @@
 				942DB9A92CAAA14900FFCB40 /* AllAlertsTopActionView.xib in Resources */,
 				7BDFAE942559165800296F8B /* CompactAssetCell.xib in Resources */,
 				943CAA302CC8383300346677 /* CallingCodeCell.xib in Resources */,
+				94E594D62D1563AD00525538 /* WalletHeaderView.xib in Resources */,
 				9495E0D92CEF79DD00124CC7 /* MnemonicsInputAccessoryView.xib in Resources */,
 				94D308782BA72C8F0017494C /* Web3AmountChangeCell.xib in Resources */,
 				948ACAA02AF38E5B0057D76B /* SnapshotMessageContentView.xib in Resources */,
@@ -6961,6 +6968,7 @@
 				7C4FF5AA26AE614C003E39AC /* StickerPreviewViewController.swift in Sources */,
 				943BC7022BCFB56F003FA778 /* Web3ReceiveSourceViewController.swift in Sources */,
 				94CEEAC3277E06A9001E7A24 /* Calendar+Convenience.swift in Sources */,
+				949B03C32D15922300A34EE3 /* StackedIconWrapperView.swift in Sources */,
 				94B1E55D2C49222100A2349F /* MixinSwapViewController.swift in Sources */,
 				DF3C47471FA071F400A07C71 /* HomeViewController.swift in Sources */,
 				94CA5C582CE5F5F80086C484 /* PaymentCollectibleCell.swift in Sources */,

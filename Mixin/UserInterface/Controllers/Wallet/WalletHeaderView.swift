@@ -1,13 +1,14 @@
 import UIKit
 import MixinServices
 
-class WalletHeaderView: InfiniteTopView {
+final class WalletHeaderView: InfiniteTopView {
     
     @IBOutlet weak var contentView: UIStackView!
     
+    @IBOutlet weak var valuesView: UIView!
     @IBOutlet weak var fiatMoneySymbolLabel: UILabel!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
-    @IBOutlet weak var btcValueLabel: UILabel!
+    @IBOutlet weak var btcValueLabel: InsetLabel!
     
     @IBOutlet weak var assetChartWrapperView: UIView!
     @IBOutlet weak var assetChartView: BarChartView!
@@ -25,7 +26,13 @@ class WalletHeaderView: InfiniteTopView {
     @IBOutlet weak var rightAssetSymbolLabel: UILabel!
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
     
-    @IBOutlet weak var contentViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var pendingDepositView: UIView!
+    @IBOutlet weak var pendingDepositButton: UIButton!
+    @IBOutlet weak var pendingDepositStackView: UIStackView!
+    @IBOutlet weak var pendingDepositIconStackView: UIStackView!
+    @IBOutlet weak var pendingDepositLabel: UILabel!
+    
+    @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
     
     var showSnowfallEffect = false {
         didSet {
@@ -43,6 +50,8 @@ class WalletHeaderView: InfiniteTopView {
         .font: UIFont.condensed(size: 14).scaled(),
         .kern: 0.7
     ]
+    
+    private let maxPendingDepositTokenIconCount = 3
     
     private lazy var snowfallLayer: CAEmitterLayer = {
         let cell = CAEmitterCell()
@@ -70,8 +79,6 @@ class WalletHeaderView: InfiniteTopView {
     
     private weak var snowfallLayerIfLoaded: CAEmitterLayer?
     
-    private var contentHeight: CGFloat = 232
-    
     private var snowflakeColor: CGColor {
         if traitCollection.userInterfaceStyle == .dark {
             return UIColor.white.withAlphaComponent(0.4).cgColor
@@ -80,8 +87,13 @@ class WalletHeaderView: InfiniteTopView {
         }
     }
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        return CGSize(width: size.width, height: contentHeight)
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        btcValueLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
+        contentView.setCustomSpacing(30, after: assetChartWrapperView)
+        contentView.setCustomSpacing(13, after: actionView)
+        pendingDepositButton.layer.masksToBounds = true
+        pendingDepositButton.layer.cornerRadius = 18
     }
     
     override func layoutSubviews() {
@@ -100,7 +112,7 @@ class WalletHeaderView: InfiniteTopView {
         }
     }
     
-    func render(tokens: [TokenItem]) {
+    func reloadValues(tokens: [TokenItem]) {
         fiatMoneySymbolLabel.text = Currency.current.symbol
         var assetPortions = [AssetPortion]()
         var btcTotalBalance: Double = 0
@@ -127,7 +139,6 @@ class WalletHeaderView: InfiniteTopView {
             }
         }
         let usdBalanceIsMoreThanZero = usdTotalBalance > 0
-        contentHeight = usdBalanceIsMoreThanZero ? 274 : 222
         fiatMoneyValueLabel.text = fiatMoneyBalanceRepresentation(usdBalance: usdTotalBalance)
         let btcValue = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never) ?? "0.00"
         let attributedBTCValue = NSAttributedString(string: btcValue, attributes: btcValueAttributes)
@@ -168,11 +179,72 @@ class WalletHeaderView: InfiniteTopView {
         }
     }
     
+    func reloadPendingDeposits(tokens: [Token], snapshots: [SafeSnapshot]) {
+        if tokens.isEmpty || snapshots.isEmpty {
+            pendingDepositView.isHidden = true
+            contentViewBottomConstraint.constant = 17
+        } else {
+            pendingDepositView.isHidden = false
+            contentViewBottomConstraint.constant = 10
+            for iconView in pendingDepositIconStackView.arrangedSubviews {
+                iconView.removeFromSuperview()
+            }
+            let iconViewCount = if tokens.count <= maxPendingDepositTokenIconCount {
+                tokens.count
+            } else {
+                maxPendingDepositTokenIconCount - 1
+            }
+            var iconViews: [UIView] = tokens.prefix(iconViewCount).map { token in
+                let view = StackedIconWrapperView<PlainTokenIconView>()
+                view.backgroundColor = .clear
+                pendingDepositIconStackView.addArrangedSubview(view)
+                view.iconView.setIcon(token: token)
+                return view
+            }
+            if tokens.count > maxPendingDepositTokenIconCount {
+                let view = StackedIconWrapperView<UILabel>()
+                view.backgroundColor = .clear
+                pendingDepositIconStackView.addArrangedSubview(view)
+                view.iconView.backgroundColor = R.color.background_tag()
+                view.iconView.textColor = R.color.text_tertiary()
+                view.iconView.font = .systemFont(ofSize: 8)
+                view.iconView.textAlignment = .center
+                view.iconView.minimumScaleFactor = 0.1
+                view.iconView.text = "+\(tokens.count - iconViewCount)"
+                view.iconView.layer.cornerRadius = 7
+                view.iconView.layer.masksToBounds = true
+                iconViews.append(view)
+            }
+            for i in 0..<iconViews.count {
+                let iconView = iconViews[i]
+                let multiplier = i == iconViews.count - 1 ? 1 : 0.5
+                iconView.snp.makeConstraints { make in
+                    make.width.equalTo(iconView.snp.height)
+                        .multipliedBy(multiplier)
+                }
+            }
+            if snapshots.count == 1,
+               let amount = Decimal(string: snapshots[0].amount, locale: .enUSPOSIX),
+               let token = tokens.first(where: { $0.assetID == snapshots[0].assetID })
+            {
+                let item = CurrencyFormatter.localizedString(
+                    from: amount,
+                    format: .precision,
+                    sign: .never,
+                    symbol: .custom(token.symbol)
+                )
+                pendingDepositLabel.text = R.string.localizable.deposit_pending_confirmation(item)
+            } else {
+                pendingDepositLabel.text = R.string.localizable.deposits_pending_confirmation(snapshots.count)
+            }
+        }
+    }
+    
 }
 
 extension WalletHeaderView {
     
-    struct AssetPortion {
+    private struct AssetPortion {
         var symbol: String
         var usdBalance: Double
         var percent: Double

@@ -34,7 +34,10 @@ public final class TokenDAO: UserDatabaseDAO {
         db.recordExists(in: Token.self, where: Token.column(of: .assetID) == assetID)
     }
     
-    public func inexistAssetIDs(in assetIDs: [String]) -> [String] {
+    public func inexistAssetIDs(in assetIDs: any Collection<String>) -> [String] {
+        guard !assetIDs.isEmpty else {
+            return []
+        }
         let values = assetIDs.map({ "('\($0)')" }).joined(separator: ",")
         return db.select(with: """
             WITH q(id) AS (VALUES \(values))
@@ -65,6 +68,11 @@ public final class TokenDAO: UserDatabaseDAO {
     public func tokenItem(kernelAssetID: String) -> TokenItem? {
         let sql = "\(SQL.selector) WHERE t.kernel_asset_id = ?"
         return db.select(with: sql, arguments: [kernelAssetID])
+    }
+    
+    public func tokens(with ids: any Sequence<String>) -> [Token] {
+        let sql: GRDB.SQL = "SELECT * FROM tokens WHERE asset_id IN \(ids)"
+        return db.select(with: sql)
     }
     
     public func tokenItems(with ids: any Sequence<String>) -> [TokenItem] {

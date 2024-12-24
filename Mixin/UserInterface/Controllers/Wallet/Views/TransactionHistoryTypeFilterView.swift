@@ -13,6 +13,8 @@ final class TransactionHistoryTypeFilterView: TransactionHistoryFilterView {
             R.string.localizable.deposit()
         case .withdrawal:
             R.string.localizable.withdrawal()
+        case .pending:
+            R.string.localizable.pending()
         }
     }
     

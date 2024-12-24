@@ -5,6 +5,7 @@ public final class SafeSnapshotItem: SafeSnapshot, InscriptionContentProvider {
     enum JoinedQueryCodingKeys: String, CodingKey {
         case tokenSymbol = "token_symbol"
         case tokenUSDPrice = "token_price_usd"
+        case tokenConfirmations = "token_confirmations"
         case opponentUserID = "opponent_user_id"
         case opponentFullname = "opponent_fullname"
         case opponentAvatarURL = "opponent_avatar_url"
@@ -15,6 +16,7 @@ public final class SafeSnapshotItem: SafeSnapshot, InscriptionContentProvider {
     
     public let tokenSymbol: String?
     public let tokenUSDPrice: String?
+    public let tokenConfirmations: Int?
     
     public let opponentUserID: String?
     public let opponentFullname: String?
@@ -37,6 +39,7 @@ public final class SafeSnapshotItem: SafeSnapshot, InscriptionContentProvider {
         
         self.tokenSymbol = try container.decodeIfPresent(String.self, forKey: .tokenSymbol)
         self.tokenUSDPrice = try container.decodeIfPresent(String.self, forKey: .tokenUSDPrice)
+        self.tokenConfirmations = try container.decodeIfPresent(Int.self, forKey: .tokenConfirmations)
         
         self.opponentUserID = try container.decodeIfPresent(String.self, forKey: .opponentUserID)
         self.opponentFullname = try container.decodeIfPresent(String.self, forKey: .opponentFullname)

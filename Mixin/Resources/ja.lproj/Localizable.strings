@@ -836,6 +836,7 @@
 "open_in_google_maps" = "Googleマップで開く";
 "open_in_maps" = "マップで開く";
 "open_link" = "リンクを開く: %@";
+"open_source" = "Copyright Mixin Messenger\nLicensed under the GPLv3";
 "open_url" = "URLを開く";
 "opening_balance" = "Opening Balance";
 "operation_failed" = "操作が失敗しました。しばらくしてからもう一度お試しください";

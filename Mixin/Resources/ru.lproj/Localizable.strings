@@ -836,6 +836,7 @@
 "open_in_google_maps" = "Открыть в Google Maps";
 "open_in_maps" = "Открыть в Картах";
 "open_link" = "Открыть ссылку: %@";
+"open_source" = "Copyright Mixin Messenger\nLicensed under the GPLv3";
 "open_url" = "Открыть URL";
 "opening_balance" = "Opening Balance";
 "operation_failed" = "Операция не удалась, повторите попытку позже";

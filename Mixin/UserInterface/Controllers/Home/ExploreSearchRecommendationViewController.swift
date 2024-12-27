@@ -109,21 +109,21 @@ extension ExploreSearchRecommendationViewController: UICollectionViewDataSource 
         let viewModel = viewModels[indexPath.item]
         switch viewModel.content {
         case let .market(market):
-            cell.tokenIconView.setIcon(market: market)
-            cell.tokenIconView.isHidden = false
-            cell.avatarImageView.isHidden = true
+            cell.setImage { iconView in
+                iconView.setIcon(market: market)
+            }
         case let .user(item):
-            cell.avatarImageView.setImage(with: item)
-            cell.tokenIconView.isHidden = true
-            cell.avatarImageView.isHidden = false
+            cell.setAvatar { imageView in
+                imageView.setImage(with: item)
+            }
         case .link:
-            cell.tokenIconView.image = R.image.recent_search_link()
-            cell.tokenIconView.isHidden = false
-            cell.avatarImageView.isHidden = true
+            cell.setImage { iconView in
+                iconView.image = R.image.recent_search_link()
+            }
         case let .dapp(app):
-            cell.tokenIconView.sd_setImage(with: app.iconURL)
-            cell.tokenIconView.isHidden = false
-            cell.avatarImageView.isHidden = true
+            cell.setImage { iconView in
+                iconView.sd_setImage(with: app.iconURL)
+            }
         }
         cell.titleLabel.text = viewModel.title
         cell.subtitleLabel.text = viewModel.subtitle

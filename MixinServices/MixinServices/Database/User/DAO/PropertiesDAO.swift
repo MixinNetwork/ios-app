@@ -13,6 +13,8 @@ public final class PropertiesDAO: UserDatabaseDAO {
         case globalMarket       = "global_market"
         case hasSwapReviewed    = "has_viewed_swap"
         case hasMarketReviewed  = "has_viewed_market"
+        case mixinSwapRecentSendIDs     = "mixin_swap_recent_send"
+        case mixinSwapRecentReceiveIDs  = "mixin_swap_recent_receive"
     }
     
     public enum Change {
@@ -36,6 +38,18 @@ public final class PropertiesDAO: UserDatabaseDAO {
         }
     }
     
+    public func jsonObject<Value: Decodable>(forKey key: Key, type: Value.Type) -> Value? {
+        assert(!Thread.isMainThread) // Prevent deadlock
+        return try? db.writeAndReturnError { db -> Value? in
+            let string: String? = try value(forKey: key, db: db)
+            if let data = string?.data(using: .utf8)  {
+                return try JSONDecoder.default.decode(type, from: data)
+            } else {
+                return nil
+            }
+        }
+    }
+    
     public func set(_ value: LosslessStringConvertible, forKey key: Key) {
         try! db.writeAndReturnError { db in
             try set(value, forKey: key, db: db)
@@ -53,6 +67,18 @@ public final class PropertiesDAO: UserDatabaseDAO {
                                                 object: self,
                                                 userInfo: [key: Change.saved(value)])
             }
+        }
+    }
+    
+    public func set<Value: Encodable>(jsonObject: Value, forKey key: Key) {
+        guard let data = try? JSONEncoder.default.encode(jsonObject) else {
+            return
+        }
+        guard let string = String(data: data, encoding: .utf8) else {
+            return
+        }
+        try? db.writeAndReturnError { db in
+            try set(string, forKey: key, db: db)
         }
     }
     

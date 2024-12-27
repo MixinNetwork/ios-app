@@ -34,7 +34,7 @@ final class PlainTokenIconView: UIImageView {
         }
     }
     
-    func setIcon(token: SwappableToken) {
+    func setIcon(token: SwapToken) {
         if let url = token.iconURL {
             setIcon(tokenIconURL: url)
         } else {

@@ -2,10 +2,13 @@ import UIKit
 
 final class ExploreRecentSearchCell: UICollectionViewCell {
     
-    @IBOutlet weak var tokenIconView: PlainTokenIconView!
-    @IBOutlet weak var avatarImageView: AvatarImageView!
+    @IBOutlet weak var iconWrapperView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: MarketColoredLabel!
+    
+    private weak var plainIconView: PlainTokenIconView?
+    private weak var tokenIconView: BadgeIconView?
+    private weak var avatarImageView: AvatarImageView?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -32,8 +35,57 @@ final class ExploreRecentSearchCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        tokenIconView.prepareForReuse()
-        avatarImageView.prepareForReuse()
+        plainIconView?.prepareForReuse()
+        tokenIconView?.prepareForReuse()
+        avatarImageView?.prepareForReuse()
+    }
+    
+    func setImage(_ setter: (PlainTokenIconView) -> Void) {
+        let iconView: PlainTokenIconView
+        if let view = plainIconView {
+            view.isHidden = false
+            iconView = view
+        } else {
+            iconView = PlainTokenIconView(frame: iconWrapperView.bounds)
+            iconWrapperView.addSubview(iconView)
+            iconView.snp.makeEdgesEqualToSuperview()
+            self.plainIconView = iconView
+        }
+        setter(iconView)
+        tokenIconView?.isHidden = true
+        avatarImageView?.isHidden = true
+    }
+    
+    func setBadgeIcon(_ setter: (BadgeIconView) -> Void) {
+        let iconView: BadgeIconView
+        if let view = tokenIconView {
+            view.isHidden = false
+            iconView = view
+        } else {
+            iconView = BadgeIconView(frame: iconWrapperView.bounds)
+            iconWrapperView.addSubview(iconView)
+            iconView.snp.makeEdgesEqualToSuperview()
+            self.tokenIconView = iconView
+        }
+        setter(iconView)
+        plainIconView?.isHidden = true
+        avatarImageView?.isHidden = true
+    }
+    
+    func setAvatar(_ setter: (AvatarImageView) -> Void) {
+        let imageView: AvatarImageView
+        if let view = avatarImageView {
+            view.isHidden = false
+            imageView = view
+        } else {
+            imageView = AvatarImageView(frame: iconWrapperView.bounds)
+            iconWrapperView.addSubview(imageView)
+            imageView.snp.makeEdgesEqualToSuperview()
+            self.avatarImageView = imageView
+        }
+        setter(imageView)
+        plainIconView?.isHidden = true
+        tokenIconView?.isHidden = true
     }
     
     private func updateBorderColor() {

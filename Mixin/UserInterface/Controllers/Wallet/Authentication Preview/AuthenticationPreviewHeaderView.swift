@@ -57,7 +57,7 @@ final class AuthenticationPreviewHeaderView: UIView {
         iconView.setIcon(token: token)
     }
     
-    func setIcon(sendToken: TokenItem, receiveToken: SwappableToken) {
+    func setIcon(sendToken: TokenItem, receiveToken: SwapToken) {
         let iconView: SwapIconView
         if let view = self.swapIconView, view.isDescendant(of: iconWrapperView) {
             iconView = view
@@ -161,7 +161,7 @@ extension AuthenticationPreviewHeaderView {
             receiveIconView.layer.cornerRadius = receiveIconView.frame.width / 2
         }
         
-        func setIcon(sendToken: TokenItem, receiveToken: SwappableToken) {
+        func setIcon(sendToken: TokenItem, receiveToken: SwapToken) {
             sendIconView.sd_setImage(with: URL(string: sendToken.iconURL),
                                      placeholderImage: nil,
                                      context: assetIconContext)

@@ -12,7 +12,7 @@ final class SwapQuote: SwapQuoteDraft {
     }
     
     init(
-        sendToken: BalancedSwappableToken, sendAmount: Decimal, receiveToken: SwappableToken,
+        sendToken: BalancedSwapToken, sendAmount: Decimal, receiveToken: SwapToken,
         receiveAmount: Decimal, source: RouteTokenSource, payload: String
     ) {
         self.receiveAmount = receiveAmount

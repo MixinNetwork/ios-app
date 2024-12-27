@@ -173,6 +173,16 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: sql) ?? 0
     }
     
+    // Key is asset id, value is token.change_usd
+    public func usdChanges(assetIDs: [String]) -> [String: String] {
+        db.select(
+            keyColumn: Token.column(of: .assetID),
+            valueColumn: Token.column(of: .usdChange),
+            from: Token.self,
+            where: assetIDs.contains(Token.column(of: .assetID))
+        )
+    }
+    
     public func save(assets: [Token], completion: (() -> Void)? = nil) {
         guard !assets.isEmpty else {
             return

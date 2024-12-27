@@ -12,7 +12,7 @@ struct QuoteRequest {
     static func web3(
         sendToken: Web3Token,
         sendAmount: Decimal,
-        receiveToken: SwappableToken,
+        receiveToken: SwapToken,
         slippage: Decimal
     ) -> QuoteRequest? {
         guard let payAmount = sendToken.nativeAmount(decimalAmount: sendAmount) else {
@@ -33,9 +33,9 @@ struct QuoteRequest {
     }
     
     static func mixin(
-        sendToken: SwappableToken,
+        sendToken: SwapToken,
         sendAmount: Decimal,
-        receiveToken: SwappableToken,
+        receiveToken: SwapToken,
         slippage: Decimal
     ) -> QuoteRequest {
         QuoteRequest(

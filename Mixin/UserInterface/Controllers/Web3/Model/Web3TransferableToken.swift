@@ -12,14 +12,4 @@ extension TokenItem: Web3TransferableToken { }
 
 extension Web3Token: Web3TransferableToken { }
 
-extension BalancedSwappableToken: Web3TransferableToken {
-    
-    var name: String {
-        token.name
-    }
-    
-    var symbol: String {
-        token.symbol
-    }
-    
-}
+extension BalancedSwapToken: Web3TransferableToken { }

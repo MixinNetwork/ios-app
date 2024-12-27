@@ -115,7 +115,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         checkmarkImageView.isHidden = true
     }
     
-    func render(swappableToken token: SwappableToken) {
+    func render(swappableToken token: SwapToken) {
         assetIconView.setIcon(swappableToken: token)
         nameLabel.text = token.name
         descriptionLabel.text = nil
@@ -133,7 +133,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         checkmarkImageView.isHidden = true
     }
     
-    func render(swappableToken token: SwappableToken, balance: Decimal, usdPrice: Decimal) {
+    func render(swappableToken token: SwapToken, balance: Decimal, usdPrice: Decimal) {
         assetIconView.setIcon(swappableToken: token)
         nameLabel.text = token.name
         descriptionLabel.text = CurrencyFormatter.localizedString(

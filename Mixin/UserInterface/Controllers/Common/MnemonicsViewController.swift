@@ -15,11 +15,11 @@ class MnemonicsViewController: UIViewController {
     @IBOutlet weak var inputStackViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var footerStackViewBottomConstraint: NSLayoutConstraint!
     
-    var textFields: [UITextField] = []
+    var inputFields: [InputField] = []
     
     var textFieldPhrases: [String] {
-        textFields.map { textField in
-            guard let text = textField.text else {
+        inputFields.map { inputField in
+            guard let text = inputField.textField.text else {
                 return ""
             }
             return text.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -79,6 +79,41 @@ class MnemonicsViewController: UIViewController {
 // MARK: - Input Field
 extension MnemonicsViewController {
     
+    struct InputField {
+        
+        enum TextColor {
+            case normal
+            case invalid
+        }
+        
+        let label: UILabel
+        let textField: UITextField
+        
+        func setTextColor(_ color: TextColor) {
+            switch color {
+            case .normal:
+                label.textColor = R.color.text_tertiary()
+                textField.textColor = R.color.text()
+            case .invalid:
+                label.textColor = R.color.error_red()
+                textField.textColor = R.color.error_red()
+            }
+        }
+        
+        func setTextColor(phrase: String?) {
+            if let phrase, !phrase.isEmpty {
+                if BIP39.wordlist.contains(phrase) {
+                    setTextColor(.normal)
+                } else {
+                    setTextColor(.invalid)
+                }
+            } else {
+                setTextColor(.normal)
+            }
+        }
+        
+    }
+    
     func addTextFields(count: Int) {
         var rowStackView = UIStackView()
         for i in 0..<count {
@@ -93,7 +128,6 @@ extension MnemonicsViewController {
             
             let label = UILabel()
             label.font = .systemFont(ofSize: 13, weight: .medium)
-            label.textColor = R.color.text_tertiary()
             label.text = "\(i + 1)"
             label.textAlignment = .center
             wrapper.addSubview(label)
@@ -114,7 +148,10 @@ extension MnemonicsViewController {
             textField.snp.makeConstraints { make in
                 make.edges.equalToSuperview()
             }
-            textFields.append(textField)
+            
+            let inputField = InputField(label: label, textField: textField)
+            inputField.setTextColor(.normal)
+            inputFields.append(inputField)
             
             if rowStackView.arrangedSubviews.count == 3 {
                 rowStackView = UIStackView()

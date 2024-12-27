@@ -67,12 +67,12 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
             button.isSelected = button.tag == phrasesCount.rawValue
         }
         
-        textFields.removeAll()
+        inputFields.removeAll()
         for view in inputStackView.subviews {
             view.removeFromSuperview()
         }
         addTextFields(count: count.rawValue)
-        for textField in textFields {
+        for textField in inputFields.map(\.textField) {
             if textField.tag == count.rawValue - 1 {
                 textField.returnKeyType = .done
             } else {
@@ -119,15 +119,17 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
         {
             reloadInputStackView(count: count)
         }
-        for (index, phrase) in phrases.prefix(textFields.count).enumerated() {
-            textFields[index].text = phrase
+        for (index, phrase) in phrases.prefix(inputFields.count).enumerated() {
+            let inputField = inputFields[index]
+            inputField.setTextColor(phrase: phrase)
+            inputField.textField.text = phrase
         }
         detectPhrases(sender)
     }
     
     @objc private func emptyPhrases(_ sender: Any) {
-        for textField in textFields {
-            textField.text = nil
+        for inputField in inputFields {
+            inputField.textField.text = nil
         }
         detectPhrases(sender)
     }

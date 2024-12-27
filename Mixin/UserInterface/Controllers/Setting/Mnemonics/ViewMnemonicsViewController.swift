@@ -26,7 +26,7 @@ final class ViewMnemonicsViewController: MnemonicsViewController {
             action: #selector(copyPhrases(_:))
         )
         for (index, phrase) in mnemonics.phrases.enumerated() {
-            let textField = textFields[index]
+            let textField = inputFields[index].textField
             textField.text = phrase
             textField.isUserInteractionEnabled = false
         }

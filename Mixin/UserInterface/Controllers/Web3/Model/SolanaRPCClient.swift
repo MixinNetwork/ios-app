@@ -55,7 +55,10 @@ struct SolanaRPCClient {
         
         let response: Response<Result> = try await post(
             method: "getAccountInfo",
-            params: [pubkey]
+            params: [
+                pubkey,
+                ["encoding": "jsonParsed"],
+            ]
         )
         let value = try response.getResult().value
         return value != nil

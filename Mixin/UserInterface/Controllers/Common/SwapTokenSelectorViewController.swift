@@ -100,8 +100,9 @@ final class SwapTokenSelectorViewController: UIViewController {
                 group.interItemSpacing = .fixed(16)
                 let section = NSCollectionLayoutSection(group: group)
                 section.interGroupSpacing = 12
-                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 10, trailing: 0)
                 if let self, self.searchResults == nil, !self.recentTokens.isEmpty {
+                    // `contentInsets` behaves different on iOS 16/18, which may put the insets as spacing despite the section is empty
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 10, trailing: 0)
                     section.boundarySupplementaryItems = [
                         NSCollectionLayoutBoundarySupplementaryItem(
                             layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(24)),

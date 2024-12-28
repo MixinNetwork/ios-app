@@ -47,10 +47,10 @@ class InputMnemonicsViewController: MnemonicsViewController {
     
     private func handleInputFinished(textField: UITextField) {
         let nextIndex = textField.tag + 1
-        if nextIndex == textFields.count {
+        if nextIndex == inputFields.count {
             textField.resignFirstResponder()
         } else {
-            textFields[nextIndex].becomeFirstResponder()
+            inputFields[nextIndex].textField.becomeFirstResponder()
         }
     }
     
@@ -60,10 +60,12 @@ extension InputMnemonicsViewController: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         reloadInputAccessoryView(textField: textField, keyword: textField.text)
+        inputFields[textField.tag].setTextColor(.normal)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         hideInputAccessoryView(textField: textField)
+        inputFields[textField.tag].setTextColor(phrase: textField.text)
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

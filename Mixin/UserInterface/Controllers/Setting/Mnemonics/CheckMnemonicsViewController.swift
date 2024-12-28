@@ -23,7 +23,7 @@ final class CheckMnemonicsViewController: InputMnemonicsViewController {
         titleLabel.text = R.string.localizable.check_mnemonic_phrase()
         descriptionLabel.text = R.string.localizable.check_mnemonic_phrase_desc()
         addTextFields(count: mnemonics.phrases.count)
-        for textField in textFields {
+        for textField in inputFields.map(\.textField) {
             if textField.tag == mnemonics.phrases.count - 1 {
                 textField.returnKeyType = .done
             } else {
@@ -77,15 +77,16 @@ final class CheckMnemonicsViewController: InputMnemonicsViewController {
     }
     
     @objc private func emptyPhrases(_ sender: Any) {
-        for textField in textFields {
-            textField.text = nil
+        for inputField in inputFields {
+            inputField.textField.text = nil
+            inputField.setTextColor(.normal)
         }
         detectPhrases(sender)
     }
     
     @objc private func detectPhrases(_ sender: Any) {
-        let phrases = textFields.map { textField in
-            textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let phrases = inputFields.map { inputField in
+            inputField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         }
         if phrases.contains(where: \.isEmpty) {
             confirmButton.isEnabled = false

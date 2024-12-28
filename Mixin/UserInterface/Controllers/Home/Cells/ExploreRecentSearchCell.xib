@@ -18,7 +18,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="155" height="48"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Xk-oA-cZZ">
+                    <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="1Xk-oA-cZZ">
                         <rect key="frame" x="6" y="6" width="36" height="36"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -26,16 +26,16 @@
                         </constraints>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="NMg-GX-gEJ">
-                        <rect key="frame" x="50" y="-27" width="87" height="102"/>
+                        <rect key="frame" x="50" y="6" width="87" height="36"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NSU-wE-ZmW">
-                                <rect key="frame" x="0.0" y="0.0" width="87" height="50"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NSU-wE-ZmW">
+                                <rect key="frame" x="0.0" y="0.0" width="87" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" name="text"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sQB-Zg-d3B" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="52" width="87" height="50"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="15.666666666666664" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sQB-Zg-d3B" customClass="MarketColoredLabel" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="19" width="87" height="17"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                 <color key="textColor" name="text_tertiary"/>
                                 <nil key="highlightedColor"/>
@@ -45,19 +45,28 @@
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
+                    <constraint firstAttribute="bottom" secondItem="NMg-GX-gEJ" secondAttribute="bottom" constant="6" id="02G-MO-JUH"/>
                     <constraint firstAttribute="trailing" secondItem="NMg-GX-gEJ" secondAttribute="trailing" constant="18" id="2Ja-Ua-cFw"/>
                     <constraint firstAttribute="bottom" secondItem="1Xk-oA-cZZ" secondAttribute="bottom" constant="6" id="5Bv-a6-DHh"/>
                     <constraint firstItem="1Xk-oA-cZZ" firstAttribute="top" secondItem="b9F-SX-IsU" secondAttribute="top" constant="6" id="5eE-ti-3HK"/>
                     <constraint firstItem="1Xk-oA-cZZ" firstAttribute="leading" secondItem="b9F-SX-IsU" secondAttribute="leading" constant="6" id="8Yt-M5-iec"/>
-                    <constraint firstItem="NMg-GX-gEJ" firstAttribute="centerY" secondItem="b9F-SX-IsU" secondAttribute="centerY" id="FEv-cT-08S"/>
                     <constraint firstItem="NMg-GX-gEJ" firstAttribute="leading" secondItem="1Xk-oA-cZZ" secondAttribute="trailing" constant="8" id="WxQ-qW-IeH"/>
+                    <constraint firstItem="NMg-GX-gEJ" firstAttribute="top" secondItem="b9F-SX-IsU" secondAttribute="top" constant="6" id="eHY-vv-vD3"/>
                 </constraints>
             </collectionViewCellContentView>
             <color key="backgroundColor" name="background"/>
             <connections>
+                <outlet property="iconWrapperBottomConstraint" destination="5Bv-a6-DHh" id="Wus-Ko-c6Y"/>
+                <outlet property="iconWrapperLeadingConstraint" destination="8Yt-M5-iec" id="qDH-tD-j15"/>
+                <outlet property="iconWrapperTopConstraint" destination="5eE-ti-3HK" id="ehv-Y4-kJV"/>
                 <outlet property="iconWrapperView" destination="1Xk-oA-cZZ" id="E49-1y-5tT"/>
                 <outlet property="subtitleLabel" destination="sQB-Zg-d3B" id="PhQ-SA-hqX"/>
                 <outlet property="titleLabel" destination="NSU-wE-ZmW" id="q1d-OT-jMh"/>
+                <outlet property="titleStackView" destination="NMg-GX-gEJ" id="aTF-Os-pcW"/>
+                <outlet property="titleStackViewBottomConstraint" destination="02G-MO-JUH" id="ntt-Oj-KwM"/>
+                <outlet property="titleStackViewLeadingConstraint" destination="WxQ-qW-IeH" id="de1-Tl-p4x"/>
+                <outlet property="titleStackViewTopConstraint" destination="eHY-vv-vD3" id="FPy-pB-sVT"/>
+                <outlet property="titleStackViewTrailingConstraint" destination="2Ja-Ua-cFw" id="vp8-86-r8d"/>
             </connections>
             <point key="canvasLocation" x="48.091603053435115" y="41.549295774647888"/>
         </collectionViewCell>

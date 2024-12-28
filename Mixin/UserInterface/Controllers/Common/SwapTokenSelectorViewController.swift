@@ -92,9 +92,9 @@ final class SwapTokenSelectorViewController: UIViewController {
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, environment) in
             switch Section(rawValue: sectionIndex)! {
             case .recent:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .absolute(42))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(99), heightDimension: .estimated(41))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(42))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(41))
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
                 group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                 group.interItemSpacing = .fixed(16)
@@ -223,6 +223,7 @@ extension SwapTokenSelectorViewController: UICollectionViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .recent:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_recent_search, for: indexPath)!
+            cell.size = .medium
             let token = recentTokens[indexPath.item]
             cell.setBadgeIcon { iconView in
                 iconView.setIcon(swappableToken: token)

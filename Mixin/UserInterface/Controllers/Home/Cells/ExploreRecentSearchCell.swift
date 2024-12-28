@@ -2,28 +2,99 @@ import UIKit
 
 final class ExploreRecentSearchCell: UICollectionViewCell {
     
+    enum Size {
+        case large
+        case medium
+    }
+    
     @IBOutlet weak var iconWrapperView: UIView!
+    @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: MarketColoredLabel!
+    
+    @IBOutlet weak var iconWrapperTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var iconWrapperLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var iconWrapperBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var titleStackViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var titleStackViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var titleStackViewTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var titleStackViewBottomConstraint: NSLayoutConstraint!
     
     private weak var plainIconView: PlainTokenIconView?
     private weak var tokenIconView: BadgeIconView?
     private weak var avatarImageView: AvatarImageView?
     
+    private var iconVerticalConstraints: [NSLayoutConstraint] {
+        [iconWrapperTopConstraint, iconWrapperBottomConstraint]
+    }
+    
+    private var titleVerticalConstraints: [NSLayoutConstraint] {
+        [titleStackViewTopConstraint, titleStackViewBottomConstraint]
+    }
+    
+    var size: Size = .large {
+        didSet {
+            switch size {
+            case .large:
+                iconWrapperLeadingConstraint.constant = 6
+                for constraint in iconVerticalConstraints {
+                    constraint.constant = 6
+                }
+                for constraint in titleVerticalConstraints {
+                    constraint.constant = 6
+                }
+                titleStackView.spacing = 2
+                titleStackViewLeadingConstraint.constant = 8
+                titleStackViewTrailingConstraint.constant = 18
+            case .medium:
+                iconWrapperLeadingConstraint.constant = 6
+                for constraint in iconVerticalConstraints {
+                    constraint.constant = 5
+                }
+                for constraint in titleVerticalConstraints {
+                    constraint.constant = 4
+                }
+                titleStackView.spacing = 0
+                titleStackViewLeadingConstraint.constant = 4
+                titleStackViewTrailingConstraint.constant = 13
+            }
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         contentView.layer.borderWidth = 1
         updateBorderColor()
-        contentView.snp.makeConstraints { make in
-            // XXX: Otherwise it breaks out the layout width
-            make.width.lessThanOrEqualTo(UIScreen.main.bounds.width - 40)
-        }
         titleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         contentView.layer.cornerRadius = contentView.bounds.height / 2
+    }
+    
+    override func systemLayoutSizeFitting(
+        _ targetSize: CGSize,
+        withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
+        verticalFittingPriority: UILayoutPriority
+    ) -> CGSize {
+        // The default implementation of `systemLayoutSizeFitting(_:withHorizontalFittingPriority:verticalFittingPriority:)`
+        // seems unable to correctly handle constraints with Aspect Ratio, resulting in noticeably incorrect results.
+        // This can cause panics with UICollectionViewCompositionalLayout.
+        // To avoid this problem, the calculation process is handled manually.
+        let titleSize = titleStackView.systemLayoutSizeFitting(
+            targetSize,
+            withHorizontalFittingPriority: horizontalFittingPriority,
+            verticalFittingPriority: verticalFittingPriority
+        )
+        let height = titleSize.height + titleVerticalConstraints.reduce(0, { $0 + $1.constant })
+        let iconDimension = height - iconVerticalConstraints.reduce(0, { $0 + $1.constant })
+        let width = iconWrapperLeadingConstraint.constant
+        + iconDimension
+        + titleStackViewLeadingConstraint.constant
+        + titleSize.width
+        + titleStackViewTrailingConstraint.constant
+        return CGSize(width: width, height: height)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

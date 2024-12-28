@@ -395,11 +395,11 @@ extension MixinSwapViewController {
     private func updateReceiveView(style: TokenSelectorStyle) {
         switch style {
         case .loading:
-            receiveStackView.alpha = 0
+            receiveTokenStackView.alpha = 0
             receiveIconView.isHidden = false
             receiveLoadingIndicator.startAnimating()
         case .selectable:
-            receiveStackView.alpha = 1
+            receiveTokenStackView.alpha = 1
             receiveBalanceLabel.text = nil
             receiveIconView.isHidden = true
             receiveIconView.prepareForReuse()
@@ -408,7 +408,7 @@ extension MixinSwapViewController {
             receiveNetworkLabel.alpha = 0 // Keeps the height
             receiveLoadingIndicator.stopAnimating()
         case .token(let token):
-            receiveStackView.alpha = 1
+            receiveTokenStackView.alpha = 1
             let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
             receiveBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
             receiveIconView.isHidden = false

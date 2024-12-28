@@ -7,6 +7,7 @@ import MixinServices
 final class SwapTokenSelectorViewController: UIViewController {
     
     @IBOutlet weak var searchBoxView: SearchBoxView!
+    @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
     
     var onSelected: ((BalancedSwapToken) -> Void)?
@@ -69,6 +70,8 @@ final class SwapTokenSelectorViewController: UIViewController {
         searchBoxView.textField.rightViewMode = .always
         searchBoxView.textField.addTarget(self, action: #selector(prepareForSearch(_:)), for: .editingChanged)
         searchBoxView.textField.placeholder = R.string.localizable.search_placeholder_asset()
+        cancelButton.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 20)
+        cancelButton.setTitle(R.string.localizable.cancel(), for: .normal)
         searchObserver = NotificationCenter.default
             .publisher(for: UITextField.textDidChangeNotification, object: searchBoxView.textField)
             .debounce(for: .seconds(1), scheduler: RunLoop.main)
@@ -130,6 +133,10 @@ final class SwapTokenSelectorViewController: UIViewController {
         reloadChainSelection()
         reloadTokenSelection()
         reloadRecents()
+    }
+    
+    @IBAction func cancel(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true)
     }
     
     @objc private func prepareForSearch(_ textField: UITextField) {

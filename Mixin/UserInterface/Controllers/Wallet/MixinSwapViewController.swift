@@ -80,9 +80,9 @@ final class MixinSwapViewController: SwapViewController {
     
     override func changeSendToken(_ sender: Any) {
         let selector = SwapTokenSelectorViewController(
+            recent: .send,
             tokens: swappableTokens,
-            selectedAssetID: sendToken?.assetID,
-            recent: .send
+            selectedAssetID: sendToken?.assetID
         )
         selector.onSelected = { token in
             if token.assetID == self.receiveToken?.assetID {
@@ -98,9 +98,9 @@ final class MixinSwapViewController: SwapViewController {
     
     override func changeReceiveToken(_ sender: Any) {
         let selector = SwapTokenSelectorViewController(
+            recent: .receive,
             tokens: swappableTokens,
-            selectedAssetID: receiveToken?.assetID,
-            recent: .receive
+            selectedAssetID: receiveToken?.assetID
         )
         selector.onSelected = { token in
             if token.assetID == self.sendToken?.assetID {
@@ -351,6 +351,8 @@ extension MixinSwapViewController {
         case .loading:
             sendTokenStackView.alpha = 0
             sendIconView.isHidden = false
+            sendNetworkLabel.text = "Placeholder"
+            sendNetworkLabel.alpha = 0 // Keeps the height
             sendLoadingIndicator.startAnimating()
         case .selectable:
             sendTokenStackView.alpha = 1
@@ -359,6 +361,7 @@ extension MixinSwapViewController {
             sendIconView.prepareForReuse()
             sendIconView.image = nil
             sendSymbolLabel.text = R.string.localizable.select_token()
+            sendNetworkLabel.text = "Placeholder"
             sendNetworkLabel.alpha = 0 // Keeps the height
             sendLoadingIndicator.stopAnimating()
         case .token(let token):
@@ -397,6 +400,8 @@ extension MixinSwapViewController {
         case .loading:
             receiveTokenStackView.alpha = 0
             receiveIconView.isHidden = false
+            receiveNetworkLabel.text = "Placeholder"
+            receiveNetworkLabel.alpha = 0 // Keeps the height
             receiveLoadingIndicator.startAnimating()
         case .selectable:
             receiveTokenStackView.alpha = 1
@@ -405,6 +410,7 @@ extension MixinSwapViewController {
             receiveIconView.prepareForReuse()
             receiveIconView.image = nil
             receiveSymbolLabel.text = R.string.localizable.select_token()
+            receiveNetworkLabel.text = "Placeholder"
             receiveNetworkLabel.alpha = 0 // Keeps the height
             receiveLoadingIndicator.stopAnimating()
         case .token(let token):

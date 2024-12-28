@@ -343,10 +343,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         
         switch context {
         case .swap:
-            if viewControllers.last is SwapViewController {
-                viewControllers.removeLast()
-            }
-            navigation.setViewControllers(viewControllers, animated: false)
+            return
         case .inscription(let context):
             switch context.operation {
             case .transfer:

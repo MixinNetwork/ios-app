@@ -42,8 +42,13 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
     }
     
     func render(snapshot: SafeSnapshotItem) {
-        CATransaction.begin() // Disable alpha animation for `progressLayer`
+        // Disable alpha animation for `progressLayer`
+        CATransaction.begin()
         CATransaction.setDisableActions(true)
+        defer {
+            CATransaction.commit()
+        }
+        
         switch SafeSnapshot.SnapshotType(rawValue: snapshot.type) {
         case .pending:
             iconImageView.imageView.contentMode = .center
@@ -122,7 +127,6 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
             symbolLabel.text = snapshot.tokenSymbol
             inscriptionIconView?.isHidden = true
         }
-        CATransaction.commit()
     }
     
     private func setTitle(_ title: String?) {

@@ -324,6 +324,7 @@
                 <outlet property="rightAssetPercentLabel" destination="fuF-rL-MJ4" id="2Pg-zB-9CK"/>
                 <outlet property="rightAssetSymbolLabel" destination="qDd-a6-D65" id="cLj-E0-4F0"/>
                 <outlet property="rightAssetWrapperView" destination="kdN-9A-pev" id="ssf-MZ-mss"/>
+                <outlet property="separatorView" destination="Cea-tl-cwe" id="xcn-dA-Qhb"/>
                 <outlet property="valuesView" destination="ATh-NL-SED" id="5yN-pq-SlG"/>
             </connections>
             <point key="canvasLocation" x="-109.16030534351144" y="265.84507042253523"/>

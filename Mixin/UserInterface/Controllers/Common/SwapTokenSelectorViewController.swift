@@ -96,7 +96,7 @@ final class SwapTokenSelectorViewController: UIViewController {
                 group.interItemSpacing = .fixed(16)
                 let section = NSCollectionLayoutSection(group: group)
                 section.interGroupSpacing = 12
-                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 20, trailing: 0)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 10, trailing: 0)
                 if let self, self.searchResults == nil, !self.recentTokens.isEmpty {
                     section.boundarySupplementaryItems = [
                         NSCollectionLayoutBoundarySupplementaryItem(
@@ -112,7 +112,7 @@ final class SwapTokenSelectorViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 15, bottom: 10, trailing: 15)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 15, bottom: 16, trailing: 15)
                 section.orthogonalScrollingBehavior = .continuous
                 return section
             case .tokens:
@@ -446,7 +446,7 @@ extension SwapTokenSelectorViewController {
                 item = index
             }
         } else {
-            assertionFailure()
+            // The selected token comes from the search results
             return
         }
         let indexPath = IndexPath(item: item, section: Section.tokens.rawValue)

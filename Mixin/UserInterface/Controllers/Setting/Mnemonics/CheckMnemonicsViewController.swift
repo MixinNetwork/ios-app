@@ -77,8 +77,9 @@ final class CheckMnemonicsViewController: InputMnemonicsViewController {
     }
     
     @objc private func emptyPhrases(_ sender: Any) {
-        for textField in inputFields.map(\.textField) {
-            textField.text = nil
+        for inputField in inputFields {
+            inputField.textField.text = nil
+            inputField.setTextColor(.normal)
         }
         detectPhrases(sender)
     }

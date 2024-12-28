@@ -130,6 +130,7 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
     @objc private func emptyPhrases(_ sender: Any) {
         for inputField in inputFields {
             inputField.textField.text = nil
+            inputField.setTextColor(.normal)
         }
         detectPhrases(sender)
     }

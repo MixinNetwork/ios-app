@@ -24,19 +24,20 @@ final class SwapTokenSelectorViewController: UIViewController {
     private let recent: Recent
     private let defaultTokens: OrderedDictionary<String, BalancedSwapToken> // Key is asset id
     private let defaultChains: [Chain]
+    private let defaultChainIDs: Set<String>
     private let selectedAssetID: String?
     
     private var recentTokens: [BalancedSwapToken] = []
     private var recentTokenChanges: [String: TokenChange] = [:] // Key is asset id
     
-    private var defaultTokensFilter: ChainFilter?
+    private var selectedChainID: String?
+    private var tokenIndicesForSelectedChain: [Int]?
     
     private weak var searchRequest: Request?
     private var searchObserver: AnyCancellable?
     private var searchResultsKeyword: String?
     private var searchResults: OrderedDictionary<String, BalancedSwapToken>? // Key is asset id
     private var searchResultChains: [Chain]?
-    private var searchResultsFilter: ChainFilter?
     
     private var trimmedKeyword: String {
         (searchBoxView.textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
@@ -54,6 +55,7 @@ final class SwapTokenSelectorViewController: UIViewController {
         self.defaultChains = allChains.filter { (chain) in
             chainIDs.contains(chain.id)
         }
+        self.defaultChainIDs = chainIDs
         self.selectedAssetID = selectedAssetID
         
         let nib = R.nib.swapTokenSelectorView
@@ -151,7 +153,11 @@ final class SwapTokenSelectorViewController: UIViewController {
             searchResultsKeyword = nil
             searchResults = nil
             searchResultChains = nil
-            searchResultsFilter = nil
+            if let chainID = selectedChainID, defaultChainIDs.contains(chainID) {
+                tokenIndicesForSelectedChain = tokenIndices(tokens: defaultTokens, chainID: chainID)
+            } else {
+                tokenIndicesForSelectedChain = nil
+            }
             collectionView.reloadData()
             collectionView.removeEmptyIndicator()
             reloadChainSelection()
@@ -207,15 +213,9 @@ extension SwapTokenSelectorViewController: UICollectionViewDataSource {
         case .chainSelector:
             return (searchResultChains ?? defaultChains).count + 1 // 1 for the "All"
         case .tokens:
-            return if let filter = searchResultsFilter {
-                filter.tokenIndices.count
-            } else if let searchResults {
-                searchResults.count
-            } else if let filter = defaultTokensFilter {
-                filter.tokenIndices.count
-            } else {
-                defaultTokens.count
-            }
+            return tokenIndicesForSelectedChain?.count
+            ?? searchResults?.count
+            ?? defaultTokens.count
         }
     }
     
@@ -308,21 +308,18 @@ extension SwapTokenSelectorViewController: UICollectionViewDelegate {
             pickUp(token: token)
         case .chainSelector:
             if indexPath.item == 0 {
-                if searchResults == nil {
-                    defaultTokensFilter = nil
-                } else {
-                    searchResultsFilter = nil
-                }
+                selectedChainID = nil
+                tokenIndicesForSelectedChain = nil
             } else {
                 let chainIndex = indexPath.item - 1
                 if let searchResultChains, let searchResults {
                     let chainID = searchResultChains[chainIndex].id
-                    let tokenIndices = tokenIndices(tokens: searchResults, chainID: chainID)
-                    searchResultsFilter = ChainFilter(chainIndex: chainIndex, tokenIndices: tokenIndices)
+                    selectedChainID = chainID
+                    tokenIndicesForSelectedChain = tokenIndices(tokens: searchResults, chainID: chainID)
                 } else {
                     let chainID = defaultChains[chainIndex].id
-                    let tokenIndices = tokenIndices(tokens: defaultTokens, chainID: chainID)
-                    defaultTokensFilter = ChainFilter(chainIndex: chainIndex, tokenIndices: tokenIndices)
+                    selectedChainID = chainID
+                    tokenIndicesForSelectedChain = tokenIndices(tokens: defaultTokens, chainID: chainID)
                 }
             }
             self.reloadWithoutAnimation(section: .tokens)
@@ -376,11 +373,6 @@ extension SwapTokenSelectorViewController {
         let name: String
     }
     
-    private struct ChainFilter {
-        let chainIndex: Int
-        let tokenIndices: [Int]
-    }
-    
     private struct TokenChange {
         let value: Decimal
         let description: String
@@ -388,20 +380,15 @@ extension SwapTokenSelectorViewController {
     
     private func token(at indexPath: IndexPath) -> BalancedSwapToken {
         assert(indexPath.section == Section.tokens.rawValue)
-        if let searchResults {
-            let index = if let filter = searchResultsFilter {
-                filter.tokenIndices[indexPath.item]
-            } else {
-                indexPath.item
-            }
-            return searchResults.values[index]
+        let index = if let indices = tokenIndicesForSelectedChain {
+            indices[indexPath.item]
         } else {
-            let index = if let filter = defaultTokensFilter {
-                filter.tokenIndices[indexPath.item]
-            } else {
-                indexPath.item
-            }
-            return defaultTokens.values[index]
+            indexPath.item
+        }
+        return if let searchResults {
+            searchResults.values[index]
+        } else {
+            defaultTokens.values[index]
         }
     }
     
@@ -455,18 +442,11 @@ extension SwapTokenSelectorViewController {
     }
     
     private func reloadChainSelection() {
-        let item = if searchResults == nil {
-            if let filter = defaultTokensFilter {
-                filter.chainIndex + 1
-            } else {
-                0
-            }
+        let chains = searchResultChains ?? defaultChains
+        let item = if let chainID = selectedChainID, let index = chains.firstIndex(where: { $0.id == chainID }) {
+            index + 1 // 1 for the "All"
         } else {
-            if let filter = searchResultsFilter {
-                filter.chainIndex + 1
-            } else {
-                0
-            }
+            0
         }
         let indexPath = IndexPath(item: item, section: Section.chainSelector.rawValue)
         collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
@@ -479,8 +459,8 @@ extension SwapTokenSelectorViewController {
         let item: Int
         if let searchResults {
             if let index = searchResults.index(forKey: assetID) {
-                if let searchResultsFilter {
-                    if let i = searchResultsFilter.tokenIndices.firstIndex(of: index) {
+                if let indices = tokenIndicesForSelectedChain {
+                    if let i = indices.firstIndex(of: index) {
                         item = i
                     } else {
                         // The selected token doesn't match with selected chain
@@ -494,8 +474,8 @@ extension SwapTokenSelectorViewController {
                 return
             }
         } else if let index = defaultTokens.index(forKey: assetID) {
-            if let defaultTokensFilter {
-                if let i = defaultTokensFilter.tokenIndices.firstIndex(of: index) {
+            if let indices = tokenIndicesForSelectedChain {
+                if let i = indices.firstIndex(of: index) {
                     item = i
                 } else {
                     // The selected token doesn't match with selected chain
@@ -529,7 +509,12 @@ extension SwapTokenSelectorViewController {
             self.searchResultsKeyword = keyword
             self.searchResults = searchResults
             self.searchResultChains = searchResultChains
-            self.searchResultsFilter = nil
+            if let chainID = self.selectedChainID, chainIDs.contains(chainID) {
+                self.tokenIndicesForSelectedChain = self.tokenIndices(tokens: searchResults, chainID: chainID)
+            } else {
+                self.selectedChainID = nil
+                self.tokenIndicesForSelectedChain = nil
+            }
             self.collectionView.reloadData()
             self.collectionView.checkEmpty(
                 dataCount: balancedTokens.count,

@@ -5,11 +5,21 @@ public struct MixinAPIResponseError: Error, Codable {
     public let status: Int
     public let code: Int
     public let description: String?
+    public let extra: JSON?
     
-    private init(status: Int, code: Int, description: String? = nil) {
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.status = try container.decode(Int.self, forKey: .status)
+        self.code = try container.decode(Int.self, forKey: .code)
+        self.description = try container.decodeIfPresent(String.self, forKey: .description)
+        self.extra = try? container.decodeIfPresent(JSON.self, forKey: .extra)
+    }
+    
+    private init(status: Int, code: Int) {
         self.status = status
         self.code = code
-        self.description = description
+        self.description = nil
+        self.extra = nil
     }
     
 }
@@ -95,6 +105,74 @@ extension MixinAPIResponseError {
         default:
             false
         }
+    }
+    
+}
+
+extension MixinAPIResponseError {
+    
+    public enum JSON: Equatable, Codable {
+        
+        case string(String)
+        case number(Double)
+        case object([String: JSON])
+        case array([JSON])
+        case bool(Bool)
+        case null
+        
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            if let object = try? container.decode([String: JSON].self) {
+                self = .object(object)
+            } else if let array = try? container.decode([JSON].self) {
+                self = .array(array)
+            } else if let string = try? container.decode(String.self) {
+                self = .string(string)
+            } else if let bool = try? container.decode(Bool.self) {
+                self = .bool(bool)
+            } else if let number = try? container.decode(Double.self) {
+                self = .number(number)
+            } else if container.decodeNil() {
+                self = .null
+            } else {
+                throw DecodingError.dataCorrupted(
+                    .init(codingPath: decoder.codingPath, debugDescription: "Invalid JSON value.")
+                )
+            }
+        }
+        
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.singleValueContainer()
+            switch self {
+            case let .array(array):
+                try container.encode(array)
+            case let .object(object):
+                try container.encode(object)
+            case let .string(string):
+                try container.encode(string)
+            case let .number(number):
+                try container.encode(number)
+            case let .bool(bool):
+                try container.encode(bool)
+            case .null:
+                try container.encodeNil()
+            }
+        }
+        
+        public func value<Path: Collection<String>>(at path: Path) -> JSON? {
+            guard case let .object(object) = self else {
+                return nil
+            }
+            guard let head = path.first else {
+                return nil
+            }
+            guard let value = object[head] else {
+                return nil
+            }
+            let tail = path.dropFirst()
+            return tail.isEmpty ? value : value.value(at: tail)
+        }
+        
     }
     
 }

@@ -234,7 +234,7 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
         switch result {
         case .success(let quote):
             self.quote = quote
-            Logger.general.debug(category: "Web3Swap", message: "Got quote: \(quote)")
+            Logger.general.debug(category: "MixinSwap", message: "Got quote: \(quote)")
             receiveAmountTextField.text = CurrencyFormatter.localizedString(
                 from: quote.receiveAmount,
                 format: .precision,
@@ -247,6 +247,8 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
                 && quote.sendAmount <= quote.sendToken.decimalBalance
         case .failure(let error):
             let description = switch error {
+            case let SwapQuotePeriodicRequester.ResponseError.invalidAmount(description):
+                description
             case MixinAPIResponseError.invalidQuoteAmount:
                 R.string.localizable.swap_invalid_amount()
             case MixinAPIResponseError.noAvailableQuote:
@@ -256,14 +258,14 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
             default:
                 "\(error)"
             }
-            Logger.general.debug(category: "Web3Swap", message: description)
+            Logger.general.debug(category: "MixinSwap", message: description)
             setFooter(.error(description))
         }
     }
     
     func swapQuotePeriodicRequester(_ requester: SwapQuotePeriodicRequester, didCountDown value: Int) {
         let progress = Double(value) / Double(requester.refreshInterval)
-        Logger.general.debug(category: "Web3Swap", message: "Progress: \(progress)")
+        Logger.general.debug(category: "MixinSwap", message: "Progress: \(progress)")
         footerInfoProgressView.setProgress(progress, animationDuration: 1)
     }
     

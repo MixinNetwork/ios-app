@@ -1163,6 +1163,9 @@
 "signature_request_from" = "该签名请求来自 %@。";
 "signed_message" = "签名";
 "signing_in_to_your_account" = "正在登录账户...";
+"single_transaction_should_be_between" = "金额范围 %1$@ %2$@ ~ %3$@ %4$@";
+"single_transaction_should_be_greater_than" = "最低金额 %1$@ %2$@";
+"single_transaction_should_be_less_than" = "最高金额 %1$@ %2$@";
 "skip" = "跳过";
 "slide_to_cancel" = "滑动取消";
 "slippage" = "滑点";

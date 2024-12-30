@@ -882,9 +882,9 @@
 		945138B82C6622F600839CBB /* TokenMarketCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945138B72C6622F600839CBB /* TokenMarketCell.xib */; };
 		945138B92C6622F600839CBB /* TokenMarketCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945138B62C6622F600839CBB /* TokenMarketCell.swift */; };
 		94525B342C4E3B91008BA7A8 /* RouteTokenSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94525B332C4E3B91008BA7A8 /* RouteTokenSource.swift */; };
-		94525B362C4E3CF2008BA7A8 /* SwappableToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94525B352C4E3CF2008BA7A8 /* SwappableToken.swift */; };
+		94525B362C4E3CF2008BA7A8 /* SwapToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94525B352C4E3CF2008BA7A8 /* SwapToken.swift */; };
 		94525B792C503B3D008BA7A8 /* Slippage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94525B782C503B3D008BA7A8 /* Slippage.swift */; };
-		94525BFC2C50812D008BA7A8 /* BalancedSwappableToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94525BFB2C50812D008BA7A8 /* BalancedSwappableToken.swift */; };
+		94525BFC2C50812D008BA7A8 /* BalancedSwapToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94525BFB2C50812D008BA7A8 /* BalancedSwapToken.swift */; };
 		945278982626BCD600023A6C /* HighlightableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945278972626BCD600023A6C /* HighlightableButton.swift */; };
 		9452D39F2C2C6E5800A61372 /* TextInscriptionContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9452D39E2C2C6E5800A61372 /* TextInscriptionContentView.swift */; };
 		9455EA082AFE598E00C3FD3C /* WithdrawFeeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9455EA072AFE598E00C3FD3C /* WithdrawFeeView.xib */; };
@@ -1226,6 +1226,10 @@
 		94F952622AE623B50025B995 /* TokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952612AE623B50025B995 /* TokenSelectorViewController.swift */; };
 		94F952672AE66A700025B995 /* AmountIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952662AE66A700025B995 /* AmountIntent.swift */; };
 		94FA8FC92644236F006BC715 /* ConversationMessageComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */; };
+		94FB8E062D1A92CF002DCA20 /* SwapTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB8E042D1A92CF002DCA20 /* SwapTokenSelectorViewController.swift */; };
+		94FB8E072D1A92CF002DCA20 /* SwapTokenSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FB8E052D1A92CF002DCA20 /* SwapTokenSelectorView.xib */; };
+		94FB8E0D2D1ACB32002DCA20 /* SwapTokenCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FB8E0C2D1ACB32002DCA20 /* SwapTokenCell.xib */; };
+		94FB8E0E2D1ACB32002DCA20 /* SwapTokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB8E0B2D1ACB32002DCA20 /* SwapTokenCell.swift */; };
 		94FCB5FF264673C400CCC8FD /* TranscriptPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */; };
 		94FCB83B264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */; };
 		94FE0C492B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE0C482B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift */; };
@@ -2361,9 +2365,9 @@
 		945138B62C6622F600839CBB /* TokenMarketCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMarketCell.swift; sourceTree = "<group>"; };
 		945138B72C6622F600839CBB /* TokenMarketCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenMarketCell.xib; sourceTree = "<group>"; };
 		94525B332C4E3B91008BA7A8 /* RouteTokenSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTokenSource.swift; sourceTree = "<group>"; };
-		94525B352C4E3CF2008BA7A8 /* SwappableToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwappableToken.swift; sourceTree = "<group>"; };
+		94525B352C4E3CF2008BA7A8 /* SwapToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapToken.swift; sourceTree = "<group>"; };
 		94525B782C503B3D008BA7A8 /* Slippage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slippage.swift; sourceTree = "<group>"; };
-		94525BFB2C50812D008BA7A8 /* BalancedSwappableToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalancedSwappableToken.swift; sourceTree = "<group>"; };
+		94525BFB2C50812D008BA7A8 /* BalancedSwapToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalancedSwapToken.swift; sourceTree = "<group>"; };
 		945278972626BCD600023A6C /* HighlightableButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightableButton.swift; sourceTree = "<group>"; };
 		9452D39E2C2C6E5800A61372 /* TextInscriptionContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInscriptionContentView.swift; sourceTree = "<group>"; };
 		9455EA072AFE598E00C3FD3C /* WithdrawFeeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawFeeView.xib; sourceTree = "<group>"; };
@@ -2717,6 +2721,10 @@
 		94F952612AE623B50025B995 /* TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenSelectorViewController.swift; sourceTree = "<group>"; };
 		94F952662AE66A700025B995 /* AmountIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountIntent.swift; sourceTree = "<group>"; };
 		94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationMessageComposer.swift; sourceTree = "<group>"; };
+		94FB8E042D1A92CF002DCA20 /* SwapTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapTokenSelectorViewController.swift; sourceTree = "<group>"; };
+		94FB8E052D1A92CF002DCA20 /* SwapTokenSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapTokenSelectorView.xib; sourceTree = "<group>"; };
+		94FB8E0B2D1ACB32002DCA20 /* SwapTokenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapTokenCell.swift; sourceTree = "<group>"; };
+		94FB8E0C2D1ACB32002DCA20 /* SwapTokenCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapTokenCell.xib; sourceTree = "<group>"; };
 		94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptPreviewViewController.swift; sourceTree = "<group>"; };
 		94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAttachmentUploadJob.swift; sourceTree = "<group>"; };
 		94FE0C482B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingDestinationSelectorViewController.swift; sourceTree = "<group>"; };
@@ -3526,6 +3534,10 @@
 				52DE7B4E2BEB7C940060A364 /* RowListViewController.swift */,
 				9413A3FF2C367D8D00B655AC /* SwapView.xib */,
 				9413A3FE2C367D8D00B655AC /* SwapViewController.swift */,
+				94FB8E0C2D1ACB32002DCA20 /* SwapTokenCell.xib */,
+				94FB8E0B2D1ACB32002DCA20 /* SwapTokenCell.swift */,
+				94FB8E052D1A92CF002DCA20 /* SwapTokenSelectorView.xib */,
+				94FB8E042D1A92CF002DCA20 /* SwapTokenSelectorViewController.swift */,
 				9412AF4C2C1AEAE00083ABB3 /* ShareViewAsPictureView.xib */,
 				9412AF4B2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift */,
 				9458A0922CC9450C00A51154 /* MnemonicsView.xib */,
@@ -5029,8 +5041,8 @@
 				DFC0ED0823BB7D990091E7AC /* GiphyImage.swift */,
 				94525B332C4E3B91008BA7A8 /* RouteTokenSource.swift */,
 				94525B782C503B3D008BA7A8 /* Slippage.swift */,
-				94525BFB2C50812D008BA7A8 /* BalancedSwappableToken.swift */,
-				94525B352C4E3CF2008BA7A8 /* SwappableToken.swift */,
+				94525BFB2C50812D008BA7A8 /* BalancedSwapToken.swift */,
+				94525B352C4E3CF2008BA7A8 /* SwapToken.swift */,
 				94793ACE2C3A56A40078ED51 /* QuoteRequest.swift */,
 				94793AD02C3A57230078ED51 /* QuoteResponse.swift */,
 				945FFC812C3829B00013DC51 /* SwapRequest.swift */,
@@ -5489,9 +5501,9 @@
 				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
 				944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 				94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */,
-				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */,
+				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */,
 				94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
-				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */,
+				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */,
 			);
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
 			projectDirPath = "";
@@ -5512,6 +5524,7 @@
 			files = (
 				7B833E9C22C4AED20063929D /* ic_app_loading@2x.webp in Resources */,
 				7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */,
+				94FB8E072D1A92CF002DCA20 /* SwapTokenSelectorView.xib in Resources */,
 				9411B3B42C7F2EBD005753F0 /* ExploreMarketHeaderView.xib in Resources */,
 				94CD471D2BECAE9D00A3DE10 /* InscriptionHashCell.xib in Resources */,
 				7B833E9D22C4AED20063929D /* ic_app_loading@3x.webp in Resources */,
@@ -5771,6 +5784,7 @@
 				DFC2646E24E585CE00BF954D /* DuplicateConfirmationWindow.xib in Resources */,
 				948664FD2CF867DC0032B9BE /* WalletView.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
+				94FB8E0D2D1ACB32002DCA20 /* SwapTokenCell.xib in Resources */,
 				DF2081B22005FF3500B87DB0 /* Camera.storyboard in Resources */,
 				947B36B325DEB79100146111 /* PlaylistView.xib in Resources */,
 				94CF1F2C2BA1BB9800BC52C1 /* Web3AccountLockedHeaderView.xib in Resources */,
@@ -6159,6 +6173,7 @@
 				7BA9D9C8226DE71E00255943 /* NavigationAvatarIconView.swift in Sources */,
 				94463C53298D690F00E63547 /* AuthenticationFailureView.swift in Sources */,
 				94658CB92B358E3100F5EB21 /* TabBar.swift in Sources */,
+				94FB8E0E2D1ACB32002DCA20 /* SwapTokenCell.swift in Sources */,
 				945FFC822C3829B00013DC51 /* SwapRequest.swift in Sources */,
 				7B09664620E0B018007DC179 /* PhotoAssetPickerNavigationController.swift in Sources */,
 				7BA9D9BD226D8BF700255943 /* SearchCategoryViewController.swift in Sources */,
@@ -6446,7 +6461,7 @@
 				7CDF316C29890FB200421808 /* ConversationFontSet.swift in Sources */,
 				94525B792C503B3D008BA7A8 /* Slippage.swift in Sources */,
 				94B577822B5E79B800AE576E /* ExploreBotsViewController.swift in Sources */,
-				94525BFC2C50812D008BA7A8 /* BalancedSwappableToken.swift in Sources */,
+				94525BFC2C50812D008BA7A8 /* BalancedSwapToken.swift in Sources */,
 				7B369208233A43C1007321A7 /* SegmentedControl.swift in Sources */,
 				9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */,
 				7C2AC42928F2B384005F369A /* DepositSuspendedView.swift in Sources */,
@@ -6471,6 +6486,7 @@
 				94227D6E2BEF242200430CAE /* SearchCollectibleViewController.swift in Sources */,
 				94CB84D62C6A65C200135641 /* ChartView.swift in Sources */,
 				7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */,
+				94FB8E062D1A92CF002DCA20 /* SwapTokenSelectorViewController.swift in Sources */,
 				946FFAD32B6C566800B62B7F /* AuthenticationProgressView.swift in Sources */,
 				7C4C039F28530C9E003DE0C0 /* ContactViewController.swift in Sources */,
 				941994EC2CCC3FD300F5425C /* RecoveryKitViewController.swift in Sources */,
@@ -6989,7 +7005,7 @@
 				7BFD375624936763006D758F /* GroupCallIndicatorView.swift in Sources */,
 				DFE356B81FB4994200E0E3A8 /* SettingsViewController.swift in Sources */,
 				7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */,
-				94525B362C4E3CF2008BA7A8 /* SwappableToken.swift in Sources */,
+				94525B362C4E3CF2008BA7A8 /* SwapToken.swift in Sources */,
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,
 				7B8ECAE8250F6BE8006F0479 /* ExternalSharingContext.swift in Sources */,
 				7C5DFE30284F23F6008733FC /* UserCenterViewController.swift in Sources */,
@@ -7199,15 +7215,15 @@
 /* Begin PBXTargetDependency section */
 		94881FAE2AD0361100CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */;
+			productRef = 94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */;
 		};
 		94881FB02AD0361700CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */;
+			productRef = 94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */;
 		};
 		94C957E52ACFECDE00C1412F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */;
+			productRef = 94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */;
 		};
 		DFE861C22422673B009B1833 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -7847,7 +7863,7 @@
 				version = 14.3.1;
 			};
 		};
-		9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */ = {
+		9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MixinNetwork/web3.swift";
 			requirement = {
@@ -7863,7 +7879,7 @@
 				version = 3.1.2;
 			};
 		};
-		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */ = {
+		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mac-cain13/R.swift";
 			requirement = {
@@ -7904,7 +7920,7 @@
 		};
 		9479B7842BBBE589002A2C4F /* web3.swift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */;
+			package = 9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */;
 			productName = web3.swift;
 		};
 		9481C03B2A49A9AA0009DAF8 /* Starscream */ = {
@@ -7914,28 +7930,28 @@
 		};
 		94881FA72AD035C300CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
 			productName = RswiftLibrary;
 		};
 		94881FA92AD035CC00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
 			productName = RswiftLibrary;
 		};
 		94881FAB2AD035ED00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
 			productName = RswiftLibrary;
 		};
-		94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
+		94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
+		94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */ = {
+		94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};

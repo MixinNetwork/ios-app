@@ -28,7 +28,7 @@ final class SwapAssetChangeCell: UITableViewCell {
     func reloadData(
         sendToken: TokenItem,
         sendAmount: String,
-        receiveToken: SwappableToken,
+        receiveToken: SwapToken,
         receiveAmount: String
     ) {
         receivingView.iconView.sd_setImage(with: receiveToken.iconURL,

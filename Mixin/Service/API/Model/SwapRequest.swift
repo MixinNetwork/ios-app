@@ -16,7 +16,7 @@ struct SwapRequest: Encodable {
         sendToken: Web3Token,
         sendAmount: Decimal,
         sendAddress: String,
-        receiveToken: SwappableToken,
+        receiveToken: SwapToken,
         source: RouteTokenSource,
         slippage: Decimal
     ) -> SwapRequest? {
@@ -42,9 +42,9 @@ struct SwapRequest: Encodable {
     }
     
     static func mixin(
-        sendToken: SwappableToken,
+        sendToken: SwapToken,
         sendAmount: Decimal,
-        receiveToken: SwappableToken,
+        receiveToken: SwapToken,
         source: RouteTokenSource,
         slippage: Decimal,
         payload: String

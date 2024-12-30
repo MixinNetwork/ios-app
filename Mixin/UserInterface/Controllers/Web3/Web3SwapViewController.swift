@@ -8,8 +8,8 @@ final class Web3SwapViewController: SwapViewController {
     
     private var sendTokens: [Web3Token]?
     private var sendToken: Web3Token?
-    private var receiveTokens: [BalancedSwappableToken]?
-    private var receiveToken: BalancedSwappableToken?
+    private var receiveTokens: [BalancedSwapToken]?
+    private var receiveToken: BalancedSwapToken?
     
     init(address: String, tokens: [Web3Token]) {
         self.address = address
@@ -57,12 +57,12 @@ final class Web3SwapViewController: SwapViewController {
         }
         let selectableReceiveTokens = receiveTokens.filter { token in
             if let sendToken {
-                !token.token.isEqual(to: sendToken)
+                !token.isEqual(to: sendToken)
             } else {
                 true
             }
         }
-        let selector = Web3TransferTokenSelectorViewController<BalancedSwappableToken>()
+        let selector = Web3TransferTokenSelectorViewController<BalancedSwapToken>()
         selector.onSelected = { token in
             self.receiveToken = token
             self.reloadReceiveView(with: token)
@@ -82,7 +82,7 @@ final class Web3SwapViewController: SwapViewController {
                 sendToken: sendToken,
                 sendAmount: sendAmount,
                 sendAddress: address,
-                receiveToken: receiveToken.token,
+                receiveToken: receiveToken,
                 source: .solana,
                 slippage: 0.01
             ) // Review if web3 swapping needs `payload` too
@@ -120,7 +120,7 @@ final class Web3SwapViewController: SwapViewController {
         }
     }
     
-    private func reloadData(supportedTokens: [SwappableToken]) {
+    private func reloadData(supportedTokens: [SwapToken]) {
         DispatchQueue.global().async { [addressTokens, weak self] in
             let sendTokens = addressTokens.filter { addressToken in
                 supportedTokens.contains { supportedToken in
@@ -133,18 +133,18 @@ final class Web3SwapViewController: SwapViewController {
                     supportedToken.isEqual(to: addressToken)
                 }
                 return if let addressToken {
-                    BalancedSwappableToken(token: supportedToken,
+                    BalancedSwapToken(token: supportedToken,
                                            balance: addressToken.decimalBalance,
                                            usdPrice: addressToken.decimalUSDPrice)
                 } else {
-                    BalancedSwappableToken(token: supportedToken,
+                    BalancedSwapToken(token: supportedToken,
                                            balance: 0,
                                            usdPrice: 0)
                 }
             }
             let receiveToken = receiveTokens.first { token in
                 if let sendToken {
-                    token.token.isEqual(to: sendToken)
+                    token.isEqual(to: sendToken)
                 } else {
                     true
                 }
@@ -184,7 +184,7 @@ final class Web3SwapViewController: SwapViewController {
             guard let request = QuoteRequest.web3(
                 sendToken: sendToken,
                 sendAmount: payAmount,
-                receiveToken: receiveToken.token,
+                receiveToken: receiveToken,
                 slippage: 0.01
             ) else {
                 self?.receiveAmountTextField.text = nil
@@ -196,9 +196,9 @@ final class Web3SwapViewController: SwapViewController {
                     guard
                         let self,
                         self.sendAmountTextField.text == text,
-                        self.receiveToken?.token.address == receiveToken.token.address,
+                        self.receiveToken?.address == receiveToken.address,
                         let receiveAmount = Decimal(string: response.outAmount, locale: .enUSPOSIX),
-                        let decimalAmount = receiveToken.token.decimalAmount(nativeAmount: receiveAmount)
+                        let decimalAmount = receiveToken.decimalAmount(nativeAmount: receiveAmount)
                     else {
                         return
                     }
@@ -219,9 +219,9 @@ final class Web3SwapViewController: SwapViewController {
         sendLoadingIndicator.stopAnimating()
     }
     
-    private func reloadReceiveView(with token: BalancedSwappableToken) {
+    private func reloadReceiveView(with token: BalancedSwapToken) {
         receiveBalanceLabel.text = nil
-        receiveIconView.setIcon(token: token.token)
+        receiveIconView.setIcon(token: token)
         receiveSymbolLabel.text = token.symbol
         receiveValueLabel.text = ""
         receiveLoadingIndicator.stopAnimating()

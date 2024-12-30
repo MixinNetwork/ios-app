@@ -8,10 +8,10 @@ final class ExploreSearchRecommendationViewController: UIViewController {
     private weak var collectionView: UICollectionView!
     
     override func loadView() {
-        let layout = UICollectionViewCompositionalLayout { [weak self] section, environment in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(113), heightDimension: .estimated(48))
+        let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, environment in
+            let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(114), heightDimension: .estimated(47))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(48))
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(47))
             let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
             group.interItemSpacing = .fixed(16)
             group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
@@ -106,24 +106,25 @@ extension ExploreSearchRecommendationViewController: UICollectionViewDataSource 
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_recent_search, for: indexPath)!
+        cell.size = .large
         let viewModel = viewModels[indexPath.item]
         switch viewModel.content {
         case let .market(market):
-            cell.tokenIconView.setIcon(market: market)
-            cell.tokenIconView.isHidden = false
-            cell.avatarImageView.isHidden = true
+            cell.setImage { iconView in
+                iconView.setIcon(market: market)
+            }
         case let .user(item):
-            cell.avatarImageView.setImage(with: item)
-            cell.tokenIconView.isHidden = true
-            cell.avatarImageView.isHidden = false
+            cell.setAvatar { imageView in
+                imageView.setImage(with: item)
+            }
         case .link:
-            cell.tokenIconView.image = R.image.recent_search_link()
-            cell.tokenIconView.isHidden = false
-            cell.avatarImageView.isHidden = true
+            cell.setImage { iconView in
+                iconView.image = R.image.recent_search_link()
+            }
         case let .dapp(app):
-            cell.tokenIconView.sd_setImage(with: app.iconURL)
-            cell.tokenIconView.isHidden = false
-            cell.avatarImageView.isHidden = true
+            cell.setImage { iconView in
+                iconView.sd_setImage(with: app.iconURL)
+            }
         }
         cell.titleLabel.text = viewModel.title
         cell.subtitleLabel.text = viewModel.subtitle

@@ -1890,7 +1890,7 @@ extension UrlWindow {
     }
 }
 
-extension Array where Element: Hashable {
+fileprivate extension Array where Element: Hashable {
     
     func filterDuplicates() -> [Element] {
         var uniq = Set<Element>()

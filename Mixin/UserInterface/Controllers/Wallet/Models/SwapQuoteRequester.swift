@@ -34,11 +34,11 @@ final class SwapQuotePeriodicRequester {
     }
     
     init(
-        sendToken: BalancedSwappableToken, sendAmount: Decimal,
-        receiveToken: SwappableToken, slippage: Decimal
+        sendToken: BalancedSwapToken, sendAmount: Decimal,
+        receiveToken: SwapToken, slippage: Decimal
     ) {
         self.request = QuoteRequest.mixin(
-            sendToken: sendToken.token,
+            sendToken: sendToken,
             sendAmount: sendAmount,
             receiveToken: receiveToken,
             slippage: slippage

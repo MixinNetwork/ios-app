@@ -378,7 +378,7 @@ extension AuthenticationPreviewViewController {
         case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: Web3TransferableToken) // Nil amount for unlimited
         case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
         case tokenAmount(token: TokenItem, tokenAmount: String, fiatMoneyAmount: String)
-        case swapAssetChange(sendToken: TokenItem, sendAmount: String, receiveToken: SwappableToken, receiveAmount: String)
+        case swapAssetChange(sendToken: TokenItem, sendAmount: String, receiveToken: SwapToken, receiveAmount: String)
         case safeMultisigAmount(token: TokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case addressReceivers(TokenItem, [SafeMultisigResponse.Safe.Recipient])
     }

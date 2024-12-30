@@ -3,15 +3,15 @@ import MixinServices
 
 class SwapQuoteDraft: CustomStringConvertible {
     
-    let sendToken: BalancedSwappableToken
+    let sendToken: BalancedSwapToken
     let sendAmount: Decimal
-    let receiveToken: SwappableToken
+    let receiveToken: SwapToken
     
     var description: String {
         "<SwapQuoteDraft \(sendAmount)\(sendToken.symbol) -> \(receiveToken.symbol)>"
     }
     
-    init(sendToken: BalancedSwappableToken, sendAmount: Decimal, receiveToken: SwappableToken) {
+    init(sendToken: BalancedSwapToken, sendAmount: Decimal, receiveToken: SwapToken) {
         self.sendToken = sendToken
         self.sendAmount = sendAmount
         self.receiveToken = receiveToken

@@ -1,17 +1,7 @@
 import Foundation
 import MixinServices
 
-final class SwappableToken: Decodable {
-    
-    enum CodingKeys: String, CodingKey {
-        case address
-        case assetID = "assetId"
-        case decimals
-        case name
-        case symbol
-        case icon
-        case chain
-    }
+class SwapToken {
     
     let address: String
     let assetID: String
@@ -24,7 +14,7 @@ final class SwappableToken: Decodable {
     init(
         address: String, assetID: String, decimals: Int16,
         name: String, symbol: String, icon: String,
-        chain: SwappableToken.Chain
+        chain: SwapToken.Chain
     ) {
         self.address = address
         self.assetID = assetID
@@ -37,7 +27,7 @@ final class SwappableToken: Decodable {
     
 }
 
-extension SwappableToken {
+extension SwapToken {
     
     var iconURL: URL? {
         URL(string: icon)
@@ -83,9 +73,9 @@ extension SwappableToken {
     
 }
 
-extension SwappableToken {
+extension SwapToken {
     
-    struct Chain: Decodable {
+    struct Chain: Swift.Decodable {
         
         enum CodingKeys: String, CodingKey {
             case chainID = "chainId"
@@ -116,6 +106,33 @@ extension SwappableToken {
             self.decimals = try container.decode(Int.self, forKey: .decimals)
             self.symbol = try container.decode(String.self, forKey: .symbol)
             self.icon = try container.decode(String.self, forKey: .icon)
+        }
+        
+    }
+    
+    final class Decodable: SwapToken, Swift.Decodable {
+        
+        enum CodingKeys: String, CodingKey {
+            case address
+            case assetID = "assetId"
+            case decimals
+            case name
+            case symbol
+            case icon
+            case chain
+        }
+        
+        init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            super.init(
+                address: try container.decode(String.self, forKey: .address),
+                assetID: try container.decode(String.self, forKey: .assetID),
+                decimals: try container.decode(Int16.self, forKey: .decimals),
+                name: try container.decode(String.self, forKey: .name),
+                symbol: try container.decode(String.self, forKey: .symbol),
+                icon: try container.decode(String.self, forKey: .icon),
+                chain: try container.decode(Chain.self, forKey: .chain)
+            )
         }
         
     }

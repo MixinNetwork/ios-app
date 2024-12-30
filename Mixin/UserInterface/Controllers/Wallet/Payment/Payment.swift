@@ -156,7 +156,7 @@ extension Payment {
     }
     
     struct SwapContext {
-        let receiveToken: SwappableToken
+        let receiveToken: SwapToken
         let receiveAmount: Decimal
     }
     

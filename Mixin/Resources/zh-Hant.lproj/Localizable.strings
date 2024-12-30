@@ -836,6 +836,7 @@
 "open_in_google_maps" = "在 Google Maps 中開啟";
 "open_in_maps" = "在地圖中開啟";
 "open_link" = "開啟連結：%@";
+"open_source" = "版權所有 Mixin Messenger\n根據 GPL-3.0 授權許可";
 "open_url" = "開啟連結";
 "opening_balance" = "期初餘額";
 "operation_failed" = "操作失敗，請稍後重試";

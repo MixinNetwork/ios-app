@@ -1,6 +1,6 @@
 import UIKit
 
-class AboutViewController: SettingsTableViewController {
+final class AboutViewController: SettingsTableViewController {
     
     @IBOutlet weak var versionLabel: UILabel!
     
@@ -16,6 +16,8 @@ class AboutViewController: SettingsTableViewController {
         ])
     ])
     
+    private let footerView = FooterView()
+    
     private lazy var diagnoseRow = SettingsRow(title: R.string.localizable.diagnose(), accessory: .disclosure)
     
     private var isShowingDiagnoseRow = false
@@ -23,6 +25,9 @@ class AboutViewController: SettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableHeaderView = R.nib.aboutTableHeaderView(withOwner: self)
+        footerView.button.addTarget(self, action: #selector(revealOpenSource(_:)), for: .touchUpInside)
+        footerView.sizeToFit(tableView: tableView)
+        tableView.tableFooterView = footerView
         versionLabel.text = Bundle.main.fullVersion
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
@@ -31,12 +36,30 @@ class AboutViewController: SettingsTableViewController {
         #endif
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        footerView.sizeToFit(tableView: tableView)
+        tableView.tableFooterView = footerView
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory {
+            footerView.sizeToFit(tableView: tableView)
+            tableView.tableFooterView = footerView
+        }
+    }
+    
     @IBAction func showDiagnoseRow(_ sender: Any) {
         guard !isShowingDiagnoseRow else {
             return
         }
         dataSource.appendRows([diagnoseRow], into: 0, animation: .automatic)
         isShowingDiagnoseRow = true
+    }
+    
+    @objc private func revealOpenSource(_ sender: Any) {
+        UIApplication.shared.openURL(url: .openSource)
     }
     
 }
@@ -67,6 +90,69 @@ extension AboutViewController: UITableViewDelegate {
         default:
             break
         }
+    }
+    
+}
+
+extension AboutViewController {
+    
+    private final class FooterView: UIView {
+        
+        let button = UIButton(type: .system)
+        
+        private let buttonVerticalMargin: CGFloat = 16
+        
+        private var lastLayoutWidth: CGFloat?
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            loadSubviews()
+        }
+        
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            loadSubviews()
+        }
+        
+        func sizeToFit(tableView: UITableView) {
+            let width = tableView.bounds.width
+            guard width != lastLayoutWidth else {
+                return
+            }
+            let sizeToFit = CGSize(width: width, height: UIView.layoutFittingExpandedSize.height)
+            let height = button.sizeThatFits(sizeToFit).height + buttonVerticalMargin * 2
+            frame.size = CGSize(width: width, height: height)
+            lastLayoutWidth = width
+        }
+        
+        private func loadSubviews() {
+            var configuration: UIButton.Configuration = .plain()
+            configuration.buttonSize = .medium
+            configuration.background = .clear()
+            configuration.baseForegroundColor = R.color.text_tertiary()
+            configuration.attributedTitle = {
+                let paragraphSytle = NSMutableParagraphStyle()
+                paragraphSytle.alignment = .center
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.preferredFont(forTextStyle: .footnote),
+                    .paragraphStyle: paragraphSytle
+                ]
+                return AttributedString(
+                    R.string.localizable.open_source(),
+                    attributes: AttributeContainer(attributes)
+                )
+            }()
+            button.configuration = configuration
+            addSubview(button)
+            button.snp.makeConstraints { make in
+                make.top.equalToSuperview().offset(buttonVerticalMargin)
+                make.bottom.equalToSuperview().offset(-buttonVerticalMargin)
+                make.centerX.equalToSuperview()
+                make.leading.greaterThanOrEqualToSuperview()
+                make.trailing.lessThanOrEqualToSuperview()
+            }
+        }
+        
     }
     
 }

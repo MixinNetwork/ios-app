@@ -154,7 +154,7 @@ final class MixinSwapViewController: SwapViewController {
             }
             switch response {
             case .success(let response):
-                guard 
+                guard
                     let url = URL(string: response.tx),
                     quote.sendToken.assetID == response.quote.inputMint,
                     quote.receiveToken.assetID == response.quote.outputMint,
@@ -181,6 +181,11 @@ final class MixinSwapViewController: SwapViewController {
                 sender.isBusy = false
             }
         }
+    }
+    
+    override func prepareForReuse(sender: Any) {
+        super.prepareForReuse(sender: sender)
+        reloadTokens() // Update send token balance
     }
     
 }

@@ -343,6 +343,9 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         
         switch context {
         case .swap:
+            if let swap = viewControllers.last as? SwapViewController {
+                swap.prepareForReuse(sender: self)
+            }
             return
         case .inscription(let context):
             switch context.operation {

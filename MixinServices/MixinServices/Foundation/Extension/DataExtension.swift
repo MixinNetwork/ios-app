@@ -17,12 +17,13 @@ public extension Data {
         self.init(bytesNoCopy: bytes, count: count, deallocator: .free)
     }
     
-    init?(base64URLEncoded string: String) {
+    init?<S: StringProtocol>(base64URLEncoded string: S) {
         var str = string
             .replacingOccurrences(of: "-", with: "+")
             .replacingOccurrences(of: "_", with: "/")
-        if string.count % 4 != 0 {
-            str.append(String(repeating: "=", count: 4 - string.count % 4))
+        let remainder = string.count % 4
+        if remainder != 0 {
+            str.append(String(repeating: "=", count: 4 - remainder))
         }
         self.init(base64Encoded: str)
     }

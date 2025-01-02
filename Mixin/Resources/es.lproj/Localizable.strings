@@ -1163,6 +1163,9 @@
 "signature_request_from" = "This signature request is issued by %@.";
 "signed_message" = "SIGNED MESSAGE";
 "signing_in_to_your_account" = "Signing in to your account...";
+"single_transaction_should_be_between" = "Amount range be %1$@ %2$@ ~ %3$@ %4$@";
+"single_transaction_should_be_greater_than" = "Minimum amount %1$@ %2$@";
+"single_transaction_should_be_less_than" = "Maximum amount %1$@ %2$@";
 "skip" = "Saltar";
 "slide_to_cancel" = "Deslizar para cancelar";
 "slippage" = "Slippage";

@@ -142,6 +142,11 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         self.present(alert, animated: true)
     }
     
+    func prepareForReuse(sender: Any) {
+        sendAmountTextField.text = nil
+        sendAmountTextField.sendActions(for: .editingChanged)
+    }
+    
 }
 
 extension SwapViewController {

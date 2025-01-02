@@ -14,6 +14,10 @@ final class SwapQuotePeriodicRequester {
         case invalidResponseAmount(String)
     }
     
+    enum ResponseError: Error {
+        case invalidAmount(String)
+    }
+    
     let refreshInterval = 10
     
     var countDownIncludesZero = true
@@ -71,6 +75,55 @@ final class SwapQuotePeriodicRequester {
         timer?.invalidate()
     }
     
+}
+
+extension SwapQuotePeriodicRequester {
+    
+    private struct AmountRange {
+        
+        let description: String
+        
+        init?(extra: MixinAPIResponseError.JSON, symbol: String) {
+            let min: String?
+            if case let .string(string) = extra.value(at: ["data", "min"]),
+               let decimal = Decimal(string: string, locale: .enUSPOSIX)
+            {
+                min = CurrencyFormatter.localizedString(
+                    from: decimal,
+                    format: .precision,
+                    sign: .never
+                )
+            } else {
+                min = nil
+            }
+            
+            let max: String?
+            if case let .string(string) = extra.value(at: ["data", "max"]),
+               let decimal = Decimal(string: string, locale: .enUSPOSIX)
+            {
+                max = CurrencyFormatter.localizedString(
+                    from: decimal,
+                    format: .precision,
+                    sign: .never
+                )
+            } else {
+                max = nil
+            }
+            
+            switch (min, max) {
+            case let (.some(min), .none):
+                description = R.string.localizable.single_transaction_should_be_greater_than(min, symbol)
+            case let (.none, .some(max)):
+                description = R.string.localizable.single_transaction_should_be_less_than(max, symbol)
+            case let (.some(min), .some(max)):
+                description = R.string.localizable.single_transaction_should_be_between(min, symbol, max, symbol)
+            default:
+                return nil
+            }
+        }
+        
+    }
+    
     private func requestQuote() {
         timer?.invalidate()
         delegate?.swapQuotePeriodicRequesterWillUpdate(self)
@@ -97,7 +150,16 @@ final class SwapQuotePeriodicRequester {
             case .failure(.httpTransport(.explicitlyCancelled)):
                 break
             case .failure(let error):
-                self.delegate?.swapQuotePeriodicRequester(self, didUpdate: .failure(error))
+                if case let .response(error) = error,
+                   case .invalidQuoteAmount = error,
+                   let extra = error.extra,
+                   let range = AmountRange(extra: extra, symbol: quoteDraft.sendToken.symbol)
+                {
+                    let error: ResponseError = .invalidAmount(range.description)
+                    self.delegate?.swapQuotePeriodicRequester(self, didUpdate: .failure(error))
+                } else {
+                    self.delegate?.swapQuotePeriodicRequester(self, didUpdate: .failure(error))
+                }
             }
         }
     }

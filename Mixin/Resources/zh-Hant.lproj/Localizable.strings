@@ -146,6 +146,8 @@
 "approving_transaction" = "正在批准";
 "approving_transaction_failed" = "批准失敗";
 "ask_me_anything" = "向我提問";
+"asset_changes" = "資產變動";
+"asset_changes_estimate" = "資產變動（預估）";
 "asset_key" = "資產標識";
 "asset_not_found" = "找不到該資產";
 "asset_type" = "資產型別";
@@ -1197,7 +1199,6 @@
 "suspended_deposit" = "%1$@ 充值已暫停，可能的原因是因為使用率太低、節點故障、區塊鏈網路硬分叉或者擁堵，注意已轉入的 %2$@ 資產可以繼續轉賬。";
 "suspicious_link" = "可疑連結";
 "swap" = "交易";
-"swap_asset_change" = "資產變動（預估）";
 "swap_confirmation" = "確認交易";
 "swap_failed" = "交易失敗";
 "swap_invalid_amount" = "沒有報價。請嘗試修改金額。";

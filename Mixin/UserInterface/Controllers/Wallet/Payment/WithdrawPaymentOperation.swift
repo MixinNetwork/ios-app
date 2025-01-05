@@ -12,7 +12,7 @@ struct WithdrawPaymentOperation {
     enum Error: Swift.Error, LocalizedError {
         
         case buildWithdrawalTx(Swift.Error?)
-        case buildFeeTx(Swift.Error)
+        case buildFeeTx(Swift.Error?)
         case missingWithdrawalResponse
         case missingFeeResponse
         case alreadyPaid
@@ -27,7 +27,7 @@ struct WithdrawPaymentOperation {
             case .buildWithdrawalTx(let error):
                 return error?.localizedDescription ?? "Null withdrawal tx"
             case .buildFeeTx(let error):
-                return error.localizedDescription
+                return error?.localizedDescription ?? "Null fee tx"
             case .missingWithdrawalResponse:
                 return "No withdrawal resp"
             case .missingFeeResponse:
@@ -172,11 +172,11 @@ struct WithdrawPaymentOperation {
                                    emptyMemo,
                                    withdrawalTx.hash,
                                    &error)
-            if let error {
+            guard let tx, error == nil else {
                 throw Error.buildFeeTx(error)
             }
-            verifyRequests.append(TransactionRequest(id: feeTraceID, raw: tx))
-            feeTx = tx
+            verifyRequests.append(TransactionRequest(id: feeTraceID, raw: tx.raw))
+            feeTx = tx.raw
             Logger.general.info(category: "Withdraw", message: "Fee tx built")
         } else {
             feeTx = nil

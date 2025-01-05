@@ -146,6 +146,8 @@
 "approving_transaction" = "Approving Transaction";
 "approving_transaction_failed" = "Approving Transaction Failed";
 "ask_me_anything" = "Ask me anything";
+"asset_changes" = "Asset changes";
+"asset_changes_estimate" = "Asset changes (estimate)";
 "asset_key" = "Ключ актива";
 "asset_not_found" = "Актив не найден.";
 "asset_type" = "Тип актива";
@@ -1197,7 +1199,6 @@
 "suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "Подозрительная ссылка";
 "swap" = "Swap";
-"swap_asset_change" = "Asset changes (estimate)";
 "swap_confirmation" = "Swap Confirmation";
 "swap_failed" = "Swap Failed";
 "swap_invalid_amount" = "No available quote found. Please try a different amount.";

@@ -6,6 +6,11 @@ enum PaymentPreconditionFailureReason {
     case description(String)
 }
 
+enum OutputCollectingResult {
+    case success(UTXOService.OutputCollection)
+    case failure(PaymentPreconditionFailureReason)
+}
+
 enum PaymentPreconditionIssue {
     
     case duplication(previous: Date, amount: Decimal, symbol: String)
@@ -35,6 +40,76 @@ enum PaymentPreconditionIssue {
 enum PaymentPreconditionCheckingResult {
     case passed([PaymentPreconditionIssue])
     case failed(PaymentPreconditionFailureReason)
+}
+
+protocol PaymentPreconditionChecker {
+    func check(preconditions: [PaymentPrecondition]) async -> PaymentPreconditionCheckingResult
+}
+
+extension PaymentPreconditionChecker {
+    
+    func check(preconditions: [PaymentPrecondition]) async -> PaymentPreconditionCheckingResult {
+        var issues: [PaymentPreconditionIssue] = []
+        for precondition in preconditions {
+            let result = await precondition.check()
+            switch result {
+            case .passed(let newIssues):
+                issues.append(contentsOf: newIssues)
+            case .failed(let reason):
+                return .failed(reason)
+            }
+        }
+        return .passed(issues)
+    }
+    
+    func collectOutputs(
+        token: TokenItem,
+        amount: Decimal,
+        on parent: UIViewController
+    ) async -> OutputCollectingResult {
+        repeat {
+            let result = UTXOService.shared.collectUnspentOutputs(kernelAssetID: token.kernelAssetID, amount: amount)
+            switch result {
+            case .insufficientBalance:
+                return .failure(.description(R.string.localizable.insufficient_balance()))
+            case .outputNotConfirmed:
+                let delegation = WalletHintViewController.UserRealizedDelegation()
+                await withCheckedContinuation { continuation in
+                    DispatchQueue.main.async {
+                        delegation.onRealize = {
+                            continuation.resume()
+                        }
+                        let hint = WalletHintViewController(content: .waitingTransaction)
+                        hint.delegate = delegation
+                        UIApplication.homeContainerViewController?.present(hint, animated: true)
+                    }
+                    let job = SyncOutputsJob()
+                    ConcurrentJobQueue.shared.addJob(job: job)
+                }
+                return .failure(.userCancelled)
+            case .success(let outputCollection):
+                return .success(outputCollection)
+            case .maxSpendingCountExceeded:
+                let consolidationResult = await withCheckedContinuation { continuation in
+                    DispatchQueue.main.async {
+                        let consolidation = ConsolidateOutputsViewController(token: token)
+                        consolidation.onCompletion = { result in
+                            continuation.resume(with: .success(result))
+                        }
+                        let auth = AuthenticationViewController(intent: consolidation)
+                        parent.present(auth, animated: true)
+                    }
+                }
+                switch consolidationResult {
+                case .userCancelled:
+                    return .failure(.userCancelled)
+                case .success:
+                    continue
+                }
+            }
+        } while true
+    }
+    
 }
 
 protocol PaymentPrecondition {
@@ -166,8 +241,6 @@ struct KnownOpponentPrecondition: PaymentPrecondition {
 }
 
 struct NoPendingTransactionPrecondition: PaymentPrecondition {
-    
-    let token: TokenItem
     
     func check() async -> PaymentPreconditionCheckingResult {
         let count = RawTransactionDAO.shared.unspentRawTransactionCount(types: [.transfer, .withdrawal])

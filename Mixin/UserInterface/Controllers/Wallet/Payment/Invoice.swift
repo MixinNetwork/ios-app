@@ -2,7 +2,7 @@ import Foundation
 import CryptoKit
 import MixinServices
 
-struct Invoice {
+struct Invoice: PaymentPreconditionChecker {
     
     enum Reference {
         case hash(String)
@@ -12,8 +12,10 @@ struct Invoice {
     struct Entry {
         let traceID: String
         let assetID: String
-        let amount: Decimal
+        let amount: String
+        let decimalAmount: Decimal
         let memo: String
+        let memoData: Data
         let references: [Reference]
     }
     
@@ -145,8 +147,8 @@ extension Invoice {
                 let assetID = reader.readUUID(),
                 let amountLength = reader.readUInt8(),
                 let amountData = reader.readBytes(count: Int(amountLength)),
-                let amountString = String(data: amountData, encoding: .utf8),
-                let amount = Decimal(string: amountString, locale: .enUSPOSIX),
+                let amount = String(data: amountData, encoding: .utf8),
+                let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX),
                 let extraLength = reader.readUInt16(),
                 let extra = reader.readBytes(count: Int(extraLength)),
                 let memo = String(data: extra, encoding: .utf8),
@@ -178,7 +180,9 @@ extension Invoice {
                 traceID: traceID,
                 assetID: assetID,
                 amount: amount,
+                decimalAmount: decimalAmount,
                 memo: memo,
+                memoData: extra,
                 references: references
             )
             entries.append(entry)
@@ -190,3 +194,66 @@ extension Invoice {
     
 }
 
+extension Invoice {
+    
+    func checkPreconditions(
+        transferTo destination: Payment.TransferDestination,
+        tokens: [String: TokenItem],
+        on parent: UIViewController,
+        onFailure: @MainActor @escaping (PaymentPreconditionFailureReason) -> Void,
+        onSuccess: @MainActor @escaping (InvoicePaymentOperation, [PaymentPreconditionIssue]) -> Void
+    ) {
+        Task {
+            let preconditions: [PaymentPrecondition] = [
+                NoPendingTransactionPrecondition(),
+                // FIXME: Check if already paid with trace IDs
+            ] + entries.flatMap { entry in
+                entry.references.compactMap { reference in
+                    switch reference {
+                    case .hash(let hash):
+                        ReferenceValidityPrecondition(reference: hash)
+                    case .index(let index):
+                        nil // Validated in Invoice.init
+                    }
+                }
+            }
+            switch await check(preconditions: preconditions) {
+            case .failed(let reason):
+                await MainActor.run {
+                    onFailure(reason)
+                }
+            case .passed(let issues):
+                var transactions: [InvoicePaymentOperation.Transaction] = []
+                for entry in entries {
+                    guard let token = tokens[entry.assetID] else {
+                        await MainActor.run {
+                            // Not expected to happen, this issue could be found by caller
+                            onFailure(.description(R.string.localizable.insufficient_balance()))
+                        }
+                        return
+                    }
+                    let outputCollectionResult = await collectOutputs(token: token, amount: entry.decimalAmount, on: parent)
+                    switch outputCollectionResult {
+                    case .success(let collection):
+                        let transaction = InvoicePaymentOperation.Transaction(
+                            entry: entry,
+                            token: token,
+                            outputCollection: collection
+                        )
+                        transactions.append(transaction)
+                    case .failure(let reason):
+                        await MainActor.run {
+                            onFailure(reason)
+                        }
+                        return
+                    }
+                }
+                let operation = InvoicePaymentOperation(destination: destination, transactions: transactions)
+                await MainActor.run {
+                    onSuccess(operation, issues)
+                }
+            }
+        }
+    }
+    
+}

@@ -12,7 +12,7 @@ final class AuthenticationPreviewHeaderView: UIView {
     private weak var assetIconView: BadgeIconView?
     private weak var progressView: AuthenticationProgressView?
     private weak var textContentView: TextInscriptionContentView?
-    private weak var swapIconView: SwapIconView?
+    private weak var multipleTokenIconView: MultipleTokenIconView?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -58,23 +58,41 @@ final class AuthenticationPreviewHeaderView: UIView {
     }
     
     func setIcon(sendToken: TokenItem, receiveToken: SwapToken) {
-        let iconView: SwapIconView
-        if let view = self.swapIconView, view.isDescendant(of: iconWrapperView) {
+        let iconView: MultipleTokenIconView
+        if let view = self.multipleTokenIconView, view.isDescendant(of: iconWrapperView) {
             iconView = view
         } else {
             for iconView in iconWrapperView.subviews {
                 iconView.removeFromSuperview()
             }
-            iconView = SwapIconView()
+            iconView = MultipleTokenIconView()
             iconWrapperView.addSubview(iconView)
             iconView.snp.makeConstraints { make in
                 make.center.equalToSuperview()
-                make.width.equalTo(124)
                 make.height.equalTo(70)
             }
-            self.swapIconView = iconView
+            self.multipleTokenIconView = iconView
         }
         iconView.setIcon(sendToken: sendToken, receiveToken: receiveToken)
+    }
+    
+    func setIcon(tokens: [TokenItem]) {
+        let iconView: MultipleTokenIconView
+        if let view = self.multipleTokenIconView, view.isDescendant(of: iconWrapperView) {
+            iconView = view
+        } else {
+            for iconView in iconWrapperView.subviews {
+                iconView.removeFromSuperview()
+            }
+            iconView = MultipleTokenIconView()
+            iconWrapperView.addSubview(iconView)
+            iconView.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+                make.height.equalTo(70)
+            }
+            self.multipleTokenIconView = iconView
+        }
+        iconView.setIcons(tokens: tokens)
     }
     
     func setIcon(progress: AuthenticationProgressView.Progress) {
@@ -137,12 +155,15 @@ final class AuthenticationPreviewHeaderView: UIView {
 
 extension AuthenticationPreviewHeaderView {
     
-    private final class SwapIconView: UIView {
+    private final class MultipleTokenIconView: UIView {
         
-        private let sendIconView = UIImageView()
-        private let borderProviderView = UIView()
-        private let receiveIconView = UIImageView()
-        private let borderWidth: CGFloat = 2
+        private typealias IconWrapperView = StackedIconWrapperView<PlainTokenIconView>
+        
+        private let stackView = UIStackView()
+        
+        private var wrapperViews: [IconWrapperView] = []
+        
+        private weak var addtionalCountLabel: UILabel?
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -154,46 +175,78 @@ extension AuthenticationPreviewHeaderView {
             loadSubviews()
         }
         
-        override func layoutSubviews() {
-            super.layoutSubviews()
-            sendIconView.layer.cornerRadius = sendIconView.frame.width / 2
-            borderProviderView.layer.cornerRadius = borderProviderView.frame.width / 2
-            receiveIconView.layer.cornerRadius = receiveIconView.frame.width / 2
+        func setIcons(tokens: [TokenItem]) {
+            if tokens.count > 3 {
+                loadIconViews(count: 2) { _, wrapperView in
+                    wrapperView.snp.makeConstraints { make in
+                        make.width.equalTo(wrapperView.snp.height).offset(-16)
+                    }
+                }
+                let label: UILabel
+                if let l = addtionalCountLabel {
+                    label = l
+                } else {
+                    let view = StackedIconWrapperView<UILabel>()
+                    view.backgroundColor = .clear
+                    label = view.iconView
+                    label.backgroundColor = R.color.background_quaternary()
+                    label.textColor = R.color.text_tertiary()
+                    label.font = .systemFont(ofSize: 20)
+                    label.textAlignment = .center
+                    label.minimumScaleFactor = 0.1
+                    label.layer.cornerRadius = 34
+                    label.layer.masksToBounds = true
+                    stackView.addArrangedSubview(view)
+                    view.snp.makeConstraints { make in
+                        make.size.equalTo(70)
+                    }
+                }
+                label.text = "+\(tokens.count - 2)"
+            } else {
+                loadIconViews(count: tokens.count) { index, wrapperView in
+                    let offset = index == tokens.count - 1 ? 0 : -16
+                    wrapperView.snp.makeConstraints { make in
+                        make.width.equalTo(wrapperView.snp.height).offset(offset)
+                    }
+                }
+            }
+            for (i, wrapperView) in wrapperViews.enumerated() {
+                wrapperView.iconView.setIcon(token: tokens[i])
+            }
         }
         
         func setIcon(sendToken: TokenItem, receiveToken: SwapToken) {
-            sendIconView.sd_setImage(with: URL(string: sendToken.iconURL),
-                                     placeholderImage: nil,
-                                     context: assetIconContext)
-            receiveIconView.sd_setImage(with: receiveToken.iconURL,
-                                        placeholderImage: nil,
-                                        context: assetIconContext)
+            loadIconViews(count: 2) { index, wrapperView in
+                let offset = index == 1 ? 0 : -16
+                wrapperView.snp.makeConstraints { make in
+                    make.width.equalTo(wrapperView.snp.height).offset(offset)
+                }
+            }
+            wrapperViews[0].iconView.setIcon(token: sendToken)
+            wrapperViews[1].iconView.setIcon(token: receiveToken)
+        }
+        
+        private func loadIconViews(count: Int, makeConstraints maker: (Int, IconWrapperView) -> Void) {
+            guard wrapperViews.count != count else {
+                return
+            }
+            for view in stackView.arrangedSubviews {
+                view.removeFromSuperview()
+            }
+            wrapperViews = []
+            for i in 0..<count {
+                let view = IconWrapperView()
+                view.backgroundColor = .clear
+                stackView.addArrangedSubview(view)
+                wrapperViews.append(view)
+                maker(i, view)
+            }
         }
         
         private func loadSubviews() {
-            sendIconView.layer.masksToBounds = true
-            addSubview(sendIconView)
-            sendIconView.snp.makeConstraints { make in
-                make.top.leading.equalToSuperview().offset(borderWidth)
-                make.bottom.equalToSuperview().offset(-borderWidth)
-                make.width.equalTo(sendIconView.snp.height)
-            }
-            
-            borderProviderView.backgroundColor = R.color.background()
-            borderProviderView.layer.masksToBounds = true
-            addSubview(borderProviderView)
-            borderProviderView.snp.makeConstraints { make in
-                make.top.trailing.bottom.equalToSuperview()
-                make.width.equalTo(borderProviderView.snp.height)
-            }
-            
-            receiveIconView.layer.masksToBounds = true
-            addSubview(receiveIconView)
-            receiveIconView.snp.makeConstraints { make in
-                make.top.equalToSuperview().offset(borderWidth)
-                make.trailing.bottom.equalToSuperview().offset(-borderWidth)
-                make.width.equalTo(receiveIconView.snp.height)
-            }
+            backgroundColor = R.color.background()
+            addSubview(stackView)
+            stackView.snp.makeEdgesEqualToSuperview()
         }
         
     }

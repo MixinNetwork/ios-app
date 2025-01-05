@@ -7,14 +7,17 @@ struct TransferPaymentOperation {
     enum Error: Swift.Error, LocalizedError {
         
         case sign(Swift.Error?)
+        case buildTx(Swift.Error?)
         case invalidTransactionResponse
         
         var errorDescription: String? {
             switch self {
             case .sign(let error):
-                return error?.localizedDescription ?? "Null signature"
+                error?.localizedDescription ?? "Null signature"
+            case .buildTx(let error):
+                error?.localizedDescription ?? "Null tx"
             case .invalidTransactionResponse:
-                return "Invalid txresp"
+                "Invalid txresp"
             }
         }
         
@@ -165,7 +168,7 @@ struct TransferPaymentOperation {
         Logger.general.info(category: "Transfer", message: "GhostKeys ready")
         
         var error: NSError?
-        let tx: String
+        let tx: KernelTx?
         switch destination {
         case .user:
             tx = KernelBuildTx(kernelAssetID,
@@ -202,8 +205,8 @@ struct TransferPaymentOperation {
                                               reference ?? "",
                                               &error)
         }
-        if let error {
-            throw error
+        guard let tx = tx?.raw, error == nil else {
+            throw Error.buildTx(error)
         }
         Logger.general.info(category: "Transfer", message: "Tx built")
         

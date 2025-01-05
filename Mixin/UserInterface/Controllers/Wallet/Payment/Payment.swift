@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-struct Payment {
+struct Payment: PaymentPreconditionChecker {
     
     enum Context {
         case swap(SwapContext)
@@ -160,6 +160,16 @@ extension Payment {
         let receiveAmount: Decimal
     }
     
+    enum InscriptionError: Error, LocalizedError {
+        
+        case missingLocalItem
+        
+        var errorDescription: String? {
+            "Missing Inscription"
+        }
+        
+    }
+    
     func checkPreconditions(
         transferTo destination: TransferDestination,
         reference: String?,
@@ -174,20 +184,20 @@ extension Payment {
                 switch context {
                 case .inscription:
                     preconditions = [
-                        NoPendingTransactionPrecondition(token: token),
+                        NoPendingTransactionPrecondition(),
                         AlreadyPaidPrecondition(traceID: traceID),
                         KnownOpponentPrecondition(opponent: opponent),
                         ReferenceValidityPrecondition(reference: reference),
                     ]
                 case .swap:
                     preconditions = [
-                        NoPendingTransactionPrecondition(token: token),
+                        NoPendingTransactionPrecondition(),
                         AlreadyPaidPrecondition(traceID: traceID),
                         ReferenceValidityPrecondition(reference: reference),
                     ]
                 case .none:
                     preconditions = [
-                        NoPendingTransactionPrecondition(token: token),
+                        NoPendingTransactionPrecondition(),
                         AlreadyPaidPrecondition(traceID: traceID),
                         DuplicationPrecondition(operation: .transfer(opponent),
                                                 token: token,
@@ -203,7 +213,7 @@ extension Payment {
                 }
             case .multisig, .mainnet:
                 preconditions = [
-                    NoPendingTransactionPrecondition(token: token),
+                    NoPendingTransactionPrecondition(),
                     AlreadyPaidPrecondition(traceID: traceID),
                     ReferenceValidityPrecondition(reference: reference),
                 ]
@@ -223,7 +233,7 @@ extension Payment {
                         .failure(.description("Invalid Amount"))
                     }
                 case .swap, .none:
-                    await collectOutputs(kernelAssetID: token.kernelAssetID, amount: tokenAmount, on: parent)
+                    await collectOutputs(token: token, amount: tokenAmount, on: parent)
                 }
                 
                 switch outputCollectionResult {
@@ -320,7 +330,7 @@ extension Payment {
             switch destination {
             case let .address(address):
                 preconditions = [
-                    NoPendingTransactionPrecondition(token: token),
+                    NoPendingTransactionPrecondition(),
                     AddressDustPrecondition(token: token,
                                             amount: tokenAmount,
                                             address: address),
@@ -333,7 +343,7 @@ extension Payment {
                 ]
             case .temporary, .web3:
                 preconditions = [
-                    NoPendingTransactionPrecondition(token: token),
+                    NoPendingTransactionPrecondition(),
                     DuplicationPrecondition(operation: .withdraw(destination.withdrawable),
                                             token: token,
                                             tokenAmount: tokenAmount,
@@ -354,7 +364,7 @@ extension Payment {
                 } else {
                     amount = tokenAmount
                 }
-                let result = await collectOutputs(kernelAssetID: token.kernelAssetID, amount: amount, on: parent)
+                let result = await collectOutputs(token: token, amount: amount, on: parent)
                 switch result {
                 case .success(let collection):
                     let addressInfo: WithdrawPaymentOperation.AddressInfo?
@@ -390,88 +400,6 @@ extension Payment {
                 }
             }
         }
-    }
-    
-}
-
-// MARK: - Private works
-extension Payment {
-    
-    enum OutputCollectingResult {
-        case success(UTXOService.OutputCollection)
-        case failure(PaymentPreconditionFailureReason)
-    }
-    
-    enum InscriptionError: Error, LocalizedError {
-        
-        case missingLocalItem
-        
-        var errorDescription: String? {
-            "Missing Inscription"
-        }
-        
-    }
-    
-    private func collectOutputs(
-        kernelAssetID: String,
-        amount: Decimal,
-        on parent: UIViewController
-    ) async -> OutputCollectingResult {
-        repeat {
-            let result = UTXOService.shared.collectUnspentOutputs(kernelAssetID: token.kernelAssetID, amount: amount)
-            switch result {
-            case .insufficientBalance:
-                return .failure(.description(R.string.localizable.insufficient_balance()))
-            case .outputNotConfirmed:
-                let delegation = WalletHintViewController.UserRealizedDelegation()
-                await withCheckedContinuation { continuation in
-                    DispatchQueue.main.async {
-                        delegation.onRealize = {
-                            continuation.resume()
-                        }
-                        let hint = WalletHintViewController(content: .waitingTransaction)
-                        hint.delegate = delegation
-                        UIApplication.homeContainerViewController?.present(hint, animated: true)
-                    }
-                    let job = SyncOutputsJob()
-                    ConcurrentJobQueue.shared.addJob(job: job)
-                }
-                return .failure(.userCancelled)
-            case .success(let outputCollection):
-                return .success(outputCollection)
-            case .maxSpendingCountExceeded:
-                let consolidationResult = await withCheckedContinuation { continuation in
-                    DispatchQueue.main.async {
-                        let consolidation = ConsolidateOutputsViewController(token: token)
-                        consolidation.onCompletion = { result in
-                            continuation.resume(with: .success(result))
-                        }
-                        let auth = AuthenticationViewController(intent: consolidation)
-                        parent.present(auth, animated: true)
-                    }
-                }
-                switch consolidationResult {
-                case .userCancelled:
-                    return .failure(.userCancelled)
-                case .success:
-                    continue
-                }
-            }
-        } while true
-    }
-    
-    private func check(preconditions: [PaymentPrecondition]) async -> PaymentPreconditionCheckingResult {
-        var issues: [PaymentPreconditionIssue] = []
-        for precondition in preconditions {
-            let result = await precondition.check()
-            switch result {
-            case .passed(let newIssues):
-                issues.append(contentsOf: newIssues)
-            case .failed(let reason):
-                return .failed(reason)
-            }
-        }
-        return .passed(issues)
     }
     
 }

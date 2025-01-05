@@ -146,6 +146,8 @@
 "approving_transaction" = "正在批准";
 "approving_transaction_failed" = "批准失败";
 "ask_me_anything" = "向我提问";
+"asset_changes" = "资产变动";
+"asset_changes_estimate" = "资产变动（预估）";
 "asset_key" = "资产标识";
 "asset_not_found" = "找不到该资产";
 "asset_type" = "资产类型";
@@ -1197,7 +1199,6 @@
 "suspended_deposit" = "%1$@ 充值已暂停，可能的原因是因为使用率太低、节点故障、区块链网络硬分叉或者拥堵，注意已转入的 %2$@ 资产可以继续转账。";
 "suspicious_link" = "可疑链接";
 "swap" = "交易";
-"swap_asset_change" = "资产变动（预估）";
 "swap_confirmation" = "确认交易";
 "swap_failed" = "交易失败";
 "swap_invalid_amount" = "没有报价。请尝试修改金额。";

@@ -65,11 +65,10 @@ final class MixinSwapViewController: SwapViewController {
     }
     
     override func sendAmountEditingChanged(_ sender: Any) {
-        updateSendValueLabel()
         scheduleNewRequesterIfAvailable()
     }
     
-    override func inputMaxSendAmount(_ sender: Any) {
+    @objc func inputMaxSendAmount(_ sender: Any) {
         guard let sendToken else {
             return
         }
@@ -240,7 +239,6 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
                 format: .precision,
                 sign: .never
             )
-            updateReceiveValueLabel()
             updateCurrentPriceRepresentation(quote: quote)
             footerInfoProgressView.setProgress(1, animationDuration: nil)
             reviewButton.isEnabled = quote.sendAmount > 0
@@ -382,24 +380,6 @@ extension MixinSwapViewController {
             sendNetworkLabel.alpha = 1
             sendLoadingIndicator.stopAnimating()
         }
-        updateSendValueLabel()
-    }
-    
-    private func updateSendValueLabel() {
-        guard
-            let sendToken,
-            let text = sendAmountTextField.text,
-            let sendAmount = Decimal(string: text, locale: .current)
-        else {
-            sendValueLabel.text = nil
-            return
-        }
-        sendValueLabel.text = CurrencyFormatter.localizedString(
-            from: sendToken.decimalUSDPrice * sendAmount * Currency.current.decimalRate,
-            format: .fiatMoney,
-            sign: .never,
-            symbol: .currencySymbol
-        )
     }
     
     private func updateReceiveView(style: TokenSelectorStyle) {
@@ -431,20 +411,6 @@ extension MixinSwapViewController {
             receiveNetworkLabel.alpha = 1
             receiveLoadingIndicator.stopAnimating()
         }
-        updateReceiveValueLabel()
-    }
-    
-    private func updateReceiveValueLabel() {
-        guard let receiveToken, let quote else {
-            receiveValueLabel.text = nil
-            return
-        }
-        receiveValueLabel.text = CurrencyFormatter.localizedString(
-            from: receiveToken.decimalUSDPrice * quote.receiveAmount * Currency.current.decimalRate,
-            format: .fiatMoney,
-            sign: .never,
-            symbol: .currencySymbol
-        )
     }
     
     private func updateCurrentPriceRepresentation(quote: SwapQuote) {
@@ -455,7 +421,6 @@ extension MixinSwapViewController {
     private func scheduleNewRequesterIfAvailable() {
         receiveAmountTextField.text = nil
         quote = nil
-        updateReceiveValueLabel()
         reviewButton.isEnabled = false
         requester?.stop()
         requester = nil

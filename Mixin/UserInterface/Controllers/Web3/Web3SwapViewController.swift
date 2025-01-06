@@ -215,7 +215,6 @@ final class Web3SwapViewController: SwapViewController {
         sendBalanceLabel.text = "Bal " + balance
         sendIconView.setIcon(web3Token: token)
         sendSymbolLabel.text = token.symbol
-        sendValueLabel.text = CurrencyFormatter.localizedString(from: 0, format: .fiatMoney, sign: .never)
         sendLoadingIndicator.stopAnimating()
     }
     
@@ -223,7 +222,6 @@ final class Web3SwapViewController: SwapViewController {
         receiveBalanceLabel.text = nil
         receiveIconView.setIcon(token: token)
         receiveSymbolLabel.text = token.symbol
-        receiveValueLabel.text = ""
         receiveLoadingIndicator.stopAnimating()
     }
     

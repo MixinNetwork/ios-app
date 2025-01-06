@@ -11,32 +11,24 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var sendView: UIView!
     @IBOutlet weak var sendStackView: UIStackView!
     
-    @IBOutlet weak var sendTitleStackView: UIStackView!
-    
+    @IBOutlet weak var sendNetworkLabel: UILabel!
     @IBOutlet weak var sendTokenStackView: UIStackView!
-    @IBOutlet weak var sendBalanceLabel: UILabel!
     @IBOutlet weak var sendAmountTextField: UITextField!
     @IBOutlet weak var sendLoadingIndicator: ActivityIndicatorView!
     @IBOutlet weak var sendIconView: PlainTokenIconView!
     @IBOutlet weak var sendSymbolLabel: UILabel!
-    
-    @IBOutlet weak var sendNetworkLabel: UILabel!
-    @IBOutlet weak var sendValueLabel: UILabel!
+    @IBOutlet weak var sendBalanceLabel: UILabel!
     
     @IBOutlet weak var receiveView: UIView!
     @IBOutlet weak var receiveStackView: UIStackView!
     
-    @IBOutlet weak var receiveBalanceLabel: UILabel!
-    
+    @IBOutlet weak var receiveNetworkLabel: UILabel!
     @IBOutlet weak var receiveTokenStackView: UIStackView!
     @IBOutlet weak var receiveAmountTextField: UITextField!
     @IBOutlet weak var receiveLoadingIndicator: ActivityIndicatorView!
     @IBOutlet weak var receiveIconView: PlainTokenIconView!
     @IBOutlet weak var receiveSymbolLabel: UILabel!
-    
-    @IBOutlet weak var receiveInfoStackView: UIStackView!
-    @IBOutlet weak var receiveNetworkLabel: UILabel!
-    @IBOutlet weak var receiveValueLabel: UILabel!
+    @IBOutlet weak var receiveBalanceLabel: UILabel!
     
     @IBOutlet weak var footerInfoLabel: UILabel!
     @IBOutlet weak var footerInfoProgressView: CircularProgressView!
@@ -67,8 +59,13 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         receiveView.layer.masksToBounds = true
         receiveView.layer.cornerRadius = 8
         receiveStackView.setCustomSpacing(12, after: receiveTokenStackView)
-        receiveStackView.setCustomSpacing(16, after: receiveInfoStackView)
         receiveLoadingIndicator.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        for symbolLabel in [sendSymbolLabel, receiveSymbolLabel] {
+            symbolLabel!.setFont(
+                scaledFor: .systemFont(ofSize: 16, weight: .medium),
+                adjustForContentSize: true
+            )
+        }
         sendAmountTextField.becomeFirstResponder()
         NotificationCenter.default.addObserver(
             self,
@@ -85,10 +82,6 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     }
     
     @IBAction func sendAmountEditingChanged(_ sender: Any) {
-        
-    }
-    
-    @IBAction func inputMaxSendAmount(_ sender: Any) {
         
     }
     

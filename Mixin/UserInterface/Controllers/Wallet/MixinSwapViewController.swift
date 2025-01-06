@@ -40,6 +40,7 @@ final class MixinSwapViewController: SwapViewController {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = .current
+        formatter.roundingMode = .floor
         formatter.maximumFractionDigits = 8
         formatter.usesGroupingSeparator = false
         return formatter
@@ -66,15 +67,6 @@ final class MixinSwapViewController: SwapViewController {
     
     override func sendAmountEditingChanged(_ sender: Any) {
         scheduleNewRequesterIfAvailable()
-    }
-    
-    @objc func inputMaxSendAmount(_ sender: Any) {
-        guard let sendToken else {
-            return
-        }
-        let balance = sendToken.decimalBalance as NSDecimalNumber
-        sendAmountTextField.text = userInputSimulationFormatter.string(from: balance)
-        sendAmountEditingChanged(sender)
     }
     
     override func changeSendToken(_ sender: Any) {
@@ -185,6 +177,15 @@ final class MixinSwapViewController: SwapViewController {
     override func prepareForReuse(sender: Any) {
         super.prepareForReuse(sender: sender)
         reloadTokens() // Update send token balance
+    }
+    
+    override func inputSendAmount(multiplier: Decimal) {
+        guard let sendToken else {
+            return
+        }
+        let amount = sendToken.decimalBalance * multiplier as NSDecimalNumber
+        sendAmountTextField.text = userInputSimulationFormatter.string(from: amount)
+        sendAmountEditingChanged(self)
     }
     
 }

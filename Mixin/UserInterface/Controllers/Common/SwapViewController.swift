@@ -41,6 +41,8 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var reviewButton: RoundedButton!
     @IBOutlet weak var reviewButtonWrapperBottomConstrait: NSLayoutConstraint!
     
+    private let swapInputAccessoryView = R.nib.swapInputAccessoryView(withOwner: nil)!
+    
     init() {
         let nib = R.nib.swapView
         super.init(nibName: nib.name, bundle: nib.bundle)
@@ -55,6 +57,7 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         sendView.layer.masksToBounds = true
         sendView.layer.cornerRadius = 8
         sendStackView.setCustomSpacing(12, after: sendTokenStackView)
+        sendAmountTextField.inputAccessoryView = swapInputAccessoryView
         sendLoadingIndicator.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         receiveView.layer.masksToBounds = true
         receiveView.layer.cornerRadius = 8
@@ -67,6 +70,7 @@ class SwapViewController: KeyboardBasedLayoutViewController {
             )
         }
         sendAmountTextField.becomeFirstResponder()
+        swapInputAccessoryView.delegate = self
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(applicationDidBecomeActive(_:)),
@@ -138,6 +142,22 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     func prepareForReuse(sender: Any) {
         sendAmountTextField.text = nil
         sendAmountTextField.sendActions(for: .editingChanged)
+    }
+    
+    func inputSendAmount(multiplier: Decimal) {
+        
+    }
+    
+}
+
+extension SwapViewController: SwapInputAccessoryView.Delegate {
+    
+    func swapInputAccessoryView(_ view: SwapInputAccessoryView, didSelectMultiplier multiplier: Decimal) {
+        inputSendAmount(multiplier: multiplier)
+    }
+    
+    func swapInputAccessoryViewDidSelectDone(_ view: SwapInputAccessoryView) {
+        sendAmountTextField.resignFirstResponder()
     }
     
 }

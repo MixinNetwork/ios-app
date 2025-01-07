@@ -28,7 +28,9 @@ public enum Logger {
         if fileManager.fileExists(atPath: legacyErrorLogURL.path), let log = try? Data(contentsOf: legacyErrorLogURL) {
             legacyGeneralLog += log
         }
-        if let url = general.fileURL, !legacyGeneralLog.isEmpty, let handle = FileHandle(forWritingAtPath: url.path) {
+        
+        let generalURL = general.fileURL
+        if isFileCreated(at: generalURL), !legacyGeneralLog.isEmpty, let handle = FileHandle(forWritingAtPath: generalURL.path) {
             handle.seekToEndOfFile()
             handle.write(legacyGeneralLog)
             try? fileManager.removeItem(at: legacySystemLogURL)
@@ -53,7 +55,9 @@ public enum Logger {
     
     public static func export(conversationId: String) -> URL? {
         let subsystems = [general, database, call, conversation(id: conversationId), tip, web3]
-        var files = subsystems.compactMap(\.fileURL)
+        var files = subsystems.compactMap(\.fileURL).filter { url in
+            FileManager.default.fileExists(atPath: url.path)
+        }
         if FileManager.default.fileExists(atPath: AppGroupContainer.webRTCLogURL.path) {
             files.append(AppGroupContainer.webRTCLogURL)
         }
@@ -173,29 +177,31 @@ extension Logger {
         return formatter
     }()
     
-    private var fileURL: URL? {
-        let filename: String
-        switch self {
+    private var fileURL: URL {
+        let filename = switch self {
         case .general:
-            filename = "general.log"
+            "general.log"
         case .database:
-            filename = "database.log"
+            "database.log"
         case .call:
-            filename = "call.log"
+            "call.log"
         case .conversation(let id):
-            filename = "\(id).log"
+            "\(id).log"
         case .tip:
-            filename = "tip.log"
+            "tip.log"
         case .web3:
-            filename = "wc.log"
+            "wc.log"
         }
-        let url = AppGroupContainer.logUrl.appendingPathComponent(filename)
+        return AppGroupContainer.logUrl.appendingPathComponent(filename)
+    }
+    
+    private static func isFileCreated(at url: URL) -> Bool {
         do {
             try FileManager.default.createFileIfNotExists(at: url)
-            return url
+            return true
         } catch {
             reporter.report(error: error)
-            return nil
+            return false
         }
     }
     
@@ -219,8 +225,8 @@ extension Logger {
         guard level != .debug else {
             return
         }
-        Self.queue.async {
-            guard let url = self.fileURL, let handle = FileHandle(forUpdatingAtPath: url.path) else {
+        Self.queue.async { [url=fileURL] in
+            guard Self.isFileCreated(at: url), let handle = FileHandle(forUpdatingAtPath: url.path) else {
                 return
             }
             

@@ -233,9 +233,11 @@ final class MixinSwapViewController: SwapViewController {
         guard let sendToken else {
             return
         }
-        let amount = sendToken.decimalBalance * multiplier as NSDecimalNumber
-        sendAmountTextField.text = userInputSimulationFormatter.string(from: amount)
-        sendAmountEditingChanged(self)
+        let amount = sendToken.decimalBalance * multiplier
+        if amount >= 0.00000001 {
+            sendAmountTextField.text = userInputSimulationFormatter.string(from: amount as NSDecimalNumber)
+            sendAmountEditingChanged(self)
+        }
     }
     
 }

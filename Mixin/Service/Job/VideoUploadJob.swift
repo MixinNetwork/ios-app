@@ -60,10 +60,10 @@ class VideoUploadJob: AttachmentUploadJob {
         let exportSession = AssetExportSession(asset: asset, outputURL: videoUrl)
         var isSizeUpdated = false
         exportSession.exportAsynchronously { newSize in
-            message.mediaWidth = Int(newSize.width)
-            message.mediaHeight = Int(newSize.height)
+            self.message.mediaWidth = Int(newSize.width)
+            self.message.mediaHeight = Int(newSize.height)
             isSizeUpdated = true
-        } completionHandler: {
+        } completionHandler: { _ in
             semaphore.signal()
         }
         semaphore.wait()

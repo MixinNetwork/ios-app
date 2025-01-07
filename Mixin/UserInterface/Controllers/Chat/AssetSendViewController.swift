@@ -215,12 +215,12 @@ class AssetSendViewController: UIViewController, MixinNavigationAnimating {
             let exportSession = AssetExportSession(asset: asset, outputURL: outputURL)
             exportSession.exportAsynchronously { _ in
                 // Message is generated in composer with file of outputURL, no need to update
-            } completionHandler: { [weak self] in
+            } completionHandler: { [weak self] status in
                 guard let weakSelf = self else {
                     return
                 }
                 DispatchQueue.main.async {
-                    if exportSession.status == .completed {
+                    if status == .completed {
                         if let composer = weakSelf.composer {
                             composer.sendMessage(type: .SIGNAL_VIDEO, messageId: messageId, value: outputURL)
                             weakSelf.navigationController?.popViewController(animated: true)

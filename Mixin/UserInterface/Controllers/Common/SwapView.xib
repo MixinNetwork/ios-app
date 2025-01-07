@@ -11,6 +11,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SwapViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="contentView" destination="xgy-fb-KEQ" id="cdM-Y7-gJ6"/>
+                <outlet property="depositSendTokenButton" destination="wJV-id-nBX" id="cLU-5D-pbO"/>
                 <outlet property="footerInfoLabel" destination="f0N-2O-dzm" id="XJZ-03-XCS"/>
                 <outlet property="footerInfoProgressView" destination="zTW-Qk-BeR" id="aRD-AV-Pof"/>
                 <outlet property="footerSpacingView" destination="h7c-H7-0Lv" id="Ghn-iF-57R"/>
@@ -25,8 +27,10 @@
                 <outlet property="receiveView" destination="91r-ww-8y0" id="s3a-Su-uO0"/>
                 <outlet property="reviewButton" destination="p0t-vv-kdZ" id="EXb-rF-bCp"/>
                 <outlet property="reviewButtonWrapperBottomConstrait" destination="LBO-VR-I8J" id="nDY-GP-7ga"/>
+                <outlet property="scrollView" destination="OqQ-fg-dGu" id="74H-oo-0zM"/>
                 <outlet property="sendAmountTextField" destination="dwa-uE-gGI" id="gpX-7x-5JO"/>
                 <outlet property="sendBalanceLabel" destination="SQP-gu-ZT7" id="8fR-nH-fjE"/>
+                <outlet property="sendFooterStackView" destination="2KG-SI-NMH" id="SI0-5m-YRy"/>
                 <outlet property="sendIconView" destination="KJu-4o-NPT" id="MVd-Xp-i52"/>
                 <outlet property="sendLoadingIndicator" destination="v2y-1y-SlM" id="iV0-P1-RfV"/>
                 <outlet property="sendNetworkLabel" destination="LfB-N6-7Nx" id="mem-gI-afX"/>
@@ -45,7 +49,7 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OqQ-fg-dGu">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="OqQ-fg-dGu">
                     <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xgy-fb-KEQ">
@@ -116,17 +120,37 @@
                                                                 </imageView>
                                                             </subviews>
                                                         </stackView>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2KG-SI-NMH">
+                                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="2KG-SI-NMH">
                                                             <rect key="frame" x="0.0" y="87" width="313" height="17"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SQP-gu-ZT7" userLabel="Send Balance Label">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="313" height="17"/>
+                                                                <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="z5g-gL-cee">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="291" height="17"/>
+                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="17" id="jKf-dI-Z8Y"/>
+                                                                    </constraints>
+                                                                </view>
+                                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wJV-id-nBX" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
+                                                                    <rect key="frame" x="297" y="-5" width="0.0" height="27"/>
+                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                                    <color key="tintColor" name="theme"/>
+                                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                    <state key="normal" title="Deposit">
+                                                                        <color key="titleColor" name="theme"/>
+                                                                    </state>
+                                                                    <userDefinedRuntimeAttributes>
+                                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="deposit"/>
+                                                                    </userDefinedRuntimeAttributes>
+                                                                    <connections>
+                                                                        <action selector="depositSendToken:" destination="-1" eventType="touchUpInside" id="KpN-wH-rs4"/>
+                                                                    </connections>
+                                                                </button>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" placeholderIntrinsicWidth="10" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SQP-gu-ZT7" userLabel="Send Balance Label">
+                                                                    <rect key="frame" x="303" y="0.0" width="10" height="17"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                     <color key="textColor" name="text_quaternary"/>
                                                                     <nil key="highlightedColor"/>
-                                                                    <userDefinedRuntimeAttributes>
-                                                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                                                    </userDefinedRuntimeAttributes>
                                                                 </label>
                                                             </subviews>
                                                         </stackView>
@@ -228,9 +252,6 @@
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                     <color key="textColor" name="text_quaternary"/>
                                                                     <nil key="highlightedColor"/>
-                                                                    <userDefinedRuntimeAttributes>
-                                                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                                                    </userDefinedRuntimeAttributes>
                                                                 </label>
                                                             </subviews>
                                                         </stackView>
@@ -447,6 +468,9 @@
         </namedColor>
         <namedColor name="text_tertiary">
             <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

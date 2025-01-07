@@ -119,6 +119,14 @@ extension SafeAPI {
         }
     }
     
+    public static func asset(
+        id: String,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<Token>) -> Void
+    ) -> Request? {
+        request(method: .get, path: "/safe/assets/\(id)", queue: queue, completion: completion)
+    }
+    
 }
 
 // MARK: - Transfer

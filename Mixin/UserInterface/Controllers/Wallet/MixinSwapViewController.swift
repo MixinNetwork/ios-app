@@ -18,6 +18,7 @@ final class MixinSwapViewController: SwapViewController {
             } else {
                 self.updateSendView(style: .selectable)
             }
+            depositTokenRequest?.cancel()
         }
     }
     
@@ -35,6 +36,8 @@ final class MixinSwapViewController: SwapViewController {
     private var requester: SwapQuotePeriodicRequester?
     
     private var priceUnit: SwapQuote.PriceUnit = .send
+    
+    private weak var depositTokenRequest: Request?
     
     private lazy var userInputSimulationFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -65,6 +68,16 @@ final class MixinSwapViewController: SwapViewController {
         sendAmountTextField.delegate = self
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        requester?.start(delay: 0)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        requester?.stop()
+    }
+    
     override func sendAmountEditingChanged(_ sender: Any) {
         scheduleNewRequesterIfAvailable()
     }
@@ -85,6 +98,43 @@ final class MixinSwapViewController: SwapViewController {
             }
         }
         present(selector, animated: true)
+    }
+    
+    override func depositSendToken(_ sender: Any) {
+        guard let id = sendToken?.assetID else {
+            return
+        }
+        if let item = TokenDAO.shared.tokenItem(assetID: id) {
+            let deposit = DepositViewController(token: item)
+            navigationController?.pushViewController(deposit, animated: true)
+            return
+        }
+        depositSendTokenButton.isBusy = true
+        depositTokenRequest = SafeAPI.asset(id: id, queue: .global()) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.depositSendTokenButton.isBusy = false
+            }
+            switch result {
+            case .success(let token):
+                if let chain = ChainDAO.shared.chain(chainId: token.chainID) {
+                    let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                    DispatchQueue.main.async {
+                        guard let self, id == self.sendToken?.assetID else {
+                            return
+                        }
+                        let deposit = DepositViewController(token: item)
+                        self.navigationController?.pushViewController(deposit, animated: true)
+                    }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    guard self != nil else {
+                        return
+                    }
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
+            }
+        }
     }
     
     override func changeReceiveToken(_ sender: Any) {
@@ -359,6 +409,7 @@ extension MixinSwapViewController {
             sendIconView.isHidden = false
             sendNetworkLabel.text = "Placeholder"
             sendNetworkLabel.alpha = 0 // Keeps the height
+            depositSendTokenButton.isHidden = true
             sendLoadingIndicator.startAnimating()
         case .selectable:
             sendTokenStackView.alpha = 1
@@ -369,6 +420,7 @@ extension MixinSwapViewController {
             sendSymbolLabel.text = R.string.localizable.select_token()
             sendNetworkLabel.text = "Placeholder"
             sendNetworkLabel.alpha = 0 // Keeps the height
+            depositSendTokenButton.isHidden = true
             sendLoadingIndicator.stopAnimating()
         case .token(let token):
             sendTokenStackView.alpha = 1
@@ -379,6 +431,7 @@ extension MixinSwapViewController {
             sendSymbolLabel.text = token.symbol
             sendNetworkLabel.text = token.chain.name
             sendNetworkLabel.alpha = 1
+            depositSendTokenButton.isHidden = token.decimalBalance != 0
             sendLoadingIndicator.stopAnimating()
         }
     }

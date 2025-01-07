@@ -8,6 +8,9 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         case error
     }
     
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var contentView: UIView!
+    
     @IBOutlet weak var sendView: UIView!
     @IBOutlet weak var sendStackView: UIStackView!
     
@@ -17,6 +20,8 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var sendLoadingIndicator: ActivityIndicatorView!
     @IBOutlet weak var sendIconView: PlainTokenIconView!
     @IBOutlet weak var sendSymbolLabel: UILabel!
+    @IBOutlet weak var sendFooterStackView: UIStackView!
+    @IBOutlet weak var depositSendTokenButton: BusyButton!
     @IBOutlet weak var sendBalanceLabel: UILabel!
     
     @IBOutlet weak var receiveView: UIView!
@@ -77,6 +82,12 @@ class SwapViewController: KeyboardBasedLayoutViewController {
             name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
     }
     
     override func layout(for keyboardFrame: CGRect) {
@@ -90,6 +101,10 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     }
     
     @IBAction func changeSendToken(_ sender: Any) {
+        
+    }
+    
+    @IBAction func depositSendToken(_ sender: Any) {
         
     }
     
@@ -121,6 +136,11 @@ class SwapViewController: KeyboardBasedLayoutViewController {
             return
         }
         sendAmountTextField.becomeFirstResponder()
+    }
+    
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        reviewButtonWrapperBottomConstrait.constant = 0
+        view.layoutIfNeeded()
     }
     
     func reportClientOutdated() {
@@ -199,6 +219,9 @@ extension SwapViewController {
             footerSpacingView.isHidden = true
             swapPriceButton.isHidden = true
         }
+        let reviewButtonFrame = reviewButton.convert(reviewButton.bounds, to: view)
+        let contentViewFrame = contentView.convert(contentView.bounds, to: view)
+        scrollView.alwaysBounceVertical = reviewButtonFrame.intersects(contentViewFrame)
     }
     
 }

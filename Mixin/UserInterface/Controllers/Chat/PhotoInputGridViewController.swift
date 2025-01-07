@@ -102,7 +102,7 @@ extension PhotoInputGridViewController: UICollectionViewDataSource {
             if asset.mediaType == .video {
                 cell.mediaTypeView.style = .video(duration: asset.duration)
             } else {
-                if let uti = asset.value(forKey: "uniformTypeIdentifier") as? String, UTTypeConformsTo(uti as CFString, kUTTypeGIF) {
+                if let type = asset.uniformType, type.conforms(to: .gif) {
                     cell.mediaTypeView.style = .gif
                 } else {
                     cell.mediaTypeView.style = .hidden

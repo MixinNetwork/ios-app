@@ -423,7 +423,7 @@ extension MediaPreviewViewController {
     
     private func loadAnimatedImage(asset: PHAsset) {
         lastRequestId = PHImageManager.default().requestImageDataAndOrientation(for: asset, options: imageRequestOptions, resultHandler: { [weak self] (data, uti, orientation, info) in
-            guard let uti = uti, UTTypeConformsTo(uti as CFString, kUTTypeGIF) else {
+            guard let uti, let type = UTType(uti), type.conforms(to: .gif) else {
                 return
             }
             guard let data = data, let image = SDAnimatedImage(data: data) else {

@@ -68,7 +68,7 @@ class ImageUploadJob: AttachmentUploadJob {
             return
         }
         
-        let uti = asset.uniformTypeIdentifier ?? kUTTypeJPEG
+        let type = asset.uniformType ?? .jpeg
         let options: PHImageRequestOptions = {
             let options = PHImageRequestOptions()
             options.isNetworkAccessAllowed = true
@@ -79,14 +79,14 @@ class ImageUploadJob: AttachmentUploadJob {
         let extensionName: String
         var image: UIImage?
         var imageData: Data?
-        if UTTypeConformsTo(uti, kUTTypeGIF) {
+        if type.conforms(to: .gif) {
             extensionName = ExtensionName.gif.rawValue
             PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, uti, orientation, info) in
                 imageData = data
             }
         } else if imageWithRatioMaybeAnArticle(CGSize(width: asset.pixelWidth, height: asset.pixelHeight)) {
             extensionName = ExtensionName.jpeg.rawValue
-            if UTTypeConformsTo(uti, kUTTypeJPEG) {
+            if type.conforms(to: .jpeg) {
                 PHImageManager.default().requestImageDataAndOrientation(for: asset, options: options) { (data, _, _, _) in
                     imageData = data
                 }

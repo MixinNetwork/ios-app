@@ -343,6 +343,14 @@ extension AssetSendViewController {
     
 }
 
+extension AssetSendViewController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .hide
+    }
+    
+}
+
 extension AssetSendViewController: NotificationControllerDelegate {
     
     func notificationController(_ controller: NotificationController, didSelectNotificationWith localObject: Any?) {

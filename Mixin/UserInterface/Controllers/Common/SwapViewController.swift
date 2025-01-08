@@ -18,7 +18,7 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var sendTokenStackView: UIStackView!
     @IBOutlet weak var sendAmountTextField: UITextField!
     @IBOutlet weak var sendLoadingIndicator: ActivityIndicatorView!
-    @IBOutlet weak var sendIconView: PlainTokenIconView!
+    @IBOutlet weak var sendIconView: BadgeIconView!
     @IBOutlet weak var sendSymbolLabel: UILabel!
     @IBOutlet weak var sendFooterStackView: UIStackView!
     @IBOutlet weak var depositSendTokenButton: BusyButton!
@@ -31,7 +31,7 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var receiveTokenStackView: UIStackView!
     @IBOutlet weak var receiveAmountTextField: UITextField!
     @IBOutlet weak var receiveLoadingIndicator: ActivityIndicatorView!
-    @IBOutlet weak var receiveIconView: PlainTokenIconView!
+    @IBOutlet weak var receiveIconView: BadgeIconView!
     @IBOutlet weak var receiveSymbolLabel: UILabel!
     @IBOutlet weak var receiveBalanceLabel: UILabel!
     
@@ -61,12 +61,12 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         super.viewDidLoad()
         sendView.layer.masksToBounds = true
         sendView.layer.cornerRadius = 8
-        sendStackView.setCustomSpacing(12, after: sendTokenStackView)
+        sendStackView.setCustomSpacing(0, after: sendTokenStackView)
         sendAmountTextField.inputAccessoryView = swapInputAccessoryView
         sendLoadingIndicator.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         receiveView.layer.masksToBounds = true
         receiveView.layer.cornerRadius = 8
-        receiveStackView.setCustomSpacing(12, after: receiveTokenStackView)
+        receiveStackView.setCustomSpacing(10, after: receiveTokenStackView)
         receiveLoadingIndicator.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         for symbolLabel in [sendSymbolLabel, receiveSymbolLabel] {
             symbolLabel!.setFont(

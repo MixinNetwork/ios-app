@@ -418,7 +418,6 @@ extension MixinSwapViewController {
             sendBalanceLabel.text = nil
             sendIconView.isHidden = true
             sendIconView.prepareForReuse()
-            sendIconView.image = nil
             sendSymbolLabel.text = R.string.localizable.select_token()
             sendNetworkLabel.text = "Placeholder"
             sendNetworkLabel.alpha = 0 // Keeps the height
@@ -429,7 +428,7 @@ extension MixinSwapViewController {
             let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
             sendBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
             sendIconView.isHidden = false
-            sendIconView.setIcon(token: token)
+            sendIconView.setIcon(swappableToken: token)
             sendSymbolLabel.text = token.symbol
             sendNetworkLabel.text = token.chain.name
             sendNetworkLabel.alpha = 1
@@ -451,7 +450,6 @@ extension MixinSwapViewController {
             receiveBalanceLabel.text = nil
             receiveIconView.isHidden = true
             receiveIconView.prepareForReuse()
-            receiveIconView.image = nil
             receiveSymbolLabel.text = R.string.localizable.select_token()
             receiveNetworkLabel.text = "Placeholder"
             receiveNetworkLabel.alpha = 0 // Keeps the height
@@ -461,7 +459,7 @@ extension MixinSwapViewController {
             let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
             receiveBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
             receiveIconView.isHidden = false
-            receiveIconView.setIcon(token: token)
+            receiveIconView.setIcon(swappableToken: token)
             receiveSymbolLabel.text = token.symbol
             receiveNetworkLabel.text = token.chain.name
             receiveNetworkLabel.alpha = 1

@@ -220,7 +220,7 @@ final class Web3SwapViewController: SwapViewController {
     
     private func reloadReceiveView(with token: BalancedSwapToken) {
         receiveBalanceLabel.text = nil
-        receiveIconView.setIcon(token: token)
+        receiveIconView.setIcon(swappableToken: token)
         receiveSymbolLabel.text = token.symbol
         receiveLoadingIndicator.stopAnimating()
     }

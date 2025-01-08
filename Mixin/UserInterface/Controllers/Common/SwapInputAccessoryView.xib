@@ -15,13 +15,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dXo-2p-uDU">
-                    <rect key="frame" x="324.66666666666669" y="0.0" width="62.333333333333314" height="44"/>
-                    <state key="normal" title="Button"/>
-                    <buttonConfiguration key="configuration" style="plain" title="Done">
-                        <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
-                        <directionalEdgeInsets key="contentInsets" top="0.0" leading="14" bottom="0.0" trailing="14"/>
-                        <color key="baseForegroundColor" name="text"/>
-                    </buttonConfiguration>
+                    <rect key="frame" x="324" y="0.0" width="63" height="44"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <inset key="contentEdgeInsets" minX="14" minY="0.0" maxX="14" maxY="0.0"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal" title="Done">
+                        <color key="titleColor" name="text"/>
+                    </state>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
@@ -31,16 +31,16 @@
                         <action selector="reportDone:" destination="iN0-l3-epB" eventType="touchUpInside" id="xx0-HD-xeY"/>
                     </connections>
                 </button>
-                <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="8g6-rq-0vr">
-                    <rect key="frame" x="16" y="0.0" width="308.66666666666669" height="44"/>
+                <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="8g6-rq-0vr">
+                    <rect key="frame" x="16" y="0.0" width="308" height="44"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QSn-wO-IBK">
-                            <rect key="frame" x="0.0" y="0.0" width="96.333333333333329" height="44"/>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" title="25%">
-                                <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
-                                <color key="baseForegroundColor" name="text"/>
-                            </buttonConfiguration>
+                            <rect key="frame" x="0.0" y="0.0" width="96" height="44"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="25%">
+                                <color key="titleColor" name="text"/>
+                            </state>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
@@ -50,12 +50,12 @@
                             </connections>
                         </button>
                         <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OeB-uG-rRl">
-                            <rect key="frame" x="106.33333333333331" y="0.0" width="96" height="44"/>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" title="50%">
-                                <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
-                                <color key="baseForegroundColor" name="text"/>
-                            </buttonConfiguration>
+                            <rect key="frame" x="106" y="0.0" width="96" height="44"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="50%">
+                                <color key="titleColor" name="text"/>
+                            </state>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
@@ -65,12 +65,12 @@
                             </connections>
                         </button>
                         <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AQa-zW-UpX">
-                            <rect key="frame" x="212.33333333333334" y="0.0" width="96.333333333333343" height="44"/>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" title="Max">
-                                <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
-                                <color key="baseForegroundColor" name="text"/>
-                            </buttonConfiguration>
+                            <rect key="frame" x="212" y="0.0" width="96" height="44"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Max">
+                                <color key="titleColor" name="text"/>
+                            </state>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
@@ -81,6 +81,9 @@
                             </connections>
                         </button>
                     </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="NTU-T9-IPd"/>
+                    </constraints>
                 </stackView>
             </subviews>
             <color key="backgroundColor" name="keyboard_background_14"/>

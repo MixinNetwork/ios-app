@@ -2,25 +2,25 @@ import Photos
 import CoreServices
 
 extension PHAsset {
-
-    var uniformTypeIdentifier: CFString? {
-        if let id = value(forKey: "uniformTypeIdentifier") as? String {
-            return id as CFString
-        } else if let res = PHAssetResource.assetResources(for: self).first {
-            return res.uniformTypeIdentifier as CFString
+    
+    var uniformType: UTType? {
+        let identifier = value(forKey: "uniformTypeIdentifier") as? String
+        ?? PHAssetResource.assetResources(for: self).first?.uniformTypeIdentifier
+        return if let identifier {
+            UTType(identifier)
         } else {
-            return nil
+            nil
         }
     }
-
-    var pathExtension: String? {
-        guard let uti = uniformTypeIdentifier, let ext = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassFilenameExtension)?.takeRetainedValue() else {
-            return nil
-        }
-        return String(ext)
-    }
-
+    
     var isGif: Bool {
-        return mediaType == .image && PHAssetResource.assetResources(for: self).contains(where: { UTTypeConformsTo($0.uniformTypeIdentifier as CFString, kUTTypeGIF) })
+        mediaType == .image && PHAssetResource.assetResources(for: self).contains(where: { resource in
+            if let type = UTType(resource.uniformTypeIdentifier) {
+                type.conforms(to: .gif)
+            } else {
+                false
+            }
+        })
     }
+    
 }

@@ -37,7 +37,7 @@ class ImagePickerController: NSObject {
 
     private lazy var pickerPhotoLibraryController: UIImagePickerController = {
         let picker = UIImagePickerController()
-        picker.mediaTypes = [kUTTypeImage as String]
+        picker.mediaTypes = [UTType.image.identifier]
         picker.delegate = self
         picker.modalPresentationStyle = .overFullScreen
         return picker
@@ -45,7 +45,7 @@ class ImagePickerController: NSObject {
 
     private lazy var pickerCameraController: UIImagePickerController = {
         let picker = UIImagePickerController()
-        picker.mediaTypes = [kUTTypeImage as String]
+        picker.mediaTypes = [UTType.image.identifier]
         picker.delegate = self
         picker.modalPresentationStyle = .overFullScreen
         return picker

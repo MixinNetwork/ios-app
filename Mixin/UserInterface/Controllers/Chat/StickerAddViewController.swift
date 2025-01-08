@@ -78,8 +78,8 @@ class StickerAddViewController: UIViewController {
                     self.rightBarButton?.isEnabled = true
                 }
             } else {
-                if let uti = asset.uniformTypeIdentifier {
-                    uploadPNGData = UTTypeConformsTo(uti, kUTTypePNG)
+                if let type = asset.uniformType {
+                    uploadPNGData = type.conforms(to: .png)
                 } else {
                     uploadPNGData = false
                 }

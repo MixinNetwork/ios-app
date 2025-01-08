@@ -202,9 +202,9 @@ extension ShareRecipientViewController {
                 guard let attachments = item.attachments, attachments.count == 1 else {
                     continue
                 }
-                if attachments[0].hasItemConformingToTypeIdentifier(kUTTypeURL as String) {
+                if attachments[0].hasItemConformingToTypeIdentifier(UTType.url.identifier) {
                     urlIndex = index
-                } else if attachments[0].hasItemConformingToTypeIdentifier(kUTTypePDF as String) {
+                } else if attachments[0].hasItemConformingToTypeIdentifier(UTType.pdf.identifier) {
                     pdfIndex = index
                 }
             }
@@ -220,11 +220,15 @@ extension ShareRecipientViewController {
         view.endEditing(true)
         loadingView.isHidden = false
 
-        let supportedTextUTIs = [kUTTypePlainText as String,
-                                 kUTTypeText as String]
-        let supportedPostUTIs = [kUTTypeSourceCode as String,
-                                 kUTTypeScript as String,
-                                 "dyn.age80s52"]    //golang
+        let supportedTextUTIs = [
+            UTType.plainText.identifier,
+            UTType.text.identifier,
+        ]
+        let supportedPostUTIs = [
+            UTType.sourceCode.identifier,
+            UTType.script.identifier,
+            "dyn.age80s52", // golang
+        ]
 
         let dispatchGroup = DispatchGroup()
 
@@ -233,11 +237,11 @@ extension ShareRecipientViewController {
                 continue
             }
             for attachment in attachments {
-                if attachment.hasItemConformingToTypeIdentifier(kUTTypeMovie as String) {
+                if attachment.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
                     progressLabel.text = "1%"
                     progressLabel.isHidden = false
                     dispatchGroup.enter()
-                    attachment.loadItem(forTypeIdentifier: kUTTypeMovie as String, options: nil) { [weak self](item, error) in
+                    attachment.loadItem(forTypeIdentifier: UTType.movie.identifier, options: nil) { [weak self](item, error) in
                         if let err = error {
                             Logger.general.error(category: "ShareRecipientViewController", message: "Unable to load attachment as movie: \(err)")
                             dispatchGroup.leave()
@@ -255,8 +259,8 @@ extension ShareRecipientViewController {
                         let exportSession = AssetExportSession(asset: asset, outputURL: videoUrl)
                         exportSession.exportAsynchronously { _ in
                             // Message is generated in completionHandler with file of videoUrl, no need to update
-                        } completionHandler: {
-                            if exportSession.status == .completed {
+                        } completionHandler: { status in
+                            if status == .completed {
                                 self?.shareVideoMessage(url: videoUrl, conversation: conversation, messageId: messageId)
                             }
                             self?.stopTimer()
@@ -300,13 +304,13 @@ extension ShareRecipientViewController {
                                 return
                             }
                             weakSelf.sharePostMessage(url: url, conversation: conversation)
-                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeImage as String) {
+                        } else if attachment.hasItemConformingToTypeIdentifier(UTType.image.identifier) {
                             var image: UIImage?
                             var imageData: Data?
-                            let inUTI = typeIdentifier as CFString
+                            let type = UTType(typeIdentifier)
 
                             if let url = item as? URL, let rawImage = UIImage(contentsOfFile: url.path) {
-                                if UTTypeConformsTo(inUTI, kUTTypeGIF) || (UTTypeConformsTo(inUTI, kUTTypeJPEG) && imageWithRatioMaybeAnArticle(rawImage.size)) {
+                                if let type, type.conforms(to: .gif) || (type.conforms(to: .jpeg) && imageWithRatioMaybeAnArticle(rawImage.size)) {
                                     image = rawImage
                                     imageData = try? Data(contentsOf: url)
                                 } else {
@@ -320,24 +324,24 @@ extension ShareRecipientViewController {
                                 return
                             }
                             let thumbnail = image.imageByScaling(to: CGSize(width: 48, height: 48)) ?? image
-                            weakSelf.sharePhotoMessage(thumbnail: thumbnail, imageData: data, size: image.size * image.scale, conversation: conversation, typeIdentifier: inUTI)
+                            weakSelf.sharePhotoMessage(thumbnail: thumbnail, imageData: data, size: image.size * image.scale, conversation: conversation, type: type)
                         } else if supportedTextUTIs.contains(where: attachment.hasItemConformingToTypeIdentifier) {
                             if let content = item as? String {
                                 weakSelf.shareTextMessage(content: content, conversation: conversation)
                             } else if let url = item as? URL {
                                 weakSelf.shareFileMessage(url: url, conversation: conversation)
                             }
-                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeFileURL as String) {
+                        } else if attachment.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
                             guard let url = item as? URL else {
                                 return
                             }
                             weakSelf.shareFileMessage(url: url, conversation: conversation)
-                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypeURL as String) {
+                        } else if attachment.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
                             guard let url = item as? URL else {
                                 return
                             }
                             weakSelf.shareTextMessage(content: url.absoluteString, conversation: conversation)
-                        } else if attachment.hasItemConformingToTypeIdentifier(kUTTypePDF as String) {
+                        } else if attachment.hasItemConformingToTypeIdentifier(UTType.pdf.identifier) {
                             guard let url = item as? URL else {
                                 return
                             }
@@ -389,12 +393,12 @@ extension ShareRecipientViewController {
         sendMessage(message: message, conversation: conversation)
     }
 
-    private func sharePhotoMessage(thumbnail: UIImage, imageData: Data, size: CGSize, conversation: RecipientSearchItem, typeIdentifier: CFString) {
+    private func sharePhotoMessage(thumbnail: UIImage, imageData: Data, size: CGSize, conversation: RecipientSearchItem, type: UTType?) {
         let category: MessageCategory = conversation.isSignalConversation ? .SIGNAL_IMAGE : .PLAIN_IMAGE
         var message = Message.createMessage(category: category.rawValue, conversationId: conversation.conversationId, userId: myUserId)
         let extensionName: String
 
-        if UTTypeConformsTo(typeIdentifier, kUTTypeGIF) {
+        if let type, type.conforms(to: .gif) {
             extensionName = ExtensionName.gif.rawValue
             message.mediaMimeType = "image/gif"
         } else {

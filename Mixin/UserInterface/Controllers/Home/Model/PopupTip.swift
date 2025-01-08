@@ -51,8 +51,7 @@ extension PopupTip {
         }
         
         if userDismissalOutdates(tip: .notification, dismissalDate: AppGroupUserDefaults.notificationTipDismissalDate),
-           await !NotificationManager.shared.getAuthorized(),
-           walletUSDBalance > 0
+           await !NotificationManager.shared.getAuthorized()
         {
             return .notification
         }

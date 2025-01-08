@@ -8,35 +8,32 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         case error
     }
     
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var contentView: UIView!
+    
     @IBOutlet weak var sendView: UIView!
     @IBOutlet weak var sendStackView: UIStackView!
     
-    @IBOutlet weak var sendTitleStackView: UIStackView!
-    
+    @IBOutlet weak var sendNetworkLabel: UILabel!
     @IBOutlet weak var sendTokenStackView: UIStackView!
-    @IBOutlet weak var sendBalanceLabel: UILabel!
     @IBOutlet weak var sendAmountTextField: UITextField!
     @IBOutlet weak var sendLoadingIndicator: ActivityIndicatorView!
-    @IBOutlet weak var sendIconView: PlainTokenIconView!
+    @IBOutlet weak var sendIconView: BadgeIconView!
     @IBOutlet weak var sendSymbolLabel: UILabel!
-    
-    @IBOutlet weak var sendNetworkLabel: UILabel!
-    @IBOutlet weak var sendValueLabel: UILabel!
+    @IBOutlet weak var sendFooterStackView: UIStackView!
+    @IBOutlet weak var depositSendTokenButton: BusyButton!
+    @IBOutlet weak var sendBalanceLabel: UILabel!
     
     @IBOutlet weak var receiveView: UIView!
     @IBOutlet weak var receiveStackView: UIStackView!
     
-    @IBOutlet weak var receiveBalanceLabel: UILabel!
-    
+    @IBOutlet weak var receiveNetworkLabel: UILabel!
     @IBOutlet weak var receiveTokenStackView: UIStackView!
     @IBOutlet weak var receiveAmountTextField: UITextField!
     @IBOutlet weak var receiveLoadingIndicator: ActivityIndicatorView!
-    @IBOutlet weak var receiveIconView: PlainTokenIconView!
+    @IBOutlet weak var receiveIconView: BadgeIconView!
     @IBOutlet weak var receiveSymbolLabel: UILabel!
-    
-    @IBOutlet weak var receiveInfoStackView: UIStackView!
-    @IBOutlet weak var receiveNetworkLabel: UILabel!
-    @IBOutlet weak var receiveValueLabel: UILabel!
+    @IBOutlet weak var receiveBalanceLabel: UILabel!
     
     @IBOutlet weak var footerInfoLabel: UILabel!
     @IBOutlet weak var footerInfoProgressView: CircularProgressView!
@@ -48,6 +45,8 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     
     @IBOutlet weak var reviewButton: RoundedButton!
     @IBOutlet weak var reviewButtonWrapperBottomConstrait: NSLayoutConstraint!
+    
+    private let swapInputAccessoryView = R.nib.swapInputAccessoryView(withOwner: nil)!
     
     init() {
         let nib = R.nib.swapView
@@ -62,18 +61,31 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         super.viewDidLoad()
         sendView.layer.masksToBounds = true
         sendView.layer.cornerRadius = 8
-        sendStackView.setCustomSpacing(12, after: sendTokenStackView)
+        sendStackView.setCustomSpacing(0, after: sendTokenStackView)
+        sendAmountTextField.inputAccessoryView = swapInputAccessoryView
         sendLoadingIndicator.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         receiveView.layer.masksToBounds = true
         receiveView.layer.cornerRadius = 8
-        receiveStackView.setCustomSpacing(12, after: receiveTokenStackView)
-        receiveStackView.setCustomSpacing(16, after: receiveInfoStackView)
+        receiveStackView.setCustomSpacing(10, after: receiveTokenStackView)
         receiveLoadingIndicator.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        for symbolLabel in [sendSymbolLabel, receiveSymbolLabel] {
+            symbolLabel!.setFont(
+                scaledFor: .systemFont(ofSize: 16, weight: .medium),
+                adjustForContentSize: true
+            )
+        }
         sendAmountTextField.becomeFirstResponder()
+        swapInputAccessoryView.delegate = self
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(applicationDidBecomeActive(_:)),
             name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: UIResponder.keyboardWillHideNotification,
             object: nil
         )
     }
@@ -88,11 +100,11 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         
     }
     
-    @IBAction func inputMaxSendAmount(_ sender: Any) {
+    @IBAction func changeSendToken(_ sender: Any) {
         
     }
     
-    @IBAction func changeSendToken(_ sender: Any) {
+    @IBAction func depositSendToken(_ sender: Any) {
         
     }
     
@@ -126,6 +138,11 @@ class SwapViewController: KeyboardBasedLayoutViewController {
         sendAmountTextField.becomeFirstResponder()
     }
     
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        reviewButtonWrapperBottomConstrait.constant = 0
+        view.layoutIfNeeded()
+    }
+    
     func reportClientOutdated() {
         let alert = UIAlertController(
             title: R.string.localizable.update_mixin(),
@@ -145,6 +162,22 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     func prepareForReuse(sender: Any) {
         sendAmountTextField.text = nil
         sendAmountTextField.sendActions(for: .editingChanged)
+    }
+    
+    func inputSendAmount(multiplier: Decimal) {
+        
+    }
+    
+}
+
+extension SwapViewController: SwapInputAccessoryView.Delegate {
+    
+    func swapInputAccessoryView(_ view: SwapInputAccessoryView, didSelectMultiplier multiplier: Decimal) {
+        inputSendAmount(multiplier: multiplier)
+    }
+    
+    func swapInputAccessoryViewDidSelectDone(_ view: SwapInputAccessoryView) {
+        sendAmountTextField.resignFirstResponder()
     }
     
 }
@@ -186,6 +219,9 @@ extension SwapViewController {
             footerSpacingView.isHidden = true
             swapPriceButton.isHidden = true
         }
+        let reviewButtonFrame = reviewButton.convert(reviewButton.bounds, to: view)
+        let contentViewFrame = contentView.convert(contentView.bounds, to: view)
+        scrollView.alwaysBounceVertical = reviewButtonFrame.intersects(contentViewFrame)
     }
     
 }

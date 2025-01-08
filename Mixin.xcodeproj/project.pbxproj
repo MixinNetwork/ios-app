@@ -1221,6 +1221,8 @@
 		94F2375C2C691D5C0057D1AB /* TokenPriceChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F2375A2C691D5C0057D1AB /* TokenPriceChartCell.swift */; };
 		94F2375D2C691D5C0057D1AB /* TokenPriceChartCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F2375B2C691D5C0057D1AB /* TokenPriceChartCell.xib */; };
 		94F36AC626CA59B300AC30A5 /* PhoneNumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */; };
+		94F7BCE22D2B9ED700BA27D9 /* SwapInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */; };
+		94F7BCE42D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */; };
 		94F952582AE616F40025B995 /* TransferOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952572AE616F40025B995 /* TransferOutViewController.swift */; };
 		94F9525D2AE6174A0025B995 /* TransferOutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F9525C2AE6174A0025B995 /* TransferOutView.xib */; };
 		94F952622AE623B50025B995 /* TokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952612AE623B50025B995 /* TokenSelectorViewController.swift */; };
@@ -2716,6 +2718,8 @@
 		94F2375A2C691D5C0057D1AB /* TokenPriceChartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenPriceChartCell.swift; sourceTree = "<group>"; };
 		94F2375B2C691D5C0057D1AB /* TokenPriceChartCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenPriceChartCell.xib; sourceTree = "<group>"; };
 		94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberValidator.swift; sourceTree = "<group>"; };
+		94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapInputAccessoryView.swift; sourceTree = "<group>"; };
+		94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapInputAccessoryView.xib; sourceTree = "<group>"; };
 		94F952572AE616F40025B995 /* TransferOutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferOutViewController.swift; sourceTree = "<group>"; };
 		94F9525C2AE6174A0025B995 /* TransferOutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferOutView.xib; sourceTree = "<group>"; };
 		94F952612AE623B50025B995 /* TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenSelectorViewController.swift; sourceTree = "<group>"; };
@@ -3534,6 +3538,8 @@
 				52DE7B4E2BEB7C940060A364 /* RowListViewController.swift */,
 				9413A3FF2C367D8D00B655AC /* SwapView.xib */,
 				9413A3FE2C367D8D00B655AC /* SwapViewController.swift */,
+				94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */,
+				94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */,
 				94FB8E0C2D1ACB32002DCA20 /* SwapTokenCell.xib */,
 				94FB8E0B2D1ACB32002DCA20 /* SwapTokenCell.swift */,
 				94FB8E052D1A92CF002DCA20 /* SwapTokenSelectorView.xib */,
@@ -5595,6 +5601,7 @@
 				94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */,
 				7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
+				94F7BCE42D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib in Resources */,
 				9423B6B32A6932D50092DE65 /* AccountDeactivatedHintView.xib in Resources */,
 				7C7579E029DC61890002DA0B /* TransferToPhoneQRCodeView.xib in Resources */,
 				94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */,
@@ -6874,6 +6881,7 @@
 				E0C7674B23CC8F54003F9215 /* TrailingInfoBackgroundView.swift in Sources */,
 				7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */,
 				940BAE222629741C00FFF753 /* MixinAuthorizationsContentViewController.swift in Sources */,
+				94F7BCE22D2B9ED700BA27D9 /* SwapInputAccessoryView.swift in Sources */,
 				94C5A8932B2157CE00201CDA /* Payment.swift in Sources */,
 				7B8261D124D9548E00A39635 /* PINVerificationFailureHandler.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,

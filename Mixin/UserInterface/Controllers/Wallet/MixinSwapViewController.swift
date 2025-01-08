@@ -18,6 +18,7 @@ final class MixinSwapViewController: SwapViewController {
             } else {
                 self.updateSendView(style: .selectable)
             }
+            depositTokenRequest?.cancel()
         }
     }
     
@@ -36,10 +37,13 @@ final class MixinSwapViewController: SwapViewController {
     
     private var priceUnit: SwapQuote.PriceUnit = .send
     
+    private weak var depositTokenRequest: Request?
+    
     private lazy var userInputSimulationFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = .current
+        formatter.roundingMode = .floor
         formatter.maximumFractionDigits = 8
         formatter.usesGroupingSeparator = false
         return formatter
@@ -58,24 +62,25 @@ final class MixinSwapViewController: SwapViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.swap()
+        navigationItem.rightBarButtonItem = .customerService(target: self, action: #selector(presentCustomerService(_:)))
         updateSendView(style: .loading)
         updateReceiveView(style: .loading)
         reloadTokens()
         sendAmountTextField.delegate = self
     }
     
-    override func sendAmountEditingChanged(_ sender: Any) {
-        updateSendValueLabel()
-        scheduleNewRequesterIfAvailable()
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        requester?.start(delay: 0)
     }
     
-    override func inputMaxSendAmount(_ sender: Any) {
-        guard let sendToken else {
-            return
-        }
-        let balance = sendToken.decimalBalance as NSDecimalNumber
-        sendAmountTextField.text = userInputSimulationFormatter.string(from: balance)
-        sendAmountEditingChanged(sender)
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        requester?.stop()
+    }
+    
+    override func sendAmountEditingChanged(_ sender: Any) {
+        scheduleNewRequesterIfAvailable()
     }
     
     override func changeSendToken(_ sender: Any) {
@@ -94,6 +99,43 @@ final class MixinSwapViewController: SwapViewController {
             }
         }
         present(selector, animated: true)
+    }
+    
+    override func depositSendToken(_ sender: Any) {
+        guard let id = sendToken?.assetID else {
+            return
+        }
+        if let item = TokenDAO.shared.tokenItem(assetID: id) {
+            let deposit = DepositViewController(token: item)
+            navigationController?.pushViewController(deposit, animated: true)
+            return
+        }
+        depositSendTokenButton.isBusy = true
+        depositTokenRequest = SafeAPI.asset(id: id, queue: .global()) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.depositSendTokenButton.isBusy = false
+            }
+            switch result {
+            case .success(let token):
+                if let chain = ChainDAO.shared.chain(chainId: token.chainID) {
+                    let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                    DispatchQueue.main.async {
+                        guard let self, id == self.sendToken?.assetID else {
+                            return
+                        }
+                        let deposit = DepositViewController(token: item)
+                        self.navigationController?.pushViewController(deposit, animated: true)
+                    }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    guard self != nil else {
+                        return
+                    }
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
+            }
+        }
     }
     
     override func changeReceiveToken(_ sender: Any) {
@@ -188,6 +230,22 @@ final class MixinSwapViewController: SwapViewController {
         reloadTokens() // Update send token balance
     }
     
+    override func inputSendAmount(multiplier: Decimal) {
+        guard let sendToken else {
+            return
+        }
+        let amount = sendToken.decimalBalance * multiplier
+        if amount >= 0.00000001 {
+            sendAmountTextField.text = userInputSimulationFormatter.string(from: amount as NSDecimalNumber)
+            sendAmountEditingChanged(self)
+        }
+    }
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController()
+        present(customerService, animated: true)
+    }
+    
 }
 
 extension MixinSwapViewController: HomeNavigationController.NavigationBarStyling {
@@ -240,7 +298,6 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
                 format: .precision,
                 sign: .never
             )
-            updateReceiveValueLabel()
             updateCurrentPriceRepresentation(quote: quote)
             footerInfoProgressView.setProgress(1, animationDuration: nil)
             reviewButton.isEnabled = quote.sendAmount > 0
@@ -360,46 +417,30 @@ extension MixinSwapViewController {
             sendIconView.isHidden = false
             sendNetworkLabel.text = "Placeholder"
             sendNetworkLabel.alpha = 0 // Keeps the height
+            depositSendTokenButton.isHidden = true
             sendLoadingIndicator.startAnimating()
         case .selectable:
             sendTokenStackView.alpha = 1
             sendBalanceLabel.text = nil
             sendIconView.isHidden = true
             sendIconView.prepareForReuse()
-            sendIconView.image = nil
             sendSymbolLabel.text = R.string.localizable.select_token()
             sendNetworkLabel.text = "Placeholder"
             sendNetworkLabel.alpha = 0 // Keeps the height
+            depositSendTokenButton.isHidden = true
             sendLoadingIndicator.stopAnimating()
         case .token(let token):
             sendTokenStackView.alpha = 1
             let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
             sendBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
             sendIconView.isHidden = false
-            sendIconView.setIcon(token: token)
+            sendIconView.setIcon(swappableToken: token)
             sendSymbolLabel.text = token.symbol
             sendNetworkLabel.text = token.chain.name
             sendNetworkLabel.alpha = 1
+            depositSendTokenButton.isHidden = token.decimalBalance != 0
             sendLoadingIndicator.stopAnimating()
         }
-        updateSendValueLabel()
-    }
-    
-    private func updateSendValueLabel() {
-        guard
-            let sendToken,
-            let text = sendAmountTextField.text,
-            let sendAmount = Decimal(string: text, locale: .current)
-        else {
-            sendValueLabel.text = nil
-            return
-        }
-        sendValueLabel.text = CurrencyFormatter.localizedString(
-            from: sendToken.decimalUSDPrice * sendAmount * Currency.current.decimalRate,
-            format: .fiatMoney,
-            sign: .never,
-            symbol: .currencySymbol
-        )
     }
     
     private func updateReceiveView(style: TokenSelectorStyle) {
@@ -415,7 +456,6 @@ extension MixinSwapViewController {
             receiveBalanceLabel.text = nil
             receiveIconView.isHidden = true
             receiveIconView.prepareForReuse()
-            receiveIconView.image = nil
             receiveSymbolLabel.text = R.string.localizable.select_token()
             receiveNetworkLabel.text = "Placeholder"
             receiveNetworkLabel.alpha = 0 // Keeps the height
@@ -425,26 +465,12 @@ extension MixinSwapViewController {
             let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
             receiveBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
             receiveIconView.isHidden = false
-            receiveIconView.setIcon(token: token)
+            receiveIconView.setIcon(swappableToken: token)
             receiveSymbolLabel.text = token.symbol
             receiveNetworkLabel.text = token.chain.name
             receiveNetworkLabel.alpha = 1
             receiveLoadingIndicator.stopAnimating()
         }
-        updateReceiveValueLabel()
-    }
-    
-    private func updateReceiveValueLabel() {
-        guard let receiveToken, let quote else {
-            receiveValueLabel.text = nil
-            return
-        }
-        receiveValueLabel.text = CurrencyFormatter.localizedString(
-            from: receiveToken.decimalUSDPrice * quote.receiveAmount * Currency.current.decimalRate,
-            format: .fiatMoney,
-            sign: .never,
-            symbol: .currencySymbol
-        )
     }
     
     private func updateCurrentPriceRepresentation(quote: SwapQuote) {
@@ -455,7 +481,6 @@ extension MixinSwapViewController {
     private func scheduleNewRequesterIfAvailable() {
         receiveAmountTextField.text = nil
         quote = nil
-        updateReceiveValueLabel()
         reviewButton.isEnabled = false
         requester?.stop()
         requester = nil

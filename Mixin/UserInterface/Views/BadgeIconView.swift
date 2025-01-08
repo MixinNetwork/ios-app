@@ -65,15 +65,19 @@ final class BadgeIconView: UIView {
             iconMask.frame = iconImageView.bounds
         }
         if !isBadgeHidden {
-            let chainBackgroundDiameter = badgeIconDiameter + badgeOutlineWidth
-            badgeBackgroundView.frame = CGRect(x: 0,
-                                               y: bounds.height - chainBackgroundDiameter,
-                                               width: chainBackgroundDiameter,
-                                               height: chainBackgroundDiameter)
-            badgeBackgroundView.layer.cornerRadius = chainBackgroundDiameter / 2
-            badgeImageView.bounds = CGRect(x: 0, y: 0, width: badgeIconDiameter, height: badgeIconDiameter)
-            badgeImageView.center = badgeBackgroundView.center
+            let R = bounds.height / 2
+            let r = badgeIconDiameter / 2
+            let x = max(0, round(0.29289322 * R - r))
+            badgeImageView.frame = CGRect(
+                x: x,
+                y: bounds.height - x - badgeIconDiameter,
+                width: badgeIconDiameter,
+                height: badgeIconDiameter
+            )
             badgeImageView.layer.cornerRadius = badgeImageView.bounds.width / 2
+            badgeBackgroundView.frame = badgeImageView.frame
+                .insetBy(dx: -badgeOutlineWidth, dy: -badgeOutlineWidth)
+            badgeBackgroundView.layer.cornerRadius = badgeBackgroundView.bounds.width / 2
         }
     }
     

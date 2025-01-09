@@ -134,6 +134,8 @@ final class ExploreRecentSearchCell: UICollectionViewCell {
             iconView = view
         } else {
             iconView = BadgeIconView(frame: iconWrapperView.bounds)
+            iconView.badgeIconDiameter = 11
+            iconView.badgeOutlineWidth = 1
             iconWrapperView.addSubview(iconView)
             iconView.snp.makeEdgesEqualToSuperview()
             self.tokenIconView = iconView

@@ -140,6 +140,10 @@ extension SafeAPI {
         try await request(method: .get, path: "/safe/transactions/" + id)
     }
     
+    public static func transactions(ids: [String]) async throws -> [TransactionResponse] {
+        try await request(method: .post, path: "/safe/transactions/fetch", parameters: ids)
+    }
+    
     public static func transaction(id: String) -> MixinAPI.Result<TransactionResponse> {
         request(method: .get, path: "/safe/transactions/" + id)
     }

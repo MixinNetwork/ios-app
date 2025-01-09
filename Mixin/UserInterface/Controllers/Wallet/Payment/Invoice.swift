@@ -39,6 +39,8 @@ extension Invoice {
         case invalidHashReference
         case invalidIndexReference
         case sha3
+        case duplicatedAssetID
+        case emptyEntries
     }
     
     private class DataReader {
@@ -188,6 +190,14 @@ extension Invoice {
             entries.append(entry)
         }
         
+        if entries.isEmpty {
+            throw InitError.emptyEntries
+        }
+        let assetIDs = Set(entries.map(\.assetID))
+        if assetIDs.count != entries.count {
+            throw InitError.duplicatedAssetID
+        }
+        
         self.recipient = recipient
         self.entries = entries
     }
@@ -206,13 +216,13 @@ extension Invoice {
         Task {
             let preconditions: [PaymentPrecondition] = [
                 NoPendingTransactionPrecondition(),
-                // FIXME: Check if already paid with trace IDs
+                AlreadyPaidPrecondition(traceIDs: entries.map(\.traceID))
             ] + entries.flatMap { entry in
                 entry.references.compactMap { reference in
                     switch reference {
                     case .hash(let hash):
                         ReferenceValidityPrecondition(reference: hash)
-                    case .index(let index):
+                    case .index:
                         nil // Validated in Invoice.init
                     }
                 }

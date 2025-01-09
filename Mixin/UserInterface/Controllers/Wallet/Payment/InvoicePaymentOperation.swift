@@ -9,6 +9,7 @@ struct InvoicePaymentOperation {
         case sign(NSError?)
         case buildTx(Error?)
         case missingTransactionResponse
+        case inconsistentBroadcast
         
         var errorDescription: String? {
             switch self {
@@ -18,6 +19,8 @@ struct InvoicePaymentOperation {
                 error?.localizedDescription ?? "Null tx"
             case .missingTransactionResponse:
                 "Mising tx resp"
+            case .inconsistentBroadcast:
+                "Inconsistent Broadcast"
             }
         }
         
@@ -100,6 +103,9 @@ struct InvoicePaymentOperation {
     let transactions: [Transaction]
     
     func start(pin: String) async throws {
+        // Early exit if PIN is wrong
+        let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
+        
         let senderID = myUserId
         var error: NSError?
         
@@ -202,10 +208,8 @@ struct InvoicePaymentOperation {
                 result[response.requestID] = response
             }
         
-        let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
         let now = Date().toUTCString()
-        var signedTransactions: [SignedTransaction] = []
-        for (index, transaction) in verifyTransactions.enumerated() {
+        let signedTransactions: [SignedTransaction] = try verifyTransactions.enumerated().map { (index, transaction) in
             let entry = transaction.entry
             let token = transaction.token
             guard let verifyResponse = verifyResponses[entry.traceID] else {
@@ -286,7 +290,7 @@ struct InvoicePaymentOperation {
                 nil
             }
             
-            let signedTransaction = SignedTransaction(
+            return SignedTransaction(
                 changeOutput: changeOutput,
                 signedKernelTransaction: signedTx,
                 rawTransaction: rawTransaction,
@@ -294,7 +298,6 @@ struct InvoicePaymentOperation {
                 trace: trace,
                 transaction: transaction
             )
-            signedTransactions.append(signedTransaction)
         }
         
         let allOutputIDs = transactions.map(\.outputCollection).flatMap(\.outputs).map(\.id)
@@ -360,20 +363,36 @@ struct InvoicePaymentOperation {
             Logger.general.info(category: "Transfer", message: "Will broadcast tx: \(tx.entry.traceID), hash: \(signedKernelTx.hash)")
             return TransactionRequest(id: tx.entry.traceID, raw: signedKernelTx.raw)
         }
+        
+        var partialResponseIDs: Set<String>?
         try await SafeAPI.withRetryingOnServerError(maxNumberOfTries: 20) {
             try await SafeAPI.postTransaction(requests: broadcastRequests)
         } shouldRetry: {
             do {
-                _ = try await SafeAPI.transaction(id: broadcastRequests[0].id)
-                Logger.general.warn(category: "Transfer", message: "Found tx, stop retrying")
-                return false
+                let transactions = try await SafeAPI.transactions(ids: broadcastRequests.map(\.id))
+                let requestIDs = Set(broadcastRequests.map(\.id))
+                let responseIDs = Set(transactions.map(\.requestID))
+                if requestIDs == responseIDs {
+                    Logger.general.warn(category: "Transfer", message: "Found tx, stop retrying")
+                    return false
+                } else {
+                    partialResponseIDs = responseIDs
+                    Logger.general.error(category: "Transfer", message: "Inconsistent txn, Request: \(requestIDs), Response: \(responseIDs)")
+                    return false
+                }
             } catch {
                 Logger.general.warn(category: "Transfer", message: "Keep retrying: \(error)")
                 return true
             }
         }
+        if let ids = partialResponseIDs {
+            // Part of invoice is paid
+            RawTransactionDAO.shared.signRawTransactions(requestIDs: ids)
+            throw OperationError.inconsistentBroadcast
+        }
+        
         Logger.general.info(category: "Transfer", message: "Will sign raw txs")
-        RawTransactionDAO.shared.signRawTransactions(with: signedTransactions.map(\.rawTransaction.requestID))
+        RawTransactionDAO.shared.signRawTransactions(requestIDs: signedTransactions.map(\.rawTransaction.requestID))
         NotificationCenter.default.post(onMainThread: dismissSearchNotification, object: nil)
         Logger.general.info(category: "Transfer", message: "RawTx signed")
         

@@ -24,7 +24,7 @@ public final class RawTransactionDAO: UserDatabaseDAO {
         db.select(with: "SELECT * FROM raw_transactions WHERE request_id = ?", arguments: [requestID])
     }
     
-    public func signRawTransactions(with requestIDs: [String]) {
+    public func signRawTransactions(requestIDs: any Sequence<String>) {
         db.write { db in
             let ids = requestIDs.joined(separator: "','")
             try db.execute(sql: "UPDATE raw_transactions SET state = ? WHERE request_id IN ('\(ids)')",

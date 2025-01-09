@@ -135,12 +135,24 @@ struct AddressDustPrecondition: PaymentPrecondition {
 
 struct AlreadyPaidPrecondition: PaymentPrecondition {
     
-    let traceID: String
+    let traceIDs: [String]
+    
+    init(traceID: String) {
+        self.traceIDs = []
+    }
+    
+    init(traceIDs: [String]) {
+        self.traceIDs = traceIDs
+    }
     
     func check() async -> PaymentPreconditionCheckingResult {
         do {
-            let _ = try await SafeAPI.transaction(id: traceID)
-            return .failed(.description(R.string.localizable.pay_paid()))
+            let transactions = try await SafeAPI.transactions(ids: traceIDs)
+            return if transactions.isEmpty {
+                .passed([])
+            } else {
+                .failed(.description(R.string.localizable.pay_paid()))
+            }
         } catch MixinAPIResponseError.notFound {
             return .passed([])
         } catch {

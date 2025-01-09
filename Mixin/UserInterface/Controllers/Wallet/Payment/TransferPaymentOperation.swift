@@ -366,7 +366,7 @@ struct TransferPaymentOperation {
             }
         }
         Logger.general.info(category: "Transfer", message: "Will sign raw txs")
-        RawTransactionDAO.shared.signRawTransactions(with: [rawTransaction.requestID])
+        RawTransactionDAO.shared.signRawTransactions(requestIDs: [rawTransaction.requestID])
         NotificationCenter.default.post(onMainThread: dismissSearchNotification, object: nil)
         Logger.general.info(category: "Transfer", message: "RawTx signed")
         

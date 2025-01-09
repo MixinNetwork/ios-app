@@ -34,17 +34,23 @@ open class Database {
             let message: String
         }
         GRDB.Database.logError = { (code, message) in
-            if code.primaryResultCode == .SQLITE_ERROR {
+            switch code.primaryResultCode {
+            case .SQLITE_NOTICE:
+                // Ignore notices, mostly SQLITE_NOTICE_RECOVER_WAL
+                Logger.database.info(category: "DB", message: "code: \(code), message: \(message)\n")
+            case .SQLITE_ERROR:
                 if message.hasPrefix("no such table: grdb_migrations") {
-                    return
+                    Logger.database.info(category: "DB", message: "code: \(code), message: \(message)\n")
                 } else {
                     AppGroupUserDefaults.User.needsRebuildDatabase = true
+                    fallthrough
                 }
-            }
-            // Stupid error from CoreFoundation
-            if !message.hasSuffix("cfurl_cache_response.request_key") {
-                reporter.report(error: Error(code: code.rawValue, message: message))
-                Logger.database.error(category: "Error", message: "code: \(code), message: \(message)\n")
+            default:
+                // Stupid error from CoreFoundation
+                if !message.hasSuffix("cfurl_cache_response.request_key") {
+                    reporter.report(error: Error(code: code.rawValue, message: message))
+                    Logger.database.error(category: "DB", message: "code: \(code), message: \(message)\n")
+                }
             }
         }
         return {}

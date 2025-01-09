@@ -9,8 +9,8 @@ final class BadgeIconView: UIView {
         case hexagon
     }
     
-    @IBInspectable var badgeIconDiameter: CGFloat = 10
-    @IBInspectable var badgeOutlineWidth: CGFloat = 2
+    @IBInspectable var badgeIconDiameter: CGFloat = 13
+    @IBInspectable var badgeOutlineWidth: CGFloat = 1.5
     
     private let iconImageView = UIImageView()
     private let badgeBackgroundView = SolidBackgroundColoredView()

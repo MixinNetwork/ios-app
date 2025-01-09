@@ -16,7 +16,6 @@ final class SwapTokenCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        iconView.badgeIconDiameter = 11
         chainLabel.contentInset = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
         chainLabel.layer.cornerRadius = 4
         chainLabel.layer.masksToBounds = true

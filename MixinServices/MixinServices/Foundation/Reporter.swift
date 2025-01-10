@@ -3,35 +3,21 @@ import Sentry
 
 open class Reporter {
     
+    public enum Event: String {
+        case signUpStart        = "sign_up_start"
+        case signUpFullname     = "sign_up_fullname"
+        case signUpSetPIN       = "sign_up_set_pin"
+        case loginStart         = "login_start"
+        case loginRestore       = "login_restore"
+        case loginVerifyPIN     = "login_verify_pin"
+        case swapStart          = "swap_start"
+        case swapCoinSwitch     = "swap_coin_switch"
+        case swapQuote          = "swap_quote"
+        case swapPreview        = "swap_preview"
+        case swapSend           = "swap_send"
+    }
+    
     public typealias UserInfo = [String: Any]
-    
-    public enum Event {
-        case signUp
-        case login
-        case sendSticker
-        case openApp
-        case cancelAudioRecording
-        
-        public var name: String {
-            switch self {
-            case .signUp:
-                return "sign_up"
-            case .login:
-                return "login"
-            case .sendSticker:
-                return "send_sticker"
-            case .openApp:
-                return "open_app"
-            case .cancelAudioRecording:
-                return "cancel_audio_record"
-            }
-        }
-    }
-    
-    public var basicUserInfo: UserInfo {
-        ["last_update_or_install_date": AppGroupUserDefaults.User.lastUpdateOrInstallDate,
-         "client_time": DateFormatter.filename.string(from: Date())]
-    }
     
     public required init() {
         
@@ -64,16 +50,10 @@ open class Reporter {
         SentrySDK.setUser(Sentry.User(userId: account.userID))
     }
     
-    open func report(event: Event, userInfo: UserInfo? = nil) {
-        let event = Sentry.Event(level: .info)
-        event.extra = userInfo
-        SentrySDK.capture(event: event)
-    }
-
     open func report(error: MixinAPIError) {
         SentrySDK.capture(error: error)
     }
-
+    
     open func report(error: Error, userInfo: UserInfo? = nil) {
         if let info = userInfo {
             let event = Sentry.Event(level: .error)
@@ -83,4 +63,15 @@ open class Reporter {
             SentrySDK.capture(error: error)
         }
     }
+    
+    open func report(event: Event, tags: [String: String]? = nil) {
+        let scope = Scope()
+        scope.setTags(tags)
+        SentrySDK.capture(message: event.rawValue, scope: scope)
+    }
+    
+    public func report(event: Event, method: String) {
+        report(event: event, tags: ["method": method])
+    }
+    
 }

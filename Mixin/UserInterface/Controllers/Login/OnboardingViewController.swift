@@ -56,6 +56,7 @@ final class OnboardingViewController: UIViewController {
         let mobileNumber = SignInWithMobileNumberViewController()
         navigationController?.pushViewController(mobileNumber, animated: true)
         Logger.general.info(category: "Login", message: "Sign in")
+        reporter.report(event: .loginStart)
     }
     
 }

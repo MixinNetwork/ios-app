@@ -168,7 +168,6 @@ final class ExploreViewController: UIViewController {
                 AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
                 MixinWebViewController.presentInstance(with: .init(conversationId: "", app: app), asChildOf: home)
             }
-            reporter.report(event: .openApp, userInfo: ["source": "Explore", "identityNumber": app.appNumber])
         }
     }
     

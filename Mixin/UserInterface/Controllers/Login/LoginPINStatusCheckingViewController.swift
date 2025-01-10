@@ -37,6 +37,7 @@ final class LoginPINStatusCheckingViewController: LoginLoadingViewController {
                 let context = try await TIP.checkCounter(with: account)
                 await MainActor.run {
                     if let context {
+                        reporter.report(event: .loginVerifyPIN, method: "change_pin")
                         let intro = TIPIntroViewController(context: context)
                         let navigation = TIPNavigationController(intro: intro)
                         AppDelegate.current.mainWindow.rootViewController = navigation

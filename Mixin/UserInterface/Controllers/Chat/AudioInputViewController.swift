@@ -205,9 +205,6 @@ extension AudioInputViewController: OggOpusRecorderDelegate {
         stopRedDotAnimation()
         if reason != .userInitiated {
             Logger.general.info(category: "AudioInput", message: "Recording is cancelled with \(reason.rawValue)")
-            var userInfo = userInfo ?? [:]
-            userInfo["reason"] = reason.rawValue
-            reporter.report(event: .cancelAudioRecording, userInfo: userInfo)
         }
     }
     

@@ -124,8 +124,6 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
         } else {
             let app = apps[indexPath.row - fixedExtensions.count].app
             if let conversationId = composer?.conversationId, let parent = conversationViewController {
-                let userInfo = ["source": "ConversationExtension", "identityNumber": app.appNumber]
-                reporter.report(event: .openApp, userInfo: userInfo)
                 MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
             }
         }

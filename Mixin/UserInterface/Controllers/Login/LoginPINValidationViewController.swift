@@ -51,6 +51,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 }
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 AppGroupUserDefaults.User.loginPINValidated = true
+                reporter.report(event: .loginVerifyPIN, method: "verify_pin")
                 await MainActor.run {
                     AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController()
                 }

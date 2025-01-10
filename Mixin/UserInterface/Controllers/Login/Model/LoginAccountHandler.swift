@@ -47,14 +47,6 @@ extension LoginAccountHandler where Self: UIViewController {
         AppGroupUserDefaults.User.loginPINValidated = false
         AppGroupUserDefaults.Wallet.payWithBiometricAuthentication = false
         
-        if account.fullName.isEmpty {
-            reporter.report(event: .signUp)
-        } else if HomeViewController.showChangePhoneNumberTips {
-            reporter.report(event: .login, userInfo: ["source": "emergency"])
-        } else {
-            reporter.report(event: .login, userInfo: ["source": "normal"])
-        }
-        
         if let icloudDir = FileManager.default.url(forUbiquityContainerIdentifier: nil) {
             
             func debugCloudFiles(baseDir: URL, parentDir: URL) -> [String] {

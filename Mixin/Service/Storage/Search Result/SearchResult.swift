@@ -74,19 +74,26 @@ extension SearchResult {
     
     static func description(identityNumber: String?, phoneNumber: String?, keyword: String) -> NSAttributedString? {
         if let identityNumber = identityNumber, identityNumber.contains(keyword) {
-            let text = R.string.localizable.contact_mixin_id(identityNumber)
-            return SearchResult.attributedText(text: text,
-                                               textAttributes: SearchResult.normalDescriptionAttributes,
-                                               keyword: keyword,
-                                               keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)
+            SearchResult.attributedText(
+                text: R.string.localizable.contact_mixin_id(identityNumber),
+                textAttributes: SearchResult.normalDescriptionAttributes,
+                keyword: keyword,
+                keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes
+            )
         } else if let phoneNumber = phoneNumber, phoneNumber.contains(keyword) {
-            let text = R.string.localizable.search_result_prefix_phone() + phoneNumber
-            return SearchResult.attributedText(text: text,
-                                               textAttributes: SearchResult.normalDescriptionAttributes,
-                                               keyword: keyword,
-                                               keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes)
+            SearchResult.attributedText(
+                text: R.string.localizable.search_result_prefix_phone() + phoneNumber,
+                textAttributes: SearchResult.normalDescriptionAttributes,
+                keyword: keyword,
+                keywordAttributes: SearchResult.highlightedNormalDescriptionAttributes
+            )
+        } else if let identityNumber = identityNumber {
+            NSAttributedString(
+                string: identityNumber,
+                attributes: SearchResult.normalDescriptionAttributes
+            )
         } else {
-            return nil
+            nil
         }
     }
     

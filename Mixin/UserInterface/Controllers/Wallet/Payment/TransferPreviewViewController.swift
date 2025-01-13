@@ -225,6 +225,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                     case .swap:
                         layoutTableHeaderView(title: R.string.localizable.sending_success(),
                                               subtitle: R.string.localizable.swap_message_success())
+                        reporter.report(event: .swapSend)
                     case .inscription(let context):
                         switch context.operation {
                         case .transfer:

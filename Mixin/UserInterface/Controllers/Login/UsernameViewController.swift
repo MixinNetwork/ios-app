@@ -23,6 +23,7 @@ final class UsernameViewController: LoginInfoInputViewController, CheckSessionEn
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
+        reporter.report(event: .signUpFullname)
     }
     
     private func makeDefaultUsername() -> String? {

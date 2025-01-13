@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 final class SignUpViewController: UIViewController {
     
@@ -105,10 +106,13 @@ extension SignUpViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let controller = if indexPath.section == 0 {
-            SignUpWithMobileNumberViewController()
+        let controller: UIViewController
+        if indexPath.section == 0 {
+            controller = SignUpWithMobileNumberViewController()
+            reporter.report(event: .signUpStart, method: "mobile_number")
         } else {
-            SignUpWithMnemonicIntroductionViewController()
+            controller = SignUpWithMnemonicIntroductionViewController()
+            reporter.report(event: .signUpStart, method: "mnemonic_phrase")
         }
         navigationController?.pushViewController(controller, animated: true)
     }

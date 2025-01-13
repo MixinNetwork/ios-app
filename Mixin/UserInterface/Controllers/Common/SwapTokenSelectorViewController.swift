@@ -306,6 +306,7 @@ extension SwapTokenSelectorViewController: UICollectionViewDelegate {
         case .recent:
             let token = recentTokens[indexPath.item]
             pickUp(token: token)
+            reporter.report(event: .swapCoinSwitch, method: "recent_click")
         case .chainSelector:
             if indexPath.item == 0 {
                 selectedChainID = nil
@@ -325,6 +326,15 @@ extension SwapTokenSelectorViewController: UICollectionViewDelegate {
             self.reloadWithoutAnimation(section: .tokens)
             self.reloadTokenSelection()
         case .tokens:
+            if searchResults == nil {
+                if selectedChainID == nil {
+                    reporter.report(event: .swapCoinSwitch, method: "all_item_click")
+                } else {
+                    reporter.report(event: .swapCoinSwitch, method: "chain_item_click")
+                }
+            } else {
+                reporter.report(event: .swapCoinSwitch, method: "search_item_click")
+            }
             let token = token(at: indexPath)
             pickUp(token: token)
         }

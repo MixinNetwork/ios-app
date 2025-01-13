@@ -69,6 +69,7 @@ class UrlWindow {
                 if let navigationController = UIApplication.homeNavigationController {
                     let swap = MixinSwapViewController(sendAssetID: input, receiveAssetID: output ?? AssetID.erc20USDT)
                     navigationController.pushViewController(swap, animated: true)
+                    reporter.report(event: .swapStart, tags: ["source": "schema"])
                 }
                 return true
             case let .send(context):
@@ -202,8 +203,6 @@ class UrlWindow {
                     guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
                         return
                     }
-                    let userInfo = ["source": "UrlWindow", "identityNumber": app.appNumber]
-                    reporter.report(event: .openApp, userInfo: userInfo)
                     let extraParams = params.filter { $0.key != "action" }
                     DispatchQueue.main.async {
                         MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app, extraParams: extraParams), asChildOf: parent)

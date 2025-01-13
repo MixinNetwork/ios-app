@@ -3,7 +3,10 @@ import Foundation
 public enum MixinServicesError: Error {
     
     private static var basicUserInfo: [String: Any] {
-        var userInfo = reporter.basicUserInfo
+        var userInfo: [String: Any] = [
+            "last_update_or_install_date": AppGroupUserDefaults.User.lastUpdateOrInstallDate,
+            "client_time": DateFormatter.filename.string(from: Date()),
+        ]
         userInfo["didLogin"] = LoginManager.shared.isLoggedIn
         userInfo["isAppExtension"] = isAppExtension
         return userInfo

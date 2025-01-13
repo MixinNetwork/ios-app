@@ -15,14 +15,14 @@ class CrashlyticalReporter: Reporter {
         }
     }
     
-    override func report(event: Reporter.Event, userInfo: Reporter.UserInfo? = nil) {
-        super.report(event: event, userInfo: userInfo)
-        Analytics.logEvent(event.name, parameters: userInfo)
-    }
-    
     override func report(error: Error, userInfo: UserInfo? = nil) {
         super.report(error: error, userInfo: userInfo)
         Crashlytics.crashlytics().record(error: error)
+    }
+    
+    override func report(event: Event, tags: [String: String]? = nil) {
+        super.report(event: event, tags: tags)
+        Analytics.logEvent(event.rawValue, parameters: tags)
     }
     
 }

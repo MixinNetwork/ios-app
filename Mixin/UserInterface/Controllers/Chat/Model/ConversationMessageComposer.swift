@@ -169,7 +169,6 @@ final class ConversationMessageComposer {
             message.mediaUrl = sticker.assetUrl
             message.stickerId = sticker.stickerId
             queue.async {
-                reporter.report(event: .sendSticker, userInfo: ["stickerId": sticker.stickerId])
                 let transferData = TransferStickerData(stickerId: sticker.stickerId)
                 message.content = try! JSONEncoder().encode(transferData).base64EncodedString()
                 SendMessageService.shared.sendMessage(message: message,

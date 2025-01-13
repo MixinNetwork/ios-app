@@ -118,6 +118,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                 root = LegacyPINViewController()
             } else if account.tipCounter == 0 {
                 if account.hasPIN {
+                    reporter.report(event: .loginVerifyPIN, method: "upgrade_pin")
                     Logger.general.debug(category: "CheckSessionEnvironment", message: "Legacy PIN")
                     root = LegacyPINViewController()
                 } else {

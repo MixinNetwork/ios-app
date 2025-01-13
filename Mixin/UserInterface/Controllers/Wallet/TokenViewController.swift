@@ -636,7 +636,7 @@ extension TokenViewController: TokenActionView.Delegate {
         case .swap:
             let swap = MixinSwapViewController(sendAssetID: token.assetID, receiveAssetID: AssetID.erc20USDT)
             navigationController?.pushViewController(swap, animated: true)
-            reporter.report(event: .swapStart, tags: ["source": "wallet"])
+            reporter.report(event: .swapStart, tags: ["entrance": "wallet", "source": "mixin"])
         }
     }
     

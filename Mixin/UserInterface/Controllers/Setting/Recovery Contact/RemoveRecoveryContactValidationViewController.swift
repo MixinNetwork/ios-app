@@ -23,6 +23,7 @@ class RemoveRecoveryContactValidationViewController: PinValidationViewController
             switch result {
             case .success(let account):
                 LoginManager.shared.setAccount(account)
+                reporter.updateUserProperties(.emergencyContact, account: account)
                 if let navigationController = UIApplication.homeNavigationController {
                     var viewControllers = navigationController.viewControllers
                     if viewControllers.last is ViewRecoveryContactViewController {

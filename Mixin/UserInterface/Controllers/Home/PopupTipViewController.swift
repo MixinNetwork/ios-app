@@ -101,6 +101,7 @@ final class PopupTipViewController: UIViewController {
                         DispatchQueue.main.async {
                             NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
                         }
+                        reporter.updateUserProperties(.notificationAuthorization)
                     }
                 case .denied:
                     DispatchQueue.main.async(execute: UIApplication.shared.openNotificationSettings)

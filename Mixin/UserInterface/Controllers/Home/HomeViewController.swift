@@ -61,6 +61,7 @@ final class HomeViewController: UIViewController {
         titleButton.setTitle(topLeftTitle, for: .normal)
         if let account = LoginManager.shared.account {
             myAvatarImageView.setImage(with: account)
+            reporter.updateUserProperties(.all, account: account)
         }
         presentPopupTipIfNeeded()
         searchContainerBeginTopConstant = searchContainerTopConstraint.constant

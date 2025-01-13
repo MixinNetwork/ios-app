@@ -17,6 +17,23 @@ open class Reporter {
         case swapSend           = "swap_send"
     }
     
+    public struct UserProperty: OptionSet {
+        
+        public static let all = UserProperty(rawValue: .max)
+        
+        public static let emergencyContact = UserProperty(rawValue: 1 << 0)
+        public static let membership = UserProperty(rawValue: 1 << 1)
+        public static let notificationAuthorization = UserProperty(rawValue: 1 << 2)
+        public static let assetLevel = UserProperty(rawValue: 1 << 3)
+        
+        public let rawValue: UInt
+        
+        public init(rawValue: UInt) {
+            self.rawValue = rawValue
+        }
+        
+    }
+    
     public typealias UserInfo = [String: Any]
     
     public required init() {
@@ -43,11 +60,9 @@ open class Reporter {
         }
     }
     
-    open func registerUserInformation() {
-        guard let account = LoginManager.shared.account else {
-            return
-        }
-        SentrySDK.setUser(Sentry.User(userId: account.userID))
+    open func registerUserInformation(account: Account) {
+        let user = Sentry.User(userId: account.userID)
+        SentrySDK.setUser(user)
     }
     
     open func report(error: MixinAPIError) {
@@ -69,6 +84,14 @@ open class Reporter {
         scope.setTags(tags)
         SentrySDK.capture(message: event.rawValue, scope: scope)
     }
+    
+    open func updateUserProperties(_ properties: UserProperty, account: Account? = nil) {
+        
+    }
+    
+}
+
+extension Reporter {
     
     public func report(event: Event, method: String) {
         report(event: event, tags: ["method": method])

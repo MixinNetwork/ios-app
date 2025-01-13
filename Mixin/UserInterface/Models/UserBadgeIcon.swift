@@ -49,10 +49,7 @@ enum UserBadgeIcon {
 extension User.Membership {
     
     var badgeImage: UIImage? {
-        guard expiredAt.timeIntervalSinceNow > 0 else {
-            return nil
-        }
-        return switch plan {
+        switch unexpiredPlan {
         case .advance:
             R.image.user_membership_advance()
         case .elite:

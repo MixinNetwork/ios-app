@@ -65,6 +65,9 @@ class CreateRecoveryContactVerificationCodeViewController: VerificationCodeViewC
                 let hadEmergencyContact = LoginManager.shared.account?.hasEmergencyContact ?? false
                 LoginManager.shared.setAccount(account)
                 self?.showSuccessAlert(hadEmergencyContact: hadEmergencyContact)
+                if !hadEmergencyContact {
+                    reporter.updateUserProperties(.emergencyContact, account: account)
+                }
             case .failure(let error):
                 if PINVerificationFailureHandler.canHandle(error: error) {
                     PINVerificationFailureHandler.handle(error: error) { [weak self] (description) in

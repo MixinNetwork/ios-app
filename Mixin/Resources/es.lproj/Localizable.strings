@@ -313,6 +313,7 @@
 "confirm_editing_address" = "Confirm Editing Address";
 "confirm_signing_multisig" = "Confirm Signing Multisig";
 "confirm_transfer" = "Confirm Transfer";
+"confirm_transfer_in_batches" = "Confirm Transfer in Batches";
 "confirm_withdrawal" = "Confirm Withdrawal";
 "connect" = "Connect";
 "connect_to_tip_network_failed" = "No se puede conectar a la red TIP. Comprueba tu conexión e inténtalo de nuevo.";

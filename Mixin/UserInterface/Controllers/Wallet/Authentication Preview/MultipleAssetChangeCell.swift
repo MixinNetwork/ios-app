@@ -21,7 +21,7 @@ final class MultipleAssetChangeCell: UITableViewCell {
     }
     
     func reloadData(changes: [(token: TokenItem, amount: String)]) {
-        titleLabel.text = R.string.localizable.asset_changes_estimate().uppercased()
+        titleLabel.text = R.string.localizable.asset_changes().uppercased()
         loadRowViews(count: changes.count)
         for (i, change) in changes.enumerated() {
             let rowView = rowViews[i]

@@ -313,6 +313,7 @@
 "confirm_editing_address" = "修改地址確認";
 "confirm_signing_multisig" = "多簽交易確認";
 "confirm_transfer" = "轉賬確認";
+"confirm_transfer_in_batches" = "批次轉賬確認";
 "confirm_withdrawal" = "提現確認";
 "connect" = "連線";
 "connect_to_tip_network_failed" = "連線 TIP 網路失敗，請嘗試切換網路後重試";

@@ -313,6 +313,7 @@
 "confirm_editing_address" = "修改地址确认";
 "confirm_signing_multisig" = "多签交易确认";
 "confirm_transfer" = "转账确认";
+"confirm_transfer_in_batches" = "批量转账确认";
 "confirm_withdrawal" = "提现确认";
 "connect" = "连接";
 "connect_to_tip_network_failed" = "连接 TIP 网络失败，请尝试切换网络后重试";

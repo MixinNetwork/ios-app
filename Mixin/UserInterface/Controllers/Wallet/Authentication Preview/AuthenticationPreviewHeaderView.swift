@@ -160,6 +160,7 @@ extension AuthenticationPreviewHeaderView {
         private typealias IconWrapperView = StackedIconWrapperView<PlainTokenIconView>
         
         private let stackView = UIStackView()
+        private let iconWrapperFrame = CGRect(x: 0, y: 0, width: 68, height: 68)
         
         private var wrapperViews: [IconWrapperView] = []
         
@@ -186,7 +187,7 @@ extension AuthenticationPreviewHeaderView {
                 if let l = addtionalCountLabel {
                     label = l
                 } else {
-                    let view = StackedIconWrapperView<UILabel>()
+                    let view = StackedIconWrapperView<UILabel>(margin: 2, frame: iconWrapperFrame)
                     view.backgroundColor = .clear
                     label = view.iconView
                     label.backgroundColor = R.color.background_quaternary()
@@ -235,7 +236,7 @@ extension AuthenticationPreviewHeaderView {
             }
             wrapperViews = []
             for i in 0..<count {
-                let view = IconWrapperView()
+                let view = IconWrapperView(margin: 2, frame: iconWrapperFrame)
                 view.backgroundColor = .clear
                 stackView.addArrangedSubview(view)
                 wrapperViews.append(view)

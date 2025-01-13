@@ -88,6 +88,7 @@ final class TIPActionViewController: UIViewController {
                     try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     await MainActor.run {
+                        reporter.report(event: .signUpSetPIN)
                         finish()
                     }
                 } catch {

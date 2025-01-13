@@ -135,8 +135,15 @@ final class TIPIntroViewController: IntroViewController {
             let navigationController = self.tipNavigationController
             let report = self.reportLoginEventOnChangingInterruptionRecovered
             let validator = TIPPopupInputViewController(action: .continue(context, { [weak navigationController] in
-                if report {
-                    reporter.report(event: .loginVerifyPIN, method: "change_pin")
+                switch context.action {
+                case .create:
+                    reporter.report(event: .signUpSetPIN)
+                case .change:
+                    if report {
+                        reporter.report(event: .loginVerifyPIN, method: "change_pin")
+                    }
+                case .migrate:
+                    break
                 }
                 navigationController?.finish()
             }))

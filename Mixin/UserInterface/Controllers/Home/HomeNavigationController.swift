@@ -36,8 +36,12 @@ class HomeNavigationController: GeneralAppearanceNavigationController {
         self.interactivePopGestureRecognizer?.isEnabled = true
         self.interactivePopGestureRecognizer?.delegate = self
         self.delegate = self
-        if AppGroupUserDefaults.Crypto.isPrekeyLoaded && AppGroupUserDefaults.Crypto.isSessionSynchronized && !AppGroupUserDefaults.isClockSkewed && LoginManager.shared.isLoggedIn {
-            reporter.registerUserInformation()
+        if AppGroupUserDefaults.Crypto.isPrekeyLoaded,
+           AppGroupUserDefaults.Crypto.isSessionSynchronized,
+           !AppGroupUserDefaults.isClockSkewed,
+           let account = LoginManager.shared.account
+        {
+            reporter.registerUserInformation(account: account)
             DCDevice.current.generateToken { (data, error) in
                 guard let token = data?.base64EncodedString() else {
                     return

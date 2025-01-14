@@ -11,11 +11,7 @@ final class TIPIntroViewController: IntroViewController {
         case noInputNeeded(TIPActionViewController.Action, Error)
     }
     
-    private enum Status {
-        case checkingCounter
-        case counterCheckingFails
-        case waitingForUser
-    }
+    var reportLoginEventOnChangingInterruptionRecovered = false
     
     private let intent: TIP.Action
     private let checkCounterTimeoutInterval: TimeInterval = 10
@@ -137,7 +133,18 @@ final class TIPIntroViewController: IntroViewController {
             }
         case .inputNeeded(let context):
             let navigationController = self.tipNavigationController
+            let report = self.reportLoginEventOnChangingInterruptionRecovered
             let validator = TIPPopupInputViewController(action: .continue(context, { [weak navigationController] in
+                switch context.action {
+                case .create:
+                    reporter.report(event: .signUpSetPIN)
+                case .change:
+                    if report {
+                        reporter.report(event: .loginVerifyPIN, method: "change_pin")
+                    }
+                case .migrate:
+                    break
+                }
                 navigationController?.finish()
             }))
             present(validator, animated: true)
@@ -154,6 +161,12 @@ final class TIPIntroViewController: IntroViewController {
 }
 
 extension TIPIntroViewController {
+    
+    private enum Status {
+        case checkingCounter
+        case counterCheckingFails
+        case waitingForUser
+    }
     
     private func updateNavigationItem() {
         switch (intent, interruption) {

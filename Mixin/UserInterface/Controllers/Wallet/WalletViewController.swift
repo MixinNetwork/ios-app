@@ -229,7 +229,7 @@ extension WalletViewController: TokenActionView.Delegate {
             DispatchQueue.global().async {
                 PropertiesDAO.shared.set(true, forKey: .hasSwapReviewed)
             }
-            reporter.report(event: .swapStart, tags: ["source": "wallet"])
+            reporter.report(event: .swapStart, tags: ["entrance": "wallet", "source": "mixin"])
         }
     }
     

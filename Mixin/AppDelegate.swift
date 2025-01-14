@@ -353,7 +353,9 @@ extension AppDelegate {
             return
         }
         AppGroupUserDefaults.User.updateLastUpdateOrInstallDateIfNeeded()
-        reporter.registerUserInformation()
+        if let account = LoginManager.shared.account {
+            reporter.registerUserInformation(account: account)
+        }
         MixinServices.printSignalLog = { (message: UnsafePointer<Int8>!) -> Void in
             let log = String(cString: message)
             if log.hasPrefix("No sender key for:"), let conversationId = log.suffix(char: ":")?.substring(endChar: ":").trim() {

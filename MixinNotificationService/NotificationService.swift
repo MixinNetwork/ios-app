@@ -59,9 +59,11 @@ final class NotificationService: UNNotificationServiceExtension {
         }
         Self.isInitiatedReporter = true
         reporter.configure()
-        reporter.registerUserInformation()
+        if let account = LoginManager.shared.account {
+            reporter.registerUserInformation(account: account)
+        }
     }
-
+    
     private func deliverNotification(with message: MessageItem) {
         guard message.status != MessageStatus.FAILED.rawValue else {
             deliverRawContent(from: "message status failed")

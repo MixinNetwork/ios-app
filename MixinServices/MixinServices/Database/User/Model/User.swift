@@ -194,6 +194,14 @@ extension User {
         public let plan: Plan
         public let expiredAt: Date
         
+        public var unexpiredPlan: Plan {
+            if expiredAt.timeIntervalSinceNow > 0 {
+                plan
+            } else {
+                .none
+            }
+        }
+        
         public var databaseValue: DatabaseValue {
             if let data = try? JSONEncoder.default.encode(self),
                let string = String(data: data, encoding: .utf8)

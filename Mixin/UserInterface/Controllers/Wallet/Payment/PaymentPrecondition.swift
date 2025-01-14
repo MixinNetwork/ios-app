@@ -3,7 +3,13 @@ import MixinServices
 
 enum PaymentPreconditionFailureReason {
     case userCancelled
+    case loggedOut
     case description(String)
+}
+
+enum OutputCollectingResult {
+    case success(UTXOService.OutputCollection)
+    case failure(PaymentPreconditionFailureReason)
 }
 
 enum PaymentPreconditionIssue {
@@ -37,6 +43,77 @@ enum PaymentPreconditionCheckingResult {
     case failed(PaymentPreconditionFailureReason)
 }
 
+protocol PaymentPreconditionChecker {
+    func check(preconditions: [PaymentPrecondition]) async -> PaymentPreconditionCheckingResult
+}
+
+extension PaymentPreconditionChecker {
+    
+    func check(preconditions: [PaymentPrecondition]) async -> PaymentPreconditionCheckingResult {
+        var issues: [PaymentPreconditionIssue] = []
+        for precondition in preconditions {
+            let result = await precondition.check()
+            switch result {
+            case .passed(let newIssues):
+                issues.append(contentsOf: newIssues)
+            case .failed(let reason):
+                return .failed(reason)
+            }
+        }
+        return .passed(issues)
+    }
+    
+    func collectOutputs(
+        token: TokenItem,
+        amount: Decimal,
+        on parent: UIViewController
+    ) async -> OutputCollectingResult {
+        repeat {
+            let result = UTXOService.shared.collectUnspentOutputs(kernelAssetID: token.kernelAssetID, amount: amount)
+            switch result {
+            case .insufficientBalance:
+                return .failure(.description(R.string.localizable.insufficient_balance()))
+            case .outputNotConfirmed:
+                let delegation = WalletHintViewController.UserRealizedDelegation()
+                await withCheckedContinuation { continuation in
+                    DispatchQueue.main.async {
+                        delegation.onRealize = {
+                            continuation.resume()
+                        }
+                        let hint = WalletHintViewController(content: .waitingTransaction)
+                        hint.delegate = delegation
+                        UIApplication.homeContainerViewController?.present(hint, animated: true)
+                    }
+                    let job = SyncOutputsJob()
+                    ConcurrentJobQueue.shared.addJob(job: job)
+                }
+                return .failure(.userCancelled)
+            case .success(let outputCollection):
+                return .success(outputCollection)
+            case .maxSpendingCountExceeded:
+                let consolidationResult = await withCheckedContinuation { continuation in
+                    DispatchQueue.main.async {
+                        let consolidation = ConsolidateOutputsViewController(token: token)
+                        consolidation.onCompletion = { result in
+                            continuation.resume(with: .success(result))
+                        }
+                        let auth = AuthenticationViewController(intent: consolidation)
+                        parent.present(auth, animated: true)
+                    }
+                }
+                switch consolidationResult {
+                case .userCancelled:
+                    return .failure(.userCancelled)
+                case .success:
+                    continue
+                }
+            }
+        } while LoginManager.shared.isLoggedIn
+        return .failure(.loggedOut)
+    }
+    
+}
+
 protocol PaymentPrecondition {
     func check() async -> PaymentPreconditionCheckingResult
 }
@@ -60,12 +137,24 @@ struct AddressDustPrecondition: PaymentPrecondition {
 
 struct AlreadyPaidPrecondition: PaymentPrecondition {
     
-    let traceID: String
+    let traceIDs: [String]
+    
+    init(traceID: String) {
+        self.traceIDs = []
+    }
+    
+    init(traceIDs: [String]) {
+        self.traceIDs = traceIDs
+    }
     
     func check() async -> PaymentPreconditionCheckingResult {
         do {
-            let _ = try await SafeAPI.transaction(id: traceID)
-            return .failed(.description(R.string.localizable.pay_paid()))
+            let transactions = try await SafeAPI.transactions(ids: traceIDs)
+            return if transactions.isEmpty {
+                .passed([])
+            } else {
+                .failed(.description(R.string.localizable.pay_paid()))
+            }
         } catch MixinAPIResponseError.notFound {
             return .passed([])
         } catch {
@@ -166,8 +255,6 @@ struct KnownOpponentPrecondition: PaymentPrecondition {
 }
 
 struct NoPendingTransactionPrecondition: PaymentPrecondition {
-    
-    let token: TokenItem
     
     func check() async -> PaymentPreconditionCheckingResult {
         let count = RawTransactionDAO.shared.unspentRawTransactionCount(types: [.transfer, .withdrawal])

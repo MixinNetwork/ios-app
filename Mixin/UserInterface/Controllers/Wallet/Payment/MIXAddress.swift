@@ -11,7 +11,6 @@ enum MIXAddress {
     init?(string: String) {
         let header = "MIX"
         let headerData = header.data(using: .utf8)!
-        let version: UInt8 = 2
         
         guard string.hasPrefix(header) else {
             return nil
@@ -43,20 +42,25 @@ enum MIXAddress {
             return nil
         }
         
-        let payloadVersion: UInt8 = payload[0]
+        self.init(data: payload)
+    }
+    
+    init?(data payload: Data) {
+        let version: UInt8 = 2
+        let payloadVersion: UInt8 = payload[payload.startIndex]
         guard version == payloadVersion else {
             Logger.general.debug(category: "MIXAddress", message: "Unknown version")
             return nil
         }
         
-        let threshold: UInt8 = payload[1]
-        let membersCount: Int = Int(payload[2])
+        let threshold: UInt8 = payload[payload.startIndex.advanced(by: 1)]
+        let membersCount: Int = Int(payload[payload.startIndex.advanced(by: 2)])
         guard threshold != 0 && threshold <= membersCount && membersCount <= 64 else {
             Logger.general.debug(category: "MIXAddress", message: "Invalid threshold: \(threshold), total: \(membersCount)")
             return nil
         }
         
-        let membersData = payload[3...]
+        let membersData = payload[payload.startIndex.advanced(by: 3)...]
         switch membersData.count {
         case 16 * membersCount:
             let userIDs = (0..<membersCount).map { i in

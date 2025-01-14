@@ -46,7 +46,7 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.register(R.nib.paymentUserGroupCell)
         tableView.register(R.nib.web3MessageCell)
         tableView.register(R.nib.web3AmountChangeCell)
-        tableView.register(R.nib.swapAssetChangeCell)
+        tableView.register(R.nib.multipleAssetChangeCell)
         tableView.register(R.nib.addressReceiversCell)
         tableView.dataSource = self
         tableView.delegate = self
@@ -259,8 +259,12 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.tokenIconView.setIcon(token: token)
             return cell
         case let .swapAssetChange(sendToken, sendAmount, receiveToken, receiveAmount):
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.swap_asset_change, for: indexPath)!
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
             cell.reloadData(sendToken: sendToken, sendAmount: sendAmount, receiveToken: receiveToken, receiveAmount: receiveAmount)
+            return cell
+        case let .assetChanges(changes):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
+            cell.reloadData(changes: changes)
             return cell
         case let .safeMultisigAmount(token, tokenAmount, fiatMoneyAmount):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
@@ -315,6 +319,7 @@ extension AuthenticationPreviewViewController {
         case memo
         case tag
         case total
+        case totalAmount
         case account
         case sender
         case receiver
@@ -344,6 +349,8 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.tag()
             case .total:
                 R.string.localizable.total()
+            case .totalAmount:
+                R.string.localizable.total_amount()
             case .account:
                 R.string.localizable.account()
             case .sender:
@@ -379,6 +386,7 @@ extension AuthenticationPreviewViewController {
         case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
         case tokenAmount(token: TokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case swapAssetChange(sendToken: TokenItem, sendAmount: String, receiveToken: SwapToken, receiveAmount: String)
+        case assetChanges([(token: TokenItem, amount: String)])
         case safeMultisigAmount(token: TokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case addressReceivers(TokenItem, [SafeMultisigResponse.Safe.Recipient])
     }

@@ -272,6 +272,19 @@ extension SafeSnapshotDAO {
         }
     }
     
+    public func save(snapshots: [SafeSnapshot], db: GRDB.Database) throws {
+        try snapshots.save(db)
+        db.afterNextTransaction { _ in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: Self.snapshotDidSaveNotification,
+                    object: self,
+                    userInfo: [Self.snapshotsUserInfoKey: snapshots]
+                )
+            }
+        }
+    }
+    
     public func save(
         snapshots: [SafeSnapshot],
         alongsideTransaction change: ((GRDB.Database) throws -> Void)

@@ -631,7 +631,7 @@ class UrlWindow {
                 let payment = Payment(traceID: traceID, token: token, tokenAmount: resolvedAmount, fiatMoneyAmount: fiatMoneyAmount, memo: transfer.memo ?? "")
                 payment.checkPreconditions(withdrawTo: .temporary(address), fee: feeItem, on: homeContainer) { reason in
                     switch reason {
-                    case .userCancelled:
+                    case .userCancelled, .loggedOut:
                         hud.hide()
                     case .description(let message):
                         hud.set(style: .error, text: message)
@@ -1100,6 +1100,41 @@ extension UrlWindow {
                     UIApplication.homeNavigationController?.pushViewController(transfer, animated: true)
                 }
                 return
+            case let .invoice(invoice):
+                let assetIDs = Set(invoice.entries.map(\.assetID))
+                let tokenItems = TokenDAO.shared.tokenItems(with: assetIDs)
+                guard tokenItems.count == assetIDs.count else {
+                    DispatchQueue.main.async {
+                        // TODO: Better error description with which token is absent
+                        completion(R.string.localizable.insufficient_balance())
+                    }
+                    return
+                }
+                let tokens = tokenItems.reduce(into: [:]) { result, token in
+                    result[token.assetID] = token
+                }
+                invoice.checkPreconditions(
+                    transferTo: destination,
+                    tokens: tokens,
+                    on: homeContainer
+                ) { reason in
+                    switch reason {
+                    case .userCancelled, .loggedOut:
+                        completion(nil)
+                    case .description(let message):
+                        completion(message)
+                    }
+                } onSuccess: { operation, issues in
+                    completion(nil)
+                    let redirection = source.isExternal ? paymentURL.redirection : nil
+                    let preview = InvoicePreviewViewController(
+                        issues: issues,
+                        operation: operation,
+                        redirection: redirection
+                    )
+                    homeContainer.present(preview, animated: true)
+                }
+                return
             case let .inscription(hash):
                 guard let (output, inscriptionItem) = syncInscriptionOutput(inscriptionHash: hash, onFailure: { completion($0) }) else {
                     return
@@ -1201,7 +1236,7 @@ extension UrlWindow {
                 on: homeContainer
             ) { reason in
                 switch reason {
-                case .userCancelled:
+                case .userCancelled, .loggedOut:
                     completion(nil)
                 case .description(let message):
                     completion(message)

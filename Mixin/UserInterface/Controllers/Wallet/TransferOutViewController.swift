@@ -269,7 +269,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         let onPreconditonFailure = { (reason: PaymentPreconditionFailureReason) in
             self.continueButton.isBusy = false
             switch reason {
-            case .userCancelled:
+            case .userCancelled, .loggedOut:
                 self.adjustBottomConstraintWhenKeyboardFrameChanges = true
                 self.amountTextField.becomeFirstResponder()
             case .description(let message):

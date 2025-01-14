@@ -30,7 +30,7 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                 
                 do {
                     _ = try await SafeAPI.transaction(id: transaction.requestID)
-                    RawTransactionDAO.shared.signRawTransactions(with: requestIDs)
+                    RawTransactionDAO.shared.signRawTransactions(requestIDs: requestIDs)
                     Logger.general.info(category: "RecoverRawTransaction", message: "Recovered by finding")
                 } catch MixinAPIResponseError.notFound {
                     do {
@@ -39,7 +39,7 @@ final class RecoverRawTransactionJob: AsynchronousJob {
                             requests.append(TransactionRequest(id: feeTransaction.requestID, raw: feeTransaction.rawTransaction))
                         }
                         try await SafeAPI.postTransaction(requests: requests)
-                        RawTransactionDAO.shared.signRawTransactions(with: requestIDs)
+                        RawTransactionDAO.shared.signRawTransactions(requestIDs: requestIDs)
                         Logger.general.info(category: "RecoverRawTransaction", message: "Recovered by posting")
                     } catch {
                         Logger.general.error(category: "RecoverRawTransaction", message: "Error: \(error)")

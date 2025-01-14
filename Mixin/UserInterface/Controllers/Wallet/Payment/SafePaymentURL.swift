@@ -7,6 +7,7 @@ struct SafePaymentURL {
         case prefilled(assetID: String, amount: Decimal)
         case inscription(hash: String)
         case inscriptionCollection(hash: String)
+        case invoice(Invoice)
         case notDetermined(assetID: String?, amount: Decimal?)
     }
     
@@ -19,6 +20,7 @@ struct SafePaymentURL {
     let reference: String?
     let inscription: String?
     let inscriptionCollection: String?
+    let invoice: Invoice?
     
     var request: Request {
         if let inscriptionCollection {
@@ -27,6 +29,8 @@ struct SafePaymentURL {
             .inscription(hash: inscription)
         } else if let asset, let amount {
             .prefilled(assetID: asset, amount: amount)
+        } else if let invoice {
+            .invoice(invoice)
         } else {
             .notDetermined(assetID: asset, amount: amount)
         }
@@ -39,6 +43,24 @@ struct SafePaymentURL {
         }
         
         Logger.general.debug(category: "SafePayment", message: "URL: \(url.absoluteString)")
+        
+        do {
+            let invoice = try Invoice(string: pathComponents[2])
+            self.address = invoice.recipient
+            self.asset = nil
+            self.amount = nil
+            self.memo = ""
+            self.trace = ""
+            self.redirection = nil
+            self.reference = nil
+            self.inscription = nil
+            self.inscriptionCollection = nil
+            self.invoice = invoice
+            return
+        } catch {
+            Logger.general.debug(category: "SafePayment", message: "Not a invoice: \(error)")
+        }
+        
         let address: MIXAddress
         let addressString = pathComponents[2]
         if UUID.isValidLowercasedUUIDString(addressString) {
@@ -130,6 +152,7 @@ struct SafePaymentURL {
         self.reference = queries["reference"]
         self.inscription = inscription
         self.inscriptionCollection = queries["inscription_collection"]
+        self.invoice = nil
     }
     
 }

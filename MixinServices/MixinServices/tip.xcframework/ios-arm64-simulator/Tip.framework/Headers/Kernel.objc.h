@@ -50,9 +50,9 @@
 @property (nonatomic) NSString* _Nonnull amount;
 @end
 
-FOUNDATION_EXPORT NSString* _Nonnull KernelBuildTx(NSString* _Nullable asset, NSString* _Nullable amount, int32_t threshold, NSString* _Nullable receiverKeys, NSString* _Nullable receiverMask, NSData* _Nullable inputs, NSString* _Nullable changeKeys, NSString* _Nullable changeMask, NSString* _Nullable extra, NSString* _Nullable reference, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT KernelTx* _Nullable KernelBuildTx(NSString* _Nullable asset, NSString* _Nullable amount, int32_t threshold, NSString* _Nullable receiverKeys, NSString* _Nullable receiverMask, NSData* _Nullable inputs, NSString* _Nullable changeKeys, NSString* _Nullable changeMask, NSString* _Nullable extra, NSString* _Nullable references, NSError* _Nullable* _Nullable error);
 
-FOUNDATION_EXPORT NSString* _Nonnull KernelBuildTxToKernelAddress(NSString* _Nullable asset, NSString* _Nullable amount, NSString* _Nullable kenelAddress, NSData* _Nullable inputs, NSString* _Nullable changeKeys, NSString* _Nullable changeMask, NSString* _Nullable extra, NSString* _Nullable reference, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT KernelTx* _Nullable KernelBuildTxToKernelAddress(NSString* _Nullable asset, NSString* _Nullable amount, NSString* _Nullable kenelAddress, NSData* _Nullable inputs, NSString* _Nullable changeKeys, NSString* _Nullable changeMask, NSString* _Nullable extra, NSString* _Nullable reference, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT KernelTx* _Nullable KernelBuildWithdrawalTx(NSString* _Nullable asset, NSString* _Nullable amount, NSString* _Nullable address, NSString* _Nullable tag, NSString* _Nullable feeAmount, NSString* _Nullable feeKeys, NSString* _Nullable feeMask, NSData* _Nullable inputs, NSString* _Nullable changeKeys, NSString* _Nullable changeMask, NSString* _Nullable extra, NSError* _Nullable* _Nullable error);
 

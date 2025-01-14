@@ -65,15 +65,29 @@ public final class MarketDAO: UserDatabaseDAO {
                     one.decimalPrice > another.decimalPrice
                 }
             }
-        case let .change(ordering):
-            switch ordering {
-            case .ascending:
-                results.sort { one, another in
-                    one.decimalPriceChangePercentage7D < another.decimalPriceChangePercentage7D
+        case let .change(period, ordering):
+            switch period {
+            case .sevenDays:
+                switch ordering {
+                case .ascending:
+                    results.sort { one, another in
+                        one.decimalPriceChangePercentage7D < another.decimalPriceChangePercentage7D
+                    }
+                case .descending:
+                    results.sort { one, another in
+                        one.decimalPriceChangePercentage7D > another.decimalPriceChangePercentage7D
+                    }
                 }
-            case .descending:
-                results.sort { one, another in
-                    one.decimalPriceChangePercentage7D > another.decimalPriceChangePercentage7D
+            case .twentyFourHours:
+                switch ordering {
+                case .ascending:
+                    results.sort { one, another in
+                        one.decimalPriceChangePercentage24H < another.decimalPriceChangePercentage24H
+                    }
+                case .descending:
+                    results.sort { one, another in
+                        one.decimalPriceChangePercentage24H > another.decimalPriceChangePercentage24H
+                    }
                 }
             }
         }

@@ -905,6 +905,11 @@ public final class UserDatabase: Database {
             try db.execute(sql: sql)
         }
         
+        migrator.registerMigration("market_24h") { db in
+            let sql = "ALTER TABLE `markets` ADD COLUMN `sparkline_in_24h` TEXT NOT NULL DEFAULT ''"
+            try db.execute(sql: sql)
+        }
+        
         return migrator
     }
     

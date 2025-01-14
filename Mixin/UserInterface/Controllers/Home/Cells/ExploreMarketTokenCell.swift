@@ -61,12 +61,15 @@ final class ExploreMarketTokenCell: UICollectionViewCell {
         marketCapLabel.text = market.localizedMarketCap
         priceLabel.text = market.localizedPrice
         switch changePeriod {
-        case .oneHour:
-            chartImageView.sd_setImage(with: nil)
-            changeLabel.text = nil
         case .twentyFourHours:
-            chartImageView.sd_setImage(with: nil)
-            changeLabel.text = nil
+            chartImageView.sd_setImage(with: market.sparklineIn24HURL,
+                                       placeholderImage: nil,
+                                       options: .refreshCached,
+                                       context: templateImageTransformingContext)
+            changeLabel.text = market.localizedPriceChangePercentage24H
+            let color: MarketColor = .byValue(market.decimalPriceChangePercentage24H)
+            changeLabel.marketColor = color
+            chartImageView.marketColor = color
         case .sevenDays:
             chartImageView.sd_setImage(with: market.sparklineIn7DURL,
                                        placeholderImage: nil,
@@ -76,9 +79,6 @@ final class ExploreMarketTokenCell: UICollectionViewCell {
             let color: MarketColor = .byValue(market.decimalPriceChangePercentage7D)
             changeLabel.marketColor = color
             chartImageView.marketColor = color
-        case .thirtyDays:
-            chartImageView.sd_setImage(with: nil)
-            changeLabel.text = nil
         }
         isFavorited = market.isFavorite
     }

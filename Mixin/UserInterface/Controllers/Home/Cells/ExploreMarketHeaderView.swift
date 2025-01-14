@@ -4,8 +4,19 @@ import MixinServices
 final class ExploreMarketHeaderView: UICollectionReusableView {
 
     protocol Delegate: AnyObject {
-        func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToCategory category: Market.Category, limit: Market.Limit?)
-        func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToOrdering order: Market.OrderingExpression)
+        
+        func exploreMarketHeaderView(
+            _ view: ExploreMarketHeaderView,
+            didSwitchToCategory category: Market.Category,
+            limit: Market.Limit?
+        )
+        
+        func exploreMarketHeaderView(
+            _ view: ExploreMarketHeaderView,
+            didSwitchToOrdering order: Market.OrderingExpression,
+            changePeriod period: Market.ChangePeriod
+        )
+        
     }
     
     @IBOutlet weak var segmentedControl: OutlineSegmentedControl!
@@ -37,9 +48,14 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
     
     var changePeriod: Market.ChangePeriod = .sevenDays {
         didSet {
-            let title = changePeriod.displayTitle
-            changePeriodButton.setTitle(title, for: .normal)
-            periodButton.setTitle(title, for: .normal)
+            UIView.performWithoutAnimation {
+                let title = changePeriod.displayTitle
+                changePeriodButton.setTitle(title, for: .normal)
+                changePeriodButton.menu = UIMenu(children: changePeriodActions(selectedPeriod: changePeriod))
+                changePeriodButton.layoutIfNeeded()
+                periodButton.setTitle(title, for: .normal)
+                periodButton.layoutIfNeeded()
+            }
         }
     }
     
@@ -90,6 +106,7 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         changePeriodButton.imageView?.contentMode = .center
         changePeriodButton.setTitle(changePeriod.displayTitle, for: .normal)
         changePeriodButton.semanticContentAttribute = .forceRightToLeft
+        changePeriodButton.menu = UIMenu(children: changePeriodActions(selectedPeriod: changePeriod))
         changePeriodButton.showsMenuAsPrimaryAction = true
         changePeriodButton.layer.masksToBounds = true
         marketCapButton.semanticContentAttribute = .forceRightToLeft
@@ -141,7 +158,7 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         default:
                 .marketCap(.descending)
         }
-        delegate?.exploreMarketHeaderView(self, didSwitchToOrdering: order)
+        delegate?.exploreMarketHeaderView(self, didSwitchToOrdering: order, changePeriod: changePeriod)
     }
     
     @IBAction func sortByPrice(_ sender: Any) {
@@ -151,22 +168,33 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         default:
                 .price(.descending)
         }
-        delegate?.exploreMarketHeaderView(self, didSwitchToOrdering: order)
+        delegate?.exploreMarketHeaderView(self, didSwitchToOrdering: order, changePeriod: changePeriod)
     }
     
     @IBAction func sortByChange(_ sender: Any) {
         order = switch order {
-        case .change(let ordering):
-                .change(ordering.toggled())
+        case let .change(period, ordering):
+                .change(period: period, ordering: ordering.toggled())
         default:
-                .change(.descending)
+                .change(period: changePeriod, ordering: .descending)
         }
-        delegate?.exploreMarketHeaderView(self, didSwitchToOrdering: order)
+        delegate?.exploreMarketHeaderView(self, didSwitchToOrdering: order, changePeriod: changePeriod)
     }
     
     private func setLimit(_ limit: Market.Limit) {
         self.limit = limit
         delegate?.exploreMarketHeaderView(self, didSwitchToCategory: category, limit: limit)
+    }
+    
+    private func setChangePeriod(_ period: Market.ChangePeriod) {
+        self.changePeriod = period
+        switch order {
+        case .marketCap, .price:
+            break
+        case let .change(_, ordering):
+            self.order = .change(period: period, ordering: ordering)
+        }
+        delegate?.exploreMarketHeaderView(self, didSwitchToOrdering: order, changePeriod: period)
     }
     
     private func iconButton(ordering: Market.OrderingExpression) -> UIButton {
@@ -186,6 +214,16 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
                 title: limit.displayTitle,
                 state: limit == selectedLimit ? .on : .off,
                 handler: { [weak self] _ in self?.setLimit(limit) }
+            )
+        }
+    }
+    
+    private func changePeriodActions(selectedPeriod: Market.ChangePeriod) -> [UIAction] {
+        Market.ChangePeriod.allCases.map { period in
+            UIAction(
+                title: period.displayTitle,
+                state: period == selectedPeriod ? .on : .off,
+                handler: { [weak self] _ in self?.setChangePeriod(period) }
             )
         }
     }

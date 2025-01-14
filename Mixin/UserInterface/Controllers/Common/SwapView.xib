@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -176,10 +176,10 @@
                                             <color key="backgroundColor" name="background"/>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="SaF-d5-fEL" secondAttribute="trailing" constant="16" id="53S-Cv-D4r"/>
+                                                <constraint firstItem="hLY-qN-fqk" firstAttribute="leading" secondItem="dwa-uE-gGI" secondAttribute="trailing" constant="8" id="B3F-QU-bAP"/>
                                                 <constraint firstItem="SaF-d5-fEL" firstAttribute="top" secondItem="ELq-oS-OR4" secondAttribute="top" constant="16" id="GFr-Ny-xO1"/>
                                                 <constraint firstItem="hLY-qN-fqk" firstAttribute="trailing" secondItem="YFf-g9-oyK" secondAttribute="trailing" id="QrL-e6-lr1"/>
                                                 <constraint firstItem="SaF-d5-fEL" firstAttribute="leading" secondItem="ELq-oS-OR4" secondAttribute="leading" constant="16" id="fpo-xL-1la"/>
-                                                <constraint firstItem="hLY-qN-fqk" firstAttribute="leading" secondItem="KJu-4o-NPT" secondAttribute="leading" id="hVm-Sb-afu"/>
                                                 <constraint firstAttribute="bottom" secondItem="SaF-d5-fEL" secondAttribute="bottom" constant="6" id="kKd-vK-q24"/>
                                                 <constraint firstItem="hLY-qN-fqk" firstAttribute="centerY" secondItem="KJu-4o-NPT" secondAttribute="centerY" id="xEC-6d-M30"/>
                                             </constraints>
@@ -284,10 +284,10 @@
                                             </subviews>
                                             <color key="backgroundColor" name="background"/>
                                             <constraints>
-                                                <constraint firstItem="PUh-Vv-IqQ" firstAttribute="leading" secondItem="gVA-hK-9T3" secondAttribute="leading" id="8sI-qp-fNr"/>
                                                 <constraint firstItem="wkq-xa-gEV" firstAttribute="top" secondItem="91r-ww-8y0" secondAttribute="top" constant="16" id="Ovj-cN-SZx"/>
                                                 <constraint firstItem="wkq-xa-gEV" firstAttribute="leading" secondItem="91r-ww-8y0" secondAttribute="leading" constant="16" id="PFY-t3-c9C"/>
                                                 <constraint firstItem="PUh-Vv-IqQ" firstAttribute="trailing" secondItem="bJp-eU-g0l" secondAttribute="trailing" id="SoV-xm-7RA"/>
+                                                <constraint firstItem="PUh-Vv-IqQ" firstAttribute="leading" secondItem="ugc-43-XHy" secondAttribute="trailing" constant="8" id="WKp-VT-JCc"/>
                                                 <constraint firstAttribute="bottom" secondItem="wkq-xa-gEV" secondAttribute="bottom" constant="16" id="XMV-cH-FO2"/>
                                                 <constraint firstAttribute="trailing" secondItem="wkq-xa-gEV" secondAttribute="trailing" constant="16" id="XXK-DZ-usn"/>
                                                 <constraint firstItem="PUh-Vv-IqQ" firstAttribute="centerY" secondItem="gVA-hK-9T3" secondAttribute="centerY" id="q3y-Dn-Tk9"/>
@@ -481,7 +481,7 @@
             <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

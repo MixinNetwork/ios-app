@@ -181,6 +181,7 @@
 "balance" = "Balance";
 "balance_abbreviation" = "Bal %@";
 "balance_max" = "MAX";
+"batch_transfer_confirmation" = "Batch Transfer Confirmation";
 "before_you_proceed" = "Before you proceed";
 "before_you_proceed_desc" = "Read the following, then save the phrase securely.";
 "before_you_proceed_instruction_1" = "The 13 or 25 mnemonic words generated when creating an account are for Mixin Network-related products only.";
@@ -313,7 +314,6 @@
 "confirm_editing_address" = "Confirm Editing Address";
 "confirm_signing_multisig" = "Confirm Signing Multisig";
 "confirm_transfer" = "Confirm Transfer";
-"confirm_transfer_in_batches" = "Confirm Transfer in Batches";
 "confirm_withdrawal" = "Confirm Withdrawal";
 "connect" = "Connect";
 "connect_to_tip_network_failed" = "No se puede conectar a la red TIP. Comprueba tu conexión e inténtalo de nuevo.";

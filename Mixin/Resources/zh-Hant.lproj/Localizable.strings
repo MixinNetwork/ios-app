@@ -181,6 +181,7 @@
 "balance" = "餘額";
 "balance_abbreviation" = "餘額 %@";
 "balance_max" = "最大";
+"batch_transfer_confirmation" = "批次轉賬確認";
 "before_you_proceed" = "請在繼續之前";
 "before_you_proceed_desc" = "閱讀以下內容，然後安全儲存助記詞。";
 "before_you_proceed_instruction_1" = "建立帳戶生成的 13 個或 25 個助記詞僅用於 Mixin Network 相關產品。";
@@ -313,7 +314,6 @@
 "confirm_editing_address" = "修改地址確認";
 "confirm_signing_multisig" = "多簽交易確認";
 "confirm_transfer" = "轉賬確認";
-"confirm_transfer_in_batches" = "批次轉賬確認";
 "confirm_withdrawal" = "提現確認";
 "connect" = "連線";
 "connect_to_tip_network_failed" = "連線 TIP 網路失敗，請嘗試切換網路後重試";

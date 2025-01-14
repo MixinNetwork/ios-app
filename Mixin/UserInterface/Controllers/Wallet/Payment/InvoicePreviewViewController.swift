@@ -26,7 +26,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
         super.viewDidLoad()
         
         tableHeaderView.setIcon(tokens: operation.transactions.map(\.token))
-        tableHeaderView.titleLabel.text = R.string.localizable.confirm_transfer_in_batches()
+        tableHeaderView.titleLabel.text = R.string.localizable.batch_transfer_confirmation()
         tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinMessenger)
         
         let totalUSDAmount = operation.transactions.reduce(0) { result, item in

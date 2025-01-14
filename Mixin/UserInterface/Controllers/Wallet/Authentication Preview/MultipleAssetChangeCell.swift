@@ -39,15 +39,16 @@ final class MultipleAssetChangeCell: UITableViewCell {
         receiveAmount: String
     ) {
         titleLabel.text = R.string.localizable.asset_changes_estimate().uppercased()
-        loadRowViews(count: 2)
         
-        let receivingView = rowViews[0]
+        loadRowViews(count: 2)
+        let sendingView = rowViews[0]
+        let receivingView = rowViews[1]
+        
         receivingView.iconView.setIcon(token: receiveToken)
         receivingView.amountLabel.text = receiveAmount
         receivingView.networkLabel.text = receiveToken.chain.name
         receivingView.amountLabel.textColor = R.color.market_green()
-
-        let sendingView = rowViews[1]
+        
         sendingView.iconView.setIcon(token: sendToken)
         sendingView.amountLabel.text = sendAmount
         sendingView.networkLabel.text = sendToken.chain?.name

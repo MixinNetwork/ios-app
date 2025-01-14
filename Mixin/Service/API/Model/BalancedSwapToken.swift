@@ -27,6 +27,29 @@ final class BalancedSwapToken: SwapToken {
         )
     }
     
+    init?(tokenItem i: TokenItem) {
+        guard let chain = i.chain else {
+            return nil
+        }
+        self.decimalBalance = i.decimalBalance
+        self.decimalUSDPrice = i.decimalUSDPrice
+        super.init(
+            address: "",
+            assetID: i.assetID,
+            decimals: 0,
+            name: i.name,
+            symbol: i.symbol,
+            icon: i.iconURL,
+            chain: Chain(
+                chainID: chain.chainId,
+                name: chain.name,
+                decimals: 0,
+                symbol: chain.symbol,
+                icon: chain.iconUrl
+            )
+        )
+    }
+    
 }
 
 extension BalancedSwapToken {

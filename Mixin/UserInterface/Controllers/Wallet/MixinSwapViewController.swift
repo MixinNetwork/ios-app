@@ -370,14 +370,22 @@ extension MixinSwapViewController {
                     token.assetID != arbitraryReceiveAssetID
                 }
             }
-            let receiveToken: BalancedSwapToken? = if let id = arbitraryReceiveAssetID ?? lastTokenIDs?.receive {
+            let receiveToken: BalancedSwapToken?
+            if let id = arbitraryReceiveAssetID ?? lastTokenIDs?.receive {
                 if id == sendToken?.assetID {
-                    nil
+                    receiveToken = nil
+                } else if let token = tokens[id] {
+                    receiveToken = token
+                } else if let item = TokenDAO.shared.tokenItem(assetID: id), let token = BalancedSwapToken(tokenItem: item) {
+                    receiveToken = token
+                } else if case let .success(token) = SafeAPI.assets(id: id), let chain = ChainDAO.shared.chain(chainId: token.chainID) {
+                    let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                    receiveToken = BalancedSwapToken(tokenItem: item)
                 } else {
-                    tokens[id]
+                    receiveToken = nil
                 }
             } else {
-                tokens.values.first { token in
+                receiveToken = tokens.values.first { token in
                     token.assetID != sendToken?.assetID
                 }
             }

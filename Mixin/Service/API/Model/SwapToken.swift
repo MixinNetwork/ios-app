@@ -108,6 +108,14 @@ extension SwapToken {
             self.icon = try container.decode(String.self, forKey: .icon)
         }
         
+        init(chainID: String?, name: String, decimals: Int, symbol: String, icon: String) {
+            self.chainID = chainID
+            self.name = name
+            self.decimals = decimals
+            self.symbol = symbol
+            self.icon = icon
+        }
+        
     }
     
     final class Decodable: SwapToken, Swift.Decodable {

@@ -3,6 +3,7 @@ import MixinServices
 
 enum PaymentPreconditionFailureReason {
     case userCancelled
+    case loggedOut
     case description(String)
 }
 
@@ -107,7 +108,8 @@ extension PaymentPreconditionChecker {
                     continue
                 }
             }
-        } while true
+        } while LoginManager.shared.isLoggedIn
+        return .failure(.loggedOut)
     }
     
 }

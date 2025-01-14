@@ -159,7 +159,7 @@ extension PaymentCollectibleSelectorViewController: UITableViewDelegate {
                 on: presentingViewController
             ) { reason in
                 switch reason {
-                case .userCancelled:
+                case .userCancelled, .loggedOut:
                     break
                 case .description(let message):
                     showAutoHiddenHud(style: .error, text: message)

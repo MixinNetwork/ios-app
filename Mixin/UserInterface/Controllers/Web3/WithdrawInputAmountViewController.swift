@@ -56,7 +56,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         payment.checkPreconditions(withdrawTo: destination, fee: fee, on: self) { reason in
             self.reviewButton.isBusy = false
             switch reason {
-            case .userCancelled:
+            case .userCancelled, .loggedOut:
                 break
             case .description(let message):
                 showAutoHiddenHud(style: .error, text: message)

@@ -208,7 +208,7 @@ final class InscriptionViewController: UIViewController {
             on: navigationController
         ) { reason in
             switch reason {
-            case .userCancelled:
+            case .userCancelled, .loggedOut:
                 break
             case .description(let message):
                 showAutoHiddenHud(style: .error, text: message)
@@ -506,7 +506,7 @@ extension InscriptionViewController: InscriptionActionCellDelegate {
             ) { reason in
                 cell.sendButton.isBusy = false
                 switch reason {
-                case .userCancelled:
+                case .userCancelled, .loggedOut:
                     break
                 case .description(let message):
                     showAutoHiddenHud(style: .error, text: message)

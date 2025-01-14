@@ -632,7 +632,7 @@ class UrlWindow {
                 let payment = Payment(traceID: traceID, token: token, tokenAmount: resolvedAmount, fiatMoneyAmount: fiatMoneyAmount, memo: transfer.memo ?? "")
                 payment.checkPreconditions(withdrawTo: .temporary(address), fee: feeItem, on: homeContainer) { reason in
                     switch reason {
-                    case .userCancelled:
+                    case .userCancelled, .loggedOut:
                         hud.hide()
                     case .description(let message):
                         hud.set(style: .error, text: message)
@@ -1120,7 +1120,7 @@ extension UrlWindow {
                     on: homeContainer
                 ) { reason in
                     switch reason {
-                    case .userCancelled:
+                    case .userCancelled, .loggedOut:
                         completion(nil)
                     case .description(let message):
                         completion(message)
@@ -1237,7 +1237,7 @@ extension UrlWindow {
                 on: homeContainer
             ) { reason in
                 switch reason {
-                case .userCancelled:
+                case .userCancelled, .loggedOut:
                     completion(nil)
                 case .description(let message):
                     completion(message)

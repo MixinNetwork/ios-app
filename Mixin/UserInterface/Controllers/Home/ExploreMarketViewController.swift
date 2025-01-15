@@ -3,16 +3,29 @@ import MixinServices
 
 final class ExploreMarketViewController: UIViewController {
     
+    private let queue = OperationQueue()
+    
     private var collectionView: UICollectionView!
+    
     private var marketsRequester: MarketPeriodicRequester!
     private var favoritesRequester: MarketPeriodicRequester!
+    
     private var globalMarketViewModels: [GlobalMarketViewModel] = []
+    
+    private var category: Market.Category = AppGroupUserDefaults.User.marketCategory {
+        didSet {
+            AppGroupUserDefaults.User.marketCategory = category
+        }
+    }
+    private var order: Market.OrderingExpression = .marketCap(.descending)
+    private var limit: Market.Limit? = .top100
+    private var changePeriod: Market.ChangePeriod = AppGroupUserDefaults.User.marketChangePeriod {
+        didSet {
+            AppGroupUserDefaults.User.marketChangePeriod = changePeriod
+        }
+    }
     private var markets: [FavorableMarket] = []
     private var favoriteMarkets: [FavorableMarket]?
-    private var category = AppGroupUserDefaults.User.marketCategory
-    private var order: Market.OrderingExpression = .marketCap(.descending)
-    private var changePeriod: Market.ChangePeriod = .sevenDays
-    private var limit: Market.Limit? = .top100
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -82,13 +95,13 @@ final class ExploreMarketViewController: UIViewController {
         collectionView.delegate = self
         
         reloadGlobalMarket(overwrites: false)
-        reloadMarketsFromLocal()
+        reloadMarketsWithCurrentSettings()
         
         NotificationCenter.default.addObserver(self, selector: #selector(reloadAll(_:)), name: Currency.currentCurrencyDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(propertiesDatabaseDidUpdate(_:)), name: PropertiesDAO.propertyDidUpdateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(favoriteChanged(_:)), name: MarketDAO.favoriteNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(favoriteChanged(_:)), name: MarketDAO.unfavoriteNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadMarketsFromLocal), name: MarketDAO.didUpdateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadMarketsWithCurrentSettings), name: MarketDAO.didUpdateNotification, object: nil)
         
         marketsRequester = MarketPeriodicRequester(category: .all)
         favoritesRequester = MarketPeriodicRequester(category: .favorite)
@@ -109,7 +122,7 @@ final class ExploreMarketViewController: UIViewController {
     
     @objc private func reloadAll(_ notification: Notification) {
         reloadGlobalMarket(overwrites: true)
-        reloadMarketsFromLocal()
+        reloadMarketsWithCurrentSettings()
     }
     
     @objc private func propertiesDatabaseDidUpdate(_ notification: Notification) {
@@ -126,36 +139,11 @@ final class ExploreMarketViewController: UIViewController {
         guard category == .favorite || markets.contains(where: { $0.coinID == coinID }) else {
             return
         }
-        reloadMarketsFromLocal()
+        reloadMarketsWithCurrentSettings()
     }
     
-    @objc private func reloadMarketsFromLocal() {
-        guard Thread.isMainThread else {
-            DispatchQueue.main.async { [weak self] in
-                self?.reloadMarketsFromLocal()
-            }
-            return
-        }
-        DispatchQueue.global().async { [weak self, category, order, limit] in
-            let markets = MarketDAO.shared.markets(category: category, order: order, limit: limit)
-            DispatchQueue.main.async {
-                guard
-                    let self,
-                    self.category == category,
-                    self.order == order,
-                    self.limit == limit
-                else {
-                    return
-                }
-                switch category {
-                case .all:
-                    self.markets = markets
-                case .favorite:
-                    self.favoriteMarkets = markets
-                }
-                self.collectionView.reloadData()
-            }
-        }
+    @objc private func reloadMarketsWithCurrentSettings() {
+        reloadMarkets(category: category, order: order, limit: limit)
     }
     
     private func reloadGlobalMarket(overwrites: Bool) {
@@ -168,8 +156,43 @@ final class ExploreMarketViewController: UIViewController {
                     return
                 }
                 self.globalMarketViewModels = GlobalMarketViewModel.viewModels(market: market)
-                self.collectionView.reloadData()
+                self.reloadCollectionView(sections: [.global])
             }
+        }
+    }
+    
+    private func reloadMarkets(
+        category: Market.Category,
+        order: Market.OrderingExpression,
+        limit: Market.Limit?
+    ) {
+        queue.cancelAllOperations()
+        let op = BlockOperation()
+        op.addExecutionBlock { [unowned op, weak self] in
+            let markets = MarketDAO.shared.markets(category: category, order: order, limit: limit)
+            DispatchQueue.main.sync {
+                guard !op.isCancelled, let self else {
+                    return
+                }
+                self.category = category
+                self.order = order
+                self.limit = limit
+                switch category {
+                case .all:
+                    self.markets = markets
+                case .favorite:
+                    self.favoriteMarkets = markets
+                }
+                self.reloadCollectionView(sections: [.coins, .noFavoriteIndicator])
+            }
+        }
+        queue.addOperation(op)
+    }
+    
+    private func reloadCollectionView(sections: [Section]) {
+        let sections = IndexSet(sections.map(\.rawValue))
+        UIView.performWithoutAnimation {
+            collectionView.reloadSections(sections)
         }
     }
     
@@ -178,16 +201,7 @@ final class ExploreMarketViewController: UIViewController {
 extension ExploreMarketViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        switch category {
-        case .all:
-            if markets.isEmpty {
-                Section.allCases.count - 2
-            } else {
-                Section.allCases.count - 1
-            }
-        case .favorite:
-            Section.allCases.count
-        }
+        Section.allCases.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -202,7 +216,7 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
                 favoriteMarkets?.count ?? 0
             }
         case .noFavoriteIndicator:
-            if let favoriteMarkets, favoriteMarkets.isEmpty {
+            if category == .favorite, let favoriteMarkets, favoriteMarkets.isEmpty {
                 1 // Empty indicator
             } else {
                 0
@@ -247,6 +261,7 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
         view.limit = limit
         view.category = category
         view.order = order
+        view.changePeriod = changePeriod
         view.delegate = self
         return view
     }
@@ -283,14 +298,20 @@ extension ExploreMarketViewController: ExploreMarketHeaderView.Delegate {
         didSwitchToCategory category: Market.Category,
         limit: Market.Limit?
     ) {
-        self.category = category
-        self.limit = limit
-        reloadMarketsFromLocal()
+        reloadMarkets(category: category, order: order, limit: limit)
     }
     
-    func exploreMarketHeaderView(_ view: ExploreMarketHeaderView, didSwitchToOrdering order: Market.OrderingExpression) {
-        self.order = order
-        reloadMarketsFromLocal()
+    func exploreMarketHeaderView(
+        _ view: ExploreMarketHeaderView,
+        didSwitchToOrdering order: Market.OrderingExpression,
+        changePeriod period: Market.ChangePeriod
+    ) {
+        self.changePeriod = period
+        if self.order != order {
+            reloadMarkets(category: category, order: order, limit: limit)
+        } else {
+            reloadCollectionView(sections: [.coins, .noFavoriteIndicator])
+        }
     }
     
 }

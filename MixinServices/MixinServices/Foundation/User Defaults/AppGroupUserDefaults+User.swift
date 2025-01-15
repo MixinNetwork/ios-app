@@ -70,6 +70,7 @@ extension AppGroupUserDefaults {
             case collectibleContent = "collectible_content"
             case collectibleOrdering = "collectible_order"
             case marketCategory = "market_category"
+            case marketChangePeriod = "market_change_period"
             case marketColorAppearance = "color_appearance"
         }
         
@@ -276,6 +277,9 @@ extension AppGroupUserDefaults {
         
         @RawRepresentableDefault(namespace: .user, key: Key.marketCategory, defaultValue: .all)
         public static var marketCategory: Market.Category
+        
+        @RawRepresentableDefault(namespace: .user, key: Key.marketChangePeriod, defaultValue: .sevenDays)
+        public static var marketChangePeriod: Market.ChangePeriod
         
         @RawRepresentableDefault(namespace: .user, key: Key.marketColorAppearance, defaultValue: .greenUpRedDown)
         public static var marketColorAppearance: MarketColorAppearance {

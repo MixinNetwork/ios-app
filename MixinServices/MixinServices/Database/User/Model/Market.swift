@@ -32,6 +32,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
         case atlDate = "atl_date"
         case assetIDs = "asset_ids"
         case sparklineIn7D = "sparkline_in_7d"
+        case sparklineIn24H = "sparkline_in_24h"
         case updatedAt = "updated_at"
     }
     
@@ -63,6 +64,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     public let atlDate: String
     public let assetIDs: [String]?
     public let sparklineIn7D: String
+    public let sparklineIn24H: String
     public let updatedAt: String
     
     public private(set) lazy var localizedMarketCap = NamedLargeNumberFormatter.string(
@@ -93,9 +95,14 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
     )
     
     public private(set) lazy var decimalPrice = Decimal(string: currentPrice, locale: .enUSPOSIX) ?? 0
+    
     public private(set) lazy var decimalPriceChangePercentage7D = Decimal(string: priceChangePercentage7D, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var localizedPriceChangePercentage7D = NumberFormatter.percentage.string(decimal: decimalPriceChangePercentage7D / 100)
     public private(set) lazy var sparklineIn7DURL = URL(string: sparklineIn7D)
+    
+    public private(set) lazy var decimalPriceChangePercentage24H = Decimal(string: priceChangePercentage24H, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var localizedPriceChangePercentage24H = NumberFormatter.percentage.string(decimal: decimalPriceChangePercentage24H / 100)
+    public private(set) lazy var sparklineIn24HURL = URL(string: sparklineIn24H)
     
     init(
         coinID: String, name: String, symbol: String, iconURL: String, currentPrice: String,
@@ -106,7 +113,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
         marketCapChangePercentage24H: String, circulatingSupply: String, 
         totalSupply: String, maxSupply: String, ath: String, athChangePercentage: String,
         athDate: String, atl: String, atlChangePercentage: String, atlDate: String,
-        assetIDs: [String]?, sparklineIn7D: String, updatedAt: String
+        assetIDs: [String]?, sparklineIn7D: String, sparklineIn24H: String, updatedAt: String
     ) {
         self.coinID = coinID
         self.name = name
@@ -136,6 +143,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
         self.atlDate = atlDate
         self.assetIDs = assetIDs
         self.sparklineIn7D = sparklineIn7D
+        self.sparklineIn24H = sparklineIn24H
         self.updatedAt = updatedAt
     }
     
@@ -169,6 +177,7 @@ public class Market: Codable, DatabaseColumnConvertible, MixinFetchableRecord {
             atlDate: atlDate,
             assetIDs: assetIDs,
             sparklineIn7D: sparklineIn7D,
+            sparklineIn24H: sparklineIn24H,
             updatedAt: updatedAt
         )
     }
@@ -187,7 +196,7 @@ extension Market {
         
         case marketCap(Ordering)
         case price(Ordering)
-        case change(Ordering)
+        case change(period: ChangePeriod, ordering: Ordering)
         
         public var ordering: Ordering {
             switch self {
@@ -195,7 +204,7 @@ extension Market {
                 ordering
             case let .price(ordering):
                 ordering
-            case let .change(ordering):
+            case let .change(_, ordering):
                 ordering
             }
         }
@@ -242,11 +251,9 @@ extension Market {
         case favorite
     }
     
-    public enum ChangePeriod: CaseIterable {
-        case oneHour
-        case twentyFourHours
-        case sevenDays
-        case thirtyDays
+    public enum ChangePeriod: Int, CaseIterable {
+        case twentyFourHours    = 0
+        case sevenDays          = 1
     }
     
 }

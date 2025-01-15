@@ -12,10 +12,18 @@ final class ExploreMarketViewController: UIViewController {
     
     private var globalMarketViewModels: [GlobalMarketViewModel] = []
     
-    private var category = AppGroupUserDefaults.User.marketCategory
+    private var category: Market.Category = AppGroupUserDefaults.User.marketCategory {
+        didSet {
+            AppGroupUserDefaults.User.marketCategory = category
+        }
+    }
     private var order: Market.OrderingExpression = .marketCap(.descending)
     private var limit: Market.Limit? = .top100
-    private var changePeriod: Market.ChangePeriod = .sevenDays
+    private var changePeriod: Market.ChangePeriod = AppGroupUserDefaults.User.marketChangePeriod {
+        didSet {
+            AppGroupUserDefaults.User.marketChangePeriod = changePeriod
+        }
+    }
     private var markets: [FavorableMarket] = []
     private var favoriteMarkets: [FavorableMarket]?
     

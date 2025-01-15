@@ -251,9 +251,9 @@ extension Market {
         case favorite
     }
     
-    public enum ChangePeriod: CaseIterable {
-        case twentyFourHours
-        case sevenDays
+    public enum ChangePeriod: Int, CaseIterable {
+        case twentyFourHours    = 0
+        case sevenDays          = 1
     }
     
 }

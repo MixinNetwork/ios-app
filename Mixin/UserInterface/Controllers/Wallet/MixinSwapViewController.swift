@@ -370,14 +370,22 @@ extension MixinSwapViewController {
                     token.assetID != arbitraryReceiveAssetID
                 }
             }
-            let receiveToken: BalancedSwapToken? = if let id = arbitraryReceiveAssetID ?? lastTokenIDs?.receive {
+            let receiveToken: BalancedSwapToken?
+            if let id = arbitraryReceiveAssetID ?? lastTokenIDs?.receive {
                 if id == sendToken?.assetID {
-                    nil
+                    receiveToken = nil
+                } else if let token = tokens[id] {
+                    receiveToken = token
+                } else if let item = TokenDAO.shared.tokenItem(assetID: id), let token = BalancedSwapToken(tokenItem: item) {
+                    receiveToken = token
+                } else if case let .success(token) = SafeAPI.assets(id: id), let chain = ChainDAO.shared.chain(chainId: token.chainID) {
+                    let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                    receiveToken = BalancedSwapToken(tokenItem: item)
                 } else {
-                    tokens[id]
+                    receiveToken = nil
                 }
             } else {
-                tokens.values.first { token in
+                receiveToken = tokens.values.first { token in
                     token.assetID != sendToken?.assetID
                 }
             }
@@ -421,27 +429,31 @@ extension MixinSwapViewController {
             sendNetworkLabel.text = "Placeholder"
             sendNetworkLabel.alpha = 0 // Keeps the height
             depositSendTokenButton.isHidden = true
+            sendBalanceLabel.text = "0"
+            sendBalanceLabel.alpha = 0
             sendLoadingIndicator.startAnimating()
         case .selectable:
             sendTokenStackView.alpha = 1
-            sendBalanceLabel.text = nil
             sendIconView.isHidden = true
             sendIconView.prepareForReuse()
             sendSymbolLabel.text = R.string.localizable.select_token()
             sendNetworkLabel.text = "Placeholder"
             sendNetworkLabel.alpha = 0 // Keeps the height
             depositSendTokenButton.isHidden = true
+            sendBalanceLabel.text = "0"
+            sendBalanceLabel.alpha = 0
             sendLoadingIndicator.stopAnimating()
         case .token(let token):
             sendTokenStackView.alpha = 1
             let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
-            sendBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
             sendIconView.isHidden = false
             sendIconView.setIcon(swappableToken: token)
             sendSymbolLabel.text = token.symbol
             sendNetworkLabel.text = token.chain.name
             sendNetworkLabel.alpha = 1
             depositSendTokenButton.isHidden = token.decimalBalance != 0
+            sendBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
+            sendBalanceLabel.alpha = 1
             sendLoadingIndicator.stopAnimating()
         }
     }
@@ -451,27 +463,31 @@ extension MixinSwapViewController {
         case .loading:
             receiveTokenStackView.alpha = 0
             receiveIconView.isHidden = false
-            receiveNetworkLabel.text = "Placeholder"
-            receiveNetworkLabel.alpha = 0 // Keeps the height
+            receiveNetworkLabel.text = "0"
+            receiveNetworkLabel.alpha = 0
+            receiveBalanceLabel.text = "0"
+            receiveBalanceLabel.alpha = 0
             receiveLoadingIndicator.startAnimating()
         case .selectable:
             receiveTokenStackView.alpha = 1
-            receiveBalanceLabel.text = nil
             receiveIconView.isHidden = true
             receiveIconView.prepareForReuse()
             receiveSymbolLabel.text = R.string.localizable.select_token()
-            receiveNetworkLabel.text = "Placeholder"
-            receiveNetworkLabel.alpha = 0 // Keeps the height
+            receiveNetworkLabel.text = "0"
+            receiveNetworkLabel.alpha = 0
+            receiveBalanceLabel.text = "0"
+            receiveBalanceLabel.alpha = 0
             receiveLoadingIndicator.stopAnimating()
         case .token(let token):
             receiveTokenStackView.alpha = 1
             let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
-            receiveBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
             receiveIconView.isHidden = false
             receiveIconView.setIcon(swappableToken: token)
             receiveSymbolLabel.text = token.symbol
             receiveNetworkLabel.text = token.chain.name
             receiveNetworkLabel.alpha = 1
+            receiveBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
+            receiveBalanceLabel.alpha = 1
             receiveLoadingIndicator.stopAnimating()
         }
     }

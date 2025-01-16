@@ -29,7 +29,7 @@
                 <outlet property="reviewButtonWrapperBottomConstrait" destination="LBO-VR-I8J" id="nDY-GP-7ga"/>
                 <outlet property="scrollView" destination="OqQ-fg-dGu" id="74H-oo-0zM"/>
                 <outlet property="sendAmountTextField" destination="dwa-uE-gGI" id="gpX-7x-5JO"/>
-                <outlet property="sendBalanceLabel" destination="SQP-gu-ZT7" id="8fR-nH-fjE"/>
+                <outlet property="sendBalanceButton" destination="7sU-5e-26S" id="gIV-UA-ffD"/>
                 <outlet property="sendFooterStackView" destination="2KG-SI-NMH" id="SI0-5m-YRy"/>
                 <outlet property="sendIconView" destination="KJu-4o-NPT" id="MVd-Xp-i52"/>
                 <outlet property="sendLoadingIndicator" destination="v2y-1y-SlM" id="iV0-P1-RfV"/>
@@ -132,11 +132,11 @@
                                                             <rect key="frame" x="0.0" y="87" width="321" height="35"/>
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="15" translatesAutoresizingMaskIntoConstraints="NO" id="z5g-gL-cee">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="311" height="35"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="309" height="35"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 </view>
                                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wJV-id-nBX" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
-                                                                    <rect key="frame" x="311" y="0.0" width="0.0" height="35"/>
+                                                                    <rect key="frame" x="309" y="0.0" width="0.0" height="35"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                                     <color key="tintColor" name="theme"/>
                                                                     <inset key="contentEdgeInsets" minX="12" minY="10" maxX="12" maxY="10"/>
@@ -152,12 +152,18 @@
                                                                         <action selector="depositSendToken:" destination="-1" eventType="touchUpInside" id="KpN-wH-rs4"/>
                                                                     </connections>
                                                                 </button>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" placeholderIntrinsicWidth="10" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SQP-gu-ZT7" userLabel="Send Balance Label">
-                                                                    <rect key="frame" x="311" y="0.0" width="10" height="35"/>
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7sU-5e-26S" userLabel="Send Balance Button">
+                                                                    <rect key="frame" x="309" y="0.0" width="12" height="35"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                                    <color key="textColor" name="text_quaternary"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
+                                                                    <inset key="contentEdgeInsets" minX="12" minY="10" maxX="0.0" maxY="10"/>
+                                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                                    <state key="normal">
+                                                                        <color key="titleColor" name="text_quaternary"/>
+                                                                    </state>
+                                                                    <connections>
+                                                                        <action selector="inputSendTokenBalance:" destination="-1" eventType="touchUpInside" id="KEO-fh-AXZ"/>
+                                                                    </connections>
+                                                                </button>
                                                             </subviews>
                                                         </stackView>
                                                     </subviews>

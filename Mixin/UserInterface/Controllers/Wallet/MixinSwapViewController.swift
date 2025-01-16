@@ -429,8 +429,8 @@ extension MixinSwapViewController {
             sendNetworkLabel.text = "Placeholder"
             sendNetworkLabel.alpha = 0 // Keeps the height
             depositSendTokenButton.isHidden = true
-            sendBalanceLabel.text = "0"
-            sendBalanceLabel.alpha = 0
+            sendBalanceButton.setTitle("0", for: .normal)
+            sendBalanceButton.alpha = 0
             sendLoadingIndicator.startAnimating()
         case .selectable:
             sendTokenStackView.alpha = 1
@@ -440,8 +440,8 @@ extension MixinSwapViewController {
             sendNetworkLabel.text = "Placeholder"
             sendNetworkLabel.alpha = 0 // Keeps the height
             depositSendTokenButton.isHidden = true
-            sendBalanceLabel.text = "0"
-            sendBalanceLabel.alpha = 0
+            sendBalanceButton.setTitle("0", for: .normal)
+            sendBalanceButton.alpha = 0
             sendLoadingIndicator.stopAnimating()
         case .token(let token):
             sendTokenStackView.alpha = 1
@@ -452,8 +452,8 @@ extension MixinSwapViewController {
             sendNetworkLabel.text = token.chain.name
             sendNetworkLabel.alpha = 1
             depositSendTokenButton.isHidden = token.decimalBalance != 0
-            sendBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
-            sendBalanceLabel.alpha = 1
+            sendBalanceButton.setTitle(R.string.localizable.balance_abbreviation(balance), for: .normal)
+            sendBalanceButton.alpha = 1
             sendLoadingIndicator.stopAnimating()
         }
     }

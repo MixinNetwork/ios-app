@@ -22,7 +22,7 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     @IBOutlet weak var sendSymbolLabel: UILabel!
     @IBOutlet weak var sendFooterStackView: UIStackView!
     @IBOutlet weak var depositSendTokenButton: BusyButton!
-    @IBOutlet weak var sendBalanceLabel: UILabel!
+    @IBOutlet weak var sendBalanceButton: UIButton!
     
     @IBOutlet weak var receiveView: UIView!
     @IBOutlet weak var receiveStackView: UIStackView!
@@ -106,6 +106,10 @@ class SwapViewController: KeyboardBasedLayoutViewController {
     
     @IBAction func depositSendToken(_ sender: Any) {
         
+    }
+    
+    @IBAction func inputSendTokenBalance(_ sender: Any) {
+        inputSendAmount(multiplier: 1)
     }
     
     @IBAction func changeReceiveToken(_ sender: Any) {

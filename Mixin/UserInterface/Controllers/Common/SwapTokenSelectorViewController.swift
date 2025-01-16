@@ -301,6 +301,16 @@ extension SwapTokenSelectorViewController: UICollectionViewDelegate {
         return true
     }
     
+    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        switch Section(rawValue: indexPath.section)! {
+        case .recent, .chainSelector:
+            break
+        case .tokens:
+            presentingViewController?.dismiss(animated: true)
+        }
+        return false
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section)! {
         case .recent:

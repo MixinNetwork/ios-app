@@ -6,6 +6,10 @@ final class MultipleAssetChangeCell: UITableViewCell {
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     
+    @IBOutlet weak var contentTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentTrailingConstraint: NSLayoutConstraint!
+    
     private var rowViews: [RowStackView] = []
     
     override func awakeFromNib() {
@@ -55,7 +59,23 @@ final class MultipleAssetChangeCell: UITableViewCell {
         sendingView.amountLabel.textColor = R.color.text()
     }
     
-    func loadRowViews(count: Int) {
+    func reloadData(
+        title: String,
+        iconURL: URL?,
+        amount: String,
+        amountColor: UIColor,
+        network: String
+    ) {
+        titleLabel.text = title.uppercased()
+        loadRowViews(count: 1)
+        let rowView = rowViews[0]
+        rowView.iconView.setIcon(tokenIconURL: iconURL)
+        rowView.amountLabel.text = amount
+        rowView.amountLabel.textColor = amountColor
+        rowView.networkLabel.text = network
+    }
+    
+    private func loadRowViews(count: Int) {
         let diff = rowViews.count - count
         if diff > 0 {
             for view in rowViews.suffix(diff) {

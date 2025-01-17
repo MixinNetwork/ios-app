@@ -62,7 +62,10 @@ final class MixinSwapViewController: SwapViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.swap()
-        navigationItem.rightBarButtonItem = .customerService(target: self, action: #selector(presentCustomerService(_:)))
+        navigationItem.rightBarButtonItems = [
+            .customerService(target: self, action: #selector(presentCustomerService(_:))),
+            .tintedIcon(image: R.image.ic_title_transaction(), target: self, action: #selector(showOrders(_:))),
+        ]
         updateSendView(style: .loading)
         updateReceiveView(style: .loading)
         reloadTokens()
@@ -240,6 +243,11 @@ final class MixinSwapViewController: SwapViewController {
             sendAmountTextField.text = userInputSimulationFormatter.string(from: amount as NSDecimalNumber)
             sendAmountEditingChanged(self)
         }
+    }
+    
+    @objc private func showOrders(_ sender: Any) {
+        let orders = SwapOrderTableViewController()
+        navigationController?.pushViewController(orders, animated: true)
     }
     
     @objc private func presentCustomerService(_ sender: Any) {

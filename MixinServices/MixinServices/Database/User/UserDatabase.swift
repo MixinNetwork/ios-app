@@ -910,6 +910,26 @@ public final class UserDatabase: Database {
             try db.execute(sql: sql)
         }
         
+        migrator.registerMigration("swap_orders") { db in
+            let sql = """
+            CREATE TABLE IF NOT EXISTS `swap_orders` (
+                `order_id` TEXT NOT NULL,
+                `user_id` TEXT NOT NULL,
+                `pay_asset_id` TEXT NOT NULL,
+                `receive_asset_id` TEXT NOT NULL,
+                `pay_amount` TEXT NOT NULL,
+                `receive_amount` TEXT NOT NULL,
+                `pay_trace_id` TEXT NOT NULL,
+                `receive_trace_id` TEXT NOT NULL,
+                `state` TEXT NOT NULL,
+                `created_at` TEXT NOT NULL,
+                `order_type` TEXT NOT NULL,
+                PRIMARY KEY(`order_id`)
+            )
+            """
+            try db.execute(sql: sql)
+        }
+        
         return migrator
     }
     

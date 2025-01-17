@@ -5,7 +5,9 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var contentTextView: UITextView!
     
-    @IBOutlet weak var stackViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentBottomConstraint: NSLayoutConstraint!
     
     private let labelLeadingMargin: CGFloat = 6
     private let labelTopMargin: CGFloat = 6
@@ -26,7 +28,7 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
         contentTextViewSizeObserver = contentTextView.observe(\.contentSize, options: [.new]) { [weak self] textView, _ in
             self?.layoutLabelIfNeeded()
         }
-        stackViewBottomMargin = stackViewBottomConstraint.constant
+        stackViewBottomMargin = contentBottomConstraint.constant
     }
     
     func setContent(_ content: String, labelContent: String? = nil) {
@@ -116,12 +118,12 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
         if let trailingLabelOrigin {
             labelLeadingConstraint.constant = round(trailingLabelOrigin.x)
             labelTopConstraint.constant = round(trailingLabelOrigin.y)
-            stackViewBottomConstraint.constant = stackViewBottomMargin
+            contentBottomConstraint.constant = stackViewBottomMargin
         } else {
             // Place label below content
             labelLeadingConstraint.constant = 0
             labelTopConstraint.constant = round(contentTextView.bounds.height + labelTopMargin)
-            stackViewBottomConstraint.constant = ceil(labelTopMargin + labelSize.height + stackViewBottomMargin)
+            contentBottomConstraint.constant = ceil(labelTopMargin + labelSize.height + stackViewBottomMargin)
         }
         
         invalidateIntrinsicContentSize()

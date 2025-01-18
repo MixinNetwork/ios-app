@@ -11,7 +11,7 @@ final class SwapOrderTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Order"
+        navigationItem.title = R.string.localizable.order()
         view.backgroundColor = R.color.background()
         tableView.backgroundColor = R.color.background()
         tableView.register(R.nib.swapOrderCell)

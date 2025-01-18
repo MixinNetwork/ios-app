@@ -794,6 +794,7 @@
 		942FD9342D3A70DB004DCC4C /* SwapOrderHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942FD9312D3A70DB004DCC4C /* SwapOrderHeaderCell.swift */; };
 		942FD9362D3A72DE004DCC4C /* SwapIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942FD9352D3A72DE004DCC4C /* SwapIconView.swift */; };
 		942FD9712D3A90E4004DCC4C /* SwapOrder+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942FD9702D3A90DD004DCC4C /* SwapOrder+Localization.swift */; };
+		942FD9FF2D3B591F004DCC4C /* LocalizedEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942FD9FE2D3B591C004DCC4C /* LocalizedEnum.swift */; };
 		9430F9C525E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9430F9C425E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift */; };
 		94317CFF2AFBDEFF00FDC9C9 /* MemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */; };
 		94317D072AFBE57200FDC9C9 /* MemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317D052AFBE57200FDC9C9 /* MemoCell.swift */; };
@@ -2291,6 +2292,7 @@
 		942FD9322D3A70DB004DCC4C /* SwapOrderHeaderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapOrderHeaderCell.xib; sourceTree = "<group>"; };
 		942FD9352D3A72DE004DCC4C /* SwapIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapIconView.swift; sourceTree = "<group>"; };
 		942FD9702D3A90DD004DCC4C /* SwapOrder+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwapOrder+Localization.swift"; sourceTree = "<group>"; };
+		942FD9FE2D3B591C004DCC4C /* LocalizedEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedEnum.swift; sourceTree = "<group>"; };
 		9430F9C425E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageDAO+PlaylistItem.swift"; sourceTree = "<group>"; };
 		94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
 		94317D052AFBE57200FDC9C9 /* MemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoCell.swift; sourceTree = "<group>"; };
@@ -5335,6 +5337,7 @@
 				94DCDA9F262DAF5B0064D1F3 /* DisplayAwakener.swift */,
 				94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */,
 				7C695D55285B25AB0042177C /* SpotlightManager.swift */,
+				942FD9FE2D3B591C004DCC4C /* LocalizedEnum.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -6299,6 +6302,7 @@
 				DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */,
 				7C2DE55928DD94D200C00818 /* LiveTextImageView.swift in Sources */,
 				7B35AF78228AA3BD00E8101D /* MessagesWithUserSearchResult.swift in Sources */,
+				942FD9FF2D3B591F004DCC4C /* LocalizedEnum.swift in Sources */,
 				7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */,
 				946331CC2C626FEE00C54B76 /* TransactionHistoryFilterPickerViewController.swift in Sources */,
 				9401A56F2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift in Sources */,

@@ -306,6 +306,7 @@
 "collection_collected" = "已收藏 %d 件";
 "combine_and_forward" = "合併轉發";
 "complete" = "完成";
+"completed" = "已完成";
 "compress_database" = "壓縮資料庫";
 "compressed" = "已壓縮";
 "confirm" = "確認";
@@ -380,6 +381,7 @@
 "create_introduction" = "MPC 錢包，2FA，%@，自我保管，社交恢復";
 "create_mnemonic_phrase" = "建立助記詞";
 "create_pin" = "建立錢包";
+"created" = "建立日期";
 "created_this_group" = "%@建立了這個群組";
 "creating_wallet_terminated_unexpectedly" = "建立錢包意外中止，點繼續完成錢包建立";
 "creating_your_account" = "正在建立賬戶...";
@@ -548,6 +550,8 @@
 "error_withdrawal_memo_format_incorrect" = "錯誤 20131：提現備註格式不正確";
 "error_withdrawal_suspend" = "錯誤 20137：提現暫停";
 "estimated_balance_change" = "餘額變動（預估）";
+"estimated_price" = "預計價格";
+"estimated_receive" = "預計收到";
 "everybody" = "任何人";
 "exchanging_data" = "正在同步金鑰分片，進度 %@%%...";
 "exit_confirmation" = "退出\"%@\"？";
@@ -559,6 +563,7 @@
 "export_failed" = "匯出失敗";
 "export_mnemonic_phrase" = "匯出助記詞";
 "face_id" = "面容";
+"failed" = "失敗";
 "failed_to_compose_avatar" = "頭像解析失敗，請嘗試使用其他圖片。";
 "failed_to_send_location" = "傳送位置失敗，請稍後重試";
 "failed_to_send_photo" = "傳送圖片失敗，請稍後重試";
@@ -847,9 +852,15 @@
 "optimize_database" = "最佳化查詢索引";
 "optimized" = "已最佳化";
 "or" = "或者";
+"order" = "訂單";
+"order_details" = "訂單詳情";
+"order_id" = "訂單 ID";
+"order_type_limit" = "限價";
+"order_type_swap" = "閃兌";
 "other" = "其他";
 "overwrite" = "覆蓋";
 "owner" = "群主";
+"paid" = "已支付";
 "participants" = "成員";
 "participants_count" = "%@ 位群組成員";
 "paste" = "貼上";
@@ -948,6 +959,7 @@
 "receive" = "充值";
 "receive_from_address_description" = "從其他錢包或交易所轉入";
 "receive_money" = "我的收款碼";
+"received" = "收到";
 "receiver" = "至";
 "receivers" = "交易接收人";
 "recent" = "最近";
@@ -960,6 +972,7 @@
 "recovery_kit_instruction" = "Mixin Messenger 的 MPC 錢包基於去中心化金鑰協議 TIP 構建，您可以透過手機號、助記詞或可信聯絡人登入恢復你的賬號，錢包完整的金鑰只存在當前裝置的 TEE 安全環境中，閱讀檔案以瞭解%@。";
 "red_up_green_down" = "紅漲綠跌";
 "refresh" = "重新整理";
+"refunded" = "已退款";
 "reject" = "拒絕";
 "reject_transaction" = "拒絕交易";
 "rejecting_transaction" = "正在拒絕";
@@ -1150,6 +1163,7 @@
 "share_log_file" = "分享日誌檔案";
 "share_message_description" = "你確定要傳送來自%1$@的%2$@？";
 "share_message_description_empty" = "你確定要傳送該%@？";
+"share_pair" = "分享交易對";
 "share_to" = "分享到";
 "shared_media" = "媒體內容";
 "show" = "顯示";
@@ -1200,6 +1214,7 @@
 "suspended_deposit" = "%1$@ 充值已暫停，可能的原因是因為使用率太低、節點故障、區塊鏈網路硬分叉或者擁堵，注意已轉入的 %2$@ 資產可以繼續轉賬。";
 "suspicious_link" = "可疑連結";
 "swap" = "交易";
+"swap_again" = "再來一筆";
 "swap_confirmation" = "確認交易";
 "swap_failed" = "交易失敗";
 "swap_invalid_amount" = "沒有報價。請嘗試修改金額。";
@@ -1281,6 +1296,7 @@
 "try_again" = "請重試";
 "trying_connect_tip_network" = "正在連線 TIP 網路";
 "trying_connect_tip_node" = "正在連線節點...";
+"type" = "型別";
 "unable_connect_to_desktop" = "無法連線到桌面，請稍後重試";
 "unable_synced_between_different_account" = "不同賬戶之間無法同步聊天記錄";
 "unable_to_decode_the_request" = "無法解析請求: %@";

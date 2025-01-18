@@ -19,7 +19,6 @@ final class SwapOrderViewController: UITableViewController {
     
     private let order: SwapOrderItem
     private let payAmount: String
-    private let receiveAmount: String
     private let receivePrice: String
     private let sendPrice: String
     
@@ -30,12 +29,6 @@ final class SwapOrderViewController: UITableViewController {
             format: .precision,
             sign: .always,
             symbol: .custom(order.paySymbol)
-        )
-        self.receiveAmount = CurrencyFormatter.localizedString(
-            from: order.receiveAmount,
-            format: .precision,
-            sign: .always,
-            symbol: .custom(order.receiveSymbol)
         )
         self.receivePrice = SwapQuote.priceRepresentation(
             sendAmount: order.payAmount,
@@ -60,7 +53,7 @@ final class SwapOrderViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Order Details"
+        navigationItem.title = R.string.localizable.order_details()
         view.backgroundColor = R.color.background_secondary()
         tableView.backgroundColor = R.color.background_secondary()
         tableView.register(R.nib.swapOrderHeaderCell)
@@ -96,7 +89,7 @@ final class SwapOrderViewController: UITableViewController {
             case .paid:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
                 cell.reloadData(
-                    title: "PAID",
+                    title: R.string.localizable.paid(),
                     iconURL: order.payIconURL,
                     amount: payAmount,
                     amountColor: R.color.market_red()!,
@@ -108,10 +101,16 @@ final class SwapOrderViewController: UITableViewController {
                 return cell
             case .receive:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
+                let title = switch order.state.knownCase {
+                case .pending, .failed, .none:
+                    R.string.localizable.estimated_receive()
+                case .success, .refunded:
+                    R.string.localizable.receive()
+                }
                 cell.reloadData(
-                    title: "estimate receive",
+                    title: title,
                     iconURL: order.receiveIconURL,
-                    amount: receiveAmount,
+                    amount: order.actualReceivingAmount,
                     amountColor: R.color.market_green()!,
                     network: order.receiveChainName
                 )
@@ -121,7 +120,12 @@ final class SwapOrderViewController: UITableViewController {
                 return cell
             case .price:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
-                cell.captionLabel.text = "Estimated Price".uppercased()
+                cell.captionLabel.text = switch order.state.knownCase {
+                case .success:
+                    R.string.localizable.price().uppercased()
+                case .pending, .failed, .refunded, .none:
+                    R.string.localizable.estimated_price().uppercased()
+                }
                 cell.primaryLabel.text = receivePrice
                 cell.secondaryLabel.text = sendPrice
                 cell.setPrimaryLabel(usesBoldFont: false)
@@ -131,14 +135,14 @@ final class SwapOrderViewController: UITableViewController {
                 return cell
             case .type:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-                cell.captionLabel.text = "Type".uppercased()
-                cell.setContent(order.type?.localizedString ?? "")
+                cell.captionLabel.text = R.string.localizable.type().uppercased()
+                cell.setContent(order.type.localizedDescription)
                 cell.contentLeadingConstraint.constant = 16
                 cell.contentTrailingConstraint.constant = 16
                 return cell
             case .createdAt:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-                cell.captionLabel.text = "Created".uppercased()
+                cell.captionLabel.text = R.string.localizable.created().uppercased()
                 if let date = order.createdAtDate {
                     cell.setContent(DateFormatter.dateAndTime.string(from: date))
                 } else {
@@ -149,7 +153,7 @@ final class SwapOrderViewController: UITableViewController {
                 return cell
             case .orderID:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-                cell.captionLabel.text = "Order ID".uppercased()
+                cell.captionLabel.text = R.string.localizable.order_id().uppercased()
                 cell.setContent(order.orderID)
                 cell.contentLeadingConstraint.constant = 16
                 cell.contentTrailingConstraint.constant = 16

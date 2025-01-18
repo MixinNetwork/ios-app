@@ -44,44 +44,20 @@ final class SwapOrderCell: ModernSelectedBackgroundCell {
             sign: .always,
             symbol: .custom(order.paySymbol)
         )
-        typeLabel.text = switch order.type {
-        case .swap:
-            "Swap"
-        case .limit:
-            "Limit"
-        case .none:
-            nil
-        }
-        stateLabel.text = order.state?.localizedString
-        
-        lazy var receiveAmount = CurrencyFormatter.localizedString(
-            from: order.receiveAmount,
-            format: .precision,
-            sign: .always,
-            symbol: .custom(order.receiveSymbol)
-        )
-        lazy var refundAmount = CurrencyFormatter.localizedString(
-            from: order.payAmount,
-            format: .precision,
-            sign: .always,
-            symbol: .custom(order.paySymbol)
-        )
-        
-        switch order.state {
+        typeLabel.text = order.type.localizedDescription
+        receiveAmountLabel.text = order.actualReceivingAmount
+        stateLabel.text = order.state.localizedDescription
+        switch order.state.knownCase {
         case .success:
-            receiveAmountLabel.text = receiveAmount
             receiveAmountLabel.textColor = R.color.market_green()
             stateLabel.textColor = R.color.market_green()
-        case .pending:
-            receiveAmountLabel.text = receiveAmount
+        case .pending, .none:
             receiveAmountLabel.textColor = R.color.text_tertiary()
             stateLabel.textColor = R.color.text_tertiary()
         case .refunded:
-            receiveAmountLabel.text = refundAmount
             receiveAmountLabel.textColor = R.color.market_green()
             stateLabel.textColor = R.color.market_red()
-        case .failed, .none:
-            receiveAmountLabel.text = refundAmount
+        case .failed:
             receiveAmountLabel.textColor = R.color.text_tertiary()
             stateLabel.textColor = R.color.market_red()
         }

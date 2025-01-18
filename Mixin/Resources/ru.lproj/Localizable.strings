@@ -306,6 +306,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Объединить и вперед";
 "complete" = "Complete";
+"completed" = "Completed";
 "compress_database" = "Сжать базу данных";
 "compressed" = "Сжатый";
 "confirm" = "Подтвердить";
@@ -380,6 +381,7 @@
 "create_introduction" = "MPC Wallet, 2FA, %@, Self-custody, Social Recovery";
 "create_mnemonic_phrase" = "Create Mnemonic Phrase";
 "create_pin" = "Create PIN";
+"created" = "Created";
 "created_this_group" = "%@ создал эту группу";
 "creating_wallet_terminated_unexpectedly" = "Creating wallet terminated unexpectedly, click \"Continue\" to complete the creation";
 "creating_your_account" = "Creating your account...";
@@ -548,6 +550,8 @@
 "error_withdrawal_memo_format_incorrect" = "ОШИБКА 20131: Неверный формат уведомления о снятии средств.";
 "error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
 "estimated_balance_change" = "Balance Change (estimate)";
+"estimated_price" = "Estimated Price";
+"estimated_receive" = "Estimated Receive";
 "everybody" = "Все";
 "exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "Выйти из %@?";
@@ -559,6 +563,7 @@
 "export_failed" = "Не удалось экспортировать";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
 "face_id" = "Идентификатор лица";
+"failed" = "Не удалось";
 "failed_to_compose_avatar" = "Не удалось создать аватар. Вместо этого попробуйте другую картинку.";
 "failed_to_send_location" = "Не удалось отправить местоположение";
 "failed_to_send_photo" = "Не удалось отправить фото";
@@ -847,9 +852,15 @@
 "optimize_database" = "Оптимизировать базу данных";
 "optimized" = "Оптимизировано";
 "or" = "or";
+"order" = "Order";
+"order_details" = "Order Details";
+"order_id" = "Order ID";
+"order_type_limit" = "Limit";
+"order_type_swap" = "Swap";
 "other" = "Другой";
 "overwrite" = "Overwrite";
 "owner" = "Владелец";
+"paid" = "Paid";
 "participants" = "Участники";
 "participants_count" = "%@ УЧАСТНИКОВ";
 "paste" = "Paste";
@@ -948,6 +959,7 @@
 "receive" = "ПОЛУЧИТЬ";
 "receive_from_address_description" = "From another wallet or exchange";
 "receive_money" = "Получить деньги";
+"received" = "received";
 "receiver" = "Получатель";
 "receivers" = "Получатели";
 "recent" = "Recent";
@@ -960,6 +972,7 @@
 "recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your phone number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "red_up_green_down" = "Red Up / Green Down";
 "refresh" = "Обновить";
+"refunded" = "Refunded";
 "reject" = "Reject";
 "reject_transaction" = "Reject Transaction";
 "rejecting_transaction" = "Rejecting Transaction";
@@ -1150,6 +1163,7 @@
 "share_log_file" = "Общий доступ к файлу журнала";
 "share_message_description" = "Вы уверены, что хотите отправить %2$@ от %1$@?";
 "share_message_description_empty" = "Вы уверены, что хотите отправить %@?";
+"share_pair" = "Share Pair";
 "share_to" = "Поделиться с";
 "shared_media" = "Общие медиа";
 "show" = "Показать";
@@ -1200,6 +1214,7 @@
 "suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "Подозрительная ссылка";
 "swap" = "Swap";
+"swap_again" = "Swap Again";
 "swap_confirmation" = "Swap Confirmation";
 "swap_failed" = "Swap Failed";
 "swap_invalid_amount" = "No available quote found. Please try a different amount.";
@@ -1281,6 +1296,7 @@
 "try_again" = "Попробуйте еще раз";
 "trying_connect_tip_network" = "Connecting the TIP network";
 "trying_connect_tip_node" = "Trying connect TIP node";
+"type" = "Type";
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";

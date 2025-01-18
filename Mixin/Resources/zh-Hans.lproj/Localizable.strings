@@ -306,6 +306,7 @@
 "collection_collected" = "已收藏 %d 件";
 "combine_and_forward" = "合并转发";
 "complete" = "完成";
+"completed" = "已完成";
 "compress_database" = "压缩数据库";
 "compressed" = "已压缩";
 "confirm" = "确认";
@@ -380,6 +381,7 @@
 "create_introduction" = "MPC 钱包，2FA，%@，自我保管，社交恢复";
 "create_mnemonic_phrase" = "创建助记词";
 "create_pin" = "创建钱包";
+"created" = "创建日期";
 "created_this_group" = "%@创建了这个群组";
 "creating_wallet_terminated_unexpectedly" = "创建钱包意外中止，点继续完成钱包创建";
 "creating_your_account" = "正在创建账户...";
@@ -548,6 +550,8 @@
 "error_withdrawal_memo_format_incorrect" = "错误 20131：提现备注格式不正确";
 "error_withdrawal_suspend" = "错误 20137：提现暂停";
 "estimated_balance_change" = "余额变动（预估）";
+"estimated_price" = "预计价格";
+"estimated_receive" = "预计收到";
 "everybody" = "任何人";
 "exchanging_data" = "正在同步密钥分片，进度 %@%%...";
 "exit_confirmation" = "退出\"%@\"？";
@@ -559,6 +563,7 @@
 "export_failed" = "导出失败";
 "export_mnemonic_phrase" = "导出助记词";
 "face_id" = "面容";
+"failed" = "失败";
 "failed_to_compose_avatar" = "头像解析失败，请尝试使用其他图片。";
 "failed_to_send_location" = "发送位置失败，请稍后重试";
 "failed_to_send_photo" = "发送图片失败，请稍后重试";
@@ -847,9 +852,15 @@
 "optimize_database" = "优化查询索引";
 "optimized" = "已优化";
 "or" = "或者";
+"order" = "订单";
+"order_details" = "订单详情";
+"order_id" = "订单 ID";
+"order_type_limit" = "限价";
+"order_type_swap" = "闪兑";
 "other" = "其他";
 "overwrite" = "覆盖";
 "owner" = "群主";
+"paid" = "已支付";
 "participants" = "成员";
 "participants_count" = "%@ 位群组成员";
 "paste" = "粘贴";
@@ -948,6 +959,7 @@
 "receive" = "充值";
 "receive_from_address_description" = "从其他钱包或交易所转入";
 "receive_money" = "我的收款码";
+"received" = "收到";
 "receiver" = "至";
 "receivers" = "交易接收人";
 "recent" = "最近";
@@ -960,6 +972,7 @@
 "recovery_kit_instruction" = "Mixin Messenger 的 MPC 钱包基于去中心化密钥协议 TIP 构建，您可以通过手机号、助记词或可信联系人登录恢复你的账号，钱包完整的密钥只存在当前设备的 TEE 安全环境中，阅读文档以了解%@。";
 "red_up_green_down" = "红涨绿跌";
 "refresh" = "刷新";
+"refunded" = "已退款";
 "reject" = "拒绝";
 "reject_transaction" = "拒绝交易";
 "rejecting_transaction" = "正在拒绝";
@@ -1150,6 +1163,7 @@
 "share_log_file" = "分享日志文件";
 "share_message_description" = "你确定要发送来自%1$@的%2$@？";
 "share_message_description_empty" = "你确定要发送该%@？";
+"share_pair" = "分享交易对";
 "share_to" = "分享到";
 "shared_media" = "媒体内容";
 "show" = "显示";
@@ -1200,6 +1214,7 @@
 "suspended_deposit" = "%1$@ 充值已暂停，可能的原因是因为使用率太低、节点故障、区块链网络硬分叉或者拥堵，注意已转入的 %2$@ 资产可以继续转账。";
 "suspicious_link" = "可疑链接";
 "swap" = "交易";
+"swap_again" = "再来一笔";
 "swap_confirmation" = "确认交易";
 "swap_failed" = "交易失败";
 "swap_invalid_amount" = "没有报价。请尝试修改金额。";
@@ -1281,6 +1296,7 @@
 "try_again" = "请重试";
 "trying_connect_tip_network" = "正在连接 TIP 网络";
 "trying_connect_tip_node" = "正在连接节点...";
+"type" = "类型";
 "unable_connect_to_desktop" = "无法连接到桌面，请稍后重试";
 "unable_synced_between_different_account" = "不同账户之间无法同步聊天记录";
 "unable_to_decode_the_request" = "无法解析请求: %@";

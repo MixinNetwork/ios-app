@@ -306,6 +306,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "まとめて転送";
 "complete" = "Complete";
+"completed" = "Completed";
 "compress_database" = "データの圧縮";
 "compressed" = "圧縮しました";
 "confirm" = "確認する";
@@ -380,6 +381,7 @@
 "create_introduction" = "MPC Wallet, 2FA, %@, Self-custody, Social Recovery";
 "create_mnemonic_phrase" = "Create Mnemonic Phrase";
 "create_pin" = "Create PIN";
+"created" = "Created";
 "created_this_group" = "%@がグループを作成しました";
 "creating_wallet_terminated_unexpectedly" = "Creating wallet terminated unexpectedly, click \"Continue\" to complete the creation";
 "creating_your_account" = "Creating your account...";
@@ -548,6 +550,8 @@
 "error_withdrawal_memo_format_incorrect" = "エラー20131：出金メモのフォーマットが不正確です";
 "error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
 "estimated_balance_change" = "Balance Change (estimate)";
+"estimated_price" = "Estimated Price";
+"estimated_receive" = "Estimated Receive";
 "everybody" = "全員";
 "exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "\"%@\"を退出しますか?";
@@ -559,6 +563,7 @@
 "export_failed" = "エクスポート失敗";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
 "face_id" = "顔認証";
+"failed" = "失敗しました";
 "failed_to_compose_avatar" = "アバターの作成に失敗しました。別の画像を使ってください";
 "failed_to_send_location" = "位置情報を送信できませんでした";
 "failed_to_send_photo" = "画像を送信できませんでした";
@@ -847,9 +852,15 @@
 "optimize_database" = "データベースの最適化";
 "optimized" = "最適化済みです";
 "or" = "or";
+"order" = "Order";
+"order_details" = "Order Details";
+"order_id" = "Order ID";
+"order_type_limit" = "Limit";
+"order_type_swap" = "Swap";
 "other" = "その他";
 "overwrite" = "Overwrite";
 "owner" = "オーナー";
+"paid" = "Paid";
 "participants" = "参加者";
 "participants_count" = "%@人のメンバー";
 "paste" = "Paste";
@@ -948,6 +959,7 @@
 "receive" = "入金";
 "receive_from_address_description" = "From another wallet or exchange";
 "receive_money" = "仮想通貨を受け取る";
+"received" = "received";
 "receiver" = "受取人";
 "receivers" = "受取人";
 "recent" = "Recent";
@@ -960,6 +972,7 @@
 "recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your phone number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "red_up_green_down" = "Red Up / Green Down";
 "refresh" = "更新";
+"refunded" = "Refunded";
 "reject" = "Reject";
 "reject_transaction" = "Reject Transaction";
 "rejecting_transaction" = "Rejecting Transaction";
@@ -1150,6 +1163,7 @@
 "share_log_file" = "ログファイルを共有する";
 "share_message_description" = "%1$@から%2$@を送信しますか？";
 "share_message_description_empty" = "%@を送信しますか？";
+"share_pair" = "Share Pair";
 "share_to" = "共有する";
 "shared_media" = "共有されたメディア";
 "show" = "表示";
@@ -1200,6 +1214,7 @@
 "suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "不審なリンクです";
 "swap" = "Swap";
+"swap_again" = "Swap Again";
 "swap_confirmation" = "Swap Confirmation";
 "swap_failed" = "Swap Failed";
 "swap_invalid_amount" = "No available quote found. Please try a different amount.";
@@ -1281,6 +1296,7 @@
 "try_again" = "もう一度試す";
 "trying_connect_tip_network" = "Connecting the TIP network";
 "trying_connect_tip_node" = "Trying connect TIP node";
+"type" = "Type";
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";

@@ -1,31 +1,31 @@
 import Foundation
 import MixinServices
 
-extension SwapOrder.State {
+extension SwapOrder.State: AnyLocalized {
     
-    var localizedString: String {
+    var localizedDescription: String {
         switch self {
         case .pending:
             R.string.localizable.pending()
         case .success:
-            "Completed"
+            R.string.localizable.completed()
         case .failed:
-            "Failed"
+            R.string.localizable.failed()
         case .refunded:
-            "Refunded"
+            R.string.localizable.refunded()
         }
     }
     
 }
 
-extension SwapOrder.OrderType {
+extension SwapOrder.OrderType: AnyLocalized {
     
-    var localizedString: String {
+    var localizedDescription: String {
         switch self {
         case .swap:
-            "Swap"
+            R.string.localizable.order_type_swap()
         case .limit:
-            "Limit"
+            R.string.localizable.order_type_limit()
         }
     }
     

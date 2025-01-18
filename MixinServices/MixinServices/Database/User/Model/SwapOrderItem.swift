@@ -22,8 +22,12 @@ public struct SwapOrderItem {
     
     public let createdAt: String
     public let createdAtDate: Date?
-    public let state: SwapOrder.State?
-    public let type: SwapOrder.OrderType?
+    public let state: UnknownableEnum<SwapOrder.State>
+    public let type: UnknownableEnum<SwapOrder.OrderType>
+    
+    // Could be receive amount if pending/success/unknown
+    // Refund amount if failed/refunded
+    public let actualReceivingAmount: String
     
     public var exchangingSymbolRepresentation: String {
         paySymbol + " → " + receiveSymbol
@@ -93,8 +97,25 @@ extension SwapOrderItem: Decodable, MixinFetchableRecord {
         
         createdAt = try container.decode(String.self, forKey: .createdAt)
         createdAtDate = DateFormatter.iso8601Full.date(from: createdAt)
-        state = SwapOrder.State(rawValue: try container.decode(String.self, forKey: .state))
-        type = SwapOrder.OrderType(rawValue: try container.decode(String.self, forKey: .type))
+        state = UnknownableEnum<SwapOrder.State>(rawValue: try container.decode(String.self, forKey: .state))
+        type = UnknownableEnum<SwapOrder.OrderType>(rawValue: try container.decode(String.self, forKey: .type))
+        
+        actualReceivingAmount = switch state.knownCase {
+        case .pending, .success, .none:
+            CurrencyFormatter.localizedString(
+                from: receiveAmount,
+                format: .precision,
+                sign: .always,
+                symbol: .custom(receiveSymbol)
+            )
+        case .failed, .refunded:
+            CurrencyFormatter.localizedString(
+                from: payAmount,
+                format: .precision,
+                sign: .always,
+                symbol: .custom(paySymbol)
+            )
+        }
     }
     
 }

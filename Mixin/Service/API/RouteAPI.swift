@@ -79,7 +79,7 @@ final class RouteAPI {
     ) {
         var path = "/web3/swap/orders?limit=\(limit)"
         if let offset {
-            path.append("offset=\(offset)")
+            path.append("&offset=\(offset)")
         }
         request(method: .get, path: path, queue: queue, completion: completion)
     }
@@ -206,7 +206,7 @@ extension RouteAPI {
     
     private static var botPublicKey: Data?
     
-    private class RouteSigningInterceptor: RequestInterceptor {
+    private final class RouteSigningInterceptor: RequestInterceptor {
         
         private let method: HTTPMethod
         private let path: String

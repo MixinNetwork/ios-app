@@ -70,6 +70,7 @@ final class MultipleAssetChangeCell: UITableViewCell {
         loadRowViews(count: 1)
         let rowView = rowViews[0]
         rowView.iconView.setIcon(tokenIconURL: iconURL)
+        rowView.amountLabel.font = .preferredFont(forTextStyle: .callout)
         rowView.amountLabel.text = amount
         rowView.amountLabel.textColor = amountColor
         rowView.networkLabel.text = network

@@ -6,7 +6,7 @@ final class SwapOrderTableViewController: UITableViewController {
     private let localPageCount = 50
     private let remotePageCount = 100
     
-    private var sections: [Section] = []
+    private var sections: [[SwapOrderItem]] = []
     private var loadNextPageIndexPath: IndexPath?
     
     override func viewDidLoad() {
@@ -20,17 +20,19 @@ final class SwapOrderTableViewController: UITableViewController {
         updateTableViewContentInsetBottom()
         DispatchQueue.global().async { [limit=localPageCount] in
             let orders = SwapOrderDAO.shared.orders(limit: limit)
+            let offset = SwapOrderDAO.shared.oldestPendingOrFailedOrderCreatedAt()
             DispatchQueue.main.async { [weak self] in
                 guard let self else {
                     return
                 }
                 if let newestOrder = orders.first {
-                    self.sections = [Section(source: .local, orders: orders)]
+                    self.sections = [orders]
                     if orders.count == limit {
                         self.resetLoadNextPageIndexPath()
                     }
-                    self.tableView.reloadData()
-                    self.reloadRemoteOrders(offset: newestOrder.createdAt)
+                    UIView.performWithoutAnimation(self.tableView.reloadData)
+                    let offset = offset ?? newestOrder.createdAt
+                    self.reloadRemoteOrders(offset: offset)
                 } else {
                     self.reloadRemoteOrders(offset: nil)
                 }
@@ -48,41 +50,46 @@ final class SwapOrderTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        sections[section].orders.count
+        sections[section].count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.swap_order, for: indexPath)!
-        let order = sections[indexPath.section].orders[indexPath.row]
+        let order = sections[indexPath.section][indexPath.row]
         cell.load(order: order)
         return cell
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath == loadNextPageIndexPath, let oldestOrder = sections.last?.orders.last {
+        if indexPath == loadNextPageIndexPath, let offset = sections.last?.last {
             loadNextPageIndexPath = nil
+            Logger.general.info(category: "SwapOrderTable", message: "Loading local orders before \(offset.createdAt)")
             DispatchQueue.global().async { [limit=localPageCount] in
-                let orders = SwapOrderDAO.shared.orders(before: oldestOrder.createdAt, limit: limit)
-                guard !orders.isEmpty else {
+                let orders = SwapOrderDAO.shared.orders(before: offset.createdAt, limit: limit)
+                guard let oldestOrder = orders.last, let newestOrder = orders.first else {
+                    Logger.general.info(category: "SwapOrderTable", message: "All local orders loaded")
                     return
                 }
                 DispatchQueue.main.sync { [weak self] in
-                    guard let self, self.sections.last?.orders.last == oldestOrder else {
+                    guard let self, self.sections.last?.last == offset else {
                         return
                     }
                     let newSectionIndex = self.sections.count
-                    self.sections.append(Section(source: .local, orders: orders))
+                    self.sections.append(orders)
+                    Logger.general.info(category: "SwapOrderTable", message: "Appended \(orders.count) local orders at \(newSectionIndex), range: \(newestOrder.createdAt) ~ \(oldestOrder.createdAt)")
                     if orders.count == limit {
                         self.resetLoadNextPageIndexPath()
                     }
-                    self.tableView.insertSections(IndexSet(integer: newSectionIndex), with: .none)
+                    UIView.performWithoutAnimation {
+                        self.tableView.insertSections(IndexSet(integer: newSectionIndex), with: .none)
+                    }
                 }
             }
         }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let order = sections[indexPath.section].orders[indexPath.row]
+        let order = sections[indexPath.section][indexPath.row]
         let details = SwapOrderViewController(order: order)
         navigationController?.pushViewController(details, animated: true)
     }
@@ -100,7 +107,7 @@ final class SwapOrderTableViewController: UITableViewController {
             return
         }
         loadNextPageIndexPath = IndexPath(
-            row: max(0, lastSection.orders.count - 3),
+            row: max(0, lastSection.count - 3),
             section: sections.count - 1
         )
     }
@@ -109,66 +116,42 @@ final class SwapOrderTableViewController: UITableViewController {
 
 extension SwapOrderTableViewController {
     
-    struct Section {
-        
-        enum Source {
-            case local
-            case remote
-        }
-        
-        let source: Source
-        let orders: [SwapOrderItem]
-        
-    }
-    
     private func reloadRemoteOrders(offset: String?) {
-        let limit = remotePageCount
+        Logger.general.info(category: "SwapOrderTable", message: "Loading remote orders from \(offset ?? "beginning")")
+        let remotePageCount = self.remotePageCount
+        let localPageCount = self.localPageCount
         RouteAPI.mixinSwapOrders(
             offset: offset,
-            limit: limit,
+            limit: remotePageCount,
             queue: .global()
         ) { [weak self] result in
             switch result {
-            case .success(let orders):
-                guard let oldestOrder = orders.first, let newestOrder = orders.last else {
-                    // Empty results, the newest order is loaded
+            case .success(let remoteOrders):
+                guard let oldestOrder = remoteOrders.first, let newestOrder = remoteOrders.last else {
+                    Logger.general.info(category: "SwapOrderTable", message: "All remote orders loaded")
                     return
                 }
-                let didFinish = SwapOrderDAO.shared.orderExists(orderID: oldestOrder.orderID)
-                || orders.count < limit
-                let newOrders = SwapOrderDAO.shared.saveAndFetch(orders: orders)
+                Logger.general.info(category: "SwapOrderTable", message: "Loaded \(remoteOrders.count) remote orders \(oldestOrder.createdAt) ~ \(newestOrder.createdAt)")
+                let didFinish = remoteOrders.count < remotePageCount
+                SwapOrderDAO.shared.save(orders: remoteOrders)
+                let localOrders = SwapOrderDAO.shared.orders(limit: localPageCount)
                 DispatchQueue.main.sync {
                     guard let self else {
                         return
                     }
-                    if offset == nil {
-                        self.sections = [Section(source: .remote, orders: newOrders)]
+                    self.sections = [localOrders]
+                    if localOrders.count == localPageCount {
                         self.resetLoadNextPageIndexPath()
-                        self.tableView.reloadData()
-                    } else {
-                        self.tableView.performBatchUpdates {
-                            var localSections = IndexSet()
-                            self.sections = self.sections.enumerated().compactMap { (index, section) in
-                                switch section.source {
-                                case .local:
-                                    localSections.insert(index)
-                                    return nil
-                                case .remote:
-                                    return section
-                                }
-                            }
-                            let newSection = Section(source: .remote, orders: newOrders)
-                            self.sections.insert(newSection, at: 0)
-                            self.tableView.deleteSections(localSections, with: .none)
-                            self.tableView.insertSections(IndexSet(integer: 0), with: .none)
-                        }
                     }
-                    if !didFinish {
+                    UIView.performWithoutAnimation(self.tableView.reloadData)
+                    if didFinish {
+                        Logger.general.info(category: "SwapOrderTable", message: "All remote orders loaded")
+                    } else {
                         self.reloadRemoteOrders(offset: newestOrder.createdAt)
                     }
                 }
             case .failure(let error):
-                Logger.general.debug(category: "MixinSwapOrderTable", message: "\(error)")
+                Logger.general.info(category: "SwapOrderTable", message: "\(error)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
                     self?.reloadRemoteOrders(offset: offset)
                 }

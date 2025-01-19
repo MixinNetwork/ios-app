@@ -52,6 +52,7 @@
                         </connections>
                     </button>
                 </subviews>
+                <color key="backgroundColor" name="background"/>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="giC-a6-lVX" secondAttribute="trailing" constant="2" id="3ML-Ow-ONq"/>
                     <constraint firstItem="0Hs-ig-skP" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="7EW-x3-DSg"/>
@@ -61,6 +62,7 @@
                     <constraint firstAttribute="bottom" secondItem="0Hs-ig-skP" secondAttribute="bottom" constant="20" id="mYA-lk-9aj"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="contentLabel" destination="CK5-f2-s3t" id="Qme-fx-gOH"/>
                 <outlet property="titleLabel" destination="skq-BO-6Xo" id="VPR-pF-ccx"/>

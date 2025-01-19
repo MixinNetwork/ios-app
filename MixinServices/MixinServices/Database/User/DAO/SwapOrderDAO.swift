@@ -21,6 +21,17 @@ public final class SwapOrderDAO: UserDatabaseDAO {
         LEFT JOIN chains rc ON rt.chain_id = rc.chain_id
     """
     
+    public func oldestPendingOrFailedOrderCreatedAt() -> String? {
+        let sql = """
+        SELECT created_at
+        FROM swap_orders
+        WHERE state IN ('pending', 'failed')
+        ORDER BY created_at ASC
+        LIMIT 1
+        """
+        return db.select(with: sql)
+    }
+    
     public func orders(before offset: String? = nil, limit: Int) -> [SwapOrderItem] {
         var sql = self.selector
         var arguments: [any DatabaseValueConvertible] = []
@@ -37,24 +48,12 @@ public final class SwapOrderDAO: UserDatabaseDAO {
         db.recordExists(in: SwapOrder.self, where: SwapOrder.column(of: .orderID) == orderID)
     }
     
-    public func saveAndFetch(orders: [SwapOrder]) -> [SwapOrderItem] {
+    public func save(orders: [SwapOrder]) {
         guard let oldestOrder = orders.first, let newestOrder = orders.last else {
-            return []
+            return
         }
-        assert(oldestOrder.createdAt < newestOrder.createdAt)
-        let sql = selector + """
-        
-        WHERE o.created_at <= ? AND o.created_at >= ?
-        ORDER BY o.created_at DESC
-        """
-        return try! db.writeAndReturnError { db in
-            try orders.save(db)
-            return try SwapOrderItem.fetchAll(
-                db,
-                sql: sql,
-                arguments: [newestOrder.createdAt, oldestOrder.createdAt]
-            )
-        }
+        assert(orders.count == 1 || oldestOrder.createdAt < newestOrder.createdAt)
+        db.save(orders)
     }
     
 }

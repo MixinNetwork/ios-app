@@ -795,6 +795,8 @@
 		942FD9362D3A72DE004DCC4C /* SwapIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942FD9352D3A72DE004DCC4C /* SwapIconView.swift */; };
 		942FD9712D3A90E4004DCC4C /* SwapOrder+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942FD9702D3A90DD004DCC4C /* SwapOrder+Localization.swift */; };
 		942FD9FF2D3B591F004DCC4C /* LocalizedEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942FD9FE2D3B591C004DCC4C /* LocalizedEnum.swift */; };
+		942FDA832D3CBCE8004DCC4C /* SwapOrderIDCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942FDA812D3CBCE8004DCC4C /* SwapOrderIDCell.swift */; };
+		942FDA842D3CBCE8004DCC4C /* SwapOrderIDCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 942FDA822D3CBCE8004DCC4C /* SwapOrderIDCell.xib */; };
 		9430F9C525E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9430F9C425E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift */; };
 		94317CFF2AFBDEFF00FDC9C9 /* MemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */; };
 		94317D072AFBE57200FDC9C9 /* MemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94317D052AFBE57200FDC9C9 /* MemoCell.swift */; };
@@ -2293,6 +2295,8 @@
 		942FD9352D3A72DE004DCC4C /* SwapIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapIconView.swift; sourceTree = "<group>"; };
 		942FD9702D3A90DD004DCC4C /* SwapOrder+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwapOrder+Localization.swift"; sourceTree = "<group>"; };
 		942FD9FE2D3B591C004DCC4C /* LocalizedEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedEnum.swift; sourceTree = "<group>"; };
+		942FDA812D3CBCE8004DCC4C /* SwapOrderIDCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapOrderIDCell.swift; sourceTree = "<group>"; };
+		942FDA822D3CBCE8004DCC4C /* SwapOrderIDCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapOrderIDCell.xib; sourceTree = "<group>"; };
 		9430F9C425E38AB5001CCA2F /* MessageDAO+PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageDAO+PlaylistItem.swift"; sourceTree = "<group>"; };
 		94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
 		94317D052AFBE57200FDC9C9 /* MemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoCell.swift; sourceTree = "<group>"; };
@@ -4830,6 +4834,8 @@
 				942FD67A2D38CFA2004DCC4C /* SwapOrderCell.swift */,
 				942FD9322D3A70DB004DCC4C /* SwapOrderHeaderCell.xib */,
 				942FD9312D3A70DB004DCC4C /* SwapOrderHeaderCell.swift */,
+				942FDA822D3CBCE8004DCC4C /* SwapOrderIDCell.xib */,
+				942FDA812D3CBCE8004DCC4C /* SwapOrderIDCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -5625,6 +5631,7 @@
 				94739A5426258F8300E8914D /* Custom-acknowledgements.plist in Resources */,
 				94062C592AE8C61700ADAE87 /* SnapshotTableHeaderView.xib in Resources */,
 				943BC65D2BCD1BAF003FA778 /* QuickAccessResultCell.xib in Resources */,
+				942FDA842D3CBCE8004DCC4C /* SwapOrderIDCell.xib in Resources */,
 				7B54F95022B22E2900908A9D /* FullscreenPINValidationView.xib in Resources */,
 				7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */,
 				94658CA92B34829B00F5EB21 /* OutputCell.xib in Resources */,
@@ -6405,6 +6412,7 @@
 				946331D82C636ED700C54B76 /* SelectedItemCell.swift in Sources */,
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
 				9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */,
+				942FDA832D3CBCE8004DCC4C /* SwapOrderIDCell.swift in Sources */,
 				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,
 				7B05CFDD22293B72006DA9E3 /* PhotoInputViewController.swift in Sources */,
 				DF5D9F311F9C95410036D5FD /* CountryLibrary.swift in Sources */,

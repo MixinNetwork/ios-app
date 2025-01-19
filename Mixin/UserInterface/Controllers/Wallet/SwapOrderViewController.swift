@@ -60,6 +60,7 @@ final class SwapOrderViewController: UITableViewController {
         tableView.register(R.nib.multipleAssetChangeCell)
         tableView.register(R.nib.authenticationPreviewInfoCell)
         tableView.register(R.nib.authenticationPreviewCompactInfoCell)
+        tableView.register(R.nib.swapOrderIDCell)
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
     }
@@ -89,7 +90,7 @@ final class SwapOrderViewController: UITableViewController {
             case .paid:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
                 cell.reloadData(
-                    title: R.string.localizable.paid(),
+                    title: R.string.localizable.swap_order_paid(),
                     iconURL: order.payIconURL,
                     amount: payAmount,
                     amountColor: R.color.market_red()!,
@@ -105,7 +106,7 @@ final class SwapOrderViewController: UITableViewController {
                 case .pending, .failed, .none:
                     R.string.localizable.estimated_receive()
                 case .success, .refunded:
-                    R.string.localizable.receive()
+                    R.string.localizable.swap_order_received()
                 }
                 cell.reloadData(
                     title: title,
@@ -152,12 +153,9 @@ final class SwapOrderViewController: UITableViewController {
                 cell.contentTrailingConstraint.constant = 16
                 return cell
             case .orderID:
-                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-                cell.captionLabel.text = R.string.localizable.order_id().uppercased()
-                cell.setContent(order.orderID)
-                cell.contentLeadingConstraint.constant = 16
-                cell.contentTrailingConstraint.constant = 16
-                cell.contentBottomConstraint.constant = 30
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.swap_order_id, for: indexPath)!
+                cell.contentLabel.text = order.orderID
+                cell.delegate = self
                 return cell
             }
         }
@@ -215,6 +213,15 @@ extension SwapOrderViewController: PillActionView.Delegate {
             UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
             vc.load(sharingContext: .text(string), message: message, webContext: nil, action: .forward)
         }
+    }
+    
+}
+
+extension SwapOrderViewController: SwapOrderIDCell.Delegate {
+    
+    func swapOrderIDCellRequestCopy(_ cell: SwapOrderIDCell) {
+        UIPasteboard.general.string = order.orderID
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     
 }

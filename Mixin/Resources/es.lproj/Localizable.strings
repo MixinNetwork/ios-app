@@ -1221,6 +1221,8 @@
 "swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
 "swap_no_available_quote" = "No available quote found. Please try a different token.";
 "swap_not_supported" = "%@ swapping is not supported.";
+"swap_order_paid" = "Paid";
+"swap_order_received" = "Received";
 "swap_receive" = "Receive";
 "swap_send" = "Send";
 "switch_account" = "Switch Account";

@@ -1221,6 +1221,8 @@
 "swap_message_success" = "您的交易已傳送至網路，將很快被處理。";
 "swap_no_available_quote" = "沒有報價。請嘗試切換幣種。";
 "swap_not_supported" = "不支援 %@ 交易。";
+"swap_order_paid" = "已支付";
+"swap_order_received" = "已收到";
 "swap_receive" = "獲得";
 "swap_send" = "支付";
 "switch_account" = "切換賬號";

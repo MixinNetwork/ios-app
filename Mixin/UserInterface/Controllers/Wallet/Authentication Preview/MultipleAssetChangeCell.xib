@@ -42,7 +42,10 @@
             </tableViewCellContentView>
             <color key="backgroundColor" name="background"/>
             <connections>
+                <outlet property="contentLeadingConstraint" destination="AOM-qn-14F" id="lCQ-Wu-yrn"/>
                 <outlet property="contentStackView" destination="QeC-82-08u" id="e6L-vA-TSC"/>
+                <outlet property="contentTopConstraint" destination="m9c-Mh-KyZ" id="DBa-jC-O2i"/>
+                <outlet property="contentTrailingConstraint" destination="5ng-99-Pky" id="oVs-rj-TpX"/>
                 <outlet property="titleLabel" destination="5Ac-Fp-Z3G" id="v44-7I-RUA"/>
             </connections>
             <point key="canvasLocation" x="16.793893129770993" y="73.591549295774655"/>

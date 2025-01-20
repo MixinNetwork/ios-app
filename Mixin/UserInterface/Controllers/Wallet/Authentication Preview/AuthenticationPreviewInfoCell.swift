@@ -14,6 +14,9 @@ final class AuthenticationPreviewInfoCell: UITableViewCell {
     @IBOutlet weak var primaryLabel: UILabel!
     @IBOutlet weak var secondaryLabel: UILabel!
     
+    @IBOutlet weak var contentLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentTrailingConstraint: NSLayoutConstraint!
+    
     private let tokenIconDimension: CGFloat = 32
     
     private weak var disclosureImageView: UIImageView?

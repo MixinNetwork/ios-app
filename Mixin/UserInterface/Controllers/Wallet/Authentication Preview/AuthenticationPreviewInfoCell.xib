@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -65,7 +65,9 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="captionLabel" destination="kuh-qd-sTw" id="pRY-CS-esS"/>
+                <outlet property="contentLeadingConstraint" destination="D4h-yq-HH5" id="G6o-XW-gWa"/>
                 <outlet property="contentStackView" destination="iKi-vZ-uOY" id="v1G-rT-zzb"/>
+                <outlet property="contentTrailingConstraint" destination="ebH-Zy-XWd" id="K44-a1-cnh"/>
                 <outlet property="labelStackView" destination="4Bd-Ul-JcF" id="kXu-mT-qOe"/>
                 <outlet property="primaryLabel" destination="oU8-Z0-mSS" id="xvy-50-A7D"/>
                 <outlet property="secondaryLabel" destination="yOR-d4-0ou" id="BEq-Dx-VJe"/>
@@ -84,7 +86,7 @@
             <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

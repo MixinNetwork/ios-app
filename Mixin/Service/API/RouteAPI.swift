@@ -71,6 +71,19 @@ final class RouteAPI {
         request(method: .get, path: path, queue: queue, completion: completion)
     }
     
+    static func mixinSwapOrders(
+        offset: String?,
+        limit: Int,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[SwapOrder]>) -> Void
+    ) {
+        var path = "/web3/swap/orders?limit=\(limit)"
+        if let offset {
+            path.append("&offset=\(offset)")
+        }
+        request(method: .get, path: path, queue: queue, completion: completion)
+    }
+    
     static func markets(
         id: String,
         queue: DispatchQueue,
@@ -193,7 +206,7 @@ extension RouteAPI {
     
     private static var botPublicKey: Data?
     
-    private class RouteSigningInterceptor: RequestInterceptor {
+    private final class RouteSigningInterceptor: RequestInterceptor {
         
         private let method: HTTPMethod
         private let path: String

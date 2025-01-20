@@ -127,6 +127,15 @@ struct ExternalSharingContext {
         }
     }
     
+    private init(destination: Destination?, content: Content) {
+        self.destination = destination
+        self.content = content
+    }
+    
+    static func text(_ text: String) -> ExternalSharingContext {
+        ExternalSharingContext(destination: nil, content: .text(text))
+    }
+    
     private static func decode<T>(base64Encoded string: String) -> T? where T : Decodable {
         guard let data = Data(base64Encoded: string) else {
             return nil

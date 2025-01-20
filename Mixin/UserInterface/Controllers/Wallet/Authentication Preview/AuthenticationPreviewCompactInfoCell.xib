@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -50,8 +50,10 @@
             <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="captionLabel" destination="U7S-Hg-QNA" id="mzL-YT-DdL"/>
+                <outlet property="contentBottomConstraint" destination="ud1-BB-diq" id="Wk1-4Q-nCH"/>
+                <outlet property="contentLeadingConstraint" destination="Jad-0z-kxa" id="3IK-CQ-5Dq"/>
                 <outlet property="contentTextView" destination="GE0-TW-ZhQ" id="pBd-Wi-eR9"/>
-                <outlet property="stackViewBottomConstraint" destination="ud1-BB-diq" id="Wk1-4Q-nCH"/>
+                <outlet property="contentTrailingConstraint" destination="I72-yj-SFu" id="jIt-dM-6HX"/>
             </connections>
             <point key="canvasLocation" x="19.847328244274809" y="48.239436619718312"/>
         </tableViewCell>

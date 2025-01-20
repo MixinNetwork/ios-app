@@ -196,6 +196,7 @@
 "bots" = "БОТЫ";
 "bots_title" = "Боты";
 "browser" = "Browser";
+"buy_token" = "Buy %@";
 "calculating" = "Calculating...";
 "call" = "Вызов";
 "call_declined" = "Вызов отклонен";
@@ -306,6 +307,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Объединить и вперед";
 "complete" = "Complete";
+"completed" = "Completed";
 "compress_database" = "Сжать базу данных";
 "compressed" = "Сжатый";
 "confirm" = "Подтвердить";
@@ -380,6 +382,7 @@
 "create_introduction" = "MPC Wallet, 2FA, %@, Self-custody, Social Recovery";
 "create_mnemonic_phrase" = "Create Mnemonic Phrase";
 "create_pin" = "Create PIN";
+"created" = "Created";
 "created_this_group" = "%@ создал эту группу";
 "creating_wallet_terminated_unexpectedly" = "Creating wallet terminated unexpectedly, click \"Continue\" to complete the creation";
 "creating_your_account" = "Creating your account...";
@@ -548,6 +551,8 @@
 "error_withdrawal_memo_format_incorrect" = "ОШИБКА 20131: Неверный формат уведомления о снятии средств.";
 "error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
 "estimated_balance_change" = "Balance Change (estimate)";
+"estimated_price" = "Estimated Price";
+"estimated_receive" = "Estimated Receive";
 "everybody" = "Все";
 "exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "Выйти из %@?";
@@ -559,6 +564,7 @@
 "export_failed" = "Не удалось экспортировать";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
 "face_id" = "Идентификатор лица";
+"failed" = "Не удалось";
 "failed_to_compose_avatar" = "Не удалось создать аватар. Вместо этого попробуйте другую картинку.";
 "failed_to_send_location" = "Не удалось отправить местоположение";
 "failed_to_send_photo" = "Не удалось отправить фото";
@@ -847,9 +853,15 @@
 "optimize_database" = "Оптимизировать базу данных";
 "optimized" = "Оптимизировано";
 "or" = "or";
+"order" = "Order";
+"order_details" = "Order Details";
+"order_id" = "Order ID";
+"order_type_limit" = "Limit";
+"order_type_swap" = "Swap";
 "other" = "Другой";
 "overwrite" = "Overwrite";
 "owner" = "Владелец";
+"paid" = "Paid";
 "participants" = "Участники";
 "participants_count" = "%@ УЧАСТНИКОВ";
 "paste" = "Paste";
@@ -917,6 +929,7 @@
 "preparing_progress" = "Подготовка...(%@)";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
+"price_change_24h" = "24h Price Change";
 "price_data_unavailable" = "Price data unavailable";
 "price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";
 "price_in_currency" = "Price (%@)";
@@ -948,6 +961,7 @@
 "receive" = "ПОЛУЧИТЬ";
 "receive_from_address_description" = "From another wallet or exchange";
 "receive_money" = "Получить деньги";
+"received" = "received";
 "receiver" = "Получатель";
 "receivers" = "Получатели";
 "recent" = "Recent";
@@ -1065,6 +1079,7 @@
 "selected_photo_count" = "Выбрано %d фото";
 "selected_video" = "Выбрано 1 видео";
 "selected_video_count" = "Выбрано %d видео";
+"sell_token" = "Sell %@";
 "send" = "Отправить";
 "send_as_file" = "Отправить как файл";
 "send_as_files" = "Отправить как файлы";
@@ -1150,6 +1165,7 @@
 "share_log_file" = "Общий доступ к файлу журнала";
 "share_message_description" = "Вы уверены, что хотите отправить %2$@ от %1$@?";
 "share_message_description_empty" = "Вы уверены, что хотите отправить %@?";
+"share_pair" = "Share Pair";
 "share_to" = "Поделиться с";
 "shared_media" = "Общие медиа";
 "show" = "Показать";
@@ -1200,12 +1216,15 @@
 "suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "Подозрительная ссылка";
 "swap" = "Swap";
+"swap_again" = "Swap Again";
 "swap_confirmation" = "Swap Confirmation";
 "swap_failed" = "Swap Failed";
 "swap_invalid_amount" = "No available quote found. Please try a different amount.";
 "swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
 "swap_no_available_quote" = "No available quote found. Please try a different token.";
 "swap_not_supported" = "%@ swapping is not supported.";
+"swap_order_paid" = "Paid";
+"swap_order_received" = "Received";
 "swap_receive" = "Receive";
 "swap_send" = "Send";
 "switch_account" = "Switch Account";
@@ -1281,6 +1300,7 @@
 "try_again" = "Попробуйте еще раз";
 "trying_connect_tip_network" = "Connecting the TIP network";
 "trying_connect_tip_node" = "Trying connect TIP node";
+"type" = "Type";
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";

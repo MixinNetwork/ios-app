@@ -101,6 +101,9 @@ final class ChartView: UIView {
     }
     
     @objc private func inspect(_ recognizer: InspectionGestureRecognizer) {
+        guard !points.isEmpty else {
+            return
+        }
         let x = {
             var x = recognizer.location(in: self).x
             x = max(0, min(bounds.width, x))

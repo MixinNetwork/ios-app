@@ -202,8 +202,20 @@ extension AppCardData {
                 self.color = try container.decode(String.self, forKey: .color)
                 self.label = try container.decode(String.self, forKey: .label)
                 self.actionURL = URL(string: action)
-                if let url = actionURL {
-                    self.isActionExternal = switch url.scheme {
+                self.isActionExternal = Self.isActionExternal(url: actionURL)
+            }
+            
+            public init(action: String, color: String, label: String) {
+                self.action = action
+                self.color = color
+                self.label = label
+                self.actionURL = URL(string: action)
+                self.isActionExternal = Self.isActionExternal(url: actionURL)
+            }
+            
+            private static func isActionExternal(url: URL?) -> Bool {
+                if let url {
+                    switch url.scheme {
                     case "mixin":
                         false
                     case "http", "https":
@@ -212,7 +224,7 @@ extension AppCardData {
                         true
                     }
                 } else {
-                    self.isActionExternal = false
+                    false
                 }
             }
             
@@ -235,6 +247,19 @@ extension AppCardData {
             case actions
             case updatedAt = "updated_at"
             case shareable = "shareable"
+        }
+        
+        public init(
+            appID: String, cover: Cover?, title: String?, description: String?,
+            actions: [Action], updatedAt: String?, isShareable: Bool
+        ) {
+            self.appID = appID
+            self.cover = cover
+            self.title = title
+            self.description = description
+            self.actions = actions
+            self.updatedAt = updatedAt
+            self.isShareable = isShareable
         }
         
         public init(from decoder: any Decoder) throws {

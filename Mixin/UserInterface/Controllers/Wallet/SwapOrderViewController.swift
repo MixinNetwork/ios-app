@@ -197,21 +197,54 @@ extension SwapOrderViewController: PillActionView.Delegate {
                 navigationController.setViewControllers(viewControllers, animated: true)
             }
         default:
-            let string = "mixin://mixin.one/swap?input=\(order.payAssetID)&output=\(order.receiveAssetID)"
-            let message = Message.createMessage(
-                messageId: UUID().uuidString.lowercased(),
-                conversationId: "",
-                userId: myUserId,
-                category: MessageCategory.SIGNAL_TEXT.rawValue,
-                content: string,
-                status: MessageStatus.SENDING.rawValue,
-                createdAt: Date().toUTCString()
-            )
-            let vc = R.storyboard.chat.external_sharing_confirmation()!
-            vc.modalPresentationStyle = .custom
-            vc.transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
-            UIApplication.homeContainerViewController?.present(vc, animated: true, completion: nil)
-            vc.load(sharingContext: .text(string), message: message, webContext: nil, action: .forward)
+            guard let navigationController else {
+                return
+            }
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            RouteAPI.markets(id: order.receiveAssetID, queue: .main) { [order] result in
+                hud.hide()
+                let description: String? = switch result {
+                case let .success(market):
+                    """
+                    🔥 \(market.name) (\(market.symbol))
+
+                    📈 \(R.string.localizable.market_cap()): \(market.localizedMarketCap ?? "")
+                    🏷️ \(R.string.localizable.price()): \(market.localizedPrice)
+                    💰 24h 价格变化: \(market.localizedPriceChangePercentage24H ?? "")
+                    """
+                case let .failure:
+                    nil
+                }
+                let actions: [AppCardData.V1Content.Action] = [
+                    .init(
+                        action: "mixin://mixin.one/swap?input=\(order.payAssetID)&output=\(order.receiveAssetID)",
+                        color: "#50BD5C",
+                        label: "Buy \(order.receiveSymbol)"
+                    ),
+                    .init(
+                        action: "mixin://mixin.one/swap?input=\(order.receiveAssetID)&output=\(order.payAssetID)",
+                        color: "#DB454F",
+                        label: "Sell \(order.receiveSymbol)"
+                    ),
+                    .init(
+                        action: "mixin://mixin.one/markets/\(order.receiveAssetID)",
+                        color: "#3D75E3",
+                        label: order.receiveSymbol + " " + R.string.localizable.market()
+                    ),
+                ]
+                let content = AppCardData.V1Content(
+                    appID: BotUserID.mixinRoute,
+                    cover: nil,
+                    title: R.string.localizable.swap() + " " + order.exchangingSymbolRepresentation,
+                    description: description,
+                    actions: actions,
+                    updatedAt: nil,
+                    isShareable: true
+                )
+                let receiverSelector = MessageReceiverViewController.instance(content: .appCard(.v1(content)))
+                navigationController.pushViewController(receiverSelector, animated: true)
+            }
         }
     }
     

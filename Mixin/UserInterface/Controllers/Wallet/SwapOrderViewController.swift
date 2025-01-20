@@ -54,6 +54,7 @@ final class SwapOrderViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = R.string.localizable.order_details()
+        navigationItem.rightBarButtonItem = .customerService(target: self, action: #selector(presentCustomerService(_:)))
         view.backgroundColor = R.color.background_secondary()
         tableView.backgroundColor = R.color.background_secondary()
         tableView.register(R.nib.swapOrderHeaderCell)
@@ -167,6 +168,11 @@ final class SwapOrderViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         nil
+    }
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController()
+        present(customerService, animated: true)
     }
     
 }

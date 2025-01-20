@@ -15,6 +15,7 @@ final class SwapTokenSelectorViewController: UIViewController {
     private let allChains: [Chain] = [
         Chain(id: ChainID.ethereum, name: "Ethereum"),
         Chain(id: ChainID.solana, name: "Solana"),
+        Chain(id: ChainID.base, name: "Base"),
         Chain(id: ChainID.tron, name: "Tron"),
         Chain(id: ChainID.bnbSmartChain, name: "BSC"),
         Chain(id: ChainID.polygon, name: "Polygon"),

@@ -803,6 +803,7 @@
 "no_media" = "NO MEDIA";
 "no_memo" = "No Memo";
 "no_network_connection" = "No network connection";
+"no_orders" = "NO ORDERS";
 "no_posts" = "NO POSTS";
 "no_results" = "NO RESULTS";
 "no_stickers" = "NO STICKERS";
@@ -853,11 +854,11 @@
 "optimize_database" = "Optimize Database";
 "optimized" = "Optimized";
 "or" = "or";
-"order" = "Order";
 "order_details" = "Order Details";
 "order_id" = "Order ID";
 "order_type_limit" = "Limit";
 "order_type_swap" = "Swap";
+"orders" = "Orders";
 "other" = "Other";
 "overwrite" = "Overwrite";
 "owner" = "Owner";

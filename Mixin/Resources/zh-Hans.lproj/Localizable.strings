@@ -803,6 +803,7 @@
 "no_media" = "没有媒体";
 "no_memo" = "没有 Memo（备注）";
 "no_network_connection" = "无网络连接";
+"no_orders" = "没有订单";
 "no_posts" = "没有文章";
 "no_results" = "未找到相关结果";
 "no_stickers" = "还未添加任何表情";
@@ -853,11 +854,11 @@
 "optimize_database" = "优化查询索引";
 "optimized" = "已优化";
 "or" = "或者";
-"order" = "订单";
 "order_details" = "订单详情";
 "order_id" = "订单 ID";
 "order_type_limit" = "限价";
 "order_type_swap" = "闪兑";
+"orders" = "订单";
 "other" = "其他";
 "overwrite" = "覆盖";
 "owner" = "群主";

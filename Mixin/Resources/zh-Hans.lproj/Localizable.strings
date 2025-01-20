@@ -853,11 +853,11 @@
 "optimize_database" = "优化查询索引";
 "optimized" = "已优化";
 "or" = "或者";
-"order" = "订单";
 "order_details" = "订单详情";
 "order_id" = "订单 ID";
 "order_type_limit" = "限价";
 "order_type_swap" = "闪兑";
+"orders" = "订单";
 "other" = "其他";
 "overwrite" = "覆盖";
 "owner" = "群主";

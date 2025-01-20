@@ -853,11 +853,11 @@
 "optimize_database" = "データベースの最適化";
 "optimized" = "最適化済みです";
 "or" = "or";
-"order" = "Order";
 "order_details" = "Order Details";
 "order_id" = "Order ID";
 "order_type_limit" = "Limit";
 "order_type_swap" = "Swap";
+"orders" = "Orders";
 "other" = "その他";
 "overwrite" = "Overwrite";
 "owner" = "オーナー";

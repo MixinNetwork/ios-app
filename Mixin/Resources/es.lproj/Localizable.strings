@@ -853,11 +853,11 @@
 "optimize_database" = "Optimizar base de datos";
 "optimized" = "Optimizado";
 "or" = "or";
-"order" = "Order";
 "order_details" = "Order Details";
 "order_id" = "Order ID";
 "order_type_limit" = "Limit";
 "order_type_swap" = "Swap";
+"orders" = "Orders";
 "other" = "Otro";
 "overwrite" = "Overwrite";
 "owner" = "Propietario";

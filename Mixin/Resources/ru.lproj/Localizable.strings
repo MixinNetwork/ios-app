@@ -853,11 +853,11 @@
 "optimize_database" = "Оптимизировать базу данных";
 "optimized" = "Оптимизировано";
 "or" = "or";
-"order" = "Order";
 "order_details" = "Order Details";
 "order_id" = "Order ID";
 "order_type_limit" = "Limit";
 "order_type_swap" = "Swap";
+"orders" = "Orders";
 "other" = "Другой";
 "overwrite" = "Overwrite";
 "owner" = "Владелец";

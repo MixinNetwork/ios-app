@@ -212,7 +212,7 @@ final class Web3SwapViewController: SwapViewController {
     
     private func reloadSendView(with token: Web3Token) {
         let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
-        sendBalanceLabel.text = "Bal " + balance
+        sendBalanceButton.setTitle(R.string.localizable.balance_abbreviation(balance), for: .normal)
         sendIconView.setIcon(web3Token: token)
         sendSymbolLabel.text = token.symbol
         sendLoadingIndicator.stopAnimating()

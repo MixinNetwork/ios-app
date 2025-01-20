@@ -422,39 +422,44 @@ extension MixinSwapViewController {
     }
     
     private func updateSendView(style: TokenSelectorStyle) {
-        switch style {
-        case .loading:
-            sendTokenStackView.alpha = 0
-            sendIconView.isHidden = false
-            sendNetworkLabel.text = "Placeholder"
-            sendNetworkLabel.alpha = 0 // Keeps the height
-            depositSendTokenButton.isHidden = true
-            sendBalanceLabel.text = "0"
-            sendBalanceLabel.alpha = 0
-            sendLoadingIndicator.startAnimating()
-        case .selectable:
-            sendTokenStackView.alpha = 1
-            sendIconView.isHidden = true
-            sendIconView.prepareForReuse()
-            sendSymbolLabel.text = R.string.localizable.select_token()
-            sendNetworkLabel.text = "Placeholder"
-            sendNetworkLabel.alpha = 0 // Keeps the height
-            depositSendTokenButton.isHidden = true
-            sendBalanceLabel.text = "0"
-            sendBalanceLabel.alpha = 0
-            sendLoadingIndicator.stopAnimating()
-        case .token(let token):
-            sendTokenStackView.alpha = 1
-            let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
-            sendIconView.isHidden = false
-            sendIconView.setIcon(swappableToken: token)
-            sendSymbolLabel.text = token.symbol
-            sendNetworkLabel.text = token.chain.name
-            sendNetworkLabel.alpha = 1
-            depositSendTokenButton.isHidden = token.decimalBalance != 0
-            sendBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
-            sendBalanceLabel.alpha = 1
-            sendLoadingIndicator.stopAnimating()
+        UIView.performWithoutAnimation {
+            switch style {
+            case .loading:
+                sendTokenStackView.alpha = 0
+                sendIconView.isHidden = false
+                sendNetworkLabel.text = "Placeholder"
+                sendNetworkLabel.alpha = 0 // Keeps the height
+                depositSendTokenButton.isHidden = true
+                sendBalanceButton.setTitle("0", for: .normal)
+                sendBalanceButton.alpha = 0
+                sendBalanceButton.layoutIfNeeded()
+                sendLoadingIndicator.startAnimating()
+            case .selectable:
+                sendTokenStackView.alpha = 1
+                sendIconView.isHidden = true
+                sendIconView.prepareForReuse()
+                sendSymbolLabel.text = R.string.localizable.select_token()
+                sendNetworkLabel.text = "Placeholder"
+                sendNetworkLabel.alpha = 0 // Keeps the height
+                depositSendTokenButton.isHidden = true
+                sendBalanceButton.setTitle("0", for: .normal)
+                sendBalanceButton.alpha = 0
+                sendBalanceButton.layoutIfNeeded()
+                sendLoadingIndicator.stopAnimating()
+            case .token(let token):
+                sendTokenStackView.alpha = 1
+                let balance = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
+                sendIconView.isHidden = false
+                sendIconView.setIcon(swappableToken: token)
+                sendSymbolLabel.text = token.symbol
+                sendNetworkLabel.text = token.chain.name
+                sendNetworkLabel.alpha = 1
+                depositSendTokenButton.isHidden = token.decimalBalance != 0
+                sendBalanceButton.setTitle(R.string.localizable.balance_abbreviation(balance), for: .normal)
+                sendBalanceButton.alpha = 1
+                sendBalanceButton.layoutIfNeeded()
+                sendLoadingIndicator.stopAnimating()
+            }
         }
     }
     

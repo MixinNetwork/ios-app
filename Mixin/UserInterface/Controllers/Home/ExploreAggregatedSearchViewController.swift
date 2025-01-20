@@ -351,7 +351,7 @@ extension ExploreAggregatedSearchViewController: UITableViewDelegate {
                 view.button.isHidden = botSearchResults.count <= maxResultsCount
                 return view
             case .dapp:
-                view.label.text = "dApps"
+                view.label.text = "Apps"
                 view.button.isHidden = true
                 return view
             }

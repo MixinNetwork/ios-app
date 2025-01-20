@@ -196,7 +196,7 @@
 "bots" = "機器人";
 "bots_title" = "機器人";
 "browser" = "瀏覽器";
-"buy_token" = "買入 %@";
+"buy_token" = "購買 %@";
 "calculating" = "正在計算...";
 "call" = "語音";
 "call_declined" = "對方已拒絕";
@@ -1079,7 +1079,7 @@
 "selected_photo_count" = "已選擇 %d 張圖片";
 "selected_video" = "已選擇 1 個影片";
 "selected_video_count" = "已選擇 %d 個影片";
-"sell_token" = "售出 %@";
+"sell_token" = "出售 %@";
 "send" = "傳送";
 "send_as_file" = "傳送為檔案";
 "send_as_files" = "傳送為檔案";

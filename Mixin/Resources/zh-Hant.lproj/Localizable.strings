@@ -803,6 +803,7 @@
 "no_media" = "沒有媒體";
 "no_memo" = "沒有 Memo（備註）";
 "no_network_connection" = "無網路連線";
+"no_orders" = "沒有訂單";
 "no_posts" = "沒有文章";
 "no_results" = "未找到相關結果";
 "no_stickers" = "還未新增任何表情";

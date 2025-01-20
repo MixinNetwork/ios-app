@@ -803,6 +803,7 @@
 "no_media" = "没有媒体";
 "no_memo" = "没有 Memo（备注）";
 "no_network_connection" = "无网络连接";
+"no_orders" = "没有订单";
 "no_posts" = "没有文章";
 "no_results" = "未找到相关结果";
 "no_stickers" = "还未添加任何表情";

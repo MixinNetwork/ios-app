@@ -803,6 +803,7 @@
 "no_media" = "メディアがありません";
 "no_memo" = "メモなし";
 "no_network_connection" = "ネットワーク接続がありません";
+"no_orders" = "NO ORDERS";
 "no_posts" = "投稿がありません";
 "no_results" = "結果なし";
 "no_stickers" = "スタンプはありません";

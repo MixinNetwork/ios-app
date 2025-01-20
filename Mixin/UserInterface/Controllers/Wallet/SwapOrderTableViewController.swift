@@ -15,7 +15,8 @@ final class SwapOrderTableViewController: UITableViewController {
         view.backgroundColor = R.color.background()
         tableView.backgroundColor = R.color.background()
         tableView.register(R.nib.swapOrderCell)
-        tableView.rowHeight = 90
+        tableView.estimatedRowHeight = 85
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
         updateTableViewContentInsetBottom()
         DispatchQueue.global().async { [limit=localPageCount] in

@@ -54,11 +54,8 @@ final class SwapOrderCell: ModernSelectedBackgroundCell {
         case .pending, .none:
             receiveAmountLabel.textColor = R.color.text_tertiary()
             stateLabel.textColor = R.color.text_tertiary()
-        case .refunded:
-            receiveAmountLabel.textColor = R.color.market_green()
-            stateLabel.textColor = R.color.market_red()
         case .failed:
-            receiveAmountLabel.textColor = R.color.text_tertiary()
+            receiveAmountLabel.textColor = R.color.market_green()
             stateLabel.textColor = R.color.market_red()
         }
     }

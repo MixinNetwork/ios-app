@@ -103,9 +103,9 @@ final class SwapOrderViewController: UITableViewController {
             case .receive:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
                 let title = switch order.state.knownCase {
-                case .pending, .failed, .none:
+                case .pending, .none:
                     R.string.localizable.estimated_receive()
-                case .success, .refunded:
+                case .success, .failed:
                     R.string.localizable.swap_order_received()
                 }
                 cell.reloadData(
@@ -124,7 +124,7 @@ final class SwapOrderViewController: UITableViewController {
                 cell.captionLabel.text = switch order.state.knownCase {
                 case .success:
                     R.string.localizable.price().uppercased()
-                case .pending, .failed, .refunded, .none:
+                case .pending, .failed, .none:
                     R.string.localizable.estimated_price().uppercased()
                 }
                 cell.primaryLabel.text = receivePrice

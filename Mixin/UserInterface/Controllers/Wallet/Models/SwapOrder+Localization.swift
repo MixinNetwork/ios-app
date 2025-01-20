@@ -11,8 +11,6 @@ extension SwapOrder.State: AnyLocalized {
             R.string.localizable.completed()
         case .failed:
             R.string.localizable.failed()
-        case .refunded:
-            R.string.localizable.refunded()
         }
     }
     

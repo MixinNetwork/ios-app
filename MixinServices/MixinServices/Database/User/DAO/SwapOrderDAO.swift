@@ -25,7 +25,7 @@ public final class SwapOrderDAO: UserDatabaseDAO {
         let sql = """
         SELECT created_at
         FROM swap_orders
-        WHERE state IN ('pending', 'failed')
+        WHERE state IN ('pending')
         ORDER BY created_at ASC
         LIMIT 1
         """

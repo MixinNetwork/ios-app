@@ -26,7 +26,7 @@ public struct SwapOrderItem {
     public let type: UnknownableEnum<SwapOrder.OrderType>
     
     // Could be receive amount if pending/success/unknown
-    // Refund amount if failed/refunded
+    // Refund amount if failed
     public let actualReceivingAmount: String
     
     public var exchangingSymbolRepresentation: String {
@@ -108,7 +108,7 @@ extension SwapOrderItem: Decodable, MixinFetchableRecord {
                 sign: .always,
                 symbol: .custom(receiveSymbol)
             )
-        case .failed, .refunded:
+        case .failed:
             CurrencyFormatter.localizedString(
                 from: payAmount,
                 format: .precision,

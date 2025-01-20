@@ -7,7 +7,6 @@ public struct SwapOrder {
         case pending
         case success
         case failed
-        case refunded
     }
     
     public enum OrderType: String {

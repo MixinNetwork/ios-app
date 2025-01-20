@@ -974,7 +974,6 @@
 "recovery_kit_instruction" = "Mixin Messenger 的 MPC 钱包基于去中心化密钥协议 TIP 构建，您可以通过手机号、助记词或可信联系人登录恢复你的账号，钱包完整的密钥只存在当前设备的 TEE 安全环境中，阅读文档以了解%@。";
 "red_up_green_down" = "红涨绿跌";
 "refresh" = "刷新";
-"refunded" = "已退款";
 "reject" = "拒绝";
 "reject_transaction" = "拒绝交易";
 "rejecting_transaction" = "正在拒绝";

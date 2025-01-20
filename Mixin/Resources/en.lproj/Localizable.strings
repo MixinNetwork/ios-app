@@ -196,6 +196,7 @@
 "bots" = "BOTS";
 "bots_title" = "Bots";
 "browser" = "Browser";
+"buy_token" = "Buy %@";
 "calculating" = "Calculating...";
 "call" = "Call";
 "call_declined" = "Call declined";
@@ -928,6 +929,7 @@
 "preparing_progress" = "Preparing...(%@)";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
+"price_change_24h" = "24h Price Change";
 "price_data_unavailable" = "Price data unavailable";
 "price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";
 "price_in_currency" = "Price (%@)";
@@ -1078,6 +1080,7 @@
 "selected_photo_count" = "Selected %d Photos";
 "selected_video" = "Selected 1 Video";
 "selected_video_count" = "Selected %d Videos";
+"sell_token" = "Sell %@";
 "send" = "Send";
 "send_as_file" = "Send as File";
 "send_as_files" = "Send as Files";

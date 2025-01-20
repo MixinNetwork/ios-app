@@ -196,6 +196,7 @@
 "bots" = "БОТЫ";
 "bots_title" = "Боты";
 "browser" = "Browser";
+"buy_token" = "Buy %@";
 "calculating" = "Calculating...";
 "call" = "Вызов";
 "call_declined" = "Вызов отклонен";
@@ -928,6 +929,7 @@
 "preparing_progress" = "Подготовка...(%@)";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
+"price_change_24h" = "24h Price Change";
 "price_data_unavailable" = "Price data unavailable";
 "price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";
 "price_in_currency" = "Price (%@)";
@@ -1078,6 +1080,7 @@
 "selected_photo_count" = "Выбрано %d фото";
 "selected_video" = "Выбрано 1 видео";
 "selected_video_count" = "Выбрано %d видео";
+"sell_token" = "Sell %@";
 "send" = "Отправить";
 "send_as_file" = "Отправить как файл";
 "send_as_files" = "Отправить как файлы";

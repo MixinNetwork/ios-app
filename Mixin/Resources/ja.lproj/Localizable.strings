@@ -196,6 +196,7 @@
 "bots" = "ミニアプリ";
 "bots_title" = "Myミニアプリ一覧";
 "browser" = "Browser";
+"buy_token" = "Buy %@";
 "calculating" = "Calculating...";
 "call" = "電話";
 "call_declined" = "応答拒否";
@@ -928,6 +929,7 @@
 "preparing_progress" = "準備中...(%@)";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
+"price_change_24h" = "24h Price Change";
 "price_data_unavailable" = "Price data unavailable";
 "price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";
 "price_in_currency" = "Price (%@)";
@@ -1078,6 +1080,7 @@
 "selected_photo_count" = "%d枚の写真を選択中";
 "selected_video" = "選択されたビデオ";
 "selected_video_count" = "%d本のビデオを選択中";
+"sell_token" = "Sell %@";
 "send" = "送る";
 "send_as_file" = "ファイルとして送信する";
 "send_as_files" = "複数ファイルとして送信する";

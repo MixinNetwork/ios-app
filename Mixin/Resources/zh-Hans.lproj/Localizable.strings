@@ -196,6 +196,7 @@
 "bots" = "机器人";
 "bots_title" = "机器人";
 "browser" = "浏览器";
+"buy_token" = "买入 %@";
 "calculating" = "正在计算...";
 "call" = "语音";
 "call_declined" = "对方已拒绝";
@@ -928,6 +929,7 @@
 "preparing_progress" = "备份中...（%@）";
 "price" = "价格";
 "price_alert_notification_permission" = "价格预警需要开启通知权限";
+"price_change_24h" = "24 小时价格变化";
 "price_data_unavailable" = "暂无价格数据";
 "price_decrease_invalid" = "跌幅需大于 %1$@ 且小于 %2$@";
 "price_in_currency" = "价格（%@）";
@@ -1078,6 +1080,7 @@
 "selected_photo_count" = "已选择 %d 张图片";
 "selected_video" = "已选择 1 个视频";
 "selected_video_count" = "已选择 %d 个视频";
+"sell_token" = "售出 %@";
 "send" = "发送";
 "send_as_file" = "发送为文件";
 "send_as_files" = "发送为文件";

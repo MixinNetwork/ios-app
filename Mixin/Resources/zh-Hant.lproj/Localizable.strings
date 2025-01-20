@@ -196,6 +196,7 @@
 "bots" = "機器人";
 "bots_title" = "機器人";
 "browser" = "瀏覽器";
+"buy_token" = "買入 %@";
 "calculating" = "正在計算...";
 "call" = "語音";
 "call_declined" = "對方已拒絕";
@@ -928,6 +929,7 @@
 "preparing_progress" = "備份中...（%@）";
 "price" = "價格";
 "price_alert_notification_permission" = "價格預警需要開啟通知許可權";
+"price_change_24h" = "24 小時價格變化";
 "price_data_unavailable" = "暫無價格資料";
 "price_decrease_invalid" = "跌幅需大於 %1$@ 且小於 %2$@";
 "price_in_currency" = "價格（%@）";
@@ -1078,6 +1080,7 @@
 "selected_photo_count" = "已選擇 %d 張圖片";
 "selected_video" = "已選擇 1 個影片";
 "selected_video_count" = "已選擇 %d 個影片";
+"sell_token" = "售出 %@";
 "send" = "傳送";
 "send_as_file" = "傳送為檔案";
 "send_as_files" = "傳送為檔案";

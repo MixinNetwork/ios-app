@@ -202,7 +202,7 @@ extension SwapOrderViewController: PillActionView.Delegate {
             }
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            RouteAPI.markets(id: order.receiveAssetID, queue: .main) { [order] result in
+            RouteAPI.markets(id: order.receiveAssetID, queue: .main) { [order, receivePrice] result in
                 hud.hide()
                 let description: String? = switch result {
                 case let .success(market):
@@ -211,21 +211,23 @@ extension SwapOrderViewController: PillActionView.Delegate {
 
                     📈 \(R.string.localizable.market_cap()): \(market.localizedMarketCap ?? "")
                     🏷️ \(R.string.localizable.price()): \(market.localizedPrice)
-                    💰 24h 价格变化: \(market.localizedPriceChangePercentage24H ?? "")
+                    💰 \(R.string.localizable.price_change_24h()): \(market.localizedPriceChangePercentage24H ?? "")
                     """
-                case let .failure:
-                    nil
+                case .failure:
+                    """
+                    🏷️ \(R.string.localizable.price()): \(receivePrice)
+                    """
                 }
                 let actions: [AppCardData.V1Content.Action] = [
                     .init(
                         action: "mixin://mixin.one/swap?input=\(order.payAssetID)&output=\(order.receiveAssetID)",
                         color: "#50BD5C",
-                        label: "Buy \(order.receiveSymbol)"
+                        label: R.string.localizable.buy_token(order.receiveSymbol)
                     ),
                     .init(
                         action: "mixin://mixin.one/swap?input=\(order.receiveAssetID)&output=\(order.payAssetID)",
                         color: "#DB454F",
-                        label: "Sell \(order.receiveSymbol)"
+                        label: R.string.localizable.sell_token(order.receiveSymbol)
                     ),
                     .init(
                         action: "mixin://mixin.one/markets/\(order.receiveAssetID)",

@@ -11,7 +11,7 @@ final class SwapOrderTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = R.string.localizable.order()
+        navigationItem.title = R.string.localizable.orders()
         view.backgroundColor = R.color.background()
         tableView.backgroundColor = R.color.background()
         tableView.register(R.nib.swapOrderCell)
@@ -35,6 +35,11 @@ final class SwapOrderTableViewController: UITableViewController {
                     let offset = offset ?? newestOrder.createdAt
                     self.reloadRemoteOrders(offset: offset)
                 } else {
+                    self.tableView.checkEmpty(
+                        dataCount: 0,
+                        text: R.string.localizable.no_orders(),
+                        photo: R.image.emptyIndicator.ic_data()!
+                    )
                     self.reloadRemoteOrders(offset: nil)
                 }
             }
@@ -144,7 +149,10 @@ extension SwapOrderTableViewController {
                     if localOrders.count == localPageCount {
                         self.resetLoadNextPageIndexPath()
                     }
-                    UIView.performWithoutAnimation(self.tableView.reloadData)
+                    UIView.performWithoutAnimation {
+                        self.tableView.removeEmptyIndicator()
+                        self.tableView.reloadData()
+                    }
                     if didFinish {
                         Logger.general.info(category: "SwapOrderTable", message: "All remote orders loaded")
                     } else {

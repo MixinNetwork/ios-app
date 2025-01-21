@@ -446,16 +446,18 @@ extension SwapTokenSelectorViewController {
             } else {
                 return
             }
-            let tokenChanges = TokenDAO.shared.usdChanges(assetIDs: recentTokens.map(\.assetID))
-            let recentTokenChanges: [String: TokenChange] = tokenChanges.compactMapValues { change in
-                guard let value = Decimal(string: change, locale: .enUSPOSIX) else {
-                    return nil
+            let assetIDs = recentTokens.map(\.assetID)
+            let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
+                .priceChangePercentage24H(assetIDs: assetIDs)
+                .compactMapValues { change in
+                    guard let value = Decimal(string: change, locale: .enUSPOSIX) else {
+                        return nil
+                    }
+                    guard let description = NumberFormatter.percentage.string(decimal: value / 100) else {
+                        return nil
+                    }
+                    return TokenChange(value: value, description: description)
                 }
-                guard let description = NumberFormatter.percentage.string(decimal: value) else {
-                    return nil
-                }
-                return TokenChange(value: value, description: description)
-            }
             DispatchQueue.main.async {
                 guard let self else {
                     return

@@ -140,6 +140,24 @@ public final class MarketDAO: UserDatabaseDAO {
         """)
     }
     
+    public func priceChangePercentage24H(assetIDs: any Sequence<String>) -> [String: String] {
+        try! db.read { (db) -> [String: String] in
+            let query: GRDB.SQL = """
+            SELECT mi.asset_id, m.price_change_percentage_24h
+            FROM markets m
+                LEFT JOIN market_ids mi ON m.coin_id = mi.coin_id
+            WHERE mi.asset_id IN \(assetIDs)
+            """
+            let (sql, arguments) = try query.build(db)
+            let rows = try Row.fetchAll(db, sql: sql, arguments: arguments)
+            return rows.reduce(into: [:]) { results, row in
+                if let key: String = row["asset_id"] {
+                    results[key] = row["price_change_percentage_24h"]
+                }
+            }
+        }
+    }
+    
     public func priceHistory(coinID: String, period: PriceHistoryPeriod) -> PriceHistoryStorage? {
         let sql = """
         SELECT hp.*

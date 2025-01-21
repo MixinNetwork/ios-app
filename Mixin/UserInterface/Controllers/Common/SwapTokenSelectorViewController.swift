@@ -435,14 +435,19 @@ extension SwapTokenSelectorViewController {
     
     private func reloadRecents() {
         DispatchQueue.global().async { [recent, defaultTokens, weak self] in
-            guard let recentIDs = PropertiesDAO.shared.jsonObject(forKey: recent.key, type: [String].self) else {
+            let recentTokens: [BalancedSwapToken]
+            if let tokens = PropertiesDAO.shared.jsonObject(forKey: recent.key, type: [SwapToken.Codable].self) {
+                recentTokens = BalancedSwapToken.fillBalance(swappableTokens: tokens)
+            } else if let ids = PropertiesDAO.shared.jsonObject(forKey: recent.key, type: [String].self) {
+                recentTokens = ids.compactMap { id in
+                    defaultTokens[id]
+                }
+                PropertiesDAO.shared.set(jsonObject: recentTokens.map(\.codable), forKey: recent.key)
+            } else {
                 return
             }
-            let recentTokens = recentIDs.compactMap { id in
-                defaultTokens[id]
-            }
-            let changes = TokenDAO.shared.usdChanges(assetIDs: recentTokens.map(\.assetID))
-            let recentTokenChanges: [String: TokenChange] = changes.compactMapValues { change in
+            let tokenChanges = TokenDAO.shared.usdChanges(assetIDs: recentTokens.map(\.assetID))
+            let recentTokenChanges: [String: TokenChange] = tokenChanges.compactMapValues { change in
                 guard let value = Decimal(string: change, locale: .enUSPOSIX) else {
                     return nil
                 }
@@ -516,6 +521,11 @@ extension SwapTokenSelectorViewController {
     private func reloadSearchResults(keyword: String, tokens: [SwapToken]) {
         assert(!Thread.isMainThread)
         let balancedTokens = BalancedSwapToken.fillBalance(swappableTokens: tokens)
+            .sorted { (one, another) in
+                let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
+                let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
+                return left > right
+            }
         let searchResults: OrderedDictionary<String, BalancedSwapToken> = balancedTokens.reduce(into: [:]) { result, token in
             result[token.assetID] = token
         }
@@ -549,19 +559,14 @@ extension SwapTokenSelectorViewController {
     }
     
     private func pickUp(token: BalancedSwapToken) {
+        var recentTokens = self.recentTokens
         DispatchQueue.global().async { [recent, maxNumberOfRecents] in
-            var recentIDs: [String]
-            if let ids = PropertiesDAO.shared.jsonObject(forKey: recent.key, type: [String].self) {
-                recentIDs = ids
-                if let index = recentIDs.firstIndex(of: token.assetID) {
-                    recentIDs.remove(at: index)
-                }
-            } else {
-                recentIDs = []
+            recentTokens.removeAll { recentToken in
+                recentToken.assetID == token.assetID
             }
-            recentIDs.insert(token.assetID, at: 0)
-            recentIDs = Array(recentIDs.prefix(maxNumberOfRecents))
-            PropertiesDAO.shared.set(jsonObject: recentIDs, forKey: recent.key)
+            recentTokens.insert(token, at: 0)
+            let tokens = recentTokens.prefix(maxNumberOfRecents).map(\.codable)
+            PropertiesDAO.shared.set(jsonObject: tokens, forKey: recent.key)
         }
         presentingViewController?.dismiss(animated: true)
         onSelected?(token)

@@ -11,6 +11,18 @@ class SwapToken {
     let icon: String
     let chain: Chain
     
+    var codable: Codable {
+        Codable(
+            address: address,
+            assetID: assetID,
+            decimals: decimals,
+            name: name,
+            symbol: symbol,
+            icon: icon,
+            chain: chain
+        )
+    }
+    
     init(
         address: String, assetID: String, decimals: Int16,
         name: String, symbol: String, icon: String,
@@ -75,7 +87,7 @@ extension SwapToken {
 
 extension SwapToken {
     
-    struct Chain: Swift.Decodable {
+    struct Chain: Swift.Codable {
         
         enum CodingKeys: String, CodingKey {
             case chainID = "chainId"
@@ -118,7 +130,7 @@ extension SwapToken {
         
     }
     
-    final class Decodable: SwapToken, Swift.Decodable {
+    final class Codable: SwapToken, Swift.Codable {
         
         enum CodingKeys: String, CodingKey {
             case address
@@ -128,6 +140,21 @@ extension SwapToken {
             case symbol
             case icon
             case chain
+        }
+        
+        override init(
+            address: String, assetID: String, decimals: Int16, name: String,
+            symbol: String, icon: String, chain: SwapToken.Chain
+        ) {
+            super.init(
+                address: address,
+                assetID: assetID,
+                decimals: decimals,
+                name: name,
+                symbol: symbol,
+                icon: icon,
+                chain: chain
+            )
         }
         
         init(from decoder: any Decoder) throws {
@@ -141,6 +168,17 @@ extension SwapToken {
                 icon: try container.decode(String.self, forKey: .icon),
                 chain: try container.decode(Chain.self, forKey: .chain)
             )
+        }
+        
+        func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(address, forKey: .address)
+            try container.encode(assetID, forKey: .assetID)
+            try container.encode(decimals, forKey: .decimals)
+            try container.encode(name, forKey: .name)
+            try container.encode(symbol, forKey: .symbol)
+            try container.encode(icon, forKey: .icon)
+            try container.encode(chain, forKey: .chain)
         }
         
     }

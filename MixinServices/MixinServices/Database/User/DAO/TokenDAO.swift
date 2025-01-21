@@ -174,7 +174,7 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     // Key is asset id, value is token.change_usd
-    public func usdChanges(assetIDs: [String]) -> [String: String] {
+    public func usdChanges(assetIDs: any Sequence<String>) -> [String: String] {
         db.select(
             keyColumn: Token.column(of: .assetID),
             valueColumn: Token.column(of: .usdChange),

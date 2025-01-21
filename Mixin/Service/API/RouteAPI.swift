@@ -21,7 +21,7 @@ final class RouteAPI {
     
     static func swappableTokens(
         source: RouteTokenSource,
-        completion: @escaping (MixinAPI.Result<[SwapToken.Decodable]>) -> Void
+        completion: @escaping (MixinAPI.Result<[SwapToken.Codable]>) -> Void
     ) {
         let path = "/web3/tokens?version=\(Bundle.main.shortVersionString)&source=\(source.rawValue)"
         request(method: .get, path: path, completion: completion)
@@ -31,7 +31,7 @@ final class RouteAPI {
         keyword: String,
         source: RouteTokenSource,
         queue: DispatchQueue,
-        completion: @escaping (MixinAPI.Result<[SwapToken.Decodable]>) -> Void
+        completion: @escaping (MixinAPI.Result<[SwapToken.Codable]>) -> Void
     ) -> Request? {
         guard let encodedKeyword = keyword.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
             completion(.failure(.invalidPath))

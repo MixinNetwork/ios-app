@@ -66,10 +66,6 @@ extension BalancedSwapToken {
             } else {
                 BalancedSwapToken(token: token, balance: 0, usdPrice: 0)
             }
-        }.sorted { (one, another) in
-            let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
-            let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
-            return left > right
         }
     }
     

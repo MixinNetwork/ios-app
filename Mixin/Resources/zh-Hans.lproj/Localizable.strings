@@ -196,7 +196,7 @@
 "bots" = "机器人";
 "bots_title" = "机器人";
 "browser" = "浏览器";
-"buy_token" = "购买 %@";
+"buy_token" = "买入 %@";
 "calculating" = "正在计算...";
 "call" = "语音";
 "call_declined" = "对方已拒绝";
@@ -1080,7 +1080,7 @@
 "selected_photo_count" = "已选择 %d 张图片";
 "selected_video" = "已选择 1 个视频";
 "selected_video_count" = "已选择 %d 个视频";
-"sell_token" = "出售 %@";
+"sell_token" = "卖出 %@";
 "send" = "发送";
 "send_as_file" = "发送为文件";
 "send_as_files" = "发送为文件";

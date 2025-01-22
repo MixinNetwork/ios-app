@@ -559,7 +559,6 @@
 "exit_group" = "Выйти из группы";
 "exit_group_and_report_inviter" = "Выйти из группы и сообщить о приглашении";
 "expired" = "Истекший";
-"explore" = "Explore";
 "export" = "Экспорт";
 "export_failed" = "Не удалось экспортировать";
 "export_mnemonic_phrase" = "Export mnemonic phrase";

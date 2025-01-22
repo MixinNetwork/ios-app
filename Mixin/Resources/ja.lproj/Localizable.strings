@@ -559,7 +559,6 @@
 "exit_group" = "グループから退出";
 "exit_group_and_report_inviter" = "グループを退会し招待者を報告する";
 "expired" = "期限切れ";
-"explore" = "Explore";
 "export" = "エクスポート";
 "export_failed" = "エクスポート失敗";
 "export_mnemonic_phrase" = "Export mnemonic phrase";

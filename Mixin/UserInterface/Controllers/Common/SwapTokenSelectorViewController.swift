@@ -23,6 +23,7 @@ final class SwapTokenSelectorViewController: UIViewController {
     
     private let maxNumberOfRecents = 6
     private let recent: Recent
+    private let recentGroupHorizontalMargin: CGFloat = 20
     private let defaultTokens: OrderedDictionary<String, BalancedSwapToken> // Key is asset id
     private let defaultChains: [Chain]
     private let defaultChainIDs: Set<String>
@@ -92,14 +93,14 @@ final class SwapTokenSelectorViewController: UIViewController {
         collectionView.register(R.nib.exploreRecentSearchCell)
         collectionView.register(R.nib.exploreSegmentCell)
         collectionView.register(R.nib.swapTokenCell)
-        collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, environment) in
+        collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { [weak self, recentGroupHorizontalMargin] (sectionIndex, environment) in
             switch Section(rawValue: sectionIndex)! {
             case .recent:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(99), heightDimension: .estimated(41))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(41))
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
-                group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: recentGroupHorizontalMargin, bottom: 0, trailing: recentGroupHorizontalMargin)
                 group.interItemSpacing = .fixed(16)
                 let section = NSCollectionLayoutSection(group: group)
                 section.interGroupSpacing = 12
@@ -224,6 +225,7 @@ extension SwapTokenSelectorViewController: UICollectionViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .recent:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_recent_search, for: indexPath)!
+            cell.maxCellWidth = collectionView.frame.width - recentGroupHorizontalMargin * 2
             cell.size = .medium
             let token = recentTokens[indexPath.item]
             cell.setBadgeIcon { iconView in

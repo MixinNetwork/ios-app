@@ -32,6 +32,13 @@ final class ExploreRecentSearchCell: UICollectionViewCell {
         [titleStackViewTopConstraint, titleStackViewBottomConstraint]
     }
     
+    // When using UICollectionViewCompositionalLayout as the collection view layout,
+    // if the item size uses an estimated width, the layout will call the cell’s
+    // `systemLayoutSizeFitting(_:withHorizontalFittingPriority:verticalFittingPriority:)`
+    // to obtain the size. If the size.width returned is too large, it can cause
+    // the layout to crash. This behavior can be managed by setting this value.
+    var maxCellWidth: CGFloat = 200
+    
     var size: Size = .large {
         didSet {
             switch size {
@@ -94,7 +101,7 @@ final class ExploreRecentSearchCell: UICollectionViewCell {
         + titleStackViewLeadingConstraint.constant
         + titleSize.width
         + titleStackViewTrailingConstraint.constant
-        return CGSize(width: width, height: height)
+        return CGSize(width: min(maxCellWidth, width), height: height)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

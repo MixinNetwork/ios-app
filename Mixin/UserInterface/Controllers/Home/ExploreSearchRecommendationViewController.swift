@@ -3,18 +3,20 @@ import MixinServices
 
 final class ExploreSearchRecommendationViewController: UIViewController {
     
+    private let groupHorizontalMargin: CGFloat = 20
+    
     private var viewModels: [RecentSearchViewModel] = []
     
     private weak var collectionView: UICollectionView!
     
     override func loadView() {
-        let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, environment in
+        let layout = UICollectionViewCompositionalLayout { [weak self, groupHorizontalMargin] sectionIndex, environment in
             let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(114), heightDimension: .estimated(47))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(47))
             let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
             group.interItemSpacing = .fixed(16)
-            group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+            group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: groupHorizontalMargin, bottom: 0, trailing: groupHorizontalMargin)
             let section = NSCollectionLayoutSection(group: group)
             if let self, !self.viewModels.isEmpty {
                 section.boundarySupplementaryItems = [
@@ -106,6 +108,7 @@ extension ExploreSearchRecommendationViewController: UICollectionViewDataSource 
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_recent_search, for: indexPath)!
+        cell.maxCellWidth = collectionView.frame.width - groupHorizontalMargin * 2
         cell.size = .large
         let viewModel = viewModels[indexPath.item]
         switch viewModel.content {

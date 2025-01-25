@@ -138,8 +138,18 @@ extension SwapOrderTableViewController {
                     return
                 }
                 Logger.general.info(category: "SwapOrderTable", message: "Loaded \(remoteOrders.count) remote orders \(oldestOrder.createdAt) ~ \(newestOrder.createdAt)")
+                
                 let didFinish = remoteOrders.count < remotePageCount
                 SwapOrderDAO.shared.save(orders: remoteOrders)
+                
+                let orderAssetIDs = Set(remoteOrders.flatMap({ order in
+                    [order.payAssetID, order.receiveAssetID]
+                }))
+                let inexistsAssetIDs = TokenDAO.shared.inexistAssetIDs(in: orderAssetIDs)
+                if !inexistsAssetIDs.isEmpty, case let .success(tokens) = SafeAPI.assets(ids: inexistsAssetIDs) {
+                    TokenDAO.shared.save(assets: tokens)
+                }
+                
                 let localOrders = SwapOrderDAO.shared.orders(limit: localPageCount)
                 DispatchQueue.main.sync {
                     guard let self else {

@@ -8,15 +8,18 @@ class InputAmountViewController: UIViewController {
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var calculatedValueLabel: UILabel!
     @IBOutlet weak var insufficientBalanceLabel: UILabel!
+    @IBOutlet weak var accessoryStackView: UIStackView!
     @IBOutlet weak var tokenIconView: BadgeIconView!
     @IBOutlet weak var tokenNameLabel: UILabel!
     @IBOutlet weak var tokenBalanceLabel: UILabel!
     @IBOutlet weak var inputMaxValueButton: UIButton!
     @IBOutlet weak var decimalSeparatorButton: HighlightableButton!
     @IBOutlet weak var deleteBackwardsButton: HighlightableButton!
-    @IBOutlet weak var reviewButton: RoundedButton!
+    @IBOutlet weak var reviewButton: StyledButton!
     
     @IBOutlet var decimalButtons: [DecimalButton]!
+    
+    @IBOutlet weak var numberPadTopConstraint: NSLayoutConstraint!
     
     var token: Web3TransferableToken {
         fatalError("Must override")
@@ -66,6 +69,7 @@ class InputAmountViewController: UIViewController {
         decimalButtons.sort(by: { $0.value < $1.value })
         decimalSeparatorButton.setTitle(Locale.current.decimalSeparator ?? ".", for: .normal)
         reloadViews(inputAmount: accumulator.decimal)
+        reviewButton.style = .filled
     }
     
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
@@ -135,10 +139,7 @@ class InputAmountViewController: UIViewController {
     }
     
     @IBAction func inputMaxValue(_ sender: Any) {
-        var accumulator = DecimalAccumulator(intent: .byToken)
-        accumulator.decimal = token.decimalBalance
-        self.amountIntent = .byToken
-        self.accumulator = accumulator
+        inputAmount(multiplier: 1)
     }
     
     @IBAction func inputValue(_ sender: DecimalButton) {
@@ -159,6 +160,62 @@ class InputAmountViewController: UIViewController {
     
     @IBAction func review(_ sender: Any) {
         
+    }
+    
+    func addMultipliersView() {
+        let multipliersStackView = {
+            var config: UIButton.Configuration = .filled()
+            config.baseForegroundColor = R.color.text()
+            config.baseBackgroundColor = R.color.background_secondary()
+            config.cornerStyle = .capsule
+            
+            let stackView = UIStackView()
+            stackView.axis = .horizontal
+            stackView.spacing = 25
+            
+            for tag in (0...2) {
+                config.attributedTitle = {
+                    let title = switch tag {
+                    case 0:
+                        "25%"
+                    case 1:
+                        "50%"
+                    default:
+                        R.string.localizable.balance_max()
+                    }
+                    let paragraphSytle = NSMutableParagraphStyle()
+                    paragraphSytle.alignment = .right
+                    let attributes: [NSAttributedString.Key: Any] = [
+                        .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
+                        .paragraphStyle: paragraphSytle,
+                    ]
+                    return AttributedString(title, attributes: AttributeContainer(attributes))
+                }()
+                
+                let button = UIButton(configuration: config)
+                button.tag = tag
+                button.addTarget(self, action: #selector(inputMultipliedAmount(_:)), for: .touchUpInside)
+                stackView.addArrangedSubview(button)
+            }
+            return stackView
+        }()
+        accessoryStackView.addArrangedSubview(multipliersStackView)
+        multipliersStackView.snp.makeConstraints { make in
+            make.height.greaterThanOrEqualTo(32)
+        }
+        numberPadTopConstraint.constant = 12
+    }
+    
+    @objc private func inputMultipliedAmount(_ sender: UIButton) {
+        let multiplier: Decimal = switch sender.tag {
+        case 0:
+            0.25
+        case 1:
+            0.5
+        default:
+            1
+        }
+        inputAmount(multiplier: multiplier)
     }
     
 }
@@ -215,6 +272,13 @@ extension InputAmountViewController {
             insufficientBalanceLabel.alpha = 0
             reviewButton.isEnabled = tokenAmount > 0
         }
+    }
+    
+    private func inputAmount(multiplier: Decimal) {
+        var accumulator = DecimalAccumulator(intent: .byToken)
+        accumulator.decimal = token.decimalBalance * multiplier
+        self.amountIntent = .byToken
+        self.accumulator = accumulator
     }
     
 }

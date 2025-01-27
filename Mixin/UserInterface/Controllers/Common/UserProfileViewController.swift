@@ -381,8 +381,9 @@ extension UserProfileViewController {
     }
     
     @objc func transfer() {
-        let viewController = TransferOutViewController(token: nil, to: .contact(user))
-        dismissAndPush(viewController)
+        let selector = SendTokenSelectorViewController()
+        selector.receiver = user
+        dismissAndPresent(selector)
     }
     
     @objc func editAlias() {

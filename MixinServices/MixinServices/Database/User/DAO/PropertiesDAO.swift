@@ -15,6 +15,7 @@ public final class PropertiesDAO: UserDatabaseDAO {
         case hasMarketReviewed  = "has_viewed_market"
         case mixinSwapRecentSendIDs     = "mixin_swap_recent_send"
         case mixinSwapRecentReceiveIDs  = "mixin_swap_recent_receive"
+        case transferRecentAssetIDs     = "transfer_recent_assets"
     }
     
     public enum Change {

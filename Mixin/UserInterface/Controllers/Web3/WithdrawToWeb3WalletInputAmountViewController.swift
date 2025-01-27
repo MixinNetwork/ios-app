@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class WithdrawInputAmountViewController: InputAmountViewController {
+final class WithdrawToWeb3WalletInputAmountViewController: InputAmountViewController {
     
     override var token: any Web3TransferableToken {
         tokenItem
@@ -126,7 +126,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
     
 }
 
-extension WithdrawInputAmountViewController: WalletHintViewControllerDelegate {
+extension WithdrawToWeb3WalletInputAmountViewController: WalletHintViewControllerDelegate {
     
     func walletHintViewControllerDidRealize(_ controller: WalletHintViewController) {
         navigationController?.popViewController(animated: true)

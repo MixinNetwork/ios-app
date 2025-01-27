@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -72,7 +72,7 @@
                                 </subviews>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" name="background_secondary"/>
+                        <color key="backgroundColor" name="background"/>
                         <constraints>
                             <constraint firstItem="bGA-bd-sDM" firstAttribute="centerY" secondItem="eMA-X1-1W9" secondAttribute="centerY" id="Evc-Bx-Efp"/>
                             <constraint firstAttribute="trailing" secondItem="bGA-bd-sDM" secondAttribute="trailing" constant="22" id="hqq-a2-J3I"/>
@@ -86,7 +86,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                 </subviews>
-                <color key="backgroundColor" name="background"/>
+                <color key="backgroundColor" name="background_secondary"/>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="eMA-X1-1W9" secondAttribute="trailing" constant="16" id="b3C-9G-xLh"/>
                     <constraint firstItem="eMA-X1-1W9" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="meK-qt-ZA4"/>
@@ -94,7 +94,7 @@
                     <constraint firstItem="eMA-X1-1W9" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="pbu-h6-ZyT"/>
                 </constraints>
             </tableViewCellContentView>
-            <color key="backgroundColor" name="background"/>
+            <color key="backgroundColor" name="background_secondary"/>
             <connections>
                 <outlet property="disclosureIndicatorImageView" destination="ZxV-5h-7z7" id="BLP-Oe-OZW"/>
                 <outlet property="freeLabel" destination="zg2-2W-1u5" id="bNY-Oz-D9b"/>

@@ -2,10 +2,10 @@ import UIKit
 import MixinServices
 
 protocol TokenSelectorViewControllerDelegate: AnyObject {
-    func tokenSelectorViewController(_ viewController: TokenSelectorViewController, didSelectToken token: TokenItem)
+    func tokenSelectorViewController(_ viewController: LegacyTokenSelectorViewController, didSelectToken token: TokenItem)
 }
 
-final class TokenSelectorViewController: PopupSearchableTableViewController {
+final class LegacyTokenSelectorViewController: PopupSearchableTableViewController {
     
     weak var delegate: TokenSelectorViewControllerDelegate?
     
@@ -44,7 +44,7 @@ final class TokenSelectorViewController: PopupSearchableTableViewController {
     
 }
 
-extension TokenSelectorViewController: UITableViewDataSource {
+extension LegacyTokenSelectorViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return isSearching ? searchResults.count : tokens.count
@@ -60,7 +60,7 @@ extension TokenSelectorViewController: UITableViewDataSource {
     
 }
 
-extension TokenSelectorViewController: UITableViewDelegate {
+extension LegacyTokenSelectorViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

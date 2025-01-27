@@ -361,7 +361,7 @@ final class TransferOutViewController: KeyboardBasedLayoutViewController {
         guard !tokenSelectorView.accessoryImageView.isHidden else {
             return
         }
-        let vc = TokenSelectorViewController()
+        let vc = LegacyTokenSelectorViewController()
         vc.delegate = self
         vc.tokens = availableTokens
         vc.token = token
@@ -577,7 +577,7 @@ extension TransferOutViewController: UITextFieldDelegate {
 
 extension TransferOutViewController: TokenSelectorViewControllerDelegate {
     
-    func tokenSelectorViewController(_ viewController: TokenSelectorViewController, didSelectToken token: TokenItem) {
+    func tokenSelectorViewController(_ viewController: LegacyTokenSelectorViewController, didSelectToken token: TokenItem) {
         self.token = token
         amountIntent = .byToken
         amountTextField.text = nil

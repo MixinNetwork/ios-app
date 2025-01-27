@@ -1,66 +1,54 @@
 import UIKit
 import Combine
 import OrderedCollections
-import Alamofire
 import MixinServices
 
-final class SwapTokenSelectorViewController: UIViewController {
+protocol SelectableToken {
+    var assetID: String { get }
+}
+
+class TokenSelectorViewController<Token: SelectableToken>: UIViewController, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
     
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var onSelected: ((BalancedSwapToken) -> Void)?
-    
-    private let allChains: [Chain] = [
-        Chain(id: ChainID.ethereum, name: "Ethereum"),
-        Chain(id: ChainID.solana, name: "Solana"),
-        Chain(id: ChainID.base, name: "Base"),
-        Chain(id: ChainID.tron, name: "Tron"),
-        Chain(id: ChainID.bnbSmartChain, name: "BSC"),
-        Chain(id: ChainID.polygon, name: "Polygon"),
-    ]
-    
     private let maxNumberOfRecents = 6
-    private let recent: Recent
     private let recentGroupHorizontalMargin: CGFloat = 20
-    private let defaultTokens: OrderedDictionary<String, BalancedSwapToken> // Key is asset id
-    private let defaultChains: [Chain]
-    private let defaultChainIDs: Set<String>
+    private let searchDebounceInterval: TimeInterval
     private let selectedAssetID: String?
     
-    private var recentTokens: [BalancedSwapToken] = []
-    private var recentTokenChanges: [String: TokenChange] = [:] // Key is asset id
+    var recentTokens: [Token] = []
+    var recentTokenChanges: [String: TokenChange] = [:] // Key is asset id
     
-    private var selectedChainID: String?
-    private var tokenIndicesForSelectedChain: [Int]?
+    var defaultTokens: [Token]
+    var defaultChains: OrderedSet<Chain>
     
-    private weak var searchRequest: Request?
+    var selectedChain: Chain?
+    var tokenIndicesForSelectedChain: [Int]?
+    
     private var searchObserver: AnyCancellable?
-    private var searchResultsKeyword: String?
-    private var searchResults: OrderedDictionary<String, BalancedSwapToken>? // Key is asset id
-    private var searchResultChains: [Chain]?
+    var searchResultsKeyword: String?
+    var searchResults: [Token]?
+    var searchResultChains: OrderedSet<Chain>?
     
-    private var trimmedKeyword: String {
-        (searchBoxView.textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+    var trimmedKeyword: String {
+        (searchBoxView.textField.text ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
     }
     
     init(
-        recent: Recent,
-        tokens: OrderedDictionary<String, BalancedSwapToken>,
+        defaultTokens: [Token],
+        defaultChains: OrderedSet<Chain>,
+        searchDebounceInterval: TimeInterval,
         selectedAssetID: String?
     ) {
-        let chainIDs = Set(tokens.compactMap(\.value.chain.chainID))
-        
-        self.recent = recent
-        self.defaultTokens = tokens
-        self.defaultChains = allChains.filter { (chain) in
-            chainIDs.contains(chain.id)
-        }
-        self.defaultChainIDs = chainIDs
+        self.defaultTokens = defaultTokens
+        self.defaultChains = defaultChains
+        self.searchDebounceInterval = searchDebounceInterval
         self.selectedAssetID = selectedAssetID
-        
-        let nib = R.nib.swapTokenSelectorView
+        let nib = R.nib.tokenSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
     
@@ -82,9 +70,17 @@ final class SwapTokenSelectorViewController: UIViewController {
         cancelButton.setTitle(R.string.localizable.cancel(), for: .normal)
         searchObserver = NotificationCenter.default
             .publisher(for: UITextField.textDidChangeNotification, object: searchBoxView.textField)
-            .debounce(for: .seconds(1), scheduler: RunLoop.main)
+            .debounce(for: .seconds(searchDebounceInterval), scheduler: RunLoop.main)
             .sink { [weak self] _ in
-                self?.search()
+                guard let self else {
+                    return
+                }
+                let keyword = self.trimmedKeyword
+                guard !keyword.isEmpty, keyword != self.searchResultsKeyword else {
+                    self.searchBoxView.isBusy = false
+                    return
+                }
+                self.search(keyword: keyword)
             }
         collectionView.register(
             R.nib.recentSearchHeaderView,
@@ -140,28 +136,29 @@ final class SwapTokenSelectorViewController: UIViewController {
         collectionView.delegate = self
         collectionView.reloadData()
         reloadChainSelection()
-        reloadTokenSelection()
-        reloadRecents()
     }
     
     @IBAction func cancel(_ sender: Any) {
         presentingViewController?.dismiss(animated: true)
     }
     
-    @objc private func prepareForSearch(_ textField: UITextField) {
-        searchRequest?.cancel()
+    @objc func prepareForSearch(_ textField: UITextField) {
         let keyword = self.trimmedKeyword
         if keyword.isEmpty {
             searchResultsKeyword = nil
             searchResults = nil
             searchResultChains = nil
-            if let chainID = selectedChainID, defaultChainIDs.contains(chainID) {
-                tokenIndicesForSelectedChain = tokenIndices(tokens: defaultTokens, chainID: chainID)
+            if let chain = selectedChain, defaultChains.contains(chain) {
+                tokenIndicesForSelectedChain = tokenIndices(tokens: defaultTokens, chainID: chain.id)
             } else {
                 tokenIndicesForSelectedChain = nil
             }
             collectionView.reloadData()
-            collectionView.removeEmptyIndicator()
+            collectionView.checkEmpty(
+                dataCount: defaultTokens.count,
+                text: R.string.localizable.dont_have_assets(),
+                photo: R.image.emptyIndicator.ic_hidden_assets()!
+            )
             reloadChainSelection()
             searchBoxView.isBusy = false
         } else if keyword != searchResultsKeyword {
@@ -169,37 +166,57 @@ final class SwapTokenSelectorViewController: UIViewController {
         }
     }
     
-    private func search() {
-        let keyword = self.trimmedKeyword
-        guard !keyword.isEmpty, keyword != searchResultsKeyword else {
-            searchBoxView.isBusy = false
-            return
-        }
-        searchRequest = RouteAPI.search(keyword: keyword, source: .mixin, queue: .global()) { [weak self] result in
-            switch result {
-            case .success(let tokens):
-                self?.reloadSearchResults(keyword: keyword, tokens: tokens)
-            case .failure(.emptyResponse):
-                self?.reloadSearchResults(keyword: keyword, tokens: [])
-            case .failure(let error):
-                Logger.general.debug(category: "SwapTokenSelector", message: "\(error)")
-            }
-        }
+    func search(keyword: String) {
+        
     }
     
-}
-
-extension SwapTokenSelectorViewController: UITextFieldDelegate {
+    func reloadRecents(tokens: [Token], changes: [String: TokenChange]) {
+        self.recentTokens = tokens
+        self.recentTokenChanges = changes
+        self.reloadWithoutAnimation(section: .recent)
+    }
     
+    func saveRecentsToStorage(tokens: any Sequence<Token>) {
+        
+    }
+    
+    func clearRecentsStorage() {
+        
+    }
+    
+    func tokenIndices(tokens: [Token], chainID: String) -> [Int] {
+        assertionFailure("Override to implement chain filter")
+        return []
+    }
+    
+    func configureRecentCell(_ cell: ExploreRecentSearchCell, withToken token: Token) {
+        
+    }
+    
+    func configureTokenCell(_ cell: SwapTokenCell, withToken token: Token) {
+        
+    }
+    
+    func pickUp(token: Token, from location: PickUpLocation) {
+        var recentTokens = self.recentTokens
+        DispatchQueue.global().async { [maxNumberOfRecents] in
+            recentTokens.removeAll { recentToken in
+                recentToken.assetID == token.assetID
+            }
+            recentTokens.insert(token, at: 0)
+            let topRecentTokens = recentTokens.prefix(maxNumberOfRecents)
+            self.saveRecentsToStorage(tokens: topRecentTokens)
+        }
+        presentingViewController?.dismiss(animated: true)
+    }
+    
+    // MARK: - UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return false
     }
     
-}
-
-extension SwapTokenSelectorViewController: UICollectionViewDataSource {
-    
+    // MARK: - UICollectionViewDataSource
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         Section.allCases.count
     }
@@ -228,17 +245,7 @@ extension SwapTokenSelectorViewController: UICollectionViewDataSource {
             cell.maxCellWidth = collectionView.frame.width - recentGroupHorizontalMargin * 2
             cell.size = .medium
             let token = recentTokens[indexPath.item]
-            cell.setBadgeIcon { iconView in
-                iconView.setIcon(swappableToken: token)
-            }
-            cell.titleLabel.text = token.symbol
-            if let change = recentTokenChanges[token.assetID] {
-                cell.subtitleLabel.marketColor = change.value >= 0 ? .rising : .falling
-                cell.subtitleLabel.text = change.description
-            } else {
-                cell.subtitleLabel.textColor = R.color.text_tertiary()
-                cell.subtitleLabel.text = token.name
-            }
+            configureRecentCell(cell, withToken: token)
             return cell
         case .chainSelector:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
@@ -252,15 +259,7 @@ extension SwapTokenSelectorViewController: UICollectionViewDataSource {
         case .tokens:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_token, for: indexPath)!
             let token = token(at: indexPath)
-            cell.iconView.setIcon(swappableToken: token)
-            cell.titleLabel.text = token.name
-            cell.subtitleLabel.text = token.localizedBalanceWithSymbol
-            if let tag = token.chainTag {
-                cell.chainLabel.text = tag
-                cell.chainLabel.isHidden = false
-            } else {
-                cell.chainLabel.isHidden = true
-            }
+            configureTokenCell(cell, withToken: token)
             return cell
         }
     }
@@ -276,10 +275,7 @@ extension SwapTokenSelectorViewController: UICollectionViewDataSource {
         return view
     }
     
-}
-
-extension SwapTokenSelectorViewController: UICollectionViewDelegate {
-    
+    // MARK: - UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         switch Section(rawValue: indexPath.section)! {
         case .recent:
@@ -318,162 +314,117 @@ extension SwapTokenSelectorViewController: UICollectionViewDelegate {
         switch Section(rawValue: indexPath.section)! {
         case .recent:
             let token = recentTokens[indexPath.item]
-            pickUp(token: token)
-            reporter.report(event: .swapCoinSwitch, method: "recent_click")
+            pickUp(token: token, from: .recent)
         case .chainSelector:
             if indexPath.item == 0 {
-                selectedChainID = nil
+                selectedChain = nil
                 tokenIndicesForSelectedChain = nil
             } else {
                 let chainIndex = indexPath.item - 1
                 if let searchResultChains, let searchResults {
-                    let chainID = searchResultChains[chainIndex].id
-                    selectedChainID = chainID
-                    tokenIndicesForSelectedChain = tokenIndices(tokens: searchResults, chainID: chainID)
+                    let chain = searchResultChains[chainIndex]
+                    selectedChain = chain
+                    tokenIndicesForSelectedChain = tokenIndices(tokens: searchResults, chainID: chain.id)
                 } else {
-                    let chainID = defaultChains[chainIndex].id
-                    selectedChainID = chainID
-                    tokenIndicesForSelectedChain = tokenIndices(tokens: defaultTokens, chainID: chainID)
+                    let chain = defaultChains[chainIndex]
+                    selectedChain = chain
+                    tokenIndicesForSelectedChain = tokenIndices(tokens: defaultTokens, chainID: chain.id)
                 }
             }
             self.reloadWithoutAnimation(section: .tokens)
             self.reloadTokenSelection()
         case .tokens:
+            let token = token(at: indexPath)
             if searchResults == nil {
-                if selectedChainID == nil {
-                    reporter.report(event: .swapCoinSwitch, method: "all_item_click")
+                if selectedChain == nil {
+                    pickUp(token: token, from: .allItems)
                 } else {
-                    reporter.report(event: .swapCoinSwitch, method: "chain_item_click")
+                    pickUp(token: token, from: .chainFilteredItems)
                 }
             } else {
-                reporter.report(event: .swapCoinSwitch, method: "search_item_click")
+                pickUp(token: token, from: .searchResults)
             }
-            let token = token(at: indexPath)
-            pickUp(token: token)
         }
     }
     
 }
 
-extension SwapTokenSelectorViewController: RecentSearchHeaderView.Delegate {
+extension TokenSelectorViewController: RecentSearchHeaderView.Delegate {
     
     func recentSearchHeaderViewDidSendAction(_ view: RecentSearchHeaderView) {
         recentTokens = []
         reloadWithoutAnimation(section: .recent)
-        DispatchQueue.global().async { [recent] in
-            PropertiesDAO.shared.removeValue(forKey: recent.key)
-        }
+        clearRecentsStorage()
     }
     
 }
 
-extension SwapTokenSelectorViewController {
+extension TokenSelectorViewController {
     
-    enum Recent {
-        
-        case send
-        case receive
-        
-        fileprivate var key: PropertiesDAO.Key {
-            switch self {
-            case .send:
-                    .mixinSwapRecentSendIDs
-            case .receive:
-                    .mixinSwapRecentReceiveIDs
-            }
-        }
-        
-    }
-    
-    private enum Section: Int, CaseIterable {
+    enum Section: Int, CaseIterable {
         case recent
         case chainSelector
         case tokens
     }
     
-    private struct Chain {
+    enum PickUpLocation {
+        case recent
+        case allItems
+        case chainFilteredItems
+        case searchResults
+    }
+    
+    struct Chain: Equatable, Hashable {
+        
         let id: String
         let name: String
+        
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            lhs.id == rhs.id
+        }
+        
+        static func chains(ids: Set<String>) -> OrderedSet<Chain> {
+            let all = [
+                Chain(id: ChainID.ethereum, name: "Ethereum"),
+                Chain(id: ChainID.solana, name: "Solana"),
+                Chain(id: ChainID.base, name: "Base"),
+                Chain(id: ChainID.tron, name: "Tron"),
+                Chain(id: ChainID.bnbSmartChain, name: "BSC"),
+                Chain(id: ChainID.polygon, name: "Polygon"),
+            ]
+            let chains = all.filter { chain in
+                ids.contains(chain.id)
+            }
+            return OrderedSet(chains)
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+        
     }
     
-    private struct TokenChange {
+    struct TokenChange {
+        
         let value: Decimal
         let description: String
-    }
-    
-    private func token(at indexPath: IndexPath) -> BalancedSwapToken {
-        assert(indexPath.section == Section.tokens.rawValue)
-        let index = if let indices = tokenIndicesForSelectedChain {
-            indices[indexPath.item]
-        } else {
-            indexPath.item
-        }
-        return if let searchResults {
-            searchResults.values[index]
-        } else {
-            defaultTokens.values[index]
-        }
-    }
-    
-    private func tokenIndices(
-        tokens: OrderedDictionary<String, BalancedSwapToken>,
-        chainID: String
-    ) -> [Int] {
-        tokens.enumerated().compactMap { (index, token) in
-            if token.value.chain.chainID == chainID {
-                index
-            } else {
-                nil
+        
+        init?(change: String) {
+            guard let value = Decimal(string: change, locale: .enUSPOSIX) else {
+                return nil
             }
-        }
-    }
-    
-    private func reloadWithoutAnimation(section: Section) {
-        let sections = IndexSet(integer: section.rawValue)
-        UIView.performWithoutAnimation {
-            collectionView.reloadSections(sections)
-        }
-    }
-    
-    private func reloadRecents() {
-        DispatchQueue.global().async { [recent, defaultTokens, weak self] in
-            let recentTokens: [BalancedSwapToken]
-            if let tokens = PropertiesDAO.shared.jsonObject(forKey: recent.key, type: [SwapToken.Codable].self) {
-                recentTokens = BalancedSwapToken.fillBalance(swappableTokens: tokens)
-            } else if let ids = PropertiesDAO.shared.jsonObject(forKey: recent.key, type: [String].self) {
-                recentTokens = ids.compactMap { id in
-                    defaultTokens[id]
-                }
-                PropertiesDAO.shared.set(jsonObject: recentTokens.map(\.codable), forKey: recent.key)
-            } else {
-                return
+            guard let description = NumberFormatter.percentage.string(decimal: value / 100) else {
+                return nil
             }
-            let assetIDs = recentTokens.map(\.assetID)
-            let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
-                .priceChangePercentage24H(assetIDs: assetIDs)
-                .compactMapValues { change in
-                    guard let value = Decimal(string: change, locale: .enUSPOSIX) else {
-                        return nil
-                    }
-                    guard let description = NumberFormatter.percentage.string(decimal: value / 100) else {
-                        return nil
-                    }
-                    return TokenChange(value: value, description: description)
-                }
-            DispatchQueue.main.async {
-                guard let self else {
-                    return
-                }
-                self.recentTokens = recentTokens
-                self.recentTokenChanges = recentTokenChanges
-                self.reloadWithoutAnimation(section: .recent)
-            }
+            self.value = value
+            self.description = description
         }
+        
     }
     
-    private func reloadChainSelection() {
+    func reloadChainSelection() {
         let chains = searchResultChains ?? defaultChains
-        let item = if let chainID = selectedChainID, let index = chains.firstIndex(where: { $0.id == chainID }) {
+        let item = if let chain = selectedChain, let index = chains.firstIndex(of: chain) {
             index + 1 // 1 for the "All"
         } else {
             0
@@ -482,13 +433,13 @@ extension SwapTokenSelectorViewController {
         collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
     }
     
-    private func reloadTokenSelection() {
+    func reloadTokenSelection() {
         guard let assetID = selectedAssetID else {
             return
         }
         let item: Int
         if let searchResults {
-            if let index = searchResults.index(forKey: assetID) {
+            if let index = searchResults.firstIndex(where: { $0.assetID == assetID }) {
                 if let indices = tokenIndicesForSelectedChain {
                     if let i = indices.firstIndex(of: index) {
                         item = i
@@ -503,7 +454,7 @@ extension SwapTokenSelectorViewController {
                 // The selected token doesn't exists in search results
                 return
             }
-        } else if let index = defaultTokens.index(forKey: assetID) {
+        } else if let index = defaultTokens.firstIndex(where: { $0.assetID == assetID }) {
             if let indices = tokenIndicesForSelectedChain {
                 if let i = indices.firstIndex(of: index) {
                     item = i
@@ -522,58 +473,25 @@ extension SwapTokenSelectorViewController {
         collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
     }
     
-    private func reloadSearchResults(keyword: String, tokens: [SwapToken]) {
-        assert(!Thread.isMainThread)
-        let balancedTokens = BalancedSwapToken.fillBalance(swappableTokens: tokens)
-            .sorted { (one, another) in
-                let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
-                let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
-                return left > right
-            }
-        let searchResults: OrderedDictionary<String, BalancedSwapToken> = balancedTokens.reduce(into: [:]) { result, token in
-            result[token.assetID] = token
+    private func token(at indexPath: IndexPath) -> Token {
+        assert(indexPath.section == Section.tokens.rawValue)
+        let index = if let indices = tokenIndicesForSelectedChain {
+            indices[indexPath.item]
+        } else {
+            indexPath.item
         }
-        let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-        let searchResultChains = allChains.filter { (chain) in
-            chainIDs.contains(chain.id)
-        }
-        DispatchQueue.main.async {
-            guard self.trimmedKeyword == keyword else {
-                return
-            }
-            self.searchResultsKeyword = keyword
-            self.searchResults = searchResults
-            self.searchResultChains = searchResultChains
-            if let chainID = self.selectedChainID, chainIDs.contains(chainID) {
-                self.tokenIndicesForSelectedChain = self.tokenIndices(tokens: searchResults, chainID: chainID)
-            } else {
-                self.selectedChainID = nil
-                self.tokenIndicesForSelectedChain = nil
-            }
-            self.collectionView.reloadData()
-            self.collectionView.checkEmpty(
-                dataCount: balancedTokens.count,
-                text: R.string.localizable.no_results(),
-                photo: R.image.emptyIndicator.ic_search_result()!
-            )
-            self.reloadChainSelection()
-            self.reloadTokenSelection()
-            self.searchBoxView.isBusy = false
+        return if let searchResults {
+            searchResults[index]
+        } else {
+            defaultTokens[index]
         }
     }
     
-    private func pickUp(token: BalancedSwapToken) {
-        var recentTokens = self.recentTokens
-        DispatchQueue.global().async { [recent, maxNumberOfRecents] in
-            recentTokens.removeAll { recentToken in
-                recentToken.assetID == token.assetID
-            }
-            recentTokens.insert(token, at: 0)
-            let tokens = recentTokens.prefix(maxNumberOfRecents).map(\.codable)
-            PropertiesDAO.shared.set(jsonObject: tokens, forKey: recent.key)
+    private func reloadWithoutAnimation(section: Section) {
+        let sections = IndexSet(integer: section.rawValue)
+        UIView.performWithoutAnimation {
+            collectionView.reloadSections(sections)
         }
-        presentingViewController?.dismiss(animated: true)
-        onSelected?(token)
     }
     
 }

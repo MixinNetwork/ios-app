@@ -379,30 +379,8 @@ extension TokenViewController {
     }
     
     private func send() {
-        guard let navigationController else {
-            return
-        }
-        let token = self.token
-        let selector = SendingDestinationSelectorViewController(destinations: [.address, .contact]) { destination in
-            switch destination {
-            case .address:
-                let address = AddressViewController.instance(token: token)
-                navigationController.pushViewController(address, animated: true)
-            case .contact:
-                let selector = TransferReceiverViewController()
-                selector.onSelect = { [weak selector] (user) in
-                    let transfer = TransferOutViewController(token: token, to: .contact(user))
-                    var viewControllers = navigationController.viewControllers
-                    if let index = viewControllers.lastIndex(where: { $0 == selector }) {
-                        viewControllers.remove(at: index)
-                    }
-                    viewControllers.append(transfer)
-                    navigationController.setViewControllers(viewControllers, animated: true)
-                }
-                navigationController.pushViewController(selector, animated: true)
-            }
-        }
-        present(selector, animated: true, completion: nil)
+        let receiver = TokenReceiverViewController(token: token)
+        navigationController?.pushViewController(receiver, animated: true)
     }
     
     private func view(snapshot: SafeSnapshotItem) {

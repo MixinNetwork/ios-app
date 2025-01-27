@@ -258,7 +258,7 @@
 		7B86B1F523F6AB0B00C80AD9 /* TitledCardContentWidthCalculable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B86B1F423F6AB0A00C80AD9 /* TitledCardContentWidthCalculable.swift */; };
 		7B88655920AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B88655820AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift */; };
 		7B88655B20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B88655A20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift */; };
-		7B894AF3205BF8660065A1B8 /* AddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894AF2205BF8660065A1B8 /* AddressViewController.swift */; };
+		7B894AF3205BF8660065A1B8 /* AddressBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894AF2205BF8660065A1B8 /* AddressBookViewController.swift */; };
 		7B894AF5205BFC9B0065A1B8 /* NewAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */; };
 		7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B894CD520D24BE2004FA5A8 /* RecorderLockView.swift */; };
 		7B8A6A6D2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8A6A6C2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift */; };
@@ -722,7 +722,7 @@
 		94149B582A1A6A6D003E9E1A /* DeviceTransferClosedReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94149B572A1A6A6D003E9E1A /* DeviceTransferClosedReason.swift */; };
 		9414A7832BE78C2F00FA35EB /* Web3TransferInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414A7822BE78C2F00FA35EB /* Web3TransferInputAmountViewController.swift */; };
 		9414A7882BE78D8700FA35EB /* DecimalAccumulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414A7872BE78D8700FA35EB /* DecimalAccumulator.swift */; };
-		9414A78A2BE7911200FA35EB /* WithdrawInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414A7892BE7911200FA35EB /* WithdrawInputAmountViewController.swift */; };
+		9414A78A2BE7911200FA35EB /* WithdrawToWeb3WalletInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414A7892BE7911200FA35EB /* WithdrawToWeb3WalletInputAmountViewController.swift */; };
 		9414A84A2BE9BF4600FA35EB /* Web3TokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9414A8492BE9BF4600FA35EB /* Web3TokenViewController.swift */; };
 		9415D4A32BCBEF6800C78A75 /* Web3DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9415D4A12BCBEF6800C78A75 /* Web3DepositViewController.swift */; };
 		9415D4A42BCBEF6800C78A75 /* Web3DepositView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9415D4A22BCBEF6800C78A75 /* Web3DepositView.xib */; };
@@ -991,7 +991,18 @@
 		946E05922CBFD67B004B264E /* ExploreSearchCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05912CBFD67B004B264E /* ExploreSearchCategoryViewController.swift */; };
 		946E059D2CBFD846004B264E /* ExploreSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05992CBFD841004B264E /* ExploreSearchViewController.swift */; };
 		946E059F2CBFEE85004B264E /* SearchNavigationControllerChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */; };
+		946E9E342D40C46F00DBC308 /* SwapTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9E332D40C46D00DBC308 /* SwapTokenSelectorViewController.swift */; };
+		946E9F0B2D440F7D00DBC308 /* SendTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F0A2D440F7500DBC308 /* SendTokenSelectorViewController.swift */; };
 		946E9F1A2AEF88DF0077CD7A /* RecoverRawTransactionJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */; };
+		946E9F5C2D455F0900DBC308 /* TokenReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F5A2D455F0900DBC308 /* TokenReceiverViewController.swift */; };
+		946E9F692D4577EA00DBC308 /* AddressInfoInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F672D4577EA00DBC308 /* AddressInfoInputCell.swift */; };
+		946E9F6A2D4577EA00DBC308 /* AddressInfoInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946E9F682D4577EA00DBC308 /* AddressInfoInputCell.xib */; };
+		946E9FBD2D46237A00DBC308 /* TransferInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */; };
+		946EA03D2D469A4A00DBC308 /* AddressBookView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946EA03C2D469A4A00DBC308 /* AddressBookView.xib */; };
+		946EA0452D469AD200DBC308 /* AddressCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946EA0442D469AD200DBC308 /* AddressCell.xib */; };
+		946EA0862D4763BD00DBC308 /* AddressInfoInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946EA0852D4763BD00DBC308 /* AddressInfoInputViewController.swift */; };
+		946EA0882D4763CF00DBC308 /* AddressInfoInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946EA0872D4763CF00DBC308 /* AddressInfoInputView.xib */; };
+		946EA1142D47DD4000DBC308 /* WithdrawInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946EA1132D47DD4000DBC308 /* WithdrawInputAmountViewController.swift */; };
 		946FFAD32B6C566800B62B7F /* AuthenticationProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946FFAD22B6C566800B62B7F /* AuthenticationProgressView.swift */; };
 		9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */; };
 		94739A5426258F8300E8914D /* Custom-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94739A5326258F8200E8914D /* Custom-acknowledgements.plist */; };
@@ -1239,11 +1250,11 @@
 		94F7BCE42D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */; };
 		94F952582AE616F40025B995 /* TransferOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952572AE616F40025B995 /* TransferOutViewController.swift */; };
 		94F9525D2AE6174A0025B995 /* TransferOutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F9525C2AE6174A0025B995 /* TransferOutView.xib */; };
-		94F952622AE623B50025B995 /* TokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952612AE623B50025B995 /* TokenSelectorViewController.swift */; };
+		94F952622AE623B50025B995 /* LegacyTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952612AE623B50025B995 /* LegacyTokenSelectorViewController.swift */; };
 		94F952672AE66A700025B995 /* AmountIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952662AE66A700025B995 /* AmountIntent.swift */; };
 		94FA8FC92644236F006BC715 /* ConversationMessageComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */; };
-		94FB8E062D1A92CF002DCA20 /* SwapTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB8E042D1A92CF002DCA20 /* SwapTokenSelectorViewController.swift */; };
-		94FB8E072D1A92CF002DCA20 /* SwapTokenSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FB8E052D1A92CF002DCA20 /* SwapTokenSelectorView.xib */; };
+		94FB8E062D1A92CF002DCA20 /* TokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB8E042D1A92CF002DCA20 /* TokenSelectorViewController.swift */; };
+		94FB8E072D1A92CF002DCA20 /* TokenSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FB8E052D1A92CF002DCA20 /* TokenSelectorView.xib */; };
 		94FB8E0D2D1ACB32002DCA20 /* SwapTokenCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FB8E0C2D1ACB32002DCA20 /* SwapTokenCell.xib */; };
 		94FB8E0E2D1ACB32002DCA20 /* SwapTokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB8E0B2D1ACB32002DCA20 /* SwapTokenCell.swift */; };
 		94FCB5FF264673C400CCC8FD /* TranscriptPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */; };
@@ -1753,7 +1764,7 @@
 		7B86B1F423F6AB0A00C80AD9 /* TitledCardContentWidthCalculable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitledCardContentWidthCalculable.swift; sourceTree = "<group>"; };
 		7B88655820AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRepresentableMessageViewModel.swift; sourceTree = "<group>"; };
 		7B88655A20AC3417002D15E4 /* PhotoRepresentableMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRepresentableMessageCell.swift; sourceTree = "<group>"; };
-		7B894AF2205BF8660065A1B8 /* AddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressViewController.swift; sourceTree = "<group>"; };
+		7B894AF2205BF8660065A1B8 /* AddressBookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookViewController.swift; sourceTree = "<group>"; };
 		7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAddressViewController.swift; sourceTree = "<group>"; };
 		7B894CD520D24BE2004FA5A8 /* RecorderLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderLockView.swift; sourceTree = "<group>"; };
 		7B8A6A6C2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaPostTableViewController.swift; sourceTree = "<group>"; };
@@ -2222,7 +2233,7 @@
 		94149B572A1A6A6D003E9E1A /* DeviceTransferClosedReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferClosedReason.swift; sourceTree = "<group>"; };
 		9414A7822BE78C2F00FA35EB /* Web3TransferInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferInputAmountViewController.swift; sourceTree = "<group>"; };
 		9414A7872BE78D8700FA35EB /* DecimalAccumulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecimalAccumulator.swift; sourceTree = "<group>"; };
-		9414A7892BE7911200FA35EB /* WithdrawInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawInputAmountViewController.swift; sourceTree = "<group>"; };
+		9414A7892BE7911200FA35EB /* WithdrawToWeb3WalletInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawToWeb3WalletInputAmountViewController.swift; sourceTree = "<group>"; };
 		9414A8492BE9BF4600FA35EB /* Web3TokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenViewController.swift; sourceTree = "<group>"; };
 		9415D4A12BCBEF6800C78A75 /* Web3DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3DepositViewController.swift; sourceTree = "<group>"; };
 		9415D4A22BCBEF6800C78A75 /* Web3DepositView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3DepositView.xib; sourceTree = "<group>"; };
@@ -2508,7 +2519,18 @@
 		946E05912CBFD67B004B264E /* ExploreSearchCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchCategoryViewController.swift; sourceTree = "<group>"; };
 		946E05992CBFD841004B264E /* ExploreSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchViewController.swift; sourceTree = "<group>"; };
 		946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationControllerChild.swift; sourceTree = "<group>"; };
+		946E9E332D40C46D00DBC308 /* SwapTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapTokenSelectorViewController.swift; sourceTree = "<group>"; };
+		946E9F0A2D440F7500DBC308 /* SendTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverRawTransactionJob.swift; sourceTree = "<group>"; };
+		946E9F5A2D455F0900DBC308 /* TokenReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenReceiverViewController.swift; sourceTree = "<group>"; };
+		946E9F672D4577EA00DBC308 /* AddressInfoInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressInfoInputCell.swift; sourceTree = "<group>"; };
+		946E9F682D4577EA00DBC308 /* AddressInfoInputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressInfoInputCell.xib; sourceTree = "<group>"; };
+		946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferInputAmountViewController.swift; sourceTree = "<group>"; };
+		946EA03C2D469A4A00DBC308 /* AddressBookView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressBookView.xib; sourceTree = "<group>"; };
+		946EA0442D469AD200DBC308 /* AddressCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressCell.xib; sourceTree = "<group>"; };
+		946EA0852D4763BD00DBC308 /* AddressInfoInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressInfoInputViewController.swift; sourceTree = "<group>"; };
+		946EA0872D4763CF00DBC308 /* AddressInfoInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressInfoInputView.xib; sourceTree = "<group>"; };
+		946EA1132D47DD4000DBC308 /* WithdrawInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawInputAmountViewController.swift; sourceTree = "<group>"; };
 		946FFAD22B6C566800B62B7F /* AuthenticationProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationProgressView.swift; sourceTree = "<group>"; };
 		9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+General.swift"; sourceTree = "<group>"; };
 		94739A5326258F8200E8914D /* Custom-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Custom-acknowledgements.plist"; sourceTree = "<group>"; };
@@ -2750,11 +2772,11 @@
 		94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapInputAccessoryView.xib; sourceTree = "<group>"; };
 		94F952572AE616F40025B995 /* TransferOutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferOutViewController.swift; sourceTree = "<group>"; };
 		94F9525C2AE6174A0025B995 /* TransferOutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferOutView.xib; sourceTree = "<group>"; };
-		94F952612AE623B50025B995 /* TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenSelectorViewController.swift; sourceTree = "<group>"; };
+		94F952612AE623B50025B995 /* LegacyTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		94F952662AE66A700025B995 /* AmountIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountIntent.swift; sourceTree = "<group>"; };
 		94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationMessageComposer.swift; sourceTree = "<group>"; };
-		94FB8E042D1A92CF002DCA20 /* SwapTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapTokenSelectorViewController.swift; sourceTree = "<group>"; };
-		94FB8E052D1A92CF002DCA20 /* SwapTokenSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapTokenSelectorView.xib; sourceTree = "<group>"; };
+		94FB8E042D1A92CF002DCA20 /* TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenSelectorViewController.swift; sourceTree = "<group>"; };
+		94FB8E052D1A92CF002DCA20 /* TokenSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenSelectorView.xib; sourceTree = "<group>"; };
 		94FB8E0B2D1ACB32002DCA20 /* SwapTokenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapTokenCell.swift; sourceTree = "<group>"; };
 		94FB8E0C2D1ACB32002DCA20 /* SwapTokenCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapTokenCell.xib; sourceTree = "<group>"; };
 		94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptPreviewViewController.swift; sourceTree = "<group>"; };
@@ -3571,8 +3593,8 @@
 				94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */,
 				94FB8E0C2D1ACB32002DCA20 /* SwapTokenCell.xib */,
 				94FB8E0B2D1ACB32002DCA20 /* SwapTokenCell.swift */,
-				94FB8E052D1A92CF002DCA20 /* SwapTokenSelectorView.xib */,
-				94FB8E042D1A92CF002DCA20 /* SwapTokenSelectorViewController.swift */,
+				94FB8E052D1A92CF002DCA20 /* TokenSelectorView.xib */,
+				94FB8E042D1A92CF002DCA20 /* TokenSelectorViewController.swift */,
 				9412AF4C2C1AEAE00083ABB3 /* ShareViewAsPictureView.xib */,
 				9412AF4B2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift */,
 				9458A0922CC9450C00A51154 /* MnemonicsView.xib */,
@@ -4221,7 +4243,7 @@
 				94350E362BCFE8C5007283B7 /* InputAmountView.xib */,
 				94350E382BCFE8C5007283B7 /* InputAmountViewController.swift */,
 				9414A7822BE78C2F00FA35EB /* Web3TransferInputAmountViewController.swift */,
-				9414A7892BE7911200FA35EB /* WithdrawInputAmountViewController.swift */,
+				9414A7892BE7911200FA35EB /* WithdrawToWeb3WalletInputAmountViewController.swift */,
 				94350E372BCFE8C5007283B7 /* DecimalButton.swift */,
 				9401A56E2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift */,
 				9401A6002BDA91F900679686 /* Web3SendingDestinationHeaderView.xib */,
@@ -4276,7 +4298,7 @@
 				94F35B862D2818B2001BCAE7 /* InvoicePreviewViewController.swift */,
 				94B6EDFD2B707F15001DCC50 /* WithdrawPreviewViewController.swift */,
 				94EE1DC62B721E4800C32DD4 /* MultisigPreviewViewController.swift */,
-				94F952612AE623B50025B995 /* TokenSelectorViewController.swift */,
+				94F952612AE623B50025B995 /* LegacyTokenSelectorViewController.swift */,
 				946B9FBA2B0493E800DB4DC1 /* WalletHintView.xib */,
 				946B9FB92B0493E800DB4DC1 /* WalletHintViewController.swift */,
 				942D90EF2B05F8FE00E81358 /* WithdrawFeeCell.xib */,
@@ -4791,6 +4813,7 @@
 		DF736F881FC08B67001DB063 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				946EA0442D469AD200DBC308 /* AddressCell.xib */,
 				7B4D1125205B8D380074BF60 /* AddressCell.swift */,
 				DF87949B207505F4004A1E55 /* TransactionCell.swift */,
 				7BEC4DF021A7D054003336F2 /* AssetCell.xib */,
@@ -5042,15 +5065,25 @@
 				94BF6D5A2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift */,
 				94A709D52B67B0A5007CADAB /* DepositSuspendedView.xib */,
 				7C2AC42828F2B384005F369A /* DepositSuspendedView.swift */,
-				7B894AF2205BF8660065A1B8 /* AddressViewController.swift */,
+				946EA03C2D469A4A00DBC308 /* AddressBookView.xib */,
+				7B894AF2205BF8660065A1B8 /* AddressBookViewController.swift */,
 				DF06D91E222FAE1300FE7FBC /* LegacyTransferOutViewController.swift */,
 				9455EA072AFE598E00C3FD3C /* WithdrawFeeView.xib */,
 				9455EA0C2AFE5A8500C3FD3C /* WithdrawFeeView.swift */,
+				946E9F0A2D440F7500DBC308 /* SendTokenSelectorViewController.swift */,
+				946E9F682D4577EA00DBC308 /* AddressInfoInputCell.xib */,
+				946E9F672D4577EA00DBC308 /* AddressInfoInputCell.swift */,
+				946E9F5A2D455F0900DBC308 /* TokenReceiverViewController.swift */,
+				946EA0872D4763CF00DBC308 /* AddressInfoInputView.xib */,
+				946EA0852D4763BD00DBC308 /* AddressInfoInputViewController.swift */,
+				946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */,
+				946EA1132D47DD4000DBC308 /* WithdrawInputAmountViewController.swift */,
 				94F9525C2AE6174A0025B995 /* TransferOutView.xib */,
 				94F952572AE616F40025B995 /* TransferOutViewController.swift */,
 				7B894AF4205BFC9B0065A1B8 /* NewAddressViewController.swift */,
 				7CDBA58D28F7B6CB00AC3777 /* TransferSearchViewController.swift */,
 				94B1E55C2C49222100A2349F /* MixinSwapViewController.swift */,
+				946E9E332D40C46D00DBC308 /* SwapTokenSelectorViewController.swift */,
 				942FD6752D38CF46004DCC4C /* SwapOrderTableViewController.swift */,
 				942FD92F2D3A6F66004DCC4C /* SwapOrderViewController.swift */,
 			);
@@ -5572,7 +5605,8 @@
 			files = (
 				7B833E9C22C4AED20063929D /* ic_app_loading@2x.webp in Resources */,
 				7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */,
-				94FB8E072D1A92CF002DCA20 /* SwapTokenSelectorView.xib in Resources */,
+				946EA0452D469AD200DBC308 /* AddressCell.xib in Resources */,
+				94FB8E072D1A92CF002DCA20 /* TokenSelectorView.xib in Resources */,
 				9411B3B42C7F2EBD005753F0 /* ExploreMarketHeaderView.xib in Resources */,
 				94CD471D2BECAE9D00A3DE10 /* InscriptionHashCell.xib in Resources */,
 				7B833E9D22C4AED20063929D /* ic_app_loading@3x.webp in Resources */,
@@ -5699,6 +5733,7 @@
 				9495E0DD2CEF7D6B00124CC7 /* MnemonicPhraseCell.xib in Resources */,
 				943CAA322CC83FFC00346677 /* LoginSeparatorLineView.xib in Resources */,
 				7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */,
+				946EA03D2D469A4A00DBC308 /* AddressBookView.xib in Resources */,
 				52589ADE2BEA50C60081C2BF /* Web3TokenHeaderView.xib in Resources */,
 				7BB7872B24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib in Resources */,
 				94B13FC32B5ED5F9001333BE /* Web3BrowserView.xib in Resources */,
@@ -5718,6 +5753,7 @@
 				94F2375D2C691D5C0057D1AB /* TokenPriceChartCell.xib in Resources */,
 				944C60FE2B6A899700C7DF06 /* AuthenticationPreviewHeaderView.xib in Resources */,
 				94A72C992C2EBE1E001E8782 /* InscriptionTraitsCell.xib in Resources */,
+				946EA0882D4763CF00DBC308 /* AddressInfoInputView.xib in Resources */,
 				E09C5EC223703FEE0095F729 /* ProfileShortcutView.xib in Resources */,
 				7BBCEC342523A1FF00F270DF /* MinimizedClipSwitcherView.xib in Resources */,
 				941D3BFB2A7912C700538504 /* QRCodeView.xib in Resources */,
@@ -5851,6 +5887,7 @@
 				94635C9D2CC264F7005BA4CA /* SelectCountryView.xib in Resources */,
 				943FEB3F2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib in Resources */,
 				9495E0492CEF2ACD00124CC7 /* BackupMnemonicsWarningView.xib in Resources */,
+				946E9F6A2D4577EA00DBC308 /* AddressInfoInputCell.xib in Resources */,
 				9497AEEE2C5E69B000966946 /* TransactionHistoryView.xib in Resources */,
 				947FA4D229957A2400EF13A0 /* AuthorizationTableViewCell.xib in Resources */,
 				7C53049B28FE753400567CF6 /* AuthorizationScopeGroupCell.xib in Resources */,
@@ -6269,6 +6306,7 @@
 				9433C2F42CBCFB530066CEA3 /* AddNonFriendBotJob.swift in Sources */,
 				94E1D44E29E9393C00511267 /* DeviceTransferServer.swift in Sources */,
 				7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */,
+				946E9E342D40C46F00DBC308 /* SwapTokenSelectorViewController.swift in Sources */,
 				94350E3B2BCFE8C5007283B7 /* DecimalButton.swift in Sources */,
 				DFB6CE2323C485D400FB6615 /* SystemConversationAction+Description.swift in Sources */,
 				94CF1F272BA1B74A00BC52C1 /* ExploreWeb3ViewController.swift in Sources */,
@@ -6312,6 +6350,7 @@
 				942FD9FF2D3B591F004DCC4C /* LocalizedEnum.swift in Sources */,
 				7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */,
 				946331CC2C626FEE00C54B76 /* TransactionHistoryFilterPickerViewController.swift in Sources */,
+				946EA0862D4763BD00DBC308 /* AddressInfoInputViewController.swift in Sources */,
 				9401A56F2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift in Sources */,
 				7B2A115F22C1ECB100AD029C /* RoundedBlurButton.swift in Sources */,
 				94B577872B5EC11500AE576E /* ExploreAction.swift in Sources */,
@@ -6332,6 +6371,7 @@
 				94D0FF312BEB1BC900E3947F /* InscriptionContentView.swift in Sources */,
 				E05DFA2E23B5D7EA00AB7ABD /* AppButtonView.swift in Sources */,
 				7CF2FEA626AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift in Sources */,
+				946EA1142D47DD4000DBC308 /* WithdrawInputAmountViewController.swift in Sources */,
 				7B7B2BC51FB15B6A0002BED5 /* AvatarImageView.swift in Sources */,
 				944A5A7C2C260D220021460C /* CollectibleCollectionViewController.swift in Sources */,
 				7BF8AD83244050EE0038D293 /* PopupResizeGestureCoordinator.swift in Sources */,
@@ -6461,7 +6501,7 @@
 				94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */,
 				942F4729299CDF1800528759 /* URLSessionWebSocketFactory.swift in Sources */,
 				7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */,
-				94F952622AE623B50025B995 /* TokenSelectorViewController.swift in Sources */,
+				94F952622AE623B50025B995 /* LegacyTokenSelectorViewController.swift in Sources */,
 				94ECCCAB261A029F004E9E2A /* Window.swift in Sources */,
 				5292D68E2BEB8F3200734F14 /* Web3Transaction+Localize.swift in Sources */,
 				7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */,
@@ -6542,12 +6582,13 @@
 				94227D6E2BEF242200430CAE /* SearchCollectibleViewController.swift in Sources */,
 				94CB84D62C6A65C200135641 /* ChartView.swift in Sources */,
 				7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */,
-				94FB8E062D1A92CF002DCA20 /* SwapTokenSelectorViewController.swift in Sources */,
+				94FB8E062D1A92CF002DCA20 /* TokenSelectorViewController.swift in Sources */,
 				946FFAD32B6C566800B62B7F /* AuthenticationProgressView.swift in Sources */,
 				7C4C039F28530C9E003DE0C0 /* ContactViewController.swift in Sources */,
 				941994EC2CCC3FD300F5425C /* RecoveryKitViewController.swift in Sources */,
 				7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */,
 				7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */,
+				946E9F692D4577EA00DBC308 /* AddressInfoInputCell.swift in Sources */,
 				7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */,
 				940B304B2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift in Sources */,
 				7BE6C7EC242DF07B00A0F2AE /* MessageAction.swift in Sources */,
@@ -6595,7 +6636,7 @@
 				DF0A713B22D5E94D00E69C50 /* WithdrawalTipWindow.swift in Sources */,
 				E090B91123B0B2F20012C7E9 /* MessageDAO+Search.swift in Sources */,
 				E05D991B2390C632009F9E8D /* FavoriteAppCell.swift in Sources */,
-				7B894AF3205BF8660065A1B8 /* AddressViewController.swift in Sources */,
+				7B894AF3205BF8660065A1B8 /* AddressBookViewController.swift in Sources */,
 				7B95533A224380B200CE95E6 /* PinValidationViewController.swift in Sources */,
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
 				7C8CC5A4280D347A00F7CBDF /* PreviewWallpaperViewController.swift in Sources */,
@@ -6813,6 +6854,7 @@
 				7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */,
 				9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */,
 				7B54F95B22B24A5600908A9D /* CreateRecoveryContactVerificationCodeViewController.swift in Sources */,
+				946E9FBD2D46237A00DBC308 /* TransferInputAmountViewController.swift in Sources */,
 				7BB0F9512434DDD400BEDA97 /* CircleMemberSearchResult.swift in Sources */,
 				7B81D91423E93ECA0031E945 /* QuotedMessageView.swift in Sources */,
 				94B61EC32B344A7A00BD39AF /* HomeTabBarController.swift in Sources */,
@@ -6832,7 +6874,7 @@
 				E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */,
 				7B57186E24D9375300682D86 /* MixinAPIError+Localization.swift in Sources */,
 				E0320FA523CC3D1600A651D4 /* MessageTagLabel.swift in Sources */,
-				9414A78A2BE7911200FA35EB /* WithdrawInputAmountViewController.swift in Sources */,
+				9414A78A2BE7911200FA35EB /* WithdrawToWeb3WalletInputAmountViewController.swift in Sources */,
 				7B333A8623406AD000FDA848 /* GalleryTransitionFromMessageCellView.swift in Sources */,
 				7B54F95922B243EA00908A9D /* RecoveryContactVerifyPINViewController.swift in Sources */,
 				9487233A2C9DF6380034BCB0 /* AddMarketAlertViewController.swift in Sources */,
@@ -6840,6 +6882,7 @@
 				7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */,
 				7BC022E5214A13DC00B7A398 /* MixinAuthorizationsViewController.swift in Sources */,
 				94B5777D2B5E755100AE576E /* SeparatorHeaderFooterView.swift in Sources */,
+				946E9F5C2D455F0900DBC308 /* TokenReceiverViewController.swift in Sources */,
 				94428D742CA2A8F200157E93 /* EditMarketAlertViewController.swift in Sources */,
 				7C1EDAB42772FF8B00193917 /* DeleteAccountContext.swift in Sources */,
 				94E66E232D12CD0D00578F19 /* MAONameSearchResultCell.swift in Sources */,
@@ -7024,6 +7067,7 @@
 				E0E3301F23962B2100276746 /* EditFavoriteAppsHeaderView.swift in Sources */,
 				7B4EF79F22D5E55400F19F6A /* RemoveRecoveryContactValidationViewController.swift in Sources */,
 				7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */,
+				946E9F0B2D440F7D00DBC308 /* SendTokenSelectorViewController.swift in Sources */,
 				7B91056222CF4A58002E3608 /* LiveMessageCell.swift in Sources */,
 				94BD7E772B2983CA0004576D /* MultisigURL.swift in Sources */,
 				7BEED0D9244D752700F3A2B9 /* SettingsRow.swift in Sources */,

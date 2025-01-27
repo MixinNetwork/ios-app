@@ -1,19 +1,32 @@
 import UIKit
 import MixinServices
 
-class AddressViewController: UIViewController {
+final class AddressBookViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBoxView: SearchBoxView!
+    @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var newAddressButton: UIButton!
     
-    private let cellReuseId = "address"
+    var onSelect: ((Address) -> Void)?
     
-    private var token: TokenItem!
-    private var addresses = [Address]()
-    private var searchResult = [Address]()
+    private let token: TokenItem
+    
+    private var addresses: [Address] = []
+    private var searchResult: [Address] = []
+    
     private var isSearching: Bool {
-        return !(searchBoxView.textField.text ?? "").isEmpty
+        !(searchBoxView.textField.text ?? "").isEmpty
+    }
+    
+    init(token: TokenItem) {
+        self.token = token
+        let nib = R.nib.addressBookView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     deinit {
@@ -22,27 +35,25 @@ class AddressViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         title = R.string.localizable.address()
-        navigationItem.rightBarButtonItem = .tintedIcon(
-            image: R.image.ic_title_add(),
-            target: self,
-            action: #selector(newAddressAction)
-        )
         
         // UIButton with image and title failed to calculate intrinsicContentSize if bold text is turned on in iOS Display Settings
         // Set lineBreakMode to byClipping as a workaround. Tested on iOS 15.1
         newAddressButton.titleLabel?.lineBreakMode = .byClipping
         
         searchBoxView.textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
+        cancelButton.configuration?.title = R.string.localizable.cancel()
+        tableView.register(R.nib.addressCell)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView()
         reloadLocalAddresses()
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(reloadLocalAddresses),
-                                               name: AddressDAO.addressDidChangeNotification,
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadLocalAddresses),
+            name: AddressDAO.addressDidChangeNotification,
+            object: nil
+        )
         AddressAPI.addresses(assetID: token.assetID) { (result) in
             guard case let .success(addresses) = result else {
                 return
@@ -53,7 +64,14 @@ class AddressViewController: UIViewController {
         }
     }
     
-    @IBAction func searchAction(_ sender: Any) {
+    @IBAction func newAddressAction() {
+        presentingViewController?.dismiss(animated: true) { [token] in
+            let vc = NewAddressViewController(token: token)
+            UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
+    @objc private func searchAction(_ sender: Any) {
         let keyword = (searchBoxView.textField.text ?? "").lowercased()
         if keyword.isEmpty {
             searchResult = []
@@ -66,27 +84,16 @@ class AddressViewController: UIViewController {
         tableView.reloadData()
     }
     
-    @IBAction func newAddressAction() {
-        let vc = NewAddressViewController.instance(asset: token)
-        UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
-    }
-    
-    class func instance(token: TokenItem) -> UIViewController {
-        let vc = R.storyboard.wallet.address_list()!
-        vc.token = token
-        return vc
-    }
-    
 }
 
-extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
+extension AddressBookViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return isSearching ? searchResult.count : addresses.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseId) as! AddressCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.address, for: indexPath)!
         if isSearching {
             cell.render(address: searchResult[indexPath.row], asset: token)
         } else {
@@ -96,18 +103,8 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        guard let navigationController = navigationController else {
-            return
-        }
         let address = isSearching ? searchResult[indexPath.row] : addresses[indexPath.row]
-        let vc = TransferOutViewController(token: token, to: .address(address))
-        var viewControllers = navigationController.viewControllers
-        if let index = viewControllers.lastIndex(of: self) {
-            viewControllers.remove(at: index)
-        }
-        viewControllers.append(vc)
-        navigationController.setViewControllers(viewControllers, animated: true)
+        onSelect?(address)
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -120,7 +117,7 @@ extension AddressViewController: UITableViewDataSource, UITableViewDelegate {
     
 }
 
-extension AddressViewController {
+extension AddressBookViewController {
     
     @objc private func reloadLocalAddresses() {
         let assetId = token.assetID
@@ -147,11 +144,13 @@ extension AddressViewController {
                 self.searchBoxView.textField.resignFirstResponder()
             }
             let address = self.addresses[indexPath.row]
-            let preview = EditAddressPreviewViewController(token: token,
-                                                           label: address.label,
-                                                           destination: address.destination,
-                                                           tag: address.tag,
-                                                           action: .delete(id: address.addressId))
+            let preview = EditAddressPreviewViewController(
+                token: token,
+                label: address.label,
+                destination: address.destination,
+                tag: address.tag,
+                action: .delete(id: address.addressId)
+            )
             self.present(preview, animated: true)
             completionHandler(true)
         }

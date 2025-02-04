@@ -2,7 +2,7 @@ import UIKit
 
 final class Web3TransferInputAmountViewController: InputAmountViewController {
     
-    override var token: any Web3TransferableToken {
+    override var token: any TransferableToken {
         payment.token
     }
     

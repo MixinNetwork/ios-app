@@ -20,7 +20,7 @@ class Web3TransferOperation {
     
     enum BalanceChange {
         case decodingFailed(rawTransaction: String)
-        case detailed(token: Web3TransferableToken, amount: Decimal)
+        case detailed(token: TransferableToken, amount: Decimal)
     }
     
     let fromAddress: String

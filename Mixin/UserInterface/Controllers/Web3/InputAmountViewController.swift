@@ -21,7 +21,7 @@ class InputAmountViewController: UIViewController {
     
     @IBOutlet weak var numberPadTopConstraint: NSLayoutConstraint!
     
-    var token: Web3TransferableToken {
+    var token: TransferableToken {
         fatalError("Must override")
     }
     

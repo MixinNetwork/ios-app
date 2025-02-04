@@ -3,7 +3,7 @@ import MixinServices
 
 final class WithdrawInputAmountViewController: InputAmountViewController {
     
-    override var token: any Web3TransferableToken {
+    override var token: any TransferableToken {
         tokenItem
     }
     

@@ -663,7 +663,7 @@
 		9401A6012BDA91F900679686 /* Web3SendingDestinationHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9401A6002BDA91F900679686 /* Web3SendingDestinationHeaderView.xib */; };
 		9401A6072BDAA74A00679686 /* Web3AccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A6052BDAA74A00679686 /* Web3AccountCell.swift */; };
 		9401A6082BDAA74A00679686 /* Web3AccountCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9401A6062BDAA74A00679686 /* Web3AccountCell.xib */; };
-		9401A6B82BDC771A00679686 /* Web3TransferableToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A6B72BDC771A00679686 /* Web3TransferableToken.swift */; };
+		9401A6B82BDC771A00679686 /* TransferableToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A6B72BDC771A00679686 /* TransferableToken.swift */; };
 		9402A2912C2B7F67006E71FA /* InscriptionContentSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9402A2902C2B7F67006E71FA /* InscriptionContentSession.swift */; };
 		94031D712C1C5B41007E53BC /* SafeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94031D702C1C5B41007E53BC /* SafeURL.swift */; };
 		94046B91272DC265007C1D4A /* GroupCallMembersDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */; };
@@ -2176,7 +2176,7 @@
 		9401A6002BDA91F900679686 /* Web3SendingDestinationHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3SendingDestinationHeaderView.xib; sourceTree = "<group>"; };
 		9401A6052BDAA74A00679686 /* Web3AccountCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3AccountCell.swift; sourceTree = "<group>"; };
 		9401A6062BDAA74A00679686 /* Web3AccountCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3AccountCell.xib; sourceTree = "<group>"; };
-		9401A6B72BDC771A00679686 /* Web3TransferableToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferableToken.swift; sourceTree = "<group>"; };
+		9401A6B72BDC771A00679686 /* TransferableToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferableToken.swift; sourceTree = "<group>"; };
 		9402A2902C2B7F67006E71FA /* InscriptionContentSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionContentSession.swift; sourceTree = "<group>"; };
 		94031D702C1C5B41007E53BC /* SafeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeURL.swift; sourceTree = "<group>"; };
 		94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCallMembersDataSource.swift; sourceTree = "<group>"; };
@@ -4081,7 +4081,7 @@
 			children = (
 				9401A57B2BD960F600679686 /* Web3Chain.swift */,
 				948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */,
-				9401A6B72BDC771A00679686 /* Web3TransferableToken.swift */,
+				9401A6B72BDC771A00679686 /* TransferableToken.swift */,
 				9401A5FE2BDA8B5300679686 /* Web3SendingPayment.swift */,
 				9414A7872BE78D8700FA35EB /* DecimalAccumulator.swift */,
 				94838A432C02ADFB005B6A27 /* Solana.swift */,
@@ -7141,7 +7141,7 @@
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
 				7BFE47DF228432C800FC4379 /* PeerInfoView.swift in Sources */,
 				946331B62C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift in Sources */,
-				9401A6B82BDC771A00679686 /* Web3TransferableToken.swift in Sources */,
+				9401A6B82BDC771A00679686 /* TransferableToken.swift in Sources */,
 				9427D52225E0E8DE00B1EF0E /* PlaylistItemCell.swift in Sources */,
 				7B86B1E923F69E3600C80AD9 /* ContactMessageCellRightView.swift in Sources */,
 				943CAA282CC832E000346677 /* UIBarButtonItem+Convenience.swift in Sources */,

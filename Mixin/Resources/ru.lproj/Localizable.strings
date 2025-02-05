@@ -1463,6 +1463,7 @@
 "withdrawal_to" = "Вывод на %@";
 "write_down_mnemonic_phrase" = "Write down your mnemonic phrase";
 "write_down_mnemonic_phrase_desc" = "Write it down on a piece of paper and keep it in a safe place.";
+"years_count_short" = "%dY";
 "you" = "Вы";
 "you_deleted_this_message" = "Вы удалили это сообщение";
 "you_have_a_new_message" = "У вас новое сообщение";
@@ -1471,4 +1472,3 @@
 "your_phone_number_has_been_changed" = "Ваш номер телефона был изменен";
 "your_pin_has_been_changed" = "Ваш PIN-код был изменен";
 "your_pin_has_been_created" = "Ваш PIN-код был создан";
-"ytd" = "YTD";

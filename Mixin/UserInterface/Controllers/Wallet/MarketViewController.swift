@@ -601,7 +601,7 @@ extension MarketViewController: ChartView.Delegate {
         switch chartPeriod {
         case .day:
             DateFormatter.shortTimeOnly.string(from: point.date)
-        case .week, .month, .ytd, .all:
+        case .week, .month, .year, .all:
             DateFormatter.shortDateOnly.string(from: point.date)
         }
     }

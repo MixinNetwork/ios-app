@@ -1463,6 +1463,7 @@
 "withdrawal_to" = "提現到 %@";
 "write_down_mnemonic_phrase" = "寫下您的助記詞";
 "write_down_mnemonic_phrase_desc" = "把它寫在一張紙上並放在安全的地方。";
+"years_count_short" = "%d年";
 "you" = "你";
 "you_deleted_this_message" = "你撤回了一條訊息";
 "you_have_a_new_message" = "你收到了一條訊息";
@@ -1471,4 +1472,3 @@
 "your_phone_number_has_been_changed" = "更換手機號";
 "your_pin_has_been_changed" = "修改 PIN";
 "your_pin_has_been_created" = "PIN 已建立";
-"ytd" = "今年";

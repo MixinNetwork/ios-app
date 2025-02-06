@@ -82,8 +82,8 @@ final class TokenPriceChartCell: UITableViewCell {
                 R.string.localizable.weeks_count_short(1)
             case .month:
                 R.string.localizable.months_count_short(1)
-            case .ytd:
-                R.string.localizable.ytd()
+            case .year:
+                R.string.localizable.years_count_short(1)
             case .all:
                 R.string.localizable.all()
             }

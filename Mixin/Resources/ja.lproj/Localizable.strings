@@ -1463,6 +1463,7 @@
 "withdrawal_to" = "%@へ出金";
 "write_down_mnemonic_phrase" = "Write down your mnemonic phrase";
 "write_down_mnemonic_phrase_desc" = "Write it down on a piece of paper and keep it in a safe place.";
+"years_count_short" = "%dY";
 "you" = "自分";
 "you_deleted_this_message" = "このメッセージを削除しました。";
 "you_have_a_new_message" = "新しいメッセージがあります";
@@ -1471,4 +1472,3 @@
 "your_phone_number_has_been_changed" = "電話番号が変更されました";
 "your_pin_has_been_changed" = "PINコードが変更されました";
 "your_pin_has_been_created" = "PINコードが生成されました";
-"ytd" = "YTD";

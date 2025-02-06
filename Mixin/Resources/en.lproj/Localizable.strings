@@ -1463,6 +1463,7 @@
 "withdrawal_to" = "Withdraw to %@";
 "write_down_mnemonic_phrase" = "Write down your mnemonic phrase";
 "write_down_mnemonic_phrase_desc" = "Write it down on a piece of paper and keep it in a safe place.";
+"years_count_short" = "%dY";
 "you" = "You";
 "you_deleted_this_message" = "You deleted this message";
 "you_have_a_new_message" = "You have a new message";
@@ -1471,4 +1472,3 @@
 "your_phone_number_has_been_changed" = "Your phone number has been changed";
 "your_pin_has_been_changed" = "Your PIN has been changed";
 "your_pin_has_been_created" = "Your PIN has been created";
-"ytd" = "YTD";

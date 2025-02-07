@@ -25,6 +25,10 @@ class InputAmountViewController: UIViewController {
         fatalError("Must override")
     }
     
+    var isBalanceInsufficient: Bool {
+        tokenAmount > token.decimalBalance
+    }
+    
     private(set) var amountIntent: AmountIntent
     private(set) var tokenAmount: Decimal = 0
     private(set) var fiatMoneyAmount: Decimal = 0
@@ -139,7 +143,7 @@ class InputAmountViewController: UIViewController {
     }
     
     @IBAction func inputMaxValue(_ sender: Any) {
-        inputAmount(multiplier: 1)
+        replaceAmount(token.decimalBalance)
     }
     
     @IBAction func inputValue(_ sender: DecimalButton) {
@@ -175,13 +179,12 @@ class InputAmountViewController: UIViewController {
             
             for tag in (0...2) {
                 config.attributedTitle = {
-                    let title = switch tag {
-                    case 0:
-                        "25%"
+                    let multiplier = self.multiplier(tag: tag)
+                    let title = switch multiplier {
                     case 1:
-                        "50%"
-                    default:
                         R.string.localizable.balance_max()
+                    default:
+                        NumberFormatter.simplePercentage.string(decimal: multiplier) ?? ""
                     }
                     let paragraphSytle = NSMutableParagraphStyle()
                     paragraphSytle.alignment = .right
@@ -206,8 +209,8 @@ class InputAmountViewController: UIViewController {
         numberPadTopConstraint.constant = 12
     }
     
-    @objc private func inputMultipliedAmount(_ sender: UIButton) {
-        let multiplier: Decimal = switch sender.tag {
+    func multiplier(tag: Int) -> Decimal {
+        switch tag {
         case 0:
             0.25
         case 1:
@@ -215,7 +218,18 @@ class InputAmountViewController: UIViewController {
         default:
             1
         }
-        inputAmount(multiplier: multiplier)
+    }
+    
+    func replaceAmount(_ amount: Decimal) {
+        var accumulator = DecimalAccumulator(intent: .byToken)
+        accumulator.decimal = amount
+        self.amountIntent = .byToken
+        self.accumulator = accumulator
+    }
+    
+    @objc func inputMultipliedAmount(_ sender: UIButton) {
+        let multiplier = self.multiplier(tag: sender.tag)
+        replaceAmount(token.decimalBalance * multiplier)
     }
     
 }
@@ -265,20 +279,13 @@ extension InputAmountViewController {
         
         amountLabel.text = inputAmountString
         
-        if tokenAmount > token.decimalBalance {
+        if isBalanceInsufficient {
             insufficientBalanceLabel.alpha = 1
             reviewButton.isEnabled = false
         } else {
             insufficientBalanceLabel.alpha = 0
             reviewButton.isEnabled = tokenAmount > 0
         }
-    }
-    
-    private func inputAmount(multiplier: Decimal) {
-        var accumulator = DecimalAccumulator(intent: .byToken)
-        accumulator.decimal = token.decimalBalance * multiplier
-        self.amountIntent = .byToken
-        self.accumulator = accumulator
     }
     
 }

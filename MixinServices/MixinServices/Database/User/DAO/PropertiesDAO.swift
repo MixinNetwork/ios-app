@@ -16,6 +16,7 @@ public final class PropertiesDAO: UserDatabaseDAO {
         case mixinSwapRecentSendIDs     = "mixin_swap_recent_send"
         case mixinSwapRecentReceiveIDs  = "mixin_swap_recent_receive"
         case transferRecentAssetIDs     = "transfer_recent_assets"
+        case web3RecentFungibleIDs      = "web3_recent_tokens"
     }
     
     public enum Change {

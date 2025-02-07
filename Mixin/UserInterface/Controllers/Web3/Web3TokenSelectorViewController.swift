@@ -1,22 +1,21 @@
 import UIKit
-import OrderedCollections
 import MixinServices
 
-extension TokenItem: IdentifiableToken {
+extension Web3Token: IdentifiableToken {
     
     var id: String {
-        assetID
+        fungibleID
     }
     
 }
 
-final class SendTokenSelectorViewController: TokenSelectorViewController<TokenItem> {
+final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Token> {
     
-    var receiver: UserItem?
+    var onSelected: ((Web3Token) -> Void)?
     
-    init() {
+    init(tokens: [Web3Token]) {
         super.init(
-            defaultTokens: [],
+            defaultTokens: tokens,
             defaultChains: [],
             searchDebounceInterval: 0.5,
             selectedID: nil
@@ -29,19 +28,15 @@ final class SendTokenSelectorViewController: TokenSelectorViewController<TokenIt
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        DispatchQueue.global().async {
-            let recentAssetIDs = PropertiesDAO.shared.jsonObject(forKey: .transferRecentAssetIDs, type: [String].self) ?? []
-            let recentTokens = TokenDAO.shared.tokenItems(with: recentAssetIDs)
-            let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
-                .priceChangePercentage24H(assetIDs: recentAssetIDs)
-                .compactMapValues(TokenChange.init(change:))
-            let tokens = TokenDAO.shared.positiveBalancedTokens()
+        DispatchQueue.global().async { [tokens=defaultTokens] in
+            let recentFungibleIDs = Set(PropertiesDAO.shared.jsonObject(forKey: .web3RecentFungibleIDs, type: [String].self) ?? [])
+            let recentTokens = tokens.filter { token in
+                recentFungibleIDs.contains(token.fungibleID)
+            }
             let chainIDs = Set(tokens.compactMap(\.chainID))
             let chains = Chain.chains(ids: chainIDs)
             DispatchQueue.main.async {
                 self.recentTokens = recentTokens
-                self.recentTokenChanges = recentTokenChanges
-                self.defaultTokens = tokens
                 self.defaultChains = chains
                 self.collectionView.reloadData()
                 self.collectionView.checkEmpty(
@@ -53,15 +48,15 @@ final class SendTokenSelectorViewController: TokenSelectorViewController<TokenIt
         }
     }
     
-    override func saveRecentsToStorage(tokens: any Sequence<TokenItem>) {
+    override func saveRecentsToStorage(tokens: any Sequence<Web3Token>) {
         PropertiesDAO.shared.set(
-            jsonObject: tokens.map(\.assetID),
-            forKey: .transferRecentAssetIDs
+            jsonObject: tokens.map(\.fungibleID),
+            forKey: .web3RecentFungibleIDs
         )
     }
     
     override func clearRecentsStorage() {
-        PropertiesDAO.shared.removeValue(forKey: .transferRecentAssetIDs)
+        PropertiesDAO.shared.removeValue(forKey: .web3RecentFungibleIDs)
     }
     
     override func search(keyword: String) {
@@ -95,7 +90,7 @@ final class SendTokenSelectorViewController: TokenSelectorViewController<TokenIt
         self.searchBoxView.isBusy = false
     }
     
-    override func tokenIndices(tokens: [TokenItem], chainID: String) -> [Int] {
+    override func tokenIndices(tokens: [Web3Token], chainID: String) -> [Int] {
         tokens.enumerated().compactMap { (index, token) in
             if token.chainID == chainID {
                 index
@@ -105,42 +100,25 @@ final class SendTokenSelectorViewController: TokenSelectorViewController<TokenIt
         }
     }
     
-    override func configureRecentCell(_ cell: ExploreRecentSearchCell, withToken token: TokenItem) {
+    override func configureRecentCell(_ cell: ExploreRecentSearchCell, withToken token: Web3Token) {
         cell.setBadgeIcon { iconView in
-            iconView.setIcon(token: token)
+            iconView.setIcon(web3Token: token)
         }
         cell.titleLabel.text = token.symbol
-        if let change = recentTokenChanges[token.assetID] {
-            cell.subtitleLabel.marketColor = change.value >= 0 ? .rising : .falling
-            cell.subtitleLabel.text = change.description
-        } else {
-            cell.subtitleLabel.textColor = R.color.text_tertiary()
-            cell.subtitleLabel.text = token.name
-        }
+        cell.subtitleLabel.marketColor = token.decimalPercentChange >= 0 ? .rising : .falling
+        cell.subtitleLabel.text = token.localizedPercentChange
     }
     
-    override func configureTokenCell(_ cell: SwapTokenCell, withToken token: TokenItem) {
-        cell.iconView.setIcon(token: token)
+    override func configureTokenCell(_ cell: SwapTokenCell, withToken token: Web3Token) {
+        cell.iconView.setIcon(web3Token: token)
         cell.titleLabel.text = token.name
         cell.subtitleLabel.text = token.localizedBalanceWithSymbol
-        if let tag = token.chainTag {
-            cell.chainLabel.text = tag
-            cell.chainLabel.isHidden = false
-        } else {
-            cell.chainLabel.isHidden = true
-        }
+        cell.chainLabel.isHidden = true
     }
     
-    override func pickUp(token: TokenItem, from location: PickUpLocation) {
-        let navigationController = UIApplication.homeNavigationController
-        presentingViewController?.dismiss(animated: true) { [receiver] in
-            if let receiver {
-                let inputAmount = TransferInputAmountViewController(tokenItem: token, receiver: receiver)
-                navigationController?.pushViewController(inputAmount, animated: true)
-            } else {
-                let receiver = TokenReceiverViewController(token: token)
-                navigationController?.pushViewController(receiver, animated: true)
-            }
+    override func pickUp(token: Web3Token, from location: PickUpLocation) {
+        presentingViewController?.dismiss(animated: true) { [onSelected] in
+            onSelected?(token)
         }
     }
     

@@ -7,10 +7,19 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         tokenItem
     }
     
+    override var isBalanceInsufficient: Bool {
+        if let fee = selectedFeeItem, feeTokenSameAsWithdrawToken {
+            tokenAmount > tokenItem.decimalBalance - fee.amount
+        } else {
+            super.isBalanceInsufficient
+        }
+    }
+    
     private let tokenItem: TokenItem
-    private let address: Address
+    private let destination: Payment.WithdrawalDestination
     private let traceID = UUID().uuidString.lowercased()
     
+    private var feeTokenSameAsWithdrawToken = false
     private var selectableFeeItems: [WithdrawFeeItem]?
     private var selectedFeeItemIndex: Int?
     private var selectedFeeItem: WithdrawFeeItem? {
@@ -31,9 +40,9 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         return container
     }
     
-    init(tokenItem: TokenItem, address: Address) {
+    init(tokenItem: TokenItem, destination: Payment.WithdrawalDestination) {
         self.tokenItem = tokenItem
-        self.address = address
+        self.destination = destination
         super.init()
     }
     
@@ -45,7 +54,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         super.viewDidLoad()
         title = R.string.localizable.send()
         
-        let noteStackView = {
+        let feeStackView = {
             let titleLabel = InsetLabel()
             titleLabel.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
             titleLabel.text = R.string.localizable.network_fee()
@@ -64,11 +73,12 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             config.baseBackgroundColor = .clear
             config.imagePlacement = .trailing
             config.imagePadding = 14
+            config.attributedTitle = AttributedString("0", attributes: feeAttributes)
             let button = UIButton(configuration: config)
             button.tintColor = R.color.chat_pin_count_background()
             button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             button.addTarget(self, action: #selector(changeFee(_:)), for: .touchUpInside)
-            button.isHidden = true
+            button.alpha = 0
             self.changeFeeButton = button
             
             let stackView = UIStackView(arrangedSubviews: [titleLabel, activityIndicator, button])
@@ -76,16 +86,14 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             stackView.alignment = .center
             return stackView
         }()
-        accessoryStackView.insertArrangedSubview(noteStackView, at: 0)
+        accessoryStackView.insertArrangedSubview(feeStackView, at: 0)
         
         tokenIconView.setIcon(token: tokenItem)
         tokenNameLabel.text = tokenItem.name
         tokenBalanceLabel.text = tokenItem.localizedBalanceWithSymbol
         inputMaxValueButton.isHidden = true
-        
         addMultipliersView()
-        
-        reloadWithdrawFee(with: tokenItem, address: address)
+        reloadWithdrawFee(with: tokenItem, destination: destination)
     }
     
     override func review(_ sender: Any) {
@@ -101,7 +109,11 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             fiatMoneyAmount: fiatMoneyAmount,
             memo: ""
         )
-        let onPreconditonFailure = { (reason: PaymentPreconditionFailureReason) in
+        payment.checkPreconditions(
+            withdrawTo: destination,
+            fee: feeItem,
+            on: self
+        ) { reason in
             self.reviewButton.isBusy = false
             switch reason {
             case .userCancelled, .loggedOut:
@@ -109,23 +121,33 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             case .description(let message):
                 showAutoHiddenHud(style: .error, text: message)
             }
-        }
-        payment.checkPreconditions(
-            withdrawTo: .address(address),
-            fee: feeItem,
-            on: self,
-            onFailure: onPreconditonFailure
-        ) { [amountIntent, address] (operation, issues) in
+        } onSuccess: { [amountIntent, destination] (operation, issues) in
             self.reviewButton.isBusy = false
+            let addressLabel: String? = switch destination {
+            case .address(let address):
+                address.label
+            case .temporary, .web3:
+                nil
+            }
             let preview = WithdrawPreviewViewController(
                 issues: issues,
                 operation: operation,
                 amountDisplay: amountIntent,
                 withdrawalTokenAmount: payment.tokenAmount,
                 withdrawalFiatMoneyAmount: payment.fiatMoneyAmount,
-                addressLabel: address.label
+                addressLabel: addressLabel
             )
             self.present(preview, animated: true)
+        }
+    }
+    
+    override func inputMultipliedAmount(_ sender: UIButton) {
+        let multiplier = self.multiplier(tag: sender.tag)
+        if let fee = selectedFeeItem, feeTokenSameAsWithdrawToken {
+            let availableBalance = max(0, tokenItem.decimalBalance - fee.amount)
+            replaceAmount(availableBalance * multiplier)
+        } else {
+            replaceAmount(token.decimalBalance * multiplier)
         }
     }
     
@@ -133,15 +155,19 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         guard let selectableFeeItems, let selectedFeeItemIndex else {
             return
         }
-        let selector = WithdrawFeeSelectorViewController(fees: selectableFeeItems, selectedIndex: selectedFeeItemIndex) { index in
-            self.selectedFeeItemIndex = index
+        let selector = WithdrawFeeSelectorViewController(
+            fees: selectableFeeItems,
+            selectedIndex: selectedFeeItemIndex
+        ) { index in
             let feeToken = selectableFeeItems[index]
-            self.updateNetworkFeeLabel(feeToken: feeToken)
+            self.feeTokenSameAsWithdrawToken = feeToken.tokenItem.assetID == self.tokenItem.assetID
+            self.selectedFeeItemIndex = index
+            self.updateFeeDisplay(feeToken: feeToken)
         }
         present(selector, animated: true)
     }
     
-    private func updateNetworkFeeLabel(feeToken: WithdrawFeeItem) {
+    private func updateFeeDisplay(feeToken: WithdrawFeeItem) {
         let title = if feeToken.amount == 0 {
             "0"
         } else {
@@ -153,26 +179,28 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             )
         }
         changeFeeButton.configuration?.attributedTitle = AttributedString(title, attributes: feeAttributes)
+        let availableBalance = if feeTokenSameAsWithdrawToken {
+            CurrencyFormatter.localizedString(
+                from: max(0, tokenItem.decimalBalance - feeToken.amount),
+                format: .precision,
+                sign: .never,
+                symbol: .custom(feeToken.tokenItem.symbol)
+            )
+        } else {
+            tokenItem.localizedBalanceWithSymbol
+        }
+        tokenBalanceLabel.text = "Available: " + availableBalance
     }
     
-    private func reloadWithdrawFee(with token: TokenItem, address: Address) {
+    private func reloadWithdrawFee(with token: TokenItem, destination: Payment.WithdrawalDestination) {
         reviewButton.isBusy = true
         Task {
             do {
-                let fees = try await SafeAPI.fees(assetID: token.assetID, destination: address.destination)
+                let fees = try await SafeAPI.fees(assetID: token.assetID, destination: destination.destination)
                 guard let fee = fees.first else {
                     throw MixinAPIResponseError.withdrawSuspended
                 }
                 let allAssetIDs = fees.map(\.assetID)
-                let missingAssetIDs = TokenDAO.shared.inexistAssetIDs(in: allAssetIDs)
-                if !missingAssetIDs.isEmpty {
-                    let tokens = try await SafeAPI.assets(ids: missingAssetIDs)
-                    await withCheckedContinuation { continuation in
-                        TokenDAO.shared.save(assets: tokens) {
-                            continuation.resume()
-                        }
-                    }
-                }
                 let tokensMap = TokenDAO.shared.tokenItems(with: allAssetIDs)
                     .reduce(into: [:]) { result, item in
                         result[item.assetID] = item
@@ -184,16 +212,17 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
                         return nil
                     }
                 }
-                guard feeTokens.first?.tokenItem.assetID == fee.assetID else {
+                guard let feeToken = feeTokens.first, feeToken.tokenItem.assetID == fee.assetID else {
                     return
                 }
-                let feeToken = feeTokens[0]
+                let feeTokenSameAsWithdrawToken = fee.assetID == token.assetID
                 await MainActor.run {
+                    self.feeTokenSameAsWithdrawToken = feeTokenSameAsWithdrawToken
                     self.selectedFeeItemIndex = 0
                     self.selectableFeeItems = feeTokens
                     self.activityIndicator.stopAnimating()
-                    self.updateNetworkFeeLabel(feeToken: feeToken)
-                    self.changeFeeButton.isHidden = false
+                    self.updateFeeDisplay(feeToken: feeToken)
+                    self.changeFeeButton.alpha = 1
                     if feeTokens.count > 1 {
                         self.changeFeeButton.configuration?.image = R.image.arrow_down_compact()
                         self.changeFeeButton.isUserInteractionEnabled = true
@@ -212,7 +241,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             } catch {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
                     // Check token and address
-                    self?.reloadWithdrawFee(with: token, address: address)
+                    self?.reloadWithdrawFee(with: token, destination: destination)
                 }
             }
         }

@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AddressBookViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="cancelButton" destination="req-KK-c9w" id="hik-2j-y2R"/>
+                <outlet property="moreActionButton" destination="vgd-vT-SQJ" id="7hJ-KL-DE3"/>
                 <outlet property="newAddressButton" destination="0El-2D-alJ" id="nRr-pR-ckL"/>
                 <outlet property="searchBoxView" destination="tMd-9U-YF1" id="jhP-Su-zf0"/>
                 <outlet property="tableView" destination="wO9-av-7Ez" id="lrq-dO-RVh"/>
@@ -76,6 +77,9 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="add_address"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold14"/>
                     </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="newAddressAction" destination="-1" eventType="touchUpInside" id="6Wx-73-YqW"/>
+                    </connections>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G2y-GP-WJw">
                     <rect key="frame" x="0.0" y="754" width="393" height="64"/>

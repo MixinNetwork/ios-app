@@ -3,7 +3,13 @@ import OrderedCollections
 import Alamofire
 import MixinServices
 
-extension SwapToken: SelectableToken { }
+extension SwapToken: IdentifiableToken {
+    
+    var id: String {
+        assetID
+    }
+    
+}
 
 final class SwapTokenSelectorViewController: TokenSelectorViewController<BalancedSwapToken> {
     
@@ -41,7 +47,7 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
             defaultTokens: tokens,
             defaultChains: chains,
             searchDebounceInterval: 1,
-            selectedAssetID: selectedAssetID
+            selectedID: selectedAssetID
         )
     }
     

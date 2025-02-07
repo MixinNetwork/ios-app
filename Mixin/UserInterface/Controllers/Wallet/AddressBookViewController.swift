@@ -3,10 +3,11 @@ import MixinServices
 
 final class AddressBookViewController: UIViewController {
     
-    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var newAddressButton: UIButton!
+    @IBOutlet weak var moreActionButton: UIButton!
     
     var onSelect: ((Address) -> Void)?
     
@@ -42,11 +43,26 @@ final class AddressBookViewController: UIViewController {
         newAddressButton.titleLabel?.lineBreakMode = .byClipping
         
         searchBoxView.textField.addTarget(self, action: #selector(searchAction(_:)), for: .editingChanged)
-        cancelButton.configuration?.title = R.string.localizable.cancel()
+        updateCancelButton()
         tableView.register(R.nib.addressCell)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.tableFooterView = UIView()
+        moreActionButton.showsMenuAsPrimaryAction = true
+        moreActionButton.menu = UIMenu(children: [
+            UIAction(
+                title: R.string.localizable.delete_address(),
+                image: R.image.conversation.ic_action_delete(),
+                attributes: .destructive,
+                handler: { [weak self] _ in
+                    guard let self else {
+                        return
+                    }
+                    self.tableView.setEditing(true, animated: true)
+                    self.updateCancelButton()
+                }
+            )
+        ])
         reloadLocalAddresses()
         NotificationCenter.default.addObserver(
             self,
@@ -66,8 +82,8 @@ final class AddressBookViewController: UIViewController {
     
     @IBAction func newAddressAction() {
         presentingViewController?.dismiss(animated: true) { [token] in
-            let vc = NewAddressViewController(token: token)
-            UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+            let input: AddressInfoInputViewController = .newAddress(token: token)
+            UIApplication.homeNavigationController?.pushViewController(input, animated: true)
         }
     }
     
@@ -84,12 +100,20 @@ final class AddressBookViewController: UIViewController {
         tableView.reloadData()
     }
     
+    @objc private func close(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true)
+    }
+    
+    @objc private func endEditing(_ sender: Any) {
+        tableView.setEditing(false, animated: true)
+    }
+    
 }
 
-extension AddressBookViewController: UITableViewDataSource, UITableViewDelegate {
+extension AddressBookViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isSearching ? searchResult.count : addresses.count
+        isSearching ? searchResult.count : addresses.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
@@ -102,13 +126,17 @@ extension AddressBookViewController: UITableViewDataSource, UITableViewDelegate 
         return cell
     }
     
+}
+
+extension AddressBookViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let address = isSearching ? searchResult[indexPath.row] : addresses[indexPath.row]
         onSelect?(address)
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return !isSearching
+        !isSearching
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -153,6 +181,17 @@ extension AddressBookViewController {
             )
             self.present(preview, animated: true)
             completionHandler(true)
+        }
+    }
+    
+    private func updateCancelButton() {
+        cancelButton.removeTarget(self, action: nil, for: .touchUpInside)
+        if tableView.isEditing {
+            cancelButton.configuration?.title = R.string.localizable.done()
+            cancelButton.addTarget(self, action: #selector(endEditing(_:)), for: .touchUpInside)
+        } else {
+            cancelButton.configuration?.title = R.string.localizable.cancel()
+            cancelButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
         }
     }
     

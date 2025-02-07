@@ -1,13 +1,14 @@
 import UIKit
 import MixinServices
 
-final class AddressInfoInputCell: UITableViewCell {
+final class AddressInfoInputHeaderView: UIView {
     
     protocol Delegate: AnyObject {
-        func addressInfoInputCell(_ cell: AddressInfoInputCell, didUpdateContent content: String?)
-        func addressInfoInputCellWantsToScanContent(_ cell: AddressInfoInputCell)
+        func addressInfoInputHeaderView(_ headerView: AddressInfoInputHeaderView, didUpdateContent content: String)
+        func addressInfoInputHeaderViewWantsToScanContent(_ headerView: AddressInfoInputHeaderView)
     }
     
+    @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var tokenIconView: PlainTokenIconView!
     @IBOutlet weak var tokenNameLabel: UILabel!
@@ -26,12 +27,8 @@ final class AddressInfoInputCell: UITableViewCell {
         }
     }
     
-    private var content: String? {
-        if let text = textView.text, !text.isEmpty {
-            text
-        } else {
-            nil
-        }
+    var trimmedContent: String {
+        textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     override func awakeFromNib() {
@@ -41,6 +38,8 @@ final class AddressInfoInputCell: UITableViewCell {
         tokenChainLabel.layer.masksToBounds = true
         textViewBackgroundView.layer.cornerRadius = 8
         textViewBackgroundView.layer.masksToBounds = true
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(textViewDidChange(_:)),
@@ -62,23 +61,59 @@ final class AddressInfoInputCell: UITableViewCell {
         tokenBalanceLabel.text = R.string.localizable.balance_abbreviation(token.localizedBalanceWithSymbol)
     }
     
+    func load(web3Token token: Web3Token) {
+        tokenIconView.setIcon(web3Token: token)
+        tokenNameLabel.text = token.name
+        tokenChainLabel.isHidden = true
+        tokenBalanceLabel.text = R.string.localizable.balance_abbreviation(token.localizedBalanceWithSymbol)
+    }
+    
+    func setContent(_ content: String) {
+        textView.text = content
+        placeholderLabel.isHidden = !content.isEmpty
+        updateActionButton()
+        delegate?.addressInfoInputHeaderView(self, didUpdateContent: trimmedContent)
+    }
+    
+    func addAddressView(configure: (UILabel) -> Void) {
+        let titleLabel = UILabel()
+        titleLabel.textColor = R.color.text_tertiary()
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        titleLabel.text = R.string.localizable.address()
+        
+        let contentLabel = UILabel()
+        contentLabel.textColor = R.color.text_tertiary()
+        contentLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        contentLabel.numberOfLines = 0
+        contentLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        contentLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        configure(contentLabel)
+        
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, contentLabel])
+        stackView.axis = .horizontal
+        stackView.alignment = .top
+        stackView.spacing = 16
+        contentStackView.addArrangedSubview(stackView)
+    }
+    
     @objc private func textViewDidChange(_ notification: Notification) {
-        let content = self.content
-        placeholderLabel.isHidden = content != nil
-        delegate?.addressInfoInputCell(self, didUpdateContent: content)
+        placeholderLabel.isHidden = !textView.text.isEmpty
+        updateActionButton()
+        delegate?.addressInfoInputHeaderView(self, didUpdateContent: trimmedContent)
     }
     
     @objc private func clearInput(_ sender: Any) {
-        textView.text = ""
-        updateActionButton()
+        setContent("")
     }
     
     @objc private func scanQRCode(_ sender: Any) {
-        delegate?.addressInfoInputCellWantsToScanContent(self)
+        delegate?.addressInfoInputHeaderViewWantsToScanContent(self)
     }
     
     private func updateActionButton() {
-        if content == nil {
+        if textView.text.isEmpty {
             actionButton.setImage(R.image.explore.web3_send_scan(), for: .normal)
             actionButton.removeTarget(self, action: nil, for: .touchUpInside)
             actionButton.addTarget(self, action: #selector(scanQRCode(_:)), for: .touchUpInside)

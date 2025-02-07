@@ -71,10 +71,6 @@ extension Token {
         assetID == AssetID.xrp
     }
     
-    public var isBitcoinChain: Bool {
-        chainID == ChainID.bitcoin
-    }
-    
     public var isEOSChain: Bool {
         chainID == ChainID.eos
     }

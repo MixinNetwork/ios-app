@@ -1,20 +1,50 @@
 import UIKit
 import MixinServices
 
-class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
+final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     
-    @IBOutlet weak var tableView: UITableView!
+    private enum Intent {
+        case newAddress
+        case oneTimeWithdraw
+    }
+    
+    private enum InputContent {
+        
+        case destination
+        case memo(destination: String)
+        case tag(destination: String)
+        case label(destination: String, tag: String?)
+        
+        init(token: TokenItem, destination: String) {
+            switch token.memoPossibility {
+            case .positive, .possible:
+                if token.usesTag {
+                    self = .tag(destination: destination)
+                } else {
+                    self = .memo(destination: destination)
+                }
+            case .negative:
+                self = .label(destination: destination, tag: nil)
+            }
+        }
+        
+    }
+    
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var errorDescriptionLabel: UILabel!
     @IBOutlet weak var nextButton: StyledButton!
     
     @IBOutlet weak var stackViewBottomConstraint: NSLayoutConstraint!
     
-    let token: TokenItem
+    private let token: TokenItem
+    private let intent: Intent
+    private let inputContent: InputContent
+    private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
     
-    private(set) weak var cell: AddressInfoInputCell?
-    
-    init(token: TokenItem) {
+    private init(token: TokenItem, intent: Intent, inputContent: InputContent) {
         self.token = token
+        self.intent = intent
+        self.inputContent = inputContent
         let nib = R.nib.addressInfoInputView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -23,17 +53,63 @@ class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         fatalError("Storyboard not supported")
     }
     
+    static func newAddress(token: TokenItem) -> AddressInfoInputViewController {
+        AddressInfoInputViewController(token: token, intent: .newAddress, inputContent: .destination)
+    }
+    
+    // Returns non-nil result if memo/tag is needed
+    static func oneTimeWithdraw(token: TokenItem, destination: String) -> AddressInfoInputViewController? {
+        let content = InputContent(token: token, destination: destination)
+        switch content {
+        case .destination, .label:
+            return nil
+        case .memo, .tag:
+            return AddressInfoInputViewController(
+                token: token,
+                intent: .oneTimeWithdraw,
+                inputContent: content
+            )
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(R.nib.addressInfoInputCell)
-        tableView.separatorStyle = .none
-        tableView.keyboardDismissMode = .onDrag
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.reloadData()
+        scrollView.addSubview(headerView)
+        scrollView.alwaysBounceVertical = true
+        scrollView.keyboardDismissMode = .onDrag
+        headerView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView.contentLayoutGuide)
+            make.width.equalTo(scrollView.frameLayoutGuide)
+        }
+        headerView.load(token: token)
+        headerView.delegate = self
+        headerView.textView.becomeFirstResponder()
+        switch inputContent {
+        case .destination:
+            break
+        case let .memo(destination), let .tag(destination), let .label(destination, _):
+            headerView.addAddressView { label in
+                label.text = destination
+            }
+        }
+        switch inputContent {
+        case .destination:
+            title = R.string.localizable.address()
+            headerView.inputPlaceholder = "Enter a wallet address, exchange address."
+        case .memo:
+            title = R.string.localizable.memo()
+            headerView.inputPlaceholder = "输入地址备注（Memo），如果没有直接点下一步。"
+        case .tag:
+            title = R.string.localizable.tag()
+            headerView.inputPlaceholder = "输入数字地址标签（Tag），如果没有直接点下一步。"
+        case .label:
+            title = R.string.localizable.label()
+            headerView.inputPlaceholder = "使用一个独特的标签来帮助您找到这个地址，例如钱包、交易所或者朋友的名称。"
+        }
         nextButton.setTitle(R.string.localizable.next(), for: .normal)
         nextButton.style = .filled
         nextButton.applyDefaultContentInsets()
+        nextButton.isEnabled = false
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillHide(_:)),
@@ -47,12 +123,81 @@ class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     }
     
     @IBAction func goNext(_ sender: Any) {
-        
+        let content = headerView.trimmedContent
+        guard !content.isEmpty else {
+            return
+        }
+        switch intent {
+        case .newAddress:
+            switch inputContent {
+            case .destination:
+                let next = AddressInfoInputViewController(
+                    token: token,
+                    intent: intent,
+                    inputContent: InputContent(token: token, destination: content)
+                )
+                navigationController?.pushViewController(next, animated: true)
+            case let .memo(destination), let .tag(destination):
+                let next = AddressInfoInputViewController(
+                    token: token,
+                    intent: intent,
+                    inputContent: .label(destination: destination, tag: content)
+                )
+                navigationController?.pushViewController(next, animated: true)
+            case let .label(destination, tag):
+                saveNewAddress(destination: destination, tag: tag, label: content)
+            }
+        case .oneTimeWithdraw:
+            switch inputContent {
+            case .destination:
+                assertionFailure("Only input memo/tag with this view controller when performing One-Time-Withdraw")
+            case let .memo(destination), let .tag(destination):
+                let address = TemporaryAddress(destination: destination, tag: content)
+                let next = WithdrawInputAmountViewController(
+                    tokenItem: token,
+                    destination: .temporary(address)
+                )
+                navigationController?.pushViewController(next, animated: true)
+            case let .label(destination, tag):
+                assertionFailure("Only input memo/tag with this view controller when performing One-Time-Withdraw")
+            }
+        }
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {
         stackViewBottomConstraint.constant = 0
         view.layoutIfNeeded()
+    }
+    
+    private func destination(bip21Unchecked destination: String) -> String {
+        if token.chainID == ChainID.bitcoin,
+           destination.lowercased().hasPrefix("bitcoin:"),
+           let components = URLComponents(string: destination)
+        {
+            components.path
+        } else {
+            destination
+        }
+    }
+    
+    private func saveNewAddress(destination: String, tag: String?, label: String) {
+        let destination = self.destination(bip21Unchecked: destination)
+        let preview = EditAddressPreviewViewController(
+            token: token,
+            label: label,
+            destination: destination,
+            tag: tag ?? "",
+            action: .add
+        )
+        preview.onSavingSuccess = {
+            self.navigationController?.popViewController(animated: false)
+        }
+        present(preview, animated: true)
+    }
+    
+    private func withdraw(destination: String, tag: String?) {
+        let destination = self.destination(bip21Unchecked: destination)
+        
     }
     
 }
@@ -65,27 +210,40 @@ extension AddressInfoInputViewController: HomeNavigationController.NavigationBar
     
 }
 
-extension AddressInfoInputViewController: UITableViewDataSource {
+extension AddressInfoInputViewController: UITextViewDelegate {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        1
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.address_info_input, for: indexPath)!
-        cell.load(token: token)
-        self.cell = cell
-        return cell
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        text != "\n"
     }
     
 }
 
-extension AddressInfoInputViewController: UITableViewDelegate {
+extension AddressInfoInputViewController: AddressInfoInputHeaderView.Delegate {
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let cell = cell as? AddressInfoInputCell {
-            cell.textView.becomeFirstResponder()
+    func addressInfoInputHeaderView(_ headerView: AddressInfoInputHeaderView, didUpdateContent content: String) {
+        nextButton.isEnabled = !content.isEmpty
+    }
+    
+    func addressInfoInputHeaderViewWantsToScanContent(_ headerView: AddressInfoInputHeaderView) {
+        let scanner = CameraViewController.instance()
+        scanner.asQrCodeScanner = true
+        scanner.delegate = self
+        navigationController?.pushViewController(scanner, animated: true)
+    }
+    
+}
+
+extension AddressInfoInputViewController: CameraViewControllerDelegate {
+    
+    func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
+        switch inputContent {
+        case .destination:
+            let destination = IBANAddress(string: string)?.standarizedAddress ?? string
+            headerView.setContent(destination)
+        case .memo, .tag, .label:
+            headerView.setContent(string)
         }
+        return false
     }
     
 }

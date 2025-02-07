@@ -13,8 +13,8 @@
             <connections>
                 <outlet property="errorDescriptionLabel" destination="Qnd-kc-AEj" id="uUj-vz-ak1"/>
                 <outlet property="nextButton" destination="0ZP-TW-k9E" id="cGE-b4-MeW"/>
+                <outlet property="scrollView" destination="NVg-Cj-JBy" id="4RV-n2-WyU"/>
                 <outlet property="stackViewBottomConstraint" destination="CQR-fd-tPm" id="z4U-oa-oIW"/>
-                <outlet property="tableView" destination="t8W-JA-u6f" id="cHP-yE-T7E"/>
                 <outlet property="view" destination="iN0-l3-epB" id="5jN-OY-xOx"/>
             </connections>
         </placeholder>
@@ -23,10 +23,9 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="t8W-JA-u6f">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NVg-Cj-JBy">
                     <rect key="frame" x="0.0" y="0.0" width="393" height="728"/>
-                    <color key="backgroundColor" name="background_secondary"/>
-                </tableView>
+                </scrollView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="pjE-8Q-ZrC">
                     <rect key="frame" x="0.0" y="736" width="393" height="82"/>
                     <subviews>
@@ -64,14 +63,14 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" name="background_secondary"/>
             <constraints>
+                <constraint firstItem="NVg-Cj-JBy" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="5Ix-eR-7WJ"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="pjE-8Q-ZrC" secondAttribute="bottom" id="9Ra-7Q-w46"/>
                 <constraint firstItem="pjE-8Q-ZrC" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="BZR-yP-9Pe"/>
                 <constraint firstAttribute="bottom" secondItem="pjE-8Q-ZrC" secondAttribute="bottom" priority="750" id="CQR-fd-tPm"/>
-                <constraint firstItem="t8W-JA-u6f" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Ef4-JH-ue9"/>
-                <constraint firstItem="t8W-JA-u6f" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="IAN-Qf-EdH"/>
-                <constraint firstAttribute="trailing" secondItem="t8W-JA-u6f" secondAttribute="trailing" id="TGn-Zi-Qla"/>
+                <constraint firstItem="pjE-8Q-ZrC" firstAttribute="top" secondItem="NVg-Cj-JBy" secondAttribute="bottom" constant="8" id="Cuw-2k-Hdz"/>
+                <constraint firstAttribute="trailing" secondItem="NVg-Cj-JBy" secondAttribute="trailing" id="HG0-CD-h6p"/>
+                <constraint firstItem="NVg-Cj-JBy" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="KvQ-Xj-hDz"/>
                 <constraint firstAttribute="trailing" secondItem="pjE-8Q-ZrC" secondAttribute="trailing" id="UUa-dP-oU8"/>
-                <constraint firstItem="pjE-8Q-ZrC" firstAttribute="top" secondItem="t8W-JA-u6f" secondAttribute="bottom" constant="8" id="Zc1-eO-x9J"/>
             </constraints>
             <point key="canvasLocation" x="29.770992366412212" y="41.549295774647888"/>
         </view>

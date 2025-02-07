@@ -70,14 +70,13 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
         switch destination {
         case .mixinWallet:
             let selector = Web3TransferTokenSelectorViewController<TokenItem>()
-            selector.onSelected = { token in
+            selector.onSelected = { [address] token in
                 guard let chain = self.kind.chains.first(where: { $0.mixinChainID == token.chainID }) else {
                     return
                 }
-                let input = WithdrawToWeb3WalletInputAmountViewController(
+                let input = WithdrawInputAmountViewController(
                     tokenItem: token,
-                    web3WalletAddress: self.address,
-                    web3WalletChainName: chain.name
+                    destination: .web3(address: address, chain: chain.name)
                 )
                 self.navigationController?.pushViewController(input, animated: true)
             }

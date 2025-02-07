@@ -94,7 +94,7 @@ final class Web3TokenViewController: UIViewController {
             return
         }
         let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address)
-        let selector = Web3SendingDestinationViewController(payment: payment)
+        let selector = Web3TokenReceiverViewController(payment: payment)
         navigationController?.pushViewController(selector, animated: true)
     }
     

@@ -3,11 +3,11 @@ import Combine
 import OrderedCollections
 import MixinServices
 
-protocol SelectableToken {
-    var assetID: String { get }
+protocol IdentifiableToken {
+    var id: String { get }
 }
 
-class TokenSelectorViewController<Token: SelectableToken>: UIViewController, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
+class TokenSelectorViewController<Token: IdentifiableToken>: UIViewController, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
     
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var cancelButton: UIButton!
@@ -16,10 +16,10 @@ class TokenSelectorViewController<Token: SelectableToken>: UIViewController, UIT
     private let maxNumberOfRecents = 6
     private let recentGroupHorizontalMargin: CGFloat = 20
     private let searchDebounceInterval: TimeInterval
-    private let selectedAssetID: String?
+    private let selectedID: String?
     
     var recentTokens: [Token] = []
-    var recentTokenChanges: [String: TokenChange] = [:] // Key is asset id
+    var recentTokenChanges: [String: TokenChange] = [:] // Key is token's id
     
     var defaultTokens: [Token]
     var defaultChains: OrderedSet<Chain>
@@ -42,12 +42,12 @@ class TokenSelectorViewController<Token: SelectableToken>: UIViewController, UIT
         defaultTokens: [Token],
         defaultChains: OrderedSet<Chain>,
         searchDebounceInterval: TimeInterval,
-        selectedAssetID: String?
+        selectedID: String?
     ) {
         self.defaultTokens = defaultTokens
         self.defaultChains = defaultChains
         self.searchDebounceInterval = searchDebounceInterval
-        self.selectedAssetID = selectedAssetID
+        self.selectedID = selectedID
         let nib = R.nib.tokenSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -201,7 +201,7 @@ class TokenSelectorViewController<Token: SelectableToken>: UIViewController, UIT
         var recentTokens = self.recentTokens
         DispatchQueue.global().async { [maxNumberOfRecents] in
             recentTokens.removeAll { recentToken in
-                recentToken.assetID == token.assetID
+                recentToken.id == token.id
             }
             recentTokens.insert(token, at: 0)
             let topRecentTokens = recentTokens.prefix(maxNumberOfRecents)
@@ -434,12 +434,12 @@ extension TokenSelectorViewController {
     }
     
     func reloadTokenSelection() {
-        guard let assetID = selectedAssetID else {
+        guard let id = selectedID else {
             return
         }
         let item: Int
         if let searchResults {
-            if let index = searchResults.firstIndex(where: { $0.assetID == assetID }) {
+            if let index = searchResults.firstIndex(where: { $0.id == id }) {
                 if let indices = tokenIndicesForSelectedChain {
                     if let i = indices.firstIndex(of: index) {
                         item = i
@@ -454,7 +454,7 @@ extension TokenSelectorViewController {
                 // The selected token doesn't exists in search results
                 return
             }
-        } else if let index = defaultTokens.firstIndex(where: { $0.assetID == assetID }) {
+        } else if let index = defaultTokens.firstIndex(where: { $0.id == id }) {
             if let indices = tokenIndicesForSelectedChain {
                 if let i = indices.firstIndex(of: index) {
                     item = i

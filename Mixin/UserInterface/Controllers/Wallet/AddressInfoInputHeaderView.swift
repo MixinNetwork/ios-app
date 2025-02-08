@@ -87,6 +87,7 @@ final class AddressInfoInputHeaderView: UIView {
         contentLabel.textColor = R.color.text_tertiary()
         contentLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         contentLabel.numberOfLines = 0
+        contentLabel.textAlignment = .right
         contentLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         contentLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         configure(contentLabel)

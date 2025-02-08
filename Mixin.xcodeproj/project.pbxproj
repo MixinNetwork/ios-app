@@ -1040,6 +1040,9 @@
 		948923512D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948923502D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift */; };
 		9489237D2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489237C2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift */; };
 		948924602D5720C600D9BCCB /* Web3Token+ChainTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489245F2D5720C100D9BCCB /* Web3Token+ChainTag.swift */; };
+		9489247D2D572E9400D9BCCB /* TokenReceiverTrayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489247C2D572E9400D9BCCB /* TokenReceiverTrayView.swift */; };
+		9489247F2D572EA200D9BCCB /* TokenReceiverTrayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9489247E2D572EA200D9BCCB /* TokenReceiverTrayView.xib */; };
+		9489249C2D573BA700D9BCCB /* OneTimeAddressValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489249B2D573BA000D9BCCB /* OneTimeAddressValidator.swift */; };
 		9489E3A025C5B150000319F8 /* AcknowledgementListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */; };
 		948A85E82D14032700880AAF /* MAONameSearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948A85E72D14032700880AAF /* MAONameSearchResultCell.xib */; };
 		948ACAA02AF38E5B0057D76B /* SnapshotMessageContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */; };
@@ -2564,6 +2567,9 @@
 		948923502D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenSelectorViewController.swift; sourceTree = "<group>"; };
 		9489237C2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenReceiverViewController.swift; sourceTree = "<group>"; };
 		9489245F2D5720C100D9BCCB /* Web3Token+ChainTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Token+ChainTag.swift"; sourceTree = "<group>"; };
+		9489247C2D572E9400D9BCCB /* TokenReceiverTrayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenReceiverTrayView.swift; sourceTree = "<group>"; };
+		9489247E2D572EA200D9BCCB /* TokenReceiverTrayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenReceiverTrayView.xib; sourceTree = "<group>"; };
+		9489249B2D573BA000D9BCCB /* OneTimeAddressValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneTimeAddressValidator.swift; sourceTree = "<group>"; };
 		9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementListViewController.swift; sourceTree = "<group>"; };
 		948A85E72D14032700880AAF /* MAONameSearchResultCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MAONameSearchResultCell.xib; sourceTree = "<group>"; };
 		948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotMessageContentView.xib; sourceTree = "<group>"; };
@@ -3197,6 +3203,7 @@
 				9487234A2C9EE7150034BCB0 /* TokenAction.swift */,
 				948723422C9E0D8D0034BCB0 /* MarketAlertViewModel.swift */,
 				942FD9702D3A90DD004DCC4C /* SwapOrder+Localization.swift */,
+				9489249B2D573BA000D9BCCB /* OneTimeAddressValidator.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -5073,6 +5080,8 @@
 				946E9F0A2D440F7500DBC308 /* SendTokenSelectorViewController.swift */,
 				94327CF62D53662700DEE36D /* AddressInfoInputHeaderView.xib */,
 				94327CF42D53650600DEE36D /* AddressInfoInputHeaderView.swift */,
+				9489247E2D572EA200D9BCCB /* TokenReceiverTrayView.xib */,
+				9489247C2D572E9400D9BCCB /* TokenReceiverTrayView.swift */,
 				946E9F5A2D455F0900DBC308 /* TokenReceiverViewController.swift */,
 				946EA0872D4763CF00DBC308 /* AddressInfoInputView.xib */,
 				946EA0852D4763BD00DBC308 /* AddressInfoInputViewController.swift */,
@@ -5848,6 +5857,7 @@
 				94CB85DA2C6B4EC600135641 /* TokenInfoCell.xib in Resources */,
 				944C61082B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.xib in Resources */,
 				DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */,
+				9489247F2D572EA200D9BCCB /* TokenReceiverTrayView.xib in Resources */,
 				9459693A28B28FF8006F5421 /* TIPActionView.xib in Resources */,
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,
 				94463C51298D627800E63547 /* AuthenticationFailureView.xib in Resources */,
@@ -6899,6 +6909,7 @@
 				DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */,
 				7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */,
 				DF8A7521236301C500765A82 /* AuthorizationWindow.swift in Sources */,
+				9489247D2D572E9400D9BCCB /* TokenReceiverTrayView.swift in Sources */,
 				E05D992B23911D64009F9E8D /* ProfileFavoriteAppsView.swift in Sources */,
 				7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */,
 				7B71F5262191CC1500F93B98 /* WalletHeaderView.swift in Sources */,
@@ -6971,6 +6982,7 @@
 				DFC2647424E9339C00BF954D /* BigAmountConfirmationWindow.swift in Sources */,
 				94658CAB2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift in Sources */,
 				E07E38A123A772CC0005A538 /* CallError.swift in Sources */,
+				9489249C2D573BA700D9BCCB /* OneTimeAddressValidator.swift in Sources */,
 				94838A442C02ADFB005B6A27 /* Solana.swift in Sources */,
 				E0C7674B23CC8F54003F9215 /* TrailingInfoBackgroundView.swift in Sources */,
 				7B9553412243860C00CE95E6 /* PinValidationPresentationController.swift in Sources */,

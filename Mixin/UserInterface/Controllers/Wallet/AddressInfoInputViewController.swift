@@ -96,20 +96,23 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         case .destination:
             title = R.string.localizable.address()
             headerView.inputPlaceholder = "Enter a wallet address, exchange address."
+            nextButton.isEnabled = false
         case .memo:
             title = R.string.localizable.memo()
             headerView.inputPlaceholder = "输入地址备注（Memo），如果没有直接点下一步。"
+            nextButton.isEnabled = true
         case .tag:
             title = R.string.localizable.tag()
             headerView.inputPlaceholder = "输入数字地址标签（Tag），如果没有直接点下一步。"
+            nextButton.isEnabled = true
         case .label:
             title = R.string.localizable.label()
             headerView.inputPlaceholder = "使用一个独特的标签来帮助您找到这个地址，例如钱包、交易所或者朋友的名称。"
+            nextButton.isEnabled = false
         }
         nextButton.setTitle(R.string.localizable.next(), for: .normal)
         nextButton.style = .filled
         nextButton.applyDefaultContentInsets()
-        nextButton.isEnabled = false
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillHide(_:)),
@@ -124,19 +127,18 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     
     @IBAction func goNext(_ sender: Any) {
         let content = headerView.trimmedContent
-        guard !content.isEmpty else {
-            return
-        }
         switch intent {
         case .newAddress:
             switch inputContent {
             case .destination:
-                let next = AddressInfoInputViewController(
-                    token: token,
-                    intent: intent,
-                    inputContent: InputContent(token: token, destination: content)
-                )
-                navigationController?.pushViewController(next, animated: true)
+                if !content.isEmpty {
+                    let next = AddressInfoInputViewController(
+                        token: token,
+                        intent: intent,
+                        inputContent: InputContent(token: token, destination: content)
+                    )
+                    navigationController?.pushViewController(next, animated: true)
+                }
             case let .memo(destination), let .tag(destination):
                 let next = AddressInfoInputViewController(
                     token: token,
@@ -145,20 +147,17 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                 )
                 navigationController?.pushViewController(next, animated: true)
             case let .label(destination, tag):
-                saveNewAddress(destination: destination, tag: tag, label: content)
+                if !content.isEmpty {
+                    saveNewAddress(destination: destination, tag: tag, label: content)
+                }
             }
         case .oneTimeWithdraw:
             switch inputContent {
             case .destination:
                 assertionFailure("Only input memo/tag with this view controller when performing One-Time-Withdraw")
             case let .memo(destination), let .tag(destination):
-                let address = TemporaryAddress(destination: destination, tag: content)
-                let next = WithdrawInputAmountViewController(
-                    tokenItem: token,
-                    destination: .temporary(address)
-                )
-                navigationController?.pushViewController(next, animated: true)
-            case let .label(destination, tag):
+                withdraw(destination: destination, tag: content)
+            case .label:
                 assertionFailure("Only input memo/tag with this view controller when performing One-Time-Withdraw")
             }
         }
@@ -195,9 +194,29 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         present(preview, animated: true)
     }
     
-    private func withdraw(destination: String, tag: String?) {
+    private func withdraw(destination: String, tag: String) {
         let destination = self.destination(bip21Unchecked: destination)
-        
+        OneTimeAddressValidator.validate(
+            assetID: token.assetID,
+            destination: destination,
+            tag: tag
+        ) { [weak self] in
+            guard let self else {
+                return
+            }
+            let address = TemporaryAddress(destination: destination, tag: tag)
+            let next = WithdrawInputAmountViewController(
+                tokenItem: self.token,
+                destination: .temporary(address)
+            )
+            self.navigationController?.pushViewController(next, animated: true)
+        } onFailure: { [weak self] error in
+            guard let self else {
+                return
+            }
+            self.errorDescriptionLabel.text = error.localizedDescription
+            self.errorDescriptionLabel.isHidden = false
+        }
     }
     
 }
@@ -221,7 +240,13 @@ extension AddressInfoInputViewController: UITextViewDelegate {
 extension AddressInfoInputViewController: AddressInfoInputHeaderView.Delegate {
     
     func addressInfoInputHeaderView(_ headerView: AddressInfoInputHeaderView, didUpdateContent content: String) {
-        nextButton.isEnabled = !content.isEmpty
+        errorDescriptionLabel.isHidden = true
+        switch inputContent {
+        case .destination, .label:
+            nextButton.isEnabled = !content.isEmpty
+        case .memo, .tag:
+            break
+        }
     }
     
     func addressInfoInputHeaderViewWantsToScanContent(_ headerView: AddressInfoInputHeaderView) {

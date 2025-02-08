@@ -14,7 +14,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     private let trayViewHeight: CGFloat = 82
     
     private weak var tableView: UITableView!
-    private weak var trayView: AuthenticationPreviewSingleButtonTrayView?
+    private weak var trayView: TokenReceiverTrayView?
     
     private weak var trayViewBottomConstraint: NSLayoutConstraint?
     
@@ -78,7 +78,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
         }
     }
     
-    @objc private func continueWithOneTimeAddress(_ sender: Any) {
+    @objc private func continueWithOneTimeAddress(_ sender: StyledButton) {
         let destination = headerView.trimmedContent
         guard !destination.isEmpty else {
             return
@@ -86,12 +86,29 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
         if let nextInput = AddressInfoInputViewController.oneTimeWithdraw(token: token, destination: destination) {
             navigationController?.pushViewController(nextInput, animated: true)
         } else {
-            let address = TemporaryAddress(destination: destination, tag: "")
-            let inputAmount = WithdrawInputAmountViewController(
-                tokenItem: token,
-                destination: .temporary(address)
-            )
-            navigationController?.pushViewController(inputAmount, animated: true)
+            sender.isBusy = true
+            OneTimeAddressValidator.validate(
+                assetID: token.assetID,
+                destination: destination,
+                tag: nil
+            ) { [weak sender, weak self] in
+                sender?.isBusy = false
+                guard let self else {
+                    return
+                }
+                let address = TemporaryAddress(destination: destination, tag: "")
+                let inputAmount = WithdrawInputAmountViewController(
+                    tokenItem: self.token,
+                    destination: .temporary(address)
+                )
+                self.navigationController?.pushViewController(inputAmount, animated: true)
+            } onFailure: { [weak sender, trayView] error in
+                sender?.isBusy = false
+                if let label = trayView?.errorDescriptionLabel {
+                    label.text = error.localizedDescription
+                    label.isHidden = false
+                }
+            }
         }
     }
     
@@ -186,18 +203,22 @@ extension TokenReceiverViewController: AddressInfoInputHeaderView.Delegate {
             tableView.contentInset.bottom = trayViewHeight
             if let trayView {
                 trayView.isHidden = false
+                trayView.errorDescriptionLabel.isHidden = true
             } else {
-                let trayView = AuthenticationPreviewSingleButtonTrayView()
-                trayView.backgroundColor = R.color.background_secondary()
+                let trayView = R.nib.tokenReceiverTrayView(withOwner: nil)!
                 view.addSubview(trayView)
                 trayView.snp.makeConstraints { make in
-                    make.height.equalTo(trayViewHeight)
                     make.leading.trailing.equalToSuperview()
-                    make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom)
                 }
-                trayView.button.setTitle(R.string.localizable.next(), for: .normal)
-                trayView.button.addTarget(self, action: #selector(continueWithOneTimeAddress(_:)), for: .touchUpInside)
-                let bottomConstraint = trayView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -(lastKeyboardFrame?.height ?? 0))
+                trayView.nextButton.addTarget(
+                    self,
+                    action: #selector(continueWithOneTimeAddress(_:)),
+                    for: .touchUpInside
+                )
+                let bottomConstraint = trayView.bottomAnchor.constraint(
+                    equalTo: view.bottomAnchor,
+                    constant: -(lastKeyboardFrame?.height ?? 0)
+                )
                 bottomConstraint.priority = .defaultHigh
                 bottomConstraint.isActive = true
                 self.trayView = trayView

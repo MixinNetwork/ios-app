@@ -1293,8 +1293,14 @@ class ConversationViewController: UIViewController {
     }
     
     func showTransfer() {
+        guard let ownerUser else {
+            return
+        }
         let selector = SendTokenSelectorViewController()
-        selector.receiver = ownerUser
+        selector.onSelected = { token in
+            let inputAmount = TransferInputAmountViewController(tokenItem: token, receiver: ownerUser)
+            self.navigationController?.pushViewController(inputAmount, animated: true)
+        }
         present(selector, animated: true)
     }
     

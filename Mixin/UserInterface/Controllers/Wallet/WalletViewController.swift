@@ -207,6 +207,10 @@ extension WalletViewController: TokenActionView.Delegate {
         switch action {
         case .send:
             let selector = SendTokenSelectorViewController()
+            selector.onSelected = { token in
+                let receiver = TokenReceiverViewController(token: token)
+                self.navigationController?.pushViewController(receiver, animated: true)
+            }
             present(selector, animated: true, completion: nil)
         case .receive:
             let controller = TransferSearchViewController()

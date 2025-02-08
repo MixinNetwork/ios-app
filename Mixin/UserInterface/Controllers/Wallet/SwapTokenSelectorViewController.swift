@@ -138,6 +138,7 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
     
     override func pickUp(token: BalancedSwapToken, from location: PickUpLocation) {
         super.pickUp(token: token, from: location)
+        presentingViewController?.dismiss(animated: true)
         onSelected?(token)
         switch location {
         case .recent:

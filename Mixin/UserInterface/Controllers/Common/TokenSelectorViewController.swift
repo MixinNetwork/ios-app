@@ -207,7 +207,6 @@ class TokenSelectorViewController<Token: IdentifiableToken>: UIViewController, U
             let topRecentTokens = recentTokens.prefix(maxNumberOfRecents)
             self.saveRecentsToStorage(tokens: topRecentTokens)
         }
-        presentingViewController?.dismiss(animated: true)
     }
     
     // MARK: - UITextFieldDelegate

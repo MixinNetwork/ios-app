@@ -12,7 +12,7 @@ extension TokenItem: IdentifiableToken {
 
 final class SendTokenSelectorViewController: TokenSelectorViewController<TokenItem> {
     
-    var receiver: UserItem?
+    var onSelected: ((TokenItem) -> Void)?
     
     init() {
         super.init(
@@ -132,15 +132,9 @@ final class SendTokenSelectorViewController: TokenSelectorViewController<TokenIt
     }
     
     override func pickUp(token: TokenItem, from location: PickUpLocation) {
-        let navigationController = UIApplication.homeNavigationController
-        presentingViewController?.dismiss(animated: true) { [receiver] in
-            if let receiver {
-                let inputAmount = TransferInputAmountViewController(tokenItem: token, receiver: receiver)
-                navigationController?.pushViewController(inputAmount, animated: true)
-            } else {
-                let receiver = TokenReceiverViewController(token: token)
-                navigationController?.pushViewController(receiver, animated: true)
-            }
+        super.pickUp(token: token, from: location)
+        presentingViewController?.dismiss(animated: true) { [onSelected] in
+            onSelected?(token)
         }
     }
     

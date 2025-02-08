@@ -117,6 +117,7 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
     }
     
     override func pickUp(token: Web3Token, from location: PickUpLocation) {
+        super.pickUp(token: token, from: location)
         presentingViewController?.dismiss(animated: true) { [onSelected] in
             onSelected?(token)
         }

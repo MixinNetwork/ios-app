@@ -88,6 +88,7 @@ final class AddressInfoInputHeaderView: UIView {
         contentLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         contentLabel.numberOfLines = 0
         contentLabel.textAlignment = .right
+        contentLabel.lineBreakMode = .byCharWrapping
         contentLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         contentLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         configure(contentLabel)

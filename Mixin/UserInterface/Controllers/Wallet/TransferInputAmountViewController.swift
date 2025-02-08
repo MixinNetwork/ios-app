@@ -81,6 +81,9 @@ final class TransferInputAmountViewController: InputAmountViewController {
             return stackView
         }()
         accessoryStackView.insertArrangedSubview(noteStackView, at: 0)
+        noteStackView.snp.makeConstraints { make in
+            make.width.equalTo(view.snp.width).offset(-56)
+        }
         
         tokenIconView.setIcon(token: tokenItem)
         tokenNameLabel.text = tokenItem.name

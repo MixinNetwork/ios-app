@@ -106,6 +106,7 @@ final class AddressBookViewController: UIViewController {
     
     @objc private func endEditing(_ sender: Any) {
         tableView.setEditing(false, animated: true)
+        updateCancelButton()
     }
     
 }
@@ -156,7 +157,6 @@ extension AddressBookViewController {
                     return
                 }
                 weakSelf.addresses = addresses
-                weakSelf.searchBoxView.isHidden = addresses.isEmpty
                 weakSelf.newAddressButton.isHidden = !addresses.isEmpty
                 weakSelf.tableView.reloadData()
             }

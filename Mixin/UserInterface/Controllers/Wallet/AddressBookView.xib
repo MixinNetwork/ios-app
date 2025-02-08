@@ -27,7 +27,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Ll-IA-9pm">
                     <rect key="frame" x="0.0" y="59" width="393" height="70"/>
                     <subviews>
-                        <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tMd-9U-YF1" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tMd-9U-YF1" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="20" y="15" width="288" height="40"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>

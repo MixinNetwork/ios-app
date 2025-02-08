@@ -167,44 +167,53 @@ class InputAmountViewController: UIViewController {
     }
     
     func addMultipliersView() {
-        let multipliersStackView = {
-            var config: UIButton.Configuration = .filled()
-            config.baseForegroundColor = R.color.text()
-            config.baseBackgroundColor = R.color.background_secondary()
-            config.cornerStyle = .capsule
+        let multipliersStackView = UIStackView()
+        multipliersStackView.axis = .horizontal
+        multipliersStackView.distribution = .equalSpacing
+        
+        var config: UIButton.Configuration = .filled()
+        config.baseForegroundColor = R.color.text()
+        config.baseBackgroundColor = R.color.background_secondary()
+        config.cornerStyle = .capsule
+        
+        let attributes = AttributeContainer([
+            .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
+            .paragraphStyle: {
+                let style = NSMutableParagraphStyle()
+                style.alignment = .right
+                return style
+            }(),
+        ])
+        for tag in (0...2) {
+            config.attributedTitle = {
+                let multiplier = self.multiplier(tag: tag)
+                let title = switch multiplier {
+                case 1:
+                    R.string.localizable.balance_max()
+                default:
+                    NumberFormatter.simplePercentage.string(decimal: multiplier) ?? ""
+                }
+                return AttributedString(title, attributes: attributes)
+            }()
             
-            let stackView = UIStackView()
-            stackView.axis = .horizontal
-            stackView.spacing = 25
-            
-            for tag in (0...2) {
-                config.attributedTitle = {
-                    let multiplier = self.multiplier(tag: tag)
-                    let title = switch multiplier {
-                    case 1:
-                        R.string.localizable.balance_max()
-                    default:
-                        NumberFormatter.simplePercentage.string(decimal: multiplier) ?? ""
-                    }
-                    let paragraphSytle = NSMutableParagraphStyle()
-                    paragraphSytle.alignment = .right
-                    let attributes: [NSAttributedString.Key: Any] = [
-                        .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
-                        .paragraphStyle: paragraphSytle,
-                    ]
-                    return AttributedString(title, attributes: AttributeContainer(attributes))
-                }()
-                
-                let button = UIButton(configuration: config)
-                button.tag = tag
-                button.addTarget(self, action: #selector(inputMultipliedAmount(_:)), for: .touchUpInside)
-                stackView.addArrangedSubview(button)
-            }
-            return stackView
-        }()
+            let button = UIButton(configuration: config)
+            button.titleLabel?.adjustsFontForContentSizeCategory = true
+            button.tag = tag
+            button.addTarget(self, action: #selector(inputMultipliedAmount(_:)), for: .touchUpInside)
+            multipliersStackView.addArrangedSubview(button)
+        }
+        
         accessoryStackView.addArrangedSubview(multipliersStackView)
         multipliersStackView.snp.makeConstraints { make in
+            make.width.equalTo(view.snp.width).offset(-56)
             make.height.greaterThanOrEqualTo(32)
+        }
+        for button in multipliersStackView.arrangedSubviews {
+            button.snp.makeConstraints { make in
+                make.width.equalTo(view.snp.width)
+                    .multipliedBy(0.24)
+                    .priority(.high)
+            }
         }
         numberPadTopConstraint.constant = 12
     }

@@ -107,11 +107,11 @@
                         <constraint firstItem="Vbe-Ks-z2S" firstAttribute="centerY" secondItem="xTJ-gJ-abW" secondAttribute="centerY" id="uLG-Hv-0nU"/>
                     </constraints>
                 </view>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="C1J-Wa-hHH" userLabel="Accessory Stack View">
-                    <rect key="frame" x="20" y="380" width="350" height="72"/>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="C1J-Wa-hHH" userLabel="Accessory Stack View">
+                    <rect key="frame" x="0.0" y="380" width="390" height="72"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AZB-n1-LJK">
-                            <rect key="frame" x="0.0" y="0.0" width="350" height="72"/>
+                            <rect key="frame" x="20" y="0.0" width="350" height="72"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="lDV-0o-0g6">
                                     <rect key="frame" x="20" y="14" width="316" height="44"/>
@@ -434,10 +434,11 @@
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="gGb-Mu-a5l" secondAttribute="trailing" constant="18" id="7j4-8K-fAy"/>
                 <constraint firstItem="DlO-Gt-IZh" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="G5Z-m5-OaO"/>
                 <constraint firstAttribute="trailing" secondItem="cpf-Ia-i69" secondAttribute="trailing" id="K8R-h9-4Pr"/>
-                <constraint firstItem="C1J-Wa-hHH" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="Mze-Ev-aWu"/>
+                <constraint firstItem="C1J-Wa-hHH" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Mze-Ev-aWu"/>
                 <constraint firstItem="cpf-Ia-i69" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="QW6-I5-Stc"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="C1J-Wa-hHH" secondAttribute="trailing" constant="20" id="U7r-LP-mau"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="C1J-Wa-hHH" secondAttribute="trailing" id="U7r-LP-mau"/>
                 <constraint firstItem="DlO-Gt-IZh" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="You-Yn-aF1"/>
+                <constraint firstItem="AZB-n1-LJK" firstAttribute="width" secondItem="vUN-kp-3ea" secondAttribute="width" constant="-40" id="aSx-1O-bnm"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="DlO-Gt-IZh" secondAttribute="trailing" id="aUx-Hy-yYa"/>
                 <constraint firstItem="gGb-Mu-a5l" firstAttribute="top" secondItem="C1J-Wa-hHH" secondAttribute="bottom" constant="32" id="s6B-1c-gWe" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                     <userDefinedRuntimeAttributes>

@@ -189,7 +189,14 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
             action: .add
         )
         preview.onSavingSuccess = {
-            self.navigationController?.popViewController(animated: false)
+            guard let navigationController = self.navigationController else {
+                return
+            }
+            var viewControllers = navigationController.viewControllers
+            while viewControllers.last is AddressInfoInputViewController {
+                viewControllers.removeLast()
+            }
+            navigationController.setViewControllers(viewControllers, animated: false)
         }
         present(preview, animated: true)
     }

@@ -1039,6 +1039,7 @@
 		948922A12D54FC5F00D9BCCB /* IBANAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948922A02D54FC5A00D9BCCB /* IBANAddress.swift */; };
 		948923512D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948923502D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift */; };
 		9489237D2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489237C2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift */; };
+		948924602D5720C600D9BCCB /* Web3Token+ChainTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489245F2D5720C100D9BCCB /* Web3Token+ChainTag.swift */; };
 		9489E3A025C5B150000319F8 /* AcknowledgementListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */; };
 		948A85E82D14032700880AAF /* MAONameSearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948A85E72D14032700880AAF /* MAONameSearchResultCell.xib */; };
 		948ACAA02AF38E5B0057D76B /* SnapshotMessageContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */; };
@@ -2562,6 +2563,7 @@
 		948922A02D54FC5A00D9BCCB /* IBANAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IBANAddress.swift; sourceTree = "<group>"; };
 		948923502D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenSelectorViewController.swift; sourceTree = "<group>"; };
 		9489237C2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenReceiverViewController.swift; sourceTree = "<group>"; };
+		9489245F2D5720C100D9BCCB /* Web3Token+ChainTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Token+ChainTag.swift"; sourceTree = "<group>"; };
 		9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementListViewController.swift; sourceTree = "<group>"; };
 		948A85E72D14032700880AAF /* MAONameSearchResultCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MAONameSearchResultCell.xib; sourceTree = "<group>"; };
 		948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotMessageContentView.xib; sourceTree = "<group>"; };
@@ -4078,6 +4080,7 @@
 			isa = PBXGroup;
 			children = (
 				9401A57B2BD960F600679686 /* Web3Chain.swift */,
+				9489245F2D5720C100D9BCCB /* Web3Token+ChainTag.swift */,
 				948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */,
 				9401A6B72BDC771A00679686 /* TransferableToken.swift */,
 				9401A5FE2BDA8B5300679686 /* Web3SendingPayment.swift */,
@@ -7111,6 +7114,7 @@
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,
 				7B8ECAE8250F6BE8006F0479 /* ExternalSharingContext.swift in Sources */,
 				7C5DFE30284F23F6008733FC /* UserCenterViewController.swift in Sources */,
+				948924602D5720C600D9BCCB /* Web3Token+ChainTag.swift in Sources */,
 				945ED2B22B28342A00C138BF /* WithdrawPaymentOperation.swift in Sources */,
 				9416548325CD2D9A007E76D0 /* OggOpusRecorder.swift in Sources */,
 				94E206752AF388A400CCF6D8 /* SnapshotMessageViewModel.swift in Sources */,

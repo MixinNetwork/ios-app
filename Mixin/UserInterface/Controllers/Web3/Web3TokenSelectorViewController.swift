@@ -113,7 +113,12 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
         cell.iconView.setIcon(web3Token: token)
         cell.titleLabel.text = token.name
         cell.subtitleLabel.text = token.localizedBalanceWithSymbol
-        cell.chainLabel.isHidden = true
+        if let tag = token.chainTag {
+            cell.chainLabel.text = tag
+            cell.chainLabel.isHidden = false
+        } else {
+            cell.chainLabel.isHidden = true
+        }
     }
     
     override func pickUp(token: Web3Token, from location: PickUpLocation) {

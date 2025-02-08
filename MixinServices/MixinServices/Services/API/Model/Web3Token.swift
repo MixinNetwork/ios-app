@@ -5,6 +5,7 @@ public class Web3Token: Codable {
     public enum AssetKey {
         public static let sol = "11111111111111111111111111111111"
         public static let wrappedSOL = "So11111111111111111111111111111111111111112"
+        public static let eth = "0x0000000000000000000000000000000000000000"
     }
     
     public enum ChainID {

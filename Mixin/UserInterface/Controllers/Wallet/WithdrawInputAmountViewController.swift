@@ -87,6 +87,9 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             return stackView
         }()
         accessoryStackView.insertArrangedSubview(feeStackView, at: 0)
+        feeStackView.snp.makeConstraints { make in
+            make.width.equalTo(view.snp.width).offset(-56)
+        }
         
         tokenIconView.setIcon(token: tokenItem)
         tokenNameLabel.text = tokenItem.name

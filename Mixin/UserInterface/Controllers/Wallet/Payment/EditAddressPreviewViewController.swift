@@ -133,8 +133,8 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
             guard let navigationController = UIApplication.homeNavigationController else {
                 return
             }
-            let transfer = TransferOutViewController(token: token, to: .address(address))
-            navigationController.pushViewController(transfer, animated: true)
+            let inputAmount = WithdrawInputAmountViewController(tokenItem: token, destination: .address(address))
+            navigationController.pushViewController(inputAmount, animated: true)
         }
     }
     

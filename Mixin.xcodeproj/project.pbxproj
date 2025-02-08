@@ -1262,7 +1262,6 @@
 		94FB8E0E2D1ACB32002DCA20 /* SwapTokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB8E0B2D1ACB32002DCA20 /* SwapTokenCell.swift */; };
 		94FCB5FF264673C400CCC8FD /* TranscriptPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */; };
 		94FCB83B264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */; };
-		94FE0C492B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE0C482B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift */; };
 		94FE0C4F2B3083CA006DEFC5 /* SendingDestinationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */; };
 		94FE0C502B3083CA006DEFC5 /* SendingDestinationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FE0C4E2B3083CA006DEFC5 /* SendingDestinationCell.xib */; };
 		99F232BF0A2DDDA98D021A03 /* Pods_MixinDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E49F74E7017E780C23E3311F /* Pods_MixinDebug.framework */; };
@@ -2787,7 +2786,6 @@
 		94FB8E0C2D1ACB32002DCA20 /* SwapTokenCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapTokenCell.xib; sourceTree = "<group>"; };
 		94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptPreviewViewController.swift; sourceTree = "<group>"; };
 		94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAttachmentUploadJob.swift; sourceTree = "<group>"; };
-		94FE0C482B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingDestinationSelectorViewController.swift; sourceTree = "<group>"; };
 		94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingDestinationCell.swift; sourceTree = "<group>"; };
 		94FE0C4E2B3083CA006DEFC5 /* SendingDestinationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SendingDestinationCell.xib; sourceTree = "<group>"; };
 		9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
@@ -5060,7 +5058,6 @@
 				948723382C9DF6380034BCB0 /* AddMarketAlertView.xib */,
 				948723372C9DF6380034BCB0 /* AddMarketAlertViewController.swift */,
 				94428D732CA2A8F200157E93 /* EditMarketAlertViewController.swift */,
-				94FE0C482B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift */,
 				DF8794932074FB4E004A1E55 /* LegacyTransactionViewController.swift */,
 				94062C632AE8CB1200ADAE87 /* SafeSnapshotViewController.swift */,
 				94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */,
@@ -6688,7 +6685,6 @@
 				7C5DFE34284F3EA3008733FC /* UserCenterTableHeaderView.swift in Sources */,
 				94C93C8D2C94880600A31591 /* ExtendedKey.swift in Sources */,
 				DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */,
-				94FE0C492B3081D0006DEFC5 /* SendingDestinationSelectorViewController.swift in Sources */,
 				7BB78724245132570057B4ED /* SettingsHeaderView.swift in Sources */,
 				7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */,
 				94145A922CD4FCE900600AD4 /* AddMobileNumberViewController.swift in Sources */,

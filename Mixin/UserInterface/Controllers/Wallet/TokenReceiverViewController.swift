@@ -3,15 +3,17 @@ import MixinServices
 
 final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
-    private enum Destination: Int, CaseIterable {
-        case contact = 0
+    private enum Destination {
+        case contact
+        case web3Wallet(chain: Web3Chain, address: String)
         case addressBook
     }
     
     private let token: TokenItem
-    private let destinations: [Destination] = Destination.allCases
     private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
     private let trayViewHeight: CGFloat = 82
+    
+    private var destinations: [Destination] = [.contact, .addressBook]
     
     private weak var tableView: UITableView!
     private weak var trayView: TokenReceiverTrayView?
@@ -45,6 +47,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
         tableView.separatorStyle = .none
         tableView.tableHeaderView = headerView
         tableView.register(R.nib.sendingDestinationCell)
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.dataSource = self
         tableView.delegate = self
         tableView.contentInsetAdjustmentBehavior = .always
@@ -57,6 +60,19 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
             name: UIResponder.keyboardWillHideNotification,
             object: nil
         )
+        
+        if let web3Chain = Web3Chain.chain(mixinChainID: token.chainID) {
+            let address: String? = switch web3Chain.kind {
+            case .evm:
+                PropertiesDAO.shared.unsafeValue(forKey: .evmAddress)
+            case .solana:
+                PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress)
+            }
+            if let address {
+                destinations.insert(.web3Wallet(chain: web3Chain, address: address), at: 1)
+            }
+        }
+        tableView.reloadData()
     }
     
     override func layout(for keyboardFrame: CGRect) {
@@ -129,38 +145,36 @@ extension TokenReceiverViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let destination = Destination(rawValue: indexPath.row)!
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
+        let destination = destinations[indexPath.row]
         switch destination {
         case .contact:
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
-            cell.iconImageView.image = R.image.wallet.send_destination_contact()
+            cell.iconImageView.image = R.image.token_receiver_contact()
             cell.titleLabel.text = R.string.localizable.send_to_contact()
             cell.freeLabel.isHidden = false
             cell.subtitleLabel.text = R.string.localizable.send_to_contact_description()
-            cell.disclosureIndicatorImageView.isHidden = true
-            return cell
+        case let .web3Wallet(chain, _):
+            cell.iconImageView.image = R.image.token_receiver_wallet()
+            cell.titleLabel.text = R.string.localizable.web3_account_network(chain.name)
+            cell.freeLabel.isHidden = true
+            cell.subtitleLabel.text = "Send to my \(chain.name) account using a crypto network."
         case .addressBook:
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
-            cell.iconImageView.image = R.image.wallet.send_destination_address()
+            cell.iconImageView.image = R.image.token_receiver_address()
             cell.titleLabel.text = R.string.localizable.send_to_address()
             cell.freeLabel.isHidden = true
             cell.subtitleLabel.text = R.string.localizable.send_to_address_description()
-            cell.disclosureIndicatorImageView.isHidden = true
-            return cell
         }
+        cell.disclosureIndicatorImageView.isHidden = true
+        return cell
     }
     
 }
 
 extension TokenReceiverViewController: UITableViewDelegate {
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        74
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch Destination(rawValue: indexPath.row)! {
+        switch destinations[indexPath.row] {
         case .contact:
             let selector = TransferReceiverViewController()
             selector.onSelect = { [token] (user) in
@@ -170,6 +184,12 @@ extension TokenReceiverViewController: UITableViewDelegate {
                 }
             }
             self.present(selector, animated: true)
+        case let .web3Wallet(chain, address):
+            let inputAmount = WithdrawInputAmountViewController(
+                tokenItem: token,
+                destination: .web3(address: address, chain: chain.name)
+            )
+            navigationController?.pushViewController(inputAmount, animated: true)
         case .addressBook:
             let book = AddressBookViewController(token: token)
             book.onSelect = { [token] (address) in

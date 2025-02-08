@@ -136,7 +136,7 @@ extension Web3TokenReceiverViewController: UITableViewDataSource {
         let destination = destinations[indexPath.row]
         switch destination {
         case .myMixinWallet:
-            cell.iconImageView.image = R.image.web3_receiver_mixin_wallet()
+            cell.iconImageView.image = R.image.token_receiver_wallet()
             cell.freeLabel.isHidden = true
             cell.titleLabel.text = R.string.localizable.to_mixin_wallet()
             cell.subtitleLabel.text = R.string.localizable.contact_mixin_id(myIdentityNumber)

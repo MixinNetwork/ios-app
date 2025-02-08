@@ -11,7 +11,15 @@ final class TransferInputAmountViewController: InputAmountViewController {
     private let receiver: UserItem
     private let traceID = UUID().uuidString.lowercased()
     
-    private var note: String?
+    private var note: String? {
+        didSet {
+            changeNoteButton.configuration?.attributedTitle = if let note {
+                AttributedString(note, attributes: noteAttributes)
+            } else {
+                AttributedString("Add a note", attributes: addNoteAttributes)
+            }
+        }
+    }
     
     private weak var changeNoteButton: UIButton!
     
@@ -127,6 +135,22 @@ final class TransferInputAmountViewController: InputAmountViewController {
     }
     
     @objc private func changeNote(_ sender: UIButton) {
+        if note == nil {
+            presentNoteEditor()
+        } else {
+            let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            sheet.addAction(UIAlertAction(title: "Edit Note", style: .default, handler: { _ in
+                self.presentNoteEditor()
+            }))
+            sheet.addAction(UIAlertAction(title: "Delete Note", style: .destructive, handler: { _ in
+                self.note = nil
+            }))
+            sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+            present(sheet, animated: true)
+        }
+    }
+    
+    private func presentNoteEditor() {
         let input = UIAlertController(title: "Add a note", message: nil, preferredStyle: .alert)
         input.addTextField { [note] textField in
             textField.text = note
@@ -138,10 +162,8 @@ final class TransferInputAmountViewController: InputAmountViewController {
             }
             if let note = textField.text, !note.isEmpty {
                 self.note = note
-                self.changeNoteButton.configuration?.attributedTitle = AttributedString(note, attributes: self.noteAttributes)
             } else {
                 self.note = nil
-                self.changeNoteButton.configuration?.attributedTitle = AttributedString("Add a note", attributes: self.addNoteAttributes)
             }
         }))
         present(input, animated: true)

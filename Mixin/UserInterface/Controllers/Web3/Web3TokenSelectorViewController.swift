@@ -34,11 +34,12 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
                 recentFungibleIDs.contains(token.fungibleID)
             }
             let chainIDs = Set(tokens.compactMap(\.chainID))
-            let chains = Chain.chains(ids: chainIDs)
+            let chains = Chain.web3Chains(ids: chainIDs)
             DispatchQueue.main.async {
                 self.recentTokens = recentTokens
                 self.defaultChains = chains
                 self.collectionView.reloadData()
+                self.reloadChainSelection()
                 self.collectionView.checkEmpty(
                     dataCount: tokens.count,
                     text: R.string.localizable.dont_have_assets(),
@@ -68,7 +69,7 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
             return left > right
         }
         let chainIDs = Set(searchResults.compactMap(\.chainID))
-        let searchResultChains = Chain.chains(ids: chainIDs)
+        let searchResultChains = Chain.web3Chains(ids: chainIDs)
         
         self.searchResultsKeyword = keyword
         self.searchResults = searchResults

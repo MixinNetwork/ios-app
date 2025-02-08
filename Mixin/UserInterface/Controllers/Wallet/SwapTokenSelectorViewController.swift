@@ -42,7 +42,7 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
     ) {
         self.recent = recent
         let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-        let chains = Chain.chains(ids: chainIDs)
+        let chains = Chain.mixinChains(ids: chainIDs)
         super.init(
             defaultTokens: tokens,
             defaultChains: chains,
@@ -161,7 +161,7 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
                 return left > right
             }
         let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-        let searchResultChains = Chain.chains(ids: chainIDs)
+        let searchResultChains = Chain.mixinChains(ids: chainIDs)
         DispatchQueue.main.async {
             guard self.trimmedKeyword == keyword else {
                 return

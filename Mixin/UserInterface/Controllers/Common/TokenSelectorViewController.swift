@@ -382,7 +382,7 @@ extension TokenSelectorViewController {
             lhs.id == rhs.id
         }
         
-        static func chains(ids: Set<String>) -> OrderedSet<Chain> {
+        static func mixinChains(ids: Set<String>) -> OrderedSet<Chain> {
             let all = [
                 Chain(id: ChainID.ethereum, name: "Ethereum"),
                 Chain(id: ChainID.solana, name: "Solana"),
@@ -391,6 +391,16 @@ extension TokenSelectorViewController {
                 Chain(id: ChainID.bnbSmartChain, name: "BSC"),
                 Chain(id: ChainID.polygon, name: "Polygon"),
             ]
+            let chains = all.filter { chain in
+                ids.contains(chain.id)
+            }
+            return OrderedSet(chains)
+        }
+        
+        static func web3Chains(ids: Set<String>) -> OrderedSet<Chain> {
+            let all = Web3Chain.all.map { chain in
+                Chain(id: chain.web3ChainID, name: chain.name)
+            }
             let chains = all.filter { chain in
                 ids.contains(chain.id)
             }

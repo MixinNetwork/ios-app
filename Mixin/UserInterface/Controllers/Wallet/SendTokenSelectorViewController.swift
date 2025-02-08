@@ -37,7 +37,7 @@ final class SendTokenSelectorViewController: TokenSelectorViewController<TokenIt
                 .compactMapValues(TokenChange.init(change:))
             let tokens = TokenDAO.shared.positiveBalancedTokens()
             let chainIDs = Set(tokens.compactMap(\.chainID))
-            let chains = Chain.chains(ids: chainIDs)
+            let chains = Chain.mixinChains(ids: chainIDs)
             DispatchQueue.main.async {
                 self.recentTokens = recentTokens
                 self.recentTokenChanges = recentTokenChanges
@@ -73,7 +73,7 @@ final class SendTokenSelectorViewController: TokenSelectorViewController<TokenIt
             return left > right
         }
         let chainIDs = Set(searchResults.compactMap(\.chainID))
-        let searchResultChains = Chain.chains(ids: chainIDs)
+        let searchResultChains = Chain.mixinChains(ids: chainIDs)
         
         self.searchResultsKeyword = keyword
         self.searchResults = searchResults

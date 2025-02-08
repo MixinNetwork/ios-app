@@ -41,7 +41,7 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
         navigationItem.rightBarButtonItem = .customerService(target: self, action: #selector(presentCustomerService(_:)))
         
         headerView.load(web3Token: payment.token)
-        headerView.inputPlaceholder = "Enter a wallet address, exchange address, or ENS."
+        headerView.inputPlaceholder = R.string.localizable.hint_address()
         headerView.delegate = self
         
         let tableView = UITableView(frame: view.bounds, style: .plain)

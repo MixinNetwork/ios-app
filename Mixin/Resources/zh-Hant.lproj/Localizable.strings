@@ -7,6 +7,7 @@
 "accounts" = "賬戶";
 "acknowledgements" = "許可證";
 "add" = "新增";
+"add_a_note" = "新增轉賬備註";
 "add_address" = "新增地址";
 "add_alert" = "添加價格預警";
 "add_bot" = "新增機器人";
@@ -17,7 +18,6 @@
 "add_contact" = "新增聯絡人";
 "add_conversations" = "新增會話";
 "add_emergency_contact" = "新增恢復聯絡人";
-"add_memo" = "點選新增 Memo（備註）";
 "add_mobile_number" = "新增手機號碼";
 "add_or_remove_favorite_bots" = "新增或刪除收藏的機器人";
 "add_participants" = "新增成員";
@@ -166,6 +166,7 @@
 "auto_download_hint" = "媒體自動下載設定，所有語音訊息將自動下載。";
 "auto_lock" = "自動鎖定";
 "automatic" = "自動";
+"available_balance" = "可用餘額：%@";
 "back_to_chat" = "返回聊天";
 "back_to_merchant" = "返回商家";
 "backed_up" = "已備份";
@@ -421,6 +422,7 @@
 "delete_for_me" = "刪除";
 "delete_group_chat_confirmation" = "刪除\"%@\"的聊天？";
 "delete_my_account" = "刪除賬號";
+"delete_note" = "刪除轉賬備註";
 "delete_synced_contact" = "刪除已同步的通訊錄";
 "delete_withdraw_address" = "刪除 %@ 地址";
 "deleted" = "已刪除";
@@ -482,6 +484,7 @@
 "edit_group_description" = "編輯群公告";
 "edit_group_name" = "編輯名稱";
 "edit_name" = "修改暱稱";
+"edit_note" = "修改轉賬備註";
 "editing_address" = "正在修改地址";
 "editing_address_failed" = "修改地址失敗";
 "emergency_contact" = "恢復聯絡人";
@@ -611,7 +614,7 @@
 "hide" = "隱藏";
 "hide_asset" = "隱藏資產";
 "high_24h" = "24 小時最高";
-"hint_address" = "輸入錢包地址";
+"hint_address" = "輸入錢包地址、交易所地址";
 "hold_to_record_audio" = "長按說話，鬆手傳送";
 "hour" = "%d 小時";
 "hour_count" = "%d 小時";
@@ -714,6 +717,7 @@
 "max_favorite_bots_description" = "最多可以新增 5 個喜歡的機器人，注意其他人可以在你的個人資訊彈窗裡檢視這些你喜歡的機器人。";
 "media" = "媒體";
 "memo" = "備註";
+"memo_placeholder" = "輸入地址備註（Memo），如果沒有直接點下一步。";
 "message_e2ee" = "此對話中的訊息使用端對端加密。點選瞭解更多。";
 "message_encryption_hint" = "使用者之間的訊息將受到端對端加密保護";
 "message_not_found" = "找不到該訊息";
@@ -852,6 +856,7 @@
 "opponents" = "收發人";
 "optimize_database" = "最佳化查詢索引";
 "optimized" = "已最佳化";
+"optional_note" = "轉賬備註（可選）";
 "or" = "或者";
 "order_details" = "訂單詳情";
 "order_id" = "訂單 ID";
@@ -1092,11 +1097,12 @@
 "send_this_location" = "傳送這個位置";
 "send_to" = "傳送給 %@";
 "send_to_address" = "轉出到地址";
-"send_to_address_description" = "轉出加密貨幣到錢包或交易所";
+"send_to_address_description" = "使用加密貨幣網路轉到已儲存的鏈上地址";
 "send_to_contact" = "轉出到聯絡人";
-"send_to_contact_description" = "轉出加密貨幣到 Mixin 聯絡人";
+"send_to_contact_description" = "使用 Mixin 網路轉到我的 Mixin 聯絡人";
 "send_to_developer" = "把日誌發給開發者";
 "send_to_title" = "轉給";
+"send_to_web3_wallet_description" = "使用加密貨幣網路轉到我的 %@ 賬戶";
 "send_video" = "傳送 1 個影片";
 "send_video_count" = "傳送 %d 個影片";
 "send_without_sound" = "靜音傳送";
@@ -1236,6 +1242,7 @@
 "system" = "跟隨系統";
 "system_time_is_unusual" = "系統時間異常";
 "tag" = "Tag（標籤）";
+"tag_placeholder" = "輸入數字地址標籤（Tag），如果沒有直接點下一步。";
 "take_a_photo" = "拍攝照片";
 "tap_to_join" = "點選加入";
 "terms_of_service" = "服務條款";
@@ -1447,7 +1454,7 @@
 "withdrawal_address_tips" = "首次提現到新地址，建議小額嘗試！如果您提現到錯誤的地址資產將無法找回！";
 "withdrawal_failed" = "提現失敗";
 "withdrawal_hash" = "提現雜湊";
-"withdrawal_label" = "地址名稱，例如 OceanOne";
+"withdrawal_label_placeholder" = "使用一個獨特的標籤來幫助您找到這個地址，例如錢包、交易所或者朋友的名稱。";
 "withdrawal_memo" = "Memo（備註）";
 "withdrawal_minimum_amount" = "提現金額最小 %1$@ %2$@";
 "withdrawal_minimum_reserve" = "最少保留數量：";

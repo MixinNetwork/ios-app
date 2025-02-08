@@ -16,7 +16,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
             changeNoteButton.configuration?.attributedTitle = if let note {
                 AttributedString(note, attributes: noteAttributes)
             } else {
-                AttributedString("Add a note", attributes: addNoteAttributes)
+                AttributedString(R.string.localizable.add_a_note(), attributes: addNoteAttributes)
             }
         }
     }
@@ -54,7 +54,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
         let noteStackView = {
             let titleLabel = InsetLabel()
             titleLabel.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
-            titleLabel.text = "Note (Optional)"
+            titleLabel.text = R.string.localizable.optional_note()
             titleLabel.textColor = R.color.text_tertiary()
             titleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
             titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -64,7 +64,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
             config.imagePlacement = .trailing
             config.imagePadding = 14
             config.image = R.image.ic_accessory_disclosure()
-            config.attributedTitle = AttributedString("Add a note", attributes: addNoteAttributes)
+            config.attributedTitle = AttributedString(R.string.localizable.add_a_note(), attributes: addNoteAttributes)
             let button = UIButton(configuration: config)
             button.tintColor = R.color.chat_pin_count_background()
             button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -142,10 +142,10 @@ final class TransferInputAmountViewController: InputAmountViewController {
             presentNoteEditor()
         } else {
             let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            sheet.addAction(UIAlertAction(title: "Edit Note", style: .default, handler: { _ in
+            sheet.addAction(UIAlertAction(title: R.string.localizable.edit_note(), style: .default, handler: { _ in
                 self.presentNoteEditor()
             }))
-            sheet.addAction(UIAlertAction(title: "Delete Note", style: .destructive, handler: { _ in
+            sheet.addAction(UIAlertAction(title: R.string.localizable.delete_note(), style: .destructive, handler: { _ in
                 self.note = nil
             }))
             sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
@@ -154,7 +154,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
     }
     
     private func presentNoteEditor() {
-        let input = UIAlertController(title: "Add a note", message: nil, preferredStyle: .alert)
+        let input = UIAlertController(title: R.string.localizable.add_a_note(), message: nil, preferredStyle: .alert)
         input.addTextField { [note] textField in
             textField.text = note
         }

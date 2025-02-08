@@ -7,6 +7,7 @@
 "accounts" = "Accounts";
 "acknowledgements" = "Благодарности";
 "add" = "Добавить";
+"add_a_note" = "Add a note";
 "add_address" = "Добавить адрес";
 "add_alert" = "Add Alert";
 "add_bot" = "Добавить бота";
@@ -17,7 +18,6 @@
 "add_contact" = "Добавить контакт";
 "add_conversations" = "Добавить беседы";
 "add_emergency_contact" = "Add recovery contact";
-"add_memo" = "добавить памятку";
 "add_mobile_number" = "Add Mobile Number";
 "add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "Добавить участников";
@@ -166,6 +166,7 @@
 "auto_download_hint" = "Измените настройки автоматической загрузки для медиафайлов. Голосовые сообщения всегда загружаются автоматически.";
 "auto_lock" = "Автоматическая блокировка";
 "automatic" = "Автоматический";
+"available_balance" = "Available: %@";
 "back_to_chat" = "Вернуться к чату";
 "back_to_merchant" = "Back to Merchant";
 "backed_up" = "Backed up";
@@ -421,6 +422,7 @@
 "delete_for_me" = "Удалить для меня";
 "delete_group_chat_confirmation" = "Удалить групповой чат %@?";
 "delete_my_account" = "Удалить мой аккаунт";
+"delete_note" = "Delete Note";
 "delete_synced_contact" = "Удалить синхронизированные контакты";
 "delete_withdraw_address" = "Удалить адрес %@";
 "deleted" = "Удалено";
@@ -482,6 +484,7 @@
 "edit_group_description" = "Изменить описание группы";
 "edit_group_name" = "Изменить имя группы";
 "edit_name" = "Редактировать название";
+"edit_note" = "Edit Note";
 "editing_address" = "Editing Address";
 "editing_address_failed" = "Editing Address Failed";
 "emergency_contact" = "Recovery Contact";
@@ -611,7 +614,7 @@
 "hide" = "Скрыть";
 "hide_asset" = "Скрыть актив";
 "high_24h" = "24H HIGH";
-"hint_address" = "Enter a wallet address";
+"hint_address" = "Enter a wallet address, exchange address.";
 "hold_to_record_audio" = "Удерживайте, чтобы записать, отпустите, чтобы отправить";
 "hour" = "%d час";
 "hour_count" = "%d часы";
@@ -714,6 +717,7 @@
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Медиа";
 "memo" = "Памятка";
+"memo_placeholder" = "Enter the Memo. If there isn’t one, just tap “Next”.";
 "message_e2ee" = "Сообщения в этом чате полностью зашифрованы. Нажмите, чтобы узнать больше.";
 "message_encryption_hint" = "Сообщения между пользователями защищены сквозным шифрованием";
 "message_not_found" = "Сообщение не найдено";
@@ -852,6 +856,7 @@
 "opponents" = "Opponents";
 "optimize_database" = "Оптимизировать базу данных";
 "optimized" = "Оптимизировано";
+"optional_note" = "Note (Optional)";
 "or" = "or";
 "order_details" = "Order Details";
 "order_id" = "Order ID";
@@ -1092,11 +1097,12 @@
 "send_this_location" = "Отправить это местоположение";
 "send_to" = "Отправить в %@";
 "send_to_address" = "Send to Address";
-"send_to_address_description" = "Send crypto to a wallet or exchange";
+"send_to_address_description" = "Send to a known crypto address using a crypto network.";
 "send_to_contact" = "Send to Contact";
-"send_to_contact_description" = "Send crypto to Mixin contact";
+"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
 "send_to_developer" = "Отправить разработчику";
 "send_to_title" = "Отправить в";
+"send_to_web3_wallet_description" = "Send to my %@ account using crypto network.";
 "send_video" = "Отправить 1 видео";
 "send_video_count" = "Отправить %d видео";
 "send_without_sound" = "Отправить без звука";
@@ -1236,6 +1242,7 @@
 "system" = "System";
 "system_time_is_unusual" = "Системное время необычно";
 "tag" = "Ярлык";
+"tag_placeholder" = "Enter the Tag. If there isn’t one, just tap “Next”.";
 "take_a_photo" = "Take a photo";
 "tap_to_join" = "Нажмите, чтобы присоединиться";
 "terms_of_service" = "Условия обслуживания";
@@ -1447,7 +1454,7 @@
 "withdrawal_address_tips" = "Для первого вывода на новый адрес попробуйте небольшие суммы! Если вы выведете активы не на тот адрес, они не будут восстановлены!";
 "withdrawal_failed" = "Withdrawal Failed";
 "withdrawal_hash" = "Withdrawal Hash";
-"withdrawal_label" = "Ярлык (например, биржи, кошельки и т.д.)";
+"withdrawal_label_placeholder" = "Use a unique label to help you identify this address, such as “Wallet” “Exchange” or a friend’s name.";
 "withdrawal_memo" = "Памятка";
 "withdrawal_minimum_amount" = "Минимальная сумма вывода: %1$@ %2$@.";
 "withdrawal_minimum_reserve" = "Минимальный резерв: ";

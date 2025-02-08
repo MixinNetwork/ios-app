@@ -189,7 +189,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         } else {
             tokenItem.localizedBalanceWithSymbol
         }
-        tokenBalanceLabel.text = "Available: " + availableBalance
+        tokenBalanceLabel.text = R.string.localizable.available_balance(availableBalance)
     }
     
     private func reloadWithdrawFee(with token: TokenItem, destination: Payment.WithdrawalDestination) {

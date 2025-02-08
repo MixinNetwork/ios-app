@@ -7,6 +7,7 @@
 "accounts" = "Accounts";
 "acknowledgements" = "Agradecimientos";
 "add" = "Añadir";
+"add_a_note" = "Add a note";
 "add_address" = "Añadir dirección";
 "add_alert" = "Add Alert";
 "add_bot" = "Añadir Bot";
@@ -17,7 +18,6 @@
 "add_contact" = "Añadir contacto";
 "add_conversations" = "Añadir conversaciones";
 "add_emergency_contact" = "Add recovery contact";
-"add_memo" = "Añadir nota";
 "add_mobile_number" = "Add Mobile Number";
 "add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "Añadir participantes";
@@ -166,6 +166,7 @@
 "auto_download_hint" = "Cambia la configuración de descarga automática para medios. Los mensajes de voz siempre se descargan automáticamente.";
 "auto_lock" = "Bloqueo automático";
 "automatic" = "Automático";
+"available_balance" = "Available: %@";
 "back_to_chat" = "Volver al chat";
 "back_to_merchant" = "Volver al comerciante";
 "backed_up" = "Backed up";
@@ -421,6 +422,7 @@
 "delete_for_me" = "Eliminar para mí";
 "delete_group_chat_confirmation" = "¿Eliminar %@ chat de grupo?";
 "delete_my_account" = "Borrar mi cuenta";
+"delete_note" = "Delete Note";
 "delete_synced_contact" = "Eliminar contactos sincronizados";
 "delete_withdraw_address" = "Eliminar dirección de %@";
 "deleted" = "Eliminado";
@@ -482,6 +484,7 @@
 "edit_group_description" = "Editar descripción del grupo";
 "edit_group_name" = "Editar nombre de grupo";
 "edit_name" = "Editar nombre";
+"edit_note" = "Edit Note";
 "editing_address" = "Editing Address";
 "editing_address_failed" = "Editing Address Failed";
 "emergency_contact" = "Recovery Contact";
@@ -611,7 +614,7 @@
 "hide" = "Ocultar";
 "hide_asset" = "Ocultar activo";
 "high_24h" = "24H HIGH";
-"hint_address" = "Enter a wallet address";
+"hint_address" = "Enter a wallet address, exchange address.";
 "hold_to_record_audio" = "Sostén para grabar, suelta para enviar";
 "hour" = "%d Hora";
 "hour_count" = "%d Horas";
@@ -714,6 +717,7 @@
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Medios de comunicación";
 "memo" = "Memorándum";
+"memo_placeholder" = "Enter the Memo. If there isn’t one, just tap “Next”.";
 "message_e2ee" = "Los mensajes de esta conversación están encriptados de extremo a extremo, toca para obtener más información.";
 "message_encryption_hint" = "Los mensajes entre usuarios están protegidos con un cifrado de extremo a extremo";
 "message_not_found" = "Mensaje no encontrado";
@@ -852,6 +856,7 @@
 "opponents" = "Opponents";
 "optimize_database" = "Optimizar base de datos";
 "optimized" = "Optimizado";
+"optional_note" = "Note (Optional)";
 "or" = "or";
 "order_details" = "Order Details";
 "order_id" = "Order ID";
@@ -1092,11 +1097,12 @@
 "send_this_location" = "Enviar esta ubicación";
 "send_to" = "Enviar a %@";
 "send_to_address" = "Send to Address";
-"send_to_address_description" = "Send crypto to a wallet or exchange";
+"send_to_address_description" = "Send to a known crypto address using a crypto network.";
 "send_to_contact" = "Send to Contact";
-"send_to_contact_description" = "Send crypto to Mixin contact";
+"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
 "send_to_developer" = "Enviar al Desarrollador";
 "send_to_title" = "Enviar a";
+"send_to_web3_wallet_description" = "Send to my %@ account using crypto network.";
 "send_video" = "Enviar 1 vídeo";
 "send_video_count" = "Enviar %d vídeos";
 "send_without_sound" = "Enviar sin sonido";
@@ -1236,6 +1242,7 @@
 "system" = "Sistema";
 "system_time_is_unusual" = "La hora del sistema es inusual";
 "tag" = "Etiqueta";
+"tag_placeholder" = "Enter the Tag. If there isn’t one, just tap “Next”.";
 "take_a_photo" = "Take a photo";
 "tap_to_join" = "Toca para unirte";
 "terms_of_service" = "Términos de servicio";
@@ -1447,7 +1454,7 @@
 "withdrawal_address_tips" = "Para el primer retiro a una nueva dirección, ¡prueba con cantidades pequeñas! Si retiras los activos a la dirección incorrecta, ¡no se recuperarán!";
 "withdrawal_failed" = "Withdrawal Failed";
 "withdrawal_hash" = "Withdrawal Hash";
-"withdrawal_label" = "Etiqueta (por ejemplo, intercambios, carteras, etc.)";
+"withdrawal_label_placeholder" = "Use a unique label to help you identify this address, such as “Wallet” “Exchange” or a friend’s name.";
 "withdrawal_memo" = "Nota";
 "withdrawal_minimum_amount" = "El importe mínimo de retiro es %1$@ %2$@";
 "withdrawal_minimum_reserve" = "Reserva mínima: ";

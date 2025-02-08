@@ -7,6 +7,7 @@
 "accounts" = "Accounts";
 "acknowledgements" = "謝辞";
 "add" = "追加";
+"add_a_note" = "Add a note";
 "add_address" = "アドレスに追加";
 "add_alert" = "Add Alert";
 "add_bot" = "ミニアプリを追加";
@@ -17,7 +18,6 @@
 "add_contact" = "友だちを追加";
 "add_conversations" = "チャットルームを追加";
 "add_emergency_contact" = "Add recovery contact";
-"add_memo" = "メモを追加";
 "add_mobile_number" = "Add Mobile Number";
 "add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "メンバーを追加";
@@ -166,6 +166,7 @@
 "auto_download_hint" = "メディアを自動ダウンロードする設定に変更する：音声メッセージは常に自動ダウンロードされます";
 "auto_lock" = "自動ロック";
 "automatic" = "自動";
+"available_balance" = "Available: %@";
 "back_to_chat" = "チャットに戻る";
 "back_to_merchant" = "Back to Merchant";
 "backed_up" = "Backed up";
@@ -421,6 +422,7 @@
 "delete_for_me" = "あなたのチャットから削除";
 "delete_group_chat_confirmation" = "\"%@\"のグループチャットを削除しますか?";
 "delete_my_account" = "アカウント削除";
+"delete_note" = "Delete Note";
 "delete_synced_contact" = "同期済みの連絡先を削除する";
 "delete_withdraw_address" = "%@のアドレス削除";
 "deleted" = "削除しました";
@@ -482,6 +484,7 @@
 "edit_group_description" = "グループアナウンスを編集";
 "edit_group_name" = "グループ名を編集";
 "edit_name" = "名前を変更";
+"edit_note" = "Edit Note";
 "editing_address" = "Editing Address";
 "editing_address_failed" = "Editing Address Failed";
 "emergency_contact" = "Recovery Contact";
@@ -611,7 +614,7 @@
 "hide" = "非表示";
 "hide_asset" = "資産を非表示にする";
 "high_24h" = "24H HIGH";
-"hint_address" = "Enter a wallet address";
+"hint_address" = "Enter a wallet address, exchange address.";
 "hold_to_record_audio" = "長押しして録音、離して送信";
 "hour" = "%d時間";
 "hour_count" = "%d時間";
@@ -714,6 +717,7 @@
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "メディア";
 "memo" = "メモ";
+"memo_placeholder" = "Enter the Memo. If there isn’t one, just tap “Next”.";
 "message_e2ee" = "チャットルームでのメッセージはE2Eで暗号化されています。詳細はタップしてください。";
 "message_encryption_hint" = "ユーザー間のメッセージはE2Eの暗号化によって守られています";
 "message_not_found" = "メッセージが見つかりません";
@@ -852,6 +856,7 @@
 "opponents" = "Opponents";
 "optimize_database" = "データベースの最適化";
 "optimized" = "最適化済みです";
+"optional_note" = "Note (Optional)";
 "or" = "or";
 "order_details" = "Order Details";
 "order_id" = "Order ID";
@@ -1092,11 +1097,12 @@
 "send_this_location" = "位置情報を送信";
 "send_to" = "%@へ送信";
 "send_to_address" = "Send to Address";
-"send_to_address_description" = "Send crypto to a wallet or exchange";
+"send_to_address_description" = "Send to a known crypto address using a crypto network.";
 "send_to_contact" = "Send to Contact";
-"send_to_contact_description" = "Send crypto to Mixin contact";
+"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
 "send_to_developer" = "開発者へ送信";
 "send_to_title" = "振替先";
+"send_to_web3_wallet_description" = "Send to my %@ account using crypto network.";
 "send_video" = "ビデオを送信";
 "send_video_count" = "%d本のビデオを送信";
 "send_without_sound" = "通知音を鳴らさずに送信する";
@@ -1236,6 +1242,7 @@
 "system" = "System";
 "system_time_is_unusual" = "システム時刻に問題があります";
 "tag" = "タグ";
+"tag_placeholder" = "Enter the Tag. If there isn’t one, just tap “Next”.";
 "take_a_photo" = "Take a photo";
 "tap_to_join" = "タップして参加";
 "terms_of_service" = "利用規約";
@@ -1447,7 +1454,7 @@
 "withdrawal_address_tips" = "新しいアドレスへの最初の出金は必ず少額で行ってください。アドレスが間違っていると資産は失われます。";
 "withdrawal_failed" = "Withdrawal Failed";
 "withdrawal_hash" = "Withdrawal Hash";
-"withdrawal_label" = "ラベル (例. 取引所, ウォレットなど)";
+"withdrawal_label_placeholder" = "Use a unique label to help you identify this address, such as “Wallet” “Exchange” or a friend’s name.";
 "withdrawal_memo" = "メモ";
 "withdrawal_minimum_amount" = "最小出金額は %1$@ %2$@です";
 "withdrawal_minimum_reserve" = "最低準備金 ";

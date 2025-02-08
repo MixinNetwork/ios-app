@@ -95,19 +95,19 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         switch inputContent {
         case .destination:
             title = R.string.localizable.address()
-            headerView.inputPlaceholder = "Enter a wallet address, exchange address."
+            headerView.inputPlaceholder = R.string.localizable.hint_address()
             nextButton.isEnabled = false
         case .memo:
             title = R.string.localizable.memo()
-            headerView.inputPlaceholder = "输入地址备注（Memo），如果没有直接点下一步。"
+            headerView.inputPlaceholder = R.string.localizable.memo_placeholder()
             nextButton.isEnabled = true
         case .tag:
             title = R.string.localizable.tag()
-            headerView.inputPlaceholder = "输入数字地址标签（Tag），如果没有直接点下一步。"
+            headerView.inputPlaceholder = R.string.localizable.tag_placeholder()
             nextButton.isEnabled = true
         case .label:
             title = R.string.localizable.label()
-            headerView.inputPlaceholder = "使用一个独特的标签来帮助您找到这个地址，例如钱包、交易所或者朋友的名称。"
+            headerView.inputPlaceholder = R.string.localizable.withdrawal_label_placeholder()
             nextButton.isEnabled = false
         }
         nextButton.setTitle(R.string.localizable.next(), for: .normal)

@@ -36,7 +36,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
         navigationItem.rightBarButtonItem = .customerService(target: self, action: #selector(presentCustomerService(_:)))
         
         headerView.load(token: token)
-        headerView.inputPlaceholder = "Enter a wallet address, exchange address, or ENS."
+        headerView.inputPlaceholder = R.string.localizable.hint_address()
         headerView.delegate = self
         
         let tableView = UITableView(frame: view.bounds, style: .plain)
@@ -157,7 +157,7 @@ extension TokenReceiverViewController: UITableViewDataSource {
             cell.iconImageView.image = R.image.token_receiver_wallet()
             cell.titleLabel.text = R.string.localizable.web3_account_network(chain.name)
             cell.freeLabel.isHidden = true
-            cell.subtitleLabel.text = "Send to my \(chain.name) account using a crypto network."
+            cell.subtitleLabel.text = R.string.localizable.send_to_web3_wallet_description(chain.name)
         case .addressBook:
             cell.iconImageView.image = R.image.token_receiver_address()
             cell.titleLabel.text = R.string.localizable.send_to_address()

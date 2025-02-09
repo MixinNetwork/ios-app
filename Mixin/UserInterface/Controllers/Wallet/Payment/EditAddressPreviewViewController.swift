@@ -133,7 +133,8 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
             guard let navigationController = UIApplication.homeNavigationController else {
                 return
             }
-            let inputAmount = WithdrawInputAmountViewController(tokenItem: token, destination: .address(address))
+            let progress = UserInteractionProgress(currentStep: 2, totalStepCount: 2)
+            let inputAmount = WithdrawInputAmountViewController(tokenItem: token, destination: .address(address), progress: progress)
             navigationController.pushViewController(inputAmount, animated: true)
         }
     }

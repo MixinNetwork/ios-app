@@ -3,33 +3,6 @@ import MixinServices
 
 final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     
-    private enum Intent {
-        case newAddress
-        case oneTimeWithdraw
-    }
-    
-    private enum InputContent {
-        
-        case destination
-        case memo(destination: String)
-        case tag(destination: String)
-        case label(destination: String, tag: String?)
-        
-        init(token: TokenItem, destination: String) {
-            switch token.memoPossibility {
-            case .positive, .possible:
-                if token.usesTag {
-                    self = .tag(destination: destination)
-                } else {
-                    self = .memo(destination: destination)
-                }
-            case .negative:
-                self = .label(destination: destination, tag: nil)
-            }
-        }
-        
-    }
-    
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var errorDescriptionLabel: UILabel!
     @IBOutlet weak var nextButton: StyledButton!
@@ -39,12 +12,54 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     private let token: TokenItem
     private let intent: Intent
     private let inputContent: InputContent
+    private let progress: UserInteractionProgress?
     private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
     
     private init(token: TokenItem, intent: Intent, inputContent: InputContent) {
         self.token = token
         self.intent = intent
         self.inputContent = inputContent
+        switch intent {
+        case .newAddress:
+            switch token.memoPossibility {
+            case .positive, .possible:
+                switch inputContent {
+                case .destination:
+                    self.progress = UserInteractionProgress(currentStep: 1, totalStepCount: 3)
+                case .memo, .tag:
+                    self.progress = UserInteractionProgress(currentStep: 2, totalStepCount: 3)
+                case .label:
+                    self.progress = UserInteractionProgress(currentStep: 3, totalStepCount: 3)
+                }
+            case .negative:
+                switch inputContent {
+                case .destination:
+                    self.progress = UserInteractionProgress(currentStep: 1, totalStepCount: 2)
+                case .memo, .tag:
+                    assertionFailure("No memo/tag for negative possiblity")
+                    self.progress = nil
+                case .label:
+                    self.progress = UserInteractionProgress(currentStep: 2, totalStepCount: 2)
+                }
+            }
+        case .oneTimeWithdraw:
+            switch inputContent {
+            case .destination:
+                assertionFailure("Destination should be input in TokenReceiverViewController")
+                self.progress = nil
+            case .memo, .tag:
+                switch token.memoPossibility {
+                case .positive, .possible:
+                    self.progress = UserInteractionProgress(currentStep: 2, totalStepCount: 3)
+                case .negative:
+                    assertionFailure("No memo/tag for negative possiblity")
+                    self.progress = nil
+                }
+            case .label:
+                assertionFailure("No label for oneTimeWithdraw")
+                self.progress = nil
+            }
+        }
         let nib = R.nib.addressInfoInputView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -92,6 +107,7 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                 label.text = destination
             }
         }
+        let title: String
         switch inputContent {
         case .destination:
             title = R.string.localizable.address()
@@ -110,6 +126,11 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
             headerView.inputPlaceholder = R.string.localizable.withdrawal_label_placeholder()
             nextButton.isEnabled = false
         }
+        if let progress {
+            navigationItem.titleView = NavigationTitleView(title: title, subtitle: progress.description)
+        } else {
+            self.title = title
+        }
         nextButton.setTitle(R.string.localizable.next(), for: .normal)
         nextButton.style = .filled
         nextButton.applyDefaultContentInsets()
@@ -123,6 +144,7 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     
     override func layout(for keyboardFrame: CGRect) {
         stackViewBottomConstraint.constant = keyboardFrame.height
+        view.layoutIfNeeded()
     }
     
     @IBAction func goNext(_ sender: Any) {
@@ -166,64 +188,6 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     @objc private func keyboardWillHide(_ notification: Notification) {
         stackViewBottomConstraint.constant = 0
         view.layoutIfNeeded()
-    }
-    
-    private func destination(bip21Unchecked destination: String) -> String {
-        if token.chainID == ChainID.bitcoin,
-           destination.lowercased().hasPrefix("bitcoin:"),
-           let components = URLComponents(string: destination)
-        {
-            components.path
-        } else {
-            destination
-        }
-    }
-    
-    private func saveNewAddress(destination: String, tag: String?, label: String) {
-        let destination = self.destination(bip21Unchecked: destination)
-        let preview = EditAddressPreviewViewController(
-            token: token,
-            label: label,
-            destination: destination,
-            tag: tag ?? "",
-            action: .add
-        )
-        preview.onSavingSuccess = {
-            guard let navigationController = self.navigationController else {
-                return
-            }
-            var viewControllers = navigationController.viewControllers
-            while viewControllers.last is AddressInfoInputViewController {
-                viewControllers.removeLast()
-            }
-            navigationController.setViewControllers(viewControllers, animated: false)
-        }
-        present(preview, animated: true)
-    }
-    
-    private func withdraw(destination: String, tag: String) {
-        let destination = self.destination(bip21Unchecked: destination)
-        OneTimeAddressValidator.validate(
-            assetID: token.assetID,
-            destination: destination,
-            tag: tag
-        ) { [weak self] in
-            guard let self else {
-                return
-            }
-            let address = TemporaryAddress(destination: destination, tag: tag)
-            let next = WithdrawInputAmountViewController(
-                tokenItem: self.token,
-                destination: .temporary(address)
-            )
-            self.navigationController?.pushViewController(next, animated: true)
-        } onFailure: { [weak self] error in
-            guard let self else {
-                return
-            }
-            self.errorDescriptionLabel.text = error.localizedDescription
-            self.errorDescriptionLabel.isHidden = false
-        }
     }
     
 }
@@ -276,6 +240,99 @@ extension AddressInfoInputViewController: CameraViewControllerDelegate {
             headerView.setContent(string)
         }
         return false
+    }
+    
+}
+
+extension AddressInfoInputViewController {
+    
+    private enum Intent {
+        case newAddress
+        case oneTimeWithdraw
+    }
+    
+    private enum InputContent {
+        
+        case destination
+        case memo(destination: String)
+        case tag(destination: String)
+        case label(destination: String, tag: String?)
+        
+        init(token: TokenItem, destination: String) {
+            switch token.memoPossibility {
+            case .positive, .possible:
+                if token.usesTag {
+                    self = .tag(destination: destination)
+                } else {
+                    self = .memo(destination: destination)
+                }
+            case .negative:
+                self = .label(destination: destination, tag: nil)
+            }
+        }
+        
+    }
+    
+    private func destination(bip21Unchecked destination: String) -> String {
+        if token.chainID == ChainID.bitcoin,
+           destination.lowercased().hasPrefix("bitcoin:"),
+           let components = URLComponents(string: destination)
+        {
+            components.path
+        } else {
+            destination
+        }
+    }
+    
+    private func saveNewAddress(destination: String, tag: String?, label: String) {
+        let destination = self.destination(bip21Unchecked: destination)
+        let preview = EditAddressPreviewViewController(
+            token: token,
+            label: label,
+            destination: destination,
+            tag: tag ?? "",
+            action: .add
+        )
+        preview.onSavingSuccess = {
+            guard let navigationController = self.navigationController else {
+                return
+            }
+            var viewControllers = navigationController.viewControllers
+            while viewControllers.last is AddressInfoInputViewController {
+                viewControllers.removeLast()
+            }
+            navigationController.setViewControllers(viewControllers, animated: false)
+        }
+        present(preview, animated: true)
+    }
+    
+    private func withdraw(destination: String, tag: String) {
+        nextButton.isBusy = true
+        let destination = self.destination(bip21Unchecked: destination)
+        OneTimeAddressValidator.validate(
+            assetID: token.assetID,
+            destination: destination,
+            tag: tag
+        ) { [weak self] in
+            guard let self else {
+                return
+            }
+            self.nextButton.isBusy = false
+            let address = TemporaryAddress(destination: destination, tag: tag)
+            let next = WithdrawInputAmountViewController(
+                tokenItem: self.token,
+                destination: .temporary(address),
+                progress: .init(currentStep: 3, totalStepCount: 3)
+            )
+            self.navigationController?.pushViewController(next, animated: true)
+        } onFailure: { [weak self] error in
+            guard let self else {
+                return
+            }
+            self.nextButton.isBusy = false
+            self.errorDescriptionLabel.text = error.localizedDescription
+            self.errorDescriptionLabel.isHidden = false
+        }
     }
     
 }

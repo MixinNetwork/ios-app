@@ -17,6 +17,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
     
     private let tokenItem: TokenItem
     private let destination: Payment.WithdrawalDestination
+    private let progress: UserInteractionProgress
     private let traceID = UUID().uuidString.lowercased()
     
     private var feeTokenSameAsWithdrawToken = false
@@ -40,9 +41,14 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         return container
     }
     
-    init(tokenItem: TokenItem, destination: Payment.WithdrawalDestination) {
+    init(
+        tokenItem: TokenItem,
+        destination: Payment.WithdrawalDestination,
+        progress: UserInteractionProgress
+    ) {
         self.tokenItem = tokenItem
         self.destination = destination
+        self.progress = progress
         super.init()
     }
     
@@ -52,7 +58,11 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = R.string.localizable.send()
+        
+        navigationItem.titleView = NavigationTitleView(
+            title: R.string.localizable.send(),
+            subtitle: progress.description
+        )
         
         let feeStackView = {
             let titleLabel = InsetLabel()

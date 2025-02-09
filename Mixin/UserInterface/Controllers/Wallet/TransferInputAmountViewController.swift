@@ -9,6 +9,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
     
     private let tokenItem: TokenItem
     private let receiver: UserItem
+    private let progress: UserInteractionProgress?
     private let traceID = UUID().uuidString.lowercased()
     
     private var note: String? {
@@ -37,9 +38,10 @@ final class TransferInputAmountViewController: InputAmountViewController {
         return container
     }
     
-    init(tokenItem: TokenItem, receiver: UserItem) {
+    init(tokenItem: TokenItem, receiver: UserItem, progress: UserInteractionProgress?) {
         self.tokenItem = tokenItem
         self.receiver = receiver
+        self.progress = progress
         super.init()
     }
     
@@ -49,7 +51,15 @@ final class TransferInputAmountViewController: InputAmountViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = R.string.localizable.send()
+        
+        if let progress {
+            navigationItem.titleView = NavigationTitleView(
+                title: R.string.localizable.send(),
+                subtitle: progress.description
+            )
+        } else {
+            title = R.string.localizable.send()
+        }
         
         let noteStackView = {
             let titleLabel = InsetLabel()

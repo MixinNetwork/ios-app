@@ -10,6 +10,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     }
     
     private let token: TokenItem
+    private let progress: UserInteractionProgress
     private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
     private let trayViewHeight: CGFloat = 82
     
@@ -22,6 +23,12 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
     init(token: TokenItem) {
         self.token = token
+        switch token.memoPossibility {
+        case .positive, .possible:
+            self.progress = UserInteractionProgress(currentStep: 1, totalStepCount: 3)
+        case .negative:
+            self.progress = UserInteractionProgress(currentStep: 1, totalStepCount: 2)
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -32,8 +39,14 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = R.string.localizable.send()
-        navigationItem.rightBarButtonItem = .customerService(target: self, action: #selector(presentCustomerService(_:)))
+        navigationItem.titleView = NavigationTitleView(
+            title: R.string.localizable.send(),
+            subtitle: progress.description
+        )
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         
         headerView.load(token: token)
         headerView.inputPlaceholder = R.string.localizable.hint_address()
@@ -115,7 +128,8 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
                 let address = TemporaryAddress(destination: destination, tag: "")
                 let inputAmount = WithdrawInputAmountViewController(
                     tokenItem: self.token,
-                    destination: .temporary(address)
+                    destination: .temporary(address),
+                    progress: .init(currentStep: 2, totalStepCount: 2)
                 )
                 self.navigationController?.pushViewController(inputAmount, animated: true)
             } onFailure: { [weak sender, trayView] error in
@@ -179,7 +193,11 @@ extension TokenReceiverViewController: UITableViewDelegate {
             let selector = TransferReceiverViewController()
             selector.onSelect = { [token] (user) in
                 self.dismiss(animated: true) {
-                    let inputAmount = TransferInputAmountViewController(tokenItem: token, receiver: user)
+                    let inputAmount = TransferInputAmountViewController(
+                        tokenItem: token,
+                        receiver: user,
+                        progress: .init(currentStep: 2, totalStepCount: 2)
+                    )
                     self.navigationController?.pushViewController(inputAmount, animated: true)
                 }
             }
@@ -187,14 +205,19 @@ extension TokenReceiverViewController: UITableViewDelegate {
         case let .web3Wallet(chain, address):
             let inputAmount = WithdrawInputAmountViewController(
                 tokenItem: token,
-                destination: .web3(address: address, chain: chain.name)
+                destination: .web3(address: address, chain: chain.name),
+                progress: .init(currentStep: 2, totalStepCount: 2)
             )
             navigationController?.pushViewController(inputAmount, animated: true)
         case .addressBook:
             let book = AddressBookViewController(token: token)
             book.onSelect = { [token] (address) in
                 self.dismiss(animated: true) {
-                    let inputAmount = WithdrawInputAmountViewController(tokenItem: token, destination: .address(address))
+                    let inputAmount = WithdrawInputAmountViewController(
+                        tokenItem: token,
+                        destination: .address(address),
+                        progress: .init(currentStep: 2, totalStepCount: 2)
+                    )
                     self.navigationController?.pushViewController(inputAmount, animated: true)
                 }
             }

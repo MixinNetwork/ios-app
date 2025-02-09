@@ -45,6 +45,7 @@
 "address_added" = "Address Added";
 "address_added_description" = "Address has been added. You can immediately use this address for withdrawals.";
 "address_adding_description" = "The request to add the address is currently under verification by the Mixin server. Please wait a moment.";
+"address_book" = "Address Book";
 "address_deleted" = "Address Deleted";
 "address_edited" = "Address Edited";
 "address_edited_description" = "The Mixin server has confirmed your address editing request. You can immediately use this address for withdrawals.";
@@ -730,6 +731,7 @@
 "minute" = "%d 分";
 "minute_count" = "%d分間";
 "mixin" = "Mixin";
+"mixin_contact" = "Mixin Contact";
 "mixin_id_or_phone" = "Mixin ID, 電話番号";
 "mixin_locked" = "Mixinはロックされています";
 "mixin_messenger_desktop" = "Mixin デスクトップ";
@@ -1096,9 +1098,7 @@
 "send_photo_count" = "%d枚の写真を送信";
 "send_this_location" = "位置情報を送信";
 "send_to" = "%@へ送信";
-"send_to_address" = "Send to Address";
 "send_to_address_description" = "Send to a known crypto address using a crypto network.";
-"send_to_contact" = "Send to Contact";
 "send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
 "send_to_developer" = "開発者へ送信";
 "send_to_title" = "振替先";

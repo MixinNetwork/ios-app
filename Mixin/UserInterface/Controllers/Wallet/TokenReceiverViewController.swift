@@ -164,7 +164,7 @@ extension TokenReceiverViewController: UITableViewDataSource {
         switch destination {
         case .contact:
             cell.iconImageView.image = R.image.token_receiver_contact()
-            cell.titleLabel.text = R.string.localizable.send_to_contact()
+            cell.titleLabel.text = R.string.localizable.mixin_contact()
             cell.freeLabel.isHidden = false
             cell.subtitleLabel.text = R.string.localizable.send_to_contact_description()
         case let .web3Wallet(chain, _):
@@ -174,7 +174,7 @@ extension TokenReceiverViewController: UITableViewDataSource {
             cell.subtitleLabel.text = R.string.localizable.send_to_web3_wallet_description(chain.name)
         case .addressBook:
             cell.iconImageView.image = R.image.token_receiver_address()
-            cell.titleLabel.text = R.string.localizable.send_to_address()
+            cell.titleLabel.text = R.string.localizable.address_book()
             cell.freeLabel.isHidden = true
             cell.subtitleLabel.text = R.string.localizable.send_to_address_description()
         }

@@ -45,6 +45,7 @@
 "address_added" = "Address Added";
 "address_added_description" = "Address has been added. You can immediately use this address for withdrawals.";
 "address_adding_description" = "The request to add the address is currently under verification by the Mixin server. Please wait a moment.";
+"address_book" = "Address Book";
 "address_deleted" = "Address Deleted";
 "address_edited" = "Address Edited";
 "address_edited_description" = "The Mixin server has confirmed your address editing request. You can immediately use this address for withdrawals.";
@@ -730,6 +731,7 @@
 "minute" = "%d Minuto";
 "minute_count" = "%d Minutos";
 "mixin" = "Mixin";
+"mixin_contact" = "Mixin Contact";
 "mixin_id_or_phone" = "ID de Mixin, número de teléfono";
 "mixin_locked" = "Mixin bloqueado";
 "mixin_messenger_desktop" = "Mixin Messenger de Escritorio";
@@ -1096,9 +1098,7 @@
 "send_photo_count" = "Enviar %d fotos";
 "send_this_location" = "Enviar esta ubicación";
 "send_to" = "Enviar a %@";
-"send_to_address" = "Send to Address";
 "send_to_address_description" = "Send to a known crypto address using a crypto network.";
-"send_to_contact" = "Send to Contact";
 "send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
 "send_to_developer" = "Enviar al Desarrollador";
 "send_to_title" = "Enviar a";

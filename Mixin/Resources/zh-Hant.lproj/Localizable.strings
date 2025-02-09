@@ -45,6 +45,7 @@
 "address_added" = "地址已新增";
 "address_added_description" = "地址已新增，您可以立刻使用該地址進行提現。";
 "address_adding_description" = "正在新增地址，請稍候。";
+"address_book" = "地址簿";
 "address_deleted" = "地址已刪除";
 "address_edited" = "地址已修改";
 "address_edited_description" = "您修改地址的請求已透過 Mixin 伺服器確認，您可以立刻使用該地址進行提現。";
@@ -730,6 +731,7 @@
 "minute" = "%d 分鐘";
 "minute_count" = "%d 分鐘";
 "mixin" = "Mixin";
+"mixin_contact" = "Mixin 聯絡人";
 "mixin_id_or_phone" = "Mixin ID 或手機號";
 "mixin_locked" = "Mixin 已鎖定";
 "mixin_messenger_desktop" = "Mixin Messenger 桌面";
@@ -1096,13 +1098,11 @@
 "send_photo_count" = "傳送 %d 張圖片";
 "send_this_location" = "傳送這個位置";
 "send_to" = "傳送給 %@";
-"send_to_address" = "轉出到地址";
-"send_to_address_description" = "使用加密貨幣網路轉到已儲存的鏈上地址";
-"send_to_contact" = "轉出到聯絡人";
-"send_to_contact_description" = "使用 Mixin 網路轉到我的 Mixin 聯絡人";
+"send_to_address_description" = "透過區塊鏈網路轉給已知地址";
+"send_to_contact_description" = "透過 Mixin 網路轉給我的 Mixin 聯絡人";
 "send_to_developer" = "把日誌發給開發者";
 "send_to_title" = "轉給";
-"send_to_web3_wallet_description" = "使用加密貨幣網路轉到我的 %@ 賬戶";
+"send_to_web3_wallet_description" = "透過區塊鏈網路轉給我的 %@ 賬戶";
 "send_video" = "傳送 1 個影片";
 "send_video_count" = "傳送 %d 個影片";
 "send_without_sound" = "靜音傳送";

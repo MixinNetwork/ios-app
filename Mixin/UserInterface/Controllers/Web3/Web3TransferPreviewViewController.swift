@@ -152,23 +152,20 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
                     Logger.web3.error(category: "Web3TransferView", message: "Load bal. change: \(error)")
                 }
                 do {
-                    if let fee = try await operation.loadFee() {
-                        await MainActor.run {
-                            let feeValue = CurrencyFormatter.localizedString(from: fee.token, format: .networkFee, sign: .never, symbol: nil)
-                            let feeCost = if fee.fiatMoney >= 0.01 {
-                                CurrencyFormatter.localizedString(from: fee.fiatMoney, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-                            } else {
-                                "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-                            }
-                            let row: Row = .amount(caption: .fee,
-                                                   token: feeValue + " " + operation.feeToken.symbol,
-                                                   fiatMoney: feeCost,
-                                                   display: .byToken,
-                                                   boldPrimaryAmount: false)
-                            self?.replaceRow(at: 1, with: row)
+                    let fee = try await operation.loadFee()
+                    await MainActor.run {
+                        let feeValue = CurrencyFormatter.localizedString(from: fee.token, format: .precision, sign: .never, symbol: nil)
+                        let feeCost = if fee.fiatMoney >= 0.01 {
+                            CurrencyFormatter.localizedString(from: fee.fiatMoney, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+                        } else {
+                            "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
                         }
-                    } else {
-                        Logger.web3.info(category: "Web3TransferView", message: "Unable to load fee")
+                        let row: Row = .amount(caption: .fee,
+                                               token: feeValue + " " + operation.feeToken.symbol,
+                                               fiatMoney: feeCost,
+                                               display: .byToken,
+                                               boldPrimaryAmount: false)
+                        self?.replaceRow(at: 1, with: row)
                     }
                 } catch {
                     Logger.web3.error(category: "Web3TransferView", message: "Load fee: \(error)")

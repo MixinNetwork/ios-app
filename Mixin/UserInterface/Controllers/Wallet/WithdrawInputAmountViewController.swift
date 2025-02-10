@@ -8,10 +8,14 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
     }
     
     override var isBalanceInsufficient: Bool {
-        if let fee = selectedFeeItem, feeTokenSameAsWithdrawToken {
-            tokenAmount > tokenItem.decimalBalance - fee.amount
+        if let fee = selectedFeeItem {
+            if feeTokenSameAsWithdrawToken {
+                tokenAmount > tokenItem.decimalBalance - fee.amount
+            } else {
+                super.isBalanceInsufficient
+            }
         } else {
-            super.isBalanceInsufficient
+            false
         }
     }
     
@@ -29,16 +33,6 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         } else {
             return nil
         }
-    }
-    
-    private weak var activityIndicator: ActivityIndicatorView!
-    private weak var changeFeeButton: UIButton!
-    
-    private var feeAttributes: AttributeContainer {
-        var container = AttributeContainer()
-        container.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
-        container.foregroundColor = R.color.text_tertiary()
-        return container
     }
     
     init(
@@ -64,46 +58,12 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             subtitle: progress.description
         )
         
-        let feeStackView = {
-            let titleLabel = InsetLabel()
-            titleLabel.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
-            titleLabel.text = R.string.localizable.network_fee()
-            titleLabel.textColor = R.color.text_tertiary()
-            titleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-            titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-            
-            let activityIndicator = ActivityIndicatorView()
-            activityIndicator.style = .custom(diameter: 16, lineWidth: 2)
-            activityIndicator.tintColor = R.color.chat_pin_count_background()
-            activityIndicator.hidesWhenStopped = true
-            activityIndicator.isAnimating = true
-            self.activityIndicator = activityIndicator
-            
-            var config: UIButton.Configuration = .plain()
-            config.baseBackgroundColor = .clear
-            config.imagePlacement = .trailing
-            config.imagePadding = 14
-            config.attributedTitle = AttributedString("0", attributes: feeAttributes)
-            let button = UIButton(configuration: config)
-            button.tintColor = R.color.chat_pin_count_background()
-            button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            button.addTarget(self, action: #selector(changeFee(_:)), for: .touchUpInside)
-            button.alpha = 0
-            self.changeFeeButton = button
-            
-            let stackView = UIStackView(arrangedSubviews: [titleLabel, activityIndicator, button])
-            stackView.axis = .horizontal
-            stackView.alignment = .center
-            return stackView
-        }()
-        accessoryStackView.insertArrangedSubview(feeStackView, at: 0)
-        feeStackView.snp.makeConstraints { make in
-            make.width.equalTo(view.snp.width).offset(-56)
-        }
-        
         tokenIconView.setIcon(token: tokenItem)
         tokenNameLabel.text = tokenItem.name
         tokenBalanceLabel.text = tokenItem.localizedBalanceWithSymbol
+        
+        addFeeView()
+        changeFeeButton?.addTarget(self, action: #selector(changeFee(_:)), for: .touchUpInside)
         reloadWithdrawFee(with: tokenItem, destination: destination)
     }
     
@@ -153,8 +113,11 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
     }
     
     override func inputMultipliedAmount(_ sender: UIButton) {
+        guard let fee = selectedFeeItem else {
+            return
+        }
         let multiplier = self.multiplier(tag: sender.tag)
-        if let fee = selectedFeeItem, feeTokenSameAsWithdrawToken {
+        if feeTokenSameAsWithdrawToken {
             let availableBalance = max(0, tokenItem.decimalBalance - fee.amount)
             replaceAmount(availableBalance * multiplier)
         } else {
@@ -189,7 +152,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
                 symbol: .custom(feeToken.tokenItem.symbol)
             )
         }
-        changeFeeButton.configuration?.attributedTitle = AttributedString(title, attributes: feeAttributes)
+        changeFeeButton?.configuration?.attributedTitle = AttributedString(title, attributes: feeAttributes)
         let availableBalance = if feeTokenSameAsWithdrawToken {
             CurrencyFormatter.localizedString(
                 from: max(0, tokenItem.decimalBalance - feeToken.amount),
@@ -231,15 +194,17 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
                     self.feeTokenSameAsWithdrawToken = feeTokenSameAsWithdrawToken
                     self.selectedFeeItemIndex = 0
                     self.selectableFeeItems = feeTokens
-                    self.activityIndicator.stopAnimating()
+                    self.feeActivityIndicator?.stopAnimating()
                     self.updateFeeDisplay(feeToken: feeToken)
-                    self.changeFeeButton.alpha = 1
-                    if feeTokens.count > 1 {
-                        self.changeFeeButton.configuration?.image = R.image.arrow_down_compact()
-                        self.changeFeeButton.isUserInteractionEnabled = true
-                    } else {
-                        self.changeFeeButton.configuration?.image = R.image.arrow_down_compact()
-                        self.changeFeeButton.isUserInteractionEnabled = false
+                    if let button = self.changeFeeButton {
+                        button.alpha = 1
+                        if feeTokens.count > 1 {
+                            button.configuration?.image = R.image.arrow_down_compact()
+                            button.isUserInteractionEnabled = true
+                        } else {
+                            button.configuration?.image = nil
+                            button.isUserInteractionEnabled = false
+                        }
                     }
                     self.reviewButton.isBusy = false
                 }

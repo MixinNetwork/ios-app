@@ -46,7 +46,6 @@ class EVMTransferOperation: Web3TransferOperation {
         chain: Web3Chain,
         balanceChange balanceChangeDerivation: BalanceChangeDerivation
     ) throws {
-        assert(!Thread.isMainThread)
         let chainID: Int
         let client: EthereumHttpClient
         switch chain.specification {
@@ -92,7 +91,7 @@ class EVMTransferOperation: Web3TransferOperation {
         balanceChange
     }
     
-    override func loadFee() async throws -> Fee? {
+    override func loadFee() async throws -> Fee {
         let dappGasLimit = transactionPreview.gas
         let transaction = EthereumTransaction(from: EthereumAddress(fromAddress),
                                               to: transactionPreview.to,

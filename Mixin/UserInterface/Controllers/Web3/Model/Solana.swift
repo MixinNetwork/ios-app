@@ -9,6 +9,7 @@ enum Solana {
     }
     
     static let lamportsPerSOL = Decimal(SOLANA_LAMPORTS_PER_SOL)
+    static let microLamportsPerLamport: Decimal = 1_000_000
     
     static func publicKey(seed: Data) throws -> String {
         try seed.withUnsafeBytes { seed in
@@ -191,13 +192,14 @@ extension Solana {
             }
         }
         
-        func fee(lamportsPerSignature: UInt64) -> Decimal? {
+        func fee(lamportsPerSignature: UInt64) throws -> Decimal {
             var lamports: UInt64 = 0
             let result = solana_calculate_fee(pointer, lamportsPerSignature, &lamports)
-            guard result == SolanaErrorCodeSuccess else {
-                return nil
+            if result == SolanaErrorCodeSuccess {
+                return Decimal(lamports) / Solana.lamportsPerSOL
+            } else {
+                throw Error.code(result)
             }
-            return Decimal(lamports) / Solana.lamportsPerSOL
         }
         
     }

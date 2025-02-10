@@ -7,7 +7,6 @@ public struct CurrencyFormatter {
         case pretty
         case fiatMoney
         case fiatMoneyPrice
-        case networkFee
     }
     
     public enum SignBehavior {
@@ -37,12 +36,6 @@ public struct CurrencyFormatter {
     
     static let fiatMoneyFormatter: NumberFormatter = {
         let formatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 2, roundingMode: .down, locale: .current)
-        formatter.locale = .current
-        return formatter
-    }()
-    
-    static let networkFeeFormatter: NumberFormatter = {
-        let formatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 4, roundingMode: .up, locale: .current)
         formatter.locale = .current
         return formatter
     }()
@@ -112,9 +105,6 @@ public struct CurrencyFormatter {
                 setSignBehavior(sign, symbolPrefix: symbolPrefix, for: fiatMoneyFormatter)
                 str = fiatMoneyFormatter.string(from: number) ?? ""
             }
-        case .networkFee:
-            setSignBehavior(sign, symbolPrefix: symbolPrefix, for: networkFeeFormatter)
-            str = networkFeeFormatter.string(from: number) ?? ""
         }
         
         switch symbol {

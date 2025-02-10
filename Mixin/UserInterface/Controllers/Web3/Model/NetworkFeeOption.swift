@@ -36,7 +36,7 @@ struct NetworkFeeOption {
         self.speed = speed
         self.cost = CurrencyFormatter.localizedString(from: decimalFee * tokenPrice, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         self.duration = duration
-        self.gasValue = CurrencyFormatter.localizedString(from: decimalFee, format: .networkFee, sign: .never, symbol: nil)
+        self.gasValue = CurrencyFormatter.localizedString(from: decimalFee, format: .precision, sign: .never, symbol: nil)
         self.gasLimit = gasLimit
     }
     

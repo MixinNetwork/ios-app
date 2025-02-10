@@ -42,11 +42,9 @@ class SolanaTransferOperation: Web3TransferOperation {
         assertionFailure("Must override")
     }
     
-    func fee(for transaction: Solana.Transaction) async throws -> Fee? {
+    func baseFee(for transaction: Solana.Transaction) throws -> Fee {
         let lamportsPerSignature: UInt64 = 5000
-        guard let tokenCount = transaction.fee(lamportsPerSignature: lamportsPerSignature) else {
-            return nil
-        }
+        let tokenCount = try transaction.fee(lamportsPerSignature: lamportsPerSignature)
         let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
         let fee = Fee(token: tokenCount, fiatMoney: fiatMoneyCount)
         return fee
@@ -121,8 +119,9 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
         }
     }
     
-    override func loadFee() async throws -> Fee? {
-        try await fee(for: transaction)
+    override func loadFee() async throws -> Fee {
+        // TODO: This could be wrong. Needs to add up the priority fee if the txn includes
+        try baseFee(for: transaction)
     }
     
     override func start(with pin: String) {
@@ -240,7 +239,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         .detailed(token: payment.token, amount: decimalAmount)
     }
     
-    override func loadFee() async throws -> Fee? {
+    override func loadFee() async throws -> Fee {
         let ata = try Solana.tokenAssociatedAccount(owner: payment.toAddress, mint: payment.token.assetKey)
         let receiverAccountExists = try await client.accountExists(pubkey: ata)
         let createAccount = !receiverAccountExists
@@ -253,13 +252,16 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             token: payment.token,
             change: .init(amount: decimalAmount, assetKey: payment.token.assetKey)
         )
+        let baseFee = try baseFee(for: transaction)
         let priorityFee = try await Web3API.priorityFee(transaction: transaction.rawTransaction)
         await MainActor.run {
             self.createAssociatedTokenAccountForReceiver = createAccount
             self.priorityFee = priorityFee
             self.state = .ready
         }
-        return try await fee(for: transaction)
+        let tokenCount = baseFee.token + priorityFee.decimalCount
+        let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
+        return Fee(token: tokenCount, fiatMoney: fiatMoneyCount)
     }
     
     override func start(with pin: String) {

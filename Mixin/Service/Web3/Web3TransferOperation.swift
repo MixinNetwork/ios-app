@@ -51,7 +51,7 @@ class Web3TransferOperation {
         fatalError("Must override")
     }
     
-    func loadFee() async throws -> Fee? {
+    func loadFee() async throws -> Fee {
         fatalError("Must override")
     }
     

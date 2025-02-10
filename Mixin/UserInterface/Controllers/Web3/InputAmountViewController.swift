@@ -9,10 +9,10 @@ class InputAmountViewController: UIViewController {
     @IBOutlet weak var calculatedValueLabel: UILabel!
     @IBOutlet weak var insufficientBalanceLabel: UILabel!
     @IBOutlet weak var accessoryStackView: UIStackView!
+    @IBOutlet weak var multipliersStackView: UIStackView!
     @IBOutlet weak var tokenIconView: BadgeIconView!
     @IBOutlet weak var tokenNameLabel: UILabel!
     @IBOutlet weak var tokenBalanceLabel: UILabel!
-    @IBOutlet weak var inputMaxValueButton: UIButton!
     @IBOutlet weak var decimalSeparatorButton: HighlightableButton!
     @IBOutlet weak var deleteBackwardsButton: HighlightableButton!
     @IBOutlet weak var reviewButton: StyledButton!
@@ -67,9 +67,53 @@ class InputAmountViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         amountStackView.setCustomSpacing(2, after: amountLabel)
         amountLabel.font = .monospacedDigitSystemFont(ofSize: 64, weight: .regular)
-        inputMaxValueButton.setTitle(R.string.localizable.max().uppercased(), for: .normal)
+        
+        let multiplierButtons = {
+            var config: UIButton.Configuration = .filled()
+            config.baseForegroundColor = R.color.text()
+            config.baseBackgroundColor = R.color.background_secondary()
+            config.cornerStyle = .capsule
+            
+            let attributes = AttributeContainer([
+                .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
+                .paragraphStyle: {
+                    let style = NSMutableParagraphStyle()
+                    style.alignment = .right
+                    return style
+                }(),
+            ])
+            
+            return (0...2).map { tag in
+                config.attributedTitle = {
+                    let multiplier = self.multiplier(tag: tag)
+                    let title = switch multiplier {
+                    case 1:
+                        R.string.localizable.balance_max()
+                    default:
+                        NumberFormatter.simplePercentage.string(decimal: multiplier) ?? ""
+                    }
+                    return AttributedString(title, attributes: attributes)
+                }()
+                
+                let button = UIButton(configuration: config)
+                button.titleLabel?.adjustsFontForContentSizeCategory = true
+                button.tag = tag
+                button.addTarget(self, action: #selector(inputMultipliedAmount(_:)), for: .touchUpInside)
+                return button
+            }
+        }()
+        for button in multiplierButtons {
+            multipliersStackView.addArrangedSubview(button)
+            button.snp.makeConstraints { make in
+                make.width.equalTo(view.snp.width)
+                    .multipliedBy(0.24)
+                    .priority(.high)
+            }
+        }
+        
         decimalButtons.sort(by: { $0.value < $1.value })
         decimalSeparatorButton.setTitle(Locale.current.decimalSeparator ?? ".", for: .normal)
         reloadViews(inputAmount: accumulator.decimal)
@@ -142,10 +186,6 @@ class InputAmountViewController: UIViewController {
         self.accumulator = accumulator
     }
     
-    @IBAction func inputMaxValue(_ sender: Any) {
-        replaceAmount(token.decimalBalance)
-    }
-    
     @IBAction func inputValue(_ sender: DecimalButton) {
         accumulator.append(value: sender.value)
     }
@@ -164,58 +204,6 @@ class InputAmountViewController: UIViewController {
     
     @IBAction func review(_ sender: Any) {
         
-    }
-    
-    func addMultipliersView() {
-        let multipliersStackView = UIStackView()
-        multipliersStackView.axis = .horizontal
-        multipliersStackView.distribution = .equalSpacing
-        
-        var config: UIButton.Configuration = .filled()
-        config.baseForegroundColor = R.color.text()
-        config.baseBackgroundColor = R.color.background_secondary()
-        config.cornerStyle = .capsule
-        
-        let attributes = AttributeContainer([
-            .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
-            .paragraphStyle: {
-                let style = NSMutableParagraphStyle()
-                style.alignment = .right
-                return style
-            }(),
-        ])
-        for tag in (0...2) {
-            config.attributedTitle = {
-                let multiplier = self.multiplier(tag: tag)
-                let title = switch multiplier {
-                case 1:
-                    R.string.localizable.balance_max()
-                default:
-                    NumberFormatter.simplePercentage.string(decimal: multiplier) ?? ""
-                }
-                return AttributedString(title, attributes: attributes)
-            }()
-            
-            let button = UIButton(configuration: config)
-            button.titleLabel?.adjustsFontForContentSizeCategory = true
-            button.tag = tag
-            button.addTarget(self, action: #selector(inputMultipliedAmount(_:)), for: .touchUpInside)
-            multipliersStackView.addArrangedSubview(button)
-        }
-        
-        accessoryStackView.addArrangedSubview(multipliersStackView)
-        multipliersStackView.snp.makeConstraints { make in
-            make.width.equalTo(view.snp.width).offset(-56)
-            make.height.greaterThanOrEqualTo(32)
-        }
-        for button in multipliersStackView.arrangedSubviews {
-            button.snp.makeConstraints { make in
-                make.width.equalTo(view.snp.width)
-                    .multipliedBy(0.24)
-                    .priority(.high)
-            }
-        }
-        numberPadTopConstraint.constant = 12
     }
     
     func multiplier(tag: Int) -> Decimal {

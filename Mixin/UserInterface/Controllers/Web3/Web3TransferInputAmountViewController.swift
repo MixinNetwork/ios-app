@@ -27,7 +27,6 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         tokenIconView.setIcon(web3Token: payment.token)
         tokenNameLabel.text = payment.token.name
         tokenBalanceLabel.text = payment.token.localizedBalanceWithSymbol
-        inputMaxValueButton.isHidden = payment.sendingNativeToken
     }
     
     override func review(_ sender: Any) {

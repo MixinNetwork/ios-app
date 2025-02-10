@@ -104,8 +104,6 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         tokenIconView.setIcon(token: tokenItem)
         tokenNameLabel.text = tokenItem.name
         tokenBalanceLabel.text = tokenItem.localizedBalanceWithSymbol
-        inputMaxValueButton.isHidden = true
-        addMultipliersView()
         reloadWithdrawFee(with: tokenItem, destination: destination)
     }
     

@@ -98,9 +98,6 @@ final class TransferInputAmountViewController: InputAmountViewController {
         tokenIconView.setIcon(token: tokenItem)
         tokenNameLabel.text = tokenItem.name
         tokenBalanceLabel.text = tokenItem.localizedBalanceWithSymbol
-        inputMaxValueButton.isHidden = true
-        
-        addMultipliersView()
     }
     
     override func review(_ sender: Any) {

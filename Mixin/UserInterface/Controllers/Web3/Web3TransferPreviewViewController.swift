@@ -5,7 +5,7 @@ import web3
 import Web3Wallet
 import MixinServices
 
-final class Web3TransferViewController: AuthenticationPreviewViewController {
+final class Web3TransferPreviewViewController: AuthenticationPreviewViewController {
     
     enum Proposer {
         case dapp(Web3DappProposer)
@@ -274,7 +274,7 @@ final class Web3TransferViewController: AuthenticationPreviewViewController {
     
 }
 
-extension Web3TransferViewController: Web3PopupViewController {
+extension Web3TransferPreviewViewController: Web3PopupViewController {
     
     func reject() {
         operation.reject()

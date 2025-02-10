@@ -243,7 +243,7 @@ final class Web3SwapViewController: SwapViewController {
                 chain: .solana
             )
             hud.hide()
-            let transfer = Web3TransferViewController(operation: operation, proposer: .web3ToAddress)
+            let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .web3ToAddress)
             transfer.manipulateNavigationStackOnFinished = true
             Web3PopupCoordinator.enqueue(popup: .request(transfer))
         } catch {

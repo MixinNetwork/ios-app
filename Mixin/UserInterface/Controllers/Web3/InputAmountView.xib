@@ -366,7 +366,9 @@
                                         </userDefinedRuntimeAttribute>
                                     </userDefinedRuntimeAttributes>
                                     <connections>
-                                        <action selector="deleteBackwards:" destination="-1" eventType="touchUpInside" id="jAO-hZ-Afc"/>
+                                        <action selector="deleteButtonTouchDown:" destination="-1" eventType="touchDown" id="RyX-GC-D73"/>
+                                        <action selector="deleteButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="jAO-hZ-Afc"/>
+                                        <action selector="deleteButtonTouchUpOutside:" destination="-1" eventType="touchUpOutside" id="5c6-Cp-Yfx"/>
                                         <action selector="generateInputFeedback:" destination="-1" eventType="touchDown" id="8kb-Bn-cB5"/>
                                     </connections>
                                 </button>

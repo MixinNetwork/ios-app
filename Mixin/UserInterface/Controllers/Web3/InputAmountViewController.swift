@@ -54,6 +54,9 @@ class InputAmountViewController: UIViewController {
         return formatter
     }()
     
+    private weak var startContinuouslyDeletingTimer: Timer?
+    private weak var continuouslyDeleteTimer: Timer?
+    
     private var accumulator: DecimalAccumulator {
         didSet {
             guard isViewLoaded else {
@@ -204,8 +207,28 @@ class InputAmountViewController: UIViewController {
         accumulator.appendDecimalSeparator()
     }
     
-    @IBAction func deleteBackwards(_ sender: Any) {
-        accumulator.deleteBackwards()
+    @IBAction func deleteButtonTouchDown(_ sender: Any) {
+        startContinuouslyDeletingTimer?.invalidate()
+        startContinuouslyDeletingTimer = Timer.scheduledTimer(
+            withTimeInterval: 0.5,
+            repeats: false
+        ) { [weak self] _ in
+            self?.startContinuouslyDelete()
+        }
+    }
+    
+    @IBAction func deleteButtonTouchUpInside(_ sender: Any) {
+        startContinuouslyDeletingTimer?.invalidate()
+        if let timer = continuouslyDeleteTimer, timer.isValid {
+            timer.invalidate()
+        } else {
+            accumulator.deleteBackwards()
+        }
+    }
+    
+    @IBAction func deleteButtonTouchUpOutside(_ sender: Any) {
+        startContinuouslyDeletingTimer?.invalidate()
+        continuouslyDeleteTimer?.invalidate()
     }
     
     @IBAction func generateInputFeedback(_ sender: Any) {
@@ -328,6 +351,19 @@ extension InputAmountViewController {
         } else {
             insufficientBalanceLabel.alpha = 0
             reviewButton.isEnabled = tokenAmount > 0
+        }
+    }
+    
+    private func startContinuouslyDelete() {
+        guard deleteBackwardsButton.state.contains(.highlighted) else {
+            return
+        }
+        continuouslyDeleteTimer?.invalidate()
+        continuouslyDeleteTimer = Timer.scheduledTimer(
+            withTimeInterval: 0.15,
+            repeats: true
+        ) { [weak self] _ in
+            self?.accumulator.deleteBackwards()
         }
     }
     

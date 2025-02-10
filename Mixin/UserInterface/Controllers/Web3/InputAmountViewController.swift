@@ -4,6 +4,11 @@ import MixinServices
 
 class InputAmountViewController: UIViewController {
     
+    enum BalanceSufficiency {
+        case sufficient
+        case insufficient(String?)
+    }
+    
     @IBOutlet weak var amountStackView: UIStackView!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var calculatedValueLabel: UILabel!
@@ -25,8 +30,12 @@ class InputAmountViewController: UIViewController {
         fatalError("Must override")
     }
     
-    var isBalanceInsufficient: Bool {
-        tokenAmount > token.decimalBalance
+    var balanceSufficiency: BalanceSufficiency {
+        if tokenAmount > token.decimalBalance {
+            .insufficient(R.string.localizable.insufficient_balance())
+        } else {
+            .sufficient
+        }
     }
     
     var feeAttributes: AttributeContainer {
@@ -298,6 +307,18 @@ class InputAmountViewController: UIViewController {
         }
     }
     
+    func reloadViewsWithBalanceSufficiency() {
+        switch balanceSufficiency {
+        case .sufficient:
+            insufficientBalanceLabel.alpha = 0
+            reviewButton.isEnabled = tokenAmount > 0
+        case .insufficient(let description):
+            insufficientBalanceLabel.text = description
+            insufficientBalanceLabel.alpha = 1
+            reviewButton.isEnabled = false
+        }
+    }
+    
 }
 
 extension InputAmountViewController {
@@ -344,14 +365,7 @@ extension InputAmountViewController {
         }
         
         amountLabel.text = inputAmountString
-        
-        if isBalanceInsufficient {
-            insufficientBalanceLabel.alpha = 1
-            reviewButton.isEnabled = false
-        } else {
-            insufficientBalanceLabel.alpha = 0
-            reviewButton.isEnabled = tokenAmount > 0
-        }
+        reloadViewsWithBalanceSufficiency()
     }
     
     private func startContinuouslyDelete() {

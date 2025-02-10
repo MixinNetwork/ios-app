@@ -634,7 +634,7 @@
 "initializing" = "Инициализация...";
 "install_messenger_desc" = "Visit mixin.one/mm or scan the QR code to install";
 "insufficient_balance" = "Insufficient balance";
-"insufficient_gas" = "You do not have enough %@ in your account to pay for network fees";
+"insufficient_fee_description" = "You need %1$@ on the %2$@ network to cover the network fee";
 "insufficient_transaction_fee" = "Недостаточная комиссия за транзакцию";
 "interface_style" = "Стиль интерфейса";
 "invalid_address" = "Invalid Address";

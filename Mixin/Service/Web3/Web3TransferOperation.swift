@@ -26,7 +26,7 @@ class Web3TransferOperation {
     let fromAddress: String
     let toAddress: String
     let chain: Web3Chain
-    let feeToken: TokenItem
+    let feeToken: TokenItem // TODO: Replace it with Web3Token
     let canDecodeBalanceChange: Bool
     let isResendingTransactionAvailable: Bool
     

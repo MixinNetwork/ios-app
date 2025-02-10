@@ -634,7 +634,7 @@
 "initializing" = "初期化中...";
 "install_messenger_desc" = "Visit mixin.one/mm or scan the QR code to install";
 "insufficient_balance" = "残高が不足しています";
-"insufficient_gas" = "You do not have enough %@ in your account to pay for network fees";
+"insufficient_fee_description" = "You need %1$@ on the %2$@ network to cover the network fee";
 "insufficient_transaction_fee" = "取引手数料が不足しています";
 "interface_style" = "外観モード";
 "invalid_address" = "Invalid Address";

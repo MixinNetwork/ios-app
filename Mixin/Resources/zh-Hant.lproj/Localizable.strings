@@ -634,7 +634,7 @@
 "initializing" = "初始化...";
 "install_messenger_desc" = "訪問 mixin.one/mm 或掃描二維碼安裝";
 "insufficient_balance" = "餘額不足";
-"insufficient_gas" = "您的賬戶中沒有足夠的 %@ 來支付網路費用";
+"insufficient_fee_description" = "需要 %1$@ 以支付 %2$@ 網路費用";
 "insufficient_transaction_fee" = "手續費不足";
 "interface_style" = "外觀";
 "invalid_address" = "無效的地址";

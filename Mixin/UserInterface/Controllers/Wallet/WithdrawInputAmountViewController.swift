@@ -7,15 +7,27 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         tokenItem
     }
     
-    override var isBalanceInsufficient: Bool {
-        if let fee = selectedFeeItem {
-            if feeTokenSameAsWithdrawToken {
-                tokenAmount > tokenItem.decimalBalance - fee.amount
-            } else {
-                super.isBalanceInsufficient
-            }
+    override var balanceSufficiency: BalanceSufficiency {
+        guard let fee = selectedFeeItem else {
+            return .insufficient(nil)
+        }
+        let balanceInsufficient = tokenAmount > token.decimalBalance
+        let feeInsufficient = if feeTokenSameAsWithdrawToken {
+            tokenAmount > tokenItem.decimalBalance - fee.amount
         } else {
-            false
+            fee.amount > tokenItem.decimalBalance
+        }
+        return if balanceInsufficient {
+            .insufficient(R.string.localizable.insufficient_balance())
+        } else if feeInsufficient {
+            .insufficient(
+                R.string.localizable.insufficient_fee_description(
+                    fee.localizedAmountWithSymbol,
+                    fee.tokenItem.chain?.name ?? ""
+                )
+            )
+        } else {
+            .sufficient
         }
     }
     
@@ -133,32 +145,26 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             fees: selectableFeeItems,
             selectedIndex: selectedFeeItemIndex
         ) { index in
-            let feeToken = selectableFeeItems[index]
-            self.feeTokenSameAsWithdrawToken = feeToken.tokenItem.assetID == self.tokenItem.assetID
+            let feeItem = selectableFeeItems[index]
+            self.feeTokenSameAsWithdrawToken = feeItem.tokenItem.assetID == self.tokenItem.assetID
             self.selectedFeeItemIndex = index
-            self.updateFeeDisplay(feeToken: feeToken)
+            self.reloadViewsWithBalanceSufficiency()
+            self.updateFeeDisplay(fee: feeItem)
         }
         present(selector, animated: true)
     }
     
-    private func updateFeeDisplay(feeToken: WithdrawFeeItem) {
-        let title = if feeToken.amount == 0 {
-            "0"
-        } else {
-            CurrencyFormatter.localizedString(
-                from: feeToken.amount,
-                format: .precision,
-                sign: .never,
-                symbol: .custom(feeToken.tokenItem.symbol)
-            )
-        }
-        changeFeeButton?.configuration?.attributedTitle = AttributedString(title, attributes: feeAttributes)
+    private func updateFeeDisplay(fee: WithdrawFeeItem) {
+        changeFeeButton?.configuration?.attributedTitle = AttributedString(
+            fee.localizedAmountWithSymbol,
+            attributes: feeAttributes
+        )
         let availableBalance = if feeTokenSameAsWithdrawToken {
             CurrencyFormatter.localizedString(
-                from: max(0, tokenItem.decimalBalance - feeToken.amount),
+                from: max(0, tokenItem.decimalBalance - fee.amount),
                 format: .precision,
                 sign: .never,
-                symbol: .custom(feeToken.tokenItem.symbol)
+                symbol: .custom(fee.tokenItem.symbol)
             )
         } else {
             tokenItem.localizedBalanceWithSymbol
@@ -179,26 +185,27 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
                     .reduce(into: [:]) { result, item in
                         result[item.assetID] = item
                     }
-                let feeTokens: [WithdrawFeeItem] = fees.compactMap { fee in
+                let feeItems: [WithdrawFeeItem] = fees.compactMap { fee in
                     if let token = tokensMap[fee.assetID] {
                         return WithdrawFeeItem(amountString: fee.amount, tokenItem: token)
                     } else {
                         return nil
                     }
                 }
-                guard let feeToken = feeTokens.first, feeToken.tokenItem.assetID == fee.assetID else {
+                guard let feeToken = feeItems.first, feeToken.tokenItem.assetID == fee.assetID else {
                     return
                 }
                 let feeTokenSameAsWithdrawToken = fee.assetID == token.assetID
                 await MainActor.run {
                     self.feeTokenSameAsWithdrawToken = feeTokenSameAsWithdrawToken
                     self.selectedFeeItemIndex = 0
-                    self.selectableFeeItems = feeTokens
+                    self.selectableFeeItems = feeItems
                     self.feeActivityIndicator?.stopAnimating()
-                    self.updateFeeDisplay(feeToken: feeToken)
+                    self.reloadViewsWithBalanceSufficiency()
+                    self.updateFeeDisplay(fee: feeToken)
                     if let button = self.changeFeeButton {
                         button.alpha = 1
-                        if feeTokens.count > 1 {
+                        if feeItems.count > 1 {
                             button.configuration?.image = R.image.arrow_down_compact()
                             button.isUserInteractionEnabled = true
                         } else {

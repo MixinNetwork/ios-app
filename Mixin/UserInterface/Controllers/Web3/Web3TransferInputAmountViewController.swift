@@ -7,21 +7,39 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         payment.token
     }
     
-    override var isBalanceInsufficient: Bool {
-        if let fee {
-            if payment.sendingNativeToken {
-                tokenAmount > token.decimalBalance - fee.token
-            } else {
-                super.isBalanceInsufficient
-            }
+    override var balanceSufficiency: BalanceSufficiency {
+        guard let fee, let feeToken else {
+            return .insufficient(nil)
+        }
+        let balanceInsufficient = tokenAmount > token.decimalBalance
+        let feeInsufficient = if payment.sendingNativeToken {
+            tokenAmount > token.decimalBalance - fee.token
         } else {
-            false
+            true // FIXME: Detemine with feeToken.balance
+        }
+        if balanceInsufficient {
+            return .insufficient(R.string.localizable.insufficient_balance())
+        } else if feeInsufficient {
+            return .insufficient(
+                R.string.localizable.insufficient_fee_description(
+                    CurrencyFormatter.localizedString(
+                        from: fee.token,
+                        format: .precision,
+                        sign: .never,
+                        symbol: .custom(feeToken.symbol)
+                    ),
+                    feeToken.chain?.name ?? ""
+                )
+            )
+        } else {
+            return .sufficient
         }
     }
     
     private let payment: Web3SendingTokenToAddressPayment
     
     private var fee: Web3TransferOperation.Fee?
+    private var feeToken: TokenItem?
     
     init(payment: Web3SendingTokenToAddressPayment) {
         self.payment = payment
@@ -129,7 +147,9 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                 }
                 await MainActor.run {
                     self.fee = fee
+                    self.feeToken = operation.feeToken
                     self.feeActivityIndicator?.stopAnimating()
+                    self.reloadViewsWithBalanceSufficiency()
                     self.tokenBalanceLabel.text = R.string.localizable.available_balance(availableBalance)
                     if let button = self.changeFeeButton {
                         button.configuration?.attributedTitle = AttributedString(title, attributes: feeAttributes)

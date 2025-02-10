@@ -634,7 +634,7 @@
 "initializing" = "初始化...";
 "install_messenger_desc" = "访问 mixin.one/mm 或扫描二维码安装";
 "insufficient_balance" = "余额不足";
-"insufficient_gas" = "您的账户中没有足够的 %@ 来支付网络费用";
+"insufficient_fee_description" = "需要 %1$@ 以支付 %2$@ 网络费用";
 "insufficient_transaction_fee" = "手续费不足";
 "interface_style" = "外观";
 "invalid_address" = "无效的地址";

@@ -1242,7 +1242,7 @@
 "system" = "跟隨系統";
 "system_time_is_unusual" = "系統時間異常";
 "tag" = "Tag（標籤）";
-"tag_placeholder" = "輸入數字地址標籤（Tag），如果沒有直接點下一步。";
+"tag_placeholder" = "輸入數字地址標籤（Tag），如果沒有請輸入任意非 0 數字。";
 "take_a_photo" = "拍攝照片";
 "tap_to_join" = "點選加入";
 "terms_of_service" = "服務條款";

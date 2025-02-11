@@ -1242,7 +1242,7 @@
 "system" = "Sistema";
 "system_time_is_unusual" = "La hora del sistema es inusual";
 "tag" = "Etiqueta";
-"tag_placeholder" = "Enter the Tag. If there isn’t one, just tap “Next”.";
+"tag_placeholder" = "Enter the Tag. If there isn’t one, enter any non-zero number.";
 "take_a_photo" = "Take a photo";
 "tap_to_join" = "Toca para unirte";
 "terms_of_service" = "Términos de servicio";

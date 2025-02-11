@@ -1242,7 +1242,7 @@
 "system" = "System";
 "system_time_is_unusual" = "Системное время необычно";
 "tag" = "Ярлык";
-"tag_placeholder" = "Enter the Tag. If there isn’t one, just tap “Next”.";
+"tag_placeholder" = "Enter the Tag. If there isn’t one, enter any non-zero number.";
 "take_a_photo" = "Take a photo";
 "tap_to_join" = "Нажмите, чтобы присоединиться";
 "terms_of_service" = "Условия обслуживания";

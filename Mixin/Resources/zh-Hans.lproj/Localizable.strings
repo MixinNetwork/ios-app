@@ -1242,7 +1242,7 @@
 "system" = "跟随系统";
 "system_time_is_unusual" = "系统时间异常";
 "tag" = "Tag（标签）";
-"tag_placeholder" = "输入数字地址标签（Tag），如果没有直接点下一步。";
+"tag_placeholder" = "输入数字地址标签（Tag），如果没有请输入任意非 0 数字。";
 "take_a_photo" = "拍摄照片";
 "tap_to_join" = "点击加入";
 "terms_of_service" = "服务条款";

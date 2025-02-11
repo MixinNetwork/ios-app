@@ -125,20 +125,6 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
         }
     }
     
-    @objc private func withdraw(_ sender: Any) {
-        guard let address = savedAddress else {
-            return
-        }
-        presentingViewController?.dismiss(animated: true) { [token] in
-            guard let navigationController = UIApplication.homeNavigationController else {
-                return
-            }
-            let progress = UserInteractionProgress(currentStep: 2, totalStepCount: 2)
-            let inputAmount = WithdrawInputAmountViewController(tokenItem: token, destination: .address(address), progress: progress)
-            navigationController.pushViewController(inputAmount, animated: true)
-        }
-    }
-    
     private func loadSuccessViews() {
         tableHeaderView.setIcon(progress: .success)
         switch action {
@@ -152,17 +138,7 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
             layoutTableHeaderView(title: R.string.localizable.address_deleted(), subtitle: nil)
         }
         tableView.setContentOffset(.zero, animated: true)
-        switch action {
-        case .add, .update:
-            loadDoubleButtonTrayView(leftTitle: R.string.localizable.close(),
-                                     leftAction: #selector(close(_:)),
-                                     rightTitle: R.string.localizable.withdrawal(),
-                                     rightAction: #selector(withdraw(_:)),
-                                     animation: .vertical)
-        case .delete:
-            loadSingleButtonTrayView(title: R.string.localizable.done(),
-                                     action:  #selector(close(_:)))
-        }
+        loadSingleButtonTrayView(title: R.string.localizable.done(), action:  #selector(close(_:)))
     }
     
     private func loadFailureViews(errorDescription: String) {

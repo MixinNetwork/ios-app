@@ -1454,7 +1454,7 @@
 "withdrawal_address_tips" = "Для первого вывода на новый адрес попробуйте небольшие суммы! Если вы выведете активы не на тот адрес, они не будут восстановлены!";
 "withdrawal_failed" = "Withdrawal Failed";
 "withdrawal_hash" = "Withdrawal Hash";
-"withdrawal_label_placeholder" = "Use a unique label to help you identify this address, such as “Wallet” “Exchange” or a friend’s name.";
+"withdrawal_label_placeholder" = "Use a unique label to help you identify this address, such as name of the wallet, exchange, or a friend.";
 "withdrawal_memo" = "Памятка";
 "withdrawal_minimum_amount" = "Минимальная сумма вывода: %1$@ %2$@.";
 "withdrawal_minimum_reserve" = "Минимальный резерв: ";

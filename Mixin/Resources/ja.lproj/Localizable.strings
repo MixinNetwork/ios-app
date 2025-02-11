@@ -1454,7 +1454,7 @@
 "withdrawal_address_tips" = "新しいアドレスへの最初の出金は必ず少額で行ってください。アドレスが間違っていると資産は失われます。";
 "withdrawal_failed" = "Withdrawal Failed";
 "withdrawal_hash" = "Withdrawal Hash";
-"withdrawal_label_placeholder" = "Use a unique label to help you identify this address, such as “Wallet” “Exchange” or a friend’s name.";
+"withdrawal_label_placeholder" = "Use a unique label to help you identify this address, such as name of the wallet, exchange, or a friend.";
 "withdrawal_memo" = "メモ";
 "withdrawal_minimum_amount" = "最小出金額は %1$@ %2$@です";
 "withdrawal_minimum_reserve" = "最低準備金 ";

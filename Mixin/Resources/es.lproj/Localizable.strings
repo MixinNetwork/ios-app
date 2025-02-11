@@ -1454,7 +1454,7 @@
 "withdrawal_address_tips" = "Para el primer retiro a una nueva dirección, ¡prueba con cantidades pequeñas! Si retiras los activos a la dirección incorrecta, ¡no se recuperarán!";
 "withdrawal_failed" = "Withdrawal Failed";
 "withdrawal_hash" = "Withdrawal Hash";
-"withdrawal_label_placeholder" = "Use a unique label to help you identify this address, such as “Wallet” “Exchange” or a friend’s name.";
+"withdrawal_label_placeholder" = "Use a unique label to help you identify this address, such as name of the wallet, exchange, or a friend.";
 "withdrawal_memo" = "Nota";
 "withdrawal_minimum_amount" = "El importe mínimo de retiro es %1$@ %2$@";
 "withdrawal_minimum_reserve" = "Reserva mínima: ";

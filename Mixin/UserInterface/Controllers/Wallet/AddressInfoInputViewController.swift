@@ -89,6 +89,28 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let title = switch intent {
+        case .newAddress:
+            switch inputContent {
+            case .destination:
+                R.string.localizable.address()
+            case .memo:
+                R.string.localizable.memo()
+            case .tag:
+                R.string.localizable.tag()
+            case .label:
+                R.string.localizable.label()
+            }
+        case .oneTimeWithdraw:
+            R.string.localizable.send()
+        }
+        if let progress {
+            navigationItem.titleView = NavigationTitleView(title: title, subtitle: progress.description)
+        } else {
+            self.title = title
+        }
+        
         scrollView.addSubview(headerView)
         scrollView.alwaysBounceVertical = true
         scrollView.keyboardDismissMode = .onDrag
@@ -107,29 +129,19 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                 label.text = destination
             }
         }
-        let title: String
         switch inputContent {
         case .destination:
-            title = R.string.localizable.address()
             headerView.inputPlaceholder = R.string.localizable.hint_address()
             nextButton.isEnabled = false
         case .memo:
-            title = R.string.localizable.memo()
             headerView.inputPlaceholder = R.string.localizable.memo_placeholder()
             nextButton.isEnabled = true
         case .tag:
-            title = R.string.localizable.tag()
             headerView.inputPlaceholder = R.string.localizable.tag_placeholder()
             nextButton.isEnabled = true
         case .label:
-            title = R.string.localizable.label()
             headerView.inputPlaceholder = R.string.localizable.withdrawal_label_placeholder()
             nextButton.isEnabled = false
-        }
-        if let progress {
-            navigationItem.titleView = NavigationTitleView(title: title, subtitle: progress.description)
-        } else {
-            self.title = title
         }
         nextButton.setTitle(R.string.localizable.next(), for: .normal)
         nextButton.style = .filled

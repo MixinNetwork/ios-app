@@ -63,8 +63,7 @@ class InputAmountViewController: UIViewController {
         return formatter
     }()
     
-    private weak var startContinuouslyDeletingTimer: Timer?
-    private weak var continuouslyDeleteTimer: Timer?
+    private weak var clearInputTimer: Timer?
     
     private var accumulator: DecimalAccumulator {
         didSet {
@@ -217,27 +216,22 @@ class InputAmountViewController: UIViewController {
     }
     
     @IBAction func deleteButtonTouchDown(_ sender: Any) {
-        startContinuouslyDeletingTimer?.invalidate()
-        startContinuouslyDeletingTimer = Timer.scheduledTimer(
-            withTimeInterval: 0.5,
+        clearInputTimer?.invalidate()
+        clearInputTimer = Timer.scheduledTimer(
+            withTimeInterval: 1,
             repeats: false
         ) { [weak self] _ in
-            self?.startContinuouslyDelete()
+            self?.replaceAmount(0)
         }
     }
     
     @IBAction func deleteButtonTouchUpInside(_ sender: Any) {
-        startContinuouslyDeletingTimer?.invalidate()
-        if let timer = continuouslyDeleteTimer, timer.isValid {
-            timer.invalidate()
-        } else {
-            accumulator.deleteBackwards()
-        }
+        clearInputTimer?.invalidate()
+        accumulator.deleteBackwards()
     }
     
     @IBAction func deleteButtonTouchUpOutside(_ sender: Any) {
-        startContinuouslyDeletingTimer?.invalidate()
-        continuouslyDeleteTimer?.invalidate()
+        clearInputTimer?.invalidate()
     }
     
     @IBAction func generateInputFeedback(_ sender: Any) {
@@ -366,19 +360,6 @@ extension InputAmountViewController {
         
         amountLabel.text = inputAmountString
         reloadViewsWithBalanceSufficiency()
-    }
-    
-    private func startContinuouslyDelete() {
-        guard deleteBackwardsButton.state.contains(.highlighted) else {
-            return
-        }
-        continuouslyDeleteTimer?.invalidate()
-        continuouslyDeleteTimer = Timer.scheduledTimer(
-            withTimeInterval: 0.15,
-            repeats: true
-        ) { [weak self] _ in
-            self?.accumulator.deleteBackwards()
-        }
     }
     
 }

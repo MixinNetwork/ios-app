@@ -7,6 +7,7 @@
 "accounts" = "Accounts";
 "acknowledgements" = "Acknowledgements";
 "add" = "Add";
+"add_a_note" = "Add a note";
 "add_address" = "Add address";
 "add_alert" = "Add Alert";
 "add_bot" = "Add Bot";
@@ -17,7 +18,6 @@
 "add_contact" = "Add Contact";
 "add_conversations" = "Add Conversations";
 "add_emergency_contact" = "Add recovery contact";
-"add_memo" = "Add Memo";
 "add_mobile_number" = "Add Mobile Number";
 "add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "Add Participants";
@@ -45,6 +45,7 @@
 "address_added" = "Address Added";
 "address_added_description" = "Address has been added. You can immediately use this address for withdrawals.";
 "address_adding_description" = "The request to add the address is currently under verification by the Mixin server. Please wait a moment.";
+"address_book" = "Address Book";
 "address_deleted" = "Address Deleted";
 "address_edited" = "Address Edited";
 "address_edited_description" = "The Mixin server has confirmed your address editing request. You can immediately use this address for withdrawals.";
@@ -166,6 +167,7 @@
 "auto_download_hint" = "Change auto-download settings for medias. Voice messages are always automatically downloaded.";
 "auto_lock" = "Auto-Lock";
 "automatic" = "Automatic";
+"available_balance" = "Available: %@";
 "back_to_chat" = "Back To Chat";
 "back_to_merchant" = "Back to Merchant";
 "backed_up" = "Backed up";
@@ -421,6 +423,7 @@
 "delete_for_me" = "Delete for me";
 "delete_group_chat_confirmation" = "Delete \"%@\" group chat?";
 "delete_my_account" = "Delete My Account";
+"delete_note" = "Delete Note";
 "delete_synced_contact" = "Delete Synced Contacts";
 "delete_withdraw_address" = "Delete %@ Address";
 "deleted" = "Deleted";
@@ -482,6 +485,7 @@
 "edit_group_description" = "Edit Group Description";
 "edit_group_name" = "Edit Group Name";
 "edit_name" = "Edit Name";
+"edit_note" = "Edit Note";
 "editing_address" = "Editing Address";
 "editing_address_failed" = "Editing Address Failed";
 "emergency_contact" = "Recovery Contact";
@@ -611,7 +615,7 @@
 "hide" = "Hide";
 "hide_asset" = "Hide asset";
 "high_24h" = "24H HIGH";
-"hint_address" = "Enter a wallet address";
+"hint_address" = "Enter a wallet address, exchange address.";
 "hold_to_record_audio" = "Hold to record, release to send.";
 "hour" = "%d Hour";
 "hour_count" = "%d Hours";
@@ -630,7 +634,7 @@
 "initializing" = "Initializing...";
 "install_messenger_desc" = "Visit mixin.one/mm or scan the QR code to install";
 "insufficient_balance" = "Insufficient balance";
-"insufficient_gas" = "You do not have enough %@ in your account to pay for network fees";
+"insufficient_fee_description" = "You need %1$@ on the %2$@ network to cover the network fee";
 "insufficient_transaction_fee" = "Insufficient transaction fee";
 "interface_style" = "Interface Style";
 "invalid_address" = "Invalid Address";
@@ -644,6 +648,7 @@
 "invalid_qr_code" = "Invalid QR-Code";
 "invalid_request_body" = "Invalid request body";
 "invalid_sdp" = "Invalid SDP";
+"invalid_tag_description" = "Tag must be a non-zero number";
 "invalid_width" = "Invalid width";
 "invite" = "Invite";
 "invite_a_friend" = "Invite a Friend";
@@ -714,6 +719,7 @@
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Media";
 "memo" = "Memo";
+"memo_placeholder" = "Enter the Memo. If there isn’t one, just tap “Next”.";
 "message_e2ee" = "Messages to this conversation are end-to-end encrypted, tap for more info.";
 "message_encryption_hint" = "Messages between users are protected with an end-to-end encryption";
 "message_not_found" = "Message not found";
@@ -726,6 +732,7 @@
 "minute" = "%d Minute";
 "minute_count" = "%d Minutes";
 "mixin" = "Mixin";
+"mixin_contact" = "Mixin Contact";
 "mixin_id_or_phone" = "Mixin ID, Phone number";
 "mixin_locked" = "Mixin Locked";
 "mixin_messenger_desktop" = "Mixin Messenger Desktop";
@@ -852,6 +859,7 @@
 "opponents" = "Opponents";
 "optimize_database" = "Optimize Database";
 "optimized" = "Optimized";
+"optional_note" = "Note (Optional)";
 "or" = "or";
 "order_details" = "Order Details";
 "order_id" = "Order ID";
@@ -1091,12 +1099,11 @@
 "send_photo_count" = "Send %d Photos";
 "send_this_location" = "Send This Location";
 "send_to" = "Send to %@";
-"send_to_address" = "Send to Address";
-"send_to_address_description" = "Send crypto to a wallet or exchange";
-"send_to_contact" = "Send to Contact";
-"send_to_contact_description" = "Send crypto to Mixin contact";
+"send_to_address_description" = "Send to a known crypto address using a crypto network.";
+"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
 "send_to_developer" = "Send to Developer";
 "send_to_title" = "Send To";
+"send_to_web3_wallet_description" = "Send to my %@ account using crypto network.";
 "send_video" = "Send 1 Video";
 "send_video_count" = "Send %d Videos";
 "send_without_sound" = "Send Without Sound";
@@ -1236,6 +1243,7 @@
 "system" = "System";
 "system_time_is_unusual" = "System time is unusual";
 "tag" = "Tag";
+"tag_placeholder" = "Enter the Tag. If there isn’t one, enter any non-zero number.";
 "take_a_photo" = "Take a photo";
 "tap_to_join" = "Tap to join";
 "terms_of_service" = "Terms of Service";
@@ -1447,7 +1455,7 @@
 "withdrawal_address_tips" = "For the first withdrawal to a new address, please try small amounts! If you withdraw the assets to the wrong address, that would not be recovered!";
 "withdrawal_failed" = "Withdrawal Failed";
 "withdrawal_hash" = "Withdrawal Hash";
-"withdrawal_label" = "Label (e.g. exchanges, wallets, etc.)";
+"withdrawal_label_placeholder" = "Use a unique label to help you identify this address, such as name of the wallet, exchange, or a friend.";
 "withdrawal_memo" = "Memo";
 "withdrawal_minimum_amount" = "Minimum withdraw amount is %1$@ %2$@";
 "withdrawal_minimum_reserve" = "Minimum reserve: ";

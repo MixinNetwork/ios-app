@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class Web3TransferTokenSelectorViewController<Token: Web3TransferableToken>: PopupSearchableTableViewController, UITableViewDataSource, UITableViewDelegate {
+final class Web3TransferTokenSelectorViewController<Token: TransferableToken>: PopupSearchableTableViewController, UITableViewDataSource, UITableViewDelegate {
     
     var onSelected: ((Token) -> Void)?
     

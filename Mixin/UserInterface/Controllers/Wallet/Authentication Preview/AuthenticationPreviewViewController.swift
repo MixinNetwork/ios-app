@@ -382,7 +382,7 @@ extension AuthenticationPreviewViewController {
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)
         case web3Message(caption: String, message: String)
-        case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: Web3TransferableToken) // Nil amount for unlimited
+        case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: TransferableToken) // Nil amount for unlimited
         case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
         case tokenAmount(token: TokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case swapAssetChange(sendToken: TokenItem, sendAmount: String, receiveToken: SwapToken, receiveAmount: String)

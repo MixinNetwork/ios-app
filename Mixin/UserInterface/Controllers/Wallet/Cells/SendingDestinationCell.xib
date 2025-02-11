@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,30 +20,30 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eMA-X1-1W9">
                         <rect key="frame" x="16" y="5" width="288" height="64"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="bGA-bd-sDM">
-                                <rect key="frame" x="20" y="12.666666666666671" width="246" height="39"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="bGA-bd-sDM">
+                                <rect key="frame" x="28" y="13" width="240" height="38"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UrT-8y-c7T">
-                                        <rect key="frame" x="0.0" y="3.3333333333333321" width="32" height="31.999999999999996"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UrT-8y-c7T">
+                                        <rect key="frame" x="0.0" y="11" width="16" height="16"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="32" id="Gt8-fn-PJi"/>
+                                            <constraint firstAttribute="width" constant="16" id="Gt8-fn-PJi"/>
                                             <constraint firstAttribute="width" secondItem="UrT-8y-c7T" secondAttribute="height" id="Mgq-wH-s4i"/>
                                         </constraints>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ilR-V9-k9l">
-                                        <rect key="frame" x="44" y="0.0" width="184" height="39"/>
+                                        <rect key="frame" x="36" y="0.0" width="204" height="38"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="9kl-g3-iws">
-                                                <rect key="frame" x="0.0" y="0.0" width="78.666666666666671" height="19.333333333333332"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="78.666666666666671" height="18.333333333333332"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uIb-4a-8OU">
-                                                        <rect key="frame" x="0.0" y="0.0" width="39.666666666666664" height="19.333333333333332"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="39.666666666666664" height="18.333333333333332"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                         <color key="textColor" name="text"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zg2-2W-1u5" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                                        <rect key="frame" x="47.666666666666671" y="0.0" width="31" height="19.333333333333332"/>
+                                                        <rect key="frame" x="47.666666666666671" y="0.0" width="31" height="18.333333333333332"/>
                                                         <color key="backgroundColor" red="0.29411764705882354" green="0.48627450980392156" blue="0.8666666666666667" alpha="1" colorSpace="calibratedRGB"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -58,25 +58,23 @@
                                                     </label>
                                                 </subviews>
                                             </stackView>
-                                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1IX-kM-hrq">
-                                                <rect key="frame" x="0.0" y="23.333333333333332" width="33" height="15.666666666666668"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1IX-kM-hrq">
+                                                <rect key="frame" x="0.0" y="22.333333333333336" width="33" height="15.666666666666664"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                 <color key="textColor" name="text"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                     </stackView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="ZxV-5h-7z7">
-                                        <rect key="frame" x="240" y="14.333333333333332" width="6" height="10"/>
-                                    </imageView>
                                 </subviews>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" name="background_secondary"/>
+                        <color key="backgroundColor" name="background"/>
                         <constraints>
-                            <constraint firstItem="bGA-bd-sDM" firstAttribute="centerY" secondItem="eMA-X1-1W9" secondAttribute="centerY" id="Evc-Bx-Efp"/>
-                            <constraint firstAttribute="trailing" secondItem="bGA-bd-sDM" secondAttribute="trailing" constant="22" id="hqq-a2-J3I"/>
-                            <constraint firstItem="bGA-bd-sDM" firstAttribute="leading" secondItem="eMA-X1-1W9" secondAttribute="leading" constant="20" id="mb2-RS-fCy"/>
+                            <constraint firstItem="bGA-bd-sDM" firstAttribute="top" secondItem="eMA-X1-1W9" secondAttribute="top" constant="13" id="DBo-om-bb1"/>
+                            <constraint firstAttribute="bottom" secondItem="bGA-bd-sDM" secondAttribute="bottom" constant="13" id="Glt-0s-gy2"/>
+                            <constraint firstAttribute="trailing" secondItem="bGA-bd-sDM" secondAttribute="trailing" constant="20" id="hqq-a2-J3I"/>
+                            <constraint firstItem="bGA-bd-sDM" firstAttribute="leading" secondItem="eMA-X1-1W9" secondAttribute="leading" constant="28" id="mb2-RS-fCy"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
@@ -86,7 +84,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                 </subviews>
-                <color key="backgroundColor" name="background"/>
+                <color key="backgroundColor" name="background_secondary"/>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="eMA-X1-1W9" secondAttribute="trailing" constant="16" id="b3C-9G-xLh"/>
                     <constraint firstItem="eMA-X1-1W9" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="meK-qt-ZA4"/>
@@ -94,9 +92,8 @@
                     <constraint firstItem="eMA-X1-1W9" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="pbu-h6-ZyT"/>
                 </constraints>
             </tableViewCellContentView>
-            <color key="backgroundColor" name="background"/>
+            <color key="backgroundColor" name="background_secondary"/>
             <connections>
-                <outlet property="disclosureIndicatorImageView" destination="ZxV-5h-7z7" id="BLP-Oe-OZW"/>
                 <outlet property="freeLabel" destination="zg2-2W-1u5" id="bNY-Oz-D9b"/>
                 <outlet property="iconImageView" destination="UrT-8y-c7T" id="Fwu-b5-RGj"/>
                 <outlet property="subtitleLabel" destination="1IX-kM-hrq" id="Zje-5u-qCH"/>
@@ -106,7 +103,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="ic_accessory_disclosure" width="6" height="10"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

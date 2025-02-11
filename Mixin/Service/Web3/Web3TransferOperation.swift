@@ -20,13 +20,13 @@ class Web3TransferOperation {
     
     enum BalanceChange {
         case decodingFailed(rawTransaction: String)
-        case detailed(token: Web3TransferableToken, amount: Decimal)
+        case detailed(token: TransferableToken, amount: Decimal)
     }
     
     let fromAddress: String
     let toAddress: String
     let chain: Web3Chain
-    let feeToken: TokenItem
+    let feeToken: TokenItem // TODO: Replace it with Web3Token
     let canDecodeBalanceChange: Bool
     let isResendingTransactionAvailable: Bool
     
@@ -51,7 +51,7 @@ class Web3TransferOperation {
         fatalError("Must override")
     }
     
-    func loadFee() async throws -> Fee? {
+    func loadFee() async throws -> Fee {
         fatalError("Must override")
     }
     

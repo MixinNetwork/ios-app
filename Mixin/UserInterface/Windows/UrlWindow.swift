@@ -1460,7 +1460,7 @@ extension UrlWindow {
                             }
                             DispatchQueue.main.async {
                                 hud.hide()
-                                let transfer = Web3TransferViewController(operation: operation, proposer: nil)
+                                let transfer = Web3TransferPreviewViewController(operation: operation, proposer: nil)
                                 Web3PopupCoordinator.enqueue(popup: .request(transfer))
                             }
                         } catch {

@@ -5,6 +5,12 @@ struct PriorityFee {
     let unitPrice: UInt64
     let unitLimit: UInt32
     
+    var decimalCount: Decimal {
+        Decimal(unitPrice) * Decimal(unitLimit)
+        / Solana.microLamportsPerLamport
+        / Solana.lamportsPerSOL
+    }
+    
 }
 
 extension PriorityFee: Decodable {

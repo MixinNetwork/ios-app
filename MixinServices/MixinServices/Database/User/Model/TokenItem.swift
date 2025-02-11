@@ -7,6 +7,10 @@ public final class TokenItem: Token, NumberStringLocalizable {
     public let isHidden: Bool
     public let chain: Chain?
     
+    public var memoPossibility: WithdrawalMemoPossibility {
+        WithdrawalMemoPossibility(rawValue: chain?.withdrawalMemoPossibility) ?? .possible
+    }
+    
     public private(set) lazy var decimalBalance = Decimal(string: balance, locale: .enUSPOSIX) ?? 0
     
     public private(set) lazy var localizedBalance = localizedNumberString(balance)

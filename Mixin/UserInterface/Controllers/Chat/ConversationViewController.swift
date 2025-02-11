@@ -1293,11 +1293,15 @@ class ConversationViewController: UIViewController {
     }
     
     func showTransfer() {
-        guard let user = ownerUser else {
+        guard let ownerUser else {
             return
         }
-        let transfer = TransferOutViewController(token: nil, to: .contact(user))
-        navigationController?.pushViewController(transfer, animated: true)
+        let selector = SendTokenSelectorViewController()
+        selector.onSelected = { token in
+            let inputAmount = TransferInputAmountViewController(tokenItem: token, receiver: ownerUser, progress: nil)
+            self.navigationController?.pushViewController(inputAmount, animated: true)
+        }
+        present(selector, animated: true)
     }
     
     func showLocationPicker() {

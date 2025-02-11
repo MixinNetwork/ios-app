@@ -305,6 +305,17 @@ extension Payment {
             }
         }
         
+        var destination: String {
+            switch self {
+            case let .address(address):
+                address.destination
+            case let .temporary(address):
+                address.destination
+            case let .web3(destination, _):
+                destination
+            }
+        }
+        
         var debugDescription: String {
             switch self {
             case let .address(address):

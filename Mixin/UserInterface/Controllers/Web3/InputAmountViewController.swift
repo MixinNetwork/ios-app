@@ -4,27 +4,53 @@ import MixinServices
 
 class InputAmountViewController: UIViewController {
     
+    enum BalanceSufficiency {
+        case sufficient
+        case insufficient(String?)
+    }
+    
     @IBOutlet weak var amountStackView: UIStackView!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var calculatedValueLabel: UILabel!
     @IBOutlet weak var insufficientBalanceLabel: UILabel!
+    @IBOutlet weak var accessoryStackView: UIStackView!
+    @IBOutlet weak var multipliersStackView: UIStackView!
     @IBOutlet weak var tokenIconView: BadgeIconView!
     @IBOutlet weak var tokenNameLabel: UILabel!
     @IBOutlet weak var tokenBalanceLabel: UILabel!
-    @IBOutlet weak var inputMaxValueButton: UIButton!
     @IBOutlet weak var decimalSeparatorButton: HighlightableButton!
     @IBOutlet weak var deleteBackwardsButton: HighlightableButton!
-    @IBOutlet weak var reviewButton: RoundedButton!
+    @IBOutlet weak var reviewButton: StyledButton!
     
     @IBOutlet var decimalButtons: [DecimalButton]!
     
-    var token: Web3TransferableToken {
+    @IBOutlet weak var numberPadTopConstraint: NSLayoutConstraint!
+    
+    var token: TransferableToken {
         fatalError("Must override")
+    }
+    
+    var balanceSufficiency: BalanceSufficiency {
+        if tokenAmount > token.decimalBalance {
+            .insufficient(R.string.localizable.insufficient_balance())
+        } else {
+            .sufficient
+        }
+    }
+    
+    var feeAttributes: AttributeContainer {
+        var container = AttributeContainer()
+        container.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+        container.foregroundColor = R.color.text_tertiary()
+        return container
     }
     
     private(set) var amountIntent: AmountIntent
     private(set) var tokenAmount: Decimal = 0
     private(set) var fiatMoneyAmount: Decimal = 0
+    
+    private(set) weak var feeActivityIndicator: ActivityIndicatorView?
+    private(set) weak var changeFeeButton: UIButton?
     
     private let feedback = UIImpactFeedbackGenerator(style: .light)
     private let formatter: NumberFormatter = {
@@ -36,6 +62,8 @@ class InputAmountViewController: UIViewController {
         formatter.negativePrefix = ""
         return formatter
     }()
+    
+    private weak var clearInputTimer: Timer?
     
     private var accumulator: DecimalAccumulator {
         didSet {
@@ -60,12 +88,57 @@ class InputAmountViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         amountStackView.setCustomSpacing(2, after: amountLabel)
         amountLabel.font = .monospacedDigitSystemFont(ofSize: 64, weight: .regular)
-        inputMaxValueButton.setTitle(R.string.localizable.max().uppercased(), for: .normal)
+        
+        let multiplierButtons = {
+            var config: UIButton.Configuration = .filled()
+            config.baseForegroundColor = R.color.text()
+            config.baseBackgroundColor = R.color.background_secondary()
+            config.cornerStyle = .capsule
+            
+            let attributes = AttributeContainer([
+                .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
+                .paragraphStyle: {
+                    let style = NSMutableParagraphStyle()
+                    style.alignment = .right
+                    return style
+                }(),
+            ])
+            
+            return (0...2).map { tag in
+                config.attributedTitle = {
+                    let multiplier = self.multiplier(tag: tag)
+                    let title = switch multiplier {
+                    case 1:
+                        R.string.localizable.balance_max()
+                    default:
+                        NumberFormatter.simplePercentage.string(decimal: multiplier) ?? ""
+                    }
+                    return AttributedString(title, attributes: attributes)
+                }()
+                
+                let button = UIButton(configuration: config)
+                button.titleLabel?.adjustsFontForContentSizeCategory = true
+                button.tag = tag
+                button.addTarget(self, action: #selector(inputMultipliedAmount(_:)), for: .touchUpInside)
+                return button
+            }
+        }()
+        for button in multiplierButtons {
+            multipliersStackView.addArrangedSubview(button)
+            button.snp.makeConstraints { make in
+                make.width.equalTo(view.snp.width)
+                    .multipliedBy(0.24)
+                    .priority(.high)
+            }
+        }
+        
         decimalButtons.sort(by: { $0.value < $1.value })
         decimalSeparatorButton.setTitle(Locale.current.decimalSeparator ?? ".", for: .normal)
         reloadViews(inputAmount: accumulator.decimal)
+        reviewButton.style = .filled
     }
     
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
@@ -134,13 +207,6 @@ class InputAmountViewController: UIViewController {
         self.accumulator = accumulator
     }
     
-    @IBAction func inputMaxValue(_ sender: Any) {
-        var accumulator = DecimalAccumulator(intent: .byToken)
-        accumulator.decimal = token.decimalBalance
-        self.amountIntent = .byToken
-        self.accumulator = accumulator
-    }
-    
     @IBAction func inputValue(_ sender: DecimalButton) {
         accumulator.append(value: sender.value)
     }
@@ -149,8 +215,23 @@ class InputAmountViewController: UIViewController {
         accumulator.appendDecimalSeparator()
     }
     
-    @IBAction func deleteBackwards(_ sender: Any) {
+    @IBAction func deleteButtonTouchDown(_ sender: Any) {
+        clearInputTimer?.invalidate()
+        clearInputTimer = Timer.scheduledTimer(
+            withTimeInterval: 1,
+            repeats: false
+        ) { [weak self] _ in
+            self?.replaceAmount(0)
+        }
+    }
+    
+    @IBAction func deleteButtonTouchUpInside(_ sender: Any) {
+        clearInputTimer?.invalidate()
         accumulator.deleteBackwards()
+    }
+    
+    @IBAction func deleteButtonTouchUpOutside(_ sender: Any) {
+        clearInputTimer?.invalidate()
     }
     
     @IBAction func generateInputFeedback(_ sender: Any) {
@@ -159,6 +240,77 @@ class InputAmountViewController: UIViewController {
     
     @IBAction func review(_ sender: Any) {
         
+    }
+    
+    func multiplier(tag: Int) -> Decimal {
+        switch tag {
+        case 0:
+            0.25
+        case 1:
+            0.5
+        default:
+            1
+        }
+    }
+    
+    func replaceAmount(_ amount: Decimal) {
+        var accumulator = DecimalAccumulator(intent: .byToken)
+        accumulator.decimal = amount
+        self.amountIntent = .byToken
+        self.accumulator = accumulator
+    }
+    
+    @objc func inputMultipliedAmount(_ sender: UIButton) {
+        let multiplier = self.multiplier(tag: sender.tag)
+        replaceAmount(token.decimalBalance * multiplier)
+    }
+    
+    func addFeeView() {
+        let titleLabel = InsetLabel()
+        titleLabel.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
+        titleLabel.text = R.string.localizable.network_fee()
+        titleLabel.textColor = R.color.text_tertiary()
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        
+        let activityIndicator = ActivityIndicatorView()
+        activityIndicator.style = .custom(diameter: 16, lineWidth: 2)
+        activityIndicator.tintColor = R.color.chat_pin_count_background()
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.isAnimating = true
+        self.feeActivityIndicator = activityIndicator
+        
+        var config: UIButton.Configuration = .plain()
+        config.baseBackgroundColor = .clear
+        config.imagePlacement = .trailing
+        config.imagePadding = 14
+        config.attributedTitle = AttributedString("0", attributes: feeAttributes)
+        let button = UIButton(configuration: config)
+        button.tintColor = R.color.chat_pin_count_background()
+        button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        button.alpha = 0
+        self.changeFeeButton = button
+        
+        let feeStackView = UIStackView(arrangedSubviews: [titleLabel, activityIndicator, button])
+        feeStackView.axis = .horizontal
+        feeStackView.alignment = .center
+        
+        accessoryStackView.insertArrangedSubview(feeStackView, at: 0)
+        feeStackView.snp.makeConstraints { make in
+            make.width.equalTo(view.snp.width).offset(-56)
+        }
+    }
+    
+    func reloadViewsWithBalanceSufficiency() {
+        switch balanceSufficiency {
+        case .sufficient:
+            insufficientBalanceLabel.alpha = 0
+            reviewButton.isEnabled = tokenAmount > 0
+        case .insufficient(let description):
+            insufficientBalanceLabel.text = description
+            insufficientBalanceLabel.alpha = 1
+            reviewButton.isEnabled = false
+        }
     }
     
 }
@@ -207,14 +359,7 @@ extension InputAmountViewController {
         }
         
         amountLabel.text = inputAmountString
-        
-        if tokenAmount > token.decimalBalance {
-            insufficientBalanceLabel.alpha = 1
-            reviewButton.isEnabled = false
-        } else {
-            insufficientBalanceLabel.alpha = 0
-            reviewButton.isEnabled = tokenAmount > 0
-        }
+        reloadViewsWithBalanceSufficiency()
     }
     
 }

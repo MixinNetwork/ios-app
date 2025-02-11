@@ -6,10 +6,15 @@ class Web3SendingTokenPayment {
     let chain: Web3Chain
     let token: Web3Token
     let fromAddress: String
+    let sendingNativeToken: Bool
     
-    var sendingNativeToken: Bool {
-        switch (token.chainID, token.assetKey) {
-        case ("ethereum",           "0x0000000000000000000000000000000000000000"),
+    init(chain: Web3Chain, token: Web3Token, fromAddress: String) {
+        self.chain = chain
+        self.token = token
+        self.fromAddress = fromAddress
+        self.sendingNativeToken = switch (token.chainID, token.assetKey) {
+        case ("solana",             Web3Token.AssetKey.sol),
+            ("ethereum",            Web3Token.AssetKey.eth),
             ("base",                "0x0000000000000000000000000000000000000000"),
             ("arbitrum",            "0x0000000000000000000000000000000000000000"),
             ("optimism",            "0x0000000000000000000000000000000000000000"),
@@ -17,16 +22,10 @@ class Web3SendingTokenPayment {
             ("binance-smart-chain", "0x0000000000000000000000000000000000000000"),
             ("avalanche",           "0x0000000000000000000000000000000000000000"),
             ("blast",               "0x0000000000000000000000000000000000000000"):
-            return true
+            true
         default:
-            return false
+            false
         }
-    }
-    
-    init(chain: Web3Chain, token: Web3Token, fromAddress: String) {
-        self.chain = chain
-        self.token = token
-        self.fromAddress = fromAddress
     }
     
 }

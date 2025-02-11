@@ -136,12 +136,24 @@ extension Web3Chain {
         }
     }()
     
+    private static let mixinChainIDMap: OrderedDictionary<String, Web3Chain> = {
+        all.reduce(into: [:]) { result, chain in
+            if let id = chain.mixinChainID {
+                result[id] = chain
+            }
+        }
+    }()
+    
     static func chain(caip2: Blockchain) -> Web3Chain? {
         caip2Map[caip2]
     }
     
     static func chain(web3ChainID id: String) -> Web3Chain? {
         web3ChainIDMap[id]
+    }
+    
+    static func chain(mixinChainID id: String) -> Web3Chain? {
+        mixinChainIDMap[id]
     }
     
     static func evmChain(chainID: Int) -> Web3Chain? {

@@ -381,8 +381,14 @@ extension UserProfileViewController {
     }
     
     @objc func transfer() {
-        let viewController = TransferOutViewController(token: nil, to: .contact(user))
-        dismissAndPush(viewController)
+        let user: UserItem = self.user
+        let selector = SendTokenSelectorViewController()
+        let navigationController = presentingViewController?.navigationController
+        selector.onSelected = { token in
+            let inputAmount = TransferInputAmountViewController(tokenItem: token, receiver: user, progress: nil)
+            UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
+        }
+        dismissAndPresent(selector)
     }
     
     @objc func editAlias() {

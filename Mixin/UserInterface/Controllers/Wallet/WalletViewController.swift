@@ -206,13 +206,12 @@ extension WalletViewController: TokenActionView.Delegate {
         lastSelectedAction = action
         switch action {
         case .send:
-            let controller = TransferSearchViewController()
-            controller.delegate = self
-            controller.showEmptyHintIfNeeded = true
-            controller.searchResultsFromServer = false
-            controller.tokens = tokens.filter { $0.decimalBalance != 0 }
-            controller.sendableAssets = sendableTokens
-            present(controller, animated: true, completion: nil)
+            let selector = SendTokenSelectorViewController()
+            selector.onSelected = { token in
+                let receiver = TokenReceiverViewController(token: token)
+                self.navigationController?.pushViewController(receiver, animated: true)
+            }
+            present(selector, animated: true, completion: nil)
         case .receive:
             let controller = TransferSearchViewController()
             controller.delegate = self

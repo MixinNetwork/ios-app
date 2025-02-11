@@ -146,7 +146,7 @@ extension WalletConnectSession {
                     request: request
                 )
                 DispatchQueue.main.async {
-                    let transfer = Web3TransferViewController(operation: operation, proposer: .dapp(proposer))
+                    let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))
                     Web3PopupCoordinator.enqueue(popup: .request(transfer))
                 }
             } catch {
@@ -202,7 +202,7 @@ extension WalletConnectSession {
                     request: request
                 )
                 DispatchQueue.main.async {
-                    let transfer = Web3TransferViewController(operation: operation, proposer: .dapp(proposer))
+                    let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))
                     Web3PopupCoordinator.enqueue(popup: .request(transfer))
                 }
             } catch {

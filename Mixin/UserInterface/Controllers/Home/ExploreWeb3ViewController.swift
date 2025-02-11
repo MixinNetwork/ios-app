@@ -68,14 +68,13 @@ class ExploreWeb3ViewController: UIViewController {
         guard let tokens else {
             return
         }
-        let selector = Web3TransferTokenSelectorViewController<Web3Token>()
-        selector.reload(tokens: tokens)
+        let selector = Web3TokenSelectorViewController(tokens: tokens)
         selector.onSelected = { token in
             guard let address = self.address, let chain = Web3Chain.chain(web3ChainID: token.chainID) else {
                 return
             }
             let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address)
-            let selector = Web3SendingDestinationViewController(payment: payment)
+            let selector = Web3TokenReceiverViewController(payment: payment)
             self.navigationController?.pushViewController(selector, animated: true)
         }
         present(selector, animated: true)

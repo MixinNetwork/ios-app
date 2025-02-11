@@ -140,7 +140,6 @@ extension Web3TokenReceiverViewController: UITableViewDataSource {
             cell.freeLabel.isHidden = true
             cell.titleLabel.text = R.string.localizable.to_mixin_wallet()
             cell.subtitleLabel.text = R.string.localizable.contact_mixin_id(myIdentityNumber)
-            cell.disclosureIndicatorImageView.isHidden = true
         }
         return cell
     }

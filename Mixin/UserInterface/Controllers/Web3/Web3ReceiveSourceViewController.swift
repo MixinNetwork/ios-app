@@ -26,13 +26,21 @@ final class Web3ReceiveSourceViewController: UIViewController {
         super.viewDidLoad()
         title = R.string.localizable.receive()
         view.addSubview(tableView)
-        tableView.backgroundColor = R.color.background()
+        tableView.backgroundColor = R.color.background_secondary()
         tableView.snp.makeEdgesEqualToSuperview()
-        tableView.rowHeight = 74
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
         tableView.register(R.nib.sendingDestinationCell)
         tableView.dataSource = self
         tableView.delegate = self
+    }
+    
+}
+
+extension Web3ReceiveSourceViewController: HomeNavigationController.NavigationBarStyling {
+    
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .secondaryBackground
     }
     
 }
@@ -48,16 +56,15 @@ extension Web3ReceiveSourceViewController: UITableViewDataSource {
         let destination = Source(rawValue: indexPath.row)!
         switch destination {
         case .mixinWallet:
-            cell.iconImageView.image = R.image.wallet.send_destination_contact()
+            cell.iconImageView.image = R.image.token_receiver_contact()
             cell.titleLabel.text = R.string.localizable.from_mixin_wallet()
             cell.subtitleLabel.text = R.string.localizable.contact_mixin_id(myIdentityNumber)
         case .address:
-            cell.iconImageView.image = R.image.wallet.send_destination_address()
+            cell.iconImageView.image = R.image.token_receiver_address()
             cell.titleLabel.text = R.string.localizable.from_address()
             cell.subtitleLabel.text = R.string.localizable.receive_from_address_description()
         }
         cell.freeLabel.isHidden = true
-        cell.disclosureIndicatorImageView.isHidden = false
         return cell
     }
     

@@ -6,7 +6,6 @@ final class SendingDestinationCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var freeLabel: InsetLabel!
     @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var disclosureIndicatorImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

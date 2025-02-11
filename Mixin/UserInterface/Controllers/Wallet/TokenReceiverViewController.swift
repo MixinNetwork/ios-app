@@ -173,12 +173,11 @@ extension TokenReceiverViewController: UITableViewDataSource {
             cell.freeLabel.isHidden = true
             cell.subtitleLabel.text = R.string.localizable.send_to_web3_wallet_description(chain.name)
         case .addressBook:
-            cell.iconImageView.image = R.image.token_receiver_address()
+            cell.iconImageView.image = R.image.token_receiver_address_book()
             cell.titleLabel.text = R.string.localizable.address_book()
             cell.freeLabel.isHidden = true
             cell.subtitleLabel.text = R.string.localizable.send_to_address_description()
         }
-        cell.disclosureIndicatorImageView.isHidden = true
         return cell
     }
     

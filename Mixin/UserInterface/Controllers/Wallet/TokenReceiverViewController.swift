@@ -199,7 +199,7 @@ extension TokenReceiverViewController: UITableViewDelegate {
                 self.dismiss(animated: true) {
                     let inputAmount = TransferInputAmountViewController(
                         tokenItem: token,
-                        receiver: user,
+                        receiver: .user(user),
                         progress: .init(currentStep: 2, totalStepCount: 2)
                     )
                     self.navigationController?.pushViewController(inputAmount, animated: true)

@@ -1253,8 +1253,6 @@
 		94F36AC626CA59B300AC30A5 /* PhoneNumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */; };
 		94F7BCE22D2B9ED700BA27D9 /* SwapInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */; };
 		94F7BCE42D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */; };
-		94F952582AE616F40025B995 /* TransferOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952572AE616F40025B995 /* TransferOutViewController.swift */; };
-		94F9525D2AE6174A0025B995 /* TransferOutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F9525C2AE6174A0025B995 /* TransferOutView.xib */; };
 		94F952622AE623B50025B995 /* LegacyTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952612AE623B50025B995 /* LegacyTokenSelectorViewController.swift */; };
 		94F952672AE66A700025B995 /* AmountIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952662AE66A700025B995 /* AmountIntent.swift */; };
 		94FA8FC92644236F006BC715 /* ConversationMessageComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */; };
@@ -2779,8 +2777,6 @@
 		94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberValidator.swift; sourceTree = "<group>"; };
 		94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapInputAccessoryView.swift; sourceTree = "<group>"; };
 		94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapInputAccessoryView.xib; sourceTree = "<group>"; };
-		94F952572AE616F40025B995 /* TransferOutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferOutViewController.swift; sourceTree = "<group>"; };
-		94F9525C2AE6174A0025B995 /* TransferOutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferOutView.xib; sourceTree = "<group>"; };
 		94F952612AE623B50025B995 /* LegacyTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		94F952662AE66A700025B995 /* AmountIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountIntent.swift; sourceTree = "<group>"; };
 		94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationMessageComposer.swift; sourceTree = "<group>"; };
@@ -5089,8 +5085,6 @@
 				946EA0852D4763BD00DBC308 /* AddressInfoInputViewController.swift */,
 				946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */,
 				946EA1132D47DD4000DBC308 /* WithdrawInputAmountViewController.swift */,
-				94F9525C2AE6174A0025B995 /* TransferOutView.xib */,
-				94F952572AE616F40025B995 /* TransferOutViewController.swift */,
 				7CDBA58D28F7B6CB00AC3777 /* TransferSearchViewController.swift */,
 				94B1E55C2C49222100A2349F /* MixinSwapViewController.swift */,
 				946E9E332D40C46D00DBC308 /* SwapTokenSelectorViewController.swift */,
@@ -5724,7 +5718,6 @@
 				9413A4002C367D8D00B655AC /* SwapView.xib in Resources */,
 				7C11E349281BF4BC00D3362B /* ic_time_animation@2x.gif in Resources */,
 				94B9FD9E2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib in Resources */,
-				94F9525D2AE6174A0025B995 /* TransferOutView.xib in Resources */,
 				94A0C8C22C77259E00BDE672 /* AddressReceiversCell.xib in Resources */,
 				7BE5BFAD2338A62900516A00 /* SearchConversationView.xib in Resources */,
 				7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */,
@@ -7215,7 +7208,6 @@
 				94CD471E2BECAE9D00A3DE10 /* InscriptionHashCell.swift in Sources */,
 				7BA41A9324E123F50042ED03 /* MentionToken.swift in Sources */,
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,
-				94F952582AE616F40025B995 /* TransferOutViewController.swift in Sources */,
 				94CDA9892A5E77D000F1CDEE /* AssetComboBoxView.swift in Sources */,
 				E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */,
 				94C56D392C53C954009F3AB8 /* SwapQuoteDraft.swift in Sources */,

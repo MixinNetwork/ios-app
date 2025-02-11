@@ -383,9 +383,12 @@ extension UserProfileViewController {
     @objc func transfer() {
         let user: UserItem = self.user
         let selector = SendTokenSelectorViewController()
-        let navigationController = presentingViewController?.navigationController
         selector.onSelected = { token in
-            let inputAmount = TransferInputAmountViewController(tokenItem: token, receiver: user, progress: nil)
+            let inputAmount = TransferInputAmountViewController(
+                tokenItem: token,
+                receiver: .user(user),
+                progress: nil
+            )
             UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
         }
         dismissAndPresent(selector)

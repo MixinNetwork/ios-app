@@ -1084,20 +1084,80 @@ extension UrlWindow {
             
             let payment: Payment
             switch paymentURL.request {
-            case .notDetermined:
+            case let .notDetermined(assetID, amount):
                 DispatchQueue.main.async {
-                    let transfer: UIViewController
-                    switch destination {
-                    case .user(let user):
-                        transfer = TransferOutViewController(token: nil, to: .contact(user))
-                    case .multisig:
+                    if case .multisig = destination {
                         completion(R.string.localizable.invalid_payment_link())
                         return
-                    case .mainnet(let address):
-                        transfer = TransferOutViewController(token: nil, to: .mainnet(address))
                     }
-                    completion(nil)
-                    UIApplication.homeNavigationController?.pushViewController(transfer, animated: true)
+                    if let assetID {
+                        let token = syncToken(assetID: assetID) { errorDescription in
+                            completion(errorDescription)
+                        }
+                        guard let token else {
+                            return
+                        }
+                        completion(nil)
+                        let inputAmount = TransferInputAmountViewController(
+                            traceID: paymentURL.trace,
+                            tokenItem: token,
+                            receiver: destination,
+                            progress: nil,
+                            note: paymentURL.memo
+                        )
+                        inputAmount.reference = paymentURL.reference
+                        inputAmount.redirection = paymentURL.redirection
+                        UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
+                    } else if let amount {
+                        completion(nil)
+                        let selector = SendTokenSelectorViewController()
+                        selector.onSelected = { token in
+                            let fiatMoneyAmount = amount * token.decimalUSDPrice * Currency.current.decimalRate
+                            let payment = Payment(
+                                traceID: paymentURL.trace,
+                                token: token,
+                                tokenAmount: amount,
+                                fiatMoneyAmount: fiatMoneyAmount,
+                                memo: paymentURL.memo
+                            )
+                            payment.checkPreconditions(
+                                transferTo: destination,
+                                reference: paymentURL.reference,
+                                on: homeContainer
+                            ) { reason in
+                                switch reason {
+                                case .userCancelled, .loggedOut:
+                                    break
+                                case .description(let message):
+                                    showAutoHiddenHud(style: .error, text: message)
+                                }
+                            } onSuccess: { (operation, issues) in
+                                let preview = TransferPreviewViewController(
+                                    issues: issues,
+                                    operation: operation,
+                                    amountDisplay: .byToken,
+                                    redirection: paymentURL.redirection
+                                )
+                                UIApplication.homeNavigationController?.present(preview, animated: true)
+                            }
+                        }
+                        homeContainer.present(selector, animated: true)
+                    } else {
+                        completion(nil)
+                        let selector = SendTokenSelectorViewController()
+                        selector.onSelected = { token in
+                            let inputAmount = TransferInputAmountViewController(
+                                tokenItem: token,
+                                receiver: destination,
+                                progress: nil,
+                                note: paymentURL.memo
+                            )
+                            inputAmount.reference = paymentURL.reference
+                            inputAmount.redirection = paymentURL.redirection
+                            UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
+                        }
+                        homeContainer.present(selector, animated: true)
+                    }
                 }
                 return
             case let .invoice(invoice):

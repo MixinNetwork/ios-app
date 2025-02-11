@@ -158,9 +158,9 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
         guard let navigation = UIApplication.homeNavigationController else {
             return
         }
-        var viewControllers = navigation.viewControllers
         switch operation.destination {
         case let .user(opponent):
+            var viewControllers = navigation.viewControllers
             if viewControllers.lazy.compactMap({ $0 as? ConversationViewController }).first?.dataSource.ownerUser?.userId == opponent.userId {
                 while (viewControllers.count > 0 && !(viewControllers.last is ConversationViewController)) {
                     viewControllers.removeLast()
@@ -171,16 +171,11 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
                         viewControllers.removeLast()
                     }
                     viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
-                } else if viewControllers.last is TransferOutViewController {
-                    viewControllers.removeLast()
                 }
             }
             navigation.setViewControllers(viewControllers, animated: false)
         case .multisig, .mainnet:
-            if viewControllers.last is TransferOutViewController {
-                viewControllers.removeLast()
-            }
-            navigation.setViewControllers(viewControllers, animated: false)
+            break
         }
     }
     

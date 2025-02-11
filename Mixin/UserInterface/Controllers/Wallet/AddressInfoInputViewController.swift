@@ -274,11 +274,8 @@ extension AddressInfoInputViewController {
     }
     
     private func destination(bip21Unchecked destination: String) -> String {
-        if token.chainID == ChainID.bitcoin,
-           destination.lowercased().hasPrefix("bitcoin:"),
-           let components = URLComponents(string: destination)
-        {
-            components.path
+        if token.chainID == ChainID.bitcoin, let uri = BIP21(string: destination) {
+            uri.destination
         } else {
             destination
         }

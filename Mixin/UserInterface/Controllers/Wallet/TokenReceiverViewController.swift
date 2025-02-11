@@ -108,7 +108,12 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     }
     
     @objc private func continueWithOneTimeAddress(_ sender: StyledButton) {
-        let destination = headerView.trimmedContent
+        let userInput = headerView.trimmedContent
+        let destination = if token.chainID == ChainID.bitcoin {
+            BIP21(string: userInput)?.destination ?? userInput
+        } else {
+            userInput
+        }
         guard !destination.isEmpty else {
             return
         }

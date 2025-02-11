@@ -1044,6 +1044,7 @@
 		9489247F2D572EA200D9BCCB /* TokenReceiverTrayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9489247E2D572EA200D9BCCB /* TokenReceiverTrayView.xib */; };
 		9489249C2D573BA700D9BCCB /* OneTimeAddressValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489249B2D573BA000D9BCCB /* OneTimeAddressValidator.swift */; };
 		948925222D5889CB00D9BCCB /* UserInteractionProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948925212D5889C700D9BCCB /* UserInteractionProgress.swift */; };
+		948926882D5B42D300D9BCCB /* BIP21.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948926872D5B42CF00D9BCCB /* BIP21.swift */; };
 		9489E3A025C5B150000319F8 /* AcknowledgementListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */; };
 		948A85E82D14032700880AAF /* MAONameSearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948A85E72D14032700880AAF /* MAONameSearchResultCell.xib */; };
 		948ACAA02AF38E5B0057D76B /* SnapshotMessageContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */; };
@@ -2571,6 +2572,7 @@
 		9489247E2D572EA200D9BCCB /* TokenReceiverTrayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenReceiverTrayView.xib; sourceTree = "<group>"; };
 		9489249B2D573BA000D9BCCB /* OneTimeAddressValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneTimeAddressValidator.swift; sourceTree = "<group>"; };
 		948925212D5889C700D9BCCB /* UserInteractionProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInteractionProgress.swift; sourceTree = "<group>"; };
+		948926872D5B42CF00D9BCCB /* BIP21.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BIP21.swift; sourceTree = "<group>"; };
 		9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementListViewController.swift; sourceTree = "<group>"; };
 		948A85E72D14032700880AAF /* MAONameSearchResultCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MAONameSearchResultCell.xib; sourceTree = "<group>"; };
 		948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotMessageContentView.xib; sourceTree = "<group>"; };
@@ -5385,6 +5387,7 @@
 				94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */,
 				7C695D55285B25AB0042177C /* SpotlightManager.swift */,
 				942FD9FE2D3B591C004DCC4C /* LocalizedEnum.swift */,
+				948926872D5B42CF00D9BCCB /* BIP21.swift */,
 				948922A02D54FC5A00D9BCCB /* IBANAddress.swift */,
 			);
 			path = Service;
@@ -6634,6 +6637,7 @@
 				9406978725E7F30800E7FDA0 /* PlaylistSlider.swift in Sources */,
 				7BDB4725215A666B008B21F9 /* SignalLoadingViewController.swift in Sources */,
 				7B97124C247EBF9800F5CBE6 /* RingtonePlayer.swift in Sources */,
+				948926882D5B42D300D9BCCB /* BIP21.swift in Sources */,
 				94C93C8C2C94880600A31591 /* BIP32Tests.swift in Sources */,
 				DF87949C207505F4004A1E55 /* TransactionCell.swift in Sources */,
 				7B93CAA5222963120053AE90 /* PhotoInputGridViewController.swift in Sources */,

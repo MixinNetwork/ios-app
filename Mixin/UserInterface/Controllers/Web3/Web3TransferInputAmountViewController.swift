@@ -162,9 +162,6 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                 }
             } catch MixinAPIResponseError.unauthorized {
                 return
-            } catch let error as EthereumClientError {
-                Logger.general.warn(category: "Web3InputAmount", message: "Failed to load fee: \(error)")
-                return
             } catch {
                 Logger.general.debug(category: "Web3InputAmount", message: "\(error)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in

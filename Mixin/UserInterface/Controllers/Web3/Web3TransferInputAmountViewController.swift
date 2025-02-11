@@ -1,4 +1,5 @@
 import UIKit
+import web3
 import MixinServices
 
 final class Web3TransferInputAmountViewController: InputAmountViewController {
@@ -15,7 +16,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         let feeInsufficient = if payment.sendingNativeToken {
             tokenAmount > token.decimalBalance - fee.token
         } else {
-            true // FIXME: Detemine with feeToken.balance
+            false // FIXME: Detemine with feeToken.balance
         }
         if balanceInsufficient {
             return .insufficient(R.string.localizable.insufficient_balance())
@@ -124,9 +125,9 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
             do {
                 let operation = switch payment.chain.kind {
                 case .evm:
-                    try EVMTransferToAddressOperation(payment: payment, decimalAmount: 1)
+                    try EVMTransferToAddressOperation(payment: payment, decimalAmount: 0)
                 case .solana:
-                    try SolanaTransferToAddressOperation(payment: payment, decimalAmount: 1)
+                    try SolanaTransferToAddressOperation(payment: payment, decimalAmount: 0)
                 }
                 let fee = try await operation.loadFee()
                 let title = CurrencyFormatter.localizedString(
@@ -161,7 +162,11 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                 }
             } catch MixinAPIResponseError.unauthorized {
                 return
+            } catch let error as EthereumClientError {
+                Logger.general.warn(category: "Web3InputAmount", message: "Failed to load fee: \(error)")
+                return
             } catch {
+                Logger.general.debug(category: "Web3InputAmount", message: "\(error)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
                     // Check token and address
                     self?.reloadFee(payment: payment)

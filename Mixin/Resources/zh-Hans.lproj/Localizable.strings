@@ -648,6 +648,7 @@
 "invalid_qr_code" = "无效的二维码";
 "invalid_request_body" = "无效的请求";
 "invalid_sdp" = "无效的 SDP";
+"invalid_tag_description" = "地址标签（Tag）必须为非 0 的数字";
 "invalid_width" = "宽度无效";
 "invite" = "邀请";
 "invite_a_friend" = "邀请好友";

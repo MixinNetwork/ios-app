@@ -15,6 +15,8 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     private let progress: UserInteractionProgress?
     private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
     
+    private lazy var tagRegex = try? NSRegularExpression(pattern: "^[0-9]+$")
+    
     private init(token: TokenItem, intent: Intent, inputContent: InputContent) {
         self.token = token
         self.intent = intent
@@ -173,7 +175,13 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                     )
                     navigationController?.pushViewController(next, animated: true)
                 }
-            case let .memo(destination), let .tag(destination):
+            case let .tag(destination):
+                if isTagValid(content) {
+                    fallthrough
+                } else {
+                    reportError(description: R.string.localizable.invalid_tag_description())
+                }
+            case let .memo(destination):
                 let next = AddressInfoInputViewController(
                     token: token,
                     intent: intent,
@@ -189,7 +197,13 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
             switch inputContent {
             case .destination:
                 assertionFailure("Only input memo/tag with this view controller when performing One-Time-Withdraw")
-            case let .memo(destination), let .tag(destination):
+            case let .tag(destination):
+                if isTagValid(content) {
+                    fallthrough
+                } else {
+                    reportError(description: R.string.localizable.invalid_tag_description())
+                }
+            case let .memo(destination):
                 withdraw(destination: destination, tag: content)
             case .label:
                 assertionFailure("Only input memo/tag with this view controller when performing One-Time-Withdraw")
@@ -225,9 +239,9 @@ extension AddressInfoInputViewController: AddressInfoInputHeaderView.Delegate {
     func addressInfoInputHeaderView(_ headerView: AddressInfoInputHeaderView, didUpdateContent content: String) {
         errorDescriptionLabel.isHidden = true
         switch inputContent {
-        case .destination, .label:
+        case .destination, .tag, .label:
             nextButton.isEnabled = !content.isEmpty
-        case .memo, .tag:
+        case .memo:
             break
         }
     }
@@ -293,6 +307,25 @@ extension AddressInfoInputViewController {
         }
     }
     
+    private func isTagValid(_ tag: String) -> Bool {
+        let fullRange = NSRange(tag.startIndex..<tag.endIndex, in: tag)
+        if let tagRegex,
+           tagRegex.rangeOfFirstMatch(in: tag, range: fullRange) == fullRange,
+           let number = Decimal(string: tag, locale: .enUSPOSIX),
+           number != 0
+        {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    private func reportError(description: String) {
+        errorDescriptionLabel.text = description
+        errorDescriptionLabel.isHidden = false
+        nextButton.isEnabled = false
+    }
+    
     private func saveNewAddress(destination: String, tag: String?, label: String) {
         let destination = self.destination(bip21Unchecked: destination)
         let preview = EditAddressPreviewViewController(
@@ -339,8 +372,7 @@ extension AddressInfoInputViewController {
                 return
             }
             self.nextButton.isBusy = false
-            self.errorDescriptionLabel.text = error.localizedDescription
-            self.errorDescriptionLabel.isHidden = false
+            self.reportError(description: error.localizedDescription)
         }
     }
     

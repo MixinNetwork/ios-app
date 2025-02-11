@@ -648,6 +648,7 @@
 "invalid_qr_code" = "無効なQRコード";
 "invalid_request_body" = "無効なリクエストボディ";
 "invalid_sdp" = "無効なSDP";
+"invalid_tag_description" = "Tag must be a non-zero number";
 "invalid_width" = "無効な横幅";
 "invite" = "招待する";
 "invite_a_friend" = "このアプリをシェアする";

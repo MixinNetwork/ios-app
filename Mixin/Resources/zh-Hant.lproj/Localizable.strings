@@ -648,6 +648,7 @@
 "invalid_qr_code" = "無效的二維碼";
 "invalid_request_body" = "無效的請求";
 "invalid_sdp" = "無效的 SDP";
+"invalid_tag_description" = "地址標籤（Tag）必須為非 0 的數字";
 "invalid_width" = "寬度無效";
 "invite" = "邀請";
 "invite_a_friend" = "邀請好友";

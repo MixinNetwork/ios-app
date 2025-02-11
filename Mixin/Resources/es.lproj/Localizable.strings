@@ -648,6 +648,7 @@
 "invalid_qr_code" = "Código QR inválido";
 "invalid_request_body" = "Cuerpo de solicitud inválido";
 "invalid_sdp" = "SDP inválido";
+"invalid_tag_description" = "Tag must be a non-zero number";
 "invalid_width" = "Ancho inválido";
 "invite" = "Invitar";
 "invite_a_friend" = "Invita a un amigo";

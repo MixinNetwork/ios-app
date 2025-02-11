@@ -648,6 +648,7 @@
 "invalid_qr_code" = "Invalid QR-Code";
 "invalid_request_body" = "Invalid request body";
 "invalid_sdp" = "Invalid SDP";
+"invalid_tag_description" = "Tag must be a non-zero number";
 "invalid_width" = "Invalid width";
 "invite" = "Invite";
 "invite_a_friend" = "Invite a Friend";

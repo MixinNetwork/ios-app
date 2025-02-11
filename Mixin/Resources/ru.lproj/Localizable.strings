@@ -648,6 +648,7 @@
 "invalid_qr_code" = "Неверный QR-код";
 "invalid_request_body" = "Неверный текст запроса";
 "invalid_sdp" = "Недействительный SDP";
+"invalid_tag_description" = "Tag must be a non-zero number";
 "invalid_width" = "Недопустимая ширина";
 "invite" = "Пригласить";
 "invite_a_friend" = "Пригласить друга";

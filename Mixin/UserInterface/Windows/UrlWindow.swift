@@ -1090,7 +1090,10 @@ extension UrlWindow {
                         completion(R.string.localizable.invalid_payment_link())
                         return
                     }
-                    if let assetID {
+                    switch (assetID, amount) {
+                    case let (.none, .some(amount)):
+                        completion(R.string.localizable.invalid_payment_link())
+                    case let (.some(assetID), .none):
                         let token = syncToken(assetID: assetID) { errorDescription in
                             completion(errorDescription)
                         }
@@ -1108,41 +1111,8 @@ extension UrlWindow {
                         inputAmount.reference = paymentURL.reference
                         inputAmount.redirection = paymentURL.redirection
                         UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
-                    } else if let amount {
-                        completion(nil)
-                        let selector = SendTokenSelectorViewController()
-                        selector.onSelected = { token in
-                            let fiatMoneyAmount = amount * token.decimalUSDPrice * Currency.current.decimalRate
-                            let payment = Payment(
-                                traceID: paymentURL.trace,
-                                token: token,
-                                tokenAmount: amount,
-                                fiatMoneyAmount: fiatMoneyAmount,
-                                memo: paymentURL.memo
-                            )
-                            payment.checkPreconditions(
-                                transferTo: destination,
-                                reference: paymentURL.reference,
-                                on: homeContainer
-                            ) { reason in
-                                switch reason {
-                                case .userCancelled, .loggedOut:
-                                    break
-                                case .description(let message):
-                                    showAutoHiddenHud(style: .error, text: message)
-                                }
-                            } onSuccess: { (operation, issues) in
-                                let preview = TransferPreviewViewController(
-                                    issues: issues,
-                                    operation: operation,
-                                    amountDisplay: .byToken,
-                                    redirection: paymentURL.redirection
-                                )
-                                UIApplication.homeNavigationController?.present(preview, animated: true)
-                            }
-                        }
-                        homeContainer.present(selector, animated: true)
-                    } else {
+                    case (.none, .none):
+                        // Receive money QR code
                         completion(nil)
                         let selector = SendTokenSelectorViewController()
                         selector.onSelected = { token in
@@ -1157,6 +1127,9 @@ extension UrlWindow {
                             UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
                         }
                         homeContainer.present(selector, animated: true)
+                    case (.some, .some):
+                        completion(nil)
+                        assertionFailure("This case should be `prefilled`")
                     }
                 }
                 return

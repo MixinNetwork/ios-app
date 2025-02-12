@@ -355,12 +355,11 @@ extension AddressInfoInputViewController {
             assetID: token.assetID,
             destination: destination,
             tag: tag
-        ) { [weak self] in
+        ) { [weak self] (address) in
             guard let self else {
                 return
             }
             self.nextButton.isBusy = false
-            let address = TemporaryAddress(destination: destination, tag: tag)
             let next = WithdrawInputAmountViewController(
                 tokenItem: self.token,
                 destination: .temporary(address),

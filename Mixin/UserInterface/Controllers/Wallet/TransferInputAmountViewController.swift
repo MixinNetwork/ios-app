@@ -14,6 +14,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
     private let tokenItem: TokenItem
     private let receiver: Payment.TransferDestination
     private let progress: UserInteractionProgress?
+    private let maxNoteDataCount = 200
     
     private var note: String {
         didSet {
@@ -179,6 +180,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
         let input = UIAlertController(title: R.string.localizable.add_a_note(), message: nil, preferredStyle: .alert)
         input.addTextField { [note] textField in
             textField.text = note
+            textField.delegate = self
         }
         input.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
         input.addAction(UIAlertAction(title: R.string.localizable.save(), style: .default, handler: { [unowned input] _ in
@@ -192,6 +194,20 @@ final class TransferInputAmountViewController: InputAmountViewController {
             }
         }))
         present(input, animated: true)
+    }
+    
+}
+
+extension TransferInputAmountViewController: UITextFieldDelegate {
+    
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        let text = (textField.text ?? "") as NSString
+        let newText = text.replacingCharacters(in: range, with: string)
+        return newText.utf8.count <= maxNoteDataCount
     }
     
 }

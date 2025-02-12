@@ -1253,7 +1253,6 @@
 		94F36AC626CA59B300AC30A5 /* PhoneNumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */; };
 		94F7BCE22D2B9ED700BA27D9 /* SwapInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */; };
 		94F7BCE42D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */; };
-		94F952622AE623B50025B995 /* LegacyTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952612AE623B50025B995 /* LegacyTokenSelectorViewController.swift */; };
 		94F952672AE66A700025B995 /* AmountIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952662AE66A700025B995 /* AmountIntent.swift */; };
 		94FA8FC92644236F006BC715 /* ConversationMessageComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */; };
 		94FB8E062D1A92CF002DCA20 /* TokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB8E042D1A92CF002DCA20 /* TokenSelectorViewController.swift */; };
@@ -2777,7 +2776,6 @@
 		94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberValidator.swift; sourceTree = "<group>"; };
 		94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapInputAccessoryView.swift; sourceTree = "<group>"; };
 		94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapInputAccessoryView.xib; sourceTree = "<group>"; };
-		94F952612AE623B50025B995 /* LegacyTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		94F952662AE66A700025B995 /* AmountIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountIntent.swift; sourceTree = "<group>"; };
 		94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationMessageComposer.swift; sourceTree = "<group>"; };
 		94FB8E042D1A92CF002DCA20 /* TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenSelectorViewController.swift; sourceTree = "<group>"; };
@@ -4304,7 +4302,6 @@
 				94F35B862D2818B2001BCAE7 /* InvoicePreviewViewController.swift */,
 				94B6EDFD2B707F15001DCC50 /* WithdrawPreviewViewController.swift */,
 				94EE1DC62B721E4800C32DD4 /* MultisigPreviewViewController.swift */,
-				94F952612AE623B50025B995 /* LegacyTokenSelectorViewController.swift */,
 				946B9FBA2B0493E800DB4DC1 /* WalletHintView.xib */,
 				946B9FB92B0493E800DB4DC1 /* WalletHintViewController.swift */,
 				942D90EF2B05F8FE00E81358 /* WithdrawFeeCell.xib */,
@@ -6507,7 +6504,6 @@
 				94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */,
 				942F4729299CDF1800528759 /* URLSessionWebSocketFactory.swift in Sources */,
 				7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */,
-				94F952622AE623B50025B995 /* LegacyTokenSelectorViewController.swift in Sources */,
 				94ECCCAB261A029F004E9E2A /* Window.swift in Sources */,
 				5292D68E2BEB8F3200734F14 /* Web3Transaction+Localize.swift in Sources */,
 				7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */,

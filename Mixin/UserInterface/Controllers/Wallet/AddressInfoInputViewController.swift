@@ -168,10 +168,11 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
             switch inputContent {
             case .destination:
                 if !content.isEmpty {
+                    let destination = self.destination(bip21Unchecked: content)
                     let next = AddressInfoInputViewController(
                         token: token,
                         intent: intent,
-                        inputContent: InputContent(token: token, destination: content)
+                        inputContent: InputContent(token: token, destination: destination)
                     )
                     navigationController?.pushViewController(next, animated: true)
                 }
@@ -327,7 +328,6 @@ extension AddressInfoInputViewController {
     }
     
     private func saveNewAddress(destination: String, tag: String?, label: String) {
-        let destination = self.destination(bip21Unchecked: destination)
         let preview = EditAddressPreviewViewController(
             token: token,
             label: label,

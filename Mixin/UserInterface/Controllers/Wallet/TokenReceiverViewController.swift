@@ -127,7 +127,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
                 return
             }
             sender.isBusy = true
-            OneTimeAddressValidator.validateAddressAndLoadFee(
+            AddressValidator.validateAddressAndLoadFee(
                 assetID: token.assetID,
                 destination: destination,
                 tag: nil
@@ -175,7 +175,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
             navigationController?.pushViewController(nextInput, animated: true)
         } else {
             sender.isBusy = true
-            OneTimeAddressValidator.validate(
+            AddressValidator.validate(
                 assetID: token.assetID,
                 destination: destination,
                 tag: nil

@@ -126,9 +126,13 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         switch inputContent {
         case .destination:
             break
-        case let .memo(destination), let .tag(destination), let .label(destination, _):
+        case let .memo(destination), let .tag(destination):
             headerView.addAddressView { label in
                 label.text = destination
+            }
+        case let .label(address):
+            headerView.addAddressView { label in
+                label.text = address.destination
             }
         }
         switch inputContent {
@@ -167,14 +171,32 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         case .newAddress:
             switch inputContent {
             case .destination:
-                if !content.isEmpty {
-                    let destination = self.destination(bip21Unchecked: content)
-                    let next = AddressInfoInputViewController(
-                        token: token,
-                        intent: intent,
-                        inputContent: InputContent(token: token, destination: destination)
-                    )
-                    navigationController?.pushViewController(next, animated: true)
+                let destination = self.destination(bip21Unchecked: content)
+                if !destination.isEmpty {
+                    let nextInputContent = InputContent(token: token, destination: destination)
+                    switch nextInputContent {
+                    case .destination, .memo, .tag:
+                        pushNext(inputContent: nextInputContent)
+                    case let .label(address):
+                        nextButton.isBusy = true
+                        AddressValidator.validate(
+                            assetID: token.assetID,
+                            destination: address.destination,
+                            tag: address.tag
+                        ) { [weak self] address in
+                            guard let self else {
+                                return
+                            }
+                            self.nextButton.isBusy = false
+                            self.pushNext(inputContent: .label(address))
+                        } onFailure: { [weak self] error in
+                            guard let self else {
+                                return
+                            }
+                            self.nextButton.isBusy = false
+                            self.reportError(description: R.string.localizable.invalid_address())
+                        }
+                    }
                 }
             case let .tag(destination):
                 if isTagValid(content) {
@@ -183,15 +205,27 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                     reportError(description: R.string.localizable.invalid_tag_description())
                 }
             case let .memo(destination):
-                let next = AddressInfoInputViewController(
-                    token: token,
-                    intent: intent,
-                    inputContent: .label(destination: destination, tag: content)
-                )
-                navigationController?.pushViewController(next, animated: true)
-            case let .label(destination, tag):
+                nextButton.isBusy = true
+                AddressValidator.validate(
+                    assetID: token.assetID,
+                    destination: destination,
+                    tag: content
+                ) { [weak self] address in
+                    guard let self else {
+                        return
+                    }
+                    self.nextButton.isBusy = false
+                    self.pushNext(inputContent: .label(address))
+                } onFailure: { [weak self] error in
+                    guard let self else {
+                        return
+                    }
+                    self.nextButton.isBusy = false
+                    self.reportError(description: R.string.localizable.invalid_address())
+                }
+            case let .label(address):
                 if !content.isEmpty {
-                    saveNewAddress(destination: destination, tag: tag, label: content)
+                    saveNewAddress(address: address, label: content)
                 }
             }
         case .oneTimeWithdraw:
@@ -217,6 +251,15 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         view.layoutIfNeeded()
     }
     
+    private func pushNext(inputContent: InputContent) {
+        let next = AddressInfoInputViewController(
+            token: token,
+            intent: intent,
+            inputContent: inputContent
+        )
+        navigationController?.pushViewController(next, animated: true)
+    }
+    
 }
 
 extension AddressInfoInputViewController: HomeNavigationController.NavigationBarStyling {
@@ -240,10 +283,10 @@ extension AddressInfoInputViewController: AddressInfoInputHeaderView.Delegate {
     func addressInfoInputHeaderView(_ headerView: AddressInfoInputHeaderView, didUpdateContent content: String) {
         errorDescriptionLabel.isHidden = true
         switch inputContent {
-        case .destination, .tag, .label:
+        case .destination, .label:
             nextButton.isEnabled = !content.isEmpty
-        case .memo:
-            break
+        case .memo, .tag:
+            nextButton.isEnabled = true
         }
     }
     
@@ -283,7 +326,7 @@ extension AddressInfoInputViewController {
         case destination
         case memo(destination: String)
         case tag(destination: String)
-        case label(destination: String, tag: String?)
+        case label(TemporaryAddress)
         
         init(token: TokenItem, destination: String) {
             switch token.memoPossibility {
@@ -294,7 +337,8 @@ extension AddressInfoInputViewController {
                     self = .memo(destination: destination)
                 }
             case .negative:
-                self = .label(destination: destination, tag: nil)
+                let address = TemporaryAddress(destination: destination, tag: "")
+                self = .label(address)
             }
         }
         
@@ -327,12 +371,12 @@ extension AddressInfoInputViewController {
         nextButton.isEnabled = false
     }
     
-    private func saveNewAddress(destination: String, tag: String?, label: String) {
+    private func saveNewAddress(address: TemporaryAddress, label: String) {
         let preview = EditAddressPreviewViewController(
             token: token,
             label: label,
-            destination: destination,
-            tag: tag ?? "",
+            destination: address.destination,
+            tag: address.tag,
             action: .add
         )
         preview.onSavingSuccess = {
@@ -351,7 +395,7 @@ extension AddressInfoInputViewController {
     private func withdraw(destination: String, tag: String) {
         nextButton.isBusy = true
         let destination = self.destination(bip21Unchecked: destination)
-        OneTimeAddressValidator.validate(
+        AddressValidator.validate(
             assetID: token.assetID,
             destination: destination,
             tag: tag

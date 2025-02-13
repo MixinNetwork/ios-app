@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-enum OneTimeAddressValidator {
+enum AddressValidator {
     
     enum ValidationError: Error, LocalizedError {
         

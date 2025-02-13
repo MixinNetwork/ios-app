@@ -7,18 +7,18 @@ final class TransferInputAmountViewController: InputAmountViewController {
         tokenItem
     }
     
-    private let tokenItem: TokenItem
-    private let receiver: UserItem
-    private let progress: UserInteractionProgress?
-    private let traceID = UUID().uuidString.lowercased()
+    var reference: String?
+    var redirection: URL?
     
-    private var note: String? {
+    private let traceID: String
+    private let tokenItem: TokenItem
+    private let receiver: Payment.TransferDestination
+    private let progress: UserInteractionProgress?
+    private let maxNoteDataCount = 200
+    
+    private var note: String {
         didSet {
-            changeNoteButton.configuration?.attributedTitle = if let note {
-                AttributedString(note, attributes: noteAttributes)
-            } else {
-                AttributedString(R.string.localizable.add_a_note(), attributes: addNoteAttributes)
-            }
+            updateChangeNoteButton()
         }
     }
     
@@ -38,10 +38,18 @@ final class TransferInputAmountViewController: InputAmountViewController {
         return container
     }
     
-    init(tokenItem: TokenItem, receiver: UserItem, progress: UserInteractionProgress?) {
+    init(
+        traceID: String = UUID().uuidString.lowercased(),
+        tokenItem: TokenItem,
+        receiver: Payment.TransferDestination,
+        progress: UserInteractionProgress?,
+        note: String = ""
+    ) {
+        self.traceID = traceID
         self.tokenItem = tokenItem
         self.receiver = receiver
         self.progress = progress
+        self.note = note
         super.init()
     }
     
@@ -94,6 +102,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
         noteStackView.snp.makeConstraints { make in
             make.width.equalTo(view.snp.width).offset(-56)
         }
+        updateChangeNoteButton()
         
         tokenIconView.setIcon(token: tokenItem)
         tokenNameLabel.text = tokenItem.name
@@ -106,7 +115,6 @@ final class TransferInputAmountViewController: InputAmountViewController {
         }
         reviewButton.isBusy = true
         
-        let memo = note ?? ""
         let traceID = self.traceID
         let amountIntent = self.amountIntent
         
@@ -115,7 +123,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
             token: tokenItem,
             tokenAmount: tokenAmount,
             fiatMoneyAmount: fiatMoneyAmount,
-            memo: memo
+            memo: note
         )
         let onPreconditonFailure = { (reason: PaymentPreconditionFailureReason) in
             self.reviewButton.isBusy = false
@@ -128,24 +136,24 @@ final class TransferInputAmountViewController: InputAmountViewController {
         }
         
         payment.checkPreconditions(
-            transferTo: .user(receiver),
-            reference: nil,
+            transferTo: receiver,
+            reference: reference,
             on: self,
             onFailure: onPreconditonFailure
-        ) { (operation, issues) in
+        ) { [redirection] (operation, issues) in
             self.reviewButton.isBusy = false
             let preview = TransferPreviewViewController(
                 issues: issues,
                 operation: operation,
                 amountDisplay: amountIntent,
-                redirection: nil
+                redirection: redirection
             )
             self.present(preview, animated: true)
         }
     }
     
     @objc private func changeNote(_ sender: UIButton) {
-        if note == nil {
+        if note.isEmpty {
             presentNoteEditor()
         } else {
             let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -153,10 +161,18 @@ final class TransferInputAmountViewController: InputAmountViewController {
                 self.presentNoteEditor()
             }))
             sheet.addAction(UIAlertAction(title: R.string.localizable.delete_note(), style: .destructive, handler: { _ in
-                self.note = nil
+                self.note = ""
             }))
             sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
             present(sheet, animated: true)
+        }
+    }
+    
+    private func updateChangeNoteButton() {
+        changeNoteButton.configuration?.attributedTitle = if note.isEmpty {
+            AttributedString(R.string.localizable.add_a_note(), attributes: addNoteAttributes)
+        } else {
+            AttributedString(note, attributes: noteAttributes)
         }
     }
     
@@ -164,6 +180,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
         let input = UIAlertController(title: R.string.localizable.add_a_note(), message: nil, preferredStyle: .alert)
         input.addTextField { [note] textField in
             textField.text = note
+            textField.delegate = self
         }
         input.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
         input.addAction(UIAlertAction(title: R.string.localizable.save(), style: .default, handler: { [unowned input] _ in
@@ -173,10 +190,24 @@ final class TransferInputAmountViewController: InputAmountViewController {
             if let note = textField.text, !note.isEmpty {
                 self.note = note
             } else {
-                self.note = nil
+                self.note = ""
             }
         }))
         present(input, animated: true)
+    }
+    
+}
+
+extension TransferInputAmountViewController: UITextFieldDelegate {
+    
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        let text = (textField.text ?? "") as NSString
+        let newText = text.replacingCharacters(in: range, with: string)
+        return newText.utf8.count <= maxNoteDataCount
     }
     
 }

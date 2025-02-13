@@ -109,42 +109,100 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
     @objc private func continueWithOneTimeAddress(_ sender: StyledButton) {
         let userInput = headerView.trimmedContent
-        let destination = if token.chainID == ChainID.bitcoin {
-            BIP21(string: userInput)?.destination ?? userInput
+        let destination: String
+        let amount: Decimal?
+        if token.chainID == ChainID.bitcoin, let uri = BIP21(string: userInput) {
+            destination = uri.destination
+            amount = uri.amount
         } else {
-            userInput
+            destination = userInput
+            amount = nil
         }
         guard !destination.isEmpty else {
             return
         }
-        if let nextInput = AddressInfoInputViewController.oneTimeWithdraw(token: token, destination: destination) {
-            navigationController?.pushViewController(nextInput, animated: true)
-        } else {
+        if let amount {
+            guard amount <= token.decimalBalance else {
+                showError(description: R.string.localizable.insufficient_balance())
+                return
+            }
             sender.isBusy = true
-            OneTimeAddressValidator.validate(
+            AddressValidator.validateAddressAndLoadFee(
                 assetID: token.assetID,
                 destination: destination,
                 tag: nil
-            ) { [weak sender, weak self] in
+            ) { [weak sender, weak self, token] (address, fee) in
+                guard let self else {
+                    return
+                }
+                let fiatMoneyAmount = amount * token.decimalUSDPrice
+                let payment = Payment(
+                    traceID: UUID().uuidString.lowercased(),
+                    token: token,
+                    tokenAmount: amount,
+                    fiatMoneyAmount: fiatMoneyAmount,
+                    memo: ""
+                )
+                payment.checkPreconditions(
+                    withdrawTo: .temporary(address),
+                    fee: fee,
+                    on: self
+                ) { reason in
+                    sender?.isBusy = false
+                    switch reason {
+                    case .userCancelled, .loggedOut:
+                        break
+                    case .description(let message):
+                        self.showError(description: message)
+                    }
+                } onSuccess: { (operation, issues) in
+                    sender?.isBusy = false
+                    let preview = WithdrawPreviewViewController(
+                        issues: issues,
+                        operation: operation,
+                        amountDisplay: .byToken,
+                        withdrawalTokenAmount: payment.tokenAmount,
+                        withdrawalFiatMoneyAmount: payment.fiatMoneyAmount,
+                        addressLabel: nil
+                    )
+                    self.present(preview, animated: true)
+                }
+            } onFailure: { [weak sender, weak self] error in
+                sender?.isBusy = false
+                self?.showError(description: error.localizedDescription)
+            }
+        } else if let nextInput = AddressInfoInputViewController.oneTimeWithdraw(token: token, destination: destination) {
+            navigationController?.pushViewController(nextInput, animated: true)
+        } else {
+            sender.isBusy = true
+            AddressValidator.validate(
+                assetID: token.assetID,
+                destination: destination,
+                tag: nil
+            ) { [weak sender, weak self] (address) in
                 sender?.isBusy = false
                 guard let self else {
                     return
                 }
-                let address = TemporaryAddress(destination: destination, tag: "")
                 let inputAmount = WithdrawInputAmountViewController(
                     tokenItem: self.token,
                     destination: .temporary(address),
                     progress: .init(currentStep: 2, totalStepCount: 2)
                 )
                 self.navigationController?.pushViewController(inputAmount, animated: true)
-            } onFailure: { [weak sender, trayView] error in
+            } onFailure: { [weak sender, weak self] error in
                 sender?.isBusy = false
-                if let label = trayView?.errorDescriptionLabel {
-                    label.text = error.localizedDescription
-                    label.isHidden = false
-                }
+                self?.showError(description: error.localizedDescription)
             }
         }
+    }
+    
+    private func showError(description: String) {
+        guard let label = trayView?.errorDescriptionLabel else {
+            return
+        }
+        label.text = description
+        label.isHidden = false
     }
     
 }
@@ -199,7 +257,7 @@ extension TokenReceiverViewController: UITableViewDelegate {
                 self.dismiss(animated: true) {
                     let inputAmount = TransferInputAmountViewController(
                         tokenItem: token,
-                        receiver: user,
+                        receiver: .user(user),
                         progress: .init(currentStep: 2, totalStepCount: 2)
                     )
                     self.navigationController?.pushViewController(inputAmount, animated: true)

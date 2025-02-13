@@ -329,13 +329,13 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                             viewControllers.removeLast()
                         }
                         viewControllers.append(ConversationViewController.instance(ownerUser: opponent))
-                    } else if viewControllers.last is TransferOutViewController {
+                    } else if viewControllers.last is TransferInputAmountViewController {
                         viewControllers.removeLast()
                     }
                 }
                 navigation.setViewControllers(viewControllers, animated: false)
             case .multisig, .mainnet:
-                if viewControllers.last is TransferOutViewController {
+                if viewControllers.last is TransferInputAmountViewController {
                     viewControllers.removeLast()
                 }
                 navigation.setViewControllers(viewControllers, animated: false)

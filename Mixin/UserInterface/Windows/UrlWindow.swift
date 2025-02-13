@@ -1084,20 +1084,53 @@ extension UrlWindow {
             
             let payment: Payment
             switch paymentURL.request {
-            case .notDetermined:
+            case let .notDetermined(assetID, amount):
                 DispatchQueue.main.async {
-                    let transfer: UIViewController
-                    switch destination {
-                    case .user(let user):
-                        transfer = TransferOutViewController(token: nil, to: .contact(user))
-                    case .multisig:
+                    if case .multisig = destination {
                         completion(R.string.localizable.invalid_payment_link())
                         return
-                    case .mainnet(let address):
-                        transfer = TransferOutViewController(token: nil, to: .mainnet(address))
                     }
-                    completion(nil)
-                    UIApplication.homeNavigationController?.pushViewController(transfer, animated: true)
+                    switch (assetID, amount) {
+                    case let (.none, .some(amount)):
+                        completion(R.string.localizable.invalid_payment_link())
+                    case let (.some(assetID), .none):
+                        let token = syncToken(assetID: assetID) { errorDescription in
+                            completion(errorDescription)
+                        }
+                        guard let token else {
+                            return
+                        }
+                        completion(nil)
+                        let inputAmount = TransferInputAmountViewController(
+                            traceID: paymentURL.trace,
+                            tokenItem: token,
+                            receiver: destination,
+                            progress: nil,
+                            note: paymentURL.memo
+                        )
+                        inputAmount.reference = paymentURL.reference
+                        inputAmount.redirection = paymentURL.redirection
+                        UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
+                    case (.none, .none):
+                        // Receive money QR code
+                        completion(nil)
+                        let selector = SendTokenSelectorViewController()
+                        selector.onSelected = { token in
+                            let inputAmount = TransferInputAmountViewController(
+                                tokenItem: token,
+                                receiver: destination,
+                                progress: nil,
+                                note: paymentURL.memo
+                            )
+                            inputAmount.reference = paymentURL.reference
+                            inputAmount.redirection = paymentURL.redirection
+                            UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
+                        }
+                        homeContainer.present(selector, animated: true)
+                    case (.some, .some):
+                        completion(nil)
+                        assertionFailure("This case should be `prefilled`")
+                    }
                 }
                 return
             case let .invoice(invoice):

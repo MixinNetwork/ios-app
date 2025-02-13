@@ -1298,7 +1298,11 @@ class ConversationViewController: UIViewController {
         }
         let selector = SendTokenSelectorViewController()
         selector.onSelected = { token in
-            let inputAmount = TransferInputAmountViewController(tokenItem: token, receiver: ownerUser, progress: nil)
+            let inputAmount = TransferInputAmountViewController(
+                tokenItem: token,
+                receiver: .user(ownerUser),
+                progress: nil
+            )
             self.navigationController?.pushViewController(inputAmount, animated: true)
         }
         present(selector, animated: true)

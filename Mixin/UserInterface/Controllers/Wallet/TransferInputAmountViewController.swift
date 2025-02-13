@@ -1,4 +1,5 @@
 import UIKit
+import SDWebImage
 import MixinServices
 
 final class TransferInputAmountViewController: InputAmountViewController {
@@ -258,7 +259,7 @@ extension TransferInputAmountViewController {
             }
             
             if let badgeImage = user.badgeImage {
-                let badgeImageView = UIImageView(frame: iconFrame)
+                let badgeImageView = SDAnimatedImageView(frame: iconFrame)
                 badgeImageView.image = badgeImage
                 userStackView.addArrangedSubview(badgeImageView)
                 badgeImageView.snp.makeConstraints { make in

@@ -53,11 +53,16 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = R.string.localizable.send()
-        navigationItem.titleView = NavigationTitleView(
-            title: R.string.localizable.send(),
-            subtitle: payment.toAddressCompactRepresentation
-        )
+        let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
+        switch payment.toType {
+        case .mixinWallet:
+            titleView.subtitle = R.string.localizable.mixin_wallet()
+            titleView.subtitleStyle = .label(backgroundColor: UIColor(displayP3RgbValue: 0x8CB3FF))
+        case .arbitrary:
+            titleView.subtitle = payment.toAddressCompactRepresentation
+            titleView.subtitleStyle = .plain
+        }
+        navigationItem.titleView = titleView
         tokenIconView.setIcon(web3Token: payment.token)
         tokenNameLabel.text = payment.token.name
         tokenBalanceLabel.text = payment.token.localizedBalanceWithSymbol

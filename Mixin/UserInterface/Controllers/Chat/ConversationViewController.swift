@@ -1300,8 +1300,7 @@ class ConversationViewController: UIViewController {
         selector.onSelected = { token in
             let inputAmount = TransferInputAmountViewController(
                 tokenItem: token,
-                receiver: .user(ownerUser),
-                progress: nil
+                receiver: .user(ownerUser)
             )
             self.navigationController?.pushViewController(inputAmount, animated: true)
         }

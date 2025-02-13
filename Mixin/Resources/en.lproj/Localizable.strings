@@ -738,6 +738,7 @@
 "mixin_messenger_desktop" = "Mixin Messenger Desktop";
 "mixin_server_encounters_errors" = "Mixin server encounters errors";
 "mixin_support" = "Mixin Support";
+"mixin_wallet" = "Mixin Wallet";
 "mnemonic_phrase" = "Mnemonic Phrase";
 "mnemonic_phrase_instruction" = "You can log in to your account using the mnemonic phrase. The current mnemonic phrase is linked to a key shard of the MPC wallet, with the complete key existing only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "mnemonic_phrase_instruction_1" = "The 13 mnemonic phrases generated when creating an account are intended only for Mixin Network-related products.";

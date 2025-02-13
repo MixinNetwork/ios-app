@@ -13,7 +13,6 @@ final class TransferInputAmountViewController: InputAmountViewController {
     private let traceID: String
     private let tokenItem: TokenItem
     private let receiver: Payment.TransferDestination
-    private let progress: UserInteractionProgress?
     private let maxNoteDataCount = 200
     
     private var note: String {
@@ -42,13 +41,11 @@ final class TransferInputAmountViewController: InputAmountViewController {
         traceID: String = UUID().uuidString.lowercased(),
         tokenItem: TokenItem,
         receiver: Payment.TransferDestination,
-        progress: UserInteractionProgress?,
         note: String = ""
     ) {
         self.traceID = traceID
         self.tokenItem = tokenItem
         self.receiver = receiver
-        self.progress = progress
         self.note = note
         super.init()
     }
@@ -60,13 +57,16 @@ final class TransferInputAmountViewController: InputAmountViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let progress {
-            navigationItem.titleView = NavigationTitleView(
-                title: R.string.localizable.send(),
-                subtitle: progress.description
+        navigationItem.titleView = switch receiver {
+        case .user(let user):
+            UserNavigationTitleView(user: user)
+        case .multisig(_, let users):
+            MultisigNavigationTitleView(users: users)
+        case .mainnet(let address):
+            NavigationTitleView(
+                title: R.string.localizable.send_to_title(),
+                subtitle: Address.compactRepresentation(of: address)
             )
-        } else {
-            title = R.string.localizable.send()
         }
         
         let noteStackView = {
@@ -208,6 +208,137 @@ extension TransferInputAmountViewController: UITextFieldDelegate {
         let text = (textField.text ?? "") as NSString
         let newText = text.replacingCharacters(in: range, with: string)
         return newText.utf8.count <= maxNoteDataCount
+    }
+    
+}
+
+extension TransferInputAmountViewController {
+    
+    private final class UserNavigationTitleView: UIStackView {
+        
+        init(user: UserItem) {
+            super.init(frame: .zero)
+            
+            axis = .vertical
+            distribution = .fill
+            alignment = .center
+            spacing = 2
+            
+            let titleLabel = UILabel()
+            titleLabel.textColor = R.color.text()
+            titleLabel.text = R.string.localizable.send_to_title()
+            titleLabel.setFont(
+                scaledFor: .systemFont(ofSize: 16, weight: .medium),
+                adjustForContentSize: true
+            )
+            addArrangedSubview(titleLabel)
+            
+            let iconFrame = CGRect(x: 0, y: 0, width: 16, height: 16)
+            
+            let avatarImageView = AvatarImageView(frame: iconFrame)
+            avatarImageView.titleFontSize = 9
+            
+            let usernameLabel = UILabel()
+            usernameLabel.font = .preferredFont(forTextStyle: .caption1)
+            usernameLabel.adjustsFontForContentSizeCategory = true
+            usernameLabel.textColor = R.color.text_tertiary()
+            usernameLabel.text = user.fullName
+            usernameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            
+            let userStackView = UIStackView(arrangedSubviews: [
+                avatarImageView, usernameLabel
+            ])
+            userStackView.axis = .horizontal
+            userStackView.distribution = .fill
+            userStackView.alignment = .center
+            userStackView.spacing = 6
+            addArrangedSubview(userStackView)
+            avatarImageView.snp.makeConstraints { make in
+                make.width.height.equalTo(16)
+            }
+            
+            if let badgeImage = user.badgeImage {
+                let badgeImageView = UIImageView(frame: iconFrame)
+                badgeImageView.image = badgeImage
+                userStackView.addArrangedSubview(badgeImageView)
+                badgeImageView.snp.makeConstraints { make in
+                    make.width.height.equalTo(16)
+                }
+            }
+            
+            avatarImageView.setImage(with: user)
+        }
+        
+        required init(coder: NSCoder) {
+            fatalError("Storyboard/Xib not supported")
+        }
+        
+    }
+    
+    private final class MultisigNavigationTitleView: UIStackView {
+        
+        init(users: [UserItem]) {
+            assert(users.count > 1)
+            super.init(frame: .zero)
+            
+            axis = .vertical
+            distribution = .fill
+            alignment = .center
+            spacing = 2
+            
+            let titleLabel = UILabel()
+            titleLabel.textColor = R.color.text()
+            titleLabel.text = R.string.localizable.send_to_title()
+            titleLabel.setFont(
+                scaledFor: .systemFont(ofSize: 16, weight: .medium),
+                adjustForContentSize: true
+            )
+            addArrangedSubview(titleLabel)
+            
+            let iconsStackView = UIStackView()
+            let iconHeight: CGFloat = 18
+            let iconFrame = CGRect(x: 0, y: 0, width: 18, height: 18)
+            let maxIconCount = 4
+            let visibleUserCount = users.count > maxIconCount ? maxIconCount - 1 : users.count
+            for user in users.prefix(visibleUserCount) {
+                let view = StackedIconWrapperView<AvatarImageView>(margin: 1, frame: iconFrame)
+                view.backgroundColor = .clear
+                view.iconView.titleFontSize = 9
+                view.iconView.setImage(with: user)
+                iconsStackView.addArrangedSubview(view)
+            }
+            let invisibleUserCount = users.count - visibleUserCount
+            if invisibleUserCount > 0 {
+                let view = StackedIconWrapperView<UILabel>(margin: 1, frame: iconFrame)
+                view.backgroundColor = .clear
+                let label = view.iconView
+                label.backgroundColor = R.color.button_background_disabled()
+                label.textColor = .white
+                label.font = .systemFont(ofSize: 8)
+                label.textAlignment = .center
+                label.minimumScaleFactor = 0.1
+                label.layer.cornerRadius = 8
+                label.layer.masksToBounds = true
+                label.text = "+\(invisibleUserCount)"
+                iconsStackView.addArrangedSubview(view)
+            }
+            for (index, view) in iconsStackView.arrangedSubviews.enumerated() {
+                let multiplier = index == iconsStackView.arrangedSubviews.count - 1 ? 1 : 0.5
+                view.snp.makeConstraints { make in
+                    make.width.equalTo(view.snp.height)
+                        .multipliedBy(multiplier)
+                }
+            }
+            addArrangedSubview(iconsStackView)
+            iconsStackView.snp.makeConstraints { make in
+                make.height.equalTo(iconHeight)
+            }
+        }
+        
+        required init(coder: NSCoder) {
+            fatalError("Storyboard/Xib not supported")
+        }
+        
     }
     
 }

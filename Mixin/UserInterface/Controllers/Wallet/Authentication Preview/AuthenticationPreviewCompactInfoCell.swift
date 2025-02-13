@@ -69,7 +69,7 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
         } else {
             label = InsetLabel()
             label.contentInset = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
-            label.backgroundColor = UIColor(rgbValue: 0x8DCC99)
+            label.backgroundColor = R.color.address_label()
             label.textColor = .white
             label.setFont(scaledFor: .systemFont(ofSize: 12), adjustForContentSize: true)
             label.numberOfLines = 1

@@ -738,6 +738,7 @@
 "mixin_messenger_desktop" = "Mixin Messenger 桌面";
 "mixin_server_encounters_errors" = "服务器出错，请稍后重试";
 "mixin_support" = "Mixin 客服";
+"mixin_wallet" = "Mixin 钱包";
 "mnemonic_phrase" = "助记词";
 "mnemonic_phrase_instruction" = "你可以通过助记词登录你的账号，当前助记词已关联到 MPC 钱包的密钥分片，完整的密钥只存在当前设备的 TEE 安全环境中，阅读文档以了解%@。";
 "mnemonic_phrase_instruction_1" = "创建账号生成的 13 个助记词仅用于 Mixin Network 相关产品。";

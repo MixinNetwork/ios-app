@@ -14,7 +14,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
     private let trayViewHeight: CGFloat = 82
     
-    private var destinations: [Destination] = [.contact, .addressBook]
+    private var destinations: [Destination] = [.addressBook, .contact]
     
     private weak var tableView: UITableView!
     private weak var trayView: TokenReceiverTrayView?

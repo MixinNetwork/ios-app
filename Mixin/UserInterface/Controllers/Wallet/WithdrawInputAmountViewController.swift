@@ -33,7 +33,6 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
     
     private let tokenItem: TokenItem
     private let destination: Payment.WithdrawalDestination
-    private let progress: UserInteractionProgress
     private let traceID = UUID().uuidString.lowercased()
     
     private var feeTokenSameAsWithdrawToken = false
@@ -49,12 +48,10 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
     
     init(
         tokenItem: TokenItem,
-        destination: Payment.WithdrawalDestination,
-        progress: UserInteractionProgress
+        destination: Payment.WithdrawalDestination
     ) {
         self.tokenItem = tokenItem
         self.destination = destination
-        self.progress = progress
         super.init()
     }
     
@@ -65,10 +62,19 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.titleView = NavigationTitleView(
-            title: R.string.localizable.send(),
-            subtitle: progress.description
-        )
+        let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
+        switch destination {
+        case .address(let address):
+            titleView.subtitle = address.label
+            titleView.subtitleStyle = .label(backgroundColor: R.color.address_label()!)
+        case .temporary(let address):
+            titleView.subtitle = address.compactRepresentation
+            titleView.subtitleStyle = .plain
+        case .web3(let address, _):
+            titleView.subtitle = Address.compactRepresentation(of: address)
+            titleView.subtitleStyle = .plain
+        }
+        navigationItem.titleView = titleView
         
         tokenIconView.setIcon(token: tokenItem)
         tokenNameLabel.text = tokenItem.name

@@ -12,7 +12,6 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     private let token: TokenItem
     private let intent: Intent
     private let inputContent: InputContent
-    private let progress: UserInteractionProgress?
     private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
     
     private lazy var tagRegex = try? NSRegularExpression(pattern: "^[0-9]+$")
@@ -21,47 +20,6 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         self.token = token
         self.intent = intent
         self.inputContent = inputContent
-        switch intent {
-        case .newAddress:
-            switch token.memoPossibility {
-            case .positive, .possible:
-                switch inputContent {
-                case .destination:
-                    self.progress = UserInteractionProgress(currentStep: 1, totalStepCount: 3)
-                case .memo, .tag:
-                    self.progress = UserInteractionProgress(currentStep: 2, totalStepCount: 3)
-                case .label:
-                    self.progress = UserInteractionProgress(currentStep: 3, totalStepCount: 3)
-                }
-            case .negative:
-                switch inputContent {
-                case .destination:
-                    self.progress = UserInteractionProgress(currentStep: 1, totalStepCount: 2)
-                case .memo, .tag:
-                    assertionFailure("No memo/tag for negative possiblity")
-                    self.progress = nil
-                case .label:
-                    self.progress = UserInteractionProgress(currentStep: 2, totalStepCount: 2)
-                }
-            }
-        case .oneTimeWithdraw:
-            switch inputContent {
-            case .destination:
-                assertionFailure("Destination should be input in TokenReceiverViewController")
-                self.progress = nil
-            case .memo, .tag:
-                switch token.memoPossibility {
-                case .positive, .possible:
-                    self.progress = UserInteractionProgress(currentStep: 2, totalStepCount: 3)
-                case .negative:
-                    assertionFailure("No memo/tag for negative possiblity")
-                    self.progress = nil
-                }
-            case .label:
-                assertionFailure("No label for oneTimeWithdraw")
-                self.progress = nil
-            }
-        }
         let nib = R.nib.addressInfoInputView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -92,7 +50,7 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let title = switch intent {
+        title = switch intent {
         case .newAddress:
             switch inputContent {
             case .destination:
@@ -106,11 +64,6 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
             }
         case .oneTimeWithdraw:
             R.string.localizable.send()
-        }
-        if let progress {
-            navigationItem.titleView = NavigationTitleView(title: title, subtitle: progress.description)
-        } else {
-            self.title = title
         }
         
         scrollView.addSubview(headerView)
@@ -406,8 +359,7 @@ extension AddressInfoInputViewController {
             self.nextButton.isBusy = false
             let next = WithdrawInputAmountViewController(
                 tokenItem: self.token,
-                destination: .temporary(address),
-                progress: .init(currentStep: 3, totalStepCount: 3)
+                destination: .temporary(address)
             )
             self.navigationController?.pushViewController(next, animated: true)
         } onFailure: { [weak self] error in

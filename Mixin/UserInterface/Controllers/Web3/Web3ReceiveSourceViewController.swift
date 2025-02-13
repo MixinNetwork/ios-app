@@ -83,8 +83,7 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
                 }
                 let input = WithdrawInputAmountViewController(
                     tokenItem: token,
-                    destination: .web3(address: address, chain: chain.name),
-                    progress: .init(currentStep: 2, totalStepCount: 2)
+                    destination: .web3(address: address, chain: chain.name)
                 )
                 self.navigationController?.pushViewController(input, animated: true)
             }

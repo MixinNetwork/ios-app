@@ -10,11 +10,10 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     }
     
     private let token: TokenItem
-    private let progress: UserInteractionProgress
     private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
     private let trayViewHeight: CGFloat = 82
     
-    private var destinations: [Destination] = [.contact, .addressBook]
+    private var destinations: [Destination] = [.addressBook, .contact]
     
     private weak var tableView: UITableView!
     private weak var trayView: TokenReceiverTrayView?
@@ -23,12 +22,6 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
     init(token: TokenItem) {
         self.token = token
-        switch token.memoPossibility {
-        case .positive, .possible:
-            self.progress = UserInteractionProgress(currentStep: 1, totalStepCount: 3)
-        case .negative:
-            self.progress = UserInteractionProgress(currentStep: 1, totalStepCount: 2)
-        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -39,10 +32,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.titleView = NavigationTitleView(
-            title: R.string.localizable.send(),
-            subtitle: progress.description
-        )
+        title = R.string.localizable.send()
         navigationItem.rightBarButtonItem = .customerService(
             target: self,
             action: #selector(presentCustomerService(_:))
@@ -184,11 +174,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
                 guard let self else {
                     return
                 }
-                let inputAmount = WithdrawInputAmountViewController(
-                    tokenItem: self.token,
-                    destination: .temporary(address),
-                    progress: .init(currentStep: 2, totalStepCount: 2)
-                )
+                let inputAmount = WithdrawInputAmountViewController(tokenItem: self.token, destination: .temporary(address))
                 self.navigationController?.pushViewController(inputAmount, animated: true)
             } onFailure: { [weak sender, weak self] error in
                 sender?.isBusy = false
@@ -257,8 +243,7 @@ extension TokenReceiverViewController: UITableViewDelegate {
                 self.dismiss(animated: true) {
                     let inputAmount = TransferInputAmountViewController(
                         tokenItem: token,
-                        receiver: .user(user),
-                        progress: .init(currentStep: 2, totalStepCount: 2)
+                        receiver: .user(user)
                     )
                     self.navigationController?.pushViewController(inputAmount, animated: true)
                 }
@@ -267,8 +252,7 @@ extension TokenReceiverViewController: UITableViewDelegate {
         case let .web3Wallet(chain, address):
             let inputAmount = WithdrawInputAmountViewController(
                 tokenItem: token,
-                destination: .web3(address: address, chain: chain.name),
-                progress: .init(currentStep: 2, totalStepCount: 2)
+                destination: .web3(address: address, chain: chain.name)
             )
             navigationController?.pushViewController(inputAmount, animated: true)
         case .addressBook:
@@ -277,8 +261,7 @@ extension TokenReceiverViewController: UITableViewDelegate {
                 self.dismiss(animated: true) {
                     let inputAmount = WithdrawInputAmountViewController(
                         tokenItem: token,
-                        destination: .address(address),
-                        progress: .init(currentStep: 2, totalStepCount: 2)
+                        destination: .address(address)
                     )
                     self.navigationController?.pushViewController(inputAmount, animated: true)
                 }

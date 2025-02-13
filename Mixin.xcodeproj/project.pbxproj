@@ -1041,7 +1041,6 @@
 		9489247D2D572E9400D9BCCB /* TokenReceiverTrayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489247C2D572E9400D9BCCB /* TokenReceiverTrayView.swift */; };
 		9489247F2D572EA200D9BCCB /* TokenReceiverTrayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9489247E2D572EA200D9BCCB /* TokenReceiverTrayView.xib */; };
 		9489249C2D573BA700D9BCCB /* AddressValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489249B2D573BA000D9BCCB /* AddressValidator.swift */; };
-		948925222D5889CB00D9BCCB /* UserInteractionProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948925212D5889C700D9BCCB /* UserInteractionProgress.swift */; };
 		948926882D5B42D300D9BCCB /* BIP21.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948926872D5B42CF00D9BCCB /* BIP21.swift */; };
 		9489E3A025C5B150000319F8 /* AcknowledgementListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */; };
 		948A85E82D14032700880AAF /* MAONameSearchResultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948A85E72D14032700880AAF /* MAONameSearchResultCell.xib */; };
@@ -2564,7 +2563,6 @@
 		9489247C2D572E9400D9BCCB /* TokenReceiverTrayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenReceiverTrayView.swift; sourceTree = "<group>"; };
 		9489247E2D572EA200D9BCCB /* TokenReceiverTrayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenReceiverTrayView.xib; sourceTree = "<group>"; };
 		9489249B2D573BA000D9BCCB /* AddressValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressValidator.swift; sourceTree = "<group>"; };
-		948925212D5889C700D9BCCB /* UserInteractionProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInteractionProgress.swift; sourceTree = "<group>"; };
 		948926872D5B42CF00D9BCCB /* BIP21.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BIP21.swift; sourceTree = "<group>"; };
 		9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementListViewController.swift; sourceTree = "<group>"; };
 		948A85E72D14032700880AAF /* MAONameSearchResultCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MAONameSearchResultCell.xib; sourceTree = "<group>"; };
@@ -3475,7 +3473,6 @@
 				941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */,
 				940B6C932C72501A0003FCDB /* UserBadgeIcon.swift */,
 				94DD693D2C90665700B3D089 /* MarketColor.swift */,
-				948925212D5889C700D9BCCB /* UserInteractionProgress.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -6599,7 +6596,6 @@
 				7CB2A57F27C386F0007D9DEE /* GroupsInCommonViewController.swift in Sources */,
 				7B2A116122C20F5F00AD029C /* PlayerView.swift in Sources */,
 				7BB3855821E770BE0070FF8F /* ProvisionMessage.swift in Sources */,
-				948925222D5889CB00D9BCCB /* UserInteractionProgress.swift in Sources */,
 				7CE3A25C2771A8AB006BE765 /* DeleteAccountVerifyCodeViewController.swift in Sources */,
 				7B9863931FA3141F00D4B16C /* XibDesignable.swift in Sources */,
 				7C4733A128533EB800ECD293 /* PhoneContactSearchResult.swift in Sources */,

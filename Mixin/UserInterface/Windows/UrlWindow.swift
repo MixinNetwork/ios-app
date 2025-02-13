@@ -1086,12 +1086,8 @@ extension UrlWindow {
             switch paymentURL.request {
             case let .notDetermined(assetID, amount):
                 DispatchQueue.main.async {
-                    if case .multisig = destination {
-                        completion(R.string.localizable.invalid_payment_link())
-                        return
-                    }
                     switch (assetID, amount) {
-                    case let (.none, .some(amount)):
+                    case (.none, .some):
                         completion(R.string.localizable.invalid_payment_link())
                     case let (.some(assetID), .none):
                         let token = syncToken(assetID: assetID) { errorDescription in
@@ -1105,7 +1101,6 @@ extension UrlWindow {
                             traceID: paymentURL.trace,
                             tokenItem: token,
                             receiver: destination,
-                            progress: nil,
                             note: paymentURL.memo
                         )
                         inputAmount.reference = paymentURL.reference
@@ -1119,7 +1114,6 @@ extension UrlWindow {
                             let inputAmount = TransferInputAmountViewController(
                                 tokenItem: token,
                                 receiver: destination,
-                                progress: nil,
                                 note: paymentURL.memo
                             )
                             inputAmount.reference = paymentURL.reference

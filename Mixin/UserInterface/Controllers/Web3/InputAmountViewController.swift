@@ -89,6 +89,11 @@ class InputAmountViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
+        
         amountStackView.setCustomSpacing(2, after: amountLabel)
         amountLabel.font = .monospacedDigitSystemFont(ofSize: 64, weight: .regular)
         
@@ -311,6 +316,11 @@ class InputAmountViewController: UIViewController {
             insufficientBalanceLabel.alpha = 1
             reviewButton.isEnabled = false
         }
+    }
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController()
+        present(customerService, animated: true)
     }
     
 }

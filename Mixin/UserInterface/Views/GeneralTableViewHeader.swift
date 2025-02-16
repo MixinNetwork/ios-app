@@ -5,6 +5,7 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
     
     var label: UILabel!
     var labelTopConstraint: NSLayoutConstraint!
+    var labelBottomConstraint: NSLayoutConstraint!
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
@@ -16,7 +17,7 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
         prepare()
     }
     
-    private func prepare() {
+    func prepare() {
         clipsToBounds = true
         label = UILabel()
         label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
@@ -27,8 +28,10 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20).priority(.almostRequired)
         }
-        labelTopConstraint = label.topAnchor.constraint(equalTo: topAnchor)
+        labelTopConstraint = label.topAnchor.constraint(equalTo: contentView.topAnchor)
         labelTopConstraint.isActive = true
+        labelBottomConstraint = label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        labelBottomConstraint.isActive = true
         backgroundConfiguration = {
             var config: UIBackgroundConfiguration = .listPlainHeaderFooter()
             config.backgroundColor = .background

@@ -26,25 +26,30 @@ final class TIPPopupInputViewController: PinValidationViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        switch action {
+        titleLabel.text = switch action {
         case .migrate:
-            titleLabel.text = R.string.localizable.enter_your_pin()
+            R.string.localizable.enter_your_pin()
         case let .continue(context, _):
-            switch context.action {
-            case .change:
-                if oldPIN == nil {
-                    titleLabel.text = R.string.localizable.enter_your_old_pin()
-                } else {
-                    titleLabel.text = R.string.localizable.enter_your_new_pin()
+            switch context.situation {
+            case .pendingUpdate, .pendingSign:
+                switch context.action {
+                case .change:
+                    if oldPIN == nil {
+                        R.string.localizable.enter_your_old_pin()
+                    } else {
+                        R.string.localizable.enter_your_new_pin()
+                    }
+                case .create:
+                    R.string.localizable.enter_your_pin()
+                case .migrate:
+                    if oldPIN == nil {
+                        R.string.localizable.enter_your_old_pin()
+                    } else {
+                        R.string.localizable.enter_your_new_pin()
+                    }
                 }
-            case .create:
-                titleLabel.text = R.string.localizable.enter_your_pin()
-            case .migrate:
-                if oldPIN == nil {
-                    titleLabel.text = R.string.localizable.enter_your_old_pin()
-                } else {
-                    titleLabel.text = R.string.localizable.enter_your_new_pin()
-                }
+            case .tipCounterExceedsNodeCounter:
+                R.string.localizable.enter_your_pin()
             }
         }
         descriptionLabel.text = nil
@@ -68,53 +73,121 @@ final class TIPPopupInputViewController: PinValidationViewController {
             case .create:
                 switch context.situation {
                 case .pendingSign(let failedSigners):
-                    continueCreate(with: pin, failedSigners: failedSigners, onSuccess: onSuccess)
+                    continueCreate(
+                        with: pin,
+                        failedSigners: failedSigners,
+                        skipAccountUpdate: false,
+                        onSuccess: onSuccess
+                    )
                 case .pendingUpdate:
-                    continueCreate(with: pin, failedSigners: [], onSuccess: onSuccess)
+                    continueCreate(
+                        with: pin,
+                        failedSigners: [],
+                        skipAccountUpdate: false,
+                        onSuccess: onSuccess
+                    )
+                case .tipCounterExceedsNodeCounter:
+                    continueCreate(
+                        with: pin,
+                        failedSigners: [],
+                        skipAccountUpdate: true,
+                        onSuccess: onSuccess
+                    )
                 }
             case .change:
-                if let old = oldPIN {
-                    switch context.situation {
-                    case .pendingSign(let failedSigners):
-                        continueChange(old: old, isOldPINLegacy: false, new: pin, failedSigners: failedSigners, onSuccess: onSuccess)
-                    case .pendingUpdate:
-                        continueChange(old: old, isOldPINLegacy: false, new: pin, failedSigners: [], onSuccess: onSuccess)
+                switch context.situation {
+                case .pendingSign(let failedSigners):
+                    if let old = oldPIN {
+                        continueChange(
+                            old: old,
+                            isOldPINLegacy: false,
+                            new: pin,
+                            failedSigners: failedSigners,
+                            skipAccountUpdate: false,
+                            onSuccess: onSuccess
+                        )
+                    } else {
+                        inputNewPIN(oldPIN: pin)
                     }
-                } else {
-                    loadingIndicator.stopAnimating()
-                    titleLabel.text = R.string.localizable.enter_your_new_pin()
-                    descriptionLabel.text = nil
-                    pinField.clear()
-                    pinField.isHidden = false
-                    pinField.receivesInput = true
-                    self.oldPIN = pin
+                case .pendingUpdate:
+                    if let old = oldPIN {
+                        continueChange(
+                            old: old,
+                            isOldPINLegacy: false,
+                            new: pin,
+                            failedSigners: [],
+                            skipAccountUpdate: false,
+                            onSuccess: onSuccess
+                        )
+                    } else {
+                        inputNewPIN(oldPIN: pin)
+                    }
+                case .tipCounterExceedsNodeCounter:
+                    continueChange(
+                        old: pin,
+                        isOldPINLegacy: false,
+                        new: pin,
+                        failedSigners: [],
+                        skipAccountUpdate: true,
+                        onSuccess: onSuccess
+                    )
                 }
             case .migrate:
-                if let old = oldPIN {
-                    let failedSigners: [TIPSigner]
-                    switch context.situation {
-                    case .pendingSign(let signers):
-                        failedSigners = signers
-                    case .pendingUpdate:
-                        failedSigners = []
+                switch context.situation {
+                case .pendingSign(let failedSigners):
+                    if let old = oldPIN {
+                        continueChange(
+                            old: old,
+                            isOldPINLegacy: true,
+                            new: pin,
+                            failedSigners: failedSigners,
+                            skipAccountUpdate: false,
+                            onSuccess: onSuccess
+                        )
+                    } else {
+                        inputNewPIN(oldPIN: pin)
                     }
-                    continueChange(old: old, isOldPINLegacy: true, new: pin, failedSigners: failedSigners, onSuccess: onSuccess)
-                } else {
-                    loadingIndicator.stopAnimating()
-                    titleLabel.text = R.string.localizable.enter_your_new_pin()
-                    descriptionLabel.text = nil
-                    pinField.clear()
-                    pinField.isHidden = false
-                    pinField.receivesInput = true
-                    self.oldPIN = pin
+                case .pendingUpdate:
+                    if let old = oldPIN {
+                        continueChange(
+                            old: old,
+                            isOldPINLegacy: true,
+                            new: pin,
+                            failedSigners: [],
+                            skipAccountUpdate: false,
+                            onSuccess: onSuccess
+                        )
+                    } else {
+                        inputNewPIN(oldPIN: pin)
+                    }
+                case .tipCounterExceedsNodeCounter:
+                    continueChange(
+                        old: pin,
+                        isOldPINLegacy: true,
+                        new: pin,
+                        failedSigners: [],
+                        skipAccountUpdate: true,
+                        onSuccess: onSuccess
+                    )
                 }
             }
         }
     }
     
+    private func inputNewPIN(oldPIN: String) {
+        loadingIndicator.stopAnimating()
+        titleLabel.text = R.string.localizable.enter_your_new_pin()
+        descriptionLabel.text = nil
+        pinField.clear()
+        pinField.isHidden = false
+        pinField.receivesInput = true
+        self.oldPIN = oldPIN
+    }
+    
     private func continueCreate(
         with pin: String,
         failedSigners: [TIPSigner],
+        skipAccountUpdate: Bool,
         onSuccess: @MainActor @Sendable @escaping () -> Void
     ) {
 #if DEBUG
@@ -131,6 +204,7 @@ final class TIPPopupInputViewController: PinValidationViewController {
                     failedSigners: failedSigners,
                     legacyPIN: nil,
                     forRecover: false,
+                    skipAccountUpdate: skipAccountUpdate,
                     progressHandler: nil
                 )
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
@@ -157,6 +231,7 @@ final class TIPPopupInputViewController: PinValidationViewController {
         isOldPINLegacy: Bool,
         new: String,
         failedSigners: [TIPSigner],
+        skipAccountUpdate: Bool,
         onSuccess: @MainActor @Sendable @escaping () -> Void
     ) {
 #if DEBUG
@@ -175,13 +250,14 @@ final class TIPPopupInputViewController: PinValidationViewController {
                         failedSigners: failedSigners,
                         legacyPIN: old,
                         forRecover: false,
+                        skipAccountUpdate: skipAccountUpdate,
                         progressHandler: nil
                     )
                 } else {
                     let isCounterBalanced: Bool
                     switch action {
                     case .continue(let context, _):
-                        isCounterBalanced = context.maxNodeCounter == context.accountTIPCounter
+                        isCounterBalanced = context.maxNodeCounter <= context.accountTIPCounter
                     case .migrate:
                         isCounterBalanced = true
                     }
@@ -190,6 +266,7 @@ final class TIPPopupInputViewController: PinValidationViewController {
                         newPIN: new,
                         isCounterBalanced: isCounterBalanced,
                         failedSigners: failedSigners,
+                        skipAccountUpdate: skipAccountUpdate,
                         progressHandler: nil
                     )
                 }

@@ -1,14 +1,9 @@
 import UIKit
 
-class PeerHeaderView: GeneralTableViewHeader {
+final class PeerHeaderView: GeneralTableViewHeader {
     
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
-        labelTopConstraint.constant = 10
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    override func prepare() {
+        super.prepare()
         labelTopConstraint.constant = 10
     }
     

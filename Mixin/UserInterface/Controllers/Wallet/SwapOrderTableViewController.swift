@@ -1,37 +1,66 @@
 import UIKit
 import MixinServices
 
-final class SwapOrderTableViewController: UITableViewController {
+final class SwapOrderTableViewController: UIViewController {
+    
+    fileprivate typealias DateRepresentation = String
+    fileprivate typealias OrderID = String
+    fileprivate typealias DiffableDataSource = UITableViewDiffableDataSource<DateRepresentation, OrderID>
+    fileprivate typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<DateRepresentation, OrderID>
     
     private let localPageCount = 50
     private let remotePageCount = 100
+    private let headerReuseIdentifier = "h"
+    private let queue = DispatchQueue(label: "one.mixin.messenger.SwapOrderLoading")
     
-    private var sections: [[SwapOrderItem]] = []
+    private var tableView: UITableView!
+    private var dataSource: DiffableDataSource!
+    private var items: [OrderID: SwapOrderItem] = [:]
     private var loadNextPageIndexPath: IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         navigationItem.title = R.string.localizable.orders()
         view.backgroundColor = R.color.background()
+        
+        tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.backgroundColor = R.color.background()
         tableView.register(R.nib.swapOrderCell)
+        tableView.register(HeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseIdentifier)
         tableView.estimatedRowHeight = 85
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
+        tableView.delegate = self
+        view.addSubview(tableView)
+        tableView.snp.makeEdgesEqualToSuperview()
+        
+        dataSource = DiffableDataSource(tableView: tableView) { [weak self] (tableView, indexPath, orderID) in
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.swap_order, for: indexPath)!
+            if let order = self?.items[orderID] {
+                cell.load(order: order)
+            }
+            return cell
+        }
+        tableView.dataSource = dataSource
         updateTableViewContentInsetBottom()
-        DispatchQueue.global().async { [limit=localPageCount] in
+        
+        queue.async { [limit=localPageCount] in
             let orders = SwapOrderDAO.shared.orders(limit: limit)
             let offset = SwapOrderDAO.shared.oldestPendingOrFailedOrderCreatedAt()
-            DispatchQueue.main.async { [weak self] in
+            let snapshot = DataSourceSnapshot(orders: orders)
+            DispatchQueue.main.sync { [weak self] in
                 guard let self else {
                     return
                 }
                 if let newestOrder = orders.first {
-                    self.sections = [orders]
-                    if orders.count == limit {
-                        self.resetLoadNextPageIndexPath()
+                    for order in orders {
+                        self.items[order.orderID] = order
                     }
-                    UIView.performWithoutAnimation(self.tableView.reloadData)
+                    if orders.count == limit {
+                        self.resetLoadNextPageIndexPath(snapshot: snapshot)
+                    }
+                    self.dataSource.applySnapshotUsingReloadData(snapshot)
                     let offset = offset ?? newestOrder.createdAt
                     self.reloadRemoteOrders(offset: offset)
                 } else {
@@ -51,55 +80,6 @@ final class SwapOrderTableViewController: UITableViewController {
         updateTableViewContentInsetBottom()
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        sections.count
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        sections[section].count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.swap_order, for: indexPath)!
-        let order = sections[indexPath.section][indexPath.row]
-        cell.load(order: order)
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath == loadNextPageIndexPath, let offset = sections.last?.last {
-            loadNextPageIndexPath = nil
-            Logger.general.info(category: "SwapOrderTable", message: "Loading local orders before \(offset.createdAt)")
-            DispatchQueue.global().async { [limit=localPageCount] in
-                let orders = SwapOrderDAO.shared.orders(before: offset.createdAt, limit: limit)
-                guard let oldestOrder = orders.last, let newestOrder = orders.first else {
-                    Logger.general.info(category: "SwapOrderTable", message: "All local orders loaded")
-                    return
-                }
-                DispatchQueue.main.sync { [weak self] in
-                    guard let self, self.sections.last?.last == offset else {
-                        return
-                    }
-                    let newSectionIndex = self.sections.count
-                    self.sections.append(orders)
-                    Logger.general.info(category: "SwapOrderTable", message: "Appended \(orders.count) local orders at \(newSectionIndex), range: \(newestOrder.createdAt) ~ \(oldestOrder.createdAt)")
-                    if orders.count == limit {
-                        self.resetLoadNextPageIndexPath()
-                    }
-                    UIView.performWithoutAnimation {
-                        self.tableView.insertSections(IndexSet(integer: newSectionIndex), with: .none)
-                    }
-                }
-            }
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let order = sections[indexPath.section][indexPath.row]
-        let details = SwapOrderViewController(order: order)
-        navigationController?.pushViewController(details, animated: true)
-    }
-    
     private func updateTableViewContentInsetBottom() {
         if view.safeAreaInsets.bottom > 10 {
             tableView.contentInset.bottom = 0
@@ -108,19 +88,92 @@ final class SwapOrderTableViewController: UITableViewController {
         }
     }
     
-    private func resetLoadNextPageIndexPath() {
-        guard let lastSection = sections.last else {
-            return
+}
+
+extension SwapOrderTableViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath == loadNextPageIndexPath,
+           let orderID = dataSource.itemIdentifier(for: indexPath),
+           let offset = items[orderID]
+        {
+            loadNextPageIndexPath = nil
+            queue.async { [limit=localPageCount, weak self] in
+                guard let self else {
+                    return
+                }
+                Logger.general.info(category: "SwapOrderTable", message: "Loading local orders before \(offset.createdAt)")
+                let orders = SwapOrderDAO.shared.orders(before: offset.createdAt, limit: limit)
+                guard let oldestOrder = orders.last, let newestOrder = orders.first else {
+                    Logger.general.info(category: "SwapOrderTable", message: "All local orders loaded")
+                    return
+                }
+                var snapshot = DispatchQueue.main.sync {
+                    self.dataSource.snapshot()
+                }
+                for order in orders {
+                    guard let createdAtDate = order.createdAtDate else {
+                        continue
+                    }
+                    let date = DateFormatter.dateSimple.string(from: createdAtDate)
+                    if !snapshot.sectionIdentifiers.reversed().contains(date) {
+                        snapshot.appendSections([date])
+                    }
+                    snapshot.appendItems([order.orderID], toSection: date)
+                }
+                Logger.general.info(category: "SwapOrderTable", message: "Appended \(orders.count) local orders, range: \(newestOrder.createdAt) ~ \(oldestOrder.createdAt)")
+                DispatchQueue.main.sync {
+                    for order in orders {
+                        self.items[order.orderID] = order
+                    }
+                    if orders.count == limit {
+                        self.resetLoadNextPageIndexPath(snapshot: snapshot)
+                    }
+                    self.dataSource.apply(snapshot, animatingDifferences: false)
+                }
+            }
         }
-        loadNextPageIndexPath = IndexPath(
-            row: max(0, lastSection.count - 3),
-            section: sections.count - 1
-        )
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseIdentifier) as! HeaderView
+        header.label.text = dataSource.sectionIdentifier(for: section)
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if let id = dataSource.itemIdentifier(for: indexPath), let item = items[id] {
+            let details = SwapOrderViewController(order: item)
+            navigationController?.pushViewController(details, animated: true)
+        }
     }
     
 }
 
 extension SwapOrderTableViewController {
+    
+    private final class HeaderView: GeneralTableViewHeader {
+        
+        override func prepare() {
+            super.prepare()
+            label.setFont(scaledFor: .systemFont(ofSize: 12), adjustForContentSize: true)
+            label.textColor = UIColor(displayP3RgbValue: 0xBCBEC3, alpha: 1)
+            labelTopConstraint.constant = 20
+            labelBottomConstraint.constant = -10
+        }
+        
+    }
+    
+    private func resetLoadNextPageIndexPath(snapshot: DataSourceSnapshot) {
+        guard let lastSectionIdentifier = snapshot.sectionIdentifiers.last else {
+            loadNextPageIndexPath = nil
+            return
+        }
+        let section = snapshot.numberOfSections - 1
+        let row = snapshot.numberOfItems(inSection: lastSectionIdentifier) - 1
+        loadNextPageIndexPath = IndexPath(row: row, section: section)
+    }
     
     private func reloadRemoteOrders(offset: String?) {
         Logger.general.info(category: "SwapOrderTable", message: "Loading remote orders from \(offset ?? "beginning")")
@@ -151,18 +204,19 @@ extension SwapOrderTableViewController {
                 }
                 
                 let localOrders = SwapOrderDAO.shared.orders(limit: localPageCount)
-                DispatchQueue.main.sync {
+                let snapshot = DataSourceSnapshot(orders: localOrders)
+                DispatchQueue.main.sync { [weak self] in
                     guard let self else {
                         return
                     }
-                    self.sections = [localOrders]
+                    for order in localOrders {
+                        self.items[order.orderID] = order
+                    }
                     if localOrders.count == localPageCount {
-                        self.resetLoadNextPageIndexPath()
+                        self.resetLoadNextPageIndexPath(snapshot: snapshot)
                     }
-                    UIView.performWithoutAnimation {
-                        self.tableView.removeEmptyIndicator()
-                        self.tableView.reloadData()
-                    }
+                    UIView.performWithoutAnimation(self.tableView.removeEmptyIndicator)
+                    self.dataSource.applySnapshotUsingReloadData(snapshot)
                     if didFinish {
                         Logger.general.info(category: "SwapOrderTable", message: "All remote orders loaded")
                     } else {
@@ -175,6 +229,26 @@ extension SwapOrderTableViewController {
                     self?.reloadRemoteOrders(offset: offset)
                 }
             }
+        }
+    }
+    
+}
+
+fileprivate extension SwapOrderTableViewController.DataSourceSnapshot {
+    
+    init(orders: [SwapOrderItem]) {
+        self.init()
+        var sectionIdentifiers: Set<String> = []
+        for order in orders {
+            guard let createdAtDate = order.createdAtDate else {
+                continue
+            }
+            let date = DateFormatter.dateSimple.string(from: createdAtDate)
+            if !sectionIdentifiers.contains(date) {
+                appendSections([date])
+                sectionIdentifiers.insert(date)
+            }
+            appendItems([order.orderID], toSection: date)
         }
     }
     

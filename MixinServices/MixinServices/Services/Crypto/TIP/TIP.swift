@@ -9,6 +9,7 @@ public enum TIP {
         public enum Situation {
             case pendingUpdate
             case pendingSign(_ failedSigners: [TIPSigner])
+            case tipCounterExceedsNodeCounter
         }
         
         public let action: Action
@@ -89,6 +90,7 @@ extension TIP {
         failedSigners: [TIPSigner],
         legacyPIN: String?,
         forRecover: Bool,
+        skipAccountUpdate: Bool,
         progressHandler: (@MainActor (Progress) -> Void)?
     ) async throws -> (tipPriv: Data, account: Account?) {
         Logger.tip.info(category: "TIP", message: "createTIPPriv with failedSigners: \(failedSigners.map(\.index)), legacyPIN: \(legacyPIN != nil), forRecover: \(forRecover)")
@@ -151,8 +153,14 @@ extension TIP {
             }
         }
 #endif
-        Logger.tip.info(category: "TIP", message: "Will update PIN")
-        let account = try await AccountAPI.updatePIN(request: request)
+        let account: Account
+        if skipAccountUpdate {
+            Logger.tip.info(category: "TIP", message: "Skip account update")
+            account = try await AccountAPI.me()
+        } else {
+            Logger.tip.info(category: "TIP", message: "Will update PIN")
+            account = try await AccountAPI.updatePIN(request: request)
+        }
 #if DEBUG
         try await MainActor.run {
             if TIPDiagnostic.failPINUpdateClientSideOnce {
@@ -178,9 +186,10 @@ extension TIP {
         newPIN: String,
         isCounterBalanced: Bool,
         failedSigners: [TIPSigner],
+        skipAccountUpdate: Bool,
         progressHandler: (@MainActor (Progress) -> Void)?
     ) async throws -> Account {
-        Logger.tip.info(category: "TIP", message: "Update priv with oldPIN: \(oldPIN != nil), failedSigners: \(failedSigners.map(\.index))")
+        Logger.tip.info(category: "TIP", message: "Update priv with oldPIN: \(oldPIN != nil), failedSigners: \(failedSigners.map(\.index)), isCounterBalanced: \(isCounterBalanced), skipAccountUpdate: \(skipAccountUpdate)")
         guard let oldPINData = oldPIN.data(using: .utf8) else {
             throw Error.invalidPIN
         }
@@ -217,7 +226,7 @@ extension TIP {
                                                            failedSigners: failedSigners,
                                                            forRecover: false,
                                                            progressHandler: progressHandler)
-        Logger.tip.info(category: "TIP", message: "aggSig ready")
+        Logger.tip.info(category: "TIP", message: "aggSig ready, nodeCounter: \(nodeCounter)")
         guard let tipPriv = SHA3_256.hash(data: aggSig) else {
             throw Error.hashAggSigToPrivSeed
         }
@@ -228,10 +237,17 @@ extension TIP {
         guard let accountBeforeUpdate = LoginManager.shared.account else {
             throw Error.noAccount
         }
-        let accountCounter = accountBeforeUpdate.tipCounter
-        let body = try TIPBody.verify(timestamp: accountCounter)
-        let oldPIN = try encryptTIPPIN(tipPriv: tipPriv, target: body)
-        let newEncryptPIN = try encryptPIN(key: pinToken, code: pub + (accountCounter + 1).data(endianness: .big))
+        let oldPIN = try {
+            let counter = accountBeforeUpdate.tipCounter
+            Logger.tip.info(category: "TIP", message: "Encrypt old PIN with counter: \(counter)")
+            let body = try TIPBody.verify(timestamp: counter)
+            return try encryptTIPPIN(tipPriv: tipPriv, target: body)
+        }()
+        let newEncryptPIN = try {
+            let counter = nodeCounter
+            Logger.tip.info(category: "TIP", message: "Encrypt new PIN with counter: \(counter)")
+            return try encryptPIN(key: pinToken, code: pub + counter.data(endianness: .big))
+        }()
         
         let pinTokenEncryptedSalt: (old: String, new: String)?
         let encryptedSaltToSave: Data?
@@ -289,8 +305,14 @@ extension TIP {
             }
         }
 #endif
-        Logger.tip.info(category: "TIP", message: "Will update PIN")
-        let account = try await AccountAPI.updatePIN(request: request)
+        let account: Account
+        if skipAccountUpdate {
+            Logger.tip.info(category: "TIP", message: "Skip account update")
+            account = try await AccountAPI.me()
+        } else {
+            Logger.tip.info(category: "TIP", message: "Will update PIN")
+            account = try await AccountAPI.updatePIN(request: request)
+        }
 #if DEBUG
         try await MainActor.run {
             if TIPDiagnostic.failPINUpdateClientSideOnce {
@@ -311,7 +333,10 @@ extension TIP {
         return account
     }
     
-    public static func checkCounter(with freshAccount: Account? = nil, timeoutInterval: TimeInterval = 15) async throws -> InterruptionContext? {
+    public static func checkCounter(
+        with freshAccount: Account? = nil,
+        timeoutInterval: TimeInterval = 15
+    ) async throws -> InterruptionContext? {
         let account: Account
         if let freshAccount {
             Logger.tip.info(category: "TIP", message: "Check counter with provided account")
@@ -354,14 +379,20 @@ extension TIP {
         }
         if groups.count <= 1 {
             let nodeCounter = counters[0].value
-            if nodeCounter == account.tipCounter {
-                return nil
+            return if nodeCounter == account.tipCounter {
+                nil
             } else if nodeCounter < account.tipCounter {
-                throw Error.tipCounterExceedsNodeCounter
+                InterruptionContext(
+                    account: account,
+                    situation: .tipCounterExceedsNodeCounter,
+                    maxNodeCounter: nodeCounter
+                )
             } else {
-                return InterruptionContext(account: account,
-                                           situation: .pendingUpdate,
-                                           maxNodeCounter: nodeCounter)
+                InterruptionContext(
+                    account: account,
+                    situation: .pendingUpdate,
+                    maxNodeCounter: nodeCounter
+                )
             }
         } else if groups.count == 2 {
             let maxCounter = groups.keys.max()!
@@ -643,6 +674,7 @@ extension TIP {
             failedSigners: [],
             legacyPIN: nil,
             forRecover: true,
+            skipAccountUpdate: false,
             progressHandler: nil
         )
         return tipPriv

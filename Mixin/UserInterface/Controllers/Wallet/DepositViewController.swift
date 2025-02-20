@@ -273,7 +273,7 @@ extension DepositViewController {
             
             do {
                 let remoteEntries = try await Self.withAutoRetrying {
-                    try await SafeAPI.depositEntries(chainID: chain.chainId)
+                    try await SafeAPI.depositEntries(assetID: token.assetID, chainID: chain.chainId)
                 }
                 DepositEntryDAO.shared.replace(entries: remoteEntries, forChainWith: token.chainID)
                 if let remoteEntry = remoteEntries.first(where: { $0.chainID == chain.chainId && $0.isPrimary }) {

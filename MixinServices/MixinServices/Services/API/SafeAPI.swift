@@ -189,8 +189,12 @@ extension SafeAPI {
 // MARK: - Deposit
 extension SafeAPI {
     
-    public static func depositEntries(chainID: String) async throws -> [DepositEntry] {
-        let entries: [DepositEntry] = try await request(method: .post, path: "/safe/deposit/entries", parameters: ["chain_id": chainID])
+    public static func depositEntries(assetID: String?, chainID: String) async throws -> [DepositEntry] {
+        var parameters = ["chain_id": chainID]
+        if let assetID {
+            parameters["asset_id"] = assetID
+        }
+        let entries: [DepositEntry] = try await request(method: .post, path: "/safe/deposit/entries", parameters: parameters)
         if entries.allSatisfy(\.isSignatureValid) {
             return entries
         } else {

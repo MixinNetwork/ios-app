@@ -233,7 +233,7 @@ extension Web3TokenReceiverViewController {
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         Task { [payment, weak self] in
             do {
-                let entries = try await SafeAPI.depositEntries(chainID: chainID)
+                let entries = try await SafeAPI.depositEntries(assetID: nil, chainID: chainID)
                 if let entry = entries.first(where: { $0.chainID == chainID && $0.isPrimary }) {
                     let payment = Web3SendingTokenToAddressPayment(
                         payment: payment,

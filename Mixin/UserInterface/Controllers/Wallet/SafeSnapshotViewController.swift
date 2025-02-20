@@ -74,24 +74,10 @@ final class SafeSnapshotViewController: RowListViewController {
             symbolLabel.text = token.symbol
             fiatMoneyValueLabel.text = R.string.localizable.value_now(Currency.current.symbol + fiatMoneyValue(usdPrice: token.decimalUSDPrice)) + "\n "
         }
-        switch SafeSnapshot.SnapshotType(rawValue: snapshot.type) {
-        case .pending:
-            amountLabel.textColor = R.color.chat_pin_count_background()
-        default:
-            if snapshot.amount.hasMinusPrefix {
-                amountLabel.textColor = R.color.market_red()
-            } else {
-                amountLabel.textColor = R.color.market_green()
-            }
-        }
-        if ScreenHeight.current >= .extraLong {
-            iconView.badgeIconDiameter = 28
-            iconView.badgeOutlineWidth = 4
-            headerContentStackView.spacing = 2
-        }
+        updateAmountLabelColor()
         layoutTableHeaderView()
         
-        reloadData()
+        reloadRows()
         updateTableViewContentInsetBottom()
         if let hash = snapshot.inscriptionHash {
             if inscription == nil {
@@ -194,7 +180,7 @@ final class SafeSnapshotViewController: RowListViewController {
         }
         self.inscription = item
         iconView.setIcon(content: item)
-        reloadData()
+        reloadRows()
     }
     
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
@@ -336,12 +322,28 @@ extension SafeSnapshotViewController {
             }
             DispatchQueue.main.async {
                 self.snapshot = item
-                self.reloadData()
+                self.updateAmountLabelColor()
+                self.reloadRows()
             }
         }
     }
     
-    private func reloadData() {
+    private func updateAmountLabelColor() {
+        switch SafeSnapshot.SnapshotType(rawValue: snapshot.type) {
+        case .pending:
+            amountLabel.textColor = R.color.chat_pin_count_background()
+        default:
+            if let withdrawal = snapshot.withdrawal, withdrawal.hash.isEmpty {
+                amountLabel.textColor = R.color.chat_pin_count_background()
+            } else if snapshot.amount.hasMinusPrefix {
+                amountLabel.textColor = R.color.market_red()
+            } else {
+                amountLabel.textColor = R.color.market_green()
+            }
+        }
+    }
+    
+    private func reloadRows() {
         var rows: [SnapshotRow] = []
         
         if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue {

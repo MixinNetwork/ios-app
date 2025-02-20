@@ -74,6 +74,11 @@ final class SafeSnapshotViewController: RowListViewController {
             symbolLabel.text = token.symbol
             fiatMoneyValueLabel.text = R.string.localizable.value_now(Currency.current.symbol + fiatMoneyValue(usdPrice: token.decimalUSDPrice)) + "\n "
         }
+        if ScreenHeight.current >= .extraLong {
+            iconView.badgeIconDiameter = 28
+            iconView.badgeOutlineWidth = 4
+            headerContentStackView.spacing = 2
+        }
         updateAmountLabelColor()
         layoutTableHeaderView()
         

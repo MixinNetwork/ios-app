@@ -336,10 +336,10 @@ extension SafeSnapshotViewController {
     private func updateAmountLabelColor() {
         switch SafeSnapshot.SnapshotType(rawValue: snapshot.type) {
         case .pending:
-            amountLabel.textColor = R.color.chat_pin_count_background()
+            amountLabel.textColor = R.color.text_tertiary()!
         default:
             if let withdrawal = snapshot.withdrawal, withdrawal.hash.isEmpty {
-                amountLabel.textColor = R.color.chat_pin_count_background()
+                amountLabel.textColor = R.color.text_tertiary()!
             } else if snapshot.amount.hasMinusPrefix {
                 amountLabel.textColor = R.color.market_red()
             } else {

@@ -1,6 +1,6 @@
 import UIKit
 
-class BarChartView: UIView {
+final class BarChartView: UIView {
     
     var proportions = [Double]() {
         didSet {

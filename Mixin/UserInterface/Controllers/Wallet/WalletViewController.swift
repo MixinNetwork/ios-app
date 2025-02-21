@@ -84,6 +84,12 @@ final class WalletViewController: UIViewController, MixinNavigationAnimating, Mn
         updateTableViewContentInset()
     }
     
+    @IBAction func switchFromWallets(_ sender: Any) {
+        if let parent = parent as? WalletContainerViewController {
+            parent.switchToWalletSummary()
+        }
+    }
+    
     @IBAction func searchAction(_ sender: Any) {
         let controller = R.storyboard.wallet.wallet_search()!
         controller.view.alpha = 0

@@ -283,6 +283,7 @@
 "circle_title" = "Círculos de %@";
 "circles" = "Círculos";
 "circulation_supply" = "Circulation Supply";
+"classic_wallet" = "Classic Wallet";
 "clear" = "Borrar";
 "clear_cache" = "Clear Cache";
 "clear_chat" = "Vaciar la conversación";
@@ -949,6 +950,7 @@
 "price_too_less" = "The set price must be greater than %@ of the current price";
 "privacy" = "Privacidad";
 "privacy_policy" = "Política de privacidad";
+"privacy_wallet" = "Privacy Wallet";
 "process_can_not_be_stop" = "El proceso no se puede cancelar cuando comienza. Recuerda el PIN de 6 dígitos y vuelva a introducirlo si el proceso se cancela inesperadamente.";
 "profile" = "Perfil";
 "profile_photo" = "Foto de perfil";
@@ -1267,6 +1269,7 @@
 "top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
+"total_assets" = "Total assets";
 "total_supply" = "Total Supply";
 "touch_id" = "identifición de toque";
 "track_not_found" = "Pista no encontrada";

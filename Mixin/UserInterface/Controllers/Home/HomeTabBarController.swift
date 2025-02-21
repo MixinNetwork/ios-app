@@ -20,7 +20,7 @@ final class HomeTabBarController: UIViewController {
     
     private let homeViewController = R.storyboard.home.home()!
     
-    private lazy var walletViewController = WalletViewController()
+    private lazy var walletContainerViewController = WalletContainerViewController()
     private lazy var collectiblesViewController = CollectiblesViewController()
     private lazy var exploreViewController = ExploreViewController()
     
@@ -149,7 +149,7 @@ final class HomeTabBarController: UIViewController {
         case .chat:
             newChild = homeViewController
         case .wallet:
-            newChild = walletViewController
+            newChild = walletContainerViewController
         case .collectibles:
             newChild = collectiblesViewController
         case .more:

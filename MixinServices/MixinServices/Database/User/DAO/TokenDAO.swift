@@ -173,6 +173,46 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: sql) ?? 0
     }
     
+    public func walletDigest() -> WalletDigest {
+        
+        enum SQL {
+            
+            static let topTokenDigests = """
+            SELECT t.asset_id, t.symbol, t.name, t.icon_url, t.price_usd, te.balance
+            FROM tokens t
+                INNER JOIN tokens_extra te ON t.asset_id = te.asset_id
+            WHERE CAST(t.price_usd * te.balance AS REAL) > 0
+            ORDER BY t.price_usd * te.balance DESC
+            LIMIT ?
+            """
+            
+            static let positiveUSDBalanceTokensCount = """
+            SELECT COUNT(1)
+            FROM tokens t
+                INNER JOIN tokens_extra te ON t.asset_id = te.asset_id
+            WHERE CAST(t.price_usd * te.balance AS REAL) > 0
+            """
+            
+            static let usdBalanceSum = """
+            SELECT SUM(ifnull(te.balance,'0') * t.price_usd)
+            FROM tokens t
+                LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
+            """
+            
+        }
+        
+        return try! db.read { db in
+            let topTokenDigests = try TokenDigest.fetchAll(db, sql: SQL.topTokenDigests, arguments: [5])
+            let positiveUSDBalanceTokensCount = try Int.fetchOne(db, sql: SQL.positiveUSDBalanceTokensCount) ?? 0
+            let usdBalanceSum = try Decimal.fetchOne(db, sql: SQL.usdBalanceSum) ?? 0
+            return WalletDigest(
+                usdBalanceSum: usdBalanceSum,
+                tokens: topTokenDigests,
+                positiveUSDBalanceTokensCount: positiveUSDBalanceTokensCount
+            )
+        }
+    }
+    
     public func save(assets: [Token], completion: (() -> Void)? = nil) {
         guard !assets.isEmpty else {
             return

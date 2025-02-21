@@ -17,8 +17,17 @@ final class Web3API {
         case assetKey(String)
     }
     
-    static func account(address: String, completion: @escaping (MixinAPI.Result<Web3Account>) -> Void) -> Request {
-        request(method: .get, path: "/accounts/" + address, completion: completion)
+    static func account(
+        address: String,
+        queue: DispatchQueue = .main,
+        completion: @escaping (MixinAPI.Result<Web3Account>) -> Void
+    ) -> Request {
+        request(
+            method: .get,
+            path: "/accounts/" + address,
+            queue: queue,
+            completion: completion
+        )
     }
     
     static func dapps(queue: DispatchQueue, completion: @escaping (MixinAPI.Result<[Web3ChainUpdate]>) -> Void) {

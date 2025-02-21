@@ -283,6 +283,7 @@
 "circle_title" = "%@的圈子";
 "circles" = "圈子";
 "circulation_supply" = "流通量";
+"classic_wallet" = "经典钱包";
 "clear" = "清理";
 "clear_cache" = "清理缓存";
 "clear_chat" = "清除聊天记录";
@@ -949,6 +950,7 @@
 "price_too_less" = "设定价格需大于现价的 %@";
 "privacy" = "隐私";
 "privacy_policy" = "隐私政策";
+"privacy_wallet" = "隐私钱包";
 "process_can_not_be_stop" = "流程一旦开始无法取消，请牢记 6 位数字 PIN，意外中止流程需要再次输入";
 "profile" = "个人资料";
 "profile_photo" = "个人头像";
@@ -1267,6 +1269,7 @@
 "top_count" = "前 %d";
 "total" = "共计";
 "total_amount" = "总金额";
+"total_assets" = "资产合计";
 "total_supply" = "总量";
 "touch_id" = "指纹";
 "track_not_found" = "Track 无效";

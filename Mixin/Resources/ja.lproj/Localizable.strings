@@ -283,6 +283,7 @@
 "circle_title" = "%@のグループリスト";
 "circles" = "グループリスト";
 "circulation_supply" = "Circulation Supply";
+"classic_wallet" = "Classic Wallet";
 "clear" = "削除";
 "clear_cache" = "キャッシュをクリア";
 "clear_chat" = "チャットを削除する";
@@ -949,6 +950,7 @@
 "price_too_less" = "The set price must be greater than %@ of the current price";
 "privacy" = "プライバシー";
 "privacy_policy" = "プライバシーポリシー";
+"privacy_wallet" = "Privacy Wallet";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "プロフィール";
 "profile_photo" = "プロフィール画像";
@@ -1267,6 +1269,7 @@
 "top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
+"total_assets" = "Total assets";
 "total_supply" = "Total Supply";
 "touch_id" = "指紋認証";
 "track_not_found" = "トラックが見つかりません";

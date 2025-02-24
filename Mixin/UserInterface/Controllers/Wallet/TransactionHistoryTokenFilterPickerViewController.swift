@@ -5,7 +5,7 @@ protocol TransactionHistoryTokenFilterPickerViewControllerDelegate: AnyObject {
     
     func transactionHistoryTokenFilterPickerViewController(
         _ controller: TransactionHistoryTokenFilterPickerViewController,
-        didPickTokens tokens: [TokenItem]
+        didPickTokens tokens: [MixinTokenItem]
     )
     
 }
@@ -16,17 +16,17 @@ final class TransactionHistoryTokenFilterPickerViewController: TransactionHistor
     
     private let selectedTokenReuseIdentifier = "st"
     
-    private var tokens: [TokenItem] = []
+    private var tokens: [MixinTokenItem] = []
     private var selectedAssetIDs: Set<String>
-    private var selectedTokens: [TokenItem]
+    private var selectedTokens: [MixinTokenItem]
     
-    private var searchResults: [TokenItem] = []
+    private var searchResults: [MixinTokenItem] = []
     
-    private var tokenModels: [TokenItem] {
+    private var tokenModels: [MixinTokenItem] {
         isSearching ? searchResults : tokens
     }
     
-    init(selectedTokens: [TokenItem]) {
+    init(selectedTokens: [MixinTokenItem]) {
         self.selectedAssetIDs = Set(selectedTokens.map(\.assetID))
         self.selectedTokens = selectedTokens
         super.init()

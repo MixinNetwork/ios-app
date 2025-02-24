@@ -2,7 +2,7 @@ import UIKit
 import OrderedCollections
 import MixinServices
 
-extension TokenItem: IdentifiableToken {
+extension MixinTokenItem: IdentifiableToken {
     
     var id: String {
         assetID
@@ -10,9 +10,9 @@ extension TokenItem: IdentifiableToken {
     
 }
 
-final class SendTokenSelectorViewController: TokenSelectorViewController<TokenItem> {
+final class SendTokenSelectorViewController: TokenSelectorViewController<MixinTokenItem> {
     
-    var onSelected: ((TokenItem) -> Void)?
+    var onSelected: ((MixinTokenItem) -> Void)?
     
     init() {
         super.init(
@@ -53,7 +53,7 @@ final class SendTokenSelectorViewController: TokenSelectorViewController<TokenIt
         }
     }
     
-    override func saveRecentsToStorage(tokens: any Sequence<TokenItem>) {
+    override func saveRecentsToStorage(tokens: any Sequence<MixinTokenItem>) {
         PropertiesDAO.shared.set(
             jsonObject: tokens.map(\.assetID),
             forKey: .transferRecentAssetIDs
@@ -95,7 +95,7 @@ final class SendTokenSelectorViewController: TokenSelectorViewController<TokenIt
         self.searchBoxView.isBusy = false
     }
     
-    override func tokenIndices(tokens: [TokenItem], chainID: String) -> [Int] {
+    override func tokenIndices(tokens: [MixinTokenItem], chainID: String) -> [Int] {
         tokens.enumerated().compactMap { (index, token) in
             if token.chainID == chainID {
                 index
@@ -105,7 +105,7 @@ final class SendTokenSelectorViewController: TokenSelectorViewController<TokenIt
         }
     }
     
-    override func configureRecentCell(_ cell: ExploreRecentSearchCell, withToken token: TokenItem) {
+    override func configureRecentCell(_ cell: ExploreRecentSearchCell, withToken token: MixinTokenItem) {
         cell.setBadgeIcon { iconView in
             iconView.setIcon(token: token)
         }
@@ -119,7 +119,7 @@ final class SendTokenSelectorViewController: TokenSelectorViewController<TokenIt
         }
     }
     
-    override func configureTokenCell(_ cell: SwapTokenCell, withToken token: TokenItem) {
+    override func configureTokenCell(_ cell: SwapTokenCell, withToken token: MixinTokenItem) {
         cell.iconView.setIcon(token: token)
         cell.titleLabel.text = token.name
         cell.subtitleLabel.text = token.localizedBalanceWithSymbol
@@ -131,7 +131,7 @@ final class SendTokenSelectorViewController: TokenSelectorViewController<TokenIt
         }
     }
     
-    override func pickUp(token: TokenItem, from location: PickUpLocation) {
+    override func pickUp(token: MixinTokenItem, from location: PickUpLocation) {
         super.pickUp(token: token, from: location)
         presentingViewController?.dismiss(animated: true) { [onSelected] in
             onSelected?(token)

@@ -22,7 +22,7 @@ final class PlainTokenIconView: UIImageView {
         sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
     }
     
-    func setIcon(token: Token) {
+    func setIcon(token: MixinToken) {
         setIcon(tokenIconURL: URL(string: token.iconURL))
     }
     

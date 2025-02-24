@@ -3,7 +3,7 @@ import MixinServices
 
 final class OutputsViewController: UITableViewController {
     
-    private let token: TokenItem?
+    private let token: MixinTokenItem?
     private let pageCount = 50
     
     private var outputs: [Output] = []
@@ -11,7 +11,7 @@ final class OutputsViewController: UITableViewController {
     private var didLoadEarliestOutput = false
     private var hud: Hud?
     
-    init(token: TokenItem?) {
+    init(token: MixinTokenItem?) {
         self.token = token
         super.init(style: .plain)
     }

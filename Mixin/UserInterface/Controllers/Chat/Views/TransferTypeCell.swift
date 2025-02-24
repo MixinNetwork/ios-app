@@ -21,7 +21,7 @@ class TransferTypeCell: UITableViewCell {
         balanceLabel.text = balance + " " + asset.symbol
     }
     
-    func render(token: TokenItem) {
+    func render(token: MixinTokenItem) {
         assetIconView.setIcon(token: token)
         nameLabel.text = token.name
         let balance = CurrencyFormatter.localizedString(from: token.balance, format: .precision, sign: .never)

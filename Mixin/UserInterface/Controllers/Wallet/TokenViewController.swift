@@ -8,7 +8,7 @@ final class TokenViewController: UIViewController, MnemonicsBackupChecking {
     
     private weak var tableView: UITableView!
     
-    private(set) var token: TokenItem
+    private(set) var token: MixinTokenItem
     
     private var performSendOnAppear: Bool
     private var pendingSnapshots: [SafeSnapshotItem] = []
@@ -17,7 +17,7 @@ final class TokenViewController: UIViewController, MnemonicsBackupChecking {
     private var chartPoints: [ChartView.Point]?
     
     init(
-        token: TokenItem,
+        token: MixinTokenItem,
         market: Market? = nil,
         performSendOnAppear: Bool = false
     ) {

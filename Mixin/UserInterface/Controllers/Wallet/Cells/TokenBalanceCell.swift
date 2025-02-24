@@ -24,7 +24,7 @@ final class TokenBalanceCell: UITableViewCell {
         iconView.addGestureRecognizer(recognizer)
     }
     
-    func reloadData(token: TokenItem) {
+    func reloadData(token: MixinTokenItem) {
         iconView.setIcon(token: token)
         var amount: String
         if token.decimalBalance == 0 {

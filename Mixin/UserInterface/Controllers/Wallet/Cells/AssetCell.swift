@@ -30,7 +30,7 @@ class AssetCell: ModernSelectedBackgroundCell {
         assetIconView.prepareForReuse()
     }
     
-    func render(asset: TokenItem, attributedSymbol: NSAttributedString? = nil) {
+    func render(asset: MixinTokenItem, attributedSymbol: NSAttributedString? = nil) {
         assetIconView.setIcon(token: asset)
         let balance: String
         if asset.decimalBalance.isZero {

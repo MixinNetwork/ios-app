@@ -64,7 +64,7 @@ extension PaymentPreconditionChecker {
     }
     
     func collectOutputs(
-        token: TokenItem,
+        token: MixinTokenItem,
         amount: Decimal,
         on parent: UIViewController
     ) async -> OutputCollectingResult {
@@ -120,7 +120,7 @@ protocol PaymentPrecondition {
 
 struct AddressDustPrecondition: PaymentPrecondition {
     
-    let token: TokenItem
+    let token: MixinTokenItem
     let amount: Decimal
     let address: Address
     
@@ -172,7 +172,7 @@ struct DuplicationPrecondition: PaymentPrecondition {
     }
     
     let operation: Operation
-    let token: TokenItem
+    let token: MixinTokenItem
     let tokenAmount: Decimal
     let fiatMoneyAmount: Decimal
     let memo: String
@@ -186,14 +186,14 @@ struct DuplicationPrecondition: PaymentPrecondition {
         let trace: Trace? = switch self.operation {
         case .transfer(let opponent):
             TraceDAO.shared.getTrace(assetId: token.assetID,
-                                     amount: Token.amountString(from: tokenAmount),
+                                     amount: MixinToken.amountString(from: tokenAmount),
                                      opponentId: opponent.userId,
                                      destination: nil,
                                      tag: nil,
                                      createdAt: createdAt)
         case let .withdraw(address):
             TraceDAO.shared.getTrace(assetId: token.assetID,
-                                             amount: Token.amountString(from: tokenAmount),
+                                             amount: MixinToken.amountString(from: tokenAmount),
                                              opponentId: nil,
                                              destination: address.destination,
                                              tag: address.tag,
@@ -225,7 +225,7 @@ struct DuplicationPrecondition: PaymentPrecondition {
 
 struct LargeAmountPrecondition: PaymentPrecondition {
     
-    let token: TokenItem
+    let token: MixinTokenItem
     let tokenAmount: Decimal
     let fiatMoneyAmount: Decimal
     

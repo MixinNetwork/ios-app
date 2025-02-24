@@ -6,7 +6,7 @@ final class TransactionHistoryAssetFilterView: TransactionHistoryFilterView {
     private let maxIconCount = 10
     private let iconsStackView = UIStackView()
     
-    func reloadData(tokens: [Token]) {
+    func reloadData(tokens: [MixinToken]) {
         for view in iconsStackView.arrangedSubviews {
             view.removeFromSuperview()
         }

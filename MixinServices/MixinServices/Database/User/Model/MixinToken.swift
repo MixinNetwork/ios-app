@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord, TableRecord, PersistableRecord {
+public class MixinToken: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord, TableRecord, PersistableRecord {
     
     public enum CodingKeys: String, CodingKey {
         case assetID = "asset_id"
@@ -65,7 +65,7 @@ public class Token: Codable, DatabaseColumnConvertible, MixinFetchableRecord, Mi
     
 }
 
-extension Token {
+extension MixinToken {
     
     public var usesTag: Bool {
         assetID == AssetID.xrp
@@ -85,7 +85,7 @@ extension Token {
     
 }
 
-extension Token {
+extension MixinToken {
     
     private static let amountFormatter: NumberFormatter = {
         let formatter = NumberFormatter()

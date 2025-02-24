@@ -13,7 +13,7 @@ class AddressCell: ModernSelectedBackgroundCell {
         dateLabel.text = address.updatedAt.toUTCDate().timeAgo()
     }
     
-    func render(address: Address, asset: TokenItem) {
+    func render(address: Address, asset: MixinTokenItem) {
         nameLabel.text = address.label
         addressLabel.text = address.fullRepresentation
         dateLabel.text = address.updatedAt.toUTCDate().timeAgo()

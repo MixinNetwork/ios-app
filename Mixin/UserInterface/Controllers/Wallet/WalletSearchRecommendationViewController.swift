@@ -15,7 +15,7 @@ final class WalletSearchRecommendationViewController: WalletSearchTableViewContr
     
     private let queue = DispatchQueue(label: "one.mixin.messenger.WalletSearchRecommendation")
     
-    private var history: [TokenItem] = []
+    private var history: [MixinTokenItem] = []
     private var trending: [AssetItem] = []
     
     override func viewDidLoad() {
@@ -153,7 +153,7 @@ extension WalletSearchRecommendationViewController: UITableViewDelegate {
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
             queue.async {
-                func pushTokenViewController(with token: TokenItem) {
+                func pushTokenViewController(with token: MixinTokenItem) {
                     DispatchQueue.main.sync {
                         hud.hide()
                         let viewController = TokenViewController(token: token)
@@ -188,7 +188,7 @@ extension WalletSearchRecommendationViewController: UITableViewDelegate {
                     switch SafeAPI.assets(id: item.assetId) {
                     case .success(let token):
                         TokenDAO.shared.save(assets: [token])
-                        let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                        let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                         pushTokenViewController(with: item)
                     case .failure(let error):
                         reportError(error)

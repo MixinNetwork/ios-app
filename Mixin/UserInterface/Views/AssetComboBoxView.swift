@@ -23,7 +23,7 @@ class AssetComboBoxView: ComboBoxView {
         iconView.setIcon(asset: asset)
     }
     
-    func load(token: TokenItem) {
+    func load(token: MixinTokenItem) {
         titleLabel.text = token.name
         let balance = CurrencyFormatter.localizedString(from: token.balance, format: .precision, sign: .never) ?? token.localizedBalance
         subtitleLabel.text = balance + " " + token.symbol

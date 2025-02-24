@@ -1312,7 +1312,7 @@ extension UrlWindow {
                     }
                     return
                 }
-                let token: TokenItem?
+                let token: MixinTokenItem?
                 if let safe = response.safe {
                     switch safe.operation {
                     case let .transaction(transaction):
@@ -1542,15 +1542,15 @@ extension UrlWindow {
     private static func syncToken(
         assetID: String,
         onFailure: @escaping (String) -> Void
-    ) -> TokenItem? {
-        var token: TokenItem
+    ) -> MixinTokenItem? {
+        var token: MixinTokenItem
         if let localToken = TokenDAO.shared.tokenItem(assetID: assetID) {
             token = localToken
         } else {
             switch SafeAPI.assets(id: assetID) {
             case let .success(remoteToken):
                 TokenDAO.shared.save(token: remoteToken)
-                token = TokenItem(token: remoteToken, balance: "0", isHidden: false, chain: nil)
+                token = MixinTokenItem(token: remoteToken, balance: "0", isHidden: false, chain: nil)
             case let .failure(error):
                 Logger.general.error(category: "UrlWindow", message: "No token: \(assetID) from remote, error: \(error)")
                 let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.asset_not_found())
@@ -1578,13 +1578,13 @@ extension UrlWindow {
                     return nil
                 }
             }
-            return TokenItem(token: token, balance: token.balance, isHidden: token.isHidden, chain: chain)
+            return MixinTokenItem(token: token, balance: token.balance, isHidden: token.isHidden, chain: chain)
         } else {
             return token
         }
     }
     
-    private static func syncToken(assetID: String, hud: Hud) -> TokenItem? {
+    private static func syncToken(assetID: String, hud: Hud) -> MixinTokenItem? {
         syncToken(assetID: assetID) { errorDescription in
             hud.set(style: .error, text: errorDescription)
             hud.scheduleAutoHidden()

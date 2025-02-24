@@ -9,14 +9,14 @@ struct Payment: PaymentPreconditionChecker {
     }
     
     let traceID: String
-    let token: TokenItem
+    let token: MixinTokenItem
     let tokenAmount: Decimal
     let fiatMoneyAmount: Decimal
     let memo: String
     let context: Context?
     
     init(
-        traceID: String, token: TokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal,
+        traceID: String, token: MixinTokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal,
         memo: String, context: Context? = nil
     ) {
         self.traceID = traceID
@@ -29,7 +29,7 @@ struct Payment: PaymentPreconditionChecker {
     
     static func inscription(
         traceID: String,
-        token: TokenItem,
+        token: MixinTokenItem,
         memo: String,
         context: InscriptionContext
     ) -> Payment {

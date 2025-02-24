@@ -17,7 +17,7 @@ final class CollectibleCollectionHeaderView: UICollectionReusableView {
         tokenIconView.layer.shadowOpacity = 0
     }
     
-    func load(token: TokenItem?, collection: InscriptionCollectionPreview) {
+    func load(token: MixinTokenItem?, collection: InscriptionCollectionPreview) {
         if let token {
             tokenIconView.setIcon(token: token)
         }

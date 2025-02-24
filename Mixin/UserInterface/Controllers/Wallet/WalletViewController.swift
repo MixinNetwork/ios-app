@@ -14,8 +14,8 @@ final class WalletViewController: UIViewController, MixinNavigationAnimating, Mn
     private var lastSelectedAction: TokenAction?
 
     private var isSearchViewControllerPreloaded = false
-    private var tokens = [TokenItem]()
-    private var sendableTokens = [TokenItem]()
+    private var tokens = [MixinTokenItem]()
+    private var sendableTokens = [MixinTokenItem]()
     private var hasAssetInLegacyNetwork = false
     
     deinit {
@@ -242,7 +242,7 @@ extension WalletViewController: TokenActionView.Delegate {
 
 extension WalletViewController: TransferSearchViewControllerDelegate {
     
-    func transferSearchViewController(_ viewController: TransferSearchViewController, didSelectToken token: TokenItem) {
+    func transferSearchViewController(_ viewController: TransferSearchViewController, didSelectToken token: MixinTokenItem) {
         guard let action = lastSelectedAction else {
             return
         }

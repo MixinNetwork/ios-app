@@ -27,7 +27,7 @@ final class DepositViewController: UIViewController {
         AssetID.bep20USDC:      "BEP-20",
     ]
     
-    private let initialToken: TokenItem
+    private let initialToken: MixinTokenItem
     
     private var addressGeneratingView: UIView?
     private var depositSuspendedView: DepositSuspendedView?
@@ -36,11 +36,11 @@ final class DepositViewController: UIViewController {
     private var switchableNetworks: OrderedDictionary<String, String> = [:]
     
     private var task: Task<Void, Error>?
-    private var displayingToken: TokenItem?
+    private var displayingToken: MixinTokenItem?
     
     private weak var titleView: NavigationTitleView!
     
-    init(token: TokenItem) {
+    init(token: MixinTokenItem) {
         self.initialToken = token
         let nib = R.nib.depositView
         super.init(nibName: nib.name, bundle: nib.bundle)
@@ -173,7 +173,7 @@ extension DepositViewController: UICollectionViewDelegate {
                 try Task.checkCancellation()
             }
             
-            let token: TokenItem
+            let token: MixinTokenItem
             if let localToken = TokenDAO.shared.tokenItem(assetID: id) {
                 token = localToken
             } else {
@@ -184,7 +184,7 @@ extension DepositViewController: UICollectionViewDelegate {
                     try await SafeAPI.assets(id: id)
                 }
                 TokenDAO.shared.save(assets: [remoteToken])
-                token = TokenItem(token: remoteToken, balance: "0", isHidden: false, chain: nil)
+                token = MixinTokenItem(token: remoteToken, balance: "0", isHidden: false, chain: nil)
                 try Task.checkCancellation()
             }
             
@@ -228,7 +228,7 @@ extension DepositViewController {
         throw MixinAPIResponseError.unauthorized
     }
     
-    private func reloadData(token: TokenItem) async throws {
+    private func reloadData(token: MixinTokenItem) async throws {
         Task.detached { [weak self] in
             let chain: Chain
             if let tokenChain = token.chain {
@@ -311,7 +311,7 @@ extension DepositViewController {
         }
     }
     
-    private func updateViews(token: TokenItem, entry: DepositEntry) {
+    private func updateViews(token: MixinTokenItem, entry: DepositEntry) {
         contentStackView.isHidden = false
         upperDepositFieldView.shadowView.hasLowerShadow = true
         upperDepositFieldView.delegate = self
@@ -369,7 +369,7 @@ extension DepositViewController {
         addressGeneratingView = nil
     }
     
-    private func addDepositSuspendedView(token: TokenItem) {
+    private func addDepositSuspendedView(token: MixinTokenItem) {
         let suspended: DepositSuspendedView
         if let depositSuspendedView {
             suspended = depositSuspendedView

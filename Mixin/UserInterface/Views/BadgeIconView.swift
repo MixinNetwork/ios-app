@@ -135,7 +135,7 @@ final class BadgeIconView: UIView {
         corner = .round
     }
     
-    func setIcon(token: TokenItem) {
+    func setIcon(token: MixinTokenItem) {
         iconImageView.sd_setImage(with: URL(string: token.iconURL),
                                   placeholderImage: nil,
                                   context: assetIconContext)

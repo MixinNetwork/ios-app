@@ -25,7 +25,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
     }
     
     private let requestID: String
-    private let token: TokenItem
+    private let token: MixinTokenItem
     private let amount: Decimal
     private let sendersThreshold: Int32
     private let senders: [UserItem]
@@ -41,7 +41,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
     
     init(
         requestID: String,
-        token: TokenItem,
+        token: MixinTokenItem,
         amount: Decimal,
         sendersThreshold: Int32,
         senders: [UserItem],

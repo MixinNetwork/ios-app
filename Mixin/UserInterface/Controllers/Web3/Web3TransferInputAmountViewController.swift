@@ -4,7 +4,7 @@ import MixinServices
 
 final class Web3TransferInputAmountViewController: InputAmountViewController {
     
-    override var token: any TransferableToken {
+    override var token: any Token {
         payment.token
     }
     
@@ -40,7 +40,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
     private let payment: Web3SendingTokenToAddressPayment
     
     private var fee: Web3TransferOperation.Fee?
-    private var feeToken: TokenItem?
+    private var feeToken: MixinTokenItem?
     
     init(payment: Web3SendingTokenToAddressPayment) {
         self.payment = payment

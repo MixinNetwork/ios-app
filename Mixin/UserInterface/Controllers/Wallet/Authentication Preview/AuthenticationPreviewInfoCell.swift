@@ -5,7 +5,7 @@ final class AuthenticationPreviewInfoCell: UITableViewCell {
     
     enum TrailingContent {
         case disclosure
-        case plainTokenIcon(TokenItem)
+        case plainTokenIcon(MixinTokenItem)
     }
     
     @IBOutlet weak var contentStackView: UIStackView!

@@ -5,7 +5,7 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
     
     let activityIndicator = ActivityIndicatorView()
     
-    var searchResults: [TokenItem] = []
+    var searchResults: [MixinTokenItem] = []
     var lastKeyword: String?
     
     private let queue = OperationQueue()
@@ -48,7 +48,7 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
             
             let lowercasedKeyword = keyword.lowercased()
             let defaultIconUrl = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
-            func assetSorting(_ one: TokenItem, _ another: TokenItem) -> Bool {
+            func assetSorting(_ one: MixinTokenItem, _ another: MixinTokenItem) -> Bool {
                 let oneSymbolEqualsToKeyword = one.symbol.lowercased() == lowercasedKeyword
                 let anotherSymbolEqualsToKeyword = another.symbol.lowercased() == lowercasedKeyword
                 if oneSymbolEqualsToKeyword && !anotherSymbolEqualsToKeyword {
@@ -86,7 +86,7 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
                 self.tableView.removeEmptyIndicator()
             }
             
-            let remoteAssets: [Token]
+            let remoteAssets: [MixinToken]
             switch AssetAPI.search(keyword: keyword) {
             case .success(let assets):
                 remoteAssets = assets
@@ -99,7 +99,7 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
             
             localItems = localItems.filter{ $0.balance.doubleValue > 0 }
             let localIds = Set(localItems.map(\.assetID))
-            let remoteItems = remoteAssets.compactMap({ (token) -> TokenItem? in
+            let remoteItems = remoteAssets.compactMap({ (token) -> MixinTokenItem? in
                 guard !localIds.contains(token.assetID) else {
                     return nil
                 }
@@ -114,11 +114,11 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
                 } else {
                     return nil
                 }
-                let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                 return item
             })
             
-            let allItems: [TokenItem]?
+            let allItems: [MixinTokenItem]?
             if remoteItems.isEmpty {
                 allItems = nil
             } else {

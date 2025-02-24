@@ -27,7 +27,7 @@ final class BalancedSwapToken: SwapToken {
         )
     }
     
-    init?(tokenItem i: TokenItem) {
+    init?(tokenItem i: MixinTokenItem) {
         guard let chain = i.chain else {
             return nil
         }

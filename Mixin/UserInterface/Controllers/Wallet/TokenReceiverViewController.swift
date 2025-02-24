@@ -9,7 +9,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
         case addressBook
     }
     
-    private let token: TokenItem
+    private let token: MixinTokenItem
     private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
     private let trayViewHeight: CGFloat = 82
     
@@ -20,7 +20,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
     private weak var trayViewBottomConstraint: NSLayoutConstraint?
     
-    init(token: TokenItem) {
+    init(token: MixinTokenItem) {
         self.token = token
         super.init(nibName: nil, bundle: nil)
     }

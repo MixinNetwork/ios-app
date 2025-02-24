@@ -19,7 +19,7 @@ final class SelectedTokenCell: SelectedItemCell<PlainTokenIconView> {
         nameLabel.text = address.label
     }
     
-    func load(token: TokenItem) {
+    func load(token: MixinTokenItem) {
         iconView.setIcon(token: token)
         nameLabel.text = token.symbol
     }

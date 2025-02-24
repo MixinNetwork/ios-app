@@ -11,7 +11,7 @@ final class AddressBookViewController: UIViewController {
     
     var onSelect: ((Address) -> Void)?
     
-    private let token: TokenItem
+    private let token: MixinTokenItem
     
     private var addresses: [Address] = []
     private var searchResult: [Address] = []
@@ -20,7 +20,7 @@ final class AddressBookViewController: UIViewController {
         !(searchBoxView.textField.text ?? "").isEmpty
     }
     
-    init(token: TokenItem) {
+    init(token: MixinTokenItem) {
         self.token = token
         let nib = R.nib.addressBookView
         super.init(nibName: nib.name, bundle: nib.bundle)

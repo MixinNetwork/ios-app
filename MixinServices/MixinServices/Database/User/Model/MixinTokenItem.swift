@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public final class TokenItem: Token, NumberStringLocalizable {
+public final class MixinTokenItem: MixinToken, NumberStringLocalizable {
     
     public let balance: String
     public let isHidden: Bool
@@ -42,7 +42,7 @@ public final class TokenItem: Token, NumberStringLocalizable {
         sign: .never
     )
     
-    public init(token: Token, balance: String, isHidden: Bool, chain: Chain?) {
+    public init(token: MixinToken, balance: String, isHidden: Bool, chain: Chain?) {
         self.balance = balance
         self.isHidden = isHidden
         self.chain = chain
@@ -99,35 +99,7 @@ public final class TokenItem: Token, NumberStringLocalizable {
     
 }
 
-extension TokenItem {
-    
-    public static let xin: TokenItem = {
-        let token = Token(assetID: AssetID.xin,
-                          kernelAssetID: "",
-                          symbol: "XIN",
-                          name: "Mixin",
-                          iconURL: "https://images.mixin.one/UasWtBZO0TZyLTLCFQjvE_UYekjC7eHCuT_9_52ZpzmCC-X-NPioVegng7Hfx0XmIUavZgz5UL-HIgPCBECc-Ws=s128",
-                          btcPrice: "0",
-                          usdPrice: "0",
-                          chainID: ChainID.ethereum,
-                          usdChange: "0",
-                          btcChange: "0",
-                          dust: "0.0001",
-                          confirmations: 100,
-                          assetKey: "0xa974c709cfb4566686553a20790685a47aceaa33",
-                          collectionHash: nil)
-        let chain = Chain(chainId: token.chainID,
-                          name: "Ether",
-                          symbol: "ETH",
-                          iconUrl: "https://images.mixin.one/zVDjOxNTQvVsA8h2B4ZVxuHoCF3DJszufYKWpd9duXUSbSapoZadC7_13cnWBqg0EmwmRcKGbJaUpA8wFfpgZA=s128",
-                          threshold: 0,
-                          withdrawalMemoPossibility: WithdrawalMemoPossibility.negative.rawValue)
-        return TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
-    }()
-    
-}
-
-extension TokenItem {
+extension MixinTokenItem {
     
     public var depositNetworkName: String? {
         switch chainID {

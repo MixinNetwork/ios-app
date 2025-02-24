@@ -5,7 +5,7 @@ final class HiddenTokensViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
-    private var tokens = [TokenItem]()
+    private var tokens = [MixinTokenItem]()
     
     override func viewDidLoad() {
         super.viewDidLoad()

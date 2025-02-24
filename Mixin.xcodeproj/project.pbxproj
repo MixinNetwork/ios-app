@@ -658,7 +658,7 @@
 		9401A56F2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A56E2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift */; };
 		9401A57C2BD960F600679686 /* Web3Chain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A57B2BD960F600679686 /* Web3Chain.swift */; };
 		9401A5FF2BDA8B5300679686 /* Web3SendingPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A5FE2BDA8B5300679686 /* Web3SendingPayment.swift */; };
-		9401A6B82BDC771A00679686 /* TransferableToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A6B72BDC771A00679686 /* TransferableToken.swift */; };
+		9401A6B82BDC771A00679686 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A6B72BDC771A00679686 /* Token.swift */; };
 		9402A2912C2B7F67006E71FA /* InscriptionContentSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9402A2902C2B7F67006E71FA /* InscriptionContentSession.swift */; };
 		94031D712C1C5B41007E53BC /* SafeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94031D702C1C5B41007E53BC /* SafeURL.swift */; };
 		94046B91272DC265007C1D4A /* GroupCallMembersDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */; };
@@ -2178,7 +2178,7 @@
 		9401A56E2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		9401A57B2BD960F600679686 /* Web3Chain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3Chain.swift; sourceTree = "<group>"; };
 		9401A5FE2BDA8B5300679686 /* Web3SendingPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SendingPayment.swift; sourceTree = "<group>"; };
-		9401A6B72BDC771A00679686 /* TransferableToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferableToken.swift; sourceTree = "<group>"; };
+		9401A6B72BDC771A00679686 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		9402A2902C2B7F67006E71FA /* InscriptionContentSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionContentSession.swift; sourceTree = "<group>"; };
 		94031D702C1C5B41007E53BC /* SafeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeURL.swift; sourceTree = "<group>"; };
 		94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCallMembersDataSource.swift; sourceTree = "<group>"; };
@@ -4096,7 +4096,7 @@
 				9401A57B2BD960F600679686 /* Web3Chain.swift */,
 				9489245F2D5720C100D9BCCB /* Web3Token+ChainTag.swift */,
 				948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */,
-				9401A6B72BDC771A00679686 /* TransferableToken.swift */,
+				9401A6B72BDC771A00679686 /* Token.swift */,
 				9401A5FE2BDA8B5300679686 /* Web3SendingPayment.swift */,
 				9414A7872BE78D8700FA35EB /* DecimalAccumulator.swift */,
 				94838A432C02ADFB005B6A27 /* Solana.swift */,
@@ -7171,7 +7171,7 @@
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
 				7BFE47DF228432C800FC4379 /* PeerInfoView.swift in Sources */,
 				946331B62C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift in Sources */,
-				9401A6B82BDC771A00679686 /* TransferableToken.swift in Sources */,
+				9401A6B82BDC771A00679686 /* Token.swift in Sources */,
 				9427D52225E0E8DE00B1EF0E /* PlaylistItemCell.swift in Sources */,
 				7B86B1E923F69E3600C80AD9 /* ContactMessageCellRightView.swift in Sources */,
 				943CAA282CC832E000346677 /* UIBarButtonItem+Convenience.swift in Sources */,

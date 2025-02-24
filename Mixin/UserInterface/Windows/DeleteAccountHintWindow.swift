@@ -9,7 +9,7 @@ final class DeleteAccountHintWindow: BottomSheetView {
     var onViewWallet: (() -> Void)?
     var onContinue: (() -> Void)?
     
-    private var assets = [TokenItem]()
+    private var assets = [MixinTokenItem]()
     private let maxTableHeight: CGFloat = AssetCell.height * 3
     
     class func instance() -> DeleteAccountHintWindow {
@@ -24,7 +24,7 @@ final class DeleteAccountHintWindow: BottomSheetView {
         tableView.delegate = self
     }
     
-    func render(assets: [TokenItem]) {
+    func render(assets: [MixinTokenItem]) {
         self.assets = assets
         tableViewHeightConstraint.constant = min(maxTableHeight, CGFloat(assets.count) * AssetCell.height)
         tableView.reloadData()

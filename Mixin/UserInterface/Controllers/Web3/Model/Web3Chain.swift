@@ -167,7 +167,7 @@ extension Web3Chain {
 
 extension Web3Chain {
     
-    func feeToken() throws -> TokenItem? {
+    func feeToken() throws -> MixinTokenItem? {
         if let token = TokenDAO.shared.tokenItem(assetID: feeTokenAssetID) {
            return token
         } else {

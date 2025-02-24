@@ -26,7 +26,7 @@ final class ShareInscriptionAsPictureView: UIView {
         tokenIconBackgroundView.layer.borderWidth = 1
     }
     
-    func reloadData(inscription: InscriptionItem, token: TokenItem?) {
+    func reloadData(inscription: InscriptionItem, token: MixinTokenItem?) {
         switch inscription.inscriptionContent {
         case let .image(url):
             backgroundImageView.isHidden = false

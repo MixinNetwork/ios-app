@@ -11,7 +11,7 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
     
     var onSavingSuccess: (() -> Void)?
     
-    private let token: TokenItem
+    private let token: MixinTokenItem
     private let label: String
     private let destination: String
     private let tag: String
@@ -19,7 +19,7 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
     
     private var savedAddress: Address?
     
-    init(token: TokenItem, label: String, destination: String, tag: String, action: Action) {
+    init(token: MixinTokenItem, label: String, destination: String, tag: String, action: Action) {
         self.token = token
         self.label = label
         self.destination = destination

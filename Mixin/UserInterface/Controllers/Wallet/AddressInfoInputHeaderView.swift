@@ -49,7 +49,7 @@ final class AddressInfoInputHeaderView: UIView {
         updateActionButton()
     }
     
-    func load(token: TokenItem) {
+    func load(token: MixinTokenItem) {
         tokenIconView.setIcon(token: token)
         tokenNameLabel.text = token.name
         if let tag = token.chainTag {

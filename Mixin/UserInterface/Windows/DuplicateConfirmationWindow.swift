@@ -25,7 +25,7 @@ class DuplicateConfirmationWindow: AssetConfirmationWindow {
     }
     
     func render(
-        token: TokenItem,
+        token: MixinTokenItem,
         operation: Operation,
         amount: Decimal,
         fiatMoneyAmount: Decimal,

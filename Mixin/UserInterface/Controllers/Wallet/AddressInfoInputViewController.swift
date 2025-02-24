@@ -9,14 +9,14 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     
     @IBOutlet weak var stackViewBottomConstraint: NSLayoutConstraint!
     
-    private let token: TokenItem
+    private let token: MixinTokenItem
     private let intent: Intent
     private let inputContent: InputContent
     private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
     
     private lazy var tagRegex = try? NSRegularExpression(pattern: "^[0-9]+$")
     
-    private init(token: TokenItem, intent: Intent, inputContent: InputContent) {
+    private init(token: MixinTokenItem, intent: Intent, inputContent: InputContent) {
         self.token = token
         self.intent = intent
         self.inputContent = inputContent
@@ -28,12 +28,12 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         fatalError("Storyboard not supported")
     }
     
-    static func newAddress(token: TokenItem) -> AddressInfoInputViewController {
+    static func newAddress(token: MixinTokenItem) -> AddressInfoInputViewController {
         AddressInfoInputViewController(token: token, intent: .newAddress, inputContent: .destination)
     }
     
     // Returns non-nil result if memo/tag is needed
-    static func oneTimeWithdraw(token: TokenItem, destination: String) -> AddressInfoInputViewController? {
+    static func oneTimeWithdraw(token: MixinTokenItem, destination: String) -> AddressInfoInputViewController? {
         let content = InputContent(token: token, destination: destination)
         switch content {
         case .destination, .label:
@@ -281,7 +281,7 @@ extension AddressInfoInputViewController {
         case tag(destination: String)
         case label(TemporaryAddress)
         
-        init(token: TokenItem, destination: String) {
+        init(token: MixinTokenItem, destination: String) {
             switch token.memoPossibility {
             case .positive, .possible:
                 if token.usesTag {

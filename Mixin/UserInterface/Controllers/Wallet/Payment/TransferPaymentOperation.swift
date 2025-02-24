@@ -49,14 +49,14 @@ struct TransferPaymentOperation {
     let traceID: String
     let spendingOutputs: UTXOService.OutputCollection
     let destination: Payment.TransferDestination
-    let token: TokenItem
+    let token: MixinTokenItem
     let amount: Decimal
     let memo: String
     let reference: String?
     
     private init(
         behavior: Behavior, traceID: String, spendingOutputs: UTXOService.OutputCollection,
-        destination: Payment.TransferDestination, token: TokenItem, amount: Decimal,
+        destination: Payment.TransferDestination, token: MixinTokenItem, amount: Decimal,
         memo: String, reference: String?
     ) {
         self.behavior = behavior
@@ -71,7 +71,7 @@ struct TransferPaymentOperation {
     
     static func transfer(
         traceID: String, spendingOutputs: UTXOService.OutputCollection,
-        destination: Payment.TransferDestination, token: TokenItem,
+        destination: Payment.TransferDestination, token: MixinTokenItem,
         amount: Decimal, memo: String, reference: String?
     ) -> TransferPaymentOperation {
         TransferPaymentOperation(behavior: .transfer,
@@ -86,7 +86,7 @@ struct TransferPaymentOperation {
     
     static func inscription(
         traceID: String, spendingOutputs: UTXOService.OutputCollection,
-        destination: Payment.TransferDestination, token: TokenItem,
+        destination: Payment.TransferDestination, token: MixinTokenItem,
         memo: String, reference: String?, context: Payment.InscriptionContext
     ) -> TransferPaymentOperation {
         TransferPaymentOperation(behavior: .inscription(context),
@@ -101,7 +101,7 @@ struct TransferPaymentOperation {
     
     static func consolidation(
         traceID: String, outputs: UTXOService.OutputCollection,
-        destination: Payment.TransferDestination, token: TokenItem
+        destination: Payment.TransferDestination, token: MixinTokenItem
     ) -> TransferPaymentOperation {
         TransferPaymentOperation(behavior: .consolidation,
                                  traceID: traceID,
@@ -115,7 +115,7 @@ struct TransferPaymentOperation {
     
     static func swap(
         traceID: String, spendingOutputs: UTXOService.OutputCollection,
-        destination: Payment.TransferDestination, token: TokenItem,
+        destination: Payment.TransferDestination, token: MixinTokenItem,
         amount: Decimal, memo: String, reference: String?,
         context: Payment.SwapContext
     ) -> TransferPaymentOperation {
@@ -134,7 +134,7 @@ struct TransferPaymentOperation {
         let traceID = self.traceID
         let kernelAssetID = token.kernelAssetID
         let senderID = myUserId
-        let amount = Token.amountString(from: amount)
+        let amount = MixinToken.amountString(from: amount)
         Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(destination.debugDescription), traceID: \(traceID), behavior: \(behavior.description)")
         
         let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()

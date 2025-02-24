@@ -1,15 +1,15 @@
 import Foundation
 import MixinServices
 
-protocol TransferableToken {
+protocol Token {
     var name: String { get }
     var symbol: String { get }
     var decimalBalance: Decimal { get }
     var decimalUSDPrice: Decimal { get }
 }
 
-extension TokenItem: TransferableToken { }
+extension MixinTokenItem: Token { }
 
-extension Web3Token: TransferableToken { }
+extension Web3Token: Token { }
 
-extension BalancedSwapToken: TransferableToken { }
+extension BalancedSwapToken: Token { }

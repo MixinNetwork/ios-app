@@ -14,11 +14,11 @@ final class SafeSnapshotViewController: RowListViewController {
     
     private let messageID: String?
     
-    private var token: TokenItem
+    private var token: MixinTokenItem
     private var snapshot: SafeSnapshotItem
     private var inscription: InscriptionItem?
     
-    init(token: TokenItem, snapshot: SafeSnapshotItem, messageID: String?, inscription: InscriptionItem?) {
+    init(token: MixinTokenItem, snapshot: SafeSnapshotItem, messageID: String?, inscription: InscriptionItem?) {
         self.token = token
         self.snapshot = snapshot
         self.messageID = messageID

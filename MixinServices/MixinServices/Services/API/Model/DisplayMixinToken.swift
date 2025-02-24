@@ -1,6 +1,6 @@
 import Foundation
 
-struct RawToken {
+struct DisplayMixinToken {
     
     // In the Token structure returned by the API, there are two sets of
     // representations: symbol and name represent the names in the contract,
@@ -23,8 +23,8 @@ struct RawToken {
     let assetKey: String
     let collectionHash: String?
     
-    var asToken: Token {
-        Token(
+    var asToken: MixinToken {
+        MixinToken(
             assetID: assetID,
             kernelAssetID: kernelAssetID,
             symbol: displaySymbol,
@@ -44,7 +44,7 @@ struct RawToken {
     
 }
 
-extension RawToken: Decodable {
+extension DisplayMixinToken: Decodable {
     
     enum CodingKeys: String, CodingKey {
         case assetID = "asset_id"

@@ -39,7 +39,7 @@ final class AuthenticationPreviewHeaderView: UIView {
         }
     }
     
-    func setIcon(token: TokenItem) {
+    func setIcon(token: MixinTokenItem) {
         let iconView: BadgeIconView
         if let view = self.assetIconView, view.isDescendant(of: iconWrapperView) {
             iconView = view
@@ -57,7 +57,7 @@ final class AuthenticationPreviewHeaderView: UIView {
         iconView.setIcon(token: token)
     }
     
-    func setIcon(sendToken: TokenItem, receiveToken: SwapToken) {
+    func setIcon(sendToken: MixinTokenItem, receiveToken: SwapToken) {
         let iconView: MultipleTokenIconView
         if let view = self.multipleTokenIconView, view.isDescendant(of: iconWrapperView) {
             iconView = view
@@ -76,7 +76,7 @@ final class AuthenticationPreviewHeaderView: UIView {
         iconView.setIcon(sendToken: sendToken, receiveToken: receiveToken)
     }
     
-    func setIcon(tokens: [TokenItem]) {
+    func setIcon(tokens: [MixinTokenItem]) {
         let iconView: MultipleTokenIconView
         if let view = self.multipleTokenIconView, view.isDescendant(of: iconWrapperView) {
             iconView = view
@@ -176,7 +176,7 @@ extension AuthenticationPreviewHeaderView {
             loadSubviews()
         }
         
-        func setIcons(tokens: [TokenItem]) {
+        func setIcons(tokens: [MixinTokenItem]) {
             if tokens.count > 3 {
                 loadIconViews(count: 2) { _, wrapperView in
                     wrapperView.snp.makeConstraints { make in
@@ -216,7 +216,7 @@ extension AuthenticationPreviewHeaderView {
             }
         }
         
-        func setIcon(sendToken: TokenItem, receiveToken: SwapToken) {
+        func setIcon(sendToken: MixinTokenItem, receiveToken: SwapToken) {
             loadIconViews(count: 2) { index, wrapperView in
                 let offset = index == 1 ? 0 : -16
                 wrapperView.snp.makeConstraints { make in

@@ -35,7 +35,7 @@ final class CheckmarkTokenCell: UITableViewCell {
         subtitleLabel.text = address.fullRepresentation
     }
     
-    func load(token: TokenItem) {
+    func load(token: MixinTokenItem) {
         iconView.setIcon(token: token)
         titleLabel.text = token.name
         if let name = token.chainTag {

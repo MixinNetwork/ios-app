@@ -114,7 +114,7 @@ final class WalletHeaderView: InfiniteTopView {
         }
     }
     
-    func reloadValues(tokens: [TokenItem]) {
+    func reloadValues(tokens: [MixinTokenItem]) {
         fiatMoneySymbolLabel.text = Currency.current.symbol
         var assetPortions = [AssetPortion]()
         var btcTotalBalance: Double = 0
@@ -181,7 +181,7 @@ final class WalletHeaderView: InfiniteTopView {
         }
     }
     
-    func reloadPendingDeposits(tokens: [Token], snapshots: [SafeSnapshot]) {
+    func reloadPendingDeposits(tokens: [MixinToken], snapshots: [SafeSnapshot]) {
         if tokens.isEmpty || snapshots.isEmpty {
             pendingDepositView.isHidden = true
             contentViewBottomConstraint.constant = 17

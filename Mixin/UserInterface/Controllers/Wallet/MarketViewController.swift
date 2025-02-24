@@ -9,10 +9,10 @@ final class MarketViewController: UIViewController {
     private weak var favoriteBarButtonItem: UIBarButtonItem!
     
     private let id: Identifier
-    private let initialToken: TokenItem?
+    private let initialToken: MixinTokenItem?
     
     private var market: FavorableMarket?
-    private var tokens: [TokenItem]?
+    private var tokens: [MixinTokenItem]?
     private var viewModel: MarketViewModel
     private var chartPeriod: PriceHistoryPeriod = .day
     private var chartPoints: [ChartView.Point]?
@@ -24,7 +24,7 @@ final class MarketViewController: UIViewController {
         return tableView.cellForRow(at: indexPath) as? TokenPriceChartCell
     }
     
-    init(token: TokenItem, chartPoints: [ChartView.Point]?) {
+    init(token: MixinTokenItem, chartPoints: [ChartView.Point]?) {
         self.id = .asset(token.assetID)
         self.initialToken = token
         self.market = nil
@@ -315,7 +315,7 @@ final class MarketViewController: UIViewController {
             return
         }
         DispatchQueue.global().async { [weak self] in
-            func update(with tokens: [TokenItem]) {
+            func update(with tokens: [MixinTokenItem]) {
                 DispatchQueue.main.sync {
                     guard let self else {
                         return
@@ -341,7 +341,7 @@ final class MarketViewController: UIViewController {
                 switch SafeAPI.assets(ids: missingAssetIDs) {
                 case .success(let missingTokens):
                     let missingTokenItems = missingTokens.map { token in
-                        TokenItem(token: token, balance: "0", isHidden: false, chain: nil)
+                        MixinTokenItem(token: token, balance: "0", isHidden: false, chain: nil)
                     }
                     update(with: tokens + missingTokenItems)
                 case .failure(let error):
@@ -352,7 +352,7 @@ final class MarketViewController: UIViewController {
     }
     
     // `completion` is not called on failure
-    private func pickSingleToken(completion: @escaping (TokenItem) -> Void) {
+    private func pickSingleToken(completion: @escaping (MixinTokenItem) -> Void) {
         guard let tokens else {
             return
         }
@@ -961,7 +961,7 @@ extension MarketViewController {
             self.marketInfos = marketInfos
         }
         
-        init(token: TokenItem) {
+        init(token: MixinTokenItem) {
             let basicInfos = [
                 Info(title: R.string.localizable.name().uppercased(), primaryContent: token.name),
                 Info(title: R.string.localizable.symbol().uppercased(), primaryContent: token.symbol),
@@ -999,7 +999,7 @@ extension MarketViewController {
             self.infos = basicInfos + marketInfos
         }
         
-        func update(market: Market, tokens: [TokenItem]) {
+        func update(market: Market, tokens: [MixinTokenItem]) {
             self.stats = Stats(market: market)
             
             self.balance = {

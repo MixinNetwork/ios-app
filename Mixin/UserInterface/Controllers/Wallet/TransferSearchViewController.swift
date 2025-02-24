@@ -3,7 +3,7 @@ import MixinServices
 
 protocol TransferSearchViewControllerDelegate: AnyObject {
     
-    func transferSearchViewController(_ viewController: TransferSearchViewController, didSelectToken token: TokenItem)
+    func transferSearchViewController(_ viewController: TransferSearchViewController, didSelectToken token: MixinTokenItem)
     func transferSearchViewControllerDidSelectDeposit(_ viewController: TransferSearchViewController)
     
 }
@@ -12,8 +12,8 @@ class TransferSearchViewController: PopupSearchableTableViewController {
     
     weak var delegate: TransferSearchViewControllerDelegate?
     
-    var tokens = [TokenItem]()
-    var sendableAssets = [TokenItem]()
+    var tokens = [MixinTokenItem]()
+    var sendableAssets = [MixinTokenItem]()
     var showEmptyHintIfNeeded = false
     var searchResultsFromServer = false
     
@@ -57,7 +57,7 @@ class TransferSearchViewController: PopupSearchableTableViewController {
             }
         } else {
             searchResultsController.lastKeyword = keyword
-            let results: [TokenItem]
+            let results: [MixinTokenItem]
             if keyword.isEmpty {
                 results = tokens
             } else {
@@ -69,7 +69,7 @@ class TransferSearchViewController: PopupSearchableTableViewController {
         }
     }
     
-    func reload(tokens: [TokenItem]) {
+    func reload(tokens: [MixinTokenItem]) {
         emptyHintViewIfLoaded?.removeFromSuperview()
         searchBoxView.isUserInteractionEnabled = true
         self.tokens = tokens
@@ -115,7 +115,7 @@ extension TransferSearchViewController {
         emptyHintViewIfLoaded = emptyHintView
     }
 
-    private func reloadSearchResults(_ tokens: [TokenItem]) {
+    private func reloadSearchResults(_ tokens: [MixinTokenItem]) {
         searchResultsController.searchResults = tokens
         searchResultsController.tableView.reloadData()
     }

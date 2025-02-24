@@ -36,7 +36,7 @@ final class TransactionHistoryViewController: UIViewController {
         self.queue.maxConcurrentOperationCount = 1
     }
     
-    convenience init(token: TokenItem) {
+    convenience init(token: MixinTokenItem) {
         self.init(filter: .init(tokens: [token]))
     }
     
@@ -348,7 +348,7 @@ extension TransactionHistoryViewController: TransactionHistoryTokenFilterPickerV
     
     func transactionHistoryTokenFilterPickerViewController(
         _ controller: TransactionHistoryTokenFilterPickerViewController,
-        didPickTokens tokens: [TokenItem]
+        didPickTokens tokens: [MixinTokenItem]
     ) {
         filter.tokens = tokens
         assetFilterView.reloadData(tokens: tokens)

@@ -76,7 +76,7 @@ public final class ConversationItem {
     public lazy var markdownControlCodeRemovedContent = makeMarkdownControlCodeRemovedContent()
     
     public var ownerIsBot: Bool {
-        return !(appId?.isEmpty ?? true)
+        User.isBot(identityNumber: ownerIdentityNumber)
     }
     
     public var isMuted: Bool {

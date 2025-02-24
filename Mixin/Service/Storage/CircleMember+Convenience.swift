@@ -13,7 +13,6 @@ extension CircleMember {
                   identityNumber: user.identityNumber,
                   phoneNumber: user.phone,
                   isVerified: user.isVerified,
-                  appID: user.appId,
                   membership: user.membership)
     }
     
@@ -27,7 +26,6 @@ extension CircleMember {
                   identityNumber: conversation.ownerIdentityNumber,
                   phoneNumber: nil,
                   isVerified: conversation.ownerIsVerified,
-                  appID: conversation.appId,
                   membership: conversation.ownerMembership)
     }
     

@@ -22,6 +22,10 @@ public struct User {
     
     public var app: App?
     
+    public var isBot: Bool {
+        Self.isBot(identityNumber: identityNumber)
+    }
+    
     public init(
         userId: String, fullName: String?, biography: String?, identityNumber: String,
         avatarUrl: String?, phone: String? = nil, isVerified: Bool,
@@ -98,6 +102,14 @@ public struct User {
              isDeactivated: false,
              membership: account.membership,
              app: nil)
+    }
+    
+    public static func isBot(identityNumber: String) -> Bool {
+        if let number = Int(identityNumber) {
+            (number > 7000000000 && number < 8000000000) || number == 7000
+        } else {
+            false
+        }
     }
     
     public func matches(lowercasedKeyword keyword: String) -> Bool {

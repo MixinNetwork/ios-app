@@ -36,7 +36,7 @@ extension ConversationDAO {
                 CASE c.category WHEN 'CONTACT' THEN u.full_name ELSE c.name END,
                 CASE c.category WHEN 'CONTACT' THEN u.avatar_url ELSE c.icon_url END,
                 CASE c.category WHEN 'CONTACT' THEN u.user_id ELSE NULL END,
-                u.is_verified, u.app_id, u.membership, count
+                u.is_verified, u.identity_number, u.membership, count
             FROM (SELECT ttou(conversation_id) AS cid, COUNT(1) AS count FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH ?)
                 LEFT JOIN conversations c ON cid = c.conversation_id
                 LEFT JOIN users u ON c.owner_id = u.user_id
@@ -62,7 +62,7 @@ extension ConversationDAO {
                 CASE c.category WHEN 'CONTACT' THEN u.full_name ELSE c.name END,
                 CASE c.category WHEN 'CONTACT' THEN u.avatar_url ELSE c.icon_url END,
                 CASE c.category WHEN 'CONTACT' THEN u.user_id ELSE NULL END,
-                u.is_verified, u.app_id, u.membership,
+                u.is_verified, u.identity_number, u.membership,
                 COUNT(m.conversation_id)
             FROM messages m
                 LEFT JOIN conversations c ON m.conversation_id = c.conversation_id
@@ -97,7 +97,7 @@ extension ConversationDAO {
                 let iconUrl: String = row[counter.advancedValue] ?? ""
                 let userId: String = row[counter.advancedValue] ?? ""
                 let userIsVerified: Bool = row[counter.advancedValue] ?? false
-                let userAppId: String? = row[counter.advancedValue]
+                let userIdentityNumber: String? = row[counter.advancedValue]
                 let userMembership: User.Membership? = row[counter.advancedValue]
                 let relatedMessageCount: Int = row[counter.advancedValue] ?? 0
                 let item: MessagesWithinConversationSearchResult
@@ -108,7 +108,7 @@ extension ConversationDAO {
                                                         iconUrl: iconUrl,
                                                         userId: userId,
                                                         userIsVerified: userIsVerified,
-                                                        userAppId: userAppId,
+                                                        userIdentityNumber: userIdentityNumber,
                                                         userMembership: userMembership,
                                                         relatedMessageCount: relatedMessageCount,
                                                         keyword: keyword)

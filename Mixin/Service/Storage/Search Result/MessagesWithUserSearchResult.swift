@@ -8,7 +8,7 @@ class MessagesWithUserSearchResult: MessagesWithinConversationSearchResult {
     
     init(
         conversationId: String, name: String, iconUrl: String, userId: String,
-        userIsVerified: Bool, userAppId: String?,
+        userIsVerified: Bool, userIdentityNumber: String?,
         userMembership: User.Membership?, relatedMessageCount: Int,
         keyword: String
     ) {
@@ -17,7 +17,7 @@ class MessagesWithUserSearchResult: MessagesWithinConversationSearchResult {
         let badgeImage = UserBadgeIcon.image(
             membership: userMembership,
             isVerified: userIsVerified,
-            appID: userAppId
+            identityNumber: userIdentityNumber
         )
         super.init(conversationId: conversationId,
                    badgeImage: badgeImage,

@@ -35,12 +35,17 @@ enum UserBadgeIcon {
     static func image(
         membership: User.Membership?,
         isVerified: Bool,
-        appID: String?
+        identityNumber: String?
     ) -> UIImage? {
-        image(
+        let isBot = if let identityNumber {
+            User.isBot(identityNumber: identityNumber)
+        } else {
+            false
+        }
+        return image(
             membership: membership,
             isVerified: isVerified,
-            isBot: !appID.isNilOrEmpty
+            isBot: isBot
         )
     }
     
@@ -69,7 +74,7 @@ extension User {
         UserBadgeIcon.image(
             membership: membership,
             isVerified: isVerified,
-            appID: appId
+            isBot: isBot
         )
     }
     
@@ -95,7 +100,7 @@ extension CircleMember {
             UserBadgeIcon.image(
                 membership: membership,
                 isVerified: isVerified ?? false,
-                appID: appID
+                isBot: isBot
             )
         case nil, .GROUP:
             nil

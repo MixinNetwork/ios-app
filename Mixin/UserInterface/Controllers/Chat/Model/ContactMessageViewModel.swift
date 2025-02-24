@@ -15,7 +15,7 @@ class ContactMessageViewModel: CardMessageViewModel {
         verifiedImage = UserBadgeIcon.image(
             membership: message.sharedUserMembership,
             isVerified: message.sharedUserIsVerified ?? false,
-            appID: message.sharedUserAppId
+            identityNumber: message.sharedUserIdentityNumber
         )
         super.init(message: message)
     }

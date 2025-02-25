@@ -888,6 +888,7 @@
 		94510FD52C8743AA00ACD972 /* MarketTokenSelectorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94510FD32C8743AA00ACD972 /* MarketTokenSelectorCell.xib */; };
 		945138B82C6622F600839CBB /* TokenMarketCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945138B72C6622F600839CBB /* TokenMarketCell.xib */; };
 		945138B92C6622F600839CBB /* TokenMarketCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945138B62C6622F600839CBB /* TokenMarketCell.swift */; };
+		9451E5282D6CF91600A6C4FD /* SessionReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9451E5272D6CF91100A6C4FD /* SessionReporter.swift */; };
 		94525B342C4E3B91008BA7A8 /* RouteTokenSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94525B332C4E3B91008BA7A8 /* RouteTokenSource.swift */; };
 		94525B362C4E3CF2008BA7A8 /* SwapToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94525B352C4E3CF2008BA7A8 /* SwapToken.swift */; };
 		94525B792C503B3D008BA7A8 /* Slippage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94525B782C503B3D008BA7A8 /* Slippage.swift */; };
@@ -2396,6 +2397,7 @@
 		94510FD32C8743AA00ACD972 /* MarketTokenSelectorCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketTokenSelectorCell.xib; sourceTree = "<group>"; };
 		945138B62C6622F600839CBB /* TokenMarketCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMarketCell.swift; sourceTree = "<group>"; };
 		945138B72C6622F600839CBB /* TokenMarketCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenMarketCell.xib; sourceTree = "<group>"; };
+		9451E5272D6CF91100A6C4FD /* SessionReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionReporter.swift; sourceTree = "<group>"; };
 		94525B332C4E3B91008BA7A8 /* RouteTokenSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTokenSource.swift; sourceTree = "<group>"; };
 		94525B352C4E3CF2008BA7A8 /* SwapToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapToken.swift; sourceTree = "<group>"; };
 		94525B782C503B3D008BA7A8 /* Slippage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slippage.swift; sourceTree = "<group>"; };
@@ -5371,6 +5373,7 @@
 				942FD9FE2D3B591C004DCC4C /* LocalizedEnum.swift */,
 				948926872D5B42CF00D9BCCB /* BIP21.swift */,
 				948922A02D54FC5A00D9BCCB /* IBANAddress.swift */,
+				9451E5272D6CF91100A6C4FD /* SessionReporter.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -6331,6 +6334,7 @@
 				94BED02F2B692F11004381FA /* PopupPresentationManager.swift in Sources */,
 				7B9650AE248794FD00DE86B9 /* MinimizedCallViewController.swift in Sources */,
 				94428D392CA245BA00157E93 /* MenuTriggerButton.swift in Sources */,
+				9451E5282D6CF91600A6C4FD /* SessionReporter.swift in Sources */,
 				943A63E328BDEC27008E0F78 /* TIPPopupInputViewController.swift in Sources */,
 				9464A49E2C7F86EE00588EE6 /* GlobalMarket.swift in Sources */,
 				7BDBDE6C223636B8006220DF /* ShadowImageView.swift in Sources */,

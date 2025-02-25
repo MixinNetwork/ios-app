@@ -53,6 +53,8 @@ final class HomeContainerViewController: UIViewController {
     
     private(set) weak var minimizedCallViewControllerIfLoaded: MinimizedCallViewController?
     
+    private let sessionReporter = SessionReporter()
+    
     private var navigationInteractiveGestureWasEnabled = true
     
     var galleryIsOnTopMost: Bool {
@@ -84,6 +86,7 @@ final class HomeContainerViewController: UIViewController {
                                                selector: #selector(applicationWillEnterForeground(_:)),
                                                name: UIApplication.willEnterForegroundNotification,
                                                object: nil)
+        sessionReporter.reportIfOutdated()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

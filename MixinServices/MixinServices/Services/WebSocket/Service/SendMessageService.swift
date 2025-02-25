@@ -23,7 +23,7 @@ public class SendMessageService: MixinService {
             let pinMessageIds = items.map(\.messageId)
             let blazeMessage = BlazeMessage(messageId: messageId, pinMessageIds: pinMessageIds, conversationId: conversationId, action: action)
             let job = Job(jobId: UUID().uuidString.lowercased(), action: JobAction.SEND_MESSAGE, conversationId: conversationId, blazeMessage: blazeMessage)
-            UserDatabase.current.save(job)
+            JobDAO.shared.insertOrIgnore(job)
             SendMessageService.shared.processMessages()
             switch action {
             case .pin:
@@ -105,7 +105,7 @@ public class SendMessageService: MixinService {
         let shouldEncodeContent = needsEncodeCategories.map(\.rawValue).contains(message.category)
         let content = shouldEncodeContent ? data?.base64Encoded() : data
         let job = Job(message: message, data: content, silentNotification: silentNotification, expireIn: expireIn)
-        UserDatabase.current.save(job)
+        JobDAO.shared.insertOrIgnore(job)
         if immediatelySend {
             SendMessageService.shared.processMessages()
         }
@@ -119,13 +119,13 @@ public class SendMessageService: MixinService {
         } else {
             job = Job(attachmentMessage: message.messageId, action: .UPLOAD_ATTACHMENT)
         }
-        UserDatabase.current.save(job)
+        JobDAO.shared.insertOrIgnore(job)
         return job.jobId
     }
     
     public func recoverAttachmentMessages(messageIds: [String]) {
         let jobs = messageIds.map { Job(attachmentMessage: $0, action: .RECOVER_ATTACHMENT) }
-        UserDatabase.current.save(jobs)
+        JobDAO.shared.insertOrIgnore(jobs)
     }
     
     // A `conversation_id` is required here to compose a BlazeMessage.
@@ -162,19 +162,19 @@ public class SendMessageService: MixinService {
     
     public func sendWebRTCMessage(message: Message, recipientId: String) {
         let job = Job(webRTCMessage: message, recipientId: recipientId)
-        UserDatabase.current.save(job)
+        JobDAO.shared.insertOrIgnore(job)
         SendMessageService.shared.processMessages()
     }
     
     func sendMessage(conversationId: String, userId: String, sessionId: String?, action: JobAction) {
         let job = Job(jobId: UUID().uuidString.lowercased(), action: action, userId: userId, conversationId: conversationId, sessionId: sessionId)
-        UserDatabase.current.save(job)
+        JobDAO.shared.insertOrIgnore(job)
         SendMessageService.shared.processMessages()
     }
     
     func sendMessage(conversationId: String, userId: String, blazeMessage: BlazeMessage, action: JobAction) {
         let job = Job(jobId: blazeMessage.id, action: action, userId: userId, conversationId: conversationId, blazeMessage: blazeMessage)
-        UserDatabase.current.save(job)
+        JobDAO.shared.insertOrIgnore(job)
         SendMessageService.shared.processMessages()
     }
     
@@ -308,7 +308,7 @@ public class SendMessageService: MixinService {
         let action: JobAction = status == .DELIVERED ? .SEND_DELIVERED_ACK_MESSAGE : .SEND_ACK_MESSAGE
         let jobId = (messageId + status.rawValue + action.rawValue).uuidDigest()
         let job = Job(jobId: jobId, action: action, blazeMessage: blazeMessage)
-        UserDatabase.current.save(job)
+        JobDAO.shared.insertOrIgnore(job)
         SendMessageService.shared.processMessages()
     }
     

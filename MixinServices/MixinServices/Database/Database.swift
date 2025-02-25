@@ -370,6 +370,37 @@ extension Database {
 // MARK: - Record Writing
 extension Database {
     
+    public func insert<Record: PersistableRecord>(
+        _ record: Record,
+        onConflict conflictResolution: GRDB.Database.ConflictResolution? = nil,
+        completion: Completion? = nil
+    ) {
+        write { (db) in
+            try record.insert(db, onConflict: conflictResolution)
+            if let completion = completion {
+                db.afterNextTransaction(onCommit: completion)
+            }
+        }
+    }
+    
+    public func insert<Record: PersistableRecord>(
+        _ records: [Record],
+        onConflict conflictResolution: GRDB.Database.ConflictResolution? = nil,
+        completion: Completion? = nil
+    ) {
+        guard !records.isEmpty else {
+            return
+        }
+        write { (db) -> Void in
+            for record in records {
+                try record.save(db, onConflict: conflictResolution)
+            }
+            if let completion = completion {
+                db.afterNextTransaction(onCommit: completion)
+            }
+        }
+    }
+    
     // Returns true on success, false on transaction
     @discardableResult
     public func save<Record: PersistableRecord>(

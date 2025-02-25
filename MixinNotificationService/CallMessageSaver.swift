@@ -24,7 +24,7 @@ extension CallMessageSaver: CallMessageCoordinator {
             MessageDAO.shared.insertMessage(message: msg, messageSource: MessageDAO.LocalMessageSource.notificationServiceExtension)
         } else {
             let job = Job(pendingWebRTCMessage: data)
-            UserDatabase.current.save(job)
+            JobDAO.shared.insertOrIgnore(job)
         }
     }
     

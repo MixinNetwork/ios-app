@@ -8,7 +8,7 @@ extension MessageDAO {
         var results = [MessageSearchResult]()
         
         var sql = """
-        SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.app_id, u.membership
+        SELECT m.id, m.category, m.content, m.created_at, u.user_id, u.full_name, u.avatar_url, u.is_verified, u.identity_number, u.membership
         FROM messages m LEFT JOIN users u ON m.user_id = u.user_id
         """
         let arguments: StatementArguments
@@ -61,7 +61,7 @@ extension MessageDAO {
                         fullname: row[counter.advancedValue] ?? "",
                         avatarUrl: row[counter.advancedValue] ?? "",
                         isVerified: row[counter.advancedValue] ?? false,
-                        appId: row[counter.advancedValue] ?? "",
+                        identityNumber: row[counter.advancedValue] ?? "",
                         membership: row[counter.advancedValue],
                         keyword: keyword
                     )

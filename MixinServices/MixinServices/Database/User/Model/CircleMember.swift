@@ -11,8 +11,15 @@ public final class CircleMember {
     public let identityNumber: String?
     public let phoneNumber: String?
     public let isVerified: Bool?
-    public let appID: String?
     public let membership: User.Membership?
+    
+    public var isBot: Bool {
+        if let identityNumber {
+            User.isBot(identityNumber: identityNumber)
+        } else {
+            false
+        }
+    }
     
     public func matches(lowercasedKeyword keyword: String) -> Bool {
         name.lowercased().contains(keyword)
@@ -23,7 +30,7 @@ public final class CircleMember {
     public init(
         conversationId: String, userId: String?, category: String,
         name: String, iconUrl: String, identityNumber: String?,
-        phoneNumber: String?, isVerified: Bool?, appID: String?,
+        phoneNumber: String?, isVerified: Bool?,
         membership: User.Membership?
     ) {
         self.conversationId = conversationId
@@ -34,7 +41,6 @@ public final class CircleMember {
         self.identityNumber = identityNumber
         self.phoneNumber = phoneNumber
         self.isVerified = isVerified
-        self.appID = appID
         self.membership = membership
     }
     
@@ -48,7 +54,6 @@ public final class CircleMember {
         identityNumber = try container.decodeIfPresent(String.self, forKey: .identityNumber)
         phoneNumber = try container.decodeIfPresent(String.self, forKey: .phoneNumber)
         isVerified = try container.decodeIfPresent(Bool.self, forKey: .isVerified)
-        appID = try container.decodeIfPresent(String.self, forKey: .appID)
         membership = try container.decodeIfPresent(User.Membership.self, forKey: .membership)
     }
     
@@ -81,7 +86,6 @@ extension CircleMember: Decodable, MixinFetchableRecord {
         case identityNumber = "identity_number"
         case phoneNumber = "phone"
         case isVerified = "is_verified"
-        case appID = "app_id"
         case membership
     }
     

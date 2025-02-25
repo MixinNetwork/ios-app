@@ -108,10 +108,7 @@ extension UserItem {
     }
     
     public var isBot: Bool {
-        guard let appId = self.appId else {
-            return false
-        }
-        return !appId.isEmpty
+        User.isBot(identityNumber: identityNumber)
     }
     
     public var isSelfBot: Bool {

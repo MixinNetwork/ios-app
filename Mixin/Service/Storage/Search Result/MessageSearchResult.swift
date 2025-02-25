@@ -20,7 +20,7 @@ class MessageSearchResult: SearchResult {
     
     init(
         conversationId: String, messageId: String, category: String, content: String, createdAt: String,
-        userId: String, fullname: String, avatarUrl: String, isVerified: Bool, appId: String?,
+        userId: String, fullname: String, avatarUrl: String, isVerified: Bool, identityNumber: String?,
         membership: User.Membership?, keyword: String
     ) {
         self.conversationId = conversationId
@@ -40,7 +40,7 @@ class MessageSearchResult: SearchResult {
         let badgeImage = UserBadgeIcon.image(
             membership: membership,
             isVerified: isVerified,
-            appID: appId
+            identityNumber: identityNumber
         )
         let superscript = createdAt.toUTCDate().timeAgo()
         super.init(iconUrl: avatarUrl,

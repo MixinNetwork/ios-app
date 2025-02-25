@@ -9,22 +9,14 @@ public class GroupUser: NSObject {
     public let isVerified: Bool
     public let isBot: Bool
     
-    public init(userId: String, identityNumber: String, fullName: String, avatarUrl: String, isVerified: Bool, isBot: Bool) {
-        self.userId = userId
-        self.identityNumber = identityNumber
-        self.fullName = fullName
-        self.avatarUrl = avatarUrl
-        self.isVerified = isVerified
-        self.isBot = isBot
-    }
-    
-    public convenience init(user: UserItem) {
-        self.init(userId: user.userId,
-                  identityNumber: user.identityNumber,
-                  fullName: user.fullName,
-                  avatarUrl: user.avatarUrl,
-                  isVerified: user.isVerified,
-                  isBot: user.isBot)
+    public init(user: UserItem) {
+        self.userId = user.userId
+        self.identityNumber = user.identityNumber
+        self.fullName = user.fullName
+        self.avatarUrl = user.avatarUrl
+        self.isVerified = user.isVerified
+        self.isBot = user.isBot
+        super.init()
     }
     
 }

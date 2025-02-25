@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             assertionFailure("Missing AppsFlyer key")
         }
-        AppsFlyerLib.shared().appleAppID = appID
+        AppsFlyerLib.shared().appleAppID = appStoreAppID
         AppGroupUserDefaults.migrateIfNeeded()
         updateImageManagerConfig()
         _ = ReachabilityManger.shared

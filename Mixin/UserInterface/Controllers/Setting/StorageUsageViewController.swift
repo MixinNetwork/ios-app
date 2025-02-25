@@ -75,7 +75,7 @@ extension StorageUsageViewController: UITableViewDataSource {
             cell.badgeImageView.image = UserBadgeIcon.image(
                 membership: conversation.ownerMembership,
                 isVerified: conversation.ownerIsVerified ?? false,
-                appID: conversation.ownerAppID
+                identityNumber: conversation.ownerIdentityNumber
             )
             cell.badgeImageView.isHidden = cell.badgeImageView.image == nil
         } else {

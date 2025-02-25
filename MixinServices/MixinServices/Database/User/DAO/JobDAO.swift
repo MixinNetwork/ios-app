@@ -51,6 +51,14 @@ public final class JobDAO: UserDatabaseDAO {
         db.count(in: Job.self)
     }
     
+    public func insertOrIgnore(_ job: Job) {
+        db.insert(job, onConflict: .ignore)
+    }
+    
+    public func insertOrIgnore(_ jobs: [Job]) {
+        db.insert(jobs, onConflict: .ignore)
+    }
+    
     public func removeJob(jobId: String) {
         db.delete(Job.self, where: Job.column(of: .jobId) == jobId)
     }

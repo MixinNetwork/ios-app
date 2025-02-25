@@ -80,9 +80,7 @@ open class Reporter {
     }
     
     open func report(event: Event, tags: [String: String]? = nil) {
-        let scope = Scope()
-        scope.setTags(tags)
-        SentrySDK.capture(message: event.rawValue, scope: scope)
+        // Reduce Sentry usage
     }
     
     open func updateUserProperties(_ properties: UserProperty, account: Account? = nil) {

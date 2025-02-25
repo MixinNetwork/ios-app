@@ -1,6 +1,5 @@
 import UIKit
 import AVFoundation
-import DeviceCheck
 import MixinServices
 
 class HomeNavigationController: GeneralAppearanceNavigationController {
@@ -42,15 +41,6 @@ class HomeNavigationController: GeneralAppearanceNavigationController {
            let account = LoginManager.shared.account
         {
             reporter.registerUserInformation(account: account)
-            DCDevice.current.generateToken { (data, error) in
-                guard let token = data?.base64EncodedString() else {
-                    return
-                }
-                guard LoginManager.shared.isLoggedIn else {
-                    return
-                }
-                AccountAPI.updateSession(deviceCheckToken: token, completion: nil)
-            }
             Logger.general.info(category: "HomeNavigationController", message: "View did load with app state: \(UIApplication.shared.applicationStateString)")
             if UIApplication.shared.applicationState == .active {
                 WebSocketService.shared.connect(firstConnect: true)

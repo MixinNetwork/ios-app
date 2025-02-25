@@ -248,7 +248,7 @@ extension WebSocketService: WebSocketProviderDelegate {
                 handler(.failure(.response(error)))
             }
             if case .unauthorized = error, message.action == BlazeMessageAction.error.rawValue, !AppGroupUserDefaults.isClockSkewed {
-                LoginManager.shared.logout(reason: "WS access unauthroized")
+                LoginManager.shared.logout(reason: "WS access unauthroized: \(message.id)")
             }
         } else {
             if let handler = messageHandlers[message.id] {

@@ -4,7 +4,7 @@ import MixinServices
 
 final class SessionReporter {
     
-    private let reportInterval: TimeInterval = 6 * .hour
+    private let interval: TimeInterval = 6 * .hour
     
     private var lastReportDate: Date?
     
@@ -17,31 +17,36 @@ final class SessionReporter {
         )
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     @objc func reportIfOutdated() {
-        assert(Thread.isMainThread)
-        let isOutdated = if let lastReportDate {
-            -lastReportDate.timeIntervalSinceNow > reportInterval
-        } else {
-            true
-        }
-        guard isOutdated else {
-            return
-        }
-        self.lastReportDate = Date()
-        DCDevice.current.generateToken { (data, error) in
-            if let error {
-                Logger.general.error(category: "SessionReporter", message: "\(error)")
+        DispatchQueue.main.async { [interval] in
+            let isOutdated = if let date = self.lastReportDate {
+                -date.timeIntervalSinceNow > interval
+            } else {
+                true
             }
-            guard let token = data?.base64EncodedString() else {
-                Logger.general.error(category: "SessionReporter", message: "Missing data")
+            guard isOutdated else {
                 return
             }
-            guard LoginManager.shared.isLoggedIn else {
-                Logger.general.error(category: "SessionReporter", message: "Not logged in")
-                return
+            self.lastReportDate = Date()
+            DCDevice.current.generateToken { (data, error) in
+                if let error {
+                    Logger.general.error(category: "SessionReporter", message: "\(error)")
+                }
+                guard let token = data?.base64EncodedString() else {
+                    Logger.general.error(category: "SessionReporter", message: "Missing data")
+                    return
+                }
+                guard LoginManager.shared.isLoggedIn else {
+                    Logger.general.error(category: "SessionReporter", message: "Not logged in")
+                    return
+                }
+                Logger.general.info(category: "SessionReporter", message: "Report at \(Date())")
+                AccountAPI.updateSession(deviceCheckToken: token, completion: nil)
             }
-            Logger.general.info(category: "SessionReporter", message: "Report at \(Date())")
-            AccountAPI.updateSession(deviceCheckToken: token, completion: nil)
         }
     }
     

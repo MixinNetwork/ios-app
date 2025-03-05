@@ -14,6 +14,18 @@ public final class ChainDAO: UserDatabaseDAO {
         db.recordExists(in: Chain.self, where: Chain.column(of: .chainId) == chainId)
     }
     
+    public func chain(chainId: String) -> Chain? {
+        db.select(where: Chain.column(of: .chainId) == chainId)
+    }
+    
+    public func chains(chainIDs: any Sequence<String>) -> [String: Chain] {
+        let query: GRDB.SQL = "SELECT * FROM chains WHERE chain_id IN \(chainIDs)"
+        let chains: [Chain] = db.select(with: query)
+        return chains.reduce(into: [:]) { result, chain in
+            result[chain.chainId] = chain
+        }
+    }
+    
     public func save(_ chains: [Chain]) {
         guard !chains.isEmpty else {
             return
@@ -29,10 +41,6 @@ public final class ChainDAO: UserDatabaseDAO {
                             object: nil)
             }
         }
-    }
-    
-    public func chain(chainId: String) -> Chain? {
-        db.select(where: Chain.column(of: .chainId) == chainId)
     }
     
 }

@@ -156,12 +156,12 @@ final class SafeSnapshotViewController: RowListViewController {
             return
         }
         if let viewController = viewControllers
-            .compactMap({ $0 as? TokenViewController })
+            .compactMap({ $0 as? MixinTokenViewController })
             .first(where: { $0.token.assetID == token.assetID })
         {
             navigationController?.popToViewController(viewController, animated: true)
         } else {
-            let viewController = TokenViewController(token: token)
+            let viewController = MixinTokenViewController(token: token)
             navigationController?.pushViewController(viewController, animated: true)
         }
     }

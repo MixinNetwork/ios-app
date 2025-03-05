@@ -1,10 +1,16 @@
 import Foundation
+import web3
 import MixinServices
 import TIP
 
 // ExtendedKey dependes on secp256k1 which is brought by web3 with SPM
 // TODO: Move this extension back to TIP.swift after dependencies are managed with SPM
 extension TIP {
+    
+    enum GenerationError: Swift.Error {
+        case evmMismatched
+        case solanaMismatched
+    }
     
     static func deriveEthereumPrivateKey(pin: String) async throws -> Data {
         let spendKey = try await TIP.spendPriv(pin: pin)
@@ -53,6 +59,43 @@ extension TIP {
             throw error as Swift.Error
         }
         return address
+    }
+    
+    static func registerClassicWallet(pin: String) async throws {
+        let spendKey = try await TIP.spendPriv(pin: pin)
+        
+        let evmAddress = try {
+            let priv = try TIP.deriveEthereumPrivateKey(spendKey: spendKey)
+            let keyStorage = InPlaceKeyStorage(raw: priv)
+            let account = try EthereumAccount(keyStorage: keyStorage)
+            return account.address.toChecksumAddress()
+        }()
+        let redundantEVMAddress = try TIP.evmAddress(spendKey: spendKey)
+        guard evmAddress == redundantEVMAddress else {
+            Logger.web3.error(category: "TIP+Web3", message: "Derive EVM Address: \(evmAddress), RA: \(redundantEVMAddress)")
+            throw GenerationError.evmMismatched
+        }
+        
+        let solanaAddress = try {
+            let privateKey = try TIP.deriveSolanaPrivateKey(spendKey: spendKey)
+            return try Solana.publicKey(seed: privateKey)
+        }()
+        let redundantSolanaAddress = try TIP.solanaAddress(spendKey: spendKey)
+        guard solanaAddress == redundantSolanaAddress else {
+            Logger.web3.error(category: "TIP+Web3", message: "Derive Solana Address: \(solanaAddress), RA: \(redundantSolanaAddress)")
+            throw GenerationError.solanaMismatched
+        }
+        
+        let request = RouteAPI.WalletRequest(name: "", category: .classic, addresses: [
+            .init(destination: evmAddress, chainID: ChainID.ethereum),
+            .init(destination: solanaAddress, chainID: ChainID.solana),
+        ])
+        switch try await RouteAPI.createWallet(request) {
+        case .success(let wallet):
+            Web3WalletDAO.shared.save(wallet: wallet)
+        case .failure(let error):
+            throw error
+        }
     }
     
 }

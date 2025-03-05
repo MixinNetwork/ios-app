@@ -204,6 +204,47 @@ final class RouteAPI {
 
 extension RouteAPI {
     
+    struct WalletRequest: Codable {
+        
+        struct Address: Codable {
+            
+            enum CodingKeys: String, CodingKey {
+                case destination
+                case chainID = "chain_id"
+            }
+            
+            let destination: String
+            let chainID: String
+            
+        }
+        
+        let name: String
+        let category: Web3Wallet.Category
+        let addresses: [Address]
+        
+    }
+    
+    static func createWallet(_ wallet: WalletRequest) async throws -> MixinAPI.Result<Web3Wallet> {
+        try await request(method: .post, path: "/wallets", with: wallet)
+    }
+    
+    static func assets(
+        walletID: String,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[Web3Token]>) -> Void
+    ) {
+        request(
+            method: .get,
+            path: "/wallets/\(walletID)/assets",
+            queue: queue,
+            completion: completion
+        )
+    }
+    
+}
+
+extension RouteAPI {
+    
     private static var botPublicKey: Data?
     
     private final class RouteSigningInterceptor: RequestInterceptor {
@@ -317,6 +358,19 @@ extension RouteAPI {
             interceptor: interceptor
         )
         return request(dataRequest, queue: queue, completion: completion)
+    }
+    
+    @discardableResult
+    private static func request<Parameters: Encodable, Response: Decodable>(
+        method: HTTPMethod,
+        path: String,
+        with parameters: Parameters? = nil
+    ) async throws -> MixinAPI.Result<Response> {
+        try await withCheckedThrowingContinuation { continuation in
+            request(method: method, path: path, with: parameters) { result in
+                continuation.resume(returning: result)
+            }
+        }
     }
     
     private static func request<Response>(

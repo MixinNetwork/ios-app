@@ -9,7 +9,6 @@ final class MarketViewController: UIViewController {
     private weak var favoriteBarButtonItem: UIBarButtonItem!
     
     private let id: Identifier
-    private let initialToken: MixinTokenItem?
     
     private var market: FavorableMarket?
     private var tokens: [MixinTokenItem]?
@@ -26,7 +25,6 @@ final class MarketViewController: UIViewController {
     
     init(token: MixinTokenItem, chartPoints: [ChartView.Point]?) {
         self.id = .asset(token.assetID)
-        self.initialToken = token
         self.market = nil
         self.tokens = [token]
         self.viewModel = MarketViewModel(token: token)
@@ -37,7 +35,6 @@ final class MarketViewController: UIViewController {
     
     init(market: FavorableMarket) {
         self.id = .coin(market.coinID)
-        self.initialToken = nil
         self.market = market
         self.tokens = nil
         self.viewModel = MarketViewModel(market: market)
@@ -571,11 +568,11 @@ extension MarketViewController: UITableViewDelegate {
         switch Section(rawValue: indexPath.section)! {
         case .myBalance:
             pickSingleToken { [market] token in
-                let pushingToken = (self.pushingViewController as? TokenViewController)?.token
+                let pushingToken = (self.pushingViewController as? MixinTokenViewController)?.token
                 if token.assetID == pushingToken?.assetID {
                     self.navigationController?.popViewController(animated: true)
                 } else {
-                    let controller = TokenViewController(token: token, market: market)
+                    let controller = MixinTokenViewController(token: token, market: market)
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
             }

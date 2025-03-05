@@ -1,17 +1,20 @@
 import Foundation
 import MixinServices
 
-final class BalancedSwapToken: SwapToken {
+final class BalancedSwapToken: SwapToken, Token {
     
     let decimalBalance: Decimal
     let decimalUSDPrice: Decimal
     
+    private(set) lazy var decimalUSDBalance = decimalBalance * decimalUSDPrice
     private(set) lazy var localizedBalanceWithSymbol = CurrencyFormatter.localizedString(
         from: decimalBalance,
         format: .precision,
         sign: .never,
         symbol: .custom(symbol)
     )
+    
+    private(set) lazy var localizedFiatMoneyPrice = localizeFiatMoneyPrice()
     
     init(token: SwapToken, balance: Decimal, usdPrice: Decimal) {
         self.decimalBalance = balance

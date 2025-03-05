@@ -155,14 +155,23 @@ final class BadgeIconView: UIView {
     
     func setIcon(web3Token token: Web3Token) {
         if let url = URL(string: token.iconURL) {
-            iconImageView.sd_setImage(with: url,
-                                      placeholderImage: nil,
-                                      context: assetIconContext)
+            iconImageView.sd_setImage(
+                with: url,
+                placeholderImage: nil,
+                context: assetIconContext
+            )
         } else {
             iconImageView.image = R.image.unknown_session()
         }
-        if let url = URL(string: token.chainIconURL) {
-            badgeImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
+        if let token = token as? Web3TokenItem,
+           let chainIcon = token.chain?.iconUrl,
+           let url = URL(string: chainIcon)
+        {
+            badgeImageView.sd_setImage(
+                with: url,
+                placeholderImage: nil,
+                context: assetIconContext
+            )
             isBadgeHidden = false
         } else {
             isBadgeHidden = true

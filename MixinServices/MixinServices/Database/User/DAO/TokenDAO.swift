@@ -206,6 +206,7 @@ public final class TokenDAO: UserDatabaseDAO {
             let positiveUSDBalanceTokensCount = try Int.fetchOne(db, sql: SQL.positiveUSDBalanceTokensCount) ?? 0
             let usdBalanceSum = try Decimal.fetchOne(db, sql: SQL.usdBalanceSum) ?? 0
             return WalletDigest(
+                type: .privacy,
                 usdBalanceSum: usdBalanceSum,
                 tokens: topTokenDigests,
                 positiveUSDBalanceTokensCount: positiveUSDBalanceTokensCount

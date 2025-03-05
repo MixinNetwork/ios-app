@@ -2,14 +2,6 @@ import UIKit
 import OrderedCollections
 import MixinServices
 
-extension MixinTokenItem: IdentifiableToken {
-    
-    var id: String {
-        assetID
-    }
-    
-}
-
 final class SendTokenSelectorViewController: TokenSelectorViewController<MixinTokenItem> {
     
     var onSelected: ((MixinTokenItem) -> Void)?

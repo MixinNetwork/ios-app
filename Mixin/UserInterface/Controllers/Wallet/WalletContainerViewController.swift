@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 final class WalletContainerViewController: UIViewController {
     
@@ -6,12 +7,16 @@ final class WalletContainerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let wallet = WalletViewController()
+        
+        let wallet = PrivacyWalletViewController()
         addChild(wallet)
         view.addSubview(wallet.view)
         wallet.view.snp.makeEdgesEqualToSuperview()
         wallet.didMove(toParent: self)
         self.viewController = wallet
+        
+        let job = ReloadMarketAlertsJob()
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     func switchToWalletSummary() {
@@ -40,12 +45,17 @@ final class WalletContainerViewController: UIViewController {
         }
     }
     
-    func switchToWallet() {
+    func switchToWallet(type: WalletDigest.WalletType) {
         guard let summary = viewController as? WalletSummaryViewController else {
             return
         }
         self.viewController = nil
-        let wallet = WalletViewController()
+        let wallet = switch type {
+        case .privacy:
+            PrivacyWalletViewController()
+        case .classic(let id):
+            ClassicWalletViewController(walletID: id)
+        }
         
         addChild(wallet)
         view.insertSubview(wallet.view, at: 0)

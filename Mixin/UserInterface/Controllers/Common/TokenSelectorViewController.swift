@@ -3,11 +3,7 @@ import Combine
 import OrderedCollections
 import MixinServices
 
-protocol IdentifiableToken {
-    var id: String { get }
-}
-
-class TokenSelectorViewController<SelectableToken: IdentifiableToken>: UIViewController, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
+class TokenSelectorViewController<SelectableToken: Token>: UIViewController, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
     
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var cancelButton: UIButton!
@@ -201,7 +197,7 @@ class TokenSelectorViewController<SelectableToken: IdentifiableToken>: UIViewCon
         var recentTokens = self.recentTokens
         DispatchQueue.global().async { [maxNumberOfRecents] in
             recentTokens.removeAll { recentToken in
-                recentToken.id == token.id
+                recentToken.assetID == token.assetID
             }
             recentTokens.insert(token, at: 0)
             let topRecentTokens = recentTokens.prefix(maxNumberOfRecents)
@@ -448,7 +444,7 @@ extension TokenSelectorViewController {
         }
         let item: Int
         if let searchResults {
-            if let index = searchResults.firstIndex(where: { $0.id == id }) {
+            if let index = searchResults.firstIndex(where: { $0.assetID == id }) {
                 if let indices = tokenIndicesForSelectedChain {
                     if let i = indices.firstIndex(of: index) {
                         item = i
@@ -463,7 +459,7 @@ extension TokenSelectorViewController {
                 // The selected token doesn't exists in search results
                 return
             }
-        } else if let index = defaultTokens.firstIndex(where: { $0.id == id }) {
+        } else if let index = defaultTokens.firstIndex(where: { $0.assetID == id }) {
             if let indices = tokenIndicesForSelectedChain {
                 if let i = indices.firstIndex(of: index) {
                     item = i

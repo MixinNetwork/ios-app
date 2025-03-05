@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public final class MixinTokenItem: MixinToken, NumberStringLocalizable {
+public final class MixinTokenItem: MixinToken, ChangeReportingToken, DepositNetworkReportingToken, NumberStringLocalizable {
     
     public let balance: String
     public let isHidden: Bool
@@ -12,6 +12,7 @@ public final class MixinTokenItem: MixinToken, NumberStringLocalizable {
     }
     
     public private(set) lazy var decimalBalance = Decimal(string: balance, locale: .enUSPOSIX) ?? 0
+    public private(set) lazy var decimalUSDBalance = decimalBalance * decimalUSDPrice
     
     public private(set) lazy var localizedBalance = localizedNumberString(balance)
     public private(set) lazy var localizedBalanceWithSymbol = CurrencyFormatter.localizedString(from: decimalBalance,
@@ -19,24 +20,17 @@ public final class MixinTokenItem: MixinToken, NumberStringLocalizable {
                                                                                                 sign: .never,
                                                                                                 symbol: .custom(symbol))
     
-    public lazy var localizedFiatMoneyPrice = CurrencyFormatter.localizedString(
-        from: decimalUSDPrice * Currency.current.decimalRate,
-        format: .fiatMoneyPrice,
+    public private(set) lazy var localizedFiatMoneyPrice = localizeFiatMoneyPrice()
+    
+    public private(set) lazy var localizedFiatMoneyBalance = "≈ " + CurrencyFormatter.localizedString(
+        from: decimalBalance * decimalUSDPrice * Currency.current.decimalRate,
+        format: .fiatMoney,
         sign: .never,
         symbol: .currencySymbol
     )
     
-    public lazy var localizedFiatMoneyBalance: String = {
-        let fiatMoneyBalance = balance.doubleValue * usdPrice.doubleValue * Currency.current.rate
-        if let value = CurrencyFormatter.localizedString(from: fiatMoneyBalance, format: .fiatMoney, sign: .never) {
-            return "≈ " + Currency.current.symbol + value
-        } else {
-            return ""
-        }
-    }()
-    
-    public lazy var localizedUSDChange = NumberFormatter.percentage.string(decimal: decimalUSDChange)
-    public lazy var localizedUSDPrice = CurrencyFormatter.localizedString(
+    public private(set) lazy var localizedUSDChange = localizeUSDChange()
+    public private(set) lazy var localizedUSDPrice = CurrencyFormatter.localizedString(
         from: decimalUSDPrice,
         format: .fiatMoneyPrice,
         sign: .never
@@ -64,61 +58,21 @@ public final class MixinTokenItem: MixinToken, NumberStringLocalizable {
     
     required init(from decoder: Decoder) throws {
         
-        enum ChainCodingKeys: String, CodingKey {
+        enum JoinedCodingKeys: String, CodingKey {
             case balance
             case hidden
-            case chainID = "chain_id"
-            case chainName = "chain_name"
-            case chainSymbol = "chain_symbol"
-            case chainIconURL = "chain_icon_url"
-            case chainThreshold = "chain_threshold"
-            case chainWithdrawalMemoPossibility = "chain_withdrawal_memo_possibility"
         }
         
-        let container = try decoder.container(keyedBy: ChainCodingKeys.self)
+        let container = try decoder.container(keyedBy: JoinedCodingKeys.self)
         self.balance = try container.decode(String.self, forKey: .balance)
         self.isHidden = try container.decode(Bool.self, forKey: .hidden)
-        if let id = try? container.decodeIfPresent(String.self, forKey: .chainID),
-           let name = try? container.decodeIfPresent(String.self, forKey: .chainName),
-           let symbol = try? container.decodeIfPresent(String.self, forKey: .chainSymbol),
-           let iconURL = try? container.decodeIfPresent(String.self, forKey: .chainIconURL),
-           let threshold = try? container.decodeIfPresent(Int.self, forKey: .chainThreshold),
-           let withdrawalMemoPossibility = try? container.decodeIfPresent(String.self, forKey: .chainWithdrawalMemoPossibility)
-        {
-            self.chain = Chain(chainId: id,
-                               name: name,
-                               symbol: symbol,
-                               iconUrl: iconURL,
-                               threshold: threshold,
-                               withdrawalMemoPossibility: withdrawalMemoPossibility)
-        } else {
-            self.chain = nil
-        }
+        self.chain = try? Chain(joinedDecoder: decoder)
         try super.init(from: decoder)
     }
     
 }
 
 extension MixinTokenItem {
-    
-    public var depositNetworkName: String? {
-        switch chainID {
-        case ChainID.ethereum:
-            return "Ethereum (ERC-20)"
-        case ChainID.avalancheXChain:
-            return "Avalanche X-Chain"
-        case ChainID.bnbBeaconChain:
-            return "BNB Beacon Chain (BEP-2)"
-        case ChainID.bnbSmartChain:
-            return "BNB Smart Chain (BEP-20)"
-        case ChainID.tron:
-            return (assetKey ?? "").isDigitsOnly ? "Tron (TRC-10)" : "Tron (TRC-20)"
-        case ChainID.bitShares:
-            return "BitShares"
-        default:
-            return chain?.name
-        }
-    }
     
     public var chainTag: String? {
         switch chainID {

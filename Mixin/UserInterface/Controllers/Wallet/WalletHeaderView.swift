@@ -5,10 +5,12 @@ final class WalletHeaderView: InfiniteTopView {
     
     @IBOutlet weak var contentView: UIStackView!
     
-    @IBOutlet weak var valuesView: UIView!
+    @IBOutlet weak var fiatMoneyStackView: UIStackView!
     @IBOutlet weak var fiatMoneySymbolLabel: UILabel!
     @IBOutlet weak var fiatMoneyValueLabel: UILabel!
-    @IBOutlet weak var btcValueLabel: InsetLabel!
+    
+    @IBOutlet weak var changeStackView: UIStackView!
+    @IBOutlet weak var changeLabel: InsetLabel!
     
     @IBOutlet weak var assetChartWrapperView: UIView!
     @IBOutlet weak var assetChartView: BarChartView!
@@ -54,6 +56,14 @@ final class WalletHeaderView: InfiniteTopView {
     ]
     
     private let maxPendingDepositTokenIconCount = 3
+    private let portionRoundingHandler = NSDecimalNumberHandler(
+        roundingMode: .plain,
+        scale: 2,
+        raiseOnExactness: false,
+        raiseOnOverflow: false,
+        raiseOnUnderflow: false,
+        raiseOnDivideByZero: false
+    )
     
     private lazy var snowfallLayer: CAEmitterLayer = {
         let cell = CAEmitterCell()
@@ -91,9 +101,12 @@ final class WalletHeaderView: InfiniteTopView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        btcValueLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
+        contentView.setCustomSpacing(7, after: fiatMoneyStackView)
+        contentView.setCustomSpacing(20, after: changeStackView)
         contentView.setCustomSpacing(30, after: assetChartWrapperView)
         contentView.setCustomSpacing(13, after: actionView)
+        changeLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
+        changeLabel.alpha = 0
         pendingDepositButton.layer.masksToBounds = true
         pendingDepositButton.layer.cornerRadius = 18
     }
@@ -114,37 +127,48 @@ final class WalletHeaderView: InfiniteTopView {
         }
     }
     
-    func reloadValues(tokens: [MixinTokenItem]) {
+    func reloadValues(tokens: [Token]) {
         fiatMoneySymbolLabel.text = Currency.current.symbol
-        var assetPortions = [AssetPortion]()
-        var btcTotalBalance: Double = 0
-        let usdTotalBalance: Double = tokens.map { $0.balance.doubleValue * $0.usdPrice.doubleValue }.reduce(0, +)
-        var maxPortion = 3
-
-        for asset in tokens {
-            let balance = asset.balance.doubleValue
-            let usdBalance = balance * asset.usdPrice.doubleValue
-            if usdBalance > 0 {
-                let btcBalance = balance * asset.btcPrice.doubleValue
-                btcTotalBalance += btcBalance
-                if assetPortions.count < maxPortion {
-                    let percent: Double = (usdBalance / usdTotalBalance).roundTo(places: 2)
-                    let new = AssetPortion(symbol: asset.symbol, usdBalance: usdBalance, percent: percent)
-                    assetPortions.append(new)
-                    if assetPortions.count == 2 && percent < 0.01 {
-                        maxPortion = 2
-                    }
-                } else {
-                    assetPortions[assetPortions.count - 1].usdBalance += usdBalance
-                    assetPortions[assetPortions.count - 1].symbol = R.string.localizable.other()
+        
+        let valuableTokens = tokens.filter { token in
+            token.decimalUSDBalance > 0
+        }.sorted { one, another in
+            one.decimalUSDBalance > another.decimalUSDBalance
+        }
+        let totalUSDBalance: Decimal = valuableTokens.map(\.decimalUSDBalance).reduce(0, +)
+        let assetPortions: [AssetPortion] = {
+            var portions: [AssetPortion] = []
+            var subsequentTokensAsOthers = false
+            for token in valuableTokens {
+                let percent = NSDecimalNumber(decimal: token.decimalUSDBalance / totalUSDBalance)
+                    .rounding(accordingToBehavior: portionRoundingHandler)
+                    .decimalValue
+                var new = AssetPortion(symbol: token.symbol, percent: percent)
+                portions.append(new)
+                if portions.count == 3 || (portions.count == 2 && percent < 0.01) {
+                    subsequentTokensAsOthers = true
+                    break
                 }
             }
+            if subsequentTokensAsOthers {
+                let percentWithoutLast = portions.prefix(portions.count - 1)
+                    .map(\.percent)
+                    .reduce(0, +)
+                portions[portions.count - 1].percent = 1 - percentWithoutLast
+                portions[portions.count - 1].symbol = R.string.localizable.other()
+            }
+            return portions
+        }()
+        let usdBalanceIsMoreThanZero = totalUSDBalance > 0
+        fiatMoneyValueLabel.text = if totalUSDBalance.isZero {
+            zeroWith2Fractions
+        } else {
+            CurrencyFormatter.localizedString(
+                from: totalUSDBalance * Currency.current.decimalRate,
+                format: .fiatMoney,
+                sign: .never
+            )
         }
-        let usdBalanceIsMoreThanZero = usdTotalBalance > 0
-        fiatMoneyValueLabel.text = fiatMoneyBalanceRepresentation(usdBalance: usdTotalBalance)
-        let btcValue = CurrencyFormatter.localizedString(from: btcTotalBalance, format: .pretty, sign: .never) ?? "0.00"
-        let attributedBTCValue = NSAttributedString(string: btcValue, attributes: btcValueAttributes)
-        btcValueLabel.attributedText = attributedBTCValue
         assetChartWrapperView.isHidden = !usdBalanceIsMoreThanZero
         switch assetPortions.count {
         case 0:
@@ -155,29 +179,27 @@ final class WalletHeaderView: InfiniteTopView {
             rightAssetWrapperView.isHidden = true
             middleAssetSymbolLabel.text = assetPortions[0].symbol
             middleAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: 1)
-            assetChartView.proportions = [1]
         case 2:
             leftAssetWrapperView.isHidden = false
             middleAssetWrapperView.isHidden = true
             rightAssetWrapperView.isHidden = false
             leftAssetSymbolLabel.text = assetPortions[0].symbol
-            leftAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: assetPortions[0].percent))
+            leftAssetPercentLabel.text = NumberFormatter.simplePercentage.string(decimal: assetPortions[0].percent)
             rightAssetSymbolLabel.text = assetPortions[1].symbol
-            assetPortions[1].percent = (1 - assetPortions[0].percent).roundTo(places: 2)
-            rightAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: assetPortions[1].percent))
-            assetChartView.proportions = assetPortions.map { $0.percent }
+            rightAssetPercentLabel.text = NumberFormatter.simplePercentage.string(decimal: assetPortions[1].percent)
         default:
             leftAssetWrapperView.isHidden = false
             middleAssetWrapperView.isHidden = false
             rightAssetWrapperView.isHidden = false
             leftAssetSymbolLabel.text = assetPortions[0].symbol
-            leftAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: assetPortions[0].percent))
+            leftAssetPercentLabel.text = NumberFormatter.simplePercentage.string(decimal: assetPortions[0].percent)
             middleAssetSymbolLabel.text = assetPortions[1].symbol
-            middleAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: assetPortions[1].percent))
+            middleAssetPercentLabel.text = NumberFormatter.simplePercentage.string(decimal: assetPortions[1].percent)
             rightAssetSymbolLabel.text = assetPortions[2].symbol
-            assetPortions[2].percent = abs(1 - assetPortions[0].percent - assetPortions[1].percent).roundTo(places: 2)
-            rightAssetPercentLabel.text = NumberFormatter.simplePercentage.string(from: NSNumber(value: assetPortions[2].percent))
-            assetChartView.proportions = assetPortions.map { $0.percent }
+            rightAssetPercentLabel.text = NumberFormatter.simplePercentage.string(decimal: assetPortions[2].percent)
+        }
+        assetChartView.proportions = assetPortions.map { portion in
+            NSDecimalNumber(decimal: portion.percent).doubleValue
         }
     }
     
@@ -248,18 +270,7 @@ extension WalletHeaderView {
     
     private struct AssetPortion {
         var symbol: String
-        var usdBalance: Double
-        var percent: Double
-    }
-    
-    private func fiatMoneyBalanceRepresentation(usdBalance: Double) -> String? {
-        if usdBalance == 0 {
-            return "0" + currentDecimalSeparator + "00"
-        } else {
-            return CurrencyFormatter.localizedString(from: usdBalance * Currency.current.rate,
-                                                     format: .fiatMoney,
-                                                     sign: .never)
-        }
+        var percent: Decimal
     }
     
     private func layoutSnowfallLayer(_ layer: CAEmitterLayer) {

@@ -3,14 +3,6 @@ import OrderedCollections
 import Alamofire
 import MixinServices
 
-extension SwapToken: IdentifiableToken {
-    
-    var id: String {
-        assetID
-    }
-    
-}
-
 final class SwapTokenSelectorViewController: TokenSelectorViewController<BalancedSwapToken> {
     
     enum Recent {

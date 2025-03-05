@@ -188,14 +188,6 @@ extension WalletConnectService {
             let solanaAddress: String? = PropertiesDAO.shared.value(forKey: .solanaAddress)
             let kinds = Set(chains.map(\.kind))
             DispatchQueue.main.async {
-                if evmAddress == nil, kinds.contains(.evm) {
-                    let controller = UnlockEVMAccountViewController()
-                    Web3PopupCoordinator.enqueue(popup: .unlock(controller))
-                }
-                if solanaAddress == nil, kinds.contains(.solana) {
-                    let controller = UnlockSolanaAccountViewController()
-                    Web3PopupCoordinator.enqueue(popup: .unlock(controller))
-                }
                 let connectWallet = ConnectWalletViewController(proposal: proposal,
                                                                 chains: chains,
                                                                 events: Array(events))

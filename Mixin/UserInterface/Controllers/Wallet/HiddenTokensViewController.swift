@@ -72,13 +72,13 @@ extension HiddenTokensViewController: UITableViewDataSource, UITableViewDelegate
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let token = tokens[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
-        cell.render(asset: token)
+        cell.render(token: token)
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        navigationController?.pushViewController(TokenViewController(token: tokens[indexPath.row]), animated: true)
+        navigationController?.pushViewController(MixinTokenViewController(token: tokens[indexPath.row]), animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

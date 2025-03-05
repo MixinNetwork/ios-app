@@ -40,6 +40,7 @@ extension LoginAccountHandler where Self: UIViewController {
         
         TaskDatabase.reloadCurrent()
         UserDatabase.reloadCurrent()
+        Web3Database.reloadCurrent()
         
         if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version

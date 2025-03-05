@@ -100,7 +100,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         chainTagLabel.isHidden = true
         if token.decimalUSDPrice > 0 {
             changeLabel.text = token.localizedPercentChange
-            changeLabel.marketColor = .byValue(token.decimalAbsoluteChange)
+            changeLabel.marketColor = .byValue(token.decimalUSDChange)
             priceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.isHidden = false
             priceLabel.isHidden = false

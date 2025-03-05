@@ -4,9 +4,7 @@ final class BarChartView: UIView {
     
     var proportions = [Double]() {
         didSet {
-            CATransaction.performWithoutAnimation {
-                draw(oldProportions: oldValue)
-            }
+            CATransaction.performWithoutAnimation(draw)
         }
     }
     
@@ -16,40 +14,39 @@ final class BarChartView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        prepare()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        prepare()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        CATransaction.performWithoutAnimation {
-            layoutLayers()
-        }
-    }
-    
-    private func prepare() {
         barLayersContainerLayer.masksToBounds = true
         layer.addSublayer(barLayersContainerLayer)
     }
     
-    private func draw(oldProportions: [Double]) {
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        barLayersContainerLayer.masksToBounds = true
+        layer.addSublayer(barLayersContainerLayer)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        CATransaction.performWithoutAnimation(layoutLayers)
+    }
+    
+    private func draw() {
         assert(proportions.count <= 3)
-        guard proportions != oldProportions else {
-            return
-        }
-        let numberOfLayersToBeAdded = proportions.count - oldProportions.count
+        let barsCount = max(1, proportions.count)
+        let numberOfLayersToBeAdded = barsCount - barLayers.count
         if numberOfLayersToBeAdded > 0 {
             for i in 0..<numberOfLayersToBeAdded {
-                let index = oldProportions.count + i
-                let layer = makeBarLayer(at: index, count: proportions.count)
+                let index = barLayers.count + 1
+                let layer = CAGradientLayer()
+                layer.startPoint = CGPoint(x: 0, y: 0)
+                layer.endPoint = CGPoint(x: 1, y: 1)
+                layer.locations = [0, 1]
                 barLayersContainerLayer.addSublayer(layer)
                 barLayers.append(layer)
-                let shadowLayer = makeShadowLayer(at: index, count: proportions.count)
+                
+                let shadowLayer = CAShapeLayer()
                 shadowLayer.fillColor = UIColor.clear.cgColor
+                shadowLayer.shadowOpacity = 0.21
+                shadowLayer.shadowRadius = 4
                 self.layer.insertSublayer(shadowLayer, at: 0)
                 shadowLayers.append(shadowLayer)
             }
@@ -65,34 +62,63 @@ final class BarChartView: UIView {
             shadowLayers
                 .removeLast(-numberOfLayersToBeAdded)
         }
+        
+        if proportions.isEmpty {
+            barLayers.first?.colors = [
+                UIColor(displayP3RgbValue: 0xE5E8EE).cgColor,
+                UIColor(displayP3RgbValue: 0xE5E8EE).cgColor,
+            ]
+            shadowLayers.first?.shadowColor = UIColor(displayP3RgbValue: 0x888888, alpha: 0.1).cgColor
+        } else {
+            for i in 0..<barLayers.count {
+                barLayers[i].colors = barColors(at: i, count: barsCount)
+            }
+            for i in 0..<shadowLayers.count {
+                shadowLayers[i].shadowColor = shadowColor(at: i, count: barsCount)
+            }
+        }
+        
         layoutLayers()
     }
     
     private func layoutLayers() {
-        assert(proportions.count == barLayers.count)
-        assert(proportions.count == shadowLayers.count)
         barLayersContainerLayer.frame = bounds
         barLayersContainerLayer.cornerRadius = bounds.height / 2
-        for i in 0..<proportions.count {
-            let size = CGSize(width: CGFloat(proportions[i]) * bounds.width, height: bounds.height)
-            if i == 0 {
-                barLayers[i].frame = CGRect(origin: .zero, size: size)
-            } else {
-                barLayers[i].frame = CGRect(x: barLayers[i - 1].frame.maxX, y: 0, width: size.width, height: size.height)
+        if proportions.isEmpty {
+            barLayers.first?.frame = CGRect(origin: .zero, size: bounds.size)
+        } else {
+            for i in 0..<proportions.count {
+                let size = CGSize(width: CGFloat(proportions[i]) * bounds.width, height: bounds.height)
+                if i == 0 {
+                    barLayers[i].frame = CGRect(origin: .zero, size: size)
+                } else {
+                    barLayers[i].frame = CGRect(x: barLayers[i - 1].frame.maxX, y: 0, width: size.width, height: size.height)
+                }
             }
+        }
+        for i in 0..<barLayers.count {
             shadowLayers[i].frame = barLayersContainerLayer.convert(barLayers[i].frame, to: layer)
             let cornerRadius = shadowLayers[i].bounds.height / 2
             let pathRect = shadowLayers[i].bounds
-            let shadowPathRect = CGRect(x: 0, y: 5, width: shadowLayers[i].bounds.width, height: shadowLayers[i].bounds.height)
+            let shadowPathRect = CGRect(
+                x: 0,
+                y: 5,
+                width: shadowLayers[i].bounds.width,
+                height: shadowLayers[i].bounds.height
+            )
             if cornerRadius <= pathRect.width / 2 {
-                shadowLayers[i].path = CGPath(roundedRect: pathRect,
-                                              cornerWidth: cornerRadius,
-                                              cornerHeight: cornerRadius,
-                                              transform: nil)
-                shadowLayers[i].shadowPath = CGPath(roundedRect: shadowPathRect,
-                                                    cornerWidth: cornerRadius,
-                                                    cornerHeight: cornerRadius,
-                                                    transform: nil)
+                shadowLayers[i].path = CGPath(
+                    roundedRect: pathRect,
+                    cornerWidth: cornerRadius,
+                    cornerHeight: cornerRadius,
+                    transform: nil
+                )
+                shadowLayers[i].shadowPath = CGPath(
+                    roundedRect: shadowPathRect,
+                    cornerWidth: cornerRadius,
+                    cornerHeight: cornerRadius,
+                    transform: nil
+                )
             } else {
                 shadowLayers[i].path = CGPath(rect: pathRect, transform: nil)
                 shadowLayers[i].shadowPath = CGPath(rect: shadowPathRect, transform: nil)
@@ -100,48 +126,37 @@ final class BarChartView: UIView {
         }
     }
     
-    private func makeBarLayer(at index: Int, count: Int) -> CAGradientLayer {
-        let layer = CAGradientLayer()
-        switch index {
+    private func barColors(at index: Int, count: Int) -> [CGColor] {
+        let values: [UInt] = switch index {
         case 0:
-            layer.colors = [UIColor(rgbValue: 0x47A1FF).cgColor,
-                            UIColor(rgbValue: 0x244BFF).cgColor]
+            [0x47A1FF, 0x244BFF]
         case 1:
             if count == 3 {
-                layer.colors = [UIColor(rgbValue: 0xB852F6).cgColor,
-                                UIColor(rgbValue: 0xED1C80).cgColor]
+                [0xB852F6, 0xED1C80]
             } else {
-                layer.colors = [UIColor(rgbValue: 0xFFBB54).cgColor,
-                                UIColor(rgbValue: 0xFF9E2C).cgColor]
+                [0xFFBB54, 0xFF9E2C]
             }
         default:
-            layer.colors = [UIColor(rgbValue: 0xFFBB54).cgColor,
-                            UIColor(rgbValue: 0xFF9E2C).cgColor]
+            [0xFFBB54, 0xFF9E2C]
         }
-        layer.startPoint = CGPoint(x: 0, y: 0)
-        layer.endPoint = CGPoint(x: 1, y: 1)
-        layer.locations = [0, 1]
-        return layer
+        return values.map { value in
+            UIColor(rgbValue: value).cgColor
+        }
     }
     
-    private func makeShadowLayer(at index: Int, count: Int) -> CAShapeLayer {
-        let layer = CAShapeLayer()
-        
+    private func shadowColor(at index: Int, count: Int) -> CGColor {
         switch index {
         case 0:
-            layer.shadowColor = UIColor(rgbValue: 0x246BFF).cgColor
+            UIColor(rgbValue: 0x246BFF).cgColor
         case 1:
             if count == 3 {
-                layer.shadowColor = UIColor(rgbValue: 0x491DF6).cgColor
+                UIColor(rgbValue: 0x491DF6).cgColor
             } else {
-                layer.shadowColor = UIColor(rgbValue: 0xF3962C).cgColor
+                UIColor(rgbValue: 0xF3962C).cgColor
             }
         default:
-            layer.shadowColor = UIColor(rgbValue: 0xF3962C).cgColor
+            UIColor(rgbValue: 0xF3962C).cgColor
         }
-        layer.shadowOpacity = 0.21
-        layer.shadowRadius = 4
-        return layer
     }
     
 }

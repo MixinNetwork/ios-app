@@ -55,7 +55,7 @@ extension DeleteAccountHintWindow: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
         if indexPath.row < assets.count {
-            cell.render(asset: assets[indexPath.row])
+            cell.render(token: assets[indexPath.row])
         }
         return cell
     }

@@ -1,14 +1,6 @@
 import UIKit
 import MixinServices
 
-extension Web3Token: IdentifiableToken {
-    
-    var id: String {
-        fungibleID
-    }
-    
-}
-
 final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Token> {
     
     var onSelected: ((Web3Token) -> Void)?
@@ -31,7 +23,7 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
         DispatchQueue.global().async { [tokens=defaultTokens] in
             let recentFungibleIDs = Set(PropertiesDAO.shared.jsonObject(forKey: .web3RecentFungibleIDs, type: [String].self) ?? [])
             let recentTokens = tokens.filter { token in
-                recentFungibleIDs.contains(token.fungibleID)
+                recentFungibleIDs.contains(token.assetID)
             }
             let chainIDs = Set(tokens.compactMap(\.chainID))
             let chains = Chain.web3Chains(ids: chainIDs)
@@ -51,7 +43,7 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
     
     override func saveRecentsToStorage(tokens: any Sequence<Web3Token>) {
         PropertiesDAO.shared.set(
-            jsonObject: tokens.map(\.fungibleID),
+            jsonObject: tokens.map(\.assetID),
             forKey: .web3RecentFungibleIDs
         )
     }

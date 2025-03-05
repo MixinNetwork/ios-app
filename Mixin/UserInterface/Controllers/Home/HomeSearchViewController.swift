@@ -46,7 +46,7 @@ extension HomeSearchViewController where Self: UIViewController {
     }
     
     func pushTokenViewController(token: MixinTokenItem) {
-        let viewController = TokenViewController(token: token)
+        let viewController = MixinTokenViewController(token: token)
         homeNavigationController?.pushViewController(viewController, animated: true)
     }
     

@@ -11,6 +11,7 @@ final class WalletSummaryViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     
     private var privacyWalletDigest: WalletDigest?
+    private var classicWalletDigests: [WalletDigest] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,24 +20,18 @@ final class WalletSummaryViewController: UIViewController {
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { (sectionIndex, environment) in
             switch Section(rawValue: sectionIndex)! {
             case .value:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(152))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(152))
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)
-                section.boundarySupplementaryItems = [
-                    NSCollectionLayoutBoundarySupplementaryItem(
-                        layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(15)),
-                        elementKind: UICollectionView.elementKindSectionHeader,
-                        alignment: .bottom
-                    )
-                ]
                 return section
             case .wallets:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(112))
+                item.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0)
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20)
@@ -53,9 +48,11 @@ final class WalletSummaryViewController: UIViewController {
             object: nil
         )
         DispatchQueue.global().async {
-            let digest = TokenDAO.shared.walletDigest()
+            let privacyWalletDigest = TokenDAO.shared.walletDigest()
+            let classicWalletDigests = Web3WalletDAO.shared.walletDigests()
             DispatchQueue.main.async {
-                self.privacyWalletDigest = digest
+                self.privacyWalletDigest = privacyWalletDigest
+                self.classicWalletDigests = classicWalletDigests
                 self.collectionView.reloadData()
             }
         }
@@ -74,7 +71,7 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
         case .value:
             1
         case .wallets:
-            1
+            1 + classicWalletDigests.count
         }
     }
     
@@ -94,7 +91,8 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
                     cell.load(digest: digest, type: .privacy)
                 }
             default:
-                break
+                let digest = classicWalletDigests[indexPath.row - 1]
+                cell.load(digest: digest, type: .classic)
             }
             return cell
         }
@@ -109,8 +107,13 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
         case .value:
             break
         case .wallets:
-            if let parent = parent as? WalletContainerViewController {
-                parent.switchToWallet()
+            let container = parent as? WalletContainerViewController
+            switch indexPath.row {
+            case 0:
+                container?.switchToWallet(type: .privacy)
+            default:
+                let digest = classicWalletDigests[indexPath.row - 1]
+                container?.switchToWallet(type: digest.type)
             }
         }
     }

@@ -92,8 +92,8 @@ struct WithdrawPaymentOperation {
         let emptyMemo = ""
         let fullAddress = address.fullRepresentation
         let withdrawalAmount = withdrawalTokenAmount
-        let withdrawalAmountString = MixinToken.amountString(from: withdrawalAmount)
-        let feeAmountString = MixinToken.amountString(from: feeAmount)
+        let withdrawalAmountString = TokenAmountFormatter.string(from: withdrawalAmount)
+        let feeAmountString = TokenAmountFormatter.string(from: feeAmount)
         let feeTraceID = UUID.uniqueObjectIDString(traceID, "FEE")
         Logger.general.info(category: "Withdraw", message: "Withdraw: \(withdrawalAmount) \(withdrawalToken.symbol), fee: \(feeAmount) \(feeToken.symbol), to \(fullAddress), traceID: \(traceID), feeTraceID: \(feeTraceID)")
         
@@ -206,7 +206,7 @@ struct WithdrawPaymentOperation {
         let withdrawalSnapshotAmount = isFeeTokenDifferent ? withdrawalAmount : withdrawalAmount + feeAmount
         let withdrawalSnapshot = SafeSnapshot(type: .withdrawal,
                                               assetID: withdrawalToken.assetID,
-                                              amount: "-" + MixinToken.amountString(from: withdrawalSnapshotAmount),
+                                              amount: "-" + TokenAmountFormatter.string(from: withdrawalSnapshotAmount),
                                               userID: senderID,
                                               opponentID: "",
                                               memo: emptyMemo,

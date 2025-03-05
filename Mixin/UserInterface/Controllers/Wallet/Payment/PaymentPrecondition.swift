@@ -186,14 +186,14 @@ struct DuplicationPrecondition: PaymentPrecondition {
         let trace: Trace? = switch self.operation {
         case .transfer(let opponent):
             TraceDAO.shared.getTrace(assetId: token.assetID,
-                                     amount: MixinToken.amountString(from: tokenAmount),
+                                     amount: TokenAmountFormatter.string(from: tokenAmount),
                                      opponentId: opponent.userId,
                                      destination: nil,
                                      tag: nil,
                                      createdAt: createdAt)
         case let .withdraw(address):
             TraceDAO.shared.getTrace(assetId: token.assetID,
-                                             amount: MixinToken.amountString(from: tokenAmount),
+                                             amount: TokenAmountFormatter.string(from: tokenAmount),
                                              opponentId: nil,
                                              destination: address.destination,
                                              tag: address.tag,

@@ -134,7 +134,7 @@ struct TransferPaymentOperation {
         let traceID = self.traceID
         let kernelAssetID = token.kernelAssetID
         let senderID = myUserId
-        let amount = MixinToken.amountString(from: amount)
+        let amount = TokenAmountFormatter.string(from: amount)
         Logger.general.info(category: "Transfer", message: "Transfer: \(amount) \(token.symbol), to \(destination.debugDescription), traceID: \(traceID), behavior: \(behavior.description)")
         
         let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()

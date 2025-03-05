@@ -84,21 +84,3 @@ extension MixinToken {
     }
     
 }
-
-extension MixinToken {
-    
-    private static let amountFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 8
-        formatter.locale = .enUSPOSIX
-        formatter.usesGroupingSeparator = false
-        return formatter
-    }()
-    
-    public static func amountString(from decimal: Decimal) -> String {
-        amountFormatter.string(from: decimal as NSDecimalNumber) ?? "\(decimal)"
-    }
-    
-}

@@ -28,7 +28,7 @@ struct SwapRequest: Encodable {
         } else {
             sendToken.assetKey
         }
-        let inputAmount = MixinToken.amountString(from: sendAmount as Decimal)
+        let inputAmount = TokenAmountFormatter.string(from: sendAmount as Decimal)
         return SwapRequest(
             payer: sendAddress,
             inputMint: inputMint,
@@ -52,7 +52,7 @@ struct SwapRequest: Encodable {
         SwapRequest(
             payer: myUserId,
             inputMint: sendToken.assetID,
-            inputAmount: MixinToken.amountString(from: sendAmount),
+            inputAmount: TokenAmountFormatter.string(from: sendAmount),
             outputMint: receiveToken.assetID,
             slippage: Slippage(decimal: slippage).integral,
             source: source,

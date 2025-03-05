@@ -36,7 +36,7 @@ public final class UTXOService {
         let extra = TokenExtra(assetID: assetID,
                                kernelAssetID: kernelAssetID,
                                isHidden: false,
-                               balance: MixinToken.amountString(from: totalAmount),
+                               balance: TokenAmountFormatter.string(from: totalAmount),
                                updatedAt: Date().toUTCString())
         try TokenExtraDAO.shared.insertOrUpdateBalance(extra: extra, into: db) {
             DispatchQueue.main.async {

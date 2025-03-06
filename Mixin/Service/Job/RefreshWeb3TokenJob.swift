@@ -21,11 +21,12 @@ public final class RefreshWeb3TokenJob: AsynchronousJob {
             case let .success(tokens):
                 Web3TokenDAO.shared.save(tokens: tokens)
             case let .failure(error):
+                Logger.general.debug(category: "RefreshWeb3Token", message: "\(error)")
                 if !error.isTransportTimedOut {
                     reporter.report(error: error)
                 }
-                self.finishJob()
             }
+            self.finishJob()
         }
         return true
     }

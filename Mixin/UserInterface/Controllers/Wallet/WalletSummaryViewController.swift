@@ -110,10 +110,10 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
             let container = parent as? WalletContainerViewController
             switch indexPath.row {
             case 0:
-                container?.switchToWallet(type: .privacy)
+                container?.switchToWallet(.privacy)
             default:
                 let digest = classicWalletDigests[indexPath.row - 1]
-                container?.switchToWallet(type: digest.type)
+                container?.switchToWallet(digest.wallet)
             }
         }
     }

@@ -152,7 +152,7 @@ extension WalletCell {
                         make.size.equalTo(20)
                     }
                 }
-                label.text = "+\(urls.count - 2)"
+                label.text = "+\(max(99, urls.count - 2))"
             } else {
                 loadIconViews(count: urls.count) { index, wrapperView in
                     let offset = index == urls.count - 1 ? 0 : -6

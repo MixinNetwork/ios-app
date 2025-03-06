@@ -79,7 +79,7 @@ final class PrivacyWalletViewController: WalletViewController {
             self.navigationController?.pushViewController(history, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
-            self.navigationController?.pushViewController(HiddenTokensViewController.instance(), animated: true)
+            self.navigationController?.pushViewController(HiddenMixinTokensViewController(), animated: true)
         }))
         if hasAssetInLegacyNetwork {
             sheet.addAction(UIAlertAction(title: R.string.localizable.legacy_network(), style: .default, handler: performAssetMigration(_:)))
@@ -251,7 +251,10 @@ extension PrivacyWalletViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let action = UIContextualAction(style: .destructive, title: R.string.localizable.hide()) { [weak self] (action, _, completionHandler) in
+        let action = UIContextualAction(
+            style: .destructive,
+            title: R.string.localizable.hide()
+        ) { [weak self] (action, _, completionHandler) in
             guard let self = self else {
                 return
             }
@@ -264,7 +267,7 @@ extension PrivacyWalletViewController: UITableViewDelegate {
             self.present(alert, animated: true, completion: nil)
             completionHandler(true)
         }
-        action.backgroundColor = .theme
+        action.backgroundColor = R.color.theme()
         return UISwipeActionsConfiguration(actions: [action])
     }
     

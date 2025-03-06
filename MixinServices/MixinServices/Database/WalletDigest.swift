@@ -2,23 +2,18 @@ import Foundation
 
 public final class WalletDigest {
     
-    public enum WalletType {
-        case privacy
-        case classic(id: String)
-    }
-    
-    public let type: WalletType
+    public let wallet: Wallet
     public let usdBalanceSum: Decimal
     public let tokens: [TokenDigest]
     public let positiveUSDBalanceTokensCount: Int
     
     init(
-        type: WalletType,
+        wallet: Wallet,
         usdBalanceSum: Decimal,
         tokens: [TokenDigest],
         positiveUSDBalanceTokensCount: Int
     ) {
-        self.type = type
+        self.wallet = wallet
         self.usdBalanceSum = usdBalanceSum
         self.tokens = tokens
         self.positiveUSDBalanceTokensCount = positiveUSDBalanceTokensCount

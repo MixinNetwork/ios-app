@@ -45,12 +45,12 @@ final class WalletContainerViewController: UIViewController {
         }
     }
     
-    func switchToWallet(type: WalletDigest.WalletType) {
+    func switchToWallet(_ wallet: Wallet) {
         guard let summary = viewController as? WalletSummaryViewController else {
             return
         }
         self.viewController = nil
-        let wallet = switch type {
+        let wallet = switch wallet {
         case .privacy:
             PrivacyWalletViewController()
         case .classic(let id):

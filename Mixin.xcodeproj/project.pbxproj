@@ -755,6 +755,8 @@
 		942AA7402C9473C9007B97A4 /* user_membership_prosperity.json in Resources */ = {isa = PBXBuildFile; fileRef = 942AA73F2C9473C9007B97A4 /* user_membership_prosperity.json */; };
 		942AA7422C9473D7007B97A4 /* user_membership_prosperity.json in Resources */ = {isa = PBXBuildFile; fileRef = 942AA7412C9473D6007B97A4 /* user_membership_prosperity.json */; };
 		942BA99C2C689FA10096CCC3 /* MarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942BA99A2C689FA10096CCC3 /* MarketViewController.swift */; };
+		942C637D2D79E467003B3A5F /* HiddenMixinTokensViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942C637C2D79E467003B3A5F /* HiddenMixinTokensViewController.swift */; };
+		942C637F2D79E5D3003B3A5F /* HiddenWeb3TokensViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942C637E2D79E5D3003B3A5F /* HiddenWeb3TokensViewController.swift */; };
 		942CF2552BC8257800ECCEFB /* Web3TransferOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942CF2542BC8257800ECCEFB /* Web3TransferOperation.swift */; };
 		942D90EA2B05F84700E81358 /* WithdrawFeeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942D90E92B05F84700E81358 /* WithdrawFeeSelectorViewController.swift */; };
 		942D90F02B05F8FE00E81358 /* WithdrawFeeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942D90EE2B05F8FE00E81358 /* WithdrawFeeCell.swift */; };
@@ -2265,6 +2267,8 @@
 		942AA73F2C9473C9007B97A4 /* user_membership_prosperity.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = user_membership_prosperity.json; sourceTree = "<group>"; };
 		942AA7412C9473D6007B97A4 /* user_membership_prosperity.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = user_membership_prosperity.json; sourceTree = "<group>"; };
 		942BA99A2C689FA10096CCC3 /* MarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketViewController.swift; sourceTree = "<group>"; };
+		942C637C2D79E467003B3A5F /* HiddenMixinTokensViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenMixinTokensViewController.swift; sourceTree = "<group>"; };
+		942C637E2D79E5D3003B3A5F /* HiddenWeb3TokensViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenWeb3TokensViewController.swift; sourceTree = "<group>"; };
 		942CF2542BC8257800ECCEFB /* Web3TransferOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferOperation.swift; sourceTree = "<group>"; };
 		942D90E92B05F84700E81358 /* WithdrawFeeSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawFeeSelectorViewController.swift; sourceTree = "<group>"; };
 		942D90EE2B05F8FE00E81358 /* WithdrawFeeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawFeeCell.swift; sourceTree = "<group>"; };
@@ -5057,6 +5061,8 @@
 				94317D052AFBE57200FDC9C9 /* MemoCell.swift */,
 				94317D062AFBE57200FDC9C9 /* MemoCell.xib */,
 				DF9E66E4205B9AF300F1A0B9 /* HiddenTokensViewController.swift */,
+				942C637C2D79E467003B3A5F /* HiddenMixinTokensViewController.swift */,
+				942C637E2D79E5D3003B3A5F /* HiddenWeb3TokensViewController.swift */,
 				94B2CD772B0F88D300D268E1 /* DepositView.xib */,
 				DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */,
 				94BF6D5A2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift */,
@@ -6232,6 +6238,7 @@
 				7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */,
 				94396D502CE36D2D009DA4E9 /* RoundOutlineButton.swift in Sources */,
 				949569A6263B12FE00E043FE /* TranscriptMessageCell.swift in Sources */,
+				942C637F2D79E5D3003B3A5F /* HiddenWeb3TokensViewController.swift in Sources */,
 				9415D4A32BCBEF6800C78A75 /* Web3DepositViewController.swift in Sources */,
 				94BFA98A2B98546000200FC4 /* SyncSafeSnapshotJob.swift in Sources */,
 				94EE1DC72B721E4800C32DD4 /* MultisigPreviewViewController.swift in Sources */,
@@ -6482,6 +6489,7 @@
 				7BA4193E209AFAB500DFCD39 /* AppCardV0MessageCell.swift in Sources */,
 				7B7DACAC2350707F006AA2AC /* SharedMediaWaveformView.swift in Sources */,
 				7B51DDBB223A52A0008ACDBB /* LoginVerificationCodeViewController.swift in Sources */,
+				942C637D2D79E467003B3A5F /* HiddenMixinTokensViewController.swift in Sources */,
 				7B2E3E521FA07F7B00DDDDEB /* CallingCodeCell.swift in Sources */,
 				7B5EA41220B2734C00940D1A /* GalleryVideoSlider.swift in Sources */,
 				7B7DACAA23505F06006AA2AC /* SharedMediaAudio.swift in Sources */,

@@ -22,29 +22,22 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
         reloadSnapshots()
     }
     
-    override func showMoreActions(_ sender: Any) {
-        let token = self.token
-        let wasHidden = token.isHidden
-        let title = wasHidden ? R.string.localizable.show_asset() : R.string.localizable.hide_asset()
-        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: title, style: .default, handler: { _ in
-            DispatchQueue.global().async {
-                let extra = TokenExtra(assetID: token.assetID,
-                                       kernelAssetID: token.kernelAssetID,
-                                       isHidden: !wasHidden,
-                                       balance: token.balance,
-                                       updatedAt: Date().toUTCString())
-                TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
-            }
-            self.navigationController?.popViewController(animated: true)
-        }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        present(sheet, animated: true, completion: nil)
-    }
-    
     override func send() {
         let receiver = TokenReceiverViewController(token: token)
         navigationController?.pushViewController(receiver, animated: true)
+    }
+    
+    override func setTokenHidden(_ hidden: Bool) {
+        let extra = TokenExtra(
+            assetID: token.assetID,
+            kernelAssetID: token.kernelAssetID,
+            isHidden: hidden,
+            balance: token.balance,
+            updatedAt: Date().toUTCString()
+        )
+        DispatchQueue.global().async {
+            TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
+        }
     }
     
     override func updateBalanceCell(_ cell: TokenBalanceCell) {

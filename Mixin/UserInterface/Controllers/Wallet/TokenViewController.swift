@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class TokenViewController<Token: MixinServices.Token, Transaction>: UIViewController, UITableViewDataSource, UITableViewDelegate, MnemonicsBackupChecking {
+class TokenViewController<Token: HideableToken, Transaction>: UIViewController, UITableViewDataSource, UITableViewDelegate, MnemonicsBackupChecking {
     
     let queue = DispatchQueue(label: "one.mixin.messenger.TokenViewController")
     let transactionsCount = 20
@@ -145,6 +145,10 @@ class TokenViewController<Token: MixinServices.Token, Transaction>: UIViewContro
         
     }
     
+    func setTokenHidden(_ hidden: Bool) {
+        
+    }
+    
     func viewMarket() {
         
     }
@@ -154,6 +158,14 @@ class TokenViewController<Token: MixinServices.Token, Transaction>: UIViewContro
     }
     
     func viewAllTransactions() {
+        
+    }
+    
+    func updateBalanceCell(_ cell: TokenBalanceCell) {
+        
+    }
+    
+    func updateTransactionCell(_ cell: SnapshotCell, with transaction: Transaction) {
         
     }
     
@@ -173,14 +185,6 @@ class TokenViewController<Token: MixinServices.Token, Transaction>: UIViewContro
         case .transactions:
             transactionRows.count
         }
-    }
-    
-    func updateBalanceCell(_ cell: TokenBalanceCell) {
-        
-    }
-    
-    func updateTransactionCell(_ cell: SnapshotCell, with transaction: Transaction) {
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -352,8 +356,17 @@ class TokenViewController<Token: MixinServices.Token, Transaction>: UIViewContro
         }
     }
     
-    @objc func showMoreActions(_ sender: Any) {
-        
+    @objc private func showMoreActions(_ sender: Any) {
+        let token = self.token
+        let wasHidden = token.isHidden
+        let title = wasHidden ? R.string.localizable.show_asset() : R.string.localizable.hide_asset()
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: title, style: .default, handler: { _ in
+            self.setTokenHidden(!wasHidden)
+            self.navigationController?.popViewController(animated: true)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true, completion: nil)
     }
     
     @objc private func reloadMarket(_ notification: Notification) {

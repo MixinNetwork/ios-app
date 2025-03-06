@@ -48,6 +48,14 @@ public final class Web3Database: Database {
                     PRIMARY KEY(wallet_id, asset_id)
                 )
                 """,
+                """
+                CREATE TABLE IF NOT EXISTS `tokens_extra` (
+                  `wallet_id` TEXT NOT NULL,
+                  `asset_id` TEXT NOT NULL,
+                  `hidden` INTEGER,
+                  PRIMARY KEY(`wallet_id`, `asset_id`)
+                )
+                """,
             ]
             for sql in sqls {
                 try db.execute(sql: sql)

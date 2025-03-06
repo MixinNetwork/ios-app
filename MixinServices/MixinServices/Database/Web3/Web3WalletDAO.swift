@@ -70,7 +70,7 @@ public final class Web3WalletDAO: Web3DAO {
                 let positiveUSDBalanceTokensCount = try Int.fetchOne(db, sql: SQL.positiveUSDBalanceTokensCount, arguments: [wallet.walletID]) ?? 0
                 let usdBalanceSum = try Decimal.fetchOne(db, sql: SQL.usdBalanceSum, arguments: [wallet.walletID]) ?? 0
                 return WalletDigest(
-                    type: .classic(id: wallet.walletID),
+                    wallet: .classic(id: wallet.walletID),
                     usdBalanceSum: usdBalanceSum,
                     tokens: topTokenDigests,
                     positiveUSDBalanceTokensCount: positiveUSDBalanceTokensCount

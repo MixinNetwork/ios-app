@@ -15,13 +15,20 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         reloadSnapshots()
     }
     
-    override func showMoreActions(_ sender: Any) {
-        // TODO: Hide or show
-    }
-    
     override func send() {
 //        let receiver = TokenReceiverViewController(token: token)
 //        navigationController?.pushViewController(receiver, animated: true)
+    }
+    
+    override func setTokenHidden(_ hidden: Bool) {
+        DispatchQueue.global().async { [token] in
+            let dao: Web3TokenExtraDAO = .shared
+            if hidden {
+                dao.hide(walletID: token.walletID, assetID: token.assetID)
+            } else {
+                dao.unhide(walletID: token.walletID, assetID: token.assetID)
+            }
+        }
     }
     
     override func updateBalanceCell(_ cell: TokenBalanceCell) {

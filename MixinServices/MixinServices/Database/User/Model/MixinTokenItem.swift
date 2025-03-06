@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public final class MixinTokenItem: MixinToken, ChangeReportingToken, DepositNetworkReportingToken, NumberStringLocalizable {
+public final class MixinTokenItem: MixinToken, ChangeReportingToken, DepositNetworkReportingToken, HideableToken {
     
     public let balance: String
     public let isHidden: Bool
@@ -14,11 +14,12 @@ public final class MixinTokenItem: MixinToken, ChangeReportingToken, DepositNetw
     public private(set) lazy var decimalBalance = Decimal(string: balance, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUSDBalance = decimalBalance * decimalUSDPrice
     
-    public private(set) lazy var localizedBalance = localizedNumberString(balance)
-    public private(set) lazy var localizedBalanceWithSymbol = CurrencyFormatter.localizedString(from: decimalBalance,
-                                                                                                format: .precision,
-                                                                                                sign: .never,
-                                                                                                symbol: .custom(symbol))
+    public private(set) lazy var localizedBalanceWithSymbol = CurrencyFormatter.localizedString(
+        from: decimalBalance,
+        format: .precision,
+        sign: .never,
+        symbol: .custom(symbol)
+    )
     
     public private(set) lazy var localizedFiatMoneyPrice = localizeFiatMoneyPrice()
     

@@ -93,38 +93,6 @@
             </objects>
             <point key="canvasLocation" x="-455.07246376811599" y="-712.5"/>
         </scene>
-        <!--Hidden Tokens View Controller-->
-        <scene sceneID="zH6-MX-htI">
-            <objects>
-                <viewController storyboardIdentifier="hidden_assets" automaticallyAdjustsScrollViewInsets="NO" id="GB1-mn-I7w" customClass="HiddenTokensViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="uhb-p1-3GT">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="74" estimatedRowHeight="74" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="hg6-2u-DnI">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </tableView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="4FZ-87-yjF"/>
-                        <color key="backgroundColor" name="background"/>
-                        <constraints>
-                            <constraint firstItem="hg6-2u-DnI" firstAttribute="top" secondItem="uhb-p1-3GT" secondAttribute="top" id="3Pn-2Z-QPe"/>
-                            <constraint firstItem="4FZ-87-yjF" firstAttribute="trailing" secondItem="hg6-2u-DnI" secondAttribute="trailing" id="7uy-xe-Xmo"/>
-                            <constraint firstItem="hg6-2u-DnI" firstAttribute="leading" secondItem="4FZ-87-yjF" secondAttribute="leading" id="drx-nG-QEm"/>
-                            <constraint firstAttribute="bottom" secondItem="hg6-2u-DnI" secondAttribute="bottom" id="yVQ-3d-hMJ"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="tableView" destination="hg6-2u-DnI" id="tR2-N9-F8d"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="lxu-7F-X7Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-455" y="703"/>
-        </scene>
         <!--Legacy Transaction View Controller-->
         <scene sceneID="jHO-cF-iCX">
             <objects>

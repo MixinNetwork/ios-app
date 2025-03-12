@@ -82,6 +82,7 @@ extension LoginAccountHandler where Self: UIViewController {
         OutputDAO.shared.deleteAll()
         RawTransactionDAO.shared.deleteAll()
         TokenExtraDAO.shared.nullifyAllBalances()
+        Web3DAO.deleteWalletsAddresses()
         WKWebsiteDataStore.default().removeAuthenticationRelatedData()
         
         if !account.fullName.isEmpty {

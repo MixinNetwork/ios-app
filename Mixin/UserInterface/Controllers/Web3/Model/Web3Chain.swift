@@ -11,6 +11,17 @@ final class Web3Chain {
         case evm
         case solana
         
+        init?(mixinChainID: String) {
+            switch mixinChainID {
+            case ChainID.ethereum, ChainID.polygon, ChainID.bnbSmartChain, ChainID.arbitrum, ChainID.base, ChainID.optimism:
+                self = .evm
+            case ChainID.solana:
+                self = .solana
+            default:
+                return nil
+            }
+        }
+        
         var chains: [Web3Chain] {
             switch self {
             case .evm:

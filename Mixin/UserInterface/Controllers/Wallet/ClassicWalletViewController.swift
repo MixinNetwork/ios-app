@@ -21,7 +21,8 @@ final class ClassicWalletViewController: WalletViewController {
         titleLabel.text = R.string.localizable.classic_wallet()
         tableView.dataSource = self
         tableView.delegate = self
-        ConcurrentJobQueue.shared.addJob(job: RefreshWeb3TokenJob(walletID: walletID))
+        tableHeaderView.actionView.swapButton.isHidden = true
+        tableHeaderView.actionView.delegate = self
         let notificationCenter: NotificationCenter = .default
         notificationCenter.addObserver(
             self,
@@ -39,13 +40,14 @@ final class ClassicWalletViewController: WalletViewController {
     }
     
     override func moreAction(_ sender: Any) {
+        let walletID = self.walletID
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in
-            let history = TransactionHistoryViewController(type: nil)
+            let history = Web3TransactionHistoryViewController(walletID: walletID, type: nil)
             self.navigationController?.pushViewController(history, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
-            let hidden = HiddenWeb3TokensViewController(walletID: self.walletID)
+            let hidden = HiddenWeb3TokensViewController(walletID: walletID)
             self.navigationController?.pushViewController(hidden, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
@@ -90,6 +92,20 @@ final class ClassicWalletViewController: WalletViewController {
         tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
         DispatchQueue.global().async { [walletID] in
             Web3TokenExtraDAO.shared.hide(walletID: walletID, assetID: token.assetID)
+        }
+    }
+    
+}
+
+extension ClassicWalletViewController: HomeTabBarControllerChild {
+    
+    func viewControllerDidSwitchToFront() {
+        let jobs = [
+            RefreshWeb3TokenJob(walletID: walletID),
+            SyncWeb3TransactionJob(walletID: walletID),
+        ]
+        for job in jobs {
+            ConcurrentJobQueue.shared.addJob(job: job)
         }
     }
     
@@ -146,6 +162,46 @@ extension ClassicWalletViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         true
+    }
+    
+}
+
+extension ClassicWalletViewController: TokenActionView.Delegate {
+    
+    func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
+        switch action {
+        case .send:
+            let selector = SendTokenSelectorViewController()
+            selector.onSelected = { token in
+                let receiver = TokenReceiverViewController(token: token)
+                self.navigationController?.pushViewController(receiver, animated: true)
+            }
+            present(selector, animated: true, completion: nil)
+        case .receive:
+            let controller = Web3TokenSelectorViewController(walletID: walletID, tokens: tokens)
+            controller.onSelected = { [walletID] token in
+                guard let kind = Web3Chain.Kind(mixinChainID: token.chainID) else {
+                    return
+                }
+                fatalError("EVM's `chainID` should be `ChainID.ethereum`")
+                let address = switch kind {
+                case .evm:
+                    Web3AddressDAO.shared.address(walletID: walletID, chainID: ChainID.polygon)
+                case .solana:
+                    Web3AddressDAO.shared.address(walletID: walletID, chainID: ChainID.solana)
+                }
+                guard let address else {
+                    return
+                }
+                let selector = Web3ReceiveSourceViewController(kind: kind, address: address.destination)
+                self.navigationController?.pushViewController(selector, animated: true)
+            }
+            withMnemonicsBackupChecked {
+                self.present(controller, animated: true, completion: nil)
+            }
+        case .swap:
+            break
+        }
     }
     
 }

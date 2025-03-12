@@ -12,6 +12,14 @@ public final class Web3WalletDAO: Web3DAO {
         )
     }
     
+    public func hasClassicWallet(id: String) -> Bool {
+        db.recordExists(
+            in: Web3Wallet.self,
+            where: Web3Wallet.column(of: .category) == Web3Wallet.Category.classic.rawValue
+                && Web3Wallet.column(of: .walletID) == id
+        )
+    }
+    
     public func walletDigests() -> [WalletDigest] {
         
         enum SQL {
@@ -79,8 +87,8 @@ public final class Web3WalletDAO: Web3DAO {
         }
     }
     
-    public func save(wallet: Web3Wallet) {
-        db.save(wallet)
+    public func save(wallets: [Web3Wallet]) {
+        db.save(wallets)
     }
     
 }

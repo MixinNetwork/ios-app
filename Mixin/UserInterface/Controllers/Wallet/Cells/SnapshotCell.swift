@@ -132,6 +132,13 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
         }
     }
     
+    func render(transaction: Web3TransactionItem) {
+        amountLabel.text = CurrencyFormatter.localizedString(from: transaction.decimalAmount, format: .precision, sign: .always)
+        symbolLabel.isHidden = false
+        symbolLabel.text = transaction.tokenSymbol
+        inscriptionIconView?.isHidden = true
+    }
+    
     private func setTitle(_ title: String?) {
         if let title, !title.isEmpty {
             titleLabel.text = title

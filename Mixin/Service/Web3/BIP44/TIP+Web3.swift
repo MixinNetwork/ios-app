@@ -86,16 +86,16 @@ extension TIP {
             throw GenerationError.solanaMismatched
         }
         
-        let request = RouteAPI.WalletRequest(name: "", category: .classic, addresses: [
+        let remoteWallets = try await RouteAPI.wallets()
+        let request = RouteAPI.WalletRequest(name: "Classic Wallet", category: .classic, addresses: [
             .init(destination: evmAddress, chainID: ChainID.ethereum),
             .init(destination: solanaAddress, chainID: ChainID.solana),
         ])
-        switch try await RouteAPI.createWallet(request) {
-        case .success(let wallet):
-            Web3WalletDAO.shared.save(wallet: wallet)
-        case .failure(let error):
-            throw error
-        }
+        let classicWallet = try await RouteAPI.createWallet(request)
+        Web3WalletDAO.shared.save(wallets: remoteWallets.map(\.wallet))
+        Web3AddressDAO.shared.save(addresses: remoteWallets.flatMap(\.addresses))
+        Web3WalletDAO.shared.save(wallets: [classicWallet.wallet])
+        Web3AddressDAO.shared.save(addresses: classicWallet.addresses)
     }
     
 }

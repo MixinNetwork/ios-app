@@ -1,157 +1,104 @@
 import Foundation
+import GRDB
 
-public struct Web3Transaction {
+public class Web3Transaction: Codable {
     
-    public let id: String
+    enum CodingKeys: String, CodingKey {
+        case transactionID = "transaction_id"
+        case transactionHash = "transaction_hash"
+        case outputIndex = "output_index"
+        case blockNumber = "block_number"
+        case sender = "sender"
+        case receiver = "receiver"
+        case outputHash = "output_hash"
+        case chainID = "chain_id"
+        case assetID = "asset_id"
+        case amount = "amount"
+        case transactionType = "transaction_type"
+        case status = "status"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case transactionAt = "transaction_at"
+    }
+    
+    public let transactionID: String
     public let transactionHash: String
-    public let operationType: String
-    public let status: String
+    public let outputIndex: Int
+    public let blockNumber: Int
     public let sender: String
     public let receiver: String
-    public let fee: Fee
-    public let transfers: [Transfer]
-    public let approvals: [Approval]
-    public let appMetadata: AppMetadata?
+    public let outputHash: String
+    public let chainID: String
+    public let assetID: String
+    public let amount: String
+    public let transactionType: String
+    public let status: String
     public let createdAt: String
+    public let updatedAt: String
+    public let transactionAt: String
+    
+    public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
     
 }
 
-extension Web3Transaction: Decodable {
+extension Web3Transaction: TableRecord, PersistableRecord, MixinFetchableRecord, MixinEncodableRecord {
     
-    enum CodingKeys: String, CodingKey {
-        case id = "id"
-        case transactionHash = "transaction_hash"
-        case operationType = "operation_type"
-        case status = "status"
-        case sender = "sender"
-        case receiver = "receiver"
-        case fee = "fee"
-        case transfers = "transfers"
-        case approvals = "approvals"
-        case appMetadata = "app_metadata"
-        case createdAt = "created_at"
-    }
+    public static let databaseTableName = "transactions"
     
 }
 
 extension Web3Transaction {
     
-    public enum TransactionType: String {
-        case receive
-        case send
-        case deposit
-        case withdraw
-        case approve
-        case borrow
-        case burn
-        case cancel
-        case claim
-        case deploy
-        case execute
-        case mint
-        case repay
-        case stake
-        case trade
-        case unstake
-    }
-    
-    public enum Status: String {
-        case pending
-        case confirmed
-        case failed
-    }
-    
-    public struct AppMetadata: Decodable {
+    public struct Filter: CustomStringConvertible {
         
-        enum CodingKeys: String, CodingKey {
-            case name = "name"
-            case iconURL = "icon_url"
-            case contractAddress = "contract_address"
-            case methodID = "method_id"
-            case methodName = "method_name"
+        // For array-type properties, when the value is empty,
+        // it indicates that this filter should not be applied.
+        
+        public var type: SafeSnapshot.DisplayType?
+        public var tokens: [Web3TokenItem]
+        public var addresses: [AddressItem]
+        public var startDate: Date?
+        public var endDate: Date?
+        
+        public var description: String {
+            "<Filter type: \(type), tokens: \(tokens.map(\.symbol)), addresses: \(addresses.map(\.label)), startDate: \(startDate), endDate: \(endDate)>"
         }
         
-        public let name: String
-        public let iconURL: String
-        public let contractAddress: String
-        public let methodID: String
-        public let methodName: String
-        
-    }
-    
-    public struct Fee: Decodable {
-        
-        enum CodingKeys: String, CodingKey {
-            case name = "name"
-            case symbol = "symbol"
-            case iconURL = "icon_url"
-            case sender = "sender"
-            case amount = "amount"
-            case price = "price"
+        public init(
+            type: SafeSnapshot.DisplayType? = nil,
+            tokens: [Web3TokenItem] = [],
+            addresses: [AddressItem] = [],
+            startDate: Date? = nil,
+            endDate: Date? = nil
+        ) {
+            self.type = type
+            self.tokens = tokens
+            self.addresses = addresses
+            self.startDate = startDate
+            self.endDate = endDate
         }
         
-        public let name: String
-        public let symbol: String
-        public let iconURL: String
-        public let sender: String?
-        public let amount: String
-        public let price: String?
-        
-    }
-    
-    public class Approval: Decodable {
-        
-        enum CodingKeys: String, CodingKey {
-            case name = "name"
-            case symbol = "symbol"
-            case iconURL = "icon_url"
-            case sender = "sender"
-            case amount = "amount"
+        public func isIncluded(snapshot: SafeSnapshot) -> Bool {
+            var isIncluded = true
+            if let type {
+                isIncluded = isIncluded && snapshot.displayTypes.contains(type)
+            }
+            if !tokens.isEmpty {
+                isIncluded = isIncluded && tokens.contains(where: { $0.assetID == snapshot.assetID })
+            }
+            if !addresses.isEmpty {
+                isIncluded = isIncluded && addresses.contains(where: { address in
+                    snapshot.deposit?.sender == address.destination || snapshot.withdrawal?.receiver == address.destination
+                })
+            }
+            if let startDate {
+                isIncluded = isIncluded && snapshot.createdAt.toUTCDate() >= startDate
+            }
+            if let endDate {
+                isIncluded = isIncluded && snapshot.createdAt.toUTCDate() <= endDate
+            }
+            return isIncluded
         }
-        
-        public let name: String
-        public let symbol: String
-        public let iconURL: String
-        public let sender: String
-        public let amount: String
-        
-        public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
-        
-    }
-    
-    public class Transfer: Decodable {
-        
-        public enum Direction: String {
-            case `in`
-            case out
-            case `self`
-        }
-        
-        enum CodingKeys: String, CodingKey {
-            case name = "name"
-            case symbol = "symbol"
-            case iconURL = "icon_url"
-            case direction = "direction"
-            case sender = "sender"
-            case amount = "amount"
-            case price = "price"
-        }
-        
-        public let name: String
-        public let symbol: String
-        public let iconURL: String
-        public let direction: String
-        public let sender: String
-        public let amount: String
-        public let price: String
-        
-        public private(set) lazy var decimalUSDPrice = Decimal(string: price, locale: .enUSPOSIX) ?? 0
-        public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
-        
-        public private(set) lazy var localizedFiatMoneyAmount: String = {
-            let value = decimalAmount * decimalUSDPrice * Currency.current.decimalRate
-            return CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-        }()
         
     }
     

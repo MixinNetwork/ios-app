@@ -73,7 +73,7 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
     }
     
     override func viewAllTransactions() {
-        let history = TransactionHistoryViewController(token: token)
+        let history = MixinTransactionHistoryViewController(token: token)
         navigationController?.pushViewController(history, animated: true)
     }
     

@@ -58,7 +58,7 @@ public class Web3Token: ChangeReportingToken, Codable {
         symbol: .currencySymbol
     )
     
-    init(
+    public init(
         walletID: String, assetID: String, chainID: String, assetKey: String,
         kernelAssetID: String, symbol: String, name: String, precision: Int16,
         iconURL: String, amount: String, usdPrice: String, usdChange: String

@@ -89,23 +89,7 @@ final class BadgeIconView: UIView {
     }
     
     func setIcon(web3Transaction transaction: Web3Transaction) {
-        switch Web3Transaction.TransactionType(rawValue: transaction.operationType) {
-        case .send:
-            iconImageView.image = R.image.wallet.snapshot_withdrawal()
-            isBadgeHidden = true
-        case .receive:
-            iconImageView.image = R.image.wallet.snapshot_deposit()
-            isBadgeHidden = true
-        default:
-            isBadgeHidden = false
-            if let app = transaction.appMetadata {
-                iconImageView.sd_setImage(with: URL(string: app.iconURL))
-                badgeImageView.sd_setImage(with: URL(string: transaction.fee.iconURL))
-            } else {
-                iconImageView.image = nil
-                badgeImageView.image = nil
-            }
-        }
+        // TODO: The icon
         corner = .round
     }
     

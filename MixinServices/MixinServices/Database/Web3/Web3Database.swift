@@ -32,6 +32,16 @@ public final class Web3Database: Database {
                 )
                 """,
                 """
+                CREATE TABLE IF NOT EXISTS `addresses` (
+                    `address_id` TEXT NOT NULL,
+                    `wallet_id` TEXT NOT NULL,
+                    `chain_id` TEXT NOT NULL,
+                    `destination` TEXT NOT NULL,
+                    `created_at` TEXT NOT NULL,
+                    PRIMARY KEY(address_id)
+                )
+                """,
+                """
                 CREATE TABLE IF NOT EXISTS `tokens` (
                     `wallet_id`         TEXT NOT NULL,
                     `asset_id`          TEXT NOT NULL,
@@ -54,6 +64,14 @@ public final class Web3Database: Database {
                   `asset_id` TEXT NOT NULL,
                   `hidden` INTEGER,
                   PRIMARY KEY(`wallet_id`, `asset_id`)
+                )
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS properties (
+                    key TEXT NOT NULL, 
+                    value TEXT NOT NULL, 
+                    updated_at TEXT NOT NULL, 
+                    PRIMARY KEY(key)
                 )
                 """,
             ]

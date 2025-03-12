@@ -75,7 +75,7 @@ final class PrivacyWalletViewController: WalletViewController {
     override func moreAction(_ sender: Any) {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in
-            let history = TransactionHistoryViewController(type: nil)
+            let history = MixinTransactionHistoryViewController(type: nil)
             self.navigationController?.pushViewController(history, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
@@ -164,7 +164,7 @@ final class PrivacyWalletViewController: WalletViewController {
     }
     
     @objc private func revealPendingDeposits(_ sender: Any) {
-        let transactionHistory = TransactionHistoryViewController(type: .pending)
+        let transactionHistory = MixinTransactionHistoryViewController(type: .pending)
         navigationController?.pushViewController(transactionHistory, animated: true)
     }
     

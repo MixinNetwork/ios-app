@@ -47,6 +47,10 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
         fatalError("Storyboard is not supported")
     }
     
+    deinit {
+        searchRequest?.cancel()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         reloadTokenSelection()

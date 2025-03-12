@@ -143,7 +143,7 @@ final class WalletHeaderView: InfiniteTopView {
                 let percent = NSDecimalNumber(decimal: token.decimalUSDBalance / totalUSDBalance)
                     .rounding(accordingToBehavior: portionRoundingHandler)
                     .decimalValue
-                var new = AssetPortion(symbol: token.symbol, percent: percent)
+                let new = AssetPortion(symbol: token.symbol, percent: percent)
                 portions.append(new)
                 if portions.count == 3 || (portions.count == 2 && percent < 0.01) {
                     subsequentTokensAsOthers = true

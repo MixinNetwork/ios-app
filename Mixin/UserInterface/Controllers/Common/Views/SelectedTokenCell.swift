@@ -24,6 +24,11 @@ final class SelectedTokenCell: SelectedItemCell<PlainTokenIconView> {
         nameLabel.text = token.symbol
     }
     
+    func load(web3Token token: Web3TokenItem) {
+        iconView.setIcon(web3Token: token)
+        nameLabel.text = token.symbol
+    }
+    
     func load(coin: MarketAlertCoin) {
         iconView.setIcon(coin: coin)
         nameLabel.text = coin.symbol

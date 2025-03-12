@@ -8,12 +8,17 @@ final class WalletContainerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let wallet = PrivacyWalletViewController()
-        addChild(wallet)
-        view.addSubview(wallet.view)
-        wallet.view.snp.makeEdgesEqualToSuperview()
-        wallet.didMove(toParent: self)
-        self.viewController = wallet
+        let defaultWallet = AppGroupUserDefaults.Wallet.lastSelectedWallet
+        switch AppGroupUserDefaults.Wallet.lastSelectedWallet {
+        case .classic(let id):
+            if Web3WalletDAO.shared.hasClassicWallet(id: id) {
+                load(child: ClassicWalletViewController(walletID: id))
+            } else {
+                fallthrough
+            }
+        case .privacy:
+            load(child: PrivacyWalletViewController())
+        }
         
         let job = ReloadMarketAlertsJob()
         ConcurrentJobQueue.shared.addJob(job: job)
@@ -50,24 +55,38 @@ final class WalletContainerViewController: UIViewController {
             return
         }
         self.viewController = nil
-        let wallet = switch wallet {
+        let viewController: WalletViewController
+        switch wallet {
         case .privacy:
-            PrivacyWalletViewController()
+            viewController = PrivacyWalletViewController()
+            AppGroupUserDefaults.Wallet.lastSelectedWallet = .privacy
         case .classic(let id):
-            ClassicWalletViewController(walletID: id)
+            viewController = ClassicWalletViewController(walletID: id)
+            AppGroupUserDefaults.Wallet.lastSelectedWallet = .classic(id: id)
         }
         
-        addChild(wallet)
-        view.insertSubview(wallet.view, at: 0)
-        wallet.view.snp.makeEdgesEqualToSuperview()
-        wallet.didMove(toParent: self)
+        addChild(viewController)
+        view.insertSubview(viewController.view, at: 0)
+        viewController.view.snp.makeEdgesEqualToSuperview()
+        viewController.didMove(toParent: self)
         
         UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
             summary.view.frame.origin.x = -self.view.bounds.width
         } completion: { _ in
             self.remove(child: summary)
-            self.viewController = wallet
+            self.viewController = viewController
+            if let viewController = viewController as? HomeTabBarControllerChild {
+                viewController.viewControllerDidSwitchToFront()
+            }
         }
+    }
+    
+    private func load(child: UIViewController) {
+        addChild(child)
+        view.addSubview(child.view)
+        child.view.snp.makeEdgesEqualToSuperview()
+        child.didMove(toParent: self)
+        self.viewController = child
     }
     
     private func remove(child: UIViewController) {

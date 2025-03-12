@@ -89,7 +89,7 @@ extension Web3TransactionViewController {
             createdAt = transaction.createdAt
         }
         rows = [
-            TransactionRow(key: .id, value: transaction.id),
+            TransactionRow(key: .id, value: transaction.transactionID),
             TransactionRow(key: .transactionHash, value: transaction.transactionHash),
             TransactionRow(key: .from, value: transaction.sender),
             TransactionRow(key: .to, value: transaction.receiver),

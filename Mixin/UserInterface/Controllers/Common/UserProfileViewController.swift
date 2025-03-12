@@ -441,7 +441,7 @@ extension UserProfileViewController {
     }
     
     @objc func showTransactions() {
-        let history = TransactionHistoryViewController(user: user)
+        let history = MixinTransactionHistoryViewController(user: user)
         dismissAndPush(history)
     }
     

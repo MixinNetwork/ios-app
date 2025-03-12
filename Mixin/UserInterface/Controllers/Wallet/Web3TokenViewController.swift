@@ -98,19 +98,16 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
 extension Web3TokenViewController: TokenActionView.Delegate {
     
     func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
-//        switch action {
-//        case .receive:
-//            let deposit = DepositViewController(token: token)
-//            withMnemonicsBackupChecked {
-//                self.navigationController?.pushViewController(deposit, animated: true)
-//            }
-//        case .send:
-//            send()
-//        case .swap:
-//            let swap = MixinSwapViewController(sendAssetID: token.assetID, receiveAssetID: AssetID.erc20USDT)
-//            navigationController?.pushViewController(swap, animated: true)
-//            reporter.report(event: .swapStart, tags: ["entrance": "wallet", "source": "mixin"])
-//        }
+        switch action {
+        case .receive:
+            withMnemonicsBackupChecked {
+                
+            }
+        case .send:
+            send()
+        case .swap:
+            break
+        }
     }
     
 }

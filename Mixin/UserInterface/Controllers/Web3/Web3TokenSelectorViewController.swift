@@ -1,14 +1,22 @@
 import UIKit
+import Alamofire
 import MixinServices
 
 final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Token> {
     
     var onSelected: ((Web3Token) -> Void)?
     
-    init(tokens: [Web3Token]) {
+    private let walletID: String
+    
+    private weak var searchRequest: Request?
+    
+    init(walletID: String, tokens: [Web3Token]) {
+        self.walletID = walletID
+        let chainIDs = Set(tokens.compactMap(\.chainID))
+        let chains = Chain.mixinChains(ids: chainIDs)
         super.init(
             defaultTokens: tokens,
-            defaultChains: [],
+            defaultChains: chains,
             searchDebounceInterval: 0.5,
             selectedID: nil
         )
@@ -16,6 +24,10 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard not supported")
+    }
+    
+    deinit {
+        searchRequest?.cancel()
     }
     
     override func viewDidLoad() {
@@ -52,6 +64,11 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
         PropertiesDAO.shared.removeValue(forKey: .web3RecentFungibleIDs)
     }
     
+    override func prepareForSearch(_ textField: UITextField) {
+        searchRequest?.cancel()
+        super.prepareForSearch(textField)
+    }
+    
     override func search(keyword: String) {
         let searchResults = defaultTokens.filter { item in
             item.symbol.lowercased().contains(keyword) || item.name.lowercased().contains(keyword)
@@ -80,7 +97,20 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
         )
         self.reloadChainSelection()
         self.reloadTokenSelection()
-        self.searchBoxView.isBusy = false
+        
+        searchRequest = AssetAPI.search(keyword: keyword, queue: .global()) { [weak self] result in
+            switch result {
+            case .success(let tokens):
+                self?.reloadSearchResults(keyword: keyword, tokens: tokens)
+            case .failure(.emptyResponse):
+                self?.reloadSearchResults(keyword: keyword, tokens: [])
+            case .failure(let error):
+                Logger.general.debug(category: "SwapTokenSelector", message: "\(error)")
+                DispatchQueue.main.async {
+                    self?.searchBoxView.isBusy = false
+                }
+            }
+        }
     }
     
     override func tokenIndices(tokens: [Web3Token], chainID: String) -> [Int] {
@@ -118,6 +148,73 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
         super.pickUp(token: token, from: location)
         presentingViewController?.dismiss(animated: true) { [onSelected] in
             onSelected?(token)
+        }
+    }
+    
+    private func reloadSearchResults(keyword: String, tokens: [MixinToken]) {
+        assert(!Thread.isMainThread)
+        let supportedChainIDs: Set<String> = [
+            ChainID.ethereum,
+            ChainID.polygon,
+            ChainID.bnbSmartChain,
+            ChainID.arbitrum,
+            ChainID.base,
+            ChainID.optimism,
+            ChainID.solana,
+        ]
+        let searchResults: [Web3Token] = tokens.compactMap { token in
+            guard supportedChainIDs.contains(token.chainID) else {
+                return nil
+            }
+            return Web3Token(
+                walletID: walletID,
+                assetID: token.assetID,
+                chainID: token.chainID,
+                assetKey: token.assetKey,
+                kernelAssetID: token.kernelAssetID,
+                symbol: token.symbol,
+                name: token.name,
+                precision: 0,
+                iconURL: token.iconURL,
+                amount: "0",
+                usdPrice: token.usdPrice,
+                usdChange: token.usdChange
+            )
+        }.sorted { (one, another) in
+            let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
+            let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
+            return left > right
+        }
+        let chainIDs = Set(searchResults.compactMap(\.chainID))
+        let searchResultChains = Chain.mixinChains(ids: chainIDs)
+        DispatchQueue.main.async {
+            guard self.trimmedKeyword == keyword else {
+                return
+            }
+            self.searchResultsKeyword = keyword
+            self.searchResults = searchResults
+            self.searchResultChains = searchResultChains
+            if let chain = self.selectedChain, chainIDs.contains(chain.id) {
+                self.tokenIndicesForSelectedChain = tokens.enumerated().compactMap { (index, token) in
+                    if token.chainID == chain.id {
+                        index
+                    } else {
+                        nil
+                    }
+                }
+            } else {
+                self.selectedChain = nil
+                self.tokenIndicesForSelectedChain = nil
+            }
+            self.collectionView.reloadData()
+            self.collectionView.checkEmpty(
+                dataCount: searchResults.count,
+                text: R.string.localizable.no_results(),
+                photo: R.image.emptyIndicator.ic_search_result()!
+            )
+            self.reloadChainSelection()
+            self.reloadTokenSelection()
+            self.searchBoxView.isBusy = false
         }
     }
     

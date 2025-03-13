@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Transaction> {
+final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3TransactionItem> {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,8 +36,8 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         cell.actionView.delegate = self
     }
     
-    override func updateTransactionCell(_ cell: SnapshotCell, with transaction: Web3Transaction) {
-//        cell.render(snapshot: transaction)
+    override func updateTransactionCell(_ cell: SnapshotCell, with transaction: Web3TransactionItem) {
+        cell.render(transaction: transaction)
     }
     
     override func viewMarket() {
@@ -46,7 +46,7 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
 //        navigationController?.pushViewController(market, animated: true)
     }
     
-    override func view(transaction: Web3Transaction) {
+    override func view(transaction: Web3TransactionItem) {
         let viewController = Web3TransactionViewController(token: token, transaction: transaction)
         navigationController?.pushViewController(viewController, animated: true)
     }
@@ -77,19 +77,16 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     
     private func reloadSnapshots() {
         queue.async { [limit=transactionsCount, assetID=token.assetID, weak self] in
-//            let dao: SafeSnapshotDAO = .shared
-//
-//            let limitExceededTransactionSnapshots = dao.snapshots(assetID: assetID, pending: false, limit: limit + 1)
-//            let hasMoreSnapshots = limitExceededTransactionSnapshots.count > limit
-//            let transactionSnapshots = Array(limitExceededTransactionSnapshots.prefix(limit))
-//            let transactionRows = TransactionRow.rows(
-//                transactions: transactionSnapshots,
-//                hasMore: hasMoreSnapshots
-//            )
-            
-//            DispatchQueue.main.async {
-//                self?.reloadTransactions(pending: [], finished: transactionRows)
-//            }
+            let limitExceededTransactions = Web3TransactionDAO.shared.transactions(assetID: assetID, limit: limit + 1)
+            let hasMoreTransactions = limitExceededTransactions.count > limit
+            let transactions = Array(limitExceededTransactions.prefix(limit))
+            let transactionRows = TransactionRow.rows(
+                transactions: transactions,
+                hasMore: hasMoreTransactions
+            )
+            DispatchQueue.main.async {
+                self?.reloadTransactions(pending: [], finished: transactionRows)
+            }
         }
     }
     

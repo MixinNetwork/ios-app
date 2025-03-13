@@ -1,12 +1,28 @@
 import UIKit
 import MixinServices
 
-class RowListViewController: UIViewController {
+class TransactionViewController: UIViewController {
     
     let tableView = UITableView()
-    var tableHeaderView: UIView!
+    let tableHeaderView = R.nib.snapshotTableHeaderView(withOwner: nil)!
     
     var rows: [Row] = []
+    
+    var iconView: BadgeIconView {
+        tableHeaderView.iconView
+    }
+    
+    var amountLabel: UILabel {
+        tableHeaderView.amountLabel
+    }
+    
+    var symbolLabel: UILabel {
+        tableHeaderView.symbolLabel
+    }
+    
+    var fiatMoneyValueLabel: UILabel {
+        tableHeaderView.fiatMoneyValueLabel
+    }
     
     override var canBecomeFirstResponder: Bool {
         true
@@ -25,6 +41,7 @@ class RowListViewController: UIViewController {
         )
         tableView.backgroundColor = .background
         tableView.separatorStyle = .none
+        tableView.tableHeaderView = tableHeaderView
         tableView.register(R.nib.snapshotColumnCell)
         tableView.dataSource = self
         tableView.delegate = self
@@ -59,6 +76,15 @@ class RowListViewController: UIViewController {
         }
     }
     
+    func fiatMoneyValue(amount: Decimal, usdPrice: Decimal) -> String {
+        CurrencyFormatter.localizedString(
+            from: amount * usdPrice * Currency.current.decimalRate,
+            format: .fiatMoney,
+            sign: .never,
+            symbol: .currencySymbol
+        )
+    }
+    
     @objc private func customerService(_ sender: Any) {
         if let user = UserDAO.shared.getUser(identityNumber: "7000") {
             let conversation = ConversationViewController.instance(ownerUser: user)
@@ -68,7 +94,7 @@ class RowListViewController: UIViewController {
     
 }
 
-extension RowListViewController {
+extension TransactionViewController {
     
     protocol RowKey {
         var allowsCopy: Bool { get }
@@ -100,7 +126,7 @@ extension RowListViewController {
     
 }
 
-extension RowListViewController: UITableViewDataSource {
+extension TransactionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         rows.count
@@ -122,7 +148,7 @@ extension RowListViewController: UITableViewDataSource {
     
 }
 
-extension RowListViewController: UITableViewDelegate {
+extension TransactionViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

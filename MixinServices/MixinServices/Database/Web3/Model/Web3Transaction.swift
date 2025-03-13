@@ -16,9 +16,21 @@ public class Web3Transaction: Codable {
         case amount = "amount"
         case transactionType = "transaction_type"
         case status = "status"
+        case transactionAt = "transaction_at"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
-        case transactionAt = "transaction_at"
+    }
+    
+    public enum TransactionType: String {
+        case receive
+        case send
+        case other
+        case contract
+    }
+    
+    public enum TransactionStatus: String {
+        case success
+        case failed
     }
     
     public let transactionID: String
@@ -31,12 +43,14 @@ public class Web3Transaction: Codable {
     public let chainID: String
     public let assetID: String
     public let amount: String
-    public let transactionType: String
-    public let status: String
+    public let transactionType: UnknownableEnum<TransactionType>
+    public let status: UnknownableEnum<TransactionStatus>
+    public let transactionAt: String
     public let createdAt: String
     public let updatedAt: String
-    public let transactionAt: String
     
+    public private(set) lazy var compactSender = Address.compactRepresentation(of: sender)
+    public private(set) lazy var compactReceiver = Address.compactRepresentation(of: receiver)
     public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
     
 }

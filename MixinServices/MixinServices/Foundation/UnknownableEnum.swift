@@ -32,3 +32,22 @@ public enum UnknownableEnum<T: RawRepresentable>: RawRepresentable {
     }
     
 }
+
+extension UnknownableEnum: Decodable where T.RawValue: Decodable {
+    
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(T.RawValue.self)
+        self.init(rawValue: rawValue)
+    }
+    
+}
+
+extension UnknownableEnum: Encodable where T.RawValue: Encodable {
+    
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
+    }
+    
+}

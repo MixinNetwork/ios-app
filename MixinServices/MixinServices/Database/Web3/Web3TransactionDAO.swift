@@ -11,7 +11,7 @@ public final class Web3TransactionDAO: Web3DAO {
     private static let selector = """
     SELECT txn.*,
         token.symbol AS \(Web3TransactionItem.JoinedQueryCodingKeys.tokenSymbol.rawValue),
-        token.price_usd AS \(Web3TransactionItem.JoinedQueryCodingKeys.tokenUSDPrice.rawValue),
+        token.price_usd AS \(Web3TransactionItem.JoinedQueryCodingKeys.tokenUSDPrice.rawValue)
     FROM transactions txn
         LEFT JOIN tokens token ON txn.asset_id = token.asset_id
     
@@ -20,6 +20,15 @@ public final class Web3TransactionDAO: Web3DAO {
     public func transaction(id: String) -> Web3Transaction? {
         let sql = "SELECT * FROM transactions WHERE transaction_id = ?"
         return db.select(with: sql, arguments: [id])
+    }
+    
+    public func transactions(assetID: String, limit: Int) -> [Web3TransactionItem] {
+        let sql = Self.selector + """
+        WHERE txn.asset_id = ?
+        ORDER BY txn.transaction_at DESC
+        LIMIT ?
+        """
+        return db.select(with: sql, arguments: [assetID, limit])
     }
     
     public func save(

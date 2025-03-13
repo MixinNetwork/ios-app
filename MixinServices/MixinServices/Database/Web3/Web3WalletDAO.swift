@@ -31,7 +31,7 @@ public final class Web3WalletDAO: Web3DAO {
             """
             
             static let topTokenDigests = """
-            SELECT t.asset_id, t.symbol, t.name, t.icon_url, t.price_usd, t.amount
+            SELECT t.asset_id, t.symbol, t.name, t.icon_url, t.price_usd, t.amount AS balance
             FROM tokens t
             WHERE t.wallet_id = ?
                 AND CAST(t.price_usd * t.amount AS REAL) > 0

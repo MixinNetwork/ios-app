@@ -133,6 +133,32 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
     }
     
     func render(transaction: Web3TransactionItem) {
+        switch transaction.status {
+        case .known(.success):
+            switch transaction.transactionType.knownCase {
+            case .send:
+                iconImageView.imageView.contentMode = .center
+                iconImageView.image = R.image.wallet.snapshot_withdrawal()
+                setTitle(transaction.compactReceiver)
+                updateAmountTitleColor(amount: transaction.decimalAmount)
+            case .receive:
+                iconImageView.imageView.contentMode = .center
+                iconImageView.image = R.image.wallet.snapshot_deposit()
+                setTitle(transaction.compactSender)
+                updateAmountTitleColor(amount: transaction.decimalAmount)
+            case .contract, .other, .none:
+                iconImageView.imageView.contentMode = .center
+                iconImageView.image = R.image.wallet.snapshot_anonymous()
+                setTitle(nil)
+                updateAmountTitleColor(amount: transaction.decimalAmount)
+            }
+        case .known(.failed), .unknown:
+            iconImageView.imageView.contentMode = .center
+            iconImageView.image = R.image.wallet.snapshot_anonymous()
+            setTitle(nil)
+            amountLabel.textColor = R.color.text_tertiary()!
+        }
+        progressLayer?.isHidden = true
         amountLabel.text = CurrencyFormatter.localizedString(from: transaction.decimalAmount, format: .precision, sign: .always)
         symbolLabel.isHidden = false
         symbolLabel.text = transaction.tokenSymbol

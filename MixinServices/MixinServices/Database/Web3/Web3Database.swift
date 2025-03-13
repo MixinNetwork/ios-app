@@ -67,6 +67,26 @@ public final class Web3Database: Database {
                 )
                 """,
                 """
+                CREATE TABLE IF NOT EXISTS `transactions` (
+                    `transaction_id` TEXT NOT NULL,
+                    `transaction_type` TEXT NOT NULL,
+                    `transaction_hash` TEXT NOT NULL,
+                    `output_index` INTEGER NOT NULL,
+                    `block_number` INTEGER NOT NULL,
+                    `sender` TEXT NOT NULL,
+                    `receiver` TEXT NOT NULL,
+                    `output_hash` TEXT NOT NULL,
+                    `chain_id` TEXT NOT NULL,
+                    `asset_id` TEXT NOT NULL,
+                    `amount` TEXT NOT NULL,
+                    `created_at` TEXT NOT NULL,
+                    `updated_at` TEXT NOT NULL,
+                    `transaction_at` TEXT NOT NULL,
+                    `status` TEXT NOT NULL,
+                    PRIMARY KEY(`transaction_id`)
+                )
+                """,
+                """
                 CREATE TABLE IF NOT EXISTS properties (
                     key TEXT NOT NULL, 
                     value TEXT NOT NULL, 

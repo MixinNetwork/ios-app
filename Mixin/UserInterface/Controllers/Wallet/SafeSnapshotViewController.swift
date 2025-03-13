@@ -1,16 +1,7 @@
 import UIKit
 import MixinServices
 
-final class SafeSnapshotViewController: RowListViewController {
-    
-    @IBOutlet weak var headerContentStackView: UIStackView!
-    @IBOutlet weak var iconView: BadgeIconView!
-    @IBOutlet weak var amountStackView: UIStackView!
-    @IBOutlet weak var amountLabel: UILabel!
-    @IBOutlet weak var symbolLabel: InsetLabel!
-    @IBOutlet weak var fiatMoneyValueLabel: UILabel!
-    
-    @IBOutlet weak var iconViewDimensionConstraint: ScreenHeightCompatibleLayoutConstraint!
+final class SafeSnapshotViewController: TransactionViewController {
     
     private let messageID: String?
     
@@ -35,10 +26,6 @@ final class SafeSnapshotViewController: RowListViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.transaction()
-        tableHeaderView = R.nib.snapshotTableHeaderView(withOwner: self)
-        tableView.tableHeaderView = tableHeaderView
-        amountLabel.setFont(scaledFor: .condensed(size: 34), adjustForContentSize: true)
-        symbolLabel.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 0, right: 0)
         if snapshot.isInscription {
             if let inscription {
                 iconView.setIcon(content: inscription)
@@ -46,7 +33,7 @@ final class SafeSnapshotViewController: RowListViewController {
                 case .image, .none:
                     break
                 case let .text(collectionIconURL, textContentURL):
-                    let dimension = round(iconViewDimensionConstraint.constant / 70 * 40)
+                    let dimension = round(tableHeaderView.iconViewDimensionConstraint.constant / 70 * 40)
                     let textContentView = TextInscriptionContentView(iconDimension: dimension, spacing: 4)
                     textContentView.label.numberOfLines = 1
                     textContentView.label.font = .systemFont(ofSize: 8, weight: .semibold)
@@ -72,12 +59,8 @@ final class SafeSnapshotViewController: RowListViewController {
             iconView.setIcon(token: token)
             amountLabel.text = CurrencyFormatter.localizedString(from: snapshot.decimalAmount, format: .precision, sign: .always)
             symbolLabel.text = token.symbol
-            fiatMoneyValueLabel.text = R.string.localizable.value_now(Currency.current.symbol + fiatMoneyValue(usdPrice: token.decimalUSDPrice)) + "\n "
-        }
-        if ScreenHeight.current >= .extraLong {
-            iconView.badgeIconDiameter = 28
-            iconView.badgeOutlineWidth = 4
-            headerContentStackView.spacing = 2
+            let value = fiatMoneyValue(amount: snapshot.decimalAmount, usdPrice: token.decimalUSDPrice)
+            fiatMoneyValueLabel.text = R.string.localizable.value_now(value) + "\n "
         }
         updateAmountLabelColor()
         layoutTableHeaderView()
@@ -103,8 +86,10 @@ final class SafeSnapshotViewController: RowListViewController {
                 }
                 switch result {
                 case var .success(ticker):
-                    let nowValue = Currency.current.symbol + self.fiatMoneyValue(usdPrice: self.token.decimalUSDPrice)
-                    let thenValue = token.decimalUSDPrice > 0 ? Currency.current.symbol + self.fiatMoneyValue(usdPrice: ticker.decimalUSDPrice) : R.string.localizable.na()
+                    let nowValue = self.fiatMoneyValue(amount: snapshot.decimalAmount, usdPrice: self.token.decimalUSDPrice)
+                    let thenValue = token.decimalUSDPrice > 0
+                        ? self.fiatMoneyValue(amount: snapshot.decimalAmount, usdPrice: ticker.decimalUSDPrice)
+                        : R.string.localizable.na()
                     self.fiatMoneyValueLabel.text = R.string.localizable.value_now(nowValue) + "\n" + R.string.localizable.value_then(thenValue)
                 case .failure:
                     break
@@ -313,11 +298,6 @@ extension SafeSnapshotViewController {
                 }
             }
         }
-    }
-    
-    private func fiatMoneyValue(usdPrice: Decimal) -> String {
-        let value = snapshot.decimalAmount * usdPrice * Decimal(Currency.current.rate)
-        return CurrencyFormatter.localizedString(from: value, format: .fiatMoney, sign: .never)
     }
     
     private func reloadData(with snapshot: SafeSnapshot) {

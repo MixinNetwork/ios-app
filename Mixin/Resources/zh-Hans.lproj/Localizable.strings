@@ -558,6 +558,7 @@
 "estimated_price" = "预计价格";
 "estimated_receive" = "预计收到";
 "everybody" = "任何人";
+"exchanges_or_wallets" = "交易所或其他钱包";
 "exchanging_data" = "正在同步密钥分片，进度 %@%%...";
 "exit_confirmation" = "退出\"%@\"？";
 "exit_group" = "退出群组";
@@ -780,6 +781,7 @@
 "my_mixin_id" = "我的 Mixin ID：%@";
 "my_qr_code" = "我的二维码";
 "my_stickers" = "我的表情";
+"my_wallet" = "我的钱包";
 "na" = "暂无价格";
 "name" = "名称";
 "name_or_phone_number" = "姓名或手机号";
@@ -969,7 +971,8 @@
 "read_your_snapshots" = "读取你的转账记录";
 "rebate" = "退款";
 "receive" = "充值";
-"receive_from_address_description" = "从其他钱包或交易所转入";
+"receive_from_address_description" = "通过加密网络从其他交易所或链上钱包提取。";
+"receive_from_my_wallets_description" = "通过加密网络从我的其他钱包提取。";
 "receive_money" = "我的收款码";
 "received" = "收到";
 "receiver" = "至";

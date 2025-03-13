@@ -57,11 +57,11 @@ extension Web3ReceiveSourceViewController: UITableViewDataSource {
         switch destination {
         case .mixinWallet:
             cell.iconImageView.image = R.image.token_receiver_contact()
-            cell.titleLabel.text = R.string.localizable.from_mixin_wallet()
-            cell.subtitleLabel.text = R.string.localizable.contact_mixin_id(myIdentityNumber)
+            cell.titleLabel.text = R.string.localizable.my_wallet()
+            cell.subtitleLabel.text = R.string.localizable.receive_from_my_wallets_description()
         case .address:
             cell.iconImageView.image = R.image.token_receiver_address()
-            cell.titleLabel.text = R.string.localizable.from_address()
+            cell.titleLabel.text = R.string.localizable.exchanges_or_wallets()
             cell.subtitleLabel.text = R.string.localizable.receive_from_address_description()
         }
         cell.freeLabel.isHidden = true

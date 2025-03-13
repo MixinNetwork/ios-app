@@ -36,7 +36,6 @@ final class WalletCell: UICollectionViewCell {
         for view in proportionStackView.arrangedSubviews {
             view.removeFromSuperview()
         }
-        // TODO: Make sure sum of percentages is 100%
         let tokens = digest.tokens
         switch digest.positiveUSDBalanceTokensCount {
         case 0:
@@ -49,29 +48,35 @@ final class WalletCell: UICollectionViewCell {
             let imageView = UIImageView(image: image)
             proportionStackView.addArrangedSubview(imageView)
         case 1, 2, 3:
+            var percentages = tokens.prefix(digest.positiveUSDBalanceTokensCount - 1).map { token in
+                NSDecimalNumber(decimal: token.decimalValue / digest.usdBalanceSum)
+                    .rounding(accordingToBehavior: NSDecimalNumberHandler.percentRoundingHandler)
+                    .decimalValue
+            }
+            percentages.append(1 - percentages.reduce(0, +))
             addSingleTokenProportionView(
                 count: digest.positiveUSDBalanceTokensCount
             ) { iconView, label, index in
                 let token = tokens[index]
                 iconView.setIcon(tokenIconURL: URL(string: token.iconURL))
-                label.text = NumberFormatter.simplePercentage.string(decimal: token.decimalValue / digest.usdBalanceSum)
+                label.text = NumberFormatter.simplePercentage.string(decimal: percentages[index])
             }
         default:
-            let proportions = [
-                digest.tokens[0].decimalValue / digest.usdBalanceSum,
-                digest.tokens[1].decimalValue / digest.usdBalanceSum,
-            ]
+            var percentages = tokens.prefix(2).map { token in
+                NSDecimalNumber(decimal: token.decimalValue / digest.usdBalanceSum)
+                    .rounding(accordingToBehavior: NSDecimalNumberHandler.percentRoundingHandler)
+                    .decimalValue
+            }
             addSingleTokenProportionView(count: 2) { iconView, label, index in
                 let token = digest.tokens[index]
                 iconView.setIcon(tokenIconURL: URL(string: token.iconURL))
-                label.text = NumberFormatter.simplePercentage.string(decimal: proportions[index])
+                label.text = NumberFormatter.simplePercentage.string(decimal: percentages[index])
             }
-            let percent = 1 - proportions.reduce(0, +)
             let iconView = MultipleTokenIconView()
             let label = UILabel()
             label.font = .systemFont(ofSize: 14)
             label.textColor = R.color.text_quaternary()
-            label.text = NumberFormatter.simplePercentage.string(decimal: percent)
+            label.text = NumberFormatter.simplePercentage.string(decimal: 1 - percentages.reduce(0, +))
             let stackView = UIStackView(arrangedSubviews: [iconView, label])
             stackView.axis = .horizontal
             stackView.spacing = 4

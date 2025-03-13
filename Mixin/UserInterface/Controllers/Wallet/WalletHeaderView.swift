@@ -56,14 +56,6 @@ final class WalletHeaderView: InfiniteTopView {
     ]
     
     private let maxPendingDepositTokenIconCount = 3
-    private let portionRoundingHandler = NSDecimalNumberHandler(
-        roundingMode: .plain,
-        scale: 2,
-        raiseOnExactness: false,
-        raiseOnOverflow: false,
-        raiseOnUnderflow: false,
-        raiseOnDivideByZero: false
-    )
     
     private lazy var snowfallLayer: CAEmitterLayer = {
         let cell = CAEmitterCell()
@@ -141,7 +133,7 @@ final class WalletHeaderView: InfiniteTopView {
             var subsequentTokensAsOthers = false
             for token in valuableTokens {
                 let percent = NSDecimalNumber(decimal: token.decimalUSDBalance / totalUSDBalance)
-                    .rounding(accordingToBehavior: portionRoundingHandler)
+                    .rounding(accordingToBehavior: NSDecimalNumberHandler.percentRoundingHandler)
                     .decimalValue
                 let new = AssetPortion(symbol: token.symbol, percent: percent)
                 portions.append(new)

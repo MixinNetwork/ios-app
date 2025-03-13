@@ -25,18 +25,8 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R6q-hK-bip">
                     <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iOq-LV-dOd">
-                            <rect key="frame" x="10" y="0.0" width="48" height="44"/>
-                            <color key="tintColor" name="icon_tint"/>
-                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" image="hamburger"/>
-                            <connections>
-                                <action selector="switchFromWallets:" destination="-1" eventType="touchUpInside" id="ORA-em-bdx"/>
-                            </connections>
-                        </button>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="vam-yF-2Ud">
-                            <rect key="frame" x="58" y="0.0" width="52.333333333333343" height="44"/>
+                            <rect key="frame" x="56" y="0.0" width="52.333333333333343" height="44"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m2F-gU-AVs">
                                     <rect key="frame" x="0.0" y="0.0" width="52.333333333333336" height="44"/>
@@ -82,13 +72,23 @@
                                 </button>
                             </subviews>
                         </stackView>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iOq-LV-dOd">
+                            <rect key="frame" x="10" y="0.0" width="48" height="44"/>
+                            <color key="tintColor" name="icon_tint"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" image="hamburger"/>
+                            <connections>
+                                <action selector="switchFromWallets:" destination="-1" eventType="touchUpInside" id="ORA-em-bdx"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="BCn-OQ-huo"/>
                         <constraint firstItem="vam-yF-2Ud" firstAttribute="top" secondItem="R6q-hK-bip" secondAttribute="top" id="I4a-3O-FdC"/>
                         <constraint firstItem="5Tn-ww-jGC" firstAttribute="top" secondItem="R6q-hK-bip" secondAttribute="top" id="KzR-lI-ZFX"/>
-                        <constraint firstItem="vam-yF-2Ud" firstAttribute="leading" secondItem="iOq-LV-dOd" secondAttribute="trailing" id="Qif-FB-5U7"/>
+                        <constraint firstItem="vam-yF-2Ud" firstAttribute="leading" secondItem="iOq-LV-dOd" secondAttribute="trailing" constant="-2" id="Qif-FB-5U7"/>
                         <constraint firstAttribute="trailing" secondItem="5Tn-ww-jGC" secondAttribute="trailing" constant="10" id="Viz-VX-NL3"/>
                         <constraint firstAttribute="bottom" secondItem="vam-yF-2Ud" secondAttribute="bottom" id="YGf-l8-Dft"/>
                         <constraint firstItem="iOq-LV-dOd" firstAttribute="top" secondItem="R6q-hK-bip" secondAttribute="top" id="Zne-oP-W3v"/>

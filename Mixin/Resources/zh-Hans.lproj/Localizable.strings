@@ -243,7 +243,6 @@
 "changed" = "已修改";
 "changed_disappearing_message_settings" = "%@修改了限时消息设置";
 "changing_pin_terminated_unexpectedly" = "更新 PIN 意外中止，点继续完成 PIN 修改";
-"chat" = "聊天";
 "chat_background" = "聊天背景";
 "chat_backup" = "聊天记录备份";
 "chat_bot_reception_title" = "点击按钮使用机器人";
@@ -267,7 +266,7 @@
 "chat_restore_subtitle" = "如果现在不恢复，未来将无法恢复这些记录。媒体文件将在信息恢复完成后在后台继续运行。";
 "chat_text_size" = "聊天字体大小";
 "chat_waiting" = "等待%1$@上线后建立加密会话。%2$@。";
-"chats" = "会话";
+"chats" = "聊天";
 "check_backup" = "检查备份";
 "check_mnemonic_phrase" = "检查您的助记词";
 "check_mnemonic_phrase_desc" = "按照呈现给您的顺序输入每个单词。";
@@ -1422,6 +1421,7 @@
 "wallet_transfer_recent_tip" = "你已经在 %1$@ 前给 %2$@ 转账了 %3$@，确认还要再转一次吗？";
 "wallet_withdrawal_changed" = "手续费已从 %1$@ 变更为 %2$@，要更新手续费并继续提现吗？";
 "wallet_withdrawal_recent_tip" = "你已经在 %1$@ 前提现 %3$@ 到 %2$@，确认还要再提一次吗？";
+"wallets" = "钱包";
 "watchlist" = "自选";
 "watchlist_add_desc" = "%@ 已经加入自选";
 "watchlist_empty" = "您的自选列表为空";

@@ -23,14 +23,14 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N3G-DI-chj">
                     <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Wallet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jn5-Sr-Ev6">
-                            <rect key="frame" x="20.000000000000004" y="0.0" width="52.333333333333343" height="44"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Wallets" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jn5-Sr-Ev6">
+                            <rect key="frame" x="19.999999999999996" y="0.0" width="61.666666666666657" height="44"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                             <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallets"/>
                             </userDefinedRuntimeAttributes>
                         </label>
                     </subviews>

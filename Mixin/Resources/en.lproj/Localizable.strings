@@ -243,7 +243,6 @@
 "changed" = "Changed";
 "changed_disappearing_message_settings" = "%@ changed disappearing message settings.";
 "changing_pin_terminated_unexpectedly" = "Changing PIN terminated unexpectedly, click \"Continue\" to complete the change";
-"chat" = "Chat";
 "chat_background" = "Chat Background";
 "chat_backup" = "Chat Backup";
 "chat_bot_reception_title" = "Tap the button to interact with the bot";
@@ -267,7 +266,7 @@
 "chat_restore_subtitle" = "You will not be able to restore later if you decline to restore now. Media files will continue restore in background after messages is restored.";
 "chat_text_size" = "Chat Text Size";
 "chat_waiting" = "Waiting for %1$@ to get online and establish an encrypted session. %2$@.";
-"chats" = "CHATS";
+"chats" = "Chats";
 "check_backup" = "Check Backup";
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
@@ -1422,6 +1421,7 @@
 "wallet_transfer_recent_tip" = "You have already transferred %3$@ to %2$@ %1$@ ago. Do you want to transfer it again?";
 "wallet_withdrawal_changed" = "The withdrawal fee has been changed from %1$@ to %2$@, would you like to proceed with the request?";
 "wallet_withdrawal_recent_tip" = "You have already withdrawn %3$@ to %2$@ %1$@ ago, Do you want to withdraw it again?";
+"wallets" = "Wallets";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";

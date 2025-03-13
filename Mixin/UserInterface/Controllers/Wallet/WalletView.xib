@@ -45,7 +45,6 @@
                                     <nil key="highlightedColor"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallet"/>
                                     </userDefinedRuntimeAttributes>
                                 </label>
                             </subviews>

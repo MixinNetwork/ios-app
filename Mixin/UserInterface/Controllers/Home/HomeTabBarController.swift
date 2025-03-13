@@ -36,7 +36,7 @@ final class HomeTabBarController: UIViewController {
                     id: id.rawValue,
                     image: R.image.home_tab_chat()!,
                     selectedImage: R.image.home_tab_chat_selected()!,
-                    text: R.string.localizable.chat(),
+                    text: R.string.localizable.chats(),
                     badge: false
                 )
             case .wallet:
@@ -44,7 +44,7 @@ final class HomeTabBarController: UIViewController {
                     id: id.rawValue,
                     image: R.image.home_tab_wallet()!,
                     selectedImage: R.image.home_tab_wallet_selected()!,
-                    text: R.string.localizable.wallet(),
+                    text: R.string.localizable.wallets(),
                     badge: false
                 )
             case .collectibles:
@@ -181,7 +181,7 @@ final class HomeTabBarController: UIViewController {
         case .chat:
             "Mixin"
         case .wallet:
-            R.string.localizable.wallet()
+            R.string.localizable.wallets()
         case .collectibles:
             R.string.localizable.collectibles()
         case .more:

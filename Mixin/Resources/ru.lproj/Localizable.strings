@@ -243,7 +243,6 @@
 "changed" = "Измененный";
 "changed_disappearing_message_settings" = "%@ изменил настройки исчезающих сообщений.";
 "changing_pin_terminated_unexpectedly" = "Changing PIN terminated unexpectedly, click \"Continue\" to complete the change";
-"chat" = "Chat";
 "chat_background" = "Фон чата";
 "chat_backup" = "Резервное копирование чата";
 "chat_bot_reception_title" = "Нажмите кнопку, чтобы взаимодействовать с ботом";
@@ -267,7 +266,7 @@
 "chat_restore_subtitle" = "Вы не сможете восстановить позже, если откажетесь от восстановления сейчас. Медиафайлы будут продолжать восстанавливаться в фоновом режиме после восстановления сообщений.";
 "chat_text_size" = "Chat Text Size";
 "chat_waiting" = "Ожидание, пока %1$@ подключится к сети и установит зашифрованный сеанс. %2$@.";
-"chats" = "ЧАТЫ";
+"chats" = "Chats";
 "check_backup" = "Check Backup";
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
@@ -1408,7 +1407,7 @@
 "waiting_for_other_device_scan" = "Connect the new device by scanning the QR code on the top";
 "waiting_transaction" = "Waiting Transaction";
 "waiting_transaction_description" = "You have a transfer or withdrawal has not been completed, please try again later";
-"wallet" = "Бумажник";
+"wallet" = "Wallet";
 "wallet_enable_biometric_pay" = "После включения, %@ можно использовать для быстрой передачи.";
 "wallet_hide_asset_confirmation" = "Вы уверены, что хотите скрыть %@?";
 "wallet_password_not_equal" = "PIN-код не повторяется дважды, попробуйте еще раз.";
@@ -1422,6 +1421,7 @@
 "wallet_transfer_recent_tip" = "Вы уже перевели %3$@ на %2$@ %1$@ назад. Вы хотите перевести его снова?";
 "wallet_withdrawal_changed" = "Комиссия за снятие средств была изменена с %1$@ на %2$@. Вы хотите продолжить обработку запроса?";
 "wallet_withdrawal_recent_tip" = "Вы уже выводили %3$@ на %2$@ %1$@ назад. Хотите вывести еще раз?";
+"wallets" = "Wallets";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";

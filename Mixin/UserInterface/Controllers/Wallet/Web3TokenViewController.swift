@@ -12,7 +12,10 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         )
         
         // TODO: Subscribe token/transaction change notifications
+        
         reloadSnapshots()
+        let job = SyncWeb3TransactionJob(walletID: token.walletID)
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     override func send() {
@@ -60,26 +63,26 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     }
     
     override func viewAllTransactions() {
-//        let history = TransactionHistoryViewController(token: token)
-//        navigationController?.pushViewController(history, animated: true)
+        let history = Web3TransactionHistoryViewController(token: token)
+        navigationController?.pushViewController(history, animated: true)
     }
     
     private func reloadToken() {
         let assetID = token.assetID
-        DispatchQueue.global().async { [weak self] in
-//            guard let token = TokenDAO.shared.tokenItem(assetID: assetID) else {
-//                return
-//            }
-//            DispatchQueue.main.sync {
-//                guard let self = self else {
-//                    return
-//                }
-//                self.token = token
-//                let indexPath = IndexPath(row: 0, section: Section.balance.rawValue)
-//                self.tableView.beginUpdates()
-//                self.tableView.reloadRows(at: [indexPath], with: .none)
-//                self.tableView.endUpdates()
-//            }
+        DispatchQueue.global().async { [token, weak self] in
+            guard let token = Web3TokenDAO.shared.token(walletID: token.walletID, assetID: token.assetID) else {
+                return
+            }
+            DispatchQueue.main.sync {
+                guard let self = self else {
+                    return
+                }
+                self.token = token
+                let indexPath = IndexPath(row: 0, section: Section.balance.rawValue)
+                self.tableView.beginUpdates()
+                self.tableView.reloadRows(at: [indexPath], with: .none)
+                self.tableView.endUpdates()
+            }
         }
     }
     

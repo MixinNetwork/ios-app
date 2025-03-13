@@ -21,8 +21,8 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     private var loadNextPageIndexPath: IndexPath?
     private var lastItem: Web3TransactionItem?
     
-    init(walletID: String, token: Web3TokenItem) {
-        self.walletID = walletID
+    init(token: Web3TokenItem) {
+        self.walletID = token.walletID
         self.filter = .init(tokens: [token])
         super.init()
     }
@@ -66,6 +66,8 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
         }
         
         reloadData()
+        let job = SyncWeb3TransactionJob(walletID: walletID)
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     @objc private func pickTokens(_ sender: Any) {

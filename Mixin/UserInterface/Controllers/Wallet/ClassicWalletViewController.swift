@@ -36,7 +36,18 @@ final class ClassicWalletViewController: WalletViewController {
             name: Web3TokenExtraDAO.tokenVisibilityDidChangeNotification,
             object: nil
         )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadTokensFromRemote),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
         reloadData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        reloadTokensFromRemote()
     }
     
     override func moreAction(_ sender: Any) {
@@ -52,6 +63,11 @@ final class ClassicWalletViewController: WalletViewController {
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
+    }
+    
+    @objc private func reloadTokensFromRemote() {
+        let job = RefreshWeb3TokenJob(walletID: walletID)
+        ConcurrentJobQueue.shared.addJob(job: job)
     }
     
     @objc private func reloadDataIfWalletMatch(_ notification: Notification) {
@@ -92,20 +108,6 @@ final class ClassicWalletViewController: WalletViewController {
         tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
         DispatchQueue.global().async { [walletID] in
             Web3TokenExtraDAO.shared.hide(walletID: walletID, assetID: token.assetID)
-        }
-    }
-    
-}
-
-extension ClassicWalletViewController: HomeTabBarControllerChild {
-    
-    func viewControllerDidSwitchToFront() {
-        let jobs = [
-            RefreshWeb3TokenJob(walletID: walletID),
-            SyncWeb3TransactionJob(walletID: walletID),
-        ]
-        for job in jobs {
-            ConcurrentJobQueue.shared.addJob(job: job)
         }
     }
     

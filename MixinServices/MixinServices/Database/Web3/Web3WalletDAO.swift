@@ -20,6 +20,10 @@ public final class Web3WalletDAO: Web3DAO {
         )
     }
     
+    public func walletIDs() -> [String] {
+        db.select(with: "SELECT wallet_id FROM wallets")
+    }
+    
     public func walletDigests() -> [WalletDigest] {
         
         enum SQL {

@@ -74,41 +74,38 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         let amount = tokenAmount
         reviewButton.isEnabled = false
         reviewButton.isBusy = true
-        
-        func transfer(proposer: Web3TransferPreviewViewController.Proposer) {
-            DispatchQueue.global().async { [payment] in
-                let initError: Error?
-                do {
-                    let operation = switch payment.chain.kind {
-                    case .evm:
-                        try EVMTransferToAddressOperation(payment: payment, decimalAmount: amount)
-                    case .solana:
-                        try SolanaTransferToAddressOperation(payment: payment, decimalAmount: amount)
-                    }
-                    DispatchQueue.main.async {
-                        let transfer = Web3TransferPreviewViewController(operation: operation, proposer: proposer)
-                        transfer.manipulateNavigationStackOnFinished = true
-                        Web3PopupCoordinator.enqueue(popup: .request(transfer))
-                    }
-                    initError = nil
-                } catch {
-                    initError = error
-                }
-                DispatchQueue.main.async {
-                    if let initError {
-                        showAutoHiddenHud(style: .error, text: "\(initError)")
-                    }
-                    self.reviewButton.isEnabled = true
-                    self.reviewButton.isBusy = false
-                }
-            }
-        }
-        
+        let proposer: Web3TransferPreviewViewController.Proposer
         switch payment.toType {
         case .mixinWallet:
-            transfer(proposer: .web3ToMixinWallet)
+            proposer = .web3ToMixinWallet
         case .arbitrary:
-            transfer(proposer: .web3ToAddress)
+            proposer = .web3ToAddress
+        }
+        DispatchQueue.global().async { [payment] in
+            let initError: Error?
+            do {
+                let operation = switch payment.chain.kind {
+                case .evm:
+                    try EVMTransferToAddressOperation(payment: payment, decimalAmount: amount)
+                case .solana:
+                    try SolanaTransferToAddressOperation(payment: payment, decimalAmount: amount)
+                }
+                DispatchQueue.main.async {
+                    let transfer = Web3TransferPreviewViewController(operation: operation, proposer: proposer)
+                    transfer.manipulateNavigationStackOnFinished = true
+                    Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                }
+                initError = nil
+            } catch {
+                initError = error
+            }
+            DispatchQueue.main.async {
+                if let initError {
+                    showAutoHiddenHud(style: .error, text: "\(initError)")
+                }
+                self.reviewButton.isEnabled = true
+                self.reviewButton.isBusy = false
+            }
         }
     }
     

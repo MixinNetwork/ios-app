@@ -171,33 +171,33 @@ extension ClassicWalletViewController: TokenActionView.Delegate {
     func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
         switch action {
         case .send:
-            let selector = SendTokenSelectorViewController()
-            selector.onSelected = { token in
-                let receiver = TokenReceiverViewController(token: token)
-                self.navigationController?.pushViewController(receiver, animated: true)
+            let selector = Web3TokenSelectorViewController(walletID: walletID, tokens: tokens)
+            selector.onSelected = { [walletID] token in
+                guard let chain = Web3Chain.chain(mixinChainID: token.chainID) else {
+                    return
+                }
+                guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: chain.mixinChainID) else {
+                    return
+                }
+                let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address.destination)
+                let selector = Web3TokenReceiverViewController(payment: payment)
+                self.navigationController?.pushViewController(selector, animated: true)
             }
             present(selector, animated: true, completion: nil)
         case .receive:
-            let controller = Web3TokenSelectorViewController(walletID: walletID, tokens: tokens)
-            controller.onSelected = { [walletID] token in
-                guard let kind = Web3Chain.Kind(mixinChainID: token.chainID) else {
+            let selector = Web3TokenSelectorViewController(walletID: walletID, tokens: tokens)
+            selector.onSelected = { [walletID] token in
+                guard let kind = Web3Chain.chain(mixinChainID: token.chainID)?.kind else {
                     return
                 }
-                fatalError("EVM's `chainID` should be `ChainID.ethereum`")
-                let address = switch kind {
-                case .evm:
-                    Web3AddressDAO.shared.address(walletID: walletID, chainID: ChainID.polygon)
-                case .solana:
-                    Web3AddressDAO.shared.address(walletID: walletID, chainID: ChainID.solana)
-                }
-                guard let address else {
+                guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: token.chainID) else {
                     return
                 }
                 let selector = Web3ReceiveSourceViewController(kind: kind, address: address.destination)
                 self.navigationController?.pushViewController(selector, animated: true)
             }
             withMnemonicsBackupChecked {
-                self.present(controller, animated: true, completion: nil)
+                self.present(selector, animated: true, completion: nil)
             }
         case .swap:
             break

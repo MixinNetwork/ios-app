@@ -22,11 +22,7 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
     init(payment: Web3SendingTokenPayment) {
         self.payment = payment
-        if let chainID = payment.chain.mixinChainID {
-            self.destinations = [.myMixinWallet(chainID)]
-        } else {
-            self.destinations = []
-        }
+        self.destinations = [.myMixinWallet(payment.chain.mixinChainID)]
         super.init(nibName: nil, bundle: nil)
     }
     

@@ -11,21 +11,10 @@ final class Web3Chain {
         case evm
         case solana
         
-        init?(mixinChainID: String) {
-            switch mixinChainID {
-            case ChainID.ethereum, ChainID.polygon, ChainID.bnbSmartChain, ChainID.arbitrum, ChainID.base, ChainID.optimism:
-                self = .evm
-            case ChainID.solana:
-                self = .solana
-            default:
-                return nil
-            }
-        }
-        
         var chains: [Web3Chain] {
             switch self {
             case .evm:
-                [.ethereum, .polygon, .bnbSmartChain, .arbitrum, .base, .optimism, .blast]
+                [.ethereum, .polygon, .bnbSmartChain, .arbitrum, .base, .optimism]
             case .solana:
                 [.solana]
             }
@@ -41,7 +30,7 @@ final class Web3Chain {
     let kind: Kind
     let specification: KindSpecification
     let web3ChainID: String
-    let mixinChainID: String?
+    let mixinChainID: String
     let feeTokenAssetID: String
     let name: String
     let failsafeRPCServerURL: URL
@@ -50,8 +39,7 @@ final class Web3Chain {
     private(set) var dapps: [Web3Dapp] = []
     
     var rpcServerURL: URL {
-        if let mixinChainID,
-           let string = AppGroupUserDefaults.web3RPCURL[mixinChainID],
+        if let string = AppGroupUserDefaults.web3RPCURL[mixinChainID],
            let url = URL(string: string)
         {
             url
@@ -62,7 +50,7 @@ final class Web3Chain {
     
     private init(
         specification: KindSpecification, web3ChainID: String,
-        mixinChainID: String?, feeTokenAssetID: String, name: String,
+        mixinChainID: String, feeTokenAssetID: String, name: String,
         failsafeRPCServerURL: URL, caip2: Blockchain
     ) {
         let kind: Kind = switch specification {
@@ -83,7 +71,7 @@ final class Web3Chain {
     }
     
     static func evm(
-        chainID: Int, web3ChainID: String, mixinChainID: String?,
+        chainID: Int, web3ChainID: String, mixinChainID: String,
         feeTokenAssetID: String, name: String, failsafeRPCServerURL: URL
     ) -> Web3Chain {
         Web3Chain(
@@ -98,7 +86,7 @@ final class Web3Chain {
     }
     
     static func solana(
-        reference: String, web3ChainID: String, mixinChainID: String?,
+        reference: String, web3ChainID: String, mixinChainID: String,
         feeTokenAssetID: String, name: String, failsafeRPCServerURL: URL
     ) -> Web3Chain {
         Web3Chain(
@@ -149,9 +137,7 @@ extension Web3Chain {
     
     private static let mixinChainIDMap: OrderedDictionary<String, Web3Chain> = {
         all.reduce(into: [:]) { result, chain in
-            if let id = chain.mixinChainID {
-                result[id] = chain
-            }
+            result[chain.mixinChainID] = chain
         }
     }()
     
@@ -226,7 +212,7 @@ extension Web3Chain {
     static let arbitrum = Web3Chain.evm(
         chainID: 42161,
         web3ChainID: "arbitrum",
-        mixinChainID: nil,
+        mixinChainID: ChainID.arbitrum,
         feeTokenAssetID: AssetID.eth,
         name: "Arbitrum",
         failsafeRPCServerURL: URL(string: "https://arbitrum.llamarpc.com")!
@@ -235,7 +221,7 @@ extension Web3Chain {
     static let base = Web3Chain.evm(
         chainID: 8453,
         web3ChainID: "base",
-        mixinChainID: nil,
+        mixinChainID: ChainID.base,
         feeTokenAssetID: AssetID.eth,
         name: "Base",
         failsafeRPCServerURL: URL(string: "https://base.llamarpc.com")!
@@ -244,19 +230,10 @@ extension Web3Chain {
     static let optimism = Web3Chain.evm(
         chainID: 10,
         web3ChainID: "optimism",
-        mixinChainID: nil,
+        mixinChainID: ChainID.optimism,
         feeTokenAssetID: AssetID.eth,
         name: "Optimism",
         failsafeRPCServerURL: URL(string: "https://optimism.llamarpc.com")!
-    )
-    
-    static let blast = Web3Chain.evm(
-        chainID: 81457,
-        web3ChainID: "blast",
-        mixinChainID: nil,
-        feeTokenAssetID: AssetID.eth,
-        name: "Blast",
-        failsafeRPCServerURL: URL(string: "https://rpc.blast.io")!
     )
     
     static let solana = Web3Chain.solana(
@@ -298,10 +275,7 @@ extension Web3Chain {
                 DispatchQueue.main.async {
                     AppGroupUserDefaults.web3RPCURL = rpcURLs
                     for chain in Web3Chain.all {
-                        guard 
-                            let mixinChainID = chain.mixinChainID,
-                            let dapps = dapps[mixinChainID]
-                        else {
+                        guard let dapps = dapps[chain.mixinChainID] else {
                             continue
                         }
                         chain.dapps = dapps

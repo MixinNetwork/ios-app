@@ -13,15 +13,15 @@ class Web3SendingTokenPayment {
         self.token = token
         self.fromAddress = fromAddress
         self.sendingNativeToken = switch (token.chainID, token.assetKey) {
-        case ("solana",             Web3Token.AssetKey.sol),
-            ("ethereum",            Web3Token.AssetKey.eth),
-            ("base",                "0x0000000000000000000000000000000000000000"),
-            ("arbitrum",            "0x0000000000000000000000000000000000000000"),
-            ("optimism",            "0x0000000000000000000000000000000000000000"),
-            ("polygon",             "0x0000000000000000000000000000000000001010"),
-            ("binance-smart-chain", "0x0000000000000000000000000000000000000000"),
-            ("avalanche",           "0x0000000000000000000000000000000000000000"),
-            ("blast",               "0x0000000000000000000000000000000000000000"):
+        case (ChainID.solana,           Web3Token.AssetKey.sol),
+            (ChainID.ethereum,          Web3Token.AssetKey.eth),
+            (ChainID.base,              "0x0000000000000000000000000000000000000000"),
+            (ChainID.arbitrum,          "0x0000000000000000000000000000000000000000"),
+            (ChainID.optimism,          "0x0000000000000000000000000000000000000000"),
+            (ChainID.polygon,           "0x0000000000000000000000000000000000000000"),
+            (ChainID.polygon,           "0x0000000000000000000000000000000000001010"),
+            (ChainID.bnbSmartChain,     "0x0000000000000000000000000000000000000000"),
+            (ChainID.avalancheXChain,   "0x0000000000000000000000000000000000000000"):
             true
         default:
             false

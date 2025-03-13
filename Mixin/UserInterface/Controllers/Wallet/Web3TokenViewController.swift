@@ -16,8 +16,15 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     }
     
     override func send() {
-//        let receiver = TokenReceiverViewController(token: token)
-//        navigationController?.pushViewController(receiver, animated: true)
+        guard let chain = Web3Chain.chain(mixinChainID: token.chainID) else {
+            return
+        }
+        guard let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: chain.mixinChainID) else {
+            return
+        }
+        let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address.destination)
+        let selector = Web3TokenReceiverViewController(payment: payment)
+        self.navigationController?.pushViewController(selector, animated: true)
     }
     
     override func setTokenHidden(_ hidden: Bool) {
@@ -33,6 +40,7 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     
     override func updateBalanceCell(_ cell: TokenBalanceCell) {
         cell.reloadData(web3Token: token)
+        cell.actionView.swapButton.isHidden = true
         cell.actionView.delegate = self
     }
     
@@ -97,8 +105,15 @@ extension Web3TokenViewController: TokenActionView.Delegate {
     func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
         switch action {
         case .receive:
-            withMnemonicsBackupChecked {
-                
+            withMnemonicsBackupChecked { [token] in
+                guard let kind = Web3Chain.chain(mixinChainID: token.chainID)?.kind else {
+                    return
+                }
+                guard let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: token.chainID) else {
+                    return
+                }
+                let selector = Web3ReceiveSourceViewController(kind: kind, address: address.destination)
+                self.navigationController?.pushViewController(selector, animated: true)
             }
         case .send:
             send()

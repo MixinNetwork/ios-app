@@ -33,6 +33,16 @@ final class MarketViewController: UIViewController {
         self.title = token.symbol
     }
     
+    init(token: Web3Token, chartPoints: [ChartView.Point]?) {
+        self.id = .asset(token.assetID)
+        self.market = nil
+        self.tokens = nil
+        self.viewModel = MarketViewModel(token: token)
+        self.chartPoints = chartPoints
+        super.init(nibName: nil, bundle: nil)
+        self.title = token.symbol
+    }
+    
     init(market: FavorableMarket) {
         self.id = .coin(market.coinID)
         self.market = market
@@ -958,7 +968,7 @@ extension MarketViewController {
             self.marketInfos = marketInfos
         }
         
-        init(token: MixinTokenItem) {
+        init(token: any Token) {
             let basicInfos = [
                 Info(title: R.string.localizable.name().uppercased(), primaryContent: token.name),
                 Info(title: R.string.localizable.symbol().uppercased(), primaryContent: token.symbol),
@@ -969,7 +979,7 @@ extension MarketViewController {
             self.balance = Balance(
                 balance: token.localizedBalanceWithSymbol,
                 period: R.string.localizable.hours_count_short(24),
-                value: token.localizedFiatMoneyBalance,
+                value: token.estimatedFiatMoneyBalance,
                 change: "",
                 changeColor: .arbitrary(.clear)
             )

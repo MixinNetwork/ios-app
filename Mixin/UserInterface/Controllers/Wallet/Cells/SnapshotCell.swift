@@ -133,33 +133,42 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
     }
     
     func render(transaction: Web3TransactionItem) {
+        let amount: Decimal
         switch transaction.status {
         case .known(.success):
             switch transaction.transactionType.knownCase {
             case .send:
+                amount = -transaction.decimalAmount
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_withdrawal()
                 setTitle(transaction.compactReceiver)
-                updateAmountTitleColor(amount: transaction.decimalAmount)
+                updateAmountTitleColor(amount: amount)
             case .receive:
+                amount = transaction.decimalAmount
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_deposit()
                 setTitle(transaction.compactSender)
-                updateAmountTitleColor(amount: transaction.decimalAmount)
+                updateAmountTitleColor(amount: amount)
             case .contract, .other, .none:
+                amount = transaction.decimalAmount
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_anonymous()
                 setTitle(nil)
-                updateAmountTitleColor(amount: transaction.decimalAmount)
+                amountLabel.textColor = R.color.text_tertiary()!
             }
         case .known(.failed), .unknown:
+            amount = transaction.decimalAmount
             iconImageView.imageView.contentMode = .center
             iconImageView.image = R.image.wallet.snapshot_anonymous()
             setTitle(nil)
             amountLabel.textColor = R.color.text_tertiary()!
         }
         progressLayer?.isHidden = true
-        amountLabel.text = CurrencyFormatter.localizedString(from: transaction.decimalAmount, format: .precision, sign: .always)
+        amountLabel.text = CurrencyFormatter.localizedString(
+            from: amount,
+            format: .precision,
+            sign: .always
+        )
         symbolLabel.isHidden = false
         symbolLabel.text = transaction.tokenSymbol
         inscriptionIconView?.isHidden = true

@@ -7,6 +7,8 @@ final class PrivacyWalletViewController: WalletViewController {
     private var lastSelectedAction: TokenAction?
     private var hasAssetInLegacyNetwork = false
     
+    private weak var walletSwitchBadgeView: BadgeDotView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -15,7 +17,7 @@ final class PrivacyWalletViewController: WalletViewController {
         privacyIconView.contentMode = .center
         privacyIconView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         privacyIconView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        titleStackView.addArrangedSubview(privacyIconView)
+        titleInfoStackView.addArrangedSubview(privacyIconView)
         
         tableHeaderView.actionView.delegate = self
         tableHeaderView.pendingDepositButton.addTarget(
@@ -59,6 +61,28 @@ final class PrivacyWalletViewController: WalletViewController {
             object: nil
         )
         reloadData()
+        
+        DispatchQueue.global().async {
+            let hasWalletSwitchViewed: Bool = PropertiesDAO.shared.value(forKey: .hasWalletSwitchViewed) ?? false
+            guard !hasWalletSwitchViewed else {
+                return
+            }
+            DispatchQueue.main.async {
+                let badge = BadgeDotView()
+                self.titleView.addSubview(badge)
+                badge.snp.makeConstraints { make in
+                    make.top.equalTo(self.walletSwitchImageView)
+                    make.leading.equalTo(self.walletSwitchImageView.snp.trailing).offset(-2)
+                }
+                self.walletSwitchBadgeView = badge
+                notificationCenter.addObserver(
+                    self,
+                    selector: #selector(self.hideBadgeView(_:)),
+                    name: PropertiesDAO.propertyDidUpdateNotification,
+                    object: nil
+                )
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -166,6 +190,21 @@ final class PrivacyWalletViewController: WalletViewController {
     @objc private func revealPendingDeposits(_ sender: Any) {
         let transactionHistory = MixinTransactionHistoryViewController(type: .pending)
         navigationController?.pushViewController(transactionHistory, animated: true)
+    }
+    
+    @objc private func hideBadgeView(_ notification: Notification) {
+        guard let change = notification.userInfo?[PropertiesDAO.Key.hasWalletSwitchViewed] as? PropertiesDAO.Change else {
+            return
+        }
+        let hasReviewed = switch change {
+        case .saved(let newValue):
+            (newValue as? Bool) ?? false
+        case .removed:
+            false
+        }
+        if hasReviewed {
+            walletSwitchBadgeView?.removeFromSuperview()
+        }
     }
     
     private func performAssetMigration(_ sender: Any) {

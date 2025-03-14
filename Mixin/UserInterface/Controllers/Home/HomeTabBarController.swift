@@ -79,21 +79,13 @@ final class HomeTabBarController: UIViewController {
         
         switchToChildAfterValidated(with: .chat)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(propertiesDidUpdate(_:)), name: PropertiesDAO.propertyDidUpdateNotification, object: nil)
-        DispatchQueue.global().async {
-            let hasSwapReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapReviewed) ?? false
-            let hasMarketReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasMarketReviewed) ?? false
-            DispatchQueue.main.async {
-                var items = self.tabBar.items
-                if !hasSwapReviewed {
-                    items[ChildID.wallet.rawValue].badge = true
-                }
-                if !hasMarketReviewed {
-                    items[ChildID.more.rawValue].badge = true
-                }
-                self.tabBar.items = items
-            }
-        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(propertiesDidUpdate(_:)),
+            name: PropertiesDAO.propertyDidUpdateNotification,
+            object: nil
+        )
+        reloadItemBadges()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -112,23 +104,19 @@ final class HomeTabBarController: UIViewController {
     }
     
     @objc private func propertiesDidUpdate(_ notification: Notification) {
-        if let change = notification.userInfo?[PropertiesDAO.Key.hasSwapReviewed] as? PropertiesDAO.Change {
-            let hasReviewed = switch change {
-            case .saved(let newValue):
-                (newValue as? Bool) ?? false
-            case .removed:
-                false
-            }
-            tabBar.items[ChildID.wallet.rawValue].badge = !hasReviewed
+        guard let userInfo = notification.userInfo else {
+            return
         }
-        if let change = notification.userInfo?[PropertiesDAO.Key.hasMarketReviewed] as? PropertiesDAO.Change {
-            let hasReviewed = switch change {
-            case .saved(let newValue):
-                (newValue as? Bool) ?? false
-            case .removed:
-                false
-            }
-            tabBar.items[ChildID.more.rawValue].badge = !hasReviewed
+        let badgeRelatedKeys: [PropertiesDAO.Key] = [
+            .hasSwapReviewed,
+            .hasWalletSwitchViewed,
+            .hasMarketReviewed,
+        ]
+        let badgeChanges = badgeRelatedKeys.contains { key in
+            userInfo[key] != nil
+        }
+        if badgeChanges {
+            reloadItemBadges()
         }
     }
     
@@ -140,6 +128,20 @@ final class HomeTabBarController: UIViewController {
             fallthrough
         @unknown default:
             tabBar.layer.shadowColor = UIColor.black.withAlphaComponent(0.06).cgColor
+        }
+    }
+    
+    private func reloadItemBadges() {
+        DispatchQueue.global().async {
+            let hasSwapReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapReviewed) ?? false
+            let hasWalletSwitchViewed: Bool = PropertiesDAO.shared.value(forKey: .hasWalletSwitchViewed) ?? false
+            let hasMarketReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasMarketReviewed) ?? false
+            DispatchQueue.main.async {
+                var items = self.tabBar.items
+                items[ChildID.wallet.rawValue].badge = !hasSwapReviewed || !hasWalletSwitchViewed
+                items[ChildID.more.rawValue].badge = !hasMarketReviewed
+                self.tabBar.items = items
+            }
         }
     }
     

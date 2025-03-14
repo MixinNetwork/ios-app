@@ -8,7 +8,6 @@ final class WalletContainerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let defaultWallet = AppGroupUserDefaults.Wallet.lastSelectedWallet
         switch AppGroupUserDefaults.Wallet.lastSelectedWallet {
         case .classic(let id):
             if Web3WalletDAO.shared.hasClassicWallet(id: id) {

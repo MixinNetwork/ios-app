@@ -48,6 +48,7 @@ final class WalletSummaryViewController: UIViewController {
             object: nil
         )
         DispatchQueue.global().async {
+            PropertiesDAO.shared.set(true, forKey: .hasWalletSwitchViewed)
             let privacyWalletDigest = TokenDAO.shared.walletDigest()
             let classicWalletDigests = Web3WalletDAO.shared.walletDigests()
             DispatchQueue.main.async {

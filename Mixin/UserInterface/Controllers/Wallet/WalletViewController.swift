@@ -4,7 +4,9 @@ import MixinServices
 
 class WalletViewController: UIViewController, MnemonicsBackupChecking {
     
-    @IBOutlet weak var titleStackView: UIStackView!
+    @IBOutlet weak var titleView: UIView!
+    @IBOutlet weak var titleInfoStackView: UIStackView!
+    @IBOutlet weak var walletSwitchImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     

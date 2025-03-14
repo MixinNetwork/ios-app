@@ -63,7 +63,7 @@ class AssetCell: ModernSelectedBackgroundCell {
             fiatMoneyPriceLabel.alpha = 0
             noFiatMoneyPriceIndicatorLabel.alpha = 1
         }
-        fiatMoneyBalanceLabel.text = token.localizedFiatMoneyBalance
+        fiatMoneyBalanceLabel.text = token.estimatedFiatMoneyBalance
     }
     
     func render(web3Token token: Web3TokenItem) {
@@ -95,7 +95,7 @@ class AssetCell: ModernSelectedBackgroundCell {
             fiatMoneyPriceLabel.alpha = 0
             noFiatMoneyPriceIndicatorLabel.alpha = 1
         }
-        fiatMoneyBalanceLabel.text = token.localizedFiatMoneyBalance
+        fiatMoneyBalanceLabel.text = token.estimatedFiatMoneyBalance
     }
     
 }

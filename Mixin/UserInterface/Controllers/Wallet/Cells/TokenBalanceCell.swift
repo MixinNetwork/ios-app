@@ -32,7 +32,7 @@ final class TokenBalanceCell: UITableViewCell {
             valueLabel.text = "≈ " + Currency.current.symbol + zeroWith2Fractions
         } else {
             amount = CurrencyFormatter.localizedString(from: token.decimalBalance, format: .precision, sign: .never)
-            valueLabel.text = token.localizedFiatMoneyBalance
+            valueLabel.text = token.estimatedFiatMoneyBalance
         }
         if amount.count > 3 {
             var index = amount.index(amount.endIndex, offsetBy: -3)
@@ -72,7 +72,7 @@ final class TokenBalanceCell: UITableViewCell {
                 format: .precision,
                 sign: .never
             )
-            valueLabel.text = token.localizedFiatMoneyBalance
+            valueLabel.text = token.estimatedFiatMoneyBalance
         }
         if amount.count > 3 {
             var index = amount.index(amount.endIndex, offsetBy: -3)

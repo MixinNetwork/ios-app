@@ -42,21 +42,12 @@ public class Web3Token: ChangeReportingToken, Codable {
     public private(set) lazy var decimalUSDPrice = Decimal(string: usdPrice, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUSDChange = Decimal(string: usdChange, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalPercentChange = decimalUSDChange / decimalUSDPrice
-    public private(set) lazy var localizedBalanceWithSymbol = CurrencyFormatter.localizedString(
-        from: decimalBalance,
-        format: .precision,
-        sign: .never,
-        symbol: .custom(symbol)
-    )
+    
     public private(set) lazy var localizedPercentChange = NumberFormatter.percentage.string(decimal: decimalPercentChange / 100)
     public private(set) lazy var localizedUSDChange = localizeUSDChange()
     public private(set) lazy var localizedFiatMoneyPrice = localizeFiatMoneyPrice()
-    public private(set) lazy var localizedFiatMoneyBalance = "≈ " + CurrencyFormatter.localizedString(
-        from: decimalBalance * decimalUSDPrice * Currency.current.decimalRate,
-        format: .fiatMoney,
-        sign: .never,
-        symbol: .currencySymbol
-    )
+    public private(set) lazy var localizedBalanceWithSymbol = localizeBalanceWithSymbol()
+    public private(set) lazy var estimatedFiatMoneyBalance = estimateFiatMoneyBalance()
     
     public init(
         walletID: String, assetID: String, chainID: String, assetKey: String,

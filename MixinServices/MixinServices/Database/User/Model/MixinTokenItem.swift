@@ -14,21 +14,9 @@ public final class MixinTokenItem: MixinToken, ChangeReportingToken, DepositNetw
     public private(set) lazy var decimalBalance = Decimal(string: balance, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUSDBalance = decimalBalance * decimalUSDPrice
     
-    public private(set) lazy var localizedBalanceWithSymbol = CurrencyFormatter.localizedString(
-        from: decimalBalance,
-        format: .precision,
-        sign: .never,
-        symbol: .custom(symbol)
-    )
-    
     public private(set) lazy var localizedFiatMoneyPrice = localizeFiatMoneyPrice()
-    
-    public private(set) lazy var localizedFiatMoneyBalance = "≈ " + CurrencyFormatter.localizedString(
-        from: decimalBalance * decimalUSDPrice * Currency.current.decimalRate,
-        format: .fiatMoney,
-        sign: .never,
-        symbol: .currencySymbol
-    )
+    public private(set) lazy var localizedBalanceWithSymbol = localizeBalanceWithSymbol()
+    public private(set) lazy var estimatedFiatMoneyBalance = estimateFiatMoneyBalance()
     
     public private(set) lazy var localizedUSDChange = localizeUSDChange()
     public private(set) lazy var localizedUSDPrice = CurrencyFormatter.localizedString(

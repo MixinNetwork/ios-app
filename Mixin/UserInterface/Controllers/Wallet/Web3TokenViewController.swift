@@ -68,7 +68,6 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     }
     
     private func reloadToken() {
-        let assetID = token.assetID
         DispatchQueue.global().async { [token, weak self] in
             guard let token = Web3TokenDAO.shared.token(walletID: token.walletID, assetID: token.assetID) else {
                 return

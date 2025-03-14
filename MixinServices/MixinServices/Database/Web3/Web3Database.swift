@@ -33,11 +33,11 @@ public final class Web3Database: Database {
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS `addresses` (
-                    `address_id` TEXT NOT NULL,
-                    `wallet_id` TEXT NOT NULL,
-                    `chain_id` TEXT NOT NULL,
-                    `destination` TEXT NOT NULL,
-                    `created_at` TEXT NOT NULL,
+                    `address_id`    TEXT NOT NULL,
+                    `wallet_id`     TEXT NOT NULL,
+                    `chain_id`      TEXT NOT NULL,
+                    `destination`   TEXT NOT NULL,
+                    `created_at`    TEXT NOT NULL,
                     PRIMARY KEY(address_id)
                 )
                 """,
@@ -46,43 +46,43 @@ public final class Web3Database: Database {
                     `wallet_id`         TEXT NOT NULL,
                     `asset_id`          TEXT NOT NULL,
                     `chain_id`          TEXT NOT NULL,
-                    `asset_key`         TEXT NOT NULL,
-                    `kernel_asset_id`   TEXT NOT NULL,
-                    `symbol`            TEXT NOT NULL,
                     `name`              TEXT NOT NULL,
-                    `precision`         TEXT NOT NULL,
+                    `asset_key`         TEXT NOT NULL,
+                    `symbol`            TEXT NOT NULL,
                     `icon_url`          TEXT NOT NULL,
+                    `precision`         INTEGER NOT NULL,
+                    `kernel_asset_id`   TEXT NOT NULL,
                     `amount`            TEXT NOT NULL,
                     `price_usd`         TEXT NOT NULL,
                     `change_usd`        TEXT NOT NULL,
-                    PRIMARY KEY(wallet_id, asset_id)
+                    PRIMARY KEY(`wallet_id`, `asset_id`)
                 )
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS `tokens_extra` (
-                  `wallet_id` TEXT NOT NULL,
-                  `asset_id` TEXT NOT NULL,
-                  `hidden` INTEGER,
+                  `wallet_id`   TEXT NOT NULL,
+                  `asset_id`    TEXT NOT NULL,
+                  `hidden`      INTEGER,
                   PRIMARY KEY(`wallet_id`, `asset_id`)
                 )
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS `transactions` (
-                    `transaction_id` TEXT NOT NULL,
-                    `transaction_type` TEXT NOT NULL,
-                    `transaction_hash` TEXT NOT NULL,
-                    `output_index` INTEGER NOT NULL,
-                    `block_number` INTEGER NOT NULL,
-                    `sender` TEXT NOT NULL,
-                    `receiver` TEXT NOT NULL,
-                    `output_hash` TEXT NOT NULL,
-                    `chain_id` TEXT NOT NULL,
-                    `asset_id` TEXT NOT NULL,
-                    `amount` TEXT NOT NULL,
-                    `created_at` TEXT NOT NULL,
-                    `updated_at` TEXT NOT NULL,
-                    `transaction_at` TEXT NOT NULL,
-                    `status` TEXT NOT NULL,
+                    `transaction_id`    TEXT NOT NULL,
+                    `transaction_type`  TEXT NOT NULL,
+                    `transaction_hash`  TEXT NOT NULL,
+                    `output_index`      INTEGER NOT NULL,
+                    `block_number`      INTEGER NOT NULL,
+                    `sender`            TEXT NOT NULL,
+                    `receiver`          TEXT NOT NULL,
+                    `output_hash`       TEXT NOT NULL,
+                    `chain_id`          TEXT NOT NULL,
+                    `asset_id`          TEXT NOT NULL,
+                    `amount`            TEXT NOT NULL,
+                    `created_at`        TEXT NOT NULL,
+                    `updated_at`        TEXT NOT NULL,
+                    `transaction_at`    TEXT NOT NULL,
+                    `status`            TEXT NOT NULL,
                     PRIMARY KEY(`transaction_id`)
                 )
                 """,
@@ -94,6 +94,8 @@ public final class Web3Database: Database {
                     PRIMARY KEY(key)
                 )
                 """,
+                "CREATE INDEX IF NOT EXISTS `index_transactions_transaction_at` ON `transactions` (`transaction_at`)",
+                "CREATE INDEX IF NOT EXISTS `index_transactions_transaction_type_asset_id` ON `transactions` (`transaction_type`, `asset_id`)",
             ]
             for sql in sqls {
                 try db.execute(sql: sql)

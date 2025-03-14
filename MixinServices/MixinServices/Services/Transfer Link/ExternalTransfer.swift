@@ -34,6 +34,16 @@ public struct ExternalTransfer {
     
     public let memo: String?
     
+    public init(assetID: String, destination: String, amount: Decimal, raw: String) {
+        self.raw = raw
+        self.assetID = assetID
+        self.destination = destination
+        self.amount = amount
+        self.resolvedAmount = amount
+        self.arbitraryAmount = nil
+        self.memo = nil
+    }
+    
     public init(
         string raw: String,
         assetIDFinder: (String) -> String? = TokenDAO.shared.assetID(assetKey:)

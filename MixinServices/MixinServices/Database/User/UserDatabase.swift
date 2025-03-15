@@ -29,6 +29,7 @@ public final class UserDatabase: Database {
         ColumnMigratableTableDefinition<Address>(constraints: nil, columns: [
             .init(key: .type, constraints: "TEXT NOT NULL"),
             .init(key: .addressId, constraints: "TEXT PRIMARY KEY"),
+            .init(key: .chainId, constraints: "TEXT NOT NULL"),
             .init(key: .assetId, constraints: "TEXT NOT NULL"),
             .init(key: .destination, constraints: "TEXT NOT NULL"),
             .init(key: .label, constraints: "TEXT NOT NULL"),
@@ -928,6 +929,15 @@ public final class UserDatabase: Database {
             )
             """
             try db.execute(sql: sql)
+        }
+        
+        migrator.registerMigration("addresses_chain") { db in
+            let itemColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(addresses)").map(\.name)
+            if !itemColumns.contains("chain_id") {
+                try db.execute(sql: "DELETE FROM `addresses`")
+                try db.execute(sql: "ALTER TABLE `addresses` ADD COLUMN `chain_id` TEXT NOT NULL DEFAULT ''")
+            }
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS `index_addresses_chain_id_updated_at` ON `addresses` (`chain_id`, `updated_at`)")
         }
         
         return migrator

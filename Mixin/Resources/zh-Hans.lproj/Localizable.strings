@@ -1435,7 +1435,7 @@
 "web3_account" = "账户";
 "web3_account_connected" = "连接成功";
 "web3_account_network" = "%@ 账户";
-"web3_deposit_description_evm" = "使用此地址在 Ethereum、Polygon、BSC、Base、Arbitrum、Optimism、Blast 网络上接收代币";
+"web3_deposit_description_evm" = "使用此地址在 Ethereum、Polygon、BSC、Base 网络上接收代币";
 "web3_deposit_description_solana" = "使用此地址在 Solana 网络上接收代币";
 "web3_ensure_trust" = "请确保您信任此应用程序。";
 "web3_message_request" = "消息签名";

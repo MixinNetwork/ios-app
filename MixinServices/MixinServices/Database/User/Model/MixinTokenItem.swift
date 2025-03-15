@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public final class MixinTokenItem: MixinToken, ChangeReportingToken, DepositNetworkReportingToken, HideableToken {
+public final class MixinTokenItem: MixinToken, ValuableToken, ChangeReportingToken, DepositNetworkReportingToken, HideableToken {
     
     public let balance: String
     public let isHidden: Bool

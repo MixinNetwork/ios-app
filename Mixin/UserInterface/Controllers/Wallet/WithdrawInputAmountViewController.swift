@@ -3,7 +3,7 @@ import MixinServices
 
 final class WithdrawInputAmountViewController: InputAmountViewController {
     
-    override var token: any Token {
+    override var token: any ValuableToken {
         tokenItem
     }
     

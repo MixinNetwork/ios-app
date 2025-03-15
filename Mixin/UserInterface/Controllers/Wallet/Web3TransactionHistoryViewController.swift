@@ -27,7 +27,7 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
         super.init()
     }
     
-    init(walletID: String, type: SafeSnapshot.DisplayType?) {
+    init(walletID: String, type: Web3Transaction.TransactionType?) {
         self.walletID = walletID
         self.filter = .init(type: type)
         super.init()
@@ -43,13 +43,13 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
         updateNavigationSubtitle(order: order)
         reloadRightBarButtonItem(order: order)
         
-//        let typeFilterActions = typeFilterActions(selectedType: filter.type)
-//        typeFilterView.reloadData(type: filter.type)
-//        typeFilterView.button.menu = UIMenu(children: typeFilterActions)
-//        assetFilterView.reloadData(tokens: filter.tokens)
-//        assetFilterView.button.addTarget(self, action: #selector(pickTokens(_:)), for: .touchUpInside)
-//        recipientFilterView.reloadData(users: filter.users, addresses: filter.addresses)
-//        recipientFilterView.button.addTarget(self, action: #selector(pickRecipients(_:)), for: .touchUpInside)
+        let typeFilterActions = typeFilterActions(selectedType: filter.type)
+        typeFilterView.reloadData(type: filter.type)
+        typeFilterView.button.menu = UIMenu(children: typeFilterActions)
+        assetFilterView.reloadData(tokens: filter.tokens)
+        assetFilterView.button.addTarget(self, action: #selector(pickTokens(_:)), for: .touchUpInside)
+        recipientFilterView.reloadData(users: [], addresses: filter.addresses)
+        recipientFilterView.button.addTarget(self, action: #selector(pickRecipients(_:)), for: .touchUpInside)
         dateFilterView.reloadData(startDate: filter.startDate, endDate: filter.endDate)
         dateFilterView.button.addTarget(self, action: #selector(pickDates(_:)), for: .touchUpInside)
         
@@ -77,17 +77,13 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     }
     
     @objc private func pickRecipients(_ sender: Any) {
-//        let picker: TransactionHistoryRecipientFilterPickerViewController
-//        switch filter.type {
-//        case .none:
-//            picker = .init(segments: [.user, .address], users: filter.users, addresses: filter.addresses)
-//        case .deposit, .withdrawal, .pending:
-//            picker = .init(segments: [.address], users: [], addresses: filter.addresses)
-//        case .transfer:
-//            picker = .init(segments: [.user], users: filter.users, addresses: filter.addresses)
-//        }
-//        picker.delegate = self
-//        present(picker, animated: true)
+        let picker = TransactionHistoryRecipientFilterPickerViewController(
+            segments: [.address],
+            users: [],
+            addresses: filter.addresses
+        )
+        picker.delegate = self
+        present(picker, animated: true)
     }
     
     @objc private func pickDates(_ sender: Any) {
@@ -99,6 +95,53 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
 }
 
 extension Web3TransactionHistoryViewController {
+    
+    private func typeFilterActions(selectedType type: Web3Transaction.TransactionType?) -> [UIAction] {
+        let actions = [
+            UIAction(
+                title: R.string.localizable.all(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: nil) }
+            ),
+            UIAction(
+                title: R.string.localizable.deposit(),
+                image: R.image.filter_deposit(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: .receive) }
+            ),
+            UIAction(
+                title: R.string.localizable.withdrawal(),
+                image: R.image.filter_withdrawal(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: .send) }
+            ),
+            UIAction(
+                title: R.string.localizable.other(),
+                image: R.image.filter_transfer(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: .other) }
+            ),
+            UIAction(
+                title: R.string.localizable.contract(),
+                image: R.image.filter_contract(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadData(filterType: .contract) }
+            ),
+        ]
+        switch type {
+        case .none:
+            actions[0].state = .on
+        case .receive:
+            actions[1].state = .on
+        case .send:
+            actions[2].state = .on
+        case .other:
+            actions[3].state = .on
+        case .contract:
+            actions[4].state = .on
+        }
+        return actions
+    }
     
     private func reloadRightBarButtonItem(order: SafeSnapshot.Order) {
         let rightBarButtonItem: UIBarButtonItem
@@ -147,12 +190,12 @@ extension Web3TransactionHistoryViewController {
         rightBarButtonItem.menu = UIMenu(children: actions)
     }
     
-    private func reloadData(filterType type: SafeSnapshot.DisplayType?) {
-//        filter.type = type
-//        let actions = typeFilterActions(selectedType: filter.type)
-//        typeFilterView.button.menu = UIMenu(children: actions)
-//        typeFilterView.reloadData(type: type)
-//        reloadData()
+    private func reloadData(filterType type: Web3Transaction.TransactionType?) {
+        filter.type = type
+        let actions = typeFilterActions(selectedType: filter.type)
+        typeFilterView.button.menu = UIMenu(children: actions)
+        typeFilterView.reloadData(type: type)
+        reloadData()
     }
     
     private func reloadData(order: SafeSnapshot.Order) {
@@ -239,26 +282,25 @@ extension Web3TransactionHistoryViewController: Web3TransactionHistoryTokenFilte
         didPickTokens tokens: [Web3TokenItem]
     ) {
         filter.tokens = tokens
-//        assetFilterView.reloadData(tokens: tokens)
+        assetFilterView.reloadData(tokens: tokens)
         reloadData()
     }
     
 }
 
-//extension Web3TransactionHistoryViewController: TransactionHistoryRecipientFilterPickerViewControllerDelegate {
-//    
-//    func transactionHistoryRecipientFilterPickerViewController(
-//        _ controller: TransactionHistoryRecipientFilterPickerViewController,
-//        didPickUsers users: [UserItem],
-//        addresses: [AddressItem]
-//    ) {
-//        filter.users = users
-//        filter.addresses = addresses
-//        recipientFilterView.reloadData(users: users, addresses: addresses)
-//        reloadData()
-//    }
-//    
-//}
+extension Web3TransactionHistoryViewController: TransactionHistoryRecipientFilterPickerViewControllerDelegate {
+    
+    func transactionHistoryRecipientFilterPickerViewController(
+        _ controller: TransactionHistoryRecipientFilterPickerViewController,
+        didPickUsers users: [UserItem],
+        addresses: [AddressItem]
+    ) {
+        filter.addresses = addresses
+        recipientFilterView.reloadData(users: [], addresses: addresses)
+        reloadData()
+    }
+    
+}
 
 extension Web3TransactionHistoryViewController: TransactionHistoryDatePickerViewControllerDelegate {
     

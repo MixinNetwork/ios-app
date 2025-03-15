@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public class Web3Token: ChangeReportingToken, Codable {
+public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
     
     public enum AssetKey {
         public static let sol = "11111111111111111111111111111111"

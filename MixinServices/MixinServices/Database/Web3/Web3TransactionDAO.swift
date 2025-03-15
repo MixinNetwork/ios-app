@@ -84,7 +84,7 @@ extension Web3TransactionDAO {
         var conditions: [GRDB.SQL] = []
         
         if let type = filter.type {
-            // TODO: Filter with type
+            conditions.append("txn.transaction_type = \(type.rawValue)")
         }
         
         if !filter.tokens.isEmpty {

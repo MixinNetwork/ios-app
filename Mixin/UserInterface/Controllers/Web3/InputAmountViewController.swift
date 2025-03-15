@@ -26,7 +26,7 @@ class InputAmountViewController: UIViewController {
     
     @IBOutlet weak var numberPadTopConstraint: NSLayoutConstraint!
     
-    var token: Token {
+    var token: ValuableToken {
         fatalError("Must override")
     }
     

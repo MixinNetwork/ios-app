@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public class MixinToken: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord, TableRecord, PersistableRecord {
+public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord, TableRecord, PersistableRecord {
     
     public enum CodingKeys: String, CodingKey {
         case assetID = "asset_id"

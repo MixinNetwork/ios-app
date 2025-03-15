@@ -64,7 +64,7 @@ extension Web3TransactionHistoryTokenFilterPickerViewController: UICollectionVie
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: selectedTokenReuseIdentifier, for: indexPath) as! SelectedTokenCell
         let token = selectedTokens[indexPath.row]
-        cell.load(web3Token: token)
+        cell.load(token: token)
         cell.delegate = self
         return cell
     }

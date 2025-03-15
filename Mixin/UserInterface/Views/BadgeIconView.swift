@@ -164,7 +164,7 @@ final class BadgeIconView: UIView {
     }
     
     func setIcon(swappableToken token: SwapToken) {
-        if let url = token.iconURL {
+        if let url = URL(string: token.iconURL) {
             iconImageView.sd_setImage(with: url,
                                       placeholderImage: nil,
                                       context: assetIconContext)

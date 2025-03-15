@@ -4,7 +4,7 @@ import MixinServices
 
 final class TransferInputAmountViewController: InputAmountViewController {
     
-    override var token: any Token {
+    override var token: any ValuableToken {
         tokenItem
     }
     

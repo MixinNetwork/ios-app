@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-final class BalancedSwapToken: SwapToken, Token {
+final class BalancedSwapToken: SwapToken, ValuableToken {
     
     let decimalBalance: Decimal
     let decimalUSDPrice: Decimal
@@ -20,7 +20,7 @@ final class BalancedSwapToken: SwapToken, Token {
             decimals: token.decimals,
             name: token.name,
             symbol: token.symbol,
-            icon: token.icon,
+            iconURL: token.iconURL,
             chain: token.chain
         )
     }
@@ -37,7 +37,7 @@ final class BalancedSwapToken: SwapToken, Token {
             decimals: 0,
             name: i.name,
             symbol: i.symbol,
-            icon: i.iconURL,
+            iconURL: i.iconURL,
             chain: Chain(
                 chainID: chain.chainId,
                 name: chain.name,

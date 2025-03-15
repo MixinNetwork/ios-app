@@ -119,7 +119,7 @@ final class WalletHeaderView: InfiniteTopView {
         }
     }
     
-    func reloadValues(tokens: [Token]) {
+    func reloadValues(tokens: [ValuableToken]) {
         fiatMoneySymbolLabel.text = Currency.current.symbol
         
         let valuableTokens = tokens.filter { token in

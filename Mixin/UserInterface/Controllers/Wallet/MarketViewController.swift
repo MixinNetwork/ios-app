@@ -968,7 +968,7 @@ extension MarketViewController {
             self.marketInfos = marketInfos
         }
         
-        init(token: any Token) {
+        init(token: any ValuableToken) {
             let basicInfos = [
                 Info(title: R.string.localizable.name().uppercased(), primaryContent: token.name),
                 Info(title: R.string.localizable.symbol().uppercased(), primaryContent: token.symbol),

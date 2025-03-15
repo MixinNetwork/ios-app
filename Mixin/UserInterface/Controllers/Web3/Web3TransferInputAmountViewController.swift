@@ -4,7 +4,7 @@ import MixinServices
 
 final class Web3TransferInputAmountViewController: InputAmountViewController {
     
-    override var token: any Token {
+    override var token: any ValuableToken {
         payment.token
     }
     

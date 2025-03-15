@@ -19,13 +19,8 @@ final class SelectedTokenCell: SelectedItemCell<PlainTokenIconView> {
         nameLabel.text = address.label
     }
     
-    func load(token: MixinTokenItem) {
+    func load(token: any Token) {
         iconView.setIcon(token: token)
-        nameLabel.text = token.symbol
-    }
-    
-    func load(web3Token token: Web3TokenItem) {
-        iconView.setIcon(web3Token: token)
         nameLabel.text = token.symbol
     }
     

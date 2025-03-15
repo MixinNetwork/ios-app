@@ -22,20 +22,8 @@ final class PlainTokenIconView: UIImageView {
         sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
     }
     
-    func setIcon(token: MixinToken) {
-        setIcon(tokenIconURL: URL(string: token.iconURL))
-    }
-    
-    func setIcon(web3Token token: Web3Token) {
+    func setIcon(token: any Token) {
         if let url = URL(string: token.iconURL) {
-            setIcon(tokenIconURL: url)
-        } else {
-            image = R.image.unknown_session()
-        }
-    }
-    
-    func setIcon(token: SwapToken) {
-        if let url = token.iconURL {
             setIcon(tokenIconURL: url)
         } else {
             image = R.image.unknown_session()

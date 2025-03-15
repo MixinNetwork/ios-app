@@ -68,7 +68,7 @@ extension Web3Transaction {
         // For array-type properties, when the value is empty,
         // it indicates that this filter should not be applied.
         
-        public var type: SafeSnapshot.DisplayType?
+        public var type: TransactionType?
         public var tokens: [Web3TokenItem]
         public var addresses: [AddressItem]
         public var startDate: Date?
@@ -79,7 +79,7 @@ extension Web3Transaction {
         }
         
         public init(
-            type: SafeSnapshot.DisplayType? = nil,
+            type: TransactionType? = nil,
             tokens: [Web3TokenItem] = [],
             addresses: [AddressItem] = [],
             startDate: Date? = nil,
@@ -92,24 +92,24 @@ extension Web3Transaction {
             self.endDate = endDate
         }
         
-        public func isIncluded(snapshot: SafeSnapshot) -> Bool {
+        public func isIncluded(transaction: Web3Transaction) -> Bool {
             var isIncluded = true
             if let type {
-                isIncluded = isIncluded && snapshot.displayTypes.contains(type)
+                isIncluded = isIncluded && transaction.transactionType.knownCase == type
             }
             if !tokens.isEmpty {
-                isIncluded = isIncluded && tokens.contains(where: { $0.assetID == snapshot.assetID })
+                isIncluded = isIncluded && tokens.contains(where: { $0.assetID == transaction.assetID })
             }
             if !addresses.isEmpty {
                 isIncluded = isIncluded && addresses.contains(where: { address in
-                    snapshot.deposit?.sender == address.destination || snapshot.withdrawal?.receiver == address.destination
+                    transaction.sender == address.destination || transaction.receiver == address.destination
                 })
             }
             if let startDate {
-                isIncluded = isIncluded && snapshot.createdAt.toUTCDate() >= startDate
+                isIncluded = isIncluded && transaction.createdAt.toUTCDate() >= startDate
             }
             if let endDate {
-                isIncluded = isIncluded && snapshot.createdAt.toUTCDate() <= endDate
+                isIncluded = isIncluded && transaction.createdAt.toUTCDate() <= endDate
             }
             return isIncluded
         }

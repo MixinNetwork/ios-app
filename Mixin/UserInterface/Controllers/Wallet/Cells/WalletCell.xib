@@ -41,13 +41,16 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="beu-6R-0hW">
-                                <rect key="frame" x="0.0" y="60" width="132.66666666666666" height="20"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="beu-6R-0hW">
+                                <rect key="frame" x="0.0" y="60" width="254.66666666666666" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="8jB-gt-2bz"/>
                                 </constraints>
                             </stackView>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="beu-6R-0hW" firstAttribute="width" secondItem="e61-KP-cyS" secondAttribute="width" multiplier="0.84" priority="250" id="kgu-0M-1h7"/>
+                        </constraints>
                     </stackView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="Oh6-tG-sNl">
                         <rect key="frame" x="293" y="12" width="30" height="30"/>

@@ -62,7 +62,7 @@ final class WalletCell: UICollectionViewCell {
                 label.text = NumberFormatter.simplePercentage.string(decimal: percentages[index])
             }
         default:
-            var percentages = tokens.prefix(2).map { token in
+            let percentages = tokens.prefix(2).map { token in
                 NSDecimalNumber(decimal: token.decimalValue / digest.usdBalanceSum)
                     .rounding(accordingToBehavior: NSDecimalNumberHandler.percentRoundingHandler)
                     .decimalValue

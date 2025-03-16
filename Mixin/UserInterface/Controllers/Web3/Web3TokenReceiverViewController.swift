@@ -134,8 +134,8 @@ extension Web3TokenReceiverViewController: UITableViewDataSource {
         case .myMixinWallet:
             cell.iconImageView.image = R.image.token_receiver_wallet()
             cell.freeLabel.isHidden = true
-            cell.titleLabel.text = R.string.localizable.to_mixin_wallet()
-            cell.subtitleLabel.text = R.string.localizable.contact_mixin_id(myIdentityNumber)
+            cell.titleLabel.text = R.string.localizable.privacy_wallet()
+            cell.subtitleLabel.text = R.string.localizable.send_to_privacy_wallet_description()
         }
         return cell
     }

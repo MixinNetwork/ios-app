@@ -740,7 +740,6 @@
 "mixin_messenger_desktop" = "Mixin Messenger de Escritorio";
 "mixin_server_encounters_errors" = "El servidor Mixin encuentra errores";
 "mixin_support" = "Mixin Support";
-"mixin_wallet" = "Mixin Wallet";
 "mnemonic_phrase" = "Mnemonic Phrase";
 "mnemonic_phrase_instruction" = "You can log in to your account using the mnemonic phrase. The current mnemonic phrase is linked to a key shard of the MPC wallet, with the complete key existing only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "mnemonic_phrase_instruction_1" = "The 13 mnemonic phrases generated when creating an account are intended only for Mixin Network-related products.";
@@ -972,8 +971,8 @@
 "read_your_snapshots" = "Lee tus instantáneas";
 "rebate" = "Reembolso";
 "receive" = "Recibir";
-"receive_from_address_description" = "Withdraw from other exchanges or on-chain wallets using a crypto network.";
-"receive_from_my_wallets_description" = "Withdraw from my other wallet using a crypto network.";
+"receive_from_address_description" = "Withdraw from other exchanges or on-chain wallets using a crypto network";
+"receive_from_my_wallets_description" = "Withdraw from my other wallet using a crypto network";
 "receive_money" = "Recibir dinero";
 "received" = "received";
 "receiver" = "Receptor";
@@ -1108,6 +1107,7 @@
 "send_to_address_description" = "Send to a known crypto address using a crypto network.";
 "send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
 "send_to_developer" = "Enviar al Desarrollador";
+"send_to_privacy_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Enviar a";
 "send_to_web3_wallet_description" = "Send to my %@ account using crypto network.";
 "send_video" = "Enviar 1 vídeo";
@@ -1266,7 +1266,6 @@
 "title_participants" = "%d Participante";
 "title_participants_count" = "%d Participantes";
 "to" = "A";
-"to_mixin_wallet" = "To my Mixin Wallet";
 "today" = "Hoy";
 "token" = "Token";
 "top_count" = "Top %d";

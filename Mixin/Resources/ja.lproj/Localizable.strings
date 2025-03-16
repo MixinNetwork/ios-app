@@ -740,7 +740,6 @@
 "mixin_messenger_desktop" = "Mixin デスクトップ";
 "mixin_server_encounters_errors" = "Mixinのサーバーにエラーが発生しています";
 "mixin_support" = "Mixin Support";
-"mixin_wallet" = "Mixin Wallet";
 "mnemonic_phrase" = "Mnemonic Phrase";
 "mnemonic_phrase_instruction" = "You can log in to your account using the mnemonic phrase. The current mnemonic phrase is linked to a key shard of the MPC wallet, with the complete key existing only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "mnemonic_phrase_instruction_1" = "The 13 mnemonic phrases generated when creating an account are intended only for Mixin Network-related products.";
@@ -972,8 +971,8 @@
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "払い戻し";
 "receive" = "入金";
-"receive_from_address_description" = "Withdraw from other exchanges or on-chain wallets using a crypto network.";
-"receive_from_my_wallets_description" = "Withdraw from my other wallet using a crypto network.";
+"receive_from_address_description" = "Withdraw from other exchanges or on-chain wallets using a crypto network";
+"receive_from_my_wallets_description" = "Withdraw from my other wallet using a crypto network";
 "receive_money" = "仮想通貨を受け取る";
 "received" = "received";
 "receiver" = "受取人";
@@ -1108,6 +1107,7 @@
 "send_to_address_description" = "Send to a known crypto address using a crypto network.";
 "send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
 "send_to_developer" = "開発者へ送信";
+"send_to_privacy_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "振替先";
 "send_to_web3_wallet_description" = "Send to my %@ account using crypto network.";
 "send_video" = "ビデオを送信";
@@ -1266,7 +1266,6 @@
 "title_participants" = "%d人の参加者";
 "title_participants_count" = "%d人の参加者";
 "to" = "宛先";
-"to_mixin_wallet" = "To my Mixin Wallet";
 "today" = "今日";
 "token" = "Token";
 "top_count" = "Top %d";

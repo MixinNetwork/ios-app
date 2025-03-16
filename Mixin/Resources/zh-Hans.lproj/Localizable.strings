@@ -740,7 +740,6 @@
 "mixin_messenger_desktop" = "Mixin Messenger 桌面";
 "mixin_server_encounters_errors" = "服务器出错，请稍后重试";
 "mixin_support" = "Mixin 客服";
-"mixin_wallet" = "Mixin 钱包";
 "mnemonic_phrase" = "助记词";
 "mnemonic_phrase_instruction" = "你可以通过助记词登录你的账号，当前助记词已关联到 MPC 钱包的密钥分片，完整的密钥只存在当前设备的 TEE 安全环境中，阅读文档以了解%@。";
 "mnemonic_phrase_instruction_1" = "创建账号生成的 13 个助记词仅用于 Mixin Network 相关产品。";
@@ -972,8 +971,8 @@
 "read_your_snapshots" = "读取你的转账记录";
 "rebate" = "退款";
 "receive" = "充值";
-"receive_from_address_description" = "通过加密网络从其他交易所或链上钱包提取。";
-"receive_from_my_wallets_description" = "通过加密网络从我的其他钱包提取。";
+"receive_from_address_description" = "通过加密网络从其他交易所或链上钱包提取";
+"receive_from_my_wallets_description" = "通过加密网络从我的其他钱包提取";
 "receive_money" = "我的收款码";
 "received" = "收到";
 "receiver" = "至";
@@ -1108,6 +1107,7 @@
 "send_to_address_description" = "通过区块链网络转给已知地址";
 "send_to_contact_description" = "通过 Mixin 网络转给我的 Mixin 联系人";
 "send_to_developer" = "把日志发给开发者";
+"send_to_privacy_wallet_description" = "使用加密网络发送到我的另一个钱包";
 "send_to_title" = "转给";
 "send_to_web3_wallet_description" = "通过区块链网络转给我的 %@ 账户";
 "send_video" = "发送 1 个视频";
@@ -1266,7 +1266,6 @@
 "title_participants" = "%d 成员";
 "title_participants_count" = "%d 成员";
 "to" = "至";
-"to_mixin_wallet" = "划转到 Mixin 钱包";
 "today" = "今天";
 "token" = "代币";
 "top_count" = "前 %d";

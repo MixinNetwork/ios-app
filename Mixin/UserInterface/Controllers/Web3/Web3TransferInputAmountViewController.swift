@@ -56,7 +56,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
         switch payment.toType {
         case .mixinWallet:
-            titleView.subtitle = R.string.localizable.mixin_wallet()
+            titleView.subtitle = R.string.localizable.privacy_wallet()
             titleView.subtitleStyle = .label(backgroundColor: UIColor(displayP3RgbValue: 0x8CB3FF))
         case .arbitrary:
             titleView.subtitle = payment.toAddressCompactRepresentation

@@ -740,7 +740,6 @@
 "mixin_messenger_desktop" = "Mixin Messenger Desktop";
 "mixin_server_encounters_errors" = "Mixin server encounters errors";
 "mixin_support" = "Mixin Support";
-"mixin_wallet" = "Mixin Wallet";
 "mnemonic_phrase" = "Mnemonic Phrase";
 "mnemonic_phrase_instruction" = "You can log in to your account using the mnemonic phrase. The current mnemonic phrase is linked to a key shard of the MPC wallet, with the complete key existing only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "mnemonic_phrase_instruction_1" = "The 13 mnemonic phrases generated when creating an account are intended only for Mixin Network-related products.";
@@ -972,8 +971,8 @@
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "Rebate";
 "receive" = "Receive";
-"receive_from_address_description" = "Withdraw from other exchanges or on-chain wallets using a crypto network.";
-"receive_from_my_wallets_description" = "Withdraw from my other wallet using a crypto network.";
+"receive_from_address_description" = "Withdraw from other exchanges or on-chain wallets using a crypto network";
+"receive_from_my_wallets_description" = "Withdraw from my other wallet using a crypto network";
 "receive_money" = "Receive Money";
 "received" = "received";
 "receiver" = "Receiver";
@@ -1108,6 +1107,7 @@
 "send_to_address_description" = "Send to a known crypto address using a crypto network.";
 "send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
 "send_to_developer" = "Send to Developer";
+"send_to_privacy_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Send To";
 "send_to_web3_wallet_description" = "Send to my %@ account using crypto network.";
 "send_video" = "Send 1 Video";
@@ -1266,7 +1266,6 @@
 "title_participants" = "%d Participant";
 "title_participants_count" = "%d Participants";
 "to" = "To";
-"to_mixin_wallet" = "To my Mixin Wallet";
 "today" = "Today";
 "token" = "Token";
 "top_count" = "Top %d";

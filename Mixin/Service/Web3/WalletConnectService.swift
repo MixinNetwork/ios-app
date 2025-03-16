@@ -184,8 +184,6 @@ extension WalletConnectService {
                 return
             }
             
-            let evmAddress: String? = PropertiesDAO.shared.value(forKey: .evmAddress)
-            let solanaAddress: String? = PropertiesDAO.shared.value(forKey: .solanaAddress)
             let kinds = Set(chains.map(\.kind))
             DispatchQueue.main.async {
                 let connectWallet = ConnectWalletViewController(proposal: proposal,

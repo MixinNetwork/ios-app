@@ -135,7 +135,7 @@ extension WalletConnectSession {
                 guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                     throw Error.noChain(request.chainId.absoluteString)
                 }
-                guard let address: String = PropertiesDAO.shared.value(forKey: .evmAddress) else {
+                guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum)?.destination else {
                     throw Error.noAccount
                 }
                 let operation = try Web3TransferWithWalletConnectOperation(
@@ -191,7 +191,7 @@ extension WalletConnectSession {
                 guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                     throw Error.noChain(request.chainId.absoluteString)
                 }
-                guard let address: String = PropertiesDAO.shared.value(forKey: .solanaAddress) else {
+                guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.solana)?.destination else {
                     throw Error.noAccount
                 }
                 let operation = try SolanaTransferWithWalletConnectOperation(
@@ -234,13 +234,8 @@ extension WalletConnectSession {
             guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                 throw Error.noChain(request.chainId.absoluteString)
             }
-            let address: String? = switch chain.kind {
-            case .evm:
-                PropertiesDAO.shared.unsafeValue(forKey: .evmAddress)
-            case .solana:
-                PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress)
-            }
-            guard let address else {
+            let address = Web3AddressDAO.shared.classicWalletAddress(chainID: chain.mixinChainID)
+            guard let address = address?.destination else {
                 throw Error.noAccount
             }
             let operation = Web3SignWithWalletConnectOperation(address: address, session: self, request: decoded, chain: chain)

@@ -5,7 +5,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
     private enum Destination {
         case contact
-        case web3Wallet(chain: Web3Chain, address: String, account: String)
+        case classicWallet(chain: Web3Chain, address: String, account: String)
         case addressBook
     }
     
@@ -64,20 +64,21 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
             object: nil
         )
         
-        if let web3Chain = Web3Chain.chain(mixinChainID: token.chainID) {
-            let address: String?
-            let account: String
-            switch web3Chain.kind {
+        if let web3Chain = Web3Chain.chain(mixinChainID: token.chainID),
+           let address = Web3AddressDAO.shared.classicWalletAddress(chainID: token.chainID)
+        {
+            let account = switch web3Chain.kind {
             case .evm:
-                address = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress)
-                account = "Ethereum"
+                "Ethereum"
             case .solana:
-                address = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress)
-                account = "Solana"
+                "Solana"
             }
-            if let address {
-                destinations.insert(.web3Wallet(chain: web3Chain, address: address, account: account), at: 1)
-            }
+            let classicWallet: Destination = .classicWallet(
+                chain: web3Chain,
+                address: address.destination,
+                account: account
+            )
+            destinations.insert(classicWallet, at: 1)
         }
         tableView.reloadData()
     }
@@ -220,7 +221,7 @@ extension TokenReceiverViewController: UITableViewDataSource {
             cell.titleLabel.text = R.string.localizable.mixin_contact()
             cell.freeLabel.isHidden = false
             cell.subtitleLabel.text = R.string.localizable.send_to_contact_description()
-        case let .web3Wallet(_, _, account):
+        case let .classicWallet(_, _, account):
             cell.iconImageView.image = R.image.token_receiver_wallet()
             cell.titleLabel.text = R.string.localizable.web3_account_network(account)
             cell.freeLabel.isHidden = true
@@ -253,7 +254,7 @@ extension TokenReceiverViewController: UITableViewDelegate {
                 }
             }
             self.present(selector, animated: true)
-        case let .web3Wallet(chain, address, _):
+        case let .classicWallet(chain, address, _):
             let inputAmount = WithdrawInputAmountViewController(
                 tokenItem: token,
                 destination: .web3(address: address, chain: chain.name)

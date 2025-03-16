@@ -1459,7 +1459,7 @@ extension UrlWindow {
                         hud.scheduleAutoHidden()
                         return
                     }
-                    guard let address: String = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress) else {
+                    guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.solana)?.destination else {
                         hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
                         hud.hide()
                         return

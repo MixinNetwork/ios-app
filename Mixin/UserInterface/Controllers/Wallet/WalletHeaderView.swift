@@ -98,7 +98,6 @@ final class WalletHeaderView: InfiniteTopView {
         contentView.setCustomSpacing(22, after: assetChartWrapperView)
         contentView.setCustomSpacing(13, after: actionView)
         changeLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
-        changeLabel.alpha = 0
         pendingDepositButton.layer.masksToBounds = true
         pendingDepositButton.layer.cornerRadius = 18
     }
@@ -160,6 +159,26 @@ final class WalletHeaderView: InfiniteTopView {
                 format: .fiatMoney,
                 sign: .never
             )
+        }
+        if let tokens = tokens as? [MixinTokenItem] {
+            let totalBTCValue = tokens.reduce(0) { result, token in
+                result + token.decimalBTCPrice * token.decimalBalance
+            }
+            let btcValue = CurrencyFormatter.localizedString(from: totalBTCValue, format: .pretty, sign: .never)
+            let attributedBTCValue = NSMutableAttributedString(string: btcValue, attributes: btcValueAttributes)
+            attributedBTCValue.append(
+                NSAttributedString(
+                    string: " BTC",
+                    attributes: [
+                        .font: UIFont.preferredFont(forTextStyle: .caption1),
+                        .foregroundColor: R.color.text_tertiary()!,
+                    ]
+                )
+            )
+            changeLabel.attributedText = attributedBTCValue
+            changeLabel.alpha = 1
+        } else {
+            changeLabel.alpha = 0
         }
         assetChartWrapperView.isHidden = !usdBalanceIsMoreThanZero
         switch assetPortions.count {

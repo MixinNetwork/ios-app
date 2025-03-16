@@ -95,7 +95,7 @@ final class WalletHeaderView: InfiniteTopView {
         super.awakeFromNib()
         contentView.setCustomSpacing(7, after: fiatMoneyStackView)
         contentView.setCustomSpacing(20, after: changeStackView)
-        contentView.setCustomSpacing(30, after: assetChartWrapperView)
+        contentView.setCustomSpacing(22, after: assetChartWrapperView)
         contentView.setCustomSpacing(13, after: actionView)
         changeLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
         changeLabel.alpha = 0

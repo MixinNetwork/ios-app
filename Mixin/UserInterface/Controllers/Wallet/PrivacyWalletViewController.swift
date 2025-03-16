@@ -13,6 +13,7 @@ final class PrivacyWalletViewController: WalletViewController {
         super.viewDidLoad()
         
         titleLabel.text = R.string.localizable.privacy_wallet()
+        titleInfoStackView.setCustomSpacing(6, after: titleLabel)
         let privacyIconView = UIImageView(image: R.image.privacy_wallet())
         privacyIconView.contentMode = .center
         privacyIconView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)

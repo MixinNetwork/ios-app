@@ -21,7 +21,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="48b-kN-ade">
-                    <rect key="frame" x="0.0" y="11" width="393" height="238"/>
+                    <rect key="frame" x="0.0" y="30" width="393" height="219"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Zp6-JX-t1j">
                             <rect key="frame" x="181.33333333333334" y="0.0" width="30.333333333333343" height="40"/>
@@ -47,10 +47,10 @@
                             </constraints>
                         </stackView>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="acY-z7-eLw">
-                            <rect key="frame" x="194" y="40" width="5.3333333333333428" height="72"/>
+                            <rect key="frame" x="194" y="40" width="5.3333333333333428" height="53"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BIn-gQ-RCY" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="5.333333333333333" height="72"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="5.333333333333333" height="53"/>
                                     <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="14"/>
                                     <color key="textColor" name="text"/>
                                     <nil key="highlightedColor"/>
@@ -58,7 +58,7 @@
                             </subviews>
                         </stackView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pij-OH-ggw">
-                            <rect key="frame" x="0.0" y="112" width="393" height="40"/>
+                            <rect key="frame" x="0.0" y="93" width="393" height="40"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rno-gB-vZh" customClass="BarChartView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="20" y="0.0" width="353" height="4"/>
@@ -196,7 +196,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Zg-ir-kM5" customClass="TokenActionView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="152" width="393" height="86"/>
+                            <rect key="frame" x="0.0" y="133" width="393" height="86"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="86" id="ctt-D2-aLN"/>
@@ -209,7 +209,7 @@
                             </userDefinedRuntimeAttributes>
                         </view>
                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GhD-g8-kWd">
-                            <rect key="frame" x="0.0" y="238" width="393" height="36"/>
+                            <rect key="frame" x="0.0" y="219" width="393" height="36"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iyb-he-NZ9">
                                     <rect key="frame" x="20" y="0.0" width="353" height="36"/>
@@ -275,7 +275,7 @@
                 <constraint firstItem="Cea-tl-cwe" firstAttribute="trailing" secondItem="0ce-wp-arb" secondAttribute="trailing" id="WJv-ji-VDc"/>
                 <constraint firstItem="Cea-tl-cwe" firstAttribute="leading" secondItem="0ce-wp-arb" secondAttribute="leading" id="aJs-Xi-X2E"/>
                 <constraint firstItem="48b-kN-ade" firstAttribute="leading" secondItem="0ce-wp-arb" secondAttribute="leading" id="dvW-0W-IQd"/>
-                <constraint firstItem="48b-kN-ade" firstAttribute="top" secondItem="0ce-wp-arb" secondAttribute="top" constant="11" id="gD1-21-bJ1"/>
+                <constraint firstItem="48b-kN-ade" firstAttribute="top" secondItem="0ce-wp-arb" secondAttribute="top" constant="30" id="gD1-21-bJ1"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>

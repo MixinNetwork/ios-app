@@ -59,6 +59,17 @@ public final class Web3Database: Database {
                 )
                 """,
                 """
+                CREATE TABLE IF NOT EXISTS `chains` (
+                    `chain_id` TEXT NOT NULL,
+                    `name` TEXT NOT NULL,
+                    `symbol` TEXT NOT NULL,
+                    `icon_url` TEXT NOT NULL,
+                    `threshold` INTEGER NOT NULL,
+                    `withdrawal_memo_possibility` TEXT NOT NULL DEFAULT 'possible',
+                    PRIMARY KEY(`chain_id`)
+                )
+                """,
+                """
                 CREATE TABLE IF NOT EXISTS `tokens_extra` (
                   `wallet_id`   TEXT NOT NULL,
                   `asset_id`    TEXT NOT NULL,

@@ -1568,6 +1568,7 @@ extension UrlWindow {
                 switch NetworkAPI.chain(id: token.chainID) {
                 case .success(let remoteChain):
                     ChainDAO.shared.save([remoteChain])
+                    Web3ChainDAO.shared.save([remoteChain])
                     chain = remoteChain
                 case .failure(let error):
                     Logger.general.error(category: "UrlWindow", message: "No chain: \(token.chainID) from remote, error: \(error)")
@@ -1668,6 +1669,7 @@ extension UrlWindow {
                 asset?.chain = chain
             } else if case let .success(chain) = AssetAPI.chain(chainId: chainId) {
                 ChainDAO.shared.save([chain])
+                Web3ChainDAO.shared.save([chain])
                 asset?.chain = chain
             } else {
                 return nil

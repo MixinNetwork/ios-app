@@ -240,6 +240,7 @@ extension DepositViewController {
                     try await NetworkAPI.chain(id: token.chainID)
                 }
                 ChainDAO.shared.save([chain])
+                Web3ChainDAO.shared.save([chain])
                 try Task.checkCancellation()
             }
             

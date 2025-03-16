@@ -6,8 +6,13 @@ public final class Web3TokenDAO: Web3DAO {
     private enum SQL {
         
         static let selector = """
-            SELECT t.*, ifnull(te.hidden,FALSE) AS hidden
+            SELECT t.*, 
+                c.icon_url AS chain_icon_url, c.name AS chain_name, c.symbol AS chain_symbol,
+                c.threshold AS chain_threshold, 
+                c.withdrawal_memo_possibility AS chain_withdrawal_memo_possibility,
+                ifnull(te.hidden,FALSE) AS hidden
             FROM tokens t
+                LEFT JOIN chains c ON t.chain_id = c.chain_id
                 LEFT JOIN tokens_extra te ON t.wallet_id = te.wallet_id AND t.asset_id = te.asset_id
         """
         

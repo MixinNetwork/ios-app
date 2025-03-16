@@ -180,6 +180,7 @@ extension WalletSearchRecommendationViewController: UITableViewDelegate {
                         case .success(let remoteChain):
                             chain = remoteChain
                             ChainDAO.shared.save([chain])
+                            Web3ChainDAO.shared.save([chain])
                         case .failure(let error):
                             reportError(error)
                             return

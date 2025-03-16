@@ -83,16 +83,11 @@ final class ClassicWalletViewController: WalletViewController {
     @objc private func reloadData() {
         DispatchQueue.global().async { [walletID, weak self] in
             let tokens = Web3TokenDAO.shared.notHiddenTokens(walletID: walletID)
-            let chainIDs = Set(tokens.map(\.chainID))
-            let chains = ChainDAO.shared.chains(chainIDs: chainIDs)
-            let items = tokens.map { token in
-                token.replacingChain(with: chains[token.chainID])
-            }
             DispatchQueue.main.async {
                 guard let self = self else {
                     return
                 }
-                self.tokens = items
+                self.tokens = tokens
                 self.tableHeaderView.reloadValues(tokens: tokens)
                 self.layoutTableHeaderView()
                 self.tableView.reloadData()

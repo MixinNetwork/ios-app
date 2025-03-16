@@ -140,7 +140,7 @@ public final class Web3Database: Database {
             fileCreationDate: fileCreationDate
         )
         reporter.report(error: error)
-        Logger.database.error(category: "TaskDatabase", message: "Table lost with error: \(error)")
+        Logger.database.error(category: "Web3Database", message: "Table lost with error: \(error)")
         AppGroupUserDefaults.User.needsRebuildDatabase = true
     }
     

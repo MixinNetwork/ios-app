@@ -1222,6 +1222,7 @@
 		94E66E232D12CD0D00578F19 /* MAONameSearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E66E222D12CD0D00578F19 /* MAONameSearchResultCell.swift */; };
 		94E66F002D13F91F00578F19 /* MAONameSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E66EFF2D13F91F00578F19 /* MAONameSearchResult.swift */; };
 		94E82DBC2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E82DBB2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib */; };
+		94E879502D8708F600F97DDD /* WalletSearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E8794F2D8708F600F97DDD /* WalletSearchView.xib */; };
 		94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */; };
 		94E978B32D09818B00FFCC12 /* ClockSkewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E978B22D09818B00FFCC12 /* ClockSkewView.xib */; };
 		94E978C52D09842000FFCC12 /* DatabaseUpgradeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E978C42D09842000FFCC12 /* DatabaseUpgradeView.xib */; };
@@ -2750,6 +2751,7 @@
 		94E66E222D12CD0D00578F19 /* MAONameSearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MAONameSearchResultCell.swift; sourceTree = "<group>"; };
 		94E66EFF2D13F91F00578F19 /* MAONameSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MAONameSearchResult.swift; sourceTree = "<group>"; };
 		94E82DBB2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingIndicatorTableFooterView.xib; sourceTree = "<group>"; };
+		94E8794F2D8708F600F97DDD /* WalletSearchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletSearchView.xib; sourceTree = "<group>"; };
 		94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Pods-Mixin-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		94E978B22D09818B00FFCC12 /* ClockSkewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClockSkewView.xib; sourceTree = "<group>"; };
 		94E978C42D09842000FFCC12 /* DatabaseUpgradeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DatabaseUpgradeView.xib; sourceTree = "<group>"; };
@@ -5034,6 +5036,7 @@
 				DFA5B5921FB051BB00549728 /* WalletViewController.swift */,
 				9451E86D2D6DFF0A00A6C4FD /* PrivacyWalletViewController.swift */,
 				948FBC872D6EF5CE000795E4 /* ClassicWalletViewController.swift */,
+				94E8794F2D8708F600F97DDD /* WalletSearchView.xib */,
 				7BDFAE8F2559008800296F8B /* WalletSearchViewController.swift */,
 				7BD00F2525597229004D8814 /* WalletSearchTableViewController.swift */,
 				7BD00F1D2559711A004D8814 /* TokenSearchResultsViewController.swift */,
@@ -5694,6 +5697,7 @@
 				947FA4CE299577B700EF13A0 /* AuthorizationsView.xib in Resources */,
 				94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */,
 				7BFCB7762419FC5B00E7BC43 /* LocationCell.xib in Resources */,
+				94E879502D8708F600F97DDD /* WalletSearchView.xib in Resources */,
 				DFD294491FA7145F00FADAAD /* Contact.storyboard in Resources */,
 				94F7BCE42D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib in Resources */,
 				9423B6B32A6932D50092DE65 /* AccountDeactivatedHintView.xib in Resources */,

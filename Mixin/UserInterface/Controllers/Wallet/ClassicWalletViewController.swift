@@ -65,6 +65,13 @@ final class ClassicWalletViewController: WalletViewController {
         present(sheet, animated: true, completion: nil)
     }
     
+    override func makeSearchViewController() -> WalletSearchViewController {
+        let ids = Set(Web3Chain.all.map(\.mixinChainID))
+        let controller = WalletSearchViewController(supportedChainIDs: ids)
+        controller.delegate = self
+        return controller
+    }
+    
     @objc private func reloadTokensFromRemote() {
         let job = RefreshWeb3TokenJob(walletID: walletID)
         ConcurrentJobQueue.shared.addJob(job: job)
@@ -199,6 +206,32 @@ extension ClassicWalletViewController: TokenActionView.Delegate {
         case .swap:
             break
         }
+    }
+    
+}
+
+extension ClassicWalletViewController: WalletSearchViewControllerDelegate {
+    
+    func walletSearchViewController(_ controller: WalletSearchViewController, didSelectToken token: MixinTokenItem) {
+        let amount = Web3TokenDAO.shared.amount(walletID: walletID, assetID: token.assetID)
+        let isHidden = Web3TokenExtraDAO.shared.isHidden(walletID: walletID, assetID: token.assetID)
+        let web3Token = Web3Token(
+            walletID: walletID,
+            assetID: token.assetID,
+            chainID: token.chainID,
+            assetKey: token.assetKey,
+            kernelAssetID: token.kernelAssetID,
+            symbol: token.symbol,
+            name: token.name,
+            precision: 0,
+            iconURL: token.iconURL,
+            amount: amount,
+            usdPrice: token.usdPrice,
+            usdChange: token.usdChange
+        )
+        let item = Web3TokenItem(token: web3Token, hidden: isHidden, chain: token.chain)
+        let controller = Web3TokenViewController(token: item)
+        navigationController?.pushViewController(controller, animated: true)
     }
     
 }

@@ -157,9 +157,7 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
             ChainID.ethereum,
             ChainID.polygon,
             ChainID.bnbSmartChain,
-            ChainID.arbitrum,
             ChainID.base,
-            ChainID.optimism,
             ChainID.solana,
         ]
         let searchResults: [Web3Token] = tokens.compactMap { token in

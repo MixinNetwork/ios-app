@@ -113,6 +113,12 @@ final class PrivacyWalletViewController: WalletViewController {
         present(sheet, animated: true, completion: nil)
     }
     
+    override func makeSearchViewController() -> WalletSearchViewController {
+        let controller = WalletSearchViewController(supportedChainIDs: nil)
+        controller.delegate = self
+        return controller
+    }
+    
     @objc private func reloadData() {
         DispatchQueue.global().async { [weak self] in
             let tokens = TokenDAO.shared.notHiddenTokens()
@@ -373,6 +379,15 @@ extension PrivacyWalletViewController: TransferSearchViewControllerDelegate {
         lastSelectedAction = .receive
         viewController.searchResultsFromServer = true
         viewController.reload(tokens: tokens)
+    }
+    
+}
+
+extension PrivacyWalletViewController: WalletSearchViewControllerDelegate {
+    
+    func walletSearchViewController(_ controller: WalletSearchViewController, didSelectToken token: MixinTokenItem) {
+        let controller = MixinTokenViewController(token: token)
+        navigationController?.pushViewController(controller, animated: true)
     }
     
 }

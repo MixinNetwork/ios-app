@@ -14,7 +14,7 @@ final class Web3Chain {
         var chains: [Web3Chain] {
             switch self {
             case .evm:
-                [.ethereum, .polygon, .bnbSmartChain, .arbitrum, .base, .optimism]
+                [.ethereum, .polygon, .bnbSmartChain, .base]
             case .solana:
                 [.solana]
             }
@@ -209,15 +209,6 @@ extension Web3Chain {
         failsafeRPCServerURL: URL(string: "https://endpoints.omniatech.io/v1/bsc/mainnet/public")!
     )
     
-    static let arbitrum = Web3Chain.evm(
-        chainID: 42161,
-        web3ChainID: "arbitrum",
-        mixinChainID: ChainID.arbitrum,
-        feeTokenAssetID: AssetID.eth,
-        name: "Arbitrum",
-        failsafeRPCServerURL: URL(string: "https://arbitrum.llamarpc.com")!
-    )
-    
     static let base = Web3Chain.evm(
         chainID: 8453,
         web3ChainID: "base",
@@ -225,15 +216,6 @@ extension Web3Chain {
         feeTokenAssetID: AssetID.eth,
         name: "Base",
         failsafeRPCServerURL: URL(string: "https://base.llamarpc.com")!
-    )
-    
-    static let optimism = Web3Chain.evm(
-        chainID: 10,
-        web3ChainID: "optimism",
-        mixinChainID: ChainID.optimism,
-        feeTokenAssetID: AssetID.eth,
-        name: "Optimism",
-        failsafeRPCServerURL: URL(string: "https://optimism.llamarpc.com")!
     )
     
     static let solana = Web3Chain.solana(

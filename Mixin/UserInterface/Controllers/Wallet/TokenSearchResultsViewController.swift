@@ -9,6 +9,16 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
     var lastKeyword: String?
     
     private let queue = OperationQueue()
+    private let supportedChainIDs: Set<String>?
+    
+    init(supportedChainIDs: Set<String>? = nil) {
+        self.supportedChainIDs = supportedChainIDs
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +50,7 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
         }
         activityIndicator.startAnimating()
         let op = BlockOperation()
-        op.addExecutionBlock { [unowned op] in
+        op.addExecutionBlock { [unowned op, supportedChainIDs] in
             usleep(200 * 1000)
             guard !op.isCancelled else {
                 return
@@ -77,6 +87,11 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
             var localItems = TokenDAO.shared
                 .search(keyword: keyword, sortResult: false, limit: nil)
                 .sorted(by: assetSorting)
+            if let ids = supportedChainIDs {
+                localItems = localItems.filter { item in
+                    ids.contains(item.chainID)
+                }
+            }
             guard !op.isCancelled else {
                 return
             }
@@ -88,7 +103,12 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
             
             let remoteAssets: [MixinToken]
             switch AssetAPI.search(keyword: keyword) {
-            case .success(let assets):
+            case .success(var assets):
+                if let ids = supportedChainIDs {
+                    assets = assets.filter { asset in
+                        ids.contains(asset.chainID)
+                    }
+                }
                 remoteAssets = assets
             case .failure:
                 DispatchQueue.main.sync {
@@ -168,13 +188,11 @@ extension TokenSearchResultsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let item = searchResults[indexPath.row]
-        let vc = MixinTokenViewController(token: item)
-        navigationController?.pushViewController(vc, animated: true)
+        if let parent = self.parent as? WalletSearchViewController {
+            parent.delegate?.walletSearchViewController(parent, didSelectToken: item)
+        }
         DispatchQueue.global().async {
             AppGroupUserDefaults.User.insertAssetSearchHistory(with: item.assetID)
-            if !TokenDAO.shared.tokenExists(assetID: item.assetID) {
-                TokenDAO.shared.save(assets: [item])
-            }
         }
     }
     

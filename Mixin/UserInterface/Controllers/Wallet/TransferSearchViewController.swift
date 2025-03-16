@@ -18,7 +18,7 @@ class TransferSearchViewController: PopupSearchableTableViewController {
     var searchResultsFromServer = false
     
     private var emptyHintViewIfLoaded: UIView?
-    private let searchResultsController = WalletTransferSearchResultsViewController()
+    private let searchResultsController = WalletTransferSearchResultsViewController(supportedChainIDs: nil)
 
     convenience init() {
         self.init(nib: R.nib.popupSearchableTableView)

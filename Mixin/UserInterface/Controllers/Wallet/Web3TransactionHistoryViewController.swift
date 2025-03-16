@@ -97,50 +97,31 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
 extension Web3TransactionHistoryViewController {
     
     private func typeFilterActions(selectedType type: Web3Transaction.TransactionType?) -> [UIAction] {
-        let actions = [
+        [
             UIAction(
                 title: R.string.localizable.all(),
-                state: .off,
+                state: type == nil ? .on : .off,
                 handler: { [weak self] _ in self?.reloadData(filterType: nil) }
             ),
             UIAction(
                 title: R.string.localizable.deposit(),
                 image: R.image.filter_deposit(),
-                state: .off,
+                state: type == .receive ? .on : .off,
                 handler: { [weak self] _ in self?.reloadData(filterType: .receive) }
             ),
             UIAction(
                 title: R.string.localizable.withdrawal(),
                 image: R.image.filter_withdrawal(),
-                state: .off,
+                state: type == .send ? .on : .off,
                 handler: { [weak self] _ in self?.reloadData(filterType: .send) }
-            ),
-            UIAction(
-                title: R.string.localizable.other(),
-                image: R.image.filter_transfer(),
-                state: .off,
-                handler: { [weak self] _ in self?.reloadData(filterType: .other) }
             ),
             UIAction(
                 title: R.string.localizable.contract(),
                 image: R.image.filter_contract(),
-                state: .off,
+                state: type == .contract ? .on : .off,
                 handler: { [weak self] _ in self?.reloadData(filterType: .contract) }
             ),
         ]
-        switch type {
-        case .none:
-            actions[0].state = .on
-        case .receive:
-            actions[1].state = .on
-        case .send:
-            actions[2].state = .on
-        case .other:
-            actions[3].state = .on
-        case .contract:
-            actions[4].state = .on
-        }
-        return actions
     }
     
     private func reloadRightBarButtonItem(order: SafeSnapshot.Order) {

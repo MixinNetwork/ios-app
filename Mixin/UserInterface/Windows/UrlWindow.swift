@@ -705,7 +705,7 @@ class UrlWindow {
                 }
             } else if let label = queries["label"], let destination = queries["destination"], !label.isEmpty, !destination.isEmpty {
                 let tag = queries["tag"] ?? ""
-                let address = AddressDAO.shared.getAddress(assetId: assetID, destination: destination, tag: tag)
+                let address = AddressDAO.shared.getAddress(chainId: token.chainID, destination: destination, tag: tag)
                 DispatchQueue.main.async {
                     hud.hide()
                     let preview = EditAddressPreviewViewController(token: token,

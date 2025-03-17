@@ -77,7 +77,8 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
         replaceTrayView(with: nil, animation: .vertical)
         switch action {
         case .add, .update:
-            let request = AddressRequest(assetID: token.assetID,
+            let request = AddressRequest(chainID: token.chainID,
+                                         assetID: token.assetID,
                                          destination: destination,
                                          tag: tag,
                                          label: label,
@@ -116,7 +117,7 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
                 case .success:
                     self.loadSuccessViews()
                     DispatchQueue.global().async {
-                        AddressDAO.shared.deleteAddress(assetId: assetID, addressId: id)
+                        AddressDAO.shared.deleteAddress(addressId: id)
                     }
                 case let .failure(error):
                     self.loadFailureViews(errorDescription: error.localizedDescription)

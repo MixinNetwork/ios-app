@@ -43,7 +43,7 @@ final class PlainTokenIconView: UIImageView {
     }
     
     func setIcon(address: AddressItem) {
-        if let string = address.tokenIconURL, let url = URL(string: string) {
+        if let string = address.tokenChainIconURL, let url = URL(string: string) {
             setIcon(tokenIconURL: url)
         } else {
             image = R.image.unknown_session()

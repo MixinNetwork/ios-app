@@ -166,7 +166,7 @@ extension TokenItem {
             "Polygon"
         case ChainID.solana:
             "Solana"
-        case ChainID.lighting:
+        case ChainID.lightning:
             "Lightning"
         default:
             nil

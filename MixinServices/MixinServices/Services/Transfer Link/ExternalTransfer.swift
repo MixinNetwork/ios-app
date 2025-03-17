@@ -34,7 +34,7 @@ public struct ExternalTransfer {
     
     public let memo: String?
     
-    public let isLightining: Bool
+    public let isLightning: Bool
     
     public init(
         string raw: String,
@@ -42,13 +42,13 @@ public struct ExternalTransfer {
     ) throws {
         guard !raw.isLightningAddress else {
             self.raw = raw
-            self.assetID = AssetID.lighting
+            self.assetID = AssetID.lightning
             self.destination = raw
             self.amount = 0
             self.resolvedAmount = 0
             self.arbitraryAmount = nil
             self.memo = nil
-            self.isLightining = true
+            self.isLightning = true
             return
         }
         guard let components = URLComponents(string: raw) else {
@@ -187,7 +187,7 @@ public struct ExternalTransfer {
                 }
             }()
         }
-        self.isLightining = false
+        self.isLightning = false
     }
     
     public static func resolve(atomicAmount: Decimal, with exponent: Int) -> Decimal {

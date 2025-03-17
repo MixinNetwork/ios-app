@@ -588,7 +588,7 @@ class UrlWindow {
                     throw Error.syncTokenFailed
                 }
                 
-                if transfer.isLightining {
+                if transfer.isLightning {
                     let response = PaymentAPI.payments(assetId: assetID, rawPaymentUrl: transfer.raw)
                     switch response {
                     case let .success(payment):
@@ -626,6 +626,7 @@ class UrlWindow {
                             hud.set(style: .error, text: error.localizedDescription)
                             hud.scheduleAutoHidden()
                         }
+                        return
                     }
                 }
                 

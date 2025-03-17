@@ -70,7 +70,7 @@ final class AddressBookViewController: UIViewController {
             name: AddressDAO.addressDidChangeNotification,
             object: nil
         )
-        AddressAPI.addresses(assetID: token.assetID) { (result) in
+        AddressAPI.addresses(chainID: token.chainID) { (result) in
             guard case let .success(addresses) = result else {
                 return
             }
@@ -149,9 +149,9 @@ extension AddressBookViewController: UITableViewDelegate {
 extension AddressBookViewController {
     
     @objc private func reloadLocalAddresses() {
-        let assetId = token.assetID
+        let chainId = token.chainID
         DispatchQueue.global().async { [weak self] in
-            let addresses = AddressDAO.shared.getAddresses(assetId: assetId)
+            let addresses = AddressDAO.shared.getAddresses(chainId: chainId)
             DispatchQueue.main.async {
                 guard let weakSelf = self else {
                     return

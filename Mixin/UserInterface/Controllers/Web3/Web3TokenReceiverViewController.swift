@@ -46,6 +46,8 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
         self.tableView = tableView
         tableView.backgroundColor = R.color.background_secondary()
         tableView.separatorStyle = .none
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 74
         tableView.tableHeaderView = headerView
         tableView.register(R.nib.sendingDestinationCell)
         tableView.dataSource = self
@@ -143,10 +145,6 @@ extension Web3TokenReceiverViewController: UITableViewDataSource {
 }
 
 extension Web3TokenReceiverViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        74
-    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

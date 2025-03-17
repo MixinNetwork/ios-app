@@ -74,8 +74,13 @@ final class WalletSearchRecommendationViewController: WalletSearchTableViewContr
     
     @objc private func reloadTrending() {
         let trendingSection = IndexSet(arrayLiteral: Section.trending.rawValue)
-        queue.async { [weak self] in
-            let trending = TopAssetsDAO.shared.getAssets()
+        queue.async { [weak self, supportedChainIDs] in
+            var trending = TopAssetsDAO.shared.getAssets()
+            if let ids = supportedChainIDs {
+                trending = trending.filter { item in
+                    ids.contains(item.chainId)
+                }
+            }
             DispatchQueue.main.sync {
                 guard let self = self else {
                     return

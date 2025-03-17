@@ -1,6 +1,6 @@
 import Foundation
 
-public final class Web3TokenItem: Web3Token, DepositNetworkReportingToken, HideableToken {
+public final class Web3TokenItem: Web3Token, OnChainToken, HideableToken {
     
     public let isHidden: Bool
     public let chain: Chain?

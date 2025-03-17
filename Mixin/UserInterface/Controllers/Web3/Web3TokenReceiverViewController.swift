@@ -5,7 +5,8 @@ import MixinServices
 final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
     private enum Destination {
-        case myMixinWallet(_ mixinChainID: String)
+        case privacyWallet(_ mixinChainID: String)
+        case addressBook
     }
     
     private let payment: Web3SendingTokenPayment
@@ -22,7 +23,10 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
     init(payment: Web3SendingTokenPayment) {
         self.payment = payment
-        self.destinations = [.myMixinWallet(payment.chain.mixinChainID)]
+        self.destinations = [
+            .privacyWallet(payment.chain.mixinChainID),
+            .addressBook,
+        ]
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -133,11 +137,16 @@ extension Web3TokenReceiverViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
         let destination = destinations[indexPath.row]
         switch destination {
-        case .myMixinWallet:
+        case .privacyWallet:
             cell.iconImageView.image = R.image.token_receiver_wallet()
-            cell.freeLabel.isHidden = true
             cell.titleLabel.text = R.string.localizable.privacy_wallet()
+            cell.freeLabel.isHidden = true
             cell.subtitleLabel.text = R.string.localizable.send_to_privacy_wallet_description()
+        case .addressBook:
+            cell.iconImageView.image = R.image.token_receiver_address_book()
+            cell.titleLabel.text = R.string.localizable.address_book()
+            cell.freeLabel.isHidden = true
+            cell.subtitleLabel.text = R.string.localizable.send_to_address_description()
         }
         return cell
     }
@@ -150,8 +159,23 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let destination = destinations[indexPath.row]
         switch destination {
-        case .myMixinWallet(let chainID):
+        case .privacyWallet(let chainID):
             sendToMyMixinWallet(chainID: chainID)
+        case .addressBook:
+            let token = payment.token
+            let book = AddressBookViewController(token: token)
+            book.onSelect = { [payment] (address) in
+                self.dismiss(animated: true) {
+                    let payment = Web3SendingTokenToAddressPayment(
+                        payment: payment,
+                        to: .addressBook(label: address.label),
+                        address: address.destination
+                    )
+                    let inputAmount = Web3TransferInputAmountViewController(payment: payment)
+                    self.navigationController?.pushViewController(inputAmount, animated: true)
+                }
+            }
+            present(book, animated: true)
         }
     }
     
@@ -231,7 +255,7 @@ extension Web3TokenReceiverViewController {
                 if let entry = entries.first(where: { $0.chainID == chainID && $0.isPrimary }) {
                     let payment = Web3SendingTokenToAddressPayment(
                         payment: payment,
-                        to: .mixinWallet,
+                        to: .privacyWallet,
                         address: entry.destination
                     )
                     await MainActor.run {

@@ -4,7 +4,7 @@ import MixinServices
 final class Web3ReceiveSourceViewController: UIViewController {
     
     private enum Source: Int, CaseIterable {
-        case mixinWallet = 0
+        case privacyWallet = 0
         case address = 1
     }
     
@@ -55,7 +55,7 @@ extension Web3ReceiveSourceViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
         let destination = Source(rawValue: indexPath.row)!
         switch destination {
-        case .mixinWallet:
+        case .privacyWallet:
             cell.iconImageView.image = R.image.token_receiver_contact()
             cell.titleLabel.text = R.string.localizable.my_wallet()
             cell.subtitleLabel.text = R.string.localizable.receive_from_my_wallets_description()
@@ -75,7 +75,7 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let destination = Source(rawValue: indexPath.row)!
         switch destination {
-        case .mixinWallet:
+        case .privacyWallet:
             let selector = Web3TransferTokenSelectorViewController<MixinTokenItem>()
             selector.onSelected = { [address] token in
                 guard let chain = self.kind.chains.first(where: { $0.mixinChainID == token.chainID }) else {

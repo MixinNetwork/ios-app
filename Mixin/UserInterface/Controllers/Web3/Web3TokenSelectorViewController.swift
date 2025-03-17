@@ -2,15 +2,15 @@ import UIKit
 import Alamofire
 import MixinServices
 
-final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Token> {
+final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3TokenItem> {
     
-    var onSelected: ((Web3Token) -> Void)?
+    var onSelected: ((Web3TokenItem) -> Void)?
     
     private let walletID: String
     
     private weak var searchRequest: Request?
     
-    init(walletID: String, tokens: [Web3Token]) {
+    init(walletID: String, tokens: [Web3TokenItem]) {
         self.walletID = walletID
         let chainIDs = Set(tokens.compactMap(\.chainID))
         let chains = Chain.mixinChains(ids: chainIDs)
@@ -53,7 +53,7 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
         }
     }
     
-    override func saveRecentsToStorage(tokens: any Sequence<Web3Token>) {
+    override func saveRecentsToStorage(tokens: any Sequence<Web3TokenItem>) {
         PropertiesDAO.shared.set(
             jsonObject: tokens.map(\.assetID),
             forKey: .web3RecentFungibleIDs
@@ -113,7 +113,7 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
         }
     }
     
-    override func tokenIndices(tokens: [Web3Token], chainID: String) -> [Int] {
+    override func tokenIndices(tokens: [Web3TokenItem], chainID: String) -> [Int] {
         tokens.enumerated().compactMap { (index, token) in
             if token.chainID == chainID {
                 index
@@ -144,7 +144,7 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
         }
     }
     
-    override func pickUp(token: Web3Token, from location: PickUpLocation) {
+    override func pickUp(token: Web3TokenItem, from location: PickUpLocation) {
         super.pickUp(token: token, from: location)
         presentingViewController?.dismiss(animated: true) { [onSelected] in
             onSelected?(token)
@@ -160,11 +160,14 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
             ChainID.base,
             ChainID.solana,
         ]
-        let searchResults: [Web3Token] = tokens.compactMap { token in
+        let searchResults: [Web3TokenItem] = tokens.compactMap { token in
             guard supportedChainIDs.contains(token.chainID) else {
                 return nil
             }
-            return Web3Token(
+            let amount = Web3TokenDAO.shared.amount(walletID: walletID, assetID: token.assetID)
+            let isHidden = Web3TokenExtraDAO.shared.isHidden(walletID: walletID, assetID: token.assetID)
+            let chain = ChainDAO.shared.chain(chainId: token.chainID)
+            let web3Token = Web3Token(
                 walletID: walletID,
                 assetID: token.assetID,
                 chainID: token.chainID,
@@ -174,10 +177,11 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
                 name: token.name,
                 precision: 0,
                 iconURL: token.iconURL,
-                amount: "0",
+                amount: amount,
                 usdPrice: token.usdPrice,
                 usdChange: token.usdChange
             )
+            return Web3TokenItem(token: web3Token, hidden: isHidden, chain: chain)
         }.sorted { (one, another) in
             let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
             let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)

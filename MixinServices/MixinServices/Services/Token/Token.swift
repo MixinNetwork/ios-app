@@ -8,3 +8,11 @@ public protocol Token {
     var iconURL: String { get }
     
 }
+
+extension Token {
+    
+    public var usesTag: Bool {
+        assetID == AssetID.xrp
+    }
+    
+}

@@ -67,18 +67,6 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
 
 extension MixinToken {
     
-    public var usesTag: Bool {
-        assetID == AssetID.xrp
-    }
-    
-    public var isEOSChain: Bool {
-        chainID == ChainID.eos
-    }
-    
-    public var isERC20: Bool {
-        chainID == ChainID.ethereum
-    }
-    
     public var isNFT: Bool {
         !(collectionHash?.isEmpty ?? true)
     }

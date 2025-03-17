@@ -204,6 +204,20 @@ final class BadgeIconView: UIView {
         corner = .round
     }
     
+    func setIcon(chain: Chain) {
+        if let url = URL(string: chain.iconUrl) {
+            iconImageView.sd_setImage(
+                with: url,
+                placeholderImage: nil,
+                context: assetIconContext
+            )
+        } else {
+            iconImageView.image = R.image.unknown_session()
+        }
+        isBadgeHidden = true
+        corner = .round
+    }
+    
     private func prepare() {
         backgroundColor = .clear
         badgeBackgroundView.backgroundColorIgnoringSystemSettings = .background

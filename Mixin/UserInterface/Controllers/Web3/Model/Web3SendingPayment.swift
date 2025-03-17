@@ -4,11 +4,11 @@ import MixinServices
 class Web3SendingTokenPayment {
     
     let chain: Web3Chain
-    let token: Web3Token
+    let token: Web3TokenItem
     let fromAddress: String
     let sendingNativeToken: Bool
     
-    init(chain: Web3Chain, token: Web3Token, fromAddress: String) {
+    init(chain: Web3Chain, token: Web3TokenItem, fromAddress: String) {
         self.chain = chain
         self.token = token
         self.fromAddress = fromAddress
@@ -33,7 +33,8 @@ class Web3SendingTokenPayment {
 class Web3SendingTokenToAddressPayment: Web3SendingTokenPayment {
     
     enum AddressType {
-        case mixinWallet
+        case privacyWallet
+        case addressBook(label: String)
         case arbitrary
     }
     

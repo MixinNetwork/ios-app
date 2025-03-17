@@ -49,6 +49,17 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
     public private(set) lazy var localizedBalanceWithSymbol = localizeBalanceWithSymbol()
     public private(set) lazy var estimatedFiatMoneyBalance = estimateFiatMoneyBalance()
     
+    public var chainTag: String? {
+        switch chainID {
+        case ChainID.solana:
+            "Solana"
+        case ChainID.ethereum where assetKey != AssetKey.eth:
+            "ERC-20"
+        default:
+            nil
+        }
+    }
+    
     public init(
         walletID: String, assetID: String, chainID: String, assetKey: String,
         kernelAssetID: String, symbol: String, name: String, precision: Int16,

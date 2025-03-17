@@ -55,9 +55,12 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         super.viewDidLoad()
         let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
         switch payment.toType {
-        case .mixinWallet:
+        case .privacyWallet:
             titleView.subtitle = R.string.localizable.privacy_wallet()
             titleView.subtitleStyle = .label(backgroundColor: UIColor(displayP3RgbValue: 0x8CB3FF))
+        case .addressBook(let label):
+            titleView.subtitle = label
+            titleView.subtitleStyle = .label(backgroundColor: R.color.address_label()!)
         case .arbitrary:
             titleView.subtitle = payment.toAddressCompactRepresentation
             titleView.subtitleStyle = .plain
@@ -76,9 +79,9 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         reviewButton.isBusy = true
         let proposer: Web3TransferPreviewViewController.Proposer
         switch payment.toType {
-        case .mixinWallet:
+        case .privacyWallet:
             proposer = .web3ToMixinWallet
-        case .arbitrary:
+        case .addressBook, .arbitrary:
             proposer = .web3ToAddress
         }
         DispatchQueue.global().async { [payment] in

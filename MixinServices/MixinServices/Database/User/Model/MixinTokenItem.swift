@@ -1,15 +1,11 @@
 import Foundation
 import GRDB
 
-public final class MixinTokenItem: MixinToken, ValuableToken, ChangeReportingToken, DepositNetworkReportingToken, HideableToken {
+public final class MixinTokenItem: MixinToken, ValuableToken, ChangeReportingToken, HideableToken {
     
     public let balance: String
     public let isHidden: Bool
     public let chain: Chain?
-    
-    public var memoPossibility: WithdrawalMemoPossibility {
-        WithdrawalMemoPossibility(rawValue: chain?.withdrawalMemoPossibility) ?? .possible
-    }
     
     public private(set) lazy var decimalBalance = Decimal(string: balance, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUSDBalance = decimalBalance * decimalUSDPrice
@@ -61,7 +57,7 @@ public final class MixinTokenItem: MixinToken, ValuableToken, ChangeReportingTok
     
 }
 
-extension MixinTokenItem {
+extension MixinTokenItem: OnChainToken {
     
     public var chainTag: String? {
         switch chainID {

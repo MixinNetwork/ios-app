@@ -559,7 +559,7 @@
 "estimated_price" = "Estimated Price";
 "estimated_receive" = "Estimated Receive";
 "everybody" = "Everybody";
-"exchanges_or_wallets" = "Exchanges or Wallets";
+"exchange_or_wallet" = "Exchange or Wallet";
 "exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "Exit \"%@\"?";
 "exit_group" = "Exit Group";
@@ -781,7 +781,6 @@
 "my_mixin_id" = "My Mixin ID: %@";
 "my_qr_code" = "My QR Code";
 "my_stickers" = "My Stickers";
-"my_wallet" = "My Wallet";
 "na" = "N/A";
 "name" = "Name";
 "name_or_phone_number" = "Name or Phone number";
@@ -971,8 +970,8 @@
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "Rebate";
 "receive" = "Receive";
-"receive_from_address_description" = "Withdraw from other exchanges or on-chain wallets using a crypto network";
-"receive_from_my_wallets_description" = "Withdraw from my other wallet using a crypto network";
+"receive_from_address_description" = "Receive from other exchange or on-chain wallet using a crypto network";
+"receive_from_privacy_wallets_description" = "Receive from my other wallet using a crypto network";
 "receive_money" = "Receive Money";
 "received" = "received";
 "receiver" = "Receiver";
@@ -1107,7 +1106,7 @@
 "send_to_address_description" = "Send to a known crypto address using a crypto network.";
 "send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
 "send_to_developer" = "Send to Developer";
-"send_to_privacy_wallet_description" = "Send to my other wallet using a crypto network";
+"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Send To";
 "send_to_web3_wallet_description" = "Send to my %@ account using crypto network.";
 "send_video" = "Send 1 Video";

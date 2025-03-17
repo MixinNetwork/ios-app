@@ -559,7 +559,7 @@
 "estimated_price" = "預計價格";
 "estimated_receive" = "預計收到";
 "everybody" = "任何人";
-"exchanges_or_wallets" = "交易所或其他錢包";
+"exchange_or_wallet" = "交易所或其他錢包";
 "exchanging_data" = "正在同步金鑰分片，進度 %@%%...";
 "exit_confirmation" = "退出\"%@\"？";
 "exit_group" = "退出群組";
@@ -781,7 +781,6 @@
 "my_mixin_id" = "我的 Mixin ID：%@";
 "my_qr_code" = "我的二維碼";
 "my_stickers" = "我的表情";
-"my_wallet" = "我的錢包";
 "na" = "暫無價格";
 "name" = "名稱";
 "name_or_phone_number" = "姓名或手機號";
@@ -971,8 +970,8 @@
 "read_your_snapshots" = "讀取你的轉賬記錄";
 "rebate" = "退款";
 "receive" = "充值";
-"receive_from_address_description" = "透過加密網路從其他交易所或鏈上錢包提取";
-"receive_from_my_wallets_description" = "透過加密網路從我的其他錢包提取";
+"receive_from_address_description" = "透過加密網路從其他交易所或鏈上錢包接收";
+"receive_from_privacy_wallets_description" = "透過加密網路從我的另一個錢包接收";
 "receive_money" = "我的收款碼";
 "received" = "收到";
 "receiver" = "至";
@@ -1107,7 +1106,7 @@
 "send_to_address_description" = "透過區塊鏈網路轉給已知地址";
 "send_to_contact_description" = "透過 Mixin 網路轉給我的 Mixin 聯絡人";
 "send_to_developer" = "把日誌發給開發者";
-"send_to_privacy_wallet_description" = "使用加密網路傳送到我的另一個錢包";
+"send_to_other_wallet_description" = "使用加密網路傳送到我的另一個錢包";
 "send_to_title" = "轉給";
 "send_to_web3_wallet_description" = "透過區塊鏈網路轉給我的 %@ 賬戶";
 "send_video" = "傳送 1 個影片";

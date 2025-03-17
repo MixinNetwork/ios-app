@@ -141,7 +141,7 @@ extension Web3TokenReceiverViewController: UITableViewDataSource {
             cell.iconImageView.image = R.image.token_receiver_wallet()
             cell.titleLabel.text = R.string.localizable.privacy_wallet()
             cell.freeLabel.isHidden = true
-            cell.subtitleLabel.text = R.string.localizable.send_to_privacy_wallet_description()
+            cell.subtitleLabel.text = R.string.localizable.send_to_other_wallet_description()
         case .addressBook:
             cell.iconImageView.image = R.image.token_receiver_address_book()
             cell.titleLabel.text = R.string.localizable.address_book()

@@ -8,13 +8,11 @@ final class Web3ReceiveSourceViewController: UIViewController {
         case address = 1
     }
     
-    private let kind: Web3Chain.Kind
-    private let address: String
+    private let token: Web3TokenItem
     private let tableView = UITableView()
     
-    init(kind: Web3Chain.Kind, address: String) {
-        self.kind = kind
-        self.address = address
+    init(token: Web3TokenItem) {
+        self.token = token
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -57,11 +55,11 @@ extension Web3ReceiveSourceViewController: UITableViewDataSource {
         switch destination {
         case .privacyWallet:
             cell.iconImageView.image = R.image.token_receiver_contact()
-            cell.titleLabel.text = R.string.localizable.my_wallet()
-            cell.subtitleLabel.text = R.string.localizable.receive_from_my_wallets_description()
+            cell.titleLabel.text = R.string.localizable.privacy_wallet()
+            cell.subtitleLabel.text = R.string.localizable.receive_from_privacy_wallets_description()
         case .address:
             cell.iconImageView.image = R.image.token_receiver_address()
-            cell.titleLabel.text = R.string.localizable.exchanges_or_wallets()
+            cell.titleLabel.text = R.string.localizable.exchange_or_wallet()
             cell.subtitleLabel.text = R.string.localizable.receive_from_address_description()
         }
         cell.freeLabel.isHidden = true
@@ -73,30 +71,53 @@ extension Web3ReceiveSourceViewController: UITableViewDataSource {
 extension Web3ReceiveSourceViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: token.chainID)
+        guard let address else {
+            return
+        }
         let destination = Source(rawValue: indexPath.row)!
         switch destination {
         case .privacyWallet:
-            let selector = Web3TransferTokenSelectorViewController<MixinTokenItem>()
-            selector.onSelected = { [address] token in
-                guard let chain = self.kind.chains.first(where: { $0.mixinChainID == token.chainID }) else {
-                    return
-                }
-                let input = WithdrawInputAmountViewController(
-                    tokenItem: token,
-                    destination: .web3(address: address, chain: chain.name)
+            let tokenItem: MixinTokenItem
+            if let item = TokenDAO.shared.tokenItem(assetID: token.assetID) {
+                tokenItem = item
+            } else {
+                // XXX: It's terrible, but since this token cannot be found in the database,
+                // the balance must be zero. Anyway, operations cannot succeed with a zero
+                // balance, so just make up some random values to get by.
+                let mixinToken = MixinToken(
+                    assetID: token.assetID,
+                    kernelAssetID: token.kernelAssetID,
+                    symbol: token.symbol,
+                    name: token.name,
+                    iconURL: token.iconURL,
+                    btcPrice: "0",
+                    usdPrice: token.usdPrice,
+                    chainID: token.chainID,
+                    usdChange: token.usdChange,
+                    btcChange: "0",
+                    dust: "0",
+                    confirmations: -1,
+                    assetKey: "",
+                    collectionHash: nil
                 )
-                self.navigationController?.pushViewController(input, animated: true)
+                tokenItem = MixinTokenItem(
+                    token: mixinToken,
+                    balance: "0",
+                    isHidden: false,
+                    chain: token.chain
+                )
             }
-            present(selector, animated: true)
-            let chainIDs = kind.chains.compactMap(\.mixinChainID)
-            DispatchQueue.global().async { [weak selector] in
-                let tokens = TokenDAO.shared.positiveBalancedTokens(chainIDs: chainIDs)
-                DispatchQueue.main.async {
-                    selector?.reload(tokens: tokens)
-                }
-            }
+            let input = WithdrawInputAmountViewController(
+                tokenItem: tokenItem,
+                destination: .classicWallet(address)
+            )
+            navigationController?.pushViewController(input, animated: true)
         case .address:
-            let deposit = Web3DepositViewController(kind: kind, address: address)
+            guard let kind = Web3Chain.chain(mixinChainID: token.chainID)?.kind else {
+                return
+            }
+            let deposit = Web3DepositViewController(kind: kind, address: address.destination)
             navigationController?.pushViewController(deposit, animated: true)
         }
     }

@@ -190,14 +190,8 @@ extension ClassicWalletViewController: TokenActionView.Delegate {
             present(selector, animated: true, completion: nil)
         case .receive:
             let selector = Web3TokenSelectorViewController(walletID: walletID, tokens: tokens)
-            selector.onSelected = { [walletID] token in
-                guard let kind = Web3Chain.chain(mixinChainID: token.chainID)?.kind else {
-                    return
-                }
-                guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: token.chainID) else {
-                    return
-                }
-                let selector = Web3ReceiveSourceViewController(kind: kind, address: address.destination)
+            selector.onSelected = { token in
+                let selector = Web3ReceiveSourceViewController(token: token)
                 self.navigationController?.pushViewController(selector, animated: true)
             }
             withMnemonicsBackupChecked {

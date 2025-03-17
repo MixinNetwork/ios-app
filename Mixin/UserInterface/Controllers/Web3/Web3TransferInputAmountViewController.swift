@@ -57,7 +57,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         switch payment.toType {
         case .privacyWallet:
             titleView.subtitle = R.string.localizable.privacy_wallet()
-            titleView.subtitleStyle = .label(backgroundColor: UIColor(displayP3RgbValue: 0x8CB3FF))
+            titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
         case .addressBook(let label):
             titleView.subtitle = label
             titleView.subtitleStyle = .label(backgroundColor: R.color.address_label()!)

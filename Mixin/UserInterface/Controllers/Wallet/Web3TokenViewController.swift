@@ -108,13 +108,7 @@ extension Web3TokenViewController: TokenActionView.Delegate {
         switch action {
         case .receive:
             withMnemonicsBackupChecked { [token] in
-                guard let kind = Web3Chain.chain(mixinChainID: token.chainID)?.kind else {
-                    return
-                }
-                guard let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: token.chainID) else {
-                    return
-                }
-                let selector = Web3ReceiveSourceViewController(kind: kind, address: address.destination)
+                let selector = Web3ReceiveSourceViewController(token: token)
                 self.navigationController?.pushViewController(selector, animated: true)
             }
         case .send:

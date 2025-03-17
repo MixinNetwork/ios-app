@@ -548,7 +548,7 @@ class UrlWindow {
         }
     }
     
-    class func performExternalTransfer(_ transfer: ExternalTransfer) {
+    class func performExternalTransfer(_ externalTransfer: ExternalTransfer) {
         guard let homeContainer = UIApplication.homeContainerViewController else {
             return
         }
@@ -559,6 +559,7 @@ class UrlWindow {
             case syncTokenFailed
             case insufficientBalance
             case insufficientFee
+            case paidPayment
             
             var errorDescription: String? {
                 switch self {
@@ -570,15 +571,65 @@ class UrlWindow {
                     R.string.localizable.insufficient_balance()
                 case .insufficientFee:
                     R.string.localizable.insufficient_transaction_fee()
+                case .paidPayment:
+                    R.string.localizable.pay_paid()
                 }
             }
             
         }
         
+        var transfer = externalTransfer
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         Task {
             do {
+                let assetID = transfer.assetID
+                guard let token = syncToken(assetID: assetID, hud: hud) else {
+                    throw Error.syncTokenFailed
+                }
+                
+                if transfer.isLightning {
+                    let response = PaymentAPI.payments(assetId: assetID, rawPaymentUrl: transfer.raw)
+                    switch response {
+                    case let .success(payment):
+                        guard payment.status != PaymentStatus.paid.rawValue else {
+                            throw Error.paidPayment
+                        }
+                        guard let destination = payment.destination else {
+                            throw Error.invalidPaymentLink
+                        }
+                        
+                        if let amount = payment.amount, let amountDecimal = Decimal(string: amount, locale: .enUSPOSIX), amountDecimal > 0 {
+                            transfer.destination = destination
+                            transfer.amount = amountDecimal
+                            transfer.resolvedAmount = amountDecimal
+                        } else {
+                            AddressValidator.validate(
+                                assetID: assetID,
+                                destination: destination,
+                                tag: nil
+                            ) { address in
+                                hud.hide()
+                                let inputViewController = WithdrawInputAmountViewController(
+                                    tokenItem: token,
+                                    destination: .temporary(address)
+                                )
+                                UIApplication.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
+                            } onFailure: { error in
+                                hud.set(style: .error, text: error.localizedDescription)
+                                hud.scheduleAutoHidden()
+                            }
+                            return
+                        }
+                    case let .failure(error):
+                        await MainActor.run {
+                            hud.set(style: .error, text: error.localizedDescription)
+                            hud.scheduleAutoHidden()
+                        }
+                        return
+                    }
+                }
+                
                 let resolvedAmount: Decimal
                 if let amount = transfer.resolvedAmount {
                     resolvedAmount = amount
@@ -590,10 +641,6 @@ class UrlWindow {
                     throw Error.invalidPaymentLink
                 }
                 
-                let assetID = transfer.assetID
-                guard let token = syncToken(assetID: assetID, hud: hud) else {
-                    throw Error.syncTokenFailed
-                }
                 guard resolvedAmount <= token.decimalBalance else {
                     throw Error.insufficientBalance
                 }

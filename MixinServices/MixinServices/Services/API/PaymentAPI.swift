@@ -8,6 +8,11 @@ public final class PaymentAPI: MixinAPI {
         static let payments = "/payments"
     }
     
+    public static func payments(assetId: String, rawPaymentUrl: String) -> MixinAPI.Result<PaymentResponse> {
+        let param: [String : Any] = ["asset_id": assetId, "raw_payment_url": rawPaymentUrl]
+        return request(method: .post, path: Path.payments, parameters: param)
+    }
+    
     public static func payments(assetId: String, opponentId: String, amount: String, traceId: String) -> MixinAPI.Result<PaymentResponse> {
         let param: [String : Any] = ["asset_id": assetId, "opponent_id": opponentId, "amount": amount, "trace_id": traceId]
         return request(method: .post, path: Path.payments, parameters: param)

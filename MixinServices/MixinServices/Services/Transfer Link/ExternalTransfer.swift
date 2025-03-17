@@ -19,35 +19,38 @@ public struct ExternalTransfer {
     
     public let raw: String
     public let assetID: String
-    public let destination: String
+    public var destination: String
     
     // Raw amount provided by string. For Ethereum this amount is
     // in atomic units, for other chains this is in decimal
-    public let amount: Decimal
+    public var amount: Decimal
     
     // Decimal amount resolved with decimal value of atomic unit.
     // Will be nil for ERC-20 tokens due to lack of the atomic value.
-    public let resolvedAmount: Decimal?
+    public var resolvedAmount: Decimal?
     
     // Some non-standard ethereum URLs specify an amount in decimal.
     public let arbitraryAmount: Decimal?
     
     public let memo: String?
     
-    public init(assetID: String, destination: String, amount: Decimal, raw: String) {
-        self.raw = raw
-        self.assetID = assetID
-        self.destination = destination
-        self.amount = amount
-        self.resolvedAmount = amount
-        self.arbitraryAmount = nil
-        self.memo = nil
-    }
+    public let isLightining: Bool
     
     public init(
         string raw: String,
         assetIDFinder: (String) -> String? = TokenDAO.shared.assetID(assetKey:)
     ) throws {
+        guard !raw.isLightningAddress else {
+            self.raw = raw
+            self.assetID = AssetID.lighting
+            self.destination = raw
+            self.amount = 0
+            self.resolvedAmount = 0
+            self.arbitraryAmount = nil
+            self.memo = nil
+            self.isLightining = true
+            return
+        }
         guard let components = URLComponents(string: raw) else {
             throw TransferLinkError.notTransferLink
         }
@@ -184,6 +187,7 @@ public struct ExternalTransfer {
                 }
             }()
         }
+        self.isLightining = false
     }
     
     public static func resolve(atomicAmount: Decimal, with exponent: Int) -> Decimal {
@@ -191,4 +195,30 @@ public struct ExternalTransfer {
         return atomicAmount / divisor
     }
     
+}
+
+fileprivate extension String {
+    
+    var isLightningAddress: Bool {
+        let lowerAddress = self.lowercased()
+        if lowerAddress.hasPrefix("bitcoin") {
+            guard let components = URLComponents(string: self) else {
+                return false
+            }
+            guard let queryItems = components.queryItems else {
+                return false
+            }
+            let queries = queryItems.reduce(into: [:]) { queries, item in
+                queries[item.name] = item.value
+            }
+            
+            guard !queries["lightning"].isNilOrEmpty || !queries["lno"].isNilOrEmpty else {
+                return false
+            }
+            return true
+        } else if ["lnbc", "lno", "lnurl", "lightning:"].contains(where: lowerAddress.hasPrefix(_:)) {
+            return true
+        }
+        return false
+    }
 }

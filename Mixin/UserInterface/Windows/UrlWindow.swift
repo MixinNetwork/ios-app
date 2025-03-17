@@ -501,14 +501,8 @@ class UrlWindow {
     
     class func checkWithdrawal(string: String) -> Bool {
         do {
-            if ["lnbc", "lnurl", "lightning:"].contains(where: string.lowercased().hasPrefix(_:)) {
-                performWithdrawLighting(raw: string)
-            } else {
-                let hud = Hud()
-                hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-                let transfer = try ExternalTransfer(string: string)
-                performExternalTransfer(transfer, hud: hud)
-            }
+            let transfer = try ExternalTransfer(string: string)
+            performExternalTransfer(transfer)
             return true
         } catch TransferLinkError.notTransferLink {
             return false
@@ -520,62 +514,6 @@ class UrlWindow {
             Logger.general.error(category: "URLWindow", message: "Invalid payment: \(string)")
             showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
             return true
-        }
-    }
-    
-    class func performWithdrawLighting(raw: String) {
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        Task {
-            let lightingAsset = AssetID.lighting
-            let response = PaymentAPI.payments(assetId: lightingAsset, rawPaymentUrl: raw)
-            switch response {
-            case let .success(payment):
-                do {
-                    guard payment.status != PaymentStatus.paid.rawValue else {
-                        throw Error.paidPayment
-                    }
-                    guard let destination = payment.destination else {
-                        throw Error.invalidPaymentLink
-                    }
-                    guard let token = syncToken(assetID: lightingAsset, hud: hud) else {
-                        throw Error.syncTokenFailed
-                    }
-                    
-                    if let amount = payment.amount, let amountDecimal = Decimal(string: amount, locale: .enUSPOSIX), amountDecimal > 0 {
-                        let transfer = ExternalTransfer(assetID: lightingAsset, destination: destination, amount: amountDecimal, raw: raw)
-                        await MainActor.run {
-                            performExternalTransfer(transfer, hud: hud)
-                        }
-                    } else {
-                        AddressValidator.validate(
-                            assetID: lightingAsset,
-                            destination: destination,
-                            tag: nil
-                        ) { address in
-                            hud.hide()
-                            let inputViewController = WithdrawInputAmountViewController(
-                                tokenItem: token,
-                                destination: .temporary(address)
-                            )
-                            UIApplication.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
-                        } onFailure: { error in
-                            hud.set(style: .error, text: error.localizedDescription)
-                            hud.scheduleAutoHidden()
-                        }
-                    }
-                } catch {
-                    await MainActor.run {
-                        hud.set(style: .error, text: error.localizedDescription)
-                        hud.scheduleAutoHidden()
-                    }
-                }
-            case let .failure(error):
-                await MainActor.run {
-                    hud.set(style: .error, text: error.localizedDescription)
-                    hud.scheduleAutoHidden()
-                }
-            }
         }
     }
     
@@ -610,38 +548,87 @@ class UrlWindow {
         }
     }
     
-    fileprivate enum Error: Swift.Error, LocalizedError {
-        
-        case invalidPaymentLink
-        case syncTokenFailed
-        case insufficientBalance
-        case insufficientFee
-        case paidPayment
-        
-        var errorDescription: String? {
-            switch self {
-            case .invalidPaymentLink:
-                R.string.localizable.invalid_payment_link()
-            case .syncTokenFailed:
-                R.string.localizable.error_connection_timeout()
-            case .insufficientBalance:
-                R.string.localizable.insufficient_balance()
-            case .insufficientFee:
-                R.string.localizable.insufficient_transaction_fee()
-            case .paidPayment:
-                R.string.localizable.pay_paid()
-            }
-        }
-        
-    }
-    
-    class func performExternalTransfer(_ transfer: ExternalTransfer, hud: Hud) {
+    class func performExternalTransfer(_ externalTransfer: ExternalTransfer) {
         guard let homeContainer = UIApplication.homeContainerViewController else {
             return
         }
         
+        enum Error: Swift.Error, LocalizedError {
+            
+            case invalidPaymentLink
+            case syncTokenFailed
+            case insufficientBalance
+            case insufficientFee
+            case paidPayment
+            
+            var errorDescription: String? {
+                switch self {
+                case .invalidPaymentLink:
+                    R.string.localizable.invalid_payment_link()
+                case .syncTokenFailed:
+                    R.string.localizable.error_connection_timeout()
+                case .insufficientBalance:
+                    R.string.localizable.insufficient_balance()
+                case .insufficientFee:
+                    R.string.localizable.insufficient_transaction_fee()
+                case .paidPayment:
+                    R.string.localizable.pay_paid()
+                }
+            }
+            
+        }
+        
+        var transfer = externalTransfer
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         Task {
             do {
+                let assetID = transfer.assetID
+                guard let token = syncToken(assetID: assetID, hud: hud) else {
+                    throw Error.syncTokenFailed
+                }
+                
+                if transfer.isLightining {
+                    let response = PaymentAPI.payments(assetId: assetID, rawPaymentUrl: transfer.raw)
+                    switch response {
+                    case let .success(payment):
+                        guard payment.status != PaymentStatus.paid.rawValue else {
+                            throw Error.paidPayment
+                        }
+                        guard let destination = payment.destination else {
+                            throw Error.invalidPaymentLink
+                        }
+                        
+                        if let amount = payment.amount, let amountDecimal = Decimal(string: amount, locale: .enUSPOSIX), amountDecimal > 0 {
+                            transfer.destination = destination
+                            transfer.amount = amountDecimal
+                            transfer.resolvedAmount = amountDecimal
+                        } else {
+                            AddressValidator.validate(
+                                assetID: assetID,
+                                destination: destination,
+                                tag: nil
+                            ) { address in
+                                hud.hide()
+                                let inputViewController = WithdrawInputAmountViewController(
+                                    tokenItem: token,
+                                    destination: .temporary(address)
+                                )
+                                UIApplication.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
+                            } onFailure: { error in
+                                hud.set(style: .error, text: error.localizedDescription)
+                                hud.scheduleAutoHidden()
+                            }
+                            return
+                        }
+                    case let .failure(error):
+                        await MainActor.run {
+                            hud.set(style: .error, text: error.localizedDescription)
+                            hud.scheduleAutoHidden()
+                        }
+                    }
+                }
+                
                 let resolvedAmount: Decimal
                 if let amount = transfer.resolvedAmount {
                     resolvedAmount = amount
@@ -653,10 +640,6 @@ class UrlWindow {
                     throw Error.invalidPaymentLink
                 }
                 
-                let assetID = transfer.assetID
-                guard let token = syncToken(assetID: assetID, hud: hud) else {
-                    throw Error.syncTokenFailed
-                }
                 guard resolvedAmount <= token.decimalBalance else {
                     throw Error.insufficientBalance
                 }

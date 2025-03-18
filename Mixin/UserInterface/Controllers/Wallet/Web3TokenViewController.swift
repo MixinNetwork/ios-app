@@ -19,10 +19,10 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     }
     
     override func send() {
-        guard let chain = Web3Chain.chain(mixinChainID: token.chainID) else {
+        guard let chain = Web3Chain.chain(chainID: token.chainID) else {
             return
         }
-        guard let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: chain.mixinChainID) else {
+        guard let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: chain.chainID) else {
             return
         }
         let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address.destination)

@@ -114,7 +114,7 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
             )
             navigationController?.pushViewController(input, animated: true)
         case .address:
-            guard let kind = Web3Chain.chain(mixinChainID: token.chainID)?.kind else {
+            guard let kind = Web3Chain.chain(chainID: token.chainID)?.kind else {
                 return
             }
             let deposit = Web3DepositViewController(kind: kind, address: address.destination)

@@ -24,7 +24,7 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
     init(payment: Web3SendingTokenPayment) {
         self.payment = payment
         self.destinations = [
-            .privacyWallet(payment.chain.mixinChainID),
+            .privacyWallet(payment.chain.chainID),
             .addressBook,
         ]
         super.init(nibName: nil, bundle: nil)

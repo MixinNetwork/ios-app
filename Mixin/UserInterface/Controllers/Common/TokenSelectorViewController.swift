@@ -395,7 +395,7 @@ extension TokenSelectorViewController {
         
         static func web3Chains(ids: Set<String>) -> OrderedSet<Chain> {
             let all = Web3Chain.all.map { chain in
-                Chain(id: chain.web3ChainID, name: chain.name)
+                Chain(id: chain.chainID, name: chain.name)
             }
             let chains = all.filter { chain in
                 ids.contains(chain.id)

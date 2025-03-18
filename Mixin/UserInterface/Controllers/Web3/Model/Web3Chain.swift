@@ -29,8 +29,7 @@ final class Web3Chain {
     
     let kind: Kind
     let specification: KindSpecification
-    let web3ChainID: String
-    let mixinChainID: String
+    let chainID: String
     let feeTokenAssetID: String
     let name: String
     let failsafeRPCServerURL: URL
@@ -39,7 +38,7 @@ final class Web3Chain {
     private(set) var dapps: [Web3Dapp] = []
     
     var rpcServerURL: URL {
-        if let string = AppGroupUserDefaults.web3RPCURL[mixinChainID],
+        if let string = AppGroupUserDefaults.web3RPCURL[chainID],
            let url = URL(string: string)
         {
             url
@@ -49,8 +48,8 @@ final class Web3Chain {
     }
     
     private init(
-        specification: KindSpecification, web3ChainID: String,
-        mixinChainID: String, feeTokenAssetID: String, name: String,
+        specification: KindSpecification, mixinChainID: String,
+        feeTokenAssetID: String, name: String,
         failsafeRPCServerURL: URL, caip2: Blockchain
     ) {
         let kind: Kind = switch specification {
@@ -62,8 +61,7 @@ final class Web3Chain {
         
         self.kind = kind
         self.specification = specification
-        self.web3ChainID = web3ChainID
-        self.mixinChainID = mixinChainID
+        self.chainID = mixinChainID
         self.feeTokenAssetID = feeTokenAssetID
         self.name = name
         self.failsafeRPCServerURL = failsafeRPCServerURL
@@ -71,12 +69,11 @@ final class Web3Chain {
     }
     
     static func evm(
-        chainID: Int, web3ChainID: String, mixinChainID: String,
-        feeTokenAssetID: String, name: String, failsafeRPCServerURL: URL
+        chainID: Int, mixinChainID: String, feeTokenAssetID: String,
+        name: String, failsafeRPCServerURL: URL
     ) -> Web3Chain {
         Web3Chain(
             specification: .evm(chainID: chainID),
-            web3ChainID: web3ChainID,
             mixinChainID: mixinChainID,
             feeTokenAssetID: feeTokenAssetID,
             name: name,
@@ -86,12 +83,11 @@ final class Web3Chain {
     }
     
     static func solana(
-        reference: String, web3ChainID: String, mixinChainID: String,
-        feeTokenAssetID: String, name: String, failsafeRPCServerURL: URL
+        reference: String, mixinChainID: String, feeTokenAssetID: String,
+        name: String, failsafeRPCServerURL: URL
     ) -> Web3Chain {
         Web3Chain(
             specification: .solana,
-            web3ChainID: web3ChainID,
             mixinChainID: mixinChainID,
             feeTokenAssetID: feeTokenAssetID,
             name: name,
@@ -129,15 +125,9 @@ extension Web3Chain {
         }
     }()
     
-    private static let web3ChainIDMap: OrderedDictionary<String, Web3Chain> = {
+    private static let chainIDMap: OrderedDictionary<String, Web3Chain> = {
         all.reduce(into: [:]) { result, chain in
-            result[chain.web3ChainID] = chain
-        }
-    }()
-    
-    private static let mixinChainIDMap: OrderedDictionary<String, Web3Chain> = {
-        all.reduce(into: [:]) { result, chain in
-            result[chain.mixinChainID] = chain
+            result[chain.chainID] = chain
         }
     }()
     
@@ -145,16 +135,12 @@ extension Web3Chain {
         caip2Map[caip2]
     }
     
-    static func chain(web3ChainID id: String) -> Web3Chain? {
-        web3ChainIDMap[id]
+    static func chain(chainID id: String) -> Web3Chain? {
+        chainIDMap[id]
     }
     
-    static func chain(mixinChainID id: String) -> Web3Chain? {
-        mixinChainIDMap[id]
-    }
-    
-    static func evmChain(chainID: Int) -> Web3Chain? {
-        guard let caip2 = Blockchain("eip155:\(chainID)") else {
+    static func chain(evmChainID: Int) -> Web3Chain? {
+        guard let caip2 = Blockchain("eip155:\(evmChainID)") else {
             return nil
         }
         return chain(caip2: caip2)
@@ -184,7 +170,6 @@ extension Web3Chain {
     
     static let ethereum = Web3Chain.evm(
         chainID: 1,
-        web3ChainID: "ethereum",
         mixinChainID: ChainID.ethereum,
         feeTokenAssetID: AssetID.eth,
         name: "Ethereum",
@@ -193,7 +178,6 @@ extension Web3Chain {
     
     static let polygon = Web3Chain.evm(
         chainID: 137,
-        web3ChainID: "polygon",
         mixinChainID: ChainID.polygon,
         feeTokenAssetID: AssetID.matic,
         name: "Polygon",
@@ -202,7 +186,6 @@ extension Web3Chain {
     
     static let bnbSmartChain = Web3Chain.evm(
         chainID: 56,
-        web3ChainID: "binance-smart-chain",
         mixinChainID: ChainID.bnbSmartChain,
         feeTokenAssetID: AssetID.bnb,
         name: "BSC",
@@ -211,7 +194,6 @@ extension Web3Chain {
     
     static let base = Web3Chain.evm(
         chainID: 8453,
-        web3ChainID: "base",
         mixinChainID: ChainID.base,
         feeTokenAssetID: AssetID.eth,
         name: "Base",
@@ -220,7 +202,6 @@ extension Web3Chain {
     
     static let solana = Web3Chain.solana(
         reference: "4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ",
-        web3ChainID: "solana",
         mixinChainID: ChainID.solana,
         feeTokenAssetID: AssetID.sol,
         name: "Solana",
@@ -230,7 +211,6 @@ extension Web3Chain {
 #if DEBUG
     static let solanaDevnet = Web3Chain.solana(
         reference: "EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
-        web3ChainID: "solana",
         mixinChainID: ChainID.solana,
         feeTokenAssetID: AssetID.sol,
         name: "Solana",
@@ -257,7 +237,7 @@ extension Web3Chain {
                 DispatchQueue.main.async {
                     AppGroupUserDefaults.web3RPCURL = rpcURLs
                     for chain in Web3Chain.all {
-                        guard let dapps = dapps[chain.mixinChainID] else {
+                        guard let dapps = dapps[chain.chainID] else {
                             continue
                         }
                         chain.dapps = dapps

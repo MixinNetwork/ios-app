@@ -66,7 +66,7 @@ final class ClassicWalletViewController: WalletViewController {
     }
     
     override func makeSearchViewController() -> WalletSearchViewController {
-        let ids = Set(Web3Chain.all.map(\.mixinChainID))
+        let ids = Set(Web3Chain.all.map(\.chainID))
         let controller = WalletSearchViewController(supportedChainIDs: ids)
         controller.delegate = self
         return controller
@@ -177,10 +177,10 @@ extension ClassicWalletViewController: TokenActionView.Delegate {
         case .send:
             let selector = Web3TokenSelectorViewController(walletID: walletID, tokens: tokens)
             selector.onSelected = { [walletID] token in
-                guard let chain = Web3Chain.chain(mixinChainID: token.chainID) else {
+                guard let chain = Web3Chain.chain(chainID: token.chainID) else {
                     return
                 }
-                guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: chain.mixinChainID) else {
+                guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: chain.chainID) else {
                     return
                 }
                 let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address.destination)

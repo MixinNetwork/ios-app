@@ -64,7 +64,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
             object: nil
         )
         
-        if let web3Chain = Web3Chain.chain(mixinChainID: token.chainID),
+        if let web3Chain = Web3Chain.chain(chainID: token.chainID),
            let address = Web3AddressDAO.shared.classicWalletAddress(chainID: token.chainID)
         {
             destinations.insert(.classicWallet(chain: web3Chain, address: address), at: 1)

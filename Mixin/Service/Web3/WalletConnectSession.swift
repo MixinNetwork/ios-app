@@ -234,7 +234,7 @@ extension WalletConnectSession {
             guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                 throw Error.noChain(request.chainId.absoluteString)
             }
-            let address = Web3AddressDAO.shared.classicWalletAddress(chainID: chain.mixinChainID)
+            let address = Web3AddressDAO.shared.classicWalletAddress(chainID: chain.chainID)
             guard let address = address?.destination else {
                 throw Error.noAccount
             }

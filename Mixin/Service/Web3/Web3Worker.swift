@@ -69,7 +69,7 @@ final class Web3Worker {
                 send(error: "Unsupported Chain", to: request)
                 return
             }
-            guard let chain = Web3Chain.evmChain(chainID: chainID) else {
+            guard let chain = Web3Chain.chain(evmChainID: chainID) else {
                 showAutoHiddenHud(style: .error, text: "Chain not supported")
                 send(error: "Unknown Chain", to: request)
                 return

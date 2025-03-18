@@ -21,7 +21,7 @@ public class Web3Wallet: Codable {
     
 }
 
-extension Web3Wallet: PersistableRecord, DatabaseColumnConvertible {
+extension Web3Wallet: MixinFetchableRecord, PersistableRecord, DatabaseColumnConvertible {
     
     public static let databaseTableName = "wallets"
     

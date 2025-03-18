@@ -353,15 +353,20 @@ final class Web3Worker {
             send(error: "Invalid Data", to: request)
             return
         }
-        guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.solana)?.destination else {
+        guard let walletID = Web3WalletDAO.shared.classicWallet()?.walletID else {
             send(error: "Account Locked", to: request)
+            return
+        }
+        guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: ChainID.solana) else {
+            send(error: "No Address", to: request)
             return
         }
         DispatchQueue.global().async { [solanaChain, proposer=currentProposer] in
             do {
                 let operation = try SolanaTransferWithCustomRespondingOperation(
+                    walletID: walletID,
                     transaction: transaction,
-                    fromAddress: address,
+                    fromAddress: address.destination,
                     chain: solanaChain
                 ) { signature in
                     try await self.send(result: signature, to: request)

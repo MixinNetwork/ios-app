@@ -13,7 +13,6 @@
 		277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70B1F909A1200DBB2EB /* Assets.xcassets */; };
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
 		52589AE32BEA52260081C2BF /* SymbolTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */; };
-		5292D68E2BEB8F3200734F14 /* Web3Transaction+Localize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5292D68D2BEB8F3200734F14 /* Web3Transaction+Localize.swift */; };
 		52A056512BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056502BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift */; };
 		52A056562BE3614700CEC8A3 /* InscriptionMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056552BE3614700CEC8A3 /* InscriptionMessageCell.swift */; };
 		52A056582BE362FF00CEC8A3 /* InscriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */; };
@@ -1519,7 +1518,6 @@
 		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTextAttachment.swift; sourceTree = "<group>"; };
-		5292D68D2BEB8F3200734F14 /* Web3Transaction+Localize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Transaction+Localize.swift"; sourceTree = "<group>"; };
 		52A056502BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionMessageViewModel.swift; sourceTree = "<group>"; };
 		52A056552BE3614700CEC8A3 /* InscriptionMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionMessageCell.swift; sourceTree = "<group>"; };
 		52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionViewController.swift; sourceTree = "<group>"; };
@@ -3870,7 +3868,6 @@
 				942CF2542BC8257800ECCEFB /* Web3TransferOperation.swift */,
 				94F209D92C06C1CE00550060 /* EVMTransferOperation.swift */,
 				94F209D42C06C1A300550060 /* SolanaTransferOperation.swift */,
-				5292D68D2BEB8F3200734F14 /* Web3Transaction+Localize.swift */,
 			);
 			path = Web3;
 			sourceTree = "<group>";
@@ -6497,7 +6494,6 @@
 				942F4729299CDF1800528759 /* URLSessionWebSocketFactory.swift in Sources */,
 				7B9E7AC021E6F8F000012A28 /* DesktopViewController.swift in Sources */,
 				94ECCCAB261A029F004E9E2A /* Window.swift in Sources */,
-				5292D68E2BEB8F3200734F14 /* Web3Transaction+Localize.swift in Sources */,
 				7BC96DE324176B390047471D /* FoursquareAPI.swift in Sources */,
 				942D90EA2B05F84700E81358 /* WithdrawFeeSelectorViewController.swift in Sources */,
 				7BDBDE6E22363E82006220DF /* SettingCell.swift in Sources */,

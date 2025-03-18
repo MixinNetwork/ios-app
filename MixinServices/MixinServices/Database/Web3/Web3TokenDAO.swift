@@ -36,6 +36,11 @@ public final class Web3TokenDAO: Web3DAO {
         return db.select(with: sql, arguments: [walletID, assetID])
     }
     
+    public func token(walletID: String, assetKey: String) -> Web3TokenItem? {
+        let sql = "\(SQL.selector)\nWHERE t.wallet_id = ? AND t.asset_key = ?"
+        return db.select(with: sql, arguments: [walletID, assetKey])
+    }
+    
     public func allTokens() -> [Web3TokenItem] {
         db.select(with: "\(SQL.selector)\n\(SQL.order)")
     }

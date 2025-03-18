@@ -20,6 +20,10 @@ public final class Web3WalletDAO: Web3DAO {
         )
     }
     
+    public func classicWallet() -> Web3Wallet? {
+        db.select(where: Web3Wallet.column(of: .category) == Web3Wallet.Category.classic.rawValue)
+    }
+    
     public func walletIDs() -> [String] {
         db.select(with: "SELECT wallet_id FROM wallets")
     }

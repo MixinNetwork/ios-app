@@ -1459,7 +1459,12 @@ extension UrlWindow {
                         hud.scheduleAutoHidden()
                         return
                     }
-                    guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.solana)?.destination else {
+                    guard let walletID = Web3WalletDAO.shared.classicWallet()?.walletID else {
+                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                        hud.hide()
+                        return
+                    }
+                    guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: ChainID.solana) else {
                         hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
                         hud.hide()
                         return
@@ -1467,8 +1472,9 @@ extension UrlWindow {
                     DispatchQueue.global().async {
                         do {
                             let operation = try SolanaTransferWithCustomRespondingOperation(
+                                walletID: walletID,
                                 transaction: transaction,
-                                fromAddress: address,
+                                fromAddress: address.destination,
                                 chain: .solana
                             ) { signature in
                                 guard let requestID, case let .conversation(composer) = source else {

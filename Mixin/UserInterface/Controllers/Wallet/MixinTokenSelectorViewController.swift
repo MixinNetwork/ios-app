@@ -1,10 +1,14 @@
 import UIKit
 import OrderedCollections
+import Alamofire
 import MixinServices
 
 final class MixinTokenSelectorViewController: TokenSelectorViewController<MixinTokenItem> {
     
     var onSelected: ((MixinTokenItem) -> Void)?
+    var searchFromRemote = false
+    
+    private weak var searchRequest: Request?
     
     init() {
         super.init(
@@ -17,6 +21,10 @@ final class MixinTokenSelectorViewController: TokenSelectorViewController<MixinT
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard not supported")
+    }
+    
+    deinit {
+        searchRequest?.cancel()
     }
     
     override func viewDidLoad() {
@@ -56,6 +64,11 @@ final class MixinTokenSelectorViewController: TokenSelectorViewController<MixinT
         PropertiesDAO.shared.removeValue(forKey: .transferRecentAssetIDs)
     }
     
+    override func prepareForSearch(_ textField: UITextField) {
+        searchRequest?.cancel()
+        super.prepareForSearch(textField)
+    }
+    
     override func search(keyword: String) {
         let searchResults = defaultTokens.filter { item in
             item.symbol.lowercased().contains(keyword) || item.name.lowercased().contains(keyword)
@@ -71,20 +84,45 @@ final class MixinTokenSelectorViewController: TokenSelectorViewController<MixinT
         self.searchResults = searchResults
         self.searchResultChains = searchResultChains
         if let chain = self.selectedChain, chainIDs.contains(chain.id) {
-            self.tokenIndicesForSelectedChain = self.tokenIndices(tokens: searchResults, chainID: chain.id)
+            tokenIndicesForSelectedChain = tokenIndices(tokens: searchResults, chainID: chain.id)
         } else {
-            self.selectedChain = nil
-            self.tokenIndicesForSelectedChain = nil
+            selectedChain = nil
+            tokenIndicesForSelectedChain = nil
         }
-        self.collectionView.reloadData()
-        self.collectionView.checkEmpty(
-            dataCount: searchResults.count,
-            text: R.string.localizable.no_results(),
-            photo: R.image.emptyIndicator.ic_search_result()!
-        )
-        self.reloadChainSelection()
-        self.reloadTokenSelection()
-        self.searchBoxView.isBusy = false
+        collectionView.reloadData()
+        reloadChainSelection()
+        reloadTokenSelection()
+        
+        if searchFromRemote {
+            searchRequest = AssetAPI.search(keyword: keyword, queue: .global()) { [weak self] result in
+                switch result {
+                case .success(let tokens):
+                    self?.reloadSearchResults(keyword: keyword, localTokens: searchResults, searchResults: tokens)
+                case .failure(.emptyResponse):
+                    self?.reloadSearchResults(keyword: keyword, localTokens: searchResults, searchResults: [])
+                case .failure(let error):
+                    Logger.general.debug(category: "MixinTokenSelector", message: "\(error)")
+                    DispatchQueue.main.async {
+                        guard let self else {
+                            return
+                        }
+                        self.collectionView.checkEmpty(
+                            dataCount: searchResults.count,
+                            text: R.string.localizable.no_results(),
+                            photo: R.image.emptyIndicator.ic_search_result()!
+                        )
+                        self.searchBoxView.isBusy = false
+                    }
+                }
+            }
+        } else {
+            collectionView.checkEmpty(
+                dataCount: searchResults.count,
+                text: R.string.localizable.no_results(),
+                photo: R.image.emptyIndicator.ic_search_result()!
+            )
+            searchBoxView.isBusy = false
+        }
     }
     
     override func tokenIndices(tokens: [MixinTokenItem], chainID: String) -> [Int] {
@@ -127,6 +165,61 @@ final class MixinTokenSelectorViewController: TokenSelectorViewController<MixinT
         super.pickUp(token: token, from: location)
         presentingViewController?.dismiss(animated: true) { [onSelected] in
             onSelected?(token)
+        }
+    }
+    
+    private func reloadSearchResults(
+        keyword: String,
+        localTokens: [MixinTokenItem],
+        searchResults: [MixinToken]
+    ) {
+        assert(!Thread.isMainThread)
+        let localAssetIDs = Set(localTokens.map(\.assetID))
+        let allChains = ChainDAO.shared.allChains()
+        let allSearchResults = localTokens + searchResults.filter{ token in
+            !localAssetIDs.contains(token.assetID)
+        }.compactMap { token in
+            MixinTokenItem(
+                token: token,
+                balance: "0",
+                isHidden: false,
+                chain: allChains[token.chainID]
+            )
+        }.sorted { (one, another) in
+            one.decimalUSDPrice > another.decimalUSDPrice
+        }
+        let chainIDs = Set(allSearchResults.compactMap(\.chainID))
+        let searchResultChains = Chain.mixinChains(ids: chainIDs)
+        DispatchQueue.main.async {
+            guard self.trimmedKeyword == keyword else {
+                return
+            }
+            self.searchResultsKeyword = keyword
+            self.searchResults = allSearchResults
+            self.searchResultChains = searchResultChains
+            if let chain = self.selectedChain, chainIDs.contains(chain.id) {
+                self.tokenIndicesForSelectedChain = allSearchResults
+                    .enumerated()
+                    .compactMap { (index, token) in
+                        if token.chainID == chain.id {
+                            index
+                        } else {
+                            nil
+                        }
+                    }
+            } else {
+                self.selectedChain = nil
+                self.tokenIndicesForSelectedChain = nil
+            }
+            self.collectionView.reloadData()
+            self.collectionView.checkEmpty(
+                dataCount: allSearchResults.count,
+                text: R.string.localizable.no_results(),
+                photo: R.image.emptyIndicator.ic_search_result()!
+            )
+            self.reloadChainSelection()
+            self.reloadTokenSelection()
+            self.searchBoxView.isBusy = false
         }
     }
     

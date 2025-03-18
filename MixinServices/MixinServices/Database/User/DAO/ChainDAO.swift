@@ -26,6 +26,14 @@ public final class ChainDAO: UserDatabaseDAO {
         }
     }
     
+    // Key is chain id
+    public func allChains() -> [String: Chain] {
+        let chains: [Chain] = db.select(with: "SELECT * FROM chains")
+        return chains.reduce(into: [:]) { result, chain in
+            result[chain.chainId] = chain
+        }
+    }
+    
     public func save(_ chains: [Chain]) {
         guard !chains.isEmpty else {
             return

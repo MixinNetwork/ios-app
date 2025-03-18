@@ -33,9 +33,9 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
     override func viewDidLoad() {
         super.viewDidLoad()
         DispatchQueue.global().async { [tokens=defaultTokens] in
-            let recentFungibleIDs = Set(PropertiesDAO.shared.jsonObject(forKey: .web3RecentFungibleIDs, type: [String].self) ?? [])
+            let assetIDs = Set(PropertiesDAO.shared.jsonObject(forKey: .transferRecentAssetIDs, type: [String].self) ?? [])
             let recentTokens = tokens.filter { token in
-                recentFungibleIDs.contains(token.assetID)
+                assetIDs.contains(token.assetID)
             }
             let chainIDs = Set(tokens.compactMap(\.chainID))
             let chains = Chain.web3Chains(ids: chainIDs)
@@ -56,12 +56,12 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
     override func saveRecentsToStorage(tokens: any Sequence<Web3TokenItem>) {
         PropertiesDAO.shared.set(
             jsonObject: tokens.map(\.assetID),
-            forKey: .web3RecentFungibleIDs
+            forKey: .transferRecentAssetIDs
         )
     }
     
     override func clearRecentsStorage() {
-        PropertiesDAO.shared.removeValue(forKey: .web3RecentFungibleIDs)
+        PropertiesDAO.shared.removeValue(forKey: .transferRecentAssetIDs)
     }
     
     override func prepareForSearch(_ textField: UITextField) {
@@ -90,11 +90,6 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
             self.tokenIndicesForSelectedChain = nil
         }
         self.collectionView.reloadData()
-        self.collectionView.checkEmpty(
-            dataCount: searchResults.count,
-            text: R.string.localizable.no_results(),
-            photo: R.image.emptyIndicator.ic_search_result()!
-        )
         self.reloadChainSelection()
         self.reloadTokenSelection()
         
@@ -105,7 +100,7 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
             case .failure(.emptyResponse):
                 self?.reloadSearchResults(keyword: keyword, tokens: [])
             case .failure(let error):
-                Logger.general.debug(category: "SwapTokenSelector", message: "\(error)")
+                Logger.general.debug(category: "Web3TokenSelector", message: "\(error)")
                 DispatchQueue.main.async {
                     self?.searchBoxView.isBusy = false
                 }

@@ -336,13 +336,14 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
             }
             present(selector, animated: true, completion: nil)
         case .receive:
-            let controller = TransferSearchViewController()
-            controller.delegate = self
-            controller.showEmptyHintIfNeeded = false
-            controller.searchResultsFromServer = true
-            controller.tokens = tokens
+            let selector = MixinTokenSelectorViewController()
+            selector.searchFromRemote = true
+            selector.onSelected = { (token) in
+                let deposit = DepositViewController(token: token)
+                self.navigationController?.pushViewController(deposit, animated: true)
+            }
             withMnemonicsBackupChecked {
-                self.present(controller, animated: true, completion: nil)
+                self.present(selector, animated: true, completion: nil)
             }
         case .swap:
             tableHeaderView.actionView.badgeOnSwap = false
@@ -353,32 +354,6 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
             }
             reporter.report(event: .swapStart, tags: ["entrance": "wallet", "source": "mixin"])
         }
-    }
-    
-}
-
-extension PrivacyWalletViewController: TransferSearchViewControllerDelegate {
-    
-    func transferSearchViewController(_ viewController: TransferSearchViewController, didSelectToken token: MixinTokenItem) {
-        guard let action = lastSelectedAction else {
-            return
-        }
-        let controller: UIViewController
-        switch action {
-        case .send:
-            controller = MixinTokenViewController(token: token, performSendOnAppear: true)
-        case .receive:
-            controller = DepositViewController(token: token)
-        case .swap:
-            return
-        }
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
-    func transferSearchViewControllerDidSelectDeposit(_ viewController: TransferSearchViewController) {
-        lastSelectedAction = .receive
-        viewController.searchResultsFromServer = true
-        viewController.reload(tokens: tokens)
     }
     
 }

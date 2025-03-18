@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class TokenSearchResultsViewController: WalletSearchTableViewController {
+final class TokenSearchResultsViewController: WalletSearchTableViewController {
     
     let activityIndicator = ActivityIndicatorView()
     

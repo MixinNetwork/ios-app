@@ -1103,12 +1103,11 @@
 "send_photo_count" = "Send %d Photos";
 "send_this_location" = "Send This Location";
 "send_to" = "Send to %@";
-"send_to_address_description" = "Send to a known crypto address using a crypto network.";
-"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
+"send_to_address_description" = "Send to a known crypto address using a crypto network";
+"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network";
 "send_to_developer" = "Send to Developer";
 "send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Send To";
-"send_to_web3_wallet_description" = "Send to my %@ account using crypto network.";
 "send_video" = "Send 1 Video";
 "send_video_count" = "Send %d Videos";
 "send_without_sound" = "Send Without Sound";

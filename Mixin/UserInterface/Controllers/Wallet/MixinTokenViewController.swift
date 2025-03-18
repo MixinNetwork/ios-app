@@ -23,7 +23,7 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
     }
     
     override func send() {
-        let receiver = TokenReceiverViewController(token: token)
+        let receiver = MixinTokenReceiverViewController(token: token)
         navigationController?.pushViewController(receiver, animated: true)
     }
     

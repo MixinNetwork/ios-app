@@ -1,12 +1,12 @@
 import UIKit
 import MixinServices
 
-final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
+final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController {
     
     private enum Destination {
-        case contact
-        case classicWallet(chain: Web3Chain, address: Web3Address)
         case addressBook
+        case classicWallet(chain: Web3Chain, address: Web3Address)
+        case contact
     }
     
     private let token: MixinTokenItem
@@ -187,7 +187,7 @@ final class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
 }
 
-extension TokenReceiverViewController: HomeNavigationController.NavigationBarStyling {
+extension MixinTokenReceiverViewController: HomeNavigationController.NavigationBarStyling {
     
     var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
         .secondaryBackground
@@ -195,7 +195,7 @@ extension TokenReceiverViewController: HomeNavigationController.NavigationBarSty
     
 }
 
-extension TokenReceiverViewController: UITableViewDataSource {
+extension MixinTokenReceiverViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         destinations.count
@@ -205,28 +205,28 @@ extension TokenReceiverViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
         let destination = destinations[indexPath.row]
         switch destination {
-        case .contact:
-            cell.iconImageView.image = R.image.token_receiver_contact()
-            cell.titleLabel.text = R.string.localizable.mixin_contact()
-            cell.freeLabel.isHidden = false
-            cell.subtitleLabel.text = R.string.localizable.send_to_contact_description()
-        case .classicWallet:
-            cell.iconImageView.image = R.image.token_receiver_wallet()
-            cell.titleLabel.text = R.string.localizable.classic_wallet()
-            cell.freeLabel.isHidden = true
-            cell.subtitleLabel.text = R.string.localizable.send_to_other_wallet_description()
         case .addressBook:
             cell.iconImageView.image = R.image.token_receiver_address_book()
             cell.titleLabel.text = R.string.localizable.address_book()
             cell.freeLabel.isHidden = true
             cell.subtitleLabel.text = R.string.localizable.send_to_address_description()
+        case .classicWallet:
+            cell.iconImageView.image = R.image.token_receiver_wallet()
+            cell.titleLabel.text = R.string.localizable.classic_wallet()
+            cell.freeLabel.isHidden = true
+            cell.subtitleLabel.text = R.string.localizable.send_to_other_wallet_description()
+        case .contact:
+            cell.iconImageView.image = R.image.token_receiver_contact()
+            cell.titleLabel.text = R.string.localizable.mixin_contact()
+            cell.freeLabel.isHidden = false
+            cell.subtitleLabel.text = R.string.localizable.send_to_contact_description()
         }
         return cell
     }
     
 }
 
-extension TokenReceiverViewController: UITableViewDelegate {
+extension MixinTokenReceiverViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -266,7 +266,7 @@ extension TokenReceiverViewController: UITableViewDelegate {
     
 }
 
-extension TokenReceiverViewController: AddressInfoInputHeaderView.Delegate {
+extension MixinTokenReceiverViewController: AddressInfoInputHeaderView.Delegate {
     
     func addressInfoInputHeaderView(_ headerView: AddressInfoInputHeaderView, didUpdateContent content: String) {
         let newHeaderSize = headerView.systemLayoutSizeFitting(
@@ -319,7 +319,7 @@ extension TokenReceiverViewController: AddressInfoInputHeaderView.Delegate {
     
 }
 
-extension TokenReceiverViewController: CameraViewControllerDelegate {
+extension MixinTokenReceiverViewController: CameraViewControllerDelegate {
     
     func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
         let destination = IBANAddress(string: string)?.standarizedAddress ?? string

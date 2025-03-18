@@ -1103,12 +1103,11 @@
 "send_photo_count" = "Отправить %d фото";
 "send_this_location" = "Отправить это местоположение";
 "send_to" = "Отправить в %@";
-"send_to_address_description" = "Send to a known crypto address using a crypto network.";
-"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
+"send_to_address_description" = "Send to a known crypto address using a crypto network";
+"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network";
 "send_to_developer" = "Отправить разработчику";
 "send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Отправить в";
-"send_to_web3_wallet_description" = "Send to my %@ account using crypto network.";
 "send_video" = "Отправить 1 видео";
 "send_video_count" = "Отправить %d видео";
 "send_without_sound" = "Отправить без звука";

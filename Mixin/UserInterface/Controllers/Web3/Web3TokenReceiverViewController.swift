@@ -5,8 +5,8 @@ import MixinServices
 final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
     private enum Destination {
-        case privacyWallet(_ mixinChainID: String)
         case addressBook
+        case privacyWallet(_ mixinChainID: String)
     }
     
     private let payment: Web3SendingTokenPayment
@@ -24,8 +24,8 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
     init(payment: Web3SendingTokenPayment) {
         self.payment = payment
         self.destinations = [
-            .privacyWallet(payment.chain.chainID),
             .addressBook,
+            .privacyWallet(payment.chain.chainID),
         ]
         super.init(nibName: nil, bundle: nil)
     }
@@ -159,8 +159,6 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let destination = destinations[indexPath.row]
         switch destination {
-        case .privacyWallet(let chainID):
-            sendToMyMixinWallet(chainID: chainID)
         case .addressBook:
             let token = payment.token
             let book = AddressBookViewController(token: token)
@@ -176,6 +174,8 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
                 }
             }
             present(book, animated: true)
+        case .privacyWallet(let chainID):
+            sendToMyMixinWallet(chainID: chainID)
         }
     }
     

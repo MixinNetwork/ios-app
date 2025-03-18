@@ -981,7 +981,7 @@
 		946E9E342D40C46F00DBC308 /* SwapTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9E332D40C46D00DBC308 /* SwapTokenSelectorViewController.swift */; };
 		946E9F0B2D440F7D00DBC308 /* SendTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F0A2D440F7500DBC308 /* SendTokenSelectorViewController.swift */; };
 		946E9F1A2AEF88DF0077CD7A /* RecoverRawTransactionJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */; };
-		946E9F5C2D455F0900DBC308 /* TokenReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F5A2D455F0900DBC308 /* TokenReceiverViewController.swift */; };
+		946E9F5C2D455F0900DBC308 /* MixinTokenReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F5A2D455F0900DBC308 /* MixinTokenReceiverViewController.swift */; };
 		946E9FBD2D46237A00DBC308 /* TransferInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */; };
 		946EA03D2D469A4A00DBC308 /* AddressBookView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946EA03C2D469A4A00DBC308 /* AddressBookView.xib */; };
 		946EA0452D469AD200DBC308 /* AddressCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946EA0442D469AD200DBC308 /* AddressCell.xib */; };
@@ -2510,7 +2510,7 @@
 		946E9E332D40C46D00DBC308 /* SwapTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		946E9F0A2D440F7500DBC308 /* SendTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverRawTransactionJob.swift; sourceTree = "<group>"; };
-		946E9F5A2D455F0900DBC308 /* TokenReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenReceiverViewController.swift; sourceTree = "<group>"; };
+		946E9F5A2D455F0900DBC308 /* MixinTokenReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinTokenReceiverViewController.swift; sourceTree = "<group>"; };
 		946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferInputAmountViewController.swift; sourceTree = "<group>"; };
 		946EA03C2D469A4A00DBC308 /* AddressBookView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressBookView.xib; sourceTree = "<group>"; };
 		946EA0442D469AD200DBC308 /* AddressCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressCell.xib; sourceTree = "<group>"; };
@@ -5066,7 +5066,7 @@
 				94327CF42D53650600DEE36D /* AddressInfoInputHeaderView.swift */,
 				9489247E2D572EA200D9BCCB /* TokenReceiverTrayView.xib */,
 				9489247C2D572E9400D9BCCB /* TokenReceiverTrayView.swift */,
-				946E9F5A2D455F0900DBC308 /* TokenReceiverViewController.swift */,
+				946E9F5A2D455F0900DBC308 /* MixinTokenReceiverViewController.swift */,
 				946EA0872D4763CF00DBC308 /* AddressInfoInputView.xib */,
 				946EA0852D4763BD00DBC308 /* AddressInfoInputViewController.swift */,
 				946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */,
@@ -6870,7 +6870,7 @@
 				7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */,
 				7BC022E5214A13DC00B7A398 /* MixinAuthorizationsViewController.swift in Sources */,
 				94B5777D2B5E755100AE576E /* SeparatorHeaderFooterView.swift in Sources */,
-				946E9F5C2D455F0900DBC308 /* TokenReceiverViewController.swift in Sources */,
+				946E9F5C2D455F0900DBC308 /* MixinTokenReceiverViewController.swift in Sources */,
 				94428D742CA2A8F200157E93 /* EditMarketAlertViewController.swift in Sources */,
 				7C1EDAB42772FF8B00193917 /* DeleteAccountContext.swift in Sources */,
 				94E66E232D12CD0D00578F19 /* MAONameSearchResultCell.swift in Sources */,

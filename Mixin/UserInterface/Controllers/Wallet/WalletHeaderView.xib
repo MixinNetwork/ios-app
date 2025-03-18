@@ -23,11 +23,11 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="48b-kN-ade">
                     <rect key="frame" x="0.0" y="30" width="393" height="219"/>
                     <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Zp6-JX-t1j">
+                        <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Zp6-JX-t1j">
                             <rect key="frame" x="181.33333333333334" y="0.0" width="30.333333333333343" height="40"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zXv-bX-7yn">
-                                    <rect key="frame" x="0.0" y="0.0" width="11" height="40"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="11" height="21.666666666666668"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                     <color key="textColor" name="text_tertiary"/>
                                     <nil key="highlightedColor"/>

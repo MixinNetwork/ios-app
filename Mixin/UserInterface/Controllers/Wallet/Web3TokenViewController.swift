@@ -3,6 +3,10 @@ import MixinServices
 
 final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3TransactionItem> {
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -11,7 +15,19 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
             subtitle: token.depositNetworkName
         )
         
-        // TODO: Subscribe token/transaction change notifications
+        let notificationCenter: NotificationCenter = .default
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadToken),
+            name: Web3TokenDAO.tokensDidChangeNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadSnapshots),
+            name: Web3TokenDAO.tokensDidChangeNotification,
+            object: nil
+        )
         
         reloadSnapshots()
         let job = SyncWeb3TransactionJob(walletID: token.walletID)
@@ -67,7 +83,7 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         navigationController?.pushViewController(history, animated: true)
     }
     
-    private func reloadToken() {
+    @objc private func reloadToken() {
         DispatchQueue.global().async { [token, weak self] in
             guard let token = Web3TokenDAO.shared.token(walletID: token.walletID, assetID: token.assetID) else {
                 return
@@ -85,7 +101,7 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         }
     }
     
-    private func reloadSnapshots() {
+    @objc private func reloadSnapshots() {
         queue.async { [limit=transactionsCount, assetID=token.assetID, weak self] in
             let limitExceededTransactions = Web3TransactionDAO.shared.transactions(assetID: assetID, limit: limit + 1)
             let hasMoreTransactions = limitExceededTransactions.count > limit

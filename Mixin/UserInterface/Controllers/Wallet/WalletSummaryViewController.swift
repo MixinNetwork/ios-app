@@ -14,6 +14,10 @@ final class WalletSummaryViewController: UIViewController {
     private var privacyWalletDigest: WalletDigest?
     private var classicWalletDigests: [WalletDigest] = []
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.register(R.nib.walletSummaryValueCell)
@@ -42,13 +46,14 @@ final class WalletSummaryViewController: UIViewController {
         collectionView.allowsMultipleSelection = true
         collectionView.dataSource = self
         collectionView.delegate = self
-        NotificationCenter.default.addObserver(
+        
+        let notificationCenter: NotificationCenter = .default
+        notificationCenter.addObserver(
             collectionView!,
             selector: #selector(collectionView.reloadData),
             name: Currency.currentCurrencyDidChangeNotification,
             object: nil
         )
-        let notificationCenter: NotificationCenter = .default
         notificationCenter.addObserver(
             self,
             selector: #selector(reloadData),

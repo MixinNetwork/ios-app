@@ -70,9 +70,9 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         case .temporary(let address):
             titleView.subtitle = address.compactRepresentation
             titleView.subtitleStyle = .plain
-        case .classicWallet(let address):
-            titleView.subtitle = Address.compactRepresentation(of: address.destination)
-            titleView.subtitleStyle = .label(backgroundColor: R.color.address_label()!)
+        case .classicWallet:
+            titleView.subtitle = R.string.localizable.classic_wallet()
+            titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
         }
         navigationItem.titleView = titleView
         

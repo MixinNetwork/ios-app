@@ -1296,7 +1296,7 @@ class ConversationViewController: UIViewController {
         guard let ownerUser else {
             return
         }
-        let selector = SendTokenSelectorViewController()
+        let selector = MixinTokenSelectorViewController()
         selector.onSelected = { token in
             let inputAmount = TransferInputAmountViewController(
                 tokenItem: token,

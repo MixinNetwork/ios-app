@@ -2,7 +2,7 @@ import UIKit
 import OrderedCollections
 import MixinServices
 
-final class SendTokenSelectorViewController: TokenSelectorViewController<MixinTokenItem> {
+final class MixinTokenSelectorViewController: TokenSelectorViewController<MixinTokenItem> {
     
     var onSelected: ((MixinTokenItem) -> Void)?
     

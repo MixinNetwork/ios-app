@@ -329,7 +329,7 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
         lastSelectedAction = action
         switch action {
         case .send:
-            let selector = SendTokenSelectorViewController()
+            let selector = MixinTokenSelectorViewController()
             selector.onSelected = { token in
                 let receiver = MixinTokenReceiverViewController(token: token)
                 self.navigationController?.pushViewController(receiver, animated: true)

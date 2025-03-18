@@ -979,7 +979,7 @@
 		946E059D2CBFD846004B264E /* ExploreSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05992CBFD841004B264E /* ExploreSearchViewController.swift */; };
 		946E059F2CBFEE85004B264E /* SearchNavigationControllerChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */; };
 		946E9E342D40C46F00DBC308 /* SwapTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9E332D40C46D00DBC308 /* SwapTokenSelectorViewController.swift */; };
-		946E9F0B2D440F7D00DBC308 /* SendTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F0A2D440F7500DBC308 /* SendTokenSelectorViewController.swift */; };
+		946E9F0B2D440F7D00DBC308 /* MixinTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F0A2D440F7500DBC308 /* MixinTokenSelectorViewController.swift */; };
 		946E9F1A2AEF88DF0077CD7A /* RecoverRawTransactionJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */; };
 		946E9F5C2D455F0900DBC308 /* MixinTokenReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9F5A2D455F0900DBC308 /* MixinTokenReceiverViewController.swift */; };
 		946E9FBD2D46237A00DBC308 /* TransferInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */; };
@@ -2508,7 +2508,7 @@
 		946E05992CBFD841004B264E /* ExploreSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchViewController.swift; sourceTree = "<group>"; };
 		946E059E2CBFEE84004B264E /* SearchNavigationControllerChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNavigationControllerChild.swift; sourceTree = "<group>"; };
 		946E9E332D40C46D00DBC308 /* SwapTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapTokenSelectorViewController.swift; sourceTree = "<group>"; };
-		946E9F0A2D440F7500DBC308 /* SendTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTokenSelectorViewController.swift; sourceTree = "<group>"; };
+		946E9F0A2D440F7500DBC308 /* MixinTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverRawTransactionJob.swift; sourceTree = "<group>"; };
 		946E9F5A2D455F0900DBC308 /* MixinTokenReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinTokenReceiverViewController.swift; sourceTree = "<group>"; };
 		946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferInputAmountViewController.swift; sourceTree = "<group>"; };
@@ -5061,7 +5061,7 @@
 				DF06D91E222FAE1300FE7FBC /* LegacyTransferOutViewController.swift */,
 				9455EA072AFE598E00C3FD3C /* WithdrawFeeView.xib */,
 				9455EA0C2AFE5A8500C3FD3C /* WithdrawFeeView.swift */,
-				946E9F0A2D440F7500DBC308 /* SendTokenSelectorViewController.swift */,
+				946E9F0A2D440F7500DBC308 /* MixinTokenSelectorViewController.swift */,
 				94327CF62D53662700DEE36D /* AddressInfoInputHeaderView.xib */,
 				94327CF42D53650600DEE36D /* AddressInfoInputHeaderView.swift */,
 				9489247E2D572EA200D9BCCB /* TokenReceiverTrayView.xib */,
@@ -7061,7 +7061,7 @@
 				7B4EF79F22D5E55400F19F6A /* RemoveRecoveryContactValidationViewController.swift in Sources */,
 				9489237D2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift in Sources */,
 				7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */,
-				946E9F0B2D440F7D00DBC308 /* SendTokenSelectorViewController.swift in Sources */,
+				946E9F0B2D440F7D00DBC308 /* MixinTokenSelectorViewController.swift in Sources */,
 				945D48102D8956040093E30D /* WalletSummary.swift in Sources */,
 				7B91056222CF4A58002E3608 /* LiveMessageCell.swift in Sources */,
 				94BD7E772B2983CA0004576D /* MultisigURL.swift in Sources */,

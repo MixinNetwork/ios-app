@@ -1109,7 +1109,7 @@ extension UrlWindow {
                     case (.none, .none):
                         // Receive money QR code
                         completion(nil)
-                        let selector = SendTokenSelectorViewController()
+                        let selector = MixinTokenSelectorViewController()
                         selector.onSelected = { token in
                             let inputAmount = TransferInputAmountViewController(
                                 tokenItem: token,

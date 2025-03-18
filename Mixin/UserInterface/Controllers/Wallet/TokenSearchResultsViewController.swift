@@ -193,6 +193,9 @@ extension TokenSearchResultsViewController: UITableViewDelegate {
         }
         DispatchQueue.global().async {
             AppGroupUserDefaults.User.insertAssetSearchHistory(with: item.assetID)
+            if !TokenDAO.shared.tokenExists(assetID: item.assetID) {
+                TokenDAO.shared.save(assets: [item])
+            }
         }
     }
     

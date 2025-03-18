@@ -235,6 +235,7 @@ extension Web3TokenReceiverViewController: CameraViewControllerDelegate {
     func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
         let destination = IBANAddress(string: string)?.standarizedAddress ?? string
         headerView.setContent(destination)
+        continueWithOneTimeAddress(controller)
         return false
     }
     

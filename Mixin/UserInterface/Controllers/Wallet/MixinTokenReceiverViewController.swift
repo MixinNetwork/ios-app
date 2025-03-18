@@ -91,7 +91,10 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
         }
     }
     
-    @objc private func continueWithOneTimeAddress(_ sender: StyledButton) {
+    @objc private func continueWithOneTimeAddress(_ sender: Any) {
+        guard let nextButton = trayView?.nextButton else {
+            return
+        }
         let userInput = headerView.trimmedContent
         let destination: String
         let amount: Decimal?
@@ -110,12 +113,12 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
                 showError(description: R.string.localizable.insufficient_balance())
                 return
             }
-            sender.isBusy = true
+            nextButton.isBusy = true
             AddressValidator.validateAddressAndLoadFee(
                 assetID: token.assetID,
                 destination: destination,
                 tag: nil
-            ) { [weak sender, weak self, token] (address, fee) in
+            ) { [weak nextButton, weak self, token] (address, fee) in
                 guard let self else {
                     return
                 }
@@ -132,7 +135,7 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
                     fee: fee,
                     on: self
                 ) { reason in
-                    sender?.isBusy = false
+                    nextButton?.isBusy = false
                     switch reason {
                     case .userCancelled, .loggedOut:
                         break
@@ -140,7 +143,7 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
                         self.showError(description: message)
                     }
                 } onSuccess: { (operation, issues) in
-                    sender?.isBusy = false
+                    nextButton?.isBusy = false
                     let preview = WithdrawPreviewViewController(
                         issues: issues,
                         operation: operation,
@@ -151,27 +154,27 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
                     )
                     self.present(preview, animated: true)
                 }
-            } onFailure: { [weak sender, weak self] error in
-                sender?.isBusy = false
+            } onFailure: { [weak nextButton, weak self] error in
+                nextButton?.isBusy = false
                 self?.showError(description: error.localizedDescription)
             }
         } else if let nextInput = AddressInfoInputViewController.oneTimeWithdraw(token: token, destination: destination) {
             navigationController?.pushViewController(nextInput, animated: true)
         } else {
-            sender.isBusy = true
+            nextButton.isBusy = true
             AddressValidator.validate(
                 assetID: token.assetID,
                 destination: destination,
                 tag: nil
-            ) { [weak sender, weak self] (address) in
-                sender?.isBusy = false
+            ) { [weak nextButton, weak self] (address) in
+                nextButton?.isBusy = false
                 guard let self else {
                     return
                 }
                 let inputAmount = WithdrawInputAmountViewController(tokenItem: self.token, destination: .temporary(address))
                 self.navigationController?.pushViewController(inputAmount, animated: true)
-            } onFailure: { [weak sender, weak self] error in
-                sender?.isBusy = false
+            } onFailure: { [weak nextButton, weak self] error in
+                nextButton?.isBusy = false
                 self?.showError(description: error.localizedDescription)
             }
         }
@@ -324,6 +327,7 @@ extension MixinTokenReceiverViewController: CameraViewControllerDelegate {
     func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
         let destination = IBANAddress(string: string)?.standarizedAddress ?? string
         headerView.setContent(destination)
+        continueWithOneTimeAddress(controller)
         return false
     }
     

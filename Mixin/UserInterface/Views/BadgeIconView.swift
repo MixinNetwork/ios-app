@@ -88,11 +88,6 @@ final class BadgeIconView: UIView {
         badgeImageView.image = nil
     }
     
-    func setIcon(web3Transaction transaction: Web3Transaction) {
-        // TODO: The icon
-        corner = .round
-    }
-    
     func setIcon(content: InscriptionContentProvider) {
         isBadgeHidden = true
         iconImageView.backgroundColor = .secondaryBackground

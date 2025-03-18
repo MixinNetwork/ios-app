@@ -19,6 +19,10 @@ public final class Web3AddressDAO: Web3DAO {
         return db.select(with: sql, arguments: [walletID, chainID])
     }
     
+    public func addresses(walletID: String) -> [Web3Address] {
+        db.select(with: "SELECT * FROM addresses WHERE wallet_id = ?", arguments: [walletID])
+    }
+    
     public func save(addresses: [Web3Address]) {
         db.save(addresses)
     }

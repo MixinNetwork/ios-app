@@ -34,26 +34,14 @@ public final class Web3WalletDAO: Web3DAO {
             ORDER BY w.created_at ASC
             """
             
-            static let topTokenDigests = """
+            static let tokenDigests = """
             SELECT t.asset_id, t.symbol, t.name, t.icon_url, t.price_usd, t.amount AS balance
             FROM tokens t
+                LEFT JOIN tokens_extra te ON t.wallet_id = te.wallet_id AND t.asset_id = te.asset_id
             WHERE t.wallet_id = ?
+                AND ifnull(te.hidden,FALSE) IS FALSE
                 AND CAST(t.price_usd * t.amount AS REAL) > 0
             ORDER BY t.price_usd * t.amount DESC
-            LIMIT ?
-            """
-            
-            static let positiveUSDBalanceTokensCount = """
-            SELECT COUNT(1)
-            FROM tokens t
-            WHERE t.wallet_id = ?
-                AND CAST(t.price_usd * t.amount AS REAL) > 0
-            """
-            
-            static let usdBalanceSum = """
-            SELECT SUM(ifnull(t.amount,'0') * t.price_usd)
-            FROM tokens t
-            WHERE t.wallet_id = ?
             """
             
         }
@@ -78,14 +66,10 @@ public final class Web3WalletDAO: Web3DAO {
                 guard wallet.category == Web3Wallet.Category.classic.rawValue else {
                     return nil
                 }
-                let topTokenDigests = try TokenDigest.fetchAll(db, sql: SQL.topTokenDigests, arguments: [wallet.walletID, 5])
-                let positiveUSDBalanceTokensCount = try Int.fetchOne(db, sql: SQL.positiveUSDBalanceTokensCount, arguments: [wallet.walletID]) ?? 0
-                let usdBalanceSum = try Decimal.fetchOne(db, sql: SQL.usdBalanceSum, arguments: [wallet.walletID]) ?? 0
+                let tokenDigests = try TokenDigest.fetchAll(db, sql: SQL.tokenDigests, arguments: [wallet.walletID])
                 return WalletDigest(
                     wallet: .classic(id: wallet.walletID),
-                    usdBalanceSum: usdBalanceSum,
-                    tokens: topTokenDigests,
-                    positiveUSDBalanceTokensCount: positiveUSDBalanceTokensCount
+                    tokens: tokenDigests
                 )
             }
         }

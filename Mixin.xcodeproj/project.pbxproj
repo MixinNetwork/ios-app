@@ -904,6 +904,7 @@
 		9459693928B28FF8006F5421 /* TIPActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459693728B28FF8006F5421 /* TIPActionViewController.swift */; };
 		9459693A28B28FF8006F5421 /* TIPActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9459693828B28FF8006F5421 /* TIPActionView.xib */; };
 		945AA6582567B18200B39415 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945AA6572567B18200B39415 /* Country.swift */; };
+		945D48102D8956040093E30D /* WalletSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D480F2D8956000093E30D /* WalletSummary.swift */; };
 		945D867B2C21754A0066C61D /* CGSize+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D867A2C21754A0066C61D /* CGSize+Constants.swift */; };
 		945ED2B22B28342A00C138BF /* WithdrawPaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945ED2B12B28342A00C138BF /* WithdrawPaymentOperation.swift */; };
 		945F833C2A3748A4008C5CE5 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 945F831D2A3748A4008C5CE5 /* GCDWebServerResponse.m */; };
@@ -2415,6 +2416,7 @@
 		9459693728B28FF8006F5421 /* TIPActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPActionViewController.swift; sourceTree = "<group>"; };
 		9459693828B28FF8006F5421 /* TIPActionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPActionView.xib; sourceTree = "<group>"; };
 		945AA6572567B18200B39415 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
+		945D480F2D8956000093E30D /* WalletSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSummary.swift; sourceTree = "<group>"; };
 		945D867A2C21754A0066C61D /* CGSize+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Constants.swift"; sourceTree = "<group>"; };
 		945ED2B12B28342A00C138BF /* WithdrawPaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawPaymentOperation.swift; sourceTree = "<group>"; };
 		945F831B2A3748A4008C5CE5 /* GCDWebServerFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFunctions.h; sourceTree = "<group>"; };
@@ -3185,6 +3187,7 @@
 				942FD9702D3A90DD004DCC4C /* SwapOrder+Localization.swift */,
 				9489249B2D573BA000D9BCCB /* AddressValidator.swift */,
 				94C5BDD72D68653D0012F840 /* FiatMoneyValueAttributedStringBuilder.swift */,
+				945D480F2D8956000093E30D /* WalletSummary.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -7063,6 +7066,7 @@
 				9489237D2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift in Sources */,
 				7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */,
 				946E9F0B2D440F7D00DBC308 /* SendTokenSelectorViewController.swift in Sources */,
+				945D48102D8956040093E30D /* WalletSummary.swift in Sources */,
 				7B91056222CF4A58002E3608 /* LiveMessageCell.swift in Sources */,
 				94BD7E772B2983CA0004576D /* MultisigURL.swift in Sources */,
 				7BEED0D9244D752700F3A2B9 /* SettingsRow.swift in Sources */,

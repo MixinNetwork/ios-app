@@ -37,7 +37,7 @@ final class WalletCell: UICollectionViewCell {
             view.removeFromSuperview()
         }
         let tokens = digest.tokens
-        switch digest.positiveUSDBalanceTokensCount {
+        switch tokens.count {
         case 0:
             let image = switch type {
             case .privacy:
@@ -48,15 +48,13 @@ final class WalletCell: UICollectionViewCell {
             let imageView = UIImageView(image: image)
             proportionStackView.addArrangedSubview(imageView)
         case 1, 2, 3:
-            var percentages = tokens.prefix(digest.positiveUSDBalanceTokensCount - 1).map { token in
+            var percentages = tokens.prefix(tokens.count - 1).map { token in
                 NSDecimalNumber(decimal: token.decimalValue / digest.usdBalanceSum)
                     .rounding(accordingToBehavior: NSDecimalNumberHandler.percentRoundingHandler)
                     .decimalValue
             }
             percentages.append(1 - percentages.reduce(0, +))
-            addSingleTokenProportionView(
-                count: digest.positiveUSDBalanceTokensCount
-            ) { iconView, label, index in
+            addSingleTokenProportionView(count: tokens.count) { iconView, label, index in
                 let token = tokens[index]
                 iconView.setIcon(tokenIconURL: URL(string: token.iconURL))
                 label.text = NumberFormatter.simplePercentage.string(decimal: percentages[index])

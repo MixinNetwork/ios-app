@@ -10,6 +10,7 @@ final class WalletSummaryViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
+    private var summary: WalletSummary?
     private var privacyWalletDigest: WalletDigest?
     private var classicWalletDigests: [WalletDigest] = []
     
@@ -47,11 +48,51 @@ final class WalletSummaryViewController: UIViewController {
             name: Currency.currentCurrencyDidChangeNotification,
             object: nil
         )
+        let notificationCenter: NotificationCenter = .default
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadData),
+            name: TokenDAO.tokensDidChangeNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadData),
+            name: TokenExtraDAO.tokenVisibilityDidChangeNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadData),
+            name: UTXOService.balanceDidUpdateNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadData),
+            name: Web3TokenDAO.tokensDidChangeNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadData),
+            name: Web3TokenExtraDAO.tokenVisibilityDidChangeNotification,
+            object: nil
+        )
+        reloadData()
+    }
+    
+    @objc private func reloadData() {
         DispatchQueue.global().async {
             PropertiesDAO.shared.set(true, forKey: .hasWalletSwitchViewed)
             let privacyWalletDigest = TokenDAO.shared.walletDigest()
             let classicWalletDigests = Web3WalletDAO.shared.walletDigests()
+            let summary = WalletSummary(
+                privacyWallet: privacyWalletDigest,
+                otherWallets: classicWalletDigests
+            )
             DispatchQueue.main.async {
+                self.summary = summary
                 self.privacyWalletDigest = privacyWalletDigest
                 self.classicWalletDigests = classicWalletDigests
                 self.collectionView.reloadData()
@@ -80,8 +121,8 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .value:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_summary_value, for: indexPath)!
-            if let digest = privacyWalletDigest {
-                cell.load(digest: digest)
+            if let summary {
+                cell.load(summary: summary)
             }
             return cell
         case .wallets:

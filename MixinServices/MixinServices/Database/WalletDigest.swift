@@ -5,18 +5,13 @@ public final class WalletDigest {
     public let wallet: Wallet
     public let usdBalanceSum: Decimal
     public let tokens: [TokenDigest]
-    public let positiveUSDBalanceTokensCount: Int
     
-    init(
-        wallet: Wallet,
-        usdBalanceSum: Decimal,
-        tokens: [TokenDigest],
-        positiveUSDBalanceTokensCount: Int
-    ) {
+    public init(wallet: Wallet, tokens: [TokenDigest]) {
         self.wallet = wallet
-        self.usdBalanceSum = usdBalanceSum
+        self.usdBalanceSum = tokens.reduce(0) { result, digest in
+            result + digest.decimalValue
+        }
         self.tokens = tokens
-        self.positiveUSDBalanceTokensCount = positiveUSDBalanceTokensCount
     }
     
 }

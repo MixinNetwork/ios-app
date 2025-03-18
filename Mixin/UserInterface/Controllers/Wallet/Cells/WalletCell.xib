@@ -49,7 +49,7 @@
                             </stackView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="beu-6R-0hW" firstAttribute="width" secondItem="e61-KP-cyS" secondAttribute="width" multiplier="0.84" priority="250" id="kgu-0M-1h7"/>
+                            <constraint firstItem="beu-6R-0hW" firstAttribute="width" secondItem="e61-KP-cyS" secondAttribute="width" multiplier="0.84" id="kgu-0M-1h7"/>
                         </constraints>
                     </stackView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="Oh6-tG-sNl">

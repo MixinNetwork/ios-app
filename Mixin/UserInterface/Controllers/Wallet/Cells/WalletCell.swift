@@ -66,7 +66,7 @@ final class WalletCell: UICollectionViewCell {
                     .decimalValue
             }
             addSingleTokenProportionView(count: 2) { iconView, label, index in
-                let token = digest.tokens[index]
+                let token = tokens[index]
                 iconView.setIcon(tokenIconURL: URL(string: token.iconURL))
                 label.text = NumberFormatter.simplePercentage.string(decimal: percentages[index])
             }
@@ -79,7 +79,7 @@ final class WalletCell: UICollectionViewCell {
             stackView.axis = .horizontal
             stackView.spacing = 4
             proportionStackView.addArrangedSubview(stackView)
-            iconView.setIcons(urls: digest.tokens[2...].map(\.iconURL))
+            iconView.setIcons(urls: tokens[2...].map(\.iconURL))
         }
     }
     
@@ -147,6 +147,7 @@ extension WalletCell {
                     label.textColor = R.color.text_tertiary()
                     label.font = .systemFont(ofSize: 8)
                     label.textAlignment = .center
+                    label.adjustsFontSizeToFitWidth = true
                     label.minimumScaleFactor = 0.1
                     label.layer.cornerRadius = 9
                     label.layer.masksToBounds = true

@@ -39,6 +39,7 @@ final class WalletCell: UICollectionViewCell {
         let tokens = digest.tokens
         switch tokens.count {
         case 0:
+            proportionStackView.distribution = .fill
             let image = switch type {
             case .privacy:
                 R.image.privacy_wallet_chains()
@@ -47,7 +48,11 @@ final class WalletCell: UICollectionViewCell {
             }
             let imageView = UIImageView(image: image)
             proportionStackView.addArrangedSubview(imageView)
+            let placeholder = UIView()
+            placeholder.backgroundColor = .clear
+            proportionStackView.addArrangedSubview(placeholder)
         case 1, 2, 3:
+            proportionStackView.distribution = .fillEqually
             var percentages = tokens.prefix(tokens.count - 1).map { token in
                 NSDecimalNumber(decimal: token.decimalValue / digest.usdBalanceSum)
                     .rounding(accordingToBehavior: NSDecimalNumberHandler.percentRoundingHandler)
@@ -60,6 +65,7 @@ final class WalletCell: UICollectionViewCell {
                 label.text = NumberFormatter.simplePercentage.string(decimal: percentages[index])
             }
         default:
+            proportionStackView.distribution = .fillEqually
             let percentages = tokens.prefix(2).map { token in
                 NSDecimalNumber(decimal: token.decimalValue / digest.usdBalanceSum)
                     .rounding(accordingToBehavior: NSDecimalNumberHandler.percentRoundingHandler)
@@ -117,7 +123,7 @@ extension WalletCell {
         
         private var wrapperViews: [IconWrapperView] = []
         
-        private weak var addtionalCountLabel: UILabel?
+        private weak var addtionalCountLabel: InsetLabel?
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -136,21 +142,22 @@ extension WalletCell {
                         make.width.equalTo(wrapperView.snp.height).offset(-6)
                     }
                 }
-                let label: UILabel
+                let label: InsetLabel
                 if let l = addtionalCountLabel {
                     label = l
                 } else {
-                    let view = StackedIconWrapperView<UILabel>(margin: 2, frame: iconWrapperFrame)
+                    let view = StackedIconWrapperView<InsetLabel>(margin: 2, frame: iconWrapperFrame)
                     view.backgroundColor = .clear
                     label = view.iconView
                     label.backgroundColor = R.color.background_quaternary()
-                    label.textColor = R.color.text_tertiary()
+                    label.textColor = R.color.icon_tint_tertiary()
                     label.font = .systemFont(ofSize: 8)
                     label.textAlignment = .center
                     label.adjustsFontSizeToFitWidth = true
                     label.minimumScaleFactor = 0.1
                     label.layer.cornerRadius = 9
                     label.layer.masksToBounds = true
+                    label.contentInset = UIEdgeInsets(top: 0, left: 1, bottom: 0, right: 2)
                     stackView.addArrangedSubview(view)
                     view.snp.makeConstraints { make in
                         make.size.equalTo(20)

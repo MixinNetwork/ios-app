@@ -85,7 +85,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
             config.image = R.image.ic_accessory_disclosure()
             config.attributedTitle = AttributedString(R.string.localizable.add_a_note(), attributes: addNoteAttributes)
             let button = UIButton(configuration: config)
-            button.tintColor = R.color.chat_pin_count_background()
+            button.tintColor = R.color.icon_tint_tertiary()
             button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             button.addTarget(self, action: #selector(changeNote(_:)), for: .touchUpInside)
             changeNoteButton = button

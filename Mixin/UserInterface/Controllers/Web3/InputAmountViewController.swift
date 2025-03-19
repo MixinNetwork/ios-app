@@ -280,7 +280,7 @@ class InputAmountViewController: UIViewController {
         
         let activityIndicator = ActivityIndicatorView()
         activityIndicator.style = .custom(diameter: 16, lineWidth: 2)
-        activityIndicator.tintColor = R.color.chat_pin_count_background()
+        activityIndicator.tintColor = R.color.icon_tint_tertiary()
         activityIndicator.hidesWhenStopped = true
         activityIndicator.isAnimating = true
         self.feeActivityIndicator = activityIndicator
@@ -291,7 +291,7 @@ class InputAmountViewController: UIViewController {
         config.imagePadding = 14
         config.attributedTitle = AttributedString("0", attributes: feeAttributes)
         let button = UIButton(configuration: config)
-        button.tintColor = R.color.chat_pin_count_background()
+        button.tintColor = R.color.icon_tint_tertiary()
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         button.alpha = 0
         self.changeFeeButton = button

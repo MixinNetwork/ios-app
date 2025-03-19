@@ -219,13 +219,29 @@ extension ClassicWalletViewController: WalletSearchViewControllerDelegate {
             name: token.name,
             precision: 0,
             iconURL: token.iconURL,
-            amount: amount,
+            amount: amount ?? "0",
             usdPrice: token.usdPrice,
             usdChange: token.usdChange
         )
         let item = Web3TokenItem(token: web3Token, hidden: isHidden, chain: token.chain)
         let controller = Web3TokenViewController(token: item)
         navigationController?.pushViewController(controller, animated: true)
+        if amount == nil,
+           let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: token.chainID)
+        {
+            RouteAPI.asset(
+                assetID: token.assetID,
+                address: address.destination,
+                queue: .global()
+            ) { result in
+                switch result {
+                case .success(let token):
+                    Web3TokenDAO.shared.save(tokens: [token])
+                case .failure(let error):
+                    Logger.general.debug(category: "ClassicWallet", message: "\(error)")
+                }
+            }
+        }
     }
     
 }

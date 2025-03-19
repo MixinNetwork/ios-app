@@ -63,11 +63,11 @@ public final class Web3TokenDAO: Web3DAO {
         return db.select(with: sql)
     }
     
-    public func amount(walletID: String, assetID: String) -> String {
+    public func amount(walletID: String, assetID: String) -> String? {
         db.select(
             with: "SELECT amount FROM tokens WHERE wallet_id = ? AND asset_id = ?",
             arguments: [walletID, assetID]
-        ) ?? "0"
+        )
     }
     
     public func save(tokens: [Web3Token]) {

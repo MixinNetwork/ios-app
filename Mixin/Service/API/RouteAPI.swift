@@ -258,6 +258,20 @@ extension RouteAPI {
         )
     }
     
+    static func asset(
+        assetID: String,
+        address: String,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<Web3Token>) -> Void
+    ) {
+        request(
+            method: .get,
+            path: "/assets/\(assetID)?address=\(address)",
+            queue: queue,
+            completion: completion
+        )
+    }
+    
     static func addresses(walletID: String) -> MixinAPI.Result<[Web3Address]> {
         let semaphore = DispatchSemaphore(value: 0)
         var result: MixinAPI.Result<[Web3Address]> = .failure(.foundNilResult)

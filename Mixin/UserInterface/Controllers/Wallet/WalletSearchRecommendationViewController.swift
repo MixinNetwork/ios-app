@@ -216,7 +216,6 @@ extension WalletSearchRecommendationViewController: UITableViewDelegate {
                     }
                     switch SafeAPI.assets(id: item.assetId) {
                     case .success(let token):
-                        TokenDAO.shared.save(assets: [token])
                         let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                         report(token: item)
                     case .failure(let error):

@@ -363,6 +363,9 @@ extension PrivacyWalletViewController: WalletSearchViewControllerDelegate {
     func walletSearchViewController(_ controller: WalletSearchViewController, didSelectToken token: MixinTokenItem) {
         let controller = MixinTokenViewController(token: token)
         navigationController?.pushViewController(controller, animated: true)
+        DispatchQueue.global().async {
+            TokenDAO.shared.save(assets: [token])
+        }
     }
     
 }

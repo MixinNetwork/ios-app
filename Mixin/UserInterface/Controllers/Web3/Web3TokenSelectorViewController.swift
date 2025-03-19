@@ -172,7 +172,7 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
                 name: token.name,
                 precision: 0,
                 iconURL: token.iconURL,
-                amount: amount,
+                amount: amount ?? "0",
                 usdPrice: token.usdPrice,
                 usdChange: token.usdChange
             )

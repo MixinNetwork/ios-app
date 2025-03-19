@@ -3,6 +3,10 @@ import MixinServices
 
 final class SyncWeb3TransactionJob: BaseJob {
     
+    private enum WalletError: Error {
+        case emptyAddress
+    }
+    
     private let limit = 300
     private let walletID: String
     
@@ -17,6 +21,15 @@ final class SyncWeb3TransactionJob: BaseJob {
     
     override func run() throws {
         let addresses = Web3AddressDAO.shared.addresses(walletID: walletID)
+        if addresses.isEmpty {
+            switch RouteAPI.addresses(walletID: walletID) {
+            case .success(let addresses):
+                Web3AddressDAO.shared.save(addresses: addresses)
+                reporter.report(error: WalletError.emptyAddress)
+            case .failure(let error):
+                throw error
+            }
+        }
         let destinations = Set(addresses.map(\.destination))
         Logger.general.debug(category: "SyncWeb3Txn", message: "Wallet: \(walletID), destinations: \(destinations)")
         for address in destinations {

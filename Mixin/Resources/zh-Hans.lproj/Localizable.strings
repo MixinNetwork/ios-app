@@ -282,7 +282,6 @@
 "circle_title" = "%@的圈子";
 "circles" = "圈子";
 "circulation_supply" = "流通量";
-"classic_wallet" = "经典钱包";
 "clear" = "清理";
 "clear_cache" = "清理缓存";
 "clear_chat" = "清除聊天记录";
@@ -308,6 +307,7 @@
 "collection" = "合集";
 "collection_collected" = "已收藏 %d 件";
 "combine_and_forward" = "合并转发";
+"common_wallet" = "普通钱包";
 "complete" = "完成";
 "completed" = "已完成";
 "compress_database" = "压缩数据库";

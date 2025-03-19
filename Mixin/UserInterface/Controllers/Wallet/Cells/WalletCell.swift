@@ -25,7 +25,7 @@ final class WalletCell: UICollectionViewCell {
             titleLabel.text = R.string.localizable.privacy_wallet()
             privacyIconImageView.isHidden = false
         case .classic:
-            titleLabel.text = R.string.localizable.classic_wallet()
+            titleLabel.text = R.string.localizable.common_wallet()
             privacyIconImageView.isHidden = true
         }
         valueLabel.attributedText = FiatMoneyValueAttributedStringBuilder.attributedString(

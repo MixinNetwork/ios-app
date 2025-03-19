@@ -282,7 +282,6 @@
 "circle_title" = "Círculos de %@";
 "circles" = "Círculos";
 "circulation_supply" = "Circulation Supply";
-"classic_wallet" = "Classic Wallet";
 "clear" = "Borrar";
 "clear_cache" = "Clear Cache";
 "clear_chat" = "Vaciar la conversación";
@@ -308,6 +307,7 @@
 "collection" = "Collection";
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Combinar y avanzar";
+"common_wallet" = "Common Wallet";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Comprimir base de datos";

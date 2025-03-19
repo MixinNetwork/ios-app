@@ -282,7 +282,6 @@
 "circle_title" = "%@のグループリスト";
 "circles" = "グループリスト";
 "circulation_supply" = "Circulation Supply";
-"classic_wallet" = "Classic Wallet";
 "clear" = "削除";
 "clear_cache" = "キャッシュをクリア";
 "clear_chat" = "チャットを削除する";
@@ -308,6 +307,7 @@
 "collection" = "Collection";
 "collection_collected" = "%d collected";
 "combine_and_forward" = "まとめて転送";
+"common_wallet" = "Common Wallet";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "データの圧縮";

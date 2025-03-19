@@ -282,7 +282,6 @@
 "circle_title" = "Круги пользователя %@";
 "circles" = "Круги";
 "circulation_supply" = "Circulation Supply";
-"classic_wallet" = "Classic Wallet";
 "clear" = "Очистить";
 "clear_cache" = "Clear Cache";
 "clear_chat" = "Очистить чат";
@@ -308,6 +307,7 @@
 "collection" = "Collection";
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Объединить и вперед";
+"common_wallet" = "Common Wallet";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Сжать базу данных";

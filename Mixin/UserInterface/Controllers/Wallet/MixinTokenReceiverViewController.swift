@@ -215,7 +215,7 @@ extension MixinTokenReceiverViewController: UITableViewDataSource {
             cell.subtitleLabel.text = R.string.localizable.send_to_address_description()
         case .classicWallet:
             cell.iconImageView.image = R.image.token_receiver_wallet()
-            cell.titleLabel.text = R.string.localizable.classic_wallet()
+            cell.titleLabel.text = R.string.localizable.common_wallet()
             cell.freeLabel.isHidden = true
             cell.subtitleLabel.text = R.string.localizable.send_to_other_wallet_description()
         case .contact:

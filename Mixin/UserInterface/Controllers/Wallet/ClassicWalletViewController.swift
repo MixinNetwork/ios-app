@@ -18,7 +18,7 @@ final class ClassicWalletViewController: WalletViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.text = R.string.localizable.classic_wallet()
+        titleLabel.text = R.string.localizable.common_wallet()
         tableView.dataSource = self
         tableView.delegate = self
         tableHeaderView.actionView.swapButton.isHidden = true

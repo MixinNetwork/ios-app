@@ -59,7 +59,7 @@ final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
         case .addressBook(let label):
             label
         case .classicWallet:
-            R.string.localizable.classic_wallet()
+            R.string.localizable.common_wallet()
         case .none:
             nil
         }

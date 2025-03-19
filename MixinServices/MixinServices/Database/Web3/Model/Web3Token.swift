@@ -81,7 +81,7 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
     
     public func nativeAmount(decimalAmount: Decimal) -> NSDecimalNumber? {
         let decimalAmountNumber = decimalAmount as NSDecimalNumber
-        let nativeAmount = decimalAmountNumber.multiplying(byPowerOf10: precision) // TODO: Really?
+        let nativeAmount = decimalAmountNumber.multiplying(byPowerOf10: precision)
         let isNativeAmountIntegral = nativeAmount == nativeAmount.rounding(accordingToBehavior: NSDecimalNumberHandler.extractIntegralPart)
         return isNativeAmountIntegral ? nativeAmount : nil
     }

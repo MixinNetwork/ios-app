@@ -12,12 +12,14 @@ public class Web3Wallet: Codable {
         case category = "category"
         case name = "name"
         case createdAt = "created_at"
+        case updatedAt = "updated_at"
     }
     
     public let walletID: String
     public let category: String
     public let name: String
     public let createdAt: String
+    public let updatedAt: String
     
 }
 

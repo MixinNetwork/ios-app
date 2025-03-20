@@ -18,7 +18,7 @@ struct DeviceTransferToken {
     let assetKey: String
     let collectionHash: String?
     
-    init(token: Token) {
+    init(token: MixinToken) {
         assetID = token.assetID
         kernelAssetID = token.kernelAssetID
         symbol = token.symbol
@@ -35,8 +35,8 @@ struct DeviceTransferToken {
         collectionHash = token.collectionHash
     }
     
-    func toToken() -> Token {
-        Token(assetID: assetID,
+    func toToken() -> MixinToken {
+        MixinToken(assetID: assetID,
               kernelAssetID: kernelAssetID,
               symbol: symbol,
               name: name,

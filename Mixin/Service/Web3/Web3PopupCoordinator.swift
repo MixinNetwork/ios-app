@@ -22,7 +22,6 @@ struct Web3PopupCoordinator {
     }
     
     enum Popup {
-        case unlock(UnlockWeb3AccountViewController)
         case request(Web3PopupViewController)
         case rejection(title: String, message: String)
     }
@@ -41,7 +40,7 @@ struct Web3PopupCoordinator {
             switch popup {
             case .request(let controller):
                 controller.reject()
-            case .unlock, .rejection:
+            case .rejection:
                 break
             }
         }
@@ -57,17 +56,6 @@ struct Web3PopupCoordinator {
         }
         let viewController: UIViewController
         switch popup {
-        case .unlock(let controller):
-            // TODO: Tell user subsequent request will fail if not approved
-            controller.onDismiss = {
-                popups.removeFirst()
-                if controller.isUnlocked {
-                    presentNextPopupIfNeeded()
-                } else {
-                    rejectAllPopups()
-                }
-            }
-            viewController = controller
         case .request(let controller):
             controller.onDismiss = {
                 popups.removeFirst()

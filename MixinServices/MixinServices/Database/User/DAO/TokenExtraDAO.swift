@@ -5,7 +5,7 @@ public final class TokenExtraDAO: UserDatabaseDAO {
     
     public static let shared = TokenExtraDAO()
     
-    public static let tokenVisibilityDidChangeNotification = Notification.Name("one.mixin.messenger.service.TokenVisibilityDidChange")
+    public static let tokenVisibilityDidChangeNotification = Notification.Name("one.mixin.service.TokenExtraDAO.TokenVisibilityDidChange")
     
     public func insertOrUpdateBalance(
         extra: TokenExtra,

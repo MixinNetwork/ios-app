@@ -64,6 +64,7 @@ public class RefreshAssetsJob: AsynchronousJob {
                                     return
                                 }
                                 ChainDAO.shared.save(chains)
+                                Web3ChainDAO.shared.save(chains)
                             }
                         case let .failure(error):
                             reporter.report(error: error)
@@ -102,6 +103,7 @@ public class RefreshAssetsJob: AsynchronousJob {
                                         return
                                     }
                                     ChainDAO.shared.save([chain])
+                                    Web3ChainDAO.shared.save([chain])
                                 }
                             case let .failure(error):
                                 reporter.report(error: error)

@@ -4,9 +4,9 @@ import TIP
 
 struct WithdrawPaymentOperation {
     
-    enum AddressInfo {
-        case label(String)
-        case web3Chain(String)
+    enum AddressLabel {
+        case addressBook(String)
+        case classicWallet
     }
     
     enum Error: Swift.Error, LocalizedError {
@@ -51,27 +51,27 @@ struct WithdrawPaymentOperation {
     
     let traceID: String
     
-    let withdrawalToken: TokenItem
+    let withdrawalToken: MixinTokenItem
     let withdrawalTokenAmount: Decimal
     let withdrawalFiatMoneyAmount: Decimal
     
     let withdrawalOutputs: UTXOService.OutputCollection
     
-    let feeToken: Token
+    let feeToken: MixinToken
     let feeAmount: Decimal
     let isFeeTokenDifferent: Bool
     
     let address: WithdrawableAddress
-    let addressInfo: AddressInfo?
+    let addressLabel: AddressLabel?
     let addressID: String?
     
     private let cashierID = "674d6776-d600-4346-af46-58e77d8df185"
     
     init(
-        traceID: String, withdrawalToken: TokenItem, withdrawalTokenAmount: Decimal,
+        traceID: String, withdrawalToken: MixinTokenItem, withdrawalTokenAmount: Decimal,
         withdrawalFiatMoneyAmount: Decimal, withdrawalOutputs: UTXOService.OutputCollection,
-        feeToken: Token, feeAmount: Decimal, address: WithdrawableAddress,
-        addressInfo: AddressInfo? = nil, addressID: String? = nil
+        feeToken: MixinToken, feeAmount: Decimal, address: WithdrawableAddress,
+        addressLabel: AddressLabel? = nil, addressID: String? = nil
     ) {
         self.traceID = traceID
         self.withdrawalToken = withdrawalToken
@@ -82,7 +82,7 @@ struct WithdrawPaymentOperation {
         self.feeAmount = feeAmount
         self.isFeeTokenDifferent = withdrawalToken.assetID != feeToken.assetID
         self.address = address
-        self.addressInfo = addressInfo
+        self.addressLabel = addressLabel
         self.addressID = addressID
     }
     
@@ -92,8 +92,8 @@ struct WithdrawPaymentOperation {
         let emptyMemo = ""
         let fullAddress = address.fullRepresentation
         let withdrawalAmount = withdrawalTokenAmount
-        let withdrawalAmountString = Token.amountString(from: withdrawalAmount)
-        let feeAmountString = Token.amountString(from: feeAmount)
+        let withdrawalAmountString = TokenAmountFormatter.string(from: withdrawalAmount)
+        let feeAmountString = TokenAmountFormatter.string(from: feeAmount)
         let feeTraceID = UUID.uniqueObjectIDString(traceID, "FEE")
         Logger.general.info(category: "Withdraw", message: "Withdraw: \(withdrawalAmount) \(withdrawalToken.symbol), fee: \(feeAmount) \(feeToken.symbol), to \(fullAddress), traceID: \(traceID), feeTraceID: \(feeTraceID)")
         
@@ -206,7 +206,7 @@ struct WithdrawPaymentOperation {
         let withdrawalSnapshotAmount = isFeeTokenDifferent ? withdrawalAmount : withdrawalAmount + feeAmount
         let withdrawalSnapshot = SafeSnapshot(type: .withdrawal,
                                               assetID: withdrawalToken.assetID,
-                                              amount: "-" + Token.amountString(from: withdrawalSnapshotAmount),
+                                              amount: "-" + TokenAmountFormatter.string(from: withdrawalSnapshotAmount),
                                               userID: senderID,
                                               opponentID: "",
                                               memo: emptyMemo,

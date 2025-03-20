@@ -97,7 +97,7 @@ final class Web3SwapViewController: SwapViewController {
             sender.isBusy = false
             switch response {
             case .success(let response):
-                self.requestSign(transaction: response.tx)
+                self.requestSign(walletID: sendToken.walletID, transaction: response.tx)
             case .failure(let error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
@@ -225,7 +225,7 @@ final class Web3SwapViewController: SwapViewController {
         receiveLoadingIndicator.stopAnimating()
     }
     
-    private func requestSign(transaction raw: String) {
+    private func requestSign(walletID: String, transaction raw: String) {
         guard let homeContainer = UIApplication.homeContainerViewController else {
             return
         }
@@ -238,6 +238,7 @@ final class Web3SwapViewController: SwapViewController {
                 return
             }
             let operation = try SolanaTransferWithCustomRespondingOperation(
+                walletID: walletID,
                 transaction: transaction,
                 fromAddress: address,
                 chain: .solana

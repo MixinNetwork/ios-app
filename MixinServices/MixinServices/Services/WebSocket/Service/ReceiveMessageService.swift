@@ -1221,6 +1221,7 @@ extension ReceiveMessageService {
         }
         if let chainId, !ChainDAO.shared.chainExists(chainId: chainId), case let .success(chain) = AssetAPI.chain(chainId: chainId) {
             ChainDAO.shared.save([chain])
+            Web3ChainDAO.shared.save([chain])
         }
         let job = RefreshAssetsJob(request: .asset(id: snapshot.assetId, untilDepositEntriesNotEmpty: false))
         ConcurrentJobQueue.shared.addJob(job: job)
@@ -1248,6 +1249,7 @@ extension ReceiveMessageService {
         }
         if let chainId, !ChainDAO.shared.chainExists(chainId: chainId), case let .success(chain) = NetworkAPI.chain(id: chainId) {
             ChainDAO.shared.save([chain])
+            Web3ChainDAO.shared.save([chain])
         }
         
         let depositHash: String?

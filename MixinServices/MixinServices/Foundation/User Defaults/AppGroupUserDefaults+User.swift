@@ -74,7 +74,7 @@ extension AppGroupUserDefaults {
             case marketColorAppearance = "color_appearance"
         }
         
-        public static let version = 32
+        public static let version = 33
         public static let uninitializedVersion = -1
         public static let deviceTransferVersion = 1
         

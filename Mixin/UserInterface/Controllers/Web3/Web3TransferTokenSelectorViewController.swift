@@ -1,12 +1,12 @@
 import UIKit
 import MixinServices
 
-final class Web3TransferTokenSelectorViewController<Token: TransferableToken>: PopupSearchableTableViewController, UITableViewDataSource, UITableViewDelegate {
+final class Web3TransferTokenSelectorViewController<SelectableToken: Token>: PopupSearchableTableViewController, UITableViewDataSource, UITableViewDelegate {
     
-    var onSelected: ((Token) -> Void)?
+    var onSelected: ((SelectableToken) -> Void)?
     
-    private var allTokens: [Token] = []
-    private var searchResults: [Token] = []
+    private var allTokens: [SelectableToken] = []
+    private var searchResults: [SelectableToken] = []
     
     convenience init() {
         self.init(nib: R.nib.popupSearchableTableView)
@@ -30,7 +30,7 @@ final class Web3TransferTokenSelectorViewController<Token: TransferableToken>: P
         }
     }
     
-    func reload(tokens: [Token]) {
+    func reload(tokens: [SelectableToken]) {
         self.allTokens = tokens
         if isViewLoaded {
             tableView.reloadData()
@@ -46,7 +46,7 @@ final class Web3TransferTokenSelectorViewController<Token: TransferableToken>: P
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.compact_asset, for: indexPath)!
         let token = isSearching ? searchResults[indexPath.row] : allTokens[indexPath.row]
         switch token {
-        case let token as TokenItem:
+        case let token as MixinTokenItem:
             cell.render(token: token, style: .nameWithBalance)
         case let token as Web3Token:
             cell.render(web3Token: token)

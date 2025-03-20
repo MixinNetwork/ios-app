@@ -15,7 +15,7 @@ class BigAmountConfirmationWindow: AssetConfirmationWindow {
     }
     
     func render(
-        token: TokenItem,
+        token: MixinTokenItem,
         to user: UserItem,
         amount: Decimal,
         fiatMoneyAmount: Decimal,

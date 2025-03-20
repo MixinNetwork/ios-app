@@ -121,7 +121,7 @@ final class MixinSwapViewController: SwapViewController {
             switch result {
             case .success(let token):
                 if let chain = ChainDAO.shared.chain(chainId: token.chainID) {
-                    let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                    let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                     DispatchQueue.main.async {
                         guard let self, id == self.sendToken?.assetID else {
                             return
@@ -379,7 +379,7 @@ extension MixinSwapViewController {
                 } else if let item = TokenDAO.shared.tokenItem(assetID: id), let token = BalancedSwapToken(tokenItem: item) {
                     sendToken = token
                 } else if case let .success(token) = SafeAPI.assets(id: id), let chain = ChainDAO.shared.chain(chainId: token.chainID) {
-                    let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                    let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                     sendToken = BalancedSwapToken(tokenItem: item)
                 } else {
                     sendToken = nil
@@ -399,7 +399,7 @@ extension MixinSwapViewController {
                 } else if let item = TokenDAO.shared.tokenItem(assetID: id), let token = BalancedSwapToken(tokenItem: item) {
                     receiveToken = token
                 } else if case let .success(token) = SafeAPI.assets(id: id), let chain = ChainDAO.shared.chain(chainId: token.chainID) {
-                    let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                    let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                     receiveToken = BalancedSwapToken(tokenItem: item)
                 } else {
                     receiveToken = nil

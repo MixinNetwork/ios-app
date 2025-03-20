@@ -208,7 +208,7 @@ extension Invoice {
     
     func checkPreconditions(
         transferTo destination: Payment.TransferDestination,
-        tokens: [String: TokenItem],
+        tokens: [String: MixinTokenItem],
         on parent: UIViewController,
         onFailure: @MainActor @escaping (PaymentPreconditionFailureReason) -> Void,
         onSuccess: @MainActor @escaping (InvoicePaymentOperation, [PaymentPreconditionIssue]) -> Void

@@ -13,7 +13,7 @@ final class AddressReceiversCell: UITableViewCell {
         contentStackView.setCustomSpacing(12, after: titleStackView)
     }
     
-    func reloadData(token: TokenItem, recipients: [SafeMultisigResponse.Safe.Recipient]) {
+    func reloadData(token: MixinTokenItem, recipients: [SafeMultisigResponse.Safe.Recipient]) {
         for view in receiversStackView.arrangedSubviews {
             view.removeFromSuperview()
         }

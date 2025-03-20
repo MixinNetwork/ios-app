@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,19 +13,9 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SafeSnapshotViewController" customModule="Mixin" customModuleProvider="target">
-            <connections>
-                <outlet property="amountLabel" destination="P9h-ae-m2f" id="wUX-5g-uy0"/>
-                <outlet property="amountStackView" destination="KPp-KY-UgW" id="qea-5h-nwo"/>
-                <outlet property="fiatMoneyValueLabel" destination="DWF-GB-gKf" id="Kam-Tx-M1u"/>
-                <outlet property="headerContentStackView" destination="u3L-Nc-1Cs" id="rrC-h1-wiq"/>
-                <outlet property="iconView" destination="rqn-Iq-NhJ" id="EXd-VY-3as"/>
-                <outlet property="iconViewDimensionConstraint" destination="d04-NQ-2rq" id="Hs5-fS-KRC"/>
-                <outlet property="symbolLabel" destination="Z0P-cq-qAP" id="Wfj-mv-oH3"/>
-            </connections>
-        </placeholder>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SafeSnapshotViewController" customModule="Mixin" customModuleProvider="target"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="KFW-NW-lZu" customClass="InfiniteTopView" customModule="Mixin" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="KFW-NW-lZu" customClass="SnapshotTableHeaderView" customModule="Mixin" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="393" height="190"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
@@ -117,6 +107,15 @@
                 <constraint firstAttribute="bottom" secondItem="0OM-lb-5R8" secondAttribute="bottom" id="s0h-Ae-HY6"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="amountLabel" destination="P9h-ae-m2f" id="q8s-6n-owh"/>
+                <outlet property="amountStackView" destination="KPp-KY-UgW" id="SJi-kW-Gtk"/>
+                <outlet property="contentStackView" destination="u3L-Nc-1Cs" id="KJi-U4-IKc"/>
+                <outlet property="fiatMoneyValueLabel" destination="DWF-GB-gKf" id="JQg-m9-Kgw"/>
+                <outlet property="iconView" destination="rqn-Iq-NhJ" id="6bn-2c-aID"/>
+                <outlet property="iconViewDimensionConstraint" destination="d04-NQ-2rq" id="kXB-fj-PVq"/>
+                <outlet property="symbolLabel" destination="Z0P-cq-qAP" id="Yeh-Vv-13n"/>
+            </connections>
             <point key="canvasLocation" x="-853" y="42"/>
         </view>
     </objects>
@@ -131,7 +130,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

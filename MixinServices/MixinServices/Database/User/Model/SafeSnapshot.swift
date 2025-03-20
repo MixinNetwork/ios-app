@@ -255,7 +255,7 @@ extension SafeSnapshot {
         // it indicates that this filter should not be applied.
         
         public var type: SafeSnapshot.DisplayType?
-        public var tokens: [TokenItem]
+        public var tokens: [MixinTokenItem]
         public var users: [UserItem]
         public var addresses: [AddressItem]
         public var startDate: Date?
@@ -267,7 +267,7 @@ extension SafeSnapshot {
         
         public init(
             type: SafeSnapshot.DisplayType? = nil,
-            tokens: [TokenItem] = [],
+            tokens: [MixinTokenItem] = [],
             users: [UserItem] = [],
             addresses: [AddressItem] = [],
             startDate: Date? = nil,

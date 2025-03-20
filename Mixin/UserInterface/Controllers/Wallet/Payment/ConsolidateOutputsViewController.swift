@@ -13,10 +13,10 @@ final class ConsolidateOutputsViewController: UIViewController {
     
     var onCompletion: ((Result) -> Void)?
     
-    private let token: TokenItem
+    private let token: MixinTokenItem
     private let traceID = UUID().uuidString.lowercased()
     
-    init(token: TokenItem) {
+    init(token: MixinTokenItem) {
         self.token = token
         let nib = R.nib.consolidateOutputsView
         super.init(nibName: nib.name, bundle: nib.bundle)

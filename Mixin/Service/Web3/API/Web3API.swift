@@ -12,38 +12,8 @@ final class Web3API {
         case calculateAgreement
     }
     
-    enum TokenID {
-        case fungibleID(String)
-        case assetKey(String)
-    }
-    
-    static func account(address: String, completion: @escaping (MixinAPI.Result<Web3Account>) -> Void) -> Request {
-        request(method: .get, path: "/accounts/" + address, completion: completion)
-    }
-    
     static func dapps(queue: DispatchQueue, completion: @escaping (MixinAPI.Result<[Web3ChainUpdate]>) -> Void) {
         request(method: .get, path: "/dapps", queue: queue, completion: completion)
-    }
-    
-    static func transactions(
-        address: String,
-        chainID: String,
-        tokenID: TokenID,
-        limit: Int = 100,
-        completion: @escaping (MixinAPI.Result<[Web3Transaction]>) -> Void
-    ) {
-        var path = "/transactions/\(address)?chain_id=\(chainID)&limit=\(limit)"
-        switch tokenID {
-        case .fungibleID(let id):
-            path += "&fungible_id=\(id)"
-        case .assetKey(let key):
-            path += "&asset_key=\(key)"
-        }
-        request(method: .get, path: path, completion: completion)
-    }
-    
-    static func tokens(address: String) async throws -> [Web3Token] {
-        try await request(method: .get, path: "/tokens?addresses=" + address)
     }
     
     static func priorityFee(transaction: String) async throws -> PriorityFee {

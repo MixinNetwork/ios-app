@@ -1,14 +1,24 @@
 import UIKit
 import MixinServices
 
-class TokenSearchResultsViewController: WalletSearchTableViewController {
+final class TokenSearchResultsViewController: WalletSearchTableViewController {
     
     let activityIndicator = ActivityIndicatorView()
     
-    var searchResults: [TokenItem] = []
+    var searchResults: [MixinTokenItem] = []
     var lastKeyword: String?
     
     private let queue = OperationQueue()
+    private let supportedChainIDs: Set<String>?
+    
+    init(supportedChainIDs: Set<String>? = nil) {
+        self.supportedChainIDs = supportedChainIDs
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +50,7 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
         }
         activityIndicator.startAnimating()
         let op = BlockOperation()
-        op.addExecutionBlock { [unowned op] in
+        op.addExecutionBlock { [unowned op, supportedChainIDs] in
             usleep(200 * 1000)
             guard !op.isCancelled else {
                 return
@@ -48,7 +58,7 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
             
             let lowercasedKeyword = keyword.lowercased()
             let defaultIconUrl = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
-            func assetSorting(_ one: TokenItem, _ another: TokenItem) -> Bool {
+            func assetSorting(_ one: MixinTokenItem, _ another: MixinTokenItem) -> Bool {
                 let oneSymbolEqualsToKeyword = one.symbol.lowercased() == lowercasedKeyword
                 let anotherSymbolEqualsToKeyword = another.symbol.lowercased() == lowercasedKeyword
                 if oneSymbolEqualsToKeyword && !anotherSymbolEqualsToKeyword {
@@ -77,6 +87,11 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
             var localItems = TokenDAO.shared
                 .search(keyword: keyword, sortResult: false, limit: nil)
                 .sorted(by: assetSorting)
+            if let ids = supportedChainIDs {
+                localItems = localItems.filter { item in
+                    ids.contains(item.chainID)
+                }
+            }
             guard !op.isCancelled else {
                 return
             }
@@ -86,9 +101,14 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
                 self.tableView.removeEmptyIndicator()
             }
             
-            let remoteAssets: [Token]
+            let remoteAssets: [MixinToken]
             switch AssetAPI.search(keyword: keyword) {
-            case .success(let assets):
+            case .success(var assets):
+                if let ids = supportedChainIDs {
+                    assets = assets.filter { asset in
+                        ids.contains(asset.chainID)
+                    }
+                }
                 remoteAssets = assets
             case .failure:
                 DispatchQueue.main.sync {
@@ -99,7 +119,7 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
             
             localItems = localItems.filter{ $0.balance.doubleValue > 0 }
             let localIds = Set(localItems.map(\.assetID))
-            let remoteItems = remoteAssets.compactMap({ (token) -> TokenItem? in
+            let remoteItems = remoteAssets.compactMap({ (token) -> MixinTokenItem? in
                 guard !localIds.contains(token.assetID) else {
                     return nil
                 }
@@ -109,16 +129,17 @@ class TokenSearchResultsViewController: WalletSearchTableViewController {
                 } else if case let .success(remoteChain) = AssetAPI.chain(chainId: token.chainID) {
                     DispatchQueue.global().async {
                         ChainDAO.shared.save([remoteChain])
+                        Web3ChainDAO.shared.save([remoteChain])
                     }
                     chain = remoteChain
                 } else {
                     return nil
                 }
-                let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                 return item
             })
             
-            let allItems: [TokenItem]?
+            let allItems: [MixinTokenItem]?
             if remoteItems.isEmpty {
                 allItems = nil
             } else {
@@ -167,13 +188,11 @@ extension TokenSearchResultsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let item = searchResults[indexPath.row]
-        let vc = TokenViewController(token: item)
-        navigationController?.pushViewController(vc, animated: true)
+        if let parent = self.parent as? WalletSearchViewController {
+            parent.delegate?.walletSearchViewController(parent, didSelectToken: item)
+        }
         DispatchQueue.global().async {
             AppGroupUserDefaults.User.insertAssetSearchHistory(with: item.assetID)
-            if !TokenDAO.shared.tokenExists(assetID: item.assetID) {
-                TokenDAO.shared.save(assets: [item])
-            }
         }
     }
     

@@ -55,12 +55,15 @@ final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
         var rows: [Row] = [
             .amount(caption: .amount, token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),
         ]
-        switch operation.addressInfo {
-        case .label(let label):
-            rows.append(.receivingAddress(value: operation.address.fullRepresentation, label: label))
-        case .web3Chain, .none:
-            rows.append(.receivingAddress(value: operation.address.fullRepresentation, label: nil))
+        let label: String? = switch operation.addressLabel {
+        case .addressBook(let label):
+            label
+        case .classicWallet:
+            R.string.localizable.common_wallet()
+        case .none:
+            nil
         }
+        rows.append(.receivingAddress(value: operation.address.fullRepresentation, label: label))
         if let account = LoginManager.shared.account {
             let user = UserItem.createUser(from: account)
             rows.append(.senders([user], multisigSigners: nil, threshold: nil))
@@ -134,7 +137,7 @@ final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
         }
         var viewControllers = navigation.viewControllers
         while (viewControllers.count > 0 && !(viewControllers.last is HomeTabBarController)) {
-            if viewControllers.last is TokenViewController {
+            if viewControllers.last is MixinTokenViewController {
                 break
             }
             viewControllers.removeLast()

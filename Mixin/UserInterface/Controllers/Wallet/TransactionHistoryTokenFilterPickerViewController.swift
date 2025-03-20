@@ -1,32 +1,21 @@
 import UIKit
 import MixinServices
 
-protocol TransactionHistoryTokenFilterPickerViewControllerDelegate: AnyObject {
+class TransactionHistoryTokenFilterPickerViewController<Token: MixinServices.Token>: TransactionHistoryFilterPickerViewController, UITableViewDelegate {
     
-    func transactionHistoryTokenFilterPickerViewController(
-        _ controller: TransactionHistoryTokenFilterPickerViewController,
-        didPickTokens tokens: [TokenItem]
-    )
+    let selectedTokenReuseIdentifier = "st"
     
-}
-
-final class TransactionHistoryTokenFilterPickerViewController: TransactionHistoryFilterPickerViewController {
+    var tokens: [Token] = []
+    var selectedAssetIDs: Set<String>
+    var selectedTokens: [Token]
     
-    weak var delegate: TransactionHistoryTokenFilterPickerViewControllerDelegate?
+    var searchResults: [Token] = []
     
-    private let selectedTokenReuseIdentifier = "st"
-    
-    private var tokens: [TokenItem] = []
-    private var selectedAssetIDs: Set<String>
-    private var selectedTokens: [TokenItem]
-    
-    private var searchResults: [TokenItem] = []
-    
-    private var tokenModels: [TokenItem] {
+    var tokenModels: [Token] {
         isSearching ? searchResults : tokens
     }
     
-    init(selectedTokens: [TokenItem]) {
+    init(selectedTokens: [Token]) {
         self.selectedAssetIDs = Set(selectedTokens.map(\.assetID))
         self.selectedTokens = selectedTokens
         super.init()
@@ -44,24 +33,13 @@ final class TransactionHistoryTokenFilterPickerViewController: TransactionHistor
         hideSegmentControlWrapperView()
         
         tableView.register(R.nib.checkmarkTokenCell)
-        tableView.dataSource = self
         tableView.delegate = self
         
         collectionView.register(SelectedTokenCell.self, forCellWithReuseIdentifier: selectedTokenReuseIdentifier)
-        collectionView.dataSource = self
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20)
         
         if !selectedAssetIDs.isEmpty {
             showSelections(animated: false)
-        }
-        
-        queue.addOperation {
-            let tokens = TokenDAO.shared.allTokens()
-            DispatchQueue.main.sync {
-                self.tokens = tokens
-                self.tableView.reloadData()
-                self.reloadTableViewSelections()
-            }
         }
     }
     
@@ -87,16 +65,6 @@ final class TransactionHistoryTokenFilterPickerViewController: TransactionHistor
         queue.addOperation(op)
     }
     
-    override func reset(_ sender: Any) {
-        presentingViewController?.dismiss(animated: true)
-        delegate?.transactionHistoryTokenFilterPickerViewController(self, didPickTokens: [])
-    }
-    
-    override func apply(_ sender: Any) {
-        presentingViewController?.dismiss(animated: true)
-        delegate?.transactionHistoryTokenFilterPickerViewController(self, didPickTokens: selectedTokens)
-    }
-    
     override func reloadTableViewSelections() {
         super.reloadTableViewSelections()
         var indexPaths: [IndexPath] = []
@@ -108,25 +76,6 @@ final class TransactionHistoryTokenFilterPickerViewController: TransactionHistor
             tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         }
     }
-    
-}
-
-extension TransactionHistoryTokenFilterPickerViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        tokenModels.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.checkmark_token, for: indexPath)!
-        let token = tokenModels[indexPath.row]
-        cell.load(token: token)
-        return cell
-    }
-    
-}
-
-extension TransactionHistoryTokenFilterPickerViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let token = tokenModels[indexPath.row]
@@ -150,22 +99,6 @@ extension TransactionHistoryTokenFilterPickerViewController: UITableViewDelegate
         if selectedAssetIDs.isEmpty {
             hideSelections(animated: true)
         }
-    }
-    
-}
-
-extension TransactionHistoryTokenFilterPickerViewController: UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        selectedTokens.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: selectedTokenReuseIdentifier, for: indexPath) as! SelectedTokenCell
-        let token = selectedTokens[indexPath.row]
-        cell.load(token: token)
-        cell.delegate = self
-        return cell
     }
     
 }

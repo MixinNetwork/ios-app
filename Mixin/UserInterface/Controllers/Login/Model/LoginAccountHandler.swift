@@ -40,6 +40,7 @@ extension LoginAccountHandler where Self: UIViewController {
         
         TaskDatabase.reloadCurrent()
         UserDatabase.reloadCurrent()
+        Web3Database.reloadCurrent()
         
         if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
             AppGroupUserDefaults.User.localVersion = AppGroupUserDefaults.User.version
@@ -81,6 +82,7 @@ extension LoginAccountHandler where Self: UIViewController {
         OutputDAO.shared.deleteAll()
         RawTransactionDAO.shared.deleteAll()
         TokenExtraDAO.shared.nullifyAllBalances()
+        Web3DAO.deleteWalletsAddresses()
         WKWebsiteDataStore.default().removeAuthenticationRelatedData()
         
         if !account.fullName.isEmpty {

@@ -95,13 +95,17 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
     
     fileprivate let transaction: Solana.Transaction
     
+    private let walletID: String
+    
     init(
+        walletID: String,
         transaction: Solana.Transaction,
         fromAddress: String,
         toAddress: String,
         chain: Web3Chain
     ) throws {
         self.transaction = transaction
+        self.walletID = walletID
         try super.init(fromAddress: fromAddress,
                        toAddress: toAddress,
                        chain: chain,
@@ -111,7 +115,7 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
     
     override func loadBalanceChange() async throws -> BalanceChange {
         if let change = transaction.change,
-           let token = try await Web3API.tokens(address: change.assetKey).first
+           let token = Web3TokenDAO.shared.token(walletID: walletID, assetKey: change.assetKey)
         {
             .detailed(token: token, amount: change.amount)
         } else {
@@ -151,6 +155,7 @@ final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolana
     let request: WalletConnectSign.Request
     
     init(
+        walletID: String,
         transaction: Solana.Transaction,
         fromAddress: String,
         chain: Web3Chain,
@@ -159,10 +164,13 @@ final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolana
     ) throws {
         self.session = session
         self.request = request
-        try super.init(transaction: transaction,
-                       fromAddress: fromAddress,
-                       toAddress: "", // FIXME: Decode txn
-                       chain: chain)
+        try super.init(
+            walletID: walletID,
+            transaction: transaction,
+            fromAddress: fromAddress,
+            toAddress: "", // FIXME: Decode txn
+            chain: chain
+        )
     }
     
     override func respond(signature: String) async throws {
@@ -189,6 +197,7 @@ final class SolanaTransferWithCustomRespondingOperation: ArbitraryTransactionSol
     private let rejectImpl: (() -> Void)?
     
     init(
+        walletID: String,
         transaction: Solana.Transaction,
         fromAddress: String,
         chain: Web3Chain,
@@ -197,10 +206,13 @@ final class SolanaTransferWithCustomRespondingOperation: ArbitraryTransactionSol
     ) throws {
         self.respondImpl = respondImpl
         self.rejectImpl = rejectImpl
-        try super.init(transaction: transaction, 
-                       fromAddress: fromAddress,
-                       toAddress: "",
-                       chain: chain)
+        try super.init(
+            walletID: walletID,
+            transaction: transaction,
+            fromAddress: fromAddress,
+            toAddress: "",
+            chain: chain
+        )
     }
     
     override func respond(signature: String) async throws {

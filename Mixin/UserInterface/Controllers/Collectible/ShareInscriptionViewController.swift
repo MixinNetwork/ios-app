@@ -6,9 +6,9 @@ import MixinServices
 final class ShareInscriptionViewController: ShareViewAsPictureViewController {
     
     private let inscription: InscriptionItem
-    private let token: TokenItem
+    private let token: MixinTokenItem
     
-    init(inscription: InscriptionItem, token: TokenItem) {
+    init(inscription: InscriptionItem, token: MixinTokenItem) {
         self.inscription = inscription
         self.token = token
         super.init()

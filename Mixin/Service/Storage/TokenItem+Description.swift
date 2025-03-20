@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-extension TokenItem {
+extension MixinTokenItem {
     
     var depositTips: String {
         switch chainID {

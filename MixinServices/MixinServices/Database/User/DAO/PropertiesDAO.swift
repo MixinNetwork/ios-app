@@ -8,15 +8,13 @@ public final class PropertiesDAO: UserDatabaseDAO {
     public enum Key: String {
         case iterator
         case snapshotOffset     = "snapshot_offset"
-        case evmAddress         = "evm_address"
-        case solanaAddress      = "solana_address"
         case globalMarket       = "global_market"
         case hasSwapReviewed    = "has_viewed_swap"
         case hasMarketReviewed  = "has_viewed_market"
+        case hasWalletSwitchViewed      = "has_viewed_wallet_switch"
         case mixinSwapRecentSendIDs     = "mixin_swap_recent_send"
         case mixinSwapRecentReceiveIDs  = "mixin_swap_recent_receive"
         case transferRecentAssetIDs     = "transfer_recent_assets"
-        case web3RecentFungibleIDs      = "web3_recent_tokens"
     }
     
     public enum Change {

@@ -29,12 +29,12 @@ struct InvoicePaymentOperation {
     class Transaction {
         
         let entry: Invoice.Entry
-        let token: TokenItem
+        let token: MixinTokenItem
         let outputCollection: UTXOService.OutputCollection
         
         init(
             entry: Invoice.Entry,
-            token: TokenItem,
+            token: MixinTokenItem,
             outputCollection: UTXOService.OutputCollection
         ) {
             self.entry = entry

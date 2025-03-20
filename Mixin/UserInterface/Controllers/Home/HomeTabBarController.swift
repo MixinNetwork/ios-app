@@ -81,7 +81,7 @@ final class HomeTabBarController: UIViewController {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(propertiesDidUpdate(_:)),
+            selector: #selector(reloadItemBadgesIfUpdated(_:)),
             name: PropertiesDAO.propertyDidUpdateNotification,
             object: nil
         )
@@ -103,12 +103,11 @@ final class HomeTabBarController: UIViewController {
         switchToChildAfterValidated(with: child)
     }
     
-    @objc private func propertiesDidUpdate(_ notification: Notification) {
+    @objc private func reloadItemBadgesIfUpdated(_ notification: Notification) {
         guard let userInfo = notification.userInfo else {
             return
         }
         let badgeRelatedKeys: [PropertiesDAO.Key] = [
-            .hasSwapReviewed,
             .hasWalletSwitchViewed,
             .hasMarketReviewed,
         ]
@@ -133,12 +132,11 @@ final class HomeTabBarController: UIViewController {
     
     private func reloadItemBadges() {
         DispatchQueue.global().async {
-            let hasSwapReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapReviewed) ?? false
             let hasWalletSwitchViewed: Bool = PropertiesDAO.shared.value(forKey: .hasWalletSwitchViewed) ?? false
             let hasMarketReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasMarketReviewed) ?? false
             DispatchQueue.main.async {
                 var items = self.tabBar.items
-                items[ChildID.wallet.rawValue].badge = !hasSwapReviewed || !hasWalletSwitchViewed
+                items[ChildID.wallet.rawValue].badge = !hasWalletSwitchViewed
                 items[ChildID.more.rawValue].badge = !hasMarketReviewed
                 self.tabBar.items = items
             }

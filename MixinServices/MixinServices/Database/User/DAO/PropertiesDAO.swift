@@ -11,6 +11,7 @@ public final class PropertiesDAO: UserDatabaseDAO {
         case globalMarket       = "global_market"
         case hasSwapReviewed    = "has_viewed_swap"
         case hasMarketReviewed  = "has_viewed_market"
+        case hasSwapOrderReviewed       = "has_viewed_swap_order"
         case hasWalletSwitchViewed      = "has_viewed_wallet_switch"
         case mixinSwapRecentSendIDs     = "mixin_swap_recent_send"
         case mixinSwapRecentReceiveIDs  = "mixin_swap_recent_receive"

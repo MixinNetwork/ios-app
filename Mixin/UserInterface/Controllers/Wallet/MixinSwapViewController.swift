@@ -37,6 +37,7 @@ final class MixinSwapViewController: SwapViewController {
     
     private var priceUnit: SwapQuote.PriceUnit = .send
     
+    private weak var showOrdersItem: BadgeBarButtonItem?
     private weak var depositTokenRequest: Request?
     
     private lazy var userInputSimulationFormatter: NumberFormatter = {
@@ -62,14 +63,29 @@ final class MixinSwapViewController: SwapViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.swap()
+        let showOrdersItem = BadgeBarButtonItem(
+            image: R.image.ic_title_transaction()!,
+            target: self,
+            action: #selector(showOrders(_:))
+        )
         navigationItem.rightBarButtonItems = [
-            .customerService(target: self, action: #selector(presentCustomerService(_:))),
-            .tintedIcon(image: R.image.ic_title_transaction(), target: self, action: #selector(showOrders(_:))),
+            .customerService(
+                target: self,
+                action: #selector(presentCustomerService(_:))
+            ),
+            showOrdersItem,
         ]
+        self.showOrdersItem = showOrdersItem
         updateSendView(style: .loading)
         updateReceiveView(style: .loading)
         reloadTokens()
         sendAmountTextField.delegate = self
+        DispatchQueue.global().async { [weak showOrdersItem] in
+            let hasSwapOrderReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapOrderReviewed) ?? false
+            DispatchQueue.main.async {
+                showOrdersItem?.showBadge = !hasSwapOrderReviewed
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -246,6 +262,7 @@ final class MixinSwapViewController: SwapViewController {
     }
     
     @objc private func showOrders(_ sender: Any) {
+        showOrdersItem?.showBadge = false
         let orders = SwapOrderTableViewController()
         navigationController?.pushViewController(orders, animated: true)
     }

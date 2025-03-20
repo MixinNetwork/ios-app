@@ -1249,6 +1249,8 @@
 		94F36AC626CA59B300AC30A5 /* PhoneNumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */; };
 		94F64FFC2D65E40100234D7D /* WalletSummaryValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F64FFA2D65E40100234D7D /* WalletSummaryValueCell.swift */; };
 		94F64FFD2D65E40100234D7D /* WalletSummaryValueCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F64FFB2D65E40100234D7D /* WalletSummaryValueCell.xib */; };
+		94F64FB32D64C79200234D7D /* BadgeBarButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F64FB22D64C79200234D7D /* BadgeBarButtonView.swift */; };
+		94F64FB52D64CD1E00234D7D /* BadgeBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F64FB42D64CD1E00234D7D /* BadgeBarButtonItem.swift */; };
 		94F7BCE22D2B9ED700BA27D9 /* SwapInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */; };
 		94F7BCE42D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */; };
 		94F952672AE66A700025B995 /* AmountIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952662AE66A700025B995 /* AmountIntent.swift */; };
@@ -2770,6 +2772,8 @@
 		94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberValidator.swift; sourceTree = "<group>"; };
 		94F64FFA2D65E40100234D7D /* WalletSummaryValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSummaryValueCell.swift; sourceTree = "<group>"; };
 		94F64FFB2D65E40100234D7D /* WalletSummaryValueCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletSummaryValueCell.xib; sourceTree = "<group>"; };
+		94F64FB22D64C79200234D7D /* BadgeBarButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeBarButtonView.swift; sourceTree = "<group>"; };
+		94F64FB42D64CD1E00234D7D /* BadgeBarButtonItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeBarButtonItem.swift; sourceTree = "<group>"; };
 		94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapInputAccessoryView.swift; sourceTree = "<group>"; };
 		94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapInputAccessoryView.xib; sourceTree = "<group>"; };
 		94F952662AE66A700025B995 /* AmountIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountIntent.swift; sourceTree = "<group>"; };
@@ -4682,6 +4686,8 @@
 				94DD67532C8F279700B3D089 /* MarketColoredLabel.swift */,
 				94DD692F2C90305000B3D089 /* MarketColorTintedImageView.swift */,
 				944B5A812CFCB940000BB893 /* NavigationTitleView.swift */,
+				94F64FB22D64C79200234D7D /* BadgeBarButtonView.swift */,
+				94F64FB42D64CD1E00234D7D /* BadgeBarButtonItem.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -6494,6 +6500,7 @@
 				7C651D8F29F68277003331A4 /* BotUserID.swift in Sources */,
 				7BB20A8C207B5F0C007ACFEE /* ContactMessageViewModel.swift in Sources */,
 				5E5CA7882674AC8E00C1E113 /* ScreenLockManager.swift in Sources */,
+				94F64FB52D64CD1E00234D7D /* BadgeBarButtonItem.swift in Sources */,
 				7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */,
 				DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */,
 				94911DC42AF00B2C00A33B2A /* TokenItem+Description.swift in Sources */,
@@ -7223,6 +7230,7 @@
 				7B7E7146217D89790052C7DD /* CallViewController.swift in Sources */,
 				94658CA22B34824E00F5EB21 /* OutputsViewController.swift in Sources */,
 				7C2ACDAE27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift in Sources */,
+				94F64FB32D64C79200234D7D /* BadgeBarButtonView.swift in Sources */,
 				7C7579D729DC573F0002DA0B /* DeviceTransferProgressViewController.swift in Sources */,
 				7BD89DBE1FB2D59000665635 /* PlaceholderTextView.swift in Sources */,
 				946B9FBB2B0493E800DB4DC1 /* WalletHintViewController.swift in Sources */,

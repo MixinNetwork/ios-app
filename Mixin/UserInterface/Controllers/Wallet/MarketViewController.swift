@@ -448,7 +448,7 @@ extension MarketViewController: UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_stats, for: indexPath)!
                 cell.leftTitleLabel.text = R.string.localizable.market_cap().uppercased()
                 cell.setLeftContent(text: viewModel.stats?.marketCap)
-                cell.rightTitleLabel.text = R.string.localizable.vol_24h(Currency.current.code).uppercased()
+                cell.rightTitleLabel.text = R.string.localizable.vol_24h().uppercased()
                 
                 cell.setRightContent(text: viewModel.stats?.fiatMoneyVolume24H)
                 return cell
@@ -888,7 +888,7 @@ extension MarketViewController {
                 if let totalVolume = Decimal(string: market.totalVolume, locale: .enUSPOSIX) {
                     fiatMoneyVolume24H = NamedLargeNumberFormatter.string(
                         number: totalVolume * Currency.current.decimalRate,
-                        currencyPrefix: false
+                        currencyPrefix: true
                     )
                 } else {
                     fiatMoneyVolume24H = nil

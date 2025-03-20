@@ -83,7 +83,7 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
         }
         
         addButtonIntoInputFields(
-            image: R.image.web.ic_action_copy()!,
+            image: R.image.paste()!,
             title: R.string.localizable.paste(),
             action: #selector(pastePhrases(_:))
         )

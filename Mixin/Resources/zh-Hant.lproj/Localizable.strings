@@ -559,7 +559,7 @@
 "estimated_price" = "預計價格";
 "estimated_receive" = "預計收到";
 "everybody" = "任何人";
-"exchange_or_wallet" = "交易所或其他錢包";
+"exchanges_or_wallets" = "交易所或其他錢包";
 "exchanging_data" = "正在同步金鑰分片，進度 %@%%...";
 "exit_confirmation" = "退出\"%@\"？";
 "exit_group" = "退出群組";

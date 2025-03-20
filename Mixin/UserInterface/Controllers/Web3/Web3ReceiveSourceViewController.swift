@@ -59,7 +59,7 @@ extension Web3ReceiveSourceViewController: UITableViewDataSource {
             cell.subtitleLabel.text = R.string.localizable.receive_from_privacy_wallets_description()
         case .address:
             cell.iconImageView.image = R.image.token_receiver_address()
-            cell.titleLabel.text = R.string.localizable.exchange_or_wallet()
+            cell.titleLabel.text = R.string.localizable.exchanges_or_wallets()
             cell.subtitleLabel.text = R.string.localizable.receive_from_address_description()
         }
         cell.freeLabel.isHidden = true

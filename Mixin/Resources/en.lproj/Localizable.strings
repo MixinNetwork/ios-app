@@ -559,7 +559,7 @@
 "estimated_price" = "Estimated Price";
 "estimated_receive" = "Estimated Receive";
 "everybody" = "Everybody";
-"exchange_or_wallet" = "Exchange or Wallet";
+"exchanges_or_wallets" = "Exchanges or Wallets";
 "exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "Exit \"%@\"?";
 "exit_group" = "Exit Group";

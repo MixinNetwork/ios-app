@@ -559,7 +559,7 @@
 "estimated_price" = "Estimated Price";
 "estimated_receive" = "Estimated Receive";
 "everybody" = "Todos";
-"exchange_or_wallet" = "Exchange or Wallet";
+"exchanges_or_wallets" = "Exchanges or Wallets";
 "exchanging_data" = "Fragmentos de clave de sincronización en curso %@%%...";
 "exit_confirmation" = "¿Salir de %@?";
 "exit_group" = "Salir del grupo";

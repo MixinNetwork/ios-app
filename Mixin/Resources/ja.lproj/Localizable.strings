@@ -559,7 +559,7 @@
 "estimated_price" = "Estimated Price";
 "estimated_receive" = "Estimated Receive";
 "everybody" = "全員";
-"exchange_or_wallet" = "Exchange or Wallet";
+"exchanges_or_wallets" = "Exchanges or Wallets";
 "exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "\"%@\"を退出しますか?";
 "exit_group" = "グループから退出";

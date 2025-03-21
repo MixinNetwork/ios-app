@@ -41,7 +41,6 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
             chain: Chain(
                 chainID: chain.chainId,
                 name: chain.name,
-                decimals: 0,
                 symbol: chain.symbol,
                 icon: chain.iconUrl
             )

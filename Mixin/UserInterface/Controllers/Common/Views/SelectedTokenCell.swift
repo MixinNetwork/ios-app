@@ -13,7 +13,7 @@ final class SelectedTokenCell: SelectedItemCell<PlainTokenIconView> {
         nameLabel.text = address.label
     }
     
-    func load(token: TokenItem) {
+    func load(token: any Token) {
         iconView.setIcon(token: token)
         nameLabel.text = token.symbol
     }

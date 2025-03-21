@@ -6,6 +6,10 @@ final class TokenActionView: UIView {
         func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction)
     }
     
+    var swapButton: UIButton {
+        buttons[TokenAction.swap.rawValue]
+    }
+    
     var badgeOnSwap = false {
         didSet {
             if badgeOnSwap {
@@ -79,7 +83,11 @@ final class TokenActionView: UIView {
     }
     
     private func showBadgeViewOnSwapButton() {
-        guard badgeView == nil, let imageView = buttons[TokenAction.swap.rawValue].imageView else {
+        guard
+            badgeView == nil,
+            !swapButton.isHidden,
+            let imageView = swapButton.imageView
+        else {
             return
         }
         let badgeView = BadgeDotView()

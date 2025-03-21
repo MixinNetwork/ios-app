@@ -60,7 +60,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         checkmarkImageView.isHidden = true
     }
     
-    func render(token: TokenItem, style: Style) {
+    func render(token: MixinTokenItem, style: Style) {
         assetIconView.setIcon(token: token)
         switch style {
         case .symbolWithName:
@@ -100,7 +100,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         chainTagLabel.isHidden = true
         if token.decimalUSDPrice > 0 {
             changeLabel.text = token.localizedPercentChange
-            changeLabel.marketColor = .byValue(token.decimalAbsoluteChange)
+            changeLabel.marketColor = .byValue(token.decimalUSDChange)
             priceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.isHidden = false
             priceLabel.isHidden = false
@@ -161,7 +161,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         checkmarkImageView.isHidden = true
     }
     
-    func render(token: TokenItem, isSelected: Bool) {
+    func render(token: MixinTokenItem, isSelected: Bool) {
         assetIconView.setIcon(token: token)
         nameLabel.text = token.name
         descriptionLabel.text = token.localizedBalanceWithSymbol

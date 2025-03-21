@@ -9,14 +9,14 @@ struct Payment: PaymentPreconditionChecker {
     }
     
     let traceID: String
-    let token: TokenItem
+    let token: MixinTokenItem
     let tokenAmount: Decimal
     let fiatMoneyAmount: Decimal
     let memo: String
     let context: Context?
     
     init(
-        traceID: String, token: TokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal,
+        traceID: String, token: MixinTokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal,
         memo: String, context: Context? = nil
     ) {
         self.traceID = traceID
@@ -29,7 +29,7 @@ struct Payment: PaymentPreconditionChecker {
     
     static func inscription(
         traceID: String,
-        token: TokenItem,
+        token: MixinTokenItem,
         memo: String,
         context: InscriptionContext
     ) -> Payment {
@@ -292,28 +292,21 @@ extension Payment {
         
         case address(Address)
         case temporary(TemporaryAddress)
-        case web3(address: String, chain: String)
+        case classicWallet(Web3Address)
         
         var withdrawable: WithdrawableAddress {
             switch self {
             case .address(let address):
-                return address
+                address
             case .temporary(let address):
-                return address
-            case .web3(let destination, _):
-                return TemporaryAddress(destination: destination, tag: "")
+                address
+            case .classicWallet(let address):
+                address
             }
         }
         
         var destination: String {
-            switch self {
-            case let .address(address):
-                address.destination
-            case let .temporary(address):
-                address.destination
-            case let .web3(destination, _):
-                destination
-            }
+            withdrawable.destination
         }
         
         var debugDescription: String {
@@ -322,8 +315,8 @@ extension Payment {
                 return "<WithdrawalDestination.address \(address.addressId)>"
             case let .temporary(address):
                 return "<WithdrawalDestination.temporary \(address.destination)>"
-            case let .web3(address, chain):
-                return "<WithdrawalDestination.web3 \(chain) \(address)>"
+            case let .classicWallet(address):
+                return "<WithdrawalDestination.classicWallet \(address.addressID)>"
             }
         }
         
@@ -352,7 +345,7 @@ extension Payment {
                                             memo: memo),
                     AddressValidityPrecondition(address: address),
                 ]
-            case .temporary, .web3:
+            case .temporary, .classicWallet:
                 preconditions = [
                     NoPendingTransactionPrecondition(),
                     DuplicationPrecondition(operation: .withdraw(destination.withdrawable),
@@ -378,29 +371,31 @@ extension Payment {
                 let result = await collectOutputs(token: token, amount: amount, on: parent)
                 switch result {
                 case .success(let collection):
-                    let addressInfo: WithdrawPaymentOperation.AddressInfo?
+                    let addressLabel: WithdrawPaymentOperation.AddressLabel?
                     let addressID: String?
                     switch destination {
                     case let .address(address):
-                        addressInfo = .label(address.label)
+                        addressLabel = .addressBook(address.label)
                         addressID = address.addressId
                     case .temporary:
-                        addressInfo = nil
+                        addressLabel = nil
                         addressID = nil
-                    case let .web3(_, chain):
-                        addressInfo = .web3Chain(chain)
+                    case .classicWallet:
+                        addressLabel = .classicWallet
                         addressID = nil
                     }
-                    let operation = WithdrawPaymentOperation(traceID: traceID,
-                                                             withdrawalToken: token,
-                                                             withdrawalTokenAmount: tokenAmount,
-                                                             withdrawalFiatMoneyAmount: fiatMoneyAmount,
-                                                             withdrawalOutputs: collection,
-                                                             feeToken: fee.tokenItem,
-                                                             feeAmount: fee.amount,
-                                                             address: destination.withdrawable,
-                                                             addressInfo: addressInfo,
-                                                             addressID: addressID)
+                    let operation = WithdrawPaymentOperation(
+                        traceID: traceID,
+                        withdrawalToken: token,
+                        withdrawalTokenAmount: tokenAmount,
+                        withdrawalFiatMoneyAmount: fiatMoneyAmount,
+                        withdrawalOutputs: collection,
+                        feeToken: fee.tokenItem,
+                        feeAmount: fee.amount,
+                        address: destination.withdrawable,
+                        addressLabel: addressLabel,
+                        addressID: addressID
+                    )
                     await MainActor.run {
                         onSuccess(operation, issues)
                     }

@@ -3,20 +3,22 @@ import MixinServices
 
 final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
     
+    typealias ValuableOnChainToken = any ValuableToken & OnChainToken
+    
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var errorDescriptionLabel: UILabel!
     @IBOutlet weak var nextButton: StyledButton!
     
     @IBOutlet weak var stackViewBottomConstraint: NSLayoutConstraint!
     
-    private let token: TokenItem
+    private let token: ValuableOnChainToken
     private let intent: Intent
     private let inputContent: InputContent
     private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
     
     private lazy var tagRegex = try? NSRegularExpression(pattern: "^[0-9]+$")
     
-    private init(token: TokenItem, intent: Intent, inputContent: InputContent) {
+    private init(token: ValuableOnChainToken, intent: Intent, inputContent: InputContent) {
         self.token = token
         self.intent = intent
         self.inputContent = inputContent
@@ -28,12 +30,12 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         fatalError("Storyboard not supported")
     }
     
-    static func newAddress(token: TokenItem) -> AddressInfoInputViewController {
+    static func newAddress(token: ValuableOnChainToken) -> AddressInfoInputViewController {
         AddressInfoInputViewController(token: token, intent: .newAddress, inputContent: .destination)
     }
     
     // Returns non-nil result if memo/tag is needed
-    static func oneTimeWithdraw(token: TokenItem, destination: String) -> AddressInfoInputViewController? {
+    static func oneTimeWithdraw(token: MixinTokenItem, destination: String) -> AddressInfoInputViewController? {
         let content = InputContent(token: token, destination: destination)
         switch content {
         case .destination, .label:
@@ -281,7 +283,7 @@ extension AddressInfoInputViewController {
         case tag(destination: String)
         case label(TemporaryAddress)
         
-        init(token: TokenItem, destination: String) {
+        init(token: any OnChainToken, destination: String) {
             switch token.memoPossibility {
             case .positive, .possible:
                 if token.usesTag {
@@ -352,16 +354,15 @@ extension AddressInfoInputViewController {
             assetID: token.assetID,
             destination: destination,
             tag: tag
-        ) { [weak self] (address) in
+        ) { [weak self, token] (address) in
             guard let self else {
                 return
             }
             self.nextButton.isBusy = false
-            let next = WithdrawInputAmountViewController(
-                tokenItem: self.token,
-                destination: .temporary(address)
-            )
-            self.navigationController?.pushViewController(next, animated: true)
+            if let token = token as? MixinTokenItem {
+                let next = WithdrawInputAmountViewController(tokenItem: token, destination: .temporary(address))
+                self.navigationController?.pushViewController(next, animated: true)
+            }
         } onFailure: { [weak self] error in
             guard let self else {
                 return

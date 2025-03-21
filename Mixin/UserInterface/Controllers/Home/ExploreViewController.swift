@@ -12,8 +12,6 @@ final class ExploreViewController: UIViewController {
     
     private lazy var exploreBotsViewController = ExploreBotsViewController()
     private lazy var exploreMarketViewController = ExploreMarketViewController()
-    private lazy var evmViewController = ExploreEVMViewController()
-    private lazy var solanaViewController = ExploreSolanaViewController()
     
     private weak var searchViewController: UIViewController?
     private weak var searchViewCenterYConstraint: NSLayoutConstraint?
@@ -222,12 +220,6 @@ extension ExploreViewController: UICollectionViewDelegate {
                 markMarketReviewed()
             }
             switchToChild(exploreMarketViewController)
-        case .evm:
-            switchToChild(evmViewController)
-            evmViewController.reloadAccountIfUnlocked()
-        case .solana:
-            switchToChild(solanaViewController)
-            evmViewController.reloadAccountIfUnlocked()
         }
         AppGroupUserDefaults.User.exploreSegmentIndex = indexPath.item
     }
@@ -237,9 +229,7 @@ extension ExploreViewController: UICollectionViewDelegate {
 extension ExploreViewController: HomeTabBarControllerChild {
     
     func viewControllerDidSwitchToFront() {
-        if let controller = selectedViewController as? ExploreWeb3ViewController {
-            controller.reloadAccountIfUnlocked()
-        } else if let controller = selectedViewController, controller is ExploreMarketViewController {
+        if let controller = selectedViewController, controller is ExploreMarketViewController {
             if showBadgeOnMarket {
                 showBadgeOnMarket = false
                 let indexPath = IndexPath(item: Segment.markets.rawValue, section: 0)
@@ -257,8 +247,6 @@ extension ExploreViewController {
         
         case bots
         case markets
-        case evm
-        case solana
         
         var name: String {
             switch self {
@@ -266,10 +254,6 @@ extension ExploreViewController {
                 R.string.localizable.bots_title()
             case .markets:
                 R.string.localizable.markets()
-            case .evm:
-                "Ethereum"
-            case .solana:
-                "Solana"
             }
         }
         

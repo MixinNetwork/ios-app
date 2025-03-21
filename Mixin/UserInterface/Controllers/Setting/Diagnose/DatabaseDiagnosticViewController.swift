@@ -2,7 +2,7 @@ import UIKit
 import GRDB
 import MixinServices
 
-class DatabaseDiagnosticViewController: UIViewController {
+final class DatabaseDiagnosticViewController: UIViewController {
     
     @IBOutlet weak var databaseSwitcher: UISegmentedControl!
     @IBOutlet weak var runButton: UIButton!
@@ -20,13 +20,15 @@ class DatabaseDiagnosticViewController: UIViewController {
     }
     
     @IBAction func changeDatabase(_ sender: Any) {
-        switch databaseSwitcher.selectedSegmentIndex {
+        inputTextView.text = switch databaseSwitcher.selectedSegmentIndex {
         case 0:
-            inputTextView.text = "SELECT * FROM identities LIMIT 10"
+            "SELECT * FROM identities LIMIT 10"
         case 1:
-            inputTextView.text = "SELECT * FROM users LIMIT 10"
+            "SELECT * FROM users LIMIT 10"
+        case 2:
+            "SELECT * FROM messages_blaze LIMIT 10"
         default:
-            inputTextView.text = "SELECT * FROM messages_blaze LIMIT 10"
+            "SELECT * FROM tokens LIMIT 5"
         }
     }
     
@@ -36,16 +38,16 @@ class DatabaseDiagnosticViewController: UIViewController {
         runButton.setTitle("Executing", for: .normal)
         pasteButton.isEnabled = false
         let sql = inputTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-        let database: MixinServices.Database = {
-            switch databaseSwitcher.selectedSegmentIndex {
-            case 0:
-                return SignalDatabase.current
-            case 1:
-                return UserDatabase.current
-            default:
-                return TaskDatabase.current
-            }
-        }()
+        let database: MixinServices.Database = switch databaseSwitcher.selectedSegmentIndex {
+        case 0:
+            SignalDatabase.current
+        case 1:
+            UserDatabase.current
+        case 2:
+            TaskDatabase.current
+        default:
+            Web3Database.current
+        }
         
         func execute(_ db: GRDB.Database) throws -> String {
             let startTime = CACurrentMediaTime()
@@ -99,4 +101,5 @@ class DatabaseDiagnosticViewController: UIViewController {
         inputTextView.text = ""
         outputTextView.text = ""
     }
+    
 }

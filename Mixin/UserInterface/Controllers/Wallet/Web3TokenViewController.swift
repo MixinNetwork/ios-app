@@ -1,0 +1,137 @@
+import UIKit
+import MixinServices
+
+final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3TransactionItem> {
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        navigationItem.titleView = NavigationTitleView(
+            title: token.name,
+            subtitle: token.depositNetworkName
+        )
+        
+        let notificationCenter: NotificationCenter = .default
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadToken),
+            name: Web3TokenDAO.tokensDidChangeNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadSnapshots),
+            name: Web3TokenDAO.tokensDidChangeNotification,
+            object: nil
+        )
+        
+        reloadSnapshots()
+        let job = SyncWeb3TransactionJob(walletID: token.walletID)
+        ConcurrentJobQueue.shared.addJob(job: job)
+    }
+    
+    override func send() {
+        guard let chain = Web3Chain.chain(chainID: token.chainID) else {
+            return
+        }
+        guard let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: chain.chainID) else {
+            return
+        }
+        let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address.destination)
+        let selector = Web3TokenReceiverViewController(payment: payment)
+        self.navigationController?.pushViewController(selector, animated: true)
+    }
+    
+    override func setTokenHidden(_ hidden: Bool) {
+        DispatchQueue.global().async { [token] in
+            let dao: Web3TokenExtraDAO = .shared
+            if hidden {
+                dao.hide(walletID: token.walletID, assetID: token.assetID)
+            } else {
+                dao.unhide(walletID: token.walletID, assetID: token.assetID)
+            }
+        }
+    }
+    
+    override func updateBalanceCell(_ cell: TokenBalanceCell) {
+        cell.reloadData(web3Token: token)
+        cell.actionView.swapButton.isHidden = true
+        cell.actionView.delegate = self
+    }
+    
+    override func updateTransactionCell(_ cell: SnapshotCell, with transaction: Web3TransactionItem) {
+        cell.render(transaction: transaction)
+    }
+    
+    override func viewMarket() {
+        let market = MarketViewController(token: token, chartPoints: chartPoints)
+        market.pushingViewController = self
+        navigationController?.pushViewController(market, animated: true)
+    }
+    
+    override func view(transaction: Web3TransactionItem) {
+        let viewController = Web3TransactionViewController(token: token, transaction: transaction)
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    override func viewAllTransactions() {
+        let history = Web3TransactionHistoryViewController(token: token)
+        navigationController?.pushViewController(history, animated: true)
+    }
+    
+    @objc private func reloadToken() {
+        DispatchQueue.global().async { [token, weak self] in
+            guard let token = Web3TokenDAO.shared.token(walletID: token.walletID, assetID: token.assetID) else {
+                return
+            }
+            DispatchQueue.main.sync {
+                guard let self = self else {
+                    return
+                }
+                self.token = token
+                let indexPath = IndexPath(row: 0, section: Section.balance.rawValue)
+                self.tableView.beginUpdates()
+                self.tableView.reloadRows(at: [indexPath], with: .none)
+                self.tableView.endUpdates()
+            }
+        }
+    }
+    
+    @objc private func reloadSnapshots() {
+        queue.async { [limit=transactionsCount, assetID=token.assetID, weak self] in
+            let limitExceededTransactions = Web3TransactionDAO.shared.transactions(assetID: assetID, limit: limit + 1)
+            let hasMoreTransactions = limitExceededTransactions.count > limit
+            let transactions = Array(limitExceededTransactions.prefix(limit))
+            let transactionRows = TransactionRow.rows(
+                transactions: transactions,
+                hasMore: hasMoreTransactions
+            )
+            DispatchQueue.main.async {
+                self?.reloadTransactions(pending: [], finished: transactionRows)
+            }
+        }
+    }
+    
+}
+
+extension Web3TokenViewController: TokenActionView.Delegate {
+    
+    func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
+        switch action {
+        case .receive:
+            withMnemonicsBackupChecked { [token] in
+                let selector = Web3ReceiveSourceViewController(token: token)
+                self.navigationController?.pushViewController(selector, animated: true)
+            }
+        case .send:
+            send()
+        case .swap:
+            break
+        }
+    }
+    
+}

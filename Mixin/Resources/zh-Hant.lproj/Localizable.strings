@@ -243,7 +243,6 @@
 "changed" = "已修改";
 "changed_disappearing_message_settings" = "%@修改了限時訊息設定";
 "changing_pin_terminated_unexpectedly" = "更新 PIN 意外中止，點繼續完成 PIN 修改";
-"chat" = "聊天";
 "chat_background" = "聊天背景";
 "chat_backup" = "聊天記錄備份";
 "chat_bot_reception_title" = "點選按鈕使用機器人";
@@ -267,7 +266,7 @@
 "chat_restore_subtitle" = "如果現在不恢復，未來將無法恢復這些記錄。媒體檔案將在資訊恢復完成後在後臺繼續執行。";
 "chat_text_size" = "聊天字型大小";
 "chat_waiting" = "等待%1$@上線後建立加密會話。%2$@。";
-"chats" = "會話";
+"chats" = "聊天";
 "check_backup" = "檢查備份";
 "check_mnemonic_phrase" = "檢查您的助記詞";
 "check_mnemonic_phrase_desc" = "按照呈現給您的順序輸入每個單詞。";
@@ -308,6 +307,7 @@
 "collection" = "合集";
 "collection_collected" = "已收藏 %d 件";
 "combine_and_forward" = "合併轉發";
+"common_wallet" = "普通錢包";
 "complete" = "完成";
 "completed" = "已完成";
 "compress_database" = "壓縮資料庫";
@@ -366,6 +366,7 @@
 "continue" = "繼續";
 "continue_open_url" = "繼續訪問";
 "continue_with_pin" = "輸入 PIN 繼續";
+"contract" = "合約";
 "contract_address" = "合約地址";
 "convenience" = "便利";
 "conversation" = "會話";
@@ -558,6 +559,7 @@
 "estimated_price" = "預計價格";
 "estimated_receive" = "預計收到";
 "everybody" = "任何人";
+"exchanges_or_wallets" = "交易所或其他錢包";
 "exchanging_data" = "正在同步金鑰分片，進度 %@%%...";
 "exit_confirmation" = "退出\"%@\"？";
 "exit_group" = "退出群組";
@@ -738,7 +740,6 @@
 "mixin_messenger_desktop" = "Mixin Messenger 桌面";
 "mixin_server_encounters_errors" = "伺服器出錯，請稍後重試";
 "mixin_support" = "Mixin 客服";
-"mixin_wallet" = "Mixin 錢包";
 "mnemonic_phrase" = "助記詞";
 "mnemonic_phrase_instruction" = "你可以透過助記詞登入你的賬號，當前助記詞已關聯到 MPC 錢包的金鑰分片，完整的金鑰只存在當前裝置的 TEE 安全環境中，閱讀檔案以瞭解%@。";
 "mnemonic_phrase_instruction_1" = "建立賬號生成的 13 個助記詞僅用於 Mixin Network 相關產品。";
@@ -949,6 +950,7 @@
 "price_too_less" = "設定價格需大於現價的 %@";
 "privacy" = "隱私";
 "privacy_policy" = "隱私政策";
+"privacy_wallet" = "隱私錢包";
 "process_can_not_be_stop" = "流程一旦開始無法取消，請牢記 6 位數字 PIN，意外中止流程需要再次輸入";
 "profile" = "個人資料";
 "profile_photo" = "個人頭像";
@@ -968,7 +970,8 @@
 "read_your_snapshots" = "讀取你的轉賬記錄";
 "rebate" = "退款";
 "receive" = "充值";
-"receive_from_address_description" = "從其他錢包或交易所轉入";
+"receive_from_address_description" = "透過區塊鏈網路從其他交易所或鏈上錢包接收";
+"receive_from_privacy_wallets_description" = "透過區塊鏈網路從我的另一個錢包接收";
 "receive_money" = "我的收款碼";
 "received" = "收到";
 "receiver" = "至";
@@ -1103,8 +1106,8 @@
 "send_to_address_description" = "透過區塊鏈網路轉給已知地址";
 "send_to_contact_description" = "透過 Mixin 網路轉給我的 Mixin 聯絡人";
 "send_to_developer" = "把日誌發給開發者";
+"send_to_other_wallet_description" = "使用區塊鏈網路傳送到我的另一個錢包";
 "send_to_title" = "轉給";
-"send_to_web3_wallet_description" = "透過區塊鏈網路轉給我的 %@ 賬戶";
 "send_video" = "傳送 1 個影片";
 "send_video_count" = "傳送 %d 個影片";
 "send_without_sound" = "靜音傳送";
@@ -1261,12 +1264,12 @@
 "title_participants" = "%d 成員";
 "title_participants_count" = "%d 成員";
 "to" = "至";
-"to_mixin_wallet" = "劃轉到 Mixin 錢包";
 "today" = "今天";
 "token" = "代幣";
 "top_count" = "前 %d";
 "total" = "共計";
 "total_amount" = "總金額";
+"total_assets" = "資產合計";
 "total_supply" = "總量";
 "touch_id" = "指紋";
 "track_not_found" = "Track 無效";
@@ -1419,6 +1422,7 @@
 "wallet_transfer_recent_tip" = "你已經在 %1$@ 前給 %2$@ 轉賬了 %3$@，確認還要再轉一次嗎？";
 "wallet_withdrawal_changed" = "手續費已從 %1$@ 變更為 %2$@，要更新手續費並繼續提現嗎？";
 "wallet_withdrawal_recent_tip" = "你已經在 %1$@ 前提現 %3$@ 到 %2$@，確認還要再提一次嗎？";
+"wallets" = "錢包";
 "watchlist" = "自選";
 "watchlist_add_desc" = "%@ 已經加入自選";
 "watchlist_empty" = "您的自選列表為空";
@@ -1428,7 +1432,7 @@
 "web3_account" = "賬戶";
 "web3_account_connected" = "連線成功";
 "web3_account_network" = "%@ 賬戶";
-"web3_deposit_description_evm" = "使用此地址在 Ethereum、Polygon、BSC、Base、Arbitrum、Optimism、Blast 網路上接收代幣";
+"web3_deposit_description_evm" = "使用此地址在 Ethereum、Polygon、BSC、Base 網路上接收代幣";
 "web3_deposit_description_solana" = "使用此地址在 Solana 網路上接收代幣";
 "web3_ensure_trust" = "請確保您信任此應用程式。";
 "web3_message_request" = "訊息簽名";

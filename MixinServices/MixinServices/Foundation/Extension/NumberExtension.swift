@@ -110,4 +110,13 @@ public extension NSDecimalNumberHandler {
         raiseOnDivideByZero: false
     )
     
+    public static let percentRoundingHandler = NSDecimalNumberHandler(
+        roundingMode: .plain,
+        scale: 2,
+        raiseOnExactness: false,
+        raiseOnOverflow: false,
+        raiseOnUnderflow: false,
+        raiseOnDivideByZero: false
+    )
+    
 }

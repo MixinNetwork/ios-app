@@ -4,10 +4,10 @@ import MixinServices
 struct WithdrawFeeItem {
     
     let amount: Decimal
-    let tokenItem: TokenItem
+    let tokenItem: MixinTokenItem
     let localizedAmountWithSymbol: String
     
-    init?(amountString: String, tokenItem: TokenItem) {
+    init?(amountString: String, tokenItem: MixinTokenItem) {
         guard let amount = Decimal(string: amountString, locale: .enUSPOSIX) else {
             return nil
         }

@@ -3,14 +3,6 @@ import OrderedCollections
 import Alamofire
 import MixinServices
 
-extension SwapToken: IdentifiableToken {
-    
-    var id: String {
-        assetID
-    }
-    
-}
-
 final class SwapTokenSelectorViewController: TokenSelectorViewController<BalancedSwapToken> {
     
     enum Recent {
@@ -53,6 +45,10 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
+    }
+    
+    deinit {
+        searchRequest?.cancel()
     }
     
     override func viewDidLoad() {

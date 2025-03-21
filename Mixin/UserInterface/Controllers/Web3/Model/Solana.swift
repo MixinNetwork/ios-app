@@ -133,7 +133,7 @@ extension Solana {
             token: Web3Token,
             change: BalanceChange
         ) throws {
-            let isSendingSOL = token.chainID == Web3Token.ChainID.solana
+            let isSendingSOL = token.chainID == ChainID.solana
                 && (token.assetKey == Web3Token.AssetKey.sol || token.assetKey == Web3Token.AssetKey.wrappedSOL)
             let solanaPriorityFee: SolanaPriorityFee? = if let fee = priorityFee {
                 SolanaPriorityFee(price: fee.unitPrice, limit: fee.unitLimit)

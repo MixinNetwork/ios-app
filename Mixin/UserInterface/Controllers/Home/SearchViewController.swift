@@ -277,7 +277,7 @@ extension SearchViewController: UITableViewDataSource {
         case .asset:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
             let result = assets[indexPath.row]
-            cell.render(asset: result.asset, attributedSymbol: result.attributedSymbol)
+            cell.render(token: result.asset, attributedSymbol: result.attributedSymbol)
             return cell
         case .user:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!

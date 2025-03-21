@@ -14,7 +14,7 @@ class WithdrawalTipWindow: AssetConfirmationWindow {
         return self
     }
     
-    func render(token: TokenItem, completion: @escaping CompletionHandler) -> BottomSheetView {
+    func render(token: MixinTokenItem, completion: @escaping CompletionHandler) -> BottomSheetView {
         self.completion = completion
         assetIconView.setIcon(token: token)
         titleLabel.text = R.string.localizable.symbol_withdrawal(token.symbol)

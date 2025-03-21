@@ -43,11 +43,11 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
             .doubleLineInfo(caption: .from, primary: proposal.proposer.name, secondary: host)
         ]
         let kinds = Set(chains.map(\.kind))
-        if kinds.contains(.evm), let account: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) {
-            rows.append(.info(caption: .account, content: account))
+        if kinds.contains(.evm), let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum) {
+            rows.append(.info(caption: .account, content: address.destination))
         }
-        if kinds.contains(.solana), let account: String = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress) {
-            rows.append(.info(caption: .account, content: account))
+        if kinds.contains(.solana), let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.solana) {
+            rows.append(.info(caption: .account, content: address.destination))
         }
         reloadData(with: rows)
     }

@@ -27,3 +27,11 @@ extension Address: WithdrawableAddress {
 extension TemporaryAddress: WithdrawableAddress {
     
 }
+
+extension Web3Address: WithdrawableAddress {
+    
+    var tag: String {
+        ""
+    }
+    
+}

@@ -110,7 +110,9 @@ extension DiagnoseViewController: UITableViewDelegate {
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
         case (9, 0):
             PropertiesDAO.shared.removeValue(forKey: .hasSwapReviewed)
+            PropertiesDAO.shared.removeValue(forKey: .hasSwapOrderReviewed)
             PropertiesDAO.shared.removeValue(forKey: .hasMarketReviewed)
+            PropertiesDAO.shared.removeValue(forKey: .hasWalletSwitchViewed)
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
 #if DEBUG
         case (10, 0):

@@ -20,7 +20,7 @@ final class HomeTabBarController: UIViewController {
     
     private let homeViewController = R.storyboard.home.home()!
     
-    private lazy var walletViewController = WalletViewController()
+    private lazy var walletContainerViewController = WalletContainerViewController()
     private lazy var collectiblesViewController = CollectiblesViewController()
     private lazy var exploreViewController = ExploreViewController()
     
@@ -36,7 +36,7 @@ final class HomeTabBarController: UIViewController {
                     id: id.rawValue,
                     image: R.image.home_tab_chat()!,
                     selectedImage: R.image.home_tab_chat_selected()!,
-                    text: R.string.localizable.chat(),
+                    text: R.string.localizable.chats(),
                     badge: false
                 )
             case .wallet:
@@ -44,7 +44,7 @@ final class HomeTabBarController: UIViewController {
                     id: id.rawValue,
                     image: R.image.home_tab_wallet()!,
                     selectedImage: R.image.home_tab_wallet_selected()!,
-                    text: R.string.localizable.wallet(),
+                    text: R.string.localizable.wallets(),
                     badge: false
                 )
             case .collectibles:
@@ -79,21 +79,13 @@ final class HomeTabBarController: UIViewController {
         
         switchToChildAfterValidated(with: .chat)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(propertiesDidUpdate(_:)), name: PropertiesDAO.propertyDidUpdateNotification, object: nil)
-        DispatchQueue.global().async {
-            let hasSwapReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapReviewed) ?? false
-            let hasMarketReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasMarketReviewed) ?? false
-            DispatchQueue.main.async {
-                var items = self.tabBar.items
-                if !hasSwapReviewed {
-                    items[ChildID.wallet.rawValue].badge = true
-                }
-                if !hasMarketReviewed {
-                    items[ChildID.more.rawValue].badge = true
-                }
-                self.tabBar.items = items
-            }
-        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadItemBadgesIfUpdated(_:)),
+            name: PropertiesDAO.propertyDidUpdateNotification,
+            object: nil
+        )
+        reloadItemBadges()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -111,24 +103,19 @@ final class HomeTabBarController: UIViewController {
         switchToChildAfterValidated(with: child)
     }
     
-    @objc private func propertiesDidUpdate(_ notification: Notification) {
-        if let change = notification.userInfo?[PropertiesDAO.Key.hasSwapReviewed] as? PropertiesDAO.Change {
-            let hasReviewed = switch change {
-            case .saved(let newValue):
-                (newValue as? Bool) ?? false
-            case .removed:
-                false
-            }
-            tabBar.items[ChildID.wallet.rawValue].badge = !hasReviewed
+    @objc private func reloadItemBadgesIfUpdated(_ notification: Notification) {
+        guard let userInfo = notification.userInfo else {
+            return
         }
-        if let change = notification.userInfo?[PropertiesDAO.Key.hasMarketReviewed] as? PropertiesDAO.Change {
-            let hasReviewed = switch change {
-            case .saved(let newValue):
-                (newValue as? Bool) ?? false
-            case .removed:
-                false
-            }
-            tabBar.items[ChildID.more.rawValue].badge = !hasReviewed
+        let badgeRelatedKeys: [PropertiesDAO.Key] = [
+            .hasWalletSwitchViewed,
+            .hasMarketReviewed,
+        ]
+        let badgeChanges = badgeRelatedKeys.contains { key in
+            userInfo[key] != nil
+        }
+        if badgeChanges {
+            reloadItemBadges()
         }
     }
     
@@ -143,13 +130,26 @@ final class HomeTabBarController: UIViewController {
         }
     }
     
+    private func reloadItemBadges() {
+        DispatchQueue.global().async {
+            let hasWalletSwitchViewed: Bool = PropertiesDAO.shared.value(forKey: .hasWalletSwitchViewed) ?? false
+            let hasMarketReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasMarketReviewed) ?? false
+            DispatchQueue.main.async {
+                var items = self.tabBar.items
+                items[ChildID.wallet.rawValue].badge = !hasWalletSwitchViewed
+                items[ChildID.more.rawValue].badge = !hasMarketReviewed
+                self.tabBar.items = items
+            }
+        }
+    }
+    
     private func switchToChild(with id: ChildID) {
         let newChild: UIViewController
         switch id {
         case .chat:
             newChild = homeViewController
         case .wallet:
-            newChild = walletViewController
+            newChild = walletContainerViewController
         case .collectibles:
             newChild = collectiblesViewController
         case .more:
@@ -181,7 +181,7 @@ final class HomeTabBarController: UIViewController {
         case .chat:
             "Mixin"
         case .wallet:
-            R.string.localizable.wallet()
+            R.string.localizable.wallets()
         case .collectibles:
             R.string.localizable.collectibles()
         case .more:

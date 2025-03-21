@@ -243,7 +243,6 @@
 "changed" = "変更しました";
 "changed_disappearing_message_settings" = "%@が消えるメッセージを設定しました";
 "changing_pin_terminated_unexpectedly" = "Changing PIN terminated unexpectedly, click \"Continue\" to complete the change";
-"chat" = "Chat";
 "chat_background" = "チャットの背景";
 "chat_backup" = "チャットのバックアップ";
 "chat_bot_reception_title" = "ミニアプリを使用するためにボタンをタップしてください";
@@ -267,7 +266,7 @@
 "chat_restore_subtitle" = "現在復元しない場合、後で復元はできません。メディアファイルはメッセージに続いて復元されます。";
 "chat_text_size" = "Chat Text Size";
 "chat_waiting" = "オンラインで暗号化されたやりとりを開始するまであと%1$@。%2$@";
-"chats" = "チャット";
+"chats" = "Chats";
 "check_backup" = "Check Backup";
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
@@ -308,6 +307,7 @@
 "collection" = "Collection";
 "collection_collected" = "%d collected";
 "combine_and_forward" = "まとめて転送";
+"common_wallet" = "Common Wallet";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "データの圧縮";
@@ -366,6 +366,7 @@
 "continue" = "続ける";
 "continue_open_url" = "URLを開く";
 "continue_with_pin" = "Continue with PIN";
+"contract" = "Contract";
 "contract_address" = "Contract Address";
 "convenience" = "Convenience";
 "conversation" = "チャットルーム";
@@ -558,6 +559,7 @@
 "estimated_price" = "Estimated Price";
 "estimated_receive" = "Estimated Receive";
 "everybody" = "全員";
+"exchanges_or_wallets" = "Exchanges or Wallets";
 "exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "\"%@\"を退出しますか?";
 "exit_group" = "グループから退出";
@@ -738,7 +740,6 @@
 "mixin_messenger_desktop" = "Mixin デスクトップ";
 "mixin_server_encounters_errors" = "Mixinのサーバーにエラーが発生しています";
 "mixin_support" = "Mixin Support";
-"mixin_wallet" = "Mixin Wallet";
 "mnemonic_phrase" = "Mnemonic Phrase";
 "mnemonic_phrase_instruction" = "You can log in to your account using the mnemonic phrase. The current mnemonic phrase is linked to a key shard of the MPC wallet, with the complete key existing only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "mnemonic_phrase_instruction_1" = "The 13 mnemonic phrases generated when creating an account are intended only for Mixin Network-related products.";
@@ -949,6 +950,7 @@
 "price_too_less" = "The set price must be greater than %@ of the current price";
 "privacy" = "プライバシー";
 "privacy_policy" = "プライバシーポリシー";
+"privacy_wallet" = "Privacy Wallet";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "プロフィール";
 "profile_photo" = "プロフィール画像";
@@ -968,7 +970,8 @@
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "払い戻し";
 "receive" = "入金";
-"receive_from_address_description" = "From another wallet or exchange";
+"receive_from_address_description" = "Receive from other exchange or on-chain wallet using a crypto network";
+"receive_from_privacy_wallets_description" = "Receive from my other wallet using a crypto network";
 "receive_money" = "仮想通貨を受け取る";
 "received" = "received";
 "receiver" = "受取人";
@@ -1100,11 +1103,11 @@
 "send_photo_count" = "%d枚の写真を送信";
 "send_this_location" = "位置情報を送信";
 "send_to" = "%@へ送信";
-"send_to_address_description" = "Send to a known crypto address using a crypto network.";
-"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
+"send_to_address_description" = "Send to a known crypto address using a crypto network";
+"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network";
 "send_to_developer" = "開発者へ送信";
+"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "振替先";
-"send_to_web3_wallet_description" = "Send to my %@ account using crypto network.";
 "send_video" = "ビデオを送信";
 "send_video_count" = "%d本のビデオを送信";
 "send_without_sound" = "通知音を鳴らさずに送信する";
@@ -1261,12 +1264,12 @@
 "title_participants" = "%d人の参加者";
 "title_participants_count" = "%d人の参加者";
 "to" = "宛先";
-"to_mixin_wallet" = "To my Mixin Wallet";
 "today" = "今日";
 "token" = "Token";
 "top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
+"total_assets" = "Total assets";
 "total_supply" = "Total Supply";
 "touch_id" = "指紋認証";
 "track_not_found" = "トラックが見つかりません";
@@ -1419,6 +1422,7 @@
 "wallet_transfer_recent_tip" = "あなたは%1$@前に%2$@へ同額の送金をしています。再度%3$@を送金しますか？";
 "wallet_withdrawal_changed" = "出金手数料が%1$@から%2$@へ変更されました。このまま出金を行いますか？";
 "wallet_withdrawal_recent_tip" = "あなたは%1$@に同額の出金を%2$@へ送っています。再度%3$@を出金しますか？";
+"wallets" = "ウォレット";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";
@@ -1428,7 +1432,7 @@
 "web3_account" = "Account";
 "web3_account_connected" = "Account Connected";
 "web3_account_network" = "%@ Account";
-"web3_deposit_description_evm" = "Use this address for receiving tokens on Ethereum, Polygon, BSC, Base, Arbitrum, Optimism, Blast networks";
+"web3_deposit_description_evm" = "Use this address for receiving tokens on Ethereum, Polygon, BSC, Base networks";
 "web3_deposit_description_solana" = "Use this address for receiving tokens on Solana network";
 "web3_ensure_trust" = "Please ensure you trust this dapp before proceeding with the request.";
 "web3_message_request" = "Message Request";

@@ -4,7 +4,7 @@ import MixinServices
 
 final class Web3TransferInputAmountViewController: InputAmountViewController {
     
-    override var token: any TransferableToken {
+    override var token: any ValuableToken {
         payment.token
     }
     
@@ -40,7 +40,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
     private let payment: Web3SendingTokenToAddressPayment
     
     private var fee: Web3TransferOperation.Fee?
-    private var feeToken: TokenItem?
+    private var feeToken: MixinTokenItem?
     
     init(payment: Web3SendingTokenToAddressPayment) {
         self.payment = payment
@@ -55,9 +55,12 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         super.viewDidLoad()
         let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
         switch payment.toType {
-        case .mixinWallet:
-            titleView.subtitle = R.string.localizable.mixin_wallet()
-            titleView.subtitleStyle = .label(backgroundColor: UIColor(displayP3RgbValue: 0x8CB3FF))
+        case .privacyWallet:
+            titleView.subtitle = R.string.localizable.privacy_wallet()
+            titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
+        case .addressBook(let label):
+            titleView.subtitle = label
+            titleView.subtitleStyle = .label(backgroundColor: R.color.address_label()!)
         case .arbitrary:
             titleView.subtitle = payment.toAddressCompactRepresentation
             titleView.subtitleStyle = .plain
@@ -74,41 +77,38 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         let amount = tokenAmount
         reviewButton.isEnabled = false
         reviewButton.isBusy = true
-        
-        func transfer(proposer: Web3TransferPreviewViewController.Proposer) {
-            DispatchQueue.global().async { [payment] in
-                let initError: Error?
-                do {
-                    let operation = switch payment.chain.kind {
-                    case .evm:
-                        try EVMTransferToAddressOperation(payment: payment, decimalAmount: amount)
-                    case .solana:
-                        try SolanaTransferToAddressOperation(payment: payment, decimalAmount: amount)
-                    }
-                    DispatchQueue.main.async {
-                        let transfer = Web3TransferPreviewViewController(operation: operation, proposer: proposer)
-                        transfer.manipulateNavigationStackOnFinished = true
-                        Web3PopupCoordinator.enqueue(popup: .request(transfer))
-                    }
-                    initError = nil
-                } catch {
-                    initError = error
+        let proposer: Web3TransferPreviewViewController.Proposer
+        switch payment.toType {
+        case .privacyWallet:
+            proposer = .web3ToMixinWallet
+        case .addressBook, .arbitrary:
+            proposer = .web3ToAddress
+        }
+        DispatchQueue.global().async { [payment] in
+            let initError: Error?
+            do {
+                let operation = switch payment.chain.kind {
+                case .evm:
+                    try EVMTransferToAddressOperation(payment: payment, decimalAmount: amount)
+                case .solana:
+                    try SolanaTransferToAddressOperation(payment: payment, decimalAmount: amount)
                 }
                 DispatchQueue.main.async {
-                    if let initError {
-                        showAutoHiddenHud(style: .error, text: "\(initError)")
-                    }
-                    self.reviewButton.isEnabled = true
-                    self.reviewButton.isBusy = false
+                    let transfer = Web3TransferPreviewViewController(operation: operation, proposer: proposer)
+                    transfer.manipulateNavigationStackOnFinished = true
+                    Web3PopupCoordinator.enqueue(popup: .request(transfer))
                 }
+                initError = nil
+            } catch {
+                initError = error
             }
-        }
-        
-        switch payment.toType {
-        case .mixinWallet:
-            transfer(proposer: .web3ToMixinWallet)
-        case .arbitrary:
-            transfer(proposer: .web3ToAddress)
+            DispatchQueue.main.async {
+                if let initError {
+                    showAutoHiddenHud(style: .error, text: "\(initError)")
+                }
+                self.reviewButton.isEnabled = true
+                self.reviewButton.isBusy = false
+            }
         }
     }
     

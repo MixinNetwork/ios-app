@@ -53,7 +53,7 @@ class AssetConfirmationWindow: BottomSheetView {
         return self
     }
     
-    func render(token: TokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal, memo: String, completion: @escaping CompletionHandler) {
+    func render(token: MixinTokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal, memo: String, completion: @escaping CompletionHandler) {
         self.completion = completion
         
         amountLabel.text = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .whenNegative, symbol: .custom(token.symbol))

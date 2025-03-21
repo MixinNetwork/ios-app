@@ -24,6 +24,7 @@ public final class RefreshTokenJob: AsynchronousJob {
                 let chain = try await NetworkAPI.chain(id: token.chainID)
                 if !MixinService.isStopProcessMessages {
                     ChainDAO.shared.save([chain])
+                    Web3ChainDAO.shared.save([chain])
                 }
                 
                 var pendingDeposits: [SafePendingDeposit] = []

@@ -3,7 +3,7 @@ import MixinServices
 
 final class WithdrawInputAmountViewController: InputAmountViewController {
     
-    override var token: any TransferableToken {
+    override var token: any ValuableToken {
         tokenItem
     }
     
@@ -31,7 +31,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         }
     }
     
-    private let tokenItem: TokenItem
+    private let tokenItem: MixinTokenItem
     private let destination: Payment.WithdrawalDestination
     private let traceID = UUID().uuidString.lowercased()
     
@@ -47,7 +47,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
     }
     
     init(
-        tokenItem: TokenItem,
+        tokenItem: MixinTokenItem,
         destination: Payment.WithdrawalDestination
     ) {
         self.tokenItem = tokenItem
@@ -70,9 +70,9 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         case .temporary(let address):
             titleView.subtitle = address.compactRepresentation
             titleView.subtitleStyle = .plain
-        case .web3(let address, _):
-            titleView.subtitle = Address.compactRepresentation(of: address)
-            titleView.subtitleStyle = .plain
+        case .classicWallet:
+            titleView.subtitle = R.string.localizable.common_wallet()
+            titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
         }
         navigationItem.titleView = titleView
         
@@ -115,8 +115,10 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             let addressLabel: String? = switch destination {
             case .address(let address):
                 address.label
-            case .temporary, .web3:
+            case .temporary:
                 nil
+            case .classicWallet:
+                R.string.localizable.common_wallet()
             }
             let preview = WithdrawPreviewViewController(
                 issues: issues,
@@ -178,7 +180,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         tokenBalanceLabel.text = R.string.localizable.available_balance(availableBalance)
     }
     
-    private func reloadWithdrawFee(with token: TokenItem, destination: Payment.WithdrawalDestination) {
+    private func reloadWithdrawFee(with token: MixinTokenItem, destination: Payment.WithdrawalDestination) {
         reviewButton.isBusy = true
         Task {
             do {

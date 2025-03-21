@@ -1,22 +1,22 @@
 import UIKit
+import Alamofire
 import MixinServices
 
-extension Web3Token: IdentifiableToken {
+final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3TokenItem> {
     
-    var id: String {
-        fungibleID
-    }
+    var onSelected: ((Web3TokenItem) -> Void)?
     
-}
-
-final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Token> {
+    private let walletID: String
     
-    var onSelected: ((Web3Token) -> Void)?
+    private weak var searchRequest: Request?
     
-    init(tokens: [Web3Token]) {
+    init(walletID: String, tokens: [Web3TokenItem]) {
+        self.walletID = walletID
+        let chainIDs = Set(tokens.compactMap(\.chainID))
+        let chains = Chain.mixinChains(ids: chainIDs)
         super.init(
             defaultTokens: tokens,
-            defaultChains: [],
+            defaultChains: chains,
             searchDebounceInterval: 0.5,
             selectedID: nil
         )
@@ -26,12 +26,16 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
         fatalError("Storyboard not supported")
     }
     
+    deinit {
+        searchRequest?.cancel()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         DispatchQueue.global().async { [tokens=defaultTokens] in
-            let recentFungibleIDs = Set(PropertiesDAO.shared.jsonObject(forKey: .web3RecentFungibleIDs, type: [String].self) ?? [])
+            let assetIDs = Set(PropertiesDAO.shared.jsonObject(forKey: .transferRecentAssetIDs, type: [String].self) ?? [])
             let recentTokens = tokens.filter { token in
-                recentFungibleIDs.contains(token.fungibleID)
+                assetIDs.contains(token.assetID)
             }
             let chainIDs = Set(tokens.compactMap(\.chainID))
             let chains = Chain.web3Chains(ids: chainIDs)
@@ -49,15 +53,20 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
         }
     }
     
-    override func saveRecentsToStorage(tokens: any Sequence<Web3Token>) {
+    override func saveRecentsToStorage(tokens: any Sequence<Web3TokenItem>) {
         PropertiesDAO.shared.set(
-            jsonObject: tokens.map(\.fungibleID),
-            forKey: .web3RecentFungibleIDs
+            jsonObject: tokens.map(\.assetID),
+            forKey: .transferRecentAssetIDs
         )
     }
     
     override func clearRecentsStorage() {
-        PropertiesDAO.shared.removeValue(forKey: .web3RecentFungibleIDs)
+        PropertiesDAO.shared.removeValue(forKey: .transferRecentAssetIDs)
+    }
+    
+    override func prepareForSearch(_ textField: UITextField) {
+        searchRequest?.cancel()
+        super.prepareForSearch(textField)
     }
     
     override func search(keyword: String) {
@@ -81,17 +90,25 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
             self.tokenIndicesForSelectedChain = nil
         }
         self.collectionView.reloadData()
-        self.collectionView.checkEmpty(
-            dataCount: searchResults.count,
-            text: R.string.localizable.no_results(),
-            photo: R.image.emptyIndicator.ic_search_result()!
-        )
         self.reloadChainSelection()
         self.reloadTokenSelection()
-        self.searchBoxView.isBusy = false
+        
+        searchRequest = AssetAPI.search(keyword: keyword, queue: .global()) { [weak self] result in
+            switch result {
+            case .success(let tokens):
+                self?.reloadSearchResults(keyword: keyword, tokens: tokens)
+            case .failure(.emptyResponse):
+                self?.reloadSearchResults(keyword: keyword, tokens: [])
+            case .failure(let error):
+                Logger.general.debug(category: "Web3TokenSelector", message: "\(error)")
+                DispatchQueue.main.async {
+                    self?.searchBoxView.isBusy = false
+                }
+            }
+        }
     }
     
-    override func tokenIndices(tokens: [Web3Token], chainID: String) -> [Int] {
+    override func tokenIndices(tokens: [Web3TokenItem], chainID: String) -> [Int] {
         tokens.enumerated().compactMap { (index, token) in
             if token.chainID == chainID {
                 index
@@ -122,10 +139,79 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
         }
     }
     
-    override func pickUp(token: Web3Token, from location: PickUpLocation) {
+    override func pickUp(token: Web3TokenItem, from location: PickUpLocation) {
         super.pickUp(token: token, from: location)
         presentingViewController?.dismiss(animated: true) { [onSelected] in
             onSelected?(token)
+        }
+    }
+    
+    private func reloadSearchResults(keyword: String, tokens: [MixinToken]) {
+        assert(!Thread.isMainThread)
+        let supportedChainIDs: Set<String> = [
+            ChainID.ethereum,
+            ChainID.polygon,
+            ChainID.bnbSmartChain,
+            ChainID.base,
+            ChainID.solana,
+        ]
+        let searchResults: [Web3TokenItem] = tokens.compactMap { token in
+            guard supportedChainIDs.contains(token.chainID) else {
+                return nil
+            }
+            let amount = Web3TokenDAO.shared.amount(walletID: walletID, assetID: token.assetID)
+            let isHidden = Web3TokenExtraDAO.shared.isHidden(walletID: walletID, assetID: token.assetID)
+            let chain = ChainDAO.shared.chain(chainId: token.chainID)
+            let web3Token = Web3Token(
+                walletID: walletID,
+                assetID: token.assetID,
+                chainID: token.chainID,
+                assetKey: token.assetKey,
+                kernelAssetID: token.kernelAssetID,
+                symbol: token.symbol,
+                name: token.name,
+                precision: 0,
+                iconURL: token.iconURL,
+                amount: amount ?? "0",
+                usdPrice: token.usdPrice,
+                usdChange: token.usdChange
+            )
+            return Web3TokenItem(token: web3Token, hidden: isHidden, chain: chain)
+        }.sorted { (one, another) in
+            let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
+            let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
+            return left > right
+        }
+        let chainIDs = Set(searchResults.compactMap(\.chainID))
+        let searchResultChains = Chain.mixinChains(ids: chainIDs)
+        DispatchQueue.main.async {
+            guard self.trimmedKeyword == keyword else {
+                return
+            }
+            self.searchResultsKeyword = keyword
+            self.searchResults = searchResults
+            self.searchResultChains = searchResultChains
+            if let chain = self.selectedChain, chainIDs.contains(chain.id) {
+                self.tokenIndicesForSelectedChain = tokens.enumerated().compactMap { (index, token) in
+                    if token.chainID == chain.id {
+                        index
+                    } else {
+                        nil
+                    }
+                }
+            } else {
+                self.selectedChain = nil
+                self.tokenIndicesForSelectedChain = nil
+            }
+            self.collectionView.reloadData()
+            self.collectionView.checkEmpty(
+                dataCount: searchResults.count,
+                text: R.string.localizable.no_results(),
+                photo: R.image.emptyIndicator.ic_search_result()!
+            )
+            self.reloadChainSelection()
+            self.reloadTokenSelection()
+            self.searchBoxView.isBusy = false
         }
     }
     

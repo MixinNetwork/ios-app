@@ -49,6 +49,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 } else {
                     try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
                 }
+                try await TIP.registerClassicWallet(pin: pin)
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 AppGroupUserDefaults.User.loginPINValidated = true
                 reporter.report(event: .loginVerifyPIN, method: "verify_pin")

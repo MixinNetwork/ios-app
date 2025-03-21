@@ -1109,7 +1109,7 @@ extension UrlWindow {
                     case (.none, .none):
                         // Receive money QR code
                         completion(nil)
-                        let selector = SendTokenSelectorViewController()
+                        let selector = MixinTokenSelectorViewController()
                         selector.onSelected = { token in
                             let inputAmount = TransferInputAmountViewController(
                                 tokenItem: token,
@@ -1312,7 +1312,7 @@ extension UrlWindow {
                     }
                     return
                 }
-                let token: TokenItem?
+                let token: MixinTokenItem?
                 if let safe = response.safe {
                     switch safe.operation {
                     case let .transaction(transaction):
@@ -1459,7 +1459,12 @@ extension UrlWindow {
                         hud.scheduleAutoHidden()
                         return
                     }
-                    guard let address: String = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress) else {
+                    guard let walletID = Web3WalletDAO.shared.classicWallet()?.walletID else {
+                        hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                        hud.hide()
+                        return
+                    }
+                    guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: ChainID.solana) else {
                         hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
                         hud.hide()
                         return
@@ -1467,8 +1472,9 @@ extension UrlWindow {
                     DispatchQueue.global().async {
                         do {
                             let operation = try SolanaTransferWithCustomRespondingOperation(
+                                walletID: walletID,
                                 transaction: transaction,
-                                fromAddress: address,
+                                fromAddress: address.destination,
                                 chain: .solana
                             ) { signature in
                                 guard let requestID, case let .conversation(composer) = source else {
@@ -1542,15 +1548,15 @@ extension UrlWindow {
     private static func syncToken(
         assetID: String,
         onFailure: @escaping (String) -> Void
-    ) -> TokenItem? {
-        var token: TokenItem
+    ) -> MixinTokenItem? {
+        var token: MixinTokenItem
         if let localToken = TokenDAO.shared.tokenItem(assetID: assetID) {
             token = localToken
         } else {
             switch SafeAPI.assets(id: assetID) {
             case let .success(remoteToken):
                 TokenDAO.shared.save(token: remoteToken)
-                token = TokenItem(token: remoteToken, balance: "0", isHidden: false, chain: nil)
+                token = MixinTokenItem(token: remoteToken, balance: "0", isHidden: false, chain: nil)
             case let .failure(error):
                 Logger.general.error(category: "UrlWindow", message: "No token: \(assetID) from remote, error: \(error)")
                 let text = error.localizedDescription(overridingNotFoundDescriptionWith: R.string.localizable.asset_not_found())
@@ -1568,6 +1574,7 @@ extension UrlWindow {
                 switch NetworkAPI.chain(id: token.chainID) {
                 case .success(let remoteChain):
                     ChainDAO.shared.save([remoteChain])
+                    Web3ChainDAO.shared.save([remoteChain])
                     chain = remoteChain
                 case .failure(let error):
                     Logger.general.error(category: "UrlWindow", message: "No chain: \(token.chainID) from remote, error: \(error)")
@@ -1578,13 +1585,13 @@ extension UrlWindow {
                     return nil
                 }
             }
-            return TokenItem(token: token, balance: token.balance, isHidden: token.isHidden, chain: chain)
+            return MixinTokenItem(token: token, balance: token.balance, isHidden: token.isHidden, chain: chain)
         } else {
             return token
         }
     }
     
-    private static func syncToken(assetID: String, hud: Hud) -> TokenItem? {
+    private static func syncToken(assetID: String, hud: Hud) -> MixinTokenItem? {
         syncToken(assetID: assetID) { errorDescription in
             hud.set(style: .error, text: errorDescription)
             hud.scheduleAutoHidden()
@@ -1668,6 +1675,7 @@ extension UrlWindow {
                 asset?.chain = chain
             } else if case let .success(chain) = AssetAPI.chain(chainId: chainId) {
                 ChainDAO.shared.save([chain])
+                Web3ChainDAO.shared.save([chain])
                 asset?.chain = chain
             } else {
                 return nil

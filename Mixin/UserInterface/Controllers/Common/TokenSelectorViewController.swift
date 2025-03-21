@@ -3,11 +3,7 @@ import Combine
 import OrderedCollections
 import MixinServices
 
-protocol IdentifiableToken {
-    var id: String { get }
-}
-
-class TokenSelectorViewController<Token: IdentifiableToken>: UIViewController, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
+class TokenSelectorViewController<SelectableToken: Token>: UIViewController, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
     
     @IBOutlet weak var searchBoxView: SearchBoxView!
     @IBOutlet weak var cancelButton: UIButton!
@@ -18,10 +14,10 @@ class TokenSelectorViewController<Token: IdentifiableToken>: UIViewController, U
     private let searchDebounceInterval: TimeInterval
     private let selectedID: String?
     
-    var recentTokens: [Token] = []
+    var recentTokens: [SelectableToken] = []
     var recentTokenChanges: [String: TokenChange] = [:] // Key is token's id
     
-    var defaultTokens: [Token]
+    var defaultTokens: [SelectableToken]
     var defaultChains: OrderedSet<Chain>
     
     var selectedChain: Chain?
@@ -29,7 +25,7 @@ class TokenSelectorViewController<Token: IdentifiableToken>: UIViewController, U
     
     private var searchObserver: AnyCancellable?
     var searchResultsKeyword: String?
-    var searchResults: [Token]?
+    var searchResults: [SelectableToken]?
     var searchResultChains: OrderedSet<Chain>?
     
     var trimmedKeyword: String {
@@ -39,7 +35,7 @@ class TokenSelectorViewController<Token: IdentifiableToken>: UIViewController, U
     }
     
     init(
-        defaultTokens: [Token],
+        defaultTokens: [SelectableToken],
         defaultChains: OrderedSet<Chain>,
         searchDebounceInterval: TimeInterval,
         selectedID: String?
@@ -170,13 +166,13 @@ class TokenSelectorViewController<Token: IdentifiableToken>: UIViewController, U
         
     }
     
-    func reloadRecents(tokens: [Token], changes: [String: TokenChange]) {
+    func reloadRecents(tokens: [SelectableToken], changes: [String: TokenChange]) {
         self.recentTokens = tokens
         self.recentTokenChanges = changes
         self.reloadWithoutAnimation(section: .recent)
     }
     
-    func saveRecentsToStorage(tokens: any Sequence<Token>) {
+    func saveRecentsToStorage(tokens: any Sequence<SelectableToken>) {
         
     }
     
@@ -184,24 +180,24 @@ class TokenSelectorViewController<Token: IdentifiableToken>: UIViewController, U
         
     }
     
-    func tokenIndices(tokens: [Token], chainID: String) -> [Int] {
+    func tokenIndices(tokens: [SelectableToken], chainID: String) -> [Int] {
         assertionFailure("Override to implement chain filter")
         return []
     }
     
-    func configureRecentCell(_ cell: ExploreRecentSearchCell, withToken token: Token) {
+    func configureRecentCell(_ cell: ExploreRecentSearchCell, withToken token: SelectableToken) {
         
     }
     
-    func configureTokenCell(_ cell: SwapTokenCell, withToken token: Token) {
+    func configureTokenCell(_ cell: SwapTokenCell, withToken token: SelectableToken) {
         
     }
     
-    func pickUp(token: Token, from location: PickUpLocation) {
+    func pickUp(token: SelectableToken, from location: PickUpLocation) {
         var recentTokens = self.recentTokens
         DispatchQueue.global().async { [maxNumberOfRecents] in
             recentTokens.removeAll { recentToken in
-                recentToken.id == token.id
+                recentToken.assetID == token.assetID
             }
             recentTokens.insert(token, at: 0)
             let topRecentTokens = recentTokens.prefix(maxNumberOfRecents)
@@ -399,7 +395,7 @@ extension TokenSelectorViewController {
         
         static func web3Chains(ids: Set<String>) -> OrderedSet<Chain> {
             let all = Web3Chain.all.map { chain in
-                Chain(id: chain.web3ChainID, name: chain.name)
+                Chain(id: chain.chainID, name: chain.name)
             }
             let chains = all.filter { chain in
                 ids.contains(chain.id)
@@ -448,7 +444,7 @@ extension TokenSelectorViewController {
         }
         let item: Int
         if let searchResults {
-            if let index = searchResults.firstIndex(where: { $0.id == id }) {
+            if let index = searchResults.firstIndex(where: { $0.assetID == id }) {
                 if let indices = tokenIndicesForSelectedChain {
                     if let i = indices.firstIndex(of: index) {
                         item = i
@@ -463,7 +459,7 @@ extension TokenSelectorViewController {
                 // The selected token doesn't exists in search results
                 return
             }
-        } else if let index = defaultTokens.firstIndex(where: { $0.id == id }) {
+        } else if let index = defaultTokens.firstIndex(where: { $0.assetID == id }) {
             if let indices = tokenIndicesForSelectedChain {
                 if let i = indices.firstIndex(of: index) {
                     item = i
@@ -482,7 +478,7 @@ extension TokenSelectorViewController {
         collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
     }
     
-    private func token(at indexPath: IndexPath) -> Token {
+    private func token(at indexPath: IndexPath) -> SelectableToken {
         assert(indexPath.section == Section.tokens.rawValue)
         let index = if let indices = tokenIndicesForSelectedChain {
             indices[indexPath.item]

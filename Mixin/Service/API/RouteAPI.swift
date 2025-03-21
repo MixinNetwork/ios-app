@@ -14,10 +14,10 @@ final class RouteAPI {
         case combineSealedBox
     }
     
-    private enum Config {
-        static let botUserID: String = "61cb8dd4-16b1-4744-ba0c-7b2d2e52fc59"
-        static let host: String = "https://api.route.mixin.one"
-    }
+}
+
+// MARK: - Swap
+extension RouteAPI {
     
     static func swappableTokens(
         source: RouteTokenSource,
@@ -55,6 +55,24 @@ final class RouteAPI {
         Self.request(method: .post, path: "/web3/swap", with: request, completion: completion)
     }
     
+    static func mixinSwapOrders(
+        offset: String?,
+        limit: Int,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[SwapOrder]>) -> Void
+    ) {
+        var path = "/web3/swap/orders?limit=\(limit)"
+        if let offset {
+            path.append("&offset=\(offset)")
+        }
+        request(method: .get, path: path, queue: queue, completion: completion)
+    }
+    
+}
+
+// MARK: - Markets
+extension RouteAPI {
+    
     static func globalMarket(
         queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<GlobalMarket>) -> Void
@@ -68,19 +86,6 @@ final class RouteAPI {
         completion: @escaping (MixinAPI.Result<[Market]>) -> Void
     ) {
         let path = "/markets?category=\(category.rawValue)&limit=500"
-        request(method: .get, path: path, queue: queue, completion: completion)
-    }
-    
-    static func mixinSwapOrders(
-        offset: String?,
-        limit: Int,
-        queue: DispatchQueue,
-        completion: @escaping (MixinAPI.Result<[SwapOrder]>) -> Void
-    ) {
-        var path = "/web3/swap/orders?limit=\(limit)"
-        if let offset {
-            path.append("&offset=\(offset)")
-        }
         request(method: .get, path: path, queue: queue, completion: completion)
     }
     
@@ -202,6 +207,7 @@ final class RouteAPI {
     
 }
 
+// MARK: - Web3 Wallets
 extension RouteAPI {
     
     struct WalletRequest: Codable {
@@ -300,7 +306,13 @@ extension RouteAPI {
     
 }
 
+// MARK: - Signing
 extension RouteAPI {
+    
+    private enum Config {
+        static let botUserID: String = "61cb8dd4-16b1-4744-ba0c-7b2d2e52fc59"
+        static let host: String = "https://api.route.mixin.one"
+    }
     
     private static var botPublicKey: Data?
     
@@ -370,6 +382,7 @@ extension RouteAPI {
     
 }
 
+// MARK: - Implementation
 extension RouteAPI {
     
     private struct ResponseObject<Response: Decodable>: Decodable {

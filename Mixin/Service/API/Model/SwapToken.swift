@@ -88,14 +88,12 @@ extension SwapToken {
         enum CodingKeys: String, CodingKey {
             case chainID = "chainId"
             case name
-            case decimals
             case symbol
             case icon
         }
         
         let chainID: String?
         let name: String
-        let decimals: Int
         let symbol: String
         let icon: String
         
@@ -111,15 +109,13 @@ extension SwapToken {
                 self.chainID = nil
             }
             self.name = try container.decode(String.self, forKey: .name)
-            self.decimals = try container.decode(Int.self, forKey: .decimals)
             self.symbol = try container.decode(String.self, forKey: .symbol)
             self.icon = try container.decode(String.self, forKey: .icon)
         }
         
-        init(chainID: String?, name: String, decimals: Int, symbol: String, icon: String) {
+        init(chainID: String?, name: String, symbol: String, icon: String) {
             self.chainID = chainID
             self.name = name
-            self.decimals = decimals
             self.symbol = symbol
             self.icon = icon
         }

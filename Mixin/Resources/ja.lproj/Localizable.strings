@@ -1400,7 +1400,7 @@
 "view_wallet" = "ウォレットを確認";
 "voice_call_cancelled" = "グループ通話がキャンセルされました";
 "voice_call_has_been_declined" = "権限不足です";
-"vol_24h" = "24H VOL(%@)";
+"vol_24h" = "24H VOL";
 "volume_24h" = "24h Volume";
 "waiting" = "待機中";
 "waiting_for_other_device" = "Waiting for Other Device...";

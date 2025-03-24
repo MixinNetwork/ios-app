@@ -1400,7 +1400,7 @@
 "view_wallet" = "Ver Cartera";
 "voice_call_cancelled" = "llamada de voz cancelada";
 "voice_call_has_been_declined" = "La llamada de voz ha sido rechazada";
-"vol_24h" = "24H VOL(%@)";
+"vol_24h" = "24H VOL";
 "volume_24h" = "24h Volume";
 "waiting" = "Esperando";
 "waiting_for_other_device" = "Waiting for Other Device...";

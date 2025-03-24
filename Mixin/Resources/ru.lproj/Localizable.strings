@@ -1400,7 +1400,7 @@
 "view_wallet" = "Посмотреть кошелек";
 "voice_call_cancelled" = "голосовой вызов отменен";
 "voice_call_has_been_declined" = "Голосовой вызов был отклонен";
-"vol_24h" = "24H VOL(%@)";
+"vol_24h" = "24H VOL";
 "volume_24h" = "24h Volume";
 "waiting" = "Ожидание";
 "waiting_for_other_device" = "Waiting for Other Device...";

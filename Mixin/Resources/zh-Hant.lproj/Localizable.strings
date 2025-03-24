@@ -1400,7 +1400,7 @@
 "view_wallet" = "檢視錢包";
 "voice_call_cancelled" = "對方已取消語音通話";
 "voice_call_has_been_declined" = "已拒絕通話";
-"vol_24h" = "24 小時交易量（%@）";
+"vol_24h" = "24 小時交易量";
 "volume_24h" = "24 小時交易量";
 "waiting" = "等待中";
 "waiting_for_other_device" = "等待其他裝置...";

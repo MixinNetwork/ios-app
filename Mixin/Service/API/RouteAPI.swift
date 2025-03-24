@@ -283,10 +283,14 @@ extension RouteAPI {
         return result
     }
     
-    static func transactions(address: String, limit: Int) -> MixinAPI.Result<[Web3Transaction]> {
+    static func transactions(address: String, offset: String?, limit: Int) -> MixinAPI.Result<[Web3Transaction]> {
         let semaphore = DispatchSemaphore(value: 0)
         var result: MixinAPI.Result<[Web3Transaction]> = .failure(.foundNilResult)
-        request(method: .get, path: "/transactions?address=\(address)&limit=\(limit)") { theResult in
+        var path = "/transactions?address=\(address)&limit=\(limit)"
+        if let offset {
+            path.append("&offset=\(offset)")
+        }
+        request(method: .get, path: path) { theResult in
             result = theResult
             semaphore.signal()
         }

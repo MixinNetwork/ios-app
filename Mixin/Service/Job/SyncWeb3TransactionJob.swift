@@ -35,11 +35,10 @@ final class SyncWeb3TransactionJob: BaseJob {
         for address in destinations {
             let initialOffset = Web3PropertiesDAO.shared.transactionOffset(address: address)
             Logger.general.debug(category: "SyncWeb3Txn", message: "Sync \(address) from initial offset: \(initialOffset ?? "(null)")")
-            var result = RouteAPI.transactions(address: address, limit: limit)
+            var result = RouteAPI.transactions(address: address, offset: initialOffset, limit: limit)
             while true {
                 let transactions = try result.get()
                 let offset = transactions.last?.createdAt
-                Logger.general.debug(category: "SyncWeb3Txn", message: "Write \(transactions.count) transactions to \(address), new offset: \(offset ?? "(null)")")
                 Web3TransactionDAO.shared.save(transactions: transactions) { db in
                     if let offset {
                         try Web3PropertiesDAO.shared.set(
@@ -49,12 +48,13 @@ final class SyncWeb3TransactionJob: BaseJob {
                         )
                     }
                 }
+                Logger.general.debug(category: "SyncWeb3Txn", message: "Wrote \(transactions.count) txns to \(address), new offset: \(offset ?? "(null)")")
                 if transactions.count < limit {
                     Logger.general.debug(category: "SyncWeb3Txn", message: "Sync \(address) finished")
                     break
                 } else {
                     Logger.general.debug(category: "SyncWeb3Txn", message: "Sync \(address) from offset: \(offset ?? "(null)")")
-                    result = RouteAPI.transactions(address: address, limit: limit)
+                    result = RouteAPI.transactions(address: address, offset: offset, limit: limit)
                 }
             }
         }

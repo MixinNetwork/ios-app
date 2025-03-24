@@ -28,6 +28,7 @@ public final class RefreshAllTokensJob: AsynchronousJob {
                 let chains = try await NetworkAPI.chains()
                 if !MixinService.isStopProcessMessages {
                     ChainDAO.shared.save(chains)
+                    Web3ChainDAO.shared.save(chains)
                 }
             } catch {
                 reporter.report(error: error)

@@ -148,7 +148,7 @@ extension UIApplicationShortcutItem {
                                                       icon: .init(templateImageName: "ic_shortcut_scan_qr_code"),
                                                       userInfo: nil)
     static let wallet = UIApplicationShortcutItem(type: ItemType.wallet.rawValue,
-                                                  localizedTitle: R.string.localizable.wallet(),
+                                                  localizedTitle: R.string.localizable.wallets(),
                                                   localizedSubtitle: nil,
                                                   icon: .init(templateImageName: "ic_shortcut_wallet"),
                                                   userInfo: nil)

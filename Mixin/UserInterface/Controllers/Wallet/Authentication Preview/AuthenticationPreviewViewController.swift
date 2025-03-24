@@ -382,13 +382,13 @@ extension AuthenticationPreviewViewController {
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)
         case web3Message(caption: String, message: String)
-        case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: TransferableToken) // Nil amount for unlimited
+        case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: Token) // Nil amount for unlimited
         case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
-        case tokenAmount(token: TokenItem, tokenAmount: String, fiatMoneyAmount: String)
-        case swapAssetChange(sendToken: TokenItem, sendAmount: String, receiveToken: SwapToken, receiveAmount: String)
-        case assetChanges([(token: TokenItem, amount: String)])
-        case safeMultisigAmount(token: TokenItem, tokenAmount: String, fiatMoneyAmount: String)
-        case addressReceivers(TokenItem, [SafeMultisigResponse.Safe.Recipient])
+        case tokenAmount(token: MixinTokenItem, tokenAmount: String, fiatMoneyAmount: String)
+        case swapAssetChange(sendToken: MixinTokenItem, sendAmount: String, receiveToken: SwapToken, receiveAmount: String)
+        case assetChanges([(token: MixinTokenItem, amount: String)])
+        case safeMultisigAmount(token: MixinTokenItem, tokenAmount: String, fiatMoneyAmount: String)
+        case addressReceivers(MixinTokenItem, [SafeMultisigResponse.Safe.Recipient])
     }
     
     struct TableHeaderViewStyle: OptionSet {

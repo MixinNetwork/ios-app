@@ -126,7 +126,9 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                     root = TIPNavigationController(intent: .create)
                 }
             } else {
-                if AppGroupUserDefaults.User.loginPINValidated {
+                let isReady = AppGroupUserDefaults.User.loginPINValidated
+                    && Web3WalletDAO.shared.hasClassicWallet()
+                if isReady {
                     Logger.general.debug(category: "CheckSessionEnvironment", message: "Go home")
                     root = HomeContainerViewController()
                 } else {

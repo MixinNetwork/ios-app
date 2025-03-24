@@ -1,6 +1,11 @@
 import UIKit
+import MixinServices
 
-class WalletSearchViewController: UIViewController {
+protocol WalletSearchViewControllerDelegate: AnyObject {
+    func walletSearchViewController(_ controller: WalletSearchViewController, didSelectToken token: MixinTokenItem)
+}
+
+final class WalletSearchViewController: UIViewController {
     
     @IBOutlet weak var searchBoxWrapperView: UIView!
     @IBOutlet weak var searchBoxView: SearchBoxView!
@@ -8,8 +13,23 @@ class WalletSearchViewController: UIViewController {
     
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
-    private let recommendation = WalletSearchRecommendationViewController()
-    private let searchResults = TokenSearchResultsViewController()
+    weak var delegate: WalletSearchViewControllerDelegate?
+    
+    private let supportedChainIDs: Set<String>?
+    private let recommendation: WalletSearchRecommendationViewController
+    private let searchResults: TokenSearchResultsViewController
+    
+    init(supportedChainIDs ids: Set<String>? = nil) {
+        self.supportedChainIDs = ids
+        self.recommendation = WalletSearchRecommendationViewController(supportedChainIDs: ids)
+        self.searchResults = TokenSearchResultsViewController(supportedChainIDs: ids)
+        let nib = R.nib.walletSearchView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

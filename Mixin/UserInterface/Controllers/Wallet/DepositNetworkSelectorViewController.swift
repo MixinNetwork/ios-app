@@ -5,13 +5,13 @@ final class DepositNetworkSelectorViewController: PopupSelectorViewController {
     
     var onDismiss: (() -> Void)?
     
-    private let token: TokenItem
+    private let token: MixinTokenItem
     private let chain: Chain
     
     private let headerReuseID = "h"
     private let presentationManager = PopupPresentationManager()
     
-    init(token: TokenItem, chain: Chain) {
+    init(token: MixinTokenItem, chain: Chain) {
         self.token = token
         self.chain = chain
         super.init()

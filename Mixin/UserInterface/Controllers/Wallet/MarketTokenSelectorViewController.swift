@@ -4,10 +4,10 @@ import MixinServices
 final class MarketTokenSelectorViewController: PopupSelectorViewController {
     
     private let name: String
-    private let tokens: [TokenItem]
+    private let tokens: [MixinTokenItem]
     private let onSelected: (Int) -> Void
     
-    init(name: String, tokens: [TokenItem], onSelected: @escaping (Int) -> Void) {
+    init(name: String, tokens: [MixinTokenItem], onSelected: @escaping (Int) -> Void) {
         self.name = name
         self.tokens = tokens
         self.onSelected = onSelected

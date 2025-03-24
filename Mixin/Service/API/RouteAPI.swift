@@ -204,6 +204,104 @@ final class RouteAPI {
 
 extension RouteAPI {
     
+    struct WalletRequest: Codable {
+        
+        struct Address: Codable {
+            
+            enum CodingKeys: String, CodingKey {
+                case destination
+                case chainID = "chain_id"
+            }
+            
+            let destination: String
+            let chainID: String
+            
+        }
+        
+        let name: String
+        let category: Web3Wallet.Category
+        let addresses: [Address]
+        
+    }
+    
+    struct WalletResponse: Codable {
+        
+        let wallet: Web3Wallet
+        let addresses: [Web3Address]
+        
+        init(from decoder: any Decoder) throws {
+            self.wallet = try Web3Wallet(from: decoder)
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.addresses = try container.decode([Web3Address].self, forKey: .addresses)
+        }
+        
+    }
+    
+    static func wallets() async throws -> [WalletResponse] {
+        try await request(method: .get, path: "/wallets")
+    }
+    
+    static func createWallet(_ wallet: WalletRequest) async throws -> WalletResponse {
+        try await request(method: .post, path: "/wallets", with: wallet)
+    }
+    
+    static func assets(
+        walletID: String,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[Web3Token]>) -> Void
+    ) {
+        request(
+            method: .get,
+            path: "/wallets/\(walletID)/assets",
+            queue: queue,
+            completion: completion
+        )
+    }
+    
+    static func asset(
+        assetID: String,
+        address: String,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<Web3Token>) -> Void
+    ) {
+        request(
+            method: .get,
+            path: "/assets/\(assetID)?address=\(address)",
+            queue: queue,
+            completion: completion
+        )
+    }
+    
+    static func addresses(walletID: String) -> MixinAPI.Result<[Web3Address]> {
+        let semaphore = DispatchSemaphore(value: 0)
+        var result: MixinAPI.Result<[Web3Address]> = .failure(.foundNilResult)
+        request(method: .get, path: "/wallets/\(walletID)/addresses") { theResult in
+            result = theResult
+            semaphore.signal()
+        }
+        semaphore.wait()
+        return result
+    }
+    
+    static func transactions(address: String, offset: String?, limit: Int) -> MixinAPI.Result<[Web3Transaction]> {
+        let semaphore = DispatchSemaphore(value: 0)
+        var result: MixinAPI.Result<[Web3Transaction]> = .failure(.foundNilResult)
+        var path = "/transactions?address=\(address)&limit=\(limit)"
+        if let offset {
+            path.append("&offset=\(offset)")
+        }
+        request(method: .get, path: path) { theResult in
+            result = theResult
+            semaphore.signal()
+        }
+        semaphore.wait()
+        return result
+    }
+    
+}
+
+extension RouteAPI {
+    
     private static var botPublicKey: Data?
     
     private final class RouteSigningInterceptor: RequestInterceptor {
@@ -317,6 +415,32 @@ extension RouteAPI {
             interceptor: interceptor
         )
         return request(dataRequest, queue: queue, completion: completion)
+    }
+    
+    @discardableResult
+    private static func request<Parameters: Encodable, Response: Decodable>(
+        method: HTTPMethod,
+        path: String,
+        with parameters: Parameters? = nil
+    ) async throws -> Response {
+        try await withCheckedThrowingContinuation { continuation in
+            request(method: method, path: path, with: parameters) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+    
+    @discardableResult
+    private static func request<Response: Decodable>(
+        method: HTTPMethod,
+        path: String,
+        with parameters: [String: Any]? = nil
+    ) async throws -> Response {
+        try await withCheckedThrowingContinuation { continuation in
+            request(method: method, path: path, with: parameters) { result in
+                continuation.resume(with: result)
+            }
+        }
     }
     
     private static func request<Response>(

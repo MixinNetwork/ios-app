@@ -14,117 +14,6 @@
         </array>
     </customFonts>
     <scenes>
-        <!--Wallet Search View Controller-->
-        <scene sceneID="ERh-cv-Yre">
-            <objects>
-                <viewController storyboardIdentifier="wallet_search" automaticallyAdjustsScrollViewInsets="NO" id="dJA-1d-DUz" customClass="WalletSearchViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="cHd-WC-NLi">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vrC-c1-P1C">
-                                <rect key="frame" x="0.0" y="20" width="414" height="44"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="omQ-aX-4Rh" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="2" width="306" height="40"/>
-                                        <color key="backgroundColor" name="background"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="i9T-uM-YEi"/>
-                                        </constraints>
-                                    </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DnU-UT-8Sh">
-                                        <rect key="frame" x="326" y="0.0" width="88" height="44"/>
-                                        <inset key="contentEdgeInsets" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
-                                        <state key="normal" title="Cancel"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="cancel"/>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="cancelAction:" destination="dJA-1d-DUz" eventType="touchUpInside" id="I8G-tC-kRN"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" name="background"/>
-                                <constraints>
-                                    <constraint firstItem="omQ-aX-4Rh" firstAttribute="leading" secondItem="vrC-c1-P1C" secondAttribute="leading" constant="20" id="48X-AT-uLb"/>
-                                    <constraint firstItem="omQ-aX-4Rh" firstAttribute="centerY" secondItem="vrC-c1-P1C" secondAttribute="centerY" id="8po-Dh-Qmf"/>
-                                    <constraint firstAttribute="trailing" secondItem="DnU-UT-8Sh" secondAttribute="trailing" id="CZZ-vd-2HB"/>
-                                    <constraint firstItem="DnU-UT-8Sh" firstAttribute="top" secondItem="vrC-c1-P1C" secondAttribute="top" id="FId-4j-72L"/>
-                                    <constraint firstItem="DnU-UT-8Sh" firstAttribute="leading" secondItem="omQ-aX-4Rh" secondAttribute="trailing" id="Z3n-ni-C64"/>
-                                    <constraint firstAttribute="bottom" secondItem="DnU-UT-8Sh" secondAttribute="bottom" id="is5-G6-lD6"/>
-                                    <constraint firstAttribute="height" constant="44" id="zMG-T9-mQT"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AMa-Jq-uT1">
-                                <rect key="frame" x="0.0" y="64" width="414" height="672"/>
-                                <color key="backgroundColor" name="background"/>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ECS-Lp-dRM">
-                                <rect key="frame" x="0.0" y="736" width="414" height="0.0"/>
-                                <color key="backgroundColor" name="background"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" id="bEP-6y-Jib"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="yZh-hV-dDP"/>
-                        <color key="backgroundColor" name="background"/>
-                        <constraints>
-                            <constraint firstItem="ECS-Lp-dRM" firstAttribute="top" secondItem="AMa-Jq-uT1" secondAttribute="bottom" id="EzN-TI-8BP"/>
-                            <constraint firstItem="AMa-Jq-uT1" firstAttribute="leading" secondItem="cHd-WC-NLi" secondAttribute="leading" id="HIz-Zy-6ce"/>
-                            <constraint firstItem="AMa-Jq-uT1" firstAttribute="top" secondItem="vrC-c1-P1C" secondAttribute="bottom" id="L2E-9j-gcb"/>
-                            <constraint firstItem="vrC-c1-P1C" firstAttribute="leading" secondItem="yZh-hV-dDP" secondAttribute="leading" id="NKF-5D-5Qk"/>
-                            <constraint firstAttribute="trailing" secondItem="AMa-Jq-uT1" secondAttribute="trailing" id="Oou-pF-roC"/>
-                            <constraint firstItem="ECS-Lp-dRM" firstAttribute="leading" secondItem="cHd-WC-NLi" secondAttribute="leading" id="bNF-4O-M0Q"/>
-                            <constraint firstAttribute="bottom" secondItem="ECS-Lp-dRM" secondAttribute="bottom" id="c1u-yA-kvz"/>
-                            <constraint firstItem="vrC-c1-P1C" firstAttribute="top" secondItem="yZh-hV-dDP" secondAttribute="top" id="jDs-lc-aZ7"/>
-                            <constraint firstItem="yZh-hV-dDP" firstAttribute="trailing" secondItem="vrC-c1-P1C" secondAttribute="trailing" id="ouo-7U-uE7"/>
-                            <constraint firstAttribute="trailing" secondItem="ECS-Lp-dRM" secondAttribute="trailing" id="tvp-Yk-ClC"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="contentWrapperView" destination="AMa-Jq-uT1" id="Obj-Qf-tJN"/>
-                        <outlet property="keyboardPlaceholderHeightConstraint" destination="bEP-6y-Jib" id="uI0-BV-uEc"/>
-                        <outlet property="searchBoxView" destination="omQ-aX-4Rh" id="6HR-1R-vFV"/>
-                        <outlet property="searchBoxWrapperView" destination="vrC-c1-P1C" id="rl4-np-srw"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="YVg-rk-v5c" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-455.07246376811599" y="-712.5"/>
-        </scene>
-        <!--Hidden Tokens View Controller-->
-        <scene sceneID="zH6-MX-htI">
-            <objects>
-                <viewController storyboardIdentifier="hidden_assets" automaticallyAdjustsScrollViewInsets="NO" id="GB1-mn-I7w" customClass="HiddenTokensViewController" customModule="Mixin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="uhb-p1-3GT">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="74" estimatedRowHeight="74" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="hg6-2u-DnI">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </tableView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="4FZ-87-yjF"/>
-                        <color key="backgroundColor" name="background"/>
-                        <constraints>
-                            <constraint firstItem="hg6-2u-DnI" firstAttribute="top" secondItem="uhb-p1-3GT" secondAttribute="top" id="3Pn-2Z-QPe"/>
-                            <constraint firstItem="4FZ-87-yjF" firstAttribute="trailing" secondItem="hg6-2u-DnI" secondAttribute="trailing" id="7uy-xe-Xmo"/>
-                            <constraint firstItem="hg6-2u-DnI" firstAttribute="leading" secondItem="4FZ-87-yjF" secondAttribute="leading" id="drx-nG-QEm"/>
-                            <constraint firstAttribute="bottom" secondItem="hg6-2u-DnI" secondAttribute="bottom" id="yVQ-3d-hMJ"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="tableView" destination="hg6-2u-DnI" id="tR2-N9-F8d"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="lxu-7F-X7Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-455" y="703"/>
-        </scene>
         <!--Legacy Transaction View Controller-->
         <scene sceneID="jHO-cF-iCX">
             <objects>
@@ -185,7 +74,7 @@
                                                                 <constraint firstAttribute="width" constant="3" id="txl-EP-N3o"/>
                                                             </constraints>
                                                         </view>
-                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
+                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hy0-UM-G0M">
                                                             <rect key="frame" x="7" y="6" width="142.33333333333334" height="49.666666666666664"/>
                                                             <gestureRecognizers/>
                                                             <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
@@ -195,7 +84,7 @@
                                                                 <outletCollection property="gestureRecognizers" destination="Nol-iF-VEd" appends="YES" id="i5D-Y2-zOE"/>
                                                             </connections>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ptc-MK-Zp1" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                                             <rect key="frame" x="153.33333333333331" y="6" width="23.666666666666657" height="49.666666666666664"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" name="text"/>
@@ -707,7 +596,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

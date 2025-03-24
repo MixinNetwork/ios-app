@@ -8,7 +8,7 @@ final class CollectibleCollectionViewController: UIViewController {
     private var collection: InscriptionCollectionPreview
     private var collectionView: UICollectionView!
     private var lastLayoutWidth: CGFloat?
-    private var token: TokenItem?
+    private var token: MixinTokenItem?
     private var items: [InscriptionOutput] = []
     
     init(collection: InscriptionCollectionPreview) {

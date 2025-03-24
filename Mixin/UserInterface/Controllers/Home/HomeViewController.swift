@@ -107,6 +107,18 @@ final class HomeViewController: UIViewController {
         UIApplication.homeContainerViewController?.clipSwitcher.loadClipsFromPreviousSession()
         WalletConnectService.shared.reloadSessions()
         Web3Chain.synchronize()
+        DispatchQueue.global().async {
+            let walletIDs = Web3WalletDAO.shared.walletIDs()
+            for id in walletIDs {
+                let jobs = [
+                    RefreshWeb3TokenJob(walletID: id),
+                    SyncWeb3TransactionJob(walletID: id),
+                ]
+                for job in jobs {
+                    ConcurrentJobQueue.shared.addJob(job: job)
+                }
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

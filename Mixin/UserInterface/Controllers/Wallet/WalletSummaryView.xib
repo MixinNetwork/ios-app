@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WalletSummaryViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="collectionView" destination="3jQ-cV-9qL" id="PSz-45-JFZ"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N3G-DI-chj">
+                    <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Wallets" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jn5-Sr-Ev6">
+                            <rect key="frame" x="19.999999999999996" y="0.0" width="61.666666666666657" height="44"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallets"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" name="background_secondary"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="5OF-FB-BD2"/>
+                        <constraint firstItem="Jn5-Sr-Ev6" firstAttribute="leading" secondItem="N3G-DI-chj" secondAttribute="leading" constant="20" id="Oks-Ly-YPm"/>
+                        <constraint firstItem="Jn5-Sr-Ev6" firstAttribute="top" secondItem="N3G-DI-chj" secondAttribute="top" id="Yfi-ah-tEQ"/>
+                        <constraint firstAttribute="bottom" secondItem="Jn5-Sr-Ev6" secondAttribute="bottom" id="p6E-IM-4gc"/>
+                    </constraints>
+                </view>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="3jQ-cV-9qL">
+                    <rect key="frame" x="0.0" y="103" width="393" height="749"/>
+                    <color key="backgroundColor" name="background_secondary"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="GWW-jB-fH0">
+                        <size key="itemSize" width="128" height="128"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" name="background_secondary"/>
+            <constraints>
+                <constraint firstItem="N3G-DI-chj" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="8eQ-Ll-nKq"/>
+                <constraint firstAttribute="trailing" secondItem="N3G-DI-chj" secondAttribute="trailing" id="K4Q-A8-aMt"/>
+                <constraint firstAttribute="trailing" secondItem="3jQ-cV-9qL" secondAttribute="trailing" id="Uez-DW-qEa"/>
+                <constraint firstAttribute="bottom" secondItem="3jQ-cV-9qL" secondAttribute="bottom" id="bdd-mf-Svv"/>
+                <constraint firstItem="3jQ-cV-9qL" firstAttribute="top" secondItem="N3G-DI-chj" secondAttribute="bottom" id="n2O-Qd-cfg"/>
+                <constraint firstItem="N3G-DI-chj" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="uhg-H0-adW"/>
+                <constraint firstItem="3jQ-cV-9qL" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="wpV-SB-luc"/>
+            </constraints>
+            <point key="canvasLocation" x="49.618320610687022" y="41.549295774647888"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

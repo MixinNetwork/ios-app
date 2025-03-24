@@ -30,24 +30,29 @@ class AssetCell: ModernSelectedBackgroundCell {
         assetIconView.prepareForReuse()
     }
     
-    func render(asset: TokenItem, attributedSymbol: NSAttributedString? = nil) {
-        assetIconView.setIcon(token: asset)
-        let balance: String
-        if asset.decimalBalance.isZero {
-            balance = zeroWith2Fractions
+    func render(token: MixinTokenItem, attributedSymbol: NSAttributedString? = nil) {
+        assetIconView.setIcon(token: token)
+        balanceLabel.text = if token.decimalBalance.isZero {
+            zeroWith2Fractions
         } else {
-            balance = CurrencyFormatter.localizedString(from: asset.balance, format: .precision, sign: .never) ?? ""
+            CurrencyFormatter.localizedString(
+                from: token.decimalBalance,
+                format: .precision,
+                sign: .never
+            )
         }
-        balanceLabel.text = balance
         if let attributedSymbol = attributedSymbol {
             symbolLabel.attributedText = attributedSymbol
         } else {
-            symbolLabel.attributedText = NSAttributedString(string: asset.symbol, attributes: AssetCell.symbolAttributes)
+            symbolLabel.attributedText = NSAttributedString(
+                string: token.symbol,
+                attributes: AssetCell.symbolAttributes
+            )
         }
-        if asset.decimalUSDPrice > 0 {
-            changeLabel.text = asset.localizedUSDChange
-            changeLabel.marketColor = .byValue(asset.decimalUSDChange)
-            fiatMoneyPriceLabel.text = asset.localizedFiatMoneyPrice
+        if token.decimalUSDPrice > 0 {
+            changeLabel.text = token.localizedUSDChange
+            changeLabel.marketColor = .byValue(token.decimalUSDChange)
+            fiatMoneyPriceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.alpha = 1
             fiatMoneyPriceLabel.alpha = 1
             noFiatMoneyPriceIndicatorLabel.alpha = 0
@@ -58,19 +63,24 @@ class AssetCell: ModernSelectedBackgroundCell {
             fiatMoneyPriceLabel.alpha = 0
             noFiatMoneyPriceIndicatorLabel.alpha = 1
         }
-        fiatMoneyBalanceLabel.text = asset.localizedFiatMoneyBalance
+        fiatMoneyBalanceLabel.text = token.estimatedFiatMoneyBalance
     }
     
-    func render(web3Token token: Web3Token) {
+    func render(web3Token token: Web3TokenItem) {
         assetIconView.setIcon(web3Token: token)
-        let balance: String
-        if token.balance == "0" {
-            balance = zeroWith2Fractions
+        balanceLabel.text = if token.decimalBalance.isZero {
+            zeroWith2Fractions
         } else {
-            balance = CurrencyFormatter.localizedString(from: token.balance, format: .precision, sign: .never) ?? ""
+            CurrencyFormatter.localizedString(
+                from: token.decimalBalance,
+                format: .precision,
+                sign: .never
+            )
         }
-        balanceLabel.text = balance
-        symbolLabel.attributedText = NSAttributedString(string: token.symbol, attributes: AssetCell.symbolAttributes)
+        symbolLabel.attributedText = NSAttributedString(
+            string: token.symbol,
+            attributes: AssetCell.symbolAttributes
+        )
         if token.decimalUSDPrice > 0 {
             changeLabel.text = token.localizedPercentChange
             changeLabel.marketColor = .byValue(token.decimalPercentChange)
@@ -85,7 +95,7 @@ class AssetCell: ModernSelectedBackgroundCell {
             fiatMoneyPriceLabel.alpha = 0
             noFiatMoneyPriceIndicatorLabel.alpha = 1
         }
-        fiatMoneyBalanceLabel.text = token.localizedFiatMoneyBalance
+        fiatMoneyBalanceLabel.text = token.estimatedFiatMoneyBalance
     }
     
 }

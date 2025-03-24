@@ -190,7 +190,7 @@ extension SearchCategoryViewController: UITableViewDataSource {
         case .asset:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
             let asset = (model as! AssetSearchResult).asset
-            cell.render(asset: asset)
+            cell.render(token: asset)
             return cell
         case .user, .conversationsByName, .conversationsByMessage:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!

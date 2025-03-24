@@ -427,7 +427,7 @@ extension ChartView {
     private class VerticalDashLineView: UIView {
         
         private let lineWidth: CGFloat = 1
-        private let lineColor: UIColor = R.color.chat_pin_count_background()!
+        private let lineColor: UIColor = R.color.icon_tint_tertiary()!
         private let numberOfDashes: CGFloat = 22
         private let lineLayer = CAShapeLayer()
         

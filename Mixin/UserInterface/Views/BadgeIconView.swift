@@ -88,27 +88,6 @@ final class BadgeIconView: UIView {
         badgeImageView.image = nil
     }
     
-    func setIcon(web3Transaction transaction: Web3Transaction) {
-        switch Web3Transaction.TransactionType(rawValue: transaction.operationType) {
-        case .send:
-            iconImageView.image = R.image.wallet.snapshot_withdrawal()
-            isBadgeHidden = true
-        case .receive:
-            iconImageView.image = R.image.wallet.snapshot_deposit()
-            isBadgeHidden = true
-        default:
-            isBadgeHidden = false
-            if let app = transaction.appMetadata {
-                iconImageView.sd_setImage(with: URL(string: app.iconURL))
-                badgeImageView.sd_setImage(with: URL(string: transaction.fee.iconURL))
-            } else {
-                iconImageView.image = nil
-                badgeImageView.image = nil
-            }
-        }
-        corner = .round
-    }
-    
     func setIcon(content: InscriptionContentProvider) {
         isBadgeHidden = true
         iconImageView.backgroundColor = .secondaryBackground
@@ -135,7 +114,7 @@ final class BadgeIconView: UIView {
         corner = .round
     }
     
-    func setIcon(token: TokenItem) {
+    func setIcon(token: MixinTokenItem) {
         iconImageView.sd_setImage(with: URL(string: token.iconURL),
                                   placeholderImage: nil,
                                   context: assetIconContext)
@@ -155,14 +134,23 @@ final class BadgeIconView: UIView {
     
     func setIcon(web3Token token: Web3Token) {
         if let url = URL(string: token.iconURL) {
-            iconImageView.sd_setImage(with: url,
-                                      placeholderImage: nil,
-                                      context: assetIconContext)
+            iconImageView.sd_setImage(
+                with: url,
+                placeholderImage: nil,
+                context: assetIconContext
+            )
         } else {
             iconImageView.image = R.image.unknown_session()
         }
-        if let url = URL(string: token.chainIconURL) {
-            badgeImageView.sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
+        if let token = token as? Web3TokenItem,
+           let chainIcon = token.chain?.iconUrl,
+           let url = URL(string: chainIcon)
+        {
+            badgeImageView.sd_setImage(
+                with: url,
+                placeholderImage: nil,
+                context: assetIconContext
+            )
             isBadgeHidden = false
         } else {
             isBadgeHidden = true
@@ -171,7 +159,7 @@ final class BadgeIconView: UIView {
     }
     
     func setIcon(swappableToken token: SwapToken) {
-        if let url = token.iconURL {
+        if let url = URL(string: token.iconURL) {
             iconImageView.sd_setImage(with: url,
                                       placeholderImage: nil,
                                       context: assetIconContext)
@@ -204,6 +192,20 @@ final class BadgeIconView: UIView {
             iconImageView.sd_setImage(with: url,
                                       placeholderImage: nil,
                                       context: assetIconContext)
+        } else {
+            iconImageView.image = R.image.unknown_session()
+        }
+        isBadgeHidden = true
+        corner = .round
+    }
+    
+    func setIcon(chain: Chain) {
+        if let url = URL(string: chain.iconUrl) {
+            iconImageView.sd_setImage(
+                with: url,
+                placeholderImage: nil,
+                context: assetIconContext
+            )
         } else {
             iconImageView.image = R.image.unknown_session()
         }

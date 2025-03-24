@@ -8,7 +8,7 @@ class QRCodeViewController: UIViewController {
     enum CenterContent {
         case avatar((AvatarImageView) -> Void)
         case receiveMoney((AvatarImageView) -> Void)
-        case asset(TokenItem)
+        case asset(MixinTokenItem)
     }
     
     @IBOutlet weak var titleView: PopupTitleView!

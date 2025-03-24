@@ -1,23 +1,27 @@
 import UIKit
 import MixinServices
 
-final class TokenViewController: UIViewController, MnemonicsBackupChecking {
+class TokenViewController<Token: HideableToken & ValuableToken, Transaction>: UIViewController, UITableViewDataSource, UITableViewDelegate, MnemonicsBackupChecking {
     
-    private let queue = DispatchQueue(label: "one.mixin.messenger.TokenViewController")
-    private let transactionsCount = 20
+    let queue = DispatchQueue(label: "one.mixin.messenger.TokenViewController")
+    let transactionsCount = 20
     
-    private weak var tableView: UITableView!
+    var token: Token
     
-    private(set) var token: TokenItem
+    weak var tableView: UITableView!
+    
+    private(set) var pendingSnapshots: [Transaction] = []
+    private(set) var transactionRows: [TransactionRow] = []
+    private(set) var market: MarketResult
+    private(set) var chartPoints: [ChartView.Point]?
+    
+    private let headerReuseIdentifier = "h"
+    private let emptyCellReuseIdentifier = "e"
     
     private var performSendOnAppear: Bool
-    private var pendingSnapshots: [SafeSnapshotItem] = []
-    private var transactionRows: [TransactionRow] = []
-    private var market: MarketResult
-    private var chartPoints: [ChartView.Point]?
     
     init(
-        token: TokenItem,
+        token: Token,
         market: Market? = nil,
         performSendOnAppear: Bool = false
     ) {
@@ -42,11 +46,6 @@ final class TokenViewController: UIViewController, MnemonicsBackupChecking {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = token.name
-        navigationItem.titleView = NavigationTitleView(
-            title: token.name,
-            subtitle: token.depositNetworkName
-        )
         navigationItem.rightBarButtonItem = .tintedIcon(
             image: R.image.ic_title_more(),
             target: self,
@@ -63,10 +62,14 @@ final class TokenViewController: UIViewController, MnemonicsBackupChecking {
         tableView.register(R.nib.tokenMarketCell)
         tableView.register(R.nib.snapshotCell)
         tableView.register(R.nib.noTransactionIndicatorCell)
-        tableView.register(UITableViewCell.self,
-                           forCellReuseIdentifier: ReuseIdentifier.emptyCell)
-        tableView.register(UITableViewHeaderFooterView.self,
-                           forHeaderFooterViewReuseIdentifier: ReuseIdentifier.header)
+        tableView.register(
+            UITableViewCell.self,
+            forCellReuseIdentifier: emptyCellReuseIdentifier
+        )
+        tableView.register(
+            UITableViewHeaderFooterView.self,
+            forHeaderFooterViewReuseIdentifier: headerReuseIdentifier
+        )
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         self.tableView = tableView
@@ -74,17 +77,12 @@ final class TokenViewController: UIViewController, MnemonicsBackupChecking {
         tableView.delegate = self
         tableView.reloadData()
         
-        let center: NotificationCenter = .default
-        center.addObserver(self, selector: #selector(balanceDidUpdate(_:)), name: UTXOService.balanceDidUpdateNotification, object: nil)
-        center.addObserver(self, selector: #selector(assetsDidChange(_:)), name: TokenDAO.tokensDidChangeNotification, object: nil)
-        center.addObserver(self, selector: #selector(chainsDidChange(_:)), name: ChainDAO.chainsDidChangeNotification, object: nil)
-        ConcurrentJobQueue.shared.addJob(job: RefreshTokenJob(assetID: token.assetID))
-        
-        center.addObserver(self, selector: #selector(snapshotsDidSave(_:)), name: SafeSnapshotDAO.snapshotDidSaveNotification, object: nil)
-        center.addObserver(self, selector: #selector(inscriptionDidRefresh(_:)), name: RefreshInscriptionJob.didFinishNotification, object: nil)
-        reloadSnapshots()
-        
-        center.addObserver(self, selector: #selector(reloadMarket(_:)), name: MarketDAO.didUpdateNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadMarket(_:)),
+            name: MarketDAO.didUpdateNotification,
+            object: nil
+        )
         
         DispatchQueue.global().async { [id=token.assetID, weak self] in
             if let market = MarketDAO.shared.market(assetID: id) {
@@ -134,274 +132,44 @@ final class TokenViewController: UIViewController, MnemonicsBackupChecking {
         }
     }
     
-    @objc private func showMoreActions(_ sender: Any) {
-        let token = self.token
-        let wasHidden = token.isHidden
-        let title = wasHidden ? R.string.localizable.show_asset() : R.string.localizable.hide_asset()
-        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: title, style: .default, handler: { _ in
-            DispatchQueue.global().async {
-                let extra = TokenExtra(assetID: token.assetID,
-                                       kernelAssetID: token.kernelAssetID,
-                                       isHidden: !wasHidden,
-                                       balance: token.balance,
-                                       updatedAt: Date().toUTCString())
-                TokenExtraDAO.shared.insertOrUpdateHidden(extra: extra)
-            }
-            self.navigationController?.popViewController(animated: true)
-        }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        present(sheet, animated: true, completion: nil)
-    }
-    
-    @objc private func balanceDidUpdate(_ notification: Notification) {
-        guard let id = notification.userInfo?[UTXOService.assetIDUserInfoKey] as? String else {
-            return
-        }
-        guard id == token.assetID else {
-            return
-        }
-        reloadToken()
-    }
-    
-    @objc private func assetsDidChange(_ notification: Notification) {
-        guard let id = notification.userInfo?[TokenDAO.UserInfoKey.assetId] as? String else {
-            return
-        }
-        guard id == token.assetID else {
-            return
-        }
-        reloadToken()
-    }
-    
-    @objc private func chainsDidChange(_ notification: Notification) {
-        guard let id = notification.userInfo?[ChainDAO.UserInfoKey.chainId] as? String else {
-            return
-        }
-        guard id == token.chainID else {
-            return
-        }
-        reloadToken()
-    }
-    
-    @objc private func snapshotsDidSave(_ notification: Notification) {
-        guard let snapshots = notification.userInfo?[SafeSnapshotDAO.snapshotsUserInfoKey] as? [SafeSnapshot] else {
-            return
-        }
-        guard snapshots.contains(where: { $0.assetID == token.assetID }) else {
-            return
-        }
-        reloadSnapshots()
-    }
-    
-    @objc private func inscriptionDidRefresh(_ notification: Notification) {
-        // Not the best approach, but since inscriptions don’t refresh frequently, simply reload it.
-        reloadSnapshots()
-    }
-    
-    @objc private func reloadMarket(_ notification: Notification) {
-        DispatchQueue.global().async { [id=token.assetID, weak self] in
-            guard let market = MarketDAO.shared.market(assetID: id) else {
-                return
-            }
-            DispatchQueue.main.async {
-                self?.reloadMarket(result: .some(market))
-            }
+    func reloadTransactions(pending: [Transaction], finished: [TransactionRow]) {
+        self.pendingSnapshots = pending
+        self.transactionRows = finished
+        UIView.performWithoutAnimation {
+            let sections = IndexSet([Section.transactions.rawValue, Section.pending.rawValue])
+            self.tableView.reloadSections(sections, with: .none)
         }
     }
     
-}
-
-extension TokenViewController: HomeNavigationController.NavigationBarStyling {
-    
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
-        .secondaryBackground
-    }
-    
-}
-
-extension TokenViewController {
-    
-    private enum ReuseIdentifier {
-        static let header = "header"
-        static let emptyCell = "emtpy_cell"
-    }
-    
-    private enum Section: Int, CaseIterable {
-        case balance
-        case market
-        case pending
-        case transactions
-    }
-    
-    private enum MarketRow: Int, CaseIterable {
-        case title
-        case content
-    }
-    
-    private enum MarketResult {
-        
-        case unknown
-        case invalid
-        case some(Market)
-        
-        var value: Market? {
-            switch self {
-            case .some(let market):
-                market
-            default:
-                nil
-            }
-        }
+    func send() {
         
     }
     
-    private enum TransactionRow {
-        
-        case title
-        case emptyIndicator
-        case transaction(SafeSnapshotItem)
-        case bottomSeparator
-        case viewAll
-        
-        init(snapshots: [SafeSnapshotItem], hasMoreSnapshots: Bool, row: Int) {
-            if snapshots.isEmpty {
-                switch row {
-                case 0:
-                    self = .title
-                default:
-                    self = .emptyIndicator
-                }
-            } else {
-                switch row {
-                case 0:
-                    self = .title
-                case snapshots.count + 1:
-                    if hasMoreSnapshots {
-                        self = .viewAll
-                    } else {
-                        self = .bottomSeparator
-                    }
-                case snapshots.count + 2:
-                    self = .bottomSeparator
-                default:
-                    self = .transaction(snapshots[row - 1])
-                }
-            }
-        }
+    func setTokenHidden(_ hidden: Bool) {
         
     }
     
-    private func reloadToken() {
-        let assetID = token.assetID
-        DispatchQueue.global().async { [weak self] in
-            guard let token = TokenDAO.shared.tokenItem(assetID: assetID) else {
-                return
-            }
-            DispatchQueue.main.sync {
-                guard let self = self else {
-                    return
-                }
-                self.token = token
-                let indexPath = IndexPath(row: 0, section: Section.balance.rawValue)
-                self.tableView.beginUpdates()
-                self.tableView.reloadRows(at: [indexPath], with: .none)
-                self.tableView.endUpdates()
-            }
-        }
+    func viewMarket() {
+        
     }
     
-    private func reloadMarket(result: MarketResult) {
-        self.market = result
-        let indexPath = IndexPath(row: MarketRow.content.rawValue, section: Section.market.rawValue)
-        tableView.reloadRows(at: [indexPath], with: .none)
+    func view(transaction: Transaction) {
+        
     }
     
-    private func reloadChart(_ points: [ChartView.Point]) {
-        self.chartPoints = points
-        let indexPath = IndexPath(row: MarketRow.content.rawValue, section: Section.market.rawValue)
-        tableView.reloadRows(at: [indexPath], with: .none)
+    func viewAllTransactions() {
+        
     }
     
-    private func loadMarketsFromRemote(assetID: String) {
-        RouteAPI.markets(id: assetID, queue: .global()) { [weak self] result in
-            switch result {
-            case .success(let market):
-                if let market = MarketDAO.shared.save(market: market) {
-                    DispatchQueue.main.async {
-                        self?.reloadMarket(result: .some(market))
-                    }
-                }
-            case .failure(.response(.notFound)):
-                DispatchQueue.main.async {
-                    self?.reloadMarket(result: .invalid)
-                }
-            case .failure(let error):
-                Logger.general.debug(category: "MarketView", message: "\(error)")
-                DispatchQueue.global().asyncAfter(deadline: .now() + 3) { [weak self] in
-                    self?.loadMarketsFromRemote(assetID: assetID)
-                }
-            }
-        }
+    func updateBalanceCell(_ cell: TokenBalanceCell) {
+        
     }
     
-    private func reloadSnapshots() {
-        queue.async { [limit=transactionsCount, assetID=token.assetID, weak self] in
-            let dao: SafeSnapshotDAO = .shared
-            
-            let pendingSnapshots = dao.snapshots(assetID: assetID, pending: true, limit: nil)
-            
-            let limitExceededTransactionSnapshots = dao.snapshots(assetID: assetID, pending: false, limit: limit + 1)
-            let hasMoreSnapshots = limitExceededTransactionSnapshots.count > limit
-            let transactionSnapshots = Array(limitExceededTransactionSnapshots.prefix(limit))
-            let transactionRows: [TransactionRow] = if transactionSnapshots.isEmpty {
-                [.title, .emptyIndicator]
-            } else {
-                if hasMoreSnapshots {
-                    [.title] + transactionSnapshots.map({ .transaction($0) }) + [.viewAll, .bottomSeparator]
-                } else {
-                    [.title] + transactionSnapshots.map({ .transaction($0) }) + [.bottomSeparator]
-                }
-            }
-            
-            DispatchQueue.main.async {
-                guard let self else {
-                    return
-                }
-                self.pendingSnapshots = pendingSnapshots
-                self.transactionRows = transactionRows
-                UIView.performWithoutAnimation {
-                    let sections = IndexSet([Section.transactions.rawValue, Section.pending.rawValue])
-                    self.tableView.reloadSections(sections, with: .none)
-                }
-            }
-        }
+    func updateTransactionCell(_ cell: SnapshotCell, with transaction: Transaction) {
+        
     }
     
-    private func send() {
-        let receiver = TokenReceiverViewController(token: token)
-        navigationController?.pushViewController(receiver, animated: true)
-    }
-    
-    private func view(snapshot: SafeSnapshotItem) {
-        let inscriptionItem: InscriptionItem? = if let hash = snapshot.inscriptionHash {
-            InscriptionDAO.shared.inscriptionItem(with: hash)
-        } else {
-            nil
-        }
-        let viewController = SafeSnapshotViewController(
-            token: token,
-            snapshot: snapshot,
-            messageID: nil,
-            inscription: inscriptionItem
-        )
-        navigationController?.pushViewController(viewController, animated: true)
-    }
-    
-}
-
-extension TokenViewController: UITableViewDataSource {
-    
+    // MARK: - UITableViewDataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         Section.allCases.count
     }
@@ -423,9 +191,7 @@ extension TokenViewController: UITableViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .balance:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_balance, for: indexPath)!
-            cell.reloadData(token: token)
-            cell.actionView.delegate = self
-            cell.delegate = self
+            updateBalanceCell(cell)
             return cell
         case .market:
             switch MarketRow(rawValue: indexPath.row)! {
@@ -451,7 +217,7 @@ extension TokenViewController: UITableViewDataSource {
                     if let market = market.value {
                         cell.changeLabel.text = market.localizedPriceChangePercentage7D
                         cell.changeLabel.marketColor = .byValue(market.decimalPriceChangePercentage7D)
-                    } else {
+                    } else if let token = token as? ChangeReportingToken {
                         cell.changeLabel.text = token.localizedUSDChange
                         cell.changeLabel.marketColor = .byValue(token.decimalUSDChange)
                     }
@@ -467,14 +233,13 @@ extension TokenViewController: UITableViewDataSource {
                 cell.disclosureIndicatorView.isHidden = true
                 return cell
             case pendingSnapshots.count + 1:
-                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.emptyCell, for: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: emptyCellReuseIdentifier, for: indexPath)
                 cell.backgroundConfiguration = .groupedCell
                 cell.contentConfiguration = nil
                 return cell
             default:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
-                cell.render(snapshot: pendingSnapshots[indexPath.row - 1])
-                cell.delegate = self
+                updateTransactionCell(cell, with: pendingSnapshots[indexPath.row - 1])
                 return cell
             }
         case .transactions:
@@ -489,16 +254,15 @@ extension TokenViewController: UITableViewDataSource {
                 return tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.no_transaction_indicator, for: indexPath)!
             case .transaction(let snapshot):
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
-                cell.render(snapshot: snapshot)
-                cell.delegate = self
+                updateTransactionCell(cell, with: snapshot)
                 return cell
             case .bottomSeparator:
-                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.emptyCell, for: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: emptyCellReuseIdentifier, for: indexPath)
                 cell.backgroundConfiguration = .groupedCell
                 cell.contentConfiguration = nil
                 return cell
             case .viewAll:
-                let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.emptyCell, for: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: emptyCellReuseIdentifier, for: indexPath)
                 cell.backgroundConfiguration = .groupedCell
                 cell.contentConfiguration = {
                     var content = cell.defaultContentConfiguration()
@@ -513,10 +277,7 @@ extension TokenViewController: UITableViewDataSource {
         }
     }
     
-}
-
-extension TokenViewController: UITableViewDelegate {
-    
+    // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch Section(rawValue: indexPath.section)! {
         case .balance, .market:
@@ -558,7 +319,7 @@ extension TokenViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: ReuseIdentifier.header)!
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseIdentifier)!
         view.contentView.backgroundColor = R.color.background_secondary()
         return view
     }
@@ -573,81 +334,147 @@ extension TokenViewController: UITableViewDelegate {
         case .balance:
             break
         case .market:
-            let market = MarketViewController(token: token, chartPoints: chartPoints)
-            market.pushingViewController = self
-            navigationController?.pushViewController(market, animated: true)
+            viewMarket()
         case .pending:
             switch indexPath.row {
             case 0, pendingSnapshots.count + 1:
                 break
             default:
                 let snapshot = pendingSnapshots[indexPath.row - 1]
-                view(snapshot: snapshot)
+                view(transaction: snapshot)
             }
         case .transactions:
             let row = transactionRows[indexPath.row]
             switch row {
             case .title, .viewAll:
-                let history = TransactionHistoryViewController(token: token)
-                navigationController?.pushViewController(history, animated: true)
+                viewAllTransactions()
             case .transaction(let snapshot):
-                view(snapshot: snapshot)
+                view(transaction: snapshot)
             case .emptyIndicator, .bottomSeparator:
                 break
             }
         }
     }
     
-}
-
-extension TokenViewController: TokenActionView.Delegate {
-    
-    func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
-        switch action {
-        case .receive:
-            let deposit = DepositViewController(token: token)
-            withMnemonicsBackupChecked {
-                self.navigationController?.pushViewController(deposit, animated: true)
-            }
-        case .send:
-            send()
-        case .swap:
-            let swap = MixinSwapViewController(sendAssetID: token.assetID, receiveAssetID: AssetID.erc20USDT)
-            navigationController?.pushViewController(swap, animated: true)
-            reporter.report(event: .swapStart, tags: ["entrance": "wallet", "source": "mixin"])
-        }
+    @objc private func showMoreActions(_ sender: Any) {
+        let token = self.token
+        let wasHidden = token.isHidden
+        let title = wasHidden ? R.string.localizable.show_asset() : R.string.localizable.hide_asset()
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: title, style: .default, handler: { _ in
+            self.setTokenHidden(!wasHidden)
+            self.navigationController?.popViewController(animated: true)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true, completion: nil)
     }
     
-}
-
-extension TokenViewController: SnapshotCellDelegate {
-    
-    func walletSnapshotCellDidSelectIcon(_ cell: SnapshotCell) {
-        guard
-            let indexPath = tableView.indexPath(for: cell),
-            case let .transaction(snapshot) = transactionRows[indexPath.row],
-            let userId = snapshot.opponentUserID
-        else {
-            return
-        }
-        DispatchQueue.global().async {
-            guard let user = UserDAO.shared.getUser(userId: userId) else {
+    @objc private func reloadMarket(_ notification: Notification) {
+        DispatchQueue.global().async { [id=token.assetID, weak self] in
+            guard let market = MarketDAO.shared.market(assetID: id) else {
                 return
             }
-            DispatchQueue.main.async { [weak self] in
-                let vc = UserProfileViewController(user: user)
-                self?.present(vc, animated: true, completion: nil)
+            DispatchQueue.main.async {
+                self?.reloadMarket(result: .some(market))
             }
         }
     }
     
 }
 
-extension TokenViewController: TokenBalanceCellDelegate {
+extension TokenViewController: HomeNavigationController.NavigationBarStyling {
     
-    func tokenBalanceCellWantsToRevealOutputs(_ cell: TokenBalanceCell) {
-        let outputs = OutputsViewController(token: token)
-        navigationController?.pushViewController(outputs, animated: true)
+    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
+        .secondaryBackground
+    }
+    
+}
+
+extension TokenViewController {
+    
+    enum Section: Int, CaseIterable {
+        case balance
+        case market
+        case pending
+        case transactions
+    }
+    
+    enum MarketRow: Int, CaseIterable {
+        case title
+        case content
+    }
+    
+    enum MarketResult {
+        
+        case unknown
+        case invalid
+        case some(Market)
+        
+        var value: Market? {
+            switch self {
+            case .some(let market):
+                market
+            default:
+                nil
+            }
+        }
+        
+    }
+    
+    enum TransactionRow {
+        
+        case title
+        case emptyIndicator
+        case transaction(Transaction)
+        case bottomSeparator
+        case viewAll
+        
+        static func rows(transactions: [Transaction], hasMore: Bool) -> [TransactionRow] {
+            if transactions.isEmpty {
+                [.title, .emptyIndicator]
+            } else {
+                if hasMore {
+                    [.title] + transactions.map({ .transaction($0) }) + [.viewAll, .bottomSeparator]
+                } else {
+                    [.title] + transactions.map({ .transaction($0) }) + [.bottomSeparator]
+                }
+            }
+        }
+        
+    }
+    
+    private func reloadMarket(result: MarketResult) {
+        self.market = result
+        let indexPath = IndexPath(row: MarketRow.content.rawValue, section: Section.market.rawValue)
+        tableView.reloadRows(at: [indexPath], with: .none)
+    }
+    
+    private func reloadChart(_ points: [ChartView.Point]) {
+        self.chartPoints = points
+        let indexPath = IndexPath(row: MarketRow.content.rawValue, section: Section.market.rawValue)
+        tableView.reloadRows(at: [indexPath], with: .none)
+    }
+    
+    private func loadMarketsFromRemote(assetID: String) {
+        RouteAPI.markets(id: assetID, queue: .global()) { [weak self] result in
+            switch result {
+            case .success(let market):
+                if let market = MarketDAO.shared.save(market: market) {
+                    DispatchQueue.main.async {
+                        self?.reloadMarket(result: .some(market))
+                    }
+                }
+            case .failure(.response(.notFound)):
+                DispatchQueue.main.async {
+                    self?.reloadMarket(result: .invalid)
+                }
+            case .failure(let error):
+                Logger.general.debug(category: "MarketView", message: "\(error)")
+                DispatchQueue.global().asyncAfter(deadline: .now() + 3) { [weak self] in
+                    self?.loadMarketsFromRemote(assetID: assetID)
+                }
+            }
+        }
     }
     
 }

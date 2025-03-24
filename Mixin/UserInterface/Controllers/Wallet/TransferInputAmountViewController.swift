@@ -4,7 +4,7 @@ import MixinServices
 
 final class TransferInputAmountViewController: InputAmountViewController {
     
-    override var token: any TransferableToken {
+    override var token: any ValuableToken {
         tokenItem
     }
     
@@ -12,7 +12,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
     var redirection: URL?
     
     private let traceID: String
-    private let tokenItem: TokenItem
+    private let tokenItem: MixinTokenItem
     private let receiver: Payment.TransferDestination
     private let maxNoteDataCount = 200
     
@@ -40,7 +40,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
     
     init(
         traceID: String = UUID().uuidString.lowercased(),
-        tokenItem: TokenItem,
+        tokenItem: MixinTokenItem,
         receiver: Payment.TransferDestination,
         note: String = ""
     ) {
@@ -85,7 +85,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
             config.image = R.image.ic_accessory_disclosure()
             config.attributedTitle = AttributedString(R.string.localizable.add_a_note(), attributes: addNoteAttributes)
             let button = UIButton(configuration: config)
-            button.tintColor = R.color.chat_pin_count_background()
+            button.tintColor = R.color.icon_tint_tertiary()
             button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             button.addTarget(self, action: #selector(changeNote(_:)), for: .touchUpInside)
             changeNoteButton = button

@@ -46,6 +46,7 @@ final class SwapOrderTableViewController: UIViewController {
         updateTableViewContentInsetBottom()
         
         queue.async { [limit=localPageCount] in
+            PropertiesDAO.shared.set(true, forKey: .hasSwapOrderReviewed)
             let orders = SwapOrderDAO.shared.orders(limit: limit)
             let offset = SwapOrderDAO.shared.oldestPendingOrFailedOrderCreatedAt()
             let snapshot = DataSourceSnapshot(orders: orders)

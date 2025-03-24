@@ -53,6 +53,15 @@ public class Web3Transaction: Codable {
     public private(set) lazy var compactReceiver = Address.compactRepresentation(of: receiver)
     public private(set) lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
     
+    public var signedDecimalAmount: Decimal {
+        switch transactionType.knownCase {
+        case .send:
+            -decimalAmount
+        case .receive, .contract, .other, .none:
+            decimalAmount
+        }
+    }
+    
 }
 
 extension Web3Transaction: TableRecord, PersistableRecord, MixinFetchableRecord, MixinEncodableRecord {

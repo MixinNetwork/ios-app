@@ -22,8 +22,21 @@ final class Web3TransactionViewController: TransactionViewController {
         super.viewDidLoad()
         title = R.string.localizable.transaction()
         iconView.setIcon(web3Token: token)
+        switch transaction.status.knownCase {
+        case .success:
+            switch transaction.transactionType.knownCase {
+            case .send:
+                amountLabel.textColor = R.color.market_red()
+            case .receive:
+                amountLabel.textColor = R.color.market_green()
+            case .other, .contract, .none:
+                amountLabel.textColor = R.color.text_tertiary()!
+            }
+        case .failed, .none:
+            amountLabel.textColor = R.color.text_tertiary()!
+        }
         amountLabel.text = CurrencyFormatter.localizedString(
-            from: transaction.decimalAmount,
+            from: transaction.signedDecimalAmount,
             format: .precision,
             sign: .always
         )
@@ -32,22 +45,6 @@ final class Web3TransactionViewController: TransactionViewController {
         fiatMoneyValueLabel.text = R.string.localizable.value_now(value) + "\n "
         layoutTableHeaderView()
         reloadData()
-    }
-    
-    private func updateAmountLabelColor() {
-        switch transaction.status.knownCase {
-        case .success:
-            switch transaction.transactionType.knownCase {
-            case .send:
-                amountLabel.textColor = R.color.market_red()
-            case .receive:
-                amountLabel.textColor = R.color.market_green()
-            default:
-                amountLabel.textColor = R.color.text_tertiary()!
-            }
-        case .failed, .none:
-            amountLabel.textColor = R.color.text_tertiary()!
-        }
     }
     
 }

@@ -133,31 +133,27 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
     }
     
     func render(transaction: Web3TransactionItem) {
-        let amount: Decimal
+        let amount = transaction.signedDecimalAmount
         switch transaction.status {
         case .known(.success):
             switch transaction.transactionType.knownCase {
             case .send:
-                amount = -transaction.decimalAmount
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_withdrawal()
                 setTitle(transaction.compactReceiver)
                 updateAmountTitleColor(amount: amount)
             case .receive:
-                amount = transaction.decimalAmount
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_deposit()
                 setTitle(transaction.compactSender)
                 updateAmountTitleColor(amount: amount)
             case .contract, .other, .none:
-                amount = transaction.decimalAmount
                 iconImageView.imageView.contentMode = .center
                 iconImageView.image = R.image.wallet.snapshot_anonymous()
                 setTitle(nil)
                 amountLabel.textColor = R.color.text_tertiary()!
             }
         case .known(.failed), .unknown:
-            amount = transaction.decimalAmount
             iconImageView.imageView.contentMode = .center
             iconImageView.image = R.image.wallet.snapshot_anonymous()
             setTitle(nil)

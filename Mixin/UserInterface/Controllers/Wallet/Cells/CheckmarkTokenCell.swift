@@ -35,8 +35,20 @@ final class CheckmarkTokenCell: UITableViewCell {
         subtitleLabel.text = address.fullRepresentation
     }
     
-    func load(token: TokenItem) {
+    func load(token: MixinTokenItem) {
         iconView.setIcon(token: token)
+        titleLabel.text = token.name
+        if let name = token.chainTag {
+            tagLabel.text = name
+            tagLabel.isHidden = false
+        } else {
+            tagLabel.isHidden = true
+        }
+        subtitleLabel.text = token.localizedBalanceWithSymbol
+    }
+    
+    func load(web3Token token: Web3TokenItem) {
+        iconView.setIcon(web3Token: token)
         titleLabel.text = token.name
         if let name = token.chainTag {
             tagLabel.text = name

@@ -74,6 +74,7 @@ public final class SyncOutputsJob: AsynchronousJob {
                             if !ChainDAO.shared.chainExists(chainId: chainID) {
                                 let chain = try await NetworkAPI.chain(id: chainID)
                                 ChainDAO.shared.save([chain])
+                                Web3ChainDAO.shared.save([chain])
                             }
                         }
                     }

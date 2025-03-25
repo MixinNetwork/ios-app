@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class Web3TransactionViewController: RowListViewController {
+final class Web3TransactionViewController: TransactionViewController {
     
     private let token: Web3Token
     private let transaction: Web3Transaction
@@ -20,15 +20,30 @@ final class Web3TransactionViewController: RowListViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         title = R.string.localizable.transaction()
-        
-        let tableHeaderView = R.nib.web3TransactionHeaderView(withOwner: nil)!
-        tableHeaderView.render(transaction: transaction)
-        tableView.tableHeaderView = tableHeaderView
-        self.tableHeaderView = tableHeaderView
+        iconView.setIcon(web3Token: token)
+        switch transaction.status.knownCase {
+        case .success:
+            switch transaction.transactionType.knownCase {
+            case .send:
+                amountLabel.textColor = R.color.market_red()
+            case .receive:
+                amountLabel.textColor = R.color.market_green()
+            case .other, .contract, .none:
+                amountLabel.textColor = R.color.text_tertiary()!
+            }
+        case .failed, .none:
+            amountLabel.textColor = R.color.text_tertiary()!
+        }
+        amountLabel.text = CurrencyFormatter.localizedString(
+            from: transaction.signedDecimalAmount,
+            format: .precision,
+            sign: .always
+        )
+        symbolLabel.text = token.symbol
+        let value = fiatMoneyValue(amount: transaction.decimalAmount, usdPrice: token.decimalUSDPrice)
+        fiatMoneyValueLabel.text = R.string.localizable.value_now(value) + "\n "
         layoutTableHeaderView()
-        
         reloadData()
     }
     
@@ -82,19 +97,19 @@ extension Web3TransactionViewController {
     }
     
     private func reloadData() {
-        let createdAt: String
-        if let date = ISO8601DateFormatter.default.date(from: transaction.createdAt) {
-            createdAt = DateFormatter.dateFull.string(from: date)
+        let transactionAt: String
+        if let date = ISO8601DateFormatter.default.date(from: transaction.transactionAt) {
+            transactionAt = DateFormatter.dateFull.string(from: date)
         } else {
-            createdAt = transaction.createdAt
+            transactionAt = transaction.transactionAt
         }
         rows = [
-            TransactionRow(key: .id, value: transaction.id),
+            TransactionRow(key: .id, value: transaction.transactionID),
             TransactionRow(key: .transactionHash, value: transaction.transactionHash),
             TransactionRow(key: .from, value: transaction.sender),
             TransactionRow(key: .to, value: transaction.receiver),
-            TransactionRow(key: .date, value: createdAt),
-            TransactionRow(key: .status, value: transaction.status.capitalized),
+            TransactionRow(key: .date, value: transactionAt),
+            TransactionRow(key: .status, value: transaction.status.rawValue.capitalized),
         ]
         tableView.reloadData()
     }

@@ -47,7 +47,7 @@ class TransactionHistoryFilterView: UIView {
         contentStackView.setCustomSpacing(6, after: label)
         
         let imageView = UIImageView(image: R.image.arrow_down_compact())
-        imageView.tintColor = R.color.chat_pin_count_background()
+        imageView.tintColor = R.color.icon_tint_tertiary()
         imageView.contentMode = .center
         contentStackView.addArrangedSubview(imageView) 
         

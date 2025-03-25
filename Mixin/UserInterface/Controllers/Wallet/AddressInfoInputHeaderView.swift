@@ -49,7 +49,7 @@ final class AddressInfoInputHeaderView: UIView {
         updateActionButton()
     }
     
-    func load(token: TokenItem) {
+    func load(token: any OnChainToken & ValuableToken) {
         tokenIconView.setIcon(token: token)
         tokenNameLabel.text = token.name
         if let tag = token.chainTag {
@@ -62,7 +62,7 @@ final class AddressInfoInputHeaderView: UIView {
     }
     
     func load(web3Token token: Web3Token) {
-        tokenIconView.setIcon(web3Token: token)
+        tokenIconView.setIcon(token: token)
         tokenNameLabel.text = token.name
         tokenChainLabel.isHidden = true
         tokenBalanceLabel.text = R.string.localizable.balance_abbreviation(token.localizedBalanceWithSymbol)

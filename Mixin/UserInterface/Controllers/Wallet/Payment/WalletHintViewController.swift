@@ -23,8 +23,8 @@ final class WalletHintViewController: UIViewController {
     }
     
     enum Content {
-        case addressUpdated(TokenItem)
-        case withdrawSuspended(TokenItem)
+        case addressUpdated(MixinTokenItem)
+        case withdrawSuspended(MixinTokenItem)
         case waitingTransaction
     }
     

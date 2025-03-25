@@ -22,11 +22,7 @@ final class PlainTokenIconView: UIImageView {
         sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
     }
     
-    func setIcon(token: Token) {
-        setIcon(tokenIconURL: URL(string: token.iconURL))
-    }
-    
-    func setIcon(web3Token token: Web3Token) {
+    func setIcon(token: any Token) {
         if let url = URL(string: token.iconURL) {
             setIcon(tokenIconURL: url)
         } else {
@@ -34,16 +30,8 @@ final class PlainTokenIconView: UIImageView {
         }
     }
     
-    func setIcon(token: SwapToken) {
-        if let url = token.iconURL {
-            setIcon(tokenIconURL: url)
-        } else {
-            image = R.image.unknown_session()
-        }
-    }
-    
     func setIcon(address: AddressItem) {
-        if let string = address.tokenIconURL, let url = URL(string: string) {
+        if let string = address.tokenChainIconURL, let url = URL(string: string) {
             setIcon(tokenIconURL: url)
         } else {
             image = R.image.unknown_session()

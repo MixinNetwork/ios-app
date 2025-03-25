@@ -37,6 +37,7 @@ final class MixinSwapViewController: SwapViewController {
     
     private var priceUnit: SwapQuote.PriceUnit = .send
     
+    private weak var showOrdersItem: BadgeBarButtonItem?
     private weak var depositTokenRequest: Request?
     
     private lazy var userInputSimulationFormatter: NumberFormatter = {
@@ -62,14 +63,29 @@ final class MixinSwapViewController: SwapViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.swap()
+        let showOrdersItem = BadgeBarButtonItem(
+            image: R.image.ic_title_transaction()!,
+            target: self,
+            action: #selector(showOrders(_:))
+        )
         navigationItem.rightBarButtonItems = [
-            .customerService(target: self, action: #selector(presentCustomerService(_:))),
-            .tintedIcon(image: R.image.ic_title_transaction(), target: self, action: #selector(showOrders(_:))),
+            .customerService(
+                target: self,
+                action: #selector(presentCustomerService(_:))
+            ),
+            showOrdersItem,
         ]
+        self.showOrdersItem = showOrdersItem
         updateSendView(style: .loading)
         updateReceiveView(style: .loading)
         reloadTokens()
         sendAmountTextField.delegate = self
+        DispatchQueue.global().async { [weak showOrdersItem] in
+            let hasSwapOrderReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapOrderReviewed) ?? false
+            DispatchQueue.main.async {
+                showOrdersItem?.showBadge = !hasSwapOrderReviewed
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -121,7 +137,7 @@ final class MixinSwapViewController: SwapViewController {
             switch result {
             case .success(let token):
                 if let chain = ChainDAO.shared.chain(chainId: token.chainID) {
-                    let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                    let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                     DispatchQueue.main.async {
                         guard let self, id == self.sendToken?.assetID else {
                             return
@@ -246,6 +262,7 @@ final class MixinSwapViewController: SwapViewController {
     }
     
     @objc private func showOrders(_ sender: Any) {
+        showOrdersItem?.showBadge = false
         let orders = SwapOrderTableViewController()
         navigationController?.pushViewController(orders, animated: true)
     }
@@ -379,7 +396,7 @@ extension MixinSwapViewController {
                 } else if let item = TokenDAO.shared.tokenItem(assetID: id), let token = BalancedSwapToken(tokenItem: item) {
                     sendToken = token
                 } else if case let .success(token) = SafeAPI.assets(id: id), let chain = ChainDAO.shared.chain(chainId: token.chainID) {
-                    let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                    let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                     sendToken = BalancedSwapToken(tokenItem: item)
                 } else {
                     sendToken = nil
@@ -399,7 +416,7 @@ extension MixinSwapViewController {
                 } else if let item = TokenDAO.shared.tokenItem(assetID: id), let token = BalancedSwapToken(tokenItem: item) {
                     receiveToken = token
                 } else if case let .success(token) = SafeAPI.assets(id: id), let chain = ChainDAO.shared.chain(chainId: token.chainID) {
-                    let item = TokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                    let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                     receiveToken = BalancedSwapToken(tokenItem: item)
                 } else {
                     receiveToken = nil

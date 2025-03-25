@@ -11,7 +11,7 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
     
     var onSavingSuccess: (() -> Void)?
     
-    private let token: TokenItem
+    private let token: any OnChainToken
     private let label: String
     private let destination: String
     private let tag: String
@@ -19,7 +19,7 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
     
     private var savedAddress: Address?
     
-    init(token: TokenItem, label: String, destination: String, tag: String, action: Action) {
+    init(token: any OnChainToken, label: String, destination: String, tag: String, action: Action) {
         self.token = token
         self.label = label
         self.destination = destination
@@ -35,7 +35,9 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableHeaderView.setIcon(token: token)
+        if let chain = token.chain {
+            tableHeaderView.setIcon(chain: chain)
+        }
         switch action {
         case .add:
             tableHeaderView.titleLabel.text = R.string.localizable.confirm_adding_address()
@@ -77,7 +79,8 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
         replaceTrayView(with: nil, animation: .vertical)
         switch action {
         case .add, .update:
-            let request = AddressRequest(assetID: token.assetID,
+            let request = AddressRequest(chainID: token.chainID,
+                                         assetID: token.assetID,
                                          destination: destination,
                                          tag: tag,
                                          label: label,
@@ -116,7 +119,7 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
                 case .success:
                     self.loadSuccessViews()
                     DispatchQueue.global().async {
-                        AddressDAO.shared.deleteAddress(assetId: assetID, addressId: id)
+                        AddressDAO.shared.deleteAddress(addressId: id)
                     }
                 case let .failure(error):
                     self.loadFailureViews(errorDescription: error.localizedDescription)

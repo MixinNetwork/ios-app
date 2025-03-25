@@ -127,7 +127,7 @@ extension DeleteAccountSettingViewController {
         window.presentPopupControllerAnimated()
     }
     
-    private func presentDeleteAccountHintWindow(assets: [TokenItem]) {
+    private func presentDeleteAccountHintWindow(assets: [MixinTokenItem]) {
         let window = DeleteAccountHintWindow.instance()
         window.onViewWallet = presentWallet
         window.onContinue = presentVerificationConfirmation

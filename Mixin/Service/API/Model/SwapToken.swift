@@ -1,14 +1,14 @@
 import Foundation
 import MixinServices
 
-class SwapToken {
+class SwapToken: Token {
     
     let address: String
     let assetID: String
     let decimals: Int16
     let name: String
     let symbol: String
-    let icon: String
+    let iconURL: String
     let chain: Chain
     
     var codable: Codable {
@@ -18,14 +18,14 @@ class SwapToken {
             decimals: decimals,
             name: name,
             symbol: symbol,
-            icon: icon,
+            iconURL: iconURL,
             chain: chain
         )
     }
     
     init(
         address: String, assetID: String, decimals: Int16,
-        name: String, symbol: String, icon: String,
+        name: String, symbol: String, iconURL: String,
         chain: SwapToken.Chain
     ) {
         self.address = address
@@ -33,17 +33,13 @@ class SwapToken {
         self.decimals = decimals
         self.name = name
         self.symbol = symbol
-        self.icon = icon
+        self.iconURL = iconURL
         self.chain = chain
     }
     
 }
 
 extension SwapToken {
-    
-    var iconURL: URL? {
-        URL(string: icon)
-    }
     
     var chainTag: String? {
         switch chain.chainID {
@@ -94,14 +90,12 @@ extension SwapToken {
         enum CodingKeys: String, CodingKey {
             case chainID = "chainId"
             case name
-            case decimals
             case symbol
             case icon
         }
         
         let chainID: String?
         let name: String
-        let decimals: Int
         let symbol: String
         let icon: String
         
@@ -117,15 +111,13 @@ extension SwapToken {
                 self.chainID = nil
             }
             self.name = try container.decode(String.self, forKey: .name)
-            self.decimals = try container.decode(Int.self, forKey: .decimals)
             self.symbol = try container.decode(String.self, forKey: .symbol)
             self.icon = try container.decode(String.self, forKey: .icon)
         }
         
-        init(chainID: String?, name: String, decimals: Int, symbol: String, icon: String) {
+        init(chainID: String?, name: String, symbol: String, icon: String) {
             self.chainID = chainID
             self.name = name
-            self.decimals = decimals
             self.symbol = symbol
             self.icon = icon
         }
@@ -140,13 +132,13 @@ extension SwapToken {
             case decimals
             case name
             case symbol
-            case icon
+            case iconURL = "icon"
             case chain
         }
         
         override init(
             address: String, assetID: String, decimals: Int16, name: String,
-            symbol: String, icon: String, chain: SwapToken.Chain
+            symbol: String, iconURL: String, chain: SwapToken.Chain
         ) {
             super.init(
                 address: address,
@@ -154,7 +146,7 @@ extension SwapToken {
                 decimals: decimals,
                 name: name,
                 symbol: symbol,
-                icon: icon,
+                iconURL: iconURL,
                 chain: chain
             )
         }
@@ -167,7 +159,7 @@ extension SwapToken {
                 decimals: try container.decode(Int16.self, forKey: .decimals),
                 name: try container.decode(String.self, forKey: .name),
                 symbol: try container.decode(String.self, forKey: .symbol),
-                icon: try container.decode(String.self, forKey: .icon),
+                iconURL: try container.decode(String.self, forKey: .iconURL),
                 chain: try container.decode(Chain.self, forKey: .chain)
             )
         }
@@ -179,7 +171,7 @@ extension SwapToken {
             try container.encode(decimals, forKey: .decimals)
             try container.encode(name, forKey: .name)
             try container.encode(symbol, forKey: .symbol)
-            try container.encode(icon, forKey: .icon)
+            try container.encode(iconURL, forKey: .iconURL)
             try container.encode(chain, forKey: .chain)
         }
         

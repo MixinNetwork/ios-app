@@ -8,8 +8,8 @@ public final class AddressAPI: MixinAPI {
         request(method: .get, path: "/addresses/\(addressID)")
     }
     
-    public static func addresses(assetID: String, completion: @escaping (MixinAPI.Result<[Address]>) -> Void) {
-        request(method: .get, path: "/assets/\(assetID)/addresses", completion: completion)
+    public static func addresses(chainID: String, completion: @escaping (MixinAPI.Result<[Address]>) -> Void) {
+        request(method: .get, path: "/safe/addresses?chain=\(chainID)", completion: completion)
     }
     
     public static func save(request: AddressRequest, completion: @escaping (MixinAPI.Result<Address>) -> Void) {

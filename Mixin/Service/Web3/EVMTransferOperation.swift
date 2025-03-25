@@ -287,7 +287,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             throw InitError.invalidAmount(decimalAmount)
         }
         // No need to worry about the fractional part, the amount is guranteed to be integral
-        let amountString = Token.amountString(from: amount as Decimal)
+        let amountString = TokenAmountFormatter.string(from: amount as Decimal)
         let transaction: EVMTransactionPreview
         if payment.sendingNativeToken {
             guard let value = BigUInt(amountString) else {

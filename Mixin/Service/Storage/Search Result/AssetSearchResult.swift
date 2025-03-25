@@ -10,9 +10,9 @@ struct AssetSearchResult {
     }()
     
     let attributedSymbol: NSMutableAttributedString?
-    let asset: TokenItem
+    let asset: MixinTokenItem
     
-    init(asset: TokenItem, keyword: String) {
+    init(asset: MixinTokenItem, keyword: String) {
         self.asset = asset
         let range = (asset.symbol.lowercased() as NSString).range(of: keyword)
         if range.length != 0 {

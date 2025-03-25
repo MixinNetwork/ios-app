@@ -11,6 +11,7 @@ final class WalletConnectSession {
         case noTransaction
         case noChain(String)
         case noAccount
+        case noAddress
     }
     
     enum Method: String, CaseIterable {
@@ -135,7 +136,7 @@ extension WalletConnectSession {
                 guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                     throw Error.noChain(request.chainId.absoluteString)
                 }
-                guard let address: String = PropertiesDAO.shared.value(forKey: .evmAddress) else {
+                guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum)?.destination else {
                     throw Error.noAccount
                 }
                 let operation = try Web3TransferWithWalletConnectOperation(
@@ -191,12 +192,16 @@ extension WalletConnectSession {
                 guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                     throw Error.noChain(request.chainId.absoluteString)
                 }
-                guard let address: String = PropertiesDAO.shared.value(forKey: .solanaAddress) else {
+                guard let walletID = Web3WalletDAO.shared.classicWallet()?.walletID else {
                     throw Error.noAccount
                 }
+                guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: ChainID.solana) else {
+                    throw Error.noAddress
+                }
                 let operation = try SolanaTransferWithWalletConnectOperation(
-                    transaction: transaction, 
-                    fromAddress: address,
+                    walletID: walletID,
+                    transaction: transaction,
+                    fromAddress: address.destination,
                     chain: chain,
                     session: self,
                     request: request
@@ -234,13 +239,8 @@ extension WalletConnectSession {
             guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                 throw Error.noChain(request.chainId.absoluteString)
             }
-            let address: String? = switch chain.kind {
-            case .evm:
-                PropertiesDAO.shared.unsafeValue(forKey: .evmAddress)
-            case .solana:
-                PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress)
-            }
-            guard let address else {
+            let address = Web3AddressDAO.shared.classicWalletAddress(chainID: chain.chainID)
+            guard let address = address?.destination else {
                 throw Error.noAccount
             }
             let operation = Web3SignWithWalletConnectOperation(address: address, session: self, request: decoded, chain: chain)

@@ -20,13 +20,13 @@ class Web3TransferOperation {
     
     enum BalanceChange {
         case decodingFailed(rawTransaction: String)
-        case detailed(token: TransferableToken, amount: Decimal)
+        case detailed(token: ValuableToken, amount: Decimal)
     }
     
     let fromAddress: String
     let toAddress: String
     let chain: Web3Chain
-    let feeToken: TokenItem // TODO: Replace it with Web3Token
+    let feeToken: MixinTokenItem // TODO: Replace it with Web3Token
     let canDecodeBalanceChange: Bool
     let isResendingTransactionAvailable: Bool
     
@@ -36,7 +36,7 @@ class Web3TransferOperation {
     
     init(
         fromAddress: String, toAddress: String, chain: Web3Chain,
-        feeToken: TokenItem, canDecodeBalanceChange: Bool,
+        feeToken: MixinTokenItem, canDecodeBalanceChange: Bool,
         isResendingTransactionAvailable: Bool
     ) {
         self.fromAddress = fromAddress

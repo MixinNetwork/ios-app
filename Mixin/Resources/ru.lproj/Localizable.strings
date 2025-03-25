@@ -243,7 +243,6 @@
 "changed" = "Измененный";
 "changed_disappearing_message_settings" = "%@ изменил настройки исчезающих сообщений.";
 "changing_pin_terminated_unexpectedly" = "Changing PIN terminated unexpectedly, click \"Continue\" to complete the change";
-"chat" = "Chat";
 "chat_background" = "Фон чата";
 "chat_backup" = "Резервное копирование чата";
 "chat_bot_reception_title" = "Нажмите кнопку, чтобы взаимодействовать с ботом";
@@ -267,7 +266,7 @@
 "chat_restore_subtitle" = "Вы не сможете восстановить позже, если откажетесь от восстановления сейчас. Медиафайлы будут продолжать восстанавливаться в фоновом режиме после восстановления сообщений.";
 "chat_text_size" = "Chat Text Size";
 "chat_waiting" = "Ожидание, пока %1$@ подключится к сети и установит зашифрованный сеанс. %2$@.";
-"chats" = "ЧАТЫ";
+"chats" = "Chats";
 "check_backup" = "Check Backup";
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
@@ -308,6 +307,7 @@
 "collection" = "Collection";
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Объединить и вперед";
+"common_wallet" = "Common Wallet";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Сжать базу данных";
@@ -366,6 +366,7 @@
 "continue" = "Продолжить";
 "continue_open_url" = "Продолжить Открыть URL";
 "continue_with_pin" = "Continue with PIN";
+"contract" = "Contract";
 "contract_address" = "Contract Address";
 "convenience" = "Convenience";
 "conversation" = "Беседа";
@@ -558,6 +559,7 @@
 "estimated_price" = "Estimated Price";
 "estimated_receive" = "Estimated Receive";
 "everybody" = "Все";
+"exchanges_or_wallets" = "Exchanges or Wallets";
 "exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "Выйти из %@?";
 "exit_group" = "Выйти из группы";
@@ -738,7 +740,6 @@
 "mixin_messenger_desktop" = "Рабочий стол Mixin Messenger";
 "mixin_server_encounters_errors" = "Сервер Mixin обнаруживает ошибки";
 "mixin_support" = "Mixin Support";
-"mixin_wallet" = "Mixin Wallet";
 "mnemonic_phrase" = "Mnemonic Phrase";
 "mnemonic_phrase_instruction" = "You can log in to your account using the mnemonic phrase. The current mnemonic phrase is linked to a key shard of the MPC wallet, with the complete key existing only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "mnemonic_phrase_instruction_1" = "The 13 mnemonic phrases generated when creating an account are intended only for Mixin Network-related products.";
@@ -949,6 +950,7 @@
 "price_too_less" = "The set price must be greater than %@ of the current price";
 "privacy" = "Конфиденциальность";
 "privacy_policy" = "Политика конфиденциальности";
+"privacy_wallet" = "Privacy Wallet";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "Профиль";
 "profile_photo" = "Аватар";
@@ -968,7 +970,8 @@
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "Скидка";
 "receive" = "ПОЛУЧИТЬ";
-"receive_from_address_description" = "From another wallet or exchange";
+"receive_from_address_description" = "Receive from other exchange or on-chain wallet using a crypto network";
+"receive_from_privacy_wallets_description" = "Receive from my other wallet using a crypto network";
 "receive_money" = "Получить деньги";
 "received" = "received";
 "receiver" = "Получатель";
@@ -1100,11 +1103,11 @@
 "send_photo_count" = "Отправить %d фото";
 "send_this_location" = "Отправить это местоположение";
 "send_to" = "Отправить в %@";
-"send_to_address_description" = "Send to a known crypto address using a crypto network.";
-"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network.";
+"send_to_address_description" = "Send to a known crypto address using a crypto network";
+"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network";
 "send_to_developer" = "Отправить разработчику";
+"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Отправить в";
-"send_to_web3_wallet_description" = "Send to my %@ account using crypto network.";
 "send_video" = "Отправить 1 видео";
 "send_video_count" = "Отправить %d видео";
 "send_without_sound" = "Отправить без звука";
@@ -1261,12 +1264,12 @@
 "title_participants" = "%d участник";
 "title_participants_count" = "%d участников";
 "to" = "В";
-"to_mixin_wallet" = "To my Mixin Wallet";
 "today" = "Сегодня";
 "token" = "Token";
 "top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
+"total_assets" = "Total assets";
 "total_supply" = "Total Supply";
 "touch_id" = "Сенсорный идентификатор";
 "track_not_found" = "Трек не найден";
@@ -1397,7 +1400,7 @@
 "view_wallet" = "Посмотреть кошелек";
 "voice_call_cancelled" = "голосовой вызов отменен";
 "voice_call_has_been_declined" = "Голосовой вызов был отклонен";
-"vol_24h" = "24H VOL(%@)";
+"vol_24h" = "24H VOL";
 "volume_24h" = "24h Volume";
 "waiting" = "Ожидание";
 "waiting_for_other_device" = "Waiting for Other Device...";
@@ -1405,7 +1408,7 @@
 "waiting_for_other_device_scan" = "Connect the new device by scanning the QR code on the top";
 "waiting_transaction" = "Waiting Transaction";
 "waiting_transaction_description" = "You have a transfer or withdrawal has not been completed, please try again later";
-"wallet" = "Бумажник";
+"wallet" = "Wallet";
 "wallet_enable_biometric_pay" = "После включения, %@ можно использовать для быстрой передачи.";
 "wallet_hide_asset_confirmation" = "Вы уверены, что хотите скрыть %@?";
 "wallet_password_not_equal" = "PIN-код не повторяется дважды, попробуйте еще раз.";
@@ -1419,6 +1422,7 @@
 "wallet_transfer_recent_tip" = "Вы уже перевели %3$@ на %2$@ %1$@ назад. Вы хотите перевести его снова?";
 "wallet_withdrawal_changed" = "Комиссия за снятие средств была изменена с %1$@ на %2$@. Вы хотите продолжить обработку запроса?";
 "wallet_withdrawal_recent_tip" = "Вы уже выводили %3$@ на %2$@ %1$@ назад. Хотите вывести еще раз?";
+"wallets" = "Wallets";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";
@@ -1428,7 +1432,7 @@
 "web3_account" = "Account";
 "web3_account_connected" = "Account Connected";
 "web3_account_network" = "%@ Account";
-"web3_deposit_description_evm" = "Use this address for receiving tokens on Ethereum, Polygon, BSC, Base, Arbitrum, Optimism, Blast networks";
+"web3_deposit_description_evm" = "Use this address for receiving tokens on Ethereum, Polygon, BSC, Base networks";
 "web3_deposit_description_solana" = "Use this address for receiving tokens on Solana network";
 "web3_ensure_trust" = "Please ensure you trust this dapp before proceeding with the request.";
 "web3_message_request" = "Message Request";

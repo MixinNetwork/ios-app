@@ -11,7 +11,7 @@ final class AddressBookViewController: UIViewController {
     
     var onSelect: ((Address) -> Void)?
     
-    private let token: TokenItem
+    private let token: any ValuableToken & OnChainToken
     
     private var addresses: [Address] = []
     private var searchResult: [Address] = []
@@ -20,7 +20,7 @@ final class AddressBookViewController: UIViewController {
         !(searchBoxView.textField.text ?? "").isEmpty
     }
     
-    init(token: TokenItem) {
+    init(token: any ValuableToken & OnChainToken) {
         self.token = token
         let nib = R.nib.addressBookView
         super.init(nibName: nib.name, bundle: nib.bundle)
@@ -70,7 +70,7 @@ final class AddressBookViewController: UIViewController {
             name: AddressDAO.addressDidChangeNotification,
             object: nil
         )
-        AddressAPI.addresses(assetID: token.assetID) { (result) in
+        AddressAPI.addresses(chainID: token.chainID) { (result) in
             guard case let .success(addresses) = result else {
                 return
             }
@@ -120,9 +120,9 @@ extension AddressBookViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.address, for: indexPath)!
         if isSearching {
-            cell.render(address: searchResult[indexPath.row], asset: token)
+            cell.render(address: searchResult[indexPath.row])
         } else {
-            cell.render(address: addresses[indexPath.row], asset: token)
+            cell.render(address: addresses[indexPath.row])
         }
         return cell
     }
@@ -149,9 +149,9 @@ extension AddressBookViewController: UITableViewDelegate {
 extension AddressBookViewController {
     
     @objc private func reloadLocalAddresses() {
-        let assetId = token.assetID
+        let chainId = token.chainID
         DispatchQueue.global().async { [weak self] in
-            let addresses = AddressDAO.shared.getAddresses(assetId: assetId)
+            let addresses = AddressDAO.shared.getAddresses(chainId: chainId)
             DispatchQueue.main.async {
                 guard let weakSelf = self else {
                     return

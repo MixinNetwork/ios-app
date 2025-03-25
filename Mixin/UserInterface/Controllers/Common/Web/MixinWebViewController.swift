@@ -87,7 +87,7 @@ class MixinWebViewController: WebViewController {
     
     private var web3ProviderScripts: [WKUserScript]? {
         let evmConfig: Script.EVMConfig? = {
-            guard let address: String = PropertiesDAO.shared.unsafeValue(forKey: .evmAddress) else {
+            guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum)?.destination else {
                 return nil
             }
             let chain = defaultEVMChain
@@ -98,8 +98,8 @@ class MixinWebViewController: WebViewController {
             return .init(address: address, chainID: chainID, rpcURL: chain.rpcServerURL)
         }()
         let solanaConfig: Script.SolanaConfig? = {
-            if let address: String = PropertiesDAO.shared.unsafeValue(forKey: .solanaAddress) {
-                Script.SolanaConfig(address: address)
+            if let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.solana) {
+                Script.SolanaConfig(address: address.destination)
             } else {
                 nil
             }

@@ -9,10 +9,9 @@ final class MarketViewController: UIViewController {
     private weak var favoriteBarButtonItem: UIBarButtonItem!
     
     private let id: Identifier
-    private let initialToken: TokenItem?
     
     private var market: FavorableMarket?
-    private var tokens: [TokenItem]?
+    private var tokens: [MixinTokenItem]?
     private var viewModel: MarketViewModel
     private var chartPeriod: PriceHistoryPeriod = .day
     private var chartPoints: [ChartView.Point]?
@@ -24,9 +23,8 @@ final class MarketViewController: UIViewController {
         return tableView.cellForRow(at: indexPath) as? TokenPriceChartCell
     }
     
-    init(token: TokenItem, chartPoints: [ChartView.Point]?) {
+    init(token: MixinTokenItem, chartPoints: [ChartView.Point]?) {
         self.id = .asset(token.assetID)
-        self.initialToken = token
         self.market = nil
         self.tokens = [token]
         self.viewModel = MarketViewModel(token: token)
@@ -35,9 +33,18 @@ final class MarketViewController: UIViewController {
         self.title = token.symbol
     }
     
+    init(token: Web3Token, chartPoints: [ChartView.Point]?) {
+        self.id = .asset(token.assetID)
+        self.market = nil
+        self.tokens = nil
+        self.viewModel = MarketViewModel(token: token)
+        self.chartPoints = chartPoints
+        super.init(nibName: nil, bundle: nil)
+        self.title = token.symbol
+    }
+    
     init(market: FavorableMarket) {
         self.id = .coin(market.coinID)
-        self.initialToken = nil
         self.market = market
         self.tokens = nil
         self.viewModel = MarketViewModel(market: market)
@@ -315,7 +322,7 @@ final class MarketViewController: UIViewController {
             return
         }
         DispatchQueue.global().async { [weak self] in
-            func update(with tokens: [TokenItem]) {
+            func update(with tokens: [MixinTokenItem]) {
                 DispatchQueue.main.sync {
                     guard let self else {
                         return
@@ -341,7 +348,7 @@ final class MarketViewController: UIViewController {
                 switch SafeAPI.assets(ids: missingAssetIDs) {
                 case .success(let missingTokens):
                     let missingTokenItems = missingTokens.map { token in
-                        TokenItem(token: token, balance: "0", isHidden: false, chain: nil)
+                        MixinTokenItem(token: token, balance: "0", isHidden: false, chain: nil)
                     }
                     update(with: tokens + missingTokenItems)
                 case .failure(let error):
@@ -352,7 +359,7 @@ final class MarketViewController: UIViewController {
     }
     
     // `completion` is not called on failure
-    private func pickSingleToken(completion: @escaping (TokenItem) -> Void) {
+    private func pickSingleToken(completion: @escaping (MixinTokenItem) -> Void) {
         guard let tokens else {
             return
         }
@@ -448,7 +455,7 @@ extension MarketViewController: UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_stats, for: indexPath)!
                 cell.leftTitleLabel.text = R.string.localizable.market_cap().uppercased()
                 cell.setLeftContent(text: viewModel.stats?.marketCap)
-                cell.rightTitleLabel.text = R.string.localizable.vol_24h(Currency.current.code).uppercased()
+                cell.rightTitleLabel.text = R.string.localizable.vol_24h().uppercased()
                 
                 cell.setRightContent(text: viewModel.stats?.fiatMoneyVolume24H)
                 return cell
@@ -571,11 +578,11 @@ extension MarketViewController: UITableViewDelegate {
         switch Section(rawValue: indexPath.section)! {
         case .myBalance:
             pickSingleToken { [market] token in
-                let pushingToken = (self.pushingViewController as? TokenViewController)?.token
+                let pushingToken = (self.pushingViewController as? MixinTokenViewController)?.token
                 if token.assetID == pushingToken?.assetID {
                     self.navigationController?.popViewController(animated: true)
                 } else {
-                    let controller = TokenViewController(token: token, market: market)
+                    let controller = MixinTokenViewController(token: token, market: market)
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
             }
@@ -888,7 +895,7 @@ extension MarketViewController {
                 if let totalVolume = Decimal(string: market.totalVolume, locale: .enUSPOSIX) {
                     fiatMoneyVolume24H = NamedLargeNumberFormatter.string(
                         number: totalVolume * Currency.current.decimalRate,
-                        currencyPrefix: false
+                        currencyPrefix: true
                     )
                 } else {
                     fiatMoneyVolume24H = nil
@@ -961,7 +968,7 @@ extension MarketViewController {
             self.marketInfos = marketInfos
         }
         
-        init(token: TokenItem) {
+        init(token: any ValuableToken) {
             let basicInfos = [
                 Info(title: R.string.localizable.name().uppercased(), primaryContent: token.name),
                 Info(title: R.string.localizable.symbol().uppercased(), primaryContent: token.symbol),
@@ -972,7 +979,7 @@ extension MarketViewController {
             self.balance = Balance(
                 balance: token.localizedBalanceWithSymbol,
                 period: R.string.localizable.hours_count_short(24),
-                value: token.localizedFiatMoneyBalance,
+                value: token.estimatedFiatMoneyBalance,
                 change: "",
                 changeColor: .arbitrary(.clear)
             )
@@ -999,7 +1006,7 @@ extension MarketViewController {
             self.infos = basicInfos + marketInfos
         }
         
-        func update(market: Market, tokens: [TokenItem]) {
+        func update(market: Market, tokens: [MixinTokenItem]) {
             self.stats = Stats(market: market)
             
             self.balance = {

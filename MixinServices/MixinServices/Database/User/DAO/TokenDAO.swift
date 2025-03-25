@@ -31,7 +31,7 @@ public final class TokenDAO: UserDatabaseDAO {
     public static let tokensDidChangeNotification = NSNotification.Name("one.mixin.services.TokenDAO.TokensDidChange")
     
     public func tokenExists(assetID: String) -> Bool {
-        db.recordExists(in: Token.self, where: Token.column(of: .assetID) == assetID)
+        db.recordExists(in: MixinToken.self, where: MixinToken.column(of: .assetID) == assetID)
     }
     
     public func inexistAssetIDs(in assetIDs: any Collection<String>) -> [String] {
@@ -61,27 +61,27 @@ public final class TokenDAO: UserDatabaseDAO {
         db.select(with: "SELECT symbol FROM tokens WHERE asset_id = ?", arguments: [assetID])
     }
     
-    public func tokenItem(assetID: String) -> TokenItem? {
+    public func tokenItem(assetID: String) -> MixinTokenItem? {
         db.select(with: SQL.selectWithAssetID, arguments: [assetID])
     }
     
-    public func tokenItem(kernelAssetID: String) -> TokenItem? {
+    public func tokenItem(kernelAssetID: String) -> MixinTokenItem? {
         let sql = "\(SQL.selector) WHERE t.kernel_asset_id = ?"
         return db.select(with: sql, arguments: [kernelAssetID])
     }
     
-    public func tokens(with ids: any Sequence<String>) -> [Token] {
+    public func tokens(with ids: any Sequence<String>) -> [MixinToken] {
         let sql: GRDB.SQL = "SELECT * FROM tokens WHERE asset_id IN \(ids)"
         return db.select(with: sql)
     }
     
-    public func tokenItems(with ids: any Sequence<String>) -> [TokenItem] {
+    public func tokenItems(with ids: any Sequence<String>) -> [MixinTokenItem] {
         var query = GRDB.SQL(sql: SQL.selector)
         query.append(literal: " WHERE t.asset_id IN \(ids)")
         return db.select(with: query)
     }
     
-    public func tokens(limit: Int, after assetId: String?) -> [Token] {
+    public func tokens(limit: Int, after assetId: String?) -> [MixinToken] {
         var sql = "SELECT * FROM tokens"
         if let assetId {
             sql += " WHERE ROWID > IFNULL((SELECT ROWID FROM tokens WHERE asset_id = '\(assetId)'), 0)"
@@ -95,7 +95,7 @@ public final class TokenDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func search(keyword: String, sortResult: Bool, limit: Int?) -> [TokenItem] {
+    public func search(keyword: String, sortResult: Bool, limit: Int?) -> [MixinTokenItem] {
         var sql = """
         \(SQL.selector)
         WHERE (t.name LIKE :keyword OR t.symbol LIKE :keyword)
@@ -113,19 +113,19 @@ public final class TokenDAO: UserDatabaseDAO {
         db.select(with: "SELECT asset_id FROM tokens")
     }
     
-    public func allTokens() -> [TokenItem] {
+    public func allTokens() -> [MixinTokenItem] {
         db.select(with: "\(SQL.selector) ORDER BY \(SQL.order)")
     }
     
-    public func hiddenTokens() -> [TokenItem] {
+    public func hiddenTokens() -> [MixinTokenItem] {
         db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS TRUE ORDER BY \(SQL.order)")
     }
     
-    public func notHiddenTokens() -> [TokenItem] {
+    public func notHiddenTokens() -> [MixinTokenItem] {
         db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS FALSE ORDER BY \(SQL.order)")
     }
     
-    public func defaultTransferToken() -> TokenItem? {
+    public func defaultTransferToken() -> MixinTokenItem? {
         if let id = AppGroupUserDefaults.Wallet.defaultTransferAssetId, !id.isEmpty, let token = tokenItem(assetID: id), token.decimalBalance > 0 {
             return token
         } else {
@@ -134,7 +134,7 @@ public final class TokenDAO: UserDatabaseDAO {
         }
     }
     
-    public func positiveBalancedTokens(assetIDs: [String]) -> [TokenItem] {
+    public func positiveBalancedTokens(assetIDs: [String]) -> [MixinTokenItem] {
         var query = GRDB.SQL(sql: "\(SQL.selector) WHERE te.balance > 0")
         if !assetIDs.isEmpty {
             query.append(literal: " AND t.asset_id IN \(assetIDs)")
@@ -143,7 +143,7 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: query)
     }
     
-    public func positiveBalancedTokens(chainIDs: [String] = []) -> [TokenItem] {
+    public func positiveBalancedTokens(chainIDs: [String] = []) -> [MixinTokenItem] {
         var query = GRDB.SQL(sql: "\(SQL.selector) WHERE te.balance > 0")
         if !chainIDs.isEmpty {
             query.append(literal: " AND t.chain_id IN \(chainIDs)")
@@ -173,7 +173,19 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: sql) ?? 0
     }
     
-    public func save(assets: [Token], completion: (() -> Void)? = nil) {
+    public func walletDigest() -> WalletDigest {
+        let digests: [TokenDigest] = db.select(with: """
+        SELECT t.asset_id, t.symbol, t.name, t.icon_url, t.price_usd, te.balance
+        FROM tokens t
+            INNER JOIN tokens_extra te ON t.asset_id = te.asset_id
+        WHERE ifnull(te.hidden,FALSE) IS FALSE
+            AND CAST(t.price_usd * te.balance AS REAL) > 0
+        ORDER BY t.price_usd * te.balance DESC
+        """)
+        return WalletDigest(wallet: .privacy, tokens: digests)
+    }
+    
+    public func save(assets: [MixinToken], completion: (() -> Void)? = nil) {
         guard !assets.isEmpty else {
             return
         }
@@ -191,14 +203,14 @@ public final class TokenDAO: UserDatabaseDAO {
         }
     }
     
-    public func save(token: Token) {
+    public func save(token: MixinToken) {
         db.save(token)
     }
     
-    public func saveAndFetch(token: Token) -> TokenItem? {
+    public func saveAndFetch(token: MixinToken) -> MixinTokenItem? {
         try! db.writeAndReturnError { db in
             try token.save(db)
-            return try TokenItem.fetchOne(db, sql: SQL.selectWithAssetID, arguments: [token.assetID])
+            return try MixinTokenItem.fetchOne(db, sql: SQL.selectWithAssetID, arguments: [token.assetID])
         }
     }
     

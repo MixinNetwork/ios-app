@@ -10,9 +10,9 @@ class AssetInfoWindow: BottomSheetView {
     @IBOutlet weak var contractLabel: UILabel!
     @IBOutlet weak var contractView: UIView!
     
-    private var asset: TokenItem!
+    private var asset: MixinTokenItem!
 
-    func presentWindow(asset: TokenItem) {
+    func presentWindow(asset: MixinTokenItem) {
         self.asset = asset
         assetView.setIcon(token: asset)
         nameLabel.text = asset.name

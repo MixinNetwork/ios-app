@@ -23,6 +23,7 @@ extension AppGroupUserDefaults {
             case outputSequencesReloaded = "output_sequences_reloaded"
             
             case swapTokens = "swap_tokens"
+            case lastSelectedWallet = "last_selected_wallet"
         }
         
         @Default(namespace: .wallet, key: Key.lastPINVerifiedDate, defaultValue: nil)
@@ -51,6 +52,9 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .wallet, key: Key.swapTokens, defaultValue: [])
         public static var swapTokens: [String]
+        
+        @RawRepresentableDefault(namespace: .wallet, key: Key.lastSelectedWallet, defaultValue: .privacy)
+        public static var lastSelectedWallet: MixinServices.Wallet
         
         internal static func migrate() {
             lastPINVerifiedDate = Date(timeIntervalSince1970: WalletUserDefault.shared.lastInputPinTime)

@@ -9,17 +9,11 @@ final class SelectedTokenCell: SelectedItemCell<PlainTokenIconView> {
     }
     
     func load(address: AddressItem) {
-        if let string = address.tokenIconURL, let url = URL(string: string) {
-            iconView.sd_setImage(with: url,
-                                 placeholderImage: nil,
-                                 context: assetIconContext)
-        } else {
-            iconView.image = R.image.unknown_session()
-        }
+        iconView.setIcon(address: address)
         nameLabel.text = address.label
     }
     
-    func load(token: TokenItem) {
+    func load(token: any Token) {
         iconView.setIcon(token: token)
         nameLabel.text = token.symbol
     }

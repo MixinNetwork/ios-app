@@ -28,7 +28,7 @@ final class MarketAlertItemView: UIView {
             }
             titleLabel.textColor = R.color.text()
         case .paused:
-            iconImageView.tintColor = R.color.chat_pin_count_background()
+            iconImageView.tintColor = R.color.icon_tint_tertiary()
             titleLabel.textColor = R.color.text_tertiary()
         }
         subtitleLabel.text = viewModel.subtitle

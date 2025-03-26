@@ -157,6 +157,12 @@ extension LoginWithMnemonicViewController {
                     self.login(context: context)
                 }
             case .failure(.requiresCaptcha):
+                switch action {
+                case .signIn:
+                    reporter.report(event: .loginRecaptcha, method: "mnemonic_phrase")
+                case .signUp:
+                    reporter.report(event: .signUpRecaptcha, method: "mnemonic_phrase")
+                }
                 captcha.validate { [weak self] (result) in
                     switch result {
                     case .success(let token):

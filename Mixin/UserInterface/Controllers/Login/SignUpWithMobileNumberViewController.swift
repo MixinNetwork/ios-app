@@ -76,6 +76,7 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController {
             case let .failure(error):
                 switch error {
                 case .requiresCaptcha:
+                    reporter.report(event: .signUpRecaptcha, method: "phone_number")
                     captcha.validate { [weak self] (result) in
                         switch result {
                         case .success(let token):

@@ -1036,7 +1036,7 @@
 		948ACAA52AF3950C0057D76B /* SnapshotMessageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */; };
 		948E276B29D2A521002BFCE1 /* NetworkFeeOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */; };
 		948E6CB528AF95CC00DFF5DF /* TIPIntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948E6CB328AF95CC00DFF5DF /* TIPIntroViewController.swift */; };
-		948E6CB628AF95CC00DFF5DF /* IntroView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948E6CB428AF95CC00DFF5DF /* IntroView.xib */; };
+		948E6CB628AF95CC00DFF5DF /* TIPIntroView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948E6CB428AF95CC00DFF5DF /* TIPIntroView.xib */; };
 		948FBC882D6EF5CE000795E4 /* ClassicWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948FBC872D6EF5CE000795E4 /* ClassicWalletViewController.swift */; };
 		948FC2962D74DE73000795E4 /* Web3TokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948FC2952D74DE70000795E4 /* Web3TokenViewController.swift */; };
 		948FC56B2D760018000795E4 /* TokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948FC56A2D760017000795E4 /* TokenViewController.swift */; };
@@ -1061,7 +1061,6 @@
 		9497AEA92C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9497AEA82C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift */; };
 		9497AEE92C5E264600966946 /* MixinTransactionHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9497AEE82C5E264600966946 /* MixinTransactionHistoryViewController.swift */; };
 		9497AEEE2C5E69B000966946 /* TransactionHistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9497AEED2C5E69B000966946 /* TransactionHistoryView.xib */; };
-		94980FC72A5D653A0051AE6D /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94980FC62A5D653A0051AE6D /* IntroViewController.swift */; };
 		949A3686261D9C5C004251B2 /* post.css in Resources */ = {isa = PBXBuildFile; fileRef = 949A3685261D9C5C004251B2 /* post.css */; };
 		949B03C32D15922300A34EE3 /* StackedIconWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949B03C22D15921E00A34EE3 /* StackedIconWrapperView.swift */; };
 		94A0C8C22C77259E00BDE672 /* AddressReceiversCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */; };
@@ -2561,7 +2560,7 @@
 		948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMessageContentView.swift; sourceTree = "<group>"; };
 		948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeOption.swift; sourceTree = "<group>"; };
 		948E6CB328AF95CC00DFF5DF /* TIPIntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPIntroViewController.swift; sourceTree = "<group>"; };
-		948E6CB428AF95CC00DFF5DF /* IntroView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IntroView.xib; sourceTree = "<group>"; };
+		948E6CB428AF95CC00DFF5DF /* TIPIntroView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPIntroView.xib; sourceTree = "<group>"; };
 		948FBC872D6EF5CE000795E4 /* ClassicWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassicWalletViewController.swift; sourceTree = "<group>"; };
 		948FC2952D74DE70000795E4 /* Web3TokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenViewController.swift; sourceTree = "<group>"; };
 		948FC56A2D760017000795E4 /* TokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenViewController.swift; sourceTree = "<group>"; };
@@ -2585,7 +2584,6 @@
 		9497AEA82C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBackgroundConfiguration+GroupedCell.swift"; sourceTree = "<group>"; };
 		9497AEE82C5E264600966946 /* MixinTransactionHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinTransactionHistoryViewController.swift; sourceTree = "<group>"; };
 		9497AEED2C5E69B000966946 /* TransactionHistoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionHistoryView.xib; sourceTree = "<group>"; };
-		94980FC62A5D653A0051AE6D /* IntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		949A3685261D9C5C004251B2 /* post.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = post.css; sourceTree = "<group>"; };
 		949B03C22D15921E00A34EE3 /* StackedIconWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedIconWrapperView.swift; sourceTree = "<group>"; };
 		94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressReceiversCell.swift; sourceTree = "<group>"; };
@@ -3567,8 +3565,6 @@
 				947FA4CB299577B700EF13A0 /* AuthorizationsViewController.swift */,
 				948374812A5D49110011A2CA /* PopupSelectorView.xib */,
 				948374802A5D49110011A2CA /* PopupSelectorViewController.swift */,
-				948E6CB428AF95CC00DFF5DF /* IntroView.xib */,
-				94980FC62A5D653A0051AE6D /* IntroViewController.swift */,
 				941D3BF92A7912C700538504 /* QRCodeView.xib */,
 				941D3BF82A7912C700538504 /* QRCodeViewController.swift */,
 				52DE7B4E2BEB7C940060A364 /* TransactionViewController.swift */,
@@ -4197,6 +4193,7 @@
 			isa = PBXGroup;
 			children = (
 				9459693528B28F18006F5421 /* TIPNavigationController.swift */,
+				948E6CB428AF95CC00DFF5DF /* TIPIntroView.xib */,
 				948E6CB328AF95CC00DFF5DF /* TIPIntroViewController.swift */,
 				94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */,
 				9459693728B28FF8006F5421 /* TIPActionViewController.swift */,
@@ -5872,7 +5869,7 @@
 				942FD67D2D38CFA2004DCC4C /* SwapOrderCell.xib in Resources */,
 				7B7B5DB3230EBA5E00D0F463 /* PopupSearchableTableView.xib in Resources */,
 				DF8EF6BC2034737F00E99CE8 /* payment_success.caf in Resources */,
-				948E6CB628AF95CC00DFF5DF /* IntroView.xib in Resources */,
+				948E6CB628AF95CC00DFF5DF /* TIPIntroView.xib in Resources */,
 				9BB351691FB1A94100EDDD2C /* ConversationDateHeaderView.xib in Resources */,
 				943CAA3B2CC8CBB900346677 /* SignUpView.xib in Resources */,
 				941995012CCE79E700F5425C /* IntroductionView.xib in Resources */,
@@ -6855,7 +6852,6 @@
 				DFC0ECFA23BB610C0091E7AC /* GiphyAPI.swift in Sources */,
 				940FC8602CDCA8970056BFF2 /* PhoneNumberVerificationContext.swift in Sources */,
 				944A5A722C2604F70021460C /* CollectibleCollectionHeaderView.swift in Sources */,
-				94980FC72A5D653A0051AE6D /* IntroViewController.swift in Sources */,
 				7B3887BE22E1AD74002B0864 /* HomeContainerViewController.swift in Sources */,
 				94046B96272DC2CF007C1D4A /* IncomingPeerCall.swift in Sources */,
 				94FCB83B264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift in Sources */,

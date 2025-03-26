@@ -1129,17 +1129,10 @@ extension UrlWindow {
                 return
             case let .invoice(invoice):
                 let assetIDs = Set(invoice.entries.map(\.assetID))
-                let tokenItems = TokenDAO.shared.tokenItems(with: assetIDs)
-                guard tokenItems.count == assetIDs.count else {
-                    DispatchQueue.main.async {
-                        // TODO: Better error description with which token is absent
-                        completion(R.string.localizable.insufficient_balance())
+                let tokens = TokenDAO.shared.tokenItems(with: assetIDs)
+                    .reduce(into: [:]) { result, token in
+                        result[token.assetID] = token
                     }
-                    return
-                }
-                let tokens = tokenItems.reduce(into: [:]) { result, token in
-                    result[token.assetID] = token
-                }
                 invoice.checkPreconditions(
                     transferTo: destination,
                     tokens: tokens,

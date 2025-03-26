@@ -5,12 +5,12 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
     
     var manipulateNavigationStackOnFinished = true
     
-    private let operation: InvoicePaymentOperation
+    private let operation: any InvoicePaymentOperation
     private let redirection: URL?
     
     init(
         issues: [PaymentPreconditionIssue],
-        operation: InvoicePaymentOperation,
+        operation: any InvoicePaymentOperation,
         redirection: URL?
     ) {
         self.operation = operation

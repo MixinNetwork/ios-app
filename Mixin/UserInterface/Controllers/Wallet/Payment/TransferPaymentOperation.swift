@@ -2,7 +2,7 @@ import Foundation
 import MixinServices
 import TIP
 
-struct TransferPaymentOperation {
+class TransferPaymentOperation {
     
     enum Error: Swift.Error, LocalizedError {
         
@@ -53,6 +53,8 @@ struct TransferPaymentOperation {
     let amount: Decimal
     let memo: String
     let reference: String?
+    
+    private(set) var kernelTransactionHash: String?
     
     private init(
         behavior: Behavior, traceID: String, spendingOutputs: UTXOService.OutputCollection,
@@ -205,19 +207,20 @@ struct TransferPaymentOperation {
                                               reference ?? "",
                                               &error)
         }
-        guard let tx = tx?.raw, error == nil else {
+        guard error == nil, let tx else {
             throw Error.buildTx(error)
         }
+        self.kernelTransactionHash = tx.hash
         Logger.general.info(category: "Transfer", message: "Tx built")
         
-        let verifyRequest = TransactionRequest(id: traceID, raw: tx)
+        let verifyRequest = TransactionRequest(id: traceID, raw: tx.raw)
         Logger.general.info(category: "Transfer", message: "Will verify: \(verifyRequest.id)")
         let verifyResponses = try await SafeAPI.requestTransaction(requests: [verifyRequest])
         guard let verifyResponse = verifyResponses.first(where: { $0.requestID == verifyRequest.id }) else {
             throw Error.invalidTransactionResponse
         }
         let viewKeys = verifyResponse.views.joined(separator: ",")
-        let signedTx = KernelSignTx(tx, outputKeys, viewKeys, spendKey, false, &error)
+        let signedTx = KernelSignTx(tx.raw, outputKeys, viewKeys, spendKey, false, &error)
         guard let signedTx, error == nil else {
             throw Error.sign(error)
         }

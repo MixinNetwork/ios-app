@@ -174,6 +174,7 @@ final class SwapOrderViewController: UITableViewController {
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source":"trade_detail"])
     }
     
 }

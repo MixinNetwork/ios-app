@@ -40,6 +40,7 @@ final class SignUpViewController: UIViewController {
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source":"sign_up"])
     }
     
     private func description(keyword: String) -> NSAttributedString {

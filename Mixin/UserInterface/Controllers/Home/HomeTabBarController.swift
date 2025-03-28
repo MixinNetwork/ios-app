@@ -218,6 +218,16 @@ extension HomeTabBarController: TabBarDelegate {
     
     func tabBar(_ tabBar: TabBar, didSelect item: TabBar.Item) {
         let id = ChildID(rawValue: item.id)!
+        switch id {
+        case .chat:
+            reporter.report(event: .homeTabSwitch, tags: ["method":"chats"])
+        case .collectibles:
+            reporter.report(event: .homeTabSwitch, tags: ["method":"wallets"])
+        case .more:
+            reporter.report(event: .homeTabSwitch, tags: ["method":"collectibles"])
+        case .wallet:
+            reporter.report(event: .homeTabSwitch, tags: ["method":"more"])
+        }
         switchToChildAfterValidated(with: id)
     }
     

@@ -11,12 +11,14 @@ open class Reporter {
         case signUpSignalInit   = "sign_up_signal_init"
         case signUpPINSet       = "sign_up_pin_set"
         case signUpEnd          = "sign_up_end"
+        
         case loginStart         = "login_start"
         case loginRestore       = "login_restore"
         case loginVerifyPIN     = "login_verify_pin"
         case loginRecaptcha     = "login_recaptcha"
         case loginSignalInit    = "login_signal_init"
         case loginEnd           = "login_end"
+        
         case tradeStart         = "trade_start"
         case tradeTokenSelect   = "trade_token_select"
         case tradeQuote         = "trade_quote"
@@ -24,6 +26,13 @@ open class Reporter {
         case tradeEnd           = "trade_end"
         case tradeTransactions  = "trade_transactions"
         case tradeDetail        = "trade_detail"
+        
+        case homeTabSwitch        = "home_tab_switch"
+        case moreTabSwitch        = "more_tab_switch"
+        
+        case customerServiceDialog = "customer_service_dialog"
+        
+        case errorSessionVerifications = "error_session_verifications"
     }
     
     public struct UserProperty: OptionSet {

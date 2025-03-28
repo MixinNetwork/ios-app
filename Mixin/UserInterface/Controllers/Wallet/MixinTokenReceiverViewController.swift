@@ -82,6 +82,7 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source":"send_recipient", "wallet": "mixin"])
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {

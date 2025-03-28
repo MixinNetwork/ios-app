@@ -160,7 +160,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         case let .multisig(threshold, users):
             rows.append(.receivers(users, threshold: threshold))
             senderThreshold = 1
-        case let .mainnet(address):
+        case let .mainnet(_, address):
             rows.append(.mainnetReceiver(address))
             senderThreshold = nil
         }
@@ -187,8 +187,8 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
             ])
         }
         
-        if !operation.memo.isEmpty {
-            rows.append(.info(caption: .memo, content: operation.memo))
+        if let memo = operation.extra.plainValue, !memo.isEmpty {
+            rows.append(.info(caption: .memo, content: memo))
         }
         reloadData(with: rows)
     }

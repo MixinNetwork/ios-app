@@ -66,7 +66,7 @@ struct SafePaymentURL {
         if UUID.isValidLowercasedUUIDString(addressString) {
             address = .user(addressString)
         } else if addressString.hasPrefix("XIN") {
-            address = .mainnet(addressString)
+            address = .mainnet(threshold: 1, address: addressString)
         } else if let mixAddress = MIXAddress(string: addressString) {
             address = mixAddress
         } else {

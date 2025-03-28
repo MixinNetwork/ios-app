@@ -49,9 +49,16 @@ extension Payment {
     
     enum TransferDestination {
         
+        static var storageFeeReceiver: TransferDestination {
+            guard case let .mainnet(threshold, address) = MIXAddress.storageFeeReceiver else {
+                fatalError("Invalid fee receiver")
+            }
+            return .mainnet(threshold: threshold, address: address)
+        }
+        
         case user(UserItem)
         case multisig(threshold: Int32, users: [UserItem])
-        case mainnet(String)
+        case mainnet(threshold: Int32, address: String)
         
         var debugDescription: String {
             switch self {
@@ -59,8 +66,8 @@ extension Payment {
                 return "<TransferDestination.user \(item.userId)>"
             case let .multisig(threshold, receivers):
                 return "<TransferDestination.multisig \(threshold):\(receivers.map(\.userId))>"
-            case let .mainnet(address):
-                return "<TransferDestination.mainnet \(address)>"
+            case let .mainnet(thresold, address):
+                return "<TransferDestination.mainnet \(thresold):\(address)>"
             }
         }
         
@@ -267,7 +274,7 @@ extension Payment {
                             destination: destination,
                             token: token,
                             amount: tokenAmount,
-                            memo: memo,
+                            extra: .plain(memo),
                             reference: reference
                         )
                     }

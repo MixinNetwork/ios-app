@@ -119,11 +119,11 @@ final class InscriptionViewController: UIViewController {
             if let owner = inscription.owner {
                 if let address = MIXAddress(string: owner) {
                     switch address {
-                    case .user(let userID):
+                    case let .user(userID):
                         appendOwner(raw: owner, userID: userID)
-                    case .multisig(let threshold, let userIDs):
+                    case let .multisig(threshold, userIDs):
                         appendOwner(raw: owner, userIDs: userIDs, threshold: threshold)
-                    case .mainnet(let address):
+                    case let .mainnet(_, address):
                         rows.append(.rawOwner(address))
                     }
                 } else {

@@ -9,6 +9,7 @@ class TransferPaymentOperation {
         case sign(Swift.Error?)
         case buildTx(Swift.Error?)
         case invalidTransactionResponse
+        case transcodeExtra
         
         var errorDescription: String? {
             switch self {
@@ -18,6 +19,8 @@ class TransferPaymentOperation {
                 error?.localizedDescription ?? "Null tx"
             case .invalidTransactionResponse:
                 "Invalid txresp"
+            case .transcodeExtra:
+                "Transcode Extra"
             }
         }
         
@@ -45,13 +48,48 @@ class TransferPaymentOperation {
         
     }
     
+    enum Extra {
+        
+        case plain(String)
+        case hexEncoded(String)
+        
+        var plainValue: String? {
+            switch self {
+            case .plain(let value):
+                value
+            case .hexEncoded(let hexEncoded):
+                if let data = Data(hexEncodedString: hexEncoded),
+                   let value = String(data: data, encoding: .utf8)
+                {
+                    value
+                } else {
+                    nil
+                }
+            }
+        }
+        
+        var hexEncodedValue: String? {
+            switch self {
+            case .plain(let plain):
+                if let data = plain.data(using: .utf8) {
+                    data.hexEncodedString()
+                } else {
+                    nil
+                }
+            case .hexEncoded(let value):
+                value
+            }
+        }
+        
+    }
+    
     let behavior: Behavior
     let traceID: String
     let spendingOutputs: UTXOService.OutputCollection
     let destination: Payment.TransferDestination
     let token: MixinTokenItem
     let amount: Decimal
-    let memo: String
+    let extra: Extra
     let reference: String?
     
     private(set) var kernelTransactionHash: String?
@@ -59,7 +97,7 @@ class TransferPaymentOperation {
     private init(
         behavior: Behavior, traceID: String, spendingOutputs: UTXOService.OutputCollection,
         destination: Payment.TransferDestination, token: MixinTokenItem, amount: Decimal,
-        memo: String, reference: String?
+        extra: Extra, reference: String?
     ) {
         self.behavior = behavior
         self.traceID = traceID
@@ -67,23 +105,25 @@ class TransferPaymentOperation {
         self.destination = destination
         self.token = token
         self.amount = amount
-        self.memo = memo
+        self.extra = extra
         self.reference = reference
     }
     
     static func transfer(
         traceID: String, spendingOutputs: UTXOService.OutputCollection,
         destination: Payment.TransferDestination, token: MixinTokenItem,
-        amount: Decimal, memo: String, reference: String?
+        amount: Decimal, extra: Extra, reference: String?
     ) -> TransferPaymentOperation {
-        TransferPaymentOperation(behavior: .transfer,
-                                 traceID: traceID,
-                                 spendingOutputs: spendingOutputs,
-                                 destination: destination,
-                                 token: token,
-                                 amount: amount,
-                                 memo: memo,
-                                 reference: reference)
+        TransferPaymentOperation(
+            behavior: .transfer,
+            traceID: traceID,
+            spendingOutputs: spendingOutputs,
+            destination: destination,
+            token: token,
+            amount: amount,
+            extra: extra,
+            reference: reference
+        )
     }
     
     static func inscription(
@@ -91,28 +131,32 @@ class TransferPaymentOperation {
         destination: Payment.TransferDestination, token: MixinTokenItem,
         memo: String, reference: String?, context: Payment.InscriptionContext
     ) -> TransferPaymentOperation {
-        TransferPaymentOperation(behavior: .inscription(context),
-                                 traceID: traceID,
-                                 spendingOutputs: spendingOutputs,
-                                 destination: destination,
-                                 token: token,
-                                 amount: context.transferAmount,
-                                 memo: memo,
-                                 reference: reference)
+        TransferPaymentOperation(
+            behavior: .inscription(context),
+            traceID: traceID,
+            spendingOutputs: spendingOutputs,
+            destination: destination,
+            token: token,
+            amount: context.transferAmount,
+            extra: .plain(memo),
+            reference: reference
+        )
     }
     
     static func consolidation(
         traceID: String, outputs: UTXOService.OutputCollection,
         destination: Payment.TransferDestination, token: MixinTokenItem
     ) -> TransferPaymentOperation {
-        TransferPaymentOperation(behavior: .consolidation,
-                                 traceID: traceID,
-                                 spendingOutputs: outputs,
-                                 destination: destination,
-                                 token: token,
-                                 amount: outputs.amount,
-                                 memo: "",
-                                 reference: nil)
+        TransferPaymentOperation(
+            behavior: .consolidation,
+            traceID: traceID,
+            spendingOutputs: outputs,
+            destination: destination,
+            token: token,
+            amount: outputs.amount,
+            extra: .plain(""),
+            reference: nil
+        )
     }
     
     static func swap(
@@ -121,14 +165,16 @@ class TransferPaymentOperation {
         amount: Decimal, memo: String, reference: String?,
         context: Payment.SwapContext
     ) -> TransferPaymentOperation {
-        TransferPaymentOperation(behavior: .swap(context),
-                                 traceID: traceID,
-                                 spendingOutputs: spendingOutputs,
-                                 destination: destination,
-                                 token: token,
-                                 amount: amount,
-                                 memo: memo,
-                                 reference: reference)
+        TransferPaymentOperation(
+            behavior: .swap(context),
+            traceID: traceID,
+            spendingOutputs: spendingOutputs,
+            destination: destination,
+            token: token,
+            amount: amount,
+            extra: .plain(memo),
+            reference: reference
+        )
     }
     
     func start(pin: String) async throws {
@@ -173,39 +219,55 @@ class TransferPaymentOperation {
         let tx: KernelTx?
         switch destination {
         case .user:
-            tx = KernelBuildTx(kernelAssetID,
-                               amount,
-                               1,
-                               receiverKeys,
-                               receiverMask,
-                               inputsData,
-                               changeKeys,
-                               changeMask,
-                               memo,
-                               reference ?? "",
-                               &error)
+            guard let extra = extra.plainValue else {
+                throw Error.transcodeExtra
+            }
+            tx = KernelBuildTx(
+                kernelAssetID,
+                amount,
+                1,
+                receiverKeys,
+                receiverMask,
+                inputsData,
+                changeKeys,
+                changeMask,
+                extra,
+                reference ?? "",
+                &error
+            )
         case let .multisig(threshold, _):
-            tx = KernelBuildTx(kernelAssetID,
-                               amount,
-                               threshold,
-                               receiverKeys,
-                               receiverMask,
-                               inputsData,
-                               changeKeys,
-                               changeMask,
-                               memo,
-                               reference ?? "",
-                               &error)
-        case .mainnet(let address):
-            tx = KernelBuildTxToKernelAddress(kernelAssetID,
-                                              amount,
-                                              address,
-                                              inputsData,
-                                              changeKeys,
-                                              changeMask,
-                                              memo,
-                                              reference ?? "",
-                                              &error)
+            guard let extra = extra.plainValue else {
+                throw Error.transcodeExtra
+            }
+            tx = KernelBuildTx(
+                kernelAssetID,
+                amount,
+                threshold,
+                receiverKeys,
+                receiverMask,
+                inputsData,
+                changeKeys,
+                changeMask,
+                extra,
+                reference ?? "",
+                &error
+            )
+        case let .mainnet(threshold, address):
+            guard let extra = extra.hexEncodedValue else {
+                throw Error.transcodeExtra
+            }
+            tx = KernelBuildTxToKernelAddress(
+                kernelAssetID,
+                amount,
+                threshold,
+                address,
+                inputsData,
+                changeKeys,
+                changeMask,
+                extra,
+                reference ?? "",
+                &error
+            )
         }
         guard error == nil, let tx else {
             throw Error.buildTx(error)
@@ -267,16 +329,18 @@ class TransferPaymentOperation {
         case .consolidation, .transfer, .swap:
             nil
         }
-        let snapshot = SafeSnapshot(type: .snapshot,
-                                    assetID: token.assetID,
-                                    amount: "-" + amount,
-                                    userID: senderID,
-                                    opponentID: snapshotOpponentID,
-                                    memo: memo.data(using: .utf8)?.hexEncodedString() ?? memo,
-                                    transactionHash: signedTx.hash,
-                                    createdAt: now,
-                                    traceID: traceID, 
-                                    inscriptionHash: snapshotInscriptionHash)
+        let snapshot = SafeSnapshot(
+            type: .snapshot,
+            assetID: token.assetID,
+            amount: "-" + amount,
+            userID: senderID,
+            opponentID: snapshotOpponentID,
+            memo: extra.hexEncodedValue ?? "",
+            transactionHash: signedTx.hash,
+            createdAt: now,
+            traceID: traceID,
+            inscriptionHash: snapshotInscriptionHash
+        )
         let trace: Trace?
         switch destination {
         case .user, .multisig:

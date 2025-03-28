@@ -12,6 +12,7 @@ final class NonAtomicInvoicePaymentOperation: InvoicePaymentOperation {
     }
     
     enum OperationError: Error {
+        case decodeExtra
         case missingHash
     }
     
@@ -36,6 +37,20 @@ final class NonAtomicInvoicePaymentOperation: InvoicePaymentOperation {
     }
     
     func start(pin: String) async throws {
+        // In case of decoding failure, do it earlier to avoid partial success
+        let extras: [TransferPaymentOperation.Extra] = try transactions.map { transaction in
+            let entry = transaction.entry
+            if entry.isStorage {
+                return .hexEncoded(entry.extra.hexEncodedString())
+            } else {
+                if let extra = String(data: entry.extra, encoding: .utf8) {
+                    return .plain(extra)
+                } else {
+                    throw OperationError.decodeExtra
+                }
+            }
+        }
+        
         var hashes: [String] = []
         for (index, transaction) in transactions.enumerated() {
             let token = transaction.token
@@ -52,13 +67,14 @@ final class NonAtomicInvoicePaymentOperation: InvoicePaymentOperation {
                 }
             }.joined(separator: ",")
             Logger.general.info(category: "NonAtomicInvoicePayment", message: "Ref: \(reference)")
-            let operation = TransferPaymentOperation.transfer(
+            let destination = entry.isStorage ? .storageFeeReceiver : self.destination
+            let operation: TransferPaymentOperation = .transfer(
                 traceID: entry.traceID,
                 spendingOutputs: spendingOutputs,
                 destination: destination,
                 token: token,
                 amount: entry.decimalAmount,
-                memo: entry.memo,
+                extra: extras[index],
                 reference: reference
             )
             Logger.general.info(category: "NonAtomicInvoicePayment", message: "Start sub-op")

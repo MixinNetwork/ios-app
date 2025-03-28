@@ -2,7 +2,7 @@ import Foundation
 import CryptoKit
 import MixinServices
 
-struct Invoice: PaymentPreconditionChecker {
+struct Invoice {
     
     enum Reference {
         case hash(String)
@@ -14,14 +14,34 @@ struct Invoice: PaymentPreconditionChecker {
         let assetID: String
         let amount: String
         let decimalAmount: Decimal
-        let memo: String
-        let memoData: Data
+        let extra: Data
         let references: [Reference]
+        let isStorage: Bool
     }
     
     let recipient: MIXAddress
     let entries: [Entry]
     let sendingSameTokenMultipleTimes: Bool
+    
+}
+
+extension Invoice {
+    
+    enum MaxExtraSize {
+        static let general = 256 - 1
+        static let storage = 4 * bytesPerMegaByte - 1
+    }
+    
+    enum Storage {
+        
+        static let step: Int = 1024
+        static let stepPrice: Decimal = 0.0001
+        
+        static func fee(byteCount: Int) -> Decimal {
+            Decimal(byteCount / step + 1) * stepPrice
+        }
+        
+    }
     
 }
 
@@ -153,7 +173,7 @@ extension Invoice {
                 let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX),
                 let extraLength = reader.readUInt16(),
                 let extra = reader.readBytes(count: Int(extraLength)),
-                let memo = String(data: extra, encoding: .utf8),
+                extra.count <= MaxExtraSize.storage,
                 let referencesCount = reader.readUInt8()
             else {
                 throw InitError.invalidEntry
@@ -178,14 +198,19 @@ extension Invoice {
                 }
             }
             
+            let isStorage = assetID == AssetID.xin
+            && !extra.isEmpty
+            && extra.count > MaxExtraSize.general
+            && Storage.fee(byteCount: extra.count) == decimalAmount
+            
             let entry = Entry(
                 traceID: traceID,
                 assetID: assetID,
                 amount: amount,
                 decimalAmount: decimalAmount,
-                memo: memo,
-                memoData: extra,
-                references: references
+                extra: extra,
+                references: references,
+                isStorage: isStorage
             )
             entries.append(entry)
         }
@@ -210,7 +235,7 @@ extension Invoice {
     
 }
 
-extension Invoice {
+extension Invoice: PaymentPreconditionChecker {
     
     private struct OutputsReadyPrecondition: PaymentPrecondition {
         

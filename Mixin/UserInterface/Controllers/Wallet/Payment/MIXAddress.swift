@@ -4,9 +4,11 @@ import TIP
 
 enum MIXAddress {
     
+    static let storageFeeReceiver = MIXAddress(string: "MIXSK624cFT3CXbbjYxU17CeYWCwj6CZgkp2VsfiRsDMXw4MzpfYKPKKYwLmfDby2z85MLAbSWZbAB1dfPetCxUf7vwwJnToaG8")
+    
     case user(String)
     case multisig(threshold: Int32, userIDs: [String])
-    case mainnet(String)
+    case mainnet(threshold: Int32, address: String)
     
     init?(string: String) {
         let header = "MIX"
@@ -53,16 +55,24 @@ enum MIXAddress {
             return nil
         }
         
-        let threshold: UInt8 = payload[payload.startIndex.advanced(by: 1)]
+        let threshold = Int32(payload[payload.startIndex.advanced(by: 1)])
         let membersCount: Int = Int(payload[payload.startIndex.advanced(by: 2)])
-        guard threshold != 0 && threshold <= membersCount && membersCount <= 64 else {
-            Logger.general.debug(category: "MIXAddress", message: "Invalid threshold: \(threshold), total: \(membersCount)")
+        guard threshold != 0 else {
+            Logger.general.debug(category: "MIXAddress", message: "Invalid threshold: \(threshold)")
+            return nil
+        }
+        guard membersCount <= 64 else {
+            Logger.general.debug(category: "MIXAddress", message: "Invalid membersCount: \(membersCount)")
             return nil
         }
         
         let membersData = payload[payload.startIndex.advanced(by: 3)...]
         switch membersData.count {
         case 16 * membersCount:
+            guard threshold <= membersCount else {
+                Logger.general.debug(category: "MIXAddress", message: "Invalid threshold: \(threshold), total: \(membersCount)")
+                return nil
+            }
             let userIDs = (0..<membersCount).map { i in
                 let startIndex = membersData.startIndex.advanced(by: i * UUID.dataCount)
                 let endIndex = startIndex.advanced(by: UUID.dataCount)
@@ -96,7 +106,7 @@ enum MIXAddress {
             guard let firstAddress = addresses.first else {
                 return nil
             }
-            self = .mainnet(firstAddress.string())
+            self = .mainnet(threshold: threshold, address: firstAddress.string())
         default:
             Logger.general.debug(category: "MIXAddress", message: "Invalid members count: \(membersData.count)")
             return nil

@@ -1078,8 +1078,8 @@ extension UrlWindow {
                 } else {
                     destination = .multisig(threshold: threshold, users: users)
                 }
-            case let .mainnet(address):
-                destination = .mainnet(address)
+            case let .mainnet(threshold, address):
+                destination = .mainnet(threshold: threshold, address: address)
             }
             
             let payment: Payment

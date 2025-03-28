@@ -10,6 +10,7 @@ final class AtomicInvoicePaymentOperation: InvoicePaymentOperation {
         case buildTx(Error?)
         case missingTransactionResponse
         case inconsistentBroadcast
+        case decodeExtra
         
         var errorDescription: String? {
             switch self {
@@ -21,6 +22,8 @@ final class AtomicInvoicePaymentOperation: InvoicePaymentOperation {
                 "Mising tx resp"
             case .inconsistentBroadcast:
                 "Inconsistent Broadcast"
+            case .decodeExtra:
+                "Decode Extra"
             }
         }
         
@@ -116,9 +119,15 @@ final class AtomicInvoicePaymentOperation: InvoicePaymentOperation {
         
         var verifyTransactions: [VerifyTransaction] = []
         for (index, transaction) in transactions.enumerated() {
-            let amount = transaction.entry.amount
+            let entry = transaction.entry
+            let destination: Payment.TransferDestination = if entry.isStorage {
+                .storageFeeReceiver
+            } else {
+                self.destination
+            }
+            let amount = entry.amount
             let kernelAssetID = transaction.token.kernelAssetID
-            let traceID = transaction.entry.traceID
+            let traceID = entry.traceID
             let inputsData = try transaction.outputCollection.encodeAsInputData()
             
             let ghostKeyRequests = switch destination {
@@ -139,7 +148,7 @@ final class AtomicInvoicePaymentOperation: InvoicePaymentOperation {
             let changeKeys = changeGhostKey.keys.joined(separator: ",")
             let changeMask = changeGhostKey.mask
             
-            let references = transaction.entry.references.map { reference in
+            let references = entry.references.map { reference in
                 switch reference {
                 case let .index(index):
                     verifyTransactions[index].kernelTransaction.hash
@@ -151,6 +160,9 @@ final class AtomicInvoicePaymentOperation: InvoicePaymentOperation {
             let tx: KernelTx?
             switch destination {
             case .user:
+                guard let extra = String(data: entry.extra, encoding: .utf8) else {
+                    throw OperationError.decodeExtra
+                }
                 tx = KernelBuildTx(
                     kernelAssetID,
                     amount,
@@ -160,11 +172,14 @@ final class AtomicInvoicePaymentOperation: InvoicePaymentOperation {
                     inputsData,
                     changeKeys,
                     changeMask,
-                    transaction.entry.memo,
+                    extra,
                     references,
                     &error
                 )
             case let .multisig(threshold, _):
+                guard let extra = String(data: entry.extra, encoding: .utf8) else {
+                    throw OperationError.decodeExtra
+                }
                 tx = KernelBuildTx(
                     kernelAssetID,
                     amount,
@@ -174,19 +189,20 @@ final class AtomicInvoicePaymentOperation: InvoicePaymentOperation {
                     inputsData,
                     changeKeys,
                     changeMask,
-                    transaction.entry.memo,
+                    extra,
                     references,
                     &error
                 )
-            case .mainnet(let address):
+            case let .mainnet(thresold, address):
                 tx = KernelBuildTxToKernelAddress(
                     kernelAssetID,
                     amount,
+                    thresold,
                     address,
                     inputsData,
                     changeKeys,
                     changeMask,
-                    transaction.entry.memo,
+                    entry.extra.hexEncodedString(),
                     references,
                     &error
                 )
@@ -194,7 +210,7 @@ final class AtomicInvoicePaymentOperation: InvoicePaymentOperation {
             guard let tx, error == nil else {
                 throw OperationError.buildTx(error)
             }
-            let verifyRequest = TransactionRequest(id: transaction.entry.traceID, raw: tx.raw)
+            let verifyRequest = TransactionRequest(id: traceID, raw: tx.raw)
             
             let verifyTransaction = VerifyTransaction(
                 changeGhostKey: changeGhostKey,
@@ -273,7 +289,7 @@ final class AtomicInvoicePaymentOperation: InvoicePaymentOperation {
                 amount: "-" + entry.amount,
                 userID: senderID,
                 opponentID: snapshotOpponentID,
-                memo: entry.memoData.hexEncodedString(),
+                memo: entry.extra.hexEncodedString(),
                 transactionHash: signedTx.hash,
                 createdAt: now,
                 traceID: entry.traceID,

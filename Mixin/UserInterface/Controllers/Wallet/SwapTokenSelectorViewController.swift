@@ -138,13 +138,13 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
         onSelected?(token)
         switch location {
         case .recent:
-            reporter.report(event: .swapCoinSwitch, method: "recent_click")
+            reporter.report(event: .tradeTokenSelect, method: "recent_click")
         case .allItems:
-            reporter.report(event: .swapCoinSwitch, method: "all_item_click")
+            reporter.report(event: .tradeTokenSelect, method: "all_item_click")
         case .chainFilteredItems:
-            reporter.report(event: .swapCoinSwitch, method: "chain_item_click")
+            reporter.report(event: .tradeTokenSelect, method: "chain_item_click")
         case .searchResults:
-            reporter.report(event: .swapCoinSwitch, method: "search_item_click")
+            reporter.report(event: .tradeTokenSelect, method: "search_item_click")
         }
     }
     

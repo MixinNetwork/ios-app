@@ -64,6 +64,7 @@ final class SwapOrderViewController: UITableViewController {
         tableView.register(R.nib.swapOrderIDCell)
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
+        reporter.report(event: .tradeDetail)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -201,6 +202,7 @@ extension SwapOrderViewController: PillActionView.Delegate {
                 )
                 viewControllers.append(swap)
                 navigationController.setViewControllers(viewControllers, animated: true)
+                reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "trade_detail"])
             }
         default:
             guard let navigationController else {

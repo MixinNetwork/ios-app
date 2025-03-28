@@ -17,11 +17,13 @@ open class Reporter {
         case loginRecaptcha     = "login_recaptcha"
         case loginSignalInit    = "login_signal_init"
         case loginEnd           = "login_end"
-        case swapStart          = "swap_start"
-        case swapCoinSwitch     = "swap_coin_switch"
-        case swapQuote          = "swap_quote"
-        case swapPreview        = "swap_preview"
-        case swapSend           = "swap_send"
+        case tradeStart         = "trade_start"
+        case tradeTokenSelect   = "trade_token_select"
+        case tradeQuote         = "trade_quote"
+        case tradePreview       = "trade_preview"
+        case tradeEnd           = "trade_end"
+        case tradeTransactions  = "trade_transactions"
+        case tradeDetail        = "trade_detail"
     }
     
     public struct UserProperty: OptionSet {

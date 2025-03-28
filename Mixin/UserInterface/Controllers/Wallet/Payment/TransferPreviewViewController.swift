@@ -225,7 +225,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                     case .swap:
                         layoutTableHeaderView(title: R.string.localizable.sending_success(),
                                               subtitle: R.string.localizable.swap_message_success())
-                        reporter.report(event: .swapSend)
+                        reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": "swap"])
                     case .inscription(let context):
                         switch context.operation {
                         case .transfer:

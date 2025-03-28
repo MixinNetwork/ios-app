@@ -69,7 +69,7 @@ class UrlWindow {
                 if let navigationController = UIApplication.homeNavigationController {
                     let swap = MixinSwapViewController(sendAssetID: input, receiveAssetID: output ?? AssetID.erc20USDT)
                     navigationController.pushViewController(swap, animated: true)
-                    reporter.report(event: .swapStart, tags: ["entrance": "url", "source": "mixin"])
+                    reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "schema"])
                 }
                 return true
             case let .send(context):

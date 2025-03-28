@@ -352,7 +352,7 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
             DispatchQueue.global().async {
                 PropertiesDAO.shared.set(true, forKey: .hasSwapReviewed)
             }
-            reporter.report(event: .swapStart, tags: ["entrance": "wallet", "source": "mixin"])
+            reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "wallet_home"])
         }
     }
     

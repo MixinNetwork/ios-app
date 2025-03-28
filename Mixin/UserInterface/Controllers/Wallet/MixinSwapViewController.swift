@@ -242,7 +242,7 @@ final class MixinSwapViewController: SwapViewController {
                 sender.isBusy = false
             }
         }
-        reporter.report(event: .swapPreview)
+        reporter.report(event: .tradePreview)
     }
     
     override func prepareForReuse(sender: Any) {
@@ -328,7 +328,7 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
             footerInfoProgressView.setProgress(1, animationDuration: nil)
             reviewButton.isEnabled = quote.sendAmount > 0
                 && quote.sendAmount <= quote.sendToken.decimalBalance
-            reporter.report(event: .swapQuote, tags: ["result": "success"])
+            reporter.report(event: .tradeQuote, tags: ["result": "success", "type": "swap"])
         case .failure(let error):
             let description = switch error {
             case let SwapQuotePeriodicRequester.ResponseError.invalidAmount(description):
@@ -344,7 +344,7 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
             }
             Logger.general.debug(category: "MixinSwap", message: description)
             setFooter(.error(description))
-            reporter.report(event: .swapQuote, tags: ["result": "failure"])
+            reporter.report(event: .tradeQuote, tags: ["result": "failure", "type": "swap"])
         }
     }
     

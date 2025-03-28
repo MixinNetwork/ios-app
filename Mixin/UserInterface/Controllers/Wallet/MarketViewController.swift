@@ -677,7 +677,7 @@ extension MarketViewController: PillActionView.Delegate {
                 pickSingleToken { token in
                     let swap = MixinSwapViewController(sendAssetID: AssetID.erc20USDT, receiveAssetID: token.assetID)
                     self.navigationController?.pushViewController(swap, animated: true)
-                    reporter.report(event: .swapStart, tags: ["entrance": "market", "source": "mixin"])
+                    reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "market_detail"])
                 }
             }
         case .alert:

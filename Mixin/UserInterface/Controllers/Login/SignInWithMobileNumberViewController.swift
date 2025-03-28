@@ -50,6 +50,10 @@ final class SignInWithMobileNumberViewController: SignUpWithMobileNumberViewCont
         isBusy ? hideOtherOptions() : showOtherOptions()
     }
     
+    override func logValidateCapatcha() {
+        reporter.report(event: .loginRecaptcha, method: "phone_number")
+    }
+    
     @objc private func mnemonicLogin(_ sender: Any) {
         let signIn = SignInWithMnemonicsViewController()
         navigationController?.pushViewController(signIn, animated: true)

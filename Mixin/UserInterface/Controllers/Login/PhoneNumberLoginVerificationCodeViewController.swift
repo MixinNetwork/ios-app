@@ -44,8 +44,8 @@ final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCod
         }
     }
     
-    override func willValidateCapatcha() {
-        reporter.report(event: .loginRecaptcha, method: "phone_number")
+    override func logValidateCapatcha() {
+        reporter.report(event: .signUpRecaptcha, method: "phone_number")
     }
     
     override func layout(for keyboardFrame: CGRect) {

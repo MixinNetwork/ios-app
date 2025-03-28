@@ -1297,7 +1297,7 @@ class ConversationViewController: UIViewController {
         guard let ownerUser else {
             return
         }
-        reporter.report(event: .sendStart, tags: ["wallet": "mixin", "source": "chat"])
+        reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "chat"])
         let selector = MixinTokenSelectorViewController()
         selector.onSelected = { (token, location) in
             reporter.report(event: .sendTokenSelect, method: location.toLogString())

@@ -381,7 +381,7 @@ extension UserProfileViewController {
     }
     
     @objc func transfer() {
-        reporter.report(event: .sendStart, tags: ["wallet": "mixin", "source": "profile"])
+        reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "profile"])
         let user: UserItem = self.user
         let selector = MixinTokenSelectorViewController()
         selector.onSelected = { (token, location) in

@@ -332,7 +332,7 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
         lastSelectedAction = action
         switch action {
         case .send:
-            reporter.report(event: .sendStart, tags: ["wallet": "mixin", "source": "wallet_home"])
+            reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "wallet_home"])
             let selector = MixinTokenSelectorViewController()
             selector.onSelected = { (token, location) in
                 reporter.report(event: .sendTokenSelect, method: location.toLogString())
@@ -341,7 +341,7 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
             }
             present(selector, animated: true, completion: nil)
         case .receive:
-            reporter.report(event: .receiveStart, tags: ["wallet": "mixin", "source": "wallet_home"])
+            reporter.report(event: .receiveStart, tags: ["wallet": "main", "source": "wallet_home"])
             let selector = MixinTokenSelectorViewController()
             selector.searchFromRemote = true
             selector.onSelected = { (token, location) in

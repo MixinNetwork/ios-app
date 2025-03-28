@@ -20,6 +20,10 @@ final class RecoveryContactLoginVerificationCodeViewController: LoginVerificatio
         resendButton.isHidden = true
     }
     
+    override func logValidateCapatcha() {
+        reporter.report(event: .loginRecaptcha, method: "phone_number")
+    }
+    
     override func login(code: String, registrationId: Int, sessionKey: Ed25519PrivateKey) {
         let sessionSecret = sessionKey.publicKey.rawRepresentation.base64EncodedString()
         EmergencyAPI.verifySession(

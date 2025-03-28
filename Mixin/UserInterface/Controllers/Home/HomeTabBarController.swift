@@ -220,13 +220,13 @@ extension HomeTabBarController: TabBarDelegate {
         let id = ChildID(rawValue: item.id)!
         switch id {
         case .chat:
-            reporter.report(event: .homeTabSwitch, tags: ["method":"chats"])
+            reporter.report(event: .homeTabSwitch, method: "chats")
         case .collectibles:
-            reporter.report(event: .homeTabSwitch, tags: ["method":"wallets"])
+            reporter.report(event: .homeTabSwitch, method: "wallets")
         case .more:
-            reporter.report(event: .homeTabSwitch, tags: ["method":"collectibles"])
+            reporter.report(event: .homeTabSwitch, method: "collectibles")
         case .wallet:
-            reporter.report(event: .homeTabSwitch, tags: ["method":"more"])
+            reporter.report(event: .homeTabSwitch, method: "more")
         }
         switchToChildAfterValidated(with: id)
     }

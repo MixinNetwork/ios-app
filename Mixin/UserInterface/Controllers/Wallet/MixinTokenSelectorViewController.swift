@@ -5,7 +5,7 @@ import MixinServices
 
 final class MixinTokenSelectorViewController: TokenSelectorViewController<MixinTokenItem> {
     
-    var onSelected: ((MixinTokenItem) -> Void)?
+    var onSelected: ((MixinTokenItem, PickUpLocation) -> Void)?
     var searchFromRemote = false
     
     private weak var searchRequest: Request?
@@ -164,7 +164,7 @@ final class MixinTokenSelectorViewController: TokenSelectorViewController<MixinT
     override func pickUp(token: MixinTokenItem, from location: PickUpLocation) {
         super.pickUp(token: token, from: location)
         presentingViewController?.dismiss(animated: true) { [onSelected] in
-            onSelected?(token)
+            onSelected?(token, location)
         }
     }
     

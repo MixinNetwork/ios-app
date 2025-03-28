@@ -144,6 +144,7 @@ class InputAmountViewController: UIViewController {
         decimalSeparatorButton.setTitle(Locale.current.decimalSeparator ?? ".", for: .normal)
         reloadViews(inputAmount: accumulator.decimal)
         reviewButton.style = .filled
+        reporter.report(event: .sendAmount)
     }
     
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
@@ -321,6 +322,7 @@ class InputAmountViewController: UIViewController {
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source":"send_amount"])
     }
     
 }

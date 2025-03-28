@@ -74,6 +74,8 @@ final class SwapOrderTableViewController: UIViewController {
                 }
             }
         }
+        
+        reporter.report(event: .tradeTransactions)
     }
     
     override func viewSafeAreaInsetsDidChange() {

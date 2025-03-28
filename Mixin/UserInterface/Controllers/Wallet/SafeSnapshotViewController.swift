@@ -148,6 +148,7 @@ final class SafeSnapshotViewController: TransactionViewController {
         } else {
             let viewController = MixinTokenViewController(token: token)
             navigationController?.pushViewController(viewController, animated: true)
+            reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": "transaction_detail"])
         }
     }
     

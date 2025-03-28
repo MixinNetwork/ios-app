@@ -95,6 +95,7 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
         pinField.becomeFirstResponder()
         switch action {
         case .create(.input):
+            reporter.report(event: .signUpPINSet)
             titleLabel.text = R.string.localizable.tip_create_pin_title()
             subtitleLabel.text = ""
         case .change(_, .verify):

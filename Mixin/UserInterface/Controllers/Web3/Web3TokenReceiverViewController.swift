@@ -95,6 +95,7 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source":"send_recipient", "wallet": "web3"])
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {
@@ -108,6 +109,7 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
         guard let address = verifiedAddress else {
             return
         }
+        reporter.report(event: .sendRecipient, tags: ["type": "address"])
         let payment = Web3SendingTokenToAddressPayment(
             payment: payment,
             to: .arbitrary,
@@ -160,6 +162,7 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
         let destination = destinations[indexPath.row]
         switch destination {
         case .addressBook:
+            reporter.report(event: .sendRecipient, tags: ["type": "address_book"])
             let token = payment.token
             let book = AddressBookViewController(token: token)
             book.onSelect = { [payment] (address) in
@@ -175,6 +178,7 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
             }
             present(book, animated: true)
         case .privacyWallet(let chainID):
+            reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
             sendToMyMixinWallet(chainID: chainID)
         }
     }

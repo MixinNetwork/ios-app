@@ -392,7 +392,7 @@ extension SearchViewController: UITableViewDelegate {
                 homeNavigationController?.pushViewController(vc, animated: true)
             }
         case .asset:
-            pushTokenViewController(token: assets[indexPath.row].asset)
+            pushTokenViewController(token: assets[indexPath.row].asset, source: "chat_search")
         case .user:
             pushViewController(keyword: trimmedKeyword, result: users[indexPath.row])
         case .group:

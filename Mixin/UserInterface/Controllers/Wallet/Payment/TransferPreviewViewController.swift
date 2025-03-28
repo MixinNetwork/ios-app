@@ -191,6 +191,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
             rows.append(.info(caption: .memo, content: operation.memo))
         }
         reloadData(with: rows)
+        reporter.report(event: .sendPreview)
     }
     
     override func performAction(with pin: String) {
@@ -225,7 +226,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                     case .swap:
                         layoutTableHeaderView(title: R.string.localizable.sending_success(),
                                               subtitle: R.string.localizable.swap_message_success())
-                        reporter.report(event: .swapSend)
+                        reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": "swap"])
                     case .inscription(let context):
                         switch context.operation {
                         case .transfer:
@@ -236,6 +237,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                                                   subtitle: R.string.localizable.collectible_released_description())
                         }
                     case .none:
+                        reporter.report(event: .sendEnd)
                         layoutTableHeaderView(title: R.string.localizable.transfer_success(),
                                               subtitle: R.string.localizable.transfer_sent_description())
                     }

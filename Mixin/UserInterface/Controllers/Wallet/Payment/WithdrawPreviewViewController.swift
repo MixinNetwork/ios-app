@@ -79,6 +79,7 @@ final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
         }
         rows.append(.info(caption: .network, content: withdrawalToken.depositNetworkName ?? ""))
         reloadData(with: rows)
+        reporter.report(event: .sendPreview)
     }
     
     override func performAction(with pin: String) {
@@ -91,6 +92,7 @@ final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
             do {
                 try await operation.start(pin: pin)
                 await MainActor.run {
+                    reporter.report(event: .sendEnd)
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
                     layoutTableHeaderView(title: R.string.localizable.withdrawal_request_sent(),

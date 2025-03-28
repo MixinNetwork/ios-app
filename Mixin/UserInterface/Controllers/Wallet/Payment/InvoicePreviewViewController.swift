@@ -79,6 +79,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
         ))
         
         reloadData(with: rows)
+        reporter.report(event: .sendPreview)
     }
     
     override func performAction(with pin: String) {
@@ -94,6 +95,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
+                    reporter.report(event: .sendEnd)
                     layoutTableHeaderView(title: R.string.localizable.transfer_success(),
                                           subtitle: R.string.localizable.transfer_sent_description())
                     tableView.setContentOffset(.zero, animated: true)

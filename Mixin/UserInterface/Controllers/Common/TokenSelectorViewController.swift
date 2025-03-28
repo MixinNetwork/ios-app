@@ -367,6 +367,19 @@ extension TokenSelectorViewController {
         case allItems
         case chainFilteredItems
         case searchResults
+        
+        func toLogString() -> String {
+            switch self {
+            case .recent:
+                return "recent_click"
+            case .allItems:
+                return "all_item_click"
+            case .chainFilteredItems:
+                return "chain_item_click"
+            case .searchResults:
+                return "search_item_click"
+            }
+        }
     }
     
     struct Chain: Equatable, Hashable {

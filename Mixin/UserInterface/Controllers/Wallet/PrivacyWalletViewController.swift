@@ -102,6 +102,7 @@ final class PrivacyWalletViewController: WalletViewController {
         sheet.addAction(UIAlertAction(title: R.string.localizable.all_transactions(), style: .default, handler: { (_) in
             let history = MixinTransactionHistoryViewController(type: nil)
             self.navigationController?.pushViewController(history, animated: true)
+            reporter.report(event: .allTransactions, tags: ["source": "wallet_home"])
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
             self.navigationController?.pushViewController(HiddenMixinTokensViewController(), animated: true)
@@ -197,6 +198,7 @@ final class PrivacyWalletViewController: WalletViewController {
     @objc private func revealPendingDeposits(_ sender: Any) {
         let transactionHistory = MixinTransactionHistoryViewController(type: .pending)
         navigationController?.pushViewController(transactionHistory, animated: true)
+        reporter.report(event: .allTransactions, tags: ["source": "wallet_home"])
     }
     
     @objc private func hideBadgeView(_ notification: Notification) {
@@ -294,6 +296,7 @@ extension PrivacyWalletViewController: UITableViewDelegate {
         let token = tokens[indexPath.row]
         let viewController = MixinTokenViewController(token: token)
         navigationController?.pushViewController(viewController, animated: true)
+        reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": "wallet_home"])
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -329,16 +332,20 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
         lastSelectedAction = action
         switch action {
         case .send:
+            reporter.report(event: .sendStart, tags: ["wallet": "mixin", "source": "wallet_home"])
             let selector = MixinTokenSelectorViewController()
-            selector.onSelected = { token in
+            selector.onSelected = { (token, location) in
+                reporter.report(event: .sendTokenSelect, method: location.toLogString())
                 let receiver = MixinTokenReceiverViewController(token: token)
                 self.navigationController?.pushViewController(receiver, animated: true)
             }
             present(selector, animated: true, completion: nil)
         case .receive:
+            reporter.report(event: .receiveStart, tags: ["wallet": "mixin", "source": "wallet_home"])
             let selector = MixinTokenSelectorViewController()
             selector.searchFromRemote = true
-            selector.onSelected = { (token) in
+            selector.onSelected = { (token, location) in
+                reporter.report(event: .receiveTokenSelect, method: location.toLogString())
                 let deposit = DepositViewController(token: token)
                 self.navigationController?.pushViewController(deposit, animated: true)
             }
@@ -346,13 +353,13 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
                 self.present(selector, animated: true, completion: nil)
             }
         case .swap:
+            reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "wallet_home"])
             tableHeaderView.actionView.badgeOnSwap = false
             let swap = MixinSwapViewController(sendAssetID: nil, receiveAssetID: nil)
             navigationController?.pushViewController(swap, animated: true)
             DispatchQueue.global().async {
                 PropertiesDAO.shared.set(true, forKey: .hasSwapReviewed)
             }
-            reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "wallet_home"])
         }
     }
     
@@ -366,6 +373,7 @@ extension PrivacyWalletViewController: WalletSearchViewControllerDelegate {
         DispatchQueue.global().async {
             TokenDAO.shared.save(assets: [token])
         }
+        reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": "wallet_search"])
     }
     
 }

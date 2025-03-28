@@ -80,12 +80,14 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
         headerView.textView.becomeFirstResponder()
         switch inputContent {
         case .destination:
-            break
+            reporter.report(event: .addAddressStart)
         case let .memo(destination), let .tag(destination):
+            reporter.report(event: .addAddressMemo)
             headerView.addAddressView { label in
                 label.text = destination
             }
         case let .label(address):
+            reporter.report(event: .addAddressLabel)
             headerView.addAddressView { label in
                 label.text = address.destination
             }
@@ -335,6 +337,7 @@ extension AddressInfoInputViewController {
             action: .add
         )
         preview.onSavingSuccess = {
+            reporter.report(event: .addAddressEnd)
             guard let navigationController = self.navigationController else {
                 return
             }

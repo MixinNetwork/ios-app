@@ -191,6 +191,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
             rows.append(.info(caption: .memo, content: operation.memo))
         }
         reloadData(with: rows)
+        reporter.report(event: .sendPreview)
     }
     
     override func performAction(with pin: String) {
@@ -236,6 +237,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                                                   subtitle: R.string.localizable.collectible_released_description())
                         }
                     case .none:
+                        reporter.report(event: .sendEnd)
                         layoutTableHeaderView(title: R.string.localizable.transfer_success(),
                                               subtitle: R.string.localizable.transfer_sent_description())
                     }

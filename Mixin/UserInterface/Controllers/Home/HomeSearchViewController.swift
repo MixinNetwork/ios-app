@@ -45,9 +45,10 @@ extension HomeSearchViewController where Self: UIViewController {
         }
     }
     
-    func pushTokenViewController(token: MixinTokenItem) {
+    func pushTokenViewController(token: MixinTokenItem, source: String) {
         let viewController = MixinTokenViewController(token: token)
         homeNavigationController?.pushViewController(viewController, animated: true)
+        reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": source])
     }
     
 }

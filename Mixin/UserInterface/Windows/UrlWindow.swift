@@ -1097,6 +1097,8 @@ extension UrlWindow {
                             return
                         }
                         completion(nil)
+                        reporter.report(event: .sendStart, tags: ["wallet": "mixin", "source": "schema"])
+                        reporter.report(event: .sendRecipient, tags: ["type": "contact"])
                         let inputAmount = TransferInputAmountViewController(
                             traceID: paymentURL.trace,
                             tokenItem: token,
@@ -1109,8 +1111,11 @@ extension UrlWindow {
                     case (.none, .none):
                         // Receive money QR code
                         completion(nil)
+                        reporter.report(event: .sendStart, tags: ["wallet": "mixin", "source": "schema"])
                         let selector = MixinTokenSelectorViewController()
-                        selector.onSelected = { token in
+                        selector.onSelected = { (token, location) in
+                            reporter.report(event: .sendTokenSelect, method: location.toLogString())
+                            reporter.report(event: .sendRecipient, tags: ["type": "contact"])
                             let inputAmount = TransferInputAmountViewController(
                                 tokenItem: token,
                                 receiver: destination,

@@ -173,6 +173,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
         }
         
         reloadData(with: rows)
+        reporter.report(event: .sendPreview)
     }
     
     override func loadInitialTrayView(animated: Bool) {
@@ -302,6 +303,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                         }
                         reloadData(with: rows)
                     }
+                    reporter.report(event: .sendEnd)
                     tableView.setContentOffset(.zero, animated: true)
                     loadSingleButtonTrayView(title: R.string.localizable.done(),
                                              action: #selector(close(_:)))

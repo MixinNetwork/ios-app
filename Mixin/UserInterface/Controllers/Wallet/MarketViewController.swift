@@ -584,6 +584,7 @@ extension MarketViewController: UITableViewDelegate {
                 } else {
                     let controller = MixinTokenViewController(token: token, market: market)
                     self.navigationController?.pushViewController(controller, animated: true)
+                    reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": "market_detail"])
                 }
             }
         default:

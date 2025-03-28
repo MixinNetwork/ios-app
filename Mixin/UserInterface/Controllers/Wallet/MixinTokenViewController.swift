@@ -70,11 +70,13 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
             inscription: inscriptionItem
         )
         navigationController?.pushViewController(viewController, animated: true)
+        reporter.report(event: .transactionDetail, tags: ["source": "asset_detail"])
     }
     
     override func viewAllTransactions() {
         let history = MixinTransactionHistoryViewController(token: token)
         navigationController?.pushViewController(history, animated: true)
+        reporter.report(event: .allTransactions, tags: ["source": "asset_detail"])
     }
     
     @objc private func balanceDidUpdate(_ notification: Notification) {

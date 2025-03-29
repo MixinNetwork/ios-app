@@ -32,7 +32,7 @@ final class Web3TransactionViewController: TransactionViewController {
             case .other, .contract, .none:
                 amountLabel.textColor = R.color.text_tertiary()!
             }
-        case .failed, .none:
+        case .pending, .failed, .none:
             amountLabel.textColor = R.color.text_tertiary()!
         }
         amountLabel.text = CurrencyFormatter.localizedString(
@@ -111,6 +111,10 @@ extension Web3TransactionViewController {
             TransactionRow(key: .date, value: transactionAt),
             TransactionRow(key: .status, value: transaction.status.rawValue.capitalized),
         ]
+        if !transaction.transactionID.isEmpty {
+            let id = TransactionRow(key: .id, value: transaction.transactionID)
+            rows.insert(id, at: 0)
+        }
         tableView.reloadData()
     }
     

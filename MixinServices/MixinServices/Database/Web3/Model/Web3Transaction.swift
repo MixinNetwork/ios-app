@@ -29,6 +29,7 @@ public class Web3Transaction: Codable {
     }
     
     public enum TransactionStatus: String {
+        case pending
         case success
         case failed
     }
@@ -60,6 +61,31 @@ public class Web3Transaction: Codable {
         case .receive, .contract, .other, .none:
             decimalAmount
         }
+    }
+    
+    public init(
+        transactionID: String, transactionHash: String, outputIndex: Int,
+        blockNumber: Int, sender: String, receiver: String, outputHash: String,
+        chainID: String, assetID: String, amount: String,
+        transactionType: UnknownableEnum<Web3Transaction.TransactionType>,
+        status: UnknownableEnum<Web3Transaction.TransactionStatus>,
+        transactionAt: String, createdAt: String, updatedAt: String
+    ) {
+        self.transactionID = transactionID
+        self.transactionHash = transactionHash
+        self.outputIndex = outputIndex
+        self.blockNumber = blockNumber
+        self.sender = sender
+        self.receiver = receiver
+        self.outputHash = outputHash
+        self.chainID = chainID
+        self.assetID = assetID
+        self.amount = amount
+        self.transactionType = transactionType
+        self.status = status
+        self.transactionAt = transactionAt
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
     }
     
 }

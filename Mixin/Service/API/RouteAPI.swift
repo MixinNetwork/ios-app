@@ -304,6 +304,24 @@ extension RouteAPI {
         return result
     }
     
+    static func transaction(hash: String) async throws -> String {
+        try await request(
+            method: .get,
+            path: "web3/transactions/\(hash)"
+        )
+    }
+    
+    static func postTransaction(chainID: String, raw: String) async throws -> Web3RawTransaction {
+        try await request(
+            method: .post,
+            path: "/web3/transactions",
+            with: [
+                "chain_id": chainID,
+                "raw": raw,
+            ]
+        )
+    }
+    
 }
 
 // MARK: - Signing

@@ -26,6 +26,8 @@ class EVMTransferOperation: Web3TransferOperation {
     private enum RequestError: Error {
         case mismatchedAddress
         case invalidFee(String)
+        case missingChainID
+        case missingRawTx
     }
     
     let transactionPreview: EVMTransactionPreview
@@ -194,7 +196,53 @@ class EVMTransferOperation: Web3TransferOperation {
                 ?? transaction.jsonRepresentation
                 ?? "(null)"
             Logger.web3.info(category: "EVMTransfer", message: "Will send tx: \(transactionDescription)")
-            let hash = try await client.eth_sendRawTransaction(transaction, withAccount: account)
+            guard
+                let evmChainID = transaction.chainId,
+                let chainID = Web3Chain.chain(evmChainID: evmChainID)?.chainID
+            else {
+                throw RequestError.missingChainID
+            }
+            let hexEncodedSignedTransaction = try {
+                let signedTx = try account.sign(transaction: transaction)
+                guard let raw = signedTx.raw else {
+                    throw RequestError.missingRawTx
+                }
+                return "0x" + raw.hexEncodedString()
+            }()
+            let rawTransaction = try await RouteAPI.postTransaction(
+                chainID: chainID,
+                raw: hexEncodedSignedTransaction
+            )
+            let pendingTransaction = {
+                let (assetID, amount) = switch balanceChange {
+                case .decodingFailed:
+                    ("", "")
+                case let .detailed(token, decimalAmount):
+                    (token.assetID, TokenAmountFormatter.string(from: decimalAmount))
+                }
+                return Web3Transaction(
+                    transactionID: "",
+                    transactionHash: rawTransaction.hash,
+                    outputIndex: -1,
+                    blockNumber: -1,
+                    sender: account.publicKey,
+                    receiver: transaction.to.toChecksumAddress(),
+                    outputHash: "",
+                    chainID: chainID,
+                    assetID: assetID,
+                    amount: amount,
+                    transactionType: .known(.send),
+                    status: .known(.pending),
+                    transactionAt: rawTransaction.createdAt,
+                    createdAt: rawTransaction.createdAt,
+                    updatedAt: rawTransaction.createdAt
+                )
+            }()
+            Web3RawTransactionDAO.shared.save(
+                rawTransaction: rawTransaction,
+                pendingTransaction: pendingTransaction
+            )
+            let hash = rawTransaction.hash
             Logger.web3.info(category: "TxnRequest", message: "Will respond hash: \(hash)")
             try await respond(hash: hash)
             Logger.web3.info(category: "EVMTransfer", message: "Txn sent")

@@ -134,8 +134,8 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
     
     func render(transaction: Web3TransactionItem) {
         let amount = transaction.signedDecimalAmount
-        switch transaction.status {
-        case .known(.success):
+        switch transaction.status.knownCase {
+        case .success:
             switch transaction.transactionType.knownCase {
             case .send:
                 iconImageView.imageView.contentMode = .center
@@ -153,7 +153,7 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
                 setTitle(nil)
                 amountLabel.textColor = R.color.text_tertiary()!
             }
-        case .known(.failed), .unknown:
+        case .pending, .failed, .none:
             iconImageView.imageView.contentMode = .center
             iconImageView.image = R.image.wallet.snapshot_anonymous()
             setTitle(nil)

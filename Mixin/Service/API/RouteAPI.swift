@@ -304,10 +304,10 @@ extension RouteAPI {
         return result
     }
     
-    static func transaction(hash: String) async throws -> String {
+    static func transaction(hash: String) async throws -> Web3RawTransaction {
         try await request(
             method: .get,
-            path: "web3/transactions/\(hash)"
+            path: "/web3/transactions/\(hash)"
         )
     }
     

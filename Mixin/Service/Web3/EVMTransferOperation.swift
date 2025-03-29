@@ -223,7 +223,6 @@ class EVMTransferOperation: Web3TransferOperation {
                 return Web3Transaction(
                     transactionID: "",
                     transactionHash: rawTransaction.hash,
-                    outputIndex: -1,
                     blockNumber: -1,
                     sender: account.publicKey,
                     receiver: transaction.to.toChecksumAddress(),

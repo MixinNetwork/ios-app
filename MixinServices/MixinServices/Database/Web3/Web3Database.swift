@@ -83,7 +83,6 @@ public final class Web3Database: Database {
                     `transaction_id`    TEXT NOT NULL,
                     `transaction_type`  TEXT NOT NULL,
                     `transaction_hash`  TEXT NOT NULL,
-                    `output_index`      INTEGER NOT NULL,
                     `block_number`      INTEGER NOT NULL,
                     `sender`            TEXT NOT NULL,
                     `receiver`          TEXT NOT NULL,

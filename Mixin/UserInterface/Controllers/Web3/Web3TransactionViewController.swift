@@ -4,7 +4,9 @@ import MixinServices
 final class Web3TransactionViewController: TransactionViewController {
     
     private let token: Web3Token
-    private let transaction: Web3Transaction
+    
+    private var transaction: Web3Transaction
+    private var reloadPendingTransactionTask: Task<Void, Error>?
     
     init(token: Web3Token, transaction: Web3Transaction) {
         self.token = token
@@ -18,32 +20,53 @@ final class Web3TransactionViewController: TransactionViewController {
         fatalError("Storyboard is not supported")
     }
     
+    deinit {
+        reloadPendingTransactionTask?.cancel()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.transaction()
         iconView.setIcon(web3Token: token)
-        switch transaction.status.knownCase {
-        case .success:
-            switch transaction.transactionType.knownCase {
-            case .send:
-                amountLabel.textColor = R.color.market_red()
-            case .receive:
-                amountLabel.textColor = R.color.market_green()
-            case .other, .contract, .none:
-                amountLabel.textColor = R.color.text_tertiary()!
-            }
-        case .pending, .failed, .none:
-            amountLabel.textColor = R.color.text_tertiary()!
-        }
-        amountLabel.text = CurrencyFormatter.localizedString(
-            from: transaction.signedDecimalAmount,
-            format: .precision,
-            sign: .always
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadDataIfContains(_:)),
+            name: Web3TransactionDAO.transactionDidSaveNotification,
+            object: nil
         )
-        symbolLabel.text = token.symbol
-        let value = fiatMoneyValue(amount: transaction.decimalAmount, usdPrice: token.decimalUSDPrice)
-        fiatMoneyValueLabel.text = R.string.localizable.value_now(value) + "\n "
-        layoutTableHeaderView()
+        reloadData()
+        if transaction.status.knownCase == .pending {
+            let hash = transaction.transactionHash
+            let walletID = token.walletID
+            reloadPendingTransactionTask = Task.detached {
+                repeat {
+                    do {
+                        let transaction = try await RouteAPI.transaction(hash: hash)
+                        if transaction.state != "pending" {
+                            Web3RawTransactionDAO.shared.save(rawTransaction: transaction)
+                            let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
+                            ConcurrentJobQueue.shared.addJob(job: syncTransactions)
+                            return
+                        }
+                    } catch {
+                        Logger.general.debug(category: "Web3TxnView", message: "\(error)")
+                    }
+                    try await Task.sleep(nanoseconds: 10 * NSEC_PER_SEC)
+                } while !Task.isCancelled
+            }
+        }
+    }
+    
+    @objc private func reloadDataIfContains(_ notification: Notification) {
+        let hash = self.transaction.transactionHash
+        guard
+            let userInfo = notification.userInfo,
+            let transactions = userInfo[Web3TransactionDAO.transactionsUserInfoKey] as? [Web3Transaction],
+            let transaction = transactions.first(where: { $0.transactionHash == hash })
+        else {
+            return
+        }
+        self.transaction = transaction
         reloadData()
     }
     
@@ -97,6 +120,29 @@ extension Web3TransactionViewController {
     }
     
     private func reloadData() {
+        switch transaction.status.knownCase {
+        case .success:
+            switch transaction.transactionType.knownCase {
+            case .send:
+                amountLabel.textColor = R.color.market_red()
+            case .receive:
+                amountLabel.textColor = R.color.market_green()
+            case .other, .contract, .none:
+                amountLabel.textColor = R.color.text_tertiary()!
+            }
+        case .pending, .failed, .none:
+            amountLabel.textColor = R.color.text_tertiary()!
+        }
+        amountLabel.text = CurrencyFormatter.localizedString(
+            from: transaction.signedDecimalAmount,
+            format: .precision,
+            sign: .always
+        )
+        symbolLabel.text = token.symbol
+        let value = fiatMoneyValue(amount: transaction.decimalAmount, usdPrice: token.decimalUSDPrice)
+        fiatMoneyValueLabel.text = R.string.localizable.value_now(value) + "\n "
+        layoutTableHeaderView()
+        
         let transactionAt: String
         if let date = ISO8601DateFormatter.default.date(from: transaction.transactionAt) {
             transactionAt = DateFormatter.dateFull.string(from: date)
@@ -104,7 +150,6 @@ extension Web3TransactionViewController {
             transactionAt = transaction.transactionAt
         }
         rows = [
-            TransactionRow(key: .id, value: transaction.transactionID),
             TransactionRow(key: .transactionHash, value: transaction.transactionHash),
             TransactionRow(key: .from, value: transaction.sender),
             TransactionRow(key: .to, value: transaction.receiver),

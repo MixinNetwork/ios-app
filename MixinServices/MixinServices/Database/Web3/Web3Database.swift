@@ -83,7 +83,6 @@ public final class Web3Database: Database {
                     `transaction_id`    TEXT NOT NULL,
                     `transaction_type`  TEXT NOT NULL,
                     `transaction_hash`  TEXT NOT NULL,
-                    `output_index`      INTEGER NOT NULL,
                     `block_number`      INTEGER NOT NULL,
                     `sender`            TEXT NOT NULL,
                     `receiver`          TEXT NOT NULL,
@@ -100,14 +99,27 @@ public final class Web3Database: Database {
                 """,
                 """
                 CREATE TABLE IF NOT EXISTS properties (
-                    key TEXT NOT NULL, 
-                    value TEXT NOT NULL, 
-                    updated_at TEXT NOT NULL, 
+                    key         TEXT NOT NULL, 
+                    value       TEXT NOT NULL, 
+                    updated_at  TEXT NOT NULL, 
                     PRIMARY KEY(key)
                 )
                 """,
                 "CREATE INDEX IF NOT EXISTS `index_transactions_transaction_at` ON `transactions` (`transaction_at`)",
                 "CREATE INDEX IF NOT EXISTS `index_transactions_transaction_type_asset_id` ON `transactions` (`transaction_type`, `asset_id`)",
+                """
+                CREATE TABLE IF NOT EXISTS raw_transactions (
+                    `hash`          TEXT NOT NULL,
+                    `chain_id`      TEXT NOT NULL,
+                    `account`       TEXT NOT NULL,
+                    `nonce`         TEXT NOT NULL,
+                    `raw`           TEXT NOT NULL,
+                    `state`         TEXT NOT NULL,
+                    `created_at`    TEXT NOT NULL,
+                    `updated_at`    TEXT NOT NULL,
+                    PRIMARY KEY(`hash`)
+                )
+                """,
             ]
             for sql in sqls {
                 try db.execute(sql: sql)

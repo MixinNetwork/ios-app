@@ -38,6 +38,15 @@ public final class Web3TransactionDAO: Web3DAO {
         db.write { db in
             try transactions.save(db)
             try change(db)
+            
+            let hashes = transactions.map(\.transactionHash)
+            let deletePendingTransactions: GRDB.SQL = """
+            DELETE FROM transactions
+            WHERE status = 'pending' AND transaction_hash IN \(hashes)
+            """
+            let (sql, arguments) = try deletePendingTransactions.build(db)
+            try db.execute(sql: sql, arguments: arguments)
+            
             db.afterNextTransaction { _ in
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(

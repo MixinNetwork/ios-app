@@ -65,6 +65,12 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
             return cell
         }
         
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadData),
+            name: Web3TransactionDAO.transactionDidSaveNotification,
+            object: nil
+        )
         reloadData()
         let job = SyncWeb3TransactionJob(walletID: walletID)
         ConcurrentJobQueue.shared.addJob(job: job)
@@ -92,6 +98,19 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
         present(picker, animated: true)
     }
     
+    @objc private func reloadData() {
+        queue.cancelAllOperations()
+        loadPreviousPageIndexPath = nil
+        loadNextPageIndexPath = nil
+        let operation = LoadLocalDataOperation(
+            viewController: self,
+            behavior: .reload,
+            filter: filter,
+            order: order
+        )
+        queue.addOperation(operation)
+    }
+    
 }
 
 extension Web3TransactionHistoryViewController {
@@ -101,25 +120,25 @@ extension Web3TransactionHistoryViewController {
             UIAction(
                 title: R.string.localizable.all(),
                 state: type == nil ? .on : .off,
-                handler: { [weak self] _ in self?.reloadData(filterType: nil) }
+                handler: { [weak self] _ in self?.reloadDataWithFilterType(nil) }
             ),
             UIAction(
                 title: R.string.localizable.deposit(),
                 image: R.image.filter_deposit(),
                 state: type == .receive ? .on : .off,
-                handler: { [weak self] _ in self?.reloadData(filterType: .receive) }
+                handler: { [weak self] _ in self?.reloadDataWithFilterType(.receive) }
             ),
             UIAction(
                 title: R.string.localizable.withdrawal(),
                 image: R.image.filter_withdrawal(),
                 state: type == .send ? .on : .off,
-                handler: { [weak self] _ in self?.reloadData(filterType: .send) }
+                handler: { [weak self] _ in self?.reloadDataWithFilterType(.send) }
             ),
             UIAction(
                 title: R.string.localizable.contract(),
                 image: R.image.filter_contract(),
                 state: type == .contract ? .on : .off,
-                handler: { [weak self] _ in self?.reloadData(filterType: .contract) }
+                handler: { [weak self] _ in self?.reloadDataWithFilterType(.contract) }
             ),
         ]
     }
@@ -137,25 +156,25 @@ extension Web3TransactionHistoryViewController {
                 title: R.string.localizable.recent(),
                 image: R.image.order_newest(),
                 state: .off,
-                handler: { [weak self] _ in self?.reloadData(order: .newest) }
+                handler: { [weak self] _ in self?.reloadDataWithOrder(.newest) }
             ),
             UIAction(
                 title: R.string.localizable.oldest(),
                 image: R.image.order_oldest(),
                 state: .off,
-                handler: { [weak self] _ in self?.reloadData(order: .oldest) }
+                handler: { [weak self] _ in self?.reloadDataWithOrder(.oldest) }
             ),
             UIAction(
                 title: R.string.localizable.value(),
                 image: R.image.order_value(),
                 state: .off,
-                handler: { [weak self] _ in self?.reloadData(order: .mostValuable) }
+                handler: { [weak self] _ in self?.reloadDataWithOrder(.mostValuable) }
             ),
             UIAction(
                 title: R.string.localizable.amount(),
                 image: R.image.order_amount(),
                 state: .off,
-                handler: { [weak self] _ in self?.reloadData(order: .biggestAmount) }
+                handler: { [weak self] _ in self?.reloadDataWithOrder(.biggestAmount) }
             ),
         ]
         switch order {
@@ -171,7 +190,7 @@ extension Web3TransactionHistoryViewController {
         rightBarButtonItem.menu = UIMenu(children: actions)
     }
     
-    private func reloadData(filterType type: Web3Transaction.TransactionType?) {
+    private func reloadDataWithFilterType(_ type: Web3Transaction.TransactionType?) {
         filter.type = type
         let actions = typeFilterActions(selectedType: filter.type)
         typeFilterView.button.menu = UIMenu(children: actions)
@@ -179,24 +198,11 @@ extension Web3TransactionHistoryViewController {
         reloadData()
     }
     
-    private func reloadData(order: SafeSnapshot.Order) {
+    private func reloadDataWithOrder(_ order: SafeSnapshot.Order) {
         self.order = order
         updateNavigationSubtitle(order: order)
         reloadRightBarButtonItem(order: order)
         reloadData()
-    }
-    
-    private func reloadData() {
-        queue.cancelAllOperations()
-        loadPreviousPageIndexPath = nil
-        loadNextPageIndexPath = nil
-        let operation = LoadLocalDataOperation(
-            viewController: self,
-            behavior: .reload,
-            filter: filter,
-            order: order
-        )
-        queue.addOperation(operation)
     }
     
 }

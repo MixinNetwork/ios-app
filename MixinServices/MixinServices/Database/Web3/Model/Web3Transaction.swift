@@ -6,7 +6,6 @@ public class Web3Transaction: Codable {
     enum CodingKeys: String, CodingKey {
         case transactionID = "transaction_id"
         case transactionHash = "transaction_hash"
-        case outputIndex = "output_index"
         case blockNumber = "block_number"
         case sender = "sender"
         case receiver = "receiver"
@@ -29,13 +28,13 @@ public class Web3Transaction: Codable {
     }
     
     public enum TransactionStatus: String {
+        case pending
         case success
         case failed
     }
     
     public let transactionID: String
     public let transactionHash: String
-    public let outputIndex: Int
     public let blockNumber: Int
     public let sender: String
     public let receiver: String
@@ -60,6 +59,30 @@ public class Web3Transaction: Codable {
         case .receive, .contract, .other, .none:
             decimalAmount
         }
+    }
+    
+    public init(
+        transactionID: String, transactionHash: String, blockNumber: Int,
+        sender: String, receiver: String, outputHash: String,
+        chainID: String, assetID: String, amount: String,
+        transactionType: UnknownableEnum<Web3Transaction.TransactionType>,
+        status: UnknownableEnum<Web3Transaction.TransactionStatus>,
+        transactionAt: String, createdAt: String, updatedAt: String
+    ) {
+        self.transactionID = transactionID
+        self.transactionHash = transactionHash
+        self.blockNumber = blockNumber
+        self.sender = sender
+        self.receiver = receiver
+        self.outputHash = outputHash
+        self.chainID = chainID
+        self.assetID = assetID
+        self.amount = amount
+        self.transactionType = transactionType
+        self.status = status
+        self.transactionAt = transactionAt
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
     }
     
 }

@@ -172,6 +172,7 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
                 }
             }
         }
+        reporter.report(event: .sendPreview)
     }
     
     override func performAction(with pin: String) {
@@ -250,6 +251,7 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
                                      rightAction: #selector(resendTransaction(_:)),
                                      animation: .vertical)
         case .success:
+            reporter.report(event: .sendEnd)
             canDismissInteractively = true
             tableHeaderView.setIcon(progress: .success)
             let subtitle = if operation.canDecodeBalanceChange {

@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewController {
     
@@ -23,6 +24,8 @@ final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCod
         resendButton.onCountDownFinished = { [weak helpButton] in
             helpButton?.isHidden = false
         }
+        
+        reporter.report(event: .signUpSmsVerify)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -39,6 +42,10 @@ final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCod
             }
             window.presentPopupControllerAnimated()
         }
+    }
+    
+    override func logValidateCapatcha() {
+        reporter.report(event: .signUpRecaptcha, method: "phone_number")
     }
     
     override func layout(for keyboardFrame: CGRect) {

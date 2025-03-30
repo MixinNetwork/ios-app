@@ -40,6 +40,7 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
         }
         switch action {
         case .add:
+            reporter.report(event: .addAddressPreview)
             tableHeaderView.titleLabel.text = R.string.localizable.confirm_adding_address()
             tableHeaderView.subtitleLabel.text = R.string.localizable.review_address_hint()
         case .update:

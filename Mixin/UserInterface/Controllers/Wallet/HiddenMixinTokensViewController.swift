@@ -60,6 +60,7 @@ extension HiddenMixinTokensViewController: UITableViewDelegate {
         let token = tokens[indexPath.row]
         let viewController = MixinTokenViewController(token: token)
         navigationController?.pushViewController(viewController, animated: true)
+        reporter.report(event: .assetDetail, tags: ["wallet": "main", "source": "hidden_assets"])
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

@@ -136,16 +136,7 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
         super.pickUp(token: token, from: location)
         presentingViewController?.dismiss(animated: true)
         onSelected?(token)
-        switch location {
-        case .recent:
-            reporter.report(event: .swapCoinSwitch, method: "recent_click")
-        case .allItems:
-            reporter.report(event: .swapCoinSwitch, method: "all_item_click")
-        case .chainFilteredItems:
-            reporter.report(event: .swapCoinSwitch, method: "chain_item_click")
-        case .searchResults:
-            reporter.report(event: .swapCoinSwitch, method: "search_item_click")
-        }
+        reporter.report(event: .tradeTokenSelect, method: location.toLogString())
     }
     
     private func reloadSearchResults(keyword: String, tokens: [SwapToken]) {

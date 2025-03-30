@@ -76,6 +76,7 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController {
             case let .failure(error):
                 switch error {
                 case .requiresCaptcha:
+                    self.logValidateCapatcha()
                     captcha.validate { [weak self] (result) in
                         switch result {
                         case .success(let token):
@@ -95,6 +96,7 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController {
                         fallthrough
                     }
                 default:
+                    reporter.report(event: .errorSessionVerifications, tags: ["source":"sign_up"])
                     var userInfo: [String: String] = [:]
                     userInfo["error"] = "\(error)"
                     if let requestId = self.request?.response?.value(forHTTPHeaderField: "x-request-id")  {
@@ -114,9 +116,14 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController {
         }
     }
     
+    func logValidateCapatcha() {
+        reporter.report(event: .signUpRecaptcha, method: "phone_number")
+    }
+    
     @objc func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source":"sign_up_phone_number"])
     }
     
 }

@@ -63,6 +63,7 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source":"login_mnemonic_phrase"])
     }
     
     @objc private func login(_ sender: Any) {
@@ -157,6 +158,12 @@ extension LoginWithMnemonicViewController {
                     self.login(context: context)
                 }
             case .failure(.requiresCaptcha):
+                switch action {
+                case .signIn:
+                    reporter.report(event: .loginRecaptcha, method: "mnemonic_phrase")
+                case .signUp:
+                    reporter.report(event: .signUpRecaptcha, method: "mnemonic_phrase")
+                }
                 captcha.validate { [weak self] (result) in
                     switch result {
                     case .success(let token):
@@ -166,6 +173,12 @@ extension LoginWithMnemonicViewController {
                     }
                 }
             case .failure(let error):
+                switch action {
+                case .signIn:
+                    reporter.report(event: .errorSessionVerifications, tags: ["source":"login"])
+                case .signUp:
+                    reporter.report(event: .errorSessionVerifications, tags: ["source":"sign_up"])
+                }
                 self.showError(error.localizedDescription)
             }
         }

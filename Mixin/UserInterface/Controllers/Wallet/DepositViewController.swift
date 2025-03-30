@@ -51,6 +51,7 @@ final class DepositViewController: UIViewController {
     }
     
     deinit {
+        reporter.report(event: .receiveEnd)
         task?.cancel()
     }
     

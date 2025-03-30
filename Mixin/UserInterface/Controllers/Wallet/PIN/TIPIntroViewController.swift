@@ -158,7 +158,7 @@ final class TIPIntroViewController: UIViewController {
             let validator = TIPPopupInputViewController(action: .continue(context, { [weak navigationController] in
                 switch context.action {
                 case .create:
-                    reporter.report(event: .signUpSetPIN)
+                    reporter.report(event: .signUpEnd)
                 case .change:
                     if report {
                         reporter.report(event: .loginVerifyPIN, method: "change_pin")

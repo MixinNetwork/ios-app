@@ -214,7 +214,7 @@ extension SearchCategoryViewController: UITableViewDelegate {
         switch category {
         case .asset:
             let asset = (model as! AssetSearchResult).asset
-            pushTokenViewController(token: asset)
+            pushTokenViewController(token: asset, source: "more_search")
         case .user, .conversationsByName, .conversationsByMessage:
             pushViewController(keyword: trimmedKeyword, result: model as! SearchResult)
         }

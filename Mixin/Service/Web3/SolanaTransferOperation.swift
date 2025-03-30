@@ -74,9 +74,41 @@ class SolanaTransferOperation: Web3TransferOperation {
         }
         do {
             Logger.web3.info(category: "SolanaTransfer", message: "Will send tx: \(signedTransaction)")
-            let signature = try await client.sendTransaction(signedTransaction: signedTransaction)
-            try await respond(signature: signature)
-            Logger.web3.info(category: "SolanaTransfer", message: "Txn sent, sig: \(signature)")
+            let rawTransaction = try await RouteAPI.postTransaction(
+                chainID: ChainID.solana,
+                raw: signedTransaction
+            )
+            let pendingTransaction = await {
+                let (assetID, amount): (String, String) = switch try? await loadBalanceChange() {
+                case .none, .decodingFailed:
+                    ("", "")
+                case let .detailed(token, decimalAmount):
+                    (token.assetID, TokenAmountFormatter.string(from: decimalAmount))
+                }
+                return Web3Transaction(
+                    transactionID: "",
+                    transactionHash: rawTransaction.hash,
+                    blockNumber: -1,
+                    sender: fromAddress,
+                    receiver: toAddress,
+                    outputHash: "",
+                    chainID: ChainID.solana,
+                    assetID: assetID,
+                    amount: amount,
+                    transactionType: .known(.send),
+                    status: .known(.pending),
+                    transactionAt: rawTransaction.createdAt,
+                    createdAt: rawTransaction.createdAt,
+                    updatedAt: rawTransaction.createdAt
+                )
+            }()
+            Web3RawTransactionDAO.shared.save(
+                rawTransaction: rawTransaction,
+                pendingTransaction: pendingTransaction
+            )
+            let hash = rawTransaction.hash
+            try await respond(signature: hash)
+            Logger.web3.info(category: "SolanaTransfer", message: "Txn sent, hash: \(hash)")
             await MainActor.run {
                 self.state = .success
                 self.hasTransactionSent = true

@@ -13,7 +13,7 @@
             <connections>
                 <outlet property="contentView" destination="xgy-fb-KEQ" id="cdM-Y7-gJ6"/>
                 <outlet property="depositSendTokenButton" destination="wJV-id-nBX" id="cLU-5D-pbO"/>
-                <outlet property="footerInfoLabel" destination="f0N-2O-dzm" id="XJZ-03-XCS"/>
+                <outlet property="footerInfoButton" destination="f0N-2O-dzm" id="XJZ-03-XCS"/>
                 <outlet property="footerInfoProgressView" destination="zTW-Qk-BeR" id="aRD-AV-Pof"/>
                 <outlet property="footerSpacingView" destination="h7c-H7-0Lv" id="Ghn-iF-57R"/>
                 <outlet property="receiveAmountTextField" destination="ugc-43-XHy" id="Adc-5k-cwB"/>
@@ -302,15 +302,11 @@
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="IrQ-QA-Uhb">
                                             <rect key="frame" x="0.0" y="282" width="353" height="144"/>
                                             <subviews>
-                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f0N-2O-dzm" userLabel="Footer Info Label">
-                                                    <rect key="frame" x="0.0" y="71.666666666666686" width="0.0" height="17"/>
+                                                <button hidden="YES" opaque="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="f0N-2O-dzm" userLabel="Footer Info Button">
+                                                    <rect key="frame" x="0.0" y="65.666666666666686" width="0.0" height="29"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                                    </userDefinedRuntimeAttributes>
-                                                </label>
+                                                    <state key="normal" title=" "/>
+                                                </button>
                                                 <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zTW-Qk-BeR" customClass="CircularProgressView" customModule="Mixin" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="74.666666666666686" width="11" height="11"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -487,7 +483,7 @@
             <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -34,6 +34,7 @@ final class MixinSwapViewController: SwapViewController {
     
     private var quote: SwapQuote?
     private var requester: SwapQuotePeriodicRequester?
+    private var amountRange: SwapQuotePeriodicRequester.AmountRange?
     
     private var priceUnit: SwapQuote.PriceUnit = .send
     
@@ -80,6 +81,11 @@ final class MixinSwapViewController: SwapViewController {
         updateReceiveView(style: .loading)
         reloadTokens()
         sendAmountTextField.delegate = self
+        footerInfoButton.addTarget(
+            self,
+            action: #selector(inputAmountByRange(_:)),
+            for: .touchUpInside
+        )
         DispatchQueue.global().async { [weak showOrdersItem] in
             let hasSwapOrderReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapOrderReviewed) ?? false
             DispatchQueue.main.async {
@@ -99,6 +105,7 @@ final class MixinSwapViewController: SwapViewController {
     }
     
     override func sendAmountEditingChanged(_ sender: Any) {
+        amountRange = nil
         scheduleNewRequesterIfAvailable()
     }
     
@@ -272,6 +279,23 @@ final class MixinSwapViewController: SwapViewController {
         present(customerService, animated: true)
     }
     
+    @objc private func inputAmountByRange(_ sender: Any) {
+        guard
+            let amountRange,
+            let text = sendAmountTextField.text,
+            let sendAmount = Decimal(string: text, locale: .current)
+        else {
+            return
+        }
+        if let minimum = amountRange.minimum, sendAmount < minimum {
+            sendAmountTextField.text = userInputSimulationFormatter.string(from: minimum as NSDecimalNumber)
+            sendAmountEditingChanged(self)
+        } else if let maximum = amountRange.maximum, sendAmount > maximum {
+            sendAmountTextField.text = userInputSimulationFormatter.string(from: maximum as NSDecimalNumber)
+            sendAmountEditingChanged(self)
+        }
+    }
+    
 }
 
 extension MixinSwapViewController: HomeNavigationController.NavigationBarStyling {
@@ -318,6 +342,7 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
         switch result {
         case .success(let quote):
             self.quote = quote
+            self.amountRange = nil
             Logger.general.debug(category: "MixinSwap", message: "Got quote: \(quote)")
             receiveAmountTextField.text = CurrencyFormatter.localizedString(
                 from: quote.receiveAmount,
@@ -330,20 +355,28 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
                 && quote.sendAmount <= quote.sendToken.decimalBalance
             reporter.report(event: .swapQuote, tags: ["result": "success"])
         case .failure(let error):
-            let description = switch error {
-            case let SwapQuotePeriodicRequester.ResponseError.invalidAmount(description):
-                description
+            let description: String
+            let amountRange: SwapQuotePeriodicRequester.AmountRange?
+            switch error {
+            case let SwapQuotePeriodicRequester.ResponseError.invalidAmount(range):
+                description = range.description
+                amountRange = range
             case MixinAPIResponseError.invalidQuoteAmount:
-                R.string.localizable.swap_invalid_amount()
+                description = R.string.localizable.swap_invalid_amount()
+                amountRange = nil
             case MixinAPIResponseError.noAvailableQuote:
-                R.string.localizable.swap_no_available_quote()
+                description = R.string.localizable.swap_no_available_quote()
+                amountRange = nil
             case let error as MixinAPIError:
-                error.localizedDescription
+                description = error.localizedDescription
+                amountRange = nil
             default:
-                "\(error)"
+                description = "\(error)"
+                amountRange = nil
             }
             Logger.general.debug(category: "MixinSwap", message: description)
             setFooter(.error(description))
+            self.amountRange = amountRange
             reporter.report(event: .swapQuote, tags: ["result": "failure"])
         }
     }

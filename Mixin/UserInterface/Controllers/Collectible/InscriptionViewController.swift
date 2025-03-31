@@ -186,7 +186,10 @@ final class InscriptionViewController: UIViewController {
         guard let url = URL(string: "https://rune.fan/items/\(inscriptionHash)") else {
             return
         }
-        MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: self)
+        guard let container = UIApplication.homeContainerViewController else {
+            return
+        }
+        container.presentWebViewController(context: .init(conversationId: "", initialUrl: url))
     }
     
     private func releaseInscription(_ action: UIAlertAction) {

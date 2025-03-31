@@ -200,12 +200,12 @@ class UrlWindow {
 
             DispatchQueue.main.async {
                 if isOpenApp {
-                    guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
+                    guard let container = UIApplication.homeContainerViewController else {
                         return
                     }
                     let extraParams = params.filter { $0.key != "action" }
                     DispatchQueue.main.async {
-                        MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app, extraParams: extraParams), asChildOf: parent)
+                        container.presentWebViewController(context: .init(conversationId: conversationId, app: app, extraParams: extraParams))
                     }
                 } else {
                     let vc = UserProfileViewController(user: user)
@@ -969,11 +969,7 @@ class UrlWindow {
             guard let container = UIApplication.homeContainerViewController else {
                 return false
             }
-            var parent = container.topMostChild
-            if let visibleViewController = (parent as? UINavigationController)?.visibleViewController {
-                parent = visibleViewController
-            }
-            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
+            container.presentWebViewController(context: .init(conversationId: "", initialUrl: url))
             return true
         }
         return false

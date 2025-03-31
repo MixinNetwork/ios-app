@@ -52,7 +52,7 @@ final class Clip: Codable {
                 } else {
                     context = .init(conversationId: conversationId, initialUrl: url, shareable: isShareable)
                 }
-                return MixinWebViewController.instance(with: context)
+                return .instance(with: context)
             }
         }()
         controller.associatedClip = self

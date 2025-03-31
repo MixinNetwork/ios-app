@@ -100,6 +100,15 @@ extension HomeNavigationController: UINavigationControllerDelegate {
                 navigationController.setNavigationBarHidden(true, animated: animated)
             }
         }
+        
+        if let container = UIApplication.homeContainerViewController {
+            let webViewControllers = container.children.compactMap { child in
+                child as? MixinWebViewController
+            }
+            for webViewController in webViewControllers {
+                webViewController.minimizeWithAnimation()
+            }
+        }
     }
     
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {

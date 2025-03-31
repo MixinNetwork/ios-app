@@ -1338,7 +1338,10 @@ class ConversationViewController: UIViewController {
         guard !conversationId.isEmpty else {
             return
         }
-        MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: self)
+        guard let container = UIApplication.homeContainerViewController else {
+            return
+        }
+        container.presentWebViewController(context: .init(conversationId: conversationId, app: app))
     }
     
     func startOrJoinGroupCall() {
@@ -2638,13 +2641,16 @@ extension ConversationViewController {
         guard !conversationId.isEmpty else {
             return
         }
+        guard let container = UIApplication.homeContainerViewController else {
+            return
+        }
         let context: MixinWebViewController.Context
         if let app = app {
             context = .init(conversationId: conversationId, url: url, app: app, shareable: shareable)
         } else {
             context = .init(conversationId: conversationId, initialUrl: url)
         }
-        MixinWebViewController.presentInstance(with: context, asChildOf: self)
+        container.presentWebViewController(context: context)
     }
     
     private func reportAirDop(conversationId: String) {

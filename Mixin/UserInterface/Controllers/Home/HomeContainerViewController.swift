@@ -110,6 +110,38 @@ final class HomeContainerViewController: UIViewController {
         topMost.present(viewControllerToPresent, animated: true)
     }
     
+    func presentWebViewController(context: MixinWebViewController.Context) {
+        present(webViewController: .instance(with: context))
+    }
+    
+    func present(webViewController web: MixinWebViewController, completion: (() -> Void)? = nil) {
+        AppDelegate.current.mainWindow.endEditing(true)
+        
+        let topWebViewIndex: Int?
+        if let topWebViewController = children.lazy.compactMap({ $0 as? MixinWebViewController }).last {
+            topWebViewIndex = view.subviews.lastIndex(of: topWebViewController.view)
+        } else {
+            topWebViewIndex = nil
+        }
+        
+        web.view.frame = view.bounds
+        web.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        addChild(web)
+        if let topWebViewIndex {
+            view.insertSubview(web.view, at: topWebViewIndex + 1)
+        } else {
+            view.insertSubview(web.view, aboveSubview: homeNavigationController.view)
+        }
+        didMove(toParent: self)
+        
+        web.view.center.y = view.bounds.height * 3 / 2
+        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
+            web.view.center.y = self.view.bounds.height / 2
+        } completion: { _ in
+            completion?()
+        }
+    }
+    
     @objc private func applicationWillEnterForeground(_ notification: Notification) {
         if UIApplication.shared.isLandscape, let controller = pipController, controller.isAvPipActive {
             if #available(iOS 16.0, *) {

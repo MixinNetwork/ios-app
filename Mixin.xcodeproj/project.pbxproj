@@ -987,6 +987,7 @@
 		946EA0882D4763CF00DBC308 /* AddressInfoInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946EA0872D4763CF00DBC308 /* AddressInfoInputView.xib */; };
 		946EA1142D47DD4000DBC308 /* WithdrawInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946EA1132D47DD4000DBC308 /* WithdrawInputAmountViewController.swift */; };
 		946FFAD32B6C566800B62B7F /* AuthenticationProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946FFAD22B6C566800B62B7F /* AuthenticationProgressView.swift */; };
+		947083AE2D928F25007DF965 /* ExternalTransferError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947083AD2D928F1E007DF965 /* ExternalTransferError.swift */; };
 		947084B42D93F891007DF965 /* InvoicePaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947084B32D93F88F007DF965 /* InvoicePaymentOperation.swift */; };
 		947084C52D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947084C42D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift */; };
 		9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */; };
@@ -2517,6 +2518,7 @@
 		946EA0872D4763CF00DBC308 /* AddressInfoInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressInfoInputView.xib; sourceTree = "<group>"; };
 		946EA1132D47DD4000DBC308 /* WithdrawInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawInputAmountViewController.swift; sourceTree = "<group>"; };
 		946FFAD22B6C566800B62B7F /* AuthenticationProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationProgressView.swift; sourceTree = "<group>"; };
+		947083AD2D928F1E007DF965 /* ExternalTransferError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalTransferError.swift; sourceTree = "<group>"; };
 		947084B32D93F88F007DF965 /* InvoicePaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoicePaymentOperation.swift; sourceTree = "<group>"; };
 		947084C42D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonAtomicInvoicePaymentOperation.swift; sourceTree = "<group>"; };
 		9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+General.swift"; sourceTree = "<group>"; };
@@ -3710,6 +3712,7 @@
 			isa = PBXGroup;
 			children = (
 				7C5304A72902AAA200567CF6 /* AuthorizationScopeDataSource.swift */,
+				947083AD2D928F1E007DF965 /* ExternalTransferError.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -6447,6 +6450,7 @@
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
 				9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */,
 				942FDA832D3CBCE8004DCC4C /* SwapOrderIDCell.swift in Sources */,
+				947083AE2D928F25007DF965 /* ExternalTransferError.swift in Sources */,
 				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,
 				7B05CFDD22293B72006DA9E3 /* PhotoInputViewController.swift in Sources */,
 				DF5D9F311F9C95410036D5FD /* CountryLibrary.swift in Sources */,

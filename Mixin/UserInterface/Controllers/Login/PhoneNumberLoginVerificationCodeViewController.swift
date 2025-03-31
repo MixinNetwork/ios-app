@@ -50,8 +50,7 @@ final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCod
         let context = self.context
         let alert = UIAlertController(title: R.string.localizable.help(), message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: R.string.localizable.cant_receive_the_code(), style: .default, handler: { (_) in
-            let url = URL(string: "https://mixinmessenger.zendesk.com/hc/articles/360024114492")!
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            UIApplication.shared.open(.cantReceiveOTP, options: [:], completionHandler: nil)
         }))
         if context.hasEmergencyContact {
             alert.addAction(UIAlertAction(title: R.string.localizable.lost_your_mobile_number(), style: .destructive, handler: { (_) in

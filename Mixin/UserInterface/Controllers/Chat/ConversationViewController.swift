@@ -2786,7 +2786,7 @@ extension ConversationViewController {
         let alc = UIAlertController(title: R.string.localizable.chat_recall_delete_alert(), message: "", preferredStyle: .alert)
         alc.addAction(UIAlertAction(title: R.string.localizable.learn_more(), style: .default, handler: { (_) in
             AppGroupUserDefaults.User.hasShownRecallTips = true
-            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com/hc/articles/360028209571")
+            UIApplication.shared.openURL(url: .recallMessage)
         }))
         alc.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .default, handler: { (_) in
             AppGroupUserDefaults.User.hasShownRecallTips = true

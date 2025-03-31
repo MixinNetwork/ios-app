@@ -59,11 +59,11 @@ final class TransferInputAmountViewController: InputAmountViewController {
         super.viewDidLoad()
         
         navigationItem.titleView = switch receiver {
-        case .user(let user):
+        case let .user(user):
             UserNavigationTitleView(user: user)
-        case .multisig(_, let users):
+        case let .multisig(_, users):
             MultisigNavigationTitleView(users: users)
-        case .mainnet(let address):
+        case let .mainnet(_, address):
             NavigationTitleView(
                 title: R.string.localizable.send_to_title(),
                 subtitle: Address.compactRepresentation(of: address)

@@ -74,7 +74,7 @@ extension AboutViewController: UITableViewDelegate {
         case 1:
             UIApplication.shared.openURL(url: "https://fb.com/MixinMessenger")
         case 2:
-            UIApplication.shared.openURL(url: "https://mixinmessenger.zendesk.com")
+            UIApplication.shared.openURL(url: .support)
         case 3:
             UIApplication.shared.openURL(url: .terms)
         case 4:

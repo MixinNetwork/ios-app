@@ -1368,12 +1368,15 @@
 "uploading" = "备份中...";
 "uploading_progress" = "上传中：%@ / %@（%@）";
 "url_api_upgrade" = "https://support.mixin.one/zh/article/mixin-api-l4jruq/";
+"url_cant_receive_otp" = "https://support.mixin.one/zh/article/5ps25lin5yiw5oml5py66aqm6kb56cb5oco5lmi5yqe77yf-f32qa2/";
 "url_delete_account" = "https://support.mixin.one/zh/article/5aac5l2v5yig6zmk6lsm5y377yf-1uteq30/";
 "url_deposit" = "https://support.mixin.one/zh/article/mixin-messenger-5ynqjm/";
 "url_deposit_suspended" = "https://support.mixin.one/zh/article/5ywz5lqo5pq56en6lwe5lqn5lin5psv5oyb5ywf5yc855qe6k05pio-1sh1z50/";
 "url_disappearing_message" = "https://support.mixin.one/zh/article/5aac5l2v5bya5zcv6zmq5pe25rai5ogv77yf-18dzv5i/";
 "url_forget_pin" = "https://support.mixin.one/zh/article/pin-1vb2rc7/";
+"url_recall_message" = "https://support.mixin.one/zh/article/mixin-messenger-bjr9re/";
 "url_recovery_contact" = "https://support.mixin.one/zh/article/5aac5l2v6k6572u57sn5ocl6igu57o75lq6-d2nssy/";
+"url_support" = "https://support.mixin.one/zh/";
 "url_unrecognized_hint" = "%@ 识别失败，请升级至 Mixin 最新版本或联系开发者检查链接";
 "url_unsupported_message" = "https://support.mixin.one/zh/article/mixin-h92cxa/";
 "use_biometry" = "采用%@";

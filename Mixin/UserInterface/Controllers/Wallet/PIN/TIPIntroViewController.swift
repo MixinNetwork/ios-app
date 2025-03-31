@@ -2,7 +2,17 @@ import UIKit
 import Alamofire
 import MixinServices
 
-final class TIPIntroViewController: IntroViewController {
+final class TIPIntroViewController: UIViewController {
+    
+    @IBOutlet weak var contentStackView: UIStackView!
+    @IBOutlet weak var iconImageView: UIImageView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var descriptionTextLabel: TextLabel!
+    @IBOutlet weak var noticeTextView: UITextView!
+    @IBOutlet weak var nextButton: RoundedButton!
+    @IBOutlet weak var actionDescriptionLabel: UILabel!
+    
+    @IBOutlet weak var noticeTextViewHeightConstraint: NSLayoutConstraint!
     
     enum Interruption {
         case unknown
@@ -53,12 +63,14 @@ final class TIPIntroViewController: IntroViewController {
     private init(intent: TIP.Action, interruption: Interruption) {
         self.intent = intent
         self.interruption = interruption
-        super.init()
+        let nib = R.nib.tipIntroView
+        super.init(nibName: nib.name, bundle: nib.bundle)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         updateNavigationItem()
+        contentStackView.setCustomSpacing(24, after: iconImageView)
         iconImageView.image = R.image.ic_tip()
         let description: String
         switch intent {
@@ -91,6 +103,8 @@ final class TIPIntroViewController: IntroViewController {
             setNoticeHidden(false)
         }
         descriptionTextLabel.text = description
+        descriptionTextLabel.delegate = self
+        noticeTextView.textContainerInset = UIEdgeInsets(top: 12, left: 8, bottom: 12, right: 14)
         lazy var linksMap: [NSRange: URL] = {
             let range = (description as NSString).range(of: R.string.localizable.learn_more(), options: [.backwards, .caseInsensitive])
             if range.location != NSNotFound && range.length != 0 {
@@ -111,7 +125,14 @@ final class TIPIntroViewController: IntroViewController {
         }
     }
     
-    override func continueToNext(_ sender: RoundedButton) {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if noticeTextViewHeightConstraint.constant != noticeTextView.contentSize.height {
+            noticeTextViewHeightConstraint.constant = noticeTextView.contentSize.height
+        }
+    }
+    
+    @IBAction func continueToNext(_ sender: RoundedButton) {
         switch interruption {
         case .unknown:
             checkCounter()
@@ -156,6 +177,18 @@ final class TIPIntroViewController: IntroViewController {
     
     @objc private func close(_ sender: Any) {
         navigationController?.presentingViewController?.dismiss(animated: true)
+    }
+    
+}
+
+extension TIPIntroViewController: CoreTextLabelDelegate {
+    
+    func coreTextLabel(_ label: CoreTextLabel, didSelectURL url: URL) {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    func coreTextLabel(_ label: CoreTextLabel, didLongPressOnURL url: URL) {
+        
     }
     
 }

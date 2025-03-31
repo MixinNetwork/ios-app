@@ -20,6 +20,9 @@ extension URL {
     static let depositSuspended     = URL(string: R.string.localizable.url_deposit_suspended())!
     static let forgetPIN            = URL(string: R.string.localizable.url_forget_pin())!
     static let apiUpgrade           = URL(string: R.string.localizable.url_api_upgrade())!
+    static let cantReceiveOTP       = URL(string: R.string.localizable.url_cant_receive_otp())!
+    static let recallMessage        = URL(string: R.string.localizable.url_recall_message())!
+    static let support              = URL(string: R.string.localizable.url_support())!
     
     func getKeyVals() -> [String: String] {
         return URLComponents(url: self, resolvingAgainstBaseURL: true)?.getKeyVals() ?? [:]

@@ -324,6 +324,64 @@ extension RouteAPI {
     
 }
 
+// MARK: - RPC
+extension RouteAPI {
+    
+    struct EthereumFee: Decodable {
+        
+        enum CodingKeys: String, CodingKey {
+            case gasLimit = "gas_limit"
+            case maxFeePerGas = "max_fee_per_gas"
+            case maxPriorityFeePerGas = "max_priority_fee_per_gas"
+        }
+        
+        let gasLimit: String
+        let maxFeePerGas: String
+        let maxPriorityFeePerGas: String
+        
+    }
+    
+    struct SolanaFee: Decodable {
+        
+        enum CodingKeys: String, CodingKey {
+            case price = "unit_price"
+            case limit = "unit_limit"
+        }
+        
+        let price: String
+        let limit: String
+        
+    }
+    
+    static func estimatedEthereumFee(
+        hexData: String?,
+        from: String,
+        to: String
+    ) async throws -> EthereumFee {
+        var parameters = [
+            "chain_id": ChainID.ethereum,
+            "from": from,
+            "to": to,
+        ]
+        if let hexData {
+            parameters["raw_transaction"] = hexData
+        }
+        return try await request(method: .post, path: "/web3/estimate-fee", with: parameters)
+    }
+    
+    static func estimatedSolanaFee(base64Transaction: String) async throws -> EthereumFee {
+        try await request(
+            method: .post,
+            path: "/web3/estimate-fee",
+            with: [
+                "chain_id": ChainID.ethereum,
+                "raw_transaction": base64Transaction,
+            ]
+        )
+    }
+    
+}
+
 // MARK: - Signing
 extension RouteAPI {
     

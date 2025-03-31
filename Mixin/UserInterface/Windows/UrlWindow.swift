@@ -568,20 +568,22 @@ class UrlWindow {
                     return
                 }
                 let decimalAmount = Decimal(string: payment.amount, locale: .enUSPOSIX)
+                let assetID = payment.asset.assetID
                 if let decimalAmount, decimalAmount > 0 {
                     hud.hide()
-                    let transfer = ExternalTransfer.lightning(
+                    let transfer: ExternalTransfer = .lightning(
                         raw: string,
+                        assetID: assetID,
                         destination: payment.destination,
                         amount: decimalAmount
                     )
                     performExternalTransfer(transfer)
                 } else {
-                    guard let token = syncToken(assetID: AssetID.lightning, hud: hud) else {
+                    guard let token = syncToken(assetID: assetID, hud: hud) else {
                         return
                     }
                     AddressValidator.validate(
-                        assetID: AssetID.lightning,
+                        assetID: assetID,
                         destination: payment.destination,
                         tag: nil
                     ) { address in
@@ -612,10 +614,6 @@ class UrlWindow {
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         Task {
             do {
-                let assetID = transfer.assetID
-                guard let token = syncToken(assetID: assetID, hud: hud) else {
-                    throw ExternalTransferError.syncTokenFailed
-                }
                 let resolvedAmount: Decimal
                 if let amount = transfer.resolvedAmount {
                     resolvedAmount = amount
@@ -627,6 +625,10 @@ class UrlWindow {
                     throw ExternalTransferError.invalidPaymentLink
                 }
                 
+                let assetID = transfer.assetID
+                guard let token = syncToken(assetID: assetID, hud: hud) else {
+                    throw ExternalTransferError.syncTokenFailed
+                }
                 guard resolvedAmount <= token.decimalBalance else {
                     throw ExternalTransferError.insufficientBalance
                 }

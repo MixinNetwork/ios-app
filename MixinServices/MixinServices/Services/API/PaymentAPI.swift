@@ -16,7 +16,7 @@ public final class PaymentAPI: MixinAPI {
             method: .post,
             path: Path.payments,
             parameters: [
-                "asset_id": AssetID.lightning,
+                "asset_id": AssetID.lightningBTC,
                 "raw_payment_url": lightningPayment,
             ],
             completion: completion

@@ -191,12 +191,13 @@ public struct ExternalTransfer {
     
     public static func lightning(
         raw: String,
+        assetID: String,
         destination: String,
         amount: Decimal
     ) -> ExternalTransfer {
         ExternalTransfer(
             raw: raw,
-            assetID: AssetID.lightning,
+            assetID: assetID,
             destination: destination,
             amount: amount,
             resolvedAmount: amount,

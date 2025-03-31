@@ -77,6 +77,8 @@ extension MixinTokenItem: OnChainToken {
             "Polygon"
         case ChainID.solana:
             "Solana"
+        case ChainID.lightning:
+            "Lightning"
         default:
             nil
         }

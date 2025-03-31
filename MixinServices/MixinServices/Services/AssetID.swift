@@ -3,7 +3,6 @@ import Foundation
 public enum AssetID {
     
     public static let xin = "c94ac88f-4671-3976-b60a-09064f1811e8"
-    public static let btc = "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
     public static let eth = "43d61dcd-e413-450d-80b8-101d5e903357"
     public static let eos = "6cfe566e-4aad-470b-8c9a-2fd35b49c68d"
     public static let ltc = "76c802a2-7c88-447f-a93e-c29c9e5dd9c8"
@@ -16,6 +15,9 @@ public enum AssetID {
     public static let trx = "25dabac5-056a-48ff-b9f9-f67395dc407c"
     public static let matic = "b7938396-3f94-4e0a-9179-d3440718156f"
     public static let bnb = "1949e683-6a08-49e2-b087-d6b72398588f"
+    
+    public static let btc = "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
+    public static let lightningBTC = "59c09123-95cc-3ffd-a659-0f9169074cee"
     
     public static let erc20USDT = "4d8c508b-91c5-375b-92b0-ee702ed2dac5"
     public static let tronUSDT = "b91e18ff-a9ae-3dc7-8679-e935d9a4b34b"

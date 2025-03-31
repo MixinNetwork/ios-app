@@ -176,9 +176,63 @@ public struct ExternalTransfer {
         }
     }
     
+    private init(
+        raw: String, assetID: String, destination: String, amount: Decimal,
+        resolvedAmount: Decimal?, arbitraryAmount: Decimal?, memo: String?
+    ) {
+        self.raw = raw
+        self.assetID = assetID
+        self.destination = destination
+        self.amount = amount
+        self.resolvedAmount = resolvedAmount
+        self.arbitraryAmount = arbitraryAmount
+        self.memo = memo
+    }
+    
+    public static func lightning(
+        raw: String,
+        assetID: String,
+        destination: String,
+        amount: Decimal
+    ) -> ExternalTransfer {
+        ExternalTransfer(
+            raw: raw,
+            assetID: assetID,
+            destination: destination,
+            amount: amount,
+            resolvedAmount: amount,
+            arbitraryAmount: nil,
+            memo: nil
+        )
+    }
+    
     public static func resolve(atomicAmount: Decimal, with exponent: Int) -> Decimal {
         let divisor: Decimal = pow(10, exponent)
         return atomicAmount / divisor
+    }
+    
+    public static func isLightningAddress(string: String) -> Bool {
+        let lowercased = string.lowercased()
+        if lowercased.hasPrefix("bitcoin") {
+            guard let queryItems = URLComponents(string: string)?.queryItems else {
+                return false
+            }
+            for item in queryItems {
+                guard let value = item.value, !value.isEmpty else {
+                    continue
+                }
+                if item.name == "lightning" || item.name == "lno" {
+                    return true
+                } else {
+                    continue
+                }
+            }
+            return false
+        } else if ["lnbc", "lno", "lnurl", "lightning:"].contains(where: lowercased.hasPrefix(_:)) {
+            return true
+        } else {
+            return false
+        }
     }
     
 }

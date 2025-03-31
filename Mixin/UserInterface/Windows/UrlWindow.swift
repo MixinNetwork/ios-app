@@ -501,8 +501,12 @@ class UrlWindow {
     
     class func checkWithdrawal(string: String) -> Bool {
         do {
-            let transfer = try ExternalTransfer(string: string)
-            performExternalTransfer(transfer)
+            if ExternalTransfer.isLightningAddress(string: string) {
+                loadLightningTransfer(string: string)
+            } else {
+                let transfer = try ExternalTransfer(string: string)
+                performExternalTransfer(transfer)
+            }
             return true
         } catch TransferLinkError.notTransferLink {
             return false
@@ -548,31 +552,62 @@ class UrlWindow {
         }
     }
     
-    class func performExternalTransfer(_ transfer: ExternalTransfer) {
+    class func loadLightningTransfer(string: String) {
         guard let homeContainer = UIApplication.homeContainerViewController else {
             return
         }
-        
-        enum Error: Swift.Error, LocalizedError {
-            
-            case invalidPaymentLink
-            case syncTokenFailed
-            case insufficientBalance
-            case insufficientFee
-            
-            var errorDescription: String? {
-                switch self {
-                case .invalidPaymentLink:
-                    R.string.localizable.invalid_payment_link()
-                case .syncTokenFailed:
-                    R.string.localizable.error_connection_timeout()
-                case .insufficientBalance:
-                    R.string.localizable.insufficient_balance()
-                case .insufficientFee:
-                    R.string.localizable.insufficient_transaction_fee()
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        PaymentAPI.payments(lightningPayment: string) { result in
+            switch result {
+            case let .success(payment):
+                guard payment.status.knownCase != .paid else {
+                    let error: ExternalTransferError = .alreadyPaid
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                    return
                 }
+                let decimalAmount = Decimal(string: payment.amount, locale: .enUSPOSIX)
+                let assetID = payment.asset.assetID
+                if let decimalAmount, decimalAmount > 0 {
+                    hud.hide()
+                    let transfer: ExternalTransfer = .lightning(
+                        raw: string,
+                        assetID: assetID,
+                        destination: payment.destination,
+                        amount: decimalAmount
+                    )
+                    performExternalTransfer(transfer)
+                } else {
+                    guard let token = syncToken(assetID: assetID, hud: hud) else {
+                        return
+                    }
+                    AddressValidator.validate(
+                        assetID: assetID,
+                        destination: payment.destination,
+                        tag: nil
+                    ) { address in
+                        hud.hide()
+                        let inputViewController = WithdrawInputAmountViewController(
+                            tokenItem: token,
+                            destination: .temporary(address)
+                        )
+                        UIApplication.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
+                    } onFailure: { error in
+                        hud.set(style: .error, text: error.localizedDescription)
+                        hud.scheduleAutoHidden()
+                    }
+                }
+            case let .failure(error):
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
             }
-            
+        }
+    }
+    
+    class func performExternalTransfer(_ transfer: ExternalTransfer) {
+        guard let homeContainer = UIApplication.homeContainerViewController else {
+            return
         }
         
         let hud = Hud()
@@ -587,20 +622,20 @@ class UrlWindow {
                     resolvedAmount = ExternalTransfer.resolve(atomicAmount: transfer.amount, with: precision)
                 }
                 if let arbitraryAmount = transfer.arbitraryAmount, arbitraryAmount != resolvedAmount {
-                    throw Error.invalidPaymentLink
+                    throw ExternalTransferError.invalidPaymentLink
                 }
                 
                 let assetID = transfer.assetID
                 guard let token = syncToken(assetID: assetID, hud: hud) else {
-                    throw Error.syncTokenFailed
+                    throw ExternalTransferError.syncTokenFailed
                 }
                 guard resolvedAmount <= token.decimalBalance else {
-                    throw Error.insufficientBalance
+                    throw ExternalTransferError.insufficientBalance
                 }
                 
                 let response = try await ExternalAPI.checkAddress(assetID: assetID, destination: transfer.destination, tag: nil)
                 guard response.tag.isNilOrEmpty, transfer.destination.lowercased() == response.destination.lowercased() else {
-                    throw Error.invalidPaymentLink
+                    throw ExternalTransferError.invalidPaymentLink
                 }
                 let address = TemporaryAddress(destination: response.destination, tag: response.tag ?? "")
                 
@@ -610,7 +645,7 @@ class UrlWindow {
                 }
                 let feeItems: [WithdrawFeeItem] = try fees.lazy.compactMap { fee in
                     guard let feeToken = syncToken(assetID: fee.assetID, hud: hud) else {
-                        throw Error.syncTokenFailed
+                        throw ExternalTransferError.syncTokenFailed
                     }
                     guard let feeItem = WithdrawFeeItem(amountString: fee.amount, tokenItem: feeToken) else {
                         return nil
@@ -623,7 +658,7 @@ class UrlWindow {
                     return isFeeSufficient ? feeItem : nil
                 }
                 guard let feeItem = feeItems.first else {
-                    throw Error.insufficientFee
+                    throw ExternalTransferError.insufficientFee
                 }
                 
                 let traceID = UUID().uuidString.lowercased()

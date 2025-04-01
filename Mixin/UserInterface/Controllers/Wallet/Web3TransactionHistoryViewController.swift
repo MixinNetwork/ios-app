@@ -72,8 +72,10 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
             object: nil
         )
         reloadData()
-        let job = SyncWeb3TransactionJob(walletID: walletID)
-        ConcurrentJobQueue.shared.addJob(job: job)
+        let reviewPendingTransactions = ReviewPendingWeb3TransactionJob()
+        ConcurrentJobQueue.shared.addJob(job: reviewPendingTransactions)
+        let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
+        ConcurrentJobQueue.shared.addJob(job: syncTransactions)
     }
     
     @objc private func pickTokens(_ sender: Any) {

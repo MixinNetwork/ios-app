@@ -28,10 +28,18 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
             name: Web3TokenDAO.tokensDidChangeNotification,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadIfContains(_:)),
+            name: Web3TransactionDAO.transactionDidSaveNotification,
+            object: nil
+        )
         
         reloadSnapshots()
-        let job = SyncWeb3TransactionJob(walletID: token.walletID)
-        ConcurrentJobQueue.shared.addJob(job: job)
+        let reviewPendingTransactions = ReviewPendingWeb3TransactionJob()
+        ConcurrentJobQueue.shared.addJob(job: reviewPendingTransactions)
+        let syncTransactions = SyncWeb3TransactionJob(walletID: token.walletID)
+        ConcurrentJobQueue.shared.addJob(job: syncTransactions)
     }
     
     override func send() {
@@ -114,6 +122,17 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
                 self?.reloadTransactions(pending: [], finished: transactionRows)
             }
         }
+    }
+    
+    @objc private func reloadIfContains(_ notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let transactions = userInfo[Web3TransactionDAO.transactionsUserInfoKey] as? [Web3Transaction],
+            transactions.contains(where: { $0.assetID == token.assetID })
+        else {
+            return
+        }
+        reloadSnapshots()
     }
     
 }

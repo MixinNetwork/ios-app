@@ -36,22 +36,32 @@ final class Web3TransactionViewController: TransactionViewController {
         )
         reloadData()
         if transaction.status.knownCase == .pending {
-            let hash = transaction.transactionHash
             let walletID = token.walletID
-            reloadPendingTransactionTask = Task.detached {
+            reloadPendingTransactionTask = Task.detached { [transaction] in
                 repeat {
+                    let transactionChanged: Bool
                     do {
-                        let transaction = try await RouteAPI.transaction(hash: hash)
-                        if transaction.state != "pending" {
-                            Web3RawTransactionDAO.shared.save(rawTransaction: transaction)
-                            let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
-                            ConcurrentJobQueue.shared.addJob(job: syncTransactions)
-                            return
-                        }
+                        let transaction = try await RouteAPI.transaction(
+                            chainID: transaction.chainID,
+                            hash: transaction.transactionHash
+                        )
+                        transactionChanged = transaction.state.knownCase != .pending
+                    } catch MixinAPIResponseError.notFound {
+                        transactionChanged = true
                     } catch {
+                        transactionChanged = false
                         Logger.general.debug(category: "Web3TxnView", message: "\(error)")
                     }
-                    try await Task.sleep(nanoseconds: 10 * NSEC_PER_SEC)
+                    if transactionChanged {
+                        Web3RawTransactionDAO.shared.deleteTransaction(hash: transaction.transactionHash)
+                        let syncTokens = SyncWeb3TransactionJob(walletID: walletID)
+                        ConcurrentJobQueue.shared.addJob(job: syncTokens)
+                        let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
+                        ConcurrentJobQueue.shared.addJob(job: syncTransactions)
+                        return
+                    } else {
+                        try await Task.sleep(nanoseconds: 10 * NSEC_PER_SEC)
+                    }
                 } while !Task.isCancelled
             }
         }

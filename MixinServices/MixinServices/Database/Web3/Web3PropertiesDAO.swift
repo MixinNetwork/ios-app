@@ -24,6 +24,14 @@ public final class Web3PropertiesDAO: Web3DAO {
         try property.save(db)
     }
     
+    public func deleteTransactionOffset(addresses: Set<String>) {
+        try? db.write { db in
+            for address in addresses {
+                try removeValue(forKey: address, db: db)
+            }
+        }
+    }
+    
 }
 
 extension Web3PropertiesDAO {

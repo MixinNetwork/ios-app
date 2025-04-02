@@ -123,7 +123,13 @@ final class Web3Worker {
     }
     
     private func signMessage(data: Data, to request: Request) {
-        guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum)?.destination else {
+        let chain = switch request.network {
+        case .ethereum:
+            evmChain
+        case .solana:
+            solanaChain
+        }
+        guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: chain.chainID)?.destination else {
             send(error: "Account Locked", to: request)
             return
         }
@@ -134,18 +140,24 @@ final class Web3Worker {
             proposer: currentProposer,
             humanReadableMessage: humanReadable,
             signable: signable,
-            chain: evmChain
+            chain: chain
         ) { signature in
             try await self.send(result: signature, to: request)
         } rejectWith: {
             self.send(error: "User Rejected", to: request)
         }
-        let sign = Web3SignViewController(operation: operation, chainName: evmChain.name)
+        let sign = Web3SignViewController(operation: operation, chainName: chain.name)
         Web3PopupCoordinator.enqueue(popup: .request(sign))
     }
     
     private func signTypedData(data: Data, to request: Request) {
-        guard let address: String = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum)?.destination else {
+        let chain = switch request.network {
+        case .ethereum:
+            evmChain
+        case .solana:
+            solanaChain
+        }
+        guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: chain.chainID)?.destination else {
             send(error: "Account Locked", to: request)
             return
         }
@@ -158,13 +170,13 @@ final class Web3Worker {
                 proposer: currentProposer,
                 humanReadableMessage: humanReadable,
                 signable: signable,
-                chain: evmChain
+                chain: chain
             ) { signature in
                 try await self.send(result: signature, to: request)
             } rejectWith: {
                 self.send(error: "User Rejected", to: request)
             }
-            let sign = Web3SignViewController(operation: operation, chainName: evmChain.name)
+            let sign = Web3SignViewController(operation: operation, chainName: chain.name)
             Web3PopupCoordinator.enqueue(popup: .request(sign))
         } catch {
             Logger.web3.error(category: "Web3Worker", message: "\(error)")

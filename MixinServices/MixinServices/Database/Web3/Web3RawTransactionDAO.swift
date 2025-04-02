@@ -18,12 +18,12 @@ public final class Web3RawTransactionDAO: Web3DAO {
             let deleteRawTransaction = "DELETE FROM raw_transactions WHERE hash = ?"
             try db.execute(sql: deleteRawTransaction, arguments: [hash])
             
-            if state.knownCase == .notfound {
+            if state.knownCase == .notFound {
                 let deletePendingTransaction = """
                 DELETE FROM transactions
                 WHERE \(Web3Transaction.CodingKeys.status.rawValue) = 'pending'
                     AND transaction_hash = ?
-            """
+                """
                 try db.execute(sql: deletePendingTransaction, arguments: [hash])
             }
         }

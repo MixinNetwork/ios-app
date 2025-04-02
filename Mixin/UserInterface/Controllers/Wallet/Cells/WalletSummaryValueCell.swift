@@ -25,6 +25,7 @@ final class WalletSummaryValueCell: UICollectionViewCell {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         titleLabel.text = R.string.localizable.total_assets()
     }
     

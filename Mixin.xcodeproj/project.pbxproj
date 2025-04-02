@@ -891,6 +891,8 @@
 		9457F76B2B6F230F008FC98F /* AuthenticationPreviewDialogView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9457F76A2B6F230F008FC98F /* AuthenticationPreviewDialogView.xib */; };
 		9457F7702B6F2376008FC98F /* AuthenticationPreviewDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9457F76F2B6F2376008FC98F /* AuthenticationPreviewDialogView.swift */; };
 		9457F7722B6F4186008FC98F /* AuthenticationPreviewSingleButtonTrayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9457F7712B6F4186008FC98F /* AuthenticationPreviewSingleButtonTrayView.swift */; };
+		945870CF2D9C211000448694 /* WalletTipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945870CD2D9C211000448694 /* WalletTipCell.swift */; };
+		945870D02D9C211000448694 /* WalletTipCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945870CE2D9C211000448694 /* WalletTipCell.xib */; };
 		9458A06F2CC8E72900A51154 /* NSAttributedString+Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458A06E2CC8E72000A51154 /* NSAttributedString+Constant.swift */; };
 		9458A0752CC8EA2F00A51154 /* PopupTitledWebView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9458A0742CC8EA2F00A51154 /* PopupTitledWebView.xib */; };
 		9458A0762CC8EA2F00A51154 /* PopupTitledWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9458A0732CC8EA2F00A51154 /* PopupTitledWebViewController.swift */; };
@@ -1197,6 +1199,7 @@
 		94DD67542C8F279700B3D089 /* MarketColoredLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DD67532C8F279700B3D089 /* MarketColoredLabel.swift */; };
 		94DD69302C90305000B3D089 /* MarketColorTintedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DD692F2C90305000B3D089 /* MarketColorTintedImageView.swift */; };
 		94DD693E2C90665700B3D089 /* MarketColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DD693D2C90665700B3D089 /* MarketColor.swift */; };
+		94DEB05F2D9D339900406E19 /* WalletTipPageControlCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DEB05E2D9D339200406E19 /* WalletTipPageControlCell.swift */; };
 		94DF7D5928DC0F17006E415B /* Acknowledgement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF7D5828DC0F17006E415B /* Acknowledgement.swift */; };
 		94DF7E0E28DC1697006E415B /* AcknowledgementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF7E0D28DC1697006E415B /* AcknowledgementViewController.swift */; };
 		94E1D44129E906AB00511267 /* DeviceTransferHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E1D44029E906AB00511267 /* DeviceTransferHeader.swift */; };
@@ -2405,6 +2408,8 @@
 		9457F76A2B6F230F008FC98F /* AuthenticationPreviewDialogView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationPreviewDialogView.xib; sourceTree = "<group>"; };
 		9457F76F2B6F2376008FC98F /* AuthenticationPreviewDialogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPreviewDialogView.swift; sourceTree = "<group>"; };
 		9457F7712B6F4186008FC98F /* AuthenticationPreviewSingleButtonTrayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationPreviewSingleButtonTrayView.swift; sourceTree = "<group>"; };
+		945870CD2D9C211000448694 /* WalletTipCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTipCell.swift; sourceTree = "<group>"; };
+		945870CE2D9C211000448694 /* WalletTipCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletTipCell.xib; sourceTree = "<group>"; };
 		9458A06E2CC8E72000A51154 /* NSAttributedString+Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Constant.swift"; sourceTree = "<group>"; };
 		9458A0732CC8EA2F00A51154 /* PopupTitledWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTitledWebViewController.swift; sourceTree = "<group>"; };
 		9458A0742CC8EA2F00A51154 /* PopupTitledWebView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupTitledWebView.xib; sourceTree = "<group>"; };
@@ -2723,6 +2728,7 @@
 		94DD67532C8F279700B3D089 /* MarketColoredLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketColoredLabel.swift; sourceTree = "<group>"; };
 		94DD692F2C90305000B3D089 /* MarketColorTintedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketColorTintedImageView.swift; sourceTree = "<group>"; };
 		94DD693D2C90665700B3D089 /* MarketColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketColor.swift; sourceTree = "<group>"; };
+		94DEB05E2D9D339200406E19 /* WalletTipPageControlCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTipPageControlCell.swift; sourceTree = "<group>"; };
 		94DF7D5828DC0F17006E415B /* Acknowledgement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Acknowledgement.swift; sourceTree = "<group>"; };
 		94DF7E0D28DC1697006E415B /* AcknowledgementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementViewController.swift; sourceTree = "<group>"; };
 		94E1D44029E906AB00511267 /* DeviceTransferHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferHeader.swift; sourceTree = "<group>"; };
@@ -4847,6 +4853,9 @@
 				94F64FFA2D65E40100234D7D /* WalletSummaryValueCell.swift */,
 				94C5BDD42D685FCD0012F840 /* WalletCell.xib */,
 				94C5BDD32D685FCD0012F840 /* WalletCell.swift */,
+				945870CE2D9C211000448694 /* WalletTipCell.xib */,
+				945870CD2D9C211000448694 /* WalletTipCell.swift */,
+				94DEB05E2D9D339200406E19 /* WalletTipPageControlCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -5695,6 +5704,7 @@
 				7BE73BFD230A8D0300B97FC6 /* group_separator_4.png in Resources */,
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
+				945870D02D9C211000448694 /* WalletTipCell.xib in Resources */,
 				7BAB3058247E8248005D6C3F /* call.caf in Resources */,
 				942FD9332D3A70DB004DCC4C /* SwapOrderHeaderCell.xib in Resources */,
 				DF3C47451FA071CD00A07C71 /* Home.storyboard in Resources */,
@@ -6266,6 +6276,7 @@
 				94C5BDD52D685FCD0012F840 /* WalletCell.swift in Sources */,
 				94658CB92B358E3100F5EB21 /* TabBar.swift in Sources */,
 				94FB8E0E2D1ACB32002DCA20 /* SwapTokenCell.swift in Sources */,
+				94DEB05F2D9D339900406E19 /* WalletTipPageControlCell.swift in Sources */,
 				945FFC822C3829B00013DC51 /* SwapRequest.swift in Sources */,
 				7B09664620E0B018007DC179 /* PhotoAssetPickerNavigationController.swift in Sources */,
 				7BA9D9BD226D8BF700255943 /* SearchCategoryViewController.swift in Sources */,
@@ -7093,6 +7104,7 @@
 				94CF4E122CDDEE8B005B69D4 /* LoginNavigationController.swift in Sources */,
 				9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */,
 				6001E88C2B0B7140006A053A /* DeviceTransferToken.swift in Sources */,
+				945870CF2D9C211000448694 /* WalletTipCell.swift in Sources */,
 				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
 				94C93C902C94880600A31591 /* TIP+Web3.swift in Sources */,
 				7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */,

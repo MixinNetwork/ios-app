@@ -282,6 +282,8 @@
 "circle_title" = "%@'s Circles";
 "circles" = "Circles";
 "circulation_supply" = "Circulation Supply";
+"classic_wallet_tip_description" = "A common multi-chain wallet that accesses decentralized applications and DeFi protocols.";
+"classic_wallet_tip_title" = "What’s the Common Wallet?";
 "clear" = "Clear";
 "clear_cache" = "Clear Cache";
 "clear_chat" = "Clear Chat";
@@ -951,6 +953,8 @@
 "privacy" = "Privacy";
 "privacy_policy" = "Privacy Policy";
 "privacy_wallet" = "Privacy Wallet";
+"privacy_wallet_tip_description" = "A multi-chain wallet with private, free, and instant transactions to meet most of your needs.";
+"privacy_wallet_tip_title" = "What’s the Privacy Wallet?";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "Profile";
 "profile_photo" = "Profile Photo";
@@ -1369,11 +1373,13 @@
 "uploading_progress" = "Uploading: %@ of %@ (%@)";
 "url_api_upgrade" = "https://support.mixin.one/en/article/mixin-api-upgrade-notification-1cfmdc9/";
 "url_cant_receive_otp" = "https://support.mixin.one/en/article/what-to-do-if-you-dont-receive-a-sms-code-for-logging-1ym9me1/";
+"url_classic_wallet" = "https://support.mixin.one/en/article/what-is-a-common-wallet-y0rxkx/";
 "url_delete_account" = "https://support.mixin.one/en/article/how-to-delete-my-account-19fkagl/";
 "url_deposit" = "https://support.mixin.one/en/article/how-to-deposit-assets-to-mixin-messenger-1usvjod/";
 "url_deposit_suspended" = "https://support.mixin.one/en/article/the-explanation-about-mixin-stopped-support-for-some-assets-deposits-1im32px/";
 "url_disappearing_message" = "https://support.mixin.one/en/article/how-to-enable-disappearing-messages-2nzaz8/";
 "url_forget_pin" = "https://support.mixin.one/en/article/how-to-do-if-i-forget-the-pin-g12pmo/";
+"url_privacy_wallet" = "https://support.mixin.one/en/article/what-is-a-privacy-wallet-1ng5j8f/";
 "url_recall_message" = "https://support.mixin.one/en/article/how-to-recall-in-mixin-messenger-n3v3p1/";
 "url_recovery_contact" = "https://support.mixin.one/en/article/how-to-set-up-an-emergency-contact-1kvd6g8/";
 "url_support" = "https://support.mixin.one/en/";

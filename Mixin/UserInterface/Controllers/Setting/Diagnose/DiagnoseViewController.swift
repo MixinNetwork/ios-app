@@ -113,6 +113,8 @@ extension DiagnoseViewController: UITableViewDelegate {
             PropertiesDAO.shared.removeValue(forKey: .hasSwapOrderReviewed)
             PropertiesDAO.shared.removeValue(forKey: .hasMarketReviewed)
             PropertiesDAO.shared.removeValue(forKey: .hasWalletSwitchViewed)
+            AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip = false
+            AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = false
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
 #if DEBUG
         case (10, 0):

@@ -17,6 +17,7 @@ final class WalletCell: UICollectionViewCell {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
+        titleLabel.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
     }
     
     func load(digest: WalletDigest, type: WalletType) {

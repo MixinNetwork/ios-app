@@ -19,11 +19,13 @@ final class ReviewPendingWeb3TransactionJob: BaseJob {
                 hash: transaction.hash
             )
             switch result {
-            case .failure(.response(.notFound)):
-                Logger.general.info(category: "ReviewPendingWeb3TransactionJob", message: "Deleted \(transaction.hash)")
-                Web3RawTransactionDAO.shared.deleteTransaction(hash: transaction.hash)
-            default:
-                break
+            case let .success(transaction):
+                guard transaction.state.knownCase != .pending else {
+                    return
+                }
+                Web3RawTransactionDAO.shared.deleteTransaction(hash: transaction.hash, state: transaction.state)
+            case let .failure(error):
+                Logger.general.debug(category: "ReviewPendingWeb3TransactionJob", message: "\(transaction.hash):\n\(error)")
             }
         }
     }

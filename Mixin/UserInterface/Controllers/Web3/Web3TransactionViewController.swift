@@ -39,29 +39,24 @@ final class Web3TransactionViewController: TransactionViewController {
             let walletID = token.walletID
             reloadPendingTransactionTask = Task.detached { [transaction] in
                 repeat {
-                    let transactionChanged: Bool
                     do {
                         let transaction = try await RouteAPI.transaction(
                             chainID: transaction.chainID,
                             hash: transaction.transactionHash
                         )
-                        transactionChanged = transaction.state.knownCase != .pending
-                    } catch MixinAPIResponseError.notFound {
-                        transactionChanged = true
+                        if transaction.state.knownCase != .pending {
+                            Web3RawTransactionDAO.shared.deleteTransaction(hash: transaction.hash, state: transaction.state)
+                            
+                            let syncTokens = RefreshWeb3TokenJob(walletID: walletID)
+                            ConcurrentJobQueue.shared.addJob(job: syncTokens)
+                            let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
+                            ConcurrentJobQueue.shared.addJob(job: syncTransactions)
+                            return
+                        }
                     } catch {
-                        transactionChanged = false
                         Logger.general.debug(category: "Web3TxnView", message: "\(error)")
                     }
-                    if transactionChanged {
-                        Web3RawTransactionDAO.shared.deleteTransaction(hash: transaction.transactionHash)
-                        let syncTokens = SyncWeb3TransactionJob(walletID: walletID)
-                        ConcurrentJobQueue.shared.addJob(job: syncTokens)
-                        let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
-                        ConcurrentJobQueue.shared.addJob(job: syncTransactions)
-                        return
-                    } else {
-                        try await Task.sleep(nanoseconds: 10 * NSEC_PER_SEC)
-                    }
+                    try await Task.sleep(nanoseconds: 10 * NSEC_PER_SEC)
                 } while !Task.isCancelled
             }
         }

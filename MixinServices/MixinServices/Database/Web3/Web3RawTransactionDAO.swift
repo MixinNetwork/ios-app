@@ -13,17 +13,19 @@ public final class Web3RawTransactionDAO: Web3DAO {
         """)
     }
     
-    public func deleteTransaction(hash: String) {
+    public func deleteTransaction(hash: String, state: UnknownableEnum<Web3RawTransaction.State>) {
         db.write { db in
-            let deletePendingTransaction = """
+            let deleteRawTransaction = "DELETE FROM raw_transactions WHERE hash = ?"
+            try db.execute(sql: deleteRawTransaction, arguments: [hash])
+            
+            if state.knownCase == .notfound {
+                let deletePendingTransaction = """
                 DELETE FROM transactions
                 WHERE \(Web3Transaction.CodingKeys.status.rawValue) = 'pending'
                     AND transaction_hash = ?
             """
-            try db.execute(sql: deletePendingTransaction, arguments: [hash])
-            
-            let deleteRawTransaction = "DELETE FROM raw_transactions WHERE hash = ?"
-            try db.execute(sql: deleteRawTransaction, arguments: [hash])
+                try db.execute(sql: deletePendingTransaction, arguments: [hash])
+            }
         }
     }
     

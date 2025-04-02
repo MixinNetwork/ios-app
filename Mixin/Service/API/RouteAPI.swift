@@ -307,14 +307,14 @@ extension RouteAPI {
     static func transaction(chainID: String, hash: String) -> MixinAPI.Result<Web3RawTransaction> {
         request(
             method: .get,
-            path: "/web3/transactions/\(hash)&chain_id=\(chainID)"
+            path: "/web3/transactions/\(hash)?chain_id=\(chainID)"
         )
     }
     
     static func transaction(chainID: String, hash: String) async throws -> Web3RawTransaction {
         try await request(
             method: .get,
-            path: "/web3/transactions/\(hash)&chain_id=\(chainID)"
+            path: "/web3/transactions/\(hash)?chain_id=\(chainID)"
         )
     }
     

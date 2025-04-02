@@ -304,10 +304,17 @@ extension RouteAPI {
         return result
     }
     
-    static func transaction(hash: String) async throws -> Web3RawTransaction {
+    static func transaction(chainID: String, hash: String) -> MixinAPI.Result<Web3RawTransaction> {
+        request(
+            method: .get,
+            path: "/web3/transactions/\(hash)&chain_id=\(chainID)"
+        )
+    }
+    
+    static func transaction(chainID: String, hash: String) async throws -> Web3RawTransaction {
         try await request(
             method: .get,
-            path: "/web3/transactions/\(hash)"
+            path: "/web3/transactions/\(hash)&chain_id=\(chainID)"
         )
     }
     
@@ -318,6 +325,64 @@ extension RouteAPI {
             with: [
                 "chain_id": chainID,
                 "raw": raw,
+            ]
+        )
+    }
+    
+}
+
+// MARK: - RPC
+extension RouteAPI {
+    
+    struct EthereumFee: Decodable {
+        
+        enum CodingKeys: String, CodingKey {
+            case gasLimit = "gas_limit"
+            case maxFeePerGas = "max_fee_per_gas"
+            case maxPriorityFeePerGas = "max_priority_fee_per_gas"
+        }
+        
+        let gasLimit: String
+        let maxFeePerGas: String
+        let maxPriorityFeePerGas: String
+        
+    }
+    
+    struct SolanaFee: Decodable {
+        
+        enum CodingKeys: String, CodingKey {
+            case price = "unit_price"
+            case limit = "unit_limit"
+        }
+        
+        let price: String
+        let limit: String
+        
+    }
+    
+    static func estimatedEthereumFee(
+        hexData: String?,
+        from: String,
+        to: String
+    ) async throws -> EthereumFee {
+        var parameters = [
+            "chain_id": ChainID.ethereum,
+            "from": from,
+            "to": to,
+        ]
+        if let hexData {
+            parameters["raw_transaction"] = hexData
+        }
+        return try await request(method: .post, path: "/web3/estimate-fee", with: parameters)
+    }
+    
+    static func estimatedSolanaFee(base64Transaction: String) async throws -> EthereumFee {
+        try await request(
+            method: .post,
+            path: "/web3/estimate-fee",
+            with: [
+                "chain_id": ChainID.ethereum,
+                "raw_transaction": base64Transaction,
             ]
         )
     }
@@ -338,10 +403,12 @@ extension RouteAPI {
         
         private let method: HTTPMethod
         private let path: String
+        private let timeoutInterval: TimeInterval?
         
-        init(method: HTTPMethod, path: String) {
+        init(method: HTTPMethod, path: String, timeoutInterval: TimeInterval? = nil) {
             self.method = method
             self.path = path
+            self.timeoutInterval = timeoutInterval
         }
         
         func adapt(
@@ -390,6 +457,10 @@ extension RouteAPI {
                 request.setValue(signature, forHTTPHeaderField: "MR-ACCESS-SIGN")
                 request.setValue(timestamp, forHTTPHeaderField: "MR-ACCESS-TIMESTAMP")
                 request.setValue(MixinAPI.userAgent, forHTTPHeaderField: "User-Agent")
+                if let timeoutInterval {
+                    request.timeoutInterval = timeoutInterval
+                }
+                
                 completion(.success(request))
             } catch {
                 completion(.failure(error))
@@ -448,6 +519,37 @@ extension RouteAPI {
         return request(dataRequest, queue: queue, completion: completion)
     }
     
+    public static func request<Response>(
+        method: HTTPMethod,
+        path: String,
+        parameters: [String: Any]? = nil
+    ) -> MixinAPI.Result<Response> {
+        var result: MixinAPI.Result<Response> = .failure(.foundNilResult)
+        
+        let semaphore = DispatchSemaphore(value: 0)
+        let url = Config.host + path
+        let interceptor = RouteSigningInterceptor(method: method, path: path, timeoutInterval: 5)
+        let dataRequest = AF.request(
+            url,
+            method: method,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            interceptor: interceptor
+        )
+        
+        request(dataRequest, queue: .global()) { theResult in
+            result = theResult
+            semaphore.signal()
+        }
+        semaphore.wait()
+        
+        if case let .failure(error) = result, error.isTransportTimedOut {
+            Logger.general.error(category: "RouteAPI", message: "Sync request timed out with: \(error), timeout: \(requestTimeout)")
+        }
+        
+        return result
+    }
+    
     @discardableResult
     private static func request<Parameters: Encodable, Response: Decodable>(
         method: HTTPMethod,
@@ -474,6 +576,7 @@ extension RouteAPI {
         }
     }
     
+    @discardableResult
     private static func request<Response>(
         _ request: DataRequest,
         queue: DispatchQueue,

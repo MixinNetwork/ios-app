@@ -59,6 +59,10 @@ public final class Web3TransactionDAO: Web3DAO {
         }
     }
     
+    public func deleteAll() {
+        db.execute(sql: "DELETE FROM transactions")
+    }
+    
 }
 
 extension Web3TransactionDAO {

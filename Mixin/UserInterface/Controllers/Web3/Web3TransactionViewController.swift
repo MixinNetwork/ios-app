@@ -36,14 +36,19 @@ final class Web3TransactionViewController: TransactionViewController {
         )
         reloadData()
         if transaction.status.knownCase == .pending {
-            let hash = transaction.transactionHash
             let walletID = token.walletID
-            reloadPendingTransactionTask = Task.detached {
+            reloadPendingTransactionTask = Task.detached { [transaction] in
                 repeat {
                     do {
-                        let transaction = try await RouteAPI.transaction(hash: hash)
-                        if transaction.state != "pending" {
-                            Web3RawTransactionDAO.shared.save(rawTransaction: transaction)
+                        let transaction = try await RouteAPI.transaction(
+                            chainID: transaction.chainID,
+                            hash: transaction.transactionHash
+                        )
+                        if transaction.state.knownCase != .pending {
+                            Web3RawTransactionDAO.shared.deleteTransaction(hash: transaction.hash, state: transaction.state)
+                            
+                            let syncTokens = RefreshWeb3TokenJob(walletID: walletID)
+                            ConcurrentJobQueue.shared.addJob(job: syncTokens)
                             let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
                             ConcurrentJobQueue.shared.addJob(job: syncTransactions)
                             return

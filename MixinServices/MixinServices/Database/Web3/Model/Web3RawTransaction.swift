@@ -3,6 +3,13 @@ import GRDB
 
 public struct Web3RawTransaction: Codable {
     
+    public enum State: String, Codable {
+        case notFound = "notfound"
+        case pending
+        case failed
+        case success
+    }
+    
     enum CodingKeys: String, CodingKey {
         case hash = "hash"
         case chainID = "chain_id"
@@ -19,7 +26,7 @@ public struct Web3RawTransaction: Codable {
     public let account: String
     public let nonce: String
     public let raw: String
-    public let state: String
+    public let state: UnknownableEnum<State>
     public let createdAt: String
     public let updatedAt: String
     

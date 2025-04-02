@@ -4,7 +4,7 @@ import GRDB
 public struct Web3RawTransaction: Codable {
     
     public enum State: String, Codable {
-        case notFound
+        case notFound = "notfound"
         case pending
         case failed
         case success

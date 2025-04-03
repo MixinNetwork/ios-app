@@ -32,6 +32,12 @@ final class MixinTokenSelectorViewController: TokenSelectorViewController<MixinT
         DispatchQueue.global().async {
             let recentAssetIDs = PropertiesDAO.shared.jsonObject(forKey: .transferRecentAssetIDs, type: [String].self) ?? []
             let recentTokens = TokenDAO.shared.tokenItems(with: recentAssetIDs)
+                .reduce(into: [:]) { results, item in
+                    results[item.assetID] = item
+                }
+            let orderedRecentTokens = recentAssetIDs.compactMap { id in
+                recentTokens[id]
+            }
             let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
                 .priceChangePercentage24H(assetIDs: recentAssetIDs)
                 .compactMapValues(TokenChange.init(change:))
@@ -39,11 +45,12 @@ final class MixinTokenSelectorViewController: TokenSelectorViewController<MixinT
             let chainIDs = Set(tokens.compactMap(\.chainID))
             let chains = Chain.mixinChains(ids: chainIDs)
             DispatchQueue.main.async {
-                self.recentTokens = recentTokens
+                self.recentTokens = orderedRecentTokens
                 self.recentTokenChanges = recentTokenChanges
                 self.defaultTokens = tokens
                 self.defaultChains = chains
                 self.collectionView.reloadData()
+                self.reloadChainSelection()
                 self.collectionView.checkEmpty(
                     dataCount: tokens.count,
                     text: R.string.localizable.dont_have_assets(),

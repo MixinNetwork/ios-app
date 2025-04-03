@@ -56,13 +56,14 @@ extension Web3ReceiveSourceViewController: UITableViewDataSource {
         case .privacyWallet:
             cell.iconImageView.image = R.image.token_receiver_contact()
             cell.titleLabel.text = R.string.localizable.privacy_wallet()
-            cell.subtitleLabel.text = R.string.localizable.receive_from_privacy_wallets_description()
+            cell.titleTag = .privacyShield
+            cell.descriptionLabel.text = R.string.localizable.receive_from_privacy_wallets_description()
         case .address:
             cell.iconImageView.image = R.image.token_receiver_address()
             cell.titleLabel.text = R.string.localizable.exchanges_or_wallets()
-            cell.subtitleLabel.text = R.string.localizable.receive_from_address_description()
+            cell.titleTag = nil
+            cell.descriptionLabel.text = R.string.localizable.receive_from_address_description()
         }
-        cell.freeLabel.isHidden = true
         return cell
     }
     

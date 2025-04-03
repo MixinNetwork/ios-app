@@ -82,8 +82,8 @@ class AssetCell: ModernSelectedBackgroundCell {
             attributes: AssetCell.symbolAttributes
         )
         if token.decimalUSDPrice > 0 {
-            changeLabel.text = token.localizedPercentChange
-            changeLabel.marketColor = .byValue(token.decimalPercentChange)
+            changeLabel.text = token.localizedUSDChange
+            changeLabel.marketColor = .byValue(token.decimalUSDChange)
             fiatMoneyPriceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.alpha = 1
             fiatMoneyPriceLabel.alpha = 1

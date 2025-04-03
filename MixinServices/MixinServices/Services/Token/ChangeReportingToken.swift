@@ -7,7 +7,6 @@ public protocol ChangeReportingToken: Token {
     
 }
 
-
 extension ChangeReportingToken {
     
     public func localizeUSDChange() -> String {
@@ -15,4 +14,3 @@ extension ChangeReportingToken {
     }
     
 }
-

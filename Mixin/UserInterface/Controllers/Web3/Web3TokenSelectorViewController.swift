@@ -123,8 +123,8 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
             iconView.setIcon(web3Token: token)
         }
         cell.titleLabel.text = token.symbol
-        cell.subtitleLabel.marketColor = token.decimalPercentChange >= 0 ? .rising : .falling
-        cell.subtitleLabel.text = token.localizedPercentChange
+        cell.subtitleLabel.marketColor = .byValue(token.decimalUSDChange)
+        cell.subtitleLabel.text = token.localizedUSDChange
     }
     
     override func configureTokenCell(_ cell: SwapTokenCell, withToken token: Web3Token) {

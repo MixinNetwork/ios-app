@@ -211,18 +211,18 @@ extension MixinTokenReceiverViewController: UITableViewDataSource {
         case .addressBook:
             cell.iconImageView.image = R.image.token_receiver_address_book()
             cell.titleLabel.text = R.string.localizable.address_book()
-            cell.freeLabel.isHidden = true
-            cell.subtitleLabel.text = R.string.localizable.send_to_address_description()
+            cell.titleTag = nil
+            cell.descriptionLabel.text = R.string.localizable.send_to_address_description()
         case .classicWallet:
             cell.iconImageView.image = R.image.token_receiver_wallet()
             cell.titleLabel.text = R.string.localizable.common_wallet()
-            cell.freeLabel.isHidden = true
-            cell.subtitleLabel.text = R.string.localizable.send_to_other_wallet_description()
+            cell.titleTag = nil
+            cell.descriptionLabel.text = R.string.localizable.send_to_other_wallet_description()
         case .contact:
             cell.iconImageView.image = R.image.token_receiver_contact()
             cell.titleLabel.text = R.string.localizable.mixin_contact()
-            cell.freeLabel.isHidden = false
-            cell.subtitleLabel.text = R.string.localizable.send_to_contact_description()
+            cell.titleTag = .free
+            cell.descriptionLabel.text = R.string.localizable.send_to_contact_description()
         }
         return cell
     }

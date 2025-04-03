@@ -38,7 +38,10 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
         super.viewDidLoad()
         
         navigationItem.title = R.string.localizable.send()
-        navigationItem.rightBarButtonItem = .customerService(target: self, action: #selector(presentCustomerService(_:)))
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         
         headerView.load(web3Token: payment.token)
         headerView.inputPlaceholder = R.string.localizable.hint_address()
@@ -140,13 +143,13 @@ extension Web3TokenReceiverViewController: UITableViewDataSource {
         case .privacyWallet:
             cell.iconImageView.image = R.image.token_receiver_wallet()
             cell.titleLabel.text = R.string.localizable.privacy_wallet()
-            cell.freeLabel.isHidden = true
-            cell.subtitleLabel.text = R.string.localizable.send_to_other_wallet_description()
+            cell.titleTag = .privacyShield
+            cell.descriptionLabel.text = R.string.localizable.send_to_other_wallet_description()
         case .addressBook:
             cell.iconImageView.image = R.image.token_receiver_address_book()
             cell.titleLabel.text = R.string.localizable.address_book()
-            cell.freeLabel.isHidden = true
-            cell.subtitleLabel.text = R.string.localizable.send_to_address_description()
+            cell.titleTag = nil
+            cell.descriptionLabel.text = R.string.localizable.send_to_address_description()
         }
         return cell
     }

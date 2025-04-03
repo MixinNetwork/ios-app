@@ -24,8 +24,14 @@ final class RefreshAccountJob: AsynchronousJob {
                         }
                         await MainActor.run {
                             let intro = TIPIntroViewController(context: context)
-                            let navigation = TIPNavigationController(intro: intro)
-                            UIApplication.homeNavigationController?.present(navigation, animated: true)
+                            let tip = TIPNavigationController(intro: intro)
+                            guard var presenter: UIViewController = UIApplication.homeContainerViewController else {
+                                return
+                            }
+                            while let p = presenter.presentedViewController {
+                                presenter = p
+                            }
+                            presenter.present(tip, animated: true)
                         }
                     } catch {
                         Logger.tip.warn(category: "RefreshAccountJob", message: "Check counter: \(error)")

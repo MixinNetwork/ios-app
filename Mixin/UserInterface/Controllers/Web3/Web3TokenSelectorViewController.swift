@@ -32,12 +32,15 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        DispatchQueue.global().async { [tokens=defaultTokens] in
-            let assetIDs = Set(PropertiesDAO.shared.jsonObject(forKey: .transferRecentAssetIDs, type: [String].self) ?? [])
-            let recentTokens = tokens.filter { token in
-                assetIDs.contains(token.assetID)
+        DispatchQueue.global().async { [defaultTokens] in
+            let tokens = defaultTokens.reduce(into: [:]) { results, item in
+                results[item.assetID] = item
             }
-            let chainIDs = Set(tokens.compactMap(\.chainID))
+            let recentAssetIDs = PropertiesDAO.shared.jsonObject(forKey: .transferRecentAssetIDs, type: [String].self) ?? []
+            let recentTokens = recentAssetIDs.compactMap { id in
+                tokens[id]
+            }
+            let chainIDs = Set(defaultTokens.compactMap(\.chainID))
             let chains = Chain.web3Chains(ids: chainIDs)
             DispatchQueue.main.async {
                 self.recentTokens = recentTokens

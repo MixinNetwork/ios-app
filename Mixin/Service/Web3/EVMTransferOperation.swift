@@ -18,23 +18,24 @@ class EVMTransferOperation: Web3TransferOperation {
         case arbitrary(BalanceChange)
     }
     
-    private struct EVMFee {
-        let gasLimit: BigUInt
-        let gasPrice: BigUInt // Wei
-    }
-    
     private enum RequestError: Error {
         case mismatchedAddress
-        case invalidFee(String)
+        case invalidFee
         case missingChainID
         case missingRawTx
+    }
+    
+    private struct EVMFee {
+        let gasLimit: BigUInt
+        let maxFeePerGas: BigUInt
+        let maxPriorityFeePerGas: BigUInt
     }
     
     let transactionPreview: EVMTransactionPreview
     
     fileprivate let client: EthereumHttpClient
     
-    fileprivate var transaction: EthereumTransaction?
+    fileprivate var transaction: EIP1559Transaction?
     fileprivate var account: EthereumAccount?
     
     private let chainID: Int
@@ -94,41 +95,34 @@ class EVMTransferOperation: Web3TransferOperation {
     }
     
     override func loadFee() async throws -> Fee {
-        let dappGasLimit = transactionPreview.gas
-        let transaction = EthereumTransaction(from: EthereumAddress(fromAddress),
-                                              to: transactionPreview.to,
-                                              value: transactionPreview.value ?? 0,
-                                              data: transactionPreview.data,
-                                              nonce: nil,
-                                              gasPrice: nil,
-                                              gasLimit: nil,
-                                              chainId: nil)
-        let rpcGasLimit = try await client.eth_estimateGas(transaction)
-        let gasLimit: BigUInt = {
-            let value = if let dappGasLimit {
-                max(dappGasLimit, rpcGasLimit)
-            } else {
-                rpcGasLimit
-            }
-            return value + value / 2 // 1.5x gasLimit
-        }()
-        var gasPrice = try await client.eth_gasPrice()
-        gasPrice += gasPrice / 5 // 1.2x gasPrice
-        Logger.web3.info(category: "EVMTransfer", message: "Using limit: \(gasLimit.description), price: \(gasPrice.description)")
-        
-        let weiFee = (gasLimit * gasPrice).description
-        guard let decimalWeiFee = Decimal(string: weiFee, locale: .enUSPOSIX) else {
-            throw RequestError.invalidFee(weiFee)
+        let rawFee = try await RouteAPI.estimatedEthereumFee(
+            hexData: transactionPreview.data?.hexEncodedString(),
+            from: fromAddress,
+            to: transactionPreview.to.toChecksumAddress()
+        )
+        Logger.web3.info(category: "EVMTransfer", message: "Using limit: \(rawFee.gasLimit), mfpg: \(rawFee.maxFeePerGas), mpfpg: \(rawFee.maxPriorityFeePerGas)")
+        guard
+            let gasLimit = BigUInt(rawFee.gasLimit),
+            let maxFeePerGas = BigUInt(rawFee.maxFeePerGas),
+            let maxPriorityFeePerGas = BigUInt(rawFee.maxPriorityFeePerGas),
+            let weiCount = Decimal(string: (gasLimit * maxFeePerGas).description, locale: .enUSPOSIX)
+        else {
+            throw RequestError.invalidFee
         }
-        let tokenCount = decimalWeiFee * .wei
-        let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-        let fee = Fee(token: tokenCount, fiatMoney: fiatMoneyCount)
-        Logger.web3.info(category: "EVMTransfer", message: "Using limit: \(gasLimit.description), price: \(gasPrice.description)")
-        let evmFee = EVMFee(gasLimit: gasLimit, gasPrice: gasPrice)
+        let evmFee = EVMFee(
+            gasLimit: gasLimit,
+            maxFeePerGas: maxFeePerGas,
+            maxPriorityFeePerGas: maxPriorityFeePerGas
+        )
         await MainActor.run {
             self.evmFee = evmFee
             self.state = .ready
         }
+        let tokenCount = weiCount * .wei
+        let fee = Fee(
+            token: tokenCount,
+            fiatMoney: tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
+        )
         return fee
     }
     
@@ -141,7 +135,7 @@ class EVMTransferOperation: Web3TransferOperation {
         Task.detached { [chainID, client, transactionPreview] in
             Logger.web3.info(category: "EVMTransfer", message: "Will sign")
             let account: EthereumAccount
-            let transaction: EthereumTransaction
+            let transaction: EIP1559Transaction
             do {
                 let priv = try await TIP.deriveEthereumPrivateKey(pin: pin)
                 let keyStorage = InPlaceKeyStorage(raw: priv)
@@ -150,14 +144,16 @@ class EVMTransferOperation: Web3TransferOperation {
                     throw RequestError.mismatchedAddress
                 }
                 let nonce = try await client.eth_getTransactionCount(address: account.address, block: .Pending)
-                transaction = EthereumTransaction(from: account.address,
-                                                  to: transactionPreview.to,
-                                                  value: transactionPreview.value ?? 0,
-                                                  data: transactionPreview.data,
-                                                  nonce: nonce,
-                                                  gasPrice: fee.gasPrice,
-                                                  gasLimit: fee.gasLimit,
-                                                  chainId: chainID)
+                transaction = EIP1559Transaction(
+                    chainID: chainID,
+                    nonce: nonce,
+                    maxPriorityFeePerGas: fee.maxPriorityFeePerGas,
+                    maxFeePerGas: fee.maxFeePerGas,
+                    gasLimit: fee.gasLimit,
+                    destination: transactionPreview.to,
+                    amount: transactionPreview.value ?? 0,
+                    data: transactionPreview.data
+                )
             } catch {
                 Logger.web3.error(category: "EVMTransfer", message: "Failed to sign: \(error)")
                 await MainActor.run {
@@ -190,16 +186,13 @@ class EVMTransferOperation: Web3TransferOperation {
         }
     }
     
-    private func send(transaction: EthereumTransaction, with account: EthereumAccount) async {
+    private func send(transaction: EIP1559Transaction, with account: EthereumAccount) async {
         do {
             let transactionDescription = transaction.raw?.hexEncodedString()
                 ?? transaction.jsonRepresentation
                 ?? "(null)"
             Logger.web3.info(category: "EVMTransfer", message: "Will send tx: \(transactionDescription)")
-            guard
-                let evmChainID = transaction.chainId,
-                let chainID = Web3Chain.chain(evmChainID: evmChainID)?.chainID
-            else {
+            guard let chainID = Web3Chain.chain(evmChainID: transaction.chainID)?.chainID else {
                 throw RequestError.missingChainID
             }
             let hexEncodedSignedTransaction = try {
@@ -225,7 +218,7 @@ class EVMTransferOperation: Web3TransferOperation {
                     transactionHash: rawTransaction.hash,
                     blockNumber: -1,
                     sender: account.publicKey,
-                    receiver: transaction.to.toChecksumAddress(),
+                    receiver: transaction.destination.toChecksumAddress(),
                     outputHash: "",
                     chainID: chainID,
                     assetID: assetID,

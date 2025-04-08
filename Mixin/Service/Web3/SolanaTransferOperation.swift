@@ -17,8 +17,6 @@ class SolanaTransferOperation: Web3TransferOperation {
         case noFeeToken(String)
     }
     
-    let client: SolanaRPCClient
-    
     fileprivate init(
         fromAddress: String,
         toAddress: String,
@@ -28,8 +26,6 @@ class SolanaTransferOperation: Web3TransferOperation {
         guard let feeToken = try chain.feeToken() else {
             throw InitError.noFeeToken(chain.feeTokenAssetID)
         }
-        self.client = SolanaRPCClient(url: chain.rpcServerURL)
-        Logger.web3.info(category: "SolanaTransfer", message: "Using RPC: \(chain.rpcServerURL)")
         super.init(fromAddress: fromAddress,
                    toAddress: toAddress,
                    chain: chain,
@@ -55,7 +51,7 @@ class SolanaTransferOperation: Web3TransferOperation {
         do {
             Logger.web3.info(category: "SolanaTransfer", message: "Start")
             let priv = try await TIP.deriveSolanaPrivateKey(pin: pin)
-            let recentBlockhash = try await client.getLatestBlockhash()
+            let recentBlockhash = try await RouteAPI.solanaLatestBlockhash()
             Logger.web3.info(category: "SolanaTransfer", message: "Using blockhash: \(recentBlockhash)")
             guard let blockhash = Data(base58EncodedString: recentBlockhash) else {
                 throw SigningError.invalidBlockhash
@@ -285,7 +281,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
     
     override func loadFee() async throws -> Fee {
         let ata = try Solana.tokenAssociatedAccount(owner: payment.toAddress, mint: payment.token.assetKey)
-        let receiverAccountExists = try await client.accountExists(pubkey: ata)
+        let receiverAccountExists = try await RouteAPI.solanaAccountExists(pubkey: ata)
         let createAccount = !receiverAccountExists
         let transaction = try Solana.Transaction(
             from: payment.fromAddress,
@@ -297,7 +293,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             change: .init(amount: decimalAmount, assetKey: payment.token.assetKey)
         )
         let baseFee = try baseFee(for: transaction)
-        let priorityFee = try await Web3API.priorityFee(transaction: transaction.rawTransaction)
+        let priorityFee = try await RouteAPI.solanaPriorityFee(base64Transaction: transaction.rawTransaction)
         await MainActor.run {
             self.createAssociatedTokenAccountForReceiver = createAccount
             self.priorityFee = priorityFee

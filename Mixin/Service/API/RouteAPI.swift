@@ -15,7 +15,7 @@ final class RouteAPI {
     }
     
     enum RPCError: Error {
-        case invalidHexCount
+        case invalidResponse
     }
     
 }
@@ -352,18 +352,6 @@ extension RouteAPI {
         
     }
     
-    struct SolanaFee: Decodable {
-        
-        enum CodingKeys: String, CodingKey {
-            case price = "unit_price"
-            case limit = "unit_limit"
-        }
-        
-        let price: String
-        let limit: String
-        
-    }
-    
     static func estimatedEthereumFee(
         mixinChainID: String,
         hexData: String?,
@@ -399,19 +387,52 @@ extension RouteAPI {
         if let count = Int(hexCount, radix: 16) {
             return count
         } else {
-            throw RPCError.invalidHexCount
+            throw RPCError.invalidResponse
         }
     }
     
-    static func estimatedSolanaFee(base64Transaction: String) async throws -> EthereumFee {
+    static func solanaPriorityFee(base64Transaction: String) async throws -> PriorityFee {
         try await request(
             method: .post,
             path: "/web3/estimate-fee",
             with: [
-                "chain_id": ChainID.ethereum,
+                "chain_id": ChainID.solana,
                 "raw_transaction": base64Transaction,
             ]
         )
+    }
+    
+    static func solanaLatestBlockhash() async throws -> String {
+        
+        struct Response: Decodable {
+            let blockhash: String
+        }
+        
+        let result: String = try await request(
+            method: .post,
+            path: "/web3/rpc?chain_id=\(ChainID.solana)",
+            with: ["method": "getLatestBlockhash"]
+        )
+        guard let data = result.data(using: .utf8) else {
+            throw RPCError.invalidResponse
+        }
+        let response = try JSONDecoder.default.decode(Response.self, from: data)
+        return response.blockhash
+    }
+    
+    static func solanaAccountExists(pubkey: String) async throws -> Bool {
+        let result: String = try await request(
+            method: .post,
+            path: "/web3/rpc?chain_id=\(ChainID.solana)",
+            with: [
+                "method": "getAccountInfo",
+                "params": [
+                    pubkey,
+                    ["encoding": "jsonParsed"],
+                ],
+            ]
+        )
+        return result != "null"
     }
     
 }

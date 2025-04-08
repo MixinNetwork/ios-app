@@ -16,12 +16,6 @@ final class Web3API {
         request(method: .get, path: "/dapps", queue: queue, completion: completion)
     }
     
-    static func priorityFee(transaction: String) async throws -> PriorityFee {
-        try await request(method: .post,
-                          path: "/estimate-priority-fees",
-                          with: ["transaction": transaction])
-    }
-    
 }
 
 extension Web3API {

@@ -5,7 +5,7 @@ import web3
 struct EIP1559Transaction: Equatable, Codable {
     
     let chainID: Int
-    let nonce: Int?
+    let nonce: BigInt?
     let maxPriorityFeePerGas: BigUInt?
     let maxFeePerGas: BigUInt?
     let gasLimit: BigUInt?
@@ -31,7 +31,7 @@ struct EIP1559Transaction: Equatable, Codable {
     }
     
     init(
-        chainID: Int, nonce: Int? = nil, maxPriorityFeePerGas: BigUInt? = nil,
+        chainID: Int, nonce: BigInt? = nil, maxPriorityFeePerGas: BigUInt? = nil,
         maxFeePerGas: BigUInt? = nil, gasLimit: BigUInt? = nil,
         destination: EthereumAddress, amount: BigUInt, data: Data? = nil
     ) {

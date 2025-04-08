@@ -23,6 +23,7 @@ class EVMTransferOperation: Web3TransferOperation {
         case invalidFee
         case missingChainID
         case missingRawTx
+        case invalidTransactionCount
     }
     
     private struct EVMFee {
@@ -145,6 +146,9 @@ class EVMTransferOperation: Web3TransferOperation {
                     chainID: mixinChainID,
                     address: account.address.toChecksumAddress()
                 )
+                guard let nonce = BigInt(hex: count) else {
+                    throw RequestError.invalidTransactionCount
+                }
                 transaction = EIP1559Transaction(
                     chainID: chainID,
                     nonce: nonce,

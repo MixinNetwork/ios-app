@@ -372,7 +372,7 @@ extension RouteAPI {
     static func ethereumLatestTransactionCount(
         chainID: String,
         address: String
-    ) async throws -> Int {
+    ) async throws -> String {
         var hexCount: String = try await request(
             method: .post,
             path: "/web3/rpc?chain_id=\(chainID)",
@@ -384,11 +384,7 @@ extension RouteAPI {
         if hexCount.hasPrefix("0x") {
             hexCount.removeFirst(2)
         }
-        if let count = Int(hexCount, radix: 16) {
-            return count
-        } else {
-            throw RPCError.invalidResponse
-        }
+        return hexCount
     }
     
     static func solanaPriorityFee(base64Transaction: String) async throws -> PriorityFee {

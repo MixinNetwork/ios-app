@@ -141,7 +141,7 @@ class EVMTransferOperation: Web3TransferOperation {
                 guard transactionPreview.from == account.address else {
                     throw RequestError.mismatchedAddress
                 }
-                let nonce = try await RouteAPI.ethereumTransactionCount(
+                let count = try await RouteAPI.ethereumLatestTransactionCount(
                     chainID: mixinChainID,
                     address: account.address.toChecksumAddress()
                 )

@@ -369,7 +369,7 @@ extension RouteAPI {
         return try await request(method: .post, path: "/web3/estimate-fee", with: parameters)
     }
     
-    static func ethereumTransactionCount(
+    static func ethereumLatestTransactionCount(
         chainID: String,
         address: String
     ) async throws -> Int {
@@ -378,7 +378,7 @@ extension RouteAPI {
             path: "/web3/rpc?chain_id=\(chainID)",
             with: [
                 "method": "eth_getTransactionCount",
-                "params": [address, "pending"]
+                "params": [address, "latest"]
             ]
         )
         if hexCount.hasPrefix("0x") {

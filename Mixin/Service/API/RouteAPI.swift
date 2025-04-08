@@ -364,7 +364,7 @@ extension RouteAPI {
             "to": to,
         ]
         if let hexData {
-            parameters["raw_transaction"] = hexData
+            parameters["raw_transaction"] = "0x" + hexData
         }
         return try await request(method: .post, path: "/web3/estimate-fee", with: parameters)
     }

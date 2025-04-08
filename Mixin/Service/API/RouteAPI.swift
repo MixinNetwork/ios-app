@@ -365,12 +365,13 @@ extension RouteAPI {
     }
     
     static func estimatedEthereumFee(
+        mixinChainID: String,
         hexData: String?,
         from: String,
         to: String
     ) async throws -> EthereumFee {
         var parameters = [
-            "chain_id": ChainID.ethereum,
+            "chain_id": mixinChainID,
             "from": from,
             "to": to,
         ]

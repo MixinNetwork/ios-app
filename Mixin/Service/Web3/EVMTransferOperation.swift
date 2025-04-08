@@ -93,6 +93,7 @@ class EVMTransferOperation: Web3TransferOperation {
     
     override func loadFee() async throws -> Fee {
         let rawFee = try await RouteAPI.estimatedEthereumFee(
+            mixinChainID: mixinChainID,
             hexData: transactionPreview.data?.hexEncodedString(),
             from: fromAddress,
             to: transactionPreview.to.toChecksumAddress()

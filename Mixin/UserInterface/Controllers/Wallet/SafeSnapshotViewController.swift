@@ -3,6 +3,10 @@ import MixinServices
 
 final class SafeSnapshotViewController: TransactionViewController {
     
+    override var viewOnExplorerURL: URL? {
+        URL(string: "https://mixin.space/tx/\(snapshot.transactionHash)")
+    }
+    
     private let messageID: String?
     
     private var token: MixinTokenItem

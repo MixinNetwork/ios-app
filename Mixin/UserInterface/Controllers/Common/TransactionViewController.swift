@@ -24,6 +24,10 @@ class TransactionViewController: UIViewController {
         tableHeaderView.fiatMoneyValueLabel
     }
     
+    var viewOnExplorerURL: URL? {
+        nil
+    }
+    
     override var canBecomeFirstResponder: Bool {
         true
     }
@@ -34,11 +38,17 @@ class TransactionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = .tintedIcon(
-            image: R.image.customer_service(),
-            target: self,
-            action: #selector(customerService(_:))
-        )
+        navigationItem.rightBarButtonItems = [
+            .tintedIcon(
+                image: R.image.ic_title_more(),
+                target: self,
+                action: #selector(presentMoreActions(_:))
+            ),
+            .customerService(
+                target: self,
+                action: #selector(presentCustomerService(_:))
+            ),
+        ]
         tableView.backgroundColor = .background
         tableView.separatorStyle = .none
         tableView.tableHeaderView = tableHeaderView
@@ -85,7 +95,19 @@ class TransactionViewController: UIViewController {
         )
     }
     
-    @objc private func customerService(_ sender: Any) {
+    @objc func presentMoreActions(_ sender: Any) {
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.view_on_explorer(), style: .default, handler: { _ in
+            guard let url = self.viewOnExplorerURL else {
+                return
+            }
+            UIApplication.shared.open(url)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+        present(sheet, animated: true)
+    }
+    
+    @objc private func presentCustomerService(_ sender: Any) {
         if let user = UserDAO.shared.getUser(identityNumber: "7000") {
             let conversation = ConversationViewController.instance(ownerUser: user)
             navigationController?.pushViewController(withBackRoot: conversation)

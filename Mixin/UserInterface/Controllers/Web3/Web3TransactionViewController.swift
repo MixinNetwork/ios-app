@@ -3,6 +3,10 @@ import MixinServices
 
 final class Web3TransactionViewController: TransactionViewController {
     
+    override var viewOnExplorerURL: URL? {
+        URL(string: "https://api.mixin.one/external/explore/\(transaction.chainID)/transactions/\(transaction.transactionHash)")
+    }
+    
     private let token: Web3Token
     
     private var transaction: Web3Transaction

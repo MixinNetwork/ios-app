@@ -5,13 +5,17 @@ import MixinServices
 
 final class RouteAPI {
     
-    enum Error: Swift.Error {
+    enum SigningError: Error {
         case missingPublicKey
         case missingPrivateKey
         case encodeMessage
         case emptyResponse
         case calculateAgreement
         case combineSealedBox
+    }
+    
+    enum RPCError: Error {
+        case invalidResponse
     }
     
 }
@@ -348,43 +352,83 @@ extension RouteAPI {
         
     }
     
-    struct SolanaFee: Decodable {
-        
-        enum CodingKeys: String, CodingKey {
-            case price = "unit_price"
-            case limit = "unit_limit"
-        }
-        
-        let price: String
-        let limit: String
-        
-    }
-    
     static func estimatedEthereumFee(
+        mixinChainID: String,
         hexData: String?,
         from: String,
         to: String
     ) async throws -> EthereumFee {
         var parameters = [
-            "chain_id": ChainID.ethereum,
+            "chain_id": mixinChainID,
             "from": from,
             "to": to,
         ]
         if let hexData {
-            parameters["raw_transaction"] = hexData
+            parameters["raw_transaction"] = "0x" + hexData
         }
         return try await request(method: .post, path: "/web3/estimate-fee", with: parameters)
     }
     
-    static func estimatedSolanaFee(base64Transaction: String) async throws -> EthereumFee {
+    static func ethereumLatestTransactionCount(
+        chainID: String,
+        address: String
+    ) async throws -> String {
+        var hexCount: String = try await request(
+            method: .post,
+            path: "/web3/rpc?chain_id=\(chainID)",
+            with: [
+                "method": "eth_getTransactionCount",
+                "params": [address, "latest"]
+            ]
+        )
+        if hexCount.hasPrefix("0x") {
+            hexCount.removeFirst(2)
+        }
+        return hexCount
+    }
+    
+    static func solanaPriorityFee(base64Transaction: String) async throws -> PriorityFee {
         try await request(
             method: .post,
             path: "/web3/estimate-fee",
             with: [
-                "chain_id": ChainID.ethereum,
+                "chain_id": ChainID.solana,
                 "raw_transaction": base64Transaction,
             ]
         )
+    }
+    
+    static func solanaLatestBlockhash() async throws -> String {
+        
+        struct Response: Decodable {
+            let blockhash: String
+        }
+        
+        let result: String = try await request(
+            method: .post,
+            path: "/web3/rpc?chain_id=\(ChainID.solana)",
+            with: ["method": "getLatestBlockhash"]
+        )
+        guard let data = result.data(using: .utf8) else {
+            throw RPCError.invalidResponse
+        }
+        let response = try JSONDecoder.default.decode(Response.self, from: data)
+        return response.blockhash
+    }
+    
+    static func solanaAccountExists(pubkey: String) async throws -> Bool {
+        let result: String = try await request(
+            method: .post,
+            path: "/web3/rpc?chain_id=\(ChainID.solana)",
+            with: [
+                "method": "getAccountInfo",
+                "params": [
+                    pubkey,
+                    ["encoding": "jsonParsed"],
+                ],
+            ]
+        )
+        return result != "null"
     }
     
 }
@@ -426,7 +470,7 @@ extension RouteAPI {
                         throw error
                     case let .success(sessions):
                         guard let publicKey = sessions.first?.publicKey, let bpk = Data(base64URLEncoded: publicKey) else {
-                            throw Error.missingPublicKey
+                            throw SigningError.missingPublicKey
                         }
                         RouteAPI.botPublicKey = bpk
                         botPublicKey = bpk
@@ -434,17 +478,17 @@ extension RouteAPI {
                 }
                 
                 guard let secret = AppGroupKeychain.sessionSecret else {
-                    throw Error.missingPrivateKey
+                    throw SigningError.missingPrivateKey
                 }
                 let privateKey = try Ed25519PrivateKey(rawRepresentation: secret)
                 let usk = privateKey.x25519Representation
                 guard let keyData = AgreementCalculator.agreement(publicKey: botPublicKey, privateKey: usk) else {
-                    throw Error.calculateAgreement
+                    throw SigningError.calculateAgreement
                 }
                 
                 let timestamp = "\(Int64(Date().timeIntervalSince1970))"
                 guard var message = (timestamp + method.rawValue + path).data(using: .utf8) else {
-                    throw Error.encodeMessage
+                    throw SigningError.encodeMessage
                 }
                 if let body = urlRequest.httpBody {
                     message.append(body)

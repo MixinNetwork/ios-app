@@ -33,12 +33,11 @@ class EVMTransferOperation: Web3TransferOperation {
     
     let transactionPreview: EVMTransactionPreview
     
-    fileprivate let client: EthereumHttpClient
-    
     fileprivate var transaction: EIP1559Transaction?
     fileprivate var account: EthereumAccount?
     
     private let chainID: Int
+    private let mixinChainID: String
     private let balanceChange: BalanceChange
     
     private var evmFee: EVMFee?
@@ -50,11 +49,9 @@ class EVMTransferOperation: Web3TransferOperation {
         balanceChange balanceChangeDerivation: BalanceChangeDerivation
     ) throws {
         let chainID: Int
-        let client: EthereumHttpClient
         switch chain.specification {
         case let .evm(id):
             chainID = id
-            client = EthereumHttpClient(url: chain.rpcServerURL, network: .custom("\(id)"))
         default:
             throw InitError.notEVMChain(chain.name)
         }
@@ -78,8 +75,8 @@ class EVMTransferOperation: Web3TransferOperation {
             true
         }
         self.transactionPreview = transaction
-        self.client = client
         self.chainID = chainID
+        self.mixinChainID = chain.chainID
         self.balanceChange = balanceChange
         
         super.init(fromAddress: fromAddress,
@@ -132,7 +129,7 @@ class EVMTransferOperation: Web3TransferOperation {
             return
         }
         state = .signing
-        Task.detached { [chainID, client, transactionPreview] in
+        Task.detached { [chainID, mixinChainID, transactionPreview] in
             Logger.web3.info(category: "EVMTransfer", message: "Will sign")
             let account: EthereumAccount
             let transaction: EIP1559Transaction
@@ -143,7 +140,10 @@ class EVMTransferOperation: Web3TransferOperation {
                 guard transactionPreview.from == account.address else {
                     throw RequestError.mismatchedAddress
                 }
-                let nonce = try await client.eth_getTransactionCount(address: account.address, block: .Pending)
+                let nonce = try await RouteAPI.ethereumTransactionCount(
+                    chainID: mixinChainID,
+                    address: account.address.toChecksumAddress()
+                )
                 transaction = EIP1559Transaction(
                     chainID: chainID,
                     nonce: nonce,
@@ -192,9 +192,6 @@ class EVMTransferOperation: Web3TransferOperation {
                 ?? transaction.jsonRepresentation
                 ?? "(null)"
             Logger.web3.info(category: "EVMTransfer", message: "Will send tx: \(transactionDescription)")
-            guard let chainID = Web3Chain.chain(evmChainID: transaction.chainID)?.chainID else {
-                throw RequestError.missingChainID
-            }
             let hexEncodedSignedTransaction = try {
                 let signedTx = try account.sign(transaction: transaction)
                 guard let raw = signedTx.raw else {
@@ -203,7 +200,7 @@ class EVMTransferOperation: Web3TransferOperation {
                 return "0x" + raw.hexEncodedString()
             }()
             let rawTransaction = try await RouteAPI.postTransaction(
-                chainID: chainID,
+                chainID: mixinChainID,
                 raw: hexEncodedSignedTransaction
             )
             let pendingTransaction = {
@@ -220,7 +217,7 @@ class EVMTransferOperation: Web3TransferOperation {
                     sender: account.publicKey,
                     receiver: transaction.destination.toChecksumAddress(),
                     outputHash: "",
-                    chainID: chainID,
+                    chainID: mixinChainID,
                     assetID: assetID,
                     amount: amount,
                     transactionType: .known(.send),

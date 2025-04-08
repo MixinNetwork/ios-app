@@ -1443,7 +1443,7 @@
 "web3_account_network" = "%@ Account";
 "web3_deposit_description_evm" = "Use this address for receiving tokens on Ethereum, Polygon, BSC, Base networks";
 "web3_deposit_description_solana" = "Use this address for receiving tokens on Solana network";
-"web3_ensure_trust" = "Please ensure you trust this dapp before proceeding with the request.";
+"web3_ensure_trust" = "Please ensure you trust this app before proceeding with the request.";
 "web3_message_request" = "Message Request";
 "web3_no_asset" = "Don’t Have Assets";
 "web3_signing" = "Signing";

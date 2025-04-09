@@ -171,7 +171,12 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
                 guard let self else {
                     return
                 }
-                let inputAmount = WithdrawInputAmountViewController(tokenItem: self.token, destination: .temporary(address))
+                let inputAmount: WithdrawInputAmountViewController
+                if let address = AddressDAO.shared.getAddress(chainId: self.token.chainID, destination: address.destination, tag: address.tag) {
+                    inputAmount = WithdrawInputAmountViewController(tokenItem: self.token, destination: .address(address))
+                } else {
+                    inputAmount = WithdrawInputAmountViewController(tokenItem: self.token, destination: .temporary(address))
+                }
                 self.navigationController?.pushViewController(inputAmount, animated: true)
             } onFailure: { [weak nextButton, weak self] error in
                 nextButton?.isBusy = false

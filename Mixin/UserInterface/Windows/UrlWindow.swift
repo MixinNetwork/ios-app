@@ -588,10 +588,12 @@ class UrlWindow {
                         tag: nil
                     ) { address in
                         hud.hide()
-                        let inputViewController = WithdrawInputAmountViewController(
-                            tokenItem: token,
-                            destination: .temporary(address)
-                        )
+                        let inputViewController: WithdrawInputAmountViewController
+                        if let address = AddressDAO.shared.getAddress(chainId: token.chainID, destination: address.destination, tag: address.tag) {
+                            inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: .address(address))
+                        } else {
+                            inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: .temporary(address))
+                        }
                         UIApplication.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
                     } onFailure: { error in
                         hud.set(style: .error, text: error.localizedDescription)

@@ -52,14 +52,10 @@ final class Web3TransactionViewController: TransactionViewController {
                             hash: transaction.transactionHash
                         )
                         if transaction.state.knownCase != .pending {
-                            Web3TransactionDAO.shared.updateTransaction(
-                                with: transaction.hash,
-                                status: transaction.state
-                            ) { db in
-                                try Web3RawTransactionDAO.shared.deleteRawTransaction(
-                                    hash: transaction.hash,
-                                    db: db
-                                )
+                            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
+                                if transaction.state.knownCase == .notFound {
+                                    try Web3TransactionDAO.shared.updateExpiredTransaction(hash: transaction.hash, chain: transaction.chainID, address: transaction.account, db: db)
+                                }
                             }
                             let syncTokens = RefreshWeb3TokenJob(walletID: walletID)
                             ConcurrentJobQueue.shared.addJob(job: syncTokens)

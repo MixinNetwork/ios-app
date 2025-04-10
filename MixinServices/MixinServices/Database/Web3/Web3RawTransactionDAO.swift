@@ -13,11 +13,14 @@ public final class Web3RawTransactionDAO: Web3DAO {
         """)
     }
     
-    public func deleteRawTransaction(hash: String, db: GRDB.Database) throws {
-        try db.execute(
-            sql: "DELETE FROM raw_transactions WHERE hash = ?",
-            arguments: [hash]
-        )
+    public func deleteRawTransaction(hash: String, alongsideTransaction change: ((GRDB.Database) throws -> Void)) throws {
+        db.write { db in
+            try db.execute(
+                sql: "DELETE FROM raw_transactions WHERE hash = ?",
+                arguments: [hash]
+            )
+            try change(db)
+        }
     }
     
 }

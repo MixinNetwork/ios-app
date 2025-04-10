@@ -54,18 +54,16 @@ public final class Web3TransactionDAO: Web3DAO {
         }
     }
     
-    public func updateTransaction(
-        with hash: String,
-        status: UnknownableEnum<Web3RawTransaction.State>,
-        alongsideTransaction change: ((GRDB.Database) throws -> Void)
-    ) {
-        db.write { db in
-            try db.execute(
-                sql: "UPDATE transactions SET status = ? WHERE transaction_hash = ?",
-                arguments: [status.rawValue, hash]
-            )
-            try change(db)
-        }
+    public func updateExpiredTransaction(
+        hash: String,
+        chain: String,
+        address: String,
+        db: GRDB.Database
+    ) throws {
+        try db.execute(
+            sql: "UPDATE transactions SET status = ? WHERE transaction_hash = ? AND chain_id = ? AND address = ?",
+            arguments: [Web3RawTransaction.State.notFound.rawValue, hash, chain, address]
+        )
     }
     
     public func deleteAll() {

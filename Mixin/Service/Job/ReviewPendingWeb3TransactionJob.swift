@@ -23,11 +23,11 @@ final class ReviewPendingWeb3TransactionJob: BaseJob {
                 guard transaction.state.knownCase != .pending else {
                     return
                 }
-                Web3TransactionDAO.shared.updateTransaction(
-                    with: transaction.hash,
-                    status: transaction.state
-                ) { db in
-                    try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash, db: db)
+                
+                try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
+                    if transaction.state.knownCase == .notFound {
+                        try Web3TransactionDAO.shared.updateExpiredTransaction(hash: transaction.hash, chain: transaction.chainID, address: transaction.account, db: db)
+                    }
                 }
             case let .failure(error):
                 Logger.general.debug(category: "ReviewPendingWeb3TransactionJob", message: "\(transaction.hash):\n\(error)")

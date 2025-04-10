@@ -8,7 +8,7 @@ final class ReviewPendingWeb3TransactionJob: BaseJob {
     }
     
     override func run() throws {
-        let transactions = Web3RawTransactionDAO.shared.pendingTransactions()
+        let transactions = Web3RawTransactionDAO.shared.pendingRawTransactions()
         guard !transactions.isEmpty else {
             Logger.general.info(category: "ReviewPendingWeb3TransactionJob", message: "No pending txn")
             return
@@ -23,7 +23,12 @@ final class ReviewPendingWeb3TransactionJob: BaseJob {
                 guard transaction.state.knownCase != .pending else {
                     return
                 }
-                Web3RawTransactionDAO.shared.deleteTransaction(hash: transaction.hash, state: transaction.state)
+                Web3TransactionDAO.shared.updateTransaction(
+                    with: transaction.hash,
+                    status: transaction.state
+                ) { db in
+                    try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash, db: db)
+                }
             case let .failure(error):
                 Logger.general.debug(category: "ReviewPendingWeb3TransactionJob", message: "\(transaction.hash):\n\(error)")
             }

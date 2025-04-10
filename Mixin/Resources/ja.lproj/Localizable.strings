@@ -142,6 +142,7 @@
 "app_update_tips" = "現在のバージョン(%@)はもう利用いただけません。App Storeで新しいバージョンを入手してください";
 "appearance" = "言語とテーマ";
 "apply" = "適用";
+"approval" = "Approval";
 "approve" = "Approve";
 "approve_transaction" = "Approve Transaction";
 "approving_transaction" = "Approving Transaction";

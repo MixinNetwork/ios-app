@@ -214,16 +214,18 @@ final class WalletHeaderView: InfiniteTopView {
         }
     }
     
-    func reloadPendingDeposits(tokens: [MixinToken], snapshots: [SafeSnapshot]) {
-        if tokens.isEmpty || snapshots.isEmpty {
+    func reloadPendingDeposits(tokens: [any Token], snapshots: [Any]) {
+        guard !snapshots.isEmpty else {
             pendingDepositView.isHidden = true
             contentViewBottomConstraint.constant = 17
-        } else {
-            pendingDepositView.isHidden = false
-            contentViewBottomConstraint.constant = 10
-            for iconView in pendingDepositIconStackView.arrangedSubviews {
-                iconView.removeFromSuperview()
-            }
+            return
+        }
+        pendingDepositView.isHidden = false
+        contentViewBottomConstraint.constant = 10
+        for iconView in pendingDepositIconStackView.arrangedSubviews {
+            iconView.removeFromSuperview()
+        }
+        if !tokens.isEmpty {
             let iconViewCount = if tokens.count <= maxPendingDepositTokenIconCount {
                 tokens.count
             } else {
@@ -258,20 +260,20 @@ final class WalletHeaderView: InfiniteTopView {
                         .multipliedBy(multiplier)
                 }
             }
-            if snapshots.count == 1,
-               let amount = Decimal(string: snapshots[0].amount, locale: .enUSPOSIX),
-               let token = tokens.first(where: { $0.assetID == snapshots[0].assetID })
-            {
-                let item = CurrencyFormatter.localizedString(
-                    from: amount,
-                    format: .precision,
-                    sign: .never,
-                    symbol: .custom(token.symbol)
-                )
-                pendingDepositLabel.text = R.string.localizable.deposit_pending_confirmation(item)
-            } else {
-                pendingDepositLabel.text = R.string.localizable.deposits_pending_confirmation(snapshots.count)
-            }
+        }
+        if snapshots.count == 1,
+           let firstSnapshot = snapshots[0] as? SafeSnapshot,
+           let token = tokens.first(where: { $0.assetID == firstSnapshot.assetID })
+        {
+            let item = CurrencyFormatter.localizedString(
+                from: firstSnapshot.decimalAmount,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(token.symbol)
+            )
+            pendingDepositLabel.text = R.string.localizable.deposit_pending_confirmation(item)
+        } else {
+            pendingDepositLabel.text = R.string.localizable.deposits_pending_confirmation(snapshots.count)
         }
     }
     

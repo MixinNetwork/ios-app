@@ -24,6 +24,17 @@ final class MultipleAssetChangeCell: UITableViewCell {
         }
     }
     
+    func reloadData(
+        numberOfAssetChanges: Int,
+        configureRow: (Int, RowStackView) -> Void
+    ) {
+        titleLabel.text = R.string.localizable.asset_changes().uppercased()
+        loadRowViews(count: numberOfAssetChanges)
+        for i in 0..<numberOfAssetChanges {
+            configureRow(i, rowViews[i])
+        }
+    }
+    
     func reloadData(changes: [(token: MixinTokenItem, amount: String)]) {
         titleLabel.text = R.string.localizable.asset_changes().uppercased()
         loadRowViews(count: changes.count)
@@ -96,7 +107,7 @@ final class MultipleAssetChangeCell: UITableViewCell {
 
 extension MultipleAssetChangeCell {
     
-    private class RowStackView: UIStackView {
+    class RowStackView: UIStackView {
         
         let iconView = PlainTokenIconView(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
         let amountLabel = UILabel()

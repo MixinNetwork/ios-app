@@ -142,6 +142,7 @@
 "app_update_tips" = "¡La versión actual (%@) ya no está disponible! Haz clic en Actualizar a continuación para actualizar a la última versión de la App Store.";
 "appearance" = "Apariencia";
 "apply" = "Aplicar";
+"approval" = "Approval";
 "approve" = "Approve";
 "approve_transaction" = "Approve Transaction";
 "approving_transaction" = "Approving Transaction";

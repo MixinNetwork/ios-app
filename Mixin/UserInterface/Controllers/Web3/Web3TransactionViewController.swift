@@ -7,13 +7,14 @@ final class Web3TransactionViewController: TransactionViewController {
         URL(string: "https://api.mixin.one/external/explore/\(transaction.chainID)/transactions/\(transaction.transactionHash)")
     }
     
-    private let token: Web3Token
+    private let walletID: String
     
     private var transaction: Web3Transaction
     private var reloadPendingTransactionTask: Task<Void, Error>?
+    private var rows: [Row] = []
     
-    init(token: Web3Token, transaction: Web3Transaction) {
-        self.token = token
+    init(walletID: String, transaction: Web3Transaction) {
+        self.walletID = walletID
         self.transaction = transaction
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .custom
@@ -31,7 +32,10 @@ final class Web3TransactionViewController: TransactionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.transaction()
-        iconView.setIcon(web3Token: token)
+        tableView.register(R.nib.multipleAssetChangeCell)
+        tableView.register(R.nib.authenticationPreviewInfoCell)
+        tableView.dataSource = self
+        tableView.delegate = self
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadDataIfContains(_:)),
@@ -39,9 +43,8 @@ final class Web3TransactionViewController: TransactionViewController {
             object: nil
         )
         reloadData()
-        if transaction.status.knownCase == .pending {
-            let walletID = token.walletID
-            reloadPendingTransactionTask = Task.detached { [transaction] in
+        if transaction.status == .pending {
+            reloadPendingTransactionTask = Task.detached { [walletID, transaction] in
                 repeat {
                     do {
                         let transaction = try await RouteAPI.transaction(
@@ -49,8 +52,15 @@ final class Web3TransactionViewController: TransactionViewController {
                             hash: transaction.transactionHash
                         )
                         if transaction.state.knownCase != .pending {
-                            Web3RawTransactionDAO.shared.deleteTransaction(hash: transaction.hash, state: transaction.state)
-                            
+                            Web3TransactionDAO.shared.updateTransaction(
+                                with: transaction.hash,
+                                status: transaction.state
+                            ) { db in
+                                try Web3RawTransactionDAO.shared.deleteRawTransaction(
+                                    hash: transaction.hash,
+                                    db: db
+                                )
+                            }
                             let syncTokens = RefreshWeb3TokenJob(walletID: walletID)
                             ConcurrentJobQueue.shared.addJob(job: syncTokens)
                             let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
@@ -81,37 +91,165 @@ final class Web3TransactionViewController: TransactionViewController {
     
 }
 
+extension Web3TransactionViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        rows.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch rows[indexPath.row] {
+        case let .plain(key, value):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot_column, for: indexPath)!
+            cell.titleLabel.text = key.localized.uppercased()
+            cell.subtitleLabel.text = value
+            cell.subtitleLabel.textColor = R.color.text()
+            cell.disclosureIndicatorImageView.isHidden = true
+            return cell
+        case let .assetChanges(changes):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
+            cell.contentLeadingConstraint.constant = 20
+            cell.contentTrailingConstraint.constant = 20
+            cell.reloadData(numberOfAssetChanges: changes.count) { index, row in
+                let change = changes[index]
+                if let token = change.token {
+                    row.iconView.setIcon(token: token)
+                }
+                let amountColor = switch change.style {
+                case .send:
+                    R.color.error_red()!
+                case .receive:
+                    R.color.market_green()!
+                case .pending:
+                    R.color.text()!
+                }
+                let amount = NSMutableAttributedString(
+                    string: change.amount,
+                    attributes: [
+                        .font: UIFont.preferredFont(forTextStyle: .callout),
+                        .foregroundColor: amountColor,
+                    ]
+                )
+                if let symbol = change.token?.symbol {
+                    let attributedSymbol = NSAttributedString(
+                        string: " " + symbol,
+                        attributes: [
+                            .font: UIFont.preferredFont(forTextStyle: .callout),
+                            .foregroundColor: R.color.text()!,
+                        ]
+                    )
+                    amount.append(attributedSymbol)
+                }
+                row.amountLabel.attributedText = amount
+                row.networkLabel.text = nil
+            }
+            return cell
+        case let .fee(token, fiatMoney):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
+            cell.contentLeadingConstraint.constant = 20
+            cell.contentTrailingConstraint.constant = 20
+            cell.captionLabel.text = R.string.localizable.network_fee().uppercased()
+            cell.primaryLabel.text = token
+            cell.secondaryLabel.text = fiatMoney
+            cell.setPrimaryLabel(usesBoldFont: false)
+            cell.trailingContent = nil
+            return cell
+        }
+    }
+    
+}
+
+extension Web3TransactionViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
+        rows[indexPath.row].allowsCopy
+    }
+    
+    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
+        rows[indexPath.row].allowsCopy && action == #selector(copy(_:))
+    }
+    
+    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
+        switch rows[indexPath.row] {
+        case let .plain(_, value):
+            UIPasteboard.general.string = value
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
+        default:
+            break
+        }
+    }
+    
+}
+
 extension Web3TransactionViewController {
     
-    enum TransactionKey: RowKey {
+    private struct AssetChange {
         
-        case id
+        enum Style {
+            case send
+            case receive
+            case pending
+        }
+        
+        let token: (any Token)?
+        let amount: String
+        let style: Style
+        
+    }
+    
+    private enum Row {
+        
+        case plain(key: Key, value: String)
+        case assetChanges([AssetChange])
+        case fee(token: String, fiatMoney: String)
+        
+        var allowsCopy: Bool {
+            switch self {
+            case let .plain(key, _):
+                key.allowsCopy
+            default:
+                false
+            }
+        }
+        
+    }
+    
+    private enum Key {
+        
         case transactionHash
         case from
         case to
+        case fee
+        case type
+        case network
         case date
-        case status
         
         var localized: String {
             switch self {
-            case .id:
-                return R.string.localizable.transaction_id()
             case .transactionHash:
-                return R.string.localizable.transaction_hash()
+                R.string.localizable.transaction_hash()
             case .from:
-                return R.string.localizable.from()
+                R.string.localizable.from()
             case .to:
-                return R.string.localizable.to()
+                R.string.localizable.to()
+            case .fee:
+                R.string.localizable.network_fee()
+            case .type:
+                R.string.localizable.type()
+            case .network:
+                R.string.localizable.network()
             case .date:
-                return R.string.localizable.date()
-            case .status:
-                return R.string.localizable.status()
+                R.string.localizable.date()
             }
         }
         
         var allowsCopy: Bool {
             switch self {
-            case .id, .transactionHash, .from, .to:
+            case .transactionHash, .from, .to:
                 true
             default:
                 false
@@ -120,37 +258,162 @@ extension Web3TransactionViewController {
         
     }
     
-    class TransactionRow: Row {
-        
-        init(key: TransactionKey, value: String, style: Row.Style = []) {
-            super.init(key: key, value: value, style: style)
-        }
-        
-    }
-    
     private func reloadData() {
-        switch transaction.status.knownCase {
-        case .success:
-            switch transaction.transactionType.knownCase {
-            case .send:
-                amountLabel.textColor = R.color.market_red()
-            case .receive:
-                amountLabel.textColor = R.color.market_green()
-            case .other, .contract, .none:
-                amountLabel.textColor = R.color.text_tertiary()!
-            }
-        case .pending, .failed, .none:
-            amountLabel.textColor = R.color.text_tertiary()!
+        let simpleHeaderView: SimpleWeb3TransactionTableHeaderView = tableView.tableHeaderView as? SimpleWeb3TransactionTableHeaderView
+            ?? R.nib.simpleWeb3TransactionTableHeaderView(withOwner: nil)!
+        let complexHeaderView: ComplexWeb3TransactionTableHeaderView = tableView.tableHeaderView as? ComplexWeb3TransactionTableHeaderView
+            ?? R.nib.complexWeb3TransactionTableHeaderView(withOwner: nil)!
+        
+        let feeToken = Web3TokenDAO.shared.token(walletID: walletID, assetID: transaction.chainID)
+        let feeRow: Row
+        if let feeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
+            feeRow = .fee(
+                token: CurrencyFormatter.localizedString(
+                    from: amount,
+                    format: .precision,
+                    sign: .never,
+                    symbol: .custom(feeToken.symbol)
+                ),
+                fiatMoney: CurrencyFormatter.localizedString(
+                    from: amount * feeToken.decimalUSDPrice * Currency.current.decimalRate,
+                    format: .precision,
+                    sign: .never,
+                    symbol: .currencySymbol
+                )
+            )
+        } else {
+            feeRow = .plain(key: .fee, value: transaction.fee)
         }
-        amountLabel.text = CurrencyFormatter.localizedString(
-            from: transaction.signedDecimalAmount,
-            format: .precision,
-            sign: .always
-        )
-        symbolLabel.text = token.symbol
-        let value = fiatMoneyValue(amount: transaction.decimalAmount, usdPrice: token.decimalUSDPrice)
-        fiatMoneyValueLabel.text = R.string.localizable.value_now(value) + "\n "
+        
+        switch transaction.transactionType.knownCase {
+        case .transferIn, .transferOut:
+            if let assetID = transaction.transferAssetID,
+               !assetID.isEmpty,
+               let token = Web3TokenDAO.shared.token(walletID: walletID, assetID: assetID)
+            {
+                simpleHeaderView.iconView.setIcon(web3Token: token)
+                simpleHeaderView.symbolLabel.text = token.symbol
+            } else {
+                simpleHeaderView.symbolLabel.text = nil
+            }
+            switch transaction.status {
+            case .success:
+                switch transaction.transactionType.knownCase {
+                case .transferIn:
+                    simpleHeaderView.amountLabel.textColor = R.color.market_green()
+                case .transferOut:
+                    simpleHeaderView.amountLabel.textColor = R.color.market_red()
+                default:
+                    break
+                }
+            case .failed, .pending, .notFound:
+                simpleHeaderView.amountLabel.textColor = R.color.text_tertiary()
+            }
+        case .none, .unknown:
+            complexHeaderView.titleLabel.text = transaction.transactionType.localized
+        case .swap:
+            complexHeaderView.titleLabel.text = R.string.localizable.swap()
+        case .approval:
+            complexHeaderView.titleLabel.text = R.string.localizable.approval()
+        }
+        
+        switch transaction.transactionType.knownCase {
+        case .transferIn, .transferOut:
+            if let amount = transaction.directionalTransferAmount {
+                simpleHeaderView.amountLabel.text = CurrencyFormatter.localizedString(
+                    from: amount,
+                    format: .precision,
+                    sign: .always
+                )
+            } else {
+                simpleHeaderView.amountLabel.text = nil
+            }
+            simpleHeaderView.statusLabel.load(status: transaction.status)
+            tableView.tableHeaderView = simpleHeaderView
+        case .none, .unknown, .swap, .approval:
+            complexHeaderView.statusLabel.load(status: transaction.status)
+            tableView.tableHeaderView = complexHeaderView
+        }
+        
         layoutTableHeaderView()
+        
+        switch transaction.transactionType.knownCase {
+        case .transferIn:
+            rows = [
+                .plain(key: .transactionHash, value: transaction.transactionHash),
+            ]
+            if let fromAddress = transaction.senders.first?.from {
+                rows.append(.plain(key: .from, value: fromAddress))
+            }
+            rows.append(contentsOf: [
+                feeRow,
+                .plain(key: .type, value: transaction.transactionType.localized)
+            ])
+        case .transferOut:
+            rows = [
+                .plain(key: .transactionHash, value: transaction.transactionHash),
+            ]
+            if let toAddress = transaction.receivers.first?.to {
+                rows.append(.plain(key: .to, value: toAddress))
+            }
+            rows.append(contentsOf: [
+                feeRow,
+                .plain(key: .type, value: transaction.transactionType.localized)
+            ])
+        case .swap, .none, .unknown:
+            let assetIDs = Set(transaction.senders.map(\.assetID) + transaction.receivers.map(\.assetID))
+            let tokens = Web3TokenDAO.shared.tokens(walletID: walletID, ids: assetIDs)
+                .reduce(into: [:]) { result, token in
+                    result[token.assetID] = token
+                }
+            let sendStyle: AssetChange.Style
+            let receiveStyle: AssetChange.Style
+            switch transaction.status {
+            case .success:
+                sendStyle = .send
+                receiveStyle = .receive
+            default:
+                sendStyle = .pending
+                receiveStyle = .pending
+            }
+            let changes = transaction.receivers.map { receiver in
+                let token = tokens[receiver.assetID]
+                let amount = if let amount = Decimal(string: receiver.amount, locale: .enUSPOSIX) {
+                    CurrencyFormatter.localizedString(
+                        from: amount,
+                        format: .precision,
+                        sign: .always
+                    )
+                } else {
+                    receiver.amount
+                }
+                return AssetChange(token: token, amount: amount, style: receiveStyle)
+            } + transaction.senders.map { sender in
+                let token = tokens[sender.assetID]
+                let amount = if let amount = Decimal(string: sender.amount, locale: .enUSPOSIX) {
+                    CurrencyFormatter.localizedString(
+                        from: -amount,
+                        format: .precision,
+                        sign: .always
+                    )
+                } else {
+                    "-" + sender.amount
+                }
+                return AssetChange(token: token, amount: amount, style: sendStyle)
+            }
+            rows = [
+                .assetChanges(changes),
+                .plain(key: .transactionHash, value: transaction.transactionHash),
+                feeRow,
+                .plain(key: .type, value: transaction.transactionType.localized)
+            ]
+        case .approval:
+            rows = []
+        }
+        
+        if let network = feeToken?.depositNetworkName {
+            rows.append(.plain(key: .network, value: network))
+        }
         
         let transactionAt: String
         if let date = ISO8601DateFormatter.default.date(from: transaction.transactionAt) {
@@ -158,17 +421,8 @@ extension Web3TransactionViewController {
         } else {
             transactionAt = transaction.transactionAt
         }
-        rows = [
-            TransactionRow(key: .transactionHash, value: transaction.transactionHash),
-            TransactionRow(key: .from, value: transaction.sender),
-            TransactionRow(key: .to, value: transaction.receiver),
-            TransactionRow(key: .date, value: transactionAt),
-            TransactionRow(key: .status, value: transaction.status.rawValue.capitalized),
-        ]
-        if !transaction.transactionID.isEmpty {
-            let id = TransactionRow(key: .id, value: transaction.transactionID)
-            rows.insert(id, at: 0)
-        }
+        rows.append(.plain(key: .date, value: transactionAt))
+        
         tableView.reloadData()
     }
     

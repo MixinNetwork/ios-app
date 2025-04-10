@@ -9,7 +9,7 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
         public static let eth = "0x0000000000000000000000000000000000000000"
     }
     
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case walletID = "wallet_id"
         case assetID = "asset_id"
         case chainID = "chain_id"
@@ -86,7 +86,7 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
     
 }
 
-extension Web3Token: TableRecord, PersistableRecord, MixinFetchableRecord, MixinEncodableRecord {
+extension Web3Token: TableRecord, PersistableRecord, MixinFetchableRecord, MixinEncodableRecord, DatabaseColumnConvertible {
     
     public static let databaseTableName = "tokens"
     

@@ -5,7 +5,7 @@ public final class Web3RawTransactionDAO: Web3DAO {
     
     public static let shared = Web3RawTransactionDAO()
     
-    public func pendingTransactions() -> [Web3RawTransaction] {
+    public func pendingRawTransactions() -> [Web3RawTransaction] {
         db.select(with: """
             SELECT *
             FROM raw_transactions 
@@ -13,27 +13,11 @@ public final class Web3RawTransactionDAO: Web3DAO {
         """)
     }
     
-    public func deleteTransaction(hash: String, state: UnknownableEnum<Web3RawTransaction.State>) {
-        db.write { db in
-            let deleteRawTransaction = "DELETE FROM raw_transactions WHERE hash = ?"
-            try db.execute(sql: deleteRawTransaction, arguments: [hash])
-            
-            if state.knownCase == .notFound {
-                let deletePendingTransaction = """
-                DELETE FROM transactions
-                WHERE \(Web3Transaction.CodingKeys.status.rawValue) = 'pending'
-                    AND transaction_hash = ?
-                """
-                try db.execute(sql: deletePendingTransaction, arguments: [hash])
-            }
-        }
-    }
-    
-    public func save(rawTransaction: Web3RawTransaction, pendingTransaction: Web3Transaction) {
-        db.write { db in
-            try rawTransaction.save(db)
-            try pendingTransaction.save(db)
-        }
+    public func deleteRawTransaction(hash: String, db: GRDB.Database) throws {
+        try db.execute(
+            sql: "DELETE FROM raw_transactions WHERE hash = ?",
+            arguments: [hash]
+        )
     }
     
 }

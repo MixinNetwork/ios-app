@@ -142,6 +142,7 @@
 "app_update_tips" = "Текущая версия (%@) больше недоступна! Нажмите «Обновить» ниже, чтобы выполнить обновление до последней версии из App Store.";
 "appearance" = "Вид";
 "apply" = "Подать заявление";
+"approval" = "Approval";
 "approve" = "Approve";
 "approve_transaction" = "Approve Transaction";
 "approving_transaction" = "Approving Transaction";

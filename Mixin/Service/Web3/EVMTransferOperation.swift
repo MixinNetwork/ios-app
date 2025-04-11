@@ -65,7 +65,7 @@ class EVMTransferOperation: Web3TransferOperation {
             if let amount = transaction.decimalValue, amount != 0 {
                 .detailed(token: feeToken, amount: amount)
             } else {
-                .decodingFailed(rawTransaction: transaction.hexData ?? "")
+                .decodingFailed(rawTransaction: transaction.hexEncodedData ?? "")
             }
         case .arbitrary(let change):
             change
@@ -96,7 +96,7 @@ class EVMTransferOperation: Web3TransferOperation {
     override func loadFee() async throws -> Fee {
         let rawFee = try await RouteAPI.estimatedEthereumFee(
             mixinChainID: mixinChainID,
-            hexData: transactionPreview.hexData,
+            hexData: transactionPreview.hexEncodedData,
             from: fromAddress,
             to: transactionPreview.to.toChecksumAddress()
         )

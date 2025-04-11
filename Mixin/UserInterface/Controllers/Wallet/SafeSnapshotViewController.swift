@@ -8,10 +8,28 @@ final class SafeSnapshotViewController: TransactionViewController {
     }
     
     private let messageID: String?
+    private let tableHeaderView = R.nib.snapshotTableHeaderView(withOwner: nil)!
     
     private var token: MixinTokenItem
     private var snapshot: SafeSnapshotItem
     private var inscription: InscriptionItem?
+    private var rows: [Row] = []
+    
+    private var iconView: BadgeIconView {
+        tableHeaderView.iconView
+    }
+    
+    private var amountLabel: UILabel {
+        tableHeaderView.amountLabel
+    }
+    
+    private var symbolLabel: UILabel {
+        tableHeaderView.symbolLabel
+    }
+    
+    private var fiatMoneyValueLabel: UILabel {
+        tableHeaderView.fiatMoneyValueLabel
+    }
     
     init(token: MixinTokenItem, snapshot: SafeSnapshotItem, messageID: String?, inscription: InscriptionItem?) {
         self.token = token
@@ -30,6 +48,9 @@ final class SafeSnapshotViewController: TransactionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.transaction()
+        tableView.tableHeaderView = tableHeaderView
+        tableView.dataSource = self
+        tableView.delegate = self
         if snapshot.isInscription {
             if let inscription {
                 iconView.setIcon(content: inscription)
@@ -104,33 +125,6 @@ final class SafeSnapshotViewController: TransactionViewController {
         reloadSnapshotIfNeeded()
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        super.tableView(tableView, didSelectRowAt: indexPath)
-        switch rows[indexPath.row].key as? SnapshotKey {
-        case .from, .to:
-            guard let id = snapshot.opponentUserID, !id.isEmpty else {
-                return
-            }
-            DispatchQueue.global().async {
-                guard let user = UserDAO.shared.getUser(userId: id) else {
-                    return
-                }
-                DispatchQueue.main.async { [weak self] in
-                    let profile = UserProfileViewController(user: user)
-                    self?.present(profile, animated: true, completion: nil)
-                }
-            }
-        case .memo:
-            guard !snapshot.memo.isEmpty, let utf8DecodedMemo = snapshot.utf8DecodedMemo else {
-                return
-            }
-            let memo = MemoViewController(rawMemo: snapshot.memo, utf8DecodedMemo: utf8DecodedMemo)
-            present(memo, animated: true, completion: nil)
-        default:
-            break
-        }
-    }
-    
     @IBAction func longPressAmountAction(_ recognizer: UILongPressGestureRecognizer) {
         guard recognizer.state == .began else {
             return
@@ -189,7 +183,7 @@ final class SafeSnapshotViewController: TransactionViewController {
 
 extension SafeSnapshotViewController {
     
-    enum SnapshotKey: RowKey {
+    private enum SnapshotKey {
         
         case transactionID
         case transactionHash
@@ -246,12 +240,93 @@ extension SafeSnapshotViewController {
         
     }
     
-    class SnapshotRow: Row {
+    private class Row {
         
-        init(key: SnapshotKey, value: String, style: Row.Style = []) {
-            super.init(key: key, value: value, style: style)
+        struct Style: OptionSet {
+            
+            let rawValue: Int
+            
+            static let unavailable = Style(rawValue: 1 << 0)
+            static let disclosureIndicator = Style(rawValue: 1 << 1)
+            
         }
         
+        let key: SnapshotKey
+        let value: String
+        let style: Style
+        
+        init(key: SnapshotKey, value: String, style: Style = []) {
+            self.key = key
+            self.value = value
+            self.style = style
+        }
+        
+    }
+    
+}
+
+extension SafeSnapshotViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        rows.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot_column, for: indexPath)!
+        let row = rows[indexPath.row]
+        cell.titleLabel.text = row.key.localized.localizedUppercase
+        cell.subtitleLabel.text = row.value
+        if row.style.contains(.unavailable) {
+            cell.subtitleLabel.textColor = R.color.text_tertiary()!
+        } else {
+            cell.subtitleLabel.textColor = R.color.text()
+        }
+        cell.disclosureIndicatorImageView.isHidden = !row.style.contains(.disclosureIndicator)
+        return cell
+    }
+    
+}
+
+extension SafeSnapshotViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        switch rows[indexPath.row].key {
+        case .from, .to:
+            guard let id = snapshot.opponentUserID, !id.isEmpty else {
+                return
+            }
+            DispatchQueue.global().async {
+                guard let user = UserDAO.shared.getUser(userId: id) else {
+                    return
+                }
+                DispatchQueue.main.async { [weak self] in
+                    let profile = UserProfileViewController(user: user)
+                    self?.present(profile, animated: true, completion: nil)
+                }
+            }
+        case .memo:
+            guard !snapshot.memo.isEmpty, let utf8DecodedMemo = snapshot.utf8DecodedMemo else {
+                return
+            }
+            let memo = MemoViewController(rawMemo: snapshot.memo, utf8DecodedMemo: utf8DecodedMemo)
+            present(memo, animated: true, completion: nil)
+        default:
+            break
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
+        rows[indexPath.row].key.allowsCopy
+    }
+    
+    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
+        rows[indexPath.row].key.allowsCopy && action == #selector(copy(_:))
+    }
+    
+    func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
+        UIPasteboard.general.string = rows[indexPath.row].value
+        showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     
 }
@@ -333,16 +408,16 @@ extension SafeSnapshotViewController {
     }
     
     private func reloadRows() {
-        var rows: [SnapshotRow] = []
+        var rows: [Row] = []
         
         if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue {
             if let completed = snapshot.confirmations {
                 let value = R.string.localizable.pending_confirmations(completed, token.confirmations)
-                rows.append(SnapshotRow(key: .depositProgress, value: value))
+                rows.append(Row(key: .depositProgress, value: value))
             }
         } else {
-            rows.append(SnapshotRow(key: .transactionID, value: snapshot.id))
-            rows.append(SnapshotRow(key: .transactionHash, value: snapshot.transactionHash))
+            rows.append(Row(key: .transactionID, value: snapshot.id))
+            rows.append(Row(key: .transactionHash, value: snapshot.transactionHash))
         }
         
         if let deposit = snapshot.deposit {
@@ -355,8 +430,8 @@ extension SafeSnapshotViewController {
                 sender = deposit.sender
                 style = []
             }
-            rows.append(SnapshotRow(key: .from, value: sender, style: style))
-            rows.append(SnapshotRow(key: .depositHash, value: deposit.hash))
+            rows.append(Row(key: .from, value: sender, style: style))
+            rows.append(Row(key: .depositHash, value: deposit.hash))
         } else if let withdrawal = snapshot.withdrawal {
             let receiver: String
             let receiverStyle: Row.Style
@@ -367,7 +442,7 @@ extension SafeSnapshotViewController {
                 receiver = withdrawal.receiver
                 receiverStyle = []
             }
-            rows.append(SnapshotRow(key: .to, value: receiver, style: receiverStyle))
+            rows.append(Row(key: .to, value: receiver, style: receiverStyle))
             
             let withdrawalHash: String
             let withdrawalStyle: Row.Style
@@ -378,13 +453,13 @@ extension SafeSnapshotViewController {
                 withdrawalHash = withdrawal.hash
                 withdrawalStyle = []
             }
-            rows.append(SnapshotRow(key: .withdrawalHash, value: withdrawalHash, style: withdrawalStyle))
+            rows.append(Row(key: .withdrawalHash, value: withdrawalHash, style: withdrawalStyle))
         } else {
             if let inscriptionHash = snapshot.inscriptionHash {
-                rows.append(SnapshotRow(key: .inscriptionHash, value: inscriptionHash))
+                rows.append(Row(key: .inscriptionHash, value: inscriptionHash))
                 if let inscription = inscription {
-                    rows.append(SnapshotRow(key: .collectionName, value: inscription.collectionName))
-                    rows.append(SnapshotRow(key: .id, value: inscription.sequenceRepresentation))
+                    rows.append(Row(key: .collectionName, value: inscription.collectionName))
+                    rows.append(Row(key: .id, value: inscription.sequenceRepresentation))
                 }
             }
             let style: Row.Style
@@ -397,9 +472,9 @@ extension SafeSnapshotViewController {
                 style = .unavailable
             }
             if snapshot.amount.hasMinusPrefix {
-                rows.append(SnapshotRow(key: .to, value: opponentName, style: style))
+                rows.append(Row(key: .to, value: opponentName, style: style))
             } else {
-                rows.append(SnapshotRow(key: .from, value: opponentName, style: style))
+                rows.append(Row(key: .from, value: opponentName, style: style))
             }
         }
         if !snapshot.memo.isEmpty {
@@ -412,9 +487,9 @@ extension SafeSnapshotViewController {
                 style = []
                 value = snapshot.memo
             }
-            rows.append(SnapshotRow(key: .memo, value: value, style: style))
+            rows.append(Row(key: .memo, value: value, style: style))
         }
-        rows.append(SnapshotRow(key: .createdAt, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
+        rows.append(Row(key: .createdAt, value: DateFormatter.dateFull.string(from: snapshot.createdAt.toUTCDate())))
         self.rows = rows
         tableView.reloadData()
     }

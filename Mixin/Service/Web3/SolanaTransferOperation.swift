@@ -17,6 +17,8 @@ class SolanaTransferOperation: Web3TransferOperation {
         case noFeeToken(String)
     }
     
+    fileprivate var fee: Fee?
+    
     fileprivate init(
         fromAddress: String,
         toAddress: String,
@@ -65,8 +67,9 @@ class SolanaTransferOperation: Web3TransferOperation {
             }
             return
         }
-        await MainActor.run {
+        let fee = await MainActor.run {
             self.state = .sending
+            return self.fee
         }
         do {
             Logger.web3.info(category: "SolanaTransfer", message: "Will send tx: \(signedTransaction)")
@@ -75,33 +78,42 @@ class SolanaTransferOperation: Web3TransferOperation {
                 raw: signedTransaction
             )
             let pendingTransaction = await {
-                let (assetID, amount): (String, String) = switch try? await loadBalanceChange() {
+                let assetID: String
+                let senders: [Web3Transaction.Sender]
+                switch try? await loadBalanceChange() {
                 case .none, .decodingFailed:
-                    ("", "")
+                    assetID = ""
+                    senders = []
                 case let .detailed(token, decimalAmount):
-                    (token.assetID, TokenAmountFormatter.string(from: decimalAmount))
+                    let amount = TokenAmountFormatter.string(from: decimalAmount)
+                    assetID = token.assetID
+                    senders = [.init(assetID: assetID, amount: amount, from: fromAddress)]
+                }
+                let feeString = if let fee {
+                    TokenAmountFormatter.string(from: fee.token)
+                } else {
+                    ""
                 }
                 return Web3Transaction(
-                    transactionID: "",
                     transactionHash: rawTransaction.hash,
+                    status: .pending,
                     blockNumber: -1,
-                    sender: fromAddress,
-                    receiver: toAddress,
-                    outputHash: "",
                     chainID: ChainID.solana,
-                    assetID: assetID,
-                    amount: amount,
-                    transactionType: .known(.send),
-                    status: .known(.pending),
+                    fee: feeString,
+                    address: fromAddress,
+                    transactionType: .known(.transferOut),
+                    senders: senders,
+                    receivers: [],
+                    sendAssetID: assetID,
+                    receiveAssetID: "",
                     transactionAt: rawTransaction.createdAt,
                     createdAt: rawTransaction.createdAt,
                     updatedAt: rawTransaction.createdAt
                 )
             }()
-            Web3RawTransactionDAO.shared.save(
-                rawTransaction: rawTransaction,
-                pendingTransaction: pendingTransaction
-            )
+            Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
+                try rawTransaction.save(db)
+            }
             let hash = rawTransaction.hash
             try await respond(signature: hash)
             Logger.web3.info(category: "SolanaTransfer", message: "Txn sent, hash: \(hash)")
@@ -292,16 +304,21 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             token: payment.token,
             change: .init(amount: decimalAmount, assetKey: payment.token.assetKey)
         )
+        
         let baseFee = try baseFee(for: transaction)
         let priorityFee = try await RouteAPI.solanaPriorityFee(base64Transaction: transaction.rawTransaction)
+        
+        let tokenCount = baseFee.token + priorityFee.decimalCount
+        let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
+        let fee = Fee(token: tokenCount, fiatMoney: fiatMoneyCount)
+        
         await MainActor.run {
             self.createAssociatedTokenAccountForReceiver = createAccount
             self.priorityFee = priorityFee
+            self.fee = fee
             self.state = .ready
         }
-        let tokenCount = baseFee.token + priorityFee.decimalCount
-        let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-        return Fee(token: tokenCount, fiatMoney: fiatMoneyCount)
+        return fee
     }
     
     override func start(with pin: String) {

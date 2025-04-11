@@ -41,7 +41,7 @@ final class TransactionHistoryOpponentFilterView: TransactionHistoryFilterView {
             label.text = users[0].fullName
         case (0, 1):
             let full = addresses[0].fullRepresentation
-            label.text = Address.truncatedRepresentation(string: full, prefixCount: 3, suffixCount: 3)
+            label.text = TextTruncation.truncateMiddle(string: full, prefixCount: 3, suffixCount: 3)
         default:
             label.text = R.string.localizable.number_of_opponents(users.count + addresses.count)
         }

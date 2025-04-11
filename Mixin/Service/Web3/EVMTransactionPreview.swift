@@ -19,7 +19,7 @@ struct EVMTransactionPreview {
     let to: EthereumAddress
     let value: BigUInt?
     let gas: BigUInt?
-    let hexData: String?
+    let hexEncodedData: String?
     let data: Data?
     
     let decimalValue: Decimal?
@@ -29,7 +29,7 @@ struct EVMTransactionPreview {
         self.to = to
         self.value = value
         self.gas = nil
-        self.hexData = data?.hexEncodedString()
+        self.hexEncodedData = data?.hexEncodedString()
         self.data = data
         self.decimalValue = decimalValue
     }
@@ -101,7 +101,7 @@ struct EVMTransactionPreview {
         self.to = to
         self.value = value
         self.gas = gas
-        self.hexData = hexData
+        self.hexEncodedData = data?.hexEncodedString()
         self.data = data
         self.decimalValue = decimalValue
     }

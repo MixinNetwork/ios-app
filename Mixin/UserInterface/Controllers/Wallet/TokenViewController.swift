@@ -60,7 +60,6 @@ class TokenViewController<Token: HideableToken & ValuableToken, Transaction>: UI
         tableView.register(R.nib.tokenBalanceCell)
         tableView.register(R.nib.insetGroupedTitleCell)
         tableView.register(R.nib.tokenMarketCell)
-        tableView.register(R.nib.snapshotCell)
         tableView.register(R.nib.noTransactionIndicatorCell)
         tableView.register(
             UITableViewCell.self,
@@ -75,7 +74,6 @@ class TokenViewController<Token: HideableToken & ValuableToken, Transaction>: UI
         self.tableView = tableView
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.reloadData()
         
         NotificationCenter.default.addObserver(
             self,
@@ -165,8 +163,8 @@ class TokenViewController<Token: HideableToken & ValuableToken, Transaction>: UI
         
     }
     
-    func updateTransactionCell(_ cell: SnapshotCell, with transaction: Transaction) {
-        
+    func tableView(_ tableView: UITableView, cellForTransaction transaction: Transaction) -> UITableViewCell {
+        fatalError("Must override")
     }
     
     // MARK: - UITableViewDataSource
@@ -238,9 +236,8 @@ class TokenViewController<Token: HideableToken & ValuableToken, Transaction>: UI
                 cell.contentConfiguration = nil
                 return cell
             default:
-                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
-                updateTransactionCell(cell, with: pendingSnapshots[indexPath.row - 1])
-                return cell
+                let transaction = pendingSnapshots[indexPath.row - 1]
+                return self.tableView(tableView, cellForTransaction: transaction)
             }
         case .transactions:
             let row = transactionRows[indexPath.row]
@@ -253,9 +250,7 @@ class TokenViewController<Token: HideableToken & ValuableToken, Transaction>: UI
             case .emptyIndicator:
                 return tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.no_transaction_indicator, for: indexPath)!
             case .transaction(let snapshot):
-                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
-                updateTransactionCell(cell, with: snapshot)
-                return cell
+                return self.tableView(tableView, cellForTransaction: snapshot)
             case .bottomSeparator:
                 let cell = tableView.dequeueReusableCell(withIdentifier: emptyCellReuseIdentifier, for: indexPath)
                 cell.backgroundConfiguration = .groupedCell

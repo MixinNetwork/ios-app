@@ -142,6 +142,9 @@
 "app_update_tips" = "¡La versión actual (%@) ya no está disponible! Haz clic en Actualizar a continuación para actualizar a la última versión de la App Store.";
 "appearance" = "Apariencia";
 "apply" = "Aplicar";
+"approval" = "Approval";
+"approval_count" = "Approved %@";
+"approval_unlimited" = "Unlimited";
 "approve" = "Approve";
 "approve_transaction" = "Approve Transaction";
 "approving_transaction" = "Approving Transaction";
@@ -1270,6 +1273,7 @@
 "to" = "A";
 "today" = "Hoy";
 "token" = "Token";
+"token_access_approval" = "Token Access Approval";
 "top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
@@ -1283,11 +1287,13 @@
 "transaction_hash" = "Hash de transacción";
 "transaction_history" = "Transaction History";
 "transaction_id" = "ID de transacción";
+"transaction_pending_confirmation" = "1 Transaction Pending Confirmation";
 "transaction_rejected" = "Transaction Rejected";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Tipo de transacción";
 "transactions" = "Transacciones";
 "transactions_cannot_be_deleted" = "Las transacciones NO se pueden eliminar";
+"transactions_pending_confirmation" = "%d Transactions Pending Confirmation";
 "transcript" = "Transcripción";
 "transfer" = "Transferir";
 "transfer_amount_count_down" = "Importe de la transferencia(%@)";

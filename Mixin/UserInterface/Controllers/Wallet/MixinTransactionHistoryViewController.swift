@@ -102,6 +102,22 @@ final class MixinTransactionHistoryViewController: TransactionHistoryViewControl
         present(picker, animated: true)
     }
     
+    private func updateNavigationSubtitle(order: SafeSnapshot.Order) {
+        guard let titleView = navigationItem.titleView as? NavigationTitleView else {
+            return
+        }
+        titleView.subtitle = switch order {
+        case .newest:
+            R.string.localizable.sort_by_recent()
+        case .oldest:
+            R.string.localizable.sort_by_oldest()
+        case .mostValuable:
+            R.string.localizable.sort_by_value()
+        case .biggestAmount:
+            R.string.localizable.sort_by_amount()
+        }
+    }
+    
     private func orderActions(selectedOrder order: SafeSnapshot.Order) -> [UIAction] {
         let actions = [
             UIAction(

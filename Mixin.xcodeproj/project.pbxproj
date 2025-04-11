@@ -995,6 +995,8 @@
 		947084C52D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947084C42D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift */; };
 		9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */; };
 		94739A5426258F8300E8914D /* Custom-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94739A5326258F8200E8914D /* Custom-acknowledgements.plist */; };
+		947402BA2DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947402B92DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib */; };
+		947402BF2DA69B890085C183 /* ComplexWeb3TransactionTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947402BE2DA69B860085C183 /* ComplexWeb3TransactionTableHeaderView.swift */; };
 		94787E182A7C071E00BB0124 /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = 94787E172A7C071E00BB0124 /* QRCode */; };
 		94793ACF2C3A56A40078ED51 /* QuoteRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94793ACE2C3A56A40078ED51 /* QuoteRequest.swift */; };
 		94793AD12C3A57230078ED51 /* QuoteResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94793AD02C3A57230078ED51 /* QuoteResponse.swift */; };
@@ -1046,6 +1048,9 @@
 		948FBC882D6EF5CE000795E4 /* ClassicWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948FBC872D6EF5CE000795E4 /* ClassicWalletViewController.swift */; };
 		948FC2962D74DE73000795E4 /* Web3TokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948FC2952D74DE70000795E4 /* Web3TokenViewController.swift */; };
 		948FC56B2D760018000795E4 /* TokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948FC56A2D760017000795E4 /* TokenViewController.swift */; };
+		94902E3B2DA6CD6200E52FC6 /* SimpleWeb3TransactionTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94902E372DA6CD5C00E52FC6 /* SimpleWeb3TransactionTableHeaderView.swift */; };
+		94902E462DA6CD6D00E52FC6 /* SimpleWeb3TransactionTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94902E452DA6CD6D00E52FC6 /* SimpleWeb3TransactionTableHeaderView.xib */; };
+		94902E4E2DA6CFA600E52FC6 /* Web3TransactionStatusLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94902E4D2DA6CFA100E52FC6 /* Web3TransactionStatusLabel.swift */; };
 		94911DC42AF00B2C00A33B2A /* TokenItem+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94911DC32AF00B2C00A33B2A /* TokenItem+Description.swift */; };
 		9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9492285E25DFB7D60000A19F /* MinimizedPlaylistViewController.swift */; };
 		9492286425DFB7EF0000A19F /* MinimizedPlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9492286325DFB7EF0000A19F /* MinimizedPlaylistView.xib */; };
@@ -1269,6 +1274,9 @@
 		94FCB83B264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */; };
 		94FE0C4F2B3083CA006DEFC5 /* SendingDestinationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */; };
 		94FE0C502B3083CA006DEFC5 /* SendingDestinationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FE0C4E2B3083CA006DEFC5 /* SendingDestinationCell.xib */; };
+		94FE11F62DA7AC830026AB9A /* Web3TransactionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FE11F52DA7AC830026AB9A /* Web3TransactionCell.xib */; };
+		94FE11F72DA7AC830026AB9A /* Web3TransactionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE11F42DA7AC830026AB9A /* Web3TransactionCell.swift */; };
+		94FE128B2DA80FFC0026AB9A /* Web3Transaction+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE128A2DA80FF40026AB9A /* Web3Transaction+Localization.swift */; };
 		99F232BF0A2DDDA98D021A03 /* Pods_MixinDebug.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E49F74E7017E780C23E3311F /* Pods_MixinDebug.framework */; };
 		9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */; };
 		9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B8D57991F9F0ADA008A7957 /* Chat.storyboard */; };
@@ -2530,6 +2538,8 @@
 		947084C42D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonAtomicInvoicePaymentOperation.swift; sourceTree = "<group>"; };
 		9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+General.swift"; sourceTree = "<group>"; };
 		94739A5326258F8200E8914D /* Custom-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Custom-acknowledgements.plist"; sourceTree = "<group>"; };
+		947402B92DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ComplexWeb3TransactionTableHeaderView.xib; sourceTree = "<group>"; };
+		947402BE2DA69B860085C183 /* ComplexWeb3TransactionTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplexWeb3TransactionTableHeaderView.swift; sourceTree = "<group>"; };
 		94793ACE2C3A56A40078ED51 /* QuoteRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteRequest.swift; sourceTree = "<group>"; };
 		94793AD02C3A57230078ED51 /* QuoteResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteResponse.swift; sourceTree = "<group>"; };
 		947B36A825DEB72A00146111 /* PlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
@@ -2577,6 +2587,9 @@
 		948FBC872D6EF5CE000795E4 /* ClassicWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassicWalletViewController.swift; sourceTree = "<group>"; };
 		948FC2952D74DE70000795E4 /* Web3TokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenViewController.swift; sourceTree = "<group>"; };
 		948FC56A2D760017000795E4 /* TokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenViewController.swift; sourceTree = "<group>"; };
+		94902E372DA6CD5C00E52FC6 /* SimpleWeb3TransactionTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWeb3TransactionTableHeaderView.swift; sourceTree = "<group>"; };
+		94902E452DA6CD6D00E52FC6 /* SimpleWeb3TransactionTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SimpleWeb3TransactionTableHeaderView.xib; sourceTree = "<group>"; };
+		94902E4D2DA6CFA100E52FC6 /* Web3TransactionStatusLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionStatusLabel.swift; sourceTree = "<group>"; };
 		94911DC32AF00B2C00A33B2A /* TokenItem+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TokenItem+Description.swift"; sourceTree = "<group>"; };
 		9492285E25DFB7D60000A19F /* MinimizedPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedPlaylistViewController.swift; sourceTree = "<group>"; };
 		9492286325DFB7EF0000A19F /* MinimizedPlaylistView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MinimizedPlaylistView.xib; sourceTree = "<group>"; };
@@ -2798,6 +2811,9 @@
 		94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAttachmentUploadJob.swift; sourceTree = "<group>"; };
 		94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingDestinationCell.swift; sourceTree = "<group>"; };
 		94FE0C4E2B3083CA006DEFC5 /* SendingDestinationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SendingDestinationCell.xib; sourceTree = "<group>"; };
+		94FE11F42DA7AC830026AB9A /* Web3TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionCell.swift; sourceTree = "<group>"; };
+		94FE11F52DA7AC830026AB9A /* Web3TransactionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3TransactionCell.xib; sourceTree = "<group>"; };
+		94FE128A2DA80FF40026AB9A /* Web3Transaction+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Transaction+Localization.swift"; sourceTree = "<group>"; };
 		9B748DCC1FA71CEF00BC009B /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		9B8D57991F9F0ADA008A7957 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
 		9BB351661FB19ECB00EDDD2C /* ConversationDateHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDateHeaderView.swift; sourceTree = "<group>"; };
@@ -4080,6 +4096,7 @@
 				9401A5FE2BDA8B5300679686 /* Web3SendingPayment.swift */,
 				9414A7872BE78D8700FA35EB /* DecimalAccumulator.swift */,
 				94838A432C02ADFB005B6A27 /* Solana.swift */,
+				94FE128A2DA80FF40026AB9A /* Web3Transaction+Localization.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4469,6 +4486,11 @@
 				948664DC2CF85B440032B9BE /* TokenActionView.swift */,
 				94062C582AE8C61700ADAE87 /* SnapshotTableHeaderView.xib */,
 				94E533D12D82B5280008DC76 /* SnapshotTableHeaderView.swift */,
+				94902E4D2DA6CFA100E52FC6 /* Web3TransactionStatusLabel.swift */,
+				94902E452DA6CD6D00E52FC6 /* SimpleWeb3TransactionTableHeaderView.xib */,
+				94902E372DA6CD5C00E52FC6 /* SimpleWeb3TransactionTableHeaderView.swift */,
+				947402B92DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib */,
+				947402BE2DA69B860085C183 /* ComplexWeb3TransactionTableHeaderView.swift */,
 				94062C5C2AE8CA7600ADAE87 /* SnapshotColumnCell.xib */,
 				94062C612AE8CA9100ADAE87 /* SnapshotColumnCell.swift */,
 				942D90F72B06145F00E81358 /* TouchEventBypassView.swift */,
@@ -4810,6 +4832,8 @@
 				7B9916D321945A6800C11401 /* AssetCell.swift */,
 				7BCE296521AC132E00B1A507 /* SnapshotCell.xib */,
 				7BC2D27C21992FA8002FAC1D /* SnapshotCell.swift */,
+				94FE11F52DA7AC830026AB9A /* Web3TransactionCell.xib */,
+				94FE11F42DA7AC830026AB9A /* Web3TransactionCell.swift */,
 				7BDFAE932559165800296F8B /* CompactAssetCell.xib */,
 				7B0BE45F21A5630500B91A1E /* CompactAssetCell.swift */,
 				DFB19005233220290021CAF3 /* PINLogCell.swift */,
@@ -5684,6 +5708,7 @@
 				DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */,
 				277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */,
 				7B8BB590234F36C000991ACB /* Colors.xcassets in Resources */,
+				947402BA2DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib in Resources */,
 				94668E2B2CB50C6F00558755 /* MarketAlertParameterCell.xib in Resources */,
 				9457F76B2B6F230F008FC98F /* AuthenticationPreviewDialogView.xib in Resources */,
 				947FA4CE299577B700EF13A0 /* AuthorizationsView.xib in Resources */,
@@ -5735,6 +5760,7 @@
 				940EF8B12C8AE573000AD1C6 /* ShareMarketAsPictureView.xib in Resources */,
 				94DC24392D08051C006501B3 /* DesktopSessionValidationView.xib in Resources */,
 				7C53049F28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib in Resources */,
+				94FE11F62DA7AC830026AB9A /* Web3TransactionCell.xib in Resources */,
 				DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */,
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
 				9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */,
@@ -5859,6 +5885,7 @@
 				7B2E3E541FA07FA300DDDDEB /* CountryCode.plist in Resources */,
 				7C952D0027E036240083F92B /* ExpiredMessageTableHeaderView.xib in Resources */,
 				94CB85DA2C6B4EC600135641 /* TokenInfoCell.xib in Resources */,
+				94902E462DA6CD6D00E52FC6 /* SimpleWeb3TransactionTableHeaderView.xib in Resources */,
 				944C61082B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.xib in Resources */,
 				DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */,
 				9489247F2D572EA200D9BCCB /* TokenReceiverTrayView.xib in Resources */,
@@ -6533,6 +6560,7 @@
 				7C7579D229DC54120002DA0B /* RestoreFromDesktopViewController.swift in Sources */,
 				7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */,
 				DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */,
+				94902E3B2DA6CD6200E52FC6 /* SimpleWeb3TransactionTableHeaderView.swift in Sources */,
 				E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */,
 				7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */,
 				7B7DACA623505793006AA2AC /* AudioCell.swift in Sources */,
@@ -6654,6 +6682,7 @@
 				7C8CC5A4280D347A00F7CBDF /* PreviewWallpaperViewController.swift in Sources */,
 				7BAE1B44223B51F3004F2D16 /* ChangeNumberContext.swift in Sources */,
 				940D10B62C5CC3380071E36D /* NoTransactionIndicatorCell.swift in Sources */,
+				947402BF2DA69B890085C183 /* ComplexWeb3TransactionTableHeaderView.swift in Sources */,
 				7B63A8632431C9EE00D0F7C7 /* CirclesViewController.swift in Sources */,
 				DFB19002233219650021CAF3 /* LogViewController.swift in Sources */,
 				94B5776A2B5E554800AE576E /* ExploreViewController.swift in Sources */,
@@ -6834,6 +6863,7 @@
 				7C54078D296BD8430082368C /* ChatTextSizeViewController.swift in Sources */,
 				94428D642CA24F6E00157E93 /* ReloadMarketAlertsJob.swift in Sources */,
 				7BC022E7214A150400B7A398 /* AuthorizationTableViewCell.swift in Sources */,
+				94902E4E2DA6CFA600E52FC6 /* Web3TransactionStatusLabel.swift in Sources */,
 				7B7ABBE02539799900070B71 /* ScreenWidth.swift in Sources */,
 				94ADE11F2CD80AC70040A426 /* ChangeMobileNumberViewController.swift in Sources */,
 				52A056582BE362FF00CEC8A3 /* InscriptionViewController.swift in Sources */,
@@ -7090,6 +7120,7 @@
 				7BEED0D9244D752700F3A2B9 /* SettingsRow.swift in Sources */,
 				94C6AA09280D35990011AB02 /* AttachmentDiagnosticViewController.swift in Sources */,
 				94DD693E2C90665700B3D089 /* MarketColor.swift in Sources */,
+				94FE128B2DA80FFC0026AB9A /* Web3Transaction+Localization.swift in Sources */,
 				7B72651C209C5F9300F234BE /* Link.swift in Sources */,
 				94668E2C2CB50C6F00558755 /* MarketAlertParameterCell.swift in Sources */,
 				7BD344072334CD5F005C26E3 /* UserHandleViewController.swift in Sources */,
@@ -7263,6 +7294,7 @@
 				944B5A5C2CFCA7EE000BB893 /* UINavigationBarAppearance+General.swift in Sources */,
 				9419374D25DFF3EE00F81A9C /* GroupIconSaver.swift in Sources */,
 				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,
+				94FE11F72DA7AC830026AB9A /* Web3TransactionCell.swift in Sources */,
 				94C0D7E929AD348500E372FC /* InPlaceKeyStorage.swift in Sources */,
 				94287EE62B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift in Sources */,
 				7BB0F9102434821000BEDA97 /* CircleEditorViewController.swift in Sources */,

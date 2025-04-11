@@ -58,15 +58,7 @@ extension Address {
     }
     
     public static func compactRepresentation(of string: String) -> String {
-        truncatedRepresentation(string: string, prefixCount: 8, suffixCount: 6)
-    }
-    
-    public static func truncatedRepresentation(string: String, prefixCount: Int, suffixCount: Int) -> String {
-        if string.count > prefixCount + suffixCount {
-            string.prefix(prefixCount) + "…" + string.suffix(suffixCount)
-        } else {
-            string
-        }
+        TextTruncation.truncateMiddle(string: string, prefixCount: 8, suffixCount: 6)
     }
     
 }

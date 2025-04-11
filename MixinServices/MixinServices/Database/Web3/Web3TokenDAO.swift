@@ -63,13 +63,16 @@ public final class Web3TokenDAO: Web3DAO {
         return db.select(with: sql)
     }
     
-    public func tokens(walletID: String, ids: any Sequence<String>) -> [Web3Token] {
+    public func tokens(walletID: String, ids: any Collection<String>) -> [Web3Token] {
+        guard !ids.isEmpty else {
+            return []
+        }
         let sql: GRDB.SQL = "SELECT * FROM tokens WHERE wallet_id = \(walletID) AND asset_id IN \(ids)"
         return db.select(with: sql)
     }
     
     // Key is asset id, value is symbol
-    public func tokenSymbols(ids: any Sequence<String>) -> [String: String] {
+    public func tokenSymbols(ids: any Collection<String>) -> [String: String] {
         db.select(
             keyColumn: Web3Token.column(of: .assetID),
             valueColumn: Web3Token.column(of: .symbol),

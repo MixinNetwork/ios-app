@@ -47,6 +47,12 @@ final class ClassicWalletViewController: WalletViewController {
             name: UIApplication.willEnterForegroundNotification,
             object: nil
         )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadPendingDeposits),
+            name: Web3TransactionDAO.transactionDidSaveNotification,
+            object: nil
+        )
         reloadData()
     }
     

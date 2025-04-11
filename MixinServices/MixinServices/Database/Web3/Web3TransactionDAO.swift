@@ -54,7 +54,7 @@ public final class Web3TransactionDAO: Web3DAO {
         }
     }
     
-    public func updateExpiredTransaction(
+    public func setTransactionStatusNotFound(
         hash: String,
         chain: String,
         address: String,

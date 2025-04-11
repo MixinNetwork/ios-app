@@ -1284,11 +1284,13 @@
 "transaction_hash" = "Хэш транзакции";
 "transaction_history" = "Transaction History";
 "transaction_id" = "ID транзакции";
+"transaction_pending_confirmation" = "1 Transaction Pending Confirmation";
 "transaction_rejected" = "Transaction Rejected";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Тип операции";
 "transactions" = "Транзакции";
 "transactions_cannot_be_deleted" = "Транзакции НЕ МОГУТ быть удалены";
+"transactions_pending_confirmation" = "%d Transactions Pending Confirmation";
 "transcript" = "Стенограмма";
 "transfer" = "Передача";
 "transfer_amount_count_down" = "Сумма перевода(%@)";

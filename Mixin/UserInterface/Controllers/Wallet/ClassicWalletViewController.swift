@@ -120,15 +120,13 @@ final class ClassicWalletViewController: WalletViewController {
     }
     
     @objc private func reloadPendingDeposits() {
-        DispatchQueue.global().async { [weak self, walletID] in
+        DispatchQueue.global().async { [weak self] in
             let transactions = Web3TransactionDAO.shared.pendingTransactions()
-            let assetIDs = Set(transactions.compactMap(\.transferAssetID))
-            let tokens = Web3TokenDAO.shared.tokens(walletID: walletID, ids: assetIDs)
             DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
-                self.tableHeaderView.reloadPendingDeposits(tokens: tokens, snapshots: transactions)
+                self.tableHeaderView.reloadPendingTransactions(transactions)
                 self.layoutTableHeaderView()
             }
         }

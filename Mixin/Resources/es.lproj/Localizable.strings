@@ -1284,11 +1284,13 @@
 "transaction_hash" = "Hash de transacción";
 "transaction_history" = "Transaction History";
 "transaction_id" = "ID de transacción";
+"transaction_pending_confirmation" = "1 Transaction Pending Confirmation";
 "transaction_rejected" = "Transaction Rejected";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Tipo de transacción";
 "transactions" = "Transacciones";
 "transactions_cannot_be_deleted" = "Las transacciones NO se pueden eliminar";
+"transactions_pending_confirmation" = "%d Transactions Pending Confirmation";
 "transcript" = "Transcripción";
 "transfer" = "Transferir";
 "transfer_amount_count_down" = "Importe de la transferencia(%@)";

@@ -1284,11 +1284,13 @@
 "transaction_hash" = "トランザクションハッシュ";
 "transaction_history" = "Transaction History";
 "transaction_id" = "トランザクションID";
+"transaction_pending_confirmation" = "1 Transaction Pending Confirmation";
 "transaction_rejected" = "Transaction Rejected";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "トランザクションタイプ";
 "transactions" = "もらった・あげたコイン💰";
 "transactions_cannot_be_deleted" = "トランザクション履歴を削除することはできません";
+"transactions_pending_confirmation" = "%d Transactions Pending Confirmation";
 "transcript" = "メッセージ履歴";
 "transfer" = "送金";
 "transfer_amount_count_down" = "送金金額(%@)";

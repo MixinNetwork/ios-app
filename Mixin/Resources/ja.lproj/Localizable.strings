@@ -143,6 +143,8 @@
 "appearance" = "言語とテーマ";
 "apply" = "適用";
 "approval" = "Approval";
+"approval_count" = "Approved %@";
+"approval_unlimited" = "Unlimited";
 "approve" = "Approve";
 "approve_transaction" = "Approve Transaction";
 "approving_transaction" = "Approving Transaction";
@@ -1271,6 +1273,7 @@
 "to" = "宛先";
 "today" = "今日";
 "token" = "Token";
+"token_access_approval" = "Token Access Approval";
 "top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";

@@ -111,6 +111,7 @@ extension Web3TransactionViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
             cell.contentLeadingConstraint.constant = 20
             cell.contentTrailingConstraint.constant = 20
+            cell.titleLabel.text = R.string.localizable.asset_changes().uppercased()
             cell.reloadData(numberOfAssetChanges: changes.count) { index, row in
                 let change = changes[index]
                 if let token = change.token {
@@ -154,6 +155,38 @@ extension Web3TransactionViewController: UITableViewDataSource {
             cell.secondaryLabel.text = fiatMoney
             cell.setPrimaryLabel(usesBoldFont: false)
             cell.trailingContent = nil
+            return cell
+        case let .approval(token, amount):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
+            cell.contentLeadingConstraint.constant = 20
+            cell.contentTrailingConstraint.constant = 20
+            cell.titleLabel.text = R.string.localizable.token_access_approval().uppercased()
+            cell.reloadData(numberOfAssetChanges: 1) { index, row in
+                row.iconView.setIcon(token: token)
+                let amountColor = switch transaction.status {
+                case .success:
+                    R.color.market_red()!
+                default:
+                    R.color.text()!
+                }
+                let amount = NSMutableAttributedString(
+                    string: amount,
+                    attributes: [
+                        .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 16, weight: .medium)),
+                        .foregroundColor: amountColor,
+                    ]
+                )
+                let attributedSymbol = NSAttributedString(
+                    string: " " + token.symbol,
+                    attributes: [
+                        .font: UIFont.preferredFont(forTextStyle: .callout),
+                        .foregroundColor: R.color.text_secondary()!,
+                    ]
+                )
+                amount.append(attributedSymbol)
+                row.amountLabel.attributedText = amount
+                row.networkLabel.text = nil
+            }
             return cell
         }
     }
@@ -207,6 +240,7 @@ extension Web3TransactionViewController {
         case plain(key: Key, value: String)
         case assetChanges([AssetChange])
         case fee(token: String, fiatMoney: String)
+        case approval(token: any Token, amount: String)
         
         var allowsCopy: Bool {
             switch self {
@@ -349,10 +383,7 @@ extension Web3TransactionViewController {
             if let fromAddress = transaction.senders.first?.from {
                 rows.append(.plain(key: .from, value: fromAddress))
             }
-            rows.append(contentsOf: [
-                feeRow,
-                .plain(key: .type, value: transaction.transactionType.localized)
-            ])
+            rows.append(feeRow)
         case .transferOut:
             rows = [
                 .plain(key: .transactionHash, value: transaction.transactionHash),
@@ -360,10 +391,7 @@ extension Web3TransactionViewController {
             if let toAddress = transaction.receivers.first?.to {
                 rows.append(.plain(key: .to, value: toAddress))
             }
-            rows.append(contentsOf: [
-                feeRow,
-                .plain(key: .type, value: transaction.transactionType.localized)
-            ])
+            rows.append(feeRow)
         case .swap, .none, .unknown:
             let assetIDs = Set(transaction.senders.map(\.assetID) + transaction.receivers.map(\.assetID))
             let tokens = Web3TokenDAO.shared.tokens(walletID: walletID, ids: assetIDs)
@@ -409,11 +437,28 @@ extension Web3TransactionViewController {
                 .assetChanges(changes),
                 .plain(key: .transactionHash, value: transaction.transactionHash),
                 feeRow,
-                .plain(key: .type, value: transaction.transactionType.localized)
             ]
         case .approval:
-            rows = []
+            rows = [
+                .plain(key: .transactionHash, value: transaction.transactionHash),
+            ]
+            if let token = Web3TokenDAO.shared.token(walletID: walletID, assetID: transaction.sendAssetID),
+               let amount = transaction.approvedAmount
+            {
+                let localizedAmount = switch amount {
+                case .unlimited:
+                    R.string.localizable.approval_unlimited()
+                case .limited(let count):
+                    R.string.localizable.approval_count(count)
+                }
+                rows.insert(.approval(token: token, amount: localizedAmount), at: 0)
+            }
+            if let toAddress = transaction.receivers.first?.to {
+                rows.append(.plain(key: .to, value: toAddress))
+            }
         }
+        
+        rows.append(.plain(key: .type, value: transaction.transactionType.localized))
         
         if let network = feeToken?.depositNetworkName {
             rows.append(.plain(key: .network, value: network))

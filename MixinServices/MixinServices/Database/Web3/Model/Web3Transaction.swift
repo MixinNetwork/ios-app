@@ -84,6 +84,23 @@ public class Web3Transaction: Codable, Identifiable {
         )
     }()
     
+    public lazy var approvedAmount: ApprovalAmount? = {
+        guard transactionType.knownCase == .approval else {
+            return nil
+        }
+        return if let sender = senders.first {
+            .limited(
+                CurrencyFormatter.localizedString(
+                    from: sender.decimalAmount,
+                    format: .precision,
+                    sign: .never
+                )
+            )
+        } else {
+            .unlimited
+        }
+    }()
+    
     public var allAssetIDs: Set<String> {
         Set(senders.map(\.assetID) + receivers.map(\.assetID))
     }
@@ -189,6 +206,11 @@ extension Web3Transaction {
             self.from = from
         }
         
+    }
+    
+    public enum ApprovalAmount {
+        case unlimited
+        case limited(String)
     }
     
 }

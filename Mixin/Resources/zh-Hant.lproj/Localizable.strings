@@ -143,6 +143,8 @@
 "appearance" = "外觀";
 "apply" = "應用";
 "approval" = "授權";
+"approval_count" = "已授權 %@";
+"approval_unlimited" = "無限量";
 "approve" = "批准";
 "approve_transaction" = "批准交易";
 "approving_transaction" = "正在批准";
@@ -1271,6 +1273,7 @@
 "to" = "至";
 "today" = "今天";
 "token" = "代幣";
+"token_access_approval" = "授權使用代幣";
 "top_count" = "前 %d";
 "total" = "共計";
 "total_amount" = "總金額";

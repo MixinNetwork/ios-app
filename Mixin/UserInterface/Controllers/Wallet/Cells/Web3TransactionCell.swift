@@ -63,9 +63,25 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
                 }
             }
         case .approval:
-            break
+            loadRowViews(count: 1)
+            let row = rowViews[0]
+            row.style = .contract
+            switch transaction.approvedAmount {
+            case .unlimited:
+                row.amountLabel.text = R.string.localizable.approval_unlimited()
+            case .limited(let amount):
+                row.amountLabel.text = R.string.localizable.approval_count(amount)
+            case .none:
+                row.amountLabel.text = nil
+            }
+            row.amountLabel.textColor = switch transaction.status {
+            case .success:
+                R.color.market_red()!
+            default:
+                R.color.text()!
+            }
+            row.symbolLabel.text = symbols[transaction.sendAssetID]
         }
-        
         
         switch transaction.transactionType.knownCase {
         case .transferIn:
@@ -173,7 +189,7 @@ extension Web3TransactionCell {
                 spacing = 4
             case .contract:
                 amountLabel.setFont(
-                    scaledFor: .condensed(size: 14),
+                    scaledFor: .systemFont(ofSize: 14, weight: .medium),
                     adjustForContentSize: true
                 )
                 spacing = 4

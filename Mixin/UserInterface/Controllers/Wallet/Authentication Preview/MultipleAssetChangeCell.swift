@@ -28,7 +28,6 @@ final class MultipleAssetChangeCell: UITableViewCell {
         numberOfAssetChanges: Int,
         configureRow: (Int, RowStackView) -> Void
     ) {
-        titleLabel.text = R.string.localizable.asset_changes().uppercased()
         loadRowViews(count: numberOfAssetChanges)
         for i in 0..<numberOfAssetChanges {
             configureRow(i, rowViews[i])

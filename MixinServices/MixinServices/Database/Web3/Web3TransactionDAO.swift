@@ -8,9 +8,9 @@ public final class Web3TransactionDAO: Web3DAO {
     public static let transactionDidSaveNotification = Notification.Name("one.mixin.services.Web3TransactionDAO.TransactionDidSave")
     public static let transactionsUserInfoKey = "s"
     
-    public func transaction(id: String) -> Web3Transaction? {
-        let sql = "SELECT * FROM transactions WHERE transaction_id = ?"
-        return db.select(with: sql, arguments: [id])
+    public func transaction(hash: String, chain: String, address: String) -> Web3Transaction? {
+        let sql = "SELECT * FROM transactions WHERE transaction_hash = ? AND chain_id = ? AND address = ?"
+        return db.select(with: sql, arguments: [hash, chain, address])
     }
     
     public func transactions(assetID: String, limit: Int) -> [Web3Transaction] {
@@ -61,8 +61,8 @@ public final class Web3TransactionDAO: Web3DAO {
         db: GRDB.Database
     ) throws {
         try db.execute(
-            sql: "UPDATE transactions SET status = ? WHERE transaction_hash = ? AND chain_id = ? AND address = ?",
-            arguments: [Web3RawTransaction.State.notFound.rawValue, hash, chain, address]
+            sql: "UPDATE transactions SET status = ? WHERE transaction_hash = ? AND chain_id = ? AND address = ? AND status = ?",
+            arguments: [Web3RawTransaction.State.notFound.rawValue, hash, chain, address, Web3RawTransaction.State.pending.rawValue]
         )
     }
     

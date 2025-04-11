@@ -47,27 +47,40 @@ final class Web3TransactionViewController: TransactionViewController {
             reloadPendingTransactionTask = Task.detached { [walletID, transaction] in
                 repeat {
                     do {
-                        let transaction = try await RouteAPI.transaction(
-                            chainID: transaction.chainID,
-                            hash: transaction.transactionHash
-                        )
-                        if transaction.state.knownCase != .pending {
-                            try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
-                                if transaction.state.knownCase == .notFound {
-                                    try Web3TransactionDAO.shared.setTransactionStatusNotFound(
-                                        hash: transaction.hash,
-                                        chain: transaction.chainID,
-                                        address: transaction.account,
-                                        db: db
-                                    )
-                                }
-                            }
-                            let syncTokens = RefreshWeb3TokenJob(walletID: walletID)
-                            ConcurrentJobQueue.shared.addJob(job: syncTokens)
-                            let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
-                            ConcurrentJobQueue.shared.addJob(job: syncTransactions)
+                        guard let localTransaction = Web3TransactionDAO.shared.transaction(hash: transaction.transactionHash, chain: transaction.chainID, address: transaction.address) else {
                             return
                         }
+                        guard localTransaction.status == .pending else {
+                            await MainActor.run {
+                                self.transaction = localTransaction
+                                self.reloadData()
+                            }
+                            return
+                        }
+                        
+                        if Web3RawTransactionDAO.shared.isExist(hash: transaction.transactionHash) {
+                            let transaction = try await RouteAPI.transaction(
+                                chainID: transaction.chainID,
+                                hash: transaction.transactionHash
+                            )
+                            if transaction.state.knownCase != .pending {
+                                try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
+                                    if transaction.state.knownCase == .notFound {
+                                        try Web3TransactionDAO.shared.setTransactionStatusNotFound(
+                                            hash: transaction.hash,
+                                            chain: transaction.chainID,
+                                            address: transaction.account,
+                                            db: db
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        
+                        let syncTokens = RefreshWeb3TokenJob(walletID: walletID)
+                        ConcurrentJobQueue.shared.addJob(job: syncTokens)
+                        let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
+                        ConcurrentJobQueue.shared.addJob(job: syncTransactions)
                     } catch {
                         Logger.general.debug(category: "Web3TxnView", message: "\(error)")
                     }

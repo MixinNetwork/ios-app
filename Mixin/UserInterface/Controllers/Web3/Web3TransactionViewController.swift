@@ -306,10 +306,13 @@ extension Web3TransactionViewController {
                 simpleHeaderView.amountLabel.textColor = R.color.text_tertiary()
             }
         case .none, .unknown:
+            complexHeaderView.iconView.image = R.image.transaction_type_unknown()
             complexHeaderView.titleLabel.text = transaction.transactionType.localized
         case .swap:
+            complexHeaderView.iconView.image = R.image.transaction_type_swap()
             complexHeaderView.titleLabel.text = R.string.localizable.swap()
         case .approval:
+            complexHeaderView.iconView.image = R.image.transaction_type_approval()
             complexHeaderView.titleLabel.text = R.string.localizable.approval()
         }
         
@@ -412,7 +415,7 @@ extension Web3TransactionViewController {
         }
         
         let transactionAt: String
-        if let date = ISO8601DateFormatter.default.date(from: transaction.transactionAt) {
+        if let date = DateFormatter.iso8601Full.date(from: transaction.transactionAt) {
             transactionAt = DateFormatter.dateFull.string(from: date)
         } else {
             transactionAt = transaction.transactionAt

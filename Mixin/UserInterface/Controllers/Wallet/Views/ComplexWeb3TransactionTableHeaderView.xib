@@ -17,7 +17,7 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="vec-V4-0mi">
                     <rect key="frame" x="20" y="18" width="353" height="146"/>
                     <subviews>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="750" image="contract" translatesAutoresizingMaskIntoConstraints="NO" id="FmN-2c-Zlt">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FmN-2c-Zlt">
                             <rect key="frame" x="141.66666666666666" y="0.0" width="70" height="70"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="FmN-2c-Zlt" secondAttribute="height" id="Ced-af-Rc5"/>
@@ -76,7 +76,6 @@
         </view>
     </objects>
     <resources>
-        <image name="contract" width="70" height="70"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

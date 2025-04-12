@@ -202,7 +202,7 @@ extension Web3Transaction {
         
         public enum ApprovalType: String {
             case unlimited
-            case limited
+            case other = "approval"
         }
         
         public enum CodingKeys: String, CodingKey {

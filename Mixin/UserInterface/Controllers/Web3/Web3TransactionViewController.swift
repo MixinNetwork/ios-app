@@ -462,7 +462,7 @@ extension Web3TransactionViewController {
                 let localizedAmount = switch approval.approvalType {
                 case .known(.unlimited):
                     R.string.localizable.approval_unlimited()
-                case .known(.limited):
+                case .known(.other):
                     R.string.localizable.approval_count(approval.localizedAmount)
                 case .unknown(let value):
                     value

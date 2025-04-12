@@ -119,6 +119,12 @@ public class Web3Transaction: Codable, Identifiable {
         self.updatedAt = updatedAt
     }
     
+    public func matches(with another: Web3Transaction) -> Bool {
+        self.transactionHash == another.transactionHash
+        && self.chainID == another.chainID
+        && self.address == another.address
+    }
+    
 }
 
 extension Web3Transaction: TableRecord, PersistableRecord, MixinFetchableRecord, MixinEncodableRecord {

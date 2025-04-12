@@ -44,14 +44,23 @@ final class Web3TransactionViewController: TransactionViewController {
         )
         reloadData()
         if transaction.status == .pending {
-            reloadPendingTransactionTask = Task.detached { [walletID, transaction] in
+            reloadPendingTransactionTask = Task { [walletID, transaction, weak self] in
                 repeat {
                     do {
-                        guard let localTransaction = Web3TransactionDAO.shared.transaction(hash: transaction.transactionHash, chain: transaction.chainID, address: transaction.address) else {
+                        let localTransaction = Web3TransactionDAO.shared.transaction(
+                            hash: transaction.transactionHash,
+                            chainID: transaction.chainID,
+                            address: transaction.address
+                        )
+                        guard let localTransaction else {
                             return
                         }
-                        guard localTransaction.status == .pending else {
+                        
+                        if localTransaction.status != .pending {
                             await MainActor.run {
+                                guard let self else {
+                                    return
+                                }
                                 self.transaction = localTransaction
                                 self.reloadData()
                             }
@@ -91,11 +100,10 @@ final class Web3TransactionViewController: TransactionViewController {
     }
     
     @objc private func reloadDataIfContains(_ notification: Notification) {
-        let hash = self.transaction.transactionHash
         guard
             let userInfo = notification.userInfo,
             let transactions = userInfo[Web3TransactionDAO.transactionsUserInfoKey] as? [Web3Transaction],
-            let transaction = transactions.first(where: { $0.transactionHash == hash })
+            let transaction = transactions.first(where: { $0.matches(with: transaction) })
         else {
             return
         }

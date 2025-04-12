@@ -148,6 +148,8 @@ extension AssetItem {
                 return "EOS"
             case ChainID.polygon:
                 return "Polygon"
+            case ChainID.lightning:
+                return "Lightning"
             default:
                 return nil
             }

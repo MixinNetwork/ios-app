@@ -17,6 +17,8 @@ class SolanaTransferOperation: Web3TransferOperation {
         case noFeeToken(String)
     }
     
+    fileprivate var fee: Fee?
+    
     fileprivate init(
         fromAddress: String,
         toAddress: String,
@@ -65,8 +67,9 @@ class SolanaTransferOperation: Web3TransferOperation {
             }
             return
         }
-        await MainActor.run {
+        let fee = await MainActor.run {
             self.state = .sending
+            return self.fee
         }
         do {
             Logger.web3.info(category: "SolanaTransfer", message: "Will send tx: \(signedTransaction)")
@@ -74,34 +77,58 @@ class SolanaTransferOperation: Web3TransferOperation {
                 chainID: ChainID.solana,
                 raw: signedTransaction
             )
-            let pendingTransaction = await {
-                let (assetID, amount): (String, String) = switch try? await loadBalanceChange() {
-                case .none, .decodingFailed:
-                    ("", "")
-                case let .detailed(token, decimalAmount):
-                    (token.assetID, TokenAmountFormatter.string(from: decimalAmount))
-                }
-                return Web3Transaction(
-                    transactionID: "",
+            let transactionFee = if let fee {
+                TokenAmountFormatter.string(from: fee.token)
+            } else {
+                ""
+            }
+            let pendingTransaction = switch try? await loadBalanceChange() {
+            case .none, .decodingFailed:
+                Web3Transaction(
                     transactionHash: rawTransaction.hash,
-                    blockNumber: -1,
-                    sender: fromAddress,
-                    receiver: toAddress,
-                    outputHash: "",
                     chainID: ChainID.solana,
-                    assetID: assetID,
-                    amount: amount,
-                    transactionType: .known(.send),
-                    status: .known(.pending),
+                    address: fromAddress,
+                    transactionType: .known(.unknown),
+                    status: .pending,
+                    blockNumber: -1,
+                    fee: transactionFee,
+                    senders: nil,
+                    receivers: nil,
+                    approvals: nil,
+                    sendAssetID: nil,
+                    receiveAssetID: nil,
                     transactionAt: rawTransaction.createdAt,
                     createdAt: rawTransaction.createdAt,
                     updatedAt: rawTransaction.createdAt
                 )
-            }()
-            Web3RawTransactionDAO.shared.save(
-                rawTransaction: rawTransaction,
-                pendingTransaction: pendingTransaction
-            )
+            case let .detailed(token, decimalAmount):
+                Web3Transaction(
+                    transactionHash: rawTransaction.hash,
+                    chainID: ChainID.solana,
+                    address: fromAddress,
+                    transactionType: .known(.transferOut),
+                    status: .pending,
+                    blockNumber: -1,
+                    fee: transactionFee,
+                    senders: [
+                        .init(
+                            assetID: token.assetID,
+                            amount: TokenAmountFormatter.string(from: decimalAmount),
+                            from: fromAddress
+                        )
+                    ],
+                    receivers: nil,
+                    approvals: nil,
+                    sendAssetID: token.assetID,
+                    receiveAssetID: nil,
+                    transactionAt: rawTransaction.createdAt,
+                    createdAt: rawTransaction.createdAt,
+                    updatedAt: rawTransaction.createdAt
+                )
+            }
+            Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
+                try rawTransaction.save(db)
+            }
             let hash = rawTransaction.hash
             try await respond(signature: hash)
             Logger.web3.info(category: "SolanaTransfer", message: "Txn sent, hash: \(hash)")
@@ -292,16 +319,21 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             token: payment.token,
             change: .init(amount: decimalAmount, assetKey: payment.token.assetKey)
         )
+        
         let baseFee = try baseFee(for: transaction)
         let priorityFee = try await RouteAPI.solanaPriorityFee(base64Transaction: transaction.rawTransaction)
+        
+        let tokenCount = baseFee.token + priorityFee.decimalCount
+        let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
+        let fee = Fee(token: tokenCount, fiatMoney: fiatMoneyCount)
+        
         await MainActor.run {
             self.createAssociatedTokenAccountForReceiver = createAccount
             self.priorityFee = priorityFee
+            self.fee = fee
             self.state = .ready
         }
-        let tokenCount = baseFee.token + priorityFee.decimalCount
-        let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-        return Fee(token: tokenCount, fiatMoney: fiatMoneyCount)
+        return fee
     }
     
     override func start(with pin: String) {

@@ -142,6 +142,9 @@
 "app_update_tips" = "当前版本（%@）已失效！请点击下方\"更新\"从 App Store 更新至最新版。";
 "appearance" = "外观";
 "apply" = "应用";
+"approval" = "授权";
+"approval_count" = "已授权 %@";
+"approval_unlimited" = "无限量";
 "approve" = "批准";
 "approve_transaction" = "批准交易";
 "approving_transaction" = "正在批准";
@@ -1270,6 +1273,7 @@
 "to" = "至";
 "today" = "今天";
 "token" = "代币";
+"token_access_approval" = "授权使用代币";
 "top_count" = "前 %d";
 "total" = "共计";
 "total_amount" = "总金额";
@@ -1283,11 +1287,13 @@
 "transaction_hash" = "交易哈希";
 "transaction_history" = "转账记录";
 "transaction_id" = "交易编号";
+"transaction_pending_confirmation" = "有 1 笔交易处理中";
 "transaction_rejected" = "拒绝成功";
 "transaction_request" = "请求转账";
 "transaction_type" = "交易类型";
 "transactions" = "转账记录";
 "transactions_cannot_be_deleted" = "转账记录不会被删除";
+"transactions_pending_confirmation" = "有 %d 笔交易处理中";
 "transcript" = "聊天记录";
 "transfer" = "转账";
 "transfer_amount_count_down" = "转账金额（%@）";

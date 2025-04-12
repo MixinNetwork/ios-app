@@ -4,22 +4,22 @@ import MixinServices
 final class Web3TransactionHistoryViewController: TransactionHistoryViewController {
     
     private typealias DateRepresentation = String
-    private typealias TransactionID = String
-    private typealias DiffableDataSource = UITableViewDiffableDataSource<DateRepresentation, TransactionID>
-    private typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<DateRepresentation, TransactionID>
+    private typealias DiffableDataSource = UITableViewDiffableDataSource<DateRepresentation, Web3Transaction.ID>
+    private typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<DateRepresentation, Web3Transaction.ID>
     
     private let walletID: String
     
     private var filter: Web3Transaction.Filter
-    private var order: SafeSnapshot.Order = .newest
+    private var order: Web3Transaction.Order = .newest
     private var dataSource: DiffableDataSource!
-    private var items: [TransactionID: Web3TransactionItem] = [:]
+    private var items: [Web3Transaction.ID: Web3Transaction] = [:]
+    private var tokenSymbols: [String: String] = [:]
     
     private var loadPreviousPageIndexPath: IndexPath?
-    private var firstItem: Web3TransactionItem?
+    private var firstItem: Web3Transaction?
     
     private var loadNextPageIndexPath: IndexPath?
-    private var lastItem: Web3TransactionItem?
+    private var lastItem: Web3Transaction?
     
     init(token: Web3TokenItem) {
         self.walletID = token.walletID
@@ -27,7 +27,7 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
         super.init()
     }
     
-    init(walletID: String, type: Web3Transaction.TransactionType?) {
+    init(walletID: String, type: Web3Transaction.DisplayType?) {
         self.walletID = walletID
         self.filter = .init(type: type)
         super.init()
@@ -53,14 +53,14 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
         dateFilterView.reloadData(startDate: filter.startDate, endDate: filter.endDate)
         dateFilterView.button.addTarget(self, action: #selector(pickDates(_:)), for: .touchUpInside)
         
-        tableView.register(R.nib.snapshotCell)
+        tableView.register(R.nib.web3TransactionCell)
         tableView.register(AssetHeaderView.self, forHeaderFooterViewReuseIdentifier: headerReuseIdentifier)
         tableView.delegate = self
         dataSource = DiffableDataSource(tableView: tableView) { [weak self] (tableView, indexPath, transactionID) in
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot, for: indexPath)!
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_transaction, for: indexPath)!
             if let self {
-                let snapshot = self.items[transactionID]!
-                cell.render(transaction: snapshot)
+                let transaction = self.items[transactionID]!
+                cell.load(transaction: transaction, symbols: self.tokenSymbols)
             }
             return cell
         }
@@ -117,35 +117,74 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
 
 extension Web3TransactionHistoryViewController {
     
-    private func typeFilterActions(selectedType type: Web3Transaction.TransactionType?) -> [UIAction] {
-        [
+    private func updateNavigationSubtitle(order: Web3Transaction.Order) {
+        guard let titleView = navigationItem.titleView as? NavigationTitleView else {
+            return
+        }
+        titleView.subtitle = switch order {
+        case .newest:
+            R.string.localizable.sort_by_recent()
+        case .oldest:
+            R.string.localizable.sort_by_oldest()
+        }
+    }
+    
+    private func typeFilterActions(selectedType type: Web3Transaction.DisplayType?) -> [UIAction] {
+        let actions = [
             UIAction(
                 title: R.string.localizable.all(),
-                state: type == nil ? .on : .off,
+                state: .off,
                 handler: { [weak self] _ in self?.reloadDataWithFilterType(nil) }
             ),
             UIAction(
-                title: R.string.localizable.deposit(),
+                title: R.string.localizable.receive(),
                 image: R.image.filter_deposit(),
-                state: type == .receive ? .on : .off,
+                state: .off,
                 handler: { [weak self] _ in self?.reloadDataWithFilterType(.receive) }
             ),
             UIAction(
-                title: R.string.localizable.withdrawal(),
+                title: R.string.localizable.send(),
                 image: R.image.filter_withdrawal(),
-                state: type == .send ? .on : .off,
+                state: .off,
                 handler: { [weak self] _ in self?.reloadDataWithFilterType(.send) }
             ),
             UIAction(
-                title: R.string.localizable.contract(),
-                image: R.image.filter_contract(),
-                state: type == .contract ? .on : .off,
-                handler: { [weak self] _ in self?.reloadDataWithFilterType(.contract) }
+                title: R.string.localizable.swap(),
+                image: R.image.filter_swap(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadDataWithFilterType(.swap) }
+            ),
+            UIAction(
+                title: R.string.localizable.approval(),
+                image: R.image.filter_approval(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadDataWithFilterType(.approval) }
+            ),
+            UIAction(
+                title: R.string.localizable.pending(),
+                image: R.image.filter_pending(),
+                state: .off,
+                handler: { [weak self] _ in self?.reloadDataWithFilterType(.pending) }
             ),
         ]
+        switch type {
+        case .none:
+            actions[0].state = .on
+        case .receive:
+            actions[1].state = .on
+        case .send:
+            actions[2].state = .on
+        case .swap:
+            actions[3].state = .on
+        case .approval:
+            actions[4].state = .on
+        case .pending:
+            actions[5].state = .on
+        }
+        return actions
     }
     
-    private func reloadRightBarButtonItem(order: SafeSnapshot.Order) {
+    private func reloadRightBarButtonItem(order: Web3Transaction.Order) {
         let rightBarButtonItem: UIBarButtonItem
         if let item = navigationItem.rightBarButtonItem {
             rightBarButtonItem = item
@@ -166,33 +205,17 @@ extension Web3TransactionHistoryViewController {
                 state: .off,
                 handler: { [weak self] _ in self?.reloadDataWithOrder(.oldest) }
             ),
-            UIAction(
-                title: R.string.localizable.value(),
-                image: R.image.order_value(),
-                state: .off,
-                handler: { [weak self] _ in self?.reloadDataWithOrder(.mostValuable) }
-            ),
-            UIAction(
-                title: R.string.localizable.amount(),
-                image: R.image.order_amount(),
-                state: .off,
-                handler: { [weak self] _ in self?.reloadDataWithOrder(.biggestAmount) }
-            ),
         ]
         switch order {
         case .newest:
             actions[0].state = .on
         case .oldest:
             actions[1].state = .on
-        case .mostValuable:
-            actions[2].state = .on
-        case .biggestAmount:
-            actions[3].state = .on
         }
         rightBarButtonItem.menu = UIMenu(children: actions)
     }
     
-    private func reloadDataWithFilterType(_ type: Web3Transaction.TransactionType?) {
+    private func reloadDataWithFilterType(_ type: Web3Transaction.DisplayType?) {
         filter.type = type
         let actions = typeFilterActions(selectedType: filter.type)
         typeFilterView.button.menu = UIMenu(children: actions)
@@ -200,7 +223,7 @@ extension Web3TransactionHistoryViewController {
         reloadData()
     }
     
-    private func reloadDataWithOrder(_ order: SafeSnapshot.Order) {
+    private func reloadDataWithOrder(_ order: Web3Transaction.Order) {
         self.order = order
         updateNavigationSubtitle(order: order)
         reloadRightBarButtonItem(order: order)
@@ -212,23 +235,13 @@ extension Web3TransactionHistoryViewController {
 extension Web3TransactionHistoryViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        switch order {
-        case .newest, .oldest:
-            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseIdentifier) as! AssetHeaderView
-            view.label.text = dataSource.sectionIdentifier(for: section)
-            return view
-        case .mostValuable, .biggestAmount:
-            return nil
-        }
+        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerReuseIdentifier) as! AssetHeaderView
+        view.label.text = dataSource.sectionIdentifier(for: section)
+        return view
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch order {
-        case .newest, .oldest:
-            44
-        case .mostValuable, .biggestAmount:
-            .leastNormalMagnitude
-        }
+        44
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -251,15 +264,8 @@ extension Web3TransactionHistoryViewController: UITableViewDelegate {
         guard let id = dataSource.itemIdentifier(for: indexPath), let item = items[id] else {
             return
         }
-        DispatchQueue.global().async { [weak self, walletID] in
-            guard let token = Web3TokenDAO.shared.token(walletID: walletID, assetID: item.assetID) else {
-                return
-            }
-            DispatchQueue.main.async {
-                let viewController = Web3TransactionViewController(token: token, transaction: item)
-                self?.navigationController?.pushViewController(viewController, animated: true)
-            }
-        }
+        let viewController = Web3TransactionViewController(walletID: walletID, transaction: item)
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
 }
@@ -317,7 +323,7 @@ extension Web3TransactionHistoryViewController {
             Logger.general.debug(category: "TxnHistory", message: "No firstItem, abort loading")
             return
         }
-        Logger.general.debug(category: "TxnHistory", message: "Will load before \(firstItem.transactionID)")
+        Logger.general.debug(category: "TxnHistory", message: "Will load before \(firstItem.id)")
         let operation = LoadLocalDataOperation(
             viewController: self,
             behavior: .prepend(offset: firstItem),
@@ -332,7 +338,7 @@ extension Web3TransactionHistoryViewController {
             Logger.general.debug(category: "TxnHistory", message: "No lastItem, abort loading")
             return
         }
-        Logger.general.debug(category: "TxnHistory", message: "Will load after \(lastItem.transactionID)")
+        Logger.general.debug(category: "TxnHistory", message: "Will load after \(lastItem.id)")
         let operation = LoadLocalDataOperation(
             viewController: self,
             behavior: .append(offset: lastItem),
@@ -354,24 +360,24 @@ extension Web3TransactionHistoryViewController {
             case reload
             
             // Reload items after the offset. `offset` is included in the results
-            case reloadVisibleItems(offset: Web3TransactionItem)
+            case reloadVisibleItems(offset: Web3Transaction)
             
             // Load items before the offset. `offset` is not included
-            case prepend(offset: Web3TransactionItem)
+            case prepend(offset: Web3Transaction)
             
             // Load items after the offset. `offset` is not included
-            case append(offset: Web3TransactionItem)
+            case append(offset: Web3Transaction)
             
             var debugDescription: String {
                 switch self {
                 case .reload:
                     "reload"
                 case .reloadVisibleItems(let offset):
-                    "reloadVisibleItems(\(offset.transactionID))"
+                    "reloadVisibleItems(\(offset.id))"
                 case .prepend(let offset):
-                    "prepend(\(offset.transactionID))"
+                    "prepend(\(offset.id))"
                 case .append(let offset):
-                    "append(\(offset.transactionID))"
+                    "append(\(offset.id))"
                 }
             }
             
@@ -379,7 +385,8 @@ extension Web3TransactionHistoryViewController {
         
         private let behavior: Behavior
         private let filter: Web3Transaction.Filter
-        private let order: SafeSnapshot.Order
+        private let order: Web3Transaction.Order
+        private let tokenSymbols: [String: String]
         
         private let limit = 50
         private let loadMoreThreshold = 5
@@ -391,12 +398,13 @@ extension Web3TransactionHistoryViewController {
             viewController: Web3TransactionHistoryViewController?,
             behavior: Behavior,
             filter: Web3Transaction.Filter,
-            order: SafeSnapshot.Order
+            order: Web3Transaction.Order
         ) {
             self.viewController = viewController
             self.behavior = behavior
             self.filter = filter
             self.order = order
+            self.tokenSymbols = viewController?.tokenSymbols ?? [:]
             assert(limit > loadMoreThreshold)
         }
         
@@ -413,8 +421,8 @@ extension Web3TransactionHistoryViewController {
                     .after(offset: offset, includesOffset: false)
             }
             
-            let items = Web3TransactionDAO.shared.transactions(offset: offset, filter: filter, order: order, limit: limit)
-            Logger.general.debug(category: "TxnLoader", message: "Loaded \(items.count) items:\n\(items.map(\.transactionID))")
+            let transactions = Web3TransactionDAO.shared.transactions(offset: offset, filter: filter, order: order, limit: limit)
+            Logger.general.debug(category: "TxnLoader", message: "Loaded \(transactions.count) items:\n\(transactions.map(\.id))")
             
             var dataSnapshot: DataSourceSnapshot
             switch behavior {
@@ -431,51 +439,45 @@ extension Web3TransactionHistoryViewController {
                 }
             }
             
-            switch order {
-            case .newest, .oldest:
-                switch offset {
-                case .before:
-                    for item in items.reversed() {
-                        let date = DateFormatter.dateSimple.string(from: item.createdAt.toUTCDate())
-                        if dataSnapshot.sectionIdentifiers.contains(date) {
-                            if let firstItem = dataSnapshot.itemIdentifiers(inSection: date).first {
-                                dataSnapshot.insertItems([item.transactionID], beforeItem: firstItem)
-                            } else {
-                                dataSnapshot.appendItems([item.transactionID], toSection: date)
-                            }
+            switch offset {
+            case .before:
+                for transaction in transactions.reversed() {
+                    let date = DateFormatter.dateSimple.string(from: transaction.createdAt.toUTCDate())
+                    if dataSnapshot.sectionIdentifiers.contains(date) {
+                        if let firstItem = dataSnapshot.itemIdentifiers(inSection: date).first {
+                            dataSnapshot.insertItems([transaction.id], beforeItem: firstItem)
                         } else {
-                            if let firstSection = dataSnapshot.sectionIdentifiers.first {
-                                dataSnapshot.insertSections([date], beforeSection: firstSection)
-                            } else {
-                                dataSnapshot.appendSections([date])
-                            }
-                            dataSnapshot.appendItems([item.transactionID], toSection: date)
+                            dataSnapshot.appendItems([transaction.id], toSection: date)
                         }
-                    }
-                case .after, .none:
-                    for item in items {
-                        let date = DateFormatter.dateSimple.string(from: item.createdAt.toUTCDate())
-                        if !dataSnapshot.sectionIdentifiers.reversed().contains(date) {
+                    } else {
+                        if let firstSection = dataSnapshot.sectionIdentifiers.first {
+                            dataSnapshot.insertSections([date], beforeSection: firstSection)
+                        } else {
                             dataSnapshot.appendSections([date])
                         }
-                        dataSnapshot.appendItems([item.transactionID], toSection: date)
+                        dataSnapshot.appendItems([transaction.id], toSection: date)
                     }
                 }
-            case .mostValuable, .biggestAmount:
-                if dataSnapshot.numberOfSections == 0 {
-                    dataSnapshot.appendSections([amountSortedSection])
-                }
-                switch offset {
-                case .before:
-                    let identifiers = items.map(\.transactionID)
-                    if let firstIdentifier = dataSnapshot.itemIdentifiers.first {
-                        dataSnapshot.insertItems(identifiers, beforeItem: firstIdentifier)
-                    } else {
-                        dataSnapshot.appendItems(identifiers, toSection: amountSortedSection)
+            case .after, .none:
+                for transaction in transactions {
+                    let date = DateFormatter.dateSimple.string(from: transaction.createdAt.toUTCDate())
+                    if !dataSnapshot.sectionIdentifiers.reversed().contains(date) {
+                        dataSnapshot.appendSections([date])
                     }
-                case .after, .none:
-                    let identifiers = items.map(\.transactionID)
-                    dataSnapshot.appendItems(identifiers, toSection: amountSortedSection)
+                    dataSnapshot.appendItems([transaction.id], toSection: date)
+                }
+            }
+            
+            var tokenSymbols = self.tokenSymbols
+            var missingAssetIDs: Set<String> = []
+            for transaction in transactions {
+                let missingIDs = transaction.allAssetIDs.subtracting(tokenSymbols.keys)
+                missingAssetIDs.formUnion(missingIDs)
+            }
+            if !missingAssetIDs.isEmpty {
+                let symbols = Web3TokenDAO.shared.tokenSymbols(ids: missingAssetIDs)
+                for (assetID, symbol) in symbols {
+                    tokenSymbols[assetID] = TextTruncation.truncateTail(string: symbol, prefixCount: 8)
                 }
             }
             
@@ -486,14 +488,15 @@ extension Web3TransactionHistoryViewController {
                 controller.order = order
                 switch behavior {
                 case .reload, .reloadVisibleItems:
-                    controller.items = items.reduce(into: [:]) { results, item in
-                        results[item.transactionID] = item
+                    controller.items = transactions.reduce(into: [:]) { results, item in
+                        results[item.id] = item
                     }
                 case .prepend, .append:
-                    for item in items {
-                        controller.items[item.transactionID] = item
+                    for item in transactions {
+                        controller.items[item.id] = item
                     }
                 }
+                controller.tokenSymbols = tokenSymbols
                 switch behavior {
                 case .reload:
                     controller.loadPreviousPageIndexPath = nil
@@ -503,10 +506,10 @@ extension Web3TransactionHistoryViewController {
                     controller.dataSource.applySnapshotUsingReloadData(dataSnapshot)
                 case .reloadVisibleItems:
                     controller.withTableViewContentOffsetManaged {
-                        if let item = items.first {
+                        if let item = transactions.first {
                             controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
                             controller.firstItem = item
-                            Logger.general.debug(category: "TxnLoader", message: "Set previous canary \(item.transactionID)")
+                            Logger.general.debug(category: "TxnLoader", message: "Set previous canary \(item.id)")
                         } else {
                             controller.loadPreviousPageIndexPath = nil
                             controller.firstItem = nil
@@ -516,10 +519,10 @@ extension Web3TransactionHistoryViewController {
                     }
                 case .prepend:
                     controller.withTableViewContentOffsetManaged {
-                        if let item = items.first {
+                        if let item = transactions.first {
                             controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
                             controller.firstItem = item
-                            Logger.general.debug(category: "TxnLoader", message: "Set previous canary \(item.transactionID)")
+                            Logger.general.debug(category: "TxnLoader", message: "Set previous canary \(item.id)")
                         } else {
                             controller.loadPreviousPageIndexPath = nil
                             controller.firstItem = nil
@@ -535,14 +538,14 @@ extension Web3TransactionHistoryViewController {
                 case .prepend:
                     // Index path changes after prepending
                     if let lastItem = controller.lastItem {
-                        controller.loadNextPageIndexPath = controller.dataSource.indexPath(for: lastItem.transactionID)
+                        controller.loadNextPageIndexPath = controller.dataSource.indexPath(for: lastItem.id)
                     }
                 case .reload, .reloadVisibleItems, .append:
-                    if items.count >= limit,
-                       let canary = items.last,
-                       let indexPath = controller.dataSource.indexPath(for: canary.transactionID)
+                    if transactions.count >= limit,
+                       let canary = transactions.last,
+                       let indexPath = controller.dataSource.indexPath(for: canary.id)
                     {
-                        Logger.general.debug(category: "TxnLoader", message: "Set next canary \(canary.transactionID)")
+                        Logger.general.debug(category: "TxnLoader", message: "Set next canary \(canary.id)")
                         controller.loadNextPageIndexPath = indexPath
                         controller.lastItem = canary
                     } else {

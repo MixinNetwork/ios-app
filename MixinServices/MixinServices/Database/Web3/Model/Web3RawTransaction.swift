@@ -10,7 +10,7 @@ public struct Web3RawTransaction: Codable {
         case success
     }
     
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case hash = "hash"
         case chainID = "chain_id"
         case account = "account"
@@ -32,7 +32,7 @@ public struct Web3RawTransaction: Codable {
     
 }
 
-extension Web3RawTransaction: TableRecord, PersistableRecord, MixinFetchableRecord, MixinEncodableRecord {
+extension Web3RawTransaction: TableRecord, DatabaseColumnConvertible, PersistableRecord, MixinFetchableRecord, MixinEncodableRecord {
     
     public static let databaseTableName = "raw_transactions"
     

@@ -142,6 +142,9 @@
 "app_update_tips" = "Текущая версия (%@) больше недоступна! Нажмите «Обновить» ниже, чтобы выполнить обновление до последней версии из App Store.";
 "appearance" = "Вид";
 "apply" = "Подать заявление";
+"approval" = "Approval";
+"approval_count" = "Approved %@";
+"approval_unlimited" = "Unlimited";
 "approve" = "Approve";
 "approve_transaction" = "Approve Transaction";
 "approving_transaction" = "Approving Transaction";
@@ -1270,6 +1273,7 @@
 "to" = "В";
 "today" = "Сегодня";
 "token" = "Token";
+"token_access_approval" = "Token Access Approval";
 "top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
@@ -1283,11 +1287,13 @@
 "transaction_hash" = "Хэш транзакции";
 "transaction_history" = "Transaction History";
 "transaction_id" = "ID транзакции";
+"transaction_pending_confirmation" = "1 Transaction Pending Confirmation";
 "transaction_rejected" = "Transaction Rejected";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Тип операции";
 "transactions" = "Транзакции";
 "transactions_cannot_be_deleted" = "Транзакции НЕ МОГУТ быть удалены";
+"transactions_pending_confirmation" = "%d Transactions Pending Confirmation";
 "transcript" = "Стенограмма";
 "transfer" = "Передача";
 "transfer_amount_count_down" = "Сумма перевода(%@)";

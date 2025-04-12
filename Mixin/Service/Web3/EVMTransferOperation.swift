@@ -42,6 +42,7 @@ class EVMTransferOperation: Web3TransferOperation {
     private let balanceChange: BalanceChange
     
     private var evmFee: EVMFee?
+    private var fee: Fee?
     
     fileprivate init(
         fromAddress: String,
@@ -64,7 +65,7 @@ class EVMTransferOperation: Web3TransferOperation {
             if let amount = transaction.decimalValue, amount != 0 {
                 .detailed(token: feeToken, amount: amount)
             } else {
-                .decodingFailed(rawTransaction: transaction.hexData ?? "")
+                .decodingFailed(rawTransaction: transaction.hexEncodedData ?? "")
             }
         case .arbitrary(let change):
             change
@@ -95,7 +96,7 @@ class EVMTransferOperation: Web3TransferOperation {
     override func loadFee() async throws -> Fee {
         let rawFee = try await RouteAPI.estimatedEthereumFee(
             mixinChainID: mixinChainID,
-            hexData: transactionPreview.hexData,
+            hexData: transactionPreview.hexEncodedData,
             from: fromAddress,
             to: transactionPreview.to.toChecksumAddress()
         )
@@ -113,20 +114,21 @@ class EVMTransferOperation: Web3TransferOperation {
             maxFeePerGas: maxFeePerGas,
             maxPriorityFeePerGas: maxPriorityFeePerGas
         )
-        await MainActor.run {
-            self.evmFee = evmFee
-            self.state = .ready
-        }
         let tokenCount = weiCount * .wei
         let fee = Fee(
             token: tokenCount,
             fiatMoney: tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
         )
+        await MainActor.run {
+            self.evmFee = evmFee
+            self.fee = fee
+            self.state = .ready
+        }
         return fee
     }
     
     override func start(with pin: String) {
-        guard let fee = evmFee else {
+        guard let evmFee, let fee else {
             assertionFailure("Missing fee, call `start(with:)` only after fee is arrived")
             return
         }
@@ -152,9 +154,9 @@ class EVMTransferOperation: Web3TransferOperation {
                 transaction = EIP1559Transaction(
                     chainID: chainID,
                     nonce: nonce,
-                    maxPriorityFeePerGas: fee.maxPriorityFeePerGas,
-                    maxFeePerGas: fee.maxFeePerGas,
-                    gasLimit: fee.gasLimit,
+                    maxPriorityFeePerGas: evmFee.maxPriorityFeePerGas,
+                    maxFeePerGas: evmFee.maxFeePerGas,
+                    gasLimit: evmFee.gasLimit,
                     destination: transactionPreview.to,
                     amount: transactionPreview.value ?? 0,
                     data: transactionPreview.data
@@ -171,7 +173,7 @@ class EVMTransferOperation: Web3TransferOperation {
             await MainActor.run {
                 self.state = .sending
             }
-            await self.send(transaction: transaction, with: account)
+            await self.send(transaction: transaction, with: account, fee: fee)
         }
     }
     
@@ -180,18 +182,18 @@ class EVMTransferOperation: Web3TransferOperation {
     }
     
     override func resendTransaction() {
-        guard let transaction, let account else {
+        guard let transaction, let fee, let account else {
             return
         }
         state = .sending
         Logger.web3.info(category: "EVMTransfer", message: "Will resend")
         Task.detached {
             Logger.web3.info(category: "EVMTransfer", message: "Will resend")
-            await self.send(transaction: transaction, with: account)
+            await self.send(transaction: transaction, with: account, fee: fee)
         }
     }
     
-    private func send(transaction: EIP1559Transaction, with account: EthereumAccount) async {
+    private func send(transaction: EIP1559Transaction, with account: EthereumAccount, fee: Fee) async {
         do {
             let transactionDescription = transaction.raw?.hexEncodedString()
                 ?? transaction.jsonRepresentation
@@ -208,34 +210,53 @@ class EVMTransferOperation: Web3TransferOperation {
                 chainID: mixinChainID,
                 raw: hexEncodedSignedTransaction
             )
-            let pendingTransaction = {
-                let (assetID, amount) = switch balanceChange {
-                case .decodingFailed:
-                    ("", "")
-                case let .detailed(token, decimalAmount):
-                    (token.assetID, TokenAmountFormatter.string(from: decimalAmount))
-                }
-                return Web3Transaction(
-                    transactionID: "",
+            let pendingTransaction = switch balanceChange {
+            case .decodingFailed:
+                Web3Transaction(
                     transactionHash: rawTransaction.hash,
-                    blockNumber: -1,
-                    sender: account.publicKey,
-                    receiver: transaction.destination.toChecksumAddress(),
-                    outputHash: "",
                     chainID: mixinChainID,
-                    assetID: assetID,
-                    amount: amount,
-                    transactionType: .known(.send),
-                    status: .known(.pending),
+                    address: fromAddress,
+                    transactionType: .known(.unknown),
+                    status: .pending,
+                    blockNumber: -1,
+                    fee: TokenAmountFormatter.string(from: fee.token),
+                    senders: nil,
+                    receivers: nil,
+                    approvals: nil,
+                    sendAssetID: nil,
+                    receiveAssetID: nil,
                     transactionAt: rawTransaction.createdAt,
                     createdAt: rawTransaction.createdAt,
                     updatedAt: rawTransaction.createdAt
                 )
-            }()
-            Web3RawTransactionDAO.shared.save(
-                rawTransaction: rawTransaction,
-                pendingTransaction: pendingTransaction
-            )
+            case let .detailed(token, decimalAmount):
+                Web3Transaction(
+                    transactionHash: rawTransaction.hash,
+                    chainID: mixinChainID,
+                    address: fromAddress,
+                    transactionType: .known(.transferOut),
+                    status: .pending,
+                    blockNumber: -1,
+                    fee: TokenAmountFormatter.string(from: fee.token),
+                    senders: [
+                        .init(
+                            assetID: token.assetID,
+                            amount: TokenAmountFormatter.string(from: decimalAmount),
+                            from: fromAddress
+                        )
+                    ],
+                    receivers: nil,
+                    approvals: nil,
+                    sendAssetID: token.assetID,
+                    receiveAssetID: nil,
+                    transactionAt: rawTransaction.createdAt,
+                    createdAt: rawTransaction.createdAt,
+                    updatedAt: rawTransaction.createdAt
+                )
+            }
+            Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
+                try rawTransaction.save(db)
+            }
             let hash = rawTransaction.hash
             Logger.web3.info(category: "TxnRequest", message: "Will respond hash: \(hash)")
             try await respond(hash: hash)

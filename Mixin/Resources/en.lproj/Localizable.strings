@@ -142,6 +142,9 @@
 "app_update_tips" = "The current version (%@) is no longer available! Please click \"Update\" below to update to the latest version from the App Store.";
 "appearance" = "Appearance";
 "apply" = "Apply";
+"approval" = "Approval";
+"approval_count" = "Approved %@";
+"approval_unlimited" = "Unlimited";
 "approve" = "Approve";
 "approve_transaction" = "Approve Transaction";
 "approving_transaction" = "Approving Transaction";
@@ -1270,6 +1273,7 @@
 "to" = "To";
 "today" = "Today";
 "token" = "Token";
+"token_access_approval" = "Token Access Approval";
 "top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
@@ -1283,11 +1287,13 @@
 "transaction_hash" = "Transaction Hash";
 "transaction_history" = "Transaction History";
 "transaction_id" = "Transaction Id";
+"transaction_pending_confirmation" = "1 Transaction Pending Confirmation";
 "transaction_rejected" = "Transaction Rejected";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Transaction Type";
 "transactions" = "Transactions";
 "transactions_cannot_be_deleted" = "Transactions CANNOT be deleted";
+"transactions_pending_confirmation" = "%d Transactions Pending Confirmation";
 "transcript" = "Transcript";
 "transfer" = "Transfer";
 "transfer_amount_count_down" = "Transfer Amount(%@)";

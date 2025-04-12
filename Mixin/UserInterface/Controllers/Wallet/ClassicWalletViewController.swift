@@ -23,6 +23,11 @@ final class ClassicWalletViewController: WalletViewController {
         tableView.delegate = self
         tableHeaderView.actionView.swapButton.isHidden = true
         tableHeaderView.actionView.delegate = self
+        tableHeaderView.pendingDepositButton.addTarget(
+            self,
+            action: #selector(revealPendingDeposits(_:)),
+            for: .touchUpInside
+        )
         let notificationCenter: NotificationCenter = .default
         notificationCenter.addObserver(
             self,
@@ -40,6 +45,12 @@ final class ClassicWalletViewController: WalletViewController {
             self,
             selector: #selector(reloadTokensFromRemote),
             name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadPendingDeposits),
+            name: Web3TransactionDAO.transactionDidSaveNotification,
             object: nil
         )
         reloadData()
@@ -106,6 +117,24 @@ final class ClassicWalletViewController: WalletViewController {
                 self.tableView.reloadData()
             }
         }
+    }
+    
+    @objc private func reloadPendingDeposits() {
+        DispatchQueue.global().async { [weak self] in
+            let transactions = Web3TransactionDAO.shared.pendingTransactions()
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                self.tableHeaderView.reloadPendingTransactions(transactions)
+                self.layoutTableHeaderView()
+            }
+        }
+    }
+    
+    @objc private func revealPendingDeposits(_ sender: Any) {
+        let transactionHistory = Web3TransactionHistoryViewController(walletID: walletID, type: .pending)
+        navigationController?.pushViewController(transactionHistory, animated: true)
     }
     
     private func hideToken(with assetID: String) {

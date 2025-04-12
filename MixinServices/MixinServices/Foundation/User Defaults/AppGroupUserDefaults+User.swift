@@ -96,6 +96,7 @@ extension AppGroupUserDefaults {
                 || TaskDatabase.current.needsMigration
                 || SignalDatabase.current.needsMigration
                 || UserDatabase.current.needsMigration
+                || Web3Database.current.needsMigration
         }
         
         @Default(namespace: .user, key: Key.localVersion, defaultValue: uninitializedVersion)

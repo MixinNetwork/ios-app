@@ -210,19 +210,27 @@ class EVMTransferOperation: Web3TransferOperation {
                 chainID: mixinChainID,
                 raw: hexEncodedSignedTransaction
             )
-            let pendingTransaction = {
-                let assetID: String?
-                let senders: [Web3Transaction.Sender]?
-                switch balanceChange {
-                case .decodingFailed:
-                    assetID = nil
-                    senders = nil
-                case let .detailed(token, decimalAmount):
-                    let amount = TokenAmountFormatter.string(from: decimalAmount)
-                    assetID = token.assetID
-                    senders = [.init(assetID: token.assetID, amount: amount, from: fromAddress)]
-                }
-                return Web3Transaction(
+            let pendingTransaction = switch balanceChange {
+            case .decodingFailed:
+                Web3Transaction(
+                    transactionHash: rawTransaction.hash,
+                    chainID: mixinChainID,
+                    address: fromAddress,
+                    transactionType: .known(.unknown),
+                    status: .pending,
+                    blockNumber: -1,
+                    fee: TokenAmountFormatter.string(from: fee.token),
+                    senders: nil,
+                    receivers: nil,
+                    approvals: nil,
+                    sendAssetID: nil,
+                    receiveAssetID: nil,
+                    transactionAt: rawTransaction.createdAt,
+                    createdAt: rawTransaction.createdAt,
+                    updatedAt: rawTransaction.createdAt
+                )
+            case let .detailed(token, decimalAmount):
+                Web3Transaction(
                     transactionHash: rawTransaction.hash,
                     chainID: mixinChainID,
                     address: fromAddress,
@@ -230,16 +238,22 @@ class EVMTransferOperation: Web3TransferOperation {
                     status: .pending,
                     blockNumber: -1,
                     fee: TokenAmountFormatter.string(from: fee.token),
-                    senders: senders,
+                    senders: [
+                        .init(
+                            assetID: token.assetID,
+                            amount: TokenAmountFormatter.string(from: decimalAmount),
+                            from: fromAddress
+                        )
+                    ],
                     receivers: nil,
                     approvals: nil,
-                    sendAssetID: assetID,
+                    sendAssetID: token.assetID,
                     receiveAssetID: nil,
                     transactionAt: rawTransaction.createdAt,
                     createdAt: rawTransaction.createdAt,
                     updatedAt: rawTransaction.createdAt
                 )
-            }()
+            }
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
                 try rawTransaction.save(db)
             }

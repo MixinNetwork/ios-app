@@ -77,41 +77,55 @@ class SolanaTransferOperation: Web3TransferOperation {
                 chainID: ChainID.solana,
                 raw: signedTransaction
             )
-            let pendingTransaction = await {
-                let assetID: String?
-                let senders: [Web3Transaction.Sender]?
-                switch try? await loadBalanceChange() {
-                case .none, .decodingFailed:
-                    assetID = nil
-                    senders = nil
-                case let .detailed(token, decimalAmount):
-                    let amount = TokenAmountFormatter.string(from: decimalAmount)
-                    assetID = token.assetID
-                    senders = [.init(assetID: token.assetID, amount: amount, from: fromAddress)]
-                }
-                let feeString = if let fee {
-                    TokenAmountFormatter.string(from: fee.token)
-                } else {
-                    ""
-                }
-                return Web3Transaction(
+            let transactionFee = if let fee {
+                TokenAmountFormatter.string(from: fee.token)
+            } else {
+                ""
+            }
+            let pendingTransaction = switch try? await loadBalanceChange() {
+            case .none, .decodingFailed:
+                Web3Transaction(
+                    transactionHash: rawTransaction.hash,
+                    chainID: ChainID.solana,
+                    address: fromAddress,
+                    transactionType: .known(.unknown),
+                    status: .pending,
+                    blockNumber: -1,
+                    fee: transactionFee,
+                    senders: nil,
+                    receivers: nil,
+                    approvals: nil,
+                    sendAssetID: nil,
+                    receiveAssetID: nil,
+                    transactionAt: rawTransaction.createdAt,
+                    createdAt: rawTransaction.createdAt,
+                    updatedAt: rawTransaction.createdAt
+                )
+            case let .detailed(token, decimalAmount):
+                Web3Transaction(
                     transactionHash: rawTransaction.hash,
                     chainID: ChainID.solana,
                     address: fromAddress,
                     transactionType: .known(.transferOut),
                     status: .pending,
                     blockNumber: -1,
-                    fee: feeString,
-                    senders: senders,
+                    fee: transactionFee,
+                    senders: [
+                        .init(
+                            assetID: token.assetID,
+                            amount: TokenAmountFormatter.string(from: decimalAmount),
+                            from: fromAddress
+                        )
+                    ],
                     receivers: nil,
                     approvals: nil,
-                    sendAssetID: assetID,
+                    sendAssetID: token.assetID,
                     receiveAssetID: nil,
                     transactionAt: rawTransaction.createdAt,
                     createdAt: rawTransaction.createdAt,
                     updatedAt: rawTransaction.createdAt
                 )
-            }()
+            }
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
                 try rawTransaction.save(db)
             }

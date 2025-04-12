@@ -447,15 +447,16 @@ extension Web3TransactionViewController {
                 }
                 return AssetChange(token: token, amount: amount, style: sendStyle)
             }
-            rows = [
-                .assetChanges(changes),
+            if changes.isEmpty {
+                rows = []
+            } else {
+                rows = [.assetChanges(changes)]
+            }
+            rows.append(contentsOf: [
                 .plain(key: .transactionHash, value: transaction.transactionHash),
                 feeRow,
-            ]
+            ])
         case .approval:
-            rows = [
-                .plain(key: .transactionHash, value: transaction.transactionHash),
-            ]
             if let approval = transaction.approvals?.first,
                let token = Web3TokenDAO.shared.token(walletID: walletID, assetID: approval.assetID)
             {
@@ -467,8 +468,11 @@ extension Web3TransactionViewController {
                 case .unknown(let value):
                     value
                 }
-                rows.insert(.approval(token: token, amount: localizedAmount), at: 0)
+                rows = [.approval(token: token, amount: localizedAmount)]
+            } else {
+                rows = []
             }
+            rows.append(.plain(key: .transactionHash, value: transaction.transactionHash))
             if let toAddress = transaction.receivers?.first?.to {
                 rows.append(.plain(key: .to, value: toAddress))
             }

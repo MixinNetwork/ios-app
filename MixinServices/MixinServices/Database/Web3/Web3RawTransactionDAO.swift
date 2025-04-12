@@ -13,7 +13,7 @@ public final class Web3RawTransactionDAO: Web3DAO {
         """)
     }
     
-    public func isExist(hash: String) -> Bool {
+    public func rawTransactionExists(hash: String) -> Bool {
         db.recordExists(in: Web3RawTransaction.self,
                         where: Web3RawTransaction.column(of: .hash) == hash)
     }

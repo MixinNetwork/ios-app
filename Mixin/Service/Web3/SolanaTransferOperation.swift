@@ -78,16 +78,16 @@ class SolanaTransferOperation: Web3TransferOperation {
                 raw: signedTransaction
             )
             let pendingTransaction = await {
-                let assetID: String
-                let senders: [Web3Transaction.Sender]
+                let assetID: String?
+                let senders: [Web3Transaction.Sender]?
                 switch try? await loadBalanceChange() {
                 case .none, .decodingFailed:
-                    assetID = ""
-                    senders = []
+                    assetID = nil
+                    senders = nil
                 case let .detailed(token, decimalAmount):
                     let amount = TokenAmountFormatter.string(from: decimalAmount)
                     assetID = token.assetID
-                    senders = [.init(assetID: assetID, amount: amount, from: fromAddress)]
+                    senders = [.init(assetID: token.assetID, amount: amount, from: fromAddress)]
                 }
                 let feeString = if let fee {
                     TokenAmountFormatter.string(from: fee.token)
@@ -96,16 +96,17 @@ class SolanaTransferOperation: Web3TransferOperation {
                 }
                 return Web3Transaction(
                     transactionHash: rawTransaction.hash,
-                    status: .pending,
-                    blockNumber: -1,
                     chainID: ChainID.solana,
-                    fee: feeString,
                     address: fromAddress,
                     transactionType: .known(.transferOut),
+                    status: .pending,
+                    blockNumber: -1,
+                    fee: feeString,
                     senders: senders,
-                    receivers: [],
+                    receivers: nil,
+                    approvals: nil,
                     sendAssetID: assetID,
-                    receiveAssetID: "",
+                    receiveAssetID: nil,
                     transactionAt: rawTransaction.createdAt,
                     createdAt: rawTransaction.createdAt,
                     updatedAt: rawTransaction.createdAt

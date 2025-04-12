@@ -58,7 +58,7 @@ final class Web3TransactionViewController: TransactionViewController {
                             return
                         }
                         
-                        if Web3RawTransactionDAO.shared.isExist(hash: transaction.transactionHash) {
+                        if Web3RawTransactionDAO.shared.rawTransactionExists(hash: transaction.transactionHash) {
                             let transaction = try await RouteAPI.transaction(
                                 chainID: transaction.chainID,
                                 hash: transaction.transactionHash
@@ -393,7 +393,7 @@ extension Web3TransactionViewController {
             rows = [
                 .plain(key: .transactionHash, value: transaction.transactionHash),
             ]
-            if let fromAddress = transaction.senders.first?.from {
+            if let fromAddress = transaction.senders?.first?.from {
                 rows.append(.plain(key: .from, value: fromAddress))
             }
             rows.append(feeRow)
@@ -401,13 +401,12 @@ extension Web3TransactionViewController {
             rows = [
                 .plain(key: .transactionHash, value: transaction.transactionHash),
             ]
-            if let toAddress = transaction.receivers.first?.to {
+            if let toAddress = transaction.receivers?.first?.to {
                 rows.append(.plain(key: .to, value: toAddress))
             }
             rows.append(feeRow)
         case .swap, .none, .unknown:
-            let assetIDs = Set(transaction.senders.map(\.assetID) + transaction.receivers.map(\.assetID))
-            let tokens = Web3TokenDAO.shared.tokens(walletID: walletID, ids: assetIDs)
+            let tokens = Web3TokenDAO.shared.tokens(walletID: walletID, ids: transaction.allAssetIDs)
                 .reduce(into: [:]) { result, token in
                     result[token.assetID] = token
                 }
@@ -421,7 +420,9 @@ extension Web3TransactionViewController {
                 sendStyle = .pending
                 receiveStyle = .pending
             }
-            let changes = transaction.receivers.map { receiver in
+            let receivers = transaction.receivers ?? []
+            let senders = transaction.senders ?? []
+            let changes = receivers.map { receiver in
                 let token = tokens[receiver.assetID]
                 let amount = if let amount = Decimal(string: receiver.amount, locale: .enUSPOSIX) {
                     CurrencyFormatter.localizedString(
@@ -433,7 +434,7 @@ extension Web3TransactionViewController {
                     receiver.amount
                 }
                 return AssetChange(token: token, amount: amount, style: receiveStyle)
-            } + transaction.senders.map { sender in
+            } + senders.map { sender in
                 let token = tokens[sender.assetID]
                 let amount = if let amount = Decimal(string: sender.amount, locale: .enUSPOSIX) {
                     CurrencyFormatter.localizedString(
@@ -455,18 +456,20 @@ extension Web3TransactionViewController {
             rows = [
                 .plain(key: .transactionHash, value: transaction.transactionHash),
             ]
-            if let token = Web3TokenDAO.shared.token(walletID: walletID, assetID: transaction.sendAssetID),
-               let amount = transaction.approvedAmount
+            if let approval = transaction.approvals?.first,
+               let token = Web3TokenDAO.shared.token(walletID: walletID, assetID: approval.assetID)
             {
-                let localizedAmount = switch amount {
-                case .unlimited:
+                let localizedAmount = switch approval.approvalType {
+                case .known(.unlimited):
                     R.string.localizable.approval_unlimited()
-                case .limited(let count):
-                    R.string.localizable.approval_count(count)
+                case .known(.limited):
+                    R.string.localizable.approval_count(approval.localizedAmount)
+                case .unknown(let value):
+                    value
                 }
                 rows.insert(.approval(token: token, amount: localizedAmount), at: 0)
             }
-            if let toAddress = transaction.receivers.first?.to {
+            if let toAddress = transaction.receivers?.first?.to {
                 rows.append(.plain(key: .to, value: toAddress))
             }
         }

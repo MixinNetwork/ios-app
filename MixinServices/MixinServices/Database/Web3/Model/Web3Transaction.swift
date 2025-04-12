@@ -5,14 +5,15 @@ public class Web3Transaction: Codable, Identifiable {
     
     public enum CodingKeys: String, CodingKey {
         case transactionHash = "transaction_hash"
-        case status = "status"
-        case blockNumber = "block_number"
         case chainID = "chain_id"
-        case fee = "fee"
         case address = "address"
         case transactionType = "transaction_type"
+        case status = "status"
+        case blockNumber = "block_number"
+        case fee = "fee"
         case senders = "senders"
         case receivers = "receivers"
+        case approvals = "approvals"
         case sendAssetID = "send_asset_id"
         case receiveAssetID = "receive_asset_id"
         case transactionAt = "transaction_at"
@@ -21,16 +22,17 @@ public class Web3Transaction: Codable, Identifiable {
     }
     
     public let transactionHash: String
-    public let status: Status
-    public let blockNumber: Int
     public let chainID: String
-    public let fee: String
     public let address: String
     public let transactionType: UnknownableEnum<TransactionType>
-    public let senders: [Sender]
-    public let receivers: [Receiver]
-    public let sendAssetID: String
-    public let receiveAssetID: String
+    public let status: Status
+    public let blockNumber: Int
+    public let fee: String
+    public let senders: [Sender]?
+    public let receivers: [Receiver]?
+    public let approvals: [Approval]?
+    public let sendAssetID: String?
+    public let receiveAssetID: String?
     public let transactionAt: String
     public let createdAt: String
     public let updatedAt: String
@@ -55,13 +57,13 @@ public class Web3Transaction: Codable, Identifiable {
     public lazy var directionalTransferAmount: Decimal? = {
         switch transactionType.knownCase {
         case .transferIn:
-            if let amount = receivers.first?.amount {
+            if let amount = receivers?.first?.amount {
                 Decimal(string: amount, locale: .enUSPOSIX)
             } else {
                 nil
             }
         case .transferOut:
-            if let amount = senders.first?.amount,
+            if let amount = senders?.first?.amount,
                let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX)
             {
                 -decimalAmount
@@ -84,44 +86,32 @@ public class Web3Transaction: Codable, Identifiable {
         )
     }()
     
-    public lazy var approvedAmount: ApprovalAmount? = {
-        guard transactionType.knownCase == .approval else {
-            return nil
-        }
-        return if let sender = senders.first {
-            .limited(
-                CurrencyFormatter.localizedString(
-                    from: sender.decimalAmount,
-                    format: .precision,
-                    sign: .never
-                )
-            )
-        } else {
-            .unlimited
-        }
-    }()
-    
     public var allAssetIDs: Set<String> {
-        Set(senders.map(\.assetID) + receivers.map(\.assetID))
+        let senderIDs = senders?.map(\.assetID) ?? []
+        let receiverIDs = receivers?.map(\.assetID) ?? []
+        return Set(senderIDs + receiverIDs)
     }
     
     public init(
-        transactionHash: String, status: Web3Transaction.Status, blockNumber: Int,
-        chainID: String, fee: String, address: String,
+        transactionHash: String, chainID: String, address: String,
         transactionType: UnknownableEnum<Web3Transaction.TransactionType>,
-        senders: [Web3Transaction.Sender], receivers: [Web3Transaction.Receiver],
-        sendAssetID: String, receiveAssetID: String, transactionAt: String,
-        createdAt: String, updatedAt: String
+        status: Web3Transaction.Status, blockNumber: Int, fee: String,
+        senders: [Web3Transaction.Sender]?,
+        receivers: [Web3Transaction.Receiver]?,
+        approvals: [Web3Transaction.Approval]?, sendAssetID: String?,
+        receiveAssetID: String?, transactionAt: String, createdAt: String,
+        updatedAt: String
     ) {
         self.transactionHash = transactionHash
-        self.status = status
-        self.blockNumber = blockNumber
         self.chainID = chainID
-        self.fee = fee
         self.address = address
         self.transactionType = transactionType
+        self.status = status
+        self.blockNumber = blockNumber
+        self.fee = fee
         self.senders = senders
         self.receivers = receivers
+        self.approvals = approvals
         self.sendAssetID = sendAssetID
         self.receiveAssetID = receiveAssetID
         self.transactionAt = transactionAt
@@ -205,6 +195,34 @@ extension Web3Transaction {
             self.amount = amount
             self.from = from
         }
+        
+    }
+    
+    public class Approval: Codable {
+        
+        public enum ApprovalType: String {
+            case unlimited
+            case limited
+        }
+        
+        public enum CodingKeys: String, CodingKey {
+            case assetID = "asset_id"
+            case amount = "amount"
+            case to = "to"
+            case approvalType = "approval_type"
+        }
+        
+        public let assetID: String
+        public let amount: String
+        public let to: String
+        public let approvalType: UnknownableEnum<ApprovalType>
+        
+        public lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
+        public lazy var localizedAmount = CurrencyFormatter.localizedString(
+            from: decimalAmount,
+            format: .precision,
+            sign: .always
+        )
         
     }
     

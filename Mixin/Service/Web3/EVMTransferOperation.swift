@@ -211,29 +211,30 @@ class EVMTransferOperation: Web3TransferOperation {
                 raw: hexEncodedSignedTransaction
             )
             let pendingTransaction = {
-                let assetID: String
-                let senders: [Web3Transaction.Sender]
+                let assetID: String?
+                let senders: [Web3Transaction.Sender]?
                 switch balanceChange {
                 case .decodingFailed:
-                    assetID = ""
-                    senders = []
+                    assetID = nil
+                    senders = nil
                 case let .detailed(token, decimalAmount):
                     let amount = TokenAmountFormatter.string(from: decimalAmount)
                     assetID = token.assetID
-                    senders = [.init(assetID: assetID, amount: amount, from: fromAddress)]
+                    senders = [.init(assetID: token.assetID, amount: amount, from: fromAddress)]
                 }
                 return Web3Transaction(
                     transactionHash: rawTransaction.hash,
-                    status: .pending,
-                    blockNumber: -1,
                     chainID: mixinChainID,
-                    fee: TokenAmountFormatter.string(from: fee.token),
                     address: fromAddress,
                     transactionType: .known(.transferOut),
+                    status: .pending,
+                    blockNumber: -1,
+                    fee: TokenAmountFormatter.string(from: fee.token),
                     senders: senders,
-                    receivers: [],
+                    receivers: nil,
+                    approvals: nil,
                     sendAssetID: assetID,
-                    receiveAssetID: "",
+                    receiveAssetID: nil,
                     transactionAt: rawTransaction.createdAt,
                     createdAt: rawTransaction.createdAt,
                     updatedAt: rawTransaction.createdAt

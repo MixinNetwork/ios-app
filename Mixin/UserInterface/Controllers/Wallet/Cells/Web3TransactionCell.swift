@@ -45,18 +45,20 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
                 row.symbolLabel.text = nil
             }
         case .swap, .unknown, .none:
-            let count = min(3, transaction.senders.count + transaction.receivers.count)
+            let senders = transaction.senders ?? []
+            let receivers = transaction.receivers ?? []
+            let count = min(3, senders.count + receivers.count)
             loadRowViews(count: count)
             for i in 0..<count {
                 let row = rowViews[i]
                 row.style = .multipleTransfer
-                if i < transaction.receivers.count {
-                    let receiver = transaction.receivers[i]
+                if i < receivers.count {
+                    let receiver = receivers[i]
                     row.amountLabel.text = receiver.localizedAmount
                     row.amountLabel.textColor = receiveAmountColor
                     row.symbolLabel.text = symbols[receiver.assetID]
                 } else {
-                    let sender = transaction.senders[i - transaction.receivers.count]
+                    let sender = senders[i - receivers.count]
                     row.amountLabel.text = sender.localizedAmount
                     row.amountLabel.textColor = sendAmountColor
                     row.symbolLabel.text = symbols[sender.assetID]
@@ -66,12 +68,16 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
             loadRowViews(count: 1)
             let row = rowViews[0]
             row.style = .contract
-            switch transaction.approvedAmount {
-            case .unlimited:
-                row.amountLabel.text = R.string.localizable.approval_unlimited()
-            case .limited(let amount):
-                row.amountLabel.text = R.string.localizable.approval_count(amount)
-            case .none:
+            if let approval = transaction.approvals?.first {
+                row.amountLabel.text = switch approval.approvalType {
+                case .known(.unlimited):
+                    R.string.localizable.approval_unlimited()
+                case .known(.limited):
+                    R.string.localizable.approval_count(approval.localizedAmount)
+                case .unknown(let value):
+                    value
+                }
+            } else {
                 row.amountLabel.text = nil
             }
             row.amountLabel.textColor = switch transaction.status {
@@ -80,7 +86,11 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
             default:
                 R.color.text()!
             }
-            row.symbolLabel.text = symbols[transaction.sendAssetID]
+            if let id = transaction.sendAssetID {
+                row.symbolLabel.text = symbols[id]
+            } else {
+                row.symbolLabel.text = nil
+            }
         }
         
         switch transaction.transactionType.knownCase {

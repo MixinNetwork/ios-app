@@ -49,11 +49,12 @@ final class ClassicWalletViewController: WalletViewController {
         )
         notificationCenter.addObserver(
             self,
-            selector: #selector(reloadPendingDeposits),
+            selector: #selector(reloadPendingTransactions),
             name: Web3TransactionDAO.transactionDidSaveNotification,
             object: nil
         )
         reloadData()
+        reloadPendingTransactions()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -119,7 +120,7 @@ final class ClassicWalletViewController: WalletViewController {
         }
     }
     
-    @objc private func reloadPendingDeposits() {
+    @objc private func reloadPendingTransactions() {
         DispatchQueue.global().async { [weak self] in
             let transactions = Web3TransactionDAO.shared.pendingTransactions()
             DispatchQueue.main.async {

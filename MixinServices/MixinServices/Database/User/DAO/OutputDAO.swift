@@ -39,6 +39,18 @@ public final class OutputDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [asset, limit])
     }
     
+    public func availableOutputs(asset: String, limit: Int) -> [Output] {
+        let sql = """
+            SELECT *
+            FROM outputs
+            WHERE (state = 'unspent' OR state = 'pending')
+                AND asset = ?
+                AND inscription_hash IS NULL
+            ORDER BY created_at ASC
+            LIMIT ?
+        """
+        return db.select(with: sql, arguments: [asset, limit])
+    }
     public func unspentOutputs(asset: String, after sequence: Int?, limit: Int, db: GRDB.Database) throws -> [Output] {
         var sql = "SELECT * FROM outputs WHERE state = 'unspent' AND asset = :asset AND inscription_hash IS NULL"
         var arguments: [String: DatabaseValueConvertible] = ["asset": asset]

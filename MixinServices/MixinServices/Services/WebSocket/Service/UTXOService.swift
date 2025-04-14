@@ -138,6 +138,38 @@ extension UTXOService {
         }
     }
     
+    public func collectAvailableOutputs(kernelAssetID: String, amount: Decimal) -> CollectingResult {
+        // Select 1 more output to see if there's more outputs available
+        var availableOutputs = OutputDAO.shared.availableOutputs(asset: kernelAssetID, limit: maxSpendingOutputsCount + 1)
+        let hasMoreAvailableOutput = availableOutputs.count > maxSpendingOutputsCount
+        if hasMoreAvailableOutput {
+            availableOutputs.removeLast()
+        }
+        
+        var outputs: [Output] = []
+        var outputsAmount: Decimal = 0
+        outputs.reserveCapacity(availableOutputs.count)
+        while outputsAmount < amount, !availableOutputs.isEmpty {
+            let spending = availableOutputs.removeFirst()
+            outputs.append(spending)
+            if let spendingAmount = Decimal(string: spending.amount, locale: .enUSPOSIX) {
+                outputsAmount += spendingAmount
+            } else {
+                Logger.general.error(category: "UTXOService", message: "Invalid utxo.amount: \(spending.amount)")
+            }
+        }
+        if !outputs.isEmpty, outputsAmount >= amount {
+            let collection = OutputCollection(outputs: outputs, amount: outputsAmount)
+            return .success(collection)
+        } else {
+            if hasMoreAvailableOutput {
+                return .maxSpendingCountExceeded
+            } else {
+                return .insufficientBalance
+            }
+        }
+    }
+    
     public func collectConsolidationOutputs(kernelAssetID: String) -> OutputCollection {
         let unspentOutputs = OutputDAO.shared.unspentOutputs(asset: kernelAssetID, limit: maxSpendingOutputsCount)
         

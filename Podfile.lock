@@ -198,9 +198,9 @@ PODS:
   - SDWebImageSVGKitPlugin (1.4.0):
     - SDWebImage/Core (~> 5.10)
     - SVGKit (~> 3.0)
-  - Sentry (8.48.0):
-    - Sentry/Core (= 8.48.0)
-  - Sentry/Core (8.48.0)
+  - Sentry (8.49.0):
+    - Sentry/Core (= 8.49.0)
+  - Sentry/Core (8.49.0)
   - SnapKit (5.7.1)
   - SocketRocket (0.7.1)
   - Sodium (0.9.1)
@@ -275,7 +275,7 @@ CHECKOUT OPTIONS:
     :commit: 53e446e27b55283f026e14606e21b112349e4c75
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
   PhoneNumberKit:
-    :commit: 45bd4211acbc0250188857e3f272c18eab0661d7
+    :commit: d0bb339352de0d66e23b8960e09fd00413b82850
     :git: https://github.com/marmelroy/PhoneNumberKit
   SVGKit:
     :commit: 026d2168d07b621e4701a8b2aac6c1eaf05c1df5
@@ -307,13 +307,13 @@ SPEC CHECKSUMS:
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   MixinServices: 790d48227edaec397484ec336ce64a6c87c18850
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
-  PhoneNumberKit: 7265b5993e9cbe1a12d3cc01d6278d650560395e
+  PhoneNumberKit: 99c7dddc07c36e76507c37a1e63f475a6faa40b2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
   SDWebImage: f84b0feeb08d2d11e6a9b843cb06d75ebf5b8868
   SDWebImageLottieCoder: 827c9c82bbaae89627391b4d6fdf39bb89be3336
   SDWebImageSVGKitPlugin: 7542dd07c344ec3415ded0461a1161a6f087e0c9
-  Sentry: 1ca8405451040482877dcd344dfa3ef80b646631
+  Sentry: 5eda2559a20fa0c377b695ed9d7c178a47122891
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Sodium: 23d11554ecd556196d313cf6130d406dfe7ac6da

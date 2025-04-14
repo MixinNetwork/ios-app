@@ -30,10 +30,16 @@ final class NonAtomicInvoicePaymentOperation: InvoicePaymentOperation {
     
     let destination: Payment.TransferDestination
     let transactions: [Transaction]
+    let paidEntriesHash: [String]
     
-    init(destination: Payment.TransferDestination, transactions: [Transaction]) {
+    init(
+        destination: Payment.TransferDestination,
+        transactions: [Transaction],
+        paidEntriesHash: [String]
+    ) {
         self.destination = destination
         self.transactions = transactions
+        self.paidEntriesHash = paidEntriesHash
     }
     
     func start(pin: String) async throws {
@@ -51,8 +57,12 @@ final class NonAtomicInvoicePaymentOperation: InvoicePaymentOperation {
             }
         }
         
-        var hashes: [String] = []
+        var hashes = paidEntriesHash
         for (index, transaction) in transactions.enumerated() {
+            guard index > paidEntriesHash.count - 1 else {
+                Logger.general.info(category: "NonAtomicInvoicePayment", message: "Skip txn \(index), hash: \(hashes[index])")
+                continue
+            }
             let token = transaction.token
             let entry = transaction.entry
             Logger.general.info(category: "NonAtomicInvoicePayment", message: "Start txn \(index), \(entry.amount) \(token.symbol)")

@@ -175,7 +175,9 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
     }
     
     override func performAction(with pin: String) {
-        operation.start(with: pin)
+        Task {
+            try? await operation.start(pin: pin)
+        }
     }
     
     override func close(_ sender: Any) {

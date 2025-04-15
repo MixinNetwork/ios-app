@@ -32,7 +32,7 @@ class MixinSwapViewController: SwapViewController {
         }
     }
     
-    private var quote: SwapQuote?
+    fileprivate(set) var quote: SwapQuote?
     private var requester: SwapQuotePeriodicRequester?
     private var amountRange: SwapQuotePeriodicRequester.AmountRange?
     
@@ -250,33 +250,76 @@ class MixinSwapViewController: SwapViewController {
             switch response {
             case .success(let response):
                 guard
-                    let url = URL(string: response.tx),
+                    let tx = response.tx,
+                    let url = URL(string: tx),
                     quote.sendToken.assetID == response.quote.inputMint,
                     quote.receiveToken.assetID == response.quote.outputMint,
                     quote.sendAmount == Decimal(string: response.quote.inAmount, locale: .enUSPOSIX),
+                    let paymentURL = SafePaymentURL(url: url),
+                    case let .user(userID) = paymentURL.address,
                     let receiveAmount = Decimal(string: response.quote.outAmount, locale: .enUSPOSIX)
                 else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
-                    sender.isBusy = false
+                    self?.toastError(text: R.string.localizable.invalid_payment_link())
                     return
                 }
+                let sendAmount = quote.sendAmount
                 let context = Payment.SwapContext(
                     receiveToken: quote.receiveToken,
                     receiveAmount: receiveAmount
                 )
-                let source: UrlWindow.Source = .swap(context: context) { description in
-                    if let description {
-                        showAutoHiddenHud(style: .error, text: description)
+                
+                Task { [weak self] in
+                    guard let sendToken = TokenDAO.shared.tokenItem(assetID: quote.sendToken.assetID) else {
+                        return
                     }
-                    sender.isBusy = false
+                    guard let destinationUser = await self?.fetchUser(userID: userID) else {
+                        return
+                    }
+                    guard let homeContainer = UIApplication.homeContainerViewController else {
+                        return
+                    }
+                    let fiatMoneyAmount = sendAmount * sendToken.decimalUSDPrice * Currency.current.decimalRate
+                    let payment = Payment(traceID: UUID().uuidString.lowercased(), token: sendToken, tokenAmount: sendAmount, fiatMoneyAmount: fiatMoneyAmount, memo: paymentURL.memo, context: .swap(context))
+                    payment.checkPreconditions(transferTo: .user(destinationUser), reference: paymentURL.reference, on: homeContainer) { reason in
+                        switch reason {
+                        case .userCancelled, .loggedOut:
+                            return
+                        case .description(let message):
+                            self?.toastError(text: message)
+                        }
+                    } onSuccess: { operation, issues in
+                        let op = SwapPaymentOperation(operation: operation, sendToken: quote.sendToken, sendAmount: sendAmount, receiveToken: quote.receiveToken, receiveAmount: receiveAmount, destination: .user(destinationUser), memo: paymentURL.memo)
+                        let preview = SwapPreviewViewController(operation: op, warnings: issues.map(\.description))
+                        homeContainer.present(preview, animated: true)
+                    }
                 }
-                _ = UrlWindow.checkUrl(url: url, from: source)
             case .failure(let error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 sender.isBusy = false
             }
         }
         reporter.report(event: .swapPreview)
+    }
+    
+    func fetchUser(userID: String) async -> UserItem? {
+        var receiveUser = UserDAO.shared.getUser(userId: userID)
+        if receiveUser == nil {
+            switch UserAPI.showUser(userId: userID) {
+            case let .success(user):
+                UserDAO.shared.updateUsers(users: [user])
+                receiveUser = UserItem.createUser(from: user)
+            case let .failure(error):
+                await MainActor.run {
+                    self.toastError(text: error.localizedDescription)
+                }
+            }
+        }
+        return receiveUser
+    }
+    
+    func toastError(text: String) {
+        showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
+        reviewButton.isBusy = false
     }
     
     override func prepareForReuse(sender: Any) {

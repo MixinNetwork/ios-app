@@ -58,24 +58,86 @@ final class Web3SwapViewController: MixinSwapViewController {
         return token
     }
     
-    override func makeRequest(swapQuote: SwapQuote) -> SwapRequest? {
+    override func review(_ sender: RoundedButton) {
+        guard let quote else {
+            return
+        }
         guard let walletID else {
-            return nil
+            return
         }
         guard let chainID = sendTokenChainID else {
-            return nil
+            return
         }
         guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: chainID) else {
-            return nil
+            return
         }
-        return SwapRequest(
-            sendToken: swapQuote.sendToken,
-            sendAmount: swapQuote.sendAmount,
-            receiveToken: swapQuote.receiveToken,
-            source: swapQuote.source,
+        
+        let request = SwapRequest(
+            sendToken: quote.sendToken,
+            sendAmount: quote.sendAmount,
+            receiveToken: quote.receiveToken,
+            source: quote.source,
             slippage: 0.01,
-            payload: swapQuote.payload,
+            payload: quote.payload,
             withdrawalDestination: address.destination
         )
+        sender.isBusy = true
+        let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
+        ConcurrentJobQueue.shared.addJob(job: job)
+        RouteAPI.swap(request: request) { [weak self] response in
+            guard self != nil else {
+                return
+            }
+            switch response {
+            case .success(let response):
+                guard
+                    let depositDestination = response.depositDestination,
+                    let receiveAmount = Decimal(string: response.quote.outAmount, locale: .enUSPOSIX)
+                else {
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
+                    sender.isBusy = false
+                    return
+                }
+                
+                Task { [weak self] in
+                    guard let sendToken = Web3TokenDAO.shared.token(walletID: chainID, assetID: quote.sendToken.assetID) else {
+                        return
+                    }
+                    guard let homeContainer = UIApplication.homeContainerViewController else {
+                        return
+                    }
+                    guard let chain = Web3Chain.chain(chainID: chainID) else {
+                        return
+                    }
+                    
+                    let sendAmount = quote.sendAmount
+                    let payment = Web3SendingTokenPayment(chain: chain, token: sendToken, fromAddress: address.destination)
+                    let addressPayment = Web3SendingTokenToAddressPayment(
+                        payment: payment,
+                        to: .arbitrary,
+                        address: address.destination
+                    )
+                    let operation = switch chain.kind {
+                    case .evm:
+                        try EVMTransferToAddressOperation(payment: addressPayment, decimalAmount: sendAmount)
+                    case .solana:
+                        try SolanaTransferToAddressOperation(payment: addressPayment, decimalAmount: sendAmount)
+                    }
+                    let fee = try await operation.loadFee()
+                    let feeTokenSymbol = operation.feeToken.symbol
+                    
+                    await MainActor.run {
+                        let op = SwapPaymentOperation(operation: operation, sendToken: quote.sendToken, sendAmount: sendAmount, receiveToken: quote.receiveToken, receiveAmount: receiveAmount, destination: .address(address.destination, fee, feeTokenSymbol), memo: nil)
+                        
+                        let preview = SwapPreviewViewController(operation: op, warnings: [])
+                        homeContainer.present(preview, animated: true)
+                    }
+                }
+            case .failure(let error):
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                sender.isBusy = false
+            }
+        }
+        reporter.report(event: .swapPreview)
     }
 }

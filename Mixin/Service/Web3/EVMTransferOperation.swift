@@ -127,54 +127,52 @@ class EVMTransferOperation: Web3TransferOperation {
         return fee
     }
     
-    override func start(with pin: String) {
+    override func start(pin: String) async throws {
         guard let evmFee, let fee else {
             assertionFailure("Missing fee, call `start(with:)` only after fee is arrived")
             return
         }
         state = .signing
-        Task.detached { [chainID, mixinChainID, transactionPreview] in
-            Logger.web3.info(category: "EVMTransfer", message: "Will sign")
-            let account: EthereumAccount
-            let transaction: EIP1559Transaction
-            do {
-                let priv = try await TIP.deriveEthereumPrivateKey(pin: pin)
-                let keyStorage = InPlaceKeyStorage(raw: priv)
-                account = try EthereumAccount(keyStorage: keyStorage)
-                guard transactionPreview.from == account.address else {
-                    throw RequestError.mismatchedAddress
-                }
-                let count = try await RouteAPI.ethereumLatestTransactionCount(
-                    chainID: mixinChainID,
-                    address: account.address.toChecksumAddress()
-                )
-                guard let nonce = BigInt(hex: count) else {
-                    throw RequestError.invalidTransactionCount
-                }
-                transaction = EIP1559Transaction(
-                    chainID: chainID,
-                    nonce: nonce,
-                    maxPriorityFeePerGas: evmFee.maxPriorityFeePerGas,
-                    maxFeePerGas: evmFee.maxFeePerGas,
-                    gasLimit: evmFee.gasLimit,
-                    destination: transactionPreview.to,
-                    amount: transactionPreview.value ?? 0,
-                    data: transactionPreview.data
-                )
-            } catch {
-                Logger.web3.error(category: "EVMTransfer", message: "Failed to sign: \(error)")
-                await MainActor.run {
-                    self.state = .signingFailed(error)
-                }
-                return
+        Logger.web3.info(category: "EVMTransfer", message: "Will sign")
+        let account: EthereumAccount
+        let transaction: EIP1559Transaction
+        do {
+            let priv = try await TIP.deriveEthereumPrivateKey(pin: pin)
+            let keyStorage = InPlaceKeyStorage(raw: priv)
+            account = try EthereumAccount(keyStorage: keyStorage)
+            guard transactionPreview.from == account.address else {
+                throw RequestError.mismatchedAddress
             }
-            
-            Logger.web3.info(category: "EVMTransfer", message: "Will send")
+            let count = try await RouteAPI.ethereumLatestTransactionCount(
+                chainID: mixinChainID,
+                address: account.address.toChecksumAddress()
+            )
+            guard let nonce = BigInt(hex: count) else {
+                throw RequestError.invalidTransactionCount
+            }
+            transaction = EIP1559Transaction(
+                chainID: chainID,
+                nonce: nonce,
+                maxPriorityFeePerGas: evmFee.maxPriorityFeePerGas,
+                maxFeePerGas: evmFee.maxFeePerGas,
+                gasLimit: evmFee.gasLimit,
+                destination: transactionPreview.to,
+                amount: transactionPreview.value ?? 0,
+                data: transactionPreview.data
+            )
+        } catch {
+            Logger.web3.error(category: "EVMTransfer", message: "Failed to sign: \(error)")
             await MainActor.run {
-                self.state = .sending
+                self.state = .signingFailed(error)
             }
-            await self.send(transaction: transaction, with: account, fee: fee)
+            return
         }
+        
+        Logger.web3.info(category: "EVMTransfer", message: "Will send")
+        await MainActor.run {
+            self.state = .sending
+        }
+        await self.send(transaction: transaction, with: account, fee: fee)
     }
     
     fileprivate func respond(hash: String) async throws {

@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-class Web3TransferOperation {
+class Web3TransferOperation: PaymentOperation {
     
     struct Fee {
         let token: Decimal
@@ -55,7 +55,7 @@ class Web3TransferOperation {
         fatalError("Must override")
     }
     
-    func start(with pin: String) {
+    func start(pin: String) async throws {
         assertionFailure("Must override")
     }
     

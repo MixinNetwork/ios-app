@@ -47,7 +47,7 @@ final class MultipleAssetChangeCell: UITableViewCell {
     }
     
     func reloadData(
-        sendToken: MixinTokenItem,
+        sendToken: SwapToken,
         sendAmount: String,
         receiveToken: SwapToken,
         receiveAmount: String
@@ -65,7 +65,7 @@ final class MultipleAssetChangeCell: UITableViewCell {
         
         sendingView.iconView.setIcon(token: sendToken)
         sendingView.amountLabel.text = sendAmount
-        sendingView.networkLabel.text = sendToken.chain?.name
+        sendingView.networkLabel.text = sendToken.chain.name
         sendingView.amountLabel.textColor = R.color.text()
     }
     

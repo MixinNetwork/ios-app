@@ -103,42 +103,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         
         switch context {
         case .swap(let context):
-            rows = [
-                .swapAssetChange(
-                    sendToken: operation.token,
-                    sendAmount: CurrencyFormatter.localizedString(
-                        from: -tokenAmount,
-                        format: .precision,
-                        sign: .always,
-                        symbol: .custom(token.symbol)
-                    ),
-                    receiveToken: context.receiveToken,
-                    receiveAmount: CurrencyFormatter.localizedString(
-                        from: context.receiveAmount,
-                        format: .precision,
-                        sign: .always,
-                        symbol: .custom(context.receiveToken.symbol)
-                    )
-                ),
-                .doubleLineInfo(
-                    caption: .price,
-                    primary: SwapQuote.priceRepresentation(
-                        sendAmount: operation.amount,
-                        sendSymbol: operation.token.symbol,
-                        receiveAmount: context.receiveAmount,
-                        receiveSymbol: context.receiveToken.symbol,
-                        unit: .send
-                    ),
-                    secondary: SwapQuote.priceRepresentation(
-                        sendAmount: operation.amount,
-                        sendSymbol: operation.token.symbol,
-                        receiveAmount: context.receiveAmount,
-                        receiveSymbol: context.receiveToken.symbol,
-                        unit: .receive
-                    )
-                ),
-                .amount(caption: .networkFee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
-            ]
+            rows = []
         case .inscription(let context):
             rows = [
                 .boldInfo(caption: .collectible, content: context.item.collectionSequenceRepresentation),

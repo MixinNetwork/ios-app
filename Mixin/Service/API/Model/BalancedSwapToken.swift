@@ -47,18 +47,43 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
         )
     }
     
+    init?(tokenItem i: Web3TokenItem) {
+        guard let chain = i.chain else {
+            return nil
+        }
+        self.decimalBalance = i.decimalBalance
+        self.decimalUSDPrice = i.decimalUSDPrice
+        super.init(
+            address: "",
+            assetID: i.assetID,
+            decimals: 0,
+            name: i.name,
+            symbol: i.symbol,
+            iconURL: i.iconURL,
+            chain: Chain(
+                chainID: chain.chainId,
+                name: chain.name,
+                symbol: chain.symbol,
+                icon: chain.iconUrl
+            )
+        )
+    }
 }
 
 extension BalancedSwapToken {
     
-    static func fillBalance(swappableTokens: [SwapToken]) -> [BalancedSwapToken] {
+    static func fillBalance(swappableTokens: [SwapToken], walletID: String? = nil) -> [BalancedSwapToken] {
         let ids = swappableTokens.map(\.assetID)
-        let tokenItems = TokenDAO.shared.tokenItems(with: ids)
-            .reduce(into: [:]) { result, item in
-                result[item.assetID] = item
-            }
+        let tokenItems: [ValuableToken] = if let walletID {
+            Web3TokenDAO.shared.tokens(walletID: walletID, ids: ids)
+        } else {
+            TokenDAO.shared.tokenItems(with: ids)
+        }
+        let tokenMaps = tokenItems.reduce(into: [:]) { result, item in
+            result[item.assetID] = item
+        }
         return swappableTokens.map { token in
-            if let item = tokenItems[token.assetID] {
+            if let item = tokenMaps[token.assetID] {
                 BalancedSwapToken(token: token, balance: item.decimalBalance, usdPrice: item.decimalUSDPrice)
             } else {
                 BalancedSwapToken(token: token, balance: 0, usdPrice: 0)

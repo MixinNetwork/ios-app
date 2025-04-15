@@ -39,13 +39,15 @@ final class SwapQuotePeriodicRequester {
     
     init(
         sendToken: BalancedSwapToken, sendAmount: Decimal,
-        receiveToken: SwapToken, slippage: Decimal
+        receiveToken: SwapToken, slippage: Decimal,
+        source: RouteTokenSource
     ) {
-        self.request = QuoteRequest.mixin(
-            sendToken: sendToken,
-            sendAmount: sendAmount,
-            receiveToken: receiveToken,
-            slippage: slippage
+        self.request = QuoteRequest(
+            inputMint: sendToken.assetID,
+            outputMint: receiveToken.assetID,
+            amount: TokenAmountFormatter.string(from: sendAmount),
+            slippage: Slippage(decimal: slippage).integral,
+            source: source
         )
         self.quoteDraft = SwapQuoteDraft(
             sendToken: sendToken,

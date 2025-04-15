@@ -3,7 +3,7 @@ import OrderedCollections
 import Alamofire
 import MixinServices
 
-final class MixinSwapViewController: SwapViewController {
+class MixinSwapViewController: SwapViewController {
     
     private let arbitrarySendAssetID: String?
     private let arbitraryReceiveAssetID: String?
@@ -41,6 +41,15 @@ final class MixinSwapViewController: SwapViewController {
     private weak var showOrdersItem: BadgeBarButtonItem?
     private weak var depositTokenRequest: Request?
     
+    var source: RouteTokenSource {
+        .mixin
+    }
+    var sendTokenChainID: String? {
+        sendToken?.chain.chainID
+    }
+    
+    let walletID: String?
+    
     private lazy var userInputSimulationFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -51,9 +60,10 @@ final class MixinSwapViewController: SwapViewController {
         return formatter
     }()
     
-    init(sendAssetID: String?, receiveAssetID: String?) {
+    init(sendAssetID: String?, receiveAssetID: String?, walletID: String? = nil) {
         self.arbitrarySendAssetID = sendAssetID
         self.arbitraryReceiveAssetID = receiveAssetID
+        self.walletID = walletID
         super.init()
     }
     
@@ -63,7 +73,24 @@ final class MixinSwapViewController: SwapViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = R.string.localizable.swap()
+        initTitleBar()
+        updateSendView(style: .loading)
+        updateReceiveView(style: .loading)
+        reloadTokens()
+        sendAmountTextField.delegate = self
+        footerInfoButton.addTarget(
+            self,
+            action: #selector(inputAmountByRange(_:)),
+            for: .touchUpInside
+        )
+    }
+    
+    func initTitleBar() {
+        navigationItem.titleView = NavigationTitleView(
+            title: R.string.localizable.swap(),
+            subtitle: R.string.localizable.privacy_wallet()
+        )
+        
         let showOrdersItem = BadgeBarButtonItem(
             image: R.image.ic_title_transaction()!,
             target: self,
@@ -77,15 +104,7 @@ final class MixinSwapViewController: SwapViewController {
             showOrdersItem,
         ]
         self.showOrdersItem = showOrdersItem
-        updateSendView(style: .loading)
-        updateReceiveView(style: .loading)
-        reloadTokens()
-        sendAmountTextField.delegate = self
-        footerInfoButton.addTarget(
-            self,
-            action: #selector(inputAmountByRange(_:)),
-            for: .touchUpInside
-        )
+        
         DispatchQueue.global().async { [weak showOrdersItem] in
             let hasSwapOrderReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapOrderReviewed) ?? false
             DispatchQueue.main.async {
@@ -113,7 +132,8 @@ final class MixinSwapViewController: SwapViewController {
         let selector = SwapTokenSelectorViewController(
             recent: .send,
             tokens: Array(swappableTokens.values),
-            selectedAssetID: sendToken?.assetID
+            selectedAssetID: sendToken?.assetID,
+            walletID: walletID
         )
         selector.onSelected = { token in
             if token.assetID == self.receiveToken?.assetID {
@@ -168,7 +188,8 @@ final class MixinSwapViewController: SwapViewController {
         let selector = SwapTokenSelectorViewController(
             recent: .receive,
             tokens: Array(swappableTokens.values),
-            selectedAssetID: receiveToken?.assetID
+            selectedAssetID: receiveToken?.assetID,
+            walletID: walletID
         )
         selector.onSelected = { token in
             if token.assetID == self.sendToken?.assetID {
@@ -201,19 +222,25 @@ final class MixinSwapViewController: SwapViewController {
         }
     }
     
+    func makeRequest(swapQuote: SwapQuote) -> SwapRequest? {
+        return SwapRequest(
+            sendToken: swapQuote.sendToken,
+            sendAmount: swapQuote.sendAmount,
+            receiveToken: swapQuote.receiveToken,
+            source: swapQuote.source,
+            slippage: 0.01,
+            payload: swapQuote.payload
+        )
+    }
+    
     override func review(_ sender: RoundedButton) {
         guard let quote else {
             return
         }
+        guard let request = makeRequest(swapQuote: quote) else {
+            return
+        }
         sender.isBusy = true
-        let request = SwapRequest.mixin(
-            sendToken: quote.sendToken,
-            sendAmount: quote.sendAmount,
-            receiveToken: quote.receiveToken,
-            source: quote.source,
-            slippage: 0.01,
-            payload: quote.payload
-        )
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
         ConcurrentJobQueue.shared.addJob(job: job)
         RouteAPI.swap(request: request) { [weak self] response in
@@ -274,7 +301,7 @@ final class MixinSwapViewController: SwapViewController {
         navigationController?.pushViewController(orders, animated: true)
     }
     
-    @objc private func presentCustomerService(_ sender: Any) {
+    @objc func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
     }
@@ -296,6 +323,16 @@ final class MixinSwapViewController: SwapViewController {
         }
     }
     
+    func fetchBalancedSwapToken(assetID: String) -> BalancedSwapToken? {
+        if let item = TokenDAO.shared.tokenItem(assetID: assetID), let token = BalancedSwapToken(tokenItem: item) {
+            return token
+        } else if case let .success(token) = SafeAPI.assets(id: assetID), let chain = ChainDAO.shared.chain(chainId: token.chainID) {
+            let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+            return BalancedSwapToken(tokenItem: item)
+        } else {
+            return nil
+        }
+    }
 }
 
 extension MixinSwapViewController: HomeNavigationController.NavigationBarStyling {
@@ -398,7 +435,7 @@ extension MixinSwapViewController {
     }
     
     private func reloadTokens() {
-        RouteAPI.swappableTokens(source: .mixin) { [weak self] result in
+        RouteAPI.swappableTokens(source: source) { [weak self] result in
             switch result {
             case .success(let tokens):
                 self?.reloadData(swappableTokens: tokens)
@@ -426,13 +463,8 @@ extension MixinSwapViewController {
             if let id = arbitrarySendAssetID ?? lastTokenIDs?.send {
                 if let token = tokens[id] {
                     sendToken = token
-                } else if let item = TokenDAO.shared.tokenItem(assetID: id), let token = BalancedSwapToken(tokenItem: item) {
-                    sendToken = token
-                } else if case let .success(token) = SafeAPI.assets(id: id), let chain = ChainDAO.shared.chain(chainId: token.chainID) {
-                    let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
-                    sendToken = BalancedSwapToken(tokenItem: item)
                 } else {
-                    sendToken = nil
+                    sendToken = self?.fetchBalancedSwapToken(assetID: id)
                 }
             } else {
                 sendToken = tokens.values.first { token in
@@ -446,13 +478,8 @@ extension MixinSwapViewController {
                     receiveToken = nil
                 } else if let token = tokens[id] {
                     receiveToken = token
-                } else if let item = TokenDAO.shared.tokenItem(assetID: id), let token = BalancedSwapToken(tokenItem: item) {
-                    receiveToken = token
-                } else if case let .success(token) = SafeAPI.assets(id: id), let chain = ChainDAO.shared.chain(chainId: token.chainID) {
-                    let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
-                    receiveToken = BalancedSwapToken(tokenItem: item)
                 } else {
-                    receiveToken = nil
+                    receiveToken = self?.fetchBalancedSwapToken(assetID: id)
                 }
             } else {
                 receiveToken = tokens.values.first { token in
@@ -599,7 +626,8 @@ extension MixinSwapViewController {
             sendToken: sendToken,
             sendAmount: sendAmount,
             receiveToken: receiveToken,
-            slippage: 0.01
+            slippage: 0.01,
+            source: source
         )
         requester.delegate = self
         self.requester = requester

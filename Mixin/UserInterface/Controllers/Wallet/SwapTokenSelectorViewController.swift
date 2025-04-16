@@ -61,11 +61,23 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
     override func viewDidLoad() {
         super.viewDidLoad()
         reloadTokenSelection()
-        DispatchQueue.global().async { [recent, weak self] in
+        DispatchQueue.global().async { [walletID, recent, defaultChains, weak self] in
             guard let tokens = PropertiesDAO.shared.jsonObject(forKey: recent.key, type: [SwapToken.Codable].self) else {
                 return
             }
-            let recentTokens = BalancedSwapToken.fillBalance(swappableTokens: tokens, walletID: self?.walletID)
+            var recentTokens = BalancedSwapToken.fillBalance(swappableTokens: tokens, walletID: walletID)
+            if walletID != nil {
+                let chains = defaultChains.reduce(into: [:]) { results, item in
+                    results[item.id] = item
+                }
+                recentTokens = recentTokens.compactMap { token in
+                    guard let chainID = token.chain.chainID else {
+                        return nil
+                    }
+                    return chains[chainID] != nil ? token : nil
+                }
+            }
+            
             let assetIDs = recentTokens.map(\.assetID)
             let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
                 .priceChangePercentage24H(assetIDs: assetIDs)

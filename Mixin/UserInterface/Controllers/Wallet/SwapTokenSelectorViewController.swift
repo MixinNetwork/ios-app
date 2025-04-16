@@ -159,13 +159,13 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
     private func reloadSearchResults(keyword: String, tokens: [SwapToken]) {
         assert(!Thread.isMainThread)
         let searchResults = BalancedSwapToken.fillBalance(swappableTokens: tokens, walletID: walletID)
-            .sorted { (one, another) in
-                let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
-                let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
-                return left > right
-            }
+            .sorted { $0.valueForSorted() > $1.valueForSorted() }
         let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-        let searchResultChains = Chain.mixinChains(ids: chainIDs)
+        let searchResultChains = if walletID != nil {
+            Chain.web3Chains(ids: chainIDs)
+        } else {
+            Chain.mixinChains(ids: chainIDs)
+        }
         DispatchQueue.main.async {
             guard self.trimmedKeyword == keyword else {
                 return

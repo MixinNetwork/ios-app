@@ -41,4 +41,7 @@ extension ValuableToken {
         )
     }
     
+    public func valueForSorted() -> (Decimal, Decimal, Decimal) {
+        return (decimalBalance * decimalUSDPrice, decimalBalance, decimalUSDPrice)
+    }
 }

@@ -134,7 +134,7 @@ class MixinSwapViewController: SwapViewController {
     override func changeSendToken(_ sender: Any) {
         let selector = SwapTokenSelectorViewController(
             recent: .send,
-            tokens: Array(swappableTokens.values),
+            tokens: swappableTokens.values.sorted { $0.valueForSorted() > $1.valueForSorted() },
             selectedAssetID: sendToken?.assetID,
             walletID: walletID
         )

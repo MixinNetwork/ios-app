@@ -65,10 +65,13 @@ final class Web3SwapViewController: MixinSwapViewController {
         guard let walletID else {
             return
         }
-        guard let chainID = sendTokenChainID else {
+        guard let sendTokenChainID, let receiveTokenChainID else {
             return
         }
-        guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: chainID) else {
+        guard let receiveAddress = Web3AddressDAO.shared.address(walletID: walletID, chainID: receiveTokenChainID) else {
+            return
+        }
+        guard let sendingAddress = Web3AddressDAO.shared.address(walletID: walletID, chainID: sendTokenChainID) else {
             return
         }
         
@@ -79,7 +82,7 @@ final class Web3SwapViewController: MixinSwapViewController {
             source: .web3,
             slippage: 0.01,
             payload: quote.payload,
-            withdrawalDestination: address.destination
+            withdrawalDestination: receiveAddress.destination
         )
         sender.isBusy = true
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
@@ -109,48 +112,55 @@ final class Web3SwapViewController: MixinSwapViewController {
                     guard let sendToken = Web3TokenDAO.shared.token(walletID: walletID, assetID: quote.sendToken.assetID) else {
                         return
                     }
-                    guard let chain = Web3Chain.chain(chainID: chainID) else {
+                    guard let sendChain = Web3Chain.chain(chainID: sendTokenChainID) else {
                         return
                     }
                     
-                    let payment = Web3SendingTokenPayment(chain: chain, token: sendToken, fromAddress: address.destination)
+                    let payment = Web3SendingTokenPayment(chain: sendChain, token: sendToken, fromAddress: sendingAddress.destination)
                     let addressPayment = Web3SendingTokenToAddressPayment(
                         payment: payment,
                         to: .arbitrary,
                         address: depositDestination
                     )
-                    let operation = switch chain.kind {
-                    case .evm:
-                        try EVMTransferToAddressOperation(payment: addressPayment, decimalAmount: sendAmount)
-                    case .solana:
-                        try SolanaTransferToAddressOperation(payment: addressPayment, decimalAmount: sendAmount)
-                    }
-                    let fee = try await operation.loadFee()
-                    let feeTokenSymbol = operation.feeToken.symbol
                     
-                    await MainActor.run {
-                        guard let homeContainer = UIApplication.homeContainerViewController else {
-                            return
+                    do {
+                        let operation = switch sendChain.kind {
+                        case .evm:
+                            try EVMTransferToAddressOperation(payment: addressPayment, decimalAmount: sendAmount)
+                        case .solana:
+                            try SolanaTransferToAddressOperation(payment: addressPayment, decimalAmount: sendAmount)
                         }
                         
-                        let destination = SwapPaymentOperation.Web3Destination(displayReceiver: displayReceiver,
-                                                                               depositDestination: address.destination,
-                                                                               fee: fee,
-                                                                               feeTokenSymbol: feeTokenSymbol,
-                                                                               senderAddress: address)
-                        let op = SwapPaymentOperation(operation: operation,
-                                                      sendToken: quote.sendToken,
-                                                      sendAmount: sendAmount,
-                                                      receiveToken: quote.receiveToken,
-                                                      receiveAmount: receiveAmount,
-                                                      destination: .web3(destination),
-                                                      memo: nil)
+                        let fee = try await operation.loadFee()
+                        let feeTokenSymbol = operation.feeToken.symbol
                         
-                        let preview = SwapPreviewViewController(operation: op, warnings: [])
-                        preview.onDismiss = {
-                            sender.isBusy = false
+                        await MainActor.run {
+                            guard let homeContainer = UIApplication.homeContainerViewController else {
+                                return
+                            }
+                            
+                            let destination = SwapPaymentOperation.Web3Destination(displayReceiver: displayReceiver,
+                                                                                   depositDestination: depositDestination,
+                                                                                   fee: fee,
+                                                                                   feeTokenSymbol: feeTokenSymbol,
+                                                                                   senderAddress: sendingAddress)
+                            let op = SwapPaymentOperation(operation: operation,
+                                                          sendToken: quote.sendToken,
+                                                          sendAmount: sendAmount,
+                                                          receiveToken: quote.receiveToken,
+                                                          receiveAmount: receiveAmount,
+                                                          destination: .web3(destination),
+                                                          memo: nil)
+                            
+                            let preview = SwapPreviewViewController(operation: op, warnings: [])
+                            preview.onDismiss = {
+                                sender.isBusy = false
+                            }
+                            homeContainer.present(preview, animated: true)
                         }
-                        homeContainer.present(preview, animated: true)
+                    } catch {
+                        showAutoHiddenHud(style: .error, text: "\(error)")
+                        sender.isBusy = false
                     }
                 }
             case .failure(let error):

@@ -47,6 +47,9 @@ class MixinSwapViewController: SwapViewController {
     var sendTokenChainID: String? {
         sendToken?.chain.chainID
     }
+    var receiveTokenChainID: String? {
+        receiveToken?.chain.chainID
+    }
     
     let walletID: String?
     

@@ -71,7 +71,6 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     
     override func updateBalanceCell(_ cell: TokenBalanceCell) {
         cell.reloadData(web3Token: token)
-        cell.actionView.swapButton.isHidden = true
         cell.actionView.delegate = self
     }
     
@@ -167,7 +166,9 @@ extension Web3TokenViewController: TokenActionView.Delegate {
         case .send:
             send()
         case .swap:
-            break
+            let swap = Web3SwapViewController(sendAssetID: token.assetID, receiveAssetID: AssetID.erc20USDT, walletID: token.walletID)
+            navigationController?.pushViewController(swap, animated: true)
+            reporter.report(event: .swapStart, tags: ["entrance": "wallet", "source": "web3"])
         }
     }
     

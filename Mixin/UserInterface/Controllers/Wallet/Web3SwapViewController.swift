@@ -8,14 +8,6 @@ final class Web3SwapViewController: MixinSwapViewController {
     override var source: RouteTokenSource {
         return .web3
     }
- 
-    init(walletID: String) {
-        super.init(sendAssetID: nil, receiveAssetID: nil, walletID: walletID)
-    }
-    
-    @MainActor required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     override func initTitleBar() {
         navigationItem.titleView = NavigationTitleView(

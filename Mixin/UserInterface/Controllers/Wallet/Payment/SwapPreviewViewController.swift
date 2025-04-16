@@ -17,63 +17,63 @@ class SwapPreviewViewController: AuthenticationPreviewViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let token = operation.sendToken
-        tableHeaderView.setIcon(sendToken: token, receiveToken: operation.receiveToken)
+        let sendToken = operation.sendToken
+        let receiveToken = operation.receiveToken
+        tableHeaderView.setIcon(sendToken: sendToken, receiveToken: receiveToken)
         tableHeaderView.titleLabel.text = R.string.localizable.swap_confirmation()
         tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinMessenger)
         
         
         var rows: [Row]
-        
-        let tokenAmount: Decimal = operation.sendAmount
-        let tokenValue = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
-        let fiatMoneyAmount = tokenAmount * token.decimalUSDPrice * Currency.current.decimalRate
-        let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-        let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
-        let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-        
         rows = [
             .swapAssetChange(
-                sendToken: token,
+                sendToken: sendToken,
                 sendAmount: CurrencyFormatter.localizedString(
-                    from: -tokenAmount,
+                    from: -operation.sendAmount,
                     format: .precision,
                     sign: .always,
-                    symbol: .custom(token.symbol)
+                    symbol: .custom(sendToken.symbol)
                 ),
-                receiveToken: operation.receiveToken,
+                receiveToken: receiveToken,
                 receiveAmount: CurrencyFormatter.localizedString(
                     from: operation.receiveAmount,
                     format: .precision,
                     sign: .always,
-                    symbol: .custom(operation.receiveToken.symbol)
+                    symbol: .custom(receiveToken.symbol)
                 )
             ),
             .doubleLineInfo(
                 caption: .price,
                 primary: SwapQuote.priceRepresentation(
                     sendAmount: operation.sendAmount,
-                    sendSymbol: operation.sendToken.symbol,
+                    sendSymbol: sendToken.symbol,
                     receiveAmount: operation.receiveAmount,
-                    receiveSymbol: operation.receiveToken.symbol,
+                    receiveSymbol: receiveToken.symbol,
                     unit: .send
                 ),
                 secondary: SwapQuote.priceRepresentation(
                     sendAmount: operation.sendAmount,
-                    sendSymbol: operation.sendToken.symbol,
+                    sendSymbol: sendToken.symbol,
                     receiveAmount: operation.receiveAmount,
-                    receiveSymbol: operation.receiveToken.symbol,
+                    receiveSymbol: receiveToken.symbol,
                     unit: .receive
                 )
             ),
             
         ]
-        let senderThreshold: Int32?
+        
         switch operation.destination {
-        case let .user(user):
+        case let .mixin(user):
+            let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
+            let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
             rows.append(.amount(caption: .networkFee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false))
             rows.append(.receivers([user], threshold: nil))
-        case let .address(address, fee, feeTokenSymbol):
+            if let account = LoginManager.shared.account {
+                let user = UserItem.createUser(from: account)
+                rows.append(.senders([user], multisigSigners: nil, threshold: nil))
+            }
+        case let .web3(destination):
+            let fee = destination.fee
             let feeValue = CurrencyFormatter.localizedString(from: fee.token, format: .precision, sign: .never, symbol: nil)
             let feeCost = if fee.fiatMoney >= 0.01 {
                 CurrencyFormatter.localizedString(from: fee.fiatMoney, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
@@ -81,20 +81,18 @@ class SwapPreviewViewController: AuthenticationPreviewViewController {
                 "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
             }
             rows.append(.amount(caption: .fee,
-                                   token: feeValue + " " + feeTokenSymbol,
+                                token: feeValue + " " + destination.feeTokenSymbol,
                                    fiatMoney: feeCost,
                                    display: .byToken,
                                    boldPrimaryAmount: false))
-            rows.append(.receivingAddress(value: address, label: nil))
-        }
-        if let account = LoginManager.shared.account {
-            let user = UserItem.createUser(from: account)
-            rows.append(.senders([user], multisigSigners: nil, threshold: nil))
+            rows.append(.receivers([destination.displayReceiver], threshold: nil))
+            rows.append(.sendingAddress(value: destination.senderAddress.destination, label: nil))
         }
         
         if let memo = operation.memo, !memo.isEmpty {
             rows.append(.info(caption: .memo, content: memo))
         }
+        
         reloadData(with: rows)
     }
     

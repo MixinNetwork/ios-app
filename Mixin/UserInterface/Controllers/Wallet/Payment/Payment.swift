@@ -163,6 +163,8 @@ extension Payment {
     }
     
     struct SwapContext {
+        let sendToken: BalancedSwapToken
+        let sendAmount: Decimal
         let receiveToken: SwapToken
         let receiveAmount: Decimal
     }

@@ -222,25 +222,19 @@ class MixinSwapViewController: SwapViewController {
         }
     }
     
-    func makeRequest(swapQuote: SwapQuote) -> SwapRequest? {
-        return SwapRequest(
-            sendToken: swapQuote.sendToken,
-            sendAmount: swapQuote.sendAmount,
-            receiveToken: swapQuote.receiveToken,
-            source: swapQuote.source,
-            slippage: 0.01,
-            payload: swapQuote.payload
-        )
-    }
-    
     override func review(_ sender: RoundedButton) {
         guard let quote else {
             return
         }
-        guard let request = makeRequest(swapQuote: quote) else {
-            return
-        }
         sender.isBusy = true
+        let request = SwapRequest(
+            sendToken: quote.sendToken,
+            sendAmount: quote.sendAmount,
+            receiveToken: quote.receiveToken,
+            source: .mixin,
+            slippage: 0.01,
+            payload: quote.payload
+        )
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
         ConcurrentJobQueue.shared.addJob(job: job)
         RouteAPI.swap(request: request) { [weak self] response in
@@ -254,72 +248,32 @@ class MixinSwapViewController: SwapViewController {
                     let url = URL(string: tx),
                     quote.sendToken.assetID == response.quote.inputMint,
                     quote.receiveToken.assetID == response.quote.outputMint,
-                    quote.sendAmount == Decimal(string: response.quote.inAmount, locale: .enUSPOSIX),
-                    let paymentURL = SafePaymentURL(url: url),
-                    case let .user(userID) = paymentURL.address,
+                    let sendAmount = Decimal(string: response.quote.inAmount, locale: .enUSPOSIX),
                     let receiveAmount = Decimal(string: response.quote.outAmount, locale: .enUSPOSIX)
                 else {
-                    self?.toastError(text: R.string.localizable.invalid_payment_link())
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
+                    sender.isBusy = false
                     return
                 }
-                let sendAmount = quote.sendAmount
                 let context = Payment.SwapContext(
+                    sendToken: quote.sendToken,
+                    sendAmount: sendAmount,
                     receiveToken: quote.receiveToken,
                     receiveAmount: receiveAmount
                 )
-                
-                Task { [weak self] in
-                    guard let sendToken = TokenDAO.shared.tokenItem(assetID: quote.sendToken.assetID) else {
-                        return
+                let source: UrlWindow.Source = .swap(context: context) { description in
+                    if let description {
+                        showAutoHiddenHud(style: .error, text: description)
                     }
-                    guard let destinationUser = await self?.fetchUser(userID: userID) else {
-                        return
-                    }
-                    guard let homeContainer = UIApplication.homeContainerViewController else {
-                        return
-                    }
-                    let fiatMoneyAmount = sendAmount * sendToken.decimalUSDPrice * Currency.current.decimalRate
-                    let payment = Payment(traceID: UUID().uuidString.lowercased(), token: sendToken, tokenAmount: sendAmount, fiatMoneyAmount: fiatMoneyAmount, memo: paymentURL.memo, context: .swap(context))
-                    payment.checkPreconditions(transferTo: .user(destinationUser), reference: paymentURL.reference, on: homeContainer) { reason in
-                        switch reason {
-                        case .userCancelled, .loggedOut:
-                            return
-                        case .description(let message):
-                            self?.toastError(text: message)
-                        }
-                    } onSuccess: { operation, issues in
-                        let op = SwapPaymentOperation(operation: operation, sendToken: quote.sendToken, sendAmount: sendAmount, receiveToken: quote.receiveToken, receiveAmount: receiveAmount, destination: .user(destinationUser), memo: paymentURL.memo)
-                        let preview = SwapPreviewViewController(operation: op, warnings: issues.map(\.description))
-                        homeContainer.present(preview, animated: true)
-                    }
+                    sender.isBusy = false
                 }
+                _ = UrlWindow.checkUrl(url: url, from: source)
             case .failure(let error):
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 sender.isBusy = false
             }
         }
         reporter.report(event: .swapPreview)
-    }
-    
-    func fetchUser(userID: String) async -> UserItem? {
-        var receiveUser = UserDAO.shared.getUser(userId: userID)
-        if receiveUser == nil {
-            switch UserAPI.showUser(userId: userID) {
-            case let .success(user):
-                UserDAO.shared.updateUsers(users: [user])
-                receiveUser = UserItem.createUser(from: user)
-            case let .failure(error):
-                await MainActor.run {
-                    self.toastError(text: error.localizedDescription)
-                }
-            }
-        }
-        return receiveUser
-    }
-    
-    func toastError(text: String) {
-        showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
-        reviewButton.isBusy = false
     }
     
     override func prepareForReuse(sender: Any) {
@@ -494,10 +448,10 @@ extension MixinSwapViewController {
     }
     
     private func reloadData(swappableTokens: [SwapToken]) {
-        DispatchQueue.global().async { [weak self, arbitrarySendAssetID, arbitraryReceiveAssetID] in
+        DispatchQueue.global().async { [weak self, arbitrarySendAssetID, arbitraryReceiveAssetID, walletID] in
             let lastTokenIDs = Self.loadTokenIDs()
             let tokens: OrderedDictionary<String, BalancedSwapToken> = BalancedSwapToken
-                .fillBalance(swappableTokens: swappableTokens)
+                .fillBalance(swappableTokens: swappableTokens, walletID: walletID)
                 .reduce(into: OrderedDictionary()) { result, token in
                     result[token.assetID] = token
                 }

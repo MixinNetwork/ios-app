@@ -76,7 +76,7 @@ final class Web3SwapViewController: MixinSwapViewController {
             sendToken: quote.sendToken,
             sendAmount: quote.sendAmount,
             receiveToken: quote.receiveToken,
-            source: quote.source,
+            source: .web3,
             slippage: 0.01,
             payload: quote.payload,
             withdrawalDestination: address.destination
@@ -84,7 +84,7 @@ final class Web3SwapViewController: MixinSwapViewController {
         sender.isBusy = true
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
         ConcurrentJobQueue.shared.addJob(job: job)
-        RouteAPI.swap(request: request) { [weak self] response in
+        RouteAPI.swap(request: request) { [weak self, walletID] response in
             guard self != nil else {
                 return
             }
@@ -92,6 +92,9 @@ final class Web3SwapViewController: MixinSwapViewController {
             case .success(let response):
                 guard
                     let depositDestination = response.depositDestination,
+                    quote.sendToken.assetID == response.quote.inputMint,
+                    quote.receiveToken.assetID == response.quote.outputMint,
+                    let sendAmount = Decimal(string: response.quote.inAmount, locale: .enUSPOSIX),
                     let receiveAmount = Decimal(string: response.quote.outAmount, locale: .enUSPOSIX)
                 else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
@@ -99,23 +102,22 @@ final class Web3SwapViewController: MixinSwapViewController {
                     return
                 }
                 
-                Task { [weak self] in
-                    guard let sendToken = Web3TokenDAO.shared.token(walletID: chainID, assetID: quote.sendToken.assetID) else {
+                Task {
+                    guard let displayReceiver = await self?.fetchUser(userID: response.displayUserId, sender: sender) else {
                         return
                     }
-                    guard let homeContainer = UIApplication.homeContainerViewController else {
+                    guard let sendToken = Web3TokenDAO.shared.token(walletID: walletID, assetID: quote.sendToken.assetID) else {
                         return
                     }
                     guard let chain = Web3Chain.chain(chainID: chainID) else {
                         return
                     }
                     
-                    let sendAmount = quote.sendAmount
                     let payment = Web3SendingTokenPayment(chain: chain, token: sendToken, fromAddress: address.destination)
                     let addressPayment = Web3SendingTokenToAddressPayment(
                         payment: payment,
                         to: .arbitrary,
-                        address: address.destination
+                        address: depositDestination
                     )
                     let operation = switch chain.kind {
                     case .evm:
@@ -127,9 +129,27 @@ final class Web3SwapViewController: MixinSwapViewController {
                     let feeTokenSymbol = operation.feeToken.symbol
                     
                     await MainActor.run {
-                        let op = SwapPaymentOperation(operation: operation, sendToken: quote.sendToken, sendAmount: sendAmount, receiveToken: quote.receiveToken, receiveAmount: receiveAmount, destination: .address(address.destination, fee, feeTokenSymbol), memo: nil)
+                        guard let homeContainer = UIApplication.homeContainerViewController else {
+                            return
+                        }
+                        
+                        let destination = SwapPaymentOperation.Web3Destination(displayReceiver: displayReceiver,
+                                                                               depositDestination: address.destination,
+                                                                               fee: fee,
+                                                                               feeTokenSymbol: feeTokenSymbol,
+                                                                               senderAddress: address)
+                        let op = SwapPaymentOperation(operation: operation,
+                                                      sendToken: quote.sendToken,
+                                                      sendAmount: sendAmount,
+                                                      receiveToken: quote.receiveToken,
+                                                      receiveAmount: receiveAmount,
+                                                      destination: .web3(destination),
+                                                      memo: nil)
                         
                         let preview = SwapPreviewViewController(operation: op, warnings: [])
+                        preview.onDismiss = {
+                            sender.isBusy = false
+                        }
                         homeContainer.present(preview, animated: true)
                     }
                 }
@@ -139,5 +159,22 @@ final class Web3SwapViewController: MixinSwapViewController {
             }
         }
         reporter.report(event: .swapPreview)
+    }
+    
+    private func fetchUser(userID: String, sender: RoundedButton) async -> UserItem? {
+        var receiveUser = UserDAO.shared.getUser(userId: userID)
+        if receiveUser == nil {
+            switch UserAPI.showUser(userId: userID) {
+            case let .success(user):
+                UserDAO.shared.updateUsers(users: [user])
+                receiveUser = UserItem.createUser(from: user)
+            case let .failure(error):
+                await MainActor.run {
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                    sender.isBusy = false
+                }
+            }
+        }
+        return receiveUser
     }
 }

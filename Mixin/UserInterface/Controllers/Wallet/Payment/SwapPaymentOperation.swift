@@ -34,9 +34,17 @@ extension SwapPaymentOperation {
     
     enum SwapDestination {
         
-        case user(UserItem)
+        case mixin(UserItem)
         
-        case address(String, Web3TransferOperation.Fee, String)
+        case web3(Web3Destination)
         
+    }
+    
+    struct Web3Destination {
+        let displayReceiver: UserItem
+        let depositDestination: String
+        let fee: Web3TransferOperation.Fee
+        let feeTokenSymbol: String
+        let senderAddress: Web3Address
     }
 }

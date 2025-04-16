@@ -178,6 +178,11 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.captionLabel.text = R.string.localizable.receiver().uppercased()
             cell.setContent(value, labelContent: label)
             return cell
+        case let .sendingAddress(value, label):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
+            cell.captionLabel.text = R.string.localizable.sender().uppercased()
+            cell.setContent(value, labelContent: label)
+            return cell
         case let .info(caption, content):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
             cell.captionLabel.text = caption.rawValue.uppercased()
@@ -378,6 +383,7 @@ extension AuthenticationPreviewViewController {
         case boldInfo(caption: Caption, content: String)
         case doubleLineInfo(caption: Caption, primary: String, secondary: String)
         case receivingAddress(value: String, label: String?)
+        case sendingAddress(value: String, label: String?)
         case senders([UserItem], multisigSigners: Set<String>?, threshold: Int32?)
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)

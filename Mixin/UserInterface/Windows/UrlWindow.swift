@@ -1300,18 +1300,23 @@ extension UrlWindow {
                 }
             } onSuccess: { (operation, issues) in
                 completion(nil)
-                let redirection = source.isExternal ? paymentURL.redirection : nil
-                let preview = TransferPreviewViewController(issues: issues,
-                                                            operation: operation,
-                                                            amountDisplay: .byToken,
-                                                            redirection: redirection)
                 switch source {
-                case .swap:
-                    preview.manipulateNavigationStackOnFinished = true
+                case let .swap(context, _):
+                    guard case let .user(userItem) = destination else {
+                        return
+                    }
+                    let paymentOperation = SwapPaymentOperation(operation: operation, sendToken: context.sendToken, sendAmount: context.sendAmount, receiveToken: context.receiveToken, receiveAmount: context.receiveAmount, destination: .mixin(userItem), memo: paymentURL.memo)
+                    let preview = SwapPreviewViewController(operation: paymentOperation, warnings: issues.map(\.description))
+                    homeContainer.present(preview, animated: true)
                 default:
+                    let redirection = source.isExternal ? paymentURL.redirection : nil
+                    let preview = TransferPreviewViewController(issues: issues,
+                                                                operation: operation,
+                                                                amountDisplay: .byToken,
+                                                                redirection: redirection)
                     preview.manipulateNavigationStackOnFinished = false
+                    homeContainer.present(preview, animated: true)
                 }
-                homeContainer.present(preview, animated: true)
             }
         }
     }

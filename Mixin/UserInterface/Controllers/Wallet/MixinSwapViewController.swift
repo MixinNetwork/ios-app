@@ -134,7 +134,7 @@ class MixinSwapViewController: SwapViewController {
     override func changeSendToken(_ sender: Any) {
         let selector = SwapTokenSelectorViewController(
             recent: .send,
-            tokens: swappableTokens.values.sorted { $0.valueForSorted() > $1.valueForSorted() },
+            tokens: swappableTokens.values.sorted { $0.sortingValues > $1.sortingValues },
             selectedAssetID: sendToken?.assetID,
             walletID: walletID
         )
@@ -236,7 +236,8 @@ class MixinSwapViewController: SwapViewController {
             receiveToken: quote.receiveToken,
             source: .mixin,
             slippage: 0.01,
-            payload: quote.payload
+            payload: quote.payload,
+            withdrawalDestination: nil
         )
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
         ConcurrentJobQueue.shared.addJob(job: job)

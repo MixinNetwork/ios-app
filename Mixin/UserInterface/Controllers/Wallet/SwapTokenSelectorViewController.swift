@@ -171,7 +171,7 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
     private func reloadSearchResults(keyword: String, tokens: [SwapToken]) {
         assert(!Thread.isMainThread)
         let searchResults = BalancedSwapToken.fillBalance(swappableTokens: tokens, walletID: walletID)
-            .sorted { $0.valueForSorted() > $1.valueForSorted() }
+            .sorted { $0.sortingValues > $1.sortingValues }
         let chainIDs = Set(tokens.compactMap(\.chain.chainID))
         let searchResultChains = if walletID != nil {
             Chain.web3Chains(ids: chainIDs)

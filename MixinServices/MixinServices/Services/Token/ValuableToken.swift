@@ -14,6 +14,10 @@ public protocol ValuableToken: Token {
 
 extension ValuableToken {
     
+    public var sortingValues: (Decimal, Decimal, Decimal) {
+        (decimalBalance * decimalUSDPrice, decimalBalance, decimalUSDPrice)
+    }
+    
     public func localizeFiatMoneyPrice() -> String {
         CurrencyFormatter.localizedString(
             from: decimalUSDPrice * Currency.current.decimalRate,
@@ -41,7 +45,4 @@ extension ValuableToken {
         )
     }
     
-    public func valueForSorted() -> (Decimal, Decimal, Decimal) {
-        return (decimalBalance * decimalUSDPrice, decimalBalance, decimalUSDPrice)
-    }
 }

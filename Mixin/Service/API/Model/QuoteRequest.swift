@@ -8,9 +8,9 @@ struct QuoteRequest {
     let amount: String
     let slippage: Int
     let source: RouteTokenSource
-      
+    
     func asParameter() -> String {
-        var parameter: String = "inputMint=\(inputMint)&outputMint=\(outputMint)&amount=\(amount)&slippage=\(slippage)&source=\(RouteTokenSource.mixin.rawValue)"
+        var parameter: String = "inputMint=\(inputMint)&outputMint=\(outputMint)&amount=\(amount)&slippage=\(slippage)&source=mixin"
         switch source {
         case .web3:
             parameter += "&needWithdraw=true"

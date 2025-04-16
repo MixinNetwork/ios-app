@@ -20,7 +20,7 @@ struct SwapRequest: Encodable {
         source: RouteTokenSource,
         slippage: Decimal,
         payload: String,
-        withdrawalDestination: String? = nil
+        withdrawalDestination: String?
     ) {
         self.payer = myUserId
         self.inputMint = sendToken.assetID

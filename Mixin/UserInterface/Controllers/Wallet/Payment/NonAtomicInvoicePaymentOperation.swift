@@ -30,10 +30,16 @@ final class NonAtomicInvoicePaymentOperation: InvoicePaymentOperation {
     
     let destination: Payment.TransferDestination
     let transactions: [Transaction]
+    let paidEntriesHash: [String]
     
-    init(destination: Payment.TransferDestination, transactions: [Transaction]) {
+    init(
+        destination: Payment.TransferDestination,
+        transactions: [Transaction],
+        paidEntriesHash: [String]
+    ) {
         self.destination = destination
         self.transactions = transactions
+        self.paidEntriesHash = paidEntriesHash
     }
     
     func start(pin: String) async throws {
@@ -51,13 +57,17 @@ final class NonAtomicInvoicePaymentOperation: InvoicePaymentOperation {
             }
         }
         
-        var hashes: [String] = []
+        var hashes = paidEntriesHash
         for (index, transaction) in transactions.enumerated() {
+            guard index > paidEntriesHash.count - 1 else {
+                Logger.general.info(category: "NonAtomicInvoicePayment", message: "Skip txn \(index), hash: \(hashes[index])")
+                continue
+            }
             let token = transaction.token
             let entry = transaction.entry
             Logger.general.info(category: "NonAtomicInvoicePayment", message: "Start txn \(index), \(entry.amount) \(token.symbol)")
             let spendingOutputs = try await collectOutputs(token: token, amount: entry.decimalAmount)
-            Logger.general.info(category: "NonAtomicInvoicePayment", message: "Output collected")
+            Logger.general.info(category: "NonAtomicInvoicePayment", message: "Output collected, states: \(spendingOutputs.outputs.map(\.state))")
             let reference = entry.references.map { reference in
                 switch reference {
                 case let .index(index):
@@ -93,29 +103,18 @@ final class NonAtomicInvoicePaymentOperation: InvoicePaymentOperation {
         token: MixinTokenItem,
         amount: Decimal
     ) async throws -> UTXOService.OutputCollection {
-        repeat {
-            let result = UTXOService.shared.collectUnspentOutputs(kernelAssetID: token.kernelAssetID, amount: amount)
-            switch result {
-            case .insufficientBalance:
-                throw OutputCollectingError.insufficientBalance
-            case .outputNotConfirmed:
-                do {
-                    let job = SyncOutputsJob()
-                    ConcurrentJobQueue.shared.addJob(job: job)
-                    Logger.general.info(category: "NonAtomicInvoicePayment", message: "Output not confirmed, sleep")
-                    try await Task.sleep(nanoseconds: 10 * NSEC_PER_SEC)
-                    Logger.general.info(category: "NonAtomicInvoicePayment", message: "Wake up")
-                } catch {
-                    throw OutputCollectingError.outputNotConfirmed
-                }
-                continue
-            case .success(let outputCollection):
-                return outputCollection
-            case .maxSpendingCountExceeded:
-                throw OutputCollectingError.maxSpendingCountExceeded
-            }
-        } while LoginManager.shared.isLoggedIn
-        throw OutputCollectingError.loggedOut
+        let result = UTXOService.shared.collectAvailableOutputs(kernelAssetID: token.kernelAssetID, amount: amount)
+        switch result {
+        case .insufficientBalance:
+            throw OutputCollectingError.insufficientBalance
+        case .outputNotConfirmed:
+            // Not expected to happen
+            throw OutputCollectingError.outputNotConfirmed
+        case .success(let outputCollection):
+            return outputCollection
+        case .maxSpendingCountExceeded:
+            throw OutputCollectingError.maxSpendingCountExceeded
+        }
     }
     
 }

@@ -63,6 +63,25 @@ extension Invoice {
         case emptyEntries
     }
     
+    private enum CheckingError: Error, LocalizedError {
+        
+        case alreadyPaid
+        case entryPaidAfterUnpaid
+        case entryPaidIntermediately
+        
+        var errorDescription: String? {
+            switch self {
+            case .alreadyPaid:
+                R.string.localizable.pay_paid()
+            case .entryPaidAfterUnpaid:
+                "Entry paid after unpaid"
+            case .entryPaidIntermediately:
+                "Entry paid intermediately"
+            }
+        }
+        
+    }
+    
     private class DataReader {
         
         private let data: Data
@@ -311,9 +330,8 @@ extension Invoice: PaymentPreconditionChecker {
         onSuccess: @MainActor @escaping (any InvoicePaymentOperation, [PaymentPreconditionIssue]) -> Void
     ) {
         Task {
-            let preconditions: [PaymentPrecondition] = [
+            var preconditions: [PaymentPrecondition] = [
                 NoPendingTransactionPrecondition(),
-                AlreadyPaidPrecondition(traceIDs: entries.map(\.traceID)),
                 OutputsReadyPrecondition(entries: entries, tokens: tokens),
             ] + entries.flatMap { entry in
                 entry.references.compactMap { reference in
@@ -324,6 +342,50 @@ extension Invoice: PaymentPreconditionChecker {
                         nil // Validated in Invoice.init
                     }
                 }
+            }
+            let paidEntriesHash: [String]
+            if sendingSameTokenMultipleTimes {
+                do {
+                    let hashes = try await SafeAPI.transactions(ids: entries.map(\.traceID))
+                        .reduce(into: [:]) { result, transaction in
+                            result[transaction.requestID] = transaction.transactionHash
+                        }
+                    if hashes.isEmpty {
+                        paidEntriesHash = []
+                    } else if let firstHash = hashes[entries[0].traceID] {
+                        var results = [firstHash]
+                        var successiveEntriesMustBeUnpaid = false
+                        for entry in entries.dropFirst() {
+                            let hash = hashes[entry.traceID]
+                            if successiveEntriesMustBeUnpaid {
+                                if hash != nil {
+                                    throw CheckingError.entryPaidAfterUnpaid
+                                }
+                            } else {
+                                if let hash {
+                                    results.append(hash)
+                                } else {
+                                    successiveEntriesMustBeUnpaid = true
+                                }
+                            }
+                        }
+                        paidEntriesHash = results
+                    } else {
+                        throw CheckingError.entryPaidIntermediately
+                    }
+                    if paidEntriesHash.count == entries.count {
+                        throw CheckingError.alreadyPaid
+                    }
+                } catch {
+                    await MainActor.run {
+                        onFailure(.description(error.localizedDescription))
+                    }
+                    return
+                }
+            } else {
+                paidEntriesHash = []
+                let alreadyPaid = AlreadyPaidPrecondition(traceIDs: entries.map(\.traceID))
+                preconditions.append(alreadyPaid)
             }
             switch await check(preconditions: preconditions) {
             case .failed(let reason):
@@ -343,7 +405,11 @@ extension Invoice: PaymentPreconditionChecker {
                         }
                         transactions.append(.init(entry: entry, token: token))
                     }
-                    let operation = NonAtomicInvoicePaymentOperation(destination: destination, transactions: transactions)
+                    let operation = NonAtomicInvoicePaymentOperation(
+                        destination: destination,
+                        transactions: transactions,
+                        paidEntriesHash: paidEntriesHash
+                    )
                     await MainActor.run {
                         onSuccess(operation, issues)
                     }

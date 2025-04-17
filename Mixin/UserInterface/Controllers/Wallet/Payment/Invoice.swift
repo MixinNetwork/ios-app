@@ -274,7 +274,10 @@ extension Invoice: PaymentPreconditionChecker {
                 guard let amount = amounts[token.kernelAssetID] else {
                     continue
                 }
-                let result = UTXOService.shared.collectUnspentOutputs(kernelAssetID: token.kernelAssetID, amount: amount)
+                let result = UTXOService.shared.collectAvailableOutputs(
+                    kernelAssetID: token.kernelAssetID,
+                    amount: amount
+                )
                 switch result {
                 case .success:
                     Logger.general.info(category: "Invoice", message: "Outputs ready for \(token.symbol)")
@@ -299,22 +302,6 @@ extension Invoice: PaymentPreconditionChecker {
                     case .success:
                         break
                     }
-                case .outputNotConfirmed:
-                    Logger.general.info(category: "Invoice", message: "\(token.symbol) requires confirmation")
-                    let delegation = WalletHintViewController.UserRealizedDelegation()
-                    await withCheckedContinuation { continuation in
-                        DispatchQueue.main.async {
-                            delegation.onRealize = {
-                                continuation.resume()
-                            }
-                            let hint = WalletHintViewController(content: .waitingTransaction)
-                            hint.delegate = delegation
-                            UIApplication.homeContainerViewController?.present(hint, animated: true)
-                        }
-                        let job = SyncOutputsJob()
-                        ConcurrentJobQueue.shared.addJob(job: job)
-                    }
-                    return .failed(.userCancelled)
                 }
             }
             return .passed([])

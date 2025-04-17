@@ -8,7 +8,6 @@ public struct Output {
         case pending
         case unspent
         case signed
-        case spent
     }
     
     private static let unconfirmedSequence = 0

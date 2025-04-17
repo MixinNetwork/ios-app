@@ -26,44 +26,40 @@ public final class OutputDAO: UserDatabaseDAO {
         db.select(with: "SELECT sequence FROM outputs WHERE asset = ? ORDER BY sequence DESC LIMIT 1", arguments: [asset])
     }
     
-    public func unspentOutputs(asset: String, limit: Int) -> [Output] {
+    public func availableOutputs(asset: String, limit: Int) -> [Output] {
         let sql = """
-            SELECT *
-            FROM outputs
-            WHERE state = 'unspent' 
-                AND asset = ?
-                AND inscription_hash IS NULL
-            ORDER BY (CASE WHEN sequence == 0 THEN 0 ELSE 1 END) DESC, sequence ASC
-            LIMIT ?
+        SELECT *
+        FROM outputs
+        WHERE state IN ('unspent','pending')
+            AND asset = ?
+            AND inscription_hash IS NULL
+        ORDER BY created_at ASC
+        LIMIT ?
         """
         return db.select(with: sql, arguments: [asset, limit])
     }
     
-    public func availableOutputs(asset: String, limit: Int) -> [Output] {
-        let sql = """
-            SELECT *
-            FROM outputs
-            WHERE (state = 'unspent' OR state = 'pending')
-                AND asset = ?
-                AND inscription_hash IS NULL
-            ORDER BY created_at ASC
-            LIMIT ?
+    public func availableOutputs(
+        asset: String,
+        after sequence: Int?,
+        limit: Int,
+        db: GRDB.Database
+    ) throws -> [Output] {
+        var query: GRDB.SQL = """
+        SELECT *
+        FROM outputs
+        WHERE state IN ('unspent','pending')
+            AND asset = \(asset)
+            AND inscription_hash IS NULL
+        
         """
-        return db.select(with: sql, arguments: [asset, limit])
-    }
-    public func unspentOutputs(asset: String, after sequence: Int?, limit: Int, db: GRDB.Database) throws -> [Output] {
-        var sql = "SELECT * FROM outputs WHERE state = 'unspent' AND asset = :asset AND inscription_hash IS NULL"
-        var arguments: [String: DatabaseValueConvertible] = ["asset": asset]
-        
         if let sequence {
-            sql += " AND sequence > :sequence"
-            arguments["sequence"] = sequence
+            query.append(literal: "AND sequence > \(sequence)\n")
         }
+        query.append(literal: "ORDER BY sequence ASC LIMIT \(limit)")
         
-        sql += " ORDER BY sequence ASC LIMIT :limit"
-        arguments["limit"] = limit
-        
-        return try Output.fetchAll(db, sql: sql, arguments: StatementArguments(arguments))
+        let (sql, arguments) = try query.build(db)
+        return try Output.fetchAll(db, sql: sql, arguments: arguments)
     }
     
     public func outputs(asset: String?, before outputID: String?, limit: Int) -> [Output] {

@@ -103,41 +103,6 @@ extension UTXOService {
         case outputNotConfirmed
     }
     
-    public func collectUnspentOutputs(kernelAssetID: String, amount: Decimal) -> CollectingResult {
-        // Select 1 more output to see if there's more outputs unspent
-        var unspentOutputs = OutputDAO.shared.unspentOutputs(asset: kernelAssetID, limit: maxSpendingOutputsCount + 1)
-        let hasMoreUnspentOutput = unspentOutputs.count > maxSpendingOutputsCount
-        if hasMoreUnspentOutput {
-            unspentOutputs.removeLast()
-        }
-        
-        var outputs: [Output] = []
-        var outputsAmount: Decimal = 0
-        outputs.reserveCapacity(unspentOutputs.count)
-        while outputsAmount < amount, !unspentOutputs.isEmpty {
-            let spending = unspentOutputs.removeFirst()
-            if !spending.isConfirmed {
-                return .outputNotConfirmed
-            }
-            outputs.append(spending)
-            if let spendingAmount = Decimal(string: spending.amount, locale: .enUSPOSIX) {
-                outputsAmount += spendingAmount
-            } else {
-                Logger.general.error(category: "UTXOService", message: "Invalid utxo.amount: \(spending.amount)")
-            }
-        }
-        if !outputs.isEmpty, outputsAmount >= amount {
-            let collection = OutputCollection(outputs: outputs, amount: outputsAmount)
-            return .success(collection)
-        } else {
-            if hasMoreUnspentOutput {
-                return .maxSpendingCountExceeded
-            } else {
-                return .insufficientBalance
-            }
-        }
-    }
-    
     public func collectAvailableOutputs(kernelAssetID: String, amount: Decimal) -> CollectingResult {
         // Select 1 more output to see if there's more outputs available
         var availableOutputs = OutputDAO.shared.availableOutputs(asset: kernelAssetID, limit: maxSpendingOutputsCount + 1)
@@ -155,7 +120,7 @@ extension UTXOService {
             if let spendingAmount = Decimal(string: spending.amount, locale: .enUSPOSIX) {
                 outputsAmount += spendingAmount
             } else {
-                Logger.general.error(category: "UTXOService", message: "Invalid utxo.amount: \(spending.amount)")
+                Logger.general.error(category: "UTXOService", message: "Invalid amount: \(spending.amount)")
             }
         }
         if !outputs.isEmpty, outputsAmount >= amount {
@@ -171,15 +136,18 @@ extension UTXOService {
     }
     
     public func collectConsolidationOutputs(kernelAssetID: String) -> OutputCollection {
-        let unspentOutputs = OutputDAO.shared.unspentOutputs(asset: kernelAssetID, limit: maxSpendingOutputsCount)
+        let availableOutputs = OutputDAO.shared.availableOutputs(
+            asset: kernelAssetID,
+            limit: maxSpendingOutputsCount
+        )
         
         var amount: Decimal = 0
-        let outputs = unspentOutputs.compactMap { output in
+        let outputs = availableOutputs.compactMap { output in
             if let outputAmount = output.decimalAmount {
                 amount += outputAmount
                 return output
             } else {
-                Logger.general.error(category: "UTXOService", message: "Invalid utxo.amount: \(output.amount)")
+                Logger.general.error(category: "UTXOService", message: "Invalid amount: \(output.amount)")
                 return nil
             }
         }

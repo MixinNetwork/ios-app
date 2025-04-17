@@ -69,7 +69,10 @@ extension PaymentPreconditionChecker {
         on parent: UIViewController
     ) async -> OutputCollectingResult {
         repeat {
-            let result = UTXOService.shared.collectUnspentOutputs(kernelAssetID: token.kernelAssetID, amount: amount)
+            let result = UTXOService.shared.collectAvailableOutputs(
+                kernelAssetID: token.kernelAssetID,
+                amount: amount
+            )
             switch result {
             case .insufficientBalance:
                 return .failure(.description(R.string.localizable.insufficient_balance()))

@@ -274,7 +274,10 @@ extension Invoice: PaymentPreconditionChecker {
                 guard let amount = amounts[token.kernelAssetID] else {
                     continue
                 }
-                let result = UTXOService.shared.collectUnspentOutputs(kernelAssetID: token.kernelAssetID, amount: amount)
+                let result = UTXOService.shared.collectAvailableOutputs(
+                    kernelAssetID: token.kernelAssetID,
+                    amount: amount
+                )
                 switch result {
                 case .success:
                     Logger.general.info(category: "Invoice", message: "Outputs ready for \(token.symbol)")

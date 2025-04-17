@@ -105,7 +105,10 @@ struct WithdrawPaymentOperation {
         
         let feeOutputs: UTXOService.OutputCollection?
         if isFeeTokenDifferent {
-            let result = UTXOService.shared.collectUnspentOutputs(kernelAssetID: feeToken.kernelAssetID, amount: feeAmount)
+            let result = UTXOService.shared.collectAvailableOutputs(
+                kernelAssetID: feeToken.kernelAssetID,
+                amount: feeAmount
+            )
             switch result {
             case .insufficientBalance:
                 throw Error.insufficientFee

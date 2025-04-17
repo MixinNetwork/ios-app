@@ -41,7 +41,7 @@ public final class OutputDAO: UserDatabaseDAO {
     
     public func availableOutputs(
         asset: String,
-        after sequence: Int?,
+        createdAfter createdAt: String?,
         limit: Int,
         db: GRDB.Database
     ) throws -> [Output] {
@@ -53,10 +53,10 @@ public final class OutputDAO: UserDatabaseDAO {
             AND inscription_hash IS NULL
         
         """
-        if let sequence {
-            query.append(literal: "AND sequence > \(sequence)\n")
+        if let createdAt {
+            query.append(literal: "AND created_at > \(createdAt)\n")
         }
-        query.append(literal: "ORDER BY sequence ASC LIMIT \(limit)")
+        query.append(literal: "ORDER BY created_at ASC LIMIT \(limit)")
         
         let (sql, arguments) = try query.build(db)
         return try Output.fetchAll(db, sql: sql, arguments: arguments)

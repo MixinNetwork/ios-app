@@ -15,13 +15,13 @@ public final class UTXOService {
         let limit = self.calculateBalancePageCount
         
         var totalAmount: Decimal = 0
-        var sequence: Int?
+        var createdAt: String?
         var outputsCount = 0
         
         repeat {
             let outputs = try OutputDAO.shared.availableOutputs(
                 asset: kernelAssetID,
-                after: sequence,
+                createdAfter: createdAt,
                 limit: limit,
                 db: db
             )
@@ -33,7 +33,7 @@ public final class UTXOService {
                     Logger.general.error(category: "UTXO", message: "Invalid amount: \(output.amount), id: \(output.id)")
                 }
             }
-            sequence = outputs.last?.sequence
+            createdAt = outputs.last?.createdAt
             outputsCount = outputs.count
         } while outputsCount >= limit
         Logger.general.debug(category: "UTXO", message: "Calculated \(totalAmount) for kernel asset: \(kernelAssetID)")

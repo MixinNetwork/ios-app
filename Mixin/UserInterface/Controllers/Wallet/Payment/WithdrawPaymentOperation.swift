@@ -19,7 +19,6 @@ struct WithdrawPaymentOperation {
         case signWithdrawal(Swift.Error?)
         case signFee(Swift.Error?)
         case insufficientFee
-        case feeOutputNotConfirmed
         case maxSpendingCountExceeded
         
         var errorDescription: String? {
@@ -40,8 +39,6 @@ struct WithdrawPaymentOperation {
                 return error?.localizedDescription ?? "Sign fee"
             case .insufficientFee:
                 return R.string.localizable.insufficient_transaction_fee()
-            case .feeOutputNotConfirmed:
-                return R.string.localizable.waiting_transaction_description()
             case .maxSpendingCountExceeded:
                 return R.string.localizable.utxo_count_exceeded()
             }
@@ -114,8 +111,6 @@ struct WithdrawPaymentOperation {
                 throw Error.insufficientFee
             case .maxSpendingCountExceeded:
                 throw Error.maxSpendingCountExceeded
-            case .outputNotConfirmed:
-                throw Error.feeOutputNotConfirmed
             case .success(let collection):
                 feeOutputs = collection
             }

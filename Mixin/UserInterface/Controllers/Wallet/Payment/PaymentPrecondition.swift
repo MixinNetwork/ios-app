@@ -76,21 +76,6 @@ extension PaymentPreconditionChecker {
             switch result {
             case .insufficientBalance:
                 return .failure(.description(R.string.localizable.insufficient_balance()))
-            case .outputNotConfirmed:
-                let delegation = WalletHintViewController.UserRealizedDelegation()
-                await withCheckedContinuation { continuation in
-                    DispatchQueue.main.async {
-                        delegation.onRealize = {
-                            continuation.resume()
-                        }
-                        let hint = WalletHintViewController(content: .waitingTransaction)
-                        hint.delegate = delegation
-                        UIApplication.homeContainerViewController?.present(hint, animated: true)
-                    }
-                    let job = SyncOutputsJob()
-                    ConcurrentJobQueue.shared.addJob(job: job)
-                }
-                return .failure(.userCancelled)
             case .success(let outputCollection):
                 return .success(outputCollection)
             case .maxSpendingCountExceeded:

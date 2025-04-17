@@ -105,7 +105,6 @@ extension UTXOService {
         case success(OutputCollection)
         case insufficientBalance
         case maxSpendingCountExceeded
-        case outputNotConfirmed
     }
     
     public func collectAvailableOutputs(kernelAssetID: String, amount: Decimal) -> CollectingResult {

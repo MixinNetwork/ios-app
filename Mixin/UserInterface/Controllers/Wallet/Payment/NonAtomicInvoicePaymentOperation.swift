@@ -6,9 +6,7 @@ final class NonAtomicInvoicePaymentOperation: InvoicePaymentOperation {
     
     enum OutputCollectingError: Error {
         case insufficientBalance
-        case outputNotConfirmed
         case maxSpendingCountExceeded
-        case loggedOut
     }
     
     enum OperationError: Error {
@@ -66,8 +64,22 @@ final class NonAtomicInvoicePaymentOperation: InvoicePaymentOperation {
             let token = transaction.token
             let entry = transaction.entry
             Logger.general.info(category: "NonAtomicInvoicePayment", message: "Start txn \(index), \(entry.amount) \(token.symbol)")
-            let spendingOutputs = try await collectOutputs(token: token, amount: entry.decimalAmount)
+            
+            let spendingOutputs: UTXOService.OutputCollection
+            let collectingResult = UTXOService.shared.collectAvailableOutputs(
+                kernelAssetID: token.kernelAssetID,
+                amount: entry.decimalAmount
+            )
+            switch collectingResult {
+            case .success(let collection):
+                spendingOutputs = collection
+            case .insufficientBalance:
+                throw OutputCollectingError.insufficientBalance
+            case .maxSpendingCountExceeded:
+                throw OutputCollectingError.maxSpendingCountExceeded
+            }
             Logger.general.info(category: "NonAtomicInvoicePayment", message: "Output collected, states: \(spendingOutputs.outputs.map(\.state))")
+            
             let reference = entry.references.map { reference in
                 switch reference {
                 case let .index(index):
@@ -96,24 +108,6 @@ final class NonAtomicInvoicePaymentOperation: InvoicePaymentOperation {
                 Logger.general.info(category: "NonAtomicInvoicePayment", message: "Missing hash")
                 throw OperationError.missingHash
             }
-        }
-    }
-    
-    private func collectOutputs(
-        token: MixinTokenItem,
-        amount: Decimal
-    ) async throws -> UTXOService.OutputCollection {
-        let result = UTXOService.shared.collectAvailableOutputs(kernelAssetID: token.kernelAssetID, amount: amount)
-        switch result {
-        case .insufficientBalance:
-            throw OutputCollectingError.insufficientBalance
-        case .outputNotConfirmed:
-            // Not expected to happen
-            throw OutputCollectingError.outputNotConfirmed
-        case .success(let outputCollection):
-            return outputCollection
-        case .maxSpendingCountExceeded:
-            throw OutputCollectingError.maxSpendingCountExceeded
         }
     }
     

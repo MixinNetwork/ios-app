@@ -302,22 +302,6 @@ extension Invoice: PaymentPreconditionChecker {
                     case .success:
                         break
                     }
-                case .outputNotConfirmed:
-                    Logger.general.info(category: "Invoice", message: "\(token.symbol) requires confirmation")
-                    let delegation = WalletHintViewController.UserRealizedDelegation()
-                    await withCheckedContinuation { continuation in
-                        DispatchQueue.main.async {
-                            delegation.onRealize = {
-                                continuation.resume()
-                            }
-                            let hint = WalletHintViewController(content: .waitingTransaction)
-                            hint.delegate = delegation
-                            UIApplication.homeContainerViewController?.present(hint, animated: true)
-                        }
-                        let job = SyncOutputsJob()
-                        ConcurrentJobQueue.shared.addJob(job: job)
-                    }
-                    return .failed(.userCancelled)
                 }
             }
             return .passed([])

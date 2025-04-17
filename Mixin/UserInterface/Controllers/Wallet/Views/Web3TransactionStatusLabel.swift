@@ -20,7 +20,7 @@ final class Web3TransactionStatusLabel: InsetLabel {
             textColor = UIColor(displayP3RgbValue: 0x0FB321)
             backgroundColor = UIColor(displayP3RgbValue: 0x50BD5C, alpha: 0.2)
         case .failed:
-            text = R.string.localizable.canceled()
+            text = R.string.localizable.failed()
             textColor = UIColor(displayP3RgbValue: 0xF67070)
             backgroundColor = UIColor(displayP3RgbValue: 0xF67070, alpha: 0.2)
         case .pending:

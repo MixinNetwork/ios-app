@@ -2,7 +2,7 @@ import Foundation
 import MixinServices
 import TIP
 
-class TransferPaymentOperation {
+class TransferPaymentOperation: PaymentOperation {
     
     enum Error: Swift.Error, LocalizedError {
         

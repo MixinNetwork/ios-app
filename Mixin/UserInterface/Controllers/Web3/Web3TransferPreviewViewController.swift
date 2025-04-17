@@ -124,7 +124,9 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
             loadSingleButtonTrayView(title: R.string.localizable.reject(), action: #selector(close(_:)))
         } else {
             stateObserver = operation.$state.sink { [weak self] state in
-                self?.reloadData(state: state)
+                DispatchQueue.main.async {
+                    self?.reloadData(state: state)
+                }
             }
             reloadData(state: operation.state)
             
@@ -175,7 +177,9 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
     }
     
     override func performAction(with pin: String) {
-        operation.start(with: pin)
+        Task {
+            try? await operation.start(pin: pin)
+        }
     }
     
     override func close(_ sender: Any) {

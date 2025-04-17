@@ -183,11 +183,9 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
         try baseFee(for: transaction)
     }
     
-    override func start(with pin: String) {
+    override func start(pin: String) async throws {
         state = .signing
-        Task.detached { [transaction] in
-            try await self.signAndSend(transaction: transaction, with: pin)
-        }
+        try await self.signAndSend(transaction: transaction, with: pin)
     }
     
     override func respond(signature: String) async throws {
@@ -336,24 +334,22 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         return fee
     }
     
-    override func start(with pin: String) {
+    override func start(pin: String) async throws {
         guard let createAccount = createAssociatedTokenAccountForReceiver, let priorityFee else {
             assertionFailure("This shouldn't happen. Check when `state` becomes `ready`")
             return
         }
         state = .signing
-        Task.detached { [payment, amount, decimalAmount, priorityFee] in
-            let transaction = try Solana.Transaction(
-                from: payment.fromAddress,
-                to: payment.toAddress,
-                createAssociatedTokenAccountForReceiver: createAccount,
-                amount: amount, 
-                priorityFee: priorityFee,
-                token: payment.token,
-                change: .init(amount: decimalAmount, assetKey: payment.token.assetKey)
-            )
-            try await self.signAndSend(transaction: transaction, with: pin)
-        }
+        let transaction = try Solana.Transaction(
+            from: payment.fromAddress,
+            to: payment.toAddress,
+            createAssociatedTokenAccountForReceiver: createAccount,
+            amount: amount,
+            priorityFee: priorityFee,
+            token: payment.token,
+            change: .init(amount: decimalAmount, assetKey: payment.token.assetKey)
+        )
+        try await self.signAndSend(transaction: transaction, with: pin)
     }
     
     override func respond(signature: String) async throws {

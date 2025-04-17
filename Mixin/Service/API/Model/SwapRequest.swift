@@ -11,54 +11,26 @@ struct SwapRequest: Encodable {
     let source: RouteTokenSource
     let referral: String?
     let payload: String?
+    let withdrawalDestination: String?
     
-    static func web3(
-        sendToken: Web3Token,
-        sendAmount: Decimal,
-        sendAddress: String,
-        receiveToken: SwapToken,
-        source: RouteTokenSource,
-        slippage: Decimal
-    ) -> SwapRequest? {
-        guard let sendAmount = sendToken.nativeAmount(decimalAmount: sendAmount) else {
-            return nil
-        }
-        let inputMint = if sendToken.assetKey == Web3Token.AssetKey.sol {
-            Web3Token.AssetKey.wrappedSOL
-        } else {
-            sendToken.assetKey
-        }
-        let inputAmount = TokenAmountFormatter.string(from: sendAmount as Decimal)
-        return SwapRequest(
-            payer: sendAddress,
-            inputMint: inputMint,
-            inputAmount: inputAmount,
-            outputMint: receiveToken.address,
-            slippage: Slippage(decimal: slippage).integral,
-            source: source,
-            referral: sendAddress,
-            payload: nil
-        )
-    }
-    
-    static func mixin(
+    init(
         sendToken: SwapToken,
         sendAmount: Decimal,
         receiveToken: SwapToken,
         source: RouteTokenSource,
         slippage: Decimal,
-        payload: String
-    ) -> SwapRequest {
-        SwapRequest(
-            payer: myUserId,
-            inputMint: sendToken.assetID,
-            inputAmount: TokenAmountFormatter.string(from: sendAmount),
-            outputMint: receiveToken.assetID,
-            slippage: Slippage(decimal: slippage).integral,
-            source: source,
-            referral: nil,
-            payload: payload
-        )
+        payload: String,
+        withdrawalDestination: String?
+    ) {
+        self.payer = myUserId
+        self.inputMint = sendToken.assetID
+        self.inputAmount = TokenAmountFormatter.string(from: sendAmount)
+        self.outputMint = receiveToken.assetID
+        self.slippage = Slippage(decimal: slippage).integral
+        self.source = source
+        self.referral = nil
+        self.payload = payload
+        self.withdrawalDestination = withdrawalDestination
     }
     
 }

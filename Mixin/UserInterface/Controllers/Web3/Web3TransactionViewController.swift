@@ -493,7 +493,9 @@ extension Web3TransactionViewController {
         }
         
         let transactionAt: String
-        if let date = DateFormatter.iso8601Full.date(from: transaction.transactionAt) {
+        let date = DateFormatter.iso8601Full.date(from: transaction.transactionAt)
+        ?? ISO8601DateFormatter.default.date(from: transaction.transactionAt)
+        if let date {
             transactionAt = DateFormatter.dateFull.string(from: date)
         } else {
             transactionAt = transaction.transactionAt

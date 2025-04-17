@@ -21,7 +21,6 @@ final class ClassicWalletViewController: WalletViewController {
         titleLabel.text = R.string.localizable.common_wallet()
         tableView.dataSource = self
         tableView.delegate = self
-        tableHeaderView.actionView.swapButton.isHidden = true
         tableHeaderView.actionView.delegate = self
         tableHeaderView.pendingDepositButton.addTarget(
             self,
@@ -234,7 +233,9 @@ extension ClassicWalletViewController: TokenActionView.Delegate {
                 self.present(selector, animated: true, completion: nil)
             }
         case .swap:
-            break
+            let swap = Web3SwapViewController(sendAssetID: nil, receiveAssetID: nil, walletID: walletID)
+            navigationController?.pushViewController(swap, animated: true)
+            reporter.report(event: .swapStart, tags: ["entrance": "wallet", "source": "web3"])
         }
     }
     

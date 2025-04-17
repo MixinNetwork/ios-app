@@ -66,8 +66,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         
         switch context {
         case .swap:
-            tableHeaderView.titleLabel.text = R.string.localizable.swap_confirmation()
-            tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinMessenger)
+            break
         case .inscription(let context):
             switch context.operation {
             case .transfer:
@@ -102,43 +101,8 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         
         switch context {
-        case .swap(let context):
-            rows = [
-                .swapAssetChange(
-                    sendToken: operation.token,
-                    sendAmount: CurrencyFormatter.localizedString(
-                        from: -tokenAmount,
-                        format: .precision,
-                        sign: .always,
-                        symbol: .custom(token.symbol)
-                    ),
-                    receiveToken: context.receiveToken,
-                    receiveAmount: CurrencyFormatter.localizedString(
-                        from: context.receiveAmount,
-                        format: .precision,
-                        sign: .always,
-                        symbol: .custom(context.receiveToken.symbol)
-                    )
-                ),
-                .doubleLineInfo(
-                    caption: .price,
-                    primary: SwapQuote.priceRepresentation(
-                        sendAmount: operation.amount,
-                        sendSymbol: operation.token.symbol,
-                        receiveAmount: context.receiveAmount,
-                        receiveSymbol: context.receiveToken.symbol,
-                        unit: .send
-                    ),
-                    secondary: SwapQuote.priceRepresentation(
-                        sendAmount: operation.amount,
-                        sendSymbol: operation.token.symbol,
-                        receiveAmount: context.receiveAmount,
-                        receiveSymbol: context.receiveToken.symbol,
-                        unit: .receive
-                    )
-                ),
-                .amount(caption: .networkFee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
-            ]
+        case .swap:
+            rows = []
         case .inscription(let context):
             rows = [
                 .boldInfo(caption: .collectible, content: context.item.collectionSequenceRepresentation),
@@ -198,8 +162,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         tableHeaderView.setIcon(progress: .busy)
         switch context {
         case .swap:
-            layoutTableHeaderView(title: R.string.localizable.sending(),
-                                  subtitle: R.string.localizable.signature_request_from(mixinMessenger))
+           break
         case .inscription(let context):
             switch context.operation {
             case .transfer:
@@ -223,9 +186,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
                     tableHeaderView.setIcon(progress: .success)
                     switch context {
                     case .swap:
-                        layoutTableHeaderView(title: R.string.localizable.sending_success(),
-                                              subtitle: R.string.localizable.swap_message_success())
-                        reporter.report(event: .swapSend)
+                        break
                     case .inscription(let context):
                         switch context.operation {
                         case .transfer:
@@ -344,10 +305,7 @@ class TransferPreviewViewController: AuthenticationPreviewViewController {
         
         switch context {
         case .swap:
-            if let swap = viewControllers.last as? SwapViewController {
-                swap.prepareForReuse(sender: self)
-            }
-            return
+            break
         case .inscription(let context):
             switch context.operation {
             case .transfer:

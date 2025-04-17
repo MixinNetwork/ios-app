@@ -24,17 +24,24 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
     var onSelected: ((BalancedSwapToken) -> Void)?
     
     private let recent: Recent
+    private let walletID: String?
     
     private weak var searchRequest: Request?
     
     init(
         recent: Recent,
         tokens: [BalancedSwapToken],
-        selectedAssetID: String?
+        selectedAssetID: String?,
+        walletID: String? = nil
     ) {
         self.recent = recent
         let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-        let chains = Chain.mixinChains(ids: chainIDs)
+        self.walletID = walletID
+        let chains = if walletID != nil {
+            Chain.web3Chains(ids: chainIDs)
+        } else {
+            Chain.mixinChains(ids: chainIDs)
+        }
         super.init(
             defaultTokens: tokens,
             defaultChains: chains,
@@ -54,11 +61,23 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
     override func viewDidLoad() {
         super.viewDidLoad()
         reloadTokenSelection()
-        DispatchQueue.global().async { [recent, weak self] in
+        DispatchQueue.global().async { [walletID, recent, defaultChains, weak self] in
             guard let tokens = PropertiesDAO.shared.jsonObject(forKey: recent.key, type: [SwapToken.Codable].self) else {
                 return
             }
-            let recentTokens = BalancedSwapToken.fillBalance(swappableTokens: tokens)
+            var recentTokens = BalancedSwapToken.fillBalance(swappableTokens: tokens, walletID: walletID)
+            if walletID != nil {
+                let chains = defaultChains.reduce(into: [:]) { results, item in
+                    results[item.id] = item
+                }
+                recentTokens = recentTokens.compactMap { token in
+                    guard let chainID = token.chain.chainID else {
+                        return nil
+                    }
+                    return chains[chainID] != nil ? token : nil
+                }
+            }
+            
             let assetIDs = recentTokens.map(\.assetID)
             let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
                 .priceChangePercentage24H(assetIDs: assetIDs)
@@ -75,7 +94,8 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
     }
     
     override func search(keyword: String) {
-        searchRequest = RouteAPI.search(keyword: keyword, source: .mixin, queue: .global()) { [weak self] result in
+        let source: RouteTokenSource = walletID == nil ? .mixin : .web3
+        searchRequest = RouteAPI.search(keyword: keyword, source: source, queue: .global()) { [weak self] result in
             switch result {
             case .success(let tokens):
                 self?.reloadSearchResults(keyword: keyword, tokens: tokens)
@@ -150,14 +170,14 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
     
     private func reloadSearchResults(keyword: String, tokens: [SwapToken]) {
         assert(!Thread.isMainThread)
-        let searchResults = BalancedSwapToken.fillBalance(swappableTokens: tokens)
-            .sorted { (one, another) in
-                let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
-                let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
-                return left > right
-            }
+        let searchResults = BalancedSwapToken.fillBalance(swappableTokens: tokens, walletID: walletID)
+            .sorted { $0.sortingValues > $1.sortingValues }
         let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-        let searchResultChains = Chain.mixinChains(ids: chainIDs)
+        let searchResultChains = if walletID != nil {
+            Chain.web3Chains(ids: chainIDs)
+        } else {
+            Chain.mixinChains(ids: chainIDs)
+        }
         DispatchQueue.main.async {
             guard self.trimmedKeyword == keyword else {
                 return

@@ -19,7 +19,12 @@ public final class UTXOService {
         var outputsCount = 0
         
         repeat {
-            let outputs = try OutputDAO.shared.unspentOutputs(asset: kernelAssetID, after: sequence, limit: limit, db: db)
+            let outputs = try OutputDAO.shared.availableOutputs(
+                asset: kernelAssetID,
+                after: sequence,
+                limit: limit,
+                db: db
+            )
             Logger.general.debug(category: "UTXO", message: "Read \(outputs.count) outputs for amount calculation")
             for output in outputs {
                 if let amount = output.decimalAmount {

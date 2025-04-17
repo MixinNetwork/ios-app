@@ -147,12 +147,12 @@ class EVMTransferOperation: Web3TransferOperation {
                 chainID: mixinChainID,
                 address: account.address.toChecksumAddress()
             )
-            guard let nonce = BigInt(hex: count) else {
+            guard let latestTransactionCount = BigInt(hex: count) else {
                 throw RequestError.invalidTransactionCount
             }
             transaction = EIP1559Transaction(
                 chainID: chainID,
-                nonce: nonce,
+                nonce: latestTransactionCount + 1,
                 maxPriorityFeePerGas: evmFee.maxPriorityFeePerGas,
                 maxFeePerGas: evmFee.maxFeePerGas,
                 gasLimit: evmFee.gasLimit,

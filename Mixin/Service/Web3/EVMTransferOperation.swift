@@ -147,8 +147,13 @@ class EVMTransferOperation: Web3TransferOperation {
                 chainID: mixinChainID,
                 address: account.address.toChecksumAddress()
             )
-            guard let latestTransactionCount = BigInt(hex: count) else {
+            guard var latestTransactionCount = BigInt(hex: count) else {
                 throw RequestError.invalidTransactionCount
+            }
+            if let nonceString = Web3RawTransactionDAO.shared.maxNonce(chainID: mixinChainID),
+               let nonce = BigInt(nonceString, radix: 10)
+            {
+                latestTransactionCount = max(nonce, latestTransactionCount)
             }
             transaction = EIP1559Transaction(
                 chainID: chainID,

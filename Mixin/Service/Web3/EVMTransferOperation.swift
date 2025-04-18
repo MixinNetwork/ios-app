@@ -143,12 +143,27 @@ class EVMTransferOperation: Web3TransferOperation {
             guard transactionPreview.from == account.address else {
                 throw RequestError.mismatchedAddress
             }
-            let count = try await RouteAPI.ethereumLatestTransactionCount(
-                chainID: mixinChainID,
-                address: account.address.toChecksumAddress()
-            )
-            guard let nonce = BigInt(hex: count) else {
-                throw RequestError.invalidTransactionCount
+            let latestTransactionCount = try await {
+                let count = try await RouteAPI.ethereumLatestTransactionCount(
+                    chainID: mixinChainID,
+                    address: fromAddress
+                )
+                if let count = BigInt(hex: count) {
+                    return count
+                } else {
+                    throw RequestError.invalidTransactionCount
+                }
+            }()
+            let nonce: BigInt
+            if let maxNonce = Web3RawTransactionDAO.shared.maxNonce(chainID: mixinChainID),
+               let n = BigInt(maxNonce, radix: 10),
+               n >= latestTransactionCount
+            {
+                nonce = n + 1
+                Logger.general.debug(category: "EVMTransfer", message: "Using local value \(nonce) as nonce")
+            } else {
+                nonce = latestTransactionCount
+                Logger.general.debug(category: "EVMTransfer", message: "Using remote value \(nonce) as nonce")
             }
             transaction = EIP1559Transaction(
                 chainID: chainID,
@@ -206,7 +221,8 @@ class EVMTransferOperation: Web3TransferOperation {
             }()
             let rawTransaction = try await RouteAPI.postTransaction(
                 chainID: mixinChainID,
-                raw: hexEncodedSignedTransaction
+                from: fromAddress,
+                rawTransaction: hexEncodedSignedTransaction
             )
             let pendingTransaction = switch balanceChange {
             case .decodingFailed:

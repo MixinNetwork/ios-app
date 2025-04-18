@@ -7,10 +7,21 @@ public final class Web3RawTransactionDAO: Web3DAO {
     
     public func pendingRawTransactions() -> [Web3RawTransaction] {
         db.select(with: """
-            SELECT *
-            FROM raw_transactions 
-            WHERE \(Web3RawTransaction.CodingKeys.state.rawValue) = 'pending'
+        SELECT *
+        FROM raw_transactions 
+        WHERE \(Web3RawTransaction.CodingKeys.state.rawValue) = 'pending'
         """)
+    }
+    
+    public func maxNonce(chainID: String) -> String? {
+        db.select(with: """
+        SELECT nonce
+        FROM raw_transactions 
+        WHERE chain_id = ?
+            AND \(Web3RawTransaction.CodingKeys.state.rawValue) = 'pending'
+        ORDER BY nonce DESC
+        LIMIT 1
+        """, arguments: [chainID])
     }
     
     public func rawTransactionExists(hash: String) -> Bool {

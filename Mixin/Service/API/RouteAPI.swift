@@ -322,13 +322,18 @@ extension RouteAPI {
         )
     }
     
-    static func postTransaction(chainID: String, raw: String) async throws -> Web3RawTransaction {
+    static func postTransaction(
+        chainID: String,
+        from: String,
+        rawTransaction: String
+    ) async throws -> Web3RawTransaction {
         try await request(
             method: .post,
             path: "/web3/transactions",
             with: [
                 "chain_id": chainID,
-                "raw": raw,
+                "from": from,
+                "raw_transaction": rawTransaction,
             ]
         )
     }

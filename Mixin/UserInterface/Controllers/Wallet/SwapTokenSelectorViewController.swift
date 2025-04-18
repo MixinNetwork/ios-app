@@ -3,7 +3,7 @@ import OrderedCollections
 import Alamofire
 import MixinServices
 
-final class SwapTokenSelectorViewController: TokenSelectorViewController<BalancedSwapToken> {
+class SwapTokenSelectorViewController: TokenSelectorViewController<BalancedSwapToken> {
     
     enum Recent {
         
@@ -24,27 +24,28 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
     var onSelected: ((BalancedSwapToken) -> Void)?
     
     private let recent: Recent
-    private let walletID: String?
     
     private weak var searchRequest: Request?
+    
+    var source: RouteTokenSource {
+        .mixin
+    }
     
     init(
         recent: Recent,
         tokens: [BalancedSwapToken],
-        selectedAssetID: String?,
-        walletID: String? = nil
+        chains: OrderedSet<Chain>? = nil,
+        selectedAssetID: String?
     ) {
         self.recent = recent
-        let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-        self.walletID = walletID
-        let chains = if walletID != nil {
-            Chain.web3Chains(ids: chainIDs)
+        let defaultChains = if let chains {
+            chains
         } else {
-            Chain.mixinChains(ids: chainIDs)
+            Chain.mixinChains(ids: Set(tokens.compactMap(\.chain.chainID)))
         }
         super.init(
             defaultTokens: tokens,
-            defaultChains: chains,
+            defaultChains: defaultChains,
             searchDebounceInterval: 1,
             selectedID: selectedAssetID
         )
@@ -61,23 +62,11 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
     override func viewDidLoad() {
         super.viewDidLoad()
         reloadTokenSelection()
-        DispatchQueue.global().async { [walletID, recent, defaultChains, weak self] in
+        DispatchQueue.global().async { [recent, weak self] in
             guard let tokens = PropertiesDAO.shared.jsonObject(forKey: recent.key, type: [SwapToken.Codable].self) else {
                 return
             }
-            var recentTokens = BalancedSwapToken.fillBalance(swappableTokens: tokens, walletID: walletID)
-            if walletID != nil {
-                let chains = defaultChains.reduce(into: [:]) { results, item in
-                    results[item.id] = item
-                }
-                recentTokens = recentTokens.compactMap { token in
-                    guard let chainID = token.chain.chainID else {
-                        return nil
-                    }
-                    return chains[chainID] != nil ? token : nil
-                }
-            }
-            
+            let recentTokens = self?.filterRecentTokens(swappableTokens: tokens) ?? []
             let assetIDs = recentTokens.map(\.assetID)
             let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
                 .priceChangePercentage24H(assetIDs: assetIDs)
@@ -88,13 +77,16 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
         }
     }
     
+    func filterRecentTokens(swappableTokens: [SwapToken]) -> [BalancedSwapToken] {
+        fillSwappableTokenBalance(swappableTokens: swappableTokens)
+    }
+    
     override func prepareForSearch(_ textField: UITextField) {
         searchRequest?.cancel()
         super.prepareForSearch(textField)
     }
     
     override func search(keyword: String) {
-        let source: RouteTokenSource = walletID == nil ? .mixin : .web3
         searchRequest = RouteAPI.search(keyword: keyword, source: source, queue: .global()) { [weak self] result in
             switch result {
             case .success(let tokens):
@@ -168,16 +160,20 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
         }
     }
     
+    func chains(with ids: Set<String>) -> OrderedSet<Chain> {
+        Chain.mixinChains(ids: ids)
+    }
+    
+    func fillSwappableTokenBalance(swappableTokens: [SwapToken]) -> [BalancedSwapToken] {
+        BalancedSwapToken.fillMixinBalance(swappableTokens: swappableTokens)
+    }
+    
     private func reloadSearchResults(keyword: String, tokens: [SwapToken]) {
         assert(!Thread.isMainThread)
-        let searchResults = BalancedSwapToken.fillBalance(swappableTokens: tokens, walletID: walletID)
+        let searchResults = fillSwappableTokenBalance(swappableTokens: tokens)
             .sorted { $0.sortingValues > $1.sortingValues }
         let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-        let searchResultChains = if walletID != nil {
-            Chain.web3Chains(ids: chainIDs)
-        } else {
-            Chain.mixinChains(ids: chainIDs)
-        }
+        let searchResultChains = chains(with: chainIDs)
         DispatchQueue.main.async {
             guard self.trimmedKeyword == keyword else {
                 return

@@ -77,7 +77,7 @@ final class Web3TransactionViewController: TransactionViewController {
                                     if transaction.state.knownCase == .notFound {
                                         try Web3TransactionDAO.shared.setTransactionStatusNotFound(
                                             hash: transaction.hash,
-                                            chain: transaction.chainID,
+                                            chainID: transaction.chainID,
                                             address: transaction.account,
                                             db: db
                                         )
@@ -86,6 +86,7 @@ final class Web3TransactionViewController: TransactionViewController {
                             }
                         }
                         
+                        // TODO: Is it really necessary to refresh the balance and transaction history here? Wouldn’t it be sufficient to refresh only when state changes?
                         let syncTokens = RefreshWeb3TokenJob(walletID: walletID)
                         ConcurrentJobQueue.shared.addJob(job: syncTokens)
                         let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)

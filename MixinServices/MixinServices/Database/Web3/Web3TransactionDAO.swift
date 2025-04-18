@@ -56,14 +56,20 @@ public final class Web3TransactionDAO: Web3DAO {
     
     public func setTransactionStatusNotFound(
         hash: String,
-        chain: String,
+        chainID: String,
         address: String,
         db: GRDB.Database
     ) throws {
-        try db.execute(
-            sql: "UPDATE transactions SET status = ? WHERE transaction_hash = ? AND chain_id = ? AND address = ? AND status = ?",
-            arguments: [Web3RawTransaction.State.notFound.rawValue, hash, chain, address, Web3RawTransaction.State.pending.rawValue]
-        )
+        let update: GRDB.SQL = """
+        UPDATE transactions
+        SET status = \(Web3RawTransaction.State.notFound.rawValue)
+        WHERE transaction_hash = \(hash)
+            AND chain_id = \(chainID)
+            AND address = \(address)
+            AND status = \(Web3RawTransaction.State.pending.rawValue)
+        """
+        try db.execute(literal: update)
+        // TODO: Post a notification and update related UIs
     }
     
     public func deleteAll() {

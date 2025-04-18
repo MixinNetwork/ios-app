@@ -28,7 +28,7 @@ final class ReviewPendingWeb3TransactionJob: BaseJob {
                     if transaction.state.knownCase == .notFound {
                         try Web3TransactionDAO.shared.setTransactionStatusNotFound(
                             hash: transaction.hash,
-                            chain: transaction.chainID,
+                            chainID: transaction.chainID,
                             address: transaction.account,
                             db: db
                         )

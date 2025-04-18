@@ -211,7 +211,8 @@ class EVMTransferOperation: Web3TransferOperation {
             }()
             let rawTransaction = try await RouteAPI.postTransaction(
                 chainID: mixinChainID,
-                raw: hexEncodedSignedTransaction
+                from: fromAddress,
+                rawTransaction: hexEncodedSignedTransaction
             )
             let pendingTransaction = switch balanceChange {
             case .decodingFailed:

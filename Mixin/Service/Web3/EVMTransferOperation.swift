@@ -143,21 +143,29 @@ class EVMTransferOperation: Web3TransferOperation {
             guard transactionPreview.from == account.address else {
                 throw RequestError.mismatchedAddress
             }
-            let count = try await RouteAPI.ethereumLatestTransactionCount(
-                chainID: mixinChainID,
-                address: account.address.toChecksumAddress()
-            )
-            guard var latestTransactionCount = BigInt(hex: count) else {
-                throw RequestError.invalidTransactionCount
-            }
-            if let nonceString = Web3RawTransactionDAO.shared.maxNonce(chainID: mixinChainID),
-               let nonce = BigInt(nonceString, radix: 10)
+            let latestTransactionCount = try await {
+                let count = try await RouteAPI.ethereumLatestTransactionCount(
+                    chainID: mixinChainID,
+                    address: fromAddress
+                )
+                if let count = BigInt(hex: count) {
+                    return count
+                } else {
+                    throw RequestError.invalidTransactionCount
+                }
+            }()
+            let nonce: BigInt
+            if let maxNonce = Web3RawTransactionDAO.shared.maxNonce(chainID: mixinChainID),
+               let n = BigInt(maxNonce, radix: 10),
+               n >= latestTransactionCount
             {
-                latestTransactionCount = max(nonce, latestTransactionCount)
+                nonce = n + 1
+            } else {
+                nonce = latestTransactionCount
             }
             transaction = EIP1559Transaction(
                 chainID: chainID,
-                nonce: latestTransactionCount + 1,
+                nonce: nonce,
                 maxPriorityFeePerGas: evmFee.maxPriorityFeePerGas,
                 maxFeePerGas: evmFee.maxFeePerGas,
                 gasLimit: evmFee.gasLimit,

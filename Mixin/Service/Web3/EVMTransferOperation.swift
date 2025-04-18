@@ -160,8 +160,10 @@ class EVMTransferOperation: Web3TransferOperation {
                n >= latestTransactionCount
             {
                 nonce = n + 1
+                Logger.general.debug(category: "EVMTransfer", message: "Using local value \(nonce) as nonce")
             } else {
                 nonce = latestTransactionCount
+                Logger.general.debug(category: "EVMTransfer", message: "Using remote value \(nonce) as nonce")
             }
             transaction = EIP1559Transaction(
                 chainID: chainID,

@@ -18,6 +18,7 @@ public final class Web3RawTransactionDAO: Web3DAO {
         SELECT nonce
         FROM raw_transactions 
         WHERE chain_id = ?
+            AND \(Web3RawTransaction.CodingKeys.state.rawValue) = 'pending'
         ORDER BY nonce DESC
         LIMIT 1
         """, arguments: [chainID])

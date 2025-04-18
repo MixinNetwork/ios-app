@@ -20,6 +20,7 @@
 		52B272762DAE586B00F46EC0 /* SwapPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B272752DAE586B00F46EC0 /* SwapPreviewViewController.swift */; };
 		52B2727B2DAE63D200F46EC0 /* SwapPaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B2727A2DAE63D200F46EC0 /* SwapPaymentOperation.swift */; };
 		52B2727D2DAE8AFF00F46EC0 /* PaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B2727C2DAE8AFF00F46EC0 /* PaymentOperation.swift */; };
+		52B273572DB225F500F46EC0 /* Web3SwapTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B273562DB225F500F46EC0 /* Web3SwapTokenSelectorViewController.swift */; };
 		52DE7B4A2BEB7C040060A364 /* Web3TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */; };
 		52DE7B4F2BEB7C940060A364 /* TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B4E2BEB7C940060A364 /* TransactionViewController.swift */; };
 		5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */; };
@@ -1542,6 +1543,7 @@
 		52B272752DAE586B00F46EC0 /* SwapPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapPreviewViewController.swift; sourceTree = "<group>"; };
 		52B2727A2DAE63D200F46EC0 /* SwapPaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapPaymentOperation.swift; sourceTree = "<group>"; };
 		52B2727C2DAE8AFF00F46EC0 /* PaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentOperation.swift; sourceTree = "<group>"; };
+		52B273562DB225F500F46EC0 /* Web3SwapTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SwapTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionViewController.swift; sourceTree = "<group>"; };
 		52DE7B4E2BEB7C940060A364 /* TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionViewController.swift; sourceTree = "<group>"; };
 		5E5CA7842674AC8D00C1E113 /* ScreenLockView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScreenLockView.xib; sourceTree = "<group>"; };
@@ -5124,6 +5126,7 @@
 				94B1E55C2C49222100A2349F /* MixinSwapViewController.swift */,
 				52B2726D2DAE358000F46EC0 /* Web3SwapViewController.swift */,
 				946E9E332D40C46D00DBC308 /* SwapTokenSelectorViewController.swift */,
+				52B273562DB225F500F46EC0 /* Web3SwapTokenSelectorViewController.swift */,
 				942FD6752D38CF46004DCC4C /* SwapOrderTableViewController.swift */,
 				942FD92F2D3A6F66004DCC4C /* SwapOrderViewController.swift */,
 			);
@@ -6501,6 +6504,7 @@
 				946331D82C636ED700C54B76 /* SelectedItemCell.swift in Sources */,
 				DF121F351FA1C809000F701D /* CornerImageView.swift in Sources */,
 				9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */,
+				52B273572DB225F500F46EC0 /* Web3SwapTokenSelectorViewController.swift in Sources */,
 				942FDA832D3CBCE8004DCC4C /* SwapOrderIDCell.swift in Sources */,
 				947083AE2D928F25007DF965 /* ExternalTransferError.swift in Sources */,
 				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,

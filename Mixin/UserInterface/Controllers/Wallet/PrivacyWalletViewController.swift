@@ -15,10 +15,13 @@ final class PrivacyWalletViewController: WalletViewController {
         titleLabel.text = R.string.localizable.privacy_wallet()
         titleInfoStackView.setCustomSpacing(6, after: titleLabel)
         let privacyIconView = UIImageView(image: R.image.privacy_wallet())
-        privacyIconView.contentMode = .center
+        privacyIconView.contentMode = .scaleAspectFit
         privacyIconView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         privacyIconView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         titleInfoStackView.addArrangedSubview(privacyIconView)
+        privacyIconView.snp.makeConstraints { make in
+            make.width.height.equalTo(22)
+        }
         
         tableHeaderView.actionView.delegate = self
         tableHeaderView.pendingDepositButton.addTarget(

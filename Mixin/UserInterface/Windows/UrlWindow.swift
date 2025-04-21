@@ -1305,8 +1305,19 @@ extension UrlWindow {
                     guard case let .user(userItem) = destination else {
                         return
                     }
-                    let paymentOperation = SwapPaymentOperation(operation: operation, sendToken: context.sendToken, sendAmount: context.sendAmount, receiveToken: context.receiveToken, receiveAmount: context.receiveAmount, destination: .mixin(userItem), memo: paymentURL.memo)
-                    let preview = SwapPreviewViewController(operation: paymentOperation, warnings: issues.map(\.description))
+                    let swap = SwapOperation(
+                        operation: operation,
+                        sendToken: context.sendToken,
+                        sendAmount: context.sendAmount,
+                        receiveToken: context.receiveToken,
+                        receiveAmount: context.receiveAmount,
+                        destination: .mixin(userItem),
+                        memo: paymentURL.memo
+                    )
+                    let preview = SwapPreviewViewController(
+                        operation: swap,
+                        warnings: issues.map(\.description)
+                    )
                     homeContainer.present(preview, animated: true)
                 default:
                     let redirection = source.isExternal ? paymentURL.redirection : nil

@@ -1,9 +1,9 @@
 import Foundation
 import MixinServices
 
-class SwapPaymentOperation {
+final class SwapOperation {
     
-    private let operation: PaymentOperation
+    private let operation: any PaymentOperation
     
     let sendToken: BalancedSwapToken
     let sendAmount: Decimal
@@ -11,11 +11,16 @@ class SwapPaymentOperation {
     let receiveToken: SwapToken
     let receiveAmount: Decimal
     
-    let destination: SwapDestination
+    let destination: Destination
     
     let memo: String?
     
-    init(operation: PaymentOperation, sendToken: BalancedSwapToken, sendAmount: Decimal, receiveToken: SwapToken, receiveAmount: Decimal, destination: SwapDestination, memo: String?) {
+    init(
+        operation: any PaymentOperation, sendToken: BalancedSwapToken,
+        sendAmount: Decimal, receiveToken: SwapToken,
+        receiveAmount: Decimal, destination: Destination,
+        memo: String?
+    ) {
         self.operation = operation
         self.sendToken = sendToken
         self.sendAmount = sendAmount
@@ -28,16 +33,18 @@ class SwapPaymentOperation {
     func start(pin: String) async throws {
         try await operation.start(pin: pin)
     }
+    
 }
 
-extension SwapPaymentOperation {
+extension SwapOperation {
     
-    enum SwapDestination {
-        
+    protocol PaymentOperation {
+        func start(pin: String) async throws
+    }
+    
+    enum Destination {
         case mixin(UserItem)
-        
         case web3(Web3Destination)
-        
     }
     
     struct Web3Destination {
@@ -47,4 +54,5 @@ extension SwapPaymentOperation {
         let feeTokenSymbol: String
         let senderAddress: Web3Address
     }
+    
 }

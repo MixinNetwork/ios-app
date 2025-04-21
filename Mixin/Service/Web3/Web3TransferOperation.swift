@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-class Web3TransferOperation: PaymentOperation {
+class Web3TransferOperation: SwapOperation.PaymentOperation {
     
     struct Fee {
         let token: Decimal

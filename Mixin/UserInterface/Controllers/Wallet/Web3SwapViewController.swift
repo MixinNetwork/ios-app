@@ -156,20 +156,22 @@ final class Web3SwapViewController: MixinSwapViewController {
                             guard let homeContainer = UIApplication.homeContainerViewController else {
                                 return
                             }
-                            
-                            let destination = SwapPaymentOperation.Web3Destination(displayReceiver: displayReceiver,
-                                                                                   depositDestination: depositDestination,
-                                                                                   fee: fee,
-                                                                                   feeTokenSymbol: feeTokenSymbol,
-                                                                                   senderAddress: sendingAddress)
-                            let op = SwapPaymentOperation(operation: operation,
-                                                          sendToken: quote.sendToken,
-                                                          sendAmount: sendAmount,
-                                                          receiveToken: quote.receiveToken,
-                                                          receiveAmount: receiveAmount,
-                                                          destination: .web3(destination),
-                                                          memo: nil)
-                            
+                            let destination = SwapOperation.Web3Destination(
+                                displayReceiver: displayReceiver,
+                                depositDestination: depositDestination,
+                                fee: fee,
+                                feeTokenSymbol: feeTokenSymbol,
+                                senderAddress: sendingAddress
+                            )
+                            let op = SwapOperation(
+                                operation: operation,
+                                sendToken: quote.sendToken,
+                                sendAmount: sendAmount,
+                                receiveToken: quote.receiveToken,
+                                receiveAmount: receiveAmount,
+                                destination: .web3(destination),
+                                memo: nil
+                            )
                             let preview = SwapPreviewViewController(operation: op, warnings: [])
                             preview.onDismiss = {
                                 sender.isBusy = false

@@ -18,8 +18,7 @@
 		52A056582BE362FF00CEC8A3 /* InscriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */; };
 		52B2726E2DAE358000F46EC0 /* Web3SwapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B2726D2DAE358000F46EC0 /* Web3SwapViewController.swift */; };
 		52B272762DAE586B00F46EC0 /* SwapPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B272752DAE586B00F46EC0 /* SwapPreviewViewController.swift */; };
-		52B2727B2DAE63D200F46EC0 /* SwapPaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B2727A2DAE63D200F46EC0 /* SwapPaymentOperation.swift */; };
-		52B2727D2DAE8AFF00F46EC0 /* PaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B2727C2DAE8AFF00F46EC0 /* PaymentOperation.swift */; };
+		52B2727B2DAE63D200F46EC0 /* SwapOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B2727A2DAE63D200F46EC0 /* SwapOperation.swift */; };
 		52B273572DB225F500F46EC0 /* Web3SwapTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52B273562DB225F500F46EC0 /* Web3SwapTokenSelectorViewController.swift */; };
 		52DE7B4A2BEB7C040060A364 /* Web3TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */; };
 		52DE7B4F2BEB7C940060A364 /* TransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52DE7B4E2BEB7C940060A364 /* TransactionViewController.swift */; };
@@ -1541,8 +1540,7 @@
 		52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionViewController.swift; sourceTree = "<group>"; };
 		52B2726D2DAE358000F46EC0 /* Web3SwapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SwapViewController.swift; sourceTree = "<group>"; };
 		52B272752DAE586B00F46EC0 /* SwapPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapPreviewViewController.swift; sourceTree = "<group>"; };
-		52B2727A2DAE63D200F46EC0 /* SwapPaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapPaymentOperation.swift; sourceTree = "<group>"; };
-		52B2727C2DAE8AFF00F46EC0 /* PaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentOperation.swift; sourceTree = "<group>"; };
+		52B2727A2DAE63D200F46EC0 /* SwapOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapOperation.swift; sourceTree = "<group>"; };
 		52B273562DB225F500F46EC0 /* Web3SwapTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SwapTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionViewController.swift; sourceTree = "<group>"; };
 		52DE7B4E2BEB7C940060A364 /* TransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionViewController.swift; sourceTree = "<group>"; };
@@ -4303,9 +4301,8 @@
 				94F35A5F2D255B5F001BCAE7 /* Invoice.swift */,
 				94C5A8922B2157CE00201CDA /* Payment.swift */,
 				94C6987A2B23257B002377EA /* PaymentPrecondition.swift */,
-				52B2727C2DAE8AFF00F46EC0 /* PaymentOperation.swift */,
 				94A40C462B2781AF0028BC02 /* TransferPaymentOperation.swift */,
-				52B2727A2DAE63D200F46EC0 /* SwapPaymentOperation.swift */,
+				52B2727A2DAE63D200F46EC0 /* SwapOperation.swift */,
 				945ED2B12B28342A00C138BF /* WithdrawPaymentOperation.swift */,
 				947084B32D93F88F007DF965 /* InvoicePaymentOperation.swift */,
 				94F35B362D27C620001BCAE7 /* AtomicInvoicePaymentOperation.swift */,
@@ -7119,7 +7116,6 @@
 				94FA8FC92644236F006BC715 /* ConversationMessageComposer.swift in Sources */,
 				DF846CDD2369550B00AA1197 /* MultisigUserCell.swift in Sources */,
 				7B0B01941FEA281E000EEE4F /* URLExtension.swift in Sources */,
-				52B2727D2DAE8AFF00F46EC0 /* PaymentOperation.swift in Sources */,
 				7B70D8512457F4EC00E01239 /* AnnouncementBadgeContentView.swift in Sources */,
 				94AC15602C3D77CD0029E1AB /* AppButtonGroupView.swift in Sources */,
 				7B441ADC24CAE1B80067231A /* StreamId.swift in Sources */,
@@ -7167,7 +7163,7 @@
 				7B9F810E222EA3EC0012BFDD /* PopupPresentationAnimator.swift in Sources */,
 				94D63DD62646C29100FD7EE8 /* MessageViewModelFactory.swift in Sources */,
 				94BF6D5B2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift in Sources */,
-				52B2727B2DAE63D200F46EC0 /* SwapPaymentOperation.swift in Sources */,
+				52B2727B2DAE63D200F46EC0 /* SwapOperation.swift in Sources */,
 				947084C52D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift in Sources */,
 				7BF4047D2048FA0E004C54E4 /* FullscreenPINValidationViewController.swift in Sources */,
 				947015C42DA3A9B300D8AA5A /* EIP1559Transaction.swift in Sources */,

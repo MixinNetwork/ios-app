@@ -3,9 +3,9 @@ import MixinServices
 
 class SwapPreviewViewController: AuthenticationPreviewViewController {
     
-    private let operation: SwapPaymentOperation
+    private let operation: SwapOperation
     
-    init(operation: SwapPaymentOperation, warnings: [String]) {
+    init(operation: SwapOperation, warnings: [String]) {
         self.operation = operation
         super.init(warnings: warnings)
     }

@@ -75,7 +75,8 @@ class SolanaTransferOperation: Web3TransferOperation {
             Logger.web3.info(category: "SolanaTransfer", message: "Will send tx: \(signedTransaction)")
             let rawTransaction = try await RouteAPI.postTransaction(
                 chainID: ChainID.solana,
-                raw: signedTransaction
+                from: fromAddress,
+                rawTransaction: signedTransaction
             )
             let transactionFee = if let fee {
                 TokenAmountFormatter.string(from: fee.token)

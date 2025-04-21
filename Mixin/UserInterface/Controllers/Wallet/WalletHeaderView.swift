@@ -283,9 +283,9 @@ final class WalletHeaderView: InfiniteTopView {
             pendingDepositView.isHidden = false
             contentViewBottomConstraint.constant = 10
             pendingDepositLabel.text = if transactions.count == 1 {
-                R.string.localizable.transaction_pending_confirmation()
+                R.string.localizable.pending_transaction_one()
             } else {
-                R.string.localizable.transactions_pending_confirmation(transactions.count)
+                R.string.localizable.pending_transactions_count(transactions.count)
             }
         }
     }

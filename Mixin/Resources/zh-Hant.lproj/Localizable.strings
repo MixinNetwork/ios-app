@@ -893,6 +893,8 @@
 "pending_confirmation" = "%1$d/%2$d 區塊確認數";
 "pending_confirmation_count" = "%1$d/%2$d 區塊確認數";
 "pending_confirmations" = "%d/%d 區塊確認數";
+"pending_transaction_one" = "有 1 筆交易處理中";
+"pending_transactions_count" = "有 %d 筆交易處理中";
 "permission_denied_camera_hint" = "Mixin 需要攝像頭許可權，請點選'設定'開啟系統授權。";
 "permission_denied_microphone_hint" = "Mixin 需要麥克風許可權，請點選'設定'開啟系統授權。";
 "permission_denied_network_hint" = "Mixin 需要無線資料許可權，請點選'設定'開啟系統授權。";
@@ -1277,7 +1279,7 @@
 "top_count" = "前 %d";
 "total" = "共計";
 "total_amount" = "總金額";
-"total_assets" = "資產合計";
+"total_balance" = "資產合計";
 "total_supply" = "總量";
 "touch_id" = "指紋";
 "track_not_found" = "Track 無效";
@@ -1287,13 +1289,11 @@
 "transaction_hash" = "交易雜湊";
 "transaction_history" = "轉賬記錄";
 "transaction_id" = "交易編號";
-"transaction_pending_confirmation" = "有 1 筆交易處理中";
 "transaction_rejected" = "拒絕成功";
 "transaction_request" = "請求轉賬";
 "transaction_type" = "交易型別";
 "transactions" = "轉賬記錄";
 "transactions_cannot_be_deleted" = "轉賬記錄不會被刪除";
-"transactions_pending_confirmation" = "有 %d 筆交易處理中";
 "transcript" = "聊天記錄";
 "transfer" = "轉賬";
 "transfer_amount_count_down" = "轉賬金額（%@）";

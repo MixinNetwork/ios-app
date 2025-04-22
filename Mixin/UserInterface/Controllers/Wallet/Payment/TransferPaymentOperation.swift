@@ -4,10 +4,10 @@ import TIP
 
 final class TransferPaymentOperation: SwapOperation.PaymentOperation {
     
-    enum Error: Swift.Error, LocalizedError {
+    enum OperationError: Error, LocalizedError {
         
-        case sign(Swift.Error?)
-        case buildTx(Swift.Error?)
+        case sign(Error?)
+        case buildTx(Error?)
         case invalidTransactionResponse
         case transcodeExtra
         
@@ -178,8 +178,6 @@ final class TransferPaymentOperation: SwapOperation.PaymentOperation {
     }
     
     func start(pin: String) async throws {
-        let destination = self.destination
-        let traceID = self.traceID
         let kernelAssetID = token.kernelAssetID
         let senderID = myUserId
         let amount = TokenAmountFormatter.string(from: amount)
@@ -220,7 +218,7 @@ final class TransferPaymentOperation: SwapOperation.PaymentOperation {
         switch destination {
         case .user:
             guard let extra = extra.plainValue else {
-                throw Error.transcodeExtra
+                throw OperationError.transcodeExtra
             }
             tx = KernelBuildTx(
                 kernelAssetID,
@@ -237,7 +235,7 @@ final class TransferPaymentOperation: SwapOperation.PaymentOperation {
             )
         case let .multisig(threshold, _):
             guard let extra = extra.plainValue else {
-                throw Error.transcodeExtra
+                throw OperationError.transcodeExtra
             }
             tx = KernelBuildTx(
                 kernelAssetID,
@@ -254,7 +252,7 @@ final class TransferPaymentOperation: SwapOperation.PaymentOperation {
             )
         case let .mainnet(threshold, address):
             guard let extra = extra.hexEncodedValue else {
-                throw Error.transcodeExtra
+                throw OperationError.transcodeExtra
             }
             tx = KernelBuildTxToKernelAddress(
                 kernelAssetID,
@@ -270,7 +268,7 @@ final class TransferPaymentOperation: SwapOperation.PaymentOperation {
             )
         }
         guard error == nil, let tx else {
-            throw Error.buildTx(error)
+            throw OperationError.buildTx(error)
         }
         self.kernelTransactionHash = tx.hash
         Logger.general.info(category: "Transfer", message: "Tx built")
@@ -279,12 +277,12 @@ final class TransferPaymentOperation: SwapOperation.PaymentOperation {
         Logger.general.info(category: "Transfer", message: "Will verify: \(verifyRequest.id)")
         let verifyResponses = try await SafeAPI.requestTransaction(requests: [verifyRequest])
         guard let verifyResponse = verifyResponses.first(where: { $0.requestID == verifyRequest.id }) else {
-            throw Error.invalidTransactionResponse
+            throw OperationError.invalidTransactionResponse
         }
         let viewKeys = verifyResponse.views.joined(separator: ",")
         let signedTx = KernelSignTx(tx.raw, outputKeys, viewKeys, spendKey, false, &error)
         guard let signedTx, error == nil else {
-            throw Error.sign(error)
+            throw OperationError.sign(error)
         }
         Logger.general.info(category: "Transfer", message: "Tx signed")
         

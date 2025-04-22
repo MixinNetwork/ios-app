@@ -136,11 +136,12 @@ extension WalletConnectSession {
                 guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                     throw Error.noChain(request.chainId.absoluteString)
                 }
-                guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum)?.destination else {
+                guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum) else {
                     throw Error.noAccount
                 }
                 let operation = try Web3TransferWithWalletConnectOperation(
-                    fromAddress: address,
+                    walletID: address.walletID,
+                    fromAddress: address.destination,
                     transaction: transactionPreview,
                     chain: chain,
                     session: self,

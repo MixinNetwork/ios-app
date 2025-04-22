@@ -145,6 +145,7 @@
 "approval" = "Approval";
 "approval_count" = "Approved %@";
 "approval_unlimited" = "Unlimited";
+"approval_unlimited_warning" = "This dapp can withdraw all your %@";
 "approve" = "Approve";
 "approve_transaction" = "Approve Transaction";
 "approving_transaction" = "Approving Transaction";
@@ -218,6 +219,8 @@
 "camera" = "Cámara";
 "cancel" = "Cancelar";
 "cancel_floating" = "Cancelar flotante";
+"cancel_transaction" = "Cancel Transaction";
+"cancel_transaction_description" = "If the transaction is too far along cancellation may not be possible";
 "canceled" = "Cancelado";
 "canceled_by_caller" = "Cancelado por la persona que llama";
 "cant_receive_the_code" = "¿No puedes recibir el código?";
@@ -1216,6 +1219,9 @@
 "sort_by_oldest" = "Sort by Oldest";
 "sort_by_recent" = "Sort by Recent";
 "sort_by_value" = "Sort by Value";
+"speed_up" = "Speed Up";
+"speed_up_transaction" = "Speed Up Transaction";
+"speed_up_transaction_description" = "If the transaction is too far along this may not be possible";
 "start" = "Comenzar";
 "start_backup" = "Start Backup";
 "start_messaging" = "Empezar a enviar mensajes";

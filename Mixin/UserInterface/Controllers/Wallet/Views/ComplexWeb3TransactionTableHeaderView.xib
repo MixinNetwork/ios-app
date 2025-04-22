@@ -68,6 +68,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="contentStackView" destination="vec-V4-0mi" id="bS0-GU-eBg"/>
+                <outlet property="contentStackViewBottomConstraint" destination="HvY-Xo-9XA" id="77e-Px-O7D"/>
                 <outlet property="iconView" destination="FmN-2c-Zlt" id="2Nn-Gf-b3v"/>
                 <outlet property="statusLabel" destination="Q5Y-4u-hxi" id="MiQ-U2-qde"/>
                 <outlet property="titleLabel" destination="00f-sA-W3q" id="Fdy-qI-b3Q"/>

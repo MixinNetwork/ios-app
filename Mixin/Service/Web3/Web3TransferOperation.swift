@@ -18,16 +18,11 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
         case success
     }
     
-    enum BalanceChange {
-        case decodingFailed(rawTransaction: String)
-        case detailed(token: ValuableToken, amount: Decimal)
-    }
-    
+    let walletID: String
     let fromAddress: String
     let toAddress: String
     let chain: Web3Chain
-    let feeToken: MixinTokenItem // TODO: Replace it with Web3Token
-    let canDecodeBalanceChange: Bool
+    let feeToken: Web3TokenItem
     let isResendingTransactionAvailable: Bool
     
     @Published
@@ -35,19 +30,19 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
     var hasTransactionSent = false
     
     init(
-        fromAddress: String, toAddress: String, chain: Web3Chain,
-        feeToken: MixinTokenItem, canDecodeBalanceChange: Bool,
+        walletID: String, fromAddress: String, toAddress: String,
+        chain: Web3Chain, feeToken: Web3TokenItem,
         isResendingTransactionAvailable: Bool
     ) {
+        self.walletID = walletID
         self.fromAddress = fromAddress
         self.toAddress = toAddress
         self.chain = chain
         self.feeToken = feeToken
-        self.canDecodeBalanceChange = canDecodeBalanceChange
         self.isResendingTransactionAvailable = isResendingTransactionAvailable
     }
     
-    func loadBalanceChange() async throws -> BalanceChange {
+    func simulateTransaction() async throws -> TransactionSimulation {
         fatalError("Must override")
     }
     

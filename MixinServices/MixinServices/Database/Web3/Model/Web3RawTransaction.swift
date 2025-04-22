@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public struct Web3RawTransaction: Codable {
+open class Web3RawTransaction: Codable {
     
     public enum State: String, Codable {
         case notFound = "notfound"

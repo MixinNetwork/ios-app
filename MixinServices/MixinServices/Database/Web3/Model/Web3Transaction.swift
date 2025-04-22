@@ -94,13 +94,11 @@ public class Web3Transaction: Codable, Identifiable {
     
     public init(
         transactionHash: String, chainID: String, address: String,
-        transactionType: UnknownableEnum<Web3Transaction.TransactionType>,
-        status: Web3Transaction.Status, blockNumber: Int, fee: String,
-        senders: [Web3Transaction.Sender]?,
-        receivers: [Web3Transaction.Receiver]?,
-        approvals: [Web3Transaction.Approval]?, sendAssetID: String?,
-        receiveAssetID: String?, transactionAt: String, createdAt: String,
-        updatedAt: String
+        transactionType: UnknownableEnum<TransactionType>,
+        status: Status, blockNumber: Int, fee: String,
+        senders: [Sender]?, receivers: [Receiver]?, approvals: [Approval]?,
+        sendAssetID: String?, receiveAssetID: String?,
+        transactionAt: String, createdAt: String, updatedAt: String
     ) {
         self.transactionHash = transactionHash
         self.chainID = chainID
@@ -229,6 +227,13 @@ extension Web3Transaction {
             format: .precision,
             sign: .always
         )
+        
+        public init(assetID: String, amount: String, to: String, approvalType: ApprovalType) {
+            self.assetID = assetID
+            self.amount = amount
+            self.to = to
+            self.approvalType = .known(approvalType)
+        }
         
     }
     

@@ -1,11 +1,15 @@
 import UIKit
 
-final class ComplexWeb3TransactionTableHeaderView: InfiniteTopView {
+final class ComplexWeb3TransactionTableHeaderView: InfiniteTopView, Web3TransactionTableHeaderView {
     
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var iconView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var statusLabel: Web3TransactionStatusLabel!
+    
+    @IBOutlet weak var contentStackViewBottomConstraint: NSLayoutConstraint!
+    
+    weak var actionView: PillActionView?
     
     override func awakeFromNib() {
         super.awakeFromNib()

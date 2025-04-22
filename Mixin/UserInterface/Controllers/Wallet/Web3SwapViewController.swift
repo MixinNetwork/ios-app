@@ -142,9 +142,13 @@ final class Web3SwapViewController: MixinSwapViewController {
                     )
                     
                     do {
-                        let operation = switch sendChain.kind {
-                        case .evm:
-                            try EVMTransferToAddressOperation(payment: addressPayment, decimalAmount: sendAmount)
+                        let operation = switch sendChain.specification {
+                        case .evm(let id):
+                            try EVMTransferToAddressOperation(
+                                evmChainID: id,
+                                payment: addressPayment,
+                                decimalAmount: sendAmount
+                            )
                         case .solana:
                             try SolanaTransferToAddressOperation(payment: addressPayment, decimalAmount: sendAmount)
                         }

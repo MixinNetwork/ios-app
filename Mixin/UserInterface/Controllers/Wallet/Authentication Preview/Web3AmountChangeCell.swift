@@ -17,28 +17,25 @@ final class Web3AmountChangeCell: UITableViewCell {
         contentStackView.setCustomSpacing(1, after: tokenStackView)
     }
     
-    func setToken(_ token: Token, tokenAmount: String?, fiatMoneyAmount: String?) {
-        switch token {
-        case let token as MixinTokenItem:
-            assetIconView.setIcon(token: token)
-        case let token as Web3Token:
-            assetIconView.setIcon(web3Token: token)
-        default:
-            assertionFailure()
-        }
+    func reloadData(token: Web3Token, tokenAmount: String?, fiatMoneyAmount: String?) {
+        assetIconView.setIcon(web3Token: token)
         
         if let tokenAmount {
             tokenAmountLabel.text = tokenAmount
             tokenAmountLabel.isHidden = false
             symbolLabel.text = token.symbol
-            symbolLabel.setFont(scaledFor: .systemFont(ofSize: 12, weight: .medium),
-                                adjustForContentSize: true)
+            symbolLabel.setFont(
+                scaledFor: .systemFont(ofSize: 12, weight: .medium),
+                adjustForContentSize: true
+            )
             symbolLabel.textColor = R.color.text()
         } else {
             tokenAmountLabel.isHidden = true
-            symbolLabel.text = "Unlimited " + token.symbol
-            symbolLabel.setFont(scaledFor: .systemFont(ofSize: 20, weight: .medium),
-                                adjustForContentSize: true)
+            symbolLabel.text = R.string.localizable.approval_unlimited() + " " + token.symbol
+            symbolLabel.setFont(
+                scaledFor: .systemFont(ofSize: 20, weight: .medium),
+                adjustForContentSize: true
+            )
             symbolLabel.textColor = R.color.red()
         }
         
@@ -46,7 +43,7 @@ final class Web3AmountChangeCell: UITableViewCell {
             fiatMoneyValueLabel.text = fiatMoneyAmount
             fiatMoneyValueLabel.textColor = R.color.text_tertiary()
         } else {
-            fiatMoneyValueLabel.text = "This dapp can withdraw all your \(token.symbol)."
+            fiatMoneyValueLabel.text = R.string.localizable.approval_unlimited_warning(token.symbol)
             fiatMoneyValueLabel.textColor = R.color.red()
         }
     }

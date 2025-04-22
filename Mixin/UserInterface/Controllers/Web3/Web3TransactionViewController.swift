@@ -13,6 +13,9 @@ final class Web3TransactionViewController: TransactionViewController {
     private var reloadPendingTransactionTask: Task<Void, Error>?
     private var rows: [Row] = []
     
+    private var speedUpOperation: Web3TransferOperation?
+    private var cancelOperation: Web3TransferOperation?
+    
     init(walletID: String, transaction: Web3Transaction) {
         self.walletID = walletID
         self.transaction = transaction
@@ -110,6 +113,30 @@ final class Web3TransactionViewController: TransactionViewController {
         }
         self.transaction = transaction
         reloadData()
+    }
+    
+}
+
+extension Web3TransactionViewController: PillActionView.Delegate {
+    
+    func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
+        guard let action = Web3TransactionTableHeaderViewAction(rawValue: index) else {
+            return
+        }
+        switch action {
+        case .speedUp:
+            guard let operation = speedUpOperation else {
+                return
+            }
+            let preview = Web3TransferPreviewViewController(operation: operation, proposer: .speedUp)
+            present(preview, animated: true)
+        case .cancel:
+            guard let operation = cancelOperation else {
+                return
+            }
+            let preview = Web3TransferPreviewViewController(operation: operation, proposer: .cancel)
+            present(preview, animated: true)
+        }
     }
     
 }
@@ -504,6 +531,56 @@ extension Web3TransactionViewController {
         rows.append(.plain(key: .date, value: transactionAt))
         
         tableView.reloadData()
+        
+        if transaction.status == .pending {
+            let hash = transaction.transactionHash
+            DispatchQueue.global().async { [walletID, weak self] in
+                let operations: (speedUp: Web3TransferOperation, cancel: Web3TransferOperation)? = {
+                    guard
+                        let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash),
+                        let chain = Web3Chain.chain(chainID: rawTransaction.chainID),
+                        chain.kind == .evm,
+                        let transaction = EIP1559Transaction(rawTransaction: rawTransaction.raw)
+                    else {
+                        return nil
+                    }
+                    do {
+                        let speedUp = try EVMSpeedUpOperation(
+                            walletID: walletID,
+                            fromAddress: rawTransaction.account,
+                            transaction: transaction,
+                            chain: chain
+                        )
+                        let cancel = try EVMCancelOperation(
+                            walletID: walletID,
+                            fromAddress: rawTransaction.account,
+                            transaction: transaction,
+                            chain: chain
+                        )
+                        return (speedUp: speedUp, cancel: cancel)
+                    } catch {
+                        Logger.general.debug(category: "Web3Txn", message: "Create op failed: \(error)")
+                        return nil
+                    }
+                }()
+                DispatchQueue.main.async {
+                    guard let self, let headerView = self.tableView.tableHeaderView as? Web3TransactionTableHeaderView else {
+                        return
+                    }
+                    if let operations {
+                        self.speedUpOperation = operations.speedUp
+                        self.cancelOperation = operations.cancel
+                        headerView.showActionView()
+                        headerView.actionView?.delegate = self
+                    } else {
+                        self.speedUpOperation = nil
+                        self.cancelOperation = nil
+                        headerView.hideActionView()
+                    }
+                    self.layoutTableHeaderView()
+                }
+            }
+        }
     }
     
 }

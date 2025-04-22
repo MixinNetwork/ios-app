@@ -12,7 +12,7 @@ struct EIP1559Transaction: Equatable, Codable {
     let destination: EthereumAddress
     let amount: BigUInt
     let data: Data?
-    let accessList: [Data] // Not in used currently, the type could be wrong
+    let accessList: [Data] // The type is wrong, not working, may cost more gas.
     
     var rlpEncodingFields: [Any?] {
         [
@@ -44,6 +44,43 @@ struct EIP1559Transaction: Equatable, Codable {
         self.amount = amount
         self.data = data
         self.accessList = []
+    }
+    
+    init?(rawTransaction: String) {
+        guard rawTransaction.hasPrefix("0x02") else {
+            return nil
+        }
+        guard let tx = Data(hexEncodedString: rawTransaction.dropFirst(4)) else {
+            return nil
+        }
+        do {
+            guard case let .list(fields) = try RLPDecoder.decode(tx) else {
+                return nil
+            }
+            guard fields.count > 7 else {
+                return nil
+            }
+            let chainID = try fields[0].asInt()
+            let nonce = try fields[1].asBigInt()
+            let maxPriorityFeePerGas = try fields[2].asBigUInt()
+            let maxFeePerGas = try fields[3].asBigUInt()
+            let gasLimit = try fields[4].asBigUInt()
+            let destination = try fields[5].asAddress()
+            let amount = try fields[6].asBigUInt()
+            let data = try fields[7].asData()
+            self.init(
+                chainID: chainID,
+                nonce: nonce,
+                maxPriorityFeePerGas: maxPriorityFeePerGas,
+                maxFeePerGas: maxFeePerGas,
+                gasLimit: gasLimit,
+                destination: destination,
+                amount: amount,
+                data: data
+            )
+        } catch {
+            return nil
+        }
     }
     
 }

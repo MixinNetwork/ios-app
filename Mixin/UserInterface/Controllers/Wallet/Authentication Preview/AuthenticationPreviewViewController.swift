@@ -246,7 +246,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
         case let .web3Amount(caption, tokenAmount, fiatMoneyAmount, token):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_amount_change, for: indexPath)!
             cell.captionLabel.text = caption.uppercased()
-            cell.setToken(token, tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount)
+            cell.reloadData(token: token, tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount)
             return cell
         case let .selectableFee(speed, tokenAmount, fiatMoneyAmount):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
@@ -388,11 +388,11 @@ extension AuthenticationPreviewViewController {
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)
         case web3Message(caption: String, message: String)
-        case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: Token) // Nil amount for unlimited
+        case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: Web3Token) // Nil amount for unlimited
         case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
         case tokenAmount(token: MixinTokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case swapAssetChange(sendToken: SwapToken, sendAmount: String, receiveToken: SwapToken, receiveAmount: String)
-        case assetChanges([(token: MixinTokenItem, amount: String)])
+        case assetChanges([(token: any OnChainToken, amount: String)])
         case safeMultisigAmount(token: MixinTokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case addressReceivers(MixinTokenItem, [SafeMultisigResponse.Safe.Recipient])
     }

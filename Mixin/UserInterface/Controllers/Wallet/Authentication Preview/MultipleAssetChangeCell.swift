@@ -34,7 +34,7 @@ final class MultipleAssetChangeCell: UITableViewCell {
         }
     }
     
-    func reloadData(changes: [(token: MixinTokenItem, amount: String)]) {
+    func reloadData(changes: [(token: any OnChainToken, amount: String)]) {
         titleLabel.text = R.string.localizable.asset_changes().uppercased()
         loadRowViews(count: changes.count)
         for (i, change) in changes.enumerated() {

@@ -4,9 +4,24 @@ import MixinServices
 final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Transaction> {
     
     private var transactionTokenSymbols: [String: String] = [:]
+    private var reloadPendingTransactionTask: Task<Void, Error>?
+    private let walletID: String
+    
+    init(
+        token: Web3TokenItem,
+        walletID: String
+    ) {
+        self.walletID = walletID
+        super.init(token: token)
+    }
+    
+    @MainActor required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+        reloadPendingTransactionTask?.cancel()
     }
     
     override func viewDidLoad() {
@@ -40,10 +55,16 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         )
         
         reloadSnapshots()
-        let reviewPendingTransactions = ReviewPendingWeb3TransactionJob()
+        syncTransactions()
+    }
+    
+    private func syncTransactions() {
+        let reviewPendingTransactions = SyncPendingWeb3TransactionJob()
         ConcurrentJobQueue.shared.addJob(job: reviewPendingTransactions)
         let syncTransactions = SyncWeb3TransactionJob(walletID: token.walletID)
         ConcurrentJobQueue.shared.addJob(job: syncTransactions)
+        
+        reloadPendingTransactionTask = Web3TransactionManager.shared.syncPendingTransaction(walletID: walletID)
     }
     
     override func send() {

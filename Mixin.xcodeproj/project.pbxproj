@@ -13,6 +13,7 @@
 		277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70B1F909A1200DBB2EB /* Assets.xcassets */; };
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
 		52589AE32BEA52260081C2BF /* SymbolTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */; };
+		52606DBA2DB679B500FB1A89 /* Web3TransactionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52606DB92DB679B500FB1A89 /* Web3TransactionManager.swift */; };
 		52A056512BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056502BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift */; };
 		52A056562BE3614700CEC8A3 /* InscriptionMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056552BE3614700CEC8A3 /* InscriptionMessageCell.swift */; };
 		52A056582BE362FF00CEC8A3 /* InscriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */; };
@@ -1266,7 +1267,7 @@
 		94F64FFD2D65E40100234D7D /* WalletSummaryValueCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F64FFB2D65E40100234D7D /* WalletSummaryValueCell.xib */; };
 		94F7BCE22D2B9ED700BA27D9 /* SwapInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */; };
 		94F7BCE42D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */; };
-		94F7E8692D9C0C1F006AA6CD /* ReviewPendingWeb3TransactionJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F7E8682D9C0BF6006AA6CD /* ReviewPendingWeb3TransactionJob.swift */; };
+		94F7E8692D9C0C1F006AA6CD /* SyncPendingWeb3TransactionJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F7E8682D9C0BF6006AA6CD /* SyncPendingWeb3TransactionJob.swift */; };
 		94F952672AE66A700025B995 /* AmountIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F952662AE66A700025B995 /* AmountIntent.swift */; };
 		94FA8FC92644236F006BC715 /* ConversationMessageComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */; };
 		94FB8E062D1A92CF002DCA20 /* TokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB8E042D1A92CF002DCA20 /* TokenSelectorViewController.swift */; };
@@ -1535,6 +1536,7 @@
 		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTextAttachment.swift; sourceTree = "<group>"; };
+		52606DB92DB679B500FB1A89 /* Web3TransactionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionManager.swift; sourceTree = "<group>"; };
 		52A056502BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionMessageViewModel.swift; sourceTree = "<group>"; };
 		52A056552BE3614700CEC8A3 /* InscriptionMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionMessageCell.swift; sourceTree = "<group>"; };
 		52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionViewController.swift; sourceTree = "<group>"; };
@@ -2806,7 +2808,7 @@
 		94F64FFB2D65E40100234D7D /* WalletSummaryValueCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletSummaryValueCell.xib; sourceTree = "<group>"; };
 		94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapInputAccessoryView.swift; sourceTree = "<group>"; };
 		94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapInputAccessoryView.xib; sourceTree = "<group>"; };
-		94F7E8682D9C0BF6006AA6CD /* ReviewPendingWeb3TransactionJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPendingWeb3TransactionJob.swift; sourceTree = "<group>"; };
+		94F7E8682D9C0BF6006AA6CD /* SyncPendingWeb3TransactionJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncPendingWeb3TransactionJob.swift; sourceTree = "<group>"; };
 		94F952662AE66A700025B995 /* AmountIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountIntent.swift; sourceTree = "<group>"; };
 		94FA8FC82644236F006BC715 /* ConversationMessageComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationMessageComposer.swift; sourceTree = "<group>"; };
 		94FB8E042D1A92CF002DCA20 /* TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenSelectorViewController.swift; sourceTree = "<group>"; };
@@ -4262,6 +4264,7 @@
 				9401A56E2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift */,
 				9489237C2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift */,
 				52DE7B492BEB7C040060A364 /* Web3TransactionViewController.swift */,
+				52606DB92DB679B500FB1A89 /* Web3TransactionManager.swift */,
 			);
 			path = Web3;
 			sourceTree = "<group>";
@@ -5387,7 +5390,7 @@
 				7C104A8027D83A51004D0530 /* RefreshExternalSchemeJob.swift */,
 				94BFA9892B98546000200FC4 /* SyncSafeSnapshotJob.swift */,
 				942C647A2D7A0C38003B3A5F /* SyncWeb3TransactionJob.swift */,
-				94F7E8682D9C0BF6006AA6CD /* ReviewPendingWeb3TransactionJob.swift */,
+				94F7E8682D9C0BF6006AA6CD /* SyncPendingWeb3TransactionJob.swift */,
 				DFAD89972418EE0500836EDD /* RecoverMediaJob.swift */,
 				947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */,
 				842347ED2695BA6400009A39 /* InitializeBotJob.swift */,
@@ -6276,6 +6279,7 @@
 				7B595358226749A100D59DB4 /* PeerCell.swift in Sources */,
 				E0A70A14238250EF003C3B96 /* InvitationHintView.swift in Sources */,
 				946E05922CBFD67B004B264E /* ExploreSearchCategoryViewController.swift in Sources */,
+				52606DBA2DB679B500FB1A89 /* Web3TransactionManager.swift in Sources */,
 				943CAA262CC8309F00346677 /* SignInWithMobileNumberViewController.swift in Sources */,
 				941995142CCEC52600F5425C /* ExportMnemonicPhrasesViewController.swift in Sources */,
 				7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */,
@@ -6988,7 +6992,7 @@
 				94F64FFC2D65E40100234D7D /* WalletSummaryValueCell.swift in Sources */,
 				DF8794942074FB4E004A1E55 /* LegacyTransactionViewController.swift in Sources */,
 				7B97BA0C2019D7570013D58F /* AlbumCollectionViewCell.swift in Sources */,
-				94F7E8692D9C0C1F006AA6CD /* ReviewPendingWeb3TransactionJob.swift in Sources */,
+				94F7E8692D9C0C1F006AA6CD /* SyncPendingWeb3TransactionJob.swift in Sources */,
 				7B28FA12201195A10023B28D /* StickerMessageCell.swift in Sources */,
 				7C53049A28FE753400567CF6 /* AuthorizationScopeGroupCell.swift in Sources */,
 				7B4ADA97243C633B00F04CA6 /* ResizablePopupViewController.swift in Sources */,

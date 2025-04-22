@@ -44,59 +44,7 @@ final class Web3TransactionViewController: TransactionViewController {
         )
         reloadData()
         if transaction.status == .pending {
-            reloadPendingTransactionTask = Task { [walletID, transaction, weak self] in
-                repeat {
-                    do {
-                        let localTransaction = Web3TransactionDAO.shared.transaction(
-                            hash: transaction.transactionHash,
-                            chainID: transaction.chainID,
-                            address: transaction.address
-                        )
-                        guard let localTransaction else {
-                            return
-                        }
-                        
-                        if localTransaction.status != .pending {
-                            await MainActor.run {
-                                guard let self else {
-                                    return
-                                }
-                                self.transaction = localTransaction
-                                self.reloadData()
-                            }
-                            return
-                        }
-                        
-                        if Web3RawTransactionDAO.shared.rawTransactionExists(hash: transaction.transactionHash) {
-                            let transaction = try await RouteAPI.transaction(
-                                chainID: transaction.chainID,
-                                hash: transaction.transactionHash
-                            )
-                            if transaction.state.knownCase != .pending {
-                                try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
-                                    if transaction.state.knownCase == .notFound {
-                                        try Web3TransactionDAO.shared.setTransactionStatusNotFound(
-                                            hash: transaction.hash,
-                                            chainID: transaction.chainID,
-                                            address: transaction.account,
-                                            db: db
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // TODO: Is it really necessary to refresh the balance and transaction history here? Wouldn’t it be sufficient to refresh only when state changes?
-                        let syncTokens = RefreshWeb3TokenJob(walletID: walletID)
-                        ConcurrentJobQueue.shared.addJob(job: syncTokens)
-                        let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
-                        ConcurrentJobQueue.shared.addJob(job: syncTransactions)
-                    } catch {
-                        Logger.general.debug(category: "Web3TxnView", message: "\(error)")
-                    }
-                    try await Task.sleep(nanoseconds: 10 * NSEC_PER_SEC)
-                } while !Task.isCancelled
-            }
+            reloadPendingTransactionTask = Web3TransactionManager.shared.syncPendingTransaction(walletID: walletID, transaction: transaction)
         }
     }
     

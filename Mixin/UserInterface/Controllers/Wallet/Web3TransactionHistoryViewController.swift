@@ -21,6 +21,8 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     private var loadNextPageIndexPath: IndexPath?
     private var lastItem: Web3Transaction?
     
+    private var reloadPendingTransactionTask: Task<Void, Error>?
+    
     init(token: Web3TokenItem) {
         self.walletID = token.walletID
         self.filter = .init(tokens: [token])
@@ -35,6 +37,10 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
+    }
+    
+    deinit {
+        reloadPendingTransactionTask?.cancel()
     }
     
     override func viewDidLoad() {
@@ -72,10 +78,16 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
             object: nil
         )
         reloadData()
-        let reviewPendingTransactions = ReviewPendingWeb3TransactionJob()
+        syncTransactions()
+    }
+    
+    private func syncTransactions() {
+        let reviewPendingTransactions = SyncPendingWeb3TransactionJob()
         ConcurrentJobQueue.shared.addJob(job: reviewPendingTransactions)
         let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
         ConcurrentJobQueue.shared.addJob(job: syncTransactions)
+        
+        reloadPendingTransactionTask = Web3TransactionManager.shared.syncPendingTransaction(walletID: walletID)
     }
     
     @objc private func pickTokens(_ sender: Any) {

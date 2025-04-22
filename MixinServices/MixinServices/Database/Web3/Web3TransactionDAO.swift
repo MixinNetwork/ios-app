@@ -8,9 +8,10 @@ public final class Web3TransactionDAO: Web3DAO {
     public static let transactionDidSaveNotification = Notification.Name("one.mixin.services.Web3TransactionDAO.TransactionDidSave")
     public static let transactionsUserInfoKey = "s"
     
+    private static let sqlQueryTransaction = "SELECT * FROM transactions WHERE transaction_hash = ? AND chain_id = ? AND address = ?"
+    
     public func transaction(hash: String, chainID: String, address: String) -> Web3Transaction? {
-        let sql = "SELECT * FROM transactions WHERE transaction_hash = ? AND chain_id = ? AND address = ?"
-        return db.select(with: sql, arguments: [hash, chainID, address])
+        return db.select(with: Self.sqlQueryTransaction, arguments: [hash, chainID, address])
     }
     
     public func transactions(assetID: String, limit: Int) -> [Web3Transaction] {
@@ -69,7 +70,18 @@ public final class Web3TransactionDAO: Web3DAO {
             AND status = \(Web3RawTransaction.State.pending.rawValue)
         """
         try db.execute(literal: update)
-        // TODO: Post a notification and update related UIs
+        db.afterNextTransaction { _ in
+            let transaction = try? Web3Transaction.fetchOne(db,
+                                                       sql: Self.sqlQueryTransaction,
+                                                       arguments: [hash, chainID, address])
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: Self.transactionDidSaveNotification,
+                    object: self,
+                    userInfo: [Self.transactionsUserInfoKey: [transaction]]
+                )
+            }
+        }
     }
     
     public func deleteAll() {

@@ -90,7 +90,7 @@ final class ClassicWalletViewController: WalletViewController {
         let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
         ConcurrentJobQueue.shared.addJob(job: syncTransactions)
         
-        let syncPendingTransactions = ReviewPendingWeb3TransactionJob()
+        let syncPendingTransactions = SyncPendingWeb3TransactionJob()
         ConcurrentJobQueue.shared.addJob(job: syncPendingTransactions)
     }
     
@@ -174,7 +174,7 @@ extension ClassicWalletViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let token = tokens[indexPath.row]
-        let viewController = Web3TokenViewController(token: token)
+        let viewController = Web3TokenViewController(token: token, walletID: walletID)
         navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -261,7 +261,7 @@ extension ClassicWalletViewController: WalletSearchViewControllerDelegate {
             usdChange: token.usdChange
         )
         let item = Web3TokenItem(token: web3Token, hidden: isHidden, chain: token.chain)
-        let controller = Web3TokenViewController(token: item)
+        let controller = Web3TokenViewController(token: item, walletID: walletID)
         navigationController?.pushViewController(controller, animated: true)
         if amount == nil,
            let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: token.chainID)

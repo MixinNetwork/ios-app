@@ -48,6 +48,12 @@ final class SyncWeb3TransactionJob: BaseJob {
                         )
                     }
                 }
+                
+                if transactions.count > 0 {
+                    let syncTokens = RefreshWeb3TokenJob(walletID: walletID)
+                    ConcurrentJobQueue.shared.addJob(job: syncTokens)
+                }
+                
                 Logger.general.debug(category: "SyncWeb3Txn", message: "Wrote \(transactions.count) txns to \(address), new offset: \(offset ?? "(null)")")
                 if transactions.count < limit {
                     Logger.general.debug(category: "SyncWeb3Txn", message: "Sync \(address) finished")

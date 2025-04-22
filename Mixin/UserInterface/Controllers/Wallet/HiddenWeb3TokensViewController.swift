@@ -69,7 +69,7 @@ extension HiddenWeb3TokensViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let token = tokens[indexPath.row]
-        let viewController = Web3TokenViewController(token: token)
+        let viewController = Web3TokenViewController(token: token, walletID: walletID)
         navigationController?.pushViewController(viewController, animated: true)
     }
     

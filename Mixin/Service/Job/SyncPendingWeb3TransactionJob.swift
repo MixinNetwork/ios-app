@@ -1,16 +1,16 @@
 import Foundation
 import MixinServices
 
-final class ReviewPendingWeb3TransactionJob: BaseJob {
+final class SyncPendingWeb3TransactionJob: BaseJob {
     
     override func getJobId() -> String {
-        "review-pending-web3txn"
+        "sync-pending-web3txn"
     }
     
     override func run() throws {
         let transactions = Web3RawTransactionDAO.shared.pendingRawTransactions()
         guard !transactions.isEmpty else {
-            Logger.general.info(category: "ReviewPendingWeb3TransactionJob", message: "No pending txn")
+            Logger.general.info(category: "SyncPendingWeb3TransactionJob", message: "No pending txn")
             return
         }
         for transaction in transactions {

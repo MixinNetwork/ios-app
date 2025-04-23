@@ -181,13 +181,6 @@ extension RLPDecoder.RLPValue {
         return result
     }
     
-    func asBigInt() throws -> BigInt {
-        guard case .data(let data) = self else {
-            throw RLPDecoder.DecodingError.invalidType
-        }
-        return BigInt(data)
-    }
-    
     func asBigUInt() throws -> BigUInt {
         guard case .data(let data) = self else {
             throw RLPDecoder.DecodingError.invalidType

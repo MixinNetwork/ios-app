@@ -5,7 +5,7 @@ import web3
 struct EIP1559Transaction: Equatable, Codable {
     
     let chainID: Int
-    let nonce: BigInt?
+    let nonce: Int?
     let maxPriorityFeePerGas: BigUInt?
     let maxFeePerGas: BigUInt?
     let gasLimit: BigUInt?
@@ -31,9 +31,9 @@ struct EIP1559Transaction: Equatable, Codable {
     }
     
     init(
-        chainID: Int, nonce: BigInt? = nil, maxPriorityFeePerGas: BigUInt? = nil,
-        maxFeePerGas: BigUInt? = nil, gasLimit: BigUInt? = nil,
-        destination: EthereumAddress, amount: BigUInt, data: Data? = nil
+        chainID: Int, nonce: Int?, maxPriorityFeePerGas: BigUInt?,
+        maxFeePerGas: BigUInt?, gasLimit: BigUInt?,
+        destination: EthereumAddress, amount: BigUInt, data: Data?
     ) {
         self.chainID = chainID
         self.nonce = nonce
@@ -61,7 +61,7 @@ struct EIP1559Transaction: Equatable, Codable {
                 return nil
             }
             let chainID = try fields[0].asInt()
-            let nonce = try fields[1].asBigInt()
+            let nonce = try fields[1].asInt()
             let maxPriorityFeePerGas = try fields[2].asBigUInt()
             let maxFeePerGas = try fields[3].asBigUInt()
             let gasLimit = try fields[4].asBigUInt()

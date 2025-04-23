@@ -578,6 +578,7 @@ extension Web3TransactionViewController {
                         headerView.hideActionView()
                     }
                     self.layoutTableHeaderView()
+                    self.tableView.tableHeaderView = headerView
                 }
             }
         }

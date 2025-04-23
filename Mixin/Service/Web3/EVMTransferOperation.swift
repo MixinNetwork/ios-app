@@ -235,22 +235,22 @@ class EVMTransferOperation: Web3TransferOperation {
         assertionFailure("Must override")
     }
     
-    fileprivate func loadNonce() async throws -> BigInt {
+    fileprivate func loadNonce() async throws -> Int {
         let latestTransactionCount = try await {
             let count = try await RouteAPI.ethereumLatestTransactionCount(
                 chainID: mixinChainID,
                 address: fromAddress
             )
-            if let count = BigInt(hex: count) {
+            if let count = Int(count, radix: 16) {
                 return count
             } else {
                 throw RequestError.invalidTransactionCount
             }
         }()
         
-        let nonce: BigInt
+        let nonce: Int
         if let maxNonce = Web3RawTransactionDAO.shared.maxNonce(chainID: mixinChainID),
-           let n = BigInt(maxNonce, radix: 10),
+           let n = Int(maxNonce, radix: 10),
            n >= latestTransactionCount
         {
             nonce = n + 1
@@ -405,6 +405,10 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             }
             transaction = EIP1559Transaction(
                 chainID: evmChainID,
+                nonce: nil,
+                maxPriorityFeePerGas: nil,
+                maxFeePerGas: nil,
+                gasLimit: nil,
                 destination: EthereumAddress(payment.toAddress),
                 amount: value,
                 data: nil
@@ -423,6 +427,10 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             + amountData
             transaction = EIP1559Transaction(
                 chainID: evmChainID,
+                nonce: nil,
+                maxPriorityFeePerGas: nil,
+                maxFeePerGas: nil,
+                gasLimit: nil,
                 destination: EthereumAddress(payment.toAddress),
                 amount: 0,
                 data: data
@@ -467,7 +475,7 @@ class EVMOverrideOperation: EVMTransferOperation {
         case missingNonce
     }
     
-    private let nonce: BigInt
+    private let nonce: Int
     
     override init(
         walletID: String,
@@ -495,7 +503,7 @@ class EVMOverrideOperation: EVMTransferOperation {
         
     }
     
-    override func loadNonce() async throws -> BigInt {
+    override func loadNonce() async throws -> Int {
         nonce
     }
     

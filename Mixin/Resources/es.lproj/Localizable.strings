@@ -1332,6 +1332,7 @@
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";
+"unable_to_estimate_asset_changes" = "Unable to estimate asset changes";
 "unable_to_save_photo" = "No se puede guardar la foto.";
 "unable_to_save_video" = "No se puede guardar el video.";
 "unable_to_share_content" = "No se puede compartir este contenido";

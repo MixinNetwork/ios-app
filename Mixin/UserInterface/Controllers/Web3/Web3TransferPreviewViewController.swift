@@ -109,14 +109,20 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
                 balanceChangeIndex = nil
                 feeIndex = 0
             default:
-                rows.append(
-                    .web3Message(
-                        caption: R.string.localizable.estimated_balance_change(),
-                        message: R.string.localizable.loading()
+                if let simulation = operation.hardcodedSimulation {
+                    rows = makeRows(simulation: simulation)
+                    balanceChangeIndex = nil
+                    feeIndex = rows.count
+                } else {
+                    rows.append(
+                        .web3Message(
+                            caption: R.string.localizable.estimated_balance_change(),
+                            message: R.string.localizable.loading()
+                        )
                     )
-                )
-                balanceChangeIndex = 0
-                feeIndex = 1
+                    balanceChangeIndex = 0
+                    feeIndex = 1
+                }
             }
             rows.append(
                 .amount(
@@ -171,12 +177,8 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
                     Logger.web3.error(category: "Web3TransferView", message: "Load fee: \(error)")
                 }
             }
-            if let index = balanceChangeIndex {
-                do {
-                    try await self.loadBalanceChange(replacingRowAt: index)
-                } catch {
-                    Logger.web3.error(category: "Web3TransferView", message: "Load bal. change: \(error)")
-                }
+            if operation.hardcodedSimulation == nil, let index = balanceChangeIndex {
+                await self.loadBalanceChange(replacingRowAt: index)
             }
         }
     }
@@ -227,38 +229,6 @@ extension Web3TransferPreviewViewController: Web3PopupViewController {
 }
 
 extension Web3TransferPreviewViewController {
-    
-    private enum SimulationError: Error {
-        case simulationFailure
-        case missingApprovalToken
-    }
-    
-    private struct RichBalanceChange {
-        
-        enum InitError: Error {
-            case missingToken(String)
-            case invalidAmount(String)
-        }
-        
-        let token: Web3TokenItem
-        let amount: Decimal
-        
-        static func changes(
-            from changes: [BalanceChange],
-            walletID: String
-        ) throws -> [RichBalanceChange] {
-            try changes.map { change in
-                guard let token = Web3TokenDAO.shared.token(walletID: walletID, assetID: change.assetID) else {
-                    throw InitError.missingToken(change.assetID)
-                }
-                guard let amount = Decimal(string: change.amount, locale: .enUSPOSIX) else {
-                    throw InitError.invalidAmount(change.amount)
-                }
-                return RichBalanceChange(token: token, amount: amount)
-            }
-        }
-        
-    }
     
     private func reloadData(state: Web3TransferOperation.State) {
         var confirmButton: UIButton? {
@@ -355,24 +325,41 @@ extension Web3TransferPreviewViewController {
         }
     }
     
-    private func loadBalanceChange(replacingRowAt index: Int) async throws {
-        let row: Row
-        let simulation = try await operation.simulateTransaction()
+    private func loadBalanceChange(replacingRowAt index: Int) async {
+        let simulationRows: [Row]
+        do {
+            let simulation = try await operation.simulateTransaction()
+            simulationRows = makeRows(simulation: simulation)
+        } catch {
+            simulationRows = makeRows(simulation: .empty)
+        }
+        await MainActor.run {
+            if let row = simulationRows.first {
+                self.replaceRow(at: index, with: row)
+            }
+            if simulationRows.count == 2 {
+                self.insertRow(simulationRows[1], at: index + 1)
+            }
+        }
+    }
+    
+    private func makeRows(simulation: TransactionSimulation) -> [Row] {
+        var rows: [Row] = []
+        
         if let approve = simulation.approves?.first {
             let token = Web3TokenDAO.shared.token(
                 walletID: operation.walletID,
                 assetID: approve.assetID
             )
-            guard let token else {
-                throw SimulationError.missingApprovalToken
-            }
             switch approve.amount {
             case .unlimited:
-                row = .web3Amount(
-                    caption: R.string.localizable.preauthorize_amount(),
-                    tokenAmount: nil,
-                    fiatMoneyAmount: nil,
-                    token: token
+                rows.append(
+                    .web3Amount(
+                        caption: R.string.localizable.preauthorize_amount(),
+                        content: .unlimited,
+                        token: token ?? approve,
+                        chain: token?.chain
+                    )
                 )
             case .limited(let value):
                 let tokenAmount = CurrencyFormatter.localizedString(
@@ -380,62 +367,92 @@ extension Web3TransferPreviewViewController {
                     format: .precision,
                     sign: .never
                 )
-                let fiatMoneyAmount = CurrencyFormatter.localizedString(
-                    from: value * token.decimalUSDPrice * Currency.current.decimalRate,
-                    format: .fiatMoney,
-                    sign: .never,
-                    symbol: .currencySymbol
-                )
-                row = .web3Amount(
-                    caption: R.string.localizable.preauthorize_amount(),
-                    tokenAmount: tokenAmount,
-                    fiatMoneyAmount: fiatMoneyAmount,
-                    token: token
+                let fiatMoneyAmount: String? = if let token {
+                    CurrencyFormatter.localizedString(
+                        from: value * token.decimalUSDPrice * Currency.current.decimalRate,
+                        format: .fiatMoney,
+                        sign: .never,
+                        symbol: .currencySymbol
+                    )
+                } else {
+                    nil
+                }
+                rows.append(
+                    .web3Amount(
+                        caption: R.string.localizable.preauthorize_amount(),
+                        content: .limited(token: tokenAmount, fiatMoney: fiatMoneyAmount),
+                        token: token ?? approve,
+                        chain: token?.chain
+                    )
                 )
             }
-        } else if !simulation.balanceChanges.isEmpty {
-            let changes = try RichBalanceChange.changes(
-                from: simulation.balanceChanges,
-                walletID: operation.walletID
-            )
-            if changes.count == 1 {
-                let amount = changes[0].amount
-                let token = changes[0].token
-                let tokenAmount = CurrencyFormatter.localizedString(
+        }
+        
+        let changes = simulation.balanceChanges ?? []
+        if changes.count == 1 {
+            let amount = Decimal(string: changes[0].amount, locale: .enUSPOSIX)
+            let tokenAmount = if let amount {
+                CurrencyFormatter.localizedString(
                     from: amount,
                     format: .precision,
                     sign: .never
                 )
-                let fiatMoneyAmount = CurrencyFormatter.localizedString(
+            } else {
+                changes[0].amount
+            }
+            
+            let token = Web3TokenDAO.shared.token(
+                walletID: operation.walletID,
+                assetID: changes[0].assetID
+            )
+            let fiatMoneyAmount: String? = if let token, let amount {
+                CurrencyFormatter.localizedString(
                     from: amount * token.decimalUSDPrice * Currency.current.decimalRate,
                     format: .fiatMoney,
                     sign: .never,
                     symbol: .currencySymbol
                 )
-                row = .web3Amount(
-                    caption: R.string.localizable.estimated_balance_change(),
-                    tokenAmount: tokenAmount,
-                    fiatMoneyAmount: fiatMoneyAmount,
-                    token: token
-                )
             } else {
-                let localizedChanges = changes.map { change in
-                    let amount = CurrencyFormatter.localizedString(
-                        from: change.amount,
+                nil
+            }
+            rows.append(
+                .web3Amount(
+                    caption: R.string.localizable.estimated_balance_change(),
+                    content: .limited(token: tokenAmount, fiatMoney: fiatMoneyAmount),
+                    token: token,
+                    chain: token?.chain
+                )
+            )
+        } else if changes.count > 1 {
+            let localizedChanges = changes.map { change in
+                let decimalAmount = Decimal(string: change.amount, locale: .enUSPOSIX)
+                let amount = if let decimalAmount {
+                    CurrencyFormatter.localizedString(
+                        from: decimalAmount,
                         format: .precision,
                         sign: .always,
-                        symbol: .custom(change.token.symbol)
+                        symbol: .custom(change.symbol)
                     )
-                    return (token: change.token, amount: amount)
+                } else {
+                    change.amount
                 }
-                row = .assetChanges(localizedChanges)
+                return (token: change, amount: amount)
             }
-        } else {
-            throw SimulationError.simulationFailure
+            rows.append(.assetChanges(localizedChanges))
         }
-        await MainActor.run {
-            self.replaceRow(at: index, with: row)
+        
+        if rows.isEmpty {
+            rows.append(
+                .web3Amount(
+                    caption: R.string.localizable.estimated_balance_change(),
+                    content: .decodingFailed,
+                    token: nil,
+                    chain: nil
+                )
+            )
         }
+        
+        return rows
     }
     
 }

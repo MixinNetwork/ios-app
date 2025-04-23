@@ -39,7 +39,8 @@ class EVMTransferOperation: Web3TransferOperation {
         walletID: String,
         fromAddress: String,
         transaction: EIP1559Transaction,
-        chain: Web3Chain
+        chain: Web3Chain,
+        hardcodedSimulation: TransactionSimulation?,
     ) throws {
         switch chain.specification {
         case .evm:
@@ -60,7 +61,8 @@ class EVMTransferOperation: Web3TransferOperation {
             toAddress: transaction.destination.toChecksumAddress(),
             chain: chain,
             feeToken: feeToken,
-            isResendingTransactionAvailable: true
+            isResendingTransactionAvailable: true,
+            hardcodedSimulation: hardcodedSimulation,
         )
     }
     
@@ -69,6 +71,7 @@ class EVMTransferOperation: Web3TransferOperation {
         fromAddress: String,
         transaction: EVMTransactionPreview,
         chain: Web3Chain,
+        hardcodedSimulation: TransactionSimulation?,
     ) throws {
         let chainID: Int
         switch chain.specification {
@@ -99,32 +102,8 @@ class EVMTransferOperation: Web3TransferOperation {
             toAddress: transaction.to.toChecksumAddress(),
             chain: chain,
             feeToken: feeToken,
-            isResendingTransactionAvailable: true
-        )
-    }
-    
-    override func simulateTransaction() async throws -> TransactionSimulation {
-        guard let evmFee else {
-            throw RequestError.invalidFee
-        }
-        let nonce = try await self.loadNonce()
-        let pseudoTransaction = EIP1559Transaction(
-            chainID: transaction.chainID,
-            nonce: nonce,
-            maxPriorityFeePerGas: evmFee.maxPriorityFeePerGas,
-            maxFeePerGas: evmFee.maxFeePerGas,
-            gasLimit: evmFee.gasLimit,
-            destination: transaction.destination,
-            amount: transaction.amount,
-            data: transaction.data
-        )
-        guard let rawTransaction = pseudoTransaction.raw?.hexEncodedString() else {
-            throw RequestError.invalidTransaction
-        }
-        return try await RouteAPI.simulateEthereumTransaction(
-            chainID: mixinChainID,
-            from: fromAddress,
-            rawTransaction: "0x" + rawTransaction
+            isResendingTransactionAvailable: true,
+            hardcodedSimulation: hardcodedSimulation,
         )
     }
     
@@ -171,6 +150,31 @@ class EVMTransferOperation: Web3TransferOperation {
             self.state = .ready
         }
         return fee
+    }
+    
+    override func simulateTransaction() async throws -> TransactionSimulation {
+        guard let evmFee else {
+            throw RequestError.invalidFee
+        }
+        let nonce = try await self.loadNonce()
+        let pseudoTransaction = EIP1559Transaction(
+            chainID: transaction.chainID,
+            nonce: nonce,
+            maxPriorityFeePerGas: evmFee.maxPriorityFeePerGas,
+            maxFeePerGas: evmFee.maxFeePerGas,
+            gasLimit: evmFee.gasLimit,
+            destination: transaction.destination,
+            amount: transaction.amount,
+            data: transaction.data
+        )
+        guard let rawTransaction = pseudoTransaction.raw?.hexEncodedString() else {
+            throw RequestError.invalidTransaction
+        }
+        return try await RouteAPI.simulateEthereumTransaction(
+            chainID: mixinChainID,
+            from: fromAddress,
+            rawTransaction: "0x" + rawTransaction
+        )
     }
     
     override func start(pin: String) async throws {
@@ -325,6 +329,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
             fromAddress: fromAddress,
             transaction: transaction,
             chain: chain,
+            hardcodedSimulation: nil,
         )
     }
     
@@ -370,6 +375,7 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
             fromAddress: fromAddress,
             transaction: transaction,
             chain: chain,
+            hardcodedSimulation: nil,
         )
     }
     
@@ -385,8 +391,6 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
 
 // MARK: - User Initiated Transactions
 final class EVMTransferToAddressOperation: EVMTransferOperation {
-    
-    private let simulation: TransactionSimulation
     
     init(
         evmChainID: Int,
@@ -437,25 +441,17 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             )
         }
         
-        self.simulation = TransactionSimulation(
-            balanceChanges: [
-                BalanceChange(
-                    token: payment.token,
-                    amount: decimalAmount
-                )
-            ],
-            approves: nil
+        let simulation: TransactionSimulation = .balanceChange(
+            token: payment.token,
+            amount: decimalAmount
         )
         try super.init(
             walletID: payment.walletID,
             fromAddress: payment.fromAddress,
             transaction: transaction,
-            chain: payment.chain
+            chain: payment.chain,
+            hardcodedSimulation: simulation
         )
-    }
-    
-    override func simulateTransaction() async throws -> TransactionSimulation {
-        simulation
     }
     
     override func respond(hash: String) async throws {
@@ -481,7 +477,8 @@ class EVMOverrideOperation: EVMTransferOperation {
         walletID: String,
         fromAddress: String,
         transaction: EIP1559Transaction,
-        chain: Web3Chain
+        chain: Web3Chain,
+        hardcodedSimulation: TransactionSimulation?,
     ) throws {
         guard let nonce = transaction.nonce else {
             throw InitError.missingNonce
@@ -491,7 +488,8 @@ class EVMOverrideOperation: EVMTransferOperation {
             walletID: walletID,
             fromAddress: fromAddress,
             transaction: transaction,
-            chain: chain
+            chain: chain,
+            hardcodedSimulation: hardcodedSimulation
         )
     }
     
@@ -511,11 +509,26 @@ class EVMOverrideOperation: EVMTransferOperation {
 
 final class EVMSpeedUpOperation: EVMOverrideOperation {
     
+    init(
+        walletID: String,
+        fromAddress: String,
+        transaction: EIP1559Transaction,
+        chain: Web3Chain,
+    ) throws {
+        try super.init(
+            walletID: walletID,
+            fromAddress: fromAddress,
+            transaction: transaction,
+            chain: chain,
+            hardcodedSimulation: nil
+        )
+    }
+    
 }
 
 final class EVMCancelOperation: EVMOverrideOperation {
     
-    override init(
+    init(
         walletID: String,
         fromAddress: String,
         transaction: EIP1559Transaction,
@@ -535,7 +548,8 @@ final class EVMCancelOperation: EVMOverrideOperation {
             walletID: walletID,
             fromAddress: fromAddress,
             transaction: emptyTransaction,
-            chain: chain
+            chain: chain,
+            hardcodedSimulation: .empty
         )
     }
     

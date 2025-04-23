@@ -34,14 +34,18 @@ final class MultipleAssetChangeCell: UITableViewCell {
         }
     }
     
-    func reloadData(changes: [(token: any OnChainToken, amount: String)]) {
+    func reloadData(changes: [(token: any Token, amount: String)]) {
         titleLabel.text = R.string.localizable.asset_changes().uppercased()
         loadRowViews(count: changes.count)
         for (i, change) in changes.enumerated() {
             let rowView = rowViews[i]
             rowView.iconView.setIcon(token: change.token)
             rowView.amountLabel.text = change.amount
-            rowView.networkLabel.text = change.token.chain?.name
+            if let token = change.token as? OnChainToken {
+                rowView.networkLabel.text = token.chain?.name
+            } else {
+                rowView.networkLabel.text = nil
+            }
             rowView.amountLabel.textColor = R.color.text()
         }
     }

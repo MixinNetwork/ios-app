@@ -3,12 +3,26 @@ import MixinServices
 
 struct TransactionSimulation {
     
-    let balanceChanges: [BalanceChange]
+    static let empty = TransactionSimulation(balanceChanges: nil, approves: nil)
+    
+    let balanceChanges: [BalanceChange]?
     let approves: [Approve]?
     
-    init(balanceChanges: [BalanceChange], approves: [Approve]?) {
+    private init(balanceChanges: [BalanceChange]?, approves: [Approve]?) {
         self.balanceChanges = balanceChanges
         self.approves = approves
+    }
+    
+    static func balanceChange(
+        token: Web3TokenItem,
+        amount: Decimal
+    ) -> TransactionSimulation {
+        TransactionSimulation(
+            balanceChanges: [
+                BalanceChange(token: token, amount: amount)
+            ],
+            approves: nil
+        )
     }
     
 }

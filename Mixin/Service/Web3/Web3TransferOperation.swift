@@ -24,6 +24,7 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
     let chain: Web3Chain
     let feeToken: Web3TokenItem
     let isResendingTransactionAvailable: Bool
+    let hardcodedSimulation: TransactionSimulation?
     
     @Published
     var state: State = .loading
@@ -32,7 +33,8 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
     init(
         walletID: String, fromAddress: String, toAddress: String,
         chain: Web3Chain, feeToken: Web3TokenItem,
-        isResendingTransactionAvailable: Bool
+        isResendingTransactionAvailable: Bool,
+        hardcodedSimulation: TransactionSimulation?
     ) {
         self.walletID = walletID
         self.fromAddress = fromAddress
@@ -40,14 +42,19 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
         self.chain = chain
         self.feeToken = feeToken
         self.isResendingTransactionAvailable = isResendingTransactionAvailable
-    }
-    
-    func simulateTransaction() async throws -> TransactionSimulation {
-        fatalError("Must override")
+        self.hardcodedSimulation = hardcodedSimulation
     }
     
     func loadFee() async throws -> Fee {
         fatalError("Must override")
+    }
+    
+    func simulateTransaction() async throws -> TransactionSimulation {
+        if let hardcodedSimulation {
+            return hardcodedSimulation
+        } else {
+            fatalError("Simulate txn if not hardcoded")
+        }
     }
     
     func start(pin: String) async throws {

@@ -123,6 +123,12 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.reloadRows(at: [indexPath], with: .none)
     }
     
+    func insertRow(_ row: Row, at index: Int) {
+        rows.insert(row, at: index)
+        let indexPath = IndexPath(row: index, section: 0)
+        tableView.insertRows(at: [indexPath], with: .none)
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRow row: Row) {
         
     }
@@ -243,10 +249,10 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.captionLabel.text = caption.uppercased()
             cell.messageTextView.text = message
             return cell
-        case let .web3Amount(caption, tokenAmount, fiatMoneyAmount, token):
+        case let .web3Amount(caption, content, token, chain):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_amount_change, for: indexPath)!
             cell.captionLabel.text = caption.uppercased()
-            cell.reloadData(token: token, tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount)
+            cell.reloadData(caption: caption, content: content, token: token, chain: chain)
             return cell
         case let .selectableFee(speed, tokenAmount, fiatMoneyAmount):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
@@ -388,11 +394,11 @@ extension AuthenticationPreviewViewController {
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)
         case web3Message(caption: String, message: String)
-        case web3Amount(caption: String, tokenAmount: String?, fiatMoneyAmount: String?, token: Web3Token) // Nil amount for unlimited
+        case web3Amount(caption: String, content: Web3AmountChangeCell.Content, token: (any Token)?, chain: Chain?)
         case selectableFee(speed: String, tokenAmount: String, fiatMoneyAmount: String)
         case tokenAmount(token: MixinTokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case swapAssetChange(sendToken: SwapToken, sendAmount: String, receiveToken: SwapToken, receiveAmount: String)
-        case assetChanges([(token: any OnChainToken, amount: String)])
+        case assetChanges([(token: any Token, amount: String)])
         case safeMultisigAmount(token: MixinTokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case addressReceivers(MixinTokenItem, [SafeMultisigResponse.Safe.Recipient])
     }

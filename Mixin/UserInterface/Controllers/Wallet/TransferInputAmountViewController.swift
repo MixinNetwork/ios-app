@@ -4,10 +4,6 @@ import MixinServices
 
 final class TransferInputAmountViewController: InputAmountViewController {
     
-    override var token: any ValuableToken {
-        tokenItem
-    }
-    
     var reference: String?
     var redirection: URL?
     
@@ -48,7 +44,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
         self.tokenItem = tokenItem
         self.receiver = receiver
         self.note = note
-        super.init()
+        super.init(token: tokenItem, precision: MixinToken.precision)
     }
     
     required init?(coder: NSCoder) {

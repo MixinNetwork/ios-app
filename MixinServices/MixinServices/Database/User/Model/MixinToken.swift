@@ -67,6 +67,8 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
 
 extension MixinToken {
     
+    public static let precision = 8
+    
     public var isNFT: Bool {
         !(collectionHash?.isEmpty ?? true)
     }

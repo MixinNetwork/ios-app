@@ -4,10 +4,6 @@ import MixinServices
 
 final class Web3TransferInputAmountViewController: InputAmountViewController {
     
-    override var token: any ValuableToken {
-        payment.token
-    }
-    
     override var balanceSufficiency: BalanceSufficiency {
         guard let fee, let feeToken else {
             return .insufficient(nil)
@@ -44,7 +40,8 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
     
     init(payment: Web3SendingTokenToAddressPayment) {
         self.payment = payment
-        super.init()
+        let token = payment.token
+        super.init(token: token, precision: Int(token.precision))
     }
     
     required init?(coder: NSCoder) {

@@ -3,7 +3,7 @@ import MixinServices
 
 final class RichWeb3RawTransaction: Web3RawTransaction {
     
-    let simulateTransaction: TransactionSimulation
+    let simulateTransaction: TransactionSimulation?
     
     required init(from decoder: Decoder) throws {
         
@@ -12,7 +12,7 @@ final class RichWeb3RawTransaction: Web3RawTransaction {
         }
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.simulateTransaction = try container.decode(
+        self.simulateTransaction = try container.decodeIfPresent(
             TransactionSimulation.self,
             forKey: .simulateTransaction
         )
@@ -37,7 +37,7 @@ extension Web3Transaction {
         
         var receiveChanges: [BalanceChange] = []
         var sendChanges: [BalanceChange] = []
-        for change in simulation.balanceChanges {
+        for change in simulation?.balanceChanges ?? [] {
             if change.amount.hasPrefix("-") {
                 sendChanges.append(change)
             } else {
@@ -46,7 +46,7 @@ extension Web3Transaction {
         }
         
         let type: TransactionType
-        if let approves = simulation.approves, !approves.isEmpty {
+        if let approves = simulation?.approves, !approves.isEmpty {
             type = .approval
         } else {
             switch (sendChanges.isEmpty, receiveChanges.isEmpty) {
@@ -104,7 +104,7 @@ extension Web3Transaction {
         case .approval:
             senders = nil
             receivers = nil
-            approvals = simulation.approves?.map { approve in
+            approvals = simulation?.approves?.map { approve in
                 switch approve.amount {
                 case .unlimited:
                         .init(

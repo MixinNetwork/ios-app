@@ -12,9 +12,9 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
         ]),
         SettingsSection(rows: [
             SettingsRow(
-                title: "Minimum EVM Fee",
+                title: "Low EVM Fee",
                 accessory: .switch(
-                    isOn: Web3Diagnostic.usesMinimumEVMFeeOnce,
+                    isOn: Web3Diagnostic.usesLowEVMFeeOnce,
                     isEnabled: true
                 )
             )
@@ -41,7 +41,7 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
         guard case let .switch(isOn, _) = row.accessory else {
             return
         }
-        Web3Diagnostic.usesMinimumEVMFeeOnce = isOn
+        Web3Diagnostic.usesLowEVMFeeOnce = isOn
     }
     
 }

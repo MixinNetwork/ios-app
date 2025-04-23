@@ -380,8 +380,6 @@ extension RouteAPI {
             case maxPriorityFeePerGas = "max_priority_fee_per_gas"
         }
         
-        static let minimum = EthereumFee(gasLimit: "1", maxFeePerGas: "1", maxPriorityFeePerGas: "1")
-        
         let gasLimit: String
         let maxFeePerGas: String
         let maxPriorityFeePerGas: String

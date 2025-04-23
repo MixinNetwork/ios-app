@@ -39,7 +39,7 @@ class EVMTransferOperation: Web3TransferOperation {
         walletID: String,
         fromAddress: String,
         transaction: EIP1559Transaction,
-        chain: Web3Chain,
+        chain: Web3Chain
     ) throws {
         switch chain.specification {
         case .evm:
@@ -129,16 +129,12 @@ class EVMTransferOperation: Web3TransferOperation {
     }
     
     override func loadFee() async throws -> Fee {
-        let rawFee = if await Web3Diagnostic.usesMinimumEVMFeeOnce {
-            RouteAPI.EthereumFee.minimum
-        } else {
-            try await RouteAPI.estimatedEthereumFee(
-                mixinChainID: mixinChainID,
-                hexData: transaction.data?.hexEncodedString(),
-                from: fromAddress,
-                to: toAddress
-            )
-        }
+        let rawFee = try await RouteAPI.estimatedEthereumFee(
+            mixinChainID: mixinChainID,
+            hexData: transaction.data?.hexEncodedString(),
+            from: fromAddress,
+            to: toAddress
+        )
         Logger.web3.info(category: "EVMTransfer", message: "Using limit: \(rawFee.gasLimit), mfpg: \(rawFee.maxFeePerGas), mpfpg: \(rawFee.maxPriorityFeePerGas)")
         guard
             let gasLimit = BigUInt(rawFee.gasLimit),
@@ -148,12 +144,23 @@ class EVMTransferOperation: Web3TransferOperation {
         else {
             throw RequestError.invalidFee
         }
-        let evmFee = EVMFee(
-            gasLimit: gasLimit,
-            maxFeePerGas: maxFeePerGas,
-            maxPriorityFeePerGas: maxPriorityFeePerGas
-        )
-        let tokenCount = weiCount * .wei
+        let evmFee: EVMFee
+        let tokenCount: Decimal
+        if await Web3Diagnostic.usesLowEVMFeeOnce {
+            evmFee = EVMFee(
+                gasLimit: gasLimit / 3,
+                maxFeePerGas: maxFeePerGas / 3,
+                maxPriorityFeePerGas: maxPriorityFeePerGas / 3
+            )
+            tokenCount = weiCount * .wei / 3
+        } else {
+            evmFee = EVMFee(
+                gasLimit: gasLimit,
+                maxFeePerGas: maxFeePerGas,
+                maxPriorityFeePerGas: maxPriorityFeePerGas
+            )
+            tokenCount = weiCount * .wei
+        }
         let fee = Fee(
             token: tokenCount,
             fiatMoney: tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
@@ -285,7 +292,7 @@ class EVMTransferOperation: Web3TransferOperation {
             await MainActor.run {
                 self.state = .success
                 self.hasTransactionSent = true
-                Web3Diagnostic.usesMinimumEVMFeeOnce = false
+                Web3Diagnostic.usesLowEVMFeeOnce = false
             }
         } catch {
             Logger.web3.error(category: "EVMTransfer", message: "Send: \(error)")

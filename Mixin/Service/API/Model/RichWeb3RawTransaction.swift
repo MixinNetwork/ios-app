@@ -38,7 +38,9 @@ extension Web3Transaction {
         var receiveChanges: [BalanceChange] = []
         var sendChanges: [BalanceChange] = []
         for change in simulation?.balanceChanges ?? [] {
-            if change.amount.hasPrefix("-") {
+            let amount = change.amount
+            let isSending = amount.hasPrefix("-") || amount == "0"
+            if isSending {
                 sendChanges.append(change)
             } else {
                 receiveChanges.append(change)
@@ -77,9 +79,14 @@ extension Web3Transaction {
             approvals = nil
         case .transferOut:
             senders = sendChanges.map { change in
-                Web3Transaction.Sender(
+                let amount = if change.amount.hasPrefix("-") {
+                    String(change.amount.dropFirst())
+                } else {
+                    change.amount
+                }
+                return Web3Transaction.Sender(
                     assetID: change.assetID,
-                    amount: String(change.amount.dropFirst()),
+                    amount: amount,
                     from: nil
                 )
             }
@@ -87,9 +94,14 @@ extension Web3Transaction {
             approvals = nil
         case .swap:
             senders = sendChanges.map { change in
-                Web3Transaction.Sender(
+                let amount = if change.amount.hasPrefix("-") {
+                    String(change.amount.dropFirst())
+                } else {
+                    change.amount
+                }
+                return Web3Transaction.Sender(
                     assetID: change.assetID,
-                    amount: String(change.amount.dropFirst()),
+                    amount: amount,
                     from: nil
                 )
             }
@@ -107,19 +119,19 @@ extension Web3Transaction {
             approvals = simulation?.approves?.map { approve in
                 switch approve.amount {
                 case .unlimited:
-                        .init(
-                            assetID: approve.assetID,
-                            amount: "",
-                            to: approve.spender,
-                            approvalType: .unlimited
-                        )
+                    Approval(
+                        assetID: approve.assetID,
+                        amount: "",
+                        to: approve.spender,
+                        approvalType: .unlimited
+                    )
                 case .limited(let value):
-                        .init(
-                            assetID: approve.assetID,
-                            amount: TokenAmountFormatter.string(from: value),
-                            to: approve.spender,
-                            approvalType: .other
-                        )
+                    Approval(
+                        assetID: approve.assetID,
+                        amount: TokenAmountFormatter.string(from: value),
+                        to: approve.spender,
+                        approvalType: .other
+                    )
                 }
             }
         case .unknown:

@@ -13,6 +13,7 @@ public struct CurrencyFormatter {
         case always
         case never
         case whenNegative
+        case whenNotZero
     }
     
     public enum Symbol {
@@ -68,6 +69,7 @@ public struct CurrencyFormatter {
     
     public static func localizedString(from decimal: Decimal, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String {
         let number = NSDecimalNumber(decimal: decimal)
+        let isNumberZero = decimal.isZero
         let symbolPrefix: String? = switch symbol {
         case .currencySymbol:
             Currency.current.symbol
@@ -79,10 +81,10 @@ public struct CurrencyFormatter {
         
         switch format {
         case .precision:
-            setSignBehavior(sign, symbolPrefix: symbolPrefix, for: precisionFormatter)
+            precisionFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
             str = precisionFormatter.string(from: number) ?? ""
         case .pretty:
-            setSignBehavior(sign, symbolPrefix: symbolPrefix, for: prettyFormatter)
+            prettyFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
             let numberOfFractionalDigits = decimal.numberOfSignificantFractionalDigits
             let integralPart = number.rounding(accordingToBehavior: roundToIntegerBehavior).doubleValue
             if integralPart == 0 {
@@ -95,14 +97,14 @@ public struct CurrencyFormatter {
             }
             str = prettyFormatter.string(from: number) ?? ""
         case .fiatMoney:
-            setSignBehavior(sign, symbolPrefix: symbolPrefix, for: fiatMoneyFormatter)
+            fiatMoneyFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
             str = fiatMoneyFormatter.string(from: number) ?? ""
         case .fiatMoneyPrice:
             if abs(decimal) < 1 {
-                setSignBehavior(sign, symbolPrefix: symbolPrefix, for: precisionFormatter)
+                precisionFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
                 str = precisionFormatter.string(from: number) ?? ""
             } else {
-                setSignBehavior(sign, symbolPrefix: symbolPrefix, for: fiatMoneyFormatter)
+                fiatMoneyFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
                 str = fiatMoneyFormatter.string(from: number) ?? ""
             }
         }
@@ -124,25 +126,37 @@ public struct CurrencyFormatter {
         return str
     }
     
-    private static func setSignBehavior(
-        _ sign: SignBehavior,
+}
+
+fileprivate extension NumberFormatter {
+    
+    func setSignBehavior(
+        _ behavior: CurrencyFormatter.SignBehavior,
         symbolPrefix: String?,
-        for formatter: NumberFormatter
+        isNumberZero: Bool
     ) {
-        switch sign {
+        switch behavior {
         case .always:
-            formatter.positivePrefix = formatter.plusSign
-            formatter.negativePrefix = formatter.minusSign
+            positivePrefix = plusSign
+            negativePrefix = minusSign
         case .never:
-            formatter.positivePrefix = ""
-            formatter.negativePrefix = ""
+            positivePrefix = ""
+            negativePrefix = ""
         case .whenNegative:
-            formatter.positivePrefix = ""
-            formatter.negativePrefix = formatter.minusSign
+            positivePrefix = ""
+            negativePrefix = minusSign
+        case .whenNotZero:
+            if isNumberZero {
+                positivePrefix = ""
+                negativePrefix = ""
+            } else {
+                positivePrefix = plusSign
+                negativePrefix = minusSign
+            }
         }
         if let prefix = symbolPrefix {
-            formatter.positivePrefix = formatter.positivePrefix + prefix
-            formatter.negativePrefix = formatter.negativePrefix + prefix
+            positivePrefix += prefix
+            negativePrefix += prefix
         }
     }
     

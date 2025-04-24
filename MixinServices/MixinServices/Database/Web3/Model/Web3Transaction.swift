@@ -82,7 +82,7 @@ public class Web3Transaction: Codable, Identifiable {
         return CurrencyFormatter.localizedString(
             from: amount,
             format: .precision,
-            sign: .always
+            sign: .whenNotZero
         )
     }()
     

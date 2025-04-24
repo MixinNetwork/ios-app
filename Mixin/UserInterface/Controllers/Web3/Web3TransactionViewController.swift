@@ -380,18 +380,19 @@ extension Web3TransactionViewController {
             } else {
                 simpleHeaderView.symbolLabel.text = nil
             }
-            switch transaction.status {
-            case .success:
+            let isAmountZero = transaction.directionalTransferAmount?.isZero ?? false
+            simpleHeaderView.amountLabel.textColor = switch transaction.status {
+            case .success where !isAmountZero:
                 switch transaction.transactionType.knownCase {
                 case .transferIn:
-                    simpleHeaderView.amountLabel.textColor = R.color.market_green()
+                    R.color.market_green()
                 case .transferOut:
-                    simpleHeaderView.amountLabel.textColor = R.color.market_red()
+                    R.color.market_red()
                 default:
-                    break
+                    R.color.text_tertiary()
                 }
-            case .failed, .pending, .notFound:
-                simpleHeaderView.amountLabel.textColor = R.color.text_tertiary()
+            default:
+                R.color.text_tertiary()
             }
         case .none, .unknown:
             complexHeaderView.iconView.image = R.image.transaction_type_unknown()
@@ -410,7 +411,7 @@ extension Web3TransactionViewController {
                 simpleHeaderView.amountLabel.text = CurrencyFormatter.localizedString(
                     from: amount,
                     format: .precision,
-                    sign: .always
+                    sign: .whenNotZero
                 )
             } else {
                 simpleHeaderView.amountLabel.text = nil

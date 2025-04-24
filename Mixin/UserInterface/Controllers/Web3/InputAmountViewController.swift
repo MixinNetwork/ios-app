@@ -64,6 +64,15 @@ class InputAmountViewController: UIViewController {
     
     private weak var clearInputTimer: Timer?
     
+    private lazy var tokenAmountRoundingHandler = NSDecimalNumberHandler(
+        roundingMode: .plain,
+        scale: Int16(tokenPrecision),
+        raiseOnExactness: false,
+        raiseOnOverflow: false,
+        raiseOnUnderflow: false,
+        raiseOnDivideByZero: false
+    )
+    
     private var accumulator: DecimalAccumulator {
         didSet {
             guard isViewLoaded else {
@@ -364,7 +373,9 @@ extension InputAmountViewController {
             calculatedValueLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencyCode)
             inputAmountString.append(" " + token.symbol)
         case .byFiatMoney:
-            tokenAmount = inputAmount / price
+            tokenAmount = NSDecimalNumber(decimal: inputAmount / price)
+                .rounding(accordingToBehavior: tokenAmountRoundingHandler)
+                .decimalValue
             fiatMoneyAmount = inputAmount
             calculatedValueLabel.text = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
             inputAmountString.append(" " + Currency.current.code)

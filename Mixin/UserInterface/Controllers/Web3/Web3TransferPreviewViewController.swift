@@ -54,9 +54,7 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
                     imageView.sd_setImage(with: operation.session.iconURL)
                 } else {
                     imageView.image = switch proposer {
-                    case .dapp, .none:
-                        R.image.unknown_session()
-                    case .web3ToMixinWallet, .web3ToAddress:
+                    case .dapp, .none, .web3ToMixinWallet, .web3ToAddress:
                         R.image.web3_sign_transfer()
                     case .speedUp:
                         R.image.speedup_transaction()

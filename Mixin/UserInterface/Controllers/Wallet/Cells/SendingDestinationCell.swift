@@ -59,7 +59,7 @@ final class SendingDestinationCell: UITableViewCell {
                 imageView.contentMode = .scaleAspectFit
                 titleStackView.addArrangedSubview(imageView)
                 imageView.snp.makeConstraints { make in
-                    make.width.height.equalTo(16)
+                    make.width.height.equalTo(18)
                 }
                 self.privacyShieldImageView = imageView
             }

@@ -220,7 +220,7 @@
 "cancel" = "取消";
 "cancel_floating" = "取消浮窗";
 "cancel_transaction" = "取消交易";
-"cancel_transaction_description" = "如果交易已有進展，可能無法取消";
+"cancel_transaction_description" = "如果交易已接近完成，可能無法取消";
 "canceled" = "已取消";
 "canceled_by_caller" = "對方已取消";
 "cant_receive_the_code" = "接收不到驗證碼？";
@@ -1221,7 +1221,7 @@
 "sort_by_value" = "按價值排序";
 "speed_up" = "加速";
 "speed_up_transaction" = "加速交易";
-"speed_up_transaction_description" = "如果交易已有進展，可能無法加速";
+"speed_up_transaction_description" = "如果交易已接近完成，可能無法加速";
 "start" = "開始";
 "start_backup" = "開始備份";
 "start_messaging" = "開始聊天";

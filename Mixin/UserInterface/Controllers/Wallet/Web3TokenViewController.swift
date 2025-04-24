@@ -40,10 +40,14 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         )
         
         reloadSnapshots()
-        let reviewPendingTransactions = ReviewPendingWeb3TransactionJob()
-        ConcurrentJobQueue.shared.addJob(job: reviewPendingTransactions)
-        let syncTransactions = SyncWeb3TransactionJob(walletID: token.walletID)
-        ConcurrentJobQueue.shared.addJob(job: syncTransactions)
+        let jobs = [
+            SyncWeb3TransactionJob(walletID: token.walletID),
+            ReviewPendingWeb3RawTransactionJob(),
+            ReviewPendingWeb3TransactionJob(walletID: token.walletID),
+        ]
+        for job in jobs {
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
     }
     
     override func send() {

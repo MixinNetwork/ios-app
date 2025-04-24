@@ -84,14 +84,15 @@ final class ClassicWalletViewController: WalletViewController {
     }
     
     @objc private func reloadTokensFromRemote() {
-        let syncTokens = RefreshWeb3TokenJob(walletID: walletID)
-        ConcurrentJobQueue.shared.addJob(job: syncTokens)
-        
-        let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
-        ConcurrentJobQueue.shared.addJob(job: syncTransactions)
-        
-        let syncPendingTransactions = ReviewPendingWeb3TransactionJob()
-        ConcurrentJobQueue.shared.addJob(job: syncPendingTransactions)
+        let jobs = [
+            RefreshWeb3TokenJob(walletID: walletID),
+            SyncWeb3TransactionJob(walletID: walletID),
+            ReviewPendingWeb3RawTransactionJob(),
+            ReviewPendingWeb3TransactionJob(walletID: walletID),
+        ]
+        for job in jobs {
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
     }
     
     @objc private func reloadDataIfWalletMatch(_ notification: Notification) {

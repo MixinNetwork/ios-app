@@ -34,8 +34,7 @@ final class MultipleAssetChangeCell: UITableViewCell {
         }
     }
     
-    func reloadData(changes: [(token: any Token, amount: String)]) {
-        titleLabel.text = R.string.localizable.asset_changes().uppercased()
+    func reloadData(changes: [StyledAssetChange]) {
         loadRowViews(count: changes.count)
         for (i, change) in changes.enumerated() {
             let rowView = rowViews[i]
@@ -46,31 +45,15 @@ final class MultipleAssetChangeCell: UITableViewCell {
             } else {
                 rowView.networkLabel.text = nil
             }
-            rowView.amountLabel.textColor = R.color.text()
+            rowView.amountLabel.textColor = switch change.amountStyle {
+            case .income:
+                R.color.market_green()
+            case .outcome:
+                R.color.market_red()
+            case .plain:
+                R.color.text()
+            }
         }
-    }
-    
-    func reloadData(
-        sendToken: SwapToken,
-        sendAmount: String,
-        receiveToken: SwapToken,
-        receiveAmount: String
-    ) {
-        titleLabel.text = R.string.localizable.asset_changes_estimate().uppercased()
-        
-        loadRowViews(count: 2)
-        let sendingView = rowViews[0]
-        let receivingView = rowViews[1]
-        
-        receivingView.iconView.setIcon(token: receiveToken)
-        receivingView.amountLabel.text = receiveAmount
-        receivingView.networkLabel.text = receiveToken.chain.name
-        receivingView.amountLabel.textColor = R.color.market_green()
-        
-        sendingView.iconView.setIcon(token: sendToken)
-        sendingView.amountLabel.text = sendAmount
-        sendingView.networkLabel.text = sendToken.chain.name
-        sendingView.amountLabel.textColor = R.color.text()
     }
     
     func reloadData(

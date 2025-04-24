@@ -1145,6 +1145,7 @@
 		94C5BDD62D685FCD0012F840 /* WalletCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C5BDD42D685FCD0012F840 /* WalletCell.xib */; };
 		94C5BDD82D6865540012F840 /* FiatMoneyValueAttributedStringBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C5BDD72D68653D0012F840 /* FiatMoneyValueAttributedStringBuilder.swift */; };
 		94C5BDEC2D687B760012F840 /* WalletContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C5BDEB2D687B710012F840 /* WalletContainerViewController.swift */; };
+		94C5EE892DBA63C800FFEE91 /* StyledAssetChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C5EE882DBA63C400FFEE91 /* StyledAssetChange.swift */; };
 		94C688B728978BCD00C69537 /* TIPDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C688B628978BCD00C69537 /* TIPDiagnosticViewController.swift */; };
 		94C6987B2B23257B002377EA /* PaymentPrecondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C6987A2B23257B002377EA /* PaymentPrecondition.swift */; };
 		94C6AA09280D35990011AB02 /* AttachmentDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */; };
@@ -2692,6 +2693,7 @@
 		94C5BDD42D685FCD0012F840 /* WalletCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletCell.xib; sourceTree = "<group>"; };
 		94C5BDD72D68653D0012F840 /* FiatMoneyValueAttributedStringBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatMoneyValueAttributedStringBuilder.swift; sourceTree = "<group>"; };
 		94C5BDEB2D687B710012F840 /* WalletContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletContainerViewController.swift; sourceTree = "<group>"; };
+		94C5EE882DBA63C400FFEE91 /* StyledAssetChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledAssetChange.swift; sourceTree = "<group>"; };
 		94C688B628978BCD00C69537 /* TIPDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94C6987A2B23257B002377EA /* PaymentPrecondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPrecondition.swift; sourceTree = "<group>"; };
 		94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDiagnosticViewController.swift; sourceTree = "<group>"; };
@@ -3232,6 +3234,7 @@
 				9489249B2D573BA000D9BCCB /* AddressValidator.swift */,
 				94C5BDD72D68653D0012F840 /* FiatMoneyValueAttributedStringBuilder.swift */,
 				945D480F2D8956000093E30D /* WalletSummary.swift */,
+				94C5EE882DBA63C400FFEE91 /* StyledAssetChange.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -7300,6 +7303,7 @@
 				7B37B16323ED483D00590215 /* GalleryTransitionFromNonQuotingMessageCellView.swift in Sources */,
 				7B40207E215B7046008FF42E /* AttachmentExpirationHintingMessageCell.swift in Sources */,
 				94ED08B62B5FB1C300493312 /* ExploreActionCell.swift in Sources */,
+				94C5EE892DBA63C800FFEE91 /* StyledAssetChange.swift in Sources */,
 				7C8FA8F42768909300855AFD /* AccountSettingViewController.swift in Sources */,
 				7B78B2461FF2170400371632 /* InviteLinkViewController.swift in Sources */,
 				94E533D22D82B52E0008DC76 /* SnapshotTableHeaderView.swift in Sources */,

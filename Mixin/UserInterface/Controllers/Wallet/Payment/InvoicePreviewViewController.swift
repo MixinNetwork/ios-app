@@ -49,7 +49,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
             .info(caption: .totalAmount, content: totalFiatMoneyAmount),
         ]
         
-        let changes: [(token: MixinTokenItem, amount: String)] = operation.transactions.compactMap { item in
+        let changes: [StyledAssetChange] = operation.transactions.compactMap { item in
             if item.entry.isStorage {
                 return nil
             } else {
@@ -59,10 +59,14 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
                     sign: .always,
                     symbol: .custom(item.token.symbol)
                 )
-                return (token: item.token, amount: amount)
+                return StyledAssetChange(
+                    token: item.token,
+                    amount: amount,
+                    amountStyle: .plain
+                )
             }
         }
-        rows.append(.assetChanges(changes))
+        rows.append(.assetChanges(estimated: false, changes: changes))
         
         let senderThreshold: Int32?
         switch operation.destination {

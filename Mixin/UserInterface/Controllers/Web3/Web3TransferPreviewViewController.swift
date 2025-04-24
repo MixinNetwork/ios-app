@@ -422,7 +422,7 @@ extension Web3TransferPreviewViewController {
                 )
             )
         } else if changes.count > 1 {
-            let localizedChanges = changes.map { change in
+            let styledChanges: [StyledAssetChange] = changes.map { change in
                 let decimalAmount = Decimal(string: change.amount, locale: .enUSPOSIX)
                 let amount = if let decimalAmount {
                     CurrencyFormatter.localizedString(
@@ -434,9 +434,24 @@ extension Web3TransferPreviewViewController {
                 } else {
                     change.amount
                 }
-                return (token: change, amount: amount)
+                let style: StyledAssetChange.AmountStyle = if let decimalAmount {
+                    if decimalAmount > 0 {
+                        .income
+                    } else if decimalAmount == 0 {
+                        .plain
+                    } else {
+                        .outcome
+                    }
+                } else {
+                    .plain
+                }
+                return StyledAssetChange(
+                    token: change,
+                    amount: amount,
+                    amountStyle: style
+                )
             }
-            rows.append(.assetChanges(localizedChanges))
+            rows.append(.assetChanges(estimated: true, changes: styledChanges))
         }
         
         if rows.isEmpty {

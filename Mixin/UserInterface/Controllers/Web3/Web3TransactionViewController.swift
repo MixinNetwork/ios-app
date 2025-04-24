@@ -68,13 +68,21 @@ extension Web3TransactionViewController: PillActionView.Delegate {
             guard let operation = speedUpOperation else {
                 return
             }
-            let preview = Web3TransferPreviewViewController(operation: operation, proposer: .speedUp)
+            let preview = Web3TransferPreviewViewController(
+                operation: operation,
+                proposer: .speedUp(sender: self)
+            )
+            preview.manipulateNavigationStackOnFinished = true
             present(preview, animated: true)
         case .cancel:
             guard let operation = cancelOperation else {
                 return
             }
-            let preview = Web3TransferPreviewViewController(operation: operation, proposer: .cancel)
+            let preview = Web3TransferPreviewViewController(
+                operation: operation,
+                proposer: .cancel(sender: self)
+            )
+            preview.manipulateNavigationStackOnFinished = true
             present(preview, animated: true)
         }
     }
@@ -521,6 +529,14 @@ extension Web3TransactionViewController {
                     self.layoutTableHeaderView()
                     self.tableView.tableHeaderView = headerView
                 }
+            }
+        } else {
+            self.speedUpOperation = nil
+            self.cancelOperation = nil
+            if let headerView = tableView.tableHeaderView as? Web3TransactionTableHeaderView {
+                headerView.hideActionView()
+                self.layoutTableHeaderView()
+                self.tableView.tableHeaderView = headerView
             }
         }
     }

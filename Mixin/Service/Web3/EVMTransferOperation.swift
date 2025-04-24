@@ -435,7 +435,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
                 maxPriorityFeePerGas: nil,
                 maxFeePerGas: nil,
                 gasLimit: nil,
-                destination: EthereumAddress(payment.toAddress),
+                destination: EthereumAddress(payment.token.assetKey),
                 amount: 0,
                 data: data
             )

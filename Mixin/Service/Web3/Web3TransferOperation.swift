@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-class Web3TransferOperation: PaymentOperation {
+class Web3TransferOperation: SwapOperation.PaymentOperation {
     
     struct Fee {
         let token: Decimal
@@ -18,41 +18,43 @@ class Web3TransferOperation: PaymentOperation {
         case success
     }
     
-    enum BalanceChange {
-        case decodingFailed(rawTransaction: String)
-        case detailed(token: ValuableToken, amount: Decimal)
-    }
-    
+    let walletID: String
     let fromAddress: String
     let toAddress: String
     let chain: Web3Chain
-    let feeToken: MixinTokenItem // TODO: Replace it with Web3Token
-    let canDecodeBalanceChange: Bool
+    let feeToken: Web3TokenItem
     let isResendingTransactionAvailable: Bool
+    let hardcodedSimulation: TransactionSimulation?
     
     @Published
     var state: State = .loading
     var hasTransactionSent = false
     
     init(
-        fromAddress: String, toAddress: String, chain: Web3Chain,
-        feeToken: MixinTokenItem, canDecodeBalanceChange: Bool,
-        isResendingTransactionAvailable: Bool
+        walletID: String, fromAddress: String, toAddress: String,
+        chain: Web3Chain, feeToken: Web3TokenItem,
+        isResendingTransactionAvailable: Bool,
+        hardcodedSimulation: TransactionSimulation?
     ) {
+        self.walletID = walletID
         self.fromAddress = fromAddress
         self.toAddress = toAddress
         self.chain = chain
         self.feeToken = feeToken
-        self.canDecodeBalanceChange = canDecodeBalanceChange
         self.isResendingTransactionAvailable = isResendingTransactionAvailable
-    }
-    
-    func loadBalanceChange() async throws -> BalanceChange {
-        fatalError("Must override")
+        self.hardcodedSimulation = hardcodedSimulation
     }
     
     func loadFee() async throws -> Fee {
         fatalError("Must override")
+    }
+    
+    func simulateTransaction() async throws -> TransactionSimulation {
+        if let hardcodedSimulation {
+            return hardcodedSimulation
+        } else {
+            fatalError("Simulate txn if not hardcoded")
+        }
     }
     
     func start(pin: String) async throws {

@@ -96,10 +96,12 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
         switch transaction.transactionType.knownCase {
         case .transferIn:
             iconView.image = R.image.wallet.snapshot_deposit()
-            rowViews[0].amountLabel.textColor = receiveAmountColor
+            let isAmountZero = transaction.directionalTransferAmount?.isZero ?? false
+            rowViews[0].amountLabel.textColor = isAmountZero ? R.color.text_secondary()! : receiveAmountColor
         case .transferOut:
             iconView.image = R.image.wallet.snapshot_withdrawal()
-            rowViews[0].amountLabel.textColor = sendAmountColor
+            let isAmountZero = transaction.directionalTransferAmount?.isZero ?? false
+            rowViews[0].amountLabel.textColor = isAmountZero ? R.color.text_secondary()! : sendAmountColor
         case .swap:
             iconView.image = R.image.transaction_type_swap()
         case .approval:

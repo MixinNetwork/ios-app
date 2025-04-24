@@ -9,9 +9,9 @@ class MixinSwapViewController: SwapViewController {
     private let arbitraryReceiveAssetID: String?
     
     // Key is asset id
-    private var swappableTokens: OrderedDictionary<String, BalancedSwapToken> = [:]
+    fileprivate(set) var swappableTokens: OrderedDictionary<String, BalancedSwapToken> = [:]
     
-    private var sendToken: BalancedSwapToken? {
+    fileprivate(set) var sendToken: BalancedSwapToken? {
         didSet {
             if let sendToken {
                 self.updateSendView(style: .token(sendToken))
@@ -22,7 +22,7 @@ class MixinSwapViewController: SwapViewController {
         }
     }
     
-    private var receiveToken: BalancedSwapToken? {
+    fileprivate(set) var receiveToken: BalancedSwapToken? {
         didSet {
             if let receiveToken {
                 updateReceiveView(style: .token(receiveToken))
@@ -44,14 +44,6 @@ class MixinSwapViewController: SwapViewController {
     var source: RouteTokenSource {
         .mixin
     }
-    var sendTokenChainID: String? {
-        sendToken?.chain.chainID
-    }
-    var receiveTokenChainID: String? {
-        receiveToken?.chain.chainID
-    }
-    
-    let walletID: String?
     
     private lazy var userInputSimulationFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -63,10 +55,9 @@ class MixinSwapViewController: SwapViewController {
         return formatter
     }()
     
-    init(sendAssetID: String?, receiveAssetID: String?, walletID: String? = nil) {
+    init(sendAssetID: String?, receiveAssetID: String?) {
         self.arbitrarySendAssetID = sendAssetID
         self.arbitraryReceiveAssetID = receiveAssetID
-        self.walletID = walletID
         super.init()
     }
     
@@ -132,12 +123,7 @@ class MixinSwapViewController: SwapViewController {
     }
     
     override func changeSendToken(_ sender: Any) {
-        let selector = SwapTokenSelectorViewController(
-            recent: .send,
-            tokens: swappableTokens.values.sorted { $0.sortingValues > $1.sortingValues },
-            selectedAssetID: sendToken?.assetID,
-            walletID: walletID
-        )
+        let selector = getTokenSelectorViewController(recent: .send)
         selector.onSelected = { token in
             if token.assetID == self.receiveToken?.assetID {
                 self.swapSendingReceiving(sender)
@@ -148,6 +134,25 @@ class MixinSwapViewController: SwapViewController {
             }
         }
         present(selector, animated: true)
+    }
+    
+    func getTokenSelectorViewController(recent: SwapTokenSelectorViewController.Recent) -> SwapTokenSelectorViewController {
+        let tokens: [BalancedSwapToken]
+        let selectedAssetID: String?
+        switch recent {
+        case .send:
+            tokens = swappableTokens.values.sorted { $0.sortingValues > $1.sortingValues }
+            selectedAssetID = sendToken?.assetID
+        case .receive:
+            tokens = Array(swappableTokens.values)
+            selectedAssetID = receiveToken?.assetID
+        }
+        
+        return SwapTokenSelectorViewController(
+            recent: recent,
+            tokens: tokens,
+            selectedAssetID: selectedAssetID
+        )
     }
     
     override func depositSendToken(_ sender: Any) {
@@ -188,12 +193,7 @@ class MixinSwapViewController: SwapViewController {
     }
     
     override func changeReceiveToken(_ sender: Any) {
-        let selector = SwapTokenSelectorViewController(
-            recent: .receive,
-            tokens: Array(swappableTokens.values),
-            selectedAssetID: receiveToken?.assetID,
-            walletID: walletID
-        )
+        let selector = getTokenSelectorViewController(recent: .receive)
         selector.onSelected = { token in
             if token.assetID == self.sendToken?.assetID {
                 self.swapSendingReceiving(sender)
@@ -334,6 +334,10 @@ class MixinSwapViewController: SwapViewController {
             return nil
         }
     }
+    
+    func fillSwappableTokenBalance(swappableTokens: [SwapToken]) -> [BalancedSwapToken] {
+        BalancedSwapToken.fillMixinBalance(swappableTokens: swappableTokens)
+    }
 }
 
 extension MixinSwapViewController: HomeNavigationController.NavigationBarStyling {
@@ -452,10 +456,9 @@ extension MixinSwapViewController {
     }
     
     private func reloadData(swappableTokens: [SwapToken]) {
-        DispatchQueue.global().async { [weak self, arbitrarySendAssetID, arbitraryReceiveAssetID, walletID] in
+        DispatchQueue.global().async { [weak self, arbitrarySendAssetID, arbitraryReceiveAssetID] in
             let lastTokenIDs = Self.loadTokenIDs()
-            let tokens: OrderedDictionary<String, BalancedSwapToken> = BalancedSwapToken
-                .fillBalance(swappableTokens: swappableTokens, walletID: walletID)
+            let tokens: OrderedDictionary<String, BalancedSwapToken> = (self?.fillSwappableTokenBalance(swappableTokens: swappableTokens) ?? [])
                 .reduce(into: OrderedDictionary()) { result, token in
                     result[token.assetID] = token
                 }

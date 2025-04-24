@@ -3,9 +3,9 @@ import MixinServices
 
 class SwapPreviewViewController: AuthenticationPreviewViewController {
     
-    private let operation: SwapPaymentOperation
+    private let operation: SwapOperation
     
-    init(operation: SwapPaymentOperation, warnings: [String]) {
+    init(operation: SwapOperation, warnings: [String]) {
         self.operation = operation
         super.init(warnings: warnings)
     }
@@ -26,21 +26,30 @@ class SwapPreviewViewController: AuthenticationPreviewViewController {
         
         var rows: [Row]
         rows = [
-            .swapAssetChange(
-                sendToken: sendToken,
-                sendAmount: CurrencyFormatter.localizedString(
-                    from: -operation.sendAmount,
-                    format: .precision,
-                    sign: .always,
-                    symbol: .custom(sendToken.symbol)
-                ),
-                receiveToken: receiveToken,
-                receiveAmount: CurrencyFormatter.localizedString(
-                    from: operation.receiveAmount,
-                    format: .precision,
-                    sign: .always,
-                    symbol: .custom(receiveToken.symbol)
-                )
+            .assetChanges(
+                estimated: true,
+                changes: [
+                    StyledAssetChange(
+                        token: sendToken,
+                        amount: CurrencyFormatter.localizedString(
+                            from: -operation.sendAmount,
+                            format: .precision,
+                            sign: .always,
+                            symbol: .custom(sendToken.symbol)
+                        ),
+                        amountStyle: .plain
+                    ),
+                    StyledAssetChange(
+                        token: receiveToken,
+                        amount: CurrencyFormatter.localizedString(
+                            from: operation.receiveAmount,
+                            format: .precision,
+                            sign: .always,
+                            symbol: .custom(receiveToken.symbol)
+                        ),
+                        amountStyle: .income
+                    ),
+                ]
             ),
             .doubleLineInfo(
                 caption: .price,
@@ -59,7 +68,6 @@ class SwapPreviewViewController: AuthenticationPreviewViewController {
                     unit: .receive
                 )
             ),
-            
         ]
         
         switch operation.destination {

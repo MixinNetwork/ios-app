@@ -53,7 +53,11 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         guard let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: chain.chainID) else {
             return
         }
-        let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address.destination)
+        let payment = Web3SendingTokenPayment(
+            chain: chain,
+            token: token,
+            fromAddress: address.destination
+        )
         let selector = Web3TokenReceiverViewController(payment: payment)
         self.navigationController?.pushViewController(selector, animated: true)
     }

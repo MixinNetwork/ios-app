@@ -97,6 +97,7 @@
                 <outlet property="amountLabel" destination="vrx-ou-noo" id="k42-Id-cTN"/>
                 <outlet property="amountStackView" destination="N0L-Q5-Sz6" id="U8c-ad-4x2"/>
                 <outlet property="contentStackView" destination="qAO-lL-IVi" id="3uQ-mL-Npc"/>
+                <outlet property="contentStackViewBottomConstraint" destination="jyV-xk-FXD" id="YDz-gl-DyY"/>
                 <outlet property="iconView" destination="vd3-El-c92" id="uVi-dB-Qhb"/>
                 <outlet property="statusLabel" destination="xDC-ii-ZTq" id="177-yM-JUH"/>
                 <outlet property="symbolLabel" destination="v9x-Gb-AdY" id="5Uy-Xe-56k"/>

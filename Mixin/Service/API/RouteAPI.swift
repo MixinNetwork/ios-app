@@ -322,11 +322,40 @@ extension RouteAPI {
         )
     }
     
+    static func simulateEthereumTransaction(
+        chainID: String,
+        from: String,
+        rawTransaction: String
+    ) async throws -> TransactionSimulation {
+        try await request(
+            method: .post,
+            path: "/web3/transactions/simulate",
+            with: [
+                "chain_id": chainID,
+                "from": from,
+                "raw_transaction": rawTransaction,
+            ]
+        )
+    }
+    
+    static func simulateSolanaTransaction(
+        rawTransaction: String
+    ) async throws -> TransactionSimulation {
+        try await request(
+            method: .post,
+            path: "/web3/transactions/simulate",
+            with: [
+                "chain_id": ChainID.solana,
+                "raw_transaction": rawTransaction,
+            ]
+        )
+    }
+    
     static func postTransaction(
         chainID: String,
         from: String,
         rawTransaction: String
-    ) async throws -> Web3RawTransaction {
+    ) async throws -> RichWeb3RawTransaction {
         try await request(
             method: .post,
             path: "/web3/transactions",

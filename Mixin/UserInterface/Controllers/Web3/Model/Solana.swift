@@ -80,11 +80,6 @@ enum Solana {
 
 extension Solana {
     
-    struct BalanceChange {
-        let amount: Decimal
-        let assetKey: String
-    }
-    
     final class Transaction {
         
         enum Encoding {
@@ -93,7 +88,6 @@ extension Solana {
         }
         
         let rawTransaction: String
-        let change: BalanceChange?
         
         private let pointer: UnsafeRawPointer
         
@@ -120,7 +114,6 @@ extension Solana {
             case .base64URL:
                 transactionData.base64EncodedString()
             }
-            self.change = nil
             self.pointer = pointer
         }
         
@@ -130,8 +123,7 @@ extension Solana {
             createAssociatedTokenAccountForReceiver createAccount: Bool,
             amount: UInt64,
             priorityFee: PriorityFee?,
-            token: Web3Token,
-            change: BalanceChange
+            token: Web3Token
         ) throws {
             let isSendingSOL = token.chainID == ChainID.solana
                 && (token.assetKey == Web3Token.AssetKey.sol || token.assetKey == Web3Token.AssetKey.wrappedSOL)
@@ -165,7 +157,6 @@ extension Solana {
             }
             
             self.rawTransaction = rawTransaction
-            self.change = change
             self.pointer = transaction
         }
         

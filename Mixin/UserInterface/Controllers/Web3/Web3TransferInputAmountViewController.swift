@@ -4,10 +4,6 @@ import MixinServices
 
 final class Web3TransferInputAmountViewController: InputAmountViewController {
     
-    override var token: any ValuableToken {
-        payment.token
-    }
-    
     override var balanceSufficiency: BalanceSufficiency {
         guard let fee, let feeToken else {
             return .insufficient(nil)
@@ -40,11 +36,12 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
     private let payment: Web3SendingTokenToAddressPayment
     
     private var fee: Web3TransferOperation.Fee?
-    private var feeToken: MixinTokenItem?
+    private var feeToken: Web3TokenItem?
     
     init(payment: Web3SendingTokenToAddressPayment) {
         self.payment = payment
-        super.init()
+        let token = payment.token
+        super.init(token: token, precision: Int(token.precision))
     }
     
     required init?(coder: NSCoder) {
@@ -87,9 +84,13 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         DispatchQueue.global().async { [payment] in
             let initError: Error?
             do {
-                let operation = switch payment.chain.kind {
-                case .evm:
-                    try EVMTransferToAddressOperation(payment: payment, decimalAmount: amount)
+                let operation = switch payment.chain.specification {
+                case .evm(let chainID):
+                    try EVMTransferToAddressOperation(
+                        evmChainID: chainID,
+                        payment: payment,
+                        decimalAmount: amount
+                    )
                 case .solana:
                     try SolanaTransferToAddressOperation(payment: payment, decimalAmount: amount)
                 }
@@ -128,9 +129,13 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
     private func reloadFee(payment: Web3SendingTokenToAddressPayment) {
         Task {
             do {
-                let operation = switch payment.chain.kind {
-                case .evm:
-                    try EVMTransferToAddressOperation(payment: payment, decimalAmount: 0)
+                let operation = switch payment.chain.specification {
+                case .evm(let chainID):
+                    try EVMTransferToAddressOperation(
+                        evmChainID: chainID,
+                        payment: payment,
+                        decimalAmount: 0
+                    )
                 case .solana:
                     try SolanaTransferToAddressOperation(payment: payment, decimalAmount: 0)
                 }

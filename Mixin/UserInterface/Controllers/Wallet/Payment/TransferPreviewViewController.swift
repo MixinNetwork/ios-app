@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class TransferPreviewViewController: AuthenticationPreviewViewController {
+final class TransferPreviewViewController: AuthenticationPreviewViewController {
     
     var manipulateNavigationStackOnFinished = true
     

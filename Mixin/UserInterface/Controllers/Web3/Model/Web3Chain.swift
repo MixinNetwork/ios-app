@@ -150,13 +150,8 @@ extension Web3Chain {
 
 extension Web3Chain {
     
-    func feeToken() throws -> MixinTokenItem? {
-        if let token = TokenDAO.shared.tokenItem(assetID: feeTokenAssetID) {
-           return token
-        } else {
-            let token = try SafeAPI.assets(id: feeTokenAssetID).get()
-            return TokenDAO.shared.saveAndFetch(token: token)
-        }
+    func feeToken(walletID: String) throws -> Web3TokenItem? {
+        Web3TokenDAO.shared.token(walletID: walletID, assetID: feeTokenAssetID)
     }
     
 }

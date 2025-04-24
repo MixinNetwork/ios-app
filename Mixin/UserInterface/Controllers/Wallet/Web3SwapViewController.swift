@@ -5,8 +5,19 @@ import MixinServices
 
 final class Web3SwapViewController: MixinSwapViewController {
     
+    private let walletID: String
+    
     override var source: RouteTokenSource {
         return .web3
+    }
+    
+    init(sendAssetID: String?, receiveAssetID: String?, walletID: String) {
+        self.walletID = walletID
+        super.init(sendAssetID: sendAssetID, receiveAssetID: receiveAssetID)
+    }
+    
+    @MainActor required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func initTitleBar() {
@@ -22,11 +33,32 @@ final class Web3SwapViewController: MixinSwapViewController {
         ]
     }
     
-    override func depositSendToken(_ sender: Any) {
-        guard let walletID else {
-            return
+    override func fillSwappableTokenBalance(swappableTokens: [SwapToken]) -> [BalancedSwapToken] {
+        BalancedSwapToken.fillWeb3Balance(swappableTokens: swappableTokens, walletID: walletID)
+    }
+    
+    override func getTokenSelectorViewController(recent: SwapTokenSelectorViewController.Recent) -> SwapTokenSelectorViewController {
+        let tokens: [BalancedSwapToken]
+        let selectedAssetID: String?
+        switch recent {
+        case .send:
+            tokens = swappableTokens.values.sorted { $0.sortingValues > $1.sortingValues }
+            selectedAssetID = sendToken?.assetID
+        case .receive:
+            tokens = Array(swappableTokens.values)
+            selectedAssetID = receiveToken?.assetID
         }
-        guard let chainID = sendTokenChainID else {
+        
+        return Web3SwapTokenSelectorViewController(
+            recent: recent,
+            tokens: tokens,
+            selectedAssetID: selectedAssetID,
+            walletID: walletID
+        )
+    }
+    
+    override func depositSendToken(_ sender: Any) {
+        guard let chainID = sendToken?.chain.chainID else {
             return
         }
         guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: chainID) else {
@@ -41,9 +73,6 @@ final class Web3SwapViewController: MixinSwapViewController {
     }
     
     override func fetchBalancedSwapToken(assetID: String) -> BalancedSwapToken? {
-        guard let walletID else {
-            return nil
-        }
         guard let item = Web3TokenDAO.shared.token(walletID: walletID, assetID: assetID), let token = BalancedSwapToken(tokenItem: item) else {
             return nil
         }
@@ -54,10 +83,7 @@ final class Web3SwapViewController: MixinSwapViewController {
         guard let quote else {
             return
         }
-        guard let walletID else {
-            return
-        }
-        guard let sendTokenChainID, let receiveTokenChainID else {
+        guard let sendTokenChainID = sendToken?.chain.chainID, let receiveTokenChainID = receiveToken?.chain.chainID else {
             return
         }
         guard let receiveAddress = Web3AddressDAO.shared.address(walletID: walletID, chainID: receiveTokenChainID) else {
@@ -116,9 +142,13 @@ final class Web3SwapViewController: MixinSwapViewController {
                     )
                     
                     do {
-                        let operation = switch sendChain.kind {
-                        case .evm:
-                            try EVMTransferToAddressOperation(payment: addressPayment, decimalAmount: sendAmount)
+                        let operation = switch sendChain.specification {
+                        case .evm(let id):
+                            try EVMTransferToAddressOperation(
+                                evmChainID: id,
+                                payment: addressPayment,
+                                decimalAmount: sendAmount
+                            )
                         case .solana:
                             try SolanaTransferToAddressOperation(payment: addressPayment, decimalAmount: sendAmount)
                         }
@@ -130,20 +160,22 @@ final class Web3SwapViewController: MixinSwapViewController {
                             guard let homeContainer = UIApplication.homeContainerViewController else {
                                 return
                             }
-                            
-                            let destination = SwapPaymentOperation.Web3Destination(displayReceiver: displayReceiver,
-                                                                                   depositDestination: depositDestination,
-                                                                                   fee: fee,
-                                                                                   feeTokenSymbol: feeTokenSymbol,
-                                                                                   senderAddress: sendingAddress)
-                            let op = SwapPaymentOperation(operation: operation,
-                                                          sendToken: quote.sendToken,
-                                                          sendAmount: sendAmount,
-                                                          receiveToken: quote.receiveToken,
-                                                          receiveAmount: receiveAmount,
-                                                          destination: .web3(destination),
-                                                          memo: nil)
-                            
+                            let destination = SwapOperation.Web3Destination(
+                                displayReceiver: displayReceiver,
+                                depositDestination: depositDestination,
+                                fee: fee,
+                                feeTokenSymbol: feeTokenSymbol,
+                                senderAddress: sendingAddress
+                            )
+                            let op = SwapOperation(
+                                operation: operation,
+                                sendToken: quote.sendToken,
+                                sendAmount: sendAmount,
+                                receiveToken: quote.receiveToken,
+                                receiveAmount: receiveAmount,
+                                destination: .web3(destination),
+                                memo: nil
+                            )
                             let preview = SwapPreviewViewController(operation: op, warnings: [])
                             preview.onDismiss = {
                                 sender.isBusy = false

@@ -70,15 +70,13 @@ struct DecimalAccumulator {
         }
     }
     
-    init(intent: AmountIntent) {
-        switch intent {
-        case .byToken:
-            maximumIntegerDigits = 20
-            maximumFractionDigits = 8
-        case .byFiatMoney:
-            maximumIntegerDigits = 20
-            maximumFractionDigits = 2
-        }
+    init(precision: Int) {
+        self.maximumIntegerDigits = 38 - precision
+        self.maximumFractionDigits = precision
+    }
+    
+    static func fiatMoney() -> DecimalAccumulator {
+        DecimalAccumulator(precision: 2)
     }
     
     mutating func append(value: UInt8) {

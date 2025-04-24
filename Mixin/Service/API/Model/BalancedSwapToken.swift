@@ -51,7 +51,15 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
 
 extension BalancedSwapToken {
     
-    static func fillBalance(swappableTokens: [SwapToken], walletID: String? = nil) -> [BalancedSwapToken] {
+    static func fillMixinBalance(swappableTokens: [SwapToken]) -> [BalancedSwapToken] {
+        fillBalance(swappableTokens: swappableTokens, walletID: nil)
+    }
+    
+    static func fillWeb3Balance(swappableTokens: [SwapToken], walletID: String) -> [BalancedSwapToken] {
+        fillBalance(swappableTokens: swappableTokens, walletID: walletID)
+    }
+
+    private static func fillBalance(swappableTokens: [SwapToken], walletID: String?) -> [BalancedSwapToken] {
         let ids = swappableTokens.map(\.assetID)
         let tokenItems: [ValuableToken] = if let walletID {
             Web3TokenDAO.shared.tokens(walletID: walletID, ids: ids)

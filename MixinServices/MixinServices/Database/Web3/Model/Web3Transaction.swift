@@ -82,25 +82,24 @@ public class Web3Transaction: Codable, Identifiable {
         return CurrencyFormatter.localizedString(
             from: amount,
             format: .precision,
-            sign: .always
+            sign: .whenNotZero
         )
     }()
     
     public var allAssetIDs: Set<String> {
         let senderIDs = senders?.map(\.assetID) ?? []
         let receiverIDs = receivers?.map(\.assetID) ?? []
-        return Set(senderIDs + receiverIDs)
+        let approvalIDs = approvals?.map(\.assetID) ?? []
+        return Set(senderIDs + receiverIDs + approvalIDs)
     }
     
     public init(
         transactionHash: String, chainID: String, address: String,
-        transactionType: UnknownableEnum<Web3Transaction.TransactionType>,
-        status: Web3Transaction.Status, blockNumber: Int, fee: String,
-        senders: [Web3Transaction.Sender]?,
-        receivers: [Web3Transaction.Receiver]?,
-        approvals: [Web3Transaction.Approval]?, sendAssetID: String?,
-        receiveAssetID: String?, transactionAt: String, createdAt: String,
-        updatedAt: String
+        transactionType: UnknownableEnum<TransactionType>,
+        status: Status, blockNumber: Int, fee: String,
+        senders: [Sender]?, receivers: [Receiver]?, approvals: [Approval]?,
+        sendAssetID: String?, receiveAssetID: String?,
+        transactionAt: String, createdAt: String, updatedAt: String
     ) {
         self.transactionHash = transactionHash
         self.chainID = chainID
@@ -227,8 +226,15 @@ extension Web3Transaction {
         public lazy var localizedAmount = CurrencyFormatter.localizedString(
             from: decimalAmount,
             format: .precision,
-            sign: .always
+            sign: .never
         )
+        
+        public init(assetID: String, amount: String, to: String, approvalType: ApprovalType) {
+            self.assetID = assetID
+            self.amount = amount
+            self.to = to
+            self.approvalType = .known(approvalType)
+        }
         
     }
     

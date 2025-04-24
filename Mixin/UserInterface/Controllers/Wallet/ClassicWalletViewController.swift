@@ -218,7 +218,11 @@ extension ClassicWalletViewController: TokenActionView.Delegate {
                 guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: chain.chainID) else {
                     return
                 }
-                let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address.destination)
+                let payment = Web3SendingTokenPayment(
+                    chain: chain,
+                    token: token,
+                    fromAddress: address.destination
+                )
                 let selector = Web3TokenReceiverViewController(payment: payment)
                 self.navigationController?.pushViewController(selector, animated: true)
             }

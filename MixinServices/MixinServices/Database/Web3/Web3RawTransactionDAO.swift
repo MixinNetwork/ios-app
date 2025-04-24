@@ -5,6 +5,15 @@ public final class Web3RawTransactionDAO: Web3DAO {
     
     public static let shared = Web3RawTransactionDAO()
     
+    public func pendingRawTransaction(hash: String) -> Web3RawTransaction? {
+        db.select(with: """
+        SELECT *
+        FROM raw_transactions 
+        WHERE \(Web3RawTransaction.CodingKeys.state.rawValue) = 'pending'
+            AND hash = ?
+        """, arguments: [hash])
+    }
+    
     public func pendingRawTransactions() -> [Web3RawTransaction] {
         db.select(with: """
         SELECT *

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -25,7 +25,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R6q-hK-bip">
-                    <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                    <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="vam-yF-2Ud">
                             <rect key="frame" x="20" y="0.0" width="150.66666666666666" height="44"/>
@@ -49,7 +49,7 @@
                             </subviews>
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="100" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iOq-LV-dOd">
-                            <rect key="frame" x="10" y="0.0" width="180.66666666666666" height="44"/>
+                            <rect key="frame" x="10" y="0.0" width="168.66666666666666" height="44"/>
                             <color key="tintColor" name="icon_tint"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" image="hamburger"/>
@@ -59,7 +59,7 @@
                             </connections>
                         </button>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="5Tn-ww-jGC">
-                            <rect key="frame" x="285" y="0.0" width="98" height="44"/>
+                            <rect key="frame" x="231" y="0.0" width="152" height="44"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hK9-W1-AND">
                                     <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
@@ -75,8 +75,19 @@
                                         <action selector="searchAction:" destination="-1" eventType="touchUpInside" id="0Wz-gg-618"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d3R-VB-Y8L">
+                                <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JVH-zU-new">
                                     <rect key="frame" x="54" y="0.0" width="44" height="44"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="44" id="Nld-i1-NDC"/>
+                                    </constraints>
+                                    <color key="tintColor" name="icon_tint"/>
+                                    <state key="normal" image="ic_app_category_scan"/>
+                                    <connections>
+                                        <action selector="scanQRCode" destination="-1" eventType="touchUpInside" id="p9c-SS-BNC"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d3R-VB-Y8L">
+                                    <rect key="frame" x="108" y="0.0" width="44" height="44"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="44" id="Dpt-Xa-OFg"/>
                                     </constraints>
@@ -94,23 +105,23 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="iOq-LV-dOd" firstAttribute="trailing" secondItem="vam-yF-2Ud" secondAttribute="trailing" priority="750" constant="20" id="B7Y-tN-7W0"/>
+                        <constraint firstItem="iOq-LV-dOd" firstAttribute="trailing" secondItem="vam-yF-2Ud" secondAttribute="trailing" priority="750" constant="8" id="B7Y-tN-7W0"/>
                         <constraint firstAttribute="height" constant="44" id="BCn-OQ-huo"/>
                         <constraint firstItem="vam-yF-2Ud" firstAttribute="top" secondItem="R6q-hK-bip" secondAttribute="top" id="I4a-3O-FdC"/>
                         <constraint firstItem="5Tn-ww-jGC" firstAttribute="top" secondItem="R6q-hK-bip" secondAttribute="top" id="KzR-lI-ZFX"/>
                         <constraint firstAttribute="trailing" secondItem="5Tn-ww-jGC" secondAttribute="trailing" constant="10" id="Viz-VX-NL3"/>
                         <constraint firstAttribute="bottom" secondItem="vam-yF-2Ud" secondAttribute="bottom" id="YGf-l8-Dft"/>
                         <constraint firstItem="iOq-LV-dOd" firstAttribute="top" secondItem="R6q-hK-bip" secondAttribute="top" id="Zne-oP-W3v"/>
-                        <constraint firstItem="5Tn-ww-jGC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vam-yF-2Ud" secondAttribute="trailing" constant="20" id="eFQ-xQ-fiJ"/>
+                        <constraint firstItem="5Tn-ww-jGC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vam-yF-2Ud" secondAttribute="trailing" constant="8" id="eFQ-xQ-fiJ"/>
                         <constraint firstAttribute="bottom" secondItem="iOq-LV-dOd" secondAttribute="bottom" id="ecv-VL-HoG"/>
                         <constraint firstItem="vam-yF-2Ud" firstAttribute="leading" secondItem="R6q-hK-bip" secondAttribute="leading" constant="20" id="j5Y-Rl-uLh"/>
                         <constraint firstAttribute="bottom" secondItem="5Tn-ww-jGC" secondAttribute="bottom" id="r9W-uP-0yr"/>
-                        <constraint firstItem="5Tn-ww-jGC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iOq-LV-dOd" secondAttribute="trailing" constant="20" id="wsA-N6-0x3"/>
+                        <constraint firstItem="5Tn-ww-jGC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iOq-LV-dOd" secondAttribute="trailing" id="wsA-N6-0x3"/>
                         <constraint firstItem="iOq-LV-dOd" firstAttribute="leading" secondItem="R6q-hK-bip" secondAttribute="leading" constant="10" id="xuf-Gw-pLw"/>
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="sfJ-o7-04i">
-                    <rect key="frame" x="0.0" y="103" width="393" height="749"/>
+                    <rect key="frame" x="0.0" y="162" width="393" height="690"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <inset key="separatorInset" minX="70" minY="0.0" maxX="0.0" maxY="0.0"/>
                 </tableView>
@@ -131,6 +142,7 @@
     </objects>
     <resources>
         <image name="hamburger" width="24" height="24"/>
+        <image name="ic_app_category_scan" width="24" height="24"/>
         <image name="ic_title_more" width="24.333333969116211" height="24"/>
         <image name="ic_title_search" width="28" height="28"/>
         <namedColor name="background">

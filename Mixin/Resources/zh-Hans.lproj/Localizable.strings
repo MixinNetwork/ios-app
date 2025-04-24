@@ -893,6 +893,8 @@
 "pending_confirmation" = "%1$d/%2$d 区块确认数";
 "pending_confirmation_count" = "%1$d/%2$d 区块确认数";
 "pending_confirmations" = "%d/%d 区块确认数";
+"pending_transaction_one" = "有 1 笔交易处理中";
+"pending_transactions_count" = "有 %d 笔交易处理中";
 "permission_denied_camera_hint" = "Mixin 需要摄像头权限，请点击'设置'打开系统授权。";
 "permission_denied_microphone_hint" = "Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
 "permission_denied_network_hint" = "Mixin 需要无线数据权限，请点击'设置'打开系统授权。";
@@ -1277,7 +1279,7 @@
 "top_count" = "前 %d";
 "total" = "共计";
 "total_amount" = "总金额";
-"total_assets" = "资产合计";
+"total_balance" = "资产合计";
 "total_supply" = "总量";
 "touch_id" = "指纹";
 "track_not_found" = "Track 无效";
@@ -1287,13 +1289,11 @@
 "transaction_hash" = "交易哈希";
 "transaction_history" = "转账记录";
 "transaction_id" = "交易编号";
-"transaction_pending_confirmation" = "有 1 笔交易处理中";
 "transaction_rejected" = "拒绝成功";
 "transaction_request" = "请求转账";
 "transaction_type" = "交易类型";
 "transactions" = "转账记录";
 "transactions_cannot_be_deleted" = "转账记录不会被删除";
-"transactions_pending_confirmation" = "有 %d 笔交易处理中";
 "transcript" = "聊天记录";
 "transfer" = "转账";
 "transfer_amount_count_down" = "转账金额（%@）";

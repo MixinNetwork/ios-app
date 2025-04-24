@@ -893,6 +893,8 @@
 "pending_confirmation" = "%1$d/%2$d 承認";
 "pending_confirmation_count" = "%1$d/%2$d 承認";
 "pending_confirmations" = "%d/%d 承認";
+"pending_transaction_one" = "1 Pending Transaction";
+"pending_transactions_count" = "%d Pending Transactions";
 "permission_denied_camera_hint" = "設定からカメラの使用をMixinに許可してください";
 "permission_denied_microphone_hint" = "設定からマイクの使用をMixinに許可してください";
 "permission_denied_network_hint" = "設定からワイヤレスデータの使用をMixinに許可してください";
@@ -1277,7 +1279,7 @@
 "top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
-"total_assets" = "Total assets";
+"total_balance" = "Total Balance";
 "total_supply" = "Total Supply";
 "touch_id" = "指紋認証";
 "track_not_found" = "トラックが見つかりません";
@@ -1287,13 +1289,11 @@
 "transaction_hash" = "トランザクションハッシュ";
 "transaction_history" = "Transaction History";
 "transaction_id" = "トランザクションID";
-"transaction_pending_confirmation" = "1 Transaction Pending Confirmation";
 "transaction_rejected" = "Transaction Rejected";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "トランザクションタイプ";
 "transactions" = "もらった・あげたコイン💰";
 "transactions_cannot_be_deleted" = "トランザクション履歴を削除することはできません";
-"transactions_pending_confirmation" = "%d Transactions Pending Confirmation";
 "transcript" = "メッセージ履歴";
 "transfer" = "送金";
 "transfer_amount_count_down" = "送金金額(%@)";

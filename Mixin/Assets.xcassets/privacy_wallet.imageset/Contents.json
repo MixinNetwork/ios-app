@@ -1,18 +1,8 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "privacy_wallet@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "privacy_wallet@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "privacy_wallet.pdf",
+      "idiom" : "universal"
     }
   ],
   "info" : {

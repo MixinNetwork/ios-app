@@ -55,9 +55,12 @@ final class SendingDestinationCell: UITableViewCell {
             freeLabel?.removeFromSuperview()
             freeLabel = nil
             if privacyShieldImageView == nil {
-                let imageView = UIImageView()
-                imageView.image = R.image.privacy_wallet()
+                let imageView = UIImageView(image: R.image.privacy_wallet())
+                imageView.contentMode = .scaleAspectFit
                 titleStackView.addArrangedSubview(imageView)
+                imageView.snp.makeConstraints { make in
+                    make.width.height.equalTo(18)
+                }
                 self.privacyShieldImageView = imageView
             }
             titleStackView.spacing = 4

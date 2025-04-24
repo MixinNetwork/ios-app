@@ -893,6 +893,8 @@
 "pending_confirmation" = "%1$d/%2$d подтверждение";
 "pending_confirmation_count" = "%1$d/%2$d подтверждения";
 "pending_confirmations" = "%d/%d Подтверждения";
+"pending_transaction_one" = "1 Pending Transaction";
+"pending_transactions_count" = "%d Pending Transactions";
 "permission_denied_camera_hint" = "У Mixin нет разрешения на использование вашей камеры. Пожалуйста, нажмите Настройки, чтобы открыть системные настройки";
 "permission_denied_microphone_hint" = "У Mixin нет разрешения на использование вашего микрофона. Пожалуйста, нажмите Настройки, чтобы открыть системные настройки.";
 "permission_denied_network_hint" = "У Mixin нет разрешения на использование беспроводных данных. Пожалуйста, нажмите Настройки, чтобы открыть системные настройки";
@@ -1277,7 +1279,7 @@
 "top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
-"total_assets" = "Total assets";
+"total_balance" = "Total Balance";
 "total_supply" = "Total Supply";
 "touch_id" = "Сенсорный идентификатор";
 "track_not_found" = "Трек не найден";
@@ -1287,13 +1289,11 @@
 "transaction_hash" = "Хэш транзакции";
 "transaction_history" = "Transaction History";
 "transaction_id" = "ID транзакции";
-"transaction_pending_confirmation" = "1 Transaction Pending Confirmation";
 "transaction_rejected" = "Transaction Rejected";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Тип операции";
 "transactions" = "Транзакции";
 "transactions_cannot_be_deleted" = "Транзакции НЕ МОГУТ быть удалены";
-"transactions_pending_confirmation" = "%d Transactions Pending Confirmation";
 "transcript" = "Стенограмма";
 "transfer" = "Передача";
 "transfer_amount_count_down" = "Сумма перевода(%@)";

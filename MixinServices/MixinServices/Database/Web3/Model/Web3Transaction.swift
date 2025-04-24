@@ -89,7 +89,8 @@ public class Web3Transaction: Codable, Identifiable {
     public var allAssetIDs: Set<String> {
         let senderIDs = senders?.map(\.assetID) ?? []
         let receiverIDs = receivers?.map(\.assetID) ?? []
-        return Set(senderIDs + receiverIDs)
+        let approvalIDs = approvals?.map(\.assetID) ?? []
+        return Set(senderIDs + receiverIDs + approvalIDs)
     }
     
     public init(
@@ -225,7 +226,7 @@ extension Web3Transaction {
         public lazy var localizedAmount = CurrencyFormatter.localizedString(
             from: decimalAmount,
             format: .precision,
-            sign: .always
+            sign: .never
         )
         
         public init(assetID: String, amount: String, to: String, approvalType: ApprovalType) {

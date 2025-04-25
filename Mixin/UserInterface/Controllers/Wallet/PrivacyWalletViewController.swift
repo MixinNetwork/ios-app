@@ -75,7 +75,7 @@ final class PrivacyWalletViewController: WalletViewController {
                 let badge = BadgeDotView()
                 self.titleView.addSubview(badge)
                 badge.snp.makeConstraints { make in
-                    make.top.equalTo(self.walletSwitchImageView)
+                    make.centerY.equalTo(self.walletSwitchImageView.snp.centerY).offset(-8)
                     make.leading.equalTo(self.walletSwitchImageView.snp.trailing).offset(-2)
                 }
                 self.walletSwitchBadgeView = badge

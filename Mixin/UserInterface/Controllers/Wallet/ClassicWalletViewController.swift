@@ -6,6 +6,7 @@ final class ClassicWalletViewController: WalletViewController {
     private let walletID: String
     
     private var tokens: [Web3TokenItem] = []
+    private var reviewPendingTransactionJobID: String?
     
     init(walletID: String) {
         self.walletID = walletID
@@ -61,6 +62,25 @@ final class ClassicWalletViewController: WalletViewController {
         reloadTokensFromRemote()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let jobs = [
+            ReviewPendingWeb3RawTransactionJob(),
+            ReviewPendingWeb3TransactionJob(walletID: walletID),
+        ]
+        reviewPendingTransactionJobID = jobs[1].getJobId()
+        for job in jobs {
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let id = reviewPendingTransactionJobID {
+            ConcurrentJobQueue.shared.cancelJob(jobId: id)
+        }
+    }
+    
     override func moreAction(_ sender: Any) {
         let walletID = self.walletID
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -84,14 +104,13 @@ final class ClassicWalletViewController: WalletViewController {
     }
     
     @objc private func reloadTokensFromRemote() {
-        let syncTokens = RefreshWeb3TokenJob(walletID: walletID)
-        ConcurrentJobQueue.shared.addJob(job: syncTokens)
-        
-        let syncTransactions = SyncWeb3TransactionJob(walletID: walletID)
-        ConcurrentJobQueue.shared.addJob(job: syncTransactions)
-        
-        let syncPendingTransactions = ReviewPendingWeb3TransactionJob()
-        ConcurrentJobQueue.shared.addJob(job: syncPendingTransactions)
+        let jobs = [
+            RefreshWeb3TokenJob(walletID: walletID),
+            SyncWeb3TransactionJob(walletID: walletID),
+        ]
+        for job in jobs {
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
     }
     
     @objc private func reloadDataIfWalletMatch(_ notification: Notification) {

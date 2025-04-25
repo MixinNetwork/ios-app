@@ -11,8 +11,8 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
         case dapp(Web3DappProposer)
         case web3ToMixinWallet
         case web3ToAddress
-        case speedUp
-        case cancel
+        case speedUp(sender: Web3TransactionViewController)
+        case cancel(sender: Web3TransactionViewController)
     }
     
     var manipulateNavigationStackOnFinished = false
@@ -280,10 +280,20 @@ extension Web3TransferPreviewViewController {
             tableView.setContentOffset(.zero, animated: true)
             loadSingleButtonTrayView(title: R.string.localizable.done(), action: #selector(close(_:)))
             if manipulateNavigationStackOnFinished,
-               let navigationController = UIApplication.homeNavigationController,
-               let home = navigationController.viewControllers.first
+               let navigationController = UIApplication.homeNavigationController
             {
-                navigationController.setViewControllers([home], animated: false)
+                switch proposer {
+                case let .speedUp(sender), let .cancel(sender):
+                    if let viewController = navigationController.viewControllers.last,
+                       viewController as? Web3TransactionViewController == sender
+                    {
+                        navigationController.popViewController(animated: false)
+                    }
+                default:
+                    if let home = navigationController.viewControllers.first {
+                        navigationController.setViewControllers([home], animated: false)
+                    }
+                }
             }
         }
     }

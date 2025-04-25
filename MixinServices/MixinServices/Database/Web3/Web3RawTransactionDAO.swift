@@ -38,6 +38,16 @@ public final class Web3RawTransactionDAO: Web3DAO {
                         where: Web3RawTransaction.column(of: .hash) == hash)
     }
     
+    public func pendingRawTransactionsCount(hashIn hashes: [String]) -> Int {
+        let query: GRDB.SQL = """
+        SELECT COUNT(1)
+        FROM raw_transactions
+        WHERE state = 'pending'
+            AND hash IN \(hashes)
+        """
+        return db.select(with: query) ?? 0
+    }
+    
     public func deleteRawTransaction(hash: String, alongsideTransaction change: ((GRDB.Database) throws -> Void)) throws {
         db.write { db in
             try db.execute(

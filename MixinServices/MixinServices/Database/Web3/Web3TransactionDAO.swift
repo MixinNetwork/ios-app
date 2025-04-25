@@ -69,7 +69,28 @@ public final class Web3TransactionDAO: Web3DAO {
             AND status = \(Web3RawTransaction.State.pending.rawValue)
         """
         try db.execute(literal: update)
-        // TODO: Post a notification and update related UIs
+        
+        let select: GRDB.SQL = """
+        SELECT *
+        FROM transactions
+        WHERE transaction_hash = \(hash)
+            AND chain_id = \(chainID)
+            AND address = \(address)
+        """
+        let (sql, arguments) = try select.build(db)
+        let transaction = try? Web3Transaction.fetchOne(db, sql: sql, arguments: arguments)
+        
+        if let transaction {
+            db.afterNextTransaction { _ in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(
+                        name: Self.transactionDidSaveNotification,
+                        object: self,
+                        userInfo: [Self.transactionsUserInfoKey: [transaction]]
+                    )
+                }
+            }
+        }
     }
     
     public func deleteAll() {

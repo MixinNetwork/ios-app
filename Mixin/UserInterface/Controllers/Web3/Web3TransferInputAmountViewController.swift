@@ -12,7 +12,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         let feeInsufficient = if payment.sendingNativeToken {
             tokenAmount > token.decimalBalance - fee.token
         } else {
-            false // FIXME: Detemine with feeToken.balance
+            fee.token > feeToken.decimalBalance
         }
         if balanceInsufficient {
             return .insufficient(R.string.localizable.insufficient_balance())

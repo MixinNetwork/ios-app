@@ -205,11 +205,17 @@ extension ExploreSearchRecommendationViewController {
         let subtitleColor: MarketColor?
         
         static func market(_ market: FavorableMarket) -> RecentSearchViewModel {
-            RecentSearchViewModel(
+            let (subtitle, value) = switch AppGroupUserDefaults.User.marketChangePeriod {
+            case .twentyFourHours:
+                (market.localizedPriceChangePercentage24H, market.decimalPriceChangePercentage24H)
+            case .sevenDays:
+                (market.localizedPriceChangePercentage7D, market.decimalPriceChangePercentage7D)
+            }
+            return RecentSearchViewModel(
                 content: .market(market),
                 title: market.symbol,
-                subtitle: market.localizedPriceChangePercentage7D ?? "",
-                subtitleColor: .byValue(market.decimalPriceChangePercentage7D)
+                subtitle: subtitle ?? "",
+                subtitleColor: .byValue(value)
             )
         }
         

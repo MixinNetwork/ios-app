@@ -6,6 +6,7 @@ final class ClassicWalletViewController: WalletViewController {
     private let walletID: String
     
     private var tokens: [Web3TokenItem] = []
+    private var reviewPendingTransactionJobIDs: [String] = []
     
     init(walletID: String) {
         self.walletID = walletID
@@ -61,6 +62,27 @@ final class ClassicWalletViewController: WalletViewController {
         reloadTokensFromRemote()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let jobs = [
+            ReviewPendingWeb3RawTransactionJob(),
+            ReviewPendingWeb3TransactionJob(walletID: walletID),
+        ]
+        reviewPendingTransactionJobIDs = jobs.map { job in
+            job.getJobId()
+        }
+        for job in jobs {
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        for id in reviewPendingTransactionJobIDs {
+            ConcurrentJobQueue.shared.cancelJob(jobId: id)
+        }
+    }
+    
     override func moreAction(_ sender: Any) {
         let walletID = self.walletID
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -87,8 +109,6 @@ final class ClassicWalletViewController: WalletViewController {
         let jobs = [
             RefreshWeb3TokenJob(walletID: walletID),
             SyncWeb3TransactionJob(walletID: walletID),
-            ReviewPendingWeb3RawTransactionJob(),
-            ReviewPendingWeb3TransactionJob(walletID: walletID),
         ]
         for job in jobs {
             ConcurrentJobQueue.shared.addJob(job: job)

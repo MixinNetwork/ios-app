@@ -4,6 +4,7 @@ import MixinServices
 final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Transaction> {
     
     private var transactionTokenSymbols: [String: String] = [:]
+    private var reviewPendingTransactionJobIDs: [String] = []
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -40,13 +41,27 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         )
         
         reloadSnapshots()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         let jobs = [
             SyncWeb3TransactionJob(walletID: token.walletID),
             ReviewPendingWeb3RawTransactionJob(),
             ReviewPendingWeb3TransactionJob(walletID: token.walletID),
         ]
+        reviewPendingTransactionJobIDs = jobs.suffix(2).map { job in
+            job.getJobId()
+        }
         for job in jobs {
             ConcurrentJobQueue.shared.addJob(job: job)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        for id in reviewPendingTransactionJobIDs {
+            ConcurrentJobQueue.shared.cancelJob(jobId: id)
         }
     }
     

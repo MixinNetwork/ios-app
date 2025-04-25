@@ -4,7 +4,7 @@ import MixinServices
 final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Transaction> {
     
     private var transactionTokenSymbols: [String: String] = [:]
-    private var reviewPendingTransactionJobIDs: [String] = []
+    private var reviewPendingTransactionJobID: String?
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -50,9 +50,7 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
             ReviewPendingWeb3RawTransactionJob(),
             ReviewPendingWeb3TransactionJob(walletID: token.walletID),
         ]
-        reviewPendingTransactionJobIDs = jobs.suffix(2).map { job in
-            job.getJobId()
-        }
+        reviewPendingTransactionJobID = jobs[2].getJobId()
         for job in jobs {
             ConcurrentJobQueue.shared.addJob(job: job)
         }
@@ -60,7 +58,7 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        for id in reviewPendingTransactionJobIDs {
+        if let id = reviewPendingTransactionJobID {
             ConcurrentJobQueue.shared.cancelJob(jobId: id)
         }
     }

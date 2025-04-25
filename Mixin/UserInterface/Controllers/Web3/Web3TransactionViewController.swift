@@ -15,7 +15,7 @@ final class Web3TransactionViewController: TransactionViewController {
     private var speedUpOperation: Web3TransferOperation?
     private var cancelOperation: Web3TransferOperation?
     
-    private var reviewPendingTransactionJobIDs: [String] = []
+    private var reviewPendingTransactionJobID: String?
     
     init(walletID: String, transaction: Web3Transaction) {
         self.walletID = walletID
@@ -52,9 +52,7 @@ final class Web3TransactionViewController: TransactionViewController {
                 ReviewPendingWeb3RawTransactionJob(),
                 ReviewPendingWeb3TransactionJob(walletID: walletID),
             ]
-            reviewPendingTransactionJobIDs = jobs.map { job in
-                job.getJobId()
-            }
+            reviewPendingTransactionJobID = jobs[1].getJobId()
             for job in jobs {
                 ConcurrentJobQueue.shared.addJob(job: job)
             }
@@ -63,7 +61,7 @@ final class Web3TransactionViewController: TransactionViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        for id in reviewPendingTransactionJobIDs {
+        if let id = reviewPendingTransactionJobID {
             ConcurrentJobQueue.shared.cancelJob(jobId: id)
         }
     }

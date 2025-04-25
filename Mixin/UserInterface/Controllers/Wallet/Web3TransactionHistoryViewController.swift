@@ -21,7 +21,7 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     private var loadNextPageIndexPath: IndexPath?
     private var lastItem: Web3Transaction?
     
-    private var reviewPendingTransactionJobIDs: [String] = []
+    private var reviewPendingTransactionJobID: String?
     
     init(token: Web3TokenItem) {
         self.walletID = token.walletID
@@ -83,9 +83,7 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
             ReviewPendingWeb3RawTransactionJob(),
             ReviewPendingWeb3TransactionJob(walletID: walletID),
         ]
-        reviewPendingTransactionJobIDs = jobs.suffix(2).map { job in
-            job.getJobId()
-        }
+        reviewPendingTransactionJobID = jobs[2].getJobId()
         for job in jobs {
             ConcurrentJobQueue.shared.addJob(job: job)
         }
@@ -93,7 +91,7 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        for id in reviewPendingTransactionJobIDs {
+        if let id = reviewPendingTransactionJobID {
             ConcurrentJobQueue.shared.cancelJob(jobId: id)
         }
     }

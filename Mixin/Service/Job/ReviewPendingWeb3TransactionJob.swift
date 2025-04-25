@@ -37,7 +37,7 @@ final class ReviewPendingWeb3TransactionJob: BaseJob {
                 }
             }
             
-            Thread.sleep(forTimeInterval: 5)
+            Thread.sleep(forTimeInterval: 3)
             if isCancelled {
                 return
             }

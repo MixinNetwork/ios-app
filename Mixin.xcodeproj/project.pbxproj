@@ -746,6 +746,8 @@
 		94227D6F2BEF242200430CAE /* SearchCollectibleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94227D6D2BEF242200430CAE /* SearchCollectibleView.xib */; };
 		9423B6B32A6932D50092DE65 /* AccountDeactivatedHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9423B6B22A6932D50092DE65 /* AccountDeactivatedHintView.xib */; };
 		9424C64B259246B600FFDAE0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424C64A259246B600FFDAE0 /* main.swift */; };
+		9425EACF2DC2218400BB018C /* MembershipPlansView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9425EACE2DC2218400BB018C /* MembershipPlansView.xib */; };
+		9425EAD02DC2218400BB018C /* MembershipPlansViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9425EACD2DC2218400BB018C /* MembershipPlansViewController.swift */; };
 		9427D51525E0D31100B1EF0E /* MusicInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9427D51425E0D31100B1EF0E /* MusicInfoView.xib */; };
 		9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */; };
 		9427D52225E0E8DE00B1EF0E /* PlaylistItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D52125E0E8DE00B1EF0E /* PlaylistItemCell.swift */; };
@@ -909,6 +911,9 @@
 		9459693928B28FF8006F5421 /* TIPActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459693728B28FF8006F5421 /* TIPActionViewController.swift */; };
 		9459693A28B28FF8006F5421 /* TIPActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9459693828B28FF8006F5421 /* TIPActionView.xib */; };
 		945AA6582567B18200B39415 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945AA6572567B18200B39415 /* Country.swift */; };
+		945C59102DC215A90024F6DE /* MembershipViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945C590F2DC215A50024F6DE /* MembershipViewController.swift */; };
+		945C59192DC215F60024F6DE /* MembershipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945C59172DC215F60024F6DE /* MembershipCell.swift */; };
+		945C591A2DC215F60024F6DE /* MembershipCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945C59182DC215F60024F6DE /* MembershipCell.xib */; };
 		945D48102D8956040093E30D /* WalletSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D480F2D8956000093E30D /* WalletSummary.swift */; };
 		945D867B2C21754A0066C61D /* CGSize+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D867A2C21754A0066C61D /* CGSize+Constants.swift */; };
 		945ED2B22B28342A00C138BF /* WithdrawPaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945ED2B12B28342A00C138BF /* WithdrawPaymentOperation.swift */; };
@@ -2283,6 +2288,8 @@
 		94227D6D2BEF242200430CAE /* SearchCollectibleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchCollectibleView.xib; sourceTree = "<group>"; };
 		9423B6B22A6932D50092DE65 /* AccountDeactivatedHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountDeactivatedHintView.xib; sourceTree = "<group>"; };
 		9424C64A259246B600FFDAE0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		9425EACD2DC2218400BB018C /* MembershipPlansViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipPlansViewController.swift; sourceTree = "<group>"; };
+		9425EACE2DC2218400BB018C /* MembershipPlansView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipPlansView.xib; sourceTree = "<group>"; };
 		9427D51425E0D31100B1EF0E /* MusicInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MusicInfoView.xib; sourceTree = "<group>"; };
 		9427D51925E0D42E00B1EF0E /* MusicInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicInfoView.swift; sourceTree = "<group>"; };
 		9427D52125E0E8DE00B1EF0E /* PlaylistItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItemCell.swift; sourceTree = "<group>"; };
@@ -2446,6 +2453,9 @@
 		9459693728B28FF8006F5421 /* TIPActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPActionViewController.swift; sourceTree = "<group>"; };
 		9459693828B28FF8006F5421 /* TIPActionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPActionView.xib; sourceTree = "<group>"; };
 		945AA6572567B18200B39415 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
+		945C590F2DC215A50024F6DE /* MembershipViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipViewController.swift; sourceTree = "<group>"; };
+		945C59172DC215F60024F6DE /* MembershipCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipCell.swift; sourceTree = "<group>"; };
+		945C59182DC215F60024F6DE /* MembershipCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipCell.xib; sourceTree = "<group>"; };
 		945D480F2D8956000093E30D /* WalletSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSummary.swift; sourceTree = "<group>"; };
 		945D867A2C21754A0066C61D /* CGSize+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Constants.swift"; sourceTree = "<group>"; };
 		945ED2B12B28342A00C138BF /* WithdrawPaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawPaymentOperation.swift; sourceTree = "<group>"; };
@@ -4943,6 +4953,8 @@
 				7BDBDE6F22365017006220DF /* SettingCell.xib */,
 				7BC03AB12424EA9B00931D21 /* StorageUsageCell.swift */,
 				7C8CC5A6280D40E900F7CBDF /* PreviewWallpaperCell.swift */,
+				945C59182DC215F60024F6DE /* MembershipCell.xib */,
+				945C59172DC215F60024F6DE /* MembershipCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -5362,6 +5374,9 @@
 				941994EB2CCC3FD300F5425C /* RecoveryKitViewController.swift */,
 				7BEED0DA244DC1F300F3A2B9 /* SettingsTableViewController.swift */,
 				DFE356B71FB4994200E0E3A8 /* SettingsViewController.swift */,
+				945C590F2DC215A50024F6DE /* MembershipViewController.swift */,
+				9425EACE2DC2218400BB018C /* MembershipPlansView.xib */,
+				9425EACD2DC2218400BB018C /* MembershipPlansViewController.swift */,
 				DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */,
 				7C1E797F29DAB701006A07A2 /* ChatsViewController.swift */,
 				9495E0AC2CEF684E00124CC7 /* LogoutHandler.swift */,
@@ -5747,6 +5762,7 @@
 				7B8BB590234F36C000991ACB /* Colors.xcassets in Resources */,
 				947402BA2DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib in Resources */,
 				94668E2B2CB50C6F00558755 /* MarketAlertParameterCell.xib in Resources */,
+				9425EACF2DC2218400BB018C /* MembershipPlansView.xib in Resources */,
 				9457F76B2B6F230F008FC98F /* AuthenticationPreviewDialogView.xib in Resources */,
 				947FA4CE299577B700EF13A0 /* AuthorizationsView.xib in Resources */,
 				94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */,
@@ -5820,6 +5836,7 @@
 				94C6AA0B280D36940011AB02 /* AttachmentDiagnosticView.xib in Resources */,
 				7C7579D829DC573F0002DA0B /* DeviceTransferProgressView.xib in Resources */,
 				7B710DFE243637D9008F0D73 /* CirclesTableFooterView.xib in Resources */,
+				945C591A2DC215F60024F6DE /* MembershipCell.xib in Resources */,
 				7B082D16242C9D5F00C5E163 /* MultipleSelectionActionView.xib in Resources */,
 				DF53BB6F202362E5002BF028 /* AuthorizationScopeCell.xib in Resources */,
 				94D0FF7F2BEB7F9100E3947F /* InscriptionContentCell.xib in Resources */,
@@ -6394,6 +6411,7 @@
 				7B6EC8FC20A91543009A7020 /* VideoUploadJob.swift in Sources */,
 				94510FBB2C85673C00ACD972 /* ReloadGlobalMarketJob.swift in Sources */,
 				9457F7632B6EEAFA008FC98F /* TransferPreviewViewController.swift in Sources */,
+				945C59192DC215F60024F6DE /* MembershipCell.swift in Sources */,
 				9419794F2BA47620002BA19F /* Web3SignViewController.swift in Sources */,
 				7BC03AB22424EA9B00931D21 /* StorageUsageCell.swift in Sources */,
 				7BD344092334CE13005C26E3 /* UserHandleCell.swift in Sources */,
@@ -6412,6 +6430,7 @@
 				DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */,
 				94CA5C512CE5F5390086C484 /* PaymentCollectibleSelectorViewController.swift in Sources */,
 				942DB9A72CAA9C8F00FFCB40 /* AllMarketAlertsViewController.swift in Sources */,
+				945C59102DC215A90024F6DE /* MembershipViewController.swift in Sources */,
 				7B04FABA22684F51004F8F04 /* SearchResult.swift in Sources */,
 				7BF3F67A22AE4733007B6C77 /* IdentityNumberLabel.swift in Sources */,
 				7B97BA0E2019F1A90013D58F /* StickerPreviewCell.swift in Sources */,
@@ -6730,6 +6749,7 @@
 				94B5776A2B5E554800AE576E /* ExploreViewController.swift in Sources */,
 				7B054052243CCCD500C1FCB6 /* HomeTitleButton.swift in Sources */,
 				94B9FDA32A55E47D00C1E286 /* CompactDepositNetworkCell.swift in Sources */,
+				9425EAD02DC2218400BB018C /* MembershipPlansViewController.swift in Sources */,
 				7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */,
 				DFD1FBC72302CB7A00C570D4 /* DatabaseUpgradeViewController.swift in Sources */,
 				944C656125D9BA0A008BDDD3 /* OggOpusWriter.swift in Sources */,

@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Mixin/Supporting Files/Memberships.storekit">
+   </FileRef>
+   <FileRef
       location = "group:Mixin.xcodeproj">
    </FileRef>
    <FileRef

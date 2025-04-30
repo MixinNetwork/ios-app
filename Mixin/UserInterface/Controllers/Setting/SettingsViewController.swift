@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class SettingsViewController: SettingsTableViewController {
+final class SettingsViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
@@ -21,6 +21,11 @@ class SettingsViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(icon: R.image.setting.ic_category_appearance(),
                         title: R.string.localizable.appearance(),
+                        accessory: .disclosure)
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(icon: R.image.setting.category_membership(),
+                        title: "Mixin One",
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [
@@ -56,27 +61,33 @@ extension SettingsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let vc: UIViewController
+        let setting: UIViewController
         switch indexPath.section {
         case 0:
             switch indexPath.row {
             case 0:
-                vc = AccountSettingViewController()
+                setting = AccountSettingViewController()
             case 1:
-                vc = ChatsViewController()
+                setting = ChatsViewController()
             case 2:
-                vc = NotificationAndConfirmationSettingsViewController()
+                setting = NotificationAndConfirmationSettingsViewController()
             default:
-                vc = DataAndStorageSettingsViewController()
+                setting = DataAndStorageSettingsViewController()
             }
         case 1:
-            vc = AppearanceSettingsViewController()
+            setting = AppearanceSettingsViewController()
         case 2:
-            vc = DesktopViewController()
+            if let account = LoginManager.shared.account {
+                setting = MembershipViewController(account: account)
+            } else {
+                return
+            }
         case 3:
+            setting = DesktopViewController()
+        case 4:
             if indexPath.row == 0 {
                 if let user = UserDAO.shared.getUser(identityNumber: "7000") {
-                    vc = ConversationViewController.instance(ownerUser: user)
+                    setting = ConversationViewController.instance(ownerUser: user)
                 } else {
                     return
                 }
@@ -87,9 +98,9 @@ extension SettingsViewController: UITableViewDelegate {
                 return
             }
         default:
-            vc = AboutViewController()
+            setting = AboutViewController()
         }
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(setting, animated: true)
     }
     
 }

@@ -145,7 +145,7 @@
 "approval" = "Approval";
 "approval_count" = "Approved %@";
 "approval_unlimited" = "Unlimited";
-"approval_unlimited_warning" = "This dapp can withdraw all your %@";
+"approval_unlimited_warning" = "This app can withdraw all your %@";
 "approve" = "Approve";
 "approve_transaction" = "Approve Transaction";
 "approving_transaction" = "Approving Transaction";

@@ -208,8 +208,8 @@ extension ExploreSearchRecommendationViewController {
             RecentSearchViewModel(
                 content: .market(market),
                 title: market.symbol,
-                subtitle: market.localizedPriceChangePercentage7D ?? "",
-                subtitleColor: .byValue(market.decimalPriceChangePercentage7D)
+                subtitle: market.localizedPriceChangePercentage24H ?? "",
+                subtitleColor: .byValue(market.decimalPriceChangePercentage24H)
             )
         }
         

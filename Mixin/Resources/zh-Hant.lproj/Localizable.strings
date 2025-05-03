@@ -151,8 +151,6 @@
 "approving_transaction" = "正在批准";
 "approving_transaction_failed" = "批准失敗";
 "ask_me_anything" = "向我提問";
-"asset_changes" = "資產變動";
-"asset_changes_estimate" = "資產變動（預估）";
 "asset_key" = "資產標識";
 "asset_not_found" = "找不到該資產";
 "asset_type" = "資產型別";
@@ -186,6 +184,7 @@
 "backup_to_icloud" = "備份到 iCloud";
 "balance" = "餘額";
 "balance_abbreviation" = "餘額 %@";
+"balance_changes" = "資產變動";
 "balance_max" = "最大";
 "batch_transfer_confirmation" = "批次轉賬確認";
 "before_you_proceed" = "請在繼續之前";
@@ -1282,7 +1281,6 @@
 "to" = "至";
 "today" = "今天";
 "token" = "代幣";
-"token_access_approval" = "授權使用代幣";
 "top_count" = "前 %d";
 "total" = "共計";
 "total_amount" = "總金額";
@@ -1333,7 +1331,7 @@
 "unable_connect_to_desktop" = "無法連線到桌面，請稍後重試";
 "unable_synced_between_different_account" = "不同賬戶之間無法同步聊天記錄";
 "unable_to_decode_the_request" = "無法解析請求: %@";
-"unable_to_estimate_asset_changes" = "無法估計資產變化";
+"unable_to_estimate_balance_changes" = "無法估計資產變化";
 "unable_to_save_photo" = "儲存圖片失敗";
 "unable_to_save_video" = "儲存影片失敗";
 "unable_to_share_content" = "無法分享此內容";

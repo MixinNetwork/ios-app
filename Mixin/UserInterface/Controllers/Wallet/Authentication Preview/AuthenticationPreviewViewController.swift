@@ -272,9 +272,9 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
         case let .assetChanges(estimated, changes):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
             cell.titleLabel.text = if estimated {
-                R.string.localizable.asset_changes_estimate().uppercased()
+                R.string.localizable.estimated_balance_change().uppercased()
             } else {
-                R.string.localizable.asset_changes().uppercased()
+                R.string.localizable.balance_changes().uppercased()
             }
             cell.reloadData(changes: changes)
             return cell

@@ -151,8 +151,6 @@
 "approving_transaction" = "Approving Transaction";
 "approving_transaction_failed" = "Approving Transaction Failed";
 "ask_me_anything" = "Ask me anything";
-"asset_changes" = "Asset changes";
-"asset_changes_estimate" = "Asset changes (estimate)";
 "asset_key" = "Ключ актива";
 "asset_not_found" = "Актив не найден.";
 "asset_type" = "Тип актива";
@@ -186,6 +184,7 @@
 "backup_to_icloud" = "Backup to iCloud";
 "balance" = "Баланс";
 "balance_abbreviation" = "Bal %@";
+"balance_changes" = "Balance changes";
 "balance_max" = "MAX";
 "batch_transfer_confirmation" = "Batch Transfer Confirmation";
 "before_you_proceed" = "Before you proceed";
@@ -418,7 +417,7 @@
 "date_format_week_date" = "EEE, d MMMM yyyy";
 "days_count_short" = "%dD";
 "declined" = "Отклоненный";
-"decode_transaction_failed" = "Unable to estimate asset changes. Be cautious and only sign transactions for apps you trust.";
+"decode_transaction_failed" = "Unable to estimate balance changes. Be cautious and only sign transactions for apps you trust.";
 "delete" = "Удалить";
 "delete_account_detail_hint" = "Локальные сообщения и резервные копии iCloud не будут удаляться автоматически";
 "delete_account_hint" = "Удалить информацию об учетной записи и фото профиля";
@@ -1282,7 +1281,6 @@
 "to" = "В";
 "today" = "Сегодня";
 "token" = "Token";
-"token_access_approval" = "Token Access Approval";
 "top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
@@ -1333,7 +1331,7 @@
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";
-"unable_to_estimate_asset_changes" = "Unable to estimate asset changes";
+"unable_to_estimate_balance_changes" = "Unable to estimate balance changes";
 "unable_to_save_photo" = "Не удалось сохранить фото.";
 "unable_to_save_video" = "Не удалось сохранить видео.";
 "unable_to_share_content" = "Невозможно поделиться этим контентом";

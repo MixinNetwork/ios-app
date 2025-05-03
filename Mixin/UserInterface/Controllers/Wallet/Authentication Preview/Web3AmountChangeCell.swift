@@ -65,7 +65,7 @@ final class Web3AmountChangeCell: UITableViewCell {
             assetIconView.setIcon(token: token, chain: chain)
         case .decodingFailed:
             tokenAmountLabel.isHidden = true
-            symbolLabel.text = R.string.localizable.unable_to_estimate_asset_changes()
+            symbolLabel.text = R.string.localizable.unable_to_estimate_balance_changes()
             symbolLabel.setFont(
                 scaledFor: .systemFont(ofSize: 16, weight: .regular),
                 adjustForContentSize: true

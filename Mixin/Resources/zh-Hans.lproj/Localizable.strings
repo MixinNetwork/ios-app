@@ -151,8 +151,6 @@
 "approving_transaction" = "正在批准";
 "approving_transaction_failed" = "批准失败";
 "ask_me_anything" = "向我提问";
-"asset_changes" = "资产变动";
-"asset_changes_estimate" = "资产变动（预估）";
 "asset_key" = "资产标识";
 "asset_not_found" = "找不到该资产";
 "asset_type" = "资产类型";
@@ -186,6 +184,7 @@
 "backup_to_icloud" = "备份到 iCloud";
 "balance" = "余额";
 "balance_abbreviation" = "余额 %@";
+"balance_changes" = "资产变动";
 "balance_max" = "最大";
 "batch_transfer_confirmation" = "批量转账确认";
 "before_you_proceed" = "请在继续之前";
@@ -1282,7 +1281,6 @@
 "to" = "至";
 "today" = "今天";
 "token" = "代币";
-"token_access_approval" = "授权使用代币";
 "top_count" = "前 %d";
 "total" = "共计";
 "total_amount" = "总金额";
@@ -1333,7 +1331,7 @@
 "unable_connect_to_desktop" = "无法连接到桌面，请稍后重试";
 "unable_synced_between_different_account" = "不同账户之间无法同步聊天记录";
 "unable_to_decode_the_request" = "无法解析请求: %@";
-"unable_to_estimate_asset_changes" = "无法估计资产变化";
+"unable_to_estimate_balance_changes" = "无法估计资产变化";
 "unable_to_save_photo" = "保存图片失败";
 "unable_to_save_video" = "保存视频失败";
 "unable_to_share_content" = "无法分享此内容";

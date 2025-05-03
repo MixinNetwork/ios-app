@@ -29,6 +29,8 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                 )
             )
         } else if tokenAmount < minimumTransferAmount {
+            // Only SOL transfers invoke minimum amount checking
+            // Change the description when it comes to EVM transfers
             .insufficient(
                 R.string.localizable.send_sol_for_rent(
                     CurrencyFormatter.localizedString(
@@ -197,6 +199,8 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
     }
     
     private func reloadMinimumTransferAmount(payment: Web3SendingTokenToAddressPayment) {
+        // Only SOL transfers invoke minimum amount checking
+        // Review `balanceSufficiency` if it involves EVM transfers
         Task {
             do {
                 let amount: Decimal

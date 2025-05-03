@@ -122,11 +122,6 @@ class MixinWebViewController: WebViewController {
         return vc
     }
     
-    class func presentInstance(with context: Context, asChildOf parent: UIViewController) {
-        let vc = Self.instance(with: context)
-        vc.presentAsChild(of: parent, completion: nil)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         contentView.insertSubview(loadingIndicator, aboveSubview: webContentView)

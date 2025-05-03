@@ -68,11 +68,7 @@ class RecognizeWindow: BottomSheetView {
             return true
         }
         dismissPopupController(animated: true)
-        var parent = container.topMostChild
-        if let visibleViewController = (parent as? UINavigationController)?.visibleViewController {
-            parent = visibleViewController
-        }
-        MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
+        container.presentWebViewController(context: .init(conversationId: "", initialUrl: url))
         return false
     }
     

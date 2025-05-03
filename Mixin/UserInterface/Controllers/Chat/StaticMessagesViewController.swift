@@ -287,11 +287,11 @@ extension StaticMessagesViewController {
                         guard !UrlWindow.checkUrl(url: content.action) else {
                             return
                         }
-                        guard let parent = self.parent else {
+                        guard let container = UIApplication.homeContainerViewController else {
                             return
                         }
                         let context = MixinWebViewController.Context(conversationId: "", url: content.action, app: app)
-                        MixinWebViewController.presentInstance(with: context, asChildOf: parent)
+                        container.presentWebViewController(context: context)
                     }
                 }
             } else if message.category.hasSuffix("_TRANSCRIPT"), let parent = parent {
@@ -635,10 +635,10 @@ extension StaticMessagesViewController {
         guard !UrlWindow.checkUrl(url: url) else {
             return
         }
-        guard let parent = parent else {
+        guard let container = UIApplication.homeContainerViewController else {
             return
         }
-        MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
+        container.presentWebViewController(context: .init(conversationId: "", initialUrl: url))
     }
     
     private func contextMenuConfigurationForRow(at indexPath: IndexPath) -> UIContextMenuConfiguration? {

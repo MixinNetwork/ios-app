@@ -44,10 +44,6 @@ final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCod
         }
     }
     
-    override func logValidateCapatcha() {
-        reporter.report(event: .signUpRecaptcha, method: "phone_number")
-    }
-    
     override func layout(for keyboardFrame: CGRect) {
         super.layout(for: keyboardFrame)
         helpButtonBottomConstraint.constant = -keyboardFrame.height - 28

@@ -9,7 +9,8 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
         case signUp
     }
     
-    private let action: Action
+    let action: Action
+    
     private let busyIndicator = ActivityIndicatorView()
     
     private lazy var captcha = Captcha(viewController: self)

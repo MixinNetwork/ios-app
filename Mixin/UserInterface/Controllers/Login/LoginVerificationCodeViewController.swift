@@ -51,7 +51,6 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
                 self.resendButton.isBusy = false
                 self.resendButton.beginCountDown(self.resendInterval)
             case .failure(.requiresCaptcha):
-                self.logValidateCapatcha()
                 captcha.validate { [weak self] (result) in
                     switch result {
                     case .success(let token):
@@ -67,10 +66,6 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
                 self.resendButton.isBusy = false
             }
         }
-    }
-    
-    func logValidateCapatcha() {
-        
     }
     
     func login() {

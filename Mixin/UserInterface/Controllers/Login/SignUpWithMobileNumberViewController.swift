@@ -76,7 +76,6 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController {
             case let .failure(error):
                 switch error {
                 case .requiresCaptcha:
-                    self.logValidateCapatcha()
                     captcha.validate { [weak self] (result) in
                         switch result {
                         case .success(let token):
@@ -114,10 +113,6 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController {
                 }
             }
         }
-    }
-    
-    func logValidateCapatcha() {
-        reporter.report(event: .signUpRecaptcha, method: "phone_number")
     }
     
     @objc func presentCustomerService(_ sender: Any) {

@@ -36,6 +36,25 @@ final class Captcha: NSObject {
         guard let view = viewController?.view else {
             return
         }
+        switch viewController {
+        case let viewController as SignInWithMobileNumberViewController:
+            reporter.report(event: .loginRecaptcha, method: "phone_number")
+        case let viewController as SignUpWithMobileNumberViewController:
+            reporter.report(event: .signUpRecaptcha, method: "phone_number")
+        case let viewController as PhoneNumberLoginVerificationCodeViewController:
+            reporter.report(event: .loginRecaptcha, method: "phone_number")
+        case let viewController as RecoveryContactLoginVerificationCodeViewController:
+            reporter.report(event: .loginRecaptcha, method: "recovery_contact")
+        case let viewController as LoginWithMnemonicViewController:
+            switch viewController.action {
+            case .signUp:
+                reporter.report(event: .signUpRecaptcha, method: "mnemonic")
+            case .signIn:
+                reporter.report(event: .loginRecaptcha, method: "mnemonic")
+            }
+        default:
+            break
+        }
         if webView == nil {
             let config = WKWebViewConfiguration()
             config.preferences.isFraudulentWebsiteWarningEnabled = false

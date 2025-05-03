@@ -4,10 +4,6 @@ import MixinServices
 
 final class TransferInputAmountViewController: InputAmountViewController {
     
-    override var token: any ValuableToken {
-        tokenItem
-    }
-    
     var reference: String?
     var redirection: URL?
     
@@ -48,7 +44,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
         self.tokenItem = tokenItem
         self.receiver = receiver
         self.note = note
-        super.init()
+        super.init(token: tokenItem, precision: MixinToken.precision)
     }
     
     required init?(coder: NSCoder) {
@@ -59,11 +55,11 @@ final class TransferInputAmountViewController: InputAmountViewController {
         super.viewDidLoad()
         
         navigationItem.titleView = switch receiver {
-        case .user(let user):
+        case let .user(user):
             UserNavigationTitleView(user: user)
-        case .multisig(_, let users):
+        case let .multisig(_, users):
             MultisigNavigationTitleView(users: users)
-        case .mainnet(let address):
+        case let .mainnet(_, address):
             NavigationTitleView(
                 title: R.string.localizable.send_to_title(),
                 subtitle: Address.compactRepresentation(of: address)

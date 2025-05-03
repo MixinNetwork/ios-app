@@ -15,10 +15,13 @@ final class PrivacyWalletViewController: WalletViewController {
         titleLabel.text = R.string.localizable.privacy_wallet()
         titleInfoStackView.setCustomSpacing(6, after: titleLabel)
         let privacyIconView = UIImageView(image: R.image.privacy_wallet())
-        privacyIconView.contentMode = .center
+        privacyIconView.contentMode = .scaleAspectFit
         privacyIconView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         privacyIconView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         titleInfoStackView.addArrangedSubview(privacyIconView)
+        privacyIconView.snp.makeConstraints { make in
+            make.width.height.equalTo(22)
+        }
         
         tableHeaderView.actionView.delegate = self
         tableHeaderView.pendingDepositButton.addTarget(
@@ -72,7 +75,7 @@ final class PrivacyWalletViewController: WalletViewController {
                 let badge = BadgeDotView()
                 self.titleView.addSubview(badge)
                 badge.snp.makeConstraints { make in
-                    make.top.equalTo(self.walletSwitchImageView)
+                    make.centerY.equalTo(self.walletSwitchImageView.snp.centerY).offset(-8)
                     make.leading.equalTo(self.walletSwitchImageView.snp.trailing).offset(-2)
                 }
                 self.walletSwitchBadgeView = badge
@@ -226,8 +229,8 @@ final class PrivacyWalletViewController: WalletViewController {
             case let .success(response):
                 hud.hide()
                 UserDAO.shared.updateUsers(users: [response])
-                if let app = response.app, let container = UIApplication.homeContainerViewController?.homeTabBarController {
-                    MixinWebViewController.presentInstance(with: .init(conversationId: conversationID, app: app), asChildOf: container)
+                if let app = response.app, let container = UIApplication.homeContainerViewController {
+                    container.presentWebViewController(context: .init(conversationId: conversationID, app: app))
                 }
             case .failure:
                 hud.set(style: .error, text: R.string.localizable.network_connection_lost())

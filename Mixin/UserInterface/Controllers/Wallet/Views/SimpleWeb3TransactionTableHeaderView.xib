@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="mixin_condensed.otf">
+            <string>MixinCondensed-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Rzc-v6-yoE" customClass="SimpleWeb3TransactionTableHeaderView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="232"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="qAO-lL-IVi">
+                    <rect key="frame" x="20" y="18" width="353" height="168"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vd3-El-c92" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="141.66666666666666" y="0.0" width="70" height="70"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="vd3-El-c92" secondAttribute="height" id="mic-P7-aqH"/>
+                                <constraint firstAttribute="width" constant="70" id="rtg-9U-gKL" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                            <real key="value" value="44"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="extraLongConstant">
+                                            <real key="value" value="90"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </constraint>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="badgeIconDiameter">
+                                    <real key="value" value="18"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="badgeOutlineWidth">
+                                    <real key="value" value="2"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="N0L-Q5-Sz6">
+                            <rect key="frame" x="91.666666666666686" y="76" width="170" height="64"/>
+                            <subviews>
+                                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+0.00001342" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vrx-ou-noo">
+                                    <rect key="frame" x="0.0" y="30" width="142.33333333333334" height="34"/>
+                                    <gestureRecognizers/>
+                                    <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="34"/>
+                                    <color key="textColor" red="0.16078431369999999" green="0.74509803919999995" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v9x-Gb-AdY" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="146.33333333333331" y="30" width="23.666666666666657" height="34"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                    <color key="textColor" name="text"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <edgeInsets key="layoutMargins" top="6" left="0.0" bottom="0.0" right="0.0"/>
+                        </stackView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" placeholderIntrinsicWidth="66" placeholderIntrinsicHeight="22" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xDC-ii-ZTq" customClass="Web3TransactionStatusLabel" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="143.66666666666666" y="146" width="66" height="22"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fpb-0b-sW3" customClass="SeparatorShadowView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="202" width="393" height="10"/>
+                    <color key="backgroundColor" name="background_secondary"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="10" id="GFT-53-OjY"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Fpb-0b-sW3" secondAttribute="trailing" id="Baf-Wm-ACA"/>
+                <constraint firstAttribute="trailing" secondItem="qAO-lL-IVi" secondAttribute="trailing" priority="999" constant="20" id="Eoy-hs-VlD"/>
+                <constraint firstAttribute="bottom" secondItem="Fpb-0b-sW3" secondAttribute="bottom" constant="20" id="HUQ-7y-uOF"/>
+                <constraint firstItem="qAO-lL-IVi" firstAttribute="leading" secondItem="Rzc-v6-yoE" secondAttribute="leading" constant="20" id="U0C-pk-4YD"/>
+                <constraint firstItem="Fpb-0b-sW3" firstAttribute="leading" secondItem="Rzc-v6-yoE" secondAttribute="leading" id="cqK-Gv-pWk"/>
+                <constraint firstItem="Fpb-0b-sW3" firstAttribute="top" secondItem="qAO-lL-IVi" secondAttribute="bottom" constant="16" id="jyV-xk-FXD"/>
+                <constraint firstItem="qAO-lL-IVi" firstAttribute="top" secondItem="Rzc-v6-yoE" secondAttribute="top" constant="18" id="zgK-0g-Kps"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="amountLabel" destination="vrx-ou-noo" id="k42-Id-cTN"/>
+                <outlet property="amountStackView" destination="N0L-Q5-Sz6" id="U8c-ad-4x2"/>
+                <outlet property="contentStackView" destination="qAO-lL-IVi" id="3uQ-mL-Npc"/>
+                <outlet property="contentStackViewBottomConstraint" destination="jyV-xk-FXD" id="YDz-gl-DyY"/>
+                <outlet property="iconView" destination="vd3-El-c92" id="uVi-dB-Qhb"/>
+                <outlet property="statusLabel" destination="xDC-ii-ZTq" id="177-yM-JUH"/>
+                <outlet property="symbolLabel" destination="v9x-Gb-AdY" id="5Uy-Xe-56k"/>
+            </connections>
+            <point key="canvasLocation" x="-854.19847328244271" y="53.521126760563384"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -15,7 +15,7 @@ final class SwapQuotePeriodicRequester {
     }
     
     enum ResponseError: Error {
-        case invalidAmount(String)
+        case invalidAmount(AmountRange)
     }
     
     let refreshInterval = 10
@@ -39,13 +39,15 @@ final class SwapQuotePeriodicRequester {
     
     init(
         sendToken: BalancedSwapToken, sendAmount: Decimal,
-        receiveToken: SwapToken, slippage: Decimal
+        receiveToken: SwapToken, slippage: Decimal,
+        source: RouteTokenSource
     ) {
-        self.request = QuoteRequest.mixin(
-            sendToken: sendToken,
-            sendAmount: sendAmount,
-            receiveToken: receiveToken,
-            slippage: slippage
+        self.request = QuoteRequest(
+            inputMint: sendToken.assetID,
+            outputMint: receiveToken.assetID,
+            amount: TokenAmountFormatter.string(from: sendAmount),
+            slippage: Slippage(decimal: slippage).integral,
+            source: source
         )
         self.quoteDraft = SwapQuoteDraft(
             sendToken: sendToken,
@@ -79,8 +81,10 @@ final class SwapQuotePeriodicRequester {
 
 extension SwapQuotePeriodicRequester {
     
-    private struct AmountRange {
+    struct AmountRange {
         
+        let minimum: Decimal?
+        let maximum: Decimal?
         let description: String
         
         init?(extra: MixinAPIResponseError.JSON, symbol: String) {
@@ -88,12 +92,14 @@ extension SwapQuotePeriodicRequester {
             if case let .string(string) = extra.value(at: ["data", "min"]),
                let decimal = Decimal(string: string, locale: .enUSPOSIX)
             {
+                self.minimum = decimal
                 min = CurrencyFormatter.localizedString(
                     from: decimal,
                     format: .precision,
                     sign: .never
                 )
             } else {
+                self.minimum = nil
                 min = nil
             }
             
@@ -101,22 +107,24 @@ extension SwapQuotePeriodicRequester {
             if case let .string(string) = extra.value(at: ["data", "max"]),
                let decimal = Decimal(string: string, locale: .enUSPOSIX)
             {
+                self.maximum = decimal
                 max = CurrencyFormatter.localizedString(
                     from: decimal,
                     format: .precision,
                     sign: .never
                 )
             } else {
+                self.maximum = nil
                 max = nil
             }
             
             switch (min, max) {
             case let (.some(min), .none):
-                description = R.string.localizable.single_transaction_should_be_greater_than(min, symbol)
+                self.description = R.string.localizable.single_transaction_should_be_greater_than(min, symbol)
             case let (.none, .some(max)):
-                description = R.string.localizable.single_transaction_should_be_less_than(max, symbol)
+                self.description = R.string.localizable.single_transaction_should_be_less_than(max, symbol)
             case let (.some(min), .some(max)):
-                description = R.string.localizable.single_transaction_should_be_between(min, symbol, max, symbol)
+                self.description = R.string.localizable.single_transaction_should_be_between(min, symbol, max, symbol)
             default:
                 return nil
             }
@@ -155,7 +163,7 @@ extension SwapQuotePeriodicRequester {
                    let extra = error.extra,
                    let range = AmountRange(extra: extra, symbol: quoteDraft.sendToken.symbol)
                 {
-                    let error: ResponseError = .invalidAmount(range.description)
+                    let error: ResponseError = .invalidAmount(range)
                     self.delegate?.swapQuotePeriodicRequester(self, didUpdate: .failure(error))
                 } else {
                     self.delegate?.swapQuotePeriodicRequester(self, didUpdate: .failure(error))

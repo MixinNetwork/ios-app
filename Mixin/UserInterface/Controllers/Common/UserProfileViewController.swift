@@ -359,7 +359,7 @@ extension UserProfileViewController {
     @objc func openApp() {
         let userId = user.userId
         checkedDismiss(animated: true) { _ in
-            guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
+            guard let container = UIApplication.homeContainerViewController else {
                 return
             }
             let conversationId: String
@@ -374,7 +374,7 @@ extension UserProfileViewController {
                 }
                 DispatchQueue.main.async {
                     AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
-                    MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app), asChildOf: parent)
+                    container.presentWebViewController(context: .init(conversationId: conversationId, app: app))
                 }
             }
         }

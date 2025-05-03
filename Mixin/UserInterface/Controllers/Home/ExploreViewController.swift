@@ -155,7 +155,7 @@ final class ExploreViewController: UIViewController {
     }
     
     func openApp(user: User) {
-        guard let home = UIApplication.homeContainerViewController?.homeTabBarController else {
+        guard let container = UIApplication.homeContainerViewController else {
             return
         }
         DispatchQueue.global().async {
@@ -164,7 +164,7 @@ final class ExploreViewController: UIViewController {
             }
             DispatchQueue.main.async {
                 AppGroupUserDefaults.User.insertRecentlyUsedAppId(id: app.appId)
-                MixinWebViewController.presentInstance(with: .init(conversationId: "", app: app), asChildOf: home)
+                container.presentWebViewController(context: .init(conversationId: "", app: app))
             }
         }
     }

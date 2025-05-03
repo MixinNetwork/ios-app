@@ -7,6 +7,18 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: "Disconnect All Dapps", accessory: .disclosure),
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Reset Transactions", accessory: .disclosure),
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(
+                title: "Low EVM Fee",
+                accessory: .switch(
+                    isOn: Web3Diagnostic.usesLowEVMFeeOnce,
+                    isEnabled: true
+                )
+            )
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -14,6 +26,22 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
         title = "Web3"
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(switchEVMFee(_:)),
+            name: SettingsRow.accessoryDidChangeNotification,
+            object: dataSource.sections[2].rows[0]
+        )
+    }
+    
+    @objc private func switchEVMFee(_ notification: Notification) {
+        guard let row = notification.object as? SettingsRow else {
+            return
+        }
+        guard case let .switch(isOn, _) = row.accessory else {
+            return
+        }
+        Web3Diagnostic.usesLowEVMFeeOnce = isOn
     }
     
 }
@@ -25,6 +53,16 @@ extension Web3DiagnosticViewController: UITableViewDelegate {
         case (0, 0):
             WalletConnectService.shared.disconnectAllSessions()
             showAutoHiddenHud(style: .notification, text: R.string.localizable.done())
+        case (1, 0):
+            if let walletID = Web3WalletDAO.shared.classicWallet()?.walletID {
+                Web3TransactionDAO.shared.deleteAll()
+                let addresses = Web3AddressDAO.shared.addresses(walletID: walletID)
+                let destinations = Set(addresses.map(\.destination))
+                Web3PropertiesDAO.shared.deleteTransactionOffset(addresses: destinations)
+                showAutoHiddenHud(style: .notification, text: R.string.localizable.done())
+            } else {
+                showAutoHiddenHud(style: .error, text: "Missing Wallet")
+            }
         default:
             break
         }

@@ -163,9 +163,9 @@ extension ExploreSearchRecommendationViewController: UICollectionViewDelegate {
         case let .user(item):
             parent?.pushConversationViewController(userItem: item)
         case let .link(url):
-            if let home = UIApplication.homeContainerViewController?.homeTabBarController {
+            if let container = UIApplication.homeContainerViewController {
                 let context = MixinWebViewController.Context(conversationId: "", initialUrl: url, saveAsRecentSearch: true)
-                MixinWebViewController.presentInstance(with: context, asChildOf: home)
+                container.presentWebViewController(context: context)
             }
         case let .dapp(app):
             parent?.presentDapp(app: app)
@@ -208,8 +208,8 @@ extension ExploreSearchRecommendationViewController {
             RecentSearchViewModel(
                 content: .market(market),
                 title: market.symbol,
-                subtitle: market.localizedPriceChangePercentage7D ?? "",
-                subtitleColor: .byValue(market.decimalPriceChangePercentage7D)
+                subtitle: market.localizedPriceChangePercentage24H ?? "",
+                subtitleColor: .byValue(market.decimalPriceChangePercentage24H)
             )
         }
         

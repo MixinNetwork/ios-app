@@ -26,9 +26,7 @@ class InputAmountViewController: UIViewController {
     
     @IBOutlet weak var numberPadTopConstraint: NSLayoutConstraint!
     
-    var token: ValuableToken {
-        fatalError("Must override")
-    }
+    let token: ValuableToken
     
     var balanceSufficiency: BalanceSufficiency {
         if tokenAmount > token.decimalBalance {
@@ -52,6 +50,7 @@ class InputAmountViewController: UIViewController {
     private(set) weak var feeActivityIndicator: ActivityIndicatorView?
     private(set) weak var changeFeeButton: UIButton?
     
+    private let tokenPrecision: Int
     private let feedback = UIImpactFeedbackGenerator(style: .light)
     private let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -65,6 +64,15 @@ class InputAmountViewController: UIViewController {
     
     private weak var clearInputTimer: Timer?
     
+    private lazy var tokenAmountRoundingHandler = NSDecimalNumberHandler(
+        roundingMode: .plain,
+        scale: Int16(tokenPrecision),
+        raiseOnExactness: false,
+        raiseOnOverflow: false,
+        raiseOnUnderflow: false,
+        raiseOnDivideByZero: false
+    )
+    
     private var accumulator: DecimalAccumulator {
         didSet {
             guard isViewLoaded else {
@@ -74,10 +82,11 @@ class InputAmountViewController: UIViewController {
         }
     }
     
-    init() {
-        let defaultIntent: AmountIntent = .byToken
-        self.amountIntent = defaultIntent
-        self.accumulator = DecimalAccumulator(intent: defaultIntent)
+    init(token: ValuableToken, precision: Int) {
+        self.token = token
+        self.tokenPrecision = precision
+        self.amountIntent = .byToken
+        self.accumulator = DecimalAccumulator(precision: precision)
         let nib = R.nib.inputAmountView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -202,13 +211,15 @@ class InputAmountViewController: UIViewController {
     }
     
     @IBAction func toggleAmountIntent(_ sender: Any) {
+        var accumulator: DecimalAccumulator
         switch amountIntent {
         case .byToken:
             amountIntent = .byFiatMoney
+            accumulator = .fiatMoney()
         case .byFiatMoney:
             amountIntent = .byToken
+            accumulator = DecimalAccumulator(precision: tokenPrecision)
         }
-        var accumulator = DecimalAccumulator(intent: amountIntent)
         accumulator.decimal = self.accumulator.decimal
         self.accumulator = accumulator
     }
@@ -260,7 +271,7 @@ class InputAmountViewController: UIViewController {
     }
     
     func replaceAmount(_ amount: Decimal) {
-        var accumulator = DecimalAccumulator(intent: .byToken)
+        var accumulator = DecimalAccumulator(precision: tokenPrecision)
         accumulator.decimal = amount
         self.amountIntent = .byToken
         self.accumulator = accumulator
@@ -364,7 +375,9 @@ extension InputAmountViewController {
             calculatedValueLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencyCode)
             inputAmountString.append(" " + token.symbol)
         case .byFiatMoney:
-            tokenAmount = inputAmount / price
+            tokenAmount = NSDecimalNumber(decimal: inputAmount / price)
+                .rounding(accordingToBehavior: tokenAmountRoundingHandler)
+                .decimalValue
             fiatMoneyAmount = inputAmount
             calculatedValueLabel.text = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
             inputAmountString.append(" " + Currency.current.code)

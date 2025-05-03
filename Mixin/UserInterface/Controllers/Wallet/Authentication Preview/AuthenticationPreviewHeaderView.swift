@@ -73,7 +73,7 @@ final class AuthenticationPreviewHeaderView: UIView {
         iconView.setIcon(chain: chain)
     }
     
-    func setIcon(sendToken: MixinTokenItem, receiveToken: SwapToken) {
+    func setIcon(sendToken: Token, receiveToken: SwapToken) {
         let iconView: MultipleTokenIconView
         if let view = self.multipleTokenIconView, view.isDescendant(of: iconWrapperView) {
             iconView = view
@@ -232,7 +232,7 @@ extension AuthenticationPreviewHeaderView {
             }
         }
         
-        func setIcon(sendToken: MixinTokenItem, receiveToken: SwapToken) {
+        func setIcon(sendToken: Token, receiveToken: SwapToken) {
             loadIconViews(count: 2) { index, wrapperView in
                 let offset = index == 1 ? 0 : -16
                 wrapperView.snp.makeConstraints { make in

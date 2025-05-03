@@ -47,6 +47,8 @@ extension SwapToken {
             "BEP-20"
         case ChainID.base:
             "Base"
+        case ChainID.lightning:
+            "Lightning"
         case assetID:
             nil
         case ChainID.ethereum:

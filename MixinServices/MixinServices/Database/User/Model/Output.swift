@@ -5,9 +5,9 @@ import TIP
 public struct Output {
     
     public enum State: String {
+        case pending
         case unspent
         case signed
-        case spent
     }
     
     private static let unconfirmedSequence = 0
@@ -80,7 +80,7 @@ public struct Output {
                   receiversHash: lastOutput.receiversHash,
                   receiversThreshold: 1,
                   extra: "",
-                  state: Output.State.unspent.rawValue,
+                  state: Output.State.pending.rawValue,
                   createdAt: Date().toUTCString(),
                   updatedAt: "",
                   signedBy: "",

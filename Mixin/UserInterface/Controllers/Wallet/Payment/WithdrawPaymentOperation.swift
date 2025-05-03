@@ -19,7 +19,6 @@ struct WithdrawPaymentOperation {
         case signWithdrawal(Swift.Error?)
         case signFee(Swift.Error?)
         case insufficientFee
-        case feeOutputNotConfirmed
         case maxSpendingCountExceeded
         
         var errorDescription: String? {
@@ -40,8 +39,6 @@ struct WithdrawPaymentOperation {
                 return error?.localizedDescription ?? "Sign fee"
             case .insufficientFee:
                 return R.string.localizable.insufficient_transaction_fee()
-            case .feeOutputNotConfirmed:
-                return R.string.localizable.waiting_transaction_description()
             case .maxSpendingCountExceeded:
                 return R.string.localizable.utxo_count_exceeded()
             }
@@ -105,14 +102,15 @@ struct WithdrawPaymentOperation {
         
         let feeOutputs: UTXOService.OutputCollection?
         if isFeeTokenDifferent {
-            let result = UTXOService.shared.collectUnspentOutputs(kernelAssetID: feeToken.kernelAssetID, amount: feeAmount)
+            let result = UTXOService.shared.collectAvailableOutputs(
+                kernelAssetID: feeToken.kernelAssetID,
+                amount: feeAmount
+            )
             switch result {
             case .insufficientBalance:
                 throw Error.insufficientFee
             case .maxSpendingCountExceeded:
                 throw Error.maxSpendingCountExceeded
-            case .outputNotConfirmed:
-                throw Error.feeOutputNotConfirmed
             case .success(let collection):
                 feeOutputs = collection
             }

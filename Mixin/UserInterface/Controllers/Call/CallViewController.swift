@@ -324,11 +324,11 @@ class CallViewController: ResizablePopupViewController {
     }
     
     func learnMoreAboutEncryption() {
-        guard let container = UIApplication.currentActivity() else {
+        guard let container = UIApplication.homeContainerViewController else {
             return
         }
         self.minimize {
-            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: .aboutEncryption), asChildOf: container)
+            container.presentWebViewController(context: .init(conversationId: "", initialUrl: .aboutEncryption))
         }
     }
     

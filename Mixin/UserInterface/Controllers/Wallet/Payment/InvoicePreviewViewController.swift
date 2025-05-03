@@ -5,12 +5,12 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
     
     var manipulateNavigationStackOnFinished = true
     
-    private let operation: InvoicePaymentOperation
+    private let operation: any InvoicePaymentOperation
     private let redirection: URL?
     
     init(
         issues: [PaymentPreconditionIssue],
-        operation: InvoicePaymentOperation,
+        operation: any InvoicePaymentOperation,
         redirection: URL?
     ) {
         self.operation = operation
@@ -25,7 +25,14 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableHeaderView.setIcon(tokens: operation.transactions.map(\.token))
+        let headerIconTokens: [MixinTokenItem] = operation.transactions.compactMap { transaction in
+            if transaction.entry.isStorage {
+                nil
+            } else {
+                transaction.token
+            }
+        }
+        tableHeaderView.setIcon(tokens: headerIconTokens)
         tableHeaderView.titleLabel.text = R.string.localizable.batch_transfer_confirmation()
         tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinMessenger)
         
@@ -42,16 +49,24 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
             .info(caption: .totalAmount, content: totalFiatMoneyAmount),
         ]
         
-        let changes = operation.transactions.map { item in
-            let amount = CurrencyFormatter.localizedString(
-                from: -item.entry.decimalAmount,
-                format: .precision,
-                sign: .always,
-                symbol: .custom(item.token.symbol)
-            )
-            return (token: item.token, amount: amount)
+        let changes: [StyledAssetChange] = operation.transactions.compactMap { item in
+            if item.entry.isStorage {
+                return nil
+            } else {
+                let amount = CurrencyFormatter.localizedString(
+                    from: -item.entry.decimalAmount,
+                    format: .precision,
+                    sign: .always,
+                    symbol: .custom(item.token.symbol)
+                )
+                return StyledAssetChange(
+                    token: item.token,
+                    amount: amount,
+                    amountStyle: .plain
+                )
+            }
         }
-        rows.append(.assetChanges(changes))
+        rows.append(.assetChanges(estimated: false, changes: changes))
         
         let senderThreshold: Int32?
         switch operation.destination {
@@ -61,7 +76,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
         case let .multisig(threshold, users):
             rows.append(.receivers(users, threshold: threshold))
             senderThreshold = 1
-        case let .mainnet(address):
+        case let .mainnet(_, address):
             rows.append(.mainnetReceiver(address))
             senderThreshold = nil
         }
@@ -70,13 +85,45 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
             rows.append(.senders([user], multisigSigners: nil, threshold: senderThreshold))
         }
         
-        rows.append(.amount(
-            caption: .networkFee,
-            token: CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never),
-            fiatMoney: CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol),
-            display: .byToken,
-            boldPrimaryAmount: false
-        ))
+        let storageTransactions = operation.transactions.filter(\.entry.isStorage)
+        if let xin = storageTransactions.first?.token {
+            let tokenAmount = storageTransactions.map(\.entry.decimalAmount).reduce(0, +)
+            let fiatMoneyAmount = tokenAmount * xin.decimalUSDPrice * Currency.current.decimalRate
+            rows.append(.amount(
+                caption: .networkFee,
+                token: CurrencyFormatter.localizedString(
+                    from: tokenAmount,
+                    format: .precision,
+                    sign: .never,
+                    symbol: .custom(xin.symbol)
+                ),
+                fiatMoney: CurrencyFormatter.localizedString(
+                    from: fiatMoneyAmount,
+                    format: .fiatMoney,
+                    sign: .never,
+                    symbol: .currencySymbol
+                ),
+                display: .byToken,
+                boldPrimaryAmount: false
+            ))
+        } else {
+            rows.append(.amount(
+                caption: .networkFee,
+                token: CurrencyFormatter.localizedString(
+                    from: Decimal(0),
+                    format: .precision,
+                    sign: .never
+                ),
+                fiatMoney: CurrencyFormatter.localizedString(
+                    from: Decimal(0),
+                    format: .fiatMoney,
+                    sign: .never,
+                    symbol: .currencySymbol
+                ),
+                display: .byToken,
+                boldPrimaryAmount: false
+            ))
+        }
         
         reloadData(with: rows)
         reporter.report(event: .sendPreview)

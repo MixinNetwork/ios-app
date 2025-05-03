@@ -150,8 +150,12 @@ extension NotificationManager: UNUserNotificationCenterDelegate {
                             UIApplication.homeNavigationController?.pushViewController(withBackRoot: vc)
                         }
                         UIApplication.homeContainerViewController?.clipSwitcher.hideFullscreenSwitcher()
-                        if let webController = UIApplication.currentActivity()?.children.first(where: { $0 is MixinWebViewController}) as? MixinWebViewController {
-                            webController.minimizeWithAnimation(completion: push)
+                        if var webControllers = UIApplication.homeContainerViewController?.children.compactMap({ $0 as? MixinWebViewController}), !webControllers.isEmpty {
+                            let last = webControllers.removeLast()
+                            for webController in webControllers {
+                                webController.minimizeWithAnimation()
+                            }
+                            last.minimizeWithAnimation(completion: push)
                         } else {
                             push()
                         }

@@ -27,10 +27,10 @@ final class OutputCell: UITableViewCell {
             let description = NSMutableAttributedString(string: "\(output.sequence):", attributes: descriptionAttributes)
             
             let stateColor: UIColor
-            switch output.state {
-            case "signed":
+            switch Output.State(rawValue: output.state) {
+            case .signed:
                 stateColor = R.color.market_red()!
-            case "unspent":
+            case .unspent:
                 stateColor = R.color.market_green()!
             default:
                 stateColor = R.color.text_tertiary()!

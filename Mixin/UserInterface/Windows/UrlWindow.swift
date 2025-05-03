@@ -200,12 +200,12 @@ class UrlWindow {
 
             DispatchQueue.main.async {
                 if isOpenApp {
-                    guard let parent = UIApplication.homeNavigationController?.visibleViewController else {
+                    guard let container = UIApplication.homeContainerViewController else {
                         return
                     }
                     let extraParams = params.filter { $0.key != "action" }
                     DispatchQueue.main.async {
-                        MixinWebViewController.presentInstance(with: .init(conversationId: conversationId, app: app, extraParams: extraParams), asChildOf: parent)
+                        container.presentWebViewController(context: .init(conversationId: conversationId, app: app, extraParams: extraParams))
                     }
                 } else {
                     let vc = UserProfileViewController(user: user)
@@ -501,8 +501,12 @@ class UrlWindow {
     
     class func checkWithdrawal(string: String) -> Bool {
         do {
-            let transfer = try ExternalTransfer(string: string)
-            performExternalTransfer(transfer)
+            if ExternalTransfer.isLightningAddress(string: string) {
+                loadLightningTransfer(string: string)
+            } else {
+                let transfer = try ExternalTransfer(string: string)
+                performExternalTransfer(transfer)
+            }
             return true
         } catch TransferLinkError.notTransferLink {
             return false
@@ -548,31 +552,64 @@ class UrlWindow {
         }
     }
     
-    class func performExternalTransfer(_ transfer: ExternalTransfer) {
+    class func loadLightningTransfer(string: String) {
         guard let homeContainer = UIApplication.homeContainerViewController else {
             return
         }
-        
-        enum Error: Swift.Error, LocalizedError {
-            
-            case invalidPaymentLink
-            case syncTokenFailed
-            case insufficientBalance
-            case insufficientFee
-            
-            var errorDescription: String? {
-                switch self {
-                case .invalidPaymentLink:
-                    R.string.localizable.invalid_payment_link()
-                case .syncTokenFailed:
-                    R.string.localizable.error_connection_timeout()
-                case .insufficientBalance:
-                    R.string.localizable.insufficient_balance()
-                case .insufficientFee:
-                    R.string.localizable.insufficient_transaction_fee()
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        PaymentAPI.payments(lightningPayment: string) { result in
+            switch result {
+            case let .success(payment):
+                guard payment.status.knownCase != .paid else {
+                    let error: ExternalTransferError = .alreadyPaid
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                    return
                 }
+                let decimalAmount = Decimal(string: payment.amount, locale: .enUSPOSIX)
+                let assetID = payment.asset.assetID
+                if let decimalAmount, decimalAmount > 0 {
+                    hud.hide()
+                    let transfer: ExternalTransfer = .lightning(
+                        raw: string,
+                        assetID: assetID,
+                        destination: payment.destination,
+                        amount: decimalAmount
+                    )
+                    performExternalTransfer(transfer)
+                } else {
+                    guard let token = syncToken(assetID: assetID, hud: hud) else {
+                        return
+                    }
+                    AddressValidator.validate(
+                        assetID: assetID,
+                        destination: payment.destination,
+                        tag: nil
+                    ) { address in
+                        hud.hide()
+                        let inputViewController: WithdrawInputAmountViewController
+                        if let address = AddressDAO.shared.getAddress(chainId: token.chainID, destination: address.destination, tag: address.tag) {
+                            inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: .address(address))
+                        } else {
+                            inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: .temporary(address))
+                        }
+                        UIApplication.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
+                    } onFailure: { error in
+                        hud.set(style: .error, text: error.localizedDescription)
+                        hud.scheduleAutoHidden()
+                    }
+                }
+            case let .failure(error):
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
             }
-            
+        }
+    }
+    
+    class func performExternalTransfer(_ transfer: ExternalTransfer) {
+        guard let homeContainer = UIApplication.homeContainerViewController else {
+            return
         }
         
         let hud = Hud()
@@ -587,20 +624,20 @@ class UrlWindow {
                     resolvedAmount = ExternalTransfer.resolve(atomicAmount: transfer.amount, with: precision)
                 }
                 if let arbitraryAmount = transfer.arbitraryAmount, arbitraryAmount != resolvedAmount {
-                    throw Error.invalidPaymentLink
+                    throw ExternalTransferError.invalidPaymentLink
                 }
                 
                 let assetID = transfer.assetID
                 guard let token = syncToken(assetID: assetID, hud: hud) else {
-                    throw Error.syncTokenFailed
+                    throw ExternalTransferError.syncTokenFailed
                 }
                 guard resolvedAmount <= token.decimalBalance else {
-                    throw Error.insufficientBalance
+                    throw ExternalTransferError.insufficientBalance
                 }
                 
                 let response = try await ExternalAPI.checkAddress(assetID: assetID, destination: transfer.destination, tag: nil)
                 guard response.tag.isNilOrEmpty, transfer.destination.lowercased() == response.destination.lowercased() else {
-                    throw Error.invalidPaymentLink
+                    throw ExternalTransferError.invalidPaymentLink
                 }
                 let address = TemporaryAddress(destination: response.destination, tag: response.tag ?? "")
                 
@@ -610,7 +647,7 @@ class UrlWindow {
                 }
                 let feeItems: [WithdrawFeeItem] = try fees.lazy.compactMap { fee in
                     guard let feeToken = syncToken(assetID: fee.assetID, hud: hud) else {
-                        throw Error.syncTokenFailed
+                        throw ExternalTransferError.syncTokenFailed
                     }
                     guard let feeItem = WithdrawFeeItem(amountString: fee.amount, tokenItem: feeToken) else {
                         return nil
@@ -623,7 +660,7 @@ class UrlWindow {
                     return isFeeSufficient ? feeItem : nil
                 }
                 guard let feeItem = feeItems.first else {
-                    throw Error.insufficientFee
+                    throw ExternalTransferError.insufficientFee
                 }
                 
                 let traceID = UUID().uuidString.lowercased()
@@ -932,11 +969,7 @@ class UrlWindow {
             guard let container = UIApplication.homeContainerViewController else {
                 return false
             }
-            var parent = container.topMostChild
-            if let visibleViewController = (parent as? UINavigationController)?.visibleViewController {
-                parent = visibleViewController
-            }
-            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
+            container.presentWebViewController(context: .init(conversationId: "", initialUrl: url))
             return true
         }
         return false
@@ -1078,8 +1111,8 @@ extension UrlWindow {
                 } else {
                     destination = .multisig(threshold: threshold, users: users)
                 }
-            case let .mainnet(address):
-                destination = .mainnet(address)
+            case let .mainnet(threshold, address):
+                destination = .mainnet(threshold: threshold, address: address)
             }
             
             let payment: Payment
@@ -1134,17 +1167,10 @@ extension UrlWindow {
                 return
             case let .invoice(invoice):
                 let assetIDs = Set(invoice.entries.map(\.assetID))
-                let tokenItems = TokenDAO.shared.tokenItems(with: assetIDs)
-                guard tokenItems.count == assetIDs.count else {
-                    DispatchQueue.main.async {
-                        // TODO: Better error description with which token is absent
-                        completion(R.string.localizable.insufficient_balance())
+                let tokens = TokenDAO.shared.tokenItems(with: assetIDs)
+                    .reduce(into: [:]) { result, token in
+                        result[token.assetID] = token
                     }
-                    return
-                }
-                let tokens = tokenItems.reduce(into: [:]) { result, token in
-                    result[token.assetID] = token
-                }
                 invoice.checkPreconditions(
                     transferTo: destination,
                     tokens: tokens,
@@ -1275,18 +1301,34 @@ extension UrlWindow {
                 }
             } onSuccess: { (operation, issues) in
                 completion(nil)
-                let redirection = source.isExternal ? paymentURL.redirection : nil
-                let preview = TransferPreviewViewController(issues: issues,
-                                                            operation: operation,
-                                                            amountDisplay: .byToken,
-                                                            redirection: redirection)
                 switch source {
-                case .swap:
-                    preview.manipulateNavigationStackOnFinished = true
+                case let .swap(context, _):
+                    guard case let .user(userItem) = destination else {
+                        return
+                    }
+                    let swap = SwapOperation(
+                        operation: operation,
+                        sendToken: context.sendToken,
+                        sendAmount: context.sendAmount,
+                        receiveToken: context.receiveToken,
+                        receiveAmount: context.receiveAmount,
+                        destination: .mixin(userItem),
+                        memo: paymentURL.memo
+                    )
+                    let preview = SwapPreviewViewController(
+                        operation: swap,
+                        warnings: issues.map(\.description)
+                    )
+                    homeContainer.present(preview, animated: true)
                 default:
+                    let redirection = source.isExternal ? paymentURL.redirection : nil
+                    let preview = TransferPreviewViewController(issues: issues,
+                                                                operation: operation,
+                                                                amountDisplay: .byToken,
+                                                                redirection: redirection)
                     preview.manipulateNavigationStackOnFinished = false
+                    homeContainer.present(preview, animated: true)
                 }
-                homeContainer.present(preview, animated: true)
             }
         }
     }

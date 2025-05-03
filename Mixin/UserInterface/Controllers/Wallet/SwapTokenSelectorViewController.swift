@@ -3,7 +3,7 @@ import OrderedCollections
 import Alamofire
 import MixinServices
 
-final class SwapTokenSelectorViewController: TokenSelectorViewController<BalancedSwapToken> {
+class SwapTokenSelectorViewController: TokenSelectorViewController<BalancedSwapToken> {
     
     enum Recent {
         
@@ -27,17 +27,25 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
     
     private weak var searchRequest: Request?
     
+    var source: RouteTokenSource {
+        .mixin
+    }
+    
     init(
         recent: Recent,
         tokens: [BalancedSwapToken],
+        chains: OrderedSet<Chain>? = nil,
         selectedAssetID: String?
     ) {
         self.recent = recent
-        let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-        let chains = Chain.mixinChains(ids: chainIDs)
+        let defaultChains = if let chains {
+            chains
+        } else {
+            Chain.mixinChains(ids: Set(tokens.compactMap(\.chain.chainID)))
+        }
         super.init(
             defaultTokens: tokens,
-            defaultChains: chains,
+            defaultChains: defaultChains,
             searchDebounceInterval: 1,
             selectedID: selectedAssetID
         )
@@ -58,7 +66,7 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
             guard let tokens = PropertiesDAO.shared.jsonObject(forKey: recent.key, type: [SwapToken.Codable].self) else {
                 return
             }
-            let recentTokens = BalancedSwapToken.fillBalance(swappableTokens: tokens)
+            let recentTokens = self?.filterRecentTokens(swappableTokens: tokens) ?? []
             let assetIDs = recentTokens.map(\.assetID)
             let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
                 .priceChangePercentage24H(assetIDs: assetIDs)
@@ -69,13 +77,17 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
         }
     }
     
+    func filterRecentTokens(swappableTokens: [SwapToken]) -> [BalancedSwapToken] {
+        fillSwappableTokenBalance(swappableTokens: swappableTokens)
+    }
+    
     override func prepareForSearch(_ textField: UITextField) {
         searchRequest?.cancel()
         super.prepareForSearch(textField)
     }
     
     override func search(keyword: String) {
-        searchRequest = RouteAPI.search(keyword: keyword, source: .mixin, queue: .global()) { [weak self] result in
+        searchRequest = RouteAPI.search(keyword: keyword, source: source, queue: .global()) { [weak self] result in
             switch result {
             case .success(let tokens):
                 self?.reloadSearchResults(keyword: keyword, tokens: tokens)
@@ -139,16 +151,20 @@ final class SwapTokenSelectorViewController: TokenSelectorViewController<Balance
         reporter.report(event: .tradeTokenSelect, method: location.toLogString())
     }
     
+    func chains(with ids: Set<String>) -> OrderedSet<Chain> {
+        Chain.mixinChains(ids: ids)
+    }
+    
+    func fillSwappableTokenBalance(swappableTokens: [SwapToken]) -> [BalancedSwapToken] {
+        BalancedSwapToken.fillMixinBalance(swappableTokens: swappableTokens)
+    }
+    
     private func reloadSearchResults(keyword: String, tokens: [SwapToken]) {
         assert(!Thread.isMainThread)
-        let searchResults = BalancedSwapToken.fillBalance(swappableTokens: tokens)
-            .sorted { (one, another) in
-                let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
-                let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
-                return left > right
-            }
+        let searchResults = fillSwappableTokenBalance(swappableTokens: tokens)
+            .sorted { $0.sortingValues > $1.sortingValues }
         let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-        let searchResultChains = Chain.mixinChains(ids: chainIDs)
+        let searchResultChains = chains(with: chainIDs)
         DispatchQueue.main.async {
             guard self.trimmedKeyword == keyword else {
                 return

@@ -2,7 +2,7 @@ import Foundation
 import CryptoKit
 import MixinServices
 
-struct Invoice: PaymentPreconditionChecker {
+struct Invoice {
     
     enum Reference {
         case hash(String)
@@ -14,13 +14,34 @@ struct Invoice: PaymentPreconditionChecker {
         let assetID: String
         let amount: String
         let decimalAmount: Decimal
-        let memo: String
-        let memoData: Data
+        let extra: Data
         let references: [Reference]
+        let isStorage: Bool
     }
     
     let recipient: MIXAddress
     let entries: [Entry]
+    let sendingSameTokenMultipleTimes: Bool
+    
+}
+
+extension Invoice {
+    
+    enum MaxExtraSize {
+        static let general = 256 - 1
+        static let storage = 4 * bytesPerMegaByte - 1
+    }
+    
+    enum Storage {
+        
+        static let step: Int = 1024
+        static let stepPrice: Decimal = 0.0001
+        
+        static func fee(byteCount: Int) -> Decimal {
+            Decimal(byteCount / step + 1) * stepPrice
+        }
+        
+    }
     
 }
 
@@ -39,8 +60,26 @@ extension Invoice {
         case invalidHashReference
         case invalidIndexReference
         case sha3
-        case duplicatedAssetID
         case emptyEntries
+    }
+    
+    private enum CheckingError: Error, LocalizedError {
+        
+        case alreadyPaid
+        case entryPaidAfterUnpaid
+        case entryPaidIntermediately
+        
+        var errorDescription: String? {
+            switch self {
+            case .alreadyPaid:
+                R.string.localizable.pay_paid()
+            case .entryPaidAfterUnpaid:
+                "Entry paid after unpaid"
+            case .entryPaidIntermediately:
+                "Entry paid intermediately"
+            }
+        }
+        
     }
     
     private class DataReader {
@@ -153,7 +192,7 @@ extension Invoice {
                 let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX),
                 let extraLength = reader.readUInt16(),
                 let extra = reader.readBytes(count: Int(extraLength)),
-                let memo = String(data: extra, encoding: .utf8),
+                extra.count <= MaxExtraSize.storage,
                 let referencesCount = reader.readUInt8()
             else {
                 throw InitError.invalidEntry
@@ -178,45 +217,109 @@ extension Invoice {
                 }
             }
             
+            let isStorage = assetID == AssetID.xin
+            && !extra.isEmpty
+            && extra.count > MaxExtraSize.general
+            && Storage.fee(byteCount: extra.count) == decimalAmount
+            
             let entry = Entry(
                 traceID: traceID,
                 assetID: assetID,
                 amount: amount,
                 decimalAmount: decimalAmount,
-                memo: memo,
-                memoData: extra,
-                references: references
+                extra: extra,
+                references: references,
+                isStorage: isStorage
             )
             entries.append(entry)
         }
-        
         if entries.isEmpty {
             throw InitError.emptyEntries
         }
-        let assetIDs = Set(entries.map(\.assetID))
-        if assetIDs.count != entries.count {
-            throw InitError.duplicatedAssetID
+        
+        var assetIDs: Set<String> = []
+        var sendingSameTokenMultipleTimes = false
+        for entry in entries {
+            let (inserted, _) = assetIDs.insert(entry.assetID)
+            if !inserted {
+                sendingSameTokenMultipleTimes = true
+                break
+            }
         }
         
         self.recipient = recipient
         self.entries = entries
+        self.sendingSameTokenMultipleTimes = sendingSameTokenMultipleTimes
     }
     
 }
 
-extension Invoice {
+extension Invoice: PaymentPreconditionChecker {
+    
+    private struct OutputsReadyPrecondition: PaymentPrecondition {
+        
+        let entries: [Entry]
+        let tokens: [String: MixinTokenItem] // Key is asset id
+        
+        func check() async -> PaymentPreconditionCheckingResult {
+            var amounts: [String: Decimal] = [:] // Key is kernel asset id
+            for entry in entries {
+                guard let kernelAssetID = tokens[entry.assetID]?.kernelAssetID else {
+                    return .failed(.description(R.string.localizable.insufficient_balance()))
+                }
+                let amount = amounts[kernelAssetID] ?? 0
+                amounts[kernelAssetID] = amount + entry.decimalAmount
+            }
+            for token in tokens.values {
+                guard let amount = amounts[token.kernelAssetID] else {
+                    continue
+                }
+                let result = UTXOService.shared.collectAvailableOutputs(
+                    kernelAssetID: token.kernelAssetID,
+                    amount: amount
+                )
+                switch result {
+                case .success:
+                    Logger.general.info(category: "Invoice", message: "Outputs ready for \(token.symbol)")
+                case .insufficientBalance:
+                    Logger.general.info(category: "Invoice", message: "Insufficient balance for \(token.symbol)")
+                    return .failed(.description(R.string.localizable.insufficient_balance()))
+                case .maxSpendingCountExceeded:
+                    Logger.general.info(category: "Invoice", message: "\(token.symbol) requires consolidation")
+                    let consolidationResult = await withCheckedContinuation { continuation in
+                        DispatchQueue.main.async {
+                            let consolidation = ConsolidateOutputsViewController(token: token)
+                            consolidation.onCompletion = { result in
+                                continuation.resume(with: .success(result))
+                            }
+                            let auth = AuthenticationViewController(intent: consolidation)
+                            UIApplication.homeContainerViewController?.present(auth, animated: true)
+                        }
+                    }
+                    switch consolidationResult {
+                    case .userCancelled:
+                        return .failed(.userCancelled)
+                    case .success:
+                        break
+                    }
+                }
+            }
+            return .passed([])
+        }
+        
+    }
     
     func checkPreconditions(
         transferTo destination: Payment.TransferDestination,
-        tokens: [String: MixinTokenItem],
+        tokens: [String: MixinTokenItem], // Key is asset id
         on parent: UIViewController,
         onFailure: @MainActor @escaping (PaymentPreconditionFailureReason) -> Void,
-        onSuccess: @MainActor @escaping (InvoicePaymentOperation, [PaymentPreconditionIssue]) -> Void
+        onSuccess: @MainActor @escaping (any InvoicePaymentOperation, [PaymentPreconditionIssue]) -> Void
     ) {
         Task {
-            let preconditions: [PaymentPrecondition] = [
+            var preconditions: [PaymentPrecondition] = [
                 NoPendingTransactionPrecondition(),
-                AlreadyPaidPrecondition(traceIDs: entries.map(\.traceID))
+                OutputsReadyPrecondition(entries: entries, tokens: tokens),
             ] + entries.flatMap { entry in
                 entry.references.compactMap { reference in
                     switch reference {
@@ -227,40 +330,106 @@ extension Invoice {
                     }
                 }
             }
+            let paidEntriesHash: [String]
+            if sendingSameTokenMultipleTimes {
+                do {
+                    let hashes = try await SafeAPI.transactions(ids: entries.map(\.traceID))
+                        .reduce(into: [:]) { result, transaction in
+                            result[transaction.requestID] = transaction.transactionHash
+                        }
+                    if hashes.isEmpty {
+                        paidEntriesHash = []
+                    } else if let firstHash = hashes[entries[0].traceID] {
+                        var results = [firstHash]
+                        var successiveEntriesMustBeUnpaid = false
+                        for entry in entries.dropFirst() {
+                            let hash = hashes[entry.traceID]
+                            if successiveEntriesMustBeUnpaid {
+                                if hash != nil {
+                                    throw CheckingError.entryPaidAfterUnpaid
+                                }
+                            } else {
+                                if let hash {
+                                    results.append(hash)
+                                } else {
+                                    successiveEntriesMustBeUnpaid = true
+                                }
+                            }
+                        }
+                        paidEntriesHash = results
+                    } else {
+                        throw CheckingError.entryPaidIntermediately
+                    }
+                    if paidEntriesHash.count == entries.count {
+                        throw CheckingError.alreadyPaid
+                    }
+                } catch {
+                    await MainActor.run {
+                        onFailure(.description(error.localizedDescription))
+                    }
+                    return
+                }
+            } else {
+                paidEntriesHash = []
+                let alreadyPaid = AlreadyPaidPrecondition(traceIDs: entries.map(\.traceID))
+                preconditions.append(alreadyPaid)
+            }
             switch await check(preconditions: preconditions) {
             case .failed(let reason):
                 await MainActor.run {
                     onFailure(reason)
                 }
             case .passed(let issues):
-                var transactions: [InvoicePaymentOperation.Transaction] = []
-                for entry in entries {
-                    guard let token = tokens[entry.assetID] else {
-                        await MainActor.run {
-                            // Not expected to happen, this issue could be found by caller
-                            onFailure(.description(R.string.localizable.insufficient_balance()))
+                if sendingSameTokenMultipleTimes {
+                    var transactions: [NonAtomicInvoicePaymentOperation.Transaction] = []
+                    for entry in entries {
+                        guard let token = tokens[entry.assetID] else {
+                            await MainActor.run {
+                                // Not expected to happen, this issue could be found by `OutputsReadyPrecondition`
+                                onFailure(.description(R.string.localizable.insufficient_balance()))
+                            }
+                            return
                         }
-                        return
+                        transactions.append(.init(entry: entry, token: token))
                     }
-                    let outputCollectionResult = await collectOutputs(token: token, amount: entry.decimalAmount, on: parent)
-                    switch outputCollectionResult {
-                    case .success(let collection):
-                        let transaction = InvoicePaymentOperation.Transaction(
-                            entry: entry,
-                            token: token,
-                            outputCollection: collection
-                        )
-                        transactions.append(transaction)
-                    case .failure(let reason):
-                        await MainActor.run {
-                            onFailure(reason)
+                    let operation = NonAtomicInvoicePaymentOperation(
+                        destination: destination,
+                        transactions: transactions,
+                        paidEntriesHash: paidEntriesHash
+                    )
+                    await MainActor.run {
+                        onSuccess(operation, issues)
+                    }
+                } else {
+                    var transactions: [AtomicInvoicePaymentOperation.Transaction] = []
+                    for entry in entries {
+                        guard let token = tokens[entry.assetID] else {
+                            await MainActor.run {
+                                // Not expected to happen, this issue could be found by caller
+                                onFailure(.description(R.string.localizable.insufficient_balance()))
+                            }
+                            return
                         }
-                        return
+                        let outputCollectionResult = await collectOutputs(token: token, amount: entry.decimalAmount, on: parent)
+                        switch outputCollectionResult {
+                        case .success(let collection):
+                            let transaction = AtomicInvoicePaymentOperation.Transaction(
+                                entry: entry,
+                                token: token,
+                                outputCollection: collection
+                            )
+                            transactions.append(transaction)
+                        case .failure(let reason):
+                            await MainActor.run {
+                                onFailure(reason)
+                            }
+                            return
+                        }
                     }
-                }
-                let operation = InvoicePaymentOperation(destination: destination, transactions: transactions)
-                await MainActor.run {
-                    onSuccess(operation, issues)
+                    let operation = AtomicInvoicePaymentOperation(destination: destination, transactions: transactions)
+                    await MainActor.run {
+                        onSuccess(operation, issues)
+                    }
                 }
             }
         }

@@ -119,11 +119,11 @@ final class InscriptionViewController: UIViewController {
             if let owner = inscription.owner {
                 if let address = MIXAddress(string: owner) {
                     switch address {
-                    case .user(let userID):
+                    case let .user(userID):
                         appendOwner(raw: owner, userID: userID)
-                    case .multisig(let threshold, let userIDs):
+                    case let .multisig(threshold, userIDs):
                         appendOwner(raw: owner, userIDs: userIDs, threshold: threshold)
-                    case .mainnet(let address):
+                    case let .mainnet(_, address):
                         rows.append(.rawOwner(address))
                     }
                 } else {
@@ -186,7 +186,10 @@ final class InscriptionViewController: UIViewController {
         guard let url = URL(string: "https://rune.fan/items/\(inscriptionHash)") else {
             return
         }
-        MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: self)
+        guard let container = UIApplication.homeContainerViewController else {
+            return
+        }
+        container.presentWebViewController(context: .init(conversationId: "", initialUrl: url))
     }
     
     private func releaseInscription(_ action: UIAlertAction) {

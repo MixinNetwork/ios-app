@@ -774,7 +774,7 @@ extension PayWindow {
             if let result = response {
                 switch result {
                 case let .success(payment):
-                    if payment.status == PaymentStatus.paid.rawValue {
+                    if payment.status.knownCase == .paid {
                         DispatchQueue.main.async {
                             PayWindow.instance().render(asset: asset, action: action, amount: amount, memo: memo, error: R.string.localizable.pay_paid(), fiatMoneyAmount: fiatMoneyAmount).presentPopupControllerAnimated()
                         }

@@ -142,6 +142,10 @@
 "app_update_tips" = "The current version (%@) is no longer available! Please click \"Update\" below to update to the latest version from the App Store.";
 "appearance" = "Appearance";
 "apply" = "Apply";
+"approval" = "Approval";
+"approval_count" = "Approved %@";
+"approval_unlimited" = "Unlimited";
+"approval_unlimited_warning" = "This app can withdraw all your %@";
 "approve" = "Approve";
 "approve_transaction" = "Approve Transaction";
 "approving_transaction" = "Approving Transaction";
@@ -215,6 +219,8 @@
 "camera" = "Camera";
 "cancel" = "Cancel";
 "cancel_floating" = "Cancel Floating";
+"cancel_transaction" = "Cancel Transaction";
+"cancel_transaction_description" = "If the transaction is too far along cancellation may not be possible";
 "canceled" = "Cancelled";
 "canceled_by_caller" = "Cancelled by caller";
 "cant_receive_the_code" = "Can't receive the code?";
@@ -282,6 +288,8 @@
 "circle_title" = "%@'s Circles";
 "circles" = "Circles";
 "circulation_supply" = "Circulation Supply";
+"classic_wallet_tip_description" = "A common multi-chain wallet that accesses decentralized applications and DeFi protocols.";
+"classic_wallet_tip_title" = "What’s the Common Wallet?";
 "clear" = "Clear";
 "clear_cache" = "Clear Cache";
 "clear_chat" = "Clear Chat";
@@ -888,6 +896,8 @@
 "pending_confirmation" = "%1$d/%2$d confirmation";
 "pending_confirmation_count" = "%1$d/%2$d confirmations";
 "pending_confirmations" = "%d/%d Confirmations";
+"pending_transaction_one" = "1 Pending Transaction";
+"pending_transactions_count" = "%d Pending Transactions";
 "permission_denied_camera_hint" = "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.";
 "permission_denied_microphone_hint" = "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.";
 "permission_denied_network_hint" = "Mixin doesn't have permission to use wireless data. Please tap Setting to open system settings.";
@@ -951,6 +961,8 @@
 "privacy" = "Privacy";
 "privacy_policy" = "Privacy Policy";
 "privacy_wallet" = "Privacy Wallet";
+"privacy_wallet_tip_description" = "A multi-chain wallet with private, free, and instant transactions to meet most of your needs.";
+"privacy_wallet_tip_title" = "What’s the Privacy Wallet?";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "Profile";
 "profile_photo" = "Profile Photo";
@@ -1207,6 +1219,9 @@
 "sort_by_oldest" = "Sort by Oldest";
 "sort_by_recent" = "Sort by Recent";
 "sort_by_value" = "Sort by Value";
+"speed_up" = "Speed Up";
+"speed_up_transaction" = "Speed Up Transaction";
+"speed_up_transaction_description" = "If the transaction is too far along this may not be possible";
 "start" = "Start";
 "start_backup" = "Start Backup";
 "start_messaging" = "Start Messaging";
@@ -1266,10 +1281,11 @@
 "to" = "To";
 "today" = "Today";
 "token" = "Token";
+"token_access_approval" = "Token Access Approval";
 "top_count" = "Top %d";
 "total" = "Total";
 "total_amount" = "Total Amount";
-"total_assets" = "Total assets";
+"total_balance" = "Total Balance";
 "total_supply" = "Total Supply";
 "touch_id" = "Touch ID";
 "track_not_found" = "Track not found";
@@ -1316,6 +1332,7 @@
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";
+"unable_to_estimate_asset_changes" = "Unable to estimate asset changes";
 "unable_to_save_photo" = "Unable to save photo.";
 "unable_to_save_video" = "Unable to save video.";
 "unable_to_share_content" = "Unable to share this content";
@@ -1369,11 +1386,13 @@
 "uploading_progress" = "Uploading: %@ of %@ (%@)";
 "url_api_upgrade" = "https://support.mixin.one/en/article/mixin-api-upgrade-notification-1cfmdc9/";
 "url_cant_receive_otp" = "https://support.mixin.one/en/article/what-to-do-if-you-dont-receive-a-sms-code-for-logging-1ym9me1/";
+"url_classic_wallet" = "https://support.mixin.one/en/article/what-is-a-common-wallet-y0rxkx/";
 "url_delete_account" = "https://support.mixin.one/en/article/how-to-delete-my-account-19fkagl/";
 "url_deposit" = "https://support.mixin.one/en/article/how-to-deposit-assets-to-mixin-messenger-1usvjod/";
 "url_deposit_suspended" = "https://support.mixin.one/en/article/the-explanation-about-mixin-stopped-support-for-some-assets-deposits-1im32px/";
 "url_disappearing_message" = "https://support.mixin.one/en/article/how-to-enable-disappearing-messages-2nzaz8/";
 "url_forget_pin" = "https://support.mixin.one/en/article/how-to-do-if-i-forget-the-pin-g12pmo/";
+"url_privacy_wallet" = "https://support.mixin.one/en/article/what-is-a-privacy-wallet-1ng5j8f/";
 "url_recall_message" = "https://support.mixin.one/en/article/how-to-recall-in-mixin-messenger-n3v3p1/";
 "url_recovery_contact" = "https://support.mixin.one/en/article/how-to-set-up-an-emergency-contact-1kvd6g8/";
 "url_support" = "https://support.mixin.one/en/";
@@ -1437,7 +1456,7 @@
 "web3_account_network" = "%@ Account";
 "web3_deposit_description_evm" = "Use this address for receiving tokens on Ethereum, Polygon, BSC, Base networks";
 "web3_deposit_description_solana" = "Use this address for receiving tokens on Solana network";
-"web3_ensure_trust" = "Please ensure you trust this dapp before proceeding with the request.";
+"web3_ensure_trust" = "Please ensure you trust this app before proceeding with the request.";
 "web3_message_request" = "Message Request";
 "web3_no_asset" = "Don’t Have Assets";
 "web3_signing" = "Signing";

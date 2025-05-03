@@ -10,6 +10,8 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
             title: token.name,
             subtitle: token.depositNetworkName
         )
+        tableView.register(R.nib.snapshotCell)
+        tableView.reloadData()
         
         let center: NotificationCenter = .default
         center.addObserver(self, selector: #selector(balanceDidUpdate(_:)), name: UTXOService.balanceDidUpdateNotification, object: nil)
@@ -46,9 +48,11 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
         cell.delegate = self
     }
     
-    override func updateTransactionCell(_ cell: SnapshotCell, with transaction: SafeSnapshotItem) {
+    override func tableView(_ tableView: UITableView, cellForTransaction transaction: SafeSnapshotItem) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.snapshot.identifier) as! SnapshotCell
         cell.render(snapshot: transaction)
         cell.delegate = self
+        return cell
     }
     
     override func viewMarket() {

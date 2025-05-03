@@ -275,6 +275,21 @@ final class WalletHeaderView: InfiniteTopView {
         }
     }
     
+    func reloadPendingTransactions(_ transactions: [Web3Transaction]) {
+        if transactions.isEmpty {
+            pendingDepositView.isHidden = true
+            contentViewBottomConstraint.constant = 17
+        } else {
+            pendingDepositView.isHidden = false
+            contentViewBottomConstraint.constant = 10
+            pendingDepositLabel.text = if transactions.count == 1 {
+                R.string.localizable.pending_transaction_one()
+            } else {
+                R.string.localizable.pending_transactions_count(transactions.count)
+            }
+        }
+    }
+    
 }
 
 extension WalletHeaderView {

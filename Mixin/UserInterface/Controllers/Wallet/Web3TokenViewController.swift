@@ -1,7 +1,10 @@
 import UIKit
 import MixinServices
 
-final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3TransactionItem> {
+final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Transaction> {
+    
+    private var transactionTokenSymbols: [String: String] = [:]
+    private var reviewPendingTransactionJobID: String?
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -14,6 +17,8 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
             title: token.name,
             subtitle: token.depositNetworkName
         )
+        tableView.register(R.nib.web3TransactionCell)
+        tableView.reloadData()
         
         let notificationCenter: NotificationCenter = .default
         notificationCenter.addObserver(
@@ -28,10 +33,34 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
             name: Web3TokenDAO.tokensDidChangeNotification,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadIfContains(_:)),
+            name: Web3TransactionDAO.transactionDidSaveNotification,
+            object: nil
+        )
         
         reloadSnapshots()
-        let job = SyncWeb3TransactionJob(walletID: token.walletID)
-        ConcurrentJobQueue.shared.addJob(job: job)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let jobs = [
+            SyncWeb3TransactionJob(walletID: token.walletID),
+            ReviewPendingWeb3RawTransactionJob(),
+            ReviewPendingWeb3TransactionJob(walletID: token.walletID),
+        ]
+        reviewPendingTransactionJobID = jobs[2].getJobId()
+        for job in jobs {
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let id = reviewPendingTransactionJobID {
+            ConcurrentJobQueue.shared.cancelJob(jobId: id)
+        }
     }
     
     override func send() {
@@ -41,7 +70,11 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         guard let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: chain.chainID) else {
             return
         }
-        let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address.destination)
+        let payment = Web3SendingTokenPayment(
+            chain: chain,
+            token: token,
+            fromAddress: address.destination
+        )
         let selector = Web3TokenReceiverViewController(payment: payment)
         self.navigationController?.pushViewController(selector, animated: true)
     }
@@ -59,12 +92,13 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     
     override func updateBalanceCell(_ cell: TokenBalanceCell) {
         cell.reloadData(web3Token: token)
-        cell.actionView.swapButton.isHidden = true
         cell.actionView.delegate = self
     }
     
-    override func updateTransactionCell(_ cell: SnapshotCell, with transaction: Web3TransactionItem) {
-        cell.render(transaction: transaction)
+    override func tableView(_ tableView: UITableView, cellForTransaction transaction: Web3Transaction) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_transaction.identifier) as! Web3TransactionCell
+        cell.load(transaction: transaction, symbols: transactionTokenSymbols)
+        return cell
     }
     
     override func viewMarket() {
@@ -73,8 +107,8 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         navigationController?.pushViewController(market, animated: true)
     }
     
-    override func view(transaction: Web3TransactionItem) {
-        let viewController = Web3TransactionViewController(token: token, transaction: transaction)
+    override func view(transaction: Web3Transaction) {
+        let viewController = Web3TransactionViewController(walletID: token.walletID, transaction: transaction)
         navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -110,10 +144,33 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
                 transactions: transactions,
                 hasMore: hasMoreTransactions
             )
+            var assetIDs: Set<String> = []
+            for transaction in transactions {
+                assetIDs.formUnion(transaction.allAssetIDs)
+            }
+            let tokenSymbols = Web3TokenDAO.shared.tokenSymbols(ids: assetIDs)
+                .mapValues { symbol in
+                    TextTruncation.truncateTail(string: symbol, prefixCount: 8)
+                }
             DispatchQueue.main.async {
-                self?.reloadTransactions(pending: [], finished: transactionRows)
+                guard let self else {
+                    return
+                }
+                self.transactionTokenSymbols = tokenSymbols
+                self.reloadTransactions(pending: [], finished: transactionRows)
             }
         }
+    }
+    
+    @objc private func reloadIfContains(_ notification: Notification) {
+        guard
+            let userInfo = notification.userInfo,
+            let transactions = userInfo[Web3TransactionDAO.transactionsUserInfoKey] as? [Web3Transaction],
+            transactions.contains(where: { [$0.sendAssetID, $0.receiveAssetID].contains(token.assetID) })
+        else {
+            return
+        }
+        reloadSnapshots()
     }
     
 }
@@ -130,7 +187,9 @@ extension Web3TokenViewController: TokenActionView.Delegate {
         case .send:
             send()
         case .swap:
-            break
+            let swap = Web3SwapViewController(sendAssetID: token.assetID, receiveAssetID: AssetID.erc20USDT, walletID: token.walletID)
+            navigationController?.pushViewController(swap, animated: true)
+            reporter.report(event: .swapStart, tags: ["entrance": "wallet", "source": "web3"])
         }
     }
     

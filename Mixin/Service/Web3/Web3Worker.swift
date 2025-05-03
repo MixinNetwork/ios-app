@@ -177,7 +177,7 @@ final class Web3Worker {
             send(error: "Invalid Data", to: request)
             return
         }
-        guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum)?.destination else {
+        guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum) else {
             send(error: "Account Locked", to: request)
             return
         }
@@ -185,7 +185,8 @@ final class Web3Worker {
             do {
                 let preview = try EVMTransactionPreview(json: object)
                 let operation = try EVMTransferWithBrowserWalletOperation(
-                    fromAddress: address,
+                    walletID: address.walletID,
+                    fromAddress: address.destination,
                     transaction: preview,
                     chain: evmChain
                 ) { hash in

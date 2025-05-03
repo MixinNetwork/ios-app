@@ -99,7 +99,7 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         descriptionLabel.text = token.localizedBalanceWithSymbol
         chainTagLabel.isHidden = true
         if token.decimalUSDPrice > 0 {
-            changeLabel.text = token.localizedPercentChange
+            changeLabel.text = token.localizedUSDChange
             changeLabel.marketColor = .byValue(token.decimalUSDChange)
             priceLabel.text = token.localizedFiatMoneyPrice
             changeLabel.isHidden = false

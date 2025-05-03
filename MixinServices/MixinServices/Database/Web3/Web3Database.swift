@@ -79,35 +79,58 @@ public final class Web3Database: Database {
                 )
                 """,
                 """
-                CREATE TABLE IF NOT EXISTS `transactions` (
-                    `transaction_id`    TEXT NOT NULL,
-                    `transaction_type`  TEXT NOT NULL,
-                    `transaction_hash`  TEXT NOT NULL,
-                    `output_index`      INTEGER NOT NULL,
-                    `block_number`      INTEGER NOT NULL,
-                    `sender`            TEXT NOT NULL,
-                    `receiver`          TEXT NOT NULL,
-                    `output_hash`       TEXT NOT NULL,
-                    `chain_id`          TEXT NOT NULL,
-                    `asset_id`          TEXT NOT NULL,
-                    `amount`            TEXT NOT NULL,
-                    `created_at`        TEXT NOT NULL,
-                    `updated_at`        TEXT NOT NULL,
-                    `transaction_at`    TEXT NOT NULL,
-                    `status`            TEXT NOT NULL,
-                    PRIMARY KEY(`transaction_id`)
-                )
-                """,
-                """
                 CREATE TABLE IF NOT EXISTS properties (
-                    key TEXT NOT NULL, 
-                    value TEXT NOT NULL, 
-                    updated_at TEXT NOT NULL, 
+                    key         TEXT NOT NULL, 
+                    value       TEXT NOT NULL, 
+                    updated_at  TEXT NOT NULL, 
                     PRIMARY KEY(key)
                 )
                 """,
-                "CREATE INDEX IF NOT EXISTS `index_transactions_transaction_at` ON `transactions` (`transaction_at`)",
-                "CREATE INDEX IF NOT EXISTS `index_transactions_transaction_type_asset_id` ON `transactions` (`transaction_type`, `asset_id`)",
+                """
+                CREATE TABLE IF NOT EXISTS raw_transactions (
+                    `hash`          TEXT NOT NULL,
+                    `chain_id`      TEXT NOT NULL,
+                    `account`       TEXT NOT NULL,
+                    `nonce`         TEXT NOT NULL,
+                    `raw`           TEXT NOT NULL,
+                    `state`         TEXT NOT NULL,
+                    `created_at`    TEXT NOT NULL,
+                    `updated_at`    TEXT NOT NULL,
+                    PRIMARY KEY(`hash`)
+                )
+                """,
+            ]
+            for sql in sqls {
+                try db.execute(sql: sql)
+            }
+        }
+        
+        migrator.registerMigration("transactions") { db in
+            let sqls = [
+                "DROP TABLE IF EXISTS transactions",
+                "DELETE FROM properties",
+                """
+                CREATE TABLE IF NOT EXISTS `transactions` (
+                    `transaction_hash`  TEXT NOT NULL,
+                    `chain_id`          TEXT NOT NULL,
+                    `address`           TEXT NOT NULL,
+                    `transaction_type`  TEXT NOT NULL,
+                    `status`            TEXT NOT NULL,
+                    `block_number`      INTEGER NOT NULL,
+                    `fee`               TEXT NOT NULL,
+                    `senders`           TEXT,
+                    `receivers`         TEXT,
+                    `approvals`         TEXT,
+                    `send_asset_id`     TEXT,
+                    `receive_asset_id`  TEXT,
+                    `transaction_at`    TEXT NOT NULL,
+                    `created_at`        TEXT NOT NULL,
+                    `updated_at`        TEXT NOT NULL,
+                    PRIMARY KEY(`transaction_hash`, `chain_id`, `address`)
+                )
+                """,
+                "CREATE INDEX IF NOT EXISTS `index_transactions_address_transaction_at` ON `transactions` (`address`, `transaction_at`)",
+                "CREATE INDEX IF NOT EXISTS `index_transactions_transaction_type_send_asset_id_receive_asset_id_transaction_at` ON `transactions` (`transaction_type`, `send_asset_id`, `receive_asset_id`, `transaction_at`)",
             ]
             for sql in sqls {
                 try db.execute(sql: sql)

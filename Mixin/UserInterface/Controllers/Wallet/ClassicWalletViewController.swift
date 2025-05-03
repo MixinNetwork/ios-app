@@ -6,6 +6,7 @@ final class ClassicWalletViewController: WalletViewController {
     private let walletID: String
     
     private var tokens: [Web3TokenItem] = []
+    private var reviewPendingTransactionJobID: String?
     
     init(walletID: String) {
         self.walletID = walletID
@@ -21,8 +22,12 @@ final class ClassicWalletViewController: WalletViewController {
         titleLabel.text = R.string.localizable.common_wallet()
         tableView.dataSource = self
         tableView.delegate = self
-        tableHeaderView.actionView.swapButton.isHidden = true
         tableHeaderView.actionView.delegate = self
+        tableHeaderView.pendingDepositButton.addTarget(
+            self,
+            action: #selector(revealPendingDeposits(_:)),
+            for: .touchUpInside
+        )
         let notificationCenter: NotificationCenter = .default
         notificationCenter.addObserver(
             self,
@@ -42,12 +47,38 @@ final class ClassicWalletViewController: WalletViewController {
             name: UIApplication.willEnterForegroundNotification,
             object: nil
         )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadPendingTransactions),
+            name: Web3TransactionDAO.transactionDidSaveNotification,
+            object: nil
+        )
         reloadData()
+        reloadPendingTransactions()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reloadTokensFromRemote()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let jobs = [
+            ReviewPendingWeb3RawTransactionJob(),
+            ReviewPendingWeb3TransactionJob(walletID: walletID),
+        ]
+        reviewPendingTransactionJobID = jobs[1].getJobId()
+        for job in jobs {
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let id = reviewPendingTransactionJobID {
+            ConcurrentJobQueue.shared.cancelJob(jobId: id)
+        }
     }
     
     override func moreAction(_ sender: Any) {
@@ -73,8 +104,13 @@ final class ClassicWalletViewController: WalletViewController {
     }
     
     @objc private func reloadTokensFromRemote() {
-        let job = RefreshWeb3TokenJob(walletID: walletID)
-        ConcurrentJobQueue.shared.addJob(job: job)
+        let jobs = [
+            RefreshWeb3TokenJob(walletID: walletID),
+            SyncWeb3TransactionJob(walletID: walletID),
+        ]
+        for job in jobs {
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
     }
     
     @objc private func reloadDataIfWalletMatch(_ notification: Notification) {
@@ -100,6 +136,24 @@ final class ClassicWalletViewController: WalletViewController {
                 self.tableView.reloadData()
             }
         }
+    }
+    
+    @objc private func reloadPendingTransactions() {
+        DispatchQueue.global().async { [weak self] in
+            let transactions = Web3TransactionDAO.shared.pendingTransactions()
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                self.tableHeaderView.reloadPendingTransactions(transactions)
+                self.layoutTableHeaderView()
+            }
+        }
+    }
+    
+    @objc private func revealPendingDeposits(_ sender: Any) {
+        let transactionHistory = Web3TransactionHistoryViewController(walletID: walletID, type: .pending)
+        navigationController?.pushViewController(transactionHistory, animated: true)
     }
     
     private func hideToken(with assetID: String) {
@@ -183,7 +237,11 @@ extension ClassicWalletViewController: TokenActionView.Delegate {
                 guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: chain.chainID) else {
                     return
                 }
-                let payment = Web3SendingTokenPayment(chain: chain, token: token, fromAddress: address.destination)
+                let payment = Web3SendingTokenPayment(
+                    chain: chain,
+                    token: token,
+                    fromAddress: address.destination
+                )
                 let selector = Web3TokenReceiverViewController(payment: payment)
                 self.navigationController?.pushViewController(selector, animated: true)
             }
@@ -198,7 +256,9 @@ extension ClassicWalletViewController: TokenActionView.Delegate {
                 self.present(selector, animated: true, completion: nil)
             }
         case .swap:
-            break
+            let swap = Web3SwapViewController(sendAssetID: nil, receiveAssetID: nil, walletID: walletID)
+            navigationController?.pushViewController(swap, animated: true)
+            reporter.report(event: .swapStart, tags: ["entrance": "wallet", "source": "web3"])
         }
     }
     

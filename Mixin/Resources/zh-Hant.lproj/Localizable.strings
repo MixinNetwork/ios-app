@@ -142,6 +142,10 @@
 "app_update_tips" = "當前版本（%@）已失效！請點選下方\"更新\"從 App Store 更新至最新版。";
 "appearance" = "外觀";
 "apply" = "應用";
+"approval" = "授權";
+"approval_count" = "已授權 %@";
+"approval_unlimited" = "無限量";
+"approval_unlimited_warning" = "此 App 可以提取你所有的 %@";
 "approve" = "批准";
 "approve_transaction" = "批准交易";
 "approving_transaction" = "正在批准";
@@ -215,6 +219,8 @@
 "camera" = "相機";
 "cancel" = "取消";
 "cancel_floating" = "取消浮窗";
+"cancel_transaction" = "取消交易";
+"cancel_transaction_description" = "如果交易已接近完成，可能無法取消";
 "canceled" = "已取消";
 "canceled_by_caller" = "對方已取消";
 "cant_receive_the_code" = "接收不到驗證碼？";
@@ -282,6 +288,8 @@
 "circle_title" = "%@的圈子";
 "circles" = "圈子";
 "circulation_supply" = "流通量";
+"classic_wallet_tip_description" = "一個支援多鏈的常規錢包，可用於訪問去中心化應用和 DeFi 協議。";
+"classic_wallet_tip_title" = "什麼是普通錢包？";
 "clear" = "清理";
 "clear_cache" = "清理快取";
 "clear_chat" = "清除聊天記錄";
@@ -888,6 +896,8 @@
 "pending_confirmation" = "%1$d/%2$d 區塊確認數";
 "pending_confirmation_count" = "%1$d/%2$d 區塊確認數";
 "pending_confirmations" = "%d/%d 區塊確認數";
+"pending_transaction_one" = "有 1 筆交易處理中";
+"pending_transactions_count" = "有 %d 筆交易處理中";
 "permission_denied_camera_hint" = "Mixin 需要攝像頭許可權，請點選'設定'開啟系統授權。";
 "permission_denied_microphone_hint" = "Mixin 需要麥克風許可權，請點選'設定'開啟系統授權。";
 "permission_denied_network_hint" = "Mixin 需要無線資料許可權，請點選'設定'開啟系統授權。";
@@ -951,6 +961,8 @@
 "privacy" = "隱私";
 "privacy_policy" = "隱私政策";
 "privacy_wallet" = "隱私錢包";
+"privacy_wallet_tip_description" = "一個支援多鏈的錢包，提供私密、免費且即時的交易，滿足您的大部分需求。";
+"privacy_wallet_tip_title" = "什麼是隱私錢包？";
 "process_can_not_be_stop" = "流程一旦開始無法取消，請牢記 6 位數字 PIN，意外中止流程需要再次輸入";
 "profile" = "個人資料";
 "profile_photo" = "個人頭像";
@@ -1207,6 +1219,9 @@
 "sort_by_oldest" = "按最早排序";
 "sort_by_recent" = "按最近排序";
 "sort_by_value" = "按價值排序";
+"speed_up" = "加速";
+"speed_up_transaction" = "加速交易";
+"speed_up_transaction_description" = "如果交易已接近完成，可能無法加速";
 "start" = "開始";
 "start_backup" = "開始備份";
 "start_messaging" = "開始聊天";
@@ -1266,10 +1281,11 @@
 "to" = "至";
 "today" = "今天";
 "token" = "代幣";
+"token_access_approval" = "授權使用代幣";
 "top_count" = "前 %d";
 "total" = "共計";
 "total_amount" = "總金額";
-"total_assets" = "資產合計";
+"total_balance" = "資產合計";
 "total_supply" = "總量";
 "touch_id" = "指紋";
 "track_not_found" = "Track 無效";
@@ -1316,6 +1332,7 @@
 "unable_connect_to_desktop" = "無法連線到桌面，請稍後重試";
 "unable_synced_between_different_account" = "不同賬戶之間無法同步聊天記錄";
 "unable_to_decode_the_request" = "無法解析請求: %@";
+"unable_to_estimate_asset_changes" = "無法估計資產變化";
 "unable_to_save_photo" = "儲存圖片失敗";
 "unable_to_save_video" = "儲存影片失敗";
 "unable_to_share_content" = "無法分享此內容";
@@ -1369,11 +1386,13 @@
 "uploading_progress" = "上傳中：%@ / %@（%@）";
 "url_api_upgrade" = "https://support.mixin.one/zh/article/mixin-api-l4jruq/";
 "url_cant_receive_otp" = "https://support.mixin.one/zh/article/5ps25lin5yiw5oml5py66aqm6kb56cb5oco5lmi5yqe77yf-f32qa2/";
+"url_classic_wallet" = "https://support.mixin.one/zh/article/5lua5lmi5piv5pmu6yca6zkx5yyf77yf-8308b1/";
 "url_delete_account" = "https://support.mixin.one/zh/article/5aac5l2v5yig6zmk6lsm5y377yf-1uteq30/";
 "url_deposit" = "https://support.mixin.one/zh/article/mixin-messenger-5ynqjm/";
 "url_deposit_suspended" = "https://support.mixin.one/zh/article/5ywz5lqo5pq56en6lwe5lqn5lin5psv5oyb5ywf5yc855qe6k05pio-1sh1z50/";
 "url_disappearing_message" = "https://support.mixin.one/zh/article/5aac5l2v5bya5zcv6zmq5pe25rai5ogv77yf-18dzv5i/";
 "url_forget_pin" = "https://support.mixin.one/zh/article/pin-1vb2rc7/";
+"url_privacy_wallet" = "https://support.mixin.one/zh/article/5lua5lmi5piv6zqq56eb6zkx5yyf77yf-1s7o0e2/";
 "url_recall_message" = "https://support.mixin.one/zh/article/mixin-messenger-bjr9re/";
 "url_recovery_contact" = "https://support.mixin.one/zh/article/5aac5l2v6k6572u57sn5ocl6igu57o75lq6-d2nssy/";
 "url_support" = "https://support.mixin.one/zh/";

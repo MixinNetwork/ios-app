@@ -3,10 +3,6 @@ import MixinServices
 
 final class WithdrawInputAmountViewController: InputAmountViewController {
     
-    override var token: any ValuableToken {
-        tokenItem
-    }
-    
     override var balanceSufficiency: BalanceSufficiency {
         guard let fee = selectedFeeItem else {
             return .insufficient(nil)
@@ -52,7 +48,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
     ) {
         self.tokenItem = tokenItem
         self.destination = destination
-        super.init()
+        super.init(token: tokenItem, precision: MixinToken.precision)
     }
     
     required init?(coder: NSCoder) {

@@ -5,7 +5,7 @@ import MixinServices
 
 final class RouteAPI {
     
-    enum Error: Swift.Error {
+    enum SigningError: Error {
         case missingPublicKey
         case missingPrivateKey
         case encodeMessage
@@ -14,10 +14,14 @@ final class RouteAPI {
         case combineSealedBox
     }
     
-    private enum Config {
-        static let botUserID: String = "61cb8dd4-16b1-4744-ba0c-7b2d2e52fc59"
-        static let host: String = "https://api.route.mixin.one"
+    enum RPCError: Error {
+        case invalidResponse
     }
+    
+}
+
+// MARK: - Swap
+extension RouteAPI {
     
     static func swappableTokens(
         source: RouteTokenSource,
@@ -55,6 +59,24 @@ final class RouteAPI {
         Self.request(method: .post, path: "/web3/swap", with: request, completion: completion)
     }
     
+    static func mixinSwapOrders(
+        offset: String?,
+        limit: Int,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[SwapOrder]>) -> Void
+    ) {
+        var path = "/web3/swap/orders?limit=\(limit)"
+        if let offset {
+            path.append("&offset=\(offset)")
+        }
+        request(method: .get, path: path, queue: queue, completion: completion)
+    }
+    
+}
+
+// MARK: - Markets
+extension RouteAPI {
+    
     static func globalMarket(
         queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<GlobalMarket>) -> Void
@@ -68,19 +90,6 @@ final class RouteAPI {
         completion: @escaping (MixinAPI.Result<[Market]>) -> Void
     ) {
         let path = "/markets?category=\(category.rawValue)&limit=500"
-        request(method: .get, path: path, queue: queue, completion: completion)
-    }
-    
-    static func mixinSwapOrders(
-        offset: String?,
-        limit: Int,
-        queue: DispatchQueue,
-        completion: @escaping (MixinAPI.Result<[SwapOrder]>) -> Void
-    ) {
-        var path = "/web3/swap/orders?limit=\(limit)"
-        if let offset {
-            path.append("&offset=\(offset)")
-        }
         request(method: .get, path: path, queue: queue, completion: completion)
     }
     
@@ -202,6 +211,7 @@ final class RouteAPI {
     
 }
 
+// MARK: - Web3 Wallets
 extension RouteAPI {
     
     struct WalletRequest: Codable {
@@ -298,9 +308,172 @@ extension RouteAPI {
         return result
     }
     
+    static func transaction(chainID: String, hash: String) -> MixinAPI.Result<Web3RawTransaction> {
+        request(
+            method: .get,
+            path: "/web3/transactions/\(hash)?chain_id=\(chainID)"
+        )
+    }
+    
+    static func transaction(chainID: String, hash: String) async throws -> Web3RawTransaction {
+        try await request(
+            method: .get,
+            path: "/web3/transactions/\(hash)?chain_id=\(chainID)"
+        )
+    }
+    
+    static func simulateEthereumTransaction(
+        chainID: String,
+        from: String,
+        rawTransaction: String
+    ) async throws -> TransactionSimulation {
+        try await request(
+            method: .post,
+            path: "/web3/transactions/simulate",
+            with: [
+                "chain_id": chainID,
+                "from": from,
+                "raw_transaction": rawTransaction,
+            ]
+        )
+    }
+    
+    static func simulateSolanaTransaction(
+        rawTransaction: String
+    ) async throws -> TransactionSimulation {
+        try await request(
+            method: .post,
+            path: "/web3/transactions/simulate",
+            with: [
+                "chain_id": ChainID.solana,
+                "raw_transaction": rawTransaction,
+            ]
+        )
+    }
+    
+    static func postTransaction(
+        chainID: String,
+        from: String,
+        rawTransaction: String
+    ) async throws -> RichWeb3RawTransaction {
+        try await request(
+            method: .post,
+            path: "/web3/transactions",
+            with: [
+                "chain_id": chainID,
+                "from": from,
+                "raw_transaction": rawTransaction,
+            ]
+        )
+    }
+    
 }
 
+// MARK: - RPC
 extension RouteAPI {
+    
+    struct EthereumFee: Decodable {
+        
+        enum CodingKeys: String, CodingKey {
+            case gasLimit = "gas_limit"
+            case maxFeePerGas = "max_fee_per_gas"
+            case maxPriorityFeePerGas = "max_priority_fee_per_gas"
+        }
+        
+        let gasLimit: String
+        let maxFeePerGas: String
+        let maxPriorityFeePerGas: String
+        
+    }
+    
+    static func estimatedEthereumFee(
+        mixinChainID: String,
+        hexData: String?,
+        from: String,
+        to: String
+    ) async throws -> EthereumFee {
+        var parameters = [
+            "chain_id": mixinChainID,
+            "from": from,
+            "to": to,
+        ]
+        if let hexData {
+            parameters["raw_transaction"] = "0x" + hexData
+        }
+        return try await request(method: .post, path: "/web3/estimate-fee", with: parameters)
+    }
+    
+    static func ethereumLatestTransactionCount(
+        chainID: String,
+        address: String
+    ) async throws -> String {
+        var hexCount: String = try await request(
+            method: .post,
+            path: "/web3/rpc?chain_id=\(chainID)",
+            with: [
+                "method": "eth_getTransactionCount",
+                "params": [address, "latest"]
+            ]
+        )
+        if hexCount.hasPrefix("0x") {
+            hexCount.removeFirst(2)
+        }
+        return hexCount
+    }
+    
+    static func solanaPriorityFee(base64Transaction: String) async throws -> PriorityFee {
+        try await request(
+            method: .post,
+            path: "/web3/estimate-fee",
+            with: [
+                "chain_id": ChainID.solana,
+                "raw_transaction": base64Transaction,
+            ]
+        )
+    }
+    
+    static func solanaLatestBlockhash() async throws -> String {
+        
+        struct Response: Decodable {
+            let blockhash: String
+        }
+        
+        let result: String = try await request(
+            method: .post,
+            path: "/web3/rpc?chain_id=\(ChainID.solana)",
+            with: ["method": "getLatestBlockhash"]
+        )
+        guard let data = result.data(using: .utf8) else {
+            throw RPCError.invalidResponse
+        }
+        let response = try JSONDecoder.default.decode(Response.self, from: data)
+        return response.blockhash
+    }
+    
+    static func solanaAccountExists(pubkey: String) async throws -> Bool {
+        let result: String = try await request(
+            method: .post,
+            path: "/web3/rpc?chain_id=\(ChainID.solana)",
+            with: [
+                "method": "getAccountInfo",
+                "params": [
+                    pubkey,
+                    ["encoding": "jsonParsed"],
+                ],
+            ]
+        )
+        return result != "null"
+    }
+    
+}
+
+// MARK: - Signing
+extension RouteAPI {
+    
+    private enum Config {
+        static let botUserID: String = "61cb8dd4-16b1-4744-ba0c-7b2d2e52fc59"
+        static let host: String = "https://api.route.mixin.one"
+    }
     
     private static var botPublicKey: Data?
     
@@ -308,10 +481,12 @@ extension RouteAPI {
         
         private let method: HTTPMethod
         private let path: String
+        private let timeoutInterval: TimeInterval?
         
-        init(method: HTTPMethod, path: String) {
+        init(method: HTTPMethod, path: String, timeoutInterval: TimeInterval? = nil) {
             self.method = method
             self.path = path
+            self.timeoutInterval = timeoutInterval
         }
         
         func adapt(
@@ -329,7 +504,7 @@ extension RouteAPI {
                         throw error
                     case let .success(sessions):
                         guard let publicKey = sessions.first?.publicKey, let bpk = Data(base64URLEncoded: publicKey) else {
-                            throw Error.missingPublicKey
+                            throw SigningError.missingPublicKey
                         }
                         RouteAPI.botPublicKey = bpk
                         botPublicKey = bpk
@@ -337,17 +512,17 @@ extension RouteAPI {
                 }
                 
                 guard let secret = AppGroupKeychain.sessionSecret else {
-                    throw Error.missingPrivateKey
+                    throw SigningError.missingPrivateKey
                 }
                 let privateKey = try Ed25519PrivateKey(rawRepresentation: secret)
                 let usk = privateKey.x25519Representation
                 guard let keyData = AgreementCalculator.agreement(publicKey: botPublicKey, privateKey: usk) else {
-                    throw Error.calculateAgreement
+                    throw SigningError.calculateAgreement
                 }
                 
                 let timestamp = "\(Int64(Date().timeIntervalSince1970))"
                 guard var message = (timestamp + method.rawValue + path).data(using: .utf8) else {
-                    throw Error.encodeMessage
+                    throw SigningError.encodeMessage
                 }
                 if let body = urlRequest.httpBody {
                     message.append(body)
@@ -360,6 +535,10 @@ extension RouteAPI {
                 request.setValue(signature, forHTTPHeaderField: "MR-ACCESS-SIGN")
                 request.setValue(timestamp, forHTTPHeaderField: "MR-ACCESS-TIMESTAMP")
                 request.setValue(MixinAPI.userAgent, forHTTPHeaderField: "User-Agent")
+                if let timeoutInterval {
+                    request.timeoutInterval = timeoutInterval
+                }
+                
                 completion(.success(request))
             } catch {
                 completion(.failure(error))
@@ -370,6 +549,7 @@ extension RouteAPI {
     
 }
 
+// MARK: - Implementation
 extension RouteAPI {
     
     private struct ResponseObject<Response: Decodable>: Decodable {
@@ -417,6 +597,37 @@ extension RouteAPI {
         return request(dataRequest, queue: queue, completion: completion)
     }
     
+    public static func request<Response>(
+        method: HTTPMethod,
+        path: String,
+        parameters: [String: Any]? = nil
+    ) -> MixinAPI.Result<Response> {
+        var result: MixinAPI.Result<Response> = .failure(.foundNilResult)
+        
+        let semaphore = DispatchSemaphore(value: 0)
+        let url = Config.host + path
+        let interceptor = RouteSigningInterceptor(method: method, path: path, timeoutInterval: 5)
+        let dataRequest = AF.request(
+            url,
+            method: method,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            interceptor: interceptor
+        )
+        
+        request(dataRequest, queue: .global()) { theResult in
+            result = theResult
+            semaphore.signal()
+        }
+        semaphore.wait()
+        
+        if case let .failure(error) = result, error.isTransportTimedOut {
+            Logger.general.error(category: "RouteAPI", message: "Sync request timed out with: \(error), timeout: \(requestTimeout)")
+        }
+        
+        return result
+    }
+    
     @discardableResult
     private static func request<Parameters: Encodable, Response: Decodable>(
         method: HTTPMethod,
@@ -443,6 +654,7 @@ extension RouteAPI {
         }
     }
     
+    @discardableResult
     private static func request<Response>(
         _ request: DataRequest,
         queue: DispatchQueue,

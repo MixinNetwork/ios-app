@@ -20,8 +20,8 @@ final class MarketCoinCell: ModernSelectedBackgroundCell {
         iconImageView.setIcon(market: market)
         symbolLabel.text = market.symbol
         nameLabel.text = market.name
-        changeLabel.text = market.localizedPriceChangePercentage7D
-        changeLabel.marketColor = .byValue(market.decimalPriceChangePercentage7D)
+        changeLabel.text = market.localizedPriceChangePercentage24H
+        changeLabel.marketColor = .byValue(market.decimalPriceChangePercentage24H)
         priceLabel.text = market.localizedPrice
     }
     

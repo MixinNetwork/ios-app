@@ -65,7 +65,7 @@ final class Web3SignViewController: AuthenticationPreviewViewController {
                 if let operation = operation as? Web3SignWithWalletConnectOperation {
                     imageView.sd_setImage(with: operation.session.iconURL)
                 } else {
-                    imageView.image = R.image.unknown_session()
+                    imageView.image = R.image.web3_sign_transfer()
                 }
             }
             layoutTableHeaderView(title: R.string.localizable.web3_message_request(),

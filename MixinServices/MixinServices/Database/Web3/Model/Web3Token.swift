@@ -9,7 +9,7 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
         public static let eth = "0x0000000000000000000000000000000000000000"
     }
     
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case walletID = "wallet_id"
         case assetID = "asset_id"
         case chainID = "chain_id"
@@ -40,10 +40,8 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
     public private(set) lazy var decimalBalance = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUSDBalance = decimalBalance * decimalUSDPrice
     public private(set) lazy var decimalUSDPrice = Decimal(string: usdPrice, locale: .enUSPOSIX) ?? 0
-    public private(set) lazy var decimalUSDChange = Decimal(string: usdChange, locale: .enUSPOSIX) ?? 0
-    public private(set) lazy var decimalPercentChange = decimalUSDChange / decimalUSDPrice
+    public private(set) lazy var decimalUSDChange = (Decimal(string: usdChange, locale: .enUSPOSIX) ?? 0) / 100
     
-    public private(set) lazy var localizedPercentChange = NumberFormatter.percentage.string(decimal: decimalPercentChange / 100)
     public private(set) lazy var localizedUSDChange = localizeUSDChange()
     public private(set) lazy var localizedFiatMoneyPrice = localizeFiatMoneyPrice()
     public private(set) lazy var localizedBalanceWithSymbol = localizeBalanceWithSymbol()
@@ -88,7 +86,7 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
     
 }
 
-extension Web3Token: TableRecord, PersistableRecord, MixinFetchableRecord, MixinEncodableRecord {
+extension Web3Token: TableRecord, PersistableRecord, MixinFetchableRecord, MixinEncodableRecord, DatabaseColumnConvertible {
     
     public static let databaseTableName = "tokens"
     

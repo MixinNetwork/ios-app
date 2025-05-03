@@ -90,9 +90,7 @@ extension PostWebViewController: WKNavigationDelegate {
         if UrlWindow.checkUrl(url: url) {
             return
         }
-        if let parent = parent {
-            MixinWebViewController.presentInstance(with: .init(conversationId: "", initialUrl: url), asChildOf: parent)
-        }
+        UIApplication.homeContainerViewController?.presentWebViewController(context: .init(conversationId: "", initialUrl: url))
     }
     
 }

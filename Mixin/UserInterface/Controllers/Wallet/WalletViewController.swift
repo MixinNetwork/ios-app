@@ -91,6 +91,10 @@ class WalletViewController: UIViewController, MnemonicsBackupChecking {
         self.searchCenterYConstraint = constraint
     }
     
+    @IBAction func scanQRCode() {
+        UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
+    }
+    
     @IBAction func moreAction(_ sender: Any) {
         
     }

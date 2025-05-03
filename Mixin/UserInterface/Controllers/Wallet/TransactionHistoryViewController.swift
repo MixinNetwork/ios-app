@@ -41,22 +41,6 @@ class TransactionHistoryViewController: UIViewController {
         }
     }
     
-    func updateNavigationSubtitle(order: SafeSnapshot.Order) {
-        guard let titleView = navigationItem.titleView as? NavigationTitleView else {
-            return
-        }
-        titleView.subtitle = switch order {
-        case .newest:
-            R.string.localizable.sort_by_recent()
-        case .oldest:
-            R.string.localizable.sort_by_oldest()
-        case .mostValuable:
-            R.string.localizable.sort_by_value()
-        case .biggestAmount:
-            R.string.localizable.sort_by_amount()
-        }
-    }
-    
     func updateEmptyIndicator(numberOfItems: Int) {
         tableView.checkEmpty(
             dataCount: numberOfItems,

@@ -173,7 +173,12 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
                 guard let self else {
                     return
                 }
-                let inputAmount = WithdrawInputAmountViewController(tokenItem: self.token, destination: .temporary(address))
+                let inputAmount: WithdrawInputAmountViewController
+                if let address = AddressDAO.shared.getAddress(chainId: self.token.chainID, destination: address.destination, tag: address.tag) {
+                    inputAmount = WithdrawInputAmountViewController(tokenItem: self.token, destination: .address(address))
+                } else {
+                    inputAmount = WithdrawInputAmountViewController(tokenItem: self.token, destination: .temporary(address))
+                }
                 self.navigationController?.pushViewController(inputAmount, animated: true)
             } onFailure: { [weak nextButton, weak self] error in
                 nextButton?.isBusy = false
@@ -213,18 +218,18 @@ extension MixinTokenReceiverViewController: UITableViewDataSource {
         case .addressBook:
             cell.iconImageView.image = R.image.token_receiver_address_book()
             cell.titleLabel.text = R.string.localizable.address_book()
-            cell.freeLabel.isHidden = true
-            cell.subtitleLabel.text = R.string.localizable.send_to_address_description()
+            cell.titleTag = nil
+            cell.descriptionLabel.text = R.string.localizable.send_to_address_description()
         case .classicWallet:
             cell.iconImageView.image = R.image.token_receiver_wallet()
             cell.titleLabel.text = R.string.localizable.common_wallet()
-            cell.freeLabel.isHidden = true
-            cell.subtitleLabel.text = R.string.localizable.send_to_other_wallet_description()
+            cell.titleTag = nil
+            cell.descriptionLabel.text = R.string.localizable.send_to_other_wallet_description()
         case .contact:
             cell.iconImageView.image = R.image.token_receiver_contact()
             cell.titleLabel.text = R.string.localizable.mixin_contact()
-            cell.freeLabel.isHidden = false
-            cell.subtitleLabel.text = R.string.localizable.send_to_contact_description()
+            cell.titleTag = .free
+            cell.descriptionLabel.text = R.string.localizable.send_to_contact_description()
         }
         return cell
     }

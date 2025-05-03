@@ -18,18 +18,20 @@ final class TransactionHistoryTypeFilterView: TransactionHistoryFilterView {
         }
     }
     
-    func reloadData(type: Web3Transaction.TransactionType?) {
+    func reloadData(type: Web3Transaction.DisplayType?) {
         label.text = switch type {
         case .none:
             R.string.localizable.all()
         case .receive:
-            R.string.localizable.deposit()
+            R.string.localizable.receive()
         case .send:
-            R.string.localizable.withdrawal()
-        case .other:
-            R.string.localizable.other()
-        case .contract:
-            R.string.localizable.contract()
+            R.string.localizable.send()
+        case .swap:
+            R.string.localizable.swap()
+        case .approval:
+            R.string.localizable.approval()
+        case .pending:
+            R.string.localizable.pending()
         }
     }
     

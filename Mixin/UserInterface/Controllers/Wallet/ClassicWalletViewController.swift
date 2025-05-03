@@ -258,7 +258,7 @@ extension ClassicWalletViewController: TokenActionView.Delegate {
         case .swap:
             let swap = Web3SwapViewController(sendAssetID: nil, receiveAssetID: nil, walletID: walletID)
             navigationController?.pushViewController(swap, animated: true)
-            reporter.report(event: .swapStart, tags: ["entrance": "wallet", "source": "web3"])
+            reporter.report(event: .tradeStart, tags: ["source": "wallet_home", "wallet": "web3"])
         }
     }
     

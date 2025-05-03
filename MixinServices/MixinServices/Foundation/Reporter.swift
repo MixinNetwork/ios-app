@@ -7,7 +7,7 @@ open class Reporter {
         case signUpStart        = "sign_up_start"
         case signUpFullname     = "sign_up_fullname"
         case signUpRecaptcha    = "sign_up_recaptcha"
-        case signUpSmsVerify    = "sign_up_sms_verify"
+        case signUpSMSVerify    = "sign_up_sms_verify"
         case signUpSignalInit   = "sign_up_signal_init"
         case signUpPINSet       = "sign_up_pin_set"
         case signUpEnd          = "sign_up_end"
@@ -135,4 +135,3 @@ extension Reporter {
     }
     
 }
-

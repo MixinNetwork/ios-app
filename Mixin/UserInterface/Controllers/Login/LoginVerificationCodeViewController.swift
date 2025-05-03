@@ -61,7 +61,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
                     }
                 }
             case let .failure(error):
-                reporter.report(event: .errorSessionVerifications, tags: ["source":"login"])
+                reporter.report(event: .errorSessionVerifications, tags: ["source": "login"])
                 reporter.report(error: error)
                 self.alert(error.localizedDescription)
                 self.resendButton.isBusy = false

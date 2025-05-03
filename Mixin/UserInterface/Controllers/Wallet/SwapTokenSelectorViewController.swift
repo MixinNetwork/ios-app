@@ -148,7 +148,7 @@ class SwapTokenSelectorViewController: TokenSelectorViewController<BalancedSwapT
         super.pickUp(token: token, from: location)
         presentingViewController?.dismiss(animated: true)
         onSelected?(token)
-        reporter.report(event: .tradeTokenSelect, method: location.toLogString())
+        reporter.report(event: .tradeTokenSelect, method: location.asEventMethod)
     }
     
     func chains(with ids: Set<String>) -> OrderedSet<Chain> {

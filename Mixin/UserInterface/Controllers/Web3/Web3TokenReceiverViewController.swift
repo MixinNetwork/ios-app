@@ -98,7 +98,7 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source":"send_recipient", "wallet": "web3"])
+        reporter.report(event: .customerServiceDialog, tags: ["source": "send_recipient", "wallet": "web3"])
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {

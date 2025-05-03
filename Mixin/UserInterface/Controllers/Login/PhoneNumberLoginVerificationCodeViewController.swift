@@ -25,7 +25,7 @@ final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCod
             helpButton?.isHidden = false
         }
         
-        reporter.report(event: .signUpSmsVerify)
+        reporter.report(event: .signUpSMSVerify)
     }
     
     override func viewDidAppear(_ animated: Bool) {

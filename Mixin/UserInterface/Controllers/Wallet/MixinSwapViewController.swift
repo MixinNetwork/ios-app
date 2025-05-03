@@ -305,7 +305,7 @@ class MixinSwapViewController: SwapViewController {
     @objc func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source":"trade_home"])
+        reporter.report(event: .customerServiceDialog, tags: ["source": "trade_home"])
     }
     
     @objc private func inputAmountByRange(_ sender: Any) {

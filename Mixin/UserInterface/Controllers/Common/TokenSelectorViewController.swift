@@ -363,23 +363,25 @@ extension TokenSelectorViewController {
     }
     
     enum PickUpLocation {
+        
         case recent
         case allItems
         case chainFilteredItems
         case searchResults
         
-        func toLogString() -> String {
+        var asEventMethod: String {
             switch self {
             case .recent:
-                return "recent_click"
+                "recent_click"
             case .allItems:
-                return "all_item_click"
+                "all_item_click"
             case .chainFilteredItems:
-                return "chain_item_click"
+                "chain_item_click"
             case .searchResults:
-                return "search_item_click"
+                "search_item_click"
             }
         }
+        
     }
     
     struct Chain: Equatable, Hashable {

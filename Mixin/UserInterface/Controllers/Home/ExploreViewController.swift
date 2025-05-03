@@ -212,10 +212,10 @@ extension ExploreViewController: UICollectionViewDelegate {
         let segment = Segment(rawValue: indexPath.item)!
         switch segment {
         case .bots:
-            reporter.report(event: .moreTabSwitch, tags: ["method":"bots"])
+            reporter.report(event: .moreTabSwitch, tags: ["method": "bots"])
             switchToChild(exploreBotsViewController)
         case .markets:
-            reporter.report(event: .moreTabSwitch, tags: ["method":"markets"])
+            reporter.report(event: .moreTabSwitch, tags: ["method": "markets"])
             if showBadgeOnMarket {
                 showBadgeOnMarket = false
                 reloadItemKeepingSelection(at: indexPath)

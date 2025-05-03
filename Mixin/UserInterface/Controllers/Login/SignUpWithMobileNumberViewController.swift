@@ -96,7 +96,7 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController {
                         fallthrough
                     }
                 default:
-                    reporter.report(event: .errorSessionVerifications, tags: ["source":"sign_up"])
+                    reporter.report(event: .errorSessionVerifications, tags: ["source": "sign_up"])
                     var userInfo: [String: String] = [:]
                     userInfo["error"] = "\(error)"
                     if let requestId = self.request?.response?.value(forHTTPHeaderField: "x-request-id")  {
@@ -123,7 +123,7 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController {
     @objc func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source":"sign_up_phone_number"])
+        reporter.report(event: .customerServiceDialog, tags: ["source": "sign_up_phone_number"])
     }
     
 }

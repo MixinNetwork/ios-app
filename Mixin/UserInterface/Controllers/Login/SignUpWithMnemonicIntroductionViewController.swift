@@ -28,7 +28,7 @@ final class SignUpWithMnemonicIntroductionViewController: IntroductionViewContro
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source":"sign_up_mnemonic_phrase"])
+        reporter.report(event: .customerServiceDialog, tags: ["source": "sign_up_mnemonic_phrase"])
     }
     
     @objc private func continueToNext(_ sender: Any) {

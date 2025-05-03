@@ -7,11 +7,26 @@ protocol HomeTabBarControllerChild {
 
 final class HomeTabBarController: UIViewController {
     
-    enum ChildID: Int, CaseIterable {
+    enum ChildID: Int, CaseIterable, CustomDebugStringConvertible {
+        
         case chat = 0
         case wallet = 1
         case collectibles = 2
         case more = 3
+        
+        var debugDescription: String {
+            switch self {
+            case .chat:
+                "chat"
+            case .wallet:
+                "wallet"
+            case .collectibles:
+                "collectibles"
+            case .more:
+                "more"
+            }
+        }
+        
     }
     
     private(set) weak var selectedViewController: UIViewController?
@@ -218,16 +233,7 @@ extension HomeTabBarController: TabBarDelegate {
     
     func tabBar(_ tabBar: TabBar, didSelect item: TabBar.Item) {
         let id = ChildID(rawValue: item.id)!
-        switch id {
-        case .chat:
-            reporter.report(event: .homeTabSwitch, method: "chats")
-        case .collectibles:
-            reporter.report(event: .homeTabSwitch, method: "wallets")
-        case .more:
-            reporter.report(event: .homeTabSwitch, method: "collectibles")
-        case .wallet:
-            reporter.report(event: .homeTabSwitch, method: "more")
-        }
+        reporter.report(event: .homeTabSwitch, method: id.debugDescription)
         switchToChildAfterValidated(with: id)
     }
     

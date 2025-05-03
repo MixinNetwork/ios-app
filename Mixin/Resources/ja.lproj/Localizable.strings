@@ -1113,6 +1113,7 @@
 "send_message" = "メッセージを送信";
 "send_photo" = "写真を送信";
 "send_photo_count" = "%d枚の写真を送信";
+"send_sol_for_rent" = "Send at least %@ SOL for the rent";
 "send_this_location" = "位置情報を送信";
 "send_to" = "%@へ送信";
 "send_to_address_description" = "Send to a known crypto address using a crypto network";

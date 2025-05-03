@@ -1113,6 +1113,7 @@
 "send_message" = "发消息";
 "send_photo" = "发送 1 张图片";
 "send_photo_count" = "发送 %d 张图片";
+"send_sol_for_rent" = "发送至少 %@ SOL 以支付租金";
 "send_this_location" = "发送这个位置";
 "send_to" = "发送给 %@";
 "send_to_address_description" = "通过区块链网络转给已知地址";

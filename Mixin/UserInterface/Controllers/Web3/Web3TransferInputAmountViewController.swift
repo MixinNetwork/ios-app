@@ -5,7 +5,7 @@ import MixinServices
 final class Web3TransferInputAmountViewController: InputAmountViewController {
     
     override var balanceSufficiency: BalanceSufficiency {
-        guard let fee, let feeToken else {
+        guard let fee, let feeToken, let minimumTransferAmount else {
             return .insufficient(nil)
         }
         let balanceInsufficient = tokenAmount > token.decimalBalance
@@ -14,10 +14,10 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         } else {
             fee.token > feeToken.decimalBalance
         }
-        if balanceInsufficient {
-            return .insufficient(R.string.localizable.insufficient_balance())
+        return if balanceInsufficient {
+            .insufficient(R.string.localizable.insufficient_balance())
         } else if feeInsufficient {
-            return .insufficient(
+            .insufficient(
                 R.string.localizable.insufficient_fee_description(
                     CurrencyFormatter.localizedString(
                         from: fee.token,
@@ -28,8 +28,18 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                     feeToken.chain?.name ?? ""
                 )
             )
+        } else if tokenAmount < minimumTransferAmount {
+            .insufficient(
+                R.string.localizable.send_sol_for_rent(
+                    CurrencyFormatter.localizedString(
+                        from: Solana.accountCreationCost,
+                        format: .precision,
+                        sign: .never,
+                    )
+                )
+            )
         } else {
-            return .sufficient
+            .sufficient
         }
     }
     
@@ -37,6 +47,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
     
     private var fee: Web3TransferOperation.Fee?
     private var feeToken: Web3TokenItem?
+    private var minimumTransferAmount: Decimal?
     
     init(payment: Web3SendingTokenToAddressPayment) {
         self.payment = payment
@@ -68,6 +79,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         tokenBalanceLabel.text = payment.token.localizedBalanceWithSymbol
         addFeeView()
         reloadFee(payment: payment)
+        reloadMinimumTransferAmount(payment: payment)
     }
     
     override func review(_ sender: Any) {
@@ -160,7 +172,6 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                     self.fee = fee
                     self.feeToken = operation.feeToken
                     self.feeActivityIndicator?.stopAnimating()
-                    self.reloadViewsWithBalanceSufficiency()
                     self.tokenBalanceLabel.text = R.string.localizable.available_balance(availableBalance)
                     if let button = self.changeFeeButton {
                         button.configuration?.attributedTitle = AttributedString(title, attributes: feeAttributes)
@@ -168,7 +179,10 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                         button.configuration?.image = nil
                         button.isUserInteractionEnabled = false
                     }
-                    self.reviewButton.isBusy = false
+                    if self.minimumTransferAmount != nil {
+                        self.reviewButton.isBusy = false
+                        self.reloadViewsWithBalanceSufficiency()
+                    }
                 }
             } catch MixinAPIResponseError.unauthorized {
                 return
@@ -177,6 +191,39 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
                     // Check token and address
                     self?.reloadFee(payment: payment)
+                }
+            }
+        }
+    }
+    
+    private func reloadMinimumTransferAmount(payment: Web3SendingTokenToAddressPayment) {
+        Task {
+            do {
+                let amount: Decimal
+                switch payment.chain.kind {
+                case .evm:
+                    amount = 0
+                case .solana:
+                    if payment.sendingNativeToken {
+                        let accountExists = try await RouteAPI.solanaAccountExists(pubkey: payment.toAddress)
+                        amount = accountExists ? 0 : Solana.accountCreationCost
+                    } else {
+                        amount = 0
+                    }
+                }
+                await MainActor.run {
+                    self.minimumTransferAmount = amount
+                    if self.fee != nil {
+                        self.reviewButton.isBusy = false
+                        self.reloadViewsWithBalanceSufficiency()
+                    }
+                }
+            } catch MixinAPIResponseError.unauthorized {
+                return
+            } catch {
+                Logger.general.debug(category: "Web3InputAmount", message: "\(error)")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                    self?.reloadMinimumTransferAmount(payment: payment)
                 }
             }
         }

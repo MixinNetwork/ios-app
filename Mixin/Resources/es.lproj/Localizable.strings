@@ -1113,6 +1113,7 @@
 "send_message" = "Enviar mensaje";
 "send_photo" = "Enviar 1 foto";
 "send_photo_count" = "Enviar %d fotos";
+"send_sol_for_rent" = "Send at least %@ SOL for the rent";
 "send_this_location" = "Enviar esta ubicación";
 "send_to" = "Enviar a %@";
 "send_to_address_description" = "Send to a known crypto address using a crypto network";

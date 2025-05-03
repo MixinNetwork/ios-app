@@ -1113,6 +1113,7 @@
 "send_message" = "Отправить сообщение";
 "send_photo" = "Отправить 1 фото";
 "send_photo_count" = "Отправить %d фото";
+"send_sol_for_rent" = "Send at least %@ SOL for the rent";
 "send_this_location" = "Отправить это местоположение";
 "send_to" = "Отправить в %@";
 "send_to_address_description" = "Send to a known crypto address using a crypto network";

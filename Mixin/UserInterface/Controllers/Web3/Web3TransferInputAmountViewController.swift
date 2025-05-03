@@ -28,7 +28,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                     feeToken.chain?.name ?? ""
                 )
             )
-        } else if tokenAmount < minimumTransferAmount {
+        } else if !tokenAmount.isZero && tokenAmount < minimumTransferAmount {
             // Only SOL transfers invoke minimum amount checking
             // Change the description when it comes to EVM transfers
             .insufficient(

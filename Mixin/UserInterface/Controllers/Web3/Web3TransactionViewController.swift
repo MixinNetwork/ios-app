@@ -131,7 +131,7 @@ extension Web3TransactionViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
             cell.contentLeadingConstraint.constant = 20
             cell.contentTrailingConstraint.constant = 20
-            cell.titleLabel.text = R.string.localizable.asset_changes().uppercased()
+            cell.titleLabel.text = R.string.localizable.balance_changes().uppercased()
             cell.reloadData(numberOfAssetChanges: changes.count) { index, row in
                 let change = changes[index]
                 if let token = change.token {
@@ -180,7 +180,7 @@ extension Web3TransactionViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
             cell.contentLeadingConstraint.constant = 20
             cell.contentTrailingConstraint.constant = 20
-            cell.titleLabel.text = R.string.localizable.token_access_approval().uppercased()
+            cell.titleLabel.text = R.string.localizable.preauthorize_amount().uppercased()
             cell.reloadData(numberOfAssetChanges: 1) { index, row in
                 row.iconView.setIcon(token: token)
                 let amountColor = switch transaction.status {

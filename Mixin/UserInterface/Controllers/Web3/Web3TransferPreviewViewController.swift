@@ -179,6 +179,7 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
                 await self.loadBalanceChange(replacingRowAt: index)
             }
         }
+        reporter.report(event: .sendPreview)
     }
     
     override func performAction(with pin: String) {
@@ -271,6 +272,7 @@ extension Web3TransferPreviewViewController {
                                      rightAction: #selector(resendTransaction(_:)),
                                      animation: .vertical)
         case .success:
+            reporter.report(event: .sendEnd)
             canDismissInteractively = true
             tableHeaderView.setIcon(progress: .success)
             layoutTableHeaderView(

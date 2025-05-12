@@ -27,6 +27,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 action: #selector(presentCustomerService(_:))
             ),
         ]
+        reporter.report(event: .loginVerifyPIN, method: "verify_pin")
     }
     
     override func continueAction(_ sender: Any) {
@@ -52,7 +53,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 try await TIP.registerClassicWallet(pin: pin)
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 AppGroupUserDefaults.User.loginPINValidated = true
-                reporter.report(event: .loginVerifyPIN, method: "verify_pin")
+                reporter.report(event: .loginEnd)
                 await MainActor.run {
                     AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController()
                 }
@@ -75,6 +76,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "login_pin_verify"])
     }
     
     @objc private func presentMoreActions(_ sender: Any) {

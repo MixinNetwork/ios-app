@@ -192,7 +192,7 @@ final class Web3SwapViewController: MixinSwapViewController {
                 sender.isBusy = false
             }
         }
-        reporter.report(event: .swapPreview)
+        reporter.report(event: .tradePreview)
     }
     
     private func fetchUser(userID: String, sender: RoundedButton) async -> UserItem? {

@@ -872,6 +872,7 @@ class ConversationViewController: UIViewController {
                             inscription: message.inscription
                         )
                         self?.navigationController?.pushViewController(viewController, animated: true)
+                        reporter.report(event: .transactionDetail, tags: ["source": "chat"])
                     }
                 }
             } else if message.category == MessageCategory.APP_CARD.rawValue, let appCard = message.appCard {
@@ -1296,8 +1297,11 @@ class ConversationViewController: UIViewController {
         guard let ownerUser else {
             return
         }
+        reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "chat"])
         let selector = MixinTokenSelectorViewController()
-        selector.onSelected = { token in
+        selector.onSelected = { (token, location) in
+            reporter.report(event: .sendTokenSelect, method: location.asEventMethod)
+            reporter.report(event: .sendRecipient, tags: ["type": "contact"])
             let inputAmount = TransferInputAmountViewController(
                 tokenItem: token,
                 receiver: .user(ownerUser)

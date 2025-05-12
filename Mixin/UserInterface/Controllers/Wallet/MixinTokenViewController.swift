@@ -74,11 +74,13 @@ final class MixinTokenViewController: TokenViewController<MixinTokenItem, SafeSn
             inscription: inscriptionItem
         )
         navigationController?.pushViewController(viewController, animated: true)
+        reporter.report(event: .transactionDetail, tags: ["source": "asset_detail"])
     }
     
     override func viewAllTransactions() {
         let history = MixinTransactionHistoryViewController(token: token)
         navigationController?.pushViewController(history, animated: true)
+        reporter.report(event: .allTransactions, tags: ["source": "asset_detail"])
     }
     
     @objc private func balanceDidUpdate(_ notification: Notification) {
@@ -190,7 +192,7 @@ extension MixinTokenViewController: TokenActionView.Delegate {
         case .swap:
             let swap = MixinSwapViewController(sendAssetID: token.assetID, receiveAssetID: AssetID.erc20USDT)
             navigationController?.pushViewController(swap, animated: true)
-            reporter.report(event: .swapStart, tags: ["entrance": "wallet", "source": "mixin"])
+            reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "asset_detail"])
         }
     }
     

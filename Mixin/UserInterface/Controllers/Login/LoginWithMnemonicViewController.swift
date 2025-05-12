@@ -63,6 +63,7 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "login_mnemonic_phrase"])
     }
     
     @objc private func login(_ sender: Any) {
@@ -110,6 +111,19 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
         contentLabel.textColor = R.color.error_red()
         contentLabel.text = description
         contentLabel.isHidden = false
+    }
+    
+}
+
+extension LoginWithMnemonicViewController: Captcha.Reporting {
+    
+    var reportingContent: (event: Reporter.Event, method: String) {
+        switch action {
+        case .signUp:
+            (event: .signUpCAPTCHA, method: "mnemonic")
+        case .signIn:
+            (event: .loginCAPTCHA, method: "mnemonic")
+        }
     }
     
 }
@@ -166,6 +180,12 @@ extension LoginWithMnemonicViewController {
                     }
                 }
             case .failure(let error):
+                switch action {
+                case .signIn:
+                    reporter.report(event: .errorSessionVerifications, tags: ["source":"login"])
+                case .signUp:
+                    reporter.report(event: .errorSessionVerifications, tags: ["source":"sign_up"])
+                }
                 self.showError(error.localizedDescription)
             }
         }

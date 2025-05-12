@@ -3,7 +3,11 @@ import CoreTelephony
 import Alamofire
 import MixinServices
 
-class SignUpWithMobileNumberViewController: MobileNumberViewController {
+class SignUpWithMobileNumberViewController: MobileNumberViewController, Captcha.Reporting {
+    
+    var reportingContent: (event: Reporter.Event, method: String) {
+        (event: .signUpCAPTCHA, method: "phone_number")
+    }
     
     private let cellularData = CTCellularData()
     
@@ -95,6 +99,7 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController {
                         fallthrough
                     }
                 default:
+                    reporter.report(event: .errorSessionVerifications, tags: ["source": "sign_up"])
                     var userInfo: [String: String] = [:]
                     userInfo["error"] = "\(error)"
                     if let requestId = self.request?.response?.value(forHTTPHeaderField: "x-request-id")  {
@@ -117,6 +122,7 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController {
     @objc func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "sign_up_phone_number"])
     }
     
 }

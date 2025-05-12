@@ -3,6 +3,10 @@ import MixinServices
 
 final class SignInWithMobileNumberViewController: SignUpWithMobileNumberViewController {
     
+    override var reportingContent: (event: Reporter.Event, method: String) {
+        (event: .loginCAPTCHA, method: "phone_number")
+    }
+    
     private let separatorLineView = R.nib.loginSeparatorLineView(withOwner: nil)!
     private let mnemonicLoginButton = StyledButton(type: .system)
     private let signupButton = StyledButton(type: .system)

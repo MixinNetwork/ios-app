@@ -381,9 +381,12 @@ extension UserProfileViewController {
     }
     
     @objc func transfer() {
+        reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "profile"])
         let user: UserItem = self.user
         let selector = MixinTokenSelectorViewController()
-        selector.onSelected = { token in
+        selector.onSelected = { (token, location) in
+            reporter.report(event: .sendTokenSelect, method: location.asEventMethod)
+            reporter.report(event: .sendRecipient, tags: ["type": "contact"])
             let inputAmount = TransferInputAmountViewController(tokenItem: token, receiver: .user(user))
             UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)
         }
@@ -443,6 +446,7 @@ extension UserProfileViewController {
     @objc func showTransactions() {
         let history = MixinTransactionHistoryViewController(user: user)
         dismissAndPush(history)
+        reporter.report(event: .allTransactions, tags: ["source": "profile"])
     }
     
     @objc func groupsInCommon() {

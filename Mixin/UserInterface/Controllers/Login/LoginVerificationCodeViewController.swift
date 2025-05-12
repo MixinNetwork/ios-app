@@ -60,6 +60,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
                     }
                 }
             case let .failure(error):
+                reporter.report(event: .errorSessionVerifications, tags: ["source": "login"])
                 reporter.report(error: error)
                 self.alert(error.localizedDescription)
                 self.resendButton.isBusy = false
@@ -101,6 +102,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source":"login_sms_verify"])
     }
     
 }

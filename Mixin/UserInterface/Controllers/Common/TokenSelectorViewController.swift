@@ -363,10 +363,25 @@ extension TokenSelectorViewController {
     }
     
     enum PickUpLocation {
+        
         case recent
         case allItems
         case chainFilteredItems
         case searchResults
+        
+        var asEventMethod: String {
+            switch self {
+            case .recent:
+                "recent_click"
+            case .allItems:
+                "all_item_click"
+            case .chainFilteredItems:
+                "chain_item_click"
+            case .searchResults:
+                "search_item_click"
+            }
+        }
+        
     }
     
     struct Chain: Equatable, Hashable {

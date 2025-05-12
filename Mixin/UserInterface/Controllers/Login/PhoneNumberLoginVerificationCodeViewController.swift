@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCodeViewController {
     
@@ -23,6 +24,8 @@ final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCod
         resendButton.onCountDownFinished = { [weak helpButton] in
             helpButton?.isHidden = false
         }
+        
+        reporter.report(event: .signUpSMSVerify)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -60,6 +63,14 @@ final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCod
         }
         alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
+    }
+    
+}
+
+extension PhoneNumberLoginVerificationCodeViewController: Captcha.Reporting {
+    
+    var reportingContent: (event: Reporter.Event, method: String) {
+        (event: .loginCAPTCHA, method: "phone_number")
     }
     
 }

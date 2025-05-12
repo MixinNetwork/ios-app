@@ -82,6 +82,7 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "send_recipient", "wallet": "main"])
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {
@@ -108,6 +109,7 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
         guard !destination.isEmpty else {
             return
         }
+        reporter.report(event: .sendRecipient, tags: ["type": "address"])
         if let amount {
             guard amount <= token.decimalBalance else {
                 showError(description: R.string.localizable.insufficient_balance())
@@ -243,6 +245,7 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
             let selector = TransferReceiverViewController()
             selector.onSelect = { [token] (user) in
                 self.dismiss(animated: true) {
+                    reporter.report(event: .sendRecipient, tags: ["type": "contact"])
                     let inputAmount = TransferInputAmountViewController(
                         tokenItem: token,
                         receiver: .user(user)
@@ -251,7 +254,8 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
                 }
             }
             self.present(selector, animated: true)
-        case let .classicWallet(chain, address):
+        case let .classicWallet(_, address):
+            reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
             let inputAmount = WithdrawInputAmountViewController(
                 tokenItem: token,
                 destination: .classicWallet(address)
@@ -261,6 +265,7 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
             let book = AddressBookViewController(token: token)
             book.onSelect = { [token] (address) in
                 self.dismiss(animated: true) {
+                    reporter.report(event: .sendRecipient, tags: ["type": "address_book"])
                     let inputAmount = WithdrawInputAmountViewController(
                         tokenItem: token,
                         destination: .address(address)

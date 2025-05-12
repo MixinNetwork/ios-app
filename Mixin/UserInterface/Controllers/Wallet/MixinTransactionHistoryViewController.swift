@@ -306,6 +306,7 @@ extension MixinTransactionHistoryViewController: UITableViewDelegate {
                     inscription: inscriptionItem
                 )
                 self?.navigationController?.pushViewController(viewController, animated: true)
+                reporter.report(event: .transactionDetail, tags: ["source": "all_transactions"])
             }
         }
     }

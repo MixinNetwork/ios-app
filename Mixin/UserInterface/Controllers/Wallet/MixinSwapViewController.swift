@@ -277,7 +277,7 @@ class MixinSwapViewController: SwapViewController {
                 sender.isBusy = false
             }
         }
-        reporter.report(event: .swapPreview)
+        reporter.report(event: .tradePreview)
     }
     
     override func prepareForReuse(sender: Any) {
@@ -305,6 +305,7 @@ class MixinSwapViewController: SwapViewController {
     @objc func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "trade_home"])
     }
     
     @objc private func inputAmountByRange(_ sender: Any) {
@@ -395,7 +396,7 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
             footerInfoProgressView.setProgress(1, animationDuration: nil)
             reviewButton.isEnabled = quote.sendAmount > 0
                 && quote.sendAmount <= quote.sendToken.decimalBalance
-            reporter.report(event: .swapQuote, tags: ["result": "success"])
+            reporter.report(event: .tradeQuote, tags: ["result": "success", "type": "swap"])
         case .failure(let error):
             let description: String
             let amountRange: SwapQuotePeriodicRequester.AmountRange?
@@ -419,7 +420,7 @@ extension MixinSwapViewController: SwapQuotePeriodicRequesterDelegate {
             Logger.general.debug(category: "MixinSwap", message: description)
             setFooter(.error(description))
             self.amountRange = amountRange
-            reporter.report(event: .swapQuote, tags: ["result": "failure"])
+            reporter.report(event: .tradeQuote, tags: ["result": "failure", "type": "swap"])
         }
     }
     

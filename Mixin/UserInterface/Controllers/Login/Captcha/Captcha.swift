@@ -4,6 +4,10 @@ import MixinServices
 
 final class Captcha: NSObject {
     
+    protocol Reporting {
+        var reportingContent: (event: Reporter.Event, method: String) { get }
+    }
+    
     private let messageHandlerName = "captcha"
     private let executeReCaptchaJS = "gReCaptchaExecute();"
     private let baseURL = URL(string: "https://api.mixin.one/")!
@@ -35,6 +39,9 @@ final class Captcha: NSObject {
     func validate(completion: @escaping CompletionCallback) {
         guard let view = viewController?.view else {
             return
+        }
+        if let content = (viewController as? Reporting)?.reportingContent {
+            reporter.report(event: content.event, method: content.method)
         }
         if webView == nil {
             let config = WKWebViewConfiguration()

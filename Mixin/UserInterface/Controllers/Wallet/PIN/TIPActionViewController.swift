@@ -89,7 +89,7 @@ final class TIPActionViewController: UIViewController {
                     try await TIP.registerClassicWallet(pin: pin)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     await MainActor.run {
-                        reporter.report(event: .signUpSetPIN)
+                        reporter.report(event: .signUpEnd)
                         finish()
                     }
                 } catch {

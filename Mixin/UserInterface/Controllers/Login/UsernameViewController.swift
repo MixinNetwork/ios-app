@@ -8,6 +8,7 @@ final class UsernameViewController: LoginInfoInputViewController, CheckSessionEn
         titleLabel.text = R.string.localizable.whats_your_name()
         textField.text = makeDefaultUsername()
         editingChangedAction(self)
+        reporter.report(event: .signUpFullname)
     }
     
     override func continueToNext(_ sender: Any) {
@@ -23,7 +24,6 @@ final class UsernameViewController: LoginInfoInputViewController, CheckSessionEn
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
-        reporter.report(event: .signUpFullname)
     }
     
     private func makeDefaultUsername() -> String? {

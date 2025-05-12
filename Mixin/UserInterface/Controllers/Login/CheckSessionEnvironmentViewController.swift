@@ -88,7 +88,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
             reload(content: upgrade)
         } else if !SignalLoadingViewController.isLoaded {
             Logger.general.debug(category: "CheckSessionEnvironment", message: "Load Signal")
-            let signalLoading = SignalLoadingViewController()
+            let signalLoading = SignalLoadingViewController(isUsernameJustInitialized: isUsernameJustInitialized)
             signalLoading.onFinished = { [weak self] in
                 guard let self else {
                     return

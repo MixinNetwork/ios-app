@@ -69,7 +69,7 @@ class UrlWindow {
                 if let navigationController = UIApplication.homeNavigationController {
                     let swap = MixinSwapViewController(sendAssetID: input, receiveAssetID: output ?? AssetID.erc20USDT)
                     navigationController.pushViewController(swap, animated: true)
-                    reporter.report(event: .swapStart, tags: ["entrance": "url", "source": "mixin"])
+                    reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "schema"])
                 }
                 return true
             case let .send(context):
@@ -1130,6 +1130,8 @@ extension UrlWindow {
                             return
                         }
                         completion(nil)
+                        reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "schema"])
+                        reporter.report(event: .sendRecipient, tags: ["type": "contact"])
                         let inputAmount = TransferInputAmountViewController(
                             traceID: paymentURL.trace,
                             tokenItem: token,
@@ -1142,8 +1144,11 @@ extension UrlWindow {
                     case (.none, .none):
                         // Receive money QR code
                         completion(nil)
+                        reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "schema"])
                         let selector = MixinTokenSelectorViewController()
-                        selector.onSelected = { token in
+                        selector.onSelected = { (token, location) in
+                            reporter.report(event: .sendTokenSelect, method: location.asEventMethod)
+                            reporter.report(event: .sendRecipient, tags: ["type": "contact"])
                             let inputAmount = TransferInputAmountViewController(
                                 tokenItem: token,
                                 receiver: destination,

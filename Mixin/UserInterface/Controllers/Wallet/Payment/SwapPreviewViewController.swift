@@ -121,7 +121,13 @@ class SwapPreviewViewController: AuthenticationPreviewViewController {
                     tableHeaderView.setIcon(progress: .success)
                     layoutTableHeaderView(title: R.string.localizable.sending_success(),
                                           subtitle: R.string.localizable.swap_message_success())
-                    reporter.report(event: .swapSend)
+                    
+                    switch operation.destination {
+                    case .mixin:
+                        reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": "swap"])
+                    case .web3:
+                        reporter.report(event: .tradeEnd, tags: ["wallet": "web3", "type": "swap"])
+                    }
                     
                     tableView.setContentOffset(.zero, animated: true)
                     loadFinishedTrayView()

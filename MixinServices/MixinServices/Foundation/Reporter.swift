@@ -6,7 +6,7 @@ open class Reporter {
     public enum Event: String {
         case signUpStart        = "sign_up_start"
         case signUpFullname     = "sign_up_fullname"
-        case signUpRecaptcha    = "sign_up_recaptcha"
+        case signUpCAPTCHA      = "sign_up_captcha"
         case signUpSMSVerify    = "sign_up_sms_verify"
         case signUpSignalInit   = "sign_up_signal_init"
         case signUpPINSet       = "sign_up_pin_set"
@@ -15,7 +15,7 @@ open class Reporter {
         case loginStart         = "login_start"
         case loginRestore       = "login_restore"
         case loginVerifyPIN     = "login_verify_pin"
-        case loginRecaptcha     = "login_recaptcha"
+        case loginCAPTCHA       = "login_captcha"
         case loginSignalInit    = "login_signal_init"
         case loginEnd           = "login_end"
         

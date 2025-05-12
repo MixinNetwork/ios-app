@@ -3,7 +3,11 @@ import CoreTelephony
 import Alamofire
 import MixinServices
 
-class SignUpWithMobileNumberViewController: MobileNumberViewController {
+class SignUpWithMobileNumberViewController: MobileNumberViewController, Captcha.Reporting {
+    
+    var reportingContent: (event: Reporter.Event, method: String) {
+        (event: .signUpCAPTCHA, method: "phone_number")
+    }
     
     private let cellularData = CTCellularData()
     

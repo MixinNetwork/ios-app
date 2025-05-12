@@ -9,8 +9,7 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
         case signUp
     }
     
-    let action: Action
-    
+    private let action: Action
     private let busyIndicator = ActivityIndicatorView()
     
     private lazy var captcha = Captcha(viewController: self)
@@ -116,6 +115,19 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     
 }
 
+extension LoginWithMnemonicViewController: Captcha.Reporting {
+    
+    var reportingContent: (event: Reporter.Event, method: String) {
+        switch action {
+        case .signUp:
+            (event: .signUpCAPTCHA, method: "mnemonic")
+        case .signIn:
+            (event: .loginCAPTCHA, method: "mnemonic")
+        }
+    }
+    
+}
+
 extension LoginWithMnemonicViewController {
     
     private enum LoginError: Error {
@@ -159,12 +171,6 @@ extension LoginWithMnemonicViewController {
                     self.login(context: context)
                 }
             case .failure(.requiresCaptcha):
-                switch action {
-                case .signIn:
-                    reporter.report(event: .loginRecaptcha, method: "mnemonic_phrase")
-                case .signUp:
-                    reporter.report(event: .signUpRecaptcha, method: "mnemonic_phrase")
-                }
                 captcha.validate { [weak self] (result) in
                     switch result {
                     case .success(let token):

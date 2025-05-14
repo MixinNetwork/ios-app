@@ -10,7 +10,7 @@ struct QuoteRequest {
     let source: RouteTokenSource
     
     func asParameter() -> String {
-        var parameter: String = "inputMint=\(inputMint)&outputMint=\(outputMint)&amount=\(amount)&slippage=\(slippage)&source=mixin"
+        var parameter: String = "inputMint=\(inputMint)&outputMint=\(outputMint)&amount=\(amount)&slippage=\(slippage)&source=\(source.rawValue)"
         switch source {
         case .web3:
             parameter += "&needWithdraw=true"

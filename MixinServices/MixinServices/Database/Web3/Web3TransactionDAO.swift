@@ -126,7 +126,13 @@ extension Web3TransactionDAO {
         order: Web3Transaction.Order,
         limit: Int
     ) -> [Web3Transaction] {
-        var query = GRDB.SQL(sql: "SELECT * from transactions txn\n")
+        var query = GRDB.SQL(sql: """
+        SELECT txn.*
+        FROM transactions txn
+            LEFT JOIN tokens st ON st.asset_id = txn.send_asset_id
+            LEFT JOIN tokens rt ON rt.asset_id = txn.receive_asset_id
+        
+        """)
         
         var conditions: [GRDB.SQL] = []
         
@@ -152,6 +158,15 @@ extension Web3TransactionDAO {
                 "txn.receive_asset_id IN \(assetIDs)",
             ]
             conditions.append("\(assetConditions.joined(operator: .or))")
+        }
+        
+        switch filter.reputation {
+        case .good:
+            conditions.append("st.level >= \(Web3Token.Level.verified.rawValue) OR rt.level >= \(Web3Token.Level.verified.rawValue)")
+        case .unknown:
+            conditions.append("st.level = \(Web3Token.Level.unknown.rawValue) OR rt.level = \(Web3Token.Level.unknown.rawValue)")
+        case .spam:
+            conditions.append("st.level <= \(Web3Token.Level.spam.rawValue) OR rt.level <= \(Web3Token.Level.spam.rawValue)")
         }
         
         var recipientConditions: [GRDB.SQL] = []

@@ -137,6 +137,14 @@ public final class Web3Database: Database {
             }
         }
         
+        migrator.registerMigration("asset_level") { db in
+            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(tokens)")
+            let columnNames = infos.map(\.name)
+            if !columnNames.contains("level") {
+                try db.execute(sql: "ALTER TABLE tokens ADD COLUMN level INTEGER NOT NULL DEFAULT \(Web3Token.Level.verified.rawValue)")
+            }
+        }
+        
         return migrator
     }
     

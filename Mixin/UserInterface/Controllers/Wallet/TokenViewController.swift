@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class TokenViewController<Token: HideableToken & ValuableToken, Transaction>: UIViewController, UITableViewDataSource, UITableViewDelegate, MnemonicsBackupChecking {
+class TokenViewController<Token: HideableToken & ValuableToken & DistinguishableToken, Transaction>: UIViewController, UITableViewDataSource, UITableViewDelegate, MnemonicsBackupChecking {
     
     let queue = DispatchQueue(label: "one.mixin.messenger.TokenViewController")
     let transactionsCount = 20
@@ -57,6 +57,7 @@ class TokenViewController<Token: HideableToken & ValuableToken, Transaction>: UI
         tableView.alwaysBounceVertical = true
         tableView.estimatedRowHeight = 62
         tableView.separatorStyle = .none
+        tableView.register(R.nib.maliciousTokenWarningCell)
         tableView.register(R.nib.tokenBalanceCell)
         tableView.register(R.nib.insetGroupedTitleCell)
         tableView.register(R.nib.tokenMarketCell)
@@ -174,6 +175,8 @@ class TokenViewController<Token: HideableToken & ValuableToken, Transaction>: UI
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
+        case .warning:
+            token.isMalicious ? 1 : 0
         case .balance:
             1
         case .market:
@@ -187,6 +190,9 @@ class TokenViewController<Token: HideableToken & ValuableToken, Transaction>: UI
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
+        case .warning:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.malicious_token_warning, for: indexPath)!
+            return cell
         case .balance:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_balance, for: indexPath)!
             updateBalanceCell(cell)
@@ -275,7 +281,7 @@ class TokenViewController<Token: HideableToken & ValuableToken, Transaction>: UI
     // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch Section(rawValue: indexPath.section)! {
-        case .balance, .market:
+        case .warning, .balance, .market:
             UITableView.automaticDimension
         case .pending:
             switch indexPath.row {
@@ -302,7 +308,7 @@ class TokenViewController<Token: HideableToken & ValuableToken, Transaction>: UI
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch Section(rawValue: section) {
-        case .pending where pendingSnapshots.isEmpty:
+        case .warning where !token.isMalicious, .pending where pendingSnapshots.isEmpty:
                 .leastNormalMagnitude
         default:
             10
@@ -326,7 +332,7 @@ class TokenViewController<Token: HideableToken & ValuableToken, Transaction>: UI
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Section(rawValue: indexPath.section)! {
-        case .balance:
+        case .warning, .balance:
             break
         case .market:
             viewMarket()
@@ -388,6 +394,7 @@ extension TokenViewController: HomeNavigationController.NavigationBarStyling {
 extension TokenViewController {
     
     enum Section: Int, CaseIterable {
+        case warning
         case balance
         case market
         case pending

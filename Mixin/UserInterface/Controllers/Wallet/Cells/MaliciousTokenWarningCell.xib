@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="malicious_token_warning" id="KGk-i7-Jjw" customClass="MaliciousTokenWarningCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="54"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="54"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="malicious_token_warning" translatesAutoresizingMaskIntoConstraints="NO" id="Pes-VY-JST">
+                        <rect key="frame" x="12" y="10" width="16" height="16"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4gw-Ix-NpQ">
+                        <rect key="frame" x="36" y="8" width="272" height="38"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" name="error_red"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="4gw-Ix-NpQ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="AFT-2j-Lrd"/>
+                    <constraint firstItem="Pes-VY-JST" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="AJy-0w-xYt"/>
+                    <constraint firstAttribute="trailing" secondItem="4gw-Ix-NpQ" secondAttribute="trailing" constant="12" id="EOT-io-znY"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Pes-VY-JST" secondAttribute="bottom" constant="10" id="VcZ-MT-ybe"/>
+                    <constraint firstAttribute="bottom" secondItem="4gw-Ix-NpQ" secondAttribute="bottom" constant="8" id="eBd-Nb-MWg"/>
+                    <constraint firstItem="Pes-VY-JST" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="iE4-T5-gql"/>
+                    <constraint firstItem="4gw-Ix-NpQ" firstAttribute="leading" secondItem="Pes-VY-JST" secondAttribute="trailing" constant="8" id="ys8-yY-d4f"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="label" destination="4gw-Ix-NpQ" id="WrH-mJ-dbl"/>
+            </connections>
+            <point key="canvasLocation" x="139" y="42"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="malicious_token_warning" width="16" height="16"/>
+        <namedColor name="error_red">
+            <color red="0.85882352941176465" green="0.27058823529411763" blue="0.30980392156862746" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

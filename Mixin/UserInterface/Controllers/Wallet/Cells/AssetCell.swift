@@ -10,6 +10,8 @@ class AssetCell: ModernSelectedBackgroundCell {
     ]
     
     @IBOutlet weak var assetIconView: BadgeIconView!
+    @IBOutlet weak var titleStackView: UIStackView!
+    @IBOutlet weak var maliciousWarningImageView: UIImageView!
     @IBOutlet weak var balanceLabel: InsetLabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
@@ -19,6 +21,7 @@ class AssetCell: ModernSelectedBackgroundCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        titleStackView.setCustomSpacing(4, after: maliciousWarningImageView)
         balanceLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
         symbolLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 3, right: 0)
         changeLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 4, right: 0)
@@ -32,6 +35,7 @@ class AssetCell: ModernSelectedBackgroundCell {
     
     func render(token: MixinTokenItem, attributedSymbol: NSAttributedString? = nil) {
         assetIconView.setIcon(token: token)
+        maliciousWarningImageView.isHidden = !token.isMalicious
         balanceLabel.text = if token.decimalBalance.isZero {
             zeroWith2Fractions
         } else {
@@ -68,6 +72,7 @@ class AssetCell: ModernSelectedBackgroundCell {
     
     func render(web3Token token: Web3TokenItem) {
         assetIconView.setIcon(web3Token: token)
+        maliciousWarningImageView.isHidden = !token.isMalicious
         balanceLabel.text = if token.decimalBalance.isZero {
             zeroWith2Fractions
         } else {

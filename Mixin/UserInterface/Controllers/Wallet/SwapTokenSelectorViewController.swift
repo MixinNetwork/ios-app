@@ -134,6 +134,7 @@ class SwapTokenSelectorViewController: TokenSelectorViewController<BalancedSwapT
     
     override func configureTokenCell(_ cell: SwapTokenCell, withToken token: BalancedSwapToken) {
         cell.iconView.setIcon(swappableToken: token)
+        cell.maliciousWarningImageView.isHidden = true
         cell.titleLabel.text = token.name
         cell.subtitleLabel.text = token.localizedBalanceWithSymbol
         if let tag = token.chainTag {

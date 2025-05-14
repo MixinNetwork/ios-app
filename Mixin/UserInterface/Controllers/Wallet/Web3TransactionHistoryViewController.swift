@@ -9,6 +9,8 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     
     private let walletID: String
     
+    private var reputationFilterView = TransactionHistoryReputationFilterView()
+    
     private var filter: Web3Transaction.Filter
     private var order: Web3Transaction.Order = .newest
     private var dataSource: DiffableDataSource!
@@ -50,6 +52,9 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
         typeFilterView.button.menu = UIMenu(children: typeFilterActions)
         assetFilterView.reloadData(tokens: filter.tokens)
         assetFilterView.button.addTarget(self, action: #selector(pickTokens(_:)), for: .touchUpInside)
+        reputationFilterView.reloadData(reputation: filter.reputation)
+        reputationFilterView.button.addTarget(self, action: #selector(pickReputation(_:)), for: .touchUpInside)
+        filtersStackView.insertArrangedSubview(reputationFilterView, at: 2)
         recipientFilterView.reloadData(users: [], addresses: filter.addresses)
         recipientFilterView.button.addTarget(self, action: #selector(pickRecipients(_:)), for: .touchUpInside)
         dateFilterView.reloadData(startDate: filter.startDate, endDate: filter.endDate)
@@ -98,6 +103,12 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     
     @objc private func pickTokens(_ sender: Any) {
         let picker = Web3TransactionHistoryTokenFilterPickerViewController(selectedTokens: filter.tokens)
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+    
+    @objc private func pickReputation(_ sender: Any) {
+        let picker = Web3TokenReputationPickerViewController(selectedReputation: filter.reputation)
         picker.delegate = self
         present(picker, animated: true)
     }
@@ -334,6 +345,20 @@ extension Web3TransactionHistoryViewController: TransactionHistoryDatePickerView
     
 }
 
+extension Web3TransactionHistoryViewController: Web3TokenReputationPickerViewController.Delegate {
+    
+    func web3TokenReputationPickerViewController(
+        _ controller: Web3TokenReputationPickerViewController,
+        didPickReputation reputation: Web3Token.Reputation
+    ) {
+        filter.reputation = reputation
+        reputationFilterView.reloadData(reputation: reputation)
+        filtersScrollView.layoutIfNeeded()
+        reloadData()
+    }
+    
+}
+
 extension Web3TransactionHistoryViewController {
     
     private func loadPreviousPage() {
@@ -369,6 +394,21 @@ extension Web3TransactionHistoryViewController {
 }
 
 extension Web3TransactionHistoryViewController {
+    
+    private final class TransactionHistoryReputationFilterView: TransactionHistoryFilterView {
+        
+        func reloadData(reputation: Web3Token.Reputation) {
+            label.text = switch reputation {
+            case .good:
+                R.string.localizable.reputation_good()
+            case .unknown:
+                R.string.localizable.reputation_unknown()
+            case .spam:
+                R.string.localizable.reputation_spam()
+            }
+        }
+        
+    }
     
     private class LoadLocalDataOperation: Operation {
         

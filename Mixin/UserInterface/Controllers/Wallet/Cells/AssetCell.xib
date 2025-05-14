@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -36,6 +36,9 @@
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="2w0-tw-QvV">
                                 <rect key="frame" x="0.0" y="0.0" width="314" height="21"/>
                                 <subviews>
+                                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="800" verticalHuggingPriority="251" horizontalCompressionResistancePriority="800" image="malicious_token_warning" translatesAutoresizingMaskIntoConstraints="NO" id="SrW-7i-0oJ">
+                                        <rect key="frame" x="0.0" y="3.5" width="0.0" height="16"/>
+                                    </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="1.0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UYd-p5-0iv" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="2" width="18" height="19"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -118,13 +121,16 @@
                 <outlet property="changeLabel" destination="esD-bh-haj" id="cje-aA-wlb"/>
                 <outlet property="fiatMoneyBalanceLabel" destination="gzb-Zt-1Oo" id="ieB-nh-RfT"/>
                 <outlet property="fiatMoneyPriceLabel" destination="XoA-aw-3R3" id="LNn-uG-f3V"/>
+                <outlet property="maliciousWarningImageView" destination="SrW-7i-0oJ" id="8P7-54-g9g"/>
                 <outlet property="noFiatMoneyPriceIndicatorLabel" destination="g77-7K-eGQ" id="LE2-in-eqK"/>
                 <outlet property="symbolLabel" destination="Ks7-rU-07m" id="07e-F2-0aW"/>
+                <outlet property="titleStackView" destination="2w0-tw-QvV" id="j47-gr-Kx0"/>
             </connections>
             <point key="canvasLocation" x="139" y="155"/>
         </tableViewCell>
     </objects>
     <resources>
+        <image name="malicious_token_warning" width="16" height="16"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

@@ -1019,6 +1019,14 @@
 "report_and_block" = "Пожаловаться и заблокировать?";
 "report_title" = "Отправить журнал бесед разработчикам?";
 "represent_send_messages" = "Represent send messages";
+"reputation" = "Reputation";
+"reputation_good" = "Good";
+"reputation_good_description" = "Verified by trusted third-party sources with healthy activity";
+"reputation_spam" = "Spam";
+"reputation_spam_description" = "Flagged token due to suspicious behavior or scam indicators";
+"reputation_spam_warning" = "This token has been flagged as malicious by Blockaid";
+"reputation_unknown" = "Unknown";
+"reputation_unknown_description" = "No sufficient data or unverified by trusted sources";
 "request_authorization" = "Request Authorization";
 "request_rejected" = "Request Rejected";
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";

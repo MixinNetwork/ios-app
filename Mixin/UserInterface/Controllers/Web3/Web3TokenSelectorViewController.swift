@@ -132,6 +132,7 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
     
     override func configureTokenCell(_ cell: SwapTokenCell, withToken token: Web3Token) {
         cell.iconView.setIcon(web3Token: token)
+        cell.maliciousWarningImageView.isHidden = !token.isMalicious
         cell.titleLabel.text = token.name
         cell.subtitleLabel.text = token.localizedBalanceWithSymbol
         if let tag = token.chainTag {
@@ -177,7 +178,8 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
                 iconURL: token.iconURL,
                 amount: amount ?? "0",
                 usdPrice: token.usdPrice,
-                usdChange: token.usdChange
+                usdChange: token.usdChange,
+                level: Web3Token.Level.verified.rawValue,
             )
             return Web3TokenItem(token: web3Token, hidden: isHidden, chain: chain)
         }.sorted { (one, another) in

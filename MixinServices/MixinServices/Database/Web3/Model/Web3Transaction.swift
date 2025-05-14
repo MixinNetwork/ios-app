@@ -267,23 +267,26 @@ extension Web3Transaction {
         
         public var type: DisplayType?
         public var tokens: [Web3TokenItem]
+        public var reputation: Web3Token.Reputation
         public var addresses: [AddressItem]
         public var startDate: Date?
         public var endDate: Date?
         
         public var description: String {
-            "<Filter type: \(type), tokens: \(tokens.map(\.symbol)), addresses: \(addresses.map(\.label)), startDate: \(startDate), endDate: \(endDate)>"
+            "<Filter type: \(type), tokens: \(tokens.map(\.symbol)), reputation: \(reputation), addresses: \(addresses.map(\.label)), startDate: \(startDate), endDate: \(endDate)>"
         }
         
         public init(
             type: DisplayType? = nil,
             tokens: [Web3TokenItem] = [],
+            reputation: Web3Token.Reputation = .good,
             addresses: [AddressItem] = [],
             startDate: Date? = nil,
             endDate: Date? = nil
         ) {
             self.type = type
             self.tokens = tokens
+            self.reputation = reputation
             self.addresses = addresses
             self.startDate = startDate
             self.endDate = endDate

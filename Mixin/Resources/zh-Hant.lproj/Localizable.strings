@@ -1019,6 +1019,14 @@
 "report_and_block" = "舉報並封鎖？";
 "report_title" = "給開發人員傳送聊天日誌？";
 "represent_send_messages" = "代表你發訊息";
+"reputation" = "信譽度";
+"reputation_good" = "良好";
+"reputation_good_description" = "由可信第三方驗證，具有良好活躍度";
+"reputation_spam" = "高風險";
+"reputation_spam_description" = "因可疑行為或欺詐跡象被標記為高風險代幣";
+"reputation_spam_warning" = "該代幣已被 Blockaid 標記為高風險代幣";
+"reputation_unknown" = "未知";
+"reputation_unknown_description" = "缺乏足夠資訊，或未被可信來源驗證";
 "request_authorization" = "請求授權";
 "request_rejected" = "請求已拒絕";
 "request_rejected_reason_another_request_in_process" = "正在處理另一請求，請完成當前請求後重試";

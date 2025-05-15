@@ -95,7 +95,7 @@ public final class Web3TokenDAO: Web3DAO {
         db.write { db in
             for token in tokens {
                 try token.save(db)
-                if token.level < Web3Token.Level.unknown.rawValue {
+                if token.level < Web3Token.Level.verified.rawValue {
                     let extra = Web3TokenExtra(
                         walletID: token.walletID,
                         assetID: token.assetID,

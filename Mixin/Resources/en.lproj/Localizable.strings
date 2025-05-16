@@ -1019,6 +1019,13 @@
 "report_and_block" = "Report and block?";
 "report_title" = "Send the conversation log to developers?";
 "represent_send_messages" = "Represent send messages";
+"reputation" = "Reputation";
+"reputation_description" = "By default, only transactions with a Good reputation are shown. Enable ‘Unknown’ or ‘Spam’ to see more.";
+"reputation_spam" = "Spam";
+"reputation_spam_description" = "Flagged transaction due to suspicious behavior or scam indicators";
+"reputation_spam_warning" = "This token has been flagged as malicious";
+"reputation_unknown" = "Unknown";
+"reputation_unknown_description" = "No sufficient data or unverified by trusted sources";
 "request_authorization" = "Request Authorization";
 "request_rejected" = "Request Rejected";
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";

@@ -22,6 +22,7 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
         case amount
         case usdPrice = "price_usd"
         case usdChange = "change_usd"
+        case level
     }
     
     public let walletID: String
@@ -36,6 +37,7 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
     public let amount: String
     public let usdPrice: String
     public let usdChange: String
+    public let level: Int
     
     public private(set) lazy var decimalBalance = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalUSDBalance = decimalBalance * decimalUSDPrice
@@ -61,7 +63,8 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
     public init(
         walletID: String, assetID: String, chainID: String, assetKey: String,
         kernelAssetID: String, symbol: String, name: String, precision: Int16,
-        iconURL: String, amount: String, usdPrice: String, usdChange: String
+        iconURL: String, amount: String, usdPrice: String, usdChange: String,
+        level: Int,
     ) {
         self.walletID = walletID
         self.assetID = assetID
@@ -75,6 +78,7 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
         self.amount = amount
         self.usdPrice = usdPrice
         self.usdChange = usdChange
+        self.level = level
     }
     
     public func nativeAmount(decimalAmount: Decimal) -> NSDecimalNumber? {
@@ -89,5 +93,13 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
 extension Web3Token: TableRecord, PersistableRecord, MixinFetchableRecord, MixinEncodableRecord, DatabaseColumnConvertible {
     
     public static let databaseTableName = "tokens"
+    
+}
+
+extension Web3Token: DistinguishableToken {
+    
+    public var isMalicious: Bool {
+        level <= Web3Reputation.Level.spam.rawValue
+    }
     
 }

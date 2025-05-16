@@ -65,6 +65,14 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
     
 }
 
+extension MixinToken: DistinguishableToken {
+    
+    public var isMalicious: Bool {
+        false
+    }
+    
+}
+
 extension MixinToken {
     
     public static let precision = 8

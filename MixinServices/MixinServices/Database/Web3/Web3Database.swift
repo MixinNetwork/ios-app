@@ -130,8 +130,33 @@ public final class Web3Database: Database {
                 )
                 """,
                 "CREATE INDEX IF NOT EXISTS `index_transactions_address_transaction_at` ON `transactions` (`address`, `transaction_at`)",
-                "CREATE INDEX IF NOT EXISTS `index_transactions_transaction_type_send_asset_id_receive_asset_id_transaction_at` ON `transactions` (`transaction_type`, `send_asset_id`, `receive_asset_id`, `transaction_at`)",
             ]
+            for sql in sqls {
+                try db.execute(sql: sql)
+            }
+        }
+        
+        migrator.registerMigration("reputations") { db in
+            var sqls: [String] = []
+            
+            let tokenInfos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(tokens)")
+            let tokenColumnNames = tokenInfos.map(\.name)
+            if !tokenColumnNames.contains("level") {
+                sqls.append("ALTER TABLE tokens ADD COLUMN level INTEGER NOT NULL DEFAULT \(Web3Reputation.Level.verified.rawValue)")
+            }
+            
+            let transactionInfos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(transactions)")
+            let transactionColumnNames = transactionInfos.map(\.name)
+            if !transactionColumnNames.contains("level") {
+                sqls.append("ALTER TABLE transactions ADD COLUMN level INTEGER NOT NULL DEFAULT \(Web3Reputation.Level.unknown.rawValue)")
+            }
+            
+            sqls.append(contentsOf: [
+                "DELETE FROM properties",
+                "DROP INDEX IF EXISTS `index_transactions_transaction_type_send_asset_id_receive_asset_id_transaction_at`",
+                "CREATE INDEX IF NOT EXISTS `index_transactions_transaction_type_send_asset_id_receive_asset_id_transaction_at_level` ON `transactions` (`transaction_type`, `send_asset_id`, `receive_asset_id`, `transaction_at`, `level`)",
+            ])
+            
             for sql in sqls {
                 try db.execute(sql: sql)
             }

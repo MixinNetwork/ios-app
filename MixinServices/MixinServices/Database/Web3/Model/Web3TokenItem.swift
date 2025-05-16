@@ -32,7 +32,8 @@ public final class Web3TokenItem: Web3Token, OnChainToken, HideableToken {
             iconURL:        t.iconURL,
             amount:         t.amount,
             usdPrice:       t.usdPrice,
-            usdChange:      t.usdChange
+            usdChange:      t.usdChange,
+            level:          t.level,
         )
     }
     

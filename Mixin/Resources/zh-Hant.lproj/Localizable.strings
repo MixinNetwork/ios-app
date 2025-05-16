@@ -1019,6 +1019,13 @@
 "report_and_block" = "舉報並封鎖？";
 "report_title" = "給開發人員傳送聊天日誌？";
 "represent_send_messages" = "代表你發訊息";
+"reputation" = "信譽度";
+"reputation_description" = "預設僅顯示信譽度良好的交易。啟用“未知”或“高風險”可檢視更多交易。";
+"reputation_spam" = "高風險";
+"reputation_spam_description" = "因可疑行為或欺詐跡象被標記為高風險交易";
+"reputation_spam_warning" = "該代幣已被標記為高風險代幣";
+"reputation_unknown" = "未知";
+"reputation_unknown_description" = "缺乏足夠資訊，或未被可信來源驗證";
 "request_authorization" = "請求授權";
 "request_rejected" = "請求已拒絕";
 "request_rejected_reason_another_request_in_process" = "正在處理另一請求，請完成當前請求後重試";

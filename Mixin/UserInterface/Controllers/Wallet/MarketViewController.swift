@@ -9,6 +9,7 @@ final class MarketViewController: UIViewController {
     private weak var favoriteBarButtonItem: UIBarButtonItem!
     
     private let id: Identifier
+    private let isMalicious: Bool
     
     private var market: FavorableMarket?
     private var tokens: [MixinTokenItem]?
@@ -25,6 +26,7 @@ final class MarketViewController: UIViewController {
     
     init(token: MixinTokenItem, chartPoints: [ChartView.Point]?) {
         self.id = .asset(token.assetID)
+        self.isMalicious = token.isMalicious
         self.market = nil
         self.tokens = [token]
         self.viewModel = MarketViewModel(token: token)
@@ -35,6 +37,7 @@ final class MarketViewController: UIViewController {
     
     init(token: Web3Token, chartPoints: [ChartView.Point]?) {
         self.id = .asset(token.assetID)
+        self.isMalicious = token.isMalicious
         self.market = nil
         self.tokens = nil
         self.viewModel = MarketViewModel(token: token)
@@ -45,6 +48,7 @@ final class MarketViewController: UIViewController {
     
     init(market: FavorableMarket) {
         self.id = .coin(market.coinID)
+        self.isMalicious = false
         self.market = market
         self.tokens = nil
         self.viewModel = MarketViewModel(market: market)
@@ -77,6 +81,7 @@ final class MarketViewController: UIViewController {
         tableView.estimatedRowHeight = 110
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
+        tableView.register(R.nib.maliciousTokenWarningCell)
         tableView.register(R.nib.tokenPriceChartCell)
         tableView.register(R.nib.insetGroupedTitleCell)
         tableView.register(R.nib.tokenStatsCell)
@@ -396,6 +401,8 @@ extension MarketViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
+        case .warning:
+            isMalicious ? 1 : 0
         case .chart:
             1
         case .stats:
@@ -409,6 +416,9 @@ extension MarketViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
+        case .warning:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.malicious_token_warning, for: indexPath)!
+            return cell
         case .chart:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_price_chart, for: indexPath)!
             if let market {
@@ -421,6 +431,9 @@ extension MarketViewController: UITableViewDataSource {
                 cell.rankLabel.text = nil
                 cell.tokenIconView.setIcon(token: token)
                 cell.updatePriceAndChangeByMarket(price: token.localizedFiatMoneyPrice, points: chartPoints)
+            } else {
+                cell.titleLabel.text = viewModel.symbol
+                cell.rankLabel.text = nil
             }
             cell.rankLabel.isHidden = cell.rankLabel.text == nil
             cell.setPeriodSelection(period: chartPeriod)
@@ -525,7 +538,7 @@ extension MarketViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch Section(rawValue: indexPath.section)! {
-        case .chart:
+        case .warning, .chart:
             return UITableView.automaticDimension
         case .stats:
             return switch StatsRow(rawValue: indexPath.row)! {
@@ -548,6 +561,8 @@ extension MarketViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch Section(rawValue: section)! {
+        case .warning:
+            isMalicious ? 10 : .leastNormalMagnitude
         case .chart:
             10
         case .stats:
@@ -730,6 +745,7 @@ extension MarketViewController {
     }
     
     private enum Section: Int, CaseIterable {
+        case warning
         case chart
         case stats
         case myBalance
@@ -943,11 +959,11 @@ extension MarketViewController {
             
         }
         
+        let symbol: String
+        
         private(set) var stats: Stats?
         private(set) var balance: Balance?
         private(set) var infos: [Info]
-        
-        private let symbol: String
         
         private var basicInfos: [Info]
         private var marketInfos: [Info]

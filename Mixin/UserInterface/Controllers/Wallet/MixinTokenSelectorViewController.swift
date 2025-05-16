@@ -158,6 +158,7 @@ final class MixinTokenSelectorViewController: TokenSelectorViewController<MixinT
     
     override func configureTokenCell(_ cell: SwapTokenCell, withToken token: MixinTokenItem) {
         cell.iconView.setIcon(token: token)
+        cell.maliciousWarningImageView.isHidden = true
         cell.titleLabel.text = token.name
         cell.subtitleLabel.text = token.localizedBalanceWithSymbol
         if let tag = token.chainTag {

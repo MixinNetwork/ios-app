@@ -92,12 +92,25 @@ public final class Web3TokenDAO: Web3DAO {
         guard let walletID = tokens.first?.walletID else {
             return
         }
-        db.save(tokens) { _ in
-            NotificationCenter.default.post(
-                onMainThread: Self.tokensDidChangeNotification,
-                object: self,
-                userInfo: [Self.walletIDUserInfoKey: walletID]
-            )
+        db.write { db in
+            for token in tokens {
+                try token.save(db)
+                if token.level < Web3Reputation.Level.verified.rawValue {
+                    let extra = Web3TokenExtra(
+                        walletID: token.walletID,
+                        assetID: token.assetID,
+                        isHidden: true
+                    )
+                    try extra.insert(db, onConflict: .ignore)
+                }
+            }
+            db.afterNextTransaction { _ in
+                NotificationCenter.default.post(
+                    onMainThread: Self.tokensDidChangeNotification,
+                    object: self,
+                    userInfo: [Self.walletIDUserInfoKey: walletID]
+                )
+            }
         }
     }
     

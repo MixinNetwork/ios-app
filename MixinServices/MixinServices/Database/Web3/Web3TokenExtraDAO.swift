@@ -14,14 +14,26 @@ public final class Web3TokenExtraDAO: Web3DAO {
     }
     
     public func unhide(walletID: String, assetID: String) {
-        db.execute(
-            sql: "DELETE FROM tokens_extra WHERE wallet_id = ? AND asset_id = ?",
-            arguments: [walletID, assetID]
-        ) { _ in
-            NotificationCenter.default.post(
-                onMainThread: Self.tokenVisibilityDidChangeNotification,
-                object: self
-            )
+        let sql = """
+        INSERT INTO tokens_extra(
+            wallet_id, asset_id, hidden
+        ) VALUES (
+            :wallet_id, :asset_id, :hidden
+        )
+        ON CONFLICT(wallet_id, asset_id) DO UPDATE SET hidden = :hidden
+        """
+        db.write { db in
+            try db.execute(sql: sql, arguments: [
+                "wallet_id": walletID,
+                "asset_id": assetID,
+                "hidden": false,
+            ])
+            db.afterNextTransaction { _ in
+                NotificationCenter.default.post(
+                    onMainThread: Self.tokenVisibilityDidChangeNotification,
+                    object: self
+                )
+            }
         }
     }
     

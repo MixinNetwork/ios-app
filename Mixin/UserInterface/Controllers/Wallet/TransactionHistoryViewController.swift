@@ -4,6 +4,7 @@ import MixinServices
 class TransactionHistoryViewController: UIViewController {
     
     @IBOutlet weak var filtersScrollView: UIScrollView!
+    @IBOutlet weak var filtersStackView: UIStackView!
     @IBOutlet weak var typeFilterView: TransactionHistoryTypeFilterView!
     @IBOutlet weak var assetFilterView: TransactionHistoryAssetFilterView!
     @IBOutlet weak var recipientFilterView: TransactionHistoryOpponentFilterView!

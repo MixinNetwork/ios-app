@@ -32,8 +32,8 @@
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="rAj-h1-YDG">
                                 <rect key="frame" x="0.0" y="0.0" width="239" height="50.333333333333336"/>
                                 <subviews>
-                                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="800" verticalHuggingPriority="251" horizontalCompressionResistancePriority="800" image="malicious_token_warning" translatesAutoresizingMaskIntoConstraints="NO" id="Iqr-4R-x1n">
-                                        <rect key="frame" x="0.0" y="17.333333333333332" width="0.0" height="15.999999999999996"/>
+                                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="800" verticalHuggingPriority="251" horizontalCompressionResistancePriority="800" image="web3_reputation_bad" translatesAutoresizingMaskIntoConstraints="NO" id="Iqr-4R-x1n">
+                                        <rect key="frame" x="0.0" y="17.333333333333329" width="0.0" height="16"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="19" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="75v-re-gnF">
                                         <rect key="frame" x="0.0" y="15.666666666666664" width="20" height="19"/>
@@ -101,7 +101,7 @@
     </objects>
     <resources>
         <image name="Setting/ic_checkmark" width="30" height="30"/>
-        <image name="malicious_token_warning" width="16" height="16"/>
+        <image name="web3_reputation_bad" width="16" height="16"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

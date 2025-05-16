@@ -15,8 +15,12 @@ public final class Web3TransactionDAO: Web3DAO {
     
     public func transactions(assetID: String, limit: Int) -> [Web3Transaction] {
         let sql = """
-        SELECT * from transactions txn
-        WHERE txn.send_asset_id = ? OR txn.receive_asset_id = ?
+        SELECT txn.*
+        FROM transactions txn
+            LEFT JOIN tokens st ON txn.send_asset_id = st.asset_id
+            LEFT JOIN tokens rt ON txn.receive_asset_id = rt.asset_id
+        WHERE (txn.send_asset_id = ? OR txn.receive_asset_id = ?)
+            AND txn.level >= ifnull(ifnull(st.level, rt.level), 0)
         ORDER BY txn.transaction_at DESC
         LIMIT ?
         """

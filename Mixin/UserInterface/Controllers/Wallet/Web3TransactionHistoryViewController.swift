@@ -26,8 +26,9 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     private var reviewPendingTransactionJobID: String?
     
     init(token: Web3TokenItem) {
+        let reputationOptions = Web3Reputation.FilterOption.options(token: token)
         self.walletID = token.walletID
-        self.filter = .init(tokens: [token])
+        self.filter = .init(tokens: [token], reputationOptions: reputationOptions)
         super.init()
     }
     
@@ -347,6 +348,20 @@ extension Web3TransactionHistoryViewController: TransactionHistoryDatePickerView
 
 extension Web3TransactionHistoryViewController: Web3ReputationPickerViewController.Delegate {
     
+    func web3ReputationPickerViewControllerDidResetOptions(
+        _ controller: Web3ReputationPickerViewController
+    ) {
+        let options: Set<Web3Reputation.FilterOption> = filter.tokens
+            .map(Web3Reputation.FilterOption.options(token:))
+            .reduce(into: []) { result, options in
+                result.formUnion(options)
+            }
+        filter.reputationOptions = options
+        reputationFilterView.reloadData(options: options)
+        filtersScrollView.layoutIfNeeded()
+        reloadData()
+    }
+    
     func web3ReputationPickerViewController(
         _ controller: Web3ReputationPickerViewController,
         didPickOptions options: Set<Web3Reputation.FilterOption>
@@ -397,22 +412,21 @@ extension Web3TransactionHistoryViewController {
     
     private final class TransactionHistoryReputationFilterView: TransactionHistoryFilterView {
         
-        private weak var warningImageView: UIImageView?
+        private weak var imageView: UIImageView?
         
         override func loadSubviews() {
             super.loadSubviews()
+            let imageView = UIImageView()
+            contentStackView.insertArrangedSubview(imageView, at: 0)
+            self.imageView = imageView
             label.text = R.string.localizable.reputation()
         }
         
         func reloadData(options: Set<Web3Reputation.FilterOption>) {
-            let warns = options.contains(.unknown) || options.contains(.spam)
-            if warns && warningImageView == nil {
-                let imageView = UIImageView(image: R.image.malicious_token_warning())
-                contentStackView.insertArrangedSubview(imageView, at: 0)
-                self.warningImageView = imageView
-            } else if !warns, let warningImageView {
-                warningImageView.removeFromSuperview()
-                self.warningImageView = nil
+            imageView?.image = if options.contains(.unknown) || options.contains(.spam) {
+                R.image.web3_reputation_bad()
+            } else {
+                R.image.web3_reputation_good()
             }
         }
         

@@ -36,7 +36,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="2w0-tw-QvV">
                                 <rect key="frame" x="0.0" y="0.0" width="314" height="21"/>
                                 <subviews>
-                                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="800" verticalHuggingPriority="251" horizontalCompressionResistancePriority="800" image="malicious_token_warning" translatesAutoresizingMaskIntoConstraints="NO" id="SrW-7i-0oJ">
+                                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="800" verticalHuggingPriority="251" horizontalCompressionResistancePriority="800" image="web3_reputation_bad" translatesAutoresizingMaskIntoConstraints="NO" id="SrW-7i-0oJ">
                                         <rect key="frame" x="0.0" y="3.5" width="0.0" height="16"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="1.0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UYd-p5-0iv" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
@@ -130,7 +130,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="malicious_token_warning" width="16" height="16"/>
+        <image name="web3_reputation_bad" width="16" height="16"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

@@ -11,8 +11,22 @@ public enum Web3Reputation {
     }
     
     public enum FilterOption: Int, CaseIterable {
+        
         case unknown
         case spam
+        
+        public static func options(token: Web3Token) -> Set<Web3Reputation.FilterOption> {
+            let options: Set<Web3Reputation.FilterOption>
+            if token.level <= Web3Reputation.Level.spam.rawValue {
+                options = [.unknown, .spam]
+            } else if token.level <= Web3Reputation.Level.unknown.rawValue {
+                options = [.unknown]
+            } else {
+                options = []
+            }
+            return options
+        }
+        
     }
     
 }

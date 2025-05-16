@@ -5,9 +5,13 @@ final class Web3ReputationPickerViewController: PopupSelectorViewController {
     
     protocol Delegate: AnyObject {
         
+        func web3ReputationPickerViewControllerDidResetOptions(
+            _ controller: Web3ReputationPickerViewController,
+        )
+        
         func web3ReputationPickerViewController(
             _ controller: Web3ReputationPickerViewController,
-            didPickOptions options: Set<Web3Reputation.FilterOption>
+            didPickOptions options: Set<Web3Reputation.FilterOption>,
         )
         
     }
@@ -100,7 +104,7 @@ extension Web3ReputationPickerViewController: Web3ReputationOptionCell.Delegate 
 extension Web3ReputationPickerViewController: Web3ReputationPickerActionCell.Delegate {
     
     func web3ReputationPickerActionCellDidSelectReset(_ cell: Web3ReputationPickerActionCell) {
-        delegate?.web3ReputationPickerViewController(self, didPickOptions: [])
+        delegate?.web3ReputationPickerViewControllerDidResetOptions(self)
         close(cell)
     }
     

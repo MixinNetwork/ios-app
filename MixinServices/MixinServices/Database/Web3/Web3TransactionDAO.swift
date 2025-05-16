@@ -126,13 +126,7 @@ extension Web3TransactionDAO {
         order: Web3Transaction.Order,
         limit: Int
     ) -> [Web3Transaction] {
-        var query = GRDB.SQL(sql: """
-        SELECT txn.*
-        FROM transactions txn
-            LEFT JOIN tokens st ON st.asset_id = txn.send_asset_id
-            LEFT JOIN tokens rt ON rt.asset_id = txn.receive_asset_id
-        
-        """)
+        var query = GRDB.SQL(sql: "SELECT * from transactions txn\n")
         
         var conditions: [GRDB.SQL] = []
         
@@ -160,13 +154,12 @@ extension Web3TransactionDAO {
             conditions.append("\(assetConditions.joined(operator: .or))")
         }
         
-        switch filter.reputation {
-        case .good:
-            conditions.append("st.level >= \(Web3Token.Level.verified.rawValue) OR rt.level >= \(Web3Token.Level.verified.rawValue)")
-        case .unknown:
-            conditions.append("st.level = \(Web3Token.Level.unknown.rawValue) OR rt.level = \(Web3Token.Level.unknown.rawValue)")
-        case .spam:
-            conditions.append("st.level <= \(Web3Token.Level.spam.rawValue) OR rt.level <= \(Web3Token.Level.spam.rawValue)")
+        if filter.reputationOptions.isEmpty {
+            conditions.append("txn.level >= 11")
+        } else if filter.reputationOptions.contains(.unknown) && !filter.reputationOptions.contains(.spam) {
+            conditions.append("txn.level >= 10")
+        } else if filter.reputationOptions.contains(.spam) && !filter.reputationOptions.contains(.unknown) {
+            conditions.append("txn.level >= 11 OR txn.level <= 1")
         }
         
         var recipientConditions: [GRDB.SQL] = []

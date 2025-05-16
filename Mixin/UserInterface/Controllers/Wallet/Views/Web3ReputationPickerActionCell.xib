@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Web3ReputationPickerViewController" customModule="Mixin" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="web3_reputation_picker_action" id="SiU-7h-Awq" customClass="Web3ReputationPickerActionCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="159"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="SiU-7h-Awq" id="2d0-Tj-nCk">
+                <rect key="frame" x="0.0" y="0.0" width="393" height="159"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iup-MM-AJn">
+                        <rect key="frame" x="36" y="5" width="321" height="52"/>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                        <color key="textColor" name="text_tertiary"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="YY3-Bf-rww">
+                        <rect key="frame" x="58.666666666666657" y="97" width="276" height="42"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wVR-TY-CDb">
+                                <rect key="frame" x="0.0" y="0.0" width="128" height="42"/>
+                                <color key="backgroundColor" red="0.8980392157" green="0.90588235289999997" blue="0.92156862750000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="128" id="DFH-rx-sjU"/>
+                                    <constraint firstAttribute="height" constant="42" id="d6l-il-IlR"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Reset">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="cancel"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="21"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="reset:" destination="SiU-7h-Awq" eventType="touchUpInside" id="uLQ-iy-jnS"/>
+                                    <action selector="resetOptions:" destination="-1" eventType="touchUpInside" id="Lla-l5-WQE"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GHD-Ja-bir" customClass="StateResponsiveButton" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="148" y="0.0" width="128" height="42"/>
+                                <color key="backgroundColor" name="theme"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="42" id="Wtw-JY-FeQ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Apply">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="21"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="apply:" destination="SiU-7h-Awq" eventType="touchUpInside" id="gBw-d8-ZnM"/>
+                                    <action selector="applyOptions:" destination="-1" eventType="touchUpInside" id="HXw-11-XPW"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" name="background_secondary"/>
+                <constraints>
+                    <constraint firstItem="iup-MM-AJn" firstAttribute="top" secondItem="2d0-Tj-nCk" secondAttribute="top" constant="5" id="5PE-ao-EDS"/>
+                    <constraint firstAttribute="bottom" secondItem="YY3-Bf-rww" secondAttribute="bottom" constant="20" id="MiV-yI-ula"/>
+                    <constraint firstItem="iup-MM-AJn" firstAttribute="leading" secondItem="2d0-Tj-nCk" secondAttribute="leading" constant="36" id="bti-Zl-3eM"/>
+                    <constraint firstItem="YY3-Bf-rww" firstAttribute="top" secondItem="iup-MM-AJn" secondAttribute="bottom" constant="40" id="kj6-Wa-och"/>
+                    <constraint firstAttribute="trailing" secondItem="iup-MM-AJn" secondAttribute="trailing" constant="36" id="n07-fA-jTV"/>
+                    <constraint firstItem="YY3-Bf-rww" firstAttribute="centerX" secondItem="2d0-Tj-nCk" secondAttribute="centerX" id="weJ-zN-fmE"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="applyButton" destination="GHD-Ja-bir" id="UIL-Hq-zaA"/>
+                <outlet property="label" destination="iup-MM-AJn" id="Zf5-PC-dok"/>
+                <outlet property="resetButton" destination="wVR-TY-CDb" id="A8X-Ql-aea"/>
+            </connections>
+            <point key="canvasLocation" x="163" y="-144"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

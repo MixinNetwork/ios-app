@@ -52,7 +52,7 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
         typeFilterView.button.menu = UIMenu(children: typeFilterActions)
         assetFilterView.reloadData(tokens: filter.tokens)
         assetFilterView.button.addTarget(self, action: #selector(pickTokens(_:)), for: .touchUpInside)
-        reputationFilterView.reloadData(reputation: filter.reputation)
+        reputationFilterView.reloadData(options: filter.reputationOptions)
         reputationFilterView.button.addTarget(self, action: #selector(pickReputation(_:)), for: .touchUpInside)
         filtersStackView.insertArrangedSubview(reputationFilterView, at: 2)
         recipientFilterView.reloadData(users: [], addresses: filter.addresses)
@@ -108,7 +108,7 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     }
     
     @objc private func pickReputation(_ sender: Any) {
-        let picker = Web3TokenReputationPickerViewController(selectedReputation: filter.reputation)
+        let picker = Web3ReputationPickerViewController(options: filter.reputationOptions)
         picker.delegate = self
         present(picker, animated: true)
     }
@@ -345,14 +345,14 @@ extension Web3TransactionHistoryViewController: TransactionHistoryDatePickerView
     
 }
 
-extension Web3TransactionHistoryViewController: Web3TokenReputationPickerViewController.Delegate {
+extension Web3TransactionHistoryViewController: Web3ReputationPickerViewController.Delegate {
     
-    func web3TokenReputationPickerViewController(
-        _ controller: Web3TokenReputationPickerViewController,
-        didPickReputation reputation: Web3Token.Reputation
+    func web3ReputationPickerViewController(
+        _ controller: Web3ReputationPickerViewController,
+        didPickOptions options: Set<Web3Reputation.FilterOption>
     ) {
-        filter.reputation = reputation
-        reputationFilterView.reloadData(reputation: reputation)
+        filter.reputationOptions = options
+        reputationFilterView.reloadData(options: options)
         filtersScrollView.layoutIfNeeded()
         reloadData()
     }
@@ -397,14 +397,22 @@ extension Web3TransactionHistoryViewController {
     
     private final class TransactionHistoryReputationFilterView: TransactionHistoryFilterView {
         
-        func reloadData(reputation: Web3Token.Reputation) {
-            label.text = switch reputation {
-            case .good:
-                R.string.localizable.reputation_good()
-            case .unknown:
-                R.string.localizable.reputation_unknown()
-            case .spam:
-                R.string.localizable.reputation_spam()
+        private weak var warningImageView: UIImageView?
+        
+        override func loadSubviews() {
+            super.loadSubviews()
+            label.text = R.string.localizable.reputation()
+        }
+        
+        func reloadData(options: Set<Web3Reputation.FilterOption>) {
+            let warns = options.contains(.unknown) || options.contains(.spam)
+            if warns && warningImageView == nil {
+                let imageView = UIImageView(image: R.image.malicious_token_warning())
+                contentStackView.insertArrangedSubview(imageView, at: 0)
+                self.warningImageView = imageView
+            } else if !warns, let warningImageView {
+                warningImageView.removeFromSuperview()
+                self.warningImageView = nil
             }
         }
         

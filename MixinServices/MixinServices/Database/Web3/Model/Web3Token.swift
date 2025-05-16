@@ -9,14 +9,6 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
         public static let eth = "0x0000000000000000000000000000000000000000"
     }
     
-    public enum Level: Int {
-        case good = 12
-        case verified = 11
-        case unknown = 10
-        case spam = 1
-        case scam = 0
-    }
-    
     public enum CodingKeys: String, CodingKey {
         case walletID = "wallet_id"
         case assetID = "asset_id"
@@ -107,17 +99,7 @@ extension Web3Token: TableRecord, PersistableRecord, MixinFetchableRecord, Mixin
 extension Web3Token: DistinguishableToken {
     
     public var isMalicious: Bool {
-        level <= Level.spam.rawValue
-    }
-    
-}
-
-extension Web3Token {
-    
-    public enum Reputation: CaseIterable {
-        case good
-        case unknown
-        case spam
+        level <= Web3Reputation.Level.spam.rawValue
     }
     
 }

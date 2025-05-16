@@ -179,7 +179,7 @@ final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3Tok
                 amount: amount ?? "0",
                 usdPrice: token.usdPrice,
                 usdChange: token.usdChange,
-                level: Web3Token.Level.verified.rawValue,
+                level: Web3Reputation.Level.verified.rawValue,
             )
             return Web3TokenItem(token: web3Token, hidden: isHidden, chain: chain)
         }.sorted { (one, another) in

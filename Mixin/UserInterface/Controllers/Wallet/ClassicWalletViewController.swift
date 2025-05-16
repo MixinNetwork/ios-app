@@ -282,7 +282,7 @@ extension ClassicWalletViewController: WalletSearchViewControllerDelegate {
             amount: amount ?? "0",
             usdPrice: token.usdPrice,
             usdChange: token.usdChange,
-            level: Web3Token.Level.verified.rawValue,
+            level: Web3Reputation.Level.verified.rawValue,
         )
         let item = Web3TokenItem(token: web3Token, hidden: isHidden, chain: token.chain)
         let controller = Web3TokenViewController(token: item)

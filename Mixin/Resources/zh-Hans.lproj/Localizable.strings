@@ -1020,11 +1020,10 @@
 "report_title" = "给开发人员发送聊天日志？";
 "represent_send_messages" = "代表你发消息";
 "reputation" = "信誉度";
-"reputation_good" = "良好";
-"reputation_good_description" = "由可信第三方验证，具有良好活跃度";
+"reputation_description" = "默认仅显示信誉度良好的交易。启用“未知”或“高风险”可查看更多交易。";
 "reputation_spam" = "高风险";
 "reputation_spam_description" = "因可疑行为或欺诈迹象被标记为高风险代币";
-"reputation_spam_warning" = "该代币已被 Blockaid 标记为高风险代币";
+"reputation_spam_warning" = "该代币已被标记为高风险代币";
 "reputation_unknown" = "未知";
 "reputation_unknown_description" = "缺乏足够信息，或未被可信来源验证";
 "request_authorization" = "请求授权";

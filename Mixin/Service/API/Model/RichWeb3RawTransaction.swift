@@ -155,7 +155,8 @@ extension Web3Transaction {
             receiveAssetID: receiveChanges.first?.assetID,
             transactionAt: rawTransaction.createdAt,
             createdAt: rawTransaction.createdAt,
-            updatedAt: rawTransaction.createdAt
+            updatedAt: rawTransaction.createdAt,
+            level: Web3Reputation.Level.good.rawValue,
         )
     }
     

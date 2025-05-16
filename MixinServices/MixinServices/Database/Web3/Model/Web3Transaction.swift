@@ -19,6 +19,7 @@ public class Web3Transaction: Codable, Identifiable {
         case transactionAt = "transaction_at"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+        case level
     }
     
     public let transactionHash: String
@@ -36,6 +37,7 @@ public class Web3Transaction: Codable, Identifiable {
     public let transactionAt: String
     public let createdAt: String
     public let updatedAt: String
+    public let level: Int
     
     public lazy var compactHash = TextTruncation.truncateMiddle(
         string: transactionHash,
@@ -99,7 +101,8 @@ public class Web3Transaction: Codable, Identifiable {
         status: Status, blockNumber: Int, fee: String,
         senders: [Sender]?, receivers: [Receiver]?, approvals: [Approval]?,
         sendAssetID: String?, receiveAssetID: String?,
-        transactionAt: String, createdAt: String, updatedAt: String
+        transactionAt: String, createdAt: String, updatedAt: String,
+        level: Int,
     ) {
         self.transactionHash = transactionHash
         self.chainID = chainID
@@ -116,6 +119,7 @@ public class Web3Transaction: Codable, Identifiable {
         self.transactionAt = transactionAt
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.level = level
     }
     
     public func matches(with another: Web3Transaction) -> Bool {
@@ -267,26 +271,26 @@ extension Web3Transaction {
         
         public var type: DisplayType?
         public var tokens: [Web3TokenItem]
-        public var reputation: Web3Token.Reputation
+        public var reputationOptions: Set<Web3Reputation.FilterOption>
         public var addresses: [AddressItem]
         public var startDate: Date?
         public var endDate: Date?
         
         public var description: String {
-            "<Filter type: \(type), tokens: \(tokens.map(\.symbol)), reputation: \(reputation), addresses: \(addresses.map(\.label)), startDate: \(startDate), endDate: \(endDate)>"
+            "<Filter type: \(type), tokens: \(tokens.map(\.symbol)), reputation: \(reputationOptions), addresses: \(addresses.map(\.label)), startDate: \(startDate), endDate: \(endDate)>"
         }
         
         public init(
             type: DisplayType? = nil,
             tokens: [Web3TokenItem] = [],
-            reputation: Web3Token.Reputation = .good,
+            reputationOptions: Set<Web3Reputation.FilterOption> = [],
             addresses: [AddressItem] = [],
             startDate: Date? = nil,
             endDate: Date? = nil
         ) {
             self.type = type
             self.tokens = tokens
-            self.reputation = reputation
+            self.reputationOptions = reputationOptions
             self.addresses = addresses
             self.startDate = startDate
             self.endDate = endDate

@@ -1022,7 +1022,7 @@
 "reputation" = "Reputation";
 "reputation_description" = "By default, only transactions with a Good reputation are shown. Enable ‘Unknown’ or ‘Spam’ to see more.";
 "reputation_spam" = "Spam";
-"reputation_spam_description" = "Flagged token due to suspicious behavior or scam indicators";
+"reputation_spam_description" = "Flagged transaction due to suspicious behavior or scam indicators";
 "reputation_spam_warning" = "This token has been flagged as malicious";
 "reputation_unknown" = "Unknown";
 "reputation_unknown_description" = "No sufficient data or unverified by trusted sources";

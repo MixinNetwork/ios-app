@@ -40,14 +40,6 @@ class WalletViewController: UIViewController, MnemonicsBackupChecking {
         updateTableHeaderVisualEffect()
         NotificationCenter.default.addObserver(self, selector: #selector(updateTableHeaderVisualEffect), name: UIApplication.significantTimeChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(dismissSearch), name: dismissSearchNotification, object: nil)
-        DispatchQueue.global().async {
-            let hasReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapReviewed) ?? false
-            if !hasReviewed {
-                DispatchQueue.main.async {
-                    self.tableHeaderView.actionView.badgeOnSwap = true
-                }
-            }
-        }
     }
     
     override func viewIsAppearing(_ animated: Bool) {

@@ -68,23 +68,26 @@ final class PrivacyWalletViewController: WalletViewController {
         
         DispatchQueue.global().async {
             let hasWalletSwitchViewed: Bool = PropertiesDAO.shared.value(forKey: .hasWalletSwitchViewed) ?? false
-            guard !hasWalletSwitchViewed else {
-                return
-            }
+            let hasSwapReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapReviewed) ?? false
             DispatchQueue.main.async {
-                let badge = BadgeDotView()
-                self.titleView.addSubview(badge)
-                badge.snp.makeConstraints { make in
-                    make.centerY.equalTo(self.walletSwitchImageView.snp.centerY).offset(-8)
-                    make.leading.equalTo(self.walletSwitchImageView.snp.trailing).offset(-2)
+                if !hasWalletSwitchViewed {
+                    let badge = BadgeDotView()
+                    self.titleView.addSubview(badge)
+                    badge.snp.makeConstraints { make in
+                        make.centerY.equalTo(self.walletSwitchImageView.snp.centerY).offset(-8)
+                        make.leading.equalTo(self.walletSwitchImageView.snp.trailing).offset(-2)
+                    }
+                    self.walletSwitchBadgeView = badge
+                    notificationCenter.addObserver(
+                        self,
+                        selector: #selector(self.hideBadgeView(_:)),
+                        name: PropertiesDAO.propertyDidUpdateNotification,
+                        object: nil
+                    )
                 }
-                self.walletSwitchBadgeView = badge
-                notificationCenter.addObserver(
-                    self,
-                    selector: #selector(self.hideBadgeView(_:)),
-                    name: PropertiesDAO.propertyDidUpdateNotification,
-                    object: nil
-                )
+                if !hasSwapReviewed {
+                    self.tableHeaderView.actionView.badgeOnSwap = true
+                }
             }
         }
     }

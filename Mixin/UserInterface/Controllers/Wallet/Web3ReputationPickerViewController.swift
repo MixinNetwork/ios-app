@@ -65,10 +65,6 @@ extension Web3ReputationPickerViewController: UITableViewDataSource {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.web3_reputation_option, for: indexPath)!
             switch Web3Reputation.FilterOption.allCases[indexPath.row] {
-            case .unknown:
-                cell.titleLabel.text = R.string.localizable.reputation_unknown()
-                cell.subtitleLabel.text = R.string.localizable.reputation_unknown_description()
-                cell.activatedSwitch.isOn = options.contains(.unknown)
             case .spam:
                 cell.titleLabel.text = R.string.localizable.reputation_spam()
                 cell.subtitleLabel.text = R.string.localizable.reputation_spam_description()

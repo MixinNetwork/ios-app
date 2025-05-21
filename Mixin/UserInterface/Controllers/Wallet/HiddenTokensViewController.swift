@@ -18,7 +18,7 @@ class HiddenTokensViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = R.string.localizable.hide_asset()
+        title = R.string.localizable.hidden_assets()
         let tableView = UITableView(frame: view.bounds, style: .plain)
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()

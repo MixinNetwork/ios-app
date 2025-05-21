@@ -41,6 +41,8 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         )
         
         reloadSnapshots()
+        let refreshToken = RefreshWeb3TokenJob(token: token)
+        ConcurrentJobQueue.shared.addJob(job: refreshToken)
     }
     
     override func viewDidAppear(_ animated: Bool) {

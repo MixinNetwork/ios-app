@@ -29,7 +29,7 @@ final class ReviewPendingWeb3TransactionJob: BaseJob {
             } else {
                 Logger.general.debug(category: "ReviewPendingWeb3Txn", message: "\(transactions.count - rawTransactionsCount) txns don't have raw txn, sync it")
                 let jobs = [
-                    RefreshWeb3TokenJob(walletID: walletID),
+                    RefreshWeb3WalletTokenJob(walletID: walletID),
                     SyncWeb3TransactionJob(walletID: walletID),
                 ]
                 for job in jobs {

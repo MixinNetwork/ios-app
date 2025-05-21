@@ -105,7 +105,7 @@ final class ClassicWalletViewController: WalletViewController {
     
     @objc private func reloadTokensFromRemote() {
         let jobs = [
-            RefreshWeb3TokenJob(walletID: walletID),
+            RefreshWeb3WalletTokenJob(walletID: walletID),
             SyncWeb3TransactionJob(walletID: walletID),
         ]
         for job in jobs {

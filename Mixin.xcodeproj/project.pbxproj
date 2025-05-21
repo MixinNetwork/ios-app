@@ -739,7 +739,7 @@
 		941D3BFA2A7912C700538504 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941D3BF82A7912C700538504 /* QRCodeViewController.swift */; };
 		941D3BFB2A7912C700538504 /* QRCodeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 941D3BF92A7912C700538504 /* QRCodeView.xib */; };
 		941D93FE27B4E315007F2F95 /* TextFieldAlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */; };
-		941E360B2D78B813000E7093 /* RefreshWeb3TokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941E360A2D78B80E000E7093 /* RefreshWeb3TokenJob.swift */; };
+		941E360B2D78B813000E7093 /* RefreshWeb3WalletTokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941E360A2D78B80E000E7093 /* RefreshWeb3WalletTokenJob.swift */; };
 		9420F2EE2DAF8A8300434E0D /* BalanceChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9420F2ED2DAF8A7F00434E0D /* BalanceChange.swift */; };
 		9420F3052DAF993500434E0D /* RichWeb3RawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9420F2E62DAF895D00434E0D /* RichWeb3RawTransaction.swift */; };
 		94227D6E2BEF242200430CAE /* SearchCollectibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94227D6C2BEF242200430CAE /* SearchCollectibleViewController.swift */; };
@@ -881,6 +881,7 @@
 		944ED8D0264640E200C97215 /* WebLoadingFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */; };
 		944ED8D22646535B00C97215 /* WebContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8D12646535B00C97215 /* WebContentView.xib */; };
 		944ED8D4264666AC00C97215 /* FullscreenPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944ED8D3264666AC00C97215 /* FullscreenPopupViewController.swift */; };
+		94509BC12DDDFC5D00DC6A43 /* RefreshWeb3TokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94509BC02DDDFC5800DC6A43 /* RefreshWeb3TokenJob.swift */; };
 		94510FBB2C85673C00ACD972 /* ReloadGlobalMarketJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94510FBA2C85673C00ACD972 /* ReloadGlobalMarketJob.swift */; };
 		94510FCE2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */; };
 		94510FD42C8743AA00ACD972 /* MarketTokenSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94510FD22C8743AA00ACD972 /* MarketTokenSelectorCell.swift */; };
@@ -2282,7 +2283,7 @@
 		941D3BF82A7912C700538504 /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
 		941D3BF92A7912C700538504 /* QRCodeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QRCodeView.xib; sourceTree = "<group>"; };
 		941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlertModifier.swift; sourceTree = "<group>"; };
-		941E360A2D78B80E000E7093 /* RefreshWeb3TokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshWeb3TokenJob.swift; sourceTree = "<group>"; };
+		941E360A2D78B80E000E7093 /* RefreshWeb3WalletTokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshWeb3WalletTokenJob.swift; sourceTree = "<group>"; };
 		9420F2E62DAF895D00434E0D /* RichWeb3RawTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichWeb3RawTransaction.swift; sourceTree = "<group>"; };
 		9420F2ED2DAF8A7F00434E0D /* BalanceChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceChange.swift; sourceTree = "<group>"; };
 		94227D6C2BEF242200430CAE /* SearchCollectibleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectibleViewController.swift; sourceTree = "<group>"; };
@@ -2424,6 +2425,7 @@
 		944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebLoadingFailureView.xib; sourceTree = "<group>"; };
 		944ED8D12646535B00C97215 /* WebContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebContentView.xib; sourceTree = "<group>"; };
 		944ED8D3264666AC00C97215 /* FullscreenPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPopupViewController.swift; sourceTree = "<group>"; };
+		94509BC02DDDFC5800DC6A43 /* RefreshWeb3TokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshWeb3TokenJob.swift; sourceTree = "<group>"; };
 		94510FBA2C85673C00ACD972 /* ReloadGlobalMarketJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadGlobalMarketJob.swift; sourceTree = "<group>"; };
 		94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		94510FD22C8743AA00ACD972 /* MarketTokenSelectorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketTokenSelectorCell.swift; sourceTree = "<group>"; };
@@ -5440,7 +5442,8 @@
 				94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */,
 				94510FBA2C85673C00ACD972 /* ReloadGlobalMarketJob.swift */,
 				94428D632CA24F6E00157E93 /* ReloadMarketAlertsJob.swift */,
-				941E360A2D78B80E000E7093 /* RefreshWeb3TokenJob.swift */,
+				941E360A2D78B80E000E7093 /* RefreshWeb3WalletTokenJob.swift */,
+				94509BC02DDDFC5800DC6A43 /* RefreshWeb3TokenJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -6450,7 +6453,7 @@
 				7C2DE55928DD94D200C00818 /* LiveTextImageView.swift in Sources */,
 				7B35AF78228AA3BD00E8101D /* MessagesWithUserSearchResult.swift in Sources */,
 				942FD9FF2D3B591F004DCC4C /* LocalizedEnum.swift in Sources */,
-				941E360B2D78B813000E7093 /* RefreshWeb3TokenJob.swift in Sources */,
+				941E360B2D78B813000E7093 /* RefreshWeb3WalletTokenJob.swift in Sources */,
 				7B61B9CA2538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift in Sources */,
 				946331CC2C626FEE00C54B76 /* TransactionHistoryFilterPickerViewController.swift in Sources */,
 				946EA0862D4763BD00DBC308 /* AddressInfoInputViewController.swift in Sources */,
@@ -6739,6 +6742,7 @@
 				7C140E9429E15B8200F05506 /* DeviceTransferSettingViewController.swift in Sources */,
 				94D308802BA73F810017494C /* Web3TransferPreviewViewController.swift in Sources */,
 				DF0A713B22D5E94D00E69C50 /* WithdrawalTipWindow.swift in Sources */,
+				94509BC12DDDFC5D00DC6A43 /* RefreshWeb3TokenJob.swift in Sources */,
 				E090B91123B0B2F20012C7E9 /* MessageDAO+Search.swift in Sources */,
 				E05D991B2390C632009F9E8D /* FavoriteAppCell.swift in Sources */,
 				7B894AF3205BF8660065A1B8 /* AddressBookViewController.swift in Sources */,

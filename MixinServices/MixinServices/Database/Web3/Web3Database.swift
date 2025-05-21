@@ -162,6 +162,16 @@ public final class Web3Database: Database {
             }
         }
         
+        migrator.registerMigration("reputations_2") { db in
+            let sqls: [String] = [
+                "DELETE FROM properties",
+                "DELETE FROM tokens_extra",
+            ]
+            for sql in sqls {
+                try db.execute(sql: sql)
+            }
+        }
+        
         return migrator
     }
     

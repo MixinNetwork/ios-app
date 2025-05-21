@@ -423,7 +423,7 @@ extension Web3TransactionHistoryViewController {
         }
         
         func reloadData(options: Set<Web3Reputation.FilterOption>) {
-            imageView?.image = if options.contains(.unknown) || options.contains(.spam) {
+            imageView?.image = if options.contains(.spam) {
                 R.image.web3_reputation_bad()
             } else {
                 R.image.web3_reputation_good()

@@ -29,7 +29,7 @@ final class TransactionHistoryAssetFilterView: TransactionHistoryFilterView {
         case 0:
             label.text = R.string.localizable.assets()
         case 1:
-            label.text = tokens[0].symbol
+            label.text = TextTruncation.truncateTail(string: tokens[0].symbol, prefixCount: 8)
         default:
             label.text = R.string.localizable.number_of_assets(tokens.count)
         }
@@ -58,7 +58,7 @@ final class TransactionHistoryAssetFilterView: TransactionHistoryFilterView {
         case 0:
             label.text = R.string.localizable.assets()
         case 1:
-            label.text = coins[0].symbol
+            label.text = TextTruncation.truncateTail(string: coins[0].symbol, prefixCount: 8)
         default:
             label.text = R.string.localizable.number_of_assets(coins.count)
         }

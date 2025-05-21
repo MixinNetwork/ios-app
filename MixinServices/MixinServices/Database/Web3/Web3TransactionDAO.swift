@@ -159,11 +159,7 @@ extension Web3TransactionDAO {
         }
         
         if filter.reputationOptions.isEmpty {
-            conditions.append("txn.level >= 11")
-        } else if filter.reputationOptions.contains(.unknown) && !filter.reputationOptions.contains(.spam) {
             conditions.append("txn.level >= 10")
-        } else if filter.reputationOptions.contains(.spam) && !filter.reputationOptions.contains(.unknown) {
-            conditions.append("(txn.level >= 11 OR txn.level <= 1)")
         }
         
         var recipientConditions: [GRDB.SQL] = []

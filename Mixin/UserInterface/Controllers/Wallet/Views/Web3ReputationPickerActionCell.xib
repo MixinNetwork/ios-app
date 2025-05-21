@@ -11,20 +11,20 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Web3ReputationPickerViewController" customModule="Mixin" customModuleProvider="target"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="web3_reputation_picker_action" id="SiU-7h-Awq" customClass="Web3ReputationPickerActionCell" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="393" height="159"/>
+            <rect key="frame" x="0.0" y="0.0" width="393" height="237"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="SiU-7h-Awq" id="2d0-Tj-nCk">
-                <rect key="frame" x="0.0" y="0.0" width="393" height="159"/>
+                <rect key="frame" x="0.0" y="0.0" width="393" height="237"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iup-MM-AJn">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iup-MM-AJn">
                         <rect key="frame" x="36" y="5" width="321" height="52"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                         <color key="textColor" name="text_tertiary"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="YY3-Bf-rww">
-                        <rect key="frame" x="58.666666666666657" y="97" width="276" height="42"/>
+                        <rect key="frame" x="58.666666666666657" y="175" width="276" height="42"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wVR-TY-CDb">
                                 <rect key="frame" x="0.0" y="0.0" width="128" height="42"/>
@@ -82,7 +82,7 @@
                     <constraint firstItem="iup-MM-AJn" firstAttribute="top" secondItem="2d0-Tj-nCk" secondAttribute="top" constant="5" id="5PE-ao-EDS"/>
                     <constraint firstAttribute="bottom" secondItem="YY3-Bf-rww" secondAttribute="bottom" constant="20" id="MiV-yI-ula"/>
                     <constraint firstItem="iup-MM-AJn" firstAttribute="leading" secondItem="2d0-Tj-nCk" secondAttribute="leading" constant="36" id="bti-Zl-3eM"/>
-                    <constraint firstItem="YY3-Bf-rww" firstAttribute="top" secondItem="iup-MM-AJn" secondAttribute="bottom" constant="40" id="kj6-Wa-och"/>
+                    <constraint firstItem="YY3-Bf-rww" firstAttribute="top" secondItem="iup-MM-AJn" secondAttribute="bottom" constant="118" id="kj6-Wa-och"/>
                     <constraint firstAttribute="trailing" secondItem="iup-MM-AJn" secondAttribute="trailing" constant="36" id="n07-fA-jTV"/>
                     <constraint firstItem="YY3-Bf-rww" firstAttribute="centerX" secondItem="2d0-Tj-nCk" secondAttribute="centerX" id="weJ-zN-fmE"/>
                 </constraints>

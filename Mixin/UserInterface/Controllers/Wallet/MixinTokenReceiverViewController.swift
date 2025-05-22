@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController {
+final class MixinTokenReceiverViewController: TokenReceiverViewController {
     
     private enum Destination {
         case addressBook
@@ -10,15 +10,8 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
     }
     
     private let token: MixinTokenItem
-    private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
-    private let trayViewHeight: CGFloat = 82
     
     private var destinations: [Destination] = [.addressBook, .contact]
-    
-    private weak var tableView: UITableView!
-    private weak var trayView: TokenReceiverTrayView?
-    
-    private weak var trayViewBottomConstraint: NSLayoutConstraint?
     
     init(token: MixinTokenItem) {
         self.token = token
@@ -32,37 +25,10 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = R.string.localizable.send()
-        navigationItem.rightBarButtonItem = .customerService(
-            target: self,
-            action: #selector(presentCustomerService(_:))
-        )
-        
         headerView.load(token: token)
-        headerView.inputPlaceholder = R.string.localizable.hint_address()
-        headerView.delegate = self
         
-        let tableView = UITableView(frame: view.bounds, style: .plain)
-        view.addSubview(tableView)
-        tableView.snp.makeEdgesEqualToSuperview()
-        self.tableView = tableView
-        tableView.backgroundColor = R.color.background_secondary()
-        tableView.separatorStyle = .none
-        tableView.tableHeaderView = headerView
-        tableView.register(R.nib.sendingDestinationCell)
-        tableView.rowHeight = UITableView.automaticDimension
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.contentInsetAdjustmentBehavior = .always
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 35, right: 0)
-        tableView.keyboardDismissMode = .onDrag
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillHide(_:)),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
         
         if let web3Chain = Web3Chain.chain(chainID: token.chainID),
            let address = Web3AddressDAO.shared.classicWalletAddress(chainID: token.chainID)
@@ -72,40 +38,53 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
         tableView.reloadData()
     }
     
-    override func layout(for keyboardFrame: CGRect) {
-        if let constraint = trayViewBottomConstraint {
-            constraint.constant = -keyboardFrame.height
-            view.layoutIfNeeded()
+    override func didInputEmpty() {
+        tableView.delegate = self
+    }
+    
+    override func continueAction(inputAddress: String) {
+        do {
+            if try ExternalTransfer.isWithdrawalLink(raw: inputAddress, chainID: token.chainID) {
+                Task { [weak self] in
+                    do {
+                        let transfer = try await ExternalTransfer(string: inputAddress)
+                        await MainActor.run {
+                            self?.validateDesination(destination: transfer.destination, amount: transfer.amount)
+                        }
+                    } catch {
+                        guard let self else {
+                            return
+                        }
+                        await MainActor.run {
+                            switch error {
+                            case TransferLinkError.alreadyPaid:
+                                self.showError(description: R.string.localizable.pay_paid())
+                            case TransferLinkError.assetNotFound:
+                                self.showError(description: R.string.localizable.asset_not_found())
+                            case let TransferLinkError.requestError(error):
+                                self.showError(description: error.localizedDescription)
+                            default:
+                                Logger.general.error(category: "MixinTokenReceiverViewController", message: "Invalid payment: \(inputAddress)")
+                                self.showError(description: R.string.localizable.invalid_payment_link())
+                            }
+                        }
+                    }
+                }
+            } else {
+                validateDesination(destination: inputAddress, amount: nil)
+            }
+        } catch TransferLinkError.invalidFormat {
+            showError(description: R.string.localizable.invalid_payment_link())
+        } catch {
+            showError(description: error.localizedDescription)
         }
     }
     
-    @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
-        present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "send_recipient", "wallet": "main"])
-    }
-    
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        if let constraint = trayViewBottomConstraint {
-            constraint.constant = 0
-            view.layoutIfNeeded()
-        }
-    }
-    
-    @objc private func continueWithOneTimeAddress(_ sender: Any) {
-        guard let nextButton = trayView?.nextButton else {
+    private func validateDesination(destination: String, amount: Decimal?) {
+        guard let nextButton = self.nextButton else {
             return
         }
-        let userInput = headerView.trimmedContent
-        let destination: String
-        let amount: Decimal?
-        if token.chainID == ChainID.bitcoin, let uri = BIP21(string: userInput) {
-            destination = uri.destination
-            amount = uri.amount
-        } else {
-            destination = userInput
-            amount = nil
-        }
+        
         guard !destination.isEmpty else {
             return
         }
@@ -115,7 +94,6 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
                 showError(description: R.string.localizable.insufficient_balance())
                 return
             }
-            nextButton.isBusy = true
             AddressValidator.validateAddressAndLoadFee(
                 assetID: token.assetID,
                 destination: destination,
@@ -156,14 +134,12 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
                     )
                     self.present(preview, animated: true)
                 }
-            } onFailure: { [weak nextButton, weak self] error in
-                nextButton?.isBusy = false
+            } onFailure: { [weak self] error in
                 self?.showError(description: error.localizedDescription)
             }
         } else if let nextInput = AddressInfoInputViewController.oneTimeWithdraw(token: token, destination: destination) {
             navigationController?.pushViewController(nextInput, animated: true)
         } else {
-            nextButton.isBusy = true
             AddressValidator.validate(
                 assetID: token.assetID,
                 destination: destination,
@@ -180,29 +156,11 @@ final class MixinTokenReceiverViewController: KeyboardBasedLayoutViewController 
                     inputAmount = WithdrawInputAmountViewController(tokenItem: self.token, destination: .temporary(address))
                 }
                 self.navigationController?.pushViewController(inputAmount, animated: true)
-            } onFailure: { [weak nextButton, weak self] error in
-                nextButton?.isBusy = false
+            } onFailure: { [weak self] error in
                 self?.showError(description: error.localizedDescription)
             }
         }
     }
-    
-    private func showError(description: String) {
-        guard let label = trayView?.errorDescriptionLabel else {
-            return
-        }
-        label.text = description
-        label.isHidden = false
-    }
-    
-}
-
-extension MixinTokenReceiverViewController: HomeNavigationController.NavigationBarStyling {
-    
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
-        .secondaryBackground
-    }
-    
 }
 
 extension MixinTokenReceiverViewController: UITableViewDataSource {
@@ -276,69 +234,4 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
             present(book, animated: true)
         }
     }
-    
-}
-
-extension MixinTokenReceiverViewController: AddressInfoInputHeaderView.Delegate {
-    
-    func addressInfoInputHeaderView(_ headerView: AddressInfoInputHeaderView, didUpdateContent content: String) {
-        let newHeaderSize = headerView.systemLayoutSizeFitting(
-            CGSize(width: headerView.bounds.width, height: UIView.layoutFittingExpandedSize.height),
-            withHorizontalFittingPriority: .required,
-            verticalFittingPriority: .fittingSizeLevel
-        )
-        headerView.frame.size.height = newHeaderSize.height
-        tableView.tableHeaderView = headerView
-        if content.isEmpty {
-            tableView.dataSource = self
-            tableView.contentInset.bottom = 0
-            trayView?.isHidden = true
-        } else {
-            tableView.dataSource = nil
-            tableView.contentInset.bottom = trayViewHeight
-            if let trayView {
-                trayView.isHidden = false
-                trayView.errorDescriptionLabel.isHidden = true
-            } else {
-                let trayView = R.nib.tokenReceiverTrayView(withOwner: nil)!
-                view.addSubview(trayView)
-                trayView.snp.makeConstraints { make in
-                    make.leading.trailing.equalToSuperview()
-                }
-                trayView.nextButton.addTarget(
-                    self,
-                    action: #selector(continueWithOneTimeAddress(_:)),
-                    for: .touchUpInside
-                )
-                let bottomConstraint = trayView.bottomAnchor.constraint(
-                    equalTo: view.bottomAnchor,
-                    constant: -(lastKeyboardFrame?.height ?? 0)
-                )
-                bottomConstraint.priority = .defaultHigh
-                bottomConstraint.isActive = true
-                self.trayView = trayView
-                self.trayViewBottomConstraint = bottomConstraint
-            }
-        }
-        tableView.reloadData()
-    }
-    
-    func addressInfoInputHeaderViewWantsToScanContent(_ headerView: AddressInfoInputHeaderView) {
-        let scanner = CameraViewController.instance()
-        scanner.asQrCodeScanner = true
-        scanner.delegate = self
-        navigationController?.pushViewController(scanner, animated: true)
-    }
-    
-}
-
-extension MixinTokenReceiverViewController: CameraViewControllerDelegate {
-    
-    func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
-        let destination = IBANAddress(string: string)?.standarizedAddress ?? string
-        headerView.setContent(destination)
-        continueWithOneTimeAddress(controller)
-        return false
-    }
-    
 }

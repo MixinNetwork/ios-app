@@ -141,7 +141,8 @@ class EVMTransferOperation: Web3TransferOperation {
             tokenCount = weiCount * .wei
         }
         let fee = Fee(
-            token: tokenCount,
+            token: feeToken,
+            amount: tokenCount,
             fiatMoney: tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
         )
         await MainActor.run {

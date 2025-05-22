@@ -48,7 +48,7 @@ class SolanaTransferOperation: Web3TransferOperation {
         let lamportsPerSignature: UInt64 = 5000
         let tokenCount = try transaction.fee(lamportsPerSignature: lamportsPerSignature)
         let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-        let fee = Fee(token: tokenCount, fiatMoney: fiatMoneyCount)
+        let fee = Fee(token: feeToken, amount: tokenCount, fiatMoney: fiatMoneyCount)
         return fee
     }
     
@@ -82,7 +82,7 @@ class SolanaTransferOperation: Web3TransferOperation {
                 from: fromAddress,
                 rawTransaction: signedTransaction
             )
-            let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee?.token)
+            let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee?.amount)
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
                 try rawTransaction.save(db)
             }
@@ -280,9 +280,9 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         let baseFee = try baseFee(for: transaction)
         let priorityFee = try await RouteAPI.solanaPriorityFee(base64Transaction: transaction.rawTransaction)
         
-        let tokenCount = baseFee.token + priorityFee.decimalCount
+        let tokenCount = baseFee.amount + priorityFee.decimalCount
         let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-        let fee = Fee(token: tokenCount, fiatMoney: fiatMoneyCount)
+        let fee = Fee(token: feeToken, amount: tokenCount, fiatMoney: fiatMoneyCount)
         
         await MainActor.run {
             self.createAssociatedTokenAccountForReceiver = createAccount

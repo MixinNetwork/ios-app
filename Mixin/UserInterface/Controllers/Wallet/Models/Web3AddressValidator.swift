@@ -14,13 +14,14 @@ enum Web3AddressValidator {
     }
     
     static func validateAddressAndLoadFee(
-        token: Web3TokenItem,
         payment: Web3SendingTokenToAddressPayment,
         destination: String,
-        amount: Decimal,
-        onSuccess: @escaping @MainActor (String, Decimal) -> Void,
+        amount: Decimal?,
+        onSuccess: @escaping @MainActor (Web3TransferOperation?) -> Void,
         onFailure: @escaping @MainActor (Error) -> Void
     ) {
+        let token = payment.token
+        
         Task {
             do {
                 let verifiedAddress: String
@@ -50,7 +51,7 @@ enum Web3AddressValidator {
                     }
                 }
                 
-                if amount > 0 {
+                if let amount, amount > 0 {
                     let operation = switch payment.chain.specification {
                     case .evm(let chainID):
                         try EVMTransferToAddressOperation(
@@ -80,9 +81,14 @@ enum Web3AddressValidator {
                     } else if amount < minimumTransferAmount {
                         throw ValidationError.insufficientForSolRent
                     }
-                }
-                await MainActor.run {
-                    onSuccess(verifiedAddress, amount)
+                    
+                    await MainActor.run {
+                        onSuccess(operation)
+                    }
+                } else {
+                    await MainActor.run {
+                        onSuccess(nil)
+                    }
                 }
             } catch {
                 await MainActor.run {

@@ -37,11 +37,11 @@ public struct ExternalTransfer {
     public init(
         string raw: String,
         assetIDFinder: (String) -> String? = TokenDAO.shared.assetID(assetKey:)
-    ) throws {
+    ) async throws {
         guard let components = URLComponents(string: raw) else {
             throw TransferLinkError.notTransferLink
         }
-        guard let scheme = components.scheme, let queryItems = components.queryItems else {
+        guard let scheme = components.scheme?.lowercased(), let queryItems = components.queryItems else {
             throw TransferLinkError.notTransferLink
         }
         guard let schemeAssetID = Self.supportedAssetIds[scheme] else {
@@ -51,7 +51,37 @@ public struct ExternalTransfer {
         let queries = queryItems.reduce(into: [:]) { queries, item in
             queries[item.name] = item.value
         }
-        if scheme == "ethereum" {
+        
+        self.raw = raw
+        
+        let memo = queries["memo"]
+        self.memo = if let decoded = memo?.removingPercentEncoding {
+            decoded
+        } else {
+            memo
+        }
+        
+        if Self.isLightningAddress(string: raw) {
+            do {
+                let payment = try await PaymentAPI.payments(lightningPayment: raw)
+                if payment.status.knownCase == .paid {
+                    throw TransferLinkError.alreadyPaid
+                } else {
+                    self.assetID = payment.asset.assetID
+                    self.destination = payment.destination
+                    self.amount = Decimal(string: payment.amount, locale: .enUSPOSIX) ?? 0
+                    self.resolvedAmount = self.amount
+                    self.arbitraryAmount = self.amount
+                }
+            } catch {
+                switch error {
+                case TransferLinkError.alreadyPaid:
+                    throw error
+                default:
+                    throw TransferLinkError.requestError(error)
+                }
+            }
+        } else if scheme == "ethereum" {
             // https://eips.ethereum.org/EIPS/eip-681
             // schema_prefix target_address [ "@" chain_id ] [ "/" function_name ] [ "?" parameters ]
             
@@ -99,7 +129,8 @@ public struct ExternalTransfer {
                     self.amount = arbitraryAmount
                     self.resolvedAmount = arbitraryAmount
                 } else {
-                    throw TransferLinkError.invalidFormat
+                    self.amount = 0
+                    self.resolvedAmount = nil
                 }
                 self.assetID = assetID
                 self.destination = targetAddress
@@ -119,7 +150,8 @@ public struct ExternalTransfer {
                     self.amount = arbitraryAmount
                     self.resolvedAmount = arbitraryAmount
                 } else {
-                    throw TransferLinkError.invalidFormat
+                    self.amount = 0
+                    self.resolvedAmount = nil
                 }
                 self.assetID = assetID
                 self.destination = address
@@ -135,15 +167,14 @@ public struct ExternalTransfer {
                     self.amount = arbitraryAmount
                     self.resolvedAmount = arbitraryAmount
                 } else {
-                    throw TransferLinkError.invalidFormat
+                    self.amount = 0
+                    self.resolvedAmount = nil
                 }
                 self.assetID = assetID
                 self.destination = targetAddress
             }
             
-            self.raw = raw
             self.arbitraryAmount = arbitraryAmount
-            self.memo = nil
         } else {
             let assetID: String? = if scheme == "solana", let key = queries["spl-token"] {
                 assetIDFinder(key)
@@ -153,26 +184,20 @@ public struct ExternalTransfer {
             guard let assetID else {
                 throw TransferLinkError.assetNotFound
             }
-            guard let amount = queries["amount"] ?? queries["tx_amount"], !amount.contains("e") else {
-                throw TransferLinkError.invalidFormat
+            
+            if let amount = queries["amount"] ?? queries["tx_amount"], !amount.contains("e") {
+                guard let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) else {
+                    throw TransferLinkError.invalidFormat
+                }
+                self.amount = decimalAmount
+                self.resolvedAmount = decimalAmount
+            } else {
+                self.amount = 0
+                self.resolvedAmount = nil
             }
-            guard let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) else {
-                throw TransferLinkError.invalidFormat
-            }
-            self.raw = raw
             self.assetID = assetID
             self.destination = components.path
-            self.amount = decimalAmount
-            self.resolvedAmount = decimalAmount
             self.arbitraryAmount = nil
-            self.memo = {
-                let memo = queries["memo"]
-                if let decoded = memo?.removingPercentEncoding {
-                    return decoded
-                } else {
-                    return memo
-                }
-            }()
         }
     }
     
@@ -232,6 +257,54 @@ public struct ExternalTransfer {
             return true
         } else {
             return false
+        }
+    }
+    
+    public static func isWithdrawalLink(raw: String) -> Bool {
+        guard let components = URLComponents(string: raw) else {
+            return false
+        }
+        guard let scheme = components.scheme?.lowercased(), let queryItems = components.queryItems else {
+            return false
+        }
+        return Self.isLightningAddress(string: raw) || Self.supportedAssetIds[scheme] != nil
+    }
+    
+    public static func isWithdrawalLink(raw: String, chainID: String) throws -> Bool {
+        guard let components = URLComponents(string: raw) else {
+            return false
+        }
+        guard let scheme = components.scheme?.lowercased(), let queryItems = components.queryItems else {
+            return false
+        }
+        
+        switch chainID {
+        case ChainID.lightning:
+            if Self.isLightningAddress(string: raw) {
+                return true
+            }
+            throw TransferLinkError.invalidFormat
+        case ChainID.ethereum,
+        ChainID.polygon,
+        ChainID.bnbSmartChain,
+        ChainID.base,
+        ChainID.arbitrum,
+        ChainID.optimism:
+            return scheme == "ethereum"
+        case ChainID.litecoin:
+            return scheme == "litecoin"
+        case ChainID.bitcoin:
+            return scheme == "bitcoin"
+        case ChainID.dogecoin:
+            return scheme == "dogecoin"
+        case ChainID.solana:
+            return scheme == "solana"
+        case ChainID.dash:
+            return scheme == "dash"
+        case ChainID.monero:
+            return scheme == "monero"
+        default:
+            throw TransferLinkError.invalidFormat
         }
     }
     

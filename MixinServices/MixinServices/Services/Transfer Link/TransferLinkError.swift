@@ -5,4 +5,6 @@ public enum TransferLinkError: Error {
     case invalidFormat
     case missingAssetKey
     case assetNotFound
+    case alreadyPaid
+    case requestError(Error)
 }

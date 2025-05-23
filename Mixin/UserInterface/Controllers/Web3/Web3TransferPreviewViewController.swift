@@ -303,7 +303,7 @@ extension Web3TransferPreviewViewController {
     private func loadFee(replacingRowAt index: Int) async throws {
         let fee = try await operation.loadFee()
         let feeValue = CurrencyFormatter.localizedString(
-            from: fee.token,
+            from: fee.amount,
             format: .precision,
             sign: .never,
             symbol: nil

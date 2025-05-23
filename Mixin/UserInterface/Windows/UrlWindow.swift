@@ -500,25 +500,29 @@ class UrlWindow {
     }
     
     class func checkWithdrawal(string: String) -> Bool {
-        do {
-            if ExternalTransfer.isLightningAddress(string: string) {
-                loadLightningTransfer(string: string)
-            } else {
-                let transfer = try ExternalTransfer(string: string)
-                performExternalTransfer(transfer)
-            }
-            return true
-        } catch TransferLinkError.notTransferLink {
+        guard ExternalTransfer.isWithdrawalLink(raw: string) else {
             return false
-        } catch TransferLinkError.assetNotFound {
-            Logger.general.error(category: "URLWindow", message: "Asset not found: \(string)")
-            showAutoHiddenHud(style: .error, text: R.string.localizable.asset_not_found())
-            return true
-        } catch {
-            Logger.general.error(category: "URLWindow", message: "Invalid payment: \(string)")
-            showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
-            return true
         }
+        
+        Task {
+            do {
+                let transfer = try await ExternalTransfer(string: string)
+                performExternalTransfer(transfer)
+            } catch {
+                switch error {
+                case TransferLinkError.alreadyPaid:
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.pay_paid())
+                case TransferLinkError.assetNotFound:
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.asset_not_found())
+                case let TransferLinkError.requestError(error):
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                default:
+                    Logger.general.error(category: "URLWindow", message: "Invalid payment: \(string)")
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
+                }
+            }
+        }
+        return true
     }
     
     class func performInternalTransfer(_ transfer: LegacyInternalTransfer) {
@@ -552,61 +556,6 @@ class UrlWindow {
         }
     }
     
-    class func loadLightningTransfer(string: String) {
-        guard let homeContainer = UIApplication.homeContainerViewController else {
-            return
-        }
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        PaymentAPI.payments(lightningPayment: string) { result in
-            switch result {
-            case let .success(payment):
-                guard payment.status.knownCase != .paid else {
-                    let error: ExternalTransferError = .alreadyPaid
-                    hud.set(style: .error, text: error.localizedDescription)
-                    hud.scheduleAutoHidden()
-                    return
-                }
-                let decimalAmount = Decimal(string: payment.amount, locale: .enUSPOSIX)
-                let assetID = payment.asset.assetID
-                if let decimalAmount, decimalAmount > 0 {
-                    hud.hide()
-                    let transfer: ExternalTransfer = .lightning(
-                        raw: string,
-                        assetID: assetID,
-                        destination: payment.destination,
-                        amount: decimalAmount
-                    )
-                    performExternalTransfer(transfer)
-                } else {
-                    guard let token = syncToken(assetID: assetID, hud: hud) else {
-                        return
-                    }
-                    AddressValidator.validate(
-                        assetID: assetID,
-                        destination: payment.destination,
-                        tag: nil
-                    ) { address in
-                        hud.hide()
-                        let inputViewController: WithdrawInputAmountViewController
-                        if let address = AddressDAO.shared.getAddress(chainId: token.chainID, destination: address.destination, tag: address.tag) {
-                            inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: .address(address))
-                        } else {
-                            inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: .temporary(address))
-                        }
-                        UIApplication.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
-                    } onFailure: { error in
-                        hud.set(style: .error, text: error.localizedDescription)
-                        hud.scheduleAutoHidden()
-                    }
-                }
-            case let .failure(error):
-                hud.set(style: .error, text: error.localizedDescription)
-                hud.scheduleAutoHidden()
-            }
-        }
-    }
-    
     class func performExternalTransfer(_ transfer: ExternalTransfer) {
         guard let homeContainer = UIApplication.homeContainerViewController else {
             return
@@ -616,23 +565,9 @@ class UrlWindow {
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         Task {
             do {
-                let resolvedAmount: Decimal
-                if let amount = transfer.resolvedAmount {
-                    resolvedAmount = amount
-                } else {
-                    let precision = try await AssetAPI.assetPrecision(assetID: transfer.assetID).precision
-                    resolvedAmount = ExternalTransfer.resolve(atomicAmount: transfer.amount, with: precision)
-                }
-                if let arbitraryAmount = transfer.arbitraryAmount, arbitraryAmount != resolvedAmount {
-                    throw ExternalTransferError.invalidPaymentLink
-                }
-                
                 let assetID = transfer.assetID
                 guard let token = syncToken(assetID: assetID, hud: hud) else {
                     throw ExternalTransferError.syncTokenFailed
-                }
-                guard resolvedAmount <= token.decimalBalance else {
-                    throw ExternalTransferError.insufficientBalance
                 }
                 
                 let response = try await ExternalAPI.checkAddress(assetID: assetID, destination: transfer.destination, tag: nil)
@@ -641,49 +576,76 @@ class UrlWindow {
                 }
                 let address = TemporaryAddress(destination: response.destination, tag: response.tag ?? "")
                 
-                let fees = try await SafeAPI.fees(assetID: assetID, destination: address.destination)
-                guard !fees.isEmpty else {
-                    throw MixinAPIResponseError.withdrawSuspended
-                }
-                let feeItems: [WithdrawFeeItem] = try fees.lazy.compactMap { fee in
-                    guard let feeToken = syncToken(assetID: fee.assetID, hud: hud) else {
-                        throw ExternalTransferError.syncTokenFailed
-                    }
-                    guard let feeItem = WithdrawFeeItem(amountString: fee.amount, tokenItem: feeToken) else {
-                        return nil
-                    }
-                    let isFeeSufficient = if feeToken.assetID == assetID {
-                        (resolvedAmount + feeItem.amount) <= feeToken.decimalBalance
+                if transfer.amount > 0 {
+                    let resolvedAmount: Decimal
+                    if let amount = transfer.resolvedAmount {
+                        resolvedAmount = amount
                     } else {
-                        feeItem.amount <= feeToken.decimalBalance
+                        let precision = try await AssetAPI.assetPrecision(assetID: transfer.assetID).precision
+                        resolvedAmount = ExternalTransfer.resolve(atomicAmount: transfer.amount, with: precision)
                     }
-                    return isFeeSufficient ? feeItem : nil
-                }
-                guard let feeItem = feeItems.first else {
-                    throw ExternalTransferError.insufficientFee
-                }
-                
-                let traceID = UUID().uuidString.lowercased()
-                let fiatMoneyAmount = resolvedAmount * token.decimalUSDPrice * Decimal(Currency.current.rate)
-                let payment = Payment(traceID: traceID, token: token, tokenAmount: resolvedAmount, fiatMoneyAmount: fiatMoneyAmount, memo: transfer.memo ?? "")
-                payment.checkPreconditions(withdrawTo: .temporary(address), fee: feeItem, on: homeContainer) { reason in
-                    switch reason {
-                    case .userCancelled, .loggedOut:
+                    if let arbitraryAmount = transfer.arbitraryAmount, arbitraryAmount != resolvedAmount {
+                        throw ExternalTransferError.invalidPaymentLink
+                    }
+                    guard resolvedAmount <= token.decimalBalance else {
+                        throw ExternalTransferError.insufficientBalance
+                    }
+                    
+                    let fees = try await SafeAPI.fees(assetID: assetID, destination: address.destination)
+                    guard !fees.isEmpty else {
+                        throw MixinAPIResponseError.withdrawSuspended
+                    }
+                    let feeItems: [WithdrawFeeItem] = try fees.lazy.compactMap { fee in
+                        guard let feeToken = syncToken(assetID: fee.assetID, hud: hud) else {
+                            throw ExternalTransferError.syncTokenFailed
+                        }
+                        guard let feeItem = WithdrawFeeItem(amountString: fee.amount, tokenItem: feeToken) else {
+                            return nil
+                        }
+                        let isFeeSufficient = if feeToken.assetID == assetID {
+                            (resolvedAmount + feeItem.amount) <= feeToken.decimalBalance
+                        } else {
+                            feeItem.amount <= feeToken.decimalBalance
+                        }
+                        return isFeeSufficient ? feeItem : nil
+                    }
+                    guard let feeItem = feeItems.first else {
+                        throw ExternalTransferError.insufficientFee
+                    }
+                    
+                    let traceID = UUID().uuidString.lowercased()
+                    let fiatMoneyAmount = resolvedAmount * token.decimalUSDPrice * Decimal(Currency.current.rate)
+                    let payment = Payment(traceID: traceID, token: token, tokenAmount: resolvedAmount, fiatMoneyAmount: fiatMoneyAmount, memo: transfer.memo ?? "")
+                    payment.checkPreconditions(withdrawTo: .temporary(address), fee: feeItem, on: homeContainer) { reason in
+                        switch reason {
+                        case .userCancelled, .loggedOut:
+                            hud.hide()
+                        case .description(let message):
+                            hud.set(style: .error, text: message)
+                            hud.scheduleAutoHidden()
+                        }
+                    } onSuccess: { (operation, issues) in
                         hud.hide()
-                    case .description(let message):
-                        hud.set(style: .error, text: message)
-                        hud.scheduleAutoHidden()
+                        let preview = WithdrawPreviewViewController(issues: issues,
+                                                                    operation: operation,
+                                                                    amountDisplay: .byToken,
+                                                                    withdrawalTokenAmount: resolvedAmount,
+                                                                    withdrawalFiatMoneyAmount: fiatMoneyAmount,
+                                                                    addressLabel: nil)
+                        preview.manipulateNavigationStackOnFinished = false
+                        homeContainer.present(preview, animated: true)
                     }
-                } onSuccess: { (operation, issues) in
-                    hud.hide()
-                    let preview = WithdrawPreviewViewController(issues: issues,
-                                                                operation: operation,
-                                                                amountDisplay: .byToken,
-                                                                withdrawalTokenAmount: resolvedAmount,
-                                                                withdrawalFiatMoneyAmount: fiatMoneyAmount,
-                                                                addressLabel: nil)
-                    preview.manipulateNavigationStackOnFinished = false
-                    homeContainer.present(preview, animated: true)
+                } else {
+                    await MainActor.run {
+                        hud.hide()
+                        let inputViewController: WithdrawInputAmountViewController
+                        if let address = AddressDAO.shared.getAddress(chainId: token.chainID, destination: address.destination, tag: address.tag) {
+                            inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: .address(address))
+                        } else {
+                            inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: .temporary(address))
+                        }
+                        UIApplication.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
+                    }
                 }
             } catch {
                 await MainActor.run {

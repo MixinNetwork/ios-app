@@ -25,30 +25,27 @@ public struct ExternalTransfer {
     // in atomic units, for other chains this is in decimal
     public let amount: Decimal
     
-    // Decimal amount resolved with decimal value of atomic unit.
-    // Will be nil for ERC-20 tokens due to lack of the atomic value.
-    public let resolvedAmount: Decimal?
-    
-    // Some non-standard ethereum URLs specify an amount in decimal.
-    public let arbitraryAmount: Decimal?
-    
     public let memo: String?
     
     public init(
         string raw: String,
-        assetIDFinder: (String) -> String? = TokenDAO.shared.assetID(assetKey:)
+        assetIDFinder: (String) -> String? = TokenDAO.shared.assetID(assetKey:),
+        resolveAmount: (String, Decimal) async throws -> Decimal = { (assetID, amount) in
+            let precision = try await AssetAPI.assetPrecision(assetID: assetID).precision
+            return ExternalTransfer.resolve(atomicAmount: amount, with: precision)
+        },
     ) async throws {
         guard let components = URLComponents(string: raw) else {
             throw TransferLinkError.notTransferLink
         }
-        guard let scheme = components.scheme?.lowercased(), let queryItems = components.queryItems else {
+        guard let scheme = components.scheme?.lowercased() else {
             throw TransferLinkError.notTransferLink
         }
         guard let schemeAssetID = Self.supportedAssetIds[scheme] else {
             // Drop schemes which are not listed in `supportedAssetIds`
             throw TransferLinkError.notTransferLink
         }
-        let queries = queryItems.reduce(into: [:]) { queries, item in
+        let queries = (components.queryItems ?? []).reduce(into: [:]) { queries, item in
             queries[item.name] = item.value
         }
         
@@ -70,8 +67,6 @@ public struct ExternalTransfer {
                     self.assetID = payment.asset.assetID
                     self.destination = payment.destination
                     self.amount = Decimal(string: payment.amount, locale: .enUSPOSIX) ?? 0
-                    self.resolvedAmount = self.amount
-                    self.arbitraryAmount = self.amount
                 }
             } catch {
                 switch error {
@@ -111,29 +106,24 @@ public struct ExternalTransfer {
                 chainID = "1"
             }
             
-            let arbitraryAmount: Decimal?
+            let arbitraryAmount: Decimal
             if let amount = queries["amount"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
                 arbitraryAmount = decimalAmount
             } else {
-                arbitraryAmount = nil
+                arbitraryAmount = 0
             }
             
             if let reqAsset = queries["req-asset"] {
                 guard let assetID = assetIDFinder(reqAsset) else {
                     throw TransferLinkError.assetNotFound
                 }
-                if let amount = parameters["uint256"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
-                    self.amount = decimalAmount
-                    self.resolvedAmount = nil
-                } else if let arbitraryAmount {
-                    self.amount = arbitraryAmount
-                    self.resolvedAmount = arbitraryAmount
-                } else {
-                    self.amount = 0
-                    self.resolvedAmount = nil
-                }
                 self.assetID = assetID
                 self.destination = targetAddress
+                if let amount = parameters["uint256"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
+                    self.amount = try await resolveAmount(assetID, decimalAmount)
+                } else {
+                    self.amount = arbitraryAmount
+                }
             } else if let range = Range(match.range(at: 3), in: path) {
                 // ERC-20 Tokens
                 let functionName = String(path[range])
@@ -143,38 +133,26 @@ public struct ExternalTransfer {
                 guard let assetID = assetIDFinder(targetAddress) else {
                     throw TransferLinkError.assetNotFound
                 }
-                if let amount = parameters["uint256"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
-                    self.amount = decimalAmount
-                    self.resolvedAmount = nil
-                } else if let arbitraryAmount {
-                    self.amount = arbitraryAmount
-                    self.resolvedAmount = arbitraryAmount
-                } else {
-                    self.amount = 0
-                    self.resolvedAmount = nil
-                }
                 self.assetID = assetID
                 self.destination = address
+                if let amount = parameters["uint256"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
+                    self.amount = try await resolveAmount(assetID, decimalAmount)
+                } else {
+                    self.amount = arbitraryAmount
+                }
             } else {
                 // ETH the native token
                 guard let assetID = Self.chainIds[chainID] else {
                     throw TransferLinkError.invalidFormat
                 }
-                if let amount = parameters["value"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
-                    self.amount = decimalAmount
-                    self.resolvedAmount = Self.resolve(atomicAmount: decimalAmount, with: 18)
-                } else if let arbitraryAmount {
-                    self.amount = arbitraryAmount
-                    self.resolvedAmount = arbitraryAmount
-                } else {
-                    self.amount = 0
-                    self.resolvedAmount = nil
-                }
                 self.assetID = assetID
                 self.destination = targetAddress
+                if let amount = parameters["value"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
+                    self.amount = Self.resolve(atomicAmount: decimalAmount, with: 18)
+                } else {
+                    self.amount = arbitraryAmount
+                }
             }
-            
-            self.arbitraryAmount = arbitraryAmount
         } else {
             let assetID: String? = if scheme == "solana", let key = queries["spl-token"] {
                 assetIDFinder(key)
@@ -190,14 +168,11 @@ public struct ExternalTransfer {
                     throw TransferLinkError.invalidFormat
                 }
                 self.amount = decimalAmount
-                self.resolvedAmount = decimalAmount
             } else {
                 self.amount = 0
-                self.resolvedAmount = nil
             }
             self.assetID = assetID
             self.destination = components.path
-            self.arbitraryAmount = nil
         }
     }
     
@@ -209,26 +184,7 @@ public struct ExternalTransfer {
         self.assetID = assetID
         self.destination = destination
         self.amount = amount
-        self.resolvedAmount = resolvedAmount
-        self.arbitraryAmount = arbitraryAmount
         self.memo = memo
-    }
-    
-    public static func lightning(
-        raw: String,
-        assetID: String,
-        destination: String,
-        amount: Decimal
-    ) -> ExternalTransfer {
-        ExternalTransfer(
-            raw: raw,
-            assetID: assetID,
-            destination: destination,
-            amount: amount,
-            resolvedAmount: amount,
-            arbitraryAmount: nil,
-            memo: nil
-        )
     }
     
     public static func resolve(atomicAmount: Decimal, with exponent: Int) -> Decimal {
@@ -236,7 +192,7 @@ public struct ExternalTransfer {
         return atomicAmount / divisor
     }
     
-    public static func isLightningAddress(string: String) -> Bool {
+    private static func isLightningAddress(string: String) -> Bool {
         let lowercased = string.lowercased()
         if lowercased.hasPrefix("bitcoin") {
             guard let queryItems = URLComponents(string: string)?.queryItems else {
@@ -264,7 +220,7 @@ public struct ExternalTransfer {
         guard let components = URLComponents(string: raw) else {
             return false
         }
-        guard let scheme = components.scheme?.lowercased(), let queryItems = components.queryItems else {
+        guard let scheme = components.scheme?.lowercased() else {
             return false
         }
         return Self.isLightningAddress(string: raw) || Self.supportedAssetIds[scheme] != nil
@@ -274,7 +230,7 @@ public struct ExternalTransfer {
         guard let components = URLComponents(string: raw) else {
             return false
         }
-        guard let scheme = components.scheme?.lowercased(), let queryItems = components.queryItems else {
+        guard let scheme = components.scheme?.lowercased() else {
             return false
         }
         

@@ -577,17 +577,7 @@ class UrlWindow {
                 let address = TemporaryAddress(destination: response.destination, tag: response.tag ?? "")
                 
                 if transfer.amount > 0 {
-                    let resolvedAmount: Decimal
-                    if let amount = transfer.resolvedAmount {
-                        resolvedAmount = amount
-                    } else {
-                        let precision = try await AssetAPI.assetPrecision(assetID: transfer.assetID).precision
-                        resolvedAmount = ExternalTransfer.resolve(atomicAmount: transfer.amount, with: precision)
-                    }
-                    if let arbitraryAmount = transfer.arbitraryAmount, arbitraryAmount != resolvedAmount {
-                        throw ExternalTransferError.invalidPaymentLink
-                    }
-                    guard resolvedAmount <= token.decimalBalance else {
+                    guard transfer.amount <= token.decimalBalance else {
                         throw ExternalTransferError.insufficientBalance
                     }
                     
@@ -603,7 +593,7 @@ class UrlWindow {
                             return nil
                         }
                         let isFeeSufficient = if feeToken.assetID == assetID {
-                            (resolvedAmount + feeItem.amount) <= feeToken.decimalBalance
+                            (transfer.amount + feeItem.amount) <= feeToken.decimalBalance
                         } else {
                             feeItem.amount <= feeToken.decimalBalance
                         }
@@ -614,8 +604,8 @@ class UrlWindow {
                     }
                     
                     let traceID = UUID().uuidString.lowercased()
-                    let fiatMoneyAmount = resolvedAmount * token.decimalUSDPrice * Decimal(Currency.current.rate)
-                    let payment = Payment(traceID: traceID, token: token, tokenAmount: resolvedAmount, fiatMoneyAmount: fiatMoneyAmount, memo: transfer.memo ?? "")
+                    let fiatMoneyAmount = transfer.amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
+                    let payment = Payment(traceID: traceID, token: token, tokenAmount: transfer.amount, fiatMoneyAmount: fiatMoneyAmount, memo: transfer.memo ?? "")
                     payment.checkPreconditions(withdrawTo: .temporary(address), fee: feeItem, on: homeContainer) { reason in
                         switch reason {
                         case .userCancelled, .loggedOut:
@@ -629,7 +619,7 @@ class UrlWindow {
                         let preview = WithdrawPreviewViewController(issues: issues,
                                                                     operation: operation,
                                                                     amountDisplay: .byToken,
-                                                                    withdrawalTokenAmount: resolvedAmount,
+                                                                    withdrawalTokenAmount: transfer.amount,
                                                                     withdrawalFiatMoneyAmount: fiatMoneyAmount,
                                                                     addressLabel: nil)
                         preview.manipulateNavigationStackOnFinished = false

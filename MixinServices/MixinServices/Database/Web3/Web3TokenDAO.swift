@@ -31,6 +31,10 @@ public final class Web3TokenDAO: Web3DAO {
     public static let tokensDidChangeNotification = Notification.Name("one.mixin.services.Web3TokenDAO.Change")
     public static let walletIDUserInfoKey = "w"
     
+    public func assetID(assetKey: String) -> String? {
+        db.select(with: "SELECT asset_id FROM tokens WHERE asset_key = ?", arguments: [assetKey])
+    }
+    
     public func token(walletID: String, assetID: String) -> Web3TokenItem? {
         let sql = "\(SQL.selector)\nWHERE t.wallet_id = ? AND t.asset_id = ?"
         return db.select(with: sql, arguments: [walletID, assetID])

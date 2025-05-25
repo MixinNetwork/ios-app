@@ -39,15 +39,18 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
     }
     
     override func didInputEmpty() {
-        tableView.delegate = self
+        tableView.dataSource = self
     }
     
     override func continueAction(inputAddress: String) {
         do {
             if try ExternalTransfer.isWithdrawalLink(raw: inputAddress, chainID: token.chainID) {
-                Task { [weak self] in
+                Task { [weak self, token] in
                     do {
                         let transfer = try await ExternalTransfer(string: inputAddress)
+                        if transfer.assetID != token.assetID {
+                            throw TransferLinkError.invalidFormat
+                        }
                         await MainActor.run {
                             self?.validateDesination(destination: transfer.destination, amount: transfer.amount)
                         }

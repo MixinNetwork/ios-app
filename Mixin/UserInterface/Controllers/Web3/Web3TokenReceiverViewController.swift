@@ -37,17 +37,25 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
     }
     
     override func didInputEmpty() {
-        tableView.delegate = self
+        tableView.dataSource = self
     }
     
     override func continueAction(inputAddress: String) {
+        let token = payment.token
         do {
             if try ExternalTransfer.isWithdrawalLink(raw: inputAddress, chainID: payment.chain.chainID) {
                 Task { [weak self] in
                     do {
-                        let transfer = try await ExternalTransfer(string: inputAddress)
+                        let transfer = try await ExternalTransfer(string: inputAddress) { assetKey in
+                            Web3TokenDAO.shared.assetID(assetKey: assetKey)
+                        } resolveAmount: { (_, amount) in
+                            ExternalTransfer.resolve(atomicAmount: amount, with: Int(token.precision))
+                        }
+                        if transfer.assetID != token.assetID {
+                            throw TransferLinkError.invalidFormat
+                        }
                         await MainActor.run {
-                            self?.validateDesination(destination: transfer.destination, amount: transfer.amount)
+                            self?.validateDesination(destination: transfer.destination, amount: transfer.amount, isLink: true)
                         }
                     } catch {
                         guard let self else {
@@ -69,7 +77,7 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
                     }
                 }
             } else {
-                validateDesination(destination: inputAddress, amount: nil)
+                validateDesination(destination: inputAddress, amount: nil, isLink: false)
             }
         } catch TransferLinkError.invalidFormat {
             showError(description: R.string.localizable.invalid_payment_link())
@@ -78,7 +86,7 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
         }
     }
     
-    private func validateDesination(destination: String, amount: Decimal?) {
+    private func validateDesination(destination: String, amount: Decimal?, isLink: Bool) {
         let verifiedAddress: String?
         switch payment.chain.kind {
         case .evm:
@@ -96,20 +104,37 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
             }
         }
         
-        guard let address = verifiedAddress else {
-            showError(description: R.string.localizable.invalid_payment_link())
+        guard let verifiedAddress else {
+            let description = if isLink {
+                R.string.localizable.invalid_payment_link()
+            } else {
+                R.string.localizable.error_invalid_address_plain()
+            }
+            showError(description: description)
             return
         }
         
-        if let amount {
-            
+        let payment = Web3SendingTokenToAddressPayment(
+            payment: self.payment,
+            to: .arbitrary,
+            address: verifiedAddress
+        )
+        
+        if let amount, amount > 0 {
+            Web3AddressValidator.validateAmountAndLoadFee(payment: payment, amount: amount) { [weak nextButton] (operation) in
+                guard let nextButton else {
+                    return
+                }
+                nextButton.isBusy = false
+                
+                let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .web3ToAddress)
+                transfer.manipulateNavigationStackOnFinished = true
+                Web3PopupCoordinator.enqueue(popup: .request(transfer))
+            } onFailure: { [weak self] error in
+                self?.showError(description: error.localizedDescription)
+            }
         } else {
-            reporter.report(event: .sendRecipient, tags: ["type": "address"])
-            let payment = Web3SendingTokenToAddressPayment(
-                payment: payment,
-                to: .arbitrary,
-                address: address
-            )
+            nextButton?.isBusy = false
             let input = Web3TransferInputAmountViewController(payment: payment)
             navigationController?.pushViewController(input, animated: true)
         }

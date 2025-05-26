@@ -11,6 +11,10 @@ struct WithdrawFeeItem {
         guard let amount = Decimal(string: amountString, locale: .enUSPOSIX) else {
             return nil
         }
+        self.init(amount: amount, tokenItem: tokenItem)
+    }
+    
+    init(amount: Decimal, tokenItem: MixinTokenItem) {
         self.amount = amount
         self.tokenItem = tokenItem
         self.localizedAmountWithSymbol = CurrencyFormatter.localizedString(

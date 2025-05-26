@@ -16,6 +16,7 @@
 		5260A8542DDF4BAD00ED9714 /* TokenReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5260A8532DDF4BAD00ED9714 /* TokenReceiverViewController.swift */; };
 		5260A85F2DDF556500ED9714 /* Web3AddressValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5260A85E2DDF556500ED9714 /* Web3AddressValidator.swift */; };
 		5260A8642DDF560E00ED9714 /* Web3WithdrawFeeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5260A8632DDF560E00ED9714 /* Web3WithdrawFeeItem.swift */; };
+		5260A8D22DE4659800ED9714 /* TransferLinkError+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5260A8D12DE4659800ED9714 /* TransferLinkError+Localized.swift */; };
 		52A056512BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056502BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift */; };
 		52A056562BE3614700CEC8A3 /* InscriptionMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056552BE3614700CEC8A3 /* InscriptionMessageCell.swift */; };
 		52A056582BE362FF00CEC8A3 /* InscriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */; };
@@ -1557,6 +1558,7 @@
 		5260A8532DDF4BAD00ED9714 /* TokenReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenReceiverViewController.swift; sourceTree = "<group>"; };
 		5260A85E2DDF556500ED9714 /* Web3AddressValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3AddressValidator.swift; sourceTree = "<group>"; };
 		5260A8632DDF560E00ED9714 /* Web3WithdrawFeeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3WithdrawFeeItem.swift; sourceTree = "<group>"; };
+		5260A8D12DE4659800ED9714 /* TransferLinkError+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransferLinkError+Localized.swift"; sourceTree = "<group>"; };
 		52A056502BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionMessageViewModel.swift; sourceTree = "<group>"; };
 		52A056552BE3614700CEC8A3 /* InscriptionMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionMessageCell.swift; sourceTree = "<group>"; };
 		52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionViewController.swift; sourceTree = "<group>"; };
@@ -5474,6 +5476,7 @@
 				E0FAE8D123CDC4F4008B056A /* CrashlyticalReporter.swift */,
 				7B8261D024D9548E00A39635 /* PINVerificationFailureHandler.swift */,
 				94DCDA9F262DAF5B0064D1F3 /* DisplayAwakener.swift */,
+				5260A8D12DE4659800ED9714 /* TransferLinkError+Localized.swift */,
 				94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */,
 				7C695D55285B25AB0042177C /* SpotlightManager.swift */,
 				942FD9FE2D3B591C004DCC4C /* LocalizedEnum.swift */,
@@ -6339,6 +6342,7 @@
 				946E05922CBFD67B004B264E /* ExploreSearchCategoryViewController.swift in Sources */,
 				943CAA262CC8309F00346677 /* SignInWithMobileNumberViewController.swift in Sources */,
 				941995142CCEC52600F5425C /* ExportMnemonicPhrasesViewController.swift in Sources */,
+				5260A8D22DE4659800ED9714 /* TransferLinkError+Localized.swift in Sources */,
 				7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */,
 				94396D502CE36D2D009DA4E9 /* RoundOutlineButton.swift in Sources */,
 				949569A6263B12FE00E043FE /* TranscriptMessageCell.swift in Sources */,

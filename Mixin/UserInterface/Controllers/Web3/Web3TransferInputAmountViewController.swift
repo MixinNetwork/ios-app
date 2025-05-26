@@ -88,13 +88,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         let amount = tokenAmount
         reviewButton.isEnabled = false
         reviewButton.isBusy = true
-        let proposer: Web3TransferPreviewViewController.Proposer
-        switch payment.toType {
-        case .privacyWallet:
-            proposer = .web3ToMixinWallet
-        case .addressBook, .arbitrary:
-            proposer = .web3ToAddress
-        }
+        let proposer: Web3TransferPreviewViewController.Proposer = .web3ToAddress(addressLabel: payment.toType.addressLabel)
         DispatchQueue.global().async { [payment] in
             let initError: Error?
             do {

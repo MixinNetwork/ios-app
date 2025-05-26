@@ -42,101 +42,38 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
     
     override func continueAction(inputAddress: String) {
         let token = payment.token
-        do {
-            if try ExternalTransfer.isWithdrawalLink(raw: inputAddress, chainID: payment.chain.chainID) {
-                Task { [weak self] in
-                    do {
-                        let transfer = try await ExternalTransfer(string: inputAddress) { assetKey in
-                            Web3TokenDAO.shared.assetID(assetKey: assetKey)
-                        } resolveAmount: { (_, amount) in
-                            ExternalTransfer.resolve(atomicAmount: amount, with: Int(token.precision))
-                        }
-                        if transfer.assetID != token.assetID {
-                            throw TransferLinkError.invalidFormat
-                        }
-                        await MainActor.run {
-                            self?.validateDesination(destination: transfer.destination, amount: transfer.amount, isLink: true)
-                        }
-                    } catch {
-                        guard let self else {
-                            return
-                        }
-                        await MainActor.run {
-                            switch error {
-                            case TransferLinkError.alreadyPaid:
-                                self.showError(description: R.string.localizable.pay_paid())
-                            case TransferLinkError.assetNotFound:
-                                self.showError(description: R.string.localizable.asset_not_found())
-                            case let TransferLinkError.requestError(error):
-                                self.showError(description: error.localizedDescription)
-                            default:
-                                Logger.general.error(category: "MixinTokenReceiverViewController", message: "Invalid payment: \(inputAddress)")
-                                self.showError(description: R.string.localizable.invalid_payment_link())
-                            }
-                        }
-                    }
-                }
-            } else {
-                validateDesination(destination: inputAddress, amount: nil, isLink: false)
-            }
-        } catch TransferLinkError.invalidFormat {
-            showError(description: R.string.localizable.invalid_payment_link())
-        } catch {
-            showError(description: error.localizedDescription)
-        }
-    }
-    
-    private func validateDesination(destination: String, amount: Decimal?, isLink: Bool) {
-        let verifiedAddress: String?
-        switch payment.chain.kind {
-        case .evm:
-            let ethereumAddress = EthereumAddress(destination)
-            if destination.count != 42 || ethereumAddress.asNumber() == nil {
-                verifiedAddress = nil
-            } else {
-                verifiedAddress = ethereumAddress.toChecksumAddress()
-            }
-        case .solana:
-            if Solana.isValidPublicKey(string: destination) {
-                verifiedAddress = destination
-            } else {
-                verifiedAddress = nil
-            }
-        }
-        
-        guard let verifiedAddress else {
-            let description = if isLink {
-                R.string.localizable.invalid_payment_link()
-            } else {
-                R.string.localizable.error_invalid_address_plain()
-            }
-            showError(description: description)
-            return
-        }
-        
-        let payment = Web3SendingTokenToAddressPayment(
-            payment: self.payment,
-            to: .arbitrary,
-            address: verifiedAddress
-        )
-        
-        if let amount, amount > 0 {
-            Web3AddressValidator.validateAmountAndLoadFee(payment: payment, amount: amount) { [weak nextButton] (operation) in
-                guard let nextButton else {
+        if ExternalTransfer.isWithdrawalLink(raw: inputAddress) {
+            Web3AddressValidator.validateWithdrawLink(
+                paymentLink: inputAddress,
+                token: token,
+                payment: payment) { [weak self, weak nextButton](transfer, operation, payment) in
+                guard let self else {
                     return
                 }
-                nextButton.isBusy = false
+                nextButton?.isBusy = false
                 
-                let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .web3ToAddress)
-                transfer.manipulateNavigationStackOnFinished = true
-                Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                if transfer.amount > 0 {
+                    let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .web3ToAddress(addressLabel: payment.toType.addressLabel))
+                    transfer.manipulateNavigationStackOnFinished = true
+                    Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                } else {
+                    let input = Web3TransferInputAmountViewController(payment: payment)
+                    self.navigationController?.pushViewController(input, animated: true)
+                }
             } onFailure: { [weak self] error in
                 self?.showError(description: error.localizedDescription)
             }
         } else {
-            nextButton?.isBusy = false
-            let input = Web3TransferInputAmountViewController(payment: payment)
-            navigationController?.pushViewController(input, animated: true)
+            Web3AddressValidator.validate(destination: inputAddress, token: token, payment: payment) { [weak self](payment) in
+                guard let self else {
+                    return
+                }
+                nextButton?.isBusy = false
+                let input = Web3TransferInputAmountViewController(payment: payment)
+                self.navigationController?.pushViewController(input, animated: true)
+            } onFailure: { [weak self] error in
+                self?.showError(description: error.localizedDescription)
+            }
         }
     }
 }

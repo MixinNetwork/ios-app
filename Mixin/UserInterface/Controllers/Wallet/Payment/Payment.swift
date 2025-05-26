@@ -318,6 +318,17 @@ extension Payment {
             withdrawable.destination
         }
         
+        var addressLabel: String? {
+            switch self {
+            case .address(let address):
+                address.label
+            case .temporary(let address):
+                nil
+            case .classicWallet:
+                R.string.localizable.common_wallet()
+            }
+        }
+        
         var debugDescription: String {
             switch self {
             case let .address(address):

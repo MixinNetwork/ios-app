@@ -225,43 +225,4 @@ public struct ExternalTransfer {
         }
         return Self.isLightningAddress(string: raw) || Self.supportedAssetIds[scheme] != nil
     }
-    
-    public static func isWithdrawalLink(raw: String, chainID: String) throws -> Bool {
-        guard let components = URLComponents(string: raw) else {
-            return false
-        }
-        guard let scheme = components.scheme?.lowercased() else {
-            return false
-        }
-        
-        switch chainID {
-        case ChainID.lightning:
-            if Self.isLightningAddress(string: raw) {
-                return true
-            }
-            throw TransferLinkError.invalidFormat
-        case ChainID.ethereum,
-        ChainID.polygon,
-        ChainID.bnbSmartChain,
-        ChainID.base,
-        ChainID.arbitrum,
-        ChainID.optimism:
-            return scheme == "ethereum"
-        case ChainID.litecoin:
-            return scheme == "litecoin"
-        case ChainID.bitcoin:
-            return scheme == "bitcoin"
-        case ChainID.dogecoin:
-            return scheme == "dogecoin"
-        case ChainID.solana:
-            return scheme == "solana"
-        case ChainID.dash:
-            return scheme == "dash"
-        case ChainID.monero:
-            return scheme == "monero"
-        default:
-            throw TransferLinkError.invalidFormat
-        }
-    }
-    
 }

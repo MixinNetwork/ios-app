@@ -7,11 +7,12 @@ public final class ExternalAPI: MixinAPI {
     }
     
     public static func checkAddress(
+        chainID: String,
         assetID: String,
         destination: String,
         tag: String?
     ) async throws -> AddressResponse {
-        var path = "/external/addresses/check?asset=\(assetID)&destination=\(destination)"
+        var path = "/external/addresses/check?asset=\(assetID)&chain=\(chainID)&destination=\(destination)"
         if let tag, !tag.isEmpty {
             path += "&tag=\(tag)"
         }

@@ -148,16 +148,17 @@ extension BackupViewController {
     private func updateAutoBackupSubtitle() {
         let indexPath = IndexPath(row: 0, section: 1)
         let row = dataSource.row(at: indexPath)
-        switch AppGroupUserDefaults.User.autoBackup {
+        let subtitle = switch AppGroupUserDefaults.User.autoBackup {
         case .daily:
-            row.subtitle = R.string.localizable.daily()
+            R.string.localizable.daily()
         case .weekly:
-            row.subtitle = R.string.localizable.weekly()
+            R.string.localizable.weekly()
         case .monthly:
-            row.subtitle = R.string.localizable.monthly()
+            R.string.localizable.monthly()
         case .off:
-            row.subtitle = R.string.localizable.off()
+            R.string.localizable.off()
         }
+        row.subtitle = .text(subtitle)
     }
     
     private func updateActionSectionFooter() {

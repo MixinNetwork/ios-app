@@ -51,8 +51,6 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
                 }
                 
                 let amount = transfer.amount
-                let temporaryAddress = TemporaryAddress(destination: transfer.destination, tag: "")
-                
                 if let fee, amount > 0 {
                     let fiatMoneyAmount = amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
                     let payment = Payment(
@@ -64,7 +62,7 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
                     )
                     
                     payment.checkPreconditions(
-                        withdrawTo: .temporary(temporaryAddress),
+                        withdrawTo: withdrawalDestination,
                         fee: fee,
                         on: self
                     ) { reason in
@@ -76,6 +74,7 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
                             self.showError(description: message)
                         }
                     } onSuccess: { (operation, issues) in
+                        reporter.report(event: .sendRecipient, tags: ["type": withdrawalDestination.logLabel])
                         nextButton?.isBusy = false
                         let preview = WithdrawPreviewViewController(
                             issues: issues,
@@ -88,6 +87,7 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
                         self.present(preview, animated: true)
                     }
                 } else {
+                    reporter.report(event: .sendRecipient, tags: ["type": withdrawalDestination.logLabel])
                     nextButton?.isBusy = false
                     let inputAmount = WithdrawInputAmountViewController(tokenItem: token, destination: withdrawalDestination)
                     self.navigationController?.pushViewController(inputAmount, animated: true)
@@ -110,6 +110,8 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
                     guard let self else {
                         return
                     }
+                    
+                    reporter.report(event: .sendRecipient, tags: ["type": withdrawalDestination.logLabel])
                     nextButton?.isBusy = false
                     let inputAmount = WithdrawInputAmountViewController(tokenItem: token, destination: withdrawalDestination)
                     self.navigationController?.pushViewController(inputAmount, animated: true)

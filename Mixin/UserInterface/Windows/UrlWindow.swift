@@ -546,6 +546,7 @@ class UrlWindow {
                 UIApplication.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
             }
         } onFailure: { error in
+            Logger.general.debug(category: "UrlWindow", message: "Invalid withdrawal link: \(string)")
             hud.set(style: .error, text: error.localizedDescription)
             hud.scheduleAutoHidden()
         }

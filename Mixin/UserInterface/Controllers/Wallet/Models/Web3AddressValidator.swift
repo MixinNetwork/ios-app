@@ -60,7 +60,7 @@ enum Web3AddressValidator {
                 // Check if the link token matches the current token
                 let linkToken = try await syncToken(walletID: token.walletID, walletAddress: walletAddress, assetID: transfer.assetID)
                 if transfer.amount > 0 {
-                    if transfer.assetID != linkToken.assetID {
+                    if token.assetID != linkToken.assetID {
                         throw ValidationError.invalidFormat
                     }
                 } else {
@@ -70,10 +70,10 @@ enum Web3AddressValidator {
                 }
                 
                 // Check address format
-                _ = try await checkAddress(chainID: token.chainID, assetID: token.assetID, destination: transfer.destination)
+                let verifiedAddress = try await checkAddress(chainID: token.chainID, assetID: token.assetID, destination: transfer.destination)
                 
                 // Query address lable
-                let localAddress = AddressDAO.shared.getAddress(chainId: token.chainID, destination: transfer.destination, tag: "")
+                let localAddress = AddressDAO.shared.getAddress(chainId: token.chainID, destination: verifiedAddress, tag: "")
                 let withdrawDestination: Web3SendingTokenToAddressPayment.AddressType = if let localAddress {
                     .addressBook(label: localAddress.label)
                 } else {
@@ -107,13 +107,13 @@ enum Web3AddressValidator {
     ) {
         Task {
             do {
-                let address = try await checkAddress(
+                let verifiedAddress = try await checkAddress(
                     chainID: token.chainID,
                     assetID: token.assetID,
                     destination: destination
                 )
                 
-                let localAddress = AddressDAO.shared.getAddress(chainId: token.chainID, destination: destination, tag: "")
+                let localAddress = AddressDAO.shared.getAddress(chainId: token.chainID, destination: verifiedAddress, tag: "")
                 let withdrawDestination: Web3SendingTokenToAddressPayment.AddressType = if let localAddress {
                     .addressBook(label: localAddress.label)
                 } else {
@@ -157,13 +157,13 @@ enum Web3AddressValidator {
         }
         
         if amount > 0 {
+            if amount > token.decimalBalance {
+                throw ValidationError.insufficientBalance(token)
+            } else if amount < minimumTransferAmount {
+                throw ValidationError.insufficientForSolRent
+            }
+            
             _ = try await checkFee(amount: amount, payment: payment, operation: operation)
-        }
-        
-        if amount > token.decimalBalance {
-            throw ValidationError.insufficientBalance(token)
-        } else if amount < minimumTransferAmount {
-            throw ValidationError.insufficientForSolRent
         }
         
         return operation

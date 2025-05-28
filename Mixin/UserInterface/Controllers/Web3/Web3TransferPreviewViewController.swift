@@ -138,7 +138,7 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
             rows.append(.info(caption: .account, content: operation.fromAddress))
         case .web3ToAddress(let addressLabel):
             rows.append(.receivingAddress(value: operation.toAddress, label: addressLabel))
-            rows.append(.info(caption: .sender, content: operation.fromAddress))
+            rows.append(.sendingAddress(value: operation.fromAddress, label: R.string.localizable.common_wallet()))
         case .speedUp, .cancel:
             break
         case .none:

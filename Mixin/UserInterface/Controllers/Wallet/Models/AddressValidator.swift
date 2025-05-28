@@ -50,7 +50,7 @@ enum AddressValidator {
                 
                 if let token {
                     if transfer.amount > 0 {
-                        if transfer.assetID != token.assetID {
+                        if token.assetID != token.assetID {
                             throw ValidationError.invalidFormat
                         }
                     } else {
@@ -69,14 +69,14 @@ enum AddressValidator {
                 
                 let withdrawFeeItem: WithdrawFeeItem?
                 if transfer.amount > 0 {
+                    if transfer.amount > tokenItem.decimalBalance {
+                        throw ValidationError.insufficientBalance(tokenItem)
+                    }
+                    
                     let feeItem = try await checkFee(
                         assetID: transfer.assetID,
                         amount: transfer.amount,
                         destination: temporaryAddress.destination)
-                    
-                    if transfer.amount > tokenItem.decimalBalance {
-                        throw ValidationError.insufficientBalance(tokenItem)
-                    }
                     withdrawFeeItem = WithdrawFeeItem(amount: feeItem.amount, tokenItem: feeItem.tokenItem)
                 } else {
                     withdrawFeeItem = nil

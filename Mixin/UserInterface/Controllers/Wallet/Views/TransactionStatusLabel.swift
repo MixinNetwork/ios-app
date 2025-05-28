@@ -30,14 +30,14 @@ final class TransactionStatusLabel: InsetLabel {
         }
     }
     
-    func load(status: MembershipOrder.Status) {
+    func load(status: UnknownableEnum<MembershipOrder.Status>) {
         text = status.localizedDescription
-        switch status {
+        switch status.knownCase {
         case .initial:
             setColor(.gray)
         case .paid:
             setColor(.green)
-        case .cancel, .expired, .failed:
+        case .cancel, .expired, .failed, .none:
             setColor(.red)
         }
     }

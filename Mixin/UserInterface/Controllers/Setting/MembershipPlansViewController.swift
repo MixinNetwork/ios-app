@@ -116,6 +116,8 @@ final class MembershipPlansViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
+        let indexPath = IndexPath(item: 0, section: Section.planSelector.rawValue)
+        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadCurrentPlan),

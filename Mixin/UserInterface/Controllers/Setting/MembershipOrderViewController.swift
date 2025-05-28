@@ -3,6 +3,7 @@ import MixinServices
 
 final class MembershipOrderViewController: UIViewController {
     
+    private let emptyCellReuseIdentifier = "e"
     private let order: MembershipOrder
     
     private var rows: [Row] = []
@@ -35,6 +36,10 @@ final class MembershipOrderViewController: UIViewController {
         tableView.sectionHeaderTopPadding = 10
         tableView.register(R.nib.membershipOrderStatusCell)
         tableView.register(R.nib.membershipOrderInfoCell)
+        tableView.register(
+            UITableViewCell.self,
+            forCellReuseIdentifier: emptyCellReuseIdentifier
+        )
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.dataSource = self
@@ -85,6 +90,10 @@ final class MembershipOrderViewController: UIViewController {
                 image: planIcon
             ),
             Row(
+                title: R.string.localizable.amount().uppercased(),
+                content: "USD " + order.actualAmount
+            ),
+            Row(
                 title: R.string.localizable.time().uppercased(),
                 content: time
             ),
@@ -118,7 +127,7 @@ extension MembershipOrderViewController: UITableViewDataSource {
         case .status:
             1
         case .infos:
-            rows.count
+            rows.count + 2
         }
     }
     
@@ -129,18 +138,40 @@ extension MembershipOrderViewController: UITableViewDataSource {
             cell.load(order: order)
             return cell
         case .infos:
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.membership_order_info, for: indexPath)!
-            let row = rows[indexPath.row]
-            cell.titleLabel.text = row.title
-            cell.contentLabel.text = row.content
-            cell.iconImageView.image = row.image
-            return cell
+            switch indexPath.row {
+            case 0, rows.count + 1:
+                let cell = tableView.dequeueReusableCell(withIdentifier: emptyCellReuseIdentifier, for: indexPath)
+                cell.backgroundConfiguration = .groupedCell
+                cell.contentConfiguration = nil
+                return cell
+            default:
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.membership_order_info, for: indexPath)!
+                let row = rows[indexPath.row - 1]
+                cell.titleLabel.text = row.title
+                cell.contentLabel.text = row.content
+                cell.iconImageView.image = row.image
+                return cell
+            }
         }
     }
     
 }
 
 extension MembershipOrderViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch Section(rawValue: indexPath.section)! {
+        case .status:
+            UITableView.automaticDimension
+        case .infos:
+            switch indexPath.row {
+            case 0, rows.count + 1:
+                10
+            default:
+                UITableView.automaticDimension
+            }
+        }
+    }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         nil

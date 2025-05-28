@@ -130,7 +130,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
                 imageView = view
             } else {
                 imageView = subtitleImageView
-                contentStackView.addArrangedSubview(imageView)
+                contentStackView.insertArrangedSubview(imageView, at: 3)
             }
             imageView.image = image
             imageView.isHidden = false

@@ -1070,7 +1070,6 @@
 		948AB7722DE5DC40005E76A0 /* MembershipOrderStatusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AB76F2DE5DC40005E76A0 /* MembershipOrderStatusCell.swift */; };
 		948AB7902DE5EF27005E76A0 /* MembershipOrderInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948AB78F2DE5EF27005E76A0 /* MembershipOrderInfoCell.xib */; };
 		948AB7912DE5EF27005E76A0 /* MembershipOrderInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AB78E2DE5EF27005E76A0 /* MembershipOrderInfoCell.swift */; };
-		948AB7BD2DE5FB29005E76A0 /* MembershipOrderStatus+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AB7BC2DE5FB1E005E76A0 /* MembershipOrderStatus+Localization.swift */; };
 		948ACAA02AF38E5B0057D76B /* SnapshotMessageContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */; };
 		948ACAA52AF3950C0057D76B /* SnapshotMessageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */; };
 		948E276B29D2A521002BFCE1 /* NetworkFeeOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */; };
@@ -1141,6 +1140,11 @@
 		94B7643525EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */; };
 		94B7B6DC26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */; };
 		94B7B6DE26B43581000B0AC5 /* SilentNotificationMessagePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */; };
+		94B89D032DE74367002A0DDC /* AllMembershipOrdersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B89D022DE7435F002A0DDC /* AllMembershipOrdersViewController.swift */; };
+		94B89D0B2DE7441D002A0DDC /* MembershipOrdersHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B89D0A2DE7441D002A0DDC /* MembershipOrdersHeaderView.swift */; };
+		94B89D162DE74C9C002A0DDC /* MembershipOrder+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B89D152DE74C92002A0DDC /* MembershipOrder+Convenience.swift */; };
+		94B89D522DE75A30002A0DDC /* MembershipViewAllOrdersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B89D502DE75A30002A0DDC /* MembershipViewAllOrdersCell.swift */; };
+		94B89D532DE75A30002A0DDC /* MembershipViewAllOrdersCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B89D512DE75A30002A0DDC /* MembershipViewAllOrdersCell.xib */; };
 		94B8D185266E37ED00F43CBB /* DiagnoseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8D184266E37ED00F43CBB /* DiagnoseViewController.swift */; };
 		94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */; };
 		94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */; };
@@ -2652,7 +2656,6 @@
 		948AB7702DE5DC40005E76A0 /* MembershipOrderStatusCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipOrderStatusCell.xib; sourceTree = "<group>"; };
 		948AB78E2DE5EF27005E76A0 /* MembershipOrderInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipOrderInfoCell.swift; sourceTree = "<group>"; };
 		948AB78F2DE5EF27005E76A0 /* MembershipOrderInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipOrderInfoCell.xib; sourceTree = "<group>"; };
-		948AB7BC2DE5FB1E005E76A0 /* MembershipOrderStatus+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MembershipOrderStatus+Localization.swift"; sourceTree = "<group>"; };
 		948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotMessageContentView.xib; sourceTree = "<group>"; };
 		948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMessageContentView.swift; sourceTree = "<group>"; };
 		948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeOption.swift; sourceTree = "<group>"; };
@@ -2722,6 +2725,11 @@
 		94B7643425EA8E9B00EDF9C6 /* CacheableAssetFileDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileDescription.swift; sourceTree = "<group>"; };
 		94B7B6DB26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SilentNotificationMessagePreviewView.xib; sourceTree = "<group>"; };
 		94B7B6DD26B43580000B0AC5 /* SilentNotificationMessagePreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentNotificationMessagePreviewViewController.swift; sourceTree = "<group>"; };
+		94B89D022DE7435F002A0DDC /* AllMembershipOrdersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllMembershipOrdersViewController.swift; sourceTree = "<group>"; };
+		94B89D0A2DE7441D002A0DDC /* MembershipOrdersHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipOrdersHeaderView.swift; sourceTree = "<group>"; };
+		94B89D152DE74C92002A0DDC /* MembershipOrder+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MembershipOrder+Convenience.swift"; sourceTree = "<group>"; };
+		94B89D502DE75A30002A0DDC /* MembershipViewAllOrdersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipViewAllOrdersCell.swift; sourceTree = "<group>"; };
+		94B89D512DE75A30002A0DDC /* MembershipViewAllOrdersCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipViewAllOrdersCell.xib; sourceTree = "<group>"; };
 		94B8D184266E37ED00F43CBB /* DiagnoseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnoseViewController.swift; sourceTree = "<group>"; };
 		94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DatabaseDiagnosticView.xib; sourceTree = "<group>"; };
@@ -3515,6 +3523,7 @@
 				941994FA2CCE690600F5425C /* ImageTextTableHeaderView.xib */,
 				941994F52CCC454600F5425C /* ImageTextTableHeaderView.swift */,
 				9495E7322CF4420100124CC7 /* RecoveryKitFooterView.swift */,
+				94B89D0A2DE7441D002A0DDC /* MembershipOrdersHeaderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4491,7 +4500,7 @@
 				7C1EDAB32772FF8B00193917 /* DeleteAccountContext.swift */,
 				7C427BC328373F8000FFDE12 /* Wallpaper.swift */,
 				94DF7D5828DC0F17006E415B /* Acknowledgement.swift */,
-				948AB7BC2DE5FB1E005E76A0 /* MembershipOrderStatus+Localization.swift */,
+				94B89D152DE74C92002A0DDC /* MembershipOrder+Convenience.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -5029,6 +5038,8 @@
 				948AB76F2DE5DC40005E76A0 /* MembershipOrderStatusCell.swift */,
 				948AB78F2DE5EF27005E76A0 /* MembershipOrderInfoCell.xib */,
 				948AB78E2DE5EF27005E76A0 /* MembershipOrderInfoCell.swift */,
+				94B89D512DE75A30002A0DDC /* MembershipViewAllOrdersCell.xib */,
+				94B89D502DE75A30002A0DDC /* MembershipViewAllOrdersCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -5450,6 +5461,7 @@
 				7BEED0DA244DC1F300F3A2B9 /* SettingsTableViewController.swift */,
 				DFE356B71FB4994200E0E3A8 /* SettingsViewController.swift */,
 				945C590F2DC215A50024F6DE /* MembershipViewController.swift */,
+				94B89D022DE7435F002A0DDC /* AllMembershipOrdersViewController.swift */,
 				9425EACE2DC2218400BB018C /* MembershipPlansView.xib */,
 				9425EACD2DC2218400BB018C /* MembershipPlansViewController.swift */,
 				948AB7542DE5C0C2005E76A0 /* MembershipOrderViewController.swift */,
@@ -5929,6 +5941,7 @@
 				944C60FE2B6A899700C7DF06 /* AuthenticationPreviewHeaderView.xib in Resources */,
 				94A72C992C2EBE1E001E8782 /* InscriptionTraitsCell.xib in Resources */,
 				946EA0882D4763CF00DBC308 /* AddressInfoInputView.xib in Resources */,
+				94B89D532DE75A30002A0DDC /* MembershipViewAllOrdersCell.xib in Resources */,
 				E09C5EC223703FEE0095F729 /* ProfileShortcutView.xib in Resources */,
 				7BBCEC342523A1FF00F270DF /* MinimizedClipSwitcherView.xib in Resources */,
 				941D3BFB2A7912C700538504 /* QRCodeView.xib in Resources */,
@@ -6490,6 +6503,7 @@
 				94A0C8C32C77259E00BDE672 /* AddressReceiversCell.swift in Sources */,
 				7BD5A88A233228D900DD4E9A /* WebViewController.swift in Sources */,
 				7B5E9B40243700CD000AE24E /* ConversationCircleEditorViewController.swift in Sources */,
+				94B89D0B2DE7441D002A0DDC /* MembershipOrdersHeaderView.swift in Sources */,
 				9433C2F42CBCFB530066CEA3 /* AddNonFriendBotJob.swift in Sources */,
 				94E1D44E29E9393C00511267 /* DeviceTransferServer.swift in Sources */,
 				7B28FA16201196DD0023B28D /* DataMessageViewModel.swift in Sources */,
@@ -6583,7 +6597,6 @@
 				7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */,
 				7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */,
 				7BAB76AC228AAE00009ECB8C /* MessageReceiverSearchResult.swift in Sources */,
-				948AB7BD2DE5FB29005E76A0 /* MembershipOrderStatus+Localization.swift in Sources */,
 				944C61FF2B6C033500C7DF06 /* EditAddressPreviewViewController.swift in Sources */,
 				DFB190002330F6A40021CAF3 /* BiographyViewController.swift in Sources */,
 				7B7F7E391FD43F2500A1C91F /* DetailInfoMessageCell.swift in Sources */,
@@ -6605,6 +6618,7 @@
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
 				7BEED890246D0C3D00387EAE /* CallAdapter.swift in Sources */,
 				94327CF52D53650600DEE36D /* AddressInfoInputHeaderView.swift in Sources */,
+				94B89D162DE74C9C002A0DDC /* MembershipOrder+Convenience.swift in Sources */,
 				7B09E55C1FD15B9B002E45D3 /* PhotoMessageViewModel.swift in Sources */,
 				94F237562C6915B70057D1AB /* PriceHistory.swift in Sources */,
 				9495E0DC2CEF7D6B00124CC7 /* MnemonicPhraseCell.swift in Sources */,
@@ -7104,6 +7118,7 @@
 				E05D992B23911D64009F9E8D /* ProfileFavoriteAppsView.swift in Sources */,
 				7B8ED47E21197FF40039946B /* FavoriteStickersViewController.swift in Sources */,
 				7B71F5262191CC1500F93B98 /* WalletHeaderView.swift in Sources */,
+				94B89D522DE75A30002A0DDC /* MembershipViewAllOrdersCell.swift in Sources */,
 				7CCC801C292DC68E000B4200 /* ImageCropViewController.swift in Sources */,
 				7B710BE5233DFB6A00058444 /* SharedMediaCollectionHeaderView.swift in Sources */,
 				7CEB735429DB24F3006FB5B2 /* RestoreChatViewController.swift in Sources */,
@@ -7365,6 +7380,7 @@
 				7CB17B642771602A00CF4C94 /* DeleteAccountConfirmWindow.swift in Sources */,
 				942FD9362D3A72DE004DCC4C /* SwapIconView.swift in Sources */,
 				7BFE47E52284530200FC4379 /* PeerHeaderView.swift in Sources */,
+				94B89D032DE74367002A0DDC /* AllMembershipOrdersViewController.swift in Sources */,
 				7BFE47DF228432C800FC4379 /* PeerInfoView.swift in Sources */,
 				946331B62C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift in Sources */,
 				9427D52225E0E8DE00B1EF0E /* PlaylistItemCell.swift in Sources */,

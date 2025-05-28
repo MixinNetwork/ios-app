@@ -26,7 +26,7 @@ final class MembershipOrderStatusCell: UITableViewCell {
         case .renew:
             R.string.localizable.renew_plan()
         }
-        statusLabel.text = order.status.localizedDescription
+        statusLabel.load(status: order.status)
     }
     
 }

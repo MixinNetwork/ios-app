@@ -3,11 +3,17 @@ import MixinServices
 
 final class MembershipViewController: UIViewController {
     
+    private enum Section: Int, CaseIterable {
+        case plan
+        case invoices
+    }
+    
     private weak var tableView: UITableView!
     
     private let plan: User.Membership.Plan
     private let expiredAt: Date
-    private let emptyCellReuseIdentifier = "e"
+    private let headerReuseIdentifier = "h"
+    private let maxOrdersCount = 8
     
     private var orders: [MembershipOrder] = []
     private var hasMoreOrders = false
@@ -41,22 +47,29 @@ final class MembershipViewController: UIViewController {
         tableView.register(R.nib.membershipCell)
         tableView.register(R.nib.insetGroupedTitleCell)
         tableView.register(R.nib.membershipInvoiceCell)
+        tableView.register(R.nib.membershipViewAllOrdersCell)
         tableView.register(
-            UITableViewCell.self,
-            forCellReuseIdentifier: emptyCellReuseIdentifier
+            MembershipOrdersHeaderView.self,
+            forHeaderFooterViewReuseIdentifier: headerReuseIdentifier
         )
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         self.tableView = tableView
         tableView.dataSource = self
         tableView.delegate = self
+        reloadFromLocal()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadFromLocal),
+            name: MembershipOrderDAO.didUpdateNotification,
+            object: nil
+        )
         SafeAPI.membershipOrders { result in
             switch result {
             case .success(let orders):
-                self.orders = orders
-                self.tableView.reloadData()
+                MembershipOrderDAO.shared.save(orders: orders)
             case .failure(let error):
-                break
+                Logger.general.debug(category: "Membership", message: "\(error)")
             }
         }
     }
@@ -64,6 +77,30 @@ final class MembershipViewController: UIViewController {
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+    }
+    
+    @objc private func reloadFromLocal() {
+        DispatchQueue.global().async { [limit=maxOrdersCount, weak self] in
+            var orders = MembershipOrderDAO.shared.orders(limit: limit + 1)
+            let hasMoreOrders: Bool
+            if orders.count > limit {
+                hasMoreOrders = true
+                orders.removeLast()
+            } else {
+                hasMoreOrders = false
+            }
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                let sections = IndexSet([Section.invoices.rawValue])
+                self.orders = orders
+                self.hasMoreOrders = hasMoreOrders
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadSections(sections, with: .none)
+                }
+            }
+        }
     }
     
 }
@@ -115,16 +152,7 @@ extension MembershipViewController: UITableViewDataSource {
                 cell.load(order: order)
                 return cell
             default:
-                let cell = tableView.dequeueReusableCell(withIdentifier: emptyCellReuseIdentifier, for: indexPath)
-                cell.backgroundConfiguration = .groupedCell
-                cell.contentConfiguration = {
-                    var content = cell.defaultContentConfiguration()
-                    content.text = R.string.localizable.view_all()
-                    content.textProperties.alignment = .center
-                    content.textProperties.font = .scaledFont(ofSize: 14, weight: .regular)
-                    content.textProperties.color = R.color.theme()!
-                    return content
-                }()
+                let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.membership_view_all_orders, for: indexPath)!
                 return cell
             }
         }
@@ -158,13 +186,15 @@ extension MembershipViewController: UITableViewDelegate {
         case .invoices:
             switch indexPath.row {
             case 0:
-                break
+                let allOrders = AllMembershipOrdersViewController(orders: orders)
+                navigationController?.pushViewController(allOrders, animated: true)
             case 1...orders.count:
                 let order = orders[indexPath.row - 1]
                 let viewController = MembershipOrderViewController(order: order)
                 navigationController?.pushViewController(viewController, animated: true)
             default:
-                break
+                let allOrders = AllMembershipOrdersViewController(orders: orders)
+                navigationController?.pushViewController(allOrders, animated: true)
             }
         }
     }
@@ -176,15 +206,6 @@ extension MembershipViewController: MembershipCell.Delegate {
     func membershipCellDidSelectViewPlan(_ cell: MembershipCell) {
         let plans = MembershipPlansViewController()
         present(plans, animated: true)
-    }
-    
-}
-
-extension MembershipViewController {
-    
-    private enum Section: Int, CaseIterable {
-        case plan
-        case invoices
     }
     
 }

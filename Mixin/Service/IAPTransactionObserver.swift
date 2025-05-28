@@ -55,7 +55,7 @@ final class IAPTransactionObserver {
                     switch order.status.knownCase {
                     case .initial:
                         Logger.general.debug(category: "IAP", message: "Order Inited: \(id)")
-                        try? await Task.sleep(nanoseconds: 10 * NSEC_PER_SEC)
+                        try? await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
                         continue
                     case .paid:
                         Logger.general.debug(category: "IAP", message: "Order Paid: \(id)")

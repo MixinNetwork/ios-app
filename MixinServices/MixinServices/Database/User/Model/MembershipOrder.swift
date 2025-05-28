@@ -1,8 +1,9 @@
 import Foundation
+import GRDB
 
 public struct MembershipOrder {
     
-    public struct FiatOrder: Decodable {
+    public struct FiatOrder: Codable {
         
         enum CodingKeys: String, CodingKey {
             case source
@@ -14,7 +15,7 @@ public struct MembershipOrder {
         
     }
     
-    public enum Status: String, Decodable {
+    public enum Status: String, Codable {
         case initial
         case paid
         case cancel
@@ -23,6 +24,9 @@ public struct MembershipOrder {
     }
     
     public let orderID: UUID
+    public let amount: String
+    public let actualAmount: String
+    public let originalAmount: String
     public let after: UnknownableEnum<SafeMembership.Plan>
     public let before: UnknownableEnum<SafeMembership.Plan>
     public let createdAt: String
@@ -32,10 +36,13 @@ public struct MembershipOrder {
     
 }
 
-extension MembershipOrder: Decodable {
+extension MembershipOrder: Codable {
     
     enum CodingKeys: String, CodingKey {
         case orderID = "order_id"
+        case amount = "amount"
+        case actualAmount = "amount_actual"
+        case originalAmount = "amount_original"
         case after
         case before
         case createdAt = "created_at"
@@ -46,20 +53,8 @@ extension MembershipOrder: Decodable {
     
 }
 
-extension MembershipOrder {
+extension MembershipOrder: MixinFetchableRecord, MixinEncodableRecord, PersistableRecord {
     
-    public enum Transition {
-        case upgrade
-        case renew
-    }
-    
-    public var transition: Transition {
-        switch (before.knownCase, after.knownCase) {
-        case (.none, _), (.basic, .standard), (.standard, .premium):
-                .upgrade
-        default:
-                .renew
-        }
-    }
+    public static let databaseTableName = "membership_orders"
     
 }

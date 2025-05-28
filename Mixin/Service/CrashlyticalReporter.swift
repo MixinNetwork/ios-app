@@ -36,7 +36,7 @@ final class CrashlyticalReporter: Reporter {
             Analytics.setUserProperty(value, forName: "has_emergency_contact")
         }
         if properties.contains(.membership) {
-            let value = account.membership?.unexpiredPlan.rawValue ?? "none"
+            let value = account.membership?.unexpiredPlan?.rawValue ?? "none"
             Analytics.setUserProperty(value, forName: "membership")
         }
         if properties.contains(.notificationAuthorization) {

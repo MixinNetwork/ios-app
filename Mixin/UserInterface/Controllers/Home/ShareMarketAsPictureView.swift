@@ -25,7 +25,7 @@ final class ShareMarketAsPictureView: UIView {
         ]
         obiView.gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
         obiView.gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
-        titleLabel.text = mixinMessenger
+        titleLabel.text = .mixinMessenger
         qrCodeView.layer.cornerCurve = .continuous
         qrCodeView.layer.cornerRadius = 6
         qrCodeView.layer.masksToBounds = true

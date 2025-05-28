@@ -82,7 +82,7 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
                 let subtitle = R.string.localizable.web3_signing_warning()
                 layoutTableHeaderView(title: title, subtitle: subtitle, style: .destructive)
             case .web3ToMixinWallet, .web3ToAddress:
-                let subtitle = R.string.localizable.signature_request_from(mixinMessenger)
+                let subtitle = R.string.localizable.signature_request_from(.mixinMessenger)
                 layoutTableHeaderView(title: title, subtitle: subtitle, style: [])
             case .speedUp:
                 let subtitle = R.string.localizable.speed_up_transaction_description()

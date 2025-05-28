@@ -84,7 +84,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
             case .paid:
                 tableHeaderView.setIcon(progress: .success)
                 tableHeaderView.titleLabel.text = R.string.localizable.transaction_approved()
-                tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinSafe) + R.string.localizable.multisig_state_paid()
+                tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(.mixinSafe) + R.string.localizable.multisig_state_paid()
             case .signed, .revoked, .pending:
                 tableHeaderView.setIcon { imageView in
                     imageView.image = R.image.transaction_checklist()
@@ -95,7 +95,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 case .revoke:
                     tableHeaderView.titleLabel.text = R.string.localizable.reject_transaction()
                 }
-                tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinSafe)
+                tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(.mixinSafe)
             }
         } else {
             switch state {
@@ -232,7 +232,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                  R.string.localizable.multisig_signing_description())
             } else {
                 (R.string.localizable.approving_transaction(),
-                 R.string.localizable.signature_request_from(mixinSafe))
+                 R.string.localizable.signature_request_from(.mixinSafe))
             }
         case .revoke:
             if safe == nil {
@@ -240,7 +240,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                  R.string.localizable.multisig_unlocking_description())
             } else {
                 (R.string.localizable.rejecting_transaction(),
-                 R.string.localizable.signature_request_from(mixinSafe))
+                 R.string.localizable.signature_request_from(.mixinSafe))
             }
         }
         layoutTableHeaderView(title: title, subtitle: subtitle)
@@ -273,7 +273,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                              R.string.localizable.multisig_signed_description())
                         } else {
                             (R.string.localizable.transaction_approved(),
-                             R.string.localizable.signature_request_from(mixinSafe))
+                             R.string.localizable.signature_request_from(.mixinSafe))
                         }
                     case .revoke:
                         if safe == nil {
@@ -281,7 +281,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                              R.string.localizable.multisig_unlocked_description())
                         } else {
                             (R.string.localizable.transaction_rejected(),
-                             R.string.localizable.signature_request_from(mixinSafe))
+                             R.string.localizable.signature_request_from(.mixinSafe))
                         }
                     }
                     layoutTableHeaderView(title: title, subtitle: subtitle)

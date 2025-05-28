@@ -45,7 +45,7 @@ extension DataAndStorageSettingsViewController: UITableViewDelegate {
                 default:
                     AppGroupUserDefaults.User.autoDownloadFiles = value
                 }
-                dataSource.row(at: indexPath).subtitle = value.description
+                dataSource.row(at: indexPath).subtitle = .text(value.description)
             }
             
             let message = dataSource.row(at: indexPath).title

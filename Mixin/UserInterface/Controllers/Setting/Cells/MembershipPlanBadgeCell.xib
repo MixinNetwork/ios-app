@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="membership_plan_badge" id="kcH-Ai-7wY" customClass="MembershipPlanBadgeCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="343" height="88"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Umf-HA-Y8q">
+                <rect key="frame" x="0.0" y="0.0" width="343" height="88"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DLl-LO-7ul" customClass="SDAnimatedImageView">
+                        <rect key="frame" x="20" y="32" width="24" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="24" id="M4A-fE-hg8"/>
+                            <constraint firstAttribute="height" constant="24" id="tjg-7r-VCD"/>
+                        </constraints>
+                    </imageView>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="yxX-ej-2O3">
+                        <rect key="frame" x="56" y="24" width="267" height="40"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" placeholderIntrinsicWidth="267" placeholderIntrinsicHeight="19.333333333333332" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yR1-rw-PYP">
+                                <rect key="frame" x="0.0" y="0.0" width="267" height="19.333333333333332"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="267" placeholderIntrinsicHeight="16.666666666666664" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gYN-1q-vAJ">
+                                <rect key="frame" x="0.0" y="23.333333333333336" width="267" height="16.666666666666664"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                <color key="textColor" name="text_tertiary"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="yxX-ej-2O3" secondAttribute="trailing" constant="20" id="2yj-7b-l7P"/>
+                    <constraint firstItem="yxX-ej-2O3" firstAttribute="top" secondItem="Umf-HA-Y8q" secondAttribute="top" constant="24" id="9F1-MJ-Mll"/>
+                    <constraint firstAttribute="bottom" secondItem="yxX-ej-2O3" secondAttribute="bottom" constant="24" id="FHW-2P-pLp"/>
+                    <constraint firstItem="DLl-LO-7ul" firstAttribute="leading" secondItem="Umf-HA-Y8q" secondAttribute="leading" constant="20" id="Xya-tL-EJP"/>
+                    <constraint firstItem="DLl-LO-7ul" firstAttribute="centerY" secondItem="Umf-HA-Y8q" secondAttribute="centerY" id="fmU-1T-Jxu"/>
+                    <constraint firstItem="yxX-ej-2O3" firstAttribute="leading" secondItem="DLl-LO-7ul" secondAttribute="trailing" constant="12" id="tfL-L0-UoD"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <connections>
+                <outlet property="descriptionLabel" destination="gYN-1q-vAJ" id="Sct-Gb-523"/>
+                <outlet property="iconImageView" destination="DLl-LO-7ul" id="gAX-bz-ac6"/>
+                <outlet property="titleLabel" destination="yR1-rw-PYP" id="rdG-eg-UQ2"/>
+            </connections>
+            <point key="canvasLocation" x="-256" y="68"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

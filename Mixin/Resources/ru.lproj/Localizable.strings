@@ -116,6 +116,7 @@
 "all_assets_will_be_lost" = "All assets will be lost";
 "all_conversations" = "Все разговоры";
 "all_dates" = "All Dates";
+"all_invoices" = "All Invoices";
 "all_photos" = "Все фотографии";
 "all_signer_failure" = "All node failure";
 "all_time_high" = "All Time High";
@@ -202,6 +203,7 @@
 "bots_title" = "Боты";
 "browser" = "Browser";
 "buy_token" = "Buy %@";
+"buy_via" = "Via";
 "calculating" = "Calculating...";
 "call" = "Вызов";
 "call_declined" = "Вызов отклонен";
@@ -314,6 +316,7 @@
 "collection" = "Collection";
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Объединить и вперед";
+"coming_soon" = "Coming Soon";
 "common_wallet" = "Common Wallet";
 "complete" = "Complete";
 "completed" = "Completed";
@@ -400,6 +403,7 @@
 "currency_code" = "Код";
 "current_language" = "English";
 "current_location" = "Текущее местоположение";
+"current_plan" = "Current Plan";
 "current_price" = "Current price: %@";
 "current_selected" = "Текущий выбранный";
 "current_version" = "Version: %@";
@@ -572,6 +576,8 @@
 "exit_group" = "Выйти из группы";
 "exit_group_and_report_inviter" = "Выйти из группы и сообщить о приглашении";
 "expired" = "Истекший";
+"expired_on" = "Expired on %@";
+"expires_on" = "Expires on %@";
 "export" = "Экспорт";
 "export_failed" = "Не удалось экспортировать";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
@@ -598,6 +604,7 @@
 "forward" = "Перенаправить";
 "fourth_pin_confirm_hint" = "Да, есть четвертое подтверждение PIN-кода, и я обещаю, что оно будет последним, чтобы убедиться, что вы запомнили свой PIN-код. PIN-код невозможно восстановить, если он утерян.";
 "free" = "FREE";
+"free_recovery_service" = "Free Recovery Service";
 "from" = "От";
 "from_address" = "From address";
 "from_date" = "From %@";
@@ -665,6 +672,10 @@
 "invite_to_group_via_link" = "Пригласить в группу по ссылке";
 "invited_by_stranger" = "Приглашающего нет в ваших контактах";
 "invites_you_to_a_voice_call" = "приглашает вас на голосовой вызов";
+"invoice" = "Invoice";
+"invoice_renew_plan" = "Renew %@ Plan";
+"invoice_upgrade_plan" = "Upgrade to %@";
+"invoices" = "Invoices";
 "join_group" = "Присоединиться к группе";
 "joined_in" = "Присоединился к %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
@@ -727,6 +738,18 @@
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Медиа";
+"membership_advance" = "Advance";
+"membership_advance_description" = "Use multiple keys on multiple devices to avoid single point of failure, and get decentralized recovery service in case of key loss.";
+"membership_benefit_create_safe" = "Create %d safes";
+"membership_benefit_free_recovery_service" = "Use the recovery service for free";
+"membership_benefit_get_stars" = "Get %d Mixin Stars";
+"membership_benefit_paid_recovery_service" = "Pay %d Mixin Stars to use the recovery service";
+"membership_benefit_safe_members" = "%1$d members per safe, %2$d members in total";
+"membership_elite" = "Elite";
+"membership_elite_description" = "Manage large fortune in Mixin Safe with family, friends or colleagues, so you can avoid thefts, accidents and custody risks.";
+"membership_plan" = "Plan";
+"membership_prosperity" = "Prosperity";
+"membership_prosperity_description" = "Professional crypto solutions with 24/7 support, best for family offices, large corporations and financial institutions.";
 "memo" = "Памятка";
 "memo_placeholder" = "Enter the Memo. If there isn’t one, just tap “Next”.";
 "message_e2ee" = "Сообщения в этом чате полностью зашифрованы. Нажмите, чтобы узнать больше.";
@@ -745,6 +768,7 @@
 "mixin_id_or_phone" = "Mixin ID, номер телефона";
 "mixin_locked" = "Миксин заблокирован";
 "mixin_messenger_desktop" = "Рабочий стол Mixin Messenger";
+"mixin_one" = "Mixin One";
 "mixin_server_encounters_errors" = "Сервер Mixin обнаруживает ошибки";
 "mixin_support" = "Mixin Support";
 "mnemonic_phrase" = "Mnemonic Phrase";
@@ -879,6 +903,7 @@
 "overwrite" = "Overwrite";
 "owner" = "Владелец";
 "paid" = "Paid";
+"paid_recovery_service" = "Paid Recovery Service";
 "participants" = "Участники";
 "participants_count" = "%@ УЧАСТНИКОВ";
 "paste" = "Paste";
@@ -964,6 +989,8 @@
 "privacy_wallet_tip_title" = "What’s the Privacy Wallet?";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "Профиль";
+"profile_badge" = "Profile Badge";
+"profile_badge_description" = "An exclusive badge next to your name";
 "profile_photo" = "Аватар";
 "profile_share_bot_hint" = "Если вы хотите поделиться ботом, сначала добавьте его в контакты";
 "qr_code" = "QR код";
@@ -1014,6 +1041,7 @@
 "remove_emergency_contact_for_sure" = "Remove recovery contact for sure?";
 "remove_from_group" = "Удалить из группы";
 "remove_stickers" = "Удалить наклейки";
+"renew_plan" = "Renew Plan";
 "reply" = "Ответить";
 "report" = "Отчет";
 "report_and_block" = "Пожаловаться и заблокировать?";
@@ -1064,6 +1092,7 @@
 "revoking_multisig_signature" = "Revoking Multisig Signature";
 "room_is_full" = "Комната заполнена";
 "safe" = "SAFE";
+"safe_members" = "Safe Members";
 "save" = "Сохранить";
 "save_image" = "Сохранить изображение";
 "save_to_camera_roll" = "Сохранить в ленту камеры";
@@ -1380,10 +1409,13 @@
 "update_now" = "Update Now";
 "upgrade" = "Upgrade";
 "upgrade_database" = "Обновление базы данных";
+"upgrade_plan" = "Upgrade Plan";
+"upgrade_plan_for" = "Upgrade for %@";
 "upgrade_safe" = "Upgrade safe";
 "upgrade_tip" = "Upgrade TIP";
 "upgrade_tip_successfully" = "Upgrade TIP successfully";
 "upgrading" = "Обновление";
+"upgrading_plan" = "Upgrading";
 "upgrading_tip_terminated_unexpectedly" = "Upgrading TIP terminated unexpectedly, click \"Continue\" to complete the upgrade";
 "upload_mobile_contacts" = "Загрузить мобильные контакты";
 "uploading" = "Загрузка...";
@@ -1423,6 +1455,7 @@
 "view_emergency_contact" = "View recovery contact";
 "view_on_explorer" = "View on Explorer";
 "view_on_marketplace" = "View on Marketplace";
+"view_plan" = "View Plan";
 "view_wallet" = "Посмотреть кошелек";
 "voice_call_cancelled" = "голосовой вызов отменен";
 "voice_call_has_been_declined" = "Голосовой вызов был отклонен";

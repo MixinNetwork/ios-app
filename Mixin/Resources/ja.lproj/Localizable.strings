@@ -116,6 +116,7 @@
 "all_assets_will_be_lost" = "All assets will be lost";
 "all_conversations" = "すべてのチャットルーム";
 "all_dates" = "All Dates";
+"all_invoices" = "All Invoices";
 "all_photos" = "全ての画像";
 "all_signer_failure" = "All node failure";
 "all_time_high" = "All Time High";
@@ -202,6 +203,7 @@
 "bots_title" = "Myミニアプリ一覧";
 "browser" = "Browser";
 "buy_token" = "Buy %@";
+"buy_via" = "Via";
 "calculating" = "Calculating...";
 "call" = "電話";
 "call_declined" = "応答拒否";
@@ -314,6 +316,7 @@
 "collection" = "Collection";
 "collection_collected" = "%d collected";
 "combine_and_forward" = "まとめて転送";
+"coming_soon" = "Coming Soon";
 "common_wallet" = "Common Wallet";
 "complete" = "Complete";
 "completed" = "Completed";
@@ -400,6 +403,7 @@
 "currency_code" = "コード";
 "current_language" = "日本語";
 "current_location" = "現在の位置";
+"current_plan" = "Current Plan";
 "current_price" = "Current price: %@";
 "current_selected" = "選択";
 "current_version" = "Version: %@";
@@ -572,6 +576,8 @@
 "exit_group" = "グループから退出";
 "exit_group_and_report_inviter" = "グループを退会し招待者を報告する";
 "expired" = "期限切れ";
+"expired_on" = "Expired on %@";
+"expires_on" = "Expires on %@";
 "export" = "エクスポート";
 "export_failed" = "エクスポート失敗";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
@@ -598,6 +604,7 @@
 "forward" = "転送";
 "fourth_pin_confirm_hint" = "最終確認：PINコードを確実に記憶してください。ウォレットを失った場合、復元することはできません";
 "free" = "FREE";
+"free_recovery_service" = "Free Recovery Service";
 "from" = "より";
 "from_address" = "From address";
 "from_date" = "From %@";
@@ -665,6 +672,10 @@
 "invite_to_group_via_link" = "リンクを使って招待する";
 "invited_by_stranger" = "招待者はあなたの連絡先に存在しません";
 "invites_you_to_a_voice_call" = "グループ通話に招待されました";
+"invoice" = "Invoice";
+"invoice_renew_plan" = "Renew %@ Plan";
+"invoice_upgrade_plan" = "Upgrade to %@";
+"invoices" = "Invoices";
 "join_group" = "グループに参加";
 "joined_in" = "%@からMixinを利用しています";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
@@ -727,6 +738,18 @@
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "メディア";
+"membership_advance" = "Advance";
+"membership_advance_description" = "Use multiple keys on multiple devices to avoid single point of failure, and get decentralized recovery service in case of key loss.";
+"membership_benefit_create_safe" = "Create %d safes";
+"membership_benefit_free_recovery_service" = "Use the recovery service for free";
+"membership_benefit_get_stars" = "Get %d Mixin Stars";
+"membership_benefit_paid_recovery_service" = "Pay %d Mixin Stars to use the recovery service";
+"membership_benefit_safe_members" = "%1$d members per safe, %2$d members in total";
+"membership_elite" = "Elite";
+"membership_elite_description" = "Manage large fortune in Mixin Safe with family, friends or colleagues, so you can avoid thefts, accidents and custody risks.";
+"membership_plan" = "Plan";
+"membership_prosperity" = "Prosperity";
+"membership_prosperity_description" = "Professional crypto solutions with 24/7 support, best for family offices, large corporations and financial institutions.";
 "memo" = "メモ";
 "memo_placeholder" = "Enter the Memo. If there isn’t one, just tap “Next”.";
 "message_e2ee" = "チャットルームでのメッセージはE2Eで暗号化されています。詳細はタップしてください。";
@@ -745,6 +768,7 @@
 "mixin_id_or_phone" = "Mixin ID, 電話番号";
 "mixin_locked" = "Mixinはロックされています";
 "mixin_messenger_desktop" = "Mixin デスクトップ";
+"mixin_one" = "Mixin One";
 "mixin_server_encounters_errors" = "Mixinのサーバーにエラーが発生しています";
 "mixin_support" = "Mixin Support";
 "mnemonic_phrase" = "Mnemonic Phrase";
@@ -879,6 +903,7 @@
 "overwrite" = "Overwrite";
 "owner" = "オーナー";
 "paid" = "Paid";
+"paid_recovery_service" = "Paid Recovery Service";
 "participants" = "参加者";
 "participants_count" = "%@人のメンバー";
 "paste" = "Paste";
@@ -964,6 +989,8 @@
 "privacy_wallet_tip_title" = "What’s the Privacy Wallet?";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "プロフィール";
+"profile_badge" = "Profile Badge";
+"profile_badge_description" = "An exclusive badge next to your name";
 "profile_photo" = "プロフィール画像";
 "profile_share_bot_hint" = "ミニアプリをシェアしたい場合は、まずミニアプリを連絡先に追加してください。";
 "qr_code" = "QRコード";
@@ -1014,6 +1041,7 @@
 "remove_emergency_contact_for_sure" = "Remove recovery contact for sure?";
 "remove_from_group" = "グループから退会させる";
 "remove_stickers" = "スタンプの削除";
+"renew_plan" = "Renew Plan";
 "reply" = "返信";
 "report" = "報告";
 "report_and_block" = "報告してブロックしますか?";
@@ -1064,6 +1092,7 @@
 "revoking_multisig_signature" = "Revoking Multisig Signature";
 "room_is_full" = "ルームが満員です";
 "safe" = "SAFE";
+"safe_members" = "Safe Members";
 "save" = "保存";
 "save_image" = "画像を保存する";
 "save_to_camera_roll" = "カメラロールに保存する";
@@ -1380,10 +1409,13 @@
 "update_now" = "Update Now";
 "upgrade" = "Upgrade";
 "upgrade_database" = "データベースをアップグレード";
+"upgrade_plan" = "Upgrade Plan";
+"upgrade_plan_for" = "Upgrade for %@";
 "upgrade_safe" = "Upgrade safe";
 "upgrade_tip" = "Upgrade TIP";
 "upgrade_tip_successfully" = "Upgrade TIP successfully";
 "upgrading" = "アップデート中";
+"upgrading_plan" = "Upgrading";
 "upgrading_tip_terminated_unexpectedly" = "Upgrading TIP terminated unexpectedly, click \"Continue\" to complete the upgrade";
 "upload_mobile_contacts" = "連絡先をアップロードする";
 "uploading" = "アップロードしています...";
@@ -1423,6 +1455,7 @@
 "view_emergency_contact" = "View recovery contact";
 "view_on_explorer" = "View on Explorer";
 "view_on_marketplace" = "View on Marketplace";
+"view_plan" = "View Plan";
 "view_wallet" = "ウォレットを確認";
 "voice_call_cancelled" = "グループ通話がキャンセルされました";
 "voice_call_has_been_declined" = "権限不足です";

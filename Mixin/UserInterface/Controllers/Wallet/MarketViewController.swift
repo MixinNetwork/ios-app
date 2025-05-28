@@ -788,7 +788,7 @@ extension MarketViewController {
             static func contentNotApplicable(title: String) -> Info {
                 Info(
                     title: title,
-                    primaryContent: notApplicable,
+                    primaryContent: .notApplicable,
                     primaryContentColor: R.color.text_tertiary()!
                 )
             }
@@ -906,7 +906,7 @@ extension MarketViewController {
                 if let value = Decimal(string: market.marketCap, locale: .enUSPOSIX), !value.isZero {
                     marketCap = NamedLargeNumberFormatter.string(number: value, currencyPrefix: true)
                 } else {
-                    marketCap = notApplicable
+                    marketCap = .notApplicable
                 }
                 let fiatMoneyVolume24H: String?
                 if let totalVolume = Decimal(string: market.totalVolume, locale: .enUSPOSIX) {
@@ -1011,7 +1011,7 @@ extension MarketViewController {
         func updateWithMarketNotFound() {
             self.stats = nil
             if let balance {
-                self.balance = balance.replacing(change: notApplicable, changeColor: .arbitrary(R.color.text_quaternary()!))
+                self.balance = balance.replacing(change: .notApplicable, changeColor: .arbitrary(R.color.text_quaternary()!))
             }
             self.marketInfos = [
                 Info.contentNotApplicable(title: R.string.localizable.market_cap().uppercased()),

@@ -37,6 +37,7 @@ class WebMoreMenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        titleView.backgroundColor = R.color.background()
         titleView.layer.cornerRadius = 13
         titleView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         titleView.clipsToBounds = true

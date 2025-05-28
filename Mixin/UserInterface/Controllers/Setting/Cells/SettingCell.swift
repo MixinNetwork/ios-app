@@ -19,6 +19,18 @@ final class SettingCell: ModernSelectedBackgroundCell {
         return view
     }()
     
+    private(set) lazy var subtitleImageView: UIImageView = {
+        let view = UIImageView()
+        view.contentMode = .center
+        view.setContentHuggingPriority(.required, for: .horizontal)
+        view.setContentCompressionResistancePriority(.required, for: .horizontal)
+        view.snp.makeConstraints { (make) in
+            make.width.height.equalTo(18).priority(.almostRequired)
+        }
+        subtitleImageViewIfLoaded = view
+        return view
+    }()
+    
     private(set) lazy var accessoryImageView: UIImageView = {
         let view = UIImageView()
         view.setContentHuggingPriority(.required, for: .horizontal)
@@ -47,6 +59,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
     }()
     
     private(set) var iconImageViewIfLoaded: UIImageView?
+    private(set) var subtitleImageViewIfLoaded: UIImageView?
     private(set) var accessoryImageViewIfLoaded: UIImageView?
     private(set) var accessorySwitchIfLoaded: UISwitch?
     private(set) var accessoryBusyIndicatorIfLoaded: ActivityIndicatorView?
@@ -75,7 +88,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
             case .destructive:
                 R.color.red()
             }
-            subtitleLabel.text = row.subtitle
+            setSubtitle(row.subtitle)
             updateAccessory(row.accessory, animated: false)
             if let menu = row.menu {
                 let button: MenuTriggerButton
@@ -103,6 +116,28 @@ final class SettingCell: ModernSelectedBackgroundCell {
             view.backgroundColor = R.color.background_input_selected()
             return view
         }()
+    }
+    
+    func setSubtitle(_ subtitle: SettingsRow.Subtitle?) {
+        switch subtitle {
+        case .text(let text):
+            subtitleLabel.text = text
+            subtitleImageViewIfLoaded?.isHidden = true
+        case .icon(let image):
+            subtitleLabel.text = nil
+            let imageView: UIImageView
+            if let view = subtitleImageViewIfLoaded {
+                imageView = view
+            } else {
+                imageView = subtitleImageView
+                contentStackView.insertArrangedSubview(imageView, at: 3)
+            }
+            imageView.image = image
+            imageView.isHidden = false
+        case nil:
+            subtitleLabel.text = nil
+            subtitleImageViewIfLoaded?.isHidden = true
+        }
     }
     
     func updateAccessory(_ accessory: SettingsRow.Accessory, animated: Bool) {

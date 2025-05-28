@@ -75,7 +75,8 @@ extension ScreenLockSettingViewController {
     private func setNewTimeoutInterval(_ interval: Double) {
         AppGroupUserDefaults.User.lastLockScreenBiometricVerifiedDate = Date()
         AppGroupUserDefaults.User.lockScreenTimeoutInterval = interval
-        timeoutIntervalRow.subtitle = ScreenLockTimeFormatter.string(from: AppGroupUserDefaults.User.lockScreenTimeoutInterval)
+        let subtitle = ScreenLockTimeFormatter.string(from: AppGroupUserDefaults.User.lockScreenTimeoutInterval)
+        timeoutIntervalRow.subtitle = .text(subtitle)
         NotificationCenter.default.post(name: Self.screenLockTimeoutDidUpdateNotification, object: nil)
     }
     

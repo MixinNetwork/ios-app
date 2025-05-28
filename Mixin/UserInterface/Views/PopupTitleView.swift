@@ -37,8 +37,6 @@ final class PopupTitleView: UIView {
     }
     
     private func addSubviews() {
-        backgroundColor = .background
-        
         contentStackView.axis = .horizontal
         contentStackView.alignment = .center
         contentStackView.distribution = .fill

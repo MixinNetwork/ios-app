@@ -219,7 +219,7 @@ extension SettingsDataSource {
         guard let cell = tableView?.cellForRow(at: indexPath) as? SettingCell else {
             return
         }
-        cell.subtitleLabel.text = row.subtitle
+        cell.setSubtitle(row.subtitle)
     }
     
     @objc func updateAccessory(_ notification: Notification) {

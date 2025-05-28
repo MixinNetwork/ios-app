@@ -137,7 +137,7 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
             titleLabel.text = title
             titleLabel.textColor = R.color.text()
         } else {
-            titleLabel.text = notApplicable
+            titleLabel.text = .notApplicable
             titleLabel.textColor = R.color.text_tertiary()!
         }
     }

@@ -1,7 +1,7 @@
 import UIKit
-import UserNotifications
 import AVFoundation
 import WebKit
+import StoreKit
 import FirebaseCore
 import FirebaseAnalytics
 import FirebasePerformance
@@ -64,6 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                     stopsRegardlessApplicationState: false,
                                                     completionHandler: nil)
         }
+        IAPTransactionObserver.global.listenToTransactionUpdates()
         return true
     }
     

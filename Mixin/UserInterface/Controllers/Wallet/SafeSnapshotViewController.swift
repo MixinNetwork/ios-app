@@ -425,7 +425,7 @@ extension SafeSnapshotViewController {
             let style: Row.Style
             let sender: String
             if deposit.sender.isEmpty {
-                sender = notApplicable
+                sender = .notApplicable
                 style = .unavailable
             } else {
                 sender = deposit.sender
@@ -437,7 +437,7 @@ extension SafeSnapshotViewController {
             let receiver: String
             let receiverStyle: Row.Style
             if withdrawal.receiver.isEmpty {
-                receiver = notApplicable
+                receiver = .notApplicable
                 receiverStyle = .unavailable
             } else {
                 receiver = withdrawal.receiver
@@ -469,7 +469,7 @@ extension SafeSnapshotViewController {
                 opponentName = name
                 style = []
             } else {
-                opponentName = notApplicable
+                opponentName = .notApplicable
                 style = .unavailable
             }
             if snapshot.amount.hasMinusPrefix {

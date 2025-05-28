@@ -182,8 +182,7 @@ extension User {
     
     public struct Membership: Codable, DatabaseValueConvertible {
         
-        public enum Plan: String, Codable {
-            case none
+        public enum Plan: String, Codable, CaseIterable {
             case advance
             case elite
             case prosperity
@@ -203,14 +202,14 @@ extension User {
         }
 #endif
         
-        public let plan: Plan
+        public let plan: Plan?
         public let expiredAt: Date
         
-        public var unexpiredPlan: Plan {
+        public var unexpiredPlan: Plan? {
             if expiredAt.timeIntervalSinceNow > 0 {
                 plan
             } else {
-                .none
+                nil
             }
         }
         
@@ -227,7 +226,7 @@ extension User {
         public init(from decoder: any Decoder) throws {
             let container: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
             let expiredAt = try container.decode(String.self, forKey: .expiredAt)
-            self.plan = try container.decode(User.Membership.Plan.self, forKey: .plan)
+            self.plan = try? container.decode(Plan.self, forKey: .plan)
             self.expiredAt = DateFormatter.iso8601Full.date(from: expiredAt) ?? .distantPast
         }
         
@@ -244,7 +243,7 @@ extension User {
         
         public func encode(to encoder: any Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(plan, forKey: .plan)
+            try container.encode(plan?.rawValue ?? "none", forKey: .plan)
             try container.encode(expiredAt.toUTCString(), forKey: .expiredAt)
         }
         

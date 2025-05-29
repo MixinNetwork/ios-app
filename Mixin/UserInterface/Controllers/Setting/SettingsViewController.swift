@@ -19,13 +19,13 @@ final class SettingsViewController: SettingsTableViewController {
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [
-            SettingsRow(icon: R.image.setting.ic_category_appearance(),
-                        title: R.string.localizable.appearance(),
+            SettingsRow(icon: R.image.setting.category_membership(),
+                        title: R.string.localizable.mixin_one(),
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [
-            SettingsRow(icon: R.image.setting.category_membership(),
-                        title: R.string.localizable.mixin_one(),
+            SettingsRow(icon: R.image.setting.ic_category_appearance(),
+                        title: R.string.localizable.appearance(),
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [
@@ -49,7 +49,7 @@ final class SettingsViewController: SettingsTableViewController {
     ])
     
     private var membershipRow: SettingsRow {
-        dataSource.sections[2].rows[0]
+        dataSource.sections[1].rows[0]
     }
     
     override func viewDidLoad() {
@@ -100,15 +100,15 @@ extension SettingsViewController: UITableViewDelegate {
                 setting = DataAndStorageSettingsViewController()
             }
         case 1:
-            setting = AppearanceSettingsViewController()
-        case 2:
             if let membership = LoginManager.shared.account?.membership, let plan = membership.plan {
                 setting = MembershipViewController(plan: plan, expiredAt: membership.expiredAt)
             } else {
-                let buy = MembershipPlansViewController()
+                let buy = MembershipPlansViewController(currentPlan: nil)
                 present(buy, animated: true)
                 return
             }
+        case 2:
+            setting = AppearanceSettingsViewController()
         case 3:
             setting = DesktopViewController()
         case 4:

@@ -116,7 +116,7 @@
 "all_assets_will_be_lost" = "所有資產將無法取回";
 "all_conversations" = "所有會話";
 "all_dates" = "所有日期";
-"all_invoices" = "全部收據";
+"all_invoices" = "全部賬單";
 "all_photos" = "所有照片";
 "all_signer_failure" = "所有節點失敗";
 "all_time_high" = "歷史最高";
@@ -672,10 +672,10 @@
 "invite_to_group_via_link" = "群邀請連結";
 "invited_by_stranger" = "邀請人不是你的聯絡人";
 "invites_you_to_a_voice_call" = "發起了語音通話";
-"invoice" = "收據";
+"invoice" = "賬單";
 "invoice_renew_plan" = "續訂%@會員";
 "invoice_upgrade_plan" = "升級到%@";
-"invoices" = "收據";
+"invoices" = "賬單";
 "join_group" = "加入群組";
 "joined_in" = "%@ 加入";
 "keep_running_foreground" = "不要關閉螢幕並保持 Mixin 在前臺執行";

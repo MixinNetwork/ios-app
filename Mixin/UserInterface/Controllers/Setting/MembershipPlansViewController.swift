@@ -33,8 +33,12 @@ final class MembershipPlansViewController: UIViewController {
         }
     }
     
-    init() {
-        self.selectedIndex = nil
+    init(currentPlan: SafeMembership.Plan?) {
+        self.selectedIndex = if let currentPlan {
+            SafeMembership.Plan.allCases.firstIndex(of: currentPlan)
+        } else {
+            nil
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -349,9 +353,14 @@ extension MembershipPlansViewController: UICollectionViewDataSource {
 extension MembershipPlansViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.selectedIndex = indexPath.item
-        reload(sections: [.introduction, .badge, .benefits])
-        reloadBuyButtonTitle(observer: .global)
+        switch Section(rawValue: indexPath.section)! {
+        case .planSelector:
+            self.selectedIndex = indexPath.item
+            reload(sections: [.introduction, .badge, .benefits])
+            reloadBuyButtonTitle(observer: .global)
+        case .introduction, .badge, .benefits:
+            break
+        }
     }
     
 }

@@ -60,21 +60,6 @@ final class MembershipOrderViewController: UIViewController {
                 order.source
             }
         }
-        let (plan, planIcon) = switch order.after.knownCase {
-        case .basic:
-            (R.string.localizable.membership_advance(), R.image.membership_advance_large())
-        case .standard:
-            (R.string.localizable.membership_elite(), R.image.membership_elite_large())
-        case .premium:
-            (R.string.localizable.membership_prosperity(), UserBadgeIcon.prosperityImage(dimension: 18))
-        case nil:
-            (order.after.rawValue, nil)
-        }
-        let time = if let date = DateFormatter.iso8601Full.date(from: order.createdAt) {
-            DateFormatter.dateFull.string(from: date)
-        } else {
-            order.createdAt
-        }
         rows = [
             Row(
                 title: R.string.localizable.transaction_id().uppercased(),
@@ -83,12 +68,36 @@ final class MembershipOrderViewController: UIViewController {
             Row(
                 title: R.string.localizable.buy_via().uppercased(),
                 content: orderSource
-            ),
-            Row(
-                title: R.string.localizable.membership_plan().uppercased(),
-                content: plan,
-                image: planIcon
-            ),
+            )
+        ]
+        
+        switch order.transition {
+        case .buyStars, .none:
+            break
+        case .upgrade(let plan), .renew(let plan):
+            let (plan, planIcon) = switch plan {
+            case .basic:
+                (R.string.localizable.membership_advance(), R.image.membership_advance_large())
+            case .standard:
+                (R.string.localizable.membership_elite(), R.image.membership_elite_large())
+            case .premium:
+                (R.string.localizable.membership_prosperity(), UserBadgeIcon.prosperityImage(dimension: 18))
+            }
+            rows.append(
+                Row(
+                    title: R.string.localizable.membership_plan().uppercased(),
+                    content: plan,
+                    image: planIcon
+                )
+            )
+        }
+        
+        let time = if let date = DateFormatter.iso8601Full.date(from: order.createdAt) {
+            DateFormatter.dateFull.string(from: date)
+        } else {
+            order.createdAt
+        }
+        rows.append(contentsOf: [
             Row(
                 title: R.string.localizable.amount().uppercased(),
                 content: "USD " + order.actualAmount
@@ -97,7 +106,8 @@ final class MembershipOrderViewController: UIViewController {
                 title: R.string.localizable.time().uppercased(),
                 content: time
             ),
-        ]
+        ])
+        
         tableView.reloadData()
     }
     

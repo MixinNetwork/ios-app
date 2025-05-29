@@ -202,6 +202,7 @@
 "bots" = "BOTS";
 "bots_title" = "Bots";
 "browser" = "Browser";
+"buy_stars" = "Buy Stars";
 "buy_token" = "Buy %@";
 "buy_via" = "Via";
 "calculating" = "Calculating...";
@@ -1024,6 +1025,7 @@
 "recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your phone number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "red_up_green_down" = "Red Up / Green Down";
 "refresh" = "Actualizar";
+"refunded" = "Refunded";
 "reject" = "Reject";
 "reject_transaction" = "Reject Transaction";
 "rejecting_transaction" = "Rejecting Transaction";
@@ -1256,6 +1258,8 @@
 "speed_up" = "Speed Up";
 "speed_up_transaction" = "Speed Up Transaction";
 "speed_up_transaction_description" = "If the transaction is too far along this may not be possible";
+"star" = "Star";
+"stars" = "Stars";
 "start" = "Comenzar";
 "start_backup" = "Start Backup";
 "start_messaging" = "Empezar a enviar mensajes";

@@ -15,22 +15,30 @@ public struct MembershipOrder {
         
     }
     
+    public enum Category: String, Codable {
+        case subscription = "SUB"
+        case transaction = "TRANS"
+    }
+    
     public enum Status: String, Codable {
         case initial
         case paid
         case cancel
         case expired
         case failed
+        case refund
     }
     
     public let orderID: UUID
+    public let category: UnknownableEnum<Category>
     public let amount: String
     public let actualAmount: String
     public let originalAmount: String
-    public let after: UnknownableEnum<SafeMembership.Plan>
-    public let before: UnknownableEnum<SafeMembership.Plan>
+    public let after: String
+    public let before: String
     public let createdAt: String
     public let fiatOrder: FiatOrder?
+    public let transactionsQuantity: Int
     public let source: String
     public let status: UnknownableEnum<Status>
     
@@ -40,13 +48,15 @@ extension MembershipOrder: Codable {
     
     enum CodingKeys: String, CodingKey {
         case orderID = "order_id"
-        case amount = "amount"
+        case category
+        case amount
         case actualAmount = "amount_actual"
         case originalAmount = "amount_original"
         case after
         case before
         case createdAt = "created_at"
         case fiatOrder = "fiat_order"
+        case transactionsQuantity = "quantity_transactions"
         case source
         case status
     }

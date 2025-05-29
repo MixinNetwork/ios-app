@@ -202,6 +202,7 @@
 "bots" = "机器人";
 "bots_title" = "机器人";
 "browser" = "浏览器";
+"buy_stars" = "购买 Stars";
 "buy_token" = "买入 %@";
 "buy_via" = "付款方式";
 "calculating" = "正在计算...";
@@ -1024,6 +1025,7 @@
 "recovery_kit_instruction" = "Mixin Messenger 的 MPC 钱包基于去中心化密钥协议 TIP 构建，您可以通过手机号、助记词或可信联系人登录恢复你的账号，钱包完整的密钥只存在当前设备的 TEE 安全环境中，阅读文档以了解%@。";
 "red_up_green_down" = "红涨绿跌";
 "refresh" = "刷新";
+"refunded" = "已退款";
 "reject" = "拒绝";
 "reject_transaction" = "拒绝交易";
 "rejecting_transaction" = "正在拒绝";
@@ -1256,6 +1258,8 @@
 "speed_up" = "加速";
 "speed_up_transaction" = "加速交易";
 "speed_up_transaction_description" = "如果交易已接近完成，可能无法加速";
+"star" = "Star";
+"stars" = "Stars";
 "start" = "开始";
 "start_backup" = "开始备份";
 "start_messaging" = "开始聊天";

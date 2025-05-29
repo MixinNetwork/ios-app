@@ -28,22 +28,39 @@
                                 </constraints>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="ANy-45-Tot">
-                                <rect key="frame" x="50" y="0.0" width="238" height="42"/>
+                                <rect key="frame" x="50" y="0.0" width="116" height="42"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U8T-rK-xrD">
-                                        <rect key="frame" x="0.0" y="2" width="238" height="35"/>
+                                        <rect key="frame" x="0.0" y="2" width="116" height="35"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kcz-vB-DS5">
-                                        <rect key="frame" x="0.0" y="40" width="238" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="40" width="116" height="0.0"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <edgeInsets key="layoutMargins" top="2" left="0.0" bottom="2" right="0.0"/>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="bottom" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="YFt-gS-io3">
+                                <rect key="frame" x="184" y="0.0" width="104" height="42"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vYG-uo-UpP">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="42"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="19"/>
+                                        <color key="textColor" name="market_green"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="31q-mn-f13" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="54" y="0.0" width="50" height="42"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                        <color key="textColor" name="text"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                             </stackView>
                         </subviews>
                     </stackView>
@@ -58,7 +75,10 @@
             </tableViewCellContentView>
             <color key="backgroundColor" name="background"/>
             <connections>
+                <outlet property="contentStackView" destination="kow-VF-Hdf" id="AwH-KN-qHJ"/>
                 <outlet property="iconImageView" destination="bUU-0x-7lb" id="2jJ-Sf-qMv"/>
+                <outlet property="starsCountLabel" destination="vYG-uo-UpP" id="dDU-hF-1XA"/>
+                <outlet property="starsUnitLabel" destination="31q-mn-f13" id="vvj-n0-pR5"/>
                 <outlet property="statusLabel" destination="kcz-vB-DS5" id="dP0-bk-tdA"/>
                 <outlet property="titleLabel" destination="U8T-rK-xrD" id="bUP-Pv-nki"/>
             </connections>
@@ -68,6 +88,9 @@
     <resources>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="market_green">
+            <color red="0.31372549019607843" green="0.74117647058823533" blue="0.36078431372549019" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

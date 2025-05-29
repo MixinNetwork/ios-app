@@ -4,17 +4,29 @@ import MixinServices
 
 extension MembershipOrder {
     
-    public enum Transition {
-        case upgrade
-        case renew
+    enum Transition {
+        case upgrade(SafeMembership.Plan)
+        case renew(SafeMembership.Plan)
+        case buyStars(Int)
     }
     
-    public var transition: Transition {
-        switch (before.knownCase, after.knownCase) {
-        case (.none, _), (.basic, .standard), (.standard, .premium):
-                .upgrade
-        default:
-                .renew
+    var transition: Transition? {
+        switch category.knownCase {
+        case .subscription:
+            guard let after = SafeMembership.Plan(rawValue: after) else {
+                return nil
+            }
+            let before = SafeMembership.Plan(rawValue: before)
+            switch (before, after) {
+            case (.none, _), (.basic, .standard), (.standard, .premium):
+                return .upgrade(after)
+            default:
+                return .renew(after)
+            }
+        case .transaction:
+            return .buyStars(transactionsQuantity)
+        case .none:
+            return nil
         }
     }
     
@@ -52,6 +64,8 @@ extension MembershipOrder.Status {
             R.string.localizable.expired()
         case .failed:
             R.string.localizable.failed()
+        case .refund:
+            R.string.localizable.refunded()
         }
     }
     

@@ -18,7 +18,7 @@ final class MembershipPlansViewController: UIViewController {
     private var products: [String: Product] = [:] // Key is product.id
     
     private var selectedPlanDetails: SafeMembership.PlanDetail? {
-        if let selectedIndex {
+        if !planDetails.isEmpty, let selectedIndex {
             planDetails[selectedIndex]
         } else {
             nil
@@ -26,7 +26,7 @@ final class MembershipPlansViewController: UIViewController {
     }
     
     private var selectedBenefits: [Benefit] {
-        if let selectedIndex {
+        if !benefits.isEmpty, let selectedIndex {
             benefits[selectedIndex]
         } else {
             []
@@ -147,6 +147,8 @@ final class MembershipPlansViewController: UIViewController {
             return
         }
         buyButton.isBusy = true
+        let job = AddBotIfNotFriendJob(userID: BotUserID.mixinSafe)
+        ConcurrentJobQueue.shared.addJob(job: job)
         Task { [products] in
             do {
                 let order = try await SafeAPI.postMembershipOrder(detail: detail)

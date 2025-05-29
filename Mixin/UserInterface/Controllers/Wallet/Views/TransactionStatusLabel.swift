@@ -37,7 +37,7 @@ final class TransactionStatusLabel: InsetLabel {
             setColor(.gray)
         case .paid:
             setColor(.green)
-        case .cancel, .expired, .failed, .none:
+        case .cancel, .expired, .failed, .refund, .none:
             setColor(.red)
         }
     }

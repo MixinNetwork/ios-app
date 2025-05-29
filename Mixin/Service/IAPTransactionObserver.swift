@@ -63,7 +63,7 @@ final class IAPTransactionObserver {
                         ConcurrentJobQueue.shared.addJob(job: job)
                         isFinished = true
                         await transaction.finish()
-                    case .cancel, .expired, .failed, .none:
+                    case .cancel, .expired, .failed, .refund, .none:
                         // TODO: Handle when user paid but order failed
                         Logger.general.error(category: "IAP", message: "Order Paid: \(id)")
                         isFinished = true

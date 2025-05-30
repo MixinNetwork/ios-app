@@ -30,6 +30,7 @@ final class Hud: NSObject {
     
     private var isViewLoaded = false
     private var isShowing = false
+    private var style: Style = .busy
     
     func set(style: Style, text: String) {
         switch style {
@@ -51,13 +52,20 @@ final class Hud: NSObject {
         }
         label.text = text
         containerView.isUserInteractionEnabled = style == .busy
+        self.style = style
     }
     
     func scheduleAutoHidden() {
         guard isShowing else {
             return
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+        let deadline: DispatchTime = if case .error = style {
+            .now() + 2.5
+        } else {
+            .now() + 1.5
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: deadline) {
             self.hide()
         }
     }

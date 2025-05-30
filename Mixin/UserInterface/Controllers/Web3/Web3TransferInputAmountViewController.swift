@@ -10,9 +10,9 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         }
         let balanceInsufficient = tokenAmount > token.decimalBalance
         let feeInsufficient = if payment.sendingNativeToken {
-            tokenAmount > token.decimalBalance - fee.token
+            tokenAmount > token.decimalBalance - fee.amount
         } else {
-            fee.token > feeToken.decimalBalance
+            fee.amount > feeToken.decimalBalance
         }
         return if balanceInsufficient {
             .insufficient(R.string.localizable.insufficient_balance())
@@ -20,7 +20,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
             .insufficient(
                 R.string.localizable.insufficient_fee_description(
                     CurrencyFormatter.localizedString(
-                        from: fee.token,
+                        from: fee.amount,
                         format: .precision,
                         sign: .never,
                         symbol: .custom(feeToken.symbol)
@@ -88,13 +88,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         let amount = tokenAmount
         reviewButton.isEnabled = false
         reviewButton.isBusy = true
-        let proposer: Web3TransferPreviewViewController.Proposer
-        switch payment.toType {
-        case .privacyWallet:
-            proposer = .web3ToMixinWallet
-        case .addressBook, .arbitrary:
-            proposer = .web3ToAddress
-        }
+        let proposer: Web3TransferPreviewViewController.Proposer = .web3ToAddress(addressLabel: payment.toType.addressLabel)
         DispatchQueue.global().async { [payment] in
             let initError: Error?
             do {
@@ -133,7 +127,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         }
         let multiplier = self.multiplier(tag: sender.tag)
         if payment.sendingNativeToken {
-            let availableBalance = max(0, token.decimalBalance - fee.token)
+            let availableBalance = max(0, token.decimalBalance - fee.amount)
             replaceAmount(availableBalance * multiplier)
         } else {
             replaceAmount(token.decimalBalance * multiplier)
@@ -155,14 +149,14 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                 }
                 let fee = try await operation.loadFee()
                 let title = CurrencyFormatter.localizedString(
-                    from: fee.token,
+                    from: fee.amount,
                     format: .precision,
                     sign: .never,
                     symbol: .custom(operation.feeToken.symbol)
                 )
                 let availableBalance = if payment.sendingNativeToken {
                     CurrencyFormatter.localizedString(
-                        from: max(0, payment.token.decimalBalance - fee.token),
+                        from: max(0, payment.token.decimalBalance - fee.amount),
                         format: .precision,
                         sign: .never,
                         symbol: .custom(operation.feeToken.symbol)

@@ -268,6 +268,10 @@ extension RouteAPI {
         )
     }
     
+    static func asset(assetID: String, address: String) async throws -> Web3Token {
+        try await request(method: .get, path: "/assets/\(assetID)?address=\(address)")
+    }
+    
     static func asset(
         assetID: String,
         address: String,

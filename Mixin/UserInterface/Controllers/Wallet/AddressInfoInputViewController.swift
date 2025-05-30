@@ -137,10 +137,11 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                     case let .label(address):
                         nextButton.isBusy = true
                         AddressValidator.validate(
+                            chainID: token.chainID,
                             assetID: token.assetID,
                             destination: address.destination,
                             tag: address.tag
-                        ) { [weak self] address in
+                        ) { [weak self] (_, address) in
                             guard let self else {
                                 return
                             }
@@ -164,10 +165,11 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
             case let .memo(destination):
                 nextButton.isBusy = true
                 AddressValidator.validate(
+                    chainID: token.chainID,
                     assetID: token.assetID,
                     destination: destination,
                     tag: content
-                ) { [weak self] address in
+                ) { [weak self] (_, address) in
                     guard let self else {
                         return
                     }
@@ -354,16 +356,17 @@ extension AddressInfoInputViewController {
         nextButton.isBusy = true
         let destination = self.destination(bip21Unchecked: destination)
         AddressValidator.validate(
+            chainID: token.chainID,
             assetID: token.assetID,
             destination: destination,
             tag: tag
-        ) { [weak self, token] (address) in
+        ) { [weak self, token] (withdrawalDestination, _) in
             guard let self else {
                 return
             }
             self.nextButton.isBusy = false
             if let token = token as? MixinTokenItem {
-                let next = WithdrawInputAmountViewController(tokenItem: token, destination: .temporary(address))
+                let next = WithdrawInputAmountViewController(tokenItem: token, destination: withdrawalDestination)
                 self.navigationController?.pushViewController(next, animated: true)
             }
         } onFailure: { [weak self] error in

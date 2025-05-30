@@ -62,7 +62,7 @@ enum AddressValidator {
                 
                 let temporaryAddress = try await checkAddress(
                     chainID: tokenItem.chainID,
-                    assetID: transfer.assetID,
+                    assetID: tokenItem.assetID,
                     destination: transfer.destination,
                     tag: nil
                 )
@@ -74,7 +74,7 @@ enum AddressValidator {
                     }
                     
                     let feeItem = try await checkFee(
-                        assetID: transfer.assetID,
+                        assetID: tokenItem.assetID,
                         amount: transfer.amount,
                         destination: temporaryAddress.destination)
                     withdrawFeeItem = WithdrawFeeItem(amount: feeItem.amount, tokenItem: feeItem.tokenItem)

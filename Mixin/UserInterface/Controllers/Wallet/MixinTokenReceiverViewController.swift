@@ -58,7 +58,7 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
                         token: token,
                         tokenAmount: amount,
                         fiatMoneyAmount: fiatMoneyAmount,
-                        memo: ""
+                        memo: transfer.memo ?? ""
                     )
                     
                     payment.checkPreconditions(

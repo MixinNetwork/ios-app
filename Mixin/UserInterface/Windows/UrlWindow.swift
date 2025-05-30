@@ -546,7 +546,14 @@ class UrlWindow {
                 UIApplication.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
             }
         } onFailure: { error in
-            Logger.general.debug(category: "UrlWindow", message: "Invalid withdrawal link: \(string)")
+            switch error {
+            case AddressValidator.ValidationError.invalidFormat, TransferLinkError.invalidFormat:
+                Logger.general.error(category: "URLWindow", message: "Invalid payment: \(string)")
+            case TransferLinkError.assetNotFound:
+                Logger.general.error(category: "URLWindow", message: "Asset not found: \(string)")
+            default:
+                Logger.general.debug(category: "UrlWindow", message: "Invalid withdrawal link: \(string)")
+            }
             hud.set(style: .error, text: error.localizedDescription)
             hud.scheduleAutoHidden()
         }

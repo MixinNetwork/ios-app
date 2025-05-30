@@ -103,7 +103,7 @@ extension SettingsViewController: UITableViewDelegate {
             if let membership = LoginManager.shared.account?.membership, let plan = membership.plan {
                 setting = MembershipViewController(plan: plan, expiredAt: membership.expiredAt)
             } else {
-                let buy = MembershipPlansViewController(currentPlan: nil)
+                let buy = MembershipPlansViewController(selectedPlan: nil)
                 present(buy, animated: true)
                 return
             }

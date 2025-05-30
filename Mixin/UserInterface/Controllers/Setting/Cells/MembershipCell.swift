@@ -28,6 +28,7 @@ final class MembershipCell: UITableViewCell {
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )
+        viewPlanButton.titleLabel?.adjustsFontForContentSizeCategory = true
         titleLabel.text = R.string.localizable.membership_plan()
     }
     
@@ -41,17 +42,31 @@ final class MembershipCell: UITableViewCell {
             badgeImageView.image = R.image.membership_elite_large()
         case .prosperity:
             membershipLabel.text = R.string.localizable.membership_prosperity()
-            badgeImageView.image = UserBadgeIcon.prosperityImage(dimension: 28)
+            badgeImageView.image = UserBadgeIcon.prosperityImage
         }
         let date = DateFormatter.dateSimple.string(from: expiredAt)
+        let viewPlanAttributes: AttributeContainer = {
+            var container = AttributeContainer()
+            container.font = UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 16, weight: .medium)
+            )
+            container.foregroundColor = .white
+            return container
+        }()
         if expiredAt.timeIntervalSinceNow < 0 {
             expirationLabel.text = R.string.localizable.expired_on(date)
             expirationLabel.textColor = R.color.error_red()
-            viewPlanButton.setTitle(R.string.localizable.renew_plan(), for: .normal)
+            viewPlanButton.configuration?.attributedTitle = AttributedString(
+                R.string.localizable.renew_plan(),
+                attributes: viewPlanAttributes
+            )
         } else {
             expirationLabel.text = R.string.localizable.expires_on(date)
             expirationLabel.textColor = R.color.text_secondary()
-            viewPlanButton.setTitle(R.string.localizable.view_plan(), for: .normal)
+            viewPlanButton.configuration?.attributedTitle = AttributedString(
+                R.string.localizable.view_plan(),
+                attributes: viewPlanAttributes
+            )
         }
     }
     

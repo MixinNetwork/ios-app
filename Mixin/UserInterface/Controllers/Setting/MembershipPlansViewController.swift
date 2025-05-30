@@ -447,7 +447,7 @@ extension MembershipPlansViewController {
             ]
             switch detail.plan {
             case .basic:
-                let recoveryFee = NSDecimalNumber(decimal: recoveryFee)
+                let recoveryFee = NSDecimalNumber(decimal: 2)
                 benefits.append(
                     Benefit(
                         icon: R.image.membership_benefit_recovery()!,

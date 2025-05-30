@@ -18,7 +18,7 @@ final class MembershipOrderStatusCell: UITableViewCell {
             case .standard:
                 R.image.membership_elite_large()
             case .premium:
-                UserBadgeIcon.prosperityImage(dimension: 70)
+                UserBadgeIcon.prosperityImage
             }
         case .buyStars:
             R.image.mixin_star()

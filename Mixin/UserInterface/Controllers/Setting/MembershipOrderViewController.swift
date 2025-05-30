@@ -81,7 +81,7 @@ final class MembershipOrderViewController: UIViewController {
             case .standard:
                 (R.string.localizable.membership_elite(), R.image.membership_elite_large())
             case .premium:
-                (R.string.localizable.membership_prosperity(), UserBadgeIcon.prosperityImage(dimension: 18))
+                (R.string.localizable.membership_prosperity(), UserBadgeIcon.prosperityImage)
             }
             rows.append(
                 Row(

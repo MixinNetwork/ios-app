@@ -4,7 +4,11 @@ import MixinServices
 
 enum UserBadgeIcon {
     
-    private static let prosperityImageData = try! Data(contentsOf: R.file.user_membership_prosperityJson.url()!)
+    static let prosperityImage: SDAnimatedImage? = {
+        let resource = R.file.user_membership_prosperityJson.url()!
+        let data = try! Data(contentsOf: resource)
+        return SDAnimatedImage(data: data, scale: UIScreen.main.scale)
+    }()
     
     static func image(
         membership: User.Membership?,
@@ -39,18 +43,6 @@ enum UserBadgeIcon {
         )
     }
     
-    static func prosperityImage(dimension: CGFloat) -> SDAnimatedImage? {
-        let size = CGSize(
-            width: dimension * UIScreen.main.scale,
-            height: dimension * UIScreen.main.scale
-        )
-        return SDAnimatedImage(
-            data: prosperityImageData,
-            scale: UIScreen.main.scale,
-            options: [.decodeThumbnailPixelSize: size]
-        )
-    }
-    
 }
 
 extension User.Membership {
@@ -62,7 +54,7 @@ extension User.Membership {
         case .elite:
             R.image.membership_elite()
         case .prosperity:
-            UserBadgeIcon.prosperityImage(dimension: 18)
+            UserBadgeIcon.prosperityImage
         case .none:
             nil
         }

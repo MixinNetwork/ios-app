@@ -27,7 +27,7 @@ final class MembershipPlanBadgeCell: UICollectionViewCell {
         case .standard:
             R.image.membership_elite_large()
         case .premium:
-            UserBadgeIcon.prosperityImage(dimension: 24)
+            UserBadgeIcon.prosperityImage
         }
     }
     

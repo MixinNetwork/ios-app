@@ -41,7 +41,7 @@ final class MembershipPlanSelectorCell: UICollectionViewCell {
             iconImageView.image = R.image.membership_elite()
         case .premium:
             nameLabel.text = R.string.localizable.membership_prosperity()
-            iconImageView.image = UserBadgeIcon.prosperityImage(dimension: 18)
+            iconImageView.image = UserBadgeIcon.prosperityImage
         }
     }
     

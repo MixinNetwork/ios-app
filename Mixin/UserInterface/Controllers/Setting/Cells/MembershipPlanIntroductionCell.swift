@@ -21,19 +21,38 @@ final class MembershipPlanIntroductionCell: UICollectionViewCell {
     }
     
     func load(plan: SafeMembership.Plan) {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        paragraphStyle.minimumLineHeight = 18
+        let descriptionAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: R.color.text_secondary()!,
+            .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
+            .paragraphStyle: paragraphStyle,
+        ]
         switch plan {
         case .basic:
             iconImageView.image = R.image.membership_advance_large()
             nameLabel.text = R.string.localizable.membership_advance()
-            descriptionLabel.text = R.string.localizable.membership_advance_description()
+            descriptionLabel.attributedText = NSAttributedString(
+                string: R.string.localizable.membership_advance_description(),
+                attributes: descriptionAttributes
+            )
         case .standard:
             iconImageView.image = R.image.membership_elite_large()
             nameLabel.text = R.string.localizable.membership_elite()
-            descriptionLabel.text = R.string.localizable.membership_elite_description()
+            descriptionLabel.attributedText = NSAttributedString(
+                string: R.string.localizable.membership_elite_description(),
+                attributes: descriptionAttributes
+            )
         case .premium:
-            iconImageView.image = UserBadgeIcon.prosperityImage(dimension: 70)
+            let x = UserBadgeIcon.prosperityImage!
+            print(x.size)
+            iconImageView.image = x
             nameLabel.text = R.string.localizable.membership_prosperity()
-            descriptionLabel.text = R.string.localizable.membership_prosperity_description()
+            descriptionLabel.attributedText = NSAttributedString(
+                string: R.string.localizable.membership_prosperity_description(),
+                attributes: descriptionAttributes
+            )
         }
     }
     

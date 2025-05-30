@@ -74,7 +74,7 @@ final class SettingsViewController: SettingsTableViewController {
         case .elite:
                 .icon(R.image.membership_elite()!)
         case .prosperity:
-                .icon(UserBadgeIcon.prosperityImage(dimension: 18)!)
+                .icon(UserBadgeIcon.prosperityImage!)
         case nil:
                 .text(R.string.localizable.upgrade_plan())
         }

@@ -205,7 +205,7 @@ extension MembershipViewController: MembershipCell.Delegate {
     
     func membershipCellDidSelectViewPlan(_ cell: MembershipCell) {
         let plan = SafeMembership.Plan(userMembershipPlan: plan)
-        let plans = MembershipPlansViewController(currentPlan: plan)
+        let plans = MembershipPlansViewController(selectedPlan: plan)
         present(plans, animated: true)
     }
     

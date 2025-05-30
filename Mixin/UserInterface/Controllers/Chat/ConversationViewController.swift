@@ -11,6 +11,7 @@ class ConversationViewController: UIViewController {
     static var allowReportSingleMessage = false
     
     @IBOutlet weak var navigationBarView: UIView!
+    @IBOutlet weak var navigationBarContentView: UIView!
     @IBOutlet weak var wallpaperImageView: WallpaperImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var membershipIconView: SDAnimatedImageView!
@@ -103,6 +104,7 @@ class ConversationViewController: UIViewController {
     
     private weak var pinMessageBannerViewIfLoaded: PinMessageBannerView?
     private weak var groupCallIndicatorViewIfLoaded: GroupCallIndicatorView?
+    private weak var membershipButton: UIButton?
     
     private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     
@@ -990,6 +992,15 @@ class ConversationViewController: UIViewController {
         
         alc.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(alc, animated: true, completion: nil)
+    }
+    
+    @objc private func buyOpponentMembership(_ sender: Any) {
+        guard let plan = ownerUser?.membership?.unexpiredPlan else {
+            return
+        }
+        let buyingPlan = SafeMembership.Plan(userMembershipPlan: plan)
+        let plans = MembershipPlansViewController(selectedPlan: buyingPlan)
+        present(plans, animated: true)
     }
     
     // MARK: - Callbacks
@@ -2076,8 +2087,19 @@ extension ConversationViewController {
         if let membershipIcon {
             membershipIconView.image = membershipIcon
             membershipIconView.isHidden = false
+            if membershipButton == nil {
+                let button = UIButton()
+                button.addTarget(self, action: #selector(buyOpponentMembership(_:)), for: .touchUpInside)
+                navigationBarContentView.addSubview(button)
+                button.snp.makeConstraints { make in
+                    make.width.height.equalTo(30)
+                    make.center.equalTo(membershipIconView)
+                }
+                membershipButton = button
+            }
         } else {
             membershipIconView.isHidden = true
+            membershipButton?.removeFromSuperview()
         }
     }
     

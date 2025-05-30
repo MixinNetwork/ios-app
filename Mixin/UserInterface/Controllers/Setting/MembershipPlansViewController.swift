@@ -10,7 +10,7 @@ final class MembershipPlansViewController: UIViewController {
     
     private let headerFooterReuseIdentifier = "h"
     
-    private var selectedIndex: Int?
+    private var selectedIndex: Int
     private var currentPlan: SafeMembership.Plan?
     
     private var planDetails: [SafeMembership.PlanDetail] = []
@@ -18,7 +18,7 @@ final class MembershipPlansViewController: UIViewController {
     private var products: [String: Product] = [:] // Key is product.id
     
     private var selectedPlanDetails: SafeMembership.PlanDetail? {
-        if !planDetails.isEmpty, let selectedIndex {
+        if !planDetails.isEmpty {
             planDetails[selectedIndex]
         } else {
             nil
@@ -26,18 +26,18 @@ final class MembershipPlansViewController: UIViewController {
     }
     
     private var selectedBenefits: [Benefit] {
-        if !benefits.isEmpty, let selectedIndex {
+        if !benefits.isEmpty {
             benefits[selectedIndex]
         } else {
             []
         }
     }
     
-    init(currentPlan: SafeMembership.Plan?) {
-        self.selectedIndex = if let currentPlan {
-            SafeMembership.Plan.allCases.firstIndex(of: currentPlan)
+    init(selectedPlan: SafeMembership.Plan?) {
+        self.selectedIndex = if let selectedPlan {
+            SafeMembership.Plan.allCases.firstIndex(of: selectedPlan) ?? 0
         } else {
-            nil
+            0
         }
         super.init(nibName: nil, bundle: nil)
     }
@@ -120,7 +120,7 @@ final class MembershipPlansViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
-        let indexPath = IndexPath(item: 0, section: Section.planSelector.rawValue)
+        let indexPath = IndexPath(item: selectedIndex, section: Section.planSelector.rawValue)
         collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
         NotificationCenter.default.addObserver(
             self,
@@ -235,15 +235,11 @@ final class MembershipPlansViewController: UIViewController {
     }
     
     private func reloadData(membership: SafeMembership) {
-        selectedIndex = 0
         planDetails = membership.plans
         benefits = membership.plans.map { detail in
             Benefit.benefits(detail: detail, recoveryFee: membership.transaction.recoveryFee)
         }
         reload(sections: [.introduction, .badge, .benefits])
-        let indexPath = IndexPath(item: 0, section: Section.planSelector.rawValue)
-        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-        
         Task { [weak self] in
             let productIDs = membership.plans.map(\.appleSubscriptionID)
             let products = try await Product.products(for: productIDs)
@@ -315,12 +311,12 @@ extension MembershipPlansViewController: UICollectionViewDataSource {
             return cell
         case .introduction:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.membership_plan_introduction, for: indexPath)!
-            let plan = selectedPlanDetails?.plan ?? SafeMembership.Plan.allCases[indexPath.item]
+            let plan = selectedPlanDetails?.plan ?? SafeMembership.Plan.allCases[selectedIndex]
             cell.load(plan: plan)
             return cell
         case .badge:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.membership_plan_badge, for: indexPath)!
-            let plan = selectedPlanDetails?.plan ?? SafeMembership.Plan.allCases[indexPath.item]
+            let plan = selectedPlanDetails?.plan ?? SafeMembership.Plan.allCases[selectedIndex]
             cell.load(plan: plan)
             return cell
         case .benefits:

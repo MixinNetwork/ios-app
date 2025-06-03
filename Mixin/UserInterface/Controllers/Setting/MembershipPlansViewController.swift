@@ -6,12 +6,17 @@ final class MembershipPlansViewController: UIViewController {
     
     @IBOutlet weak var titleView: PopupTitleView!
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var buyButton: StyledButton!
+    @IBOutlet weak var actionButton: StyledButton!
+    @IBOutlet weak var verifyingPaymentLabel: UILabel!
+    
+    @IBOutlet weak var actionStackViewBottomConstraint: NSLayoutConstraint!
     
     private let headerFooterReuseIdentifier = "h"
     
     private var selectedIndex: Int
     private var currentPlan: SafeMembership.Plan?
+    private var pendingOrder: MembershipOrder?
+    private var isPayingPendingOrder = false
     
     private var planDetails: [SafeMembership.PlanDetail] = []
     private var benefits: [[Benefit]] = []
@@ -122,6 +127,11 @@ final class MembershipPlansViewController: UIViewController {
         collectionView.reloadData()
         let indexPath = IndexPath(item: selectedIndex, section: Section.planSelector.rawValue)
         collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+        verifyingPaymentLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14),
+            adjustForContentSize: true
+        )
+        verifyingPaymentLabel.text = R.string.localizable.verifying_payment()
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadCurrentPlan),
@@ -129,9 +139,16 @@ final class MembershipPlansViewController: UIViewController {
             object: nil
         )
         reloadCurrentPlan()
-        buyButton.style = .filled
-        buyButton.applyDefaultContentInsets()
-        buyButton.titleLabel?.setFont(
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadPendingOrder),
+            name: MembershipOrderDAO.didUpdateNotification,
+            object: nil
+        )
+        reloadPendingOrder()
+        actionButton.style = .filled
+        actionButton.applyDefaultContentInsets()
+        actionButton.titleLabel?.setFont(
             scaledFor: .systemFont(ofSize: 16, weight: .medium),
             adjustForContentSize: true
         )
@@ -142,57 +159,11 @@ final class MembershipPlansViewController: UIViewController {
         reloadPlans()
     }
     
-    @IBAction func buy(_ sender: Any) {
-        guard let detail = selectedPlanDetails else {
-            return
-        }
-        buyButton.isBusy = true
-        let job = AddBotIfNotFriendJob(userID: BotUserID.mixinSafe)
-        ConcurrentJobQueue.shared.addJob(job: job)
-        Task { [products] in
-            do {
-                let order = try await SafeAPI.postMembershipOrder(detail: detail)
-                guard let productID = order.fiatOrder?.subscriptionID else {
-                    Logger.general.error(category: "Membership", message: "No fiat order")
-                    await MainActor.run {
-                        self.buyButton.isBusy = false
-                    }
-                    return
-                }
-                guard let product = products[productID] else {
-                    Logger.general.error(category: "Membership", message: "No product: \(productID)")
-                    await MainActor.run {
-                        self.buyButton.isBusy = false
-                    }
-                    return
-                }
-                let result = try await product.purchase(options: [.appAccountToken(order.orderID)])
-                switch result {
-                case .success(let verification):
-                    switch verification {
-                    case .verified(let transaction):
-                        Logger.general.debug(category: "Membership", message: "Transaction verified: \(order.orderID)")
-                        await IAPTransactionObserver.global.handle(transaction: transaction)
-                    case .unverified:
-                        Logger.general.debug(category: "Membership", message: "Transaction unverified: \(order.orderID)")
-                        throw BuyingError.unverifiedTransaction
-                    }
-                case .userCancelled:
-                    Logger.general.debug(category: "Membership", message: "User cancelled: \(order.orderID)")
-                case .pending:
-                    // Leave it to AppDelegate
-                    Logger.general.debug(category: "Membership", message: "Pending: \(order.orderID)")
-                @unknown default:
-                    break
-                }
-            } catch {
-                await MainActor.run {
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                }
-            }
-            await MainActor.run {
-                self.buyButton.isBusy = false
-            }
+    @IBAction func performAction(_ sender: Any) {
+        if let order = pendingOrder {
+            view(order: order)
+        } else {
+            buy()
         }
     }
     
@@ -210,76 +181,92 @@ final class MembershipPlansViewController: UIViewController {
             } else {
                 nil
             }
+            self.reloadBuyButtonTitle(observer: .global)
         }
     }
     
-    private func reload(sections: [Section]) {
-        let set = IndexSet(sections.map(\.rawValue))
-        UIView.performWithoutAnimation {
-            collectionView.reloadSections(set)
-        }
-    }
-    
-    private func reloadPlans() {
-        SafeAPI.membershipPlans { [weak self] result in
-            switch result {
-            case let .success(membership):
-                self?.reloadData(membership: membership)
-            case let .failure(error):
-                Logger.general.debug(category: "Membership", message: "\(error)")
-                DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
-                    self?.reloadPlans()
-                }
-            }
-        }
-    }
-    
-    private func reloadData(membership: SafeMembership) {
-        planDetails = membership.plans
-        benefits = membership.plans.map { detail in
-            Benefit.benefits(detail: detail, recoveryFee: membership.transaction.recoveryFee)
-        }
-        reload(sections: [.introduction, .badge, .benefits])
-        Task { [weak self] in
-            let productIDs = membership.plans.map(\.appleSubscriptionID)
-            let products = try await Product.products(for: productIDs)
-                .reduce(into: [:]) { result, product in
-                    result[product.id] = product
-                }
-            await MainActor.run {
+    @objc private func reloadPendingOrder() {
+        DispatchQueue.global().async { [weak self] in
+            let order = MembershipOrderDAO.shared.lastPendingOrder()
+            DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
-                self.products = products
+                self.pendingOrder = order
                 self.reloadBuyButtonTitle(observer: .global)
             }
         }
     }
     
-    private func reloadBuyButtonTitle(observer: IAPTransactionObserver) {
-        if observer.isRunning {
-            buyButton.setTitle(R.string.localizable.upgrading_plan(), for: .normal)
-            buyButton.isEnabled = false
-            buyButton.isBusy = false
-        } else if let detail = selectedPlanDetails {
-            if detail.plan == currentPlan {
-                buyButton.setTitle(R.string.localizable.current_plan(), for: .normal)
-                buyButton.isEnabled = false
-                buyButton.isBusy = false
-            } else if let product = products[detail.appleSubscriptionID] {
-                let title = R.string.localizable.upgrade_plan_for(product.displayPrice)
-                buyButton.setTitle(title, for: .normal)
-                buyButton.isEnabled = true
-                buyButton.isBusy = false
-            } else {
-                buyButton.setTitle(R.string.localizable.coming_soon(), for: .normal)
-                buyButton.isEnabled = false
-                buyButton.isBusy = false
+    private func view(order: MembershipOrder) {
+        guard let presentingViewController else {
+            return
+        }
+        presentingViewController.dismiss(animated: true) {
+            let viewController = MembershipOrderViewController(order: order)
+            UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
+        }
+    }
+    
+    private func buy() {
+        guard let detail = selectedPlanDetails else {
+            return
+        }
+        isPayingPendingOrder = true
+        reloadBuyButtonTitle(observer: .global)
+        let job = AddBotIfNotFriendJob(userID: BotUserID.mixinSafe)
+        ConcurrentJobQueue.shared.addJob(job: job)
+        Task { [products] in
+            do {
+                let order = try await SafeAPI.postMembershipOrder(detail: detail)
+                MembershipOrderDAO.shared.save(orders: [order])
+                guard let productID = order.fiatOrder?.subscriptionID else {
+                    Logger.general.error(category: "Membership", message: "No fiat order")
+                    await MainActor.run {
+                        self.reloadBuyButtonTitle(observer: .global)
+                    }
+                    return
+                }
+                guard let product = products[productID] else {
+                    Logger.general.error(category: "Membership", message: "No product: \(productID)")
+                    await MainActor.run {
+                        self.reloadBuyButtonTitle(observer: .global)
+                    }
+                    return
+                }
+                let result = try await product.purchase(options: [.appAccountToken(order.orderID)])
+                switch result {
+                case .success(let verification):
+                    switch verification {
+                    case .verified(let transaction):
+                        Logger.general.debug(category: "Membership", message: "Transaction verified: \(order.orderID)")
+                        await IAPTransactionObserver.global.handle(transaction: transaction)
+                    case .unverified:
+                        Logger.general.debug(category: "Membership", message: "Transaction unverified: \(order.orderID)")
+                        throw BuyingError.unverifiedTransaction
+                    }
+                case .userCancelled:
+                    Logger.general.debug(category: "Membership", message: "User cancelled: \(order.orderID)")
+                    let id = order.orderID.uuidString.lowercased()
+                    let order = try await SafeAPI.cancelMembershipOrder(id: id)
+                    MembershipOrderDAO.shared.save(orders: [order])
+                    let reloadOrders = ReloadMembershipOrderJob()
+                    ConcurrentJobQueue.shared.addJob(job: reloadOrders)
+                case .pending:
+                    // Leave it to AppDelegate
+                    Logger.general.debug(category: "Membership", message: "Pending: \(order.orderID)")
+                @unknown default:
+                    break
+                }
+            } catch {
+                await MainActor.run {
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
             }
-        } else {
-            buyButton.setTitle(" ", for: .normal)
-            buyButton.isEnabled = false
-            buyButton.isBusy = true
+            await MainActor.run {
+                self.isPayingPendingOrder = false
+                self.reloadBuyButtonTitle(observer: .global)
+            }
         }
     }
     
@@ -417,7 +404,7 @@ extension MembershipPlansViewController {
             self.description = NSAttributedString(attributedString: attributedDescription)
         }
         
-        static func benefits(detail: SafeMembership.PlanDetail, recoveryFee: Decimal) -> [Benefit] {
+        static func benefits(detail: SafeMembership.PlanDetail) -> [Benefit] {
             var benefits = [
                 Benefit(
                     icon: R.image.membership_benefit_safe()!,
@@ -471,6 +458,88 @@ extension MembershipPlansViewController {
             return benefits
         }
         
+    }
+    
+    private func reload(sections: [Section]) {
+        let set = IndexSet(sections.map(\.rawValue))
+        UIView.performWithoutAnimation {
+            collectionView.reloadSections(set)
+        }
+    }
+    
+    private func reloadPlans() {
+        SafeAPI.membershipPlans { [weak self] result in
+            switch result {
+            case let .success(membership):
+                self?.reloadData(membership: membership)
+            case let .failure(error):
+                Logger.general.debug(category: "Membership", message: "\(error)")
+                DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
+                    self?.reloadPlans()
+                }
+            }
+        }
+    }
+    
+    private func reloadData(membership: SafeMembership) {
+        planDetails = membership.plans
+        benefits = membership.plans.map(Benefit.benefits(detail:))
+        reload(sections: [.introduction, .badge, .benefits])
+        Task { [weak self] in
+            let productIDs = membership.plans.map(\.appleSubscriptionID)
+            let products = try await Product.products(for: productIDs)
+                .reduce(into: [:]) { result, product in
+                    result[product.id] = product
+                }
+            await MainActor.run {
+                guard let self else {
+                    return
+                }
+                self.products = products
+                self.reloadBuyButtonTitle(observer: .global)
+            }
+        }
+    }
+    
+    private func reloadBuyButtonTitle(observer: IAPTransactionObserver) {
+        if isPayingPendingOrder {
+            verifyingPaymentLabel.isHidden = true
+            actionStackViewBottomConstraint.constant = 20
+            actionButton.isBusy = true
+        } else if let order = pendingOrder, order.status.knownCase == .initial {
+            verifyingPaymentLabel.isHidden = false
+            actionStackViewBottomConstraint.constant = 10
+            actionButton.setTitle(R.string.localizable.view_invoice(), for: .normal)
+            actionButton.isEnabled = true
+            actionButton.isBusy = false
+        } else {
+            verifyingPaymentLabel.isHidden = true
+            actionStackViewBottomConstraint.constant = 20
+            if observer.isRunning {
+                actionButton.setTitle(R.string.localizable.upgrading_plan(), for: .normal)
+                actionButton.isEnabled = false
+                actionButton.isBusy = false
+            } else if let detail = selectedPlanDetails {
+                if detail.plan == currentPlan {
+                    actionButton.setTitle(R.string.localizable.current_plan(), for: .normal)
+                    actionButton.isEnabled = false
+                    actionButton.isBusy = false
+                } else if let product = products[detail.appleSubscriptionID] {
+                    let title = R.string.localizable.upgrade_plan_for(product.displayPrice)
+                    actionButton.setTitle(title, for: .normal)
+                    actionButton.isEnabled = true
+                    actionButton.isBusy = false
+                } else {
+                    actionButton.setTitle(R.string.localizable.coming_soon(), for: .normal)
+                    actionButton.isEnabled = false
+                    actionButton.isBusy = false
+                }
+            } else {
+                actionButton.setTitle(" ", for: .normal)
+                actionButton.isEnabled = false
+                actionButton.isBusy = true
+            }
+        }
     }
     
 }

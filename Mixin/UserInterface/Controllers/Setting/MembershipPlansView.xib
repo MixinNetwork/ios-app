@@ -11,9 +11,11 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MembershipPlansViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
-                <outlet property="buyButton" destination="D0t-KR-Uyi" id="QqG-NH-x69"/>
+                <outlet property="actionButton" destination="D0t-KR-Uyi" id="QqG-NH-x69"/>
+                <outlet property="actionStackViewBottomConstraint" destination="e9o-Xx-yxV" id="SXt-gB-iAB"/>
                 <outlet property="collectionView" destination="qvi-Zq-w0N" id="qRE-D5-A7x"/>
                 <outlet property="titleView" destination="T41-XJ-ucW" id="nKg-4c-7au"/>
+                <outlet property="verifyingPaymentLabel" destination="43T-hs-2vR" id="r9V-IP-kfg"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -42,22 +44,33 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y6o-J9-bVL">
                     <rect key="frame" x="0.0" y="700" width="393" height="152"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="256" placeholderIntrinsicHeight="44" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D0t-KR-Uyi" customClass="StyledButton" customModule="Mixin" customModuleProvider="target">
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="sS8-ZB-sMd">
                             <rect key="frame" x="68.666666666666686" y="20" width="256" height="44"/>
-                            <constraints>
-                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="256" id="t04-pW-r5V"/>
-                            </constraints>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" title=""/>
-                            <connections>
-                                <action selector="buy:" destination="-1" eventType="touchUpInside" id="FvN-NS-kmB"/>
-                            </connections>
-                        </button>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="256" placeholderIntrinsicHeight="44" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D0t-KR-Uyi" customClass="StyledButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="256" height="44"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="256" id="t04-pW-r5V"/>
+                                    </constraints>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="plain" title=""/>
+                                    <connections>
+                                        <action selector="performAction:" destination="-1" eventType="touchUpInside" id="FvN-NS-kmB"/>
+                                    </connections>
+                                </button>
+                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="43T-hs-2vR">
+                                    <rect key="frame" x="0.0" y="0.0" width="256" height="0.0"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" name="text_tertiary"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
                     </subviews>
                     <color key="backgroundColor" name="background_secondary"/>
                     <constraints>
-                        <constraint firstItem="D0t-KR-Uyi" firstAttribute="top" secondItem="y6o-J9-bVL" secondAttribute="top" constant="20" id="Mb5-ZN-tOG"/>
-                        <constraint firstItem="D0t-KR-Uyi" firstAttribute="centerX" secondItem="y6o-J9-bVL" secondAttribute="centerX" id="nEH-N7-7pU"/>
+                        <constraint firstItem="sS8-ZB-sMd" firstAttribute="centerX" secondItem="y6o-J9-bVL" secondAttribute="centerX" id="ZzJ-kS-KOG"/>
+                        <constraint firstItem="sS8-ZB-sMd" firstAttribute="top" secondItem="y6o-J9-bVL" secondAttribute="top" constant="20" id="d1M-HI-o9t"/>
                     </constraints>
                 </view>
             </subviews>
@@ -68,7 +81,7 @@
                 <constraint firstAttribute="bottom" secondItem="y6o-J9-bVL" secondAttribute="bottom" id="WcW-5Z-Iuh"/>
                 <constraint firstAttribute="trailing" secondItem="y6o-J9-bVL" secondAttribute="trailing" id="Zjc-xJ-0xP"/>
                 <constraint firstItem="T41-XJ-ucW" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="bwB-Bt-nek"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="D0t-KR-Uyi" secondAttribute="bottom" constant="20" id="d7w-mW-2M6"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="sS8-ZB-sMd" secondAttribute="bottom" constant="20" id="e9o-Xx-yxV"/>
                 <constraint firstAttribute="trailing" secondItem="T41-XJ-ucW" secondAttribute="trailing" id="gN2-an-7Xu"/>
                 <constraint firstItem="qvi-Zq-w0N" firstAttribute="top" secondItem="T41-XJ-ucW" secondAttribute="bottom" id="jNX-gB-el5"/>
                 <constraint firstItem="y6o-J9-bVL" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="l69-tR-2da"/>
@@ -82,6 +95,9 @@
     <resources>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

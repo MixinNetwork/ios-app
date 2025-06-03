@@ -6,6 +6,15 @@ public final class MembershipOrderDAO: UserDatabaseDAO {
     
     public static let didUpdateNotification = Notification.Name("one.mixin.service.MembershipOrderDAO.Update")
     
+    public func order(id: String) -> MembershipOrder? {
+        db.select(with: """
+            SELECT *
+            FROM membership_orders
+            WHERE order_id = ?
+            LIMIT 1
+        """, arguments: [id])
+    }
+    
     public func orders(limit: Int?) -> [MembershipOrder] {
         var sql = """
         SELECT *
@@ -16,6 +25,15 @@ public final class MembershipOrderDAO: UserDatabaseDAO {
             sql.append("\nLIMIT \(limit)")
         }
         return db.select(with: sql)
+    }
+    
+    public func lastPendingOrder() -> MembershipOrder? {
+        db.select(with: """
+            SELECT *
+            FROM membership_orders
+            WHERE status = 'initial'
+            ORDER BY created_at DESC
+        """)
     }
     
     public func save(orders: [MembershipOrder]) {

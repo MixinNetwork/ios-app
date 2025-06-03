@@ -223,6 +223,7 @@
 "cancel_floating" = "取消浮窗";
 "cancel_transaction" = "取消交易";
 "cancel_transaction_description" = "如果交易已接近完成，可能无法取消";
+"cancel_waiting" = "取消订单";
 "canceled" = "已取消";
 "canceled_by_caller" = "对方已取消";
 "cant_receive_the_code" = "接收不到验证码？";
@@ -680,6 +681,7 @@
 "join_group" = "加入群组";
 "joined_in" = "%@ 加入";
 "keep_running_foreground" = "不要关闭屏幕并保持 Mixin 在前台运行";
+"keep_waiting" = "继续等待";
 "label" = "标题";
 "landing_delete_content" = "您在 %1$@ 申请了删除账号，账号将于 %2$@ 被删除，如果您继续登录，删除您账户的请求将被取消。";
 "landing_have_account" = "已有帐户";
@@ -857,6 +859,8 @@
 "not_enough_partials" = "没有足够的节点返回密钥分片";
 "not_found" = "没有找到相应的消息";
 "not_now" = "现在不要";
+"not_paid" = "未付款？";
+"not_paid_description" = "如果您尚未付款，可以放弃等待，重新创建并支付新的订单。";
 "not_playing" = "未在播放";
 "not_turn_off_screen_hint" = "同步时请不要关闭屏幕并保持 Mixin 在前台运行。";
 "note" = "备注";
@@ -1450,6 +1454,8 @@
 "value_then" = "当时价值 %@";
 "verify" = "验证";
 "verify_pin" = "验证 PIN";
+"verifying_payment" = "支付检测中...";
+"verifying_payment_description" = "支付检测中，请耐心等待";
 "version_update" = "版本更新";
 "video" = "视频";
 "videos" = "视频";
@@ -1457,6 +1463,7 @@
 "view_authorization" = "查看授权";
 "view_document" = "查看文档";
 "view_emergency_contact" = "查看恢复联系人";
+"view_invoice" = "查看账单";
 "view_on_explorer" = "在浏览器中查看";
 "view_on_marketplace" = "在市场中查看";
 "view_plan" = "查看会员";

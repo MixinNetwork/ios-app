@@ -1300,6 +1300,10 @@
 		94F237562C6915B70057D1AB /* PriceHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F237552C6915B70057D1AB /* PriceHistory.swift */; };
 		94F2375C2C691D5C0057D1AB /* TokenPriceChartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F2375A2C691D5C0057D1AB /* TokenPriceChartCell.swift */; };
 		94F2375D2C691D5C0057D1AB /* TokenPriceChartCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F2375B2C691D5C0057D1AB /* TokenPriceChartCell.xib */; };
+		94F2F9502DEF2C7E0013B820 /* ReloadMembershipOrderJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F2F94F2DEF2C750013B820 /* ReloadMembershipOrderJob.swift */; };
+		94F2F9802DEF50590013B820 /* CancelPendingMembershipOrderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94F2F97F2DEF50590013B820 /* CancelPendingMembershipOrderView.xib */; };
+		94F2F9812DEF50590013B820 /* CancelPendingMembershipOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F2F97E2DEF50590013B820 /* CancelPendingMembershipOrderViewController.swift */; };
+		94F2F9B32DEF581B0013B820 /* DestructiveRoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F2F9B22DEF581B0013B820 /* DestructiveRoundedButton.swift */; };
 		94F35A602D255B61001BCAE7 /* Invoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F35A5F2D255B5F001BCAE7 /* Invoice.swift */; };
 		94F35B372D27C625001BCAE7 /* AtomicInvoicePaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F35B362D27C620001BCAE7 /* AtomicInvoicePaymentOperation.swift */; };
 		94F35B872D2818B2001BCAE7 /* InvoicePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F35B862D2818B2001BCAE7 /* InvoicePreviewViewController.swift */; };
@@ -2884,6 +2888,10 @@
 		94F237552C6915B70057D1AB /* PriceHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceHistory.swift; sourceTree = "<group>"; };
 		94F2375A2C691D5C0057D1AB /* TokenPriceChartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenPriceChartCell.swift; sourceTree = "<group>"; };
 		94F2375B2C691D5C0057D1AB /* TokenPriceChartCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenPriceChartCell.xib; sourceTree = "<group>"; };
+		94F2F94F2DEF2C750013B820 /* ReloadMembershipOrderJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadMembershipOrderJob.swift; sourceTree = "<group>"; };
+		94F2F97E2DEF50590013B820 /* CancelPendingMembershipOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelPendingMembershipOrderViewController.swift; sourceTree = "<group>"; };
+		94F2F97F2DEF50590013B820 /* CancelPendingMembershipOrderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CancelPendingMembershipOrderView.xib; sourceTree = "<group>"; };
+		94F2F9B22DEF581B0013B820 /* DestructiveRoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestructiveRoundedButton.swift; sourceTree = "<group>"; };
 		94F35A5F2D255B5F001BCAE7 /* Invoice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invoice.swift; sourceTree = "<group>"; };
 		94F35B362D27C620001BCAE7 /* AtomicInvoicePaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicInvoicePaymentOperation.swift; sourceTree = "<group>"; };
 		94F35B862D2818B2001BCAE7 /* InvoicePreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoicePreviewViewController.swift; sourceTree = "<group>"; };
@@ -4803,6 +4811,7 @@
 				7B015D8021A81C8D000C9F1E /* SearchBoxView.xib */,
 				7BBD2791221E7C9E0047E7D1 /* CheckmarkView.swift */,
 				7BA1F8CC221FDABF00DBFCE2 /* RoundedButton.swift */,
+				94F2F9B22DEF581B0013B820 /* DestructiveRoundedButton.swift */,
 				7BDBDE6B223636B8006220DF /* ShadowImageView.swift */,
 				7B1AEB5B221D25F000256A18 /* SeparatorShadowView.swift */,
 				7BDBDE6422361D85006220DF /* SeparatorShadowFooterView.swift */,
@@ -5040,6 +5049,8 @@
 				948AB78E2DE5EF27005E76A0 /* MembershipOrderInfoCell.swift */,
 				94B89D512DE75A30002A0DDC /* MembershipViewAllOrdersCell.xib */,
 				94B89D502DE75A30002A0DDC /* MembershipViewAllOrdersCell.swift */,
+				94F2F97F2DEF50590013B820 /* CancelPendingMembershipOrderView.xib */,
+				94F2F97E2DEF50590013B820 /* CancelPendingMembershipOrderViewController.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -5528,6 +5539,7 @@
 				94428D632CA24F6E00157E93 /* ReloadMarketAlertsJob.swift */,
 				941E360A2D78B80E000E7093 /* RefreshWeb3WalletTokenJob.swift */,
 				94509BC02DDDFC5800DC6A43 /* RefreshWeb3TokenJob.swift */,
+				94F2F94F2DEF2C750013B820 /* ReloadMembershipOrderJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -5873,6 +5885,7 @@
 				94425FE62DD498FB003F46DF /* MaliciousTokenWarningCell.xib in Resources */,
 				944A5A772C2605720021460C /* CollectibleCollectionHeaderView.xib in Resources */,
 				7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */,
+				94F2F9802DEF50590013B820 /* CancelPendingMembershipOrderView.xib in Resources */,
 				7BE73BFD230A8D0300B97FC6 /* group_separator_4.png in Resources */,
 				E05D992923911D55009F9E8D /* ProfileFavoriteAppsView.xib in Resources */,
 				7B869C6E202D7D90009930BA /* NumberPadView.xib in Resources */,
@@ -6388,6 +6401,7 @@
 				7B88655920AC330D002D15E4 /* PhotoRepresentableMessageViewModel.swift in Sources */,
 				94DC229F2D072F76006501B3 /* DesktopSessionValidationViewController.swift in Sources */,
 				7BBD2792221E7C9E0047E7D1 /* CheckmarkView.swift in Sources */,
+				94F2F9502DEF2C7E0013B820 /* ReloadMembershipOrderJob.swift in Sources */,
 				94E979672D0C16C300FFCC12 /* LoginPINValidationViewController.swift in Sources */,
 				7BB8E2D124529E910098B1E8 /* AppearanceSettingsViewController.swift in Sources */,
 				52B2726E2DAE358000F46EC0 /* Web3SwapViewController.swift in Sources */,
@@ -6648,6 +6662,7 @@
 				94793ACF2C3A56A40078ED51 /* QuoteRequest.swift in Sources */,
 				948374822A5D49110011A2CA /* PopupSelectorViewController.swift in Sources */,
 				7C719E8229D4AB0C00C42E08 /* DeviceTransferTypedRecord.swift in Sources */,
+				94F2F9B32DEF581B0013B820 /* DestructiveRoundedButton.swift in Sources */,
 				7B4CA8BE249B3F840048E46D /* PeerCall.swift in Sources */,
 				7B2E56B2244EC44E0073102C /* PinSettingsViewController.swift in Sources */,
 				7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */,
@@ -7481,6 +7496,7 @@
 				944ED8D4264666AC00C97215 /* FullscreenPopupViewController.swift in Sources */,
 				944B5A5C2CFCA7EE000BB893 /* UINavigationBarAppearance+General.swift in Sources */,
 				9419374D25DFF3EE00F81A9C /* GroupIconSaver.swift in Sources */,
+				94F2F9812DEF50590013B820 /* CancelPendingMembershipOrderViewController.swift in Sources */,
 				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,
 				94FE11F72DA7AC830026AB9A /* Web3TransactionCell.swift in Sources */,
 				94C0D7E929AD348500E372FC /* InPlaceKeyStorage.swift in Sources */,

@@ -64,14 +64,8 @@ final class MembershipViewController: UIViewController {
             name: MembershipOrderDAO.didUpdateNotification,
             object: nil
         )
-        SafeAPI.membershipOrders { result in
-            switch result {
-            case .success(let orders):
-                MembershipOrderDAO.shared.save(orders: orders)
-            case .failure(let error):
-                Logger.general.debug(category: "Membership", message: "\(error)")
-            }
-        }
+        let reloadOrders = ReloadMembershipOrderJob()
+        ConcurrentJobQueue.shared.addJob(job: reloadOrders)
     }
     
     @objc private func presentCustomerService(_ sender: Any) {

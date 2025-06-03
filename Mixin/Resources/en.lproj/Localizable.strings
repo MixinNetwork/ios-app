@@ -223,6 +223,7 @@
 "cancel_floating" = "Cancel Floating";
 "cancel_transaction" = "Cancel Transaction";
 "cancel_transaction_description" = "If the transaction is too far along cancellation may not be possible";
+"cancel_waiting" = "Cancel Waiting";
 "canceled" = "Cancelled";
 "canceled_by_caller" = "Cancelled by caller";
 "cant_receive_the_code" = "Can't receive the code?";
@@ -680,6 +681,7 @@
 "join_group" = "Join Group";
 "joined_in" = "Joined on %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
+"keep_waiting" = "Keep Waiting";
 "label" = "Label";
 "landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to login, your account deletion will be cancelled.";
 "landing_have_account" = "I already have an account";
@@ -857,6 +859,8 @@
 "not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "Not found";
 "not_now" = "Not Now";
+"not_paid" = "Not Paid?";
+"not_paid_description" = "If you haven't paid, you can give up waiting to create and pay next order.";
 "not_playing" = "Not playing";
 "not_turn_off_screen_hint" = "Please do not turn off the screen and keep Mixin in the foreground when synchronizing.";
 "note" = "Note";
@@ -1450,6 +1454,8 @@
 "value_then" = "value then %@";
 "verify" = "Verify";
 "verify_pin" = "Verify PIN";
+"verifying_payment" = "Verifying payment...";
+"verifying_payment_description" = "Your payment is being verified. Thank you for your patience.";
 "version_update" = "Version Update";
 "video" = "Video";
 "videos" = "Videos";
@@ -1457,6 +1463,7 @@
 "view_authorization" = "View Authorization";
 "view_document" = "View Document";
 "view_emergency_contact" = "View recovery contact";
+"view_invoice" = "View Invoice";
 "view_on_explorer" = "View on Explorer";
 "view_on_marketplace" = "View on Marketplace";
 "view_plan" = "View Plan";

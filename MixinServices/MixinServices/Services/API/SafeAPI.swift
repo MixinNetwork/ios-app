@@ -275,6 +275,21 @@ extension SafeAPI {
         )
     }
     
+    public static func cancelMembershipOrder(id: String) async throws -> MembershipOrder {
+        try await request(method: .post, path: "/safe/membership/orders/\(id)/cancel")
+    }
+    
+    public static func cancelMembershipOrder(
+        id: String,
+        completion: @escaping (MixinAPI.Result<MembershipOrder>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/safe/membership/orders/\(id)/cancel",
+            completion: completion
+        )
+    }
+    
     public static func membershipOrder(id: String) async throws -> MembershipOrder {
         try await request(method: .get, path: "/safe/membership/orders/" + id)
     }

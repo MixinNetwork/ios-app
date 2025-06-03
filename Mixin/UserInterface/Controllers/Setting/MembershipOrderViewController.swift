@@ -4,8 +4,10 @@ import MixinServices
 final class MembershipOrderViewController: UIViewController {
     
     private let emptyCellReuseIdentifier = "e"
-    private let order: MembershipOrder
     
+    private weak var tableView: UITableView!
+    
+    private var order: MembershipOrder
     private var rows: [Row] = []
     
     init(order: MembershipOrder) {
@@ -42,73 +44,16 @@ final class MembershipOrderViewController: UIViewController {
         )
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
+        self.tableView = tableView
         tableView.dataSource = self
         tableView.delegate = self
-        
-        let orderSource = switch order.fiatOrder?.source {
-        case "app_store":
-            "App Store"
-        case "google_play":
-            "Google Play"
-        default:
-            switch order.source {
-            case "mixin":
-                "Mixin"
-            case "mixpay":
-                "MixPay"
-            default:
-                order.source
-            }
-        }
-        rows = [
-            Row(
-                title: R.string.localizable.transaction_id().uppercased(),
-                content: order.orderID.uuidString.lowercased()
-            ),
-            Row(
-                title: R.string.localizable.buy_via().uppercased(),
-                content: orderSource
-            )
-        ]
-        
-        switch order.transition {
-        case .buyStars, .none:
-            break
-        case .upgrade(let plan), .renew(let plan):
-            let (plan, planIcon) = switch plan {
-            case .basic:
-                (R.string.localizable.membership_advance(), R.image.membership_advance_large())
-            case .standard:
-                (R.string.localizable.membership_elite(), R.image.membership_elite_large())
-            case .premium:
-                (R.string.localizable.membership_prosperity(), UserBadgeIcon.prosperityImage)
-            }
-            rows.append(
-                Row(
-                    title: R.string.localizable.membership_plan().uppercased(),
-                    content: plan,
-                    image: planIcon
-                )
-            )
-        }
-        
-        let time = if let date = DateFormatter.iso8601Full.date(from: order.createdAt) {
-            DateFormatter.dateFull.string(from: date)
-        } else {
-            order.createdAt
-        }
-        rows.append(contentsOf: [
-            Row(
-                title: R.string.localizable.amount().uppercased(),
-                content: "USD " + order.actualAmount
-            ),
-            Row(
-                title: R.string.localizable.time().uppercased(),
-                content: time
-            ),
-        ])
-        
-        tableView.reloadData()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadOrder),
+            name: MembershipOrderDAO.didUpdateNotification,
+            object: nil
+        )
+        reloadData(order: order)
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
@@ -146,6 +91,7 @@ extension MembershipOrderViewController: UITableViewDataSource {
         case .status:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.membership_order_status, for: indexPath)!
             cell.load(order: order)
+            cell.delegate = self
             return cell
         case .infos:
             switch indexPath.row {
@@ -193,6 +139,15 @@ extension MembershipOrderViewController: UITableViewDelegate {
     
 }
 
+extension MembershipOrderViewController: MembershipOrderStatusCell.Delegate {
+    
+    func membershipOrderStatusCellWantsToCancel(_ cell: MembershipOrderStatusCell) {
+        let confirmation = CancelPendingMembershipOrderViewController(order: order)
+        present(confirmation, animated: true)
+    }
+    
+}
+
 extension MembershipOrderViewController {
     
     private enum Section: Int, CaseIterable {
@@ -212,6 +167,74 @@ extension MembershipOrderViewController {
             self.image = image
         }
         
+    }
+    
+    @objc private func reloadOrder() {
+        let id = order.orderID.uuidString.lowercased()
+        DispatchQueue.global().async { [weak self] in
+            guard let order = MembershipOrderDAO.shared.order(id: id) else {
+                return
+            }
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                self.order = order
+                self.reloadData(order: order)
+            }
+        }
+    }
+    
+    private func reloadData(order: MembershipOrder) {
+        rows = [
+            Row(
+                title: R.string.localizable.transaction_id().uppercased(),
+                content: order.orderID.uuidString.lowercased()
+            ),
+            Row(
+                title: R.string.localizable.buy_via().uppercased(),
+                content: order.prettySource
+            )
+        ]
+        
+        switch order.transition {
+        case .buyStars, .none:
+            break
+        case .upgrade(let plan), .renew(let plan):
+            let (plan, planIcon) = switch plan {
+            case .basic:
+                (R.string.localizable.membership_advance(), R.image.membership_advance_large())
+            case .standard:
+                (R.string.localizable.membership_elite(), R.image.membership_elite_large())
+            case .premium:
+                (R.string.localizable.membership_prosperity(), UserBadgeIcon.prosperityImage)
+            }
+            rows.append(
+                Row(
+                    title: R.string.localizable.membership_plan().uppercased(),
+                    content: plan,
+                    image: planIcon
+                )
+            )
+        }
+        
+        let time = if let date = DateFormatter.iso8601Full.date(from: order.createdAt) {
+            DateFormatter.dateFull.string(from: date)
+        } else {
+            order.createdAt
+        }
+        rows.append(contentsOf: [
+            Row(
+                title: R.string.localizable.amount().uppercased(),
+                content: "USD " + order.actualAmount
+            ),
+            Row(
+                title: R.string.localizable.time().uppercased(),
+                content: time
+            ),
+        ])
+        
+        tableView.reloadData()
     }
     
 }

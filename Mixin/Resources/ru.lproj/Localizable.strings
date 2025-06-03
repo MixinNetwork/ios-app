@@ -223,6 +223,7 @@
 "cancel_floating" = "Отменить всплывание";
 "cancel_transaction" = "Cancel Transaction";
 "cancel_transaction_description" = "If the transaction is too far along cancellation may not be possible";
+"cancel_waiting" = "Cancel Waiting";
 "canceled" = "Отменено";
 "canceled_by_caller" = "Отменено звонившим";
 "cant_receive_the_code" = "Не можете получить код?";
@@ -680,6 +681,7 @@
 "join_group" = "Присоединиться к группе";
 "joined_in" = "Присоединился к %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
+"keep_waiting" = "Keep Waiting";
 "label" = "Этикетка";
 "landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to login, your account deletion will be cancelled.";
 "landing_have_account" = "I already have an account";
@@ -857,6 +859,8 @@
 "not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "Не найден";
 "not_now" = "Not Now";
+"not_paid" = "Not Paid?";
+"not_paid_description" = "If you haven't paid, you can give up waiting to create and pay next order.";
 "not_playing" = "Не играет";
 "not_turn_off_screen_hint" = "Please do not turn off the screen and keep Mixin in the foreground when synchronizing.";
 "note" = "Note";
@@ -1450,6 +1454,8 @@
 "value_then" = "значение затем %@";
 "verify" = "Проверить";
 "verify_pin" = "Подтвердить PIN-код";
+"verifying_payment" = "Verifying payment...";
+"verifying_payment_description" = "Your payment is being verified. Thank you for your patience.";
 "version_update" = "Обновление версии";
 "video" = "Видео";
 "videos" = "Видео";
@@ -1457,6 +1463,7 @@
 "view_authorization" = "Просмотр авторизации";
 "view_document" = "View Document";
 "view_emergency_contact" = "View recovery contact";
+"view_invoice" = "View Invoice";
 "view_on_explorer" = "View on Explorer";
 "view_on_marketplace" = "View on Marketplace";
 "view_plan" = "View Plan";

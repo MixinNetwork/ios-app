@@ -34,7 +34,7 @@ extension MembershipOrder {
 
 extension MembershipOrder {
     
-    public static func categorizedByCreatedAt(
+    static func categorizedByCreatedAt(
         createdAtDescendingOrders orders: [MembershipOrder]
     ) -> OrderedDictionary<String, [MembershipOrder]> {
         var result: OrderedDictionary<String, [MembershipOrder]> = [:]
@@ -46,6 +46,28 @@ extension MembershipOrder {
             result[formattedDate] = orders
         }
         return result
+    }
+    
+}
+
+extension MembershipOrder {
+    
+    var prettySource: String {
+        switch fiatOrder?.source {
+        case "app_store":
+            "App Store"
+        case "google_play":
+            "Google Play"
+        default:
+            switch source {
+            case "mixin":
+                "Mixin"
+            case "mixpay":
+                "MixPay"
+            default:
+                source
+            }
+        }
     }
     
 }

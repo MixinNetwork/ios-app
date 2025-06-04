@@ -123,7 +123,17 @@ final class Web3Worker {
     }
     
     private func signMessage(data: Data, to request: Request) {
-        guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum)?.destination else {
+        let address: Web3Address?
+        let chain: Web3Chain
+        switch request.network {
+        case .ethereum:
+            address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum)
+            chain = evmChain
+        case .solana:
+            address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.solana)
+            chain = solanaChain
+        }
+        guard let address = address?.destination else {
             send(error: "Account Locked", to: request)
             return
         }
@@ -134,11 +144,14 @@ final class Web3Worker {
             proposer: currentProposer,
             humanReadableMessage: humanReadable,
             signable: signable,
-            chain: evmChain
+            chain: chain
         ) { signature in
             try await self.send(result: signature, to: request)
         } rejectWith: {
             self.send(error: "User Rejected", to: request)
+        }
+        if chain == solanaChain {
+            operation.solanaLoginWithHexSignatureQuirk = true
         }
         let sign = Web3SignViewController(operation: operation, chainName: evmChain.name)
         Web3PopupCoordinator.enqueue(popup: .request(sign))

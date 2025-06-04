@@ -55,8 +55,8 @@
                                     <constraints>
                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="256" id="t04-pW-r5V"/>
                                     </constraints>
-                                    <state key="normal" title="Button"/>
-                                    <buttonConfiguration key="configuration" style="plain" title=""/>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                    <state key="normal" title=""/>
                                     <connections>
                                         <action selector="performAction:" destination="-1" eventType="touchUpInside" id="FvN-NS-kmB"/>
                                     </connections>

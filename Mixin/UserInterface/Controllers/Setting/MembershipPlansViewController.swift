@@ -19,7 +19,7 @@ final class MembershipPlansViewController: UIViewController {
     private var isPayingPendingOrder = false
     
     private var planDetails: [SafeMembership.PlanDetail] = []
-    private var benefits: [[Benefit]] = []
+    private var benefits: [[Benefit]] = Benefit.defaults()
     private var products: [String: Product] = [:] // Key is product.id
     
     private var selectedPlanDetails: SafeMembership.PlanDetail? {
@@ -402,6 +402,44 @@ extension MembershipPlansViewController {
             self.icon = icon
             self.title = title
             self.description = NSAttributedString(attributedString: attributedDescription)
+        }
+        
+        static func defaults() -> [[Benefit]] {
+            [
+                SafeMembership.PlanDetail(
+                    plan: .basic,
+                    accountQuota: 2,
+                    transactionQuota: 2,
+                    accountantsQuota: 3,
+                    membersQuota: 3,
+                    amount: "100",
+                    discountAmount: "100",
+                    paymentAmount: "100",
+                    appleSubscriptionID: ""
+                ),
+                SafeMembership.PlanDetail(
+                    plan: .standard,
+                    accountQuota: 5,
+                    transactionQuota: 5,
+                    accountantsQuota: 5,
+                    membersQuota: 10,
+                    amount: "1000",
+                    discountAmount: "1000",
+                    paymentAmount: "1000",
+                    appleSubscriptionID: ""
+                ),
+                SafeMembership.PlanDetail(
+                    plan: .premium,
+                    accountQuota: 100,
+                    transactionQuota: 20,
+                    accountantsQuota: 10,
+                    membersQuota: 100,
+                    amount: "10000",
+                    discountAmount: "10000",
+                    paymentAmount: "10000",
+                    appleSubscriptionID: ""
+                ),
+            ].map(Benefit.benefits(detail:))
         }
         
         static func benefits(detail: SafeMembership.PlanDetail) -> [Benefit] {

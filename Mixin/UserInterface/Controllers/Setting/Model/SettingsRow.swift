@@ -8,6 +8,11 @@ final class SettingsRow: NSObject {
         case destructive
     }
     
+    enum Subtitle {
+        case text(String)
+        case icon(UIImage)
+    }
+    
     enum Accessory {
         case none
         case disclosure
@@ -30,7 +35,7 @@ final class SettingsRow: NSObject {
     
     let titleStyle: Style
     
-    var subtitle: String? {
+    var subtitle: Subtitle? {
         didSet {
             NotificationCenter.default.post(onMainThread: Self.subtitleDidChangeNotification, object: self, userInfo: nil)
         }
@@ -55,10 +60,30 @@ final class SettingsRow: NSObject {
         self.icon = icon
         self.title = title
         self.titleStyle = titleStyle
-        self.subtitle = subtitle
+        self.subtitle = if let subtitle {
+            .text(subtitle)
+        } else {
+            nil
+        }
         self.accessory = accessory
         self.menu = menu
         super.init()
+    }
+    
+    init(
+        icon: UIImage? = nil,
+        title: String,
+        titleStyle: Style,
+        subtitleIcon: UIImage,
+        accessory: Accessory,
+        menu: UIMenu? = nil
+    ) {
+        self.icon = icon
+        self.title = title
+        self.titleStyle = titleStyle
+        self.subtitle = .icon(subtitleIcon)
+        self.accessory = accessory
+        self.menu = menu
     }
     
 }

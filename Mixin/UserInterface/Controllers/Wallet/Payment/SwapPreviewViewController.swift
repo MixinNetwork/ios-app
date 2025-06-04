@@ -21,7 +21,7 @@ class SwapPreviewViewController: AuthenticationPreviewViewController {
         let receiveToken = operation.receiveToken
         tableHeaderView.setIcon(sendToken: sendToken, receiveToken: receiveToken)
         tableHeaderView.titleLabel.text = R.string.localizable.swap_confirmation()
-        tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(mixinMessenger)
+        tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(.mixinMessenger)
         
         
         var rows: [Row]
@@ -108,8 +108,10 @@ class SwapPreviewViewController: AuthenticationPreviewViewController {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
         
-        layoutTableHeaderView(title: R.string.localizable.sending(),
-                                  subtitle: R.string.localizable.signature_request_from(mixinMessenger))
+        layoutTableHeaderView(
+            title: R.string.localizable.sending(),
+            subtitle: R.string.localizable.signature_request_from(.mixinMessenger)
+        )
         
         replaceTrayView(with: nil, animation: .vertical)
         Task {

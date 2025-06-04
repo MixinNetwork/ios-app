@@ -54,13 +54,14 @@ extension PrivacySettingViewController {
                 }
                 let indexPath = IndexPath(row: 0, section: 0)
                 let row = self.dataSource.row(at: indexPath)
-                if blocked.count == 0 {
-                    row.subtitle = R.string.localizable.none()
+                let subtitle = if blocked.count == 0 {
+                    R.string.localizable.none()
                 } else if blocked.count == 1 {
-                    row.subtitle = R.string.localizable.contact_count(1)
+                    R.string.localizable.contact_count(1)
                 } else {
-                    row.subtitle = R.string.localizable.contact_count_count(blocked.count)
+                    R.string.localizable.contact_count_count(blocked.count)
                 }
+                row.subtitle = .text(subtitle)
             }
         }
     }
@@ -68,7 +69,7 @@ extension PrivacySettingViewController {
     @objc private func updateScreenLockRow() {
         let indexPath = IndexPath(row: 0, section: 2)
         let row = dataSource.row(at: indexPath)
-        row.subtitle = screenLockTimeoutInterval
+        row.subtitle = .text(screenLockTimeoutInterval)
     }
     
     private var screenLockTimeoutInterval: String {

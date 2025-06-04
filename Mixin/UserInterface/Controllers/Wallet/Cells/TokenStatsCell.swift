@@ -26,7 +26,7 @@ final class TokenStatsCell: UITableViewCell {
             label.text = text
             label.textColor = R.color.text()
         } else {
-            label.text = notApplicable
+            label.text = .notApplicable
             label.textColor = R.color.text_tertiary()
         }
     }

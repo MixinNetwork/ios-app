@@ -39,7 +39,9 @@ final class UserProfileViewController: ProfileViewController {
         view.button.addTarget(self, action: #selector(self.editExpiredMessageDuration), for: .touchUpInside)
         return view
     }()
-
+    
+    private weak var membershipButton: UIButton?
+    
     private var isMe = false
     private var relationship = Relationship.ME
     private var developer: UserItem?
@@ -606,6 +608,15 @@ extension UserProfileViewController {
         reloadFavoriteApps(userId: user.userId, fromRemote: false)
     }
     
+    @objc private func buyMembership(_ sender: Any) {
+        guard let plan = user?.membership?.unexpiredPlan else {
+            return
+        }
+        let buyingPlan = SafeMembership.Plan(userMembershipPlan: plan)
+        let plans = MembershipPlansViewController(selectedPlan: buyingPlan)
+        dismissAndPresent(plans)
+    }
+    
 }
 
 // MARK: - Private works
@@ -651,6 +662,18 @@ extension UserProfileViewController {
         let badgeImage = user.badgeImage
         badgeImageView.image = badgeImage
         badgeImageView.isHidden = badgeImage == nil
+        if user.membership?.unexpiredPlan == nil {
+            membershipButton?.removeFromSuperview()
+        } else if membershipButton == nil {
+            let button = UIButton()
+            button.addTarget(self, action: #selector(buyMembership(_:)), for: .touchUpInside)
+            headerView.addSubview(button)
+            button.snp.makeConstraints { make in
+                make.width.height.equalTo(30)
+                make.center.equalTo(badgeImageView)
+            }
+            membershipButton = button
+        }
         
         if user.isDeactivated {
             centerStackView.addArrangedSubview(deactivatedHintView)

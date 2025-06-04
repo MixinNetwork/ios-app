@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class SettingsViewController: SettingsTableViewController {
+final class SettingsViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
@@ -16,6 +16,11 @@ class SettingsViewController: SettingsTableViewController {
                         accessory: .disclosure),
             SettingsRow(icon: R.image.setting.ic_category_storage(),
                         title: R.string.localizable.data_and_storage_usage(),
+                        accessory: .disclosure)
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(icon: R.image.setting.category_membership(),
+                        title: R.string.localizable.mixin_one(),
                         accessory: .disclosure)
         ]),
         SettingsSection(rows: [
@@ -43,11 +48,36 @@ class SettingsViewController: SettingsTableViewController {
         ])
     ])
     
+    private var membershipRow: SettingsRow {
+        dataSource.sections[1].rows[0]
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.settings()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
+        updateMembershipRow()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateMembershipRow),
+            name: LoginManager.accountDidChangeNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func updateMembershipRow() {
+        let plan = LoginManager.shared.account?.membership?.unexpiredPlan
+        membershipRow.subtitle = switch plan {
+        case .advance:
+                .icon(R.image.membership_advance()!)
+        case .elite:
+                .icon(R.image.membership_elite()!)
+        case .prosperity:
+                .icon(UserBadgeIcon.prosperityImage!)
+        case nil:
+                .text(R.string.localizable.upgrade_plan())
+        }
     }
     
 }
@@ -56,27 +86,35 @@ extension SettingsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let vc: UIViewController
+        let setting: UIViewController
         switch indexPath.section {
         case 0:
             switch indexPath.row {
             case 0:
-                vc = AccountSettingViewController()
+                setting = AccountSettingViewController()
             case 1:
-                vc = ChatsViewController()
+                setting = ChatsViewController()
             case 2:
-                vc = NotificationAndConfirmationSettingsViewController()
+                setting = NotificationAndConfirmationSettingsViewController()
             default:
-                vc = DataAndStorageSettingsViewController()
+                setting = DataAndStorageSettingsViewController()
             }
         case 1:
-            vc = AppearanceSettingsViewController()
+            if let membership = LoginManager.shared.account?.membership, let plan = membership.plan {
+                setting = MembershipViewController(plan: plan, expiredAt: membership.expiredAt)
+            } else {
+                let buy = MembershipPlansViewController(selectedPlan: nil)
+                present(buy, animated: true)
+                return
+            }
         case 2:
-            vc = DesktopViewController()
+            setting = AppearanceSettingsViewController()
         case 3:
+            setting = DesktopViewController()
+        case 4:
             if indexPath.row == 0 {
                 if let user = UserDAO.shared.getUser(identityNumber: "7000") {
-                    vc = ConversationViewController.instance(ownerUser: user)
+                    setting = ConversationViewController.instance(ownerUser: user)
                 } else {
                     return
                 }
@@ -87,9 +125,9 @@ extension SettingsViewController: UITableViewDelegate {
                 return
             }
         default:
-            vc = AboutViewController()
+            setting = AboutViewController()
         }
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(setting, animated: true)
     }
     
 }

@@ -39,7 +39,7 @@
                             <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" placeholderIntrinsicWidth="66" placeholderIntrinsicHeight="22" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q5Y-4u-hxi" customClass="Web3TransactionStatusLabel" customModule="Mixin" customModuleProvider="target">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" placeholderIntrinsicWidth="66" placeholderIntrinsicHeight="22" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q5Y-4u-hxi" customClass="TransactionStatusLabel" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="143.66666666666666" y="124" width="66" height="22"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <nil key="textColor"/>

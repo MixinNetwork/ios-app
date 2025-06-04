@@ -5,7 +5,7 @@ public final class SwapOrderDAO: UserDatabaseDAO {
     
     public static let shared = SwapOrderDAO()
     
-    public static let didChangeNotification = Notification.Name("one.mixin.service.MarketAlertDAO.Change")
+    public static let didChangeNotification = Notification.Name("one.mixin.service.SwapOrderDAO.Change")
     
     private let selector = """
     SELECT o.order_id, o.pay_asset_id, o.receive_asset_id,

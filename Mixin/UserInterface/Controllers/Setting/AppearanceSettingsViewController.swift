@@ -75,7 +75,7 @@ extension AppearanceSettingsViewController {
     @objc private func updateCurrencySubtitle() {
         let currency = Currency.current
         let subtitle = currency.code + " (" + currency.symbol + ")"
-        currencyRow.subtitle = subtitle
+        currencyRow.subtitle = .text(subtitle)
     }
     
     @objc private func updateUserInterfaceStyleSubtitle() {
@@ -90,11 +90,11 @@ extension AppearanceSettingsViewController {
         @unknown default:
             subtitle = ""
         }
-        userInterfaceStyleRow.subtitle = subtitle
+        userInterfaceStyleRow.subtitle = .text(subtitle)
     }
     
     @objc private func updatechatTextSizeSubtitle() {
-        chatTextSizeRow.subtitle = Self.chatTextSizeSubtitle
+        chatTextSizeRow.subtitle = .text(Self.chatTextSizeSubtitle)
     }
     
     private func colorAppearanceActions() -> [UIAction] {

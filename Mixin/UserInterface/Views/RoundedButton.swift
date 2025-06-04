@@ -28,12 +28,15 @@ class RoundedButton: UIButton {
             }
         }
     }
-
+    
+    var backgroundEnableColor: UIColor {
+        .theme
+    }
+    
     @IBInspectable var cornerRadius: CGFloat = 20
     
     private let backgroundLayer = CAShapeLayer()
     private let shadowLayer = CALayer()
-    private let backgroundEnableColor = UIColor.theme
     private let backgroundDisableColor = R.color.button_background_disabled()!
     private let textDisableColor = R.color.button_text_disabled()!
     

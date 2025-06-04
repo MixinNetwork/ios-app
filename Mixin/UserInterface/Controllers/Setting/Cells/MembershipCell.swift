@@ -42,7 +42,7 @@ final class MembershipCell: UITableViewCell {
             badgeImageView.image = R.image.membership_elite_large()
         case .prosperity:
             membershipLabel.text = R.string.localizable.membership_prosperity()
-            badgeImageView.image = UserBadgeIcon.prosperityImage
+            badgeImageView.image = UserBadgeIcon.largeProsperityImage
         }
         let date = DateFormatter.dateSimple.string(from: expiredAt)
         let viewPlanAttributes: AttributeContainer = {

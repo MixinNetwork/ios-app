@@ -41,7 +41,7 @@ final class CancelPendingMembershipOrderViewController: UIViewController {
             case .standard:
                 R.image.membership_elite_large()
             case .premium:
-                UserBadgeIcon.prosperityImage
+                UserBadgeIcon.largeProsperityImage
             }
         case .buyStars:
             R.image.mixin_star()

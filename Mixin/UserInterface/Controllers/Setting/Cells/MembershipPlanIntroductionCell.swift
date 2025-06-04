@@ -45,9 +45,7 @@ final class MembershipPlanIntroductionCell: UICollectionViewCell {
                 attributes: descriptionAttributes
             )
         case .premium:
-            let x = UserBadgeIcon.prosperityImage!
-            print(x.size)
-            iconImageView.image = x
+            iconImageView.image = UserBadgeIcon.largeProsperityImage
             nameLabel.text = R.string.localizable.membership_prosperity()
             descriptionLabel.attributedText = NSAttributedString(
                 string: R.string.localizable.membership_prosperity_description(),

@@ -5,7 +5,7 @@ import Photos
 import SDWebImage
 import MixinServices
 
-class ConversationViewController: UIViewController {
+final class ConversationViewController: UIViewController {
     
     static var positions = [String: Position]()
     static var allowReportSingleMessage = false

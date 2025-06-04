@@ -36,7 +36,7 @@ final class MembershipInvoiceCell: UITableViewCell {
                 iconImageView.image = R.image.membership_elite_large()
                 titleLabel.text = title(R.string.localizable.membership_elite())
             case .premium:
-                iconImageView.image = UserBadgeIcon.prosperityImage
+                iconImageView.image = UserBadgeIcon.largeProsperityImage
                 titleLabel.text = title(R.string.localizable.membership_prosperity())
             }
         case .renew(let plan):
@@ -49,7 +49,7 @@ final class MembershipInvoiceCell: UITableViewCell {
                 iconImageView.image = R.image.membership_elite_large()
                 titleLabel.text = title(R.string.localizable.membership_elite())
             case .premium:
-                iconImageView.image = UserBadgeIcon.prosperityImage
+                iconImageView.image = UserBadgeIcon.largeProsperityImage
                 titleLabel.text = title(R.string.localizable.membership_prosperity())
             }
         case .buyStars:

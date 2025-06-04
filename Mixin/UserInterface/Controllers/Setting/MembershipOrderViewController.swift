@@ -207,7 +207,7 @@ extension MembershipOrderViewController {
             case .standard:
                 (R.string.localizable.membership_elite(), R.image.membership_elite_large())
             case .premium:
-                (R.string.localizable.membership_prosperity(), UserBadgeIcon.prosperityImage)
+                (R.string.localizable.membership_prosperity(), UserBadgeIcon.largeProsperityImage)
             }
             rows.append(
                 Row(

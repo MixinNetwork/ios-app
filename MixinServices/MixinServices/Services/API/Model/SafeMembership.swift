@@ -97,8 +97,8 @@ public struct SafeMembership: Decodable {
         public init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.assetID = try container.decode(String.self, forKey: .assetID)
-            self.fee = try container.decode(Decimal.self, forKey: .fee)
-            self.recoveryFee = try container.decode(Decimal.self, forKey: .recoveryFee)
+            self.fee = try container.decodeStringAsDecimal(forKey: .fee)
+            self.recoveryFee = try container.decodeStringAsDecimal(forKey: .recoveryFee)
         }
         
     }

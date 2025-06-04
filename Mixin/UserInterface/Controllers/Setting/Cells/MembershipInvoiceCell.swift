@@ -68,18 +68,9 @@ final class MembershipInvoiceCell: UITableViewCell {
         case .cancel, .expired, .failed, .refund, .none:
             R.color.market_red()
         }
-        switch order.status.knownCase {
-        case .paid:
-            starsCountLabel.text = "+\(order.transactionsQuantity)"
-            starsUnitLabel.text = if order.transactionsQuantity == 1 {
-                R.string.localizable.star()
-            } else {
-                R.string.localizable.stars()
-            }
-        default:
-            starsCountLabel.text = nil
-            starsUnitLabel.text = nil
-        }
+        let stars = order.incomingStars
+        starsCountLabel.text = stars?.count
+        starsUnitLabel.text = stars?.unit
     }
     
 }

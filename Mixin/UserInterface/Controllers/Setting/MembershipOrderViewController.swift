@@ -8,10 +8,12 @@ final class MembershipOrderViewController: UIViewController {
     private weak var tableView: UITableView!
     
     private var order: MembershipOrder
+    private var rewards: MembershipOrder.StarRepresentation?
     private var rows: [Row] = []
     
     init(order: MembershipOrder) {
         self.order = order
+        self.rewards = order.subscriptionRewards
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -38,6 +40,7 @@ final class MembershipOrderViewController: UIViewController {
         tableView.sectionHeaderTopPadding = 10
         tableView.register(R.nib.membershipOrderStatusCell)
         tableView.register(R.nib.membershipOrderInfoCell)
+        tableView.register(R.nib.membershipOrderRewardsCell)
         tableView.register(
             UITableViewCell.self,
             forCellReuseIdentifier: emptyCellReuseIdentifier
@@ -83,6 +86,8 @@ extension MembershipOrderViewController: UITableViewDataSource {
             1
         case .infos:
             rows.count + 2
+        case .rewards:
+            rewards == nil ? 0 : 1
         }
     }
     
@@ -108,6 +113,13 @@ extension MembershipOrderViewController: UITableViewDataSource {
                 cell.iconImageView.image = row.image
                 return cell
             }
+        case .rewards:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.membership_order_rewards, for: indexPath)!
+            if let rewards {
+                cell.countLabel.text = rewards.count
+                cell.unitLabel.text = rewards.unit
+            }
+            return cell
         }
     }
     
@@ -117,7 +129,7 @@ extension MembershipOrderViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch Section(rawValue: indexPath.section)! {
-        case .status:
+        case .status, .rewards:
             UITableView.automaticDimension
         case .infos:
             switch indexPath.row {
@@ -153,6 +165,7 @@ extension MembershipOrderViewController {
     private enum Section: Int, CaseIterable {
         case status
         case infos
+        case rewards
     }
     
     private struct Row {
@@ -180,6 +193,7 @@ extension MembershipOrderViewController {
                     return
                 }
                 self.order = order
+                self.rewards = order.subscriptionRewards
                 self.reloadData(order: order)
             }
         }

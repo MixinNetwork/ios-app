@@ -742,11 +742,11 @@
 "media" = "媒体";
 "membership_advance" = "进阶版";
 "membership_advance_description" = "在多设备上使用多个密钥，避免单点故障，并在密钥丢失时获得去中心化的恢复服务。";
-"membership_benefit_create_safe" = "可创建 %d 个金库";
-"membership_benefit_free_recovery_service" = "资产恢复服务免费使用";
-"membership_benefit_get_stars" = "得到 %d 个 Mixin Stars";
-"membership_benefit_paid_recovery_service" = "支付 %d Mixin Stars 使用资产恢复服务";
-"membership_benefit_safe_members" = "每个金库最多 %1$d 个共管人，所有金库最多 %2$d 个共管人";
+"membership_benefit_create_safe" = "可创建 %d 个金库。";
+"membership_benefit_free_recovery_service" = "资产恢复服务免费使用。";
+"membership_benefit_get_stars" = "得到 %d 个 Mixin Stars。";
+"membership_benefit_paid_recovery_service" = "支付 %d Mixin Stars 使用资产恢复服务。";
+"membership_benefit_safe_members" = "每个金库最多 %1$d 个共管人，所有金库最多 %2$d 个共管人。";
 "membership_elite" = "精英版";
 "membership_elite_description" = "与家人、朋友或同事一起使用 Mixin Safe 管理大量资产，从而规避盗窃、意外和托管风险。";
 "membership_plan" = "级别";
@@ -1095,6 +1095,7 @@
 "revoke_multisig_transaction" = "撤销多重签名交易";
 "revoking_multisig_failed" = "撤销多重签名交易失败";
 "revoking_multisig_signature" = "正在撤销多签交易";
+"rewards" = "礼遇";
 "room_is_full" = "房间已满";
 "safe" = "金库";
 "safe_members" = "金库共管人";

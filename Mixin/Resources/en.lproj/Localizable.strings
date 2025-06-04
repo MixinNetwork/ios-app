@@ -742,11 +742,11 @@
 "media" = "Media";
 "membership_advance" = "Advance";
 "membership_advance_description" = "Use multiple keys on multiple devices to avoid single point of failure, and get decentralized recovery service in case of key loss.";
-"membership_benefit_create_safe" = "Create %d safes";
-"membership_benefit_free_recovery_service" = "Use the recovery service for free";
-"membership_benefit_get_stars" = "Get %d Mixin Stars";
-"membership_benefit_paid_recovery_service" = "Pay %d Mixin Stars to use the recovery service";
-"membership_benefit_safe_members" = "%1$d members per safe, %2$d members in total";
+"membership_benefit_create_safe" = "Create %d Safes.";
+"membership_benefit_free_recovery_service" = "Use the recovery service for free.";
+"membership_benefit_get_stars" = "Get %d Mixin Stars.";
+"membership_benefit_paid_recovery_service" = "Pay %d Mixin Stars to use the recovery service.";
+"membership_benefit_safe_members" = "%1$d members per Safe, %2$d members in total.";
 "membership_elite" = "Elite";
 "membership_elite_description" = "Manage large fortune in Mixin Safe with family, friends or colleagues, so you can avoid thefts, accidents and custody risks.";
 "membership_plan" = "Plan";
@@ -1095,6 +1095,7 @@
 "revoke_multisig_transaction" = "Revoke Multisig Transaction";
 "revoking_multisig_failed" = "Revoking Multisig Failed";
 "revoking_multisig_signature" = "Revoking Multisig Signature";
+"rewards" = "Rewards";
 "room_is_full" = "Room is full";
 "safe" = "SAFE";
 "safe_members" = "Safe Members";

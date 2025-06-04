@@ -981,6 +981,8 @@
 		94658CAB2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94658CAA2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift */; };
 		94658CB92B358E3100F5EB21 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94658CB82B358E3100F5EB21 /* TabBar.swift */; };
 		94659DAA25C13793003403E5 /* DevicePerformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94659DA925C13793003403E5 /* DevicePerformance.swift */; };
+		94668D682DF06C640068078D /* MembershipOrderRewardsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94668D662DF06C640068078D /* MembershipOrderRewardsCell.swift */; };
+		94668D692DF06C640068078D /* MembershipOrderRewardsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94668D672DF06C640068078D /* MembershipOrderRewardsCell.xib */; };
 		94668E252CB50B6800558755 /* AlertTypeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94668E242CB50B6800558755 /* AlertTypeSelectorViewController.swift */; };
 		94668E2B2CB50C6F00558755 /* MarketAlertParameterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94668E2A2CB50C6F00558755 /* MarketAlertParameterCell.xib */; };
 		94668E2C2CB50C6F00558755 /* MarketAlertParameterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94668E292CB50C6F00558755 /* MarketAlertParameterCell.swift */; };
@@ -2577,6 +2579,8 @@
 		94658CAA2B34A75700F5EB21 /* RevealPublicSpendKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevealPublicSpendKeyViewController.swift; sourceTree = "<group>"; };
 		94658CB82B358E3100F5EB21 /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		94659DA925C13793003403E5 /* DevicePerformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DevicePerformance.swift; sourceTree = "<group>"; };
+		94668D662DF06C640068078D /* MembershipOrderRewardsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipOrderRewardsCell.swift; sourceTree = "<group>"; };
+		94668D672DF06C640068078D /* MembershipOrderRewardsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipOrderRewardsCell.xib; sourceTree = "<group>"; };
 		94668E242CB50B6800558755 /* AlertTypeSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertTypeSelectorViewController.swift; sourceTree = "<group>"; };
 		94668E292CB50C6F00558755 /* MarketAlertParameterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertParameterCell.swift; sourceTree = "<group>"; };
 		94668E2A2CB50C6F00558755 /* MarketAlertParameterCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketAlertParameterCell.xib; sourceTree = "<group>"; };
@@ -5053,6 +5057,8 @@
 				948AB76F2DE5DC40005E76A0 /* MembershipOrderStatusCell.swift */,
 				948AB78F2DE5EF27005E76A0 /* MembershipOrderInfoCell.xib */,
 				948AB78E2DE5EF27005E76A0 /* MembershipOrderInfoCell.swift */,
+				94668D672DF06C640068078D /* MembershipOrderRewardsCell.xib */,
+				94668D662DF06C640068078D /* MembershipOrderRewardsCell.swift */,
 				94B89D512DE75A30002A0DDC /* MembershipViewAllOrdersCell.xib */,
 				94B89D502DE75A30002A0DDC /* MembershipViewAllOrdersCell.swift */,
 				94F2F97F2DEF50590013B820 /* CancelPendingMembershipOrderView.xib */,
@@ -5972,6 +5978,7 @@
 				7CF5929827979CCF00015495 /* DeleteAccountVerifyPinWindow.xib in Resources */,
 				946332002C63E36800C54B76 /* CheckmarkTokenCell.xib in Resources */,
 				7B2C4B112436FF5E00D2EB99 /* CircleCell.xib in Resources */,
+				94668D692DF06C640068078D /* MembershipOrderRewardsCell.xib in Resources */,
 				94E619B92645BAA000A38049 /* SuspiciousLinkView.xib in Resources */,
 				7B2D175022B11A8600AE3DD8 /* LoginInfoInputView.xib in Resources */,
 				9415D4A42BCBEF6800C78A75 /* Web3DepositView.xib in Resources */,
@@ -6613,6 +6620,7 @@
 				940FC5EB2CDBC4F10056BFF2 /* ViewMnemonicsViewController.swift in Sources */,
 				940AE02C2BA0D88100E7A9FE /* ExploreSegmentCell.swift in Sources */,
 				7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */,
+				94668D682DF06C640068078D /* MembershipOrderRewardsCell.swift in Sources */,
 				DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */,
 				946331C22C622C3500C54B76 /* TransactionHistoryDateFilterView.swift in Sources */,
 				7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */,

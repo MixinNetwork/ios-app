@@ -34,18 +34,33 @@ extension MembershipOrder {
 
 extension MembershipOrder {
     
-    static func categorizedByCreatedAt(
-        createdAtDescendingOrders orders: [MembershipOrder]
-    ) -> OrderedDictionary<String, [MembershipOrder]> {
-        var result: OrderedDictionary<String, [MembershipOrder]> = [:]
-        for order in orders {
-            let date = DateFormatter.iso8601Full.date(from: order.createdAt) ?? Date()
-            let formattedDate = DateFormatter.dateSimple.string(from: date)
-            var orders = result[formattedDate] ?? []
-            orders.append(order)
-            result[formattedDate] = orders
+    struct StarRepresentation {
+        let count: String
+        let unit: String
+    }
+    
+    var incomingStars: StarRepresentation? {
+        switch status.knownCase {
+        case .paid:
+            let count = "+\(transactionsQuantity)"
+            let unit = if transactionsQuantity == 1 {
+                R.string.localizable.star()
+            } else {
+                R.string.localizable.stars()
+            }
+            return StarRepresentation(count: count, unit: unit)
+        default:
+            return nil
         }
-        return result
+    }
+    
+    var subscriptionRewards: StarRepresentation? {
+        switch category.knownCase {
+        case .subscription:
+            incomingStars
+        default:
+            nil
+        }
     }
     
 }
@@ -68,6 +83,24 @@ extension MembershipOrder {
                 source
             }
         }
+    }
+    
+}
+
+extension MembershipOrder {
+    
+    static func categorizedByCreatedAt(
+        createdAtDescendingOrders orders: [MembershipOrder]
+    ) -> OrderedDictionary<String, [MembershipOrder]> {
+        var result: OrderedDictionary<String, [MembershipOrder]> = [:]
+        for order in orders {
+            let date = DateFormatter.iso8601Full.date(from: order.createdAt) ?? Date()
+            let formattedDate = DateFormatter.dateSimple.string(from: date)
+            var orders = result[formattedDate] ?? []
+            orders.append(order)
+            result[formattedDate] = orders
+        }
+        return result
     }
     
 }

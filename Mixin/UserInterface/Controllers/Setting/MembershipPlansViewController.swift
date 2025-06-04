@@ -165,8 +165,12 @@ final class MembershipPlansViewController: UIViewController {
     @IBAction func performAction(_ sender: Any) {
         if let order = pendingOrder {
             view(order: order)
+        } else if let detail = selectedPlanDetails, products[detail.appleSubscriptionID] != nil {
+            buy(detail: detail)
         } else {
-            buy()
+            let customerService = CustomerServiceViewController()
+            present(customerService, animated: true)
+            reporter.report(event: .customerServiceDialog, tags: ["source": "membership_plans"])
         }
     }
     
@@ -211,10 +215,7 @@ final class MembershipPlansViewController: UIViewController {
         }
     }
     
-    private func buy() {
-        guard let detail = selectedPlanDetails else {
-            return
-        }
+    private func buy(detail: SafeMembership.PlanDetail) {
         isPayingPendingOrder = true
         reloadBuyButtonTitle(observer: .global)
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinSafe)
@@ -243,7 +244,7 @@ final class MembershipPlansViewController: UIViewController {
                     switch verification {
                     case .verified(let transaction):
                         Logger.general.debug(category: "Membership", message: "Transaction verified: \(order.orderID)")
-                        await IAPTransactionObserver.global.handle(transaction: transaction)
+                        await IAPTransactionObserver.global.handle(verifiedTransaction: transaction)
                     case .unverified:
                         Logger.general.debug(category: "Membership", message: "Transaction unverified: \(order.orderID)")
                         throw BuyingError.unverifiedTransaction
@@ -594,8 +595,8 @@ extension MembershipPlansViewController {
                     actionButton.isBusy = false
                 } else {
                     showActionView(showVerifyPaymentLabel: false)
-                    actionButton.setTitle(R.string.localizable.coming_soon(), for: .normal)
-                    actionButton.isEnabled = false
+                    actionButton.setTitle(R.string.localizable.contact_support(), for: .normal)
+                    actionButton.isEnabled = true
                     actionButton.isBusy = false
                 }
             } else {
@@ -605,6 +606,7 @@ extension MembershipPlansViewController {
                 actionButton.isBusy = true
             }
         }
+        UIView.performWithoutAnimation(view.layoutIfNeeded)
     }
     
 }

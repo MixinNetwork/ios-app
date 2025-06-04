@@ -32,12 +32,12 @@ final class IAPTransactionObserver {
                 guard case .verified(let transaction) = result else {
                     continue
                 }
-                await self.handle(transaction: transaction)
+                await self.handle(verifiedTransaction: transaction)
             }
         }
     }
     
-    func handle(transaction: Transaction) async {
+    func handle(verifiedTransaction transaction: Transaction) async {
         await MainActor.run {
             self.isRunning = true
         }

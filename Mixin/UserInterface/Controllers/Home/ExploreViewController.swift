@@ -253,7 +253,7 @@ extension ExploreViewController {
         var name: String {
             switch self {
             case .bots:
-                R.string.localizable.bots_title()
+                R.string.localizable.explore()
             case .markets:
                 R.string.localizable.markets()
             }

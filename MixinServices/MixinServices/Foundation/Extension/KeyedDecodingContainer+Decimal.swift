@@ -2,8 +2,7 @@ import Foundation
 
 extension KeyedDecodingContainer {
     
-    public func decode(
-        _ type: Decimal.Type,
+    public func decodeStringAsDecimal(
         forKey key: KeyedDecodingContainer<K>.Key
     ) throws -> Decimal {
         let string = try decode(String.self, forKey: key)

@@ -81,7 +81,7 @@
                         </button>
                     </subviews>
                 </stackView>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="VOM-vy-xAJ">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="order_cancel" translatesAutoresizingMaskIntoConstraints="NO" id="VOM-vy-xAJ">
                     <rect key="frame" x="207.66666666666666" y="96" width="24" height="24"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="VOM-vy-xAJ" secondAttribute="height" id="ptG-Do-hBz"/>
@@ -104,6 +104,7 @@
         </view>
     </objects>
     <resources>
+        <image name="order_cancel" width="24" height="24"/>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

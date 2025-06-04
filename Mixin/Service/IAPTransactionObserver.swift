@@ -59,8 +59,10 @@ final class IAPTransactionObserver {
                         continue
                     case .paid:
                         Logger.general.debug(category: "IAP", message: "Order Paid: \(id)")
+                        try? await Task.sleep(nanoseconds: 10 * NSEC_PER_SEC)
                         let job = RefreshAccountJob()
                         ConcurrentJobQueue.shared.addJob(job: job)
+                        MembershipOrderDAO.shared.save(orders: [order])
                         isFinished = true
                         await transaction.finish()
                     case .cancel, .expired, .failed, .refund, .none:

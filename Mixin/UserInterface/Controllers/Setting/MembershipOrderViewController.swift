@@ -218,6 +218,12 @@ extension MembershipOrderViewController {
             )
         }
         
+        let amount = switch order.status.knownCase {
+        case .paid:
+            order.actualAmount
+        default:
+            order.amount
+        }
         let time = if let date = DateFormatter.iso8601Full.date(from: order.createdAt) {
             DateFormatter.dateFull.string(from: date)
         } else {
@@ -226,7 +232,7 @@ extension MembershipOrderViewController {
         rows.append(contentsOf: [
             Row(
                 title: R.string.localizable.amount().uppercased(),
-                content: "USD " + order.actualAmount
+                content: "USD " + amount
             ),
             Row(
                 title: R.string.localizable.time().uppercased(),

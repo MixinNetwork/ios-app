@@ -61,6 +61,7 @@ final class IAPTransactionObserver {
                         Logger.general.debug(category: "IAP", message: "Order Paid: \(id)")
                         let job = RefreshAccountJob()
                         ConcurrentJobQueue.shared.addJob(job: job)
+                        MembershipOrderDAO.shared.save(orders: [order])
                         isFinished = true
                         await transaction.finish()
                     case .cancel, .expired, .failed, .refund, .none:

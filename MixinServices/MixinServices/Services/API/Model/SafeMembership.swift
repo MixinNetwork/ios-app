@@ -2,7 +2,7 @@ import Foundation
 
 public struct SafeMembership: Decodable {
     
-    public enum Plan: String, CaseIterable, Decodable {
+    public enum Plan: String, CaseIterable, Decodable, Comparable {
         
         case basic
         case standard
@@ -16,6 +16,24 @@ public struct SafeMembership: Decodable {
                 self = .standard
             case .prosperity:
                 self = .premium
+            }
+        }
+        
+        public static func < (lhs: Self, rhs: Self) -> Bool {
+            switch (lhs, rhs) {
+            case (.basic, .standard), (.standard, .premium):
+                true
+            default:
+                false
+            }
+        }
+        
+        public static func > (lhs: Self, rhs: Self) -> Bool {
+            switch (lhs, rhs) {
+            case (.standard, .basic), (.premium, .standard):
+                true
+            default:
+                false
             }
         }
         
@@ -44,6 +62,23 @@ public struct SafeMembership: Decodable {
         public let discountAmount: String
         public let paymentAmount: String
         public let appleSubscriptionID: String
+        
+        public init(
+            plan: Plan, accountQuota: Int, transactionQuota: Int,
+            accountantsQuota: Int, membersQuota: Int,
+            amount: String, discountAmount: String,
+            paymentAmount: String, appleSubscriptionID: String
+        ) {
+            self.plan = plan
+            self.accountQuota = accountQuota
+            self.transactionQuota = transactionQuota
+            self.accountantsQuota = accountantsQuota
+            self.membersQuota = membersQuota
+            self.amount = amount
+            self.discountAmount = discountAmount
+            self.paymentAmount = paymentAmount
+            self.appleSubscriptionID = appleSubscriptionID
+        }
         
     }
     

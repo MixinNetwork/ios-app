@@ -6,10 +6,13 @@ final class MembershipPlansViewController: UIViewController {
     
     @IBOutlet weak var titleView: PopupTitleView!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var actionView: UIView!
     @IBOutlet weak var actionButton: StyledButton!
     @IBOutlet weak var verifyingPaymentLabel: UILabel!
     
     @IBOutlet weak var actionStackViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var showActionViewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideActionViewConstraint: NSLayoutConstraint!
     
     private let headerFooterReuseIdentifier = "h"
     
@@ -539,40 +542,64 @@ extension MembershipPlansViewController {
         }
     }
     
-    private func reloadBuyButtonTitle(observer: IAPTransactionObserver) {
-        if isPayingPendingOrder {
-            verifyingPaymentLabel.isHidden = true
-            actionStackViewBottomConstraint.constant = 20
-            actionButton.isBusy = true
-        } else if let order = pendingOrder, order.status.knownCase == .initial {
+    private func hideActionView() {
+        hideActionViewConstraint.priority = .almostRequired
+        showActionViewConstraint.priority = .almostInexist
+        actionView.isHidden = true
+    }
+    
+    private func showActionView(showVerifyPaymentLabel: Bool) {
+        hideActionViewConstraint.priority = .almostInexist
+        showActionViewConstraint.priority = .almostRequired
+        actionView.isHidden = false
+        if showVerifyPaymentLabel {
             verifyingPaymentLabel.isHidden = false
             actionStackViewBottomConstraint.constant = 10
+        } else {
+            verifyingPaymentLabel.isHidden = true
+            actionStackViewBottomConstraint.constant = 20
+        }
+    }
+    
+    private func reloadBuyButtonTitle(observer: IAPTransactionObserver) {
+        if isPayingPendingOrder {
+            showActionView(showVerifyPaymentLabel: false)
+            actionButton.isBusy = true
+        } else if let order = pendingOrder, order.status.knownCase == .initial {
+            showActionView(showVerifyPaymentLabel: true)
             actionButton.setTitle(R.string.localizable.view_invoice(), for: .normal)
             actionButton.isEnabled = true
             actionButton.isBusy = false
         } else {
-            verifyingPaymentLabel.isHidden = true
-            actionStackViewBottomConstraint.constant = 20
-            if observer.isRunning {
+            if planDetails.isEmpty, let currentPlan, SafeMembership.Plan.allCases[selectedIndex] < currentPlan {
+                hideActionView()
+            } else if observer.isRunning {
+                showActionView(showVerifyPaymentLabel: false)
                 actionButton.setTitle(R.string.localizable.upgrading_plan(), for: .normal)
                 actionButton.isEnabled = false
                 actionButton.isBusy = false
             } else if let detail = selectedPlanDetails {
                 if detail.plan == currentPlan {
+                    showActionView(showVerifyPaymentLabel: false)
                     actionButton.setTitle(R.string.localizable.current_plan(), for: .normal)
                     actionButton.isEnabled = false
                     actionButton.isBusy = false
+                } else if let currentPlan, detail.plan < currentPlan {
+                    hideActionView()
                 } else if let product = products[detail.appleSubscriptionID] {
+                    showActionView(showVerifyPaymentLabel: false)
                     let title = R.string.localizable.upgrade_plan_for(product.displayPrice)
                     actionButton.setTitle(title, for: .normal)
                     actionButton.isEnabled = true
                     actionButton.isBusy = false
                 } else {
+                    showActionView(showVerifyPaymentLabel: false)
                     actionButton.setTitle(R.string.localizable.coming_soon(), for: .normal)
                     actionButton.isEnabled = false
                     actionButton.isBusy = false
                 }
             } else {
+                showActionView(showVerifyPaymentLabel: false)
                 actionButton.setTitle(" ", for: .normal)
                 actionButton.isEnabled = false
                 actionButton.isBusy = true

@@ -13,7 +13,10 @@
             <connections>
                 <outlet property="actionButton" destination="D0t-KR-Uyi" id="QqG-NH-x69"/>
                 <outlet property="actionStackViewBottomConstraint" destination="e9o-Xx-yxV" id="SXt-gB-iAB"/>
+                <outlet property="actionView" destination="y6o-J9-bVL" id="Xlg-hb-toV"/>
                 <outlet property="collectionView" destination="qvi-Zq-w0N" id="qRE-D5-A7x"/>
+                <outlet property="hideActionViewConstraint" destination="hyr-GV-1AN" id="WfU-wI-zQG"/>
+                <outlet property="showActionViewConstraint" destination="24g-Ai-WzO" id="Snw-7M-Myc"/>
                 <outlet property="titleView" destination="T41-XJ-ucW" id="nKg-4c-7au"/>
                 <outlet property="verifyingPaymentLabel" destination="43T-hs-2vR" id="r9V-IP-kfg"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -41,7 +44,7 @@
                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                     </collectionViewFlowLayout>
                 </collectionView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y6o-J9-bVL">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y6o-J9-bVL" userLabel="Action View">
                     <rect key="frame" x="0.0" y="700" width="393" height="152"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="sS8-ZB-sMd">
@@ -70,19 +73,20 @@
                     <color key="backgroundColor" name="background_secondary"/>
                     <constraints>
                         <constraint firstItem="sS8-ZB-sMd" firstAttribute="centerX" secondItem="y6o-J9-bVL" secondAttribute="centerX" id="ZzJ-kS-KOG"/>
-                        <constraint firstItem="sS8-ZB-sMd" firstAttribute="top" secondItem="y6o-J9-bVL" secondAttribute="top" constant="20" id="d1M-HI-o9t"/>
+                        <constraint firstItem="sS8-ZB-sMd" firstAttribute="top" secondItem="y6o-J9-bVL" secondAttribute="top" priority="750" constant="20" id="d1M-HI-o9t"/>
                     </constraints>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" name="background_secondary"/>
             <constraints>
-                <constraint firstItem="y6o-J9-bVL" firstAttribute="top" secondItem="qvi-Zq-w0N" secondAttribute="bottom" id="24g-Ai-WzO"/>
+                <constraint firstItem="y6o-J9-bVL" firstAttribute="top" secondItem="qvi-Zq-w0N" secondAttribute="bottom" priority="999" id="24g-Ai-WzO"/>
                 <constraint firstAttribute="bottom" secondItem="y6o-J9-bVL" secondAttribute="bottom" id="WcW-5Z-Iuh"/>
                 <constraint firstAttribute="trailing" secondItem="y6o-J9-bVL" secondAttribute="trailing" id="Zjc-xJ-0xP"/>
                 <constraint firstItem="T41-XJ-ucW" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="bwB-Bt-nek"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="sS8-ZB-sMd" secondAttribute="bottom" constant="20" id="e9o-Xx-yxV"/>
                 <constraint firstAttribute="trailing" secondItem="T41-XJ-ucW" secondAttribute="trailing" id="gN2-an-7Xu"/>
+                <constraint firstAttribute="bottom" secondItem="qvi-Zq-w0N" secondAttribute="bottom" priority="1" id="hyr-GV-1AN"/>
                 <constraint firstItem="qvi-Zq-w0N" firstAttribute="top" secondItem="T41-XJ-ucW" secondAttribute="bottom" id="jNX-gB-el5"/>
                 <constraint firstItem="y6o-J9-bVL" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="l69-tR-2da"/>
                 <constraint firstItem="T41-XJ-ucW" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="q2k-I0-gOX"/>

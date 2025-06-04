@@ -66,6 +66,11 @@ final class SettingsViewController: SettingsTableViewController {
         )
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
+    }
+    
     @objc private func updateMembershipRow() {
         let plan = LoginManager.shared.account?.membership?.unexpiredPlan
         membershipRow.subtitle = switch plan {

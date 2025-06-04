@@ -48,7 +48,6 @@ final class UserCenterViewController: SettingsTableViewController, MixinNavigati
         tableView.tableHeaderView = R.nib.userCenterTableHeaderView(withOwner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-        ConcurrentJobQueue.shared.addJob(job: RefreshAccountJob())
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadAccount),

@@ -9,9 +9,9 @@ struct SwapRequest: Encodable {
     let outputMint: String
     let slippage: Int
     let source: RouteTokenSource
-    let referral: String?
     let payload: String?
     let withdrawalDestination: String?
+    let referral: String?
     
     init(
         sendToken: SwapToken,
@@ -20,7 +20,8 @@ struct SwapRequest: Encodable {
         source: RouteTokenSource,
         slippage: Decimal,
         payload: String,
-        withdrawalDestination: String?
+        withdrawalDestination: String?,
+        referral: String?,
     ) {
         self.payer = myUserId
         self.inputMint = sendToken.assetID
@@ -28,9 +29,9 @@ struct SwapRequest: Encodable {
         self.outputMint = receiveToken.assetID
         self.slippage = Slippage(decimal: slippage).integral
         self.source = source
-        self.referral = nil
         self.payload = payload
         self.withdrawalDestination = withdrawalDestination
+        self.referral = referral
     }
     
 }

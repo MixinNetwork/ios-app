@@ -8,7 +8,7 @@ enum SafeURL {
     case code(String)
     case tip(TIPURL)
     case inscription(String)
-    case swap(input: String?, output: String?)
+    case swap(input: String?, output: String?, referral: String?)
     case send(ExternalSharingContext)
     case market(id: String)
     
@@ -36,7 +36,7 @@ extension SafeURL {
             let pathComponents = url.pathComponents
             switch pathComponents.count {
             case 2 where pathComponents[1] == "swap":
-                var input, output: String?
+                var input, output, referral: String?
                 if let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: true)?.queryItems {
                     for item in queryItems {
                         switch item.name {
@@ -44,12 +44,14 @@ extension SafeURL {
                             input = item.value
                         case "output":
                             output = item.value
+                        case "referral":
+                            referral = item.value
                         default:
                             break
                         }
                     }
                 }
-                self = .swap(input: input, output: output)
+                self = .swap(input: input, output: output, referral: referral)
             case 2 where pathComponents[1] == "send":
                 if let context = ExternalSharingContext(url: url) {
                     self = .send(context)

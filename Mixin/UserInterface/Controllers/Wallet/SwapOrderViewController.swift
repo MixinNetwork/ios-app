@@ -199,7 +199,8 @@ extension SwapOrderViewController: PillActionView.Delegate {
                 }
                 let swap = MixinSwapViewController(
                     sendAssetID: order.payAssetID,
-                    receiveAssetID: order.receiveAssetID
+                    receiveAssetID: order.receiveAssetID,
+                    referral: nil
                 )
                 viewControllers.append(swap)
                 navigationController.setViewControllers(viewControllers, animated: true)

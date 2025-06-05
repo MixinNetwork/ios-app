@@ -13,7 +13,7 @@ final class Web3SwapViewController: MixinSwapViewController {
     
     init(sendAssetID: String?, receiveAssetID: String?, walletID: String) {
         self.walletID = walletID
-        super.init(sendAssetID: sendAssetID, receiveAssetID: receiveAssetID)
+        super.init(sendAssetID: sendAssetID, receiveAssetID: receiveAssetID, referral: nil)
     }
     
     @MainActor required init?(coder: NSCoder) {
@@ -100,7 +100,8 @@ final class Web3SwapViewController: MixinSwapViewController {
             source: .web3,
             slippage: 0.01,
             payload: quote.payload,
-            withdrawalDestination: receiveAddress.destination
+            withdrawalDestination: receiveAddress.destination,
+            referral: nil
         )
         sender.isBusy = true
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)

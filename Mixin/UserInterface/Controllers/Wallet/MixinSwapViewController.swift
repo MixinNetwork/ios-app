@@ -7,6 +7,7 @@ class MixinSwapViewController: SwapViewController {
     
     private let arbitrarySendAssetID: String?
     private let arbitraryReceiveAssetID: String?
+    private let referral: String?
     
     // Key is asset id
     fileprivate(set) var swappableTokens: OrderedDictionary<String, BalancedSwapToken> = [:]
@@ -55,9 +56,10 @@ class MixinSwapViewController: SwapViewController {
         return formatter
     }()
     
-    init(sendAssetID: String?, receiveAssetID: String?) {
+    init(sendAssetID: String?, receiveAssetID: String?, referral: String?) {
         self.arbitrarySendAssetID = sendAssetID
         self.arbitraryReceiveAssetID = receiveAssetID
+        self.referral = referral
         super.init()
     }
     
@@ -237,7 +239,8 @@ class MixinSwapViewController: SwapViewController {
             source: .mixin,
             slippage: 0.01,
             payload: quote.payload,
-            withdrawalDestination: nil
+            withdrawalDestination: nil,
+            referral: referral
         )
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
         ConcurrentJobQueue.shared.addJob(job: job)

@@ -65,9 +65,13 @@ class UrlWindow {
             case .inscription(let hash):
                 checkInscription(hash: hash)
                 return true
-            case let .swap(input, output):
+            case let .swap(input, output, referral):
                 if let navigationController = UIApplication.homeNavigationController {
-                    let swap = MixinSwapViewController(sendAssetID: input, receiveAssetID: output ?? AssetID.erc20USDT)
+                    let swap = MixinSwapViewController(
+                        sendAssetID: input,
+                        receiveAssetID: output ?? AssetID.erc20USDT,
+                        referral: referral
+                    )
                     navigationController.pushViewController(swap, animated: true)
                     reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "schema"])
                 }

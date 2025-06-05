@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class TokenViewController<Token: HideableToken & ValuableToken & DistinguishableToken, Transaction>: UIViewController, UITableViewDataSource, UITableViewDelegate, MnemonicsBackupChecking {
+class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistinguishable, Transaction>: UIViewController, UITableViewDataSource, UITableViewDelegate, MnemonicsBackupChecking {
     
     let queue = DispatchQueue(label: "one.mixin.messenger.TokenViewController")
     let transactionsCount = 20
@@ -16,6 +16,7 @@ class TokenViewController<Token: HideableToken & ValuableToken & Distinguishable
     private(set) var chartPoints: [ChartView.Point]?
     
     private let headerReuseIdentifier = "h"
+    private let maliciousWarningReuseIdentifier = "m"
     private let emptyCellReuseIdentifier = "e"
     
     private var performSendOnAppear: Bool
@@ -57,7 +58,10 @@ class TokenViewController<Token: HideableToken & ValuableToken & Distinguishable
         tableView.alwaysBounceVertical = true
         tableView.estimatedRowHeight = 62
         tableView.separatorStyle = .none
-        tableView.register(R.nib.maliciousTokenWarningCell)
+        tableView.register(
+            MaliciousTokenWarningCell.self,
+            forCellReuseIdentifier: maliciousWarningReuseIdentifier
+        )
         tableView.register(R.nib.tokenBalanceCell)
         tableView.register(R.nib.insetGroupedTitleCell)
         tableView.register(R.nib.tokenMarketCell)
@@ -191,8 +195,7 @@ class TokenViewController<Token: HideableToken & ValuableToken & Distinguishable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
         case .warning:
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.malicious_token_warning, for: indexPath)!
-            return cell
+            return tableView.dequeueReusableCell(withIdentifier: maliciousWarningReuseIdentifier, for: indexPath)
         case .balance:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_balance, for: indexPath)!
             updateBalanceCell(cell)

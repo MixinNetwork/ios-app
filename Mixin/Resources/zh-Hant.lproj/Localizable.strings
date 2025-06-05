@@ -1057,7 +1057,8 @@
 "reputation_description" = "預設僅顯示信譽度良好、未知的交易。啟用“高風險”可檢視更多交易。";
 "reputation_spam" = "高風險";
 "reputation_spam_description" = "因可疑行為或欺詐跡象被標記為高風險交易";
-"reputation_spam_warning" = "該代幣已被標記為高風險代幣";
+"reputation_spam_token_warning" = "該代幣已被標記為高風險代幣";
+"reputation_spam_transaction_warning" = "該交易已被標記為高風險交易";
 "request_authorization" = "請求授權";
 "request_rejected" = "請求已拒絕";
 "request_rejected_reason_another_request_in_process" = "正在處理另一請求，請完成當前請求後重試";

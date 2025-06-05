@@ -319,27 +319,6 @@ extension Web3TransactionViewController {
         let complexHeaderView: ComplexWeb3TransactionTableHeaderView = tableView.tableHeaderView as? ComplexWeb3TransactionTableHeaderView
             ?? R.nib.complexWeb3TransactionTableHeaderView(withOwner: nil)!
         
-        let feeToken = Web3TokenDAO.shared.token(walletID: walletID, assetID: transaction.chainID)
-        let feeRow: Row
-        if let feeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
-            feeRow = .fee(
-                token: CurrencyFormatter.localizedString(
-                    from: amount,
-                    format: .precision,
-                    sign: .never,
-                    symbol: .custom(feeToken.symbol)
-                ),
-                fiatMoney: CurrencyFormatter.localizedString(
-                    from: amount * feeToken.decimalUSDPrice * Currency.current.decimalRate,
-                    format: .precision,
-                    sign: .never,
-                    symbol: .currencySymbol
-                )
-            )
-        } else {
-            feeRow = .plain(key: .fee, value: transaction.fee)
-        }
-        
         switch transaction.transactionType.knownCase {
         case .transferIn, .transferOut:
             if let assetID = transaction.transferAssetID,
@@ -394,7 +373,36 @@ extension Web3TransactionViewController {
             tableView.tableHeaderView = complexHeaderView
         }
         
+        if let headerView = tableView.tableHeaderView as? Web3TransactionTableHeaderView {
+            if transaction.isMalicious {
+                headerView.showMaliciousWarningView()
+            } else {
+                headerView.hideMaliciousWarningView()
+            }
+        }
+        
         layoutTableHeaderView()
+        
+        let feeToken = Web3TokenDAO.shared.token(walletID: walletID, assetID: transaction.chainID)
+        let feeRow: Row
+        if let feeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
+            feeRow = .fee(
+                token: CurrencyFormatter.localizedString(
+                    from: amount,
+                    format: .precision,
+                    sign: .never,
+                    symbol: .custom(feeToken.symbol)
+                ),
+                fiatMoney: CurrencyFormatter.localizedString(
+                    from: amount * feeToken.decimalUSDPrice * Currency.current.decimalRate,
+                    format: .precision,
+                    sign: .never,
+                    symbol: .currencySymbol
+                )
+            )
+        } else {
+            feeRow = .plain(key: .fee, value: transaction.fee)
+        }
         
         switch transaction.transactionType.knownCase {
         case .transferIn:

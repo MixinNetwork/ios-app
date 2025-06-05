@@ -9,8 +9,10 @@ final class SimpleWeb3TransactionTableHeaderView: InfiniteTopView, Web3Transacti
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var statusLabel: TransactionStatusLabel!
     
+    @IBOutlet weak var contentStackViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentStackViewBottomConstraint: NSLayoutConstraint!
     
+    weak var maliciousWarningView: UIView?
     weak var actionView: PillActionView?
     
     override func awakeFromNib() {

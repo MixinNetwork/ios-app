@@ -3,8 +3,10 @@ import UIKit
 protocol Web3TransactionTableHeaderView: UIView {
     
     var contentStackView: UIStackView! { get }
+    var contentStackViewTopConstraint: NSLayoutConstraint! { get }
     var contentStackViewBottomConstraint: NSLayoutConstraint! { get }
     
+    var maliciousWarningView: UIView? { get set }
     var actionView: PillActionView? { get set }
     
 }
@@ -48,6 +50,29 @@ extension Web3TransactionTableHeaderView {
     func hideActionView() {
         contentStackViewBottomConstraint.constant = 16
         actionView?.removeFromSuperview()
+    }
+    
+}
+
+extension Web3TransactionTableHeaderView {
+    
+    func showMaliciousWarningView() {
+        contentStackViewTopConstraint.constant = 10
+        if maliciousWarningView == nil {
+            let warningView = R.nib.maliciousWarningView(withOwner: nil)!
+            warningView.content = .transaction
+            contentStackView.insertArrangedSubview(warningView, at: 0)
+            contentStackView.setCustomSpacing(18, after: warningView)
+            warningView.snp.makeConstraints { make in
+                make.width.equalToSuperview()
+            }
+            self.maliciousWarningView = warningView
+        }
+    }
+    
+    func hideMaliciousWarningView() {
+        contentStackViewTopConstraint.constant = 18
+        maliciousWarningView?.removeFromSuperview()
     }
     
 }

@@ -136,6 +136,14 @@ extension Web3Transaction: TableRecord, PersistableRecord, MixinFetchableRecord,
     
 }
 
+extension Web3Transaction: MaliciousDistinguishable {
+    
+    public var isMalicious: Bool {
+        level <= Web3Reputation.Level.spam.rawValue
+    }
+    
+}
+
 extension Web3Transaction {
     
     public enum Status: String, Codable {

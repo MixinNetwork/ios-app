@@ -6,8 +6,11 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var iconView: UIImageView!
     @IBOutlet weak var statusWrapperView: UIView!
     @IBOutlet weak var statusImageView: UIImageView!
+    @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var assetChangeStackView: UIStackView!
+    
+    private weak var badReputationImageView: UIImageView?
     
     private var rowViews: [RowStackView] = []
     
@@ -20,6 +23,11 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
     }
     
     func load(transaction: Web3Transaction, symbols: [String: String]) {
+        if transaction.isMalicious {
+            showBadReputationIcon()
+        } else {
+            hideBadReputationIcon()
+        }
         titleLabel.text = transaction.compactHash
         
         let sendAmountColor: UIColor
@@ -133,6 +141,23 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
                 assetChangeStackView.addArrangedSubview(view)
             }
         }
+    }
+    
+    private func showBadReputationIcon() {
+        if let imageView = badReputationImageView {
+            imageView.isHidden = false
+        } else {
+            let imageView = UIImageView(image: R.image.web3_reputation_bad())
+            imageView.setContentHuggingPriority(.required, for: .horizontal)
+            imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+            titleStackView.insertArrangedSubview(imageView, at: 0)
+            titleStackView.setCustomSpacing(4, after: imageView)
+            badReputationImageView = imageView
+        }
+    }
+    
+    private func hideBadReputationIcon() {
+        badReputationImageView?.isHidden = true
     }
     
 }

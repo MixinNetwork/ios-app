@@ -10,6 +10,7 @@ final class MarketViewController: UIViewController {
     
     private let id: Identifier
     private let isMalicious: Bool
+    private let maliciousWarningReuseIdentifier = "m"
     
     private var market: FavorableMarket?
     private var tokens: [MixinTokenItem]?
@@ -81,7 +82,10 @@ final class MarketViewController: UIViewController {
         tableView.estimatedRowHeight = 110
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
-        tableView.register(R.nib.maliciousTokenWarningCell)
+        tableView.register(
+            MaliciousTokenWarningCell.self,
+            forCellReuseIdentifier: maliciousWarningReuseIdentifier
+        )
         tableView.register(R.nib.tokenPriceChartCell)
         tableView.register(R.nib.insetGroupedTitleCell)
         tableView.register(R.nib.tokenStatsCell)
@@ -417,8 +421,7 @@ extension MarketViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
         case .warning:
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.malicious_token_warning, for: indexPath)!
-            return cell
+            return tableView.dequeueReusableCell(withIdentifier: maliciousWarningReuseIdentifier, for: indexPath)
         case .chart:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.token_price_chart, for: indexPath)!
             if let market {

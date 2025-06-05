@@ -1,5 +1,5 @@
 import Foundation
 
-public protocol DistinguishableToken: Token {
+public protocol MaliciousDistinguishable {
     var isMalicious: Bool { get }
 }

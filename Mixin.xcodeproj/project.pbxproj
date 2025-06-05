@@ -836,7 +836,6 @@
 		943EDC482C833B55007E160B /* Market+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943EDC472C833B55007E160B /* Market+Localization.swift */; };
 		943FEB3E2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943FEB3C2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift */; };
 		943FEB3F2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943FEB3D2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib */; };
-		94425FE62DD498FB003F46DF /* MaliciousTokenWarningCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94425FE52DD498FB003F46DF /* MaliciousTokenWarningCell.xib */; };
 		94425FE72DD498FB003F46DF /* MaliciousTokenWarningCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94425FE42DD498FB003F46DF /* MaliciousTokenWarningCell.swift */; };
 		944263832DD64337003F46DF /* Web3ReputationPickerActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944263822DD64337003F46DF /* Web3ReputationPickerActionCell.xib */; };
 		944263B42DD648AD003F46DF /* Web3ReputationPickerActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944263B32DD648AB003F46DF /* Web3ReputationPickerActionCell.swift */; };
@@ -1213,6 +1212,8 @@
 		94CF1F3F2BA1EC0400BC52C1 /* Web3DappCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CF1F3E2BA1EC0400BC52C1 /* Web3DappCell.xib */; };
 		94CF1F402BA1EC0400BC52C1 /* Web3DappCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CF1F3D2BA1EC0400BC52C1 /* Web3DappCell.swift */; };
 		94CF4E122CDDEE8B005B69D4 /* LoginNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CF4E112CDDEE86005B69D4 /* LoginNavigationController.swift */; };
+		94D07AF72DF1883400FDF38E /* MaliciousWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D07AF62DF1882C00FDF38E /* MaliciousWarningView.swift */; };
+		94D07AFF2DF1883D00FDF38E /* MaliciousWarningView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D07AFE2DF1883D00FDF38E /* MaliciousWarningView.xib */; };
 		94D0FF312BEB1BC900E3947F /* InscriptionContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D0FF302BEB1BC900E3947F /* InscriptionContentView.swift */; };
 		94D0FF362BEB1BD700E3947F /* InscriptionContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D0FF352BEB1BD700E3947F /* InscriptionContentView.xib */; };
 		94D0FF382BEB1CA200E3947F /* InscriptionHashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D0FF372BEB1CA200E3947F /* InscriptionHashView.swift */; };
@@ -2418,7 +2419,6 @@
 		943FEB3C2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertTokenCell.swift; sourceTree = "<group>"; };
 		943FEB3D2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketAlertTokenCell.xib; sourceTree = "<group>"; };
 		94425FE42DD498FB003F46DF /* MaliciousTokenWarningCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaliciousTokenWarningCell.swift; sourceTree = "<group>"; };
-		94425FE52DD498FB003F46DF /* MaliciousTokenWarningCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaliciousTokenWarningCell.xib; sourceTree = "<group>"; };
 		944263822DD64337003F46DF /* Web3ReputationPickerActionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3ReputationPickerActionCell.xib; sourceTree = "<group>"; };
 		944263B32DD648AB003F46DF /* Web3ReputationPickerActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ReputationPickerActionCell.swift; sourceTree = "<group>"; };
 		944263CD2DD6CB98003F46DF /* Web3ReputationOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ReputationOptionCell.swift; sourceTree = "<group>"; };
@@ -2806,6 +2806,8 @@
 		94CF1F3D2BA1EC0400BC52C1 /* Web3DappCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3DappCell.swift; sourceTree = "<group>"; };
 		94CF1F3E2BA1EC0400BC52C1 /* Web3DappCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3DappCell.xib; sourceTree = "<group>"; };
 		94CF4E112CDDEE86005B69D4 /* LoginNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNavigationController.swift; sourceTree = "<group>"; };
+		94D07AF62DF1882C00FDF38E /* MaliciousWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaliciousWarningView.swift; sourceTree = "<group>"; };
+		94D07AFE2DF1883D00FDF38E /* MaliciousWarningView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaliciousWarningView.xib; sourceTree = "<group>"; };
 		94D0FF302BEB1BC900E3947F /* InscriptionContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionContentView.swift; sourceTree = "<group>"; };
 		94D0FF352BEB1BD700E3947F /* InscriptionContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionContentView.xib; sourceTree = "<group>"; };
 		94D0FF372BEB1CA200E3947F /* InscriptionHashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionHashView.swift; sourceTree = "<group>"; };
@@ -5007,7 +5009,8 @@
 				94DEB05E2D9D339200406E19 /* WalletTipPageControlCell.swift */,
 				94AD96C72DD47E6E00C84DF2 /* Web3ReputationOptionCell.xib */,
 				944263CD2DD6CB98003F46DF /* Web3ReputationOptionCell.swift */,
-				94425FE52DD498FB003F46DF /* MaliciousTokenWarningCell.xib */,
+				94D07AFE2DF1883D00FDF38E /* MaliciousWarningView.xib */,
+				94D07AF62DF1882C00FDF38E /* MaliciousWarningView.swift */,
 				94425FE42DD498FB003F46DF /* MaliciousTokenWarningCell.swift */,
 			);
 			path = Cells;
@@ -5895,7 +5898,6 @@
 				94B7B6DC26B43562000B0AC5 /* SilentNotificationMessagePreviewView.xib in Resources */,
 				947E3AB72B10A8AB008B2007 /* ConsolidateOutputsView.xib in Resources */,
 				7C5DFE32284F3071008733FC /* UserCenterTableHeaderView.xib in Resources */,
-				94425FE62DD498FB003F46DF /* MaliciousTokenWarningCell.xib in Resources */,
 				944A5A772C2605720021460C /* CollectibleCollectionHeaderView.xib in Resources */,
 				7C8FA78F2768822800855AFD /* DeleteAccountTableHeaderView.xib in Resources */,
 				94F2F9802DEF50590013B820 /* CancelPendingMembershipOrderView.xib in Resources */,
@@ -6038,6 +6040,7 @@
 				7B9863911FA313E300D4B16C /* BottomWrapperView.xib in Resources */,
 				94FE0C502B3083CA006DEFC5 /* SendingDestinationCell.xib in Resources */,
 				7B9A08FD25481A7600E8568D /* MinimizedClipIconView.xib in Resources */,
+				94D07AFF2DF1883D00FDF38E /* MaliciousWarningView.xib in Resources */,
 				94CD47202BECB6F100A3DE10 /* InscriptionView.xib in Resources */,
 				7C53049728FE6F4400567CF6 /* AuthorizationScopePreviewView.xib in Resources */,
 				94CB85D02C6B43A900135641 /* TokenMyBalanceCell.xib in Resources */,
@@ -6592,6 +6595,7 @@
 				7BC98FA721EF5B8C004A5D79 /* AudioMessagePlayingManager.swift in Sources */,
 				9458A06F2CC8E72900A51154 /* NSAttributedString+Constant.swift in Sources */,
 				943BC6782BCE99BC003FA778 /* CollectiblesViewController.swift in Sources */,
+				94D07AF72DF1883400FDF38E /* MaliciousWarningView.swift in Sources */,
 				7BE0726E2024A2AC00D7B44D /* AppButtonGroupMessageCell.swift in Sources */,
 				7BC26534207B595500EA7DFF /* ContactMessageCell.swift in Sources */,
 				7BBCEC1825232A9800F270DF /* WebMoreMenuViewController.swift in Sources */,

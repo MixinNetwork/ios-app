@@ -32,6 +32,8 @@ final class IAPTransactionObserver {
                 guard case .verified(let transaction) = result else {
                     continue
                 }
+                let orderID = transaction.appAccountToken?.uuidString ?? "nil"
+                Logger.general.info(category: "IAP", message: "Got verified txn update: \(orderID)")
                 await self.handle(verifiedTransaction: transaction)
             }
         }
@@ -51,14 +53,15 @@ final class IAPTransactionObserver {
             var isFinished = false
             while !isFinished {
                 do {
+                    Logger.general.info(category: "IAP", message: "Checking order: \(id)")
                     let order = try await SafeAPI.membershipOrder(id: id)
                     switch order.status.knownCase {
                     case .initial:
-                        Logger.general.debug(category: "IAP", message: "Order Inited: \(id)")
+                        Logger.general.info(category: "IAP", message: "Order Inited: \(id)")
                         try? await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
                         continue
                     case .paid:
-                        Logger.general.debug(category: "IAP", message: "Order Paid: \(id)")
+                        Logger.general.info(category: "IAP", message: "Order Paid: \(id)")
                         try? await Task.sleep(nanoseconds: 10 * NSEC_PER_SEC)
                         let job = RefreshAccountJob()
                         ConcurrentJobQueue.shared.addJob(job: job)
@@ -87,7 +90,7 @@ final class IAPTransactionObserver {
                 }
             }
         } else {
-            // Missing appAccountToken
+            Logger.general.error(category: "IAP", message: "Missing order ID")
         }
         await MainActor.run {
             self.isRunning = false

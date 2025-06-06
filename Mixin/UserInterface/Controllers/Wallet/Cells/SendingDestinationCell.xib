@@ -18,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eMA-X1-1W9">
-                        <rect key="frame" x="16" y="5" width="288" height="64"/>
+                        <rect key="frame" x="20" y="5" width="280" height="64"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UrT-8y-c7T">
                                 <rect key="frame" x="24" y="24" width="16" height="16"/>
@@ -28,7 +28,7 @@
                                 </constraints>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ilR-V9-k9l">
-                                <rect key="frame" x="60" y="13" width="212" height="38"/>
+                                <rect key="frame" x="60" y="13" width="204" height="38"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="9kl-g3-iws">
                                         <rect key="frame" x="0.0" y="0.0" width="39.666666666666664" height="18.666666666666668"/>
@@ -69,8 +69,8 @@
                 </subviews>
                 <color key="backgroundColor" name="background_secondary"/>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="eMA-X1-1W9" secondAttribute="trailing" constant="16" id="b3C-9G-xLh"/>
-                    <constraint firstItem="eMA-X1-1W9" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="meK-qt-ZA4"/>
+                    <constraint firstAttribute="trailing" secondItem="eMA-X1-1W9" secondAttribute="trailing" constant="20" id="b3C-9G-xLh"/>
+                    <constraint firstItem="eMA-X1-1W9" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="meK-qt-ZA4"/>
                     <constraint firstAttribute="bottom" secondItem="eMA-X1-1W9" secondAttribute="bottom" constant="5" id="nsv-x7-aF9"/>
                     <constraint firstItem="eMA-X1-1W9" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="pbu-h6-ZyT"/>
                 </constraints>

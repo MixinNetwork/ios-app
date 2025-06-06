@@ -1157,10 +1157,11 @@
 "send_sol_for_rent" = "傳送至少 %@ SOL 以支付租金";
 "send_this_location" = "傳送這個位置";
 "send_to" = "傳送給 %@";
-"send_to_address_description" = "透過區塊鏈網路轉給已知地址";
-"send_to_contact_description" = "透過 Mixin 網路轉給我的 Mixin 聯絡人";
+"send_to_address_description" = "轉到我地址薄中的地址，地址受到 PIN 保護，避免地址釣魚攻擊。";
+"send_to_common_wallet_description" = "轉到我的普通錢包，用於去中心化應用和 DeFi 協議。";
+"send_to_contact_description" = "轉給我的 Mixin 好友，轉賬隱私、零手續費且秒到賬。";
 "send_to_developer" = "把日誌發給開發者";
-"send_to_other_wallet_description" = "使用區塊鏈網路傳送到我的另一個錢包";
+"send_to_privacy_wallet_description" = "轉到我的隱私錢包，保護資產的隱私和安全，避免各種潛在風險。";
 "send_to_title" = "轉給";
 "send_video" = "傳送 1 個影片";
 "send_video_count" = "傳送 %d 個影片";

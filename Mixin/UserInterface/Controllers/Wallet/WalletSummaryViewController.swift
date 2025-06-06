@@ -10,14 +10,17 @@ final class WalletSummaryViewController: UIViewController {
         case tipsPageControl
     }
     
-    @IBOutlet weak var collectionView: UICollectionView!
+    private enum ReuseIdentifier {
+        static let tip = "t"
+        static let pageControl = "p"
+    }
     
-    private let pageControlIdentifier = "p"
+    @IBOutlet weak var collectionView: UICollectionView!
     
     private var summary: WalletSummary?
     private var privacyWalletDigest: WalletDigest?
     private var classicWalletDigests: [WalletDigest] = []
-    private var tips: [WalletTipCell.Content] = []
+    private var tips: [WalletTipView.Content] = []
     
     private weak var tipsPageControl: UIPageControl?
     private var tipsCurrentPage: Int = 0 {
@@ -40,10 +43,13 @@ final class WalletSummaryViewController: UIViewController {
         }
         collectionView.register(R.nib.walletSummaryValueCell)
         collectionView.register(R.nib.walletCell)
-        collectionView.register(R.nib.walletTipCell)
+        collectionView.register(
+            WalletTipCollectionViewCell.self,
+            forCellWithReuseIdentifier: ReuseIdentifier.tip
+        )
         collectionView.register(
             WalletTipPageControlCell.self,
-            forCellWithReuseIdentifier: pageControlIdentifier
+            forCellWithReuseIdentifier: ReuseIdentifier.pageControl
         )
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, environment) in
             switch Section(rawValue: sectionIndex)! {
@@ -154,10 +160,10 @@ final class WalletSummaryViewController: UIViewController {
     
 }
 
-extension WalletSummaryViewController: WalletTipCell.Delegate {
+extension WalletSummaryViewController: WalletTipView.Delegate {
     
-    func walletTipCellWantsToClose(_ cell: WalletTipCell) {
-        guard let content = cell.content, let item = tips.firstIndex(of: content) else {
+    func walletTipViewWantsToClose(_ view: WalletTipView) {
+        guard let content = view.content, let item = tips.firstIndex(of: content) else {
             return
         }
         tips.remove(at: item)
@@ -176,19 +182,6 @@ extension WalletSummaryViewController: WalletTipCell.Delegate {
         case .classic:
             AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = true
         }
-    }
-    
-    func walletTipCell(_ cell: WalletTipCell, wantsToLearnMoreAbout content: WalletTipCell.Content) {
-        let string = switch content {
-        case .privacy:
-            R.string.localizable.url_privacy_wallet()
-        case .classic:
-            R.string.localizable.url_classic_wallet()
-        }
-        guard let url = URL(string: string) else {
-            return
-        }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
 }
@@ -238,12 +231,12 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
             }
             return cell
         case .tips:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_tip, for: indexPath)!
-            cell.content = tips[indexPath.item]
-            cell.delegate = self
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseIdentifier.tip, for: indexPath) as! WalletTipCollectionViewCell
+            cell.tipView.content = tips[indexPath.item]
+            cell.tipView.delegate = self
             return cell
         case .tipsPageControl:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: pageControlIdentifier, for: indexPath) as! WalletTipPageControlCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseIdentifier.pageControl, for: indexPath) as! WalletTipPageControlCell
             cell.pageControl.numberOfPages = tips.count
             cell.pageControl.currentPage = tipsCurrentPage
             self.tipsPageControl = cell.pageControl
@@ -269,6 +262,33 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
                 container?.switchToWallet(digest.wallet)
             }
         }
+    }
+    
+}
+
+extension WalletSummaryViewController {
+    
+    private final class WalletTipCollectionViewCell: UICollectionViewCell {
+        
+        let tipView = R.nib.walletTipView(withOwner: nil)!
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            prepare()
+        }
+        
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            prepare()
+        }
+        
+        private func prepare() {
+            backgroundColor = .clear
+            contentView.backgroundColor = .clear
+            contentView.addSubview(tipView)
+            tipView.snp.makeEdgesEqualToSuperview()
+        }
+        
     }
     
 }

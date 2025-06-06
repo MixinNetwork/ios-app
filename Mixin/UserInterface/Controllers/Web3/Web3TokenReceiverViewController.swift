@@ -13,6 +13,7 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
     private let destinations: [Destination]
     private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
     private let trayViewHeight: CGFloat = 82
+    private let walletTipReuseIdentifier = "t"
     
     private var verifiedAddress: String?
     
@@ -37,7 +38,10 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = R.string.localizable.send()
+        navigationItem.titleView = NavigationTitleView(
+            title: R.string.localizable.send(),
+            subtitle: R.string.localizable.common_wallet()
+        )
         navigationItem.rightBarButtonItem = .customerService(
             target: self,
             action: #selector(presentCustomerService(_:))
@@ -57,6 +61,10 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
         tableView.estimatedRowHeight = 74
         tableView.tableHeaderView = headerView
         tableView.register(R.nib.sendingDestinationCell)
+        tableView.register(
+            WalletTipTableViewCell.self,
+            forCellReuseIdentifier: walletTipReuseIdentifier
+        )
         tableView.dataSource = self
         tableView.delegate = self
         tableView.contentInsetAdjustmentBehavior = .always
@@ -134,26 +142,41 @@ extension Web3TokenReceiverViewController: HomeNavigationController.NavigationBa
 
 extension Web3TokenReceiverViewController: UITableViewDataSource {
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        destinations.count
+        if section == 0 {
+            destinations.count
+        } else {
+            AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTipInTransfer ? 0 : 1
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
-        let destination = destinations[indexPath.row]
-        switch destination {
-        case .privacyWallet:
-            cell.iconImageView.image = R.image.token_receiver_wallet()
-            cell.titleLabel.text = R.string.localizable.privacy_wallet()
-            cell.titleTag = .privacyShield
-            cell.descriptionLabel.text = R.string.localizable.send_to_other_wallet_description()
-        case .addressBook:
-            cell.iconImageView.image = R.image.token_receiver_address_book()
-            cell.titleLabel.text = R.string.localizable.address_book()
-            cell.titleTag = nil
-            cell.descriptionLabel.text = R.string.localizable.send_to_address_description()
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
+            let destination = destinations[indexPath.row]
+            switch destination {
+            case .privacyWallet:
+                cell.iconImageView.image = R.image.token_receiver_wallet()
+                cell.titleLabel.text = R.string.localizable.privacy_wallet()
+                cell.titleTag = .privacyShield
+                cell.descriptionLabel.text = R.string.localizable.send_to_privacy_wallet_description()
+            case .addressBook:
+                cell.iconImageView.image = R.image.token_receiver_address_book()
+                cell.titleLabel.text = R.string.localizable.address_book()
+                cell.titleTag = nil
+                cell.descriptionLabel.text = R.string.localizable.send_to_address_description()
+            }
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: walletTipReuseIdentifier, for: indexPath) as! WalletTipTableViewCell
+            cell.tipView.content = .privacy
+            cell.tipView.delegate = self
+            return cell
         }
-        return cell
     }
     
 }
@@ -162,6 +185,9 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        guard indexPath.section == 0 else {
+            return
+        }
         let destination = destinations[indexPath.row]
         switch destination {
         case .addressBook:
@@ -244,6 +270,16 @@ extension Web3TokenReceiverViewController: CameraViewControllerDelegate {
         headerView.setContent(destination)
         continueWithOneTimeAddress(controller)
         return false
+    }
+    
+}
+
+extension Web3TokenReceiverViewController: WalletTipView.Delegate {
+    
+    func walletTipViewWantsToClose(_ view: WalletTipView) {
+        AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTipInTransfer = true
+        let indexPath = IndexPath(row: 0, section: 1)
+        tableView.deleteRows(at: [indexPath], with: .fade)
     }
     
 }

@@ -1157,10 +1157,11 @@
 "send_sol_for_rent" = "Send at least %@ SOL for the rent";
 "send_this_location" = "Отправить это местоположение";
 "send_to" = "Отправить в %@";
-"send_to_address_description" = "Send to a known crypto address using a crypto network";
-"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network";
+"send_to_address_description" = "Send to an address in your Address Book, PIN-protected to prevent phishing.";
+"send_to_common_wallet_description" = "Send to your Common Wallet for use with decentralized apps and DeFi protocols.";
+"send_to_contact_description" = "Send to your Mixin friends with privacy, zero fees, and instant delivery.";
 "send_to_developer" = "Отправить разработчику";
-"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
+"send_to_privacy_wallet_description" = "Send to your Privacy Wallet to keep your assets safe and hidden from potential risks.";
 "send_to_title" = "Отправить в";
 "send_video" = "Отправить 1 видео";
 "send_video_count" = "Отправить %d видео";

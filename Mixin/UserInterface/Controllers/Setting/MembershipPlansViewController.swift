@@ -243,14 +243,14 @@ final class MembershipPlansViewController: UIViewController {
                 case .success(let verification):
                     switch verification {
                     case .verified(let transaction):
-                        Logger.general.debug(category: "Membership", message: "Transaction verified: \(order.orderID)")
+                        Logger.general.info(category: "Membership", message: "Transaction verified: \(order.orderID)")
                         await IAPTransactionObserver.global.handle(verifiedTransaction: transaction)
                     case .unverified:
-                        Logger.general.debug(category: "Membership", message: "Transaction unverified: \(order.orderID)")
+                        Logger.general.info(category: "Membership", message: "Transaction unverified: \(order.orderID)")
                         throw BuyingError.unverifiedTransaction
                     }
                 case .userCancelled:
-                    Logger.general.debug(category: "Membership", message: "User cancelled: \(order.orderID)")
+                    Logger.general.info(category: "Membership", message: "User cancelled: \(order.orderID)")
                     let id = order.orderID.uuidString.lowercased()
                     let order = try await SafeAPI.cancelMembershipOrder(id: id)
                     MembershipOrderDAO.shared.save(orders: [order])
@@ -258,7 +258,7 @@ final class MembershipPlansViewController: UIViewController {
                     ConcurrentJobQueue.shared.addJob(job: reloadOrders)
                 case .pending:
                     // Leave it to AppDelegate
-                    Logger.general.debug(category: "Membership", message: "Pending: \(order.orderID)")
+                    Logger.general.info(category: "Membership", message: "Pending: \(order.orderID)")
                 @unknown default:
                     break
                 }
@@ -515,7 +515,7 @@ extension MembershipPlansViewController {
             case let .success(membership):
                 self?.reloadData(membership: membership)
             case let .failure(error):
-                Logger.general.debug(category: "Membership", message: "\(error)")
+                Logger.general.error(category: "Membership", message: "\(error)")
                 DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
                     self?.reloadPlans()
                 }

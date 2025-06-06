@@ -317,34 +317,37 @@ public final class MessageDAO: UserDatabaseDAO {
         UNUserNotificationCenter.current().removeNotifications(withIdentifiers: mentionMessageIds)
     }
     
-    public func updateMessageStatus(messageId: String, status: String, from: String) {
-        guard let oldMessage: Message = db.select(where: Message.column(of: .messageId) == messageId) else {
-            return
-        }
-        guard oldMessage.status != MessageStatus.FAILED.rawValue else {
-            let error = MixinServicesError.badMessageData(id: messageId, status: status, from: from)
-            reporter.report(error: error)
-            return
-        }
-        guard MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: oldMessage.status) else {
-            return
-        }
-        
-        let conversationId = oldMessage.conversationId
-        
-        let completion: ((GRDB.Database) -> Void)?
-        if isAppExtension {
-            completion = nil
-        } else {
-            completion = { _ in
-                let status = MessageStatus(rawValue: status) ?? .UNKNOWN
-                let change = ConversationChange(conversationId: conversationId,
-                                                action: .updateMessageStatus(messageId: messageId, newStatus: status))
-                NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
-            }
-        }
-        
+    // Return true if message exists, false if not exists
+    @discardableResult
+    public func updateMessageStatus(messageId: String, status: String, from: String) -> Bool {
+        var messageExists = true
         db.write { db in
+            guard let current = try Message.filter(Message.column(of: .messageId) == messageId).fetchOne(db) else {
+                messageExists = false
+                return
+            }
+            guard current.status != MessageStatus.FAILED.rawValue else {
+                let error = MixinServicesError.badMessageData(id: messageId, status: status, from: from)
+                reporter.report(error: error)
+                return
+            }
+            guard MessageStatus.getOrder(messageStatus: status) > MessageStatus.getOrder(messageStatus: current.status) else {
+                return
+            }
+            
+            let conversationId = current.conversationId
+            let completion: ((GRDB.Database) -> Void)?
+            if isAppExtension {
+                completion = nil
+            } else {
+                completion = { _ in
+                    let status = MessageStatus(rawValue: status) ?? .UNKNOWN
+                    let change = ConversationChange(conversationId: conversationId,
+                                                    action: .updateMessageStatus(messageId: messageId, newStatus: status))
+                    NotificationCenter.default.post(onMainThread: conversationDidChangeNotification, object: change)
+                }
+            }
+            
             try Message
                 .filter(Message.column(of: .messageId) == messageId)
                 .updateAll(db, [Message.column(of: .status).set(to: status)])
@@ -355,6 +358,7 @@ public final class MessageDAO: UserDatabaseDAO {
                 db.afterNextTransaction(onCommit: completion)
             }
         }
+        return messageExists
     }
     
     public func updateUnseenMessageCount(database: GRDB.Database, conversationId: String) throws {

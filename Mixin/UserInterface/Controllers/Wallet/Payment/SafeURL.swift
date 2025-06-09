@@ -11,6 +11,7 @@ enum SafeURL {
     case swap(input: String?, output: String?, referral: String?)
     case send(ExternalSharingContext)
     case market(id: String)
+    case membership
     
 }
 
@@ -58,6 +59,8 @@ extension SafeURL {
                 } else {
                     return nil
                 }
+            case 2 where pathComponents[1] == "membership":
+                self = .membership
             case 3 where pathComponents[1] == "schemes":
                 let uuid = pathComponents[2]
                 if UUID.isValidLowercasedUUIDString(uuid) {

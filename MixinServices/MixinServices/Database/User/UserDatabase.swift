@@ -940,26 +940,27 @@ public final class UserDatabase: Database {
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS `index_addresses_chain_id_updated_at` ON `addresses` (`chain_id`, `updated_at`)")
         }
         
-        migrator.registerMigration("membership_orders") { db in
+        migrator.registerMigration("membership_orders_2") { db in
             let sqls = [
+                "DROP TABLE IF EXISTS membership_orders",
                 """
                 CREATE TABLE IF NOT EXISTS `membership_orders` (
-                    `order_id`              TEXT NOT NULL,
-                    `category`              TEXT NOT NULL,
-                    `amount`                TEXT NOT NULL,
-                    `amount_actual`         TEXT NOT NULL,
-                    `amount_original`       TEXT NOT NULL,
-                    `after`                 TEXT NOT NULL,
-                    `before`                TEXT NOT NULL,
-                    `created_at`            TEXT NOT NULL,
-                    `fiat_order`            TEXT,
-                    `quantity_transactions` INTEGER NOT NULL,
-                    `source`                TEXT NOT NULL,
-                    `status`                TEXT NOT NULL,
+                    `order_id`          TEXT NOT NULL,
+                    `category`          TEXT NOT NULL,
+                    `amount`            TEXT NOT NULL,
+                    `amount_actual`     TEXT NOT NULL,
+                    `amount_original`   TEXT NOT NULL,
+                    `after`             TEXT NOT NULL,
+                    `before`            TEXT NOT NULL,
+                    `created_at`        TEXT NOT NULL,
+                    `fiat_order`        TEXT,
+                    `stars`             INTEGER NOT NULL,
+                    `payment_url`       TEXT,
+                    `status`            TEXT NOT NULL,
                     PRIMARY KEY(order_id)
                 )
                 """,
-                "CREATE INDEX IF NOT EXISTS index_membership_orders_created_at ON membership_orders(created_at)"
+                "CREATE INDEX IF NOT EXISTS index_membership_orders_created_at ON membership_orders(created_at)",
             ]
             for sql in sqls {
                 try db.execute(sql: sql)

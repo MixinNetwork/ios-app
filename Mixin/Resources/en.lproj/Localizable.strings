@@ -116,6 +116,7 @@
 "all_assets_will_be_lost" = "All assets will be lost";
 "all_conversations" = "All Conversations";
 "all_dates" = "All Dates";
+"all_invoices" = "All Invoices";
 "all_photos" = "All Photos";
 "all_signer_failure" = "All node failure";
 "all_time_high" = "All Time High";
@@ -201,7 +202,9 @@
 "bots" = "BOTS";
 "bots_title" = "Bots";
 "browser" = "Browser";
+"buy_stars" = "Buy Stars";
 "buy_token" = "Buy %@";
+"buy_via" = "Via";
 "calculating" = "Calculating...";
 "call" = "Call";
 "call_declined" = "Call declined";
@@ -220,6 +223,7 @@
 "cancel_floating" = "Cancel Floating";
 "cancel_transaction" = "Cancel Transaction";
 "cancel_transaction_description" = "If the transaction is too far along cancellation may not be possible";
+"cancel_waiting" = "Cancel Waiting";
 "canceled" = "Cancelled";
 "canceled_by_caller" = "Cancelled by caller";
 "cant_receive_the_code" = "Can't receive the code?";
@@ -400,6 +404,7 @@
 "currency_code" = "Code";
 "current_language" = "English";
 "current_location" = "Current Location";
+"current_plan" = "Current Plan";
 "current_price" = "Current price: %@";
 "current_selected" = "Current Selected";
 "current_version" = "Version: %@";
@@ -572,6 +577,9 @@
 "exit_group" = "Exit Group";
 "exit_group_and_report_inviter" = "Exit group and report inviter";
 "expired" = "Expired";
+"expired_on" = "Expired on %@";
+"expires_on" = "Expires on %@";
+"explore" = "Explore";
 "export" = "Export";
 "export_failed" = "Export failed";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
@@ -598,6 +606,7 @@
 "forward" = "Forward";
 "fourth_pin_confirm_hint" = "Yes, there is a fourth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
 "free" = "FREE";
+"free_recovery_service" = "Free Recovery Service";
 "from" = "From";
 "from_address" = "From address";
 "from_date" = "From %@";
@@ -665,9 +674,14 @@
 "invite_to_group_via_link" = "Invite to Group via Link";
 "invited_by_stranger" = "The inviter is not in your contacts";
 "invites_you_to_a_voice_call" = "invites you to a voice call";
+"invoice" = "Invoice";
+"invoice_renew_plan" = "Renew %@ Plan";
+"invoice_upgrade_plan" = "Upgrade to %@";
+"invoices" = "Invoices";
 "join_group" = "Join Group";
 "joined_in" = "Joined on %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
+"keep_waiting" = "Keep Waiting";
 "label" = "Label";
 "landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to login, your account deletion will be cancelled.";
 "landing_have_account" = "I already have an account";
@@ -727,6 +741,18 @@
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Media";
+"membership_advance" = "Advance";
+"membership_advance_description" = "Use multiple keys on multiple devices to avoid single point of failure, and get decentralized recovery service in case of key loss.";
+"membership_benefit_create_safe" = "Create %d Safes.";
+"membership_benefit_free_recovery_service" = "Use the recovery service for free.";
+"membership_benefit_get_stars" = "Get %d Mixin Stars.";
+"membership_benefit_paid_recovery_service" = "Pay %d Mixin Stars to use the recovery service.";
+"membership_benefit_safe_members" = "%1$d members per Safe, %2$d members in total.";
+"membership_elite" = "Elite";
+"membership_elite_description" = "Manage large fortune in Mixin Safe with family, friends or colleagues, so you can avoid thefts, accidents and custody risks.";
+"membership_plan" = "Plan";
+"membership_prosperity" = "Prosperity";
+"membership_prosperity_description" = "Professional crypto solutions with 24/7 support, best for family offices, large corporations and financial institutions.";
 "memo" = "Memo";
 "memo_placeholder" = "Enter the Memo. If there isn’t one, just tap “Next”.";
 "message_e2ee" = "Messages to this conversation are end-to-end encrypted, tap for more info.";
@@ -745,6 +771,7 @@
 "mixin_id_or_phone" = "Mixin ID, Phone number";
 "mixin_locked" = "Mixin Locked";
 "mixin_messenger_desktop" = "Mixin Messenger Desktop";
+"mixin_one" = "Mixin One";
 "mixin_server_encounters_errors" = "Mixin server encounters errors";
 "mixin_support" = "Mixin Support";
 "mnemonic_phrase" = "Mnemonic Phrase";
@@ -832,6 +859,8 @@
 "not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "Not found";
 "not_now" = "Not Now";
+"not_paid" = "Not Paid?";
+"not_paid_description" = "If you haven't paid, you can give up waiting to create and pay next order.";
 "not_playing" = "Not playing";
 "not_turn_off_screen_hint" = "Please do not turn off the screen and keep Mixin in the foreground when synchronizing.";
 "note" = "Note";
@@ -879,6 +908,7 @@
 "overwrite" = "Overwrite";
 "owner" = "Owner";
 "paid" = "Paid";
+"paid_recovery_service" = "Paid Recovery Service";
 "participants" = "Participants";
 "participants_count" = "%@ PARTICIPANTS";
 "paste" = "Paste";
@@ -964,6 +994,8 @@
 "privacy_wallet_tip_title" = "What’s the Privacy Wallet?";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "Profile";
+"profile_badge" = "Profile Badge";
+"profile_badge_description" = "An exclusive badge next to your name";
 "profile_photo" = "Profile Photo";
 "profile_share_bot_hint" = "If you want to share a bot, add it to your contacts first";
 "qr_code" = "QR Code";
@@ -997,6 +1029,7 @@
 "recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your phone number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "red_up_green_down" = "Red Up / Green Down";
 "refresh" = "Refresh";
+"refunded" = "Refunded";
 "reject" = "Reject";
 "reject_transaction" = "Reject Transaction";
 "rejecting_transaction" = "Rejecting Transaction";
@@ -1014,6 +1047,7 @@
 "remove_emergency_contact_for_sure" = "Remove recovery contact for sure?";
 "remove_from_group" = "Remove from Group";
 "remove_stickers" = "Remove Stickers";
+"renew_plan" = "Renew Plan";
 "reply" = "Reply";
 "report" = "Report";
 "report_and_block" = "Report and block?";
@@ -1023,7 +1057,8 @@
 "reputation_description" = "By default, only transactions with a Good or Unknown reputation are shown. Enable ‘Spam’ to see more.";
 "reputation_spam" = "Spam";
 "reputation_spam_description" = "Flagged transaction due to suspicious behavior or scam indicators";
-"reputation_spam_warning" = "This token has been flagged as malicious";
+"reputation_spam_token_warning" = "This token has been flagged as malicious";
+"reputation_spam_transaction_warning" = "This transaction has been flagged as malicious";
 "request_authorization" = "Request Authorization";
 "request_rejected" = "Request Rejected";
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
@@ -1062,8 +1097,10 @@
 "revoke_multisig_transaction" = "Revoke Multisig Transaction";
 "revoking_multisig_failed" = "Revoking Multisig Failed";
 "revoking_multisig_signature" = "Revoking Multisig Signature";
+"rewards" = "Rewards";
 "room_is_full" = "Room is full";
 "safe" = "SAFE";
+"safe_members" = "Safe Members";
 "save" = "Save";
 "save_image" = "Save Image";
 "save_to_camera_roll" = "Save to Camera Roll";
@@ -1120,10 +1157,11 @@
 "send_sol_for_rent" = "Send at least %@ SOL for the rent";
 "send_this_location" = "Send This Location";
 "send_to" = "Send to %@";
-"send_to_address_description" = "Send to a known crypto address using a crypto network";
-"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network";
+"send_to_address_description" = "Send to an address in your Address Book, PIN-protected to prevent phishing.";
+"send_to_common_wallet_description" = "Send to your Common Wallet for use with decentralized apps and DeFi protocols.";
+"send_to_contact_description" = "Send to your Mixin friends with privacy, zero fees, and instant delivery.";
 "send_to_developer" = "Send to Developer";
-"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
+"send_to_privacy_wallet_description" = "Send to your Privacy Wallet to keep your assets safe and hidden from potential risks.";
 "send_to_title" = "Send To";
 "send_video" = "Send 1 Video";
 "send_video_count" = "Send %d Videos";
@@ -1227,6 +1265,8 @@
 "speed_up" = "Speed Up";
 "speed_up_transaction" = "Speed Up Transaction";
 "speed_up_transaction_description" = "If the transaction is too far along this may not be possible";
+"star" = "Star";
+"stars" = "Stars";
 "start" = "Start";
 "start_backup" = "Start Backup";
 "start_messaging" = "Start Messaging";
@@ -1380,10 +1420,13 @@
 "update_now" = "Update Now";
 "upgrade" = "Upgrade";
 "upgrade_database" = "Upgrade Database";
+"upgrade_plan" = "Upgrade Plan";
+"upgrade_plan_for" = "Upgrade for %@";
 "upgrade_safe" = "Upgrade safe";
 "upgrade_tip" = "Upgrade TIP";
 "upgrade_tip_successfully" = "Upgrade TIP successfully";
 "upgrading" = "Upgrading";
+"upgrading_plan" = "Upgrading";
 "upgrading_tip_terminated_unexpectedly" = "Upgrading TIP terminated unexpectedly, click \"Continue\" to complete the upgrade";
 "upload_mobile_contacts" = "Upload Mobile Contacts";
 "uploading" = "Uploading...";
@@ -1414,6 +1457,8 @@
 "value_then" = "value then %@";
 "verify" = "Verify";
 "verify_pin" = "Verify PIN";
+"verifying_payment" = "Verifying payment...";
+"verifying_payment_description" = "Your payment is being verified. Thank you for your patience.";
 "version_update" = "Version Update";
 "video" = "Video";
 "videos" = "Videos";
@@ -1421,8 +1466,10 @@
 "view_authorization" = "View Authorization";
 "view_document" = "View Document";
 "view_emergency_contact" = "View recovery contact";
+"view_invoice" = "View Invoice";
 "view_on_explorer" = "View on Explorer";
 "view_on_marketplace" = "View on Marketplace";
+"view_plan" = "View Plan";
 "view_wallet" = "View Wallet";
 "voice_call_cancelled" = "voice call cancelled";
 "voice_call_has_been_declined" = "Voice call has been declined";

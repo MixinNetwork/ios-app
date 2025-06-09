@@ -252,3 +252,50 @@ extension SafeAPI {
     }
     
 }
+
+// MARK: - Membership
+extension SafeAPI {
+    
+    public static func membershipPlans(completion: @escaping (MixinAPI.Result<SafeMembership>) -> Void) {
+        request(method: .get, path: "/safe/membership/plans", completion: completion)
+    }
+    
+    public static func postMembershipOrder(detail: SafeMembership.PlanDetail) async throws -> MembershipOrder {
+        try await request(
+            method: .post,
+            path: "/safe/membership/orders",
+            parameters: [
+                "category": "SUB",
+                "plan": detail.plan.rawValue,
+                "amount": detail.amount,
+                "source": "app_store",
+                "fiat_source": "app_store",
+                "subscription_id": detail.appleSubscriptionID,
+            ]
+        )
+    }
+    
+    public static func cancelMembershipOrder(id: String) async throws -> MembershipOrder {
+        try await request(method: .post, path: "/safe/membership/orders/\(id)/cancel")
+    }
+    
+    public static func cancelMembershipOrder(
+        id: String,
+        completion: @escaping (MixinAPI.Result<MembershipOrder>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/safe/membership/orders/\(id)/cancel",
+            completion: completion
+        )
+    }
+    
+    public static func membershipOrder(id: String) async throws -> MembershipOrder {
+        try await request(method: .get, path: "/safe/membership/orders/" + id)
+    }
+    
+    public static func membershipOrders(completion: @escaping (MixinAPI.Result<[MembershipOrder]>) -> Void) {
+        request(method: .get, path: "/safe/membership/orders", completion: completion)
+    }
+    
+}

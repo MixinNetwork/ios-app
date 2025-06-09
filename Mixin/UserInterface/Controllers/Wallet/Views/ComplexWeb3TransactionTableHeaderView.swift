@@ -5,10 +5,12 @@ final class ComplexWeb3TransactionTableHeaderView: InfiniteTopView, Web3Transact
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var iconView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var statusLabel: Web3TransactionStatusLabel!
+    @IBOutlet weak var statusLabel: TransactionStatusLabel!
     
+    @IBOutlet weak var contentStackViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentStackViewBottomConstraint: NSLayoutConstraint!
     
+    weak var maliciousWarningView: UIView?
     weak var actionView: PillActionView?
     
     override func awakeFromNib() {

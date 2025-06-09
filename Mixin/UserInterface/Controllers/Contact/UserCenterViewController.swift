@@ -48,11 +48,13 @@ final class UserCenterViewController: SettingsTableViewController, MixinNavigati
         tableView.tableHeaderView = R.nib.userCenterTableHeaderView(withOwner: nil)
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadAccount),
+            name: LoginManager.accountDidChangeNotification,
+            object: nil
+        )
         reloadAccount()
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(reloadAccount),
-                                               name: LoginManager.accountDidChangeNotification,
-                                               object: nil)
     }
     
     @objc private func close(_ sender: Any) {
@@ -113,10 +115,26 @@ extension UserCenterViewController {
         DispatchQueue.main.async {
             headerView.avatarImageView.setImage(with: account.avatarURL, userId: account.userID, name: account.fullName)
             headerView.nameLabel.text = account.fullName
-            headerView.membershipImageView.image = account.membership?.badgeImage
-            headerView.membershipImageView.isHidden = headerView.membershipImageView.image == nil
+            if let image = account.membership?.badgeImage {
+                headerView.membershipImageView.image = image
+                headerView.membershipImageView.isHidden = false
+                headerView.addMembershipButton(target: self, action: #selector(self.buyMembership(_:)))
+            } else {
+                headerView.membershipImageView.image = nil
+                headerView.membershipImageView.isHidden = true
+                headerView.removeMembershipButton()
+            }
             headerView.identityNumberLabel.text = R.string.localizable.contact_mixin_id(account.identityNumber)
         }
+    }
+    
+    @objc private func buyMembership(_ sender: Any) {
+        guard let plan = LoginManager.shared.account?.membership?.unexpiredPlan else {
+            return
+        }
+        let buyingPlan = SafeMembership.Plan(userMembershipPlan: plan)
+        let plans = MembershipPlansViewController(selectedPlan: buyingPlan)
+        present(plans, animated: true)
     }
     
     private func showMyQrCode() {

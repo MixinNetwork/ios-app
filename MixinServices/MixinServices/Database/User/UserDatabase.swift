@@ -940,6 +940,32 @@ public final class UserDatabase: Database {
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS `index_addresses_chain_id_updated_at` ON `addresses` (`chain_id`, `updated_at`)")
         }
         
+        migrator.registerMigration("membership_orders") { db in
+            let sqls = [
+                """
+                CREATE TABLE IF NOT EXISTS `membership_orders` (
+                    `order_id`              TEXT NOT NULL,
+                    `category`              TEXT NOT NULL,
+                    `amount`                TEXT NOT NULL,
+                    `amount_actual`         TEXT NOT NULL,
+                    `amount_original`       TEXT NOT NULL,
+                    `after`                 TEXT NOT NULL,
+                    `before`                TEXT NOT NULL,
+                    `created_at`            TEXT NOT NULL,
+                    `fiat_order`            TEXT,
+                    `quantity_transactions` INTEGER NOT NULL,
+                    `source`                TEXT NOT NULL,
+                    `status`                TEXT NOT NULL,
+                    PRIMARY KEY(order_id)
+                )
+                """,
+                "CREATE INDEX IF NOT EXISTS index_membership_orders_created_at ON membership_orders(created_at)"
+            ]
+            for sql in sqls {
+                try db.execute(sql: sql)
+            }
+        }
+        
         return migrator
     }
     

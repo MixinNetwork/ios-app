@@ -717,10 +717,10 @@ extension MixinWebViewController {
                                                         updatedAt: nil,
                                                         isShareable: isShareable)
                     let vc = MessageReceiverViewController.instance(content: .appCard(.v0(content)))
-                    self?.navigationController?.pushViewController(vc, animated: true)
+                    UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
                 } else {
                     let vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))
-                    self?.navigationController?.pushViewController(vc, animated: true)
+                    UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
                 }
             }
         }

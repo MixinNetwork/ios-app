@@ -45,7 +45,7 @@
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="xJu-Ne-cqv">
                         <rect key="frame" x="77" y="0.0" width="317" height="62"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YuL-8z-6P6">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YuL-8z-6P6">
                                 <rect key="frame" x="0.0" y="6" width="50" height="50"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" name="text"/>
@@ -78,6 +78,7 @@
                 <outlet property="statusImageView" destination="xAk-bA-jXL" id="GQX-av-mXL"/>
                 <outlet property="statusWrapperView" destination="Cdf-i5-kny" id="PKk-eH-bC0"/>
                 <outlet property="titleLabel" destination="YuL-8z-6P6" id="3zV-9X-p2c"/>
+                <outlet property="titleStackView" destination="xJu-Ne-cqv" id="dqi-9y-gcc"/>
             </connections>
             <point key="canvasLocation" x="139" y="155"/>
         </tableViewCell>

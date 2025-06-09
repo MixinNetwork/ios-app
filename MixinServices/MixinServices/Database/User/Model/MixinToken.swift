@@ -65,7 +65,7 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
     
 }
 
-extension MixinToken: DistinguishableToken {
+extension MixinToken: MaliciousDistinguishable {
     
     public var isMalicious: Bool {
         false

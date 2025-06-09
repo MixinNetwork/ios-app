@@ -27,6 +27,8 @@ extension AppGroupUserDefaults {
             
             case hasViewedPrivacyWalletTip = "has_viewed_privacy_wallet_tip"
             case hasViewedClassicWalletTip = "has_viewed_classic_wallet_tip"
+            case hasViewedPrivacyWalletTipInTransfer = "has_viewed_privacy_wallet_tip_transfer"
+            case hasViewedClassicWalletTipInTransfer = "has_viewed_classic_wallet_tip_transfer"
         }
         
         @Default(namespace: .wallet, key: Key.lastPINVerifiedDate, defaultValue: nil)
@@ -64,6 +66,12 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .wallet, key: Key.hasViewedClassicWalletTip, defaultValue: false)
         public static var hasViewedClassicWalletTip: Bool
+        
+        @Default(namespace: .wallet, key: Key.hasViewedPrivacyWalletTipInTransfer, defaultValue: false)
+        public static var hasViewedPrivacyWalletTipInTransfer: Bool
+        
+        @Default(namespace: .wallet, key: Key.hasViewedClassicWalletTipInTransfer, defaultValue: false)
+        public static var hasViewedClassicWalletTipInTransfer: Bool
         
         internal static func migrate() {
             lastPINVerifiedDate = Date(timeIntervalSince1970: WalletUserDefault.shared.lastInputPinTime)

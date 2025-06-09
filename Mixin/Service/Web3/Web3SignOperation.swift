@@ -17,6 +17,7 @@ class Web3SignOperation {
     enum SigningError: Error {
         case mismatchedAddress
         case invalidSignable
+        case invalidSignature
     }
     
     let address: String
@@ -182,6 +183,8 @@ final class Web3SignWithWalletConnectOperation: Web3SignOperation {
 
 final class Web3SignWithBrowserWalletOperation: Web3SignOperation {
     
+    var solanaLoginWithHexSignatureQuirk = false
+    
     private let sendImpl: ((String) async throws -> Void)?
     private let rejectImpl: (() -> Void)?
     
@@ -212,13 +215,20 @@ final class Web3SignWithBrowserWalletOperation: Web3SignOperation {
                 guard case let .raw(signedMessage) = signable else {
                     throw SigningError.invalidSignable
                 }
-                let output: [String: Any] = [
-                    "account": ["publicKey": address],
-                    "signedMessage": signedMessage.base58EncodedString(),
-                    "signature": signature
-                ]
-                let json = try JSONSerialization.data(withJSONObject: output)
-                try await sendImpl?(json.hexEncodedString())
+                if solanaLoginWithHexSignatureQuirk {
+                    guard let data = Data(base58EncodedString: signature) else {
+                        throw SigningError.invalidSignature
+                    }
+                    try await sendImpl?(data.hexEncodedString())
+                } else {
+                    let output: [String: Any] = [
+                        "account": ["publicKey": address],
+                        "signedMessage": signedMessage.base58EncodedString(),
+                        "signature": signature
+                    ]
+                    let json = try JSONSerialization.data(withJSONObject: output)
+                    try await sendImpl?(json.hexEncodedString())
+                }
             }
             Logger.web3.info(category: "Sign", message: "Signature sent")
             await MainActor.run {

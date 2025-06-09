@@ -361,7 +361,7 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
         case .swap:
             reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "wallet_home"])
             tableHeaderView.actionView.badgeOnSwap = false
-            let swap = MixinSwapViewController(sendAssetID: nil, receiveAssetID: nil)
+            let swap = MixinSwapViewController(sendAssetID: nil, receiveAssetID: nil, referral: nil)
             navigationController?.pushViewController(swap, animated: true)
             DispatchQueue.global().async {
                 PropertiesDAO.shared.set(true, forKey: .hasSwapReviewed)

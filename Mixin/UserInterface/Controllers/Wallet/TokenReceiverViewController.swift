@@ -3,14 +3,15 @@ import MixinServices
 
 class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
-    private weak var trayView: TokenReceiverTrayView?
-    private weak var trayViewBottomConstraint: NSLayoutConstraint?
-    
-    private let trayViewHeight: CGFloat = 82
+    let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
+    let walletTipReuseIdentifier = "t"
     
     weak var tableView: UITableView!
     
-    let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
+    private let trayViewHeight: CGFloat = 82
+    
+    private weak var trayView: TokenReceiverTrayView?
+    private weak var trayViewBottomConstraint: NSLayoutConstraint?
     
     var nextButton: StyledButton? {
         return trayView?.nextButton
@@ -19,7 +20,9 @@ class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = R.string.localizable.send()
+        navigationItem.titleView = NavigationTitleView(
+            title: R.string.localizable.send()
+        )
         navigationItem.rightBarButtonItem = .customerService(
             target: self,
             action: #selector(presentCustomerService(_:))
@@ -36,6 +39,11 @@ class TokenReceiverViewController: KeyboardBasedLayoutViewController {
         tableView.separatorStyle = .none
         tableView.tableHeaderView = headerView
         tableView.register(R.nib.sendingDestinationCell)
+        tableView.register(
+            WalletTipTableViewCell.self,
+            forCellReuseIdentifier: walletTipReuseIdentifier
+        )
+        tableView.estimatedRowHeight = 74
         tableView.rowHeight = UITableView.automaticDimension
         tableView.contentInsetAdjustmentBehavior = .always
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 35, right: 0)

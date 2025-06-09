@@ -39,7 +39,7 @@
                             <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" placeholderIntrinsicWidth="66" placeholderIntrinsicHeight="22" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q5Y-4u-hxi" customClass="Web3TransactionStatusLabel" customModule="Mixin" customModuleProvider="target">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" placeholderIntrinsicWidth="66" placeholderIntrinsicHeight="22" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q5Y-4u-hxi" customClass="TransactionStatusLabel" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="143.66666666666666" y="124" width="66" height="22"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <nil key="textColor"/>
@@ -69,6 +69,7 @@
             <connections>
                 <outlet property="contentStackView" destination="vec-V4-0mi" id="bS0-GU-eBg"/>
                 <outlet property="contentStackViewBottomConstraint" destination="HvY-Xo-9XA" id="77e-Px-O7D"/>
+                <outlet property="contentStackViewTopConstraint" destination="cd1-KF-BoK" id="XuL-g1-Yr0"/>
                 <outlet property="iconView" destination="FmN-2c-Zlt" id="2Nn-Gf-b3v"/>
                 <outlet property="statusLabel" destination="Q5Y-4u-hxi" id="MiQ-U2-qde"/>
                 <outlet property="titleLabel" destination="00f-sA-W3q" id="Fdy-qI-b3Q"/>

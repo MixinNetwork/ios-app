@@ -130,7 +130,7 @@ extension ExpiredMessageViewController {
         }
         switch option {
         case .custom:
-            rows[index].subtitle = ExpiredMessageDurationFormatter.string(from: expireIn)
+            rows[index].subtitle = .text(ExpiredMessageDurationFormatter.string(from: expireIn))
         default:
             if let index = Option.allCases.firstIndex(of: .custom) {
                 rows[index].subtitle = nil

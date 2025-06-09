@@ -2,14 +2,23 @@ import UIKit
 
 final class MaliciousTokenWarningCell: UITableViewCell {
     
-    @IBOutlet weak var label: UILabel!
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        prepare()
+    }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        contentView.backgroundColor = R.color.red()?.withAlphaComponent(0.2)
-        contentView.layer.cornerRadius = 8
-        contentView.layer.masksToBounds = true
-        label.text = R.string.localizable.reputation_spam_warning()
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        prepare()
+    }
+    
+    private func prepare() {
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+        let view = R.nib.maliciousWarningView(withOwner: nil)!
+        view.content = .token
+        contentView.addSubview(view)
+        view.snp.makeEdgesEqualToSuperview()
     }
     
 }

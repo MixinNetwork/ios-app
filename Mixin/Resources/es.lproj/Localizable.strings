@@ -116,6 +116,7 @@
 "all_assets_will_be_lost" = "All assets will be lost";
 "all_conversations" = "Todas las conversaciones";
 "all_dates" = "All Dates";
+"all_invoices" = "All Invoices";
 "all_photos" = "Todas las fotos";
 "all_signer_failure" = "Falla de todos los nodos";
 "all_time_high" = "All Time High";
@@ -201,7 +202,9 @@
 "bots" = "BOTS";
 "bots_title" = "Bots";
 "browser" = "Browser";
+"buy_stars" = "Buy Stars";
 "buy_token" = "Buy %@";
+"buy_via" = "Via";
 "calculating" = "Calculating...";
 "call" = "Llamar";
 "call_declined" = "Llamada rechazada";
@@ -220,6 +223,7 @@
 "cancel_floating" = "Cancelar flotante";
 "cancel_transaction" = "Cancel Transaction";
 "cancel_transaction_description" = "If the transaction is too far along cancellation may not be possible";
+"cancel_waiting" = "Cancel Waiting";
 "canceled" = "Cancelado";
 "canceled_by_caller" = "Cancelado por la persona que llama";
 "cant_receive_the_code" = "¿No puedes recibir el código?";
@@ -400,6 +404,7 @@
 "currency_code" = "Código";
 "current_language" = "Inglés";
 "current_location" = "Ubicación actual";
+"current_plan" = "Current Plan";
 "current_price" = "Current price: %@";
 "current_selected" = "Seleccionado actual";
 "current_version" = "Version: %@";
@@ -572,6 +577,9 @@
 "exit_group" = "Salir del grupo";
 "exit_group_and_report_inviter" = "Salir del grupo e reportar persona que te ha invitado";
 "expired" = "Caducado";
+"expired_on" = "Expired on %@";
+"expires_on" = "Expires on %@";
+"explore" = "Explore";
 "export" = "Exportar";
 "export_failed" = "Exportación fallida";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
@@ -598,6 +606,7 @@
 "forward" = "Adelante";
 "fourth_pin_confirm_hint" = "Sí, hay una cuarta confirmación de PIN y le prometo que es la última para asegurarse de que has recordado tu PIN. El PIN es irrecuperable si se pierde.";
 "free" = "FREE";
+"free_recovery_service" = "Free Recovery Service";
 "from" = "De";
 "from_address" = "From address";
 "from_date" = "From %@";
@@ -665,9 +674,14 @@
 "invite_to_group_via_link" = "Invitar al grupo a través de un enlace";
 "invited_by_stranger" = "El anfitrión no está en tus contactos.";
 "invites_you_to_a_voice_call" = "te invita a una llamada de voz";
+"invoice" = "Invoice";
+"invoice_renew_plan" = "Renew %@ Plan";
+"invoice_upgrade_plan" = "Upgrade to %@";
+"invoices" = "Invoices";
 "join_group" = "Únete al grupo";
 "joined_in" = "Se ha unido en %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
+"keep_waiting" = "Keep Waiting";
 "label" = "Etiqueta";
 "landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to login, your account deletion will be cancelled.";
 "landing_have_account" = "I already have an account";
@@ -727,6 +741,18 @@
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
 "media" = "Medios de comunicación";
+"membership_advance" = "Advance";
+"membership_advance_description" = "Use multiple keys on multiple devices to avoid single point of failure, and get decentralized recovery service in case of key loss.";
+"membership_benefit_create_safe" = "Create %d Safes.";
+"membership_benefit_free_recovery_service" = "Use the recovery service for free.";
+"membership_benefit_get_stars" = "Get %d Mixin Stars.";
+"membership_benefit_paid_recovery_service" = "Pay %d Mixin Stars to use the recovery service.";
+"membership_benefit_safe_members" = "%1$d members per Safe, %2$d members in total.";
+"membership_elite" = "Elite";
+"membership_elite_description" = "Manage large fortune in Mixin Safe with family, friends or colleagues, so you can avoid thefts, accidents and custody risks.";
+"membership_plan" = "Plan";
+"membership_prosperity" = "Prosperity";
+"membership_prosperity_description" = "Professional crypto solutions with 24/7 support, best for family offices, large corporations and financial institutions.";
 "memo" = "Memorándum";
 "memo_placeholder" = "Enter the Memo. If there isn’t one, just tap “Next”.";
 "message_e2ee" = "Los mensajes de esta conversación están encriptados de extremo a extremo, toca para obtener más información.";
@@ -745,6 +771,7 @@
 "mixin_id_or_phone" = "ID de Mixin, número de teléfono";
 "mixin_locked" = "Mixin bloqueado";
 "mixin_messenger_desktop" = "Mixin Messenger de Escritorio";
+"mixin_one" = "Mixin One";
 "mixin_server_encounters_errors" = "El servidor Mixin encuentra errores";
 "mixin_support" = "Mixin Support";
 "mnemonic_phrase" = "Mnemonic Phrase";
@@ -832,6 +859,8 @@
 "not_enough_partials" = "No hay suficientes nodos que devuelvan fragmento de clave";
 "not_found" = "Extraviado";
 "not_now" = "Not Now";
+"not_paid" = "Not Paid?";
+"not_paid_description" = "If you haven't paid, you can give up waiting to create and pay next order.";
 "not_playing" = "No se está reproduciendo";
 "not_turn_off_screen_hint" = "Please do not turn off the screen and keep Mixin in the foreground when synchronizing.";
 "note" = "Note";
@@ -879,6 +908,7 @@
 "overwrite" = "Overwrite";
 "owner" = "Propietario";
 "paid" = "Paid";
+"paid_recovery_service" = "Paid Recovery Service";
 "participants" = "Participantes";
 "participants_count" = "%@ PARTICIPANTES";
 "paste" = "Paste";
@@ -964,6 +994,8 @@
 "privacy_wallet_tip_title" = "What’s the Privacy Wallet?";
 "process_can_not_be_stop" = "El proceso no se puede cancelar cuando comienza. Recuerda el PIN de 6 dígitos y vuelva a introducirlo si el proceso se cancela inesperadamente.";
 "profile" = "Perfil";
+"profile_badge" = "Profile Badge";
+"profile_badge_description" = "An exclusive badge next to your name";
 "profile_photo" = "Foto de perfil";
 "profile_share_bot_hint" = "Si deseas compartir un bot, añádelo primero a tus contactosa";
 "qr_code" = "Código QR";
@@ -997,6 +1029,7 @@
 "recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your phone number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "red_up_green_down" = "Red Up / Green Down";
 "refresh" = "Actualizar";
+"refunded" = "Refunded";
 "reject" = "Reject";
 "reject_transaction" = "Reject Transaction";
 "rejecting_transaction" = "Rejecting Transaction";
@@ -1014,6 +1047,7 @@
 "remove_emergency_contact_for_sure" = "Remove recovery contact for sure?";
 "remove_from_group" = "Eliminar del grupo";
 "remove_stickers" = "Eliminar pegatinas";
+"renew_plan" = "Renew Plan";
 "reply" = "Responder";
 "report" = "Informe";
 "report_and_block" = "¿Denunciar y bloquear?";
@@ -1023,7 +1057,8 @@
 "reputation_description" = "By default, only transactions with a Good or Unknown reputation are shown. Enable ‘Spam’ to see more.";
 "reputation_spam" = "Spam";
 "reputation_spam_description" = "Flagged transaction due to suspicious behavior or scam indicators";
-"reputation_spam_warning" = "This token has been flagged as malicious";
+"reputation_spam_token_warning" = "This token has been flagged as malicious";
+"reputation_spam_transaction_warning" = "This transaction has been flagged as malicious";
 "request_authorization" = "Solicitar Autorización";
 "request_rejected" = "Request Rejected";
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
@@ -1062,8 +1097,10 @@
 "revoke_multisig_transaction" = "Revocar transacción multigrado";
 "revoking_multisig_failed" = "Revoking Multisig Failed";
 "revoking_multisig_signature" = "Revoking Multisig Signature";
+"rewards" = "Rewards";
 "room_is_full" = "El cuarto está lleno";
 "safe" = "SAFE";
+"safe_members" = "Safe Members";
 "save" = "Guardar";
 "save_image" = "Guardar imagen";
 "save_to_camera_roll" = "Guarda en el Rollo de la cámara";
@@ -1120,10 +1157,11 @@
 "send_sol_for_rent" = "Send at least %@ SOL for the rent";
 "send_this_location" = "Enviar esta ubicación";
 "send_to" = "Enviar a %@";
-"send_to_address_description" = "Send to a known crypto address using a crypto network";
-"send_to_contact_description" = "Send to my Mixin contact using the Mixin Network";
+"send_to_address_description" = "Send to an address in your Address Book, PIN-protected to prevent phishing.";
+"send_to_common_wallet_description" = "Send to your Common Wallet for use with decentralized apps and DeFi protocols.";
+"send_to_contact_description" = "Send to your Mixin friends with privacy, zero fees, and instant delivery.";
 "send_to_developer" = "Enviar al Desarrollador";
-"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
+"send_to_privacy_wallet_description" = "Send to your Privacy Wallet to keep your assets safe and hidden from potential risks.";
 "send_to_title" = "Enviar a";
 "send_video" = "Enviar 1 vídeo";
 "send_video_count" = "Enviar %d vídeos";
@@ -1227,6 +1265,8 @@
 "speed_up" = "Speed Up";
 "speed_up_transaction" = "Speed Up Transaction";
 "speed_up_transaction_description" = "If the transaction is too far along this may not be possible";
+"star" = "Star";
+"stars" = "Stars";
 "start" = "Comenzar";
 "start_backup" = "Start Backup";
 "start_messaging" = "Empezar a enviar mensajes";
@@ -1380,10 +1420,13 @@
 "update_now" = "Update Now";
 "upgrade" = "Mejora";
 "upgrade_database" = "Actualizar base de datos";
+"upgrade_plan" = "Upgrade Plan";
+"upgrade_plan_for" = "Upgrade for %@";
 "upgrade_safe" = "Upgrade safe";
 "upgrade_tip" = "Actualizar TIP";
 "upgrade_tip_successfully" = "Actualizar TIP con éxito";
 "upgrading" = "Actualizando";
+"upgrading_plan" = "Upgrading";
 "upgrading_tip_terminated_unexpectedly" = "La actualización de TIP ha finalizado inesperadamente, haz clic en Continuar para completar la actualización";
 "upload_mobile_contacts" = "Cargar contactos móviles";
 "uploading" = "Cargando...";
@@ -1414,6 +1457,8 @@
 "value_then" = "valor entonces %@";
 "verify" = "Verificar";
 "verify_pin" = "Verificar PIN";
+"verifying_payment" = "Verifying payment...";
+"verifying_payment_description" = "Your payment is being verified. Thank you for your patience.";
 "version_update" = "Actualización de versión";
 "video" = "Video";
 "videos" = "Vídeos";
@@ -1421,8 +1466,10 @@
 "view_authorization" = "Ver autorización";
 "view_document" = "View Document";
 "view_emergency_contact" = "View recovery contact";
+"view_invoice" = "View Invoice";
 "view_on_explorer" = "View on Explorer";
 "view_on_marketplace" = "View on Marketplace";
+"view_plan" = "View Plan";
 "view_wallet" = "Ver Cartera";
 "voice_call_cancelled" = "llamada de voz cancelada";
 "voice_call_has_been_declined" = "La llamada de voz ha sido rechazada";

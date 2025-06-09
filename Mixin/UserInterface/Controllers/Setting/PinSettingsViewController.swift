@@ -161,7 +161,7 @@ extension PinSettingsViewController {
             return
         }
         let expirationInterval = AppGroupUserDefaults.Wallet.biometricPaymentExpirationInterval
-        pinIntervalRow.subtitle = title(for: expirationInterval)
+        pinIntervalRow.subtitle = .text(title(for: expirationInterval))
     }
     
     private func title(for interval: TimeInterval) -> String {

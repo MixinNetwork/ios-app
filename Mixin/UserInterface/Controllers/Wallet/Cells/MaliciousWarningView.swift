@@ -7,6 +7,7 @@ final class MaliciousWarningView: UIView {
         case transaction
     }
     
+    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var label: UILabel!
     
     var content: Content? {
@@ -24,7 +25,9 @@ final class MaliciousWarningView: UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        backgroundColor = R.color.red()?.withAlphaComponent(0.2)
+        imageView.image = R.image.web3_reputation_bad()!.withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = R.color.error_red()
+        backgroundColor = R.color.red()!.withAlphaComponent(0.2)
         layer.cornerRadius = 8
         layer.masksToBounds = true
     }

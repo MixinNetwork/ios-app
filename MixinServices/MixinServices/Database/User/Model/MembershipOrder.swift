@@ -38,8 +38,8 @@ public struct MembershipOrder {
     public let before: String
     public let createdAt: String
     public let fiatOrder: FiatOrder?
-    public let transactionsQuantity: Int
-    public let source: String
+    public let stars: Int
+    public let paymentURL: String?
     public let status: UnknownableEnum<Status>
     
 }
@@ -56,8 +56,8 @@ extension MembershipOrder: Codable {
         case before
         case createdAt = "created_at"
         case fiatOrder = "fiat_order"
-        case transactionsQuantity = "quantity_transactions"
-        case source
+        case stars = "stars"
+        case paymentURL = "payment_url"
         case status
     }
     

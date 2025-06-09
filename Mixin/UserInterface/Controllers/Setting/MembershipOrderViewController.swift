@@ -205,10 +205,6 @@ extension MembershipOrderViewController {
                 title: R.string.localizable.transaction_id().uppercased(),
                 content: order.orderID.uuidString.lowercased()
             ),
-            Row(
-                title: R.string.localizable.buy_via().uppercased(),
-                content: order.prettySource
-            )
         ]
         
         switch order.transition {

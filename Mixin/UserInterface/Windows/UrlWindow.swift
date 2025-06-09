@@ -81,6 +81,17 @@ class UrlWindow {
             case let .market(id):
                 checkMarket(id: id)
                 return true
+            case .membership:
+                if let homeContainer = UIApplication.homeContainerViewController {
+                    let plan = if let plan = LoginManager.shared.account?.membership?.plan {
+                        SafeMembership.Plan(userMembershipPlan: plan)
+                    } else {
+                        SafeMembership.Plan.basic
+                    }
+                    let plans = MembershipPlansViewController(selectedPlan: plan)
+                    homeContainer.present(plans, animated: true)
+                }
+                return true
             }
         } else if let mixinURL = MixinURL(url: url) {
             let result: Bool

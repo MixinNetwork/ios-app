@@ -24,7 +24,7 @@ extension MembershipOrder {
                 return .renew(after)
             }
         case .transaction:
-            return .buyStars(transactionsQuantity)
+            return .buyStars(stars)
         case .none:
             return nil
         }
@@ -42,8 +42,8 @@ extension MembershipOrder {
     var incomingStars: StarRepresentation? {
         switch status.knownCase {
         case .paid:
-            let count = "+\(transactionsQuantity)"
-            let unit = if transactionsQuantity == 1 {
+            let count = "+\(stars)"
+            let unit = if stars == 1 {
                 R.string.localizable.star()
             } else {
                 R.string.localizable.stars()
@@ -60,28 +60,6 @@ extension MembershipOrder {
             incomingStars
         default:
             nil
-        }
-    }
-    
-}
-
-extension MembershipOrder {
-    
-    var prettySource: String {
-        switch fiatOrder?.source {
-        case "app_store":
-            "App Store"
-        case "google_play":
-            "Google Play"
-        default:
-            switch source {
-            case "mixin":
-                "Mixin"
-            case "mixpay":
-                "MixPay"
-            default:
-                source
-            }
         }
     }
     

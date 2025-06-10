@@ -13,6 +13,10 @@
 		277FF70C1F909A1200DBB2EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70B1F909A1200DBB2EB /* Assets.xcassets */; };
 		277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 277FF70D1F909A1200DBB2EB /* LaunchScreen.storyboard */; };
 		52589AE32BEA52260081C2BF /* SymbolTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */; };
+		5260A8542DDF4BAD00ED9714 /* TokenReceiverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5260A8532DDF4BAD00ED9714 /* TokenReceiverViewController.swift */; };
+		5260A85F2DDF556500ED9714 /* Web3AddressValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5260A85E2DDF556500ED9714 /* Web3AddressValidator.swift */; };
+		5260A8642DDF560E00ED9714 /* Web3WithdrawFeeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5260A8632DDF560E00ED9714 /* Web3WithdrawFeeItem.swift */; };
+		5260A8D22DE4659800ED9714 /* TransferLinkError+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5260A8D12DE4659800ED9714 /* TransferLinkError+Localized.swift */; };
 		52A056512BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056502BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift */; };
 		52A056562BE3614700CEC8A3 /* InscriptionMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056552BE3614700CEC8A3 /* InscriptionMessageCell.swift */; };
 		52A056582BE362FF00CEC8A3 /* InscriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */; };
@@ -1589,6 +1593,10 @@
 		4A8D4E34146BCC9F9DFC5D60 /* Pods-MixinNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MixinNotificationService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MixinNotificationService/Pods-MixinNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		4DEF1DAAD7BD26CE1E41669D /* Pods-mixin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mixin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-mixin/Pods-mixin.debug.xcconfig"; sourceTree = "<group>"; };
 		52589AE22BEA52260081C2BF /* SymbolTextAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTextAttachment.swift; sourceTree = "<group>"; };
+		5260A8532DDF4BAD00ED9714 /* TokenReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenReceiverViewController.swift; sourceTree = "<group>"; };
+		5260A85E2DDF556500ED9714 /* Web3AddressValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3AddressValidator.swift; sourceTree = "<group>"; };
+		5260A8632DDF560E00ED9714 /* Web3WithdrawFeeItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3WithdrawFeeItem.swift; sourceTree = "<group>"; };
+		5260A8D12DE4659800ED9714 /* TransferLinkError+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransferLinkError+Localized.swift"; sourceTree = "<group>"; };
 		52A056502BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionMessageViewModel.swift; sourceTree = "<group>"; };
 		52A056552BE3614700CEC8A3 /* InscriptionMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionMessageCell.swift; sourceTree = "<group>"; };
 		52A056572BE362FF00CEC8A3 /* InscriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionViewController.swift; sourceTree = "<group>"; };
@@ -3318,6 +3326,7 @@
 				7C2ACDAD27D73F7C00E9DDB3 /* LeftAlignedCollectionViewFlowLayout.swift */,
 				94647C6F28D243B100684CFA /* TIPNode+Description.swift */,
 				942D90F22B0606C700E81358 /* WithdrawFeeItem.swift */,
+				5260A8632DDF560E00ED9714 /* Web3WithdrawFeeItem.swift */,
 				94EE1AB82B48518D00BE9AD1 /* TemporaryAddress.swift */,
 				94EE1ABD2B4851E600BE9AD1 /* WithdrawableAddress.swift */,
 				94C56D382C53C954009F3AB8 /* SwapQuoteDraft.swift */,
@@ -3327,6 +3336,7 @@
 				948723422C9E0D8D0034BCB0 /* MarketAlertViewModel.swift */,
 				942FD9702D3A90DD004DCC4C /* SwapOrder+Localization.swift */,
 				9489249B2D573BA000D9BCCB /* AddressValidator.swift */,
+				5260A85E2DDF556500ED9714 /* Web3AddressValidator.swift */,
 				94C5BDD72D68653D0012F840 /* FiatMoneyValueAttributedStringBuilder.swift */,
 				945D480F2D8956000093E30D /* WalletSummary.swift */,
 				94C5EE882DBA63C400FFEE91 /* StyledAssetChange.swift */,
@@ -5267,6 +5277,7 @@
 				9489247E2D572EA200D9BCCB /* TokenReceiverTrayView.xib */,
 				9489247C2D572E9400D9BCCB /* TokenReceiverTrayView.swift */,
 				946E9F5A2D455F0900DBC308 /* MixinTokenReceiverViewController.swift */,
+				5260A8532DDF4BAD00ED9714 /* TokenReceiverViewController.swift */,
 				946EA0872D4763CF00DBC308 /* AddressInfoInputView.xib */,
 				946EA0852D4763BD00DBC308 /* AddressInfoInputViewController.swift */,
 				946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */,
@@ -5579,6 +5590,7 @@
 				E0FAE8D123CDC4F4008B056A /* CrashlyticalReporter.swift */,
 				7B8261D024D9548E00A39635 /* PINVerificationFailureHandler.swift */,
 				94DCDA9F262DAF5B0064D1F3 /* DisplayAwakener.swift */,
+				5260A8D12DE4659800ED9714 /* TransferLinkError+Localized.swift */,
 				94F36AC526CA59B300AC30A5 /* PhoneNumberValidator.swift */,
 				7C695D55285B25AB0042177C /* SpotlightManager.swift */,
 				942FD9FE2D3B591C004DCC4C /* LocalizedEnum.swift */,
@@ -6459,6 +6471,7 @@
 				946E05922CBFD67B004B264E /* ExploreSearchCategoryViewController.swift in Sources */,
 				943CAA262CC8309F00346677 /* SignInWithMobileNumberViewController.swift in Sources */,
 				941995142CCEC52600F5425C /* ExportMnemonicPhrasesViewController.swift in Sources */,
+				5260A8D22DE4659800ED9714 /* TransferLinkError+Localized.swift in Sources */,
 				7BB12FA72192C8DB009BEECF /* BarChartView.swift in Sources */,
 				94396D502CE36D2D009DA4E9 /* RoundOutlineButton.swift in Sources */,
 				949569A6263B12FE00E043FE /* TranscriptMessageCell.swift in Sources */,
@@ -6500,6 +6513,7 @@
 				7B09664620E0B018007DC179 /* PhotoAssetPickerNavigationController.swift in Sources */,
 				7BA9D9BD226D8BF700255943 /* SearchCategoryViewController.swift in Sources */,
 				5EBD8CD1267B37D20026A248 /* ScreenLockViewController.swift in Sources */,
+				5260A8542DDF4BAD00ED9714 /* TokenReceiverViewController.swift in Sources */,
 				7BDBDE5F22327698006220DF /* LegacyTransferTypeViewController.swift in Sources */,
 				944C610E2B6AB7F600C7DF06 /* TokenAmountCell.swift in Sources */,
 				7B9650B42487EBE000DE86B9 /* BackgroundMessagingService.swift in Sources */,
@@ -6622,6 +6636,7 @@
 				7BBAE9DA244ADB3800CC8670 /* AssetQrCodeScanningController.swift in Sources */,
 				DFA063D222B0D0E80031E151 /* PrivacySettingViewController.swift in Sources */,
 				7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */,
+				5260A85F2DDF556500ED9714 /* Web3AddressValidator.swift in Sources */,
 				7C51F3A927E459AD0095B4D6 /* ExpiredMessageManager.swift in Sources */,
 				DF06D91F222FAE1400FE7FBC /* LegacyTransferOutViewController.swift in Sources */,
 				7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */,
@@ -6675,6 +6690,7 @@
 				94510FD42C8743AA00ACD972 /* MarketTokenSelectorCell.swift in Sources */,
 				7B311BAA22B9EAFE00C16652 /* IntroTextView.swift in Sources */,
 				DF81413220C51D5E00E89DE8 /* PhotoLibraryExtension.swift in Sources */,
+				5260A8642DDF560E00ED9714 /* Web3WithdrawFeeItem.swift in Sources */,
 				7BF42E3322DC860E005066E6 /* GalleryItemViewController.swift in Sources */,
 				7B362BB522E87D38009BB0BF /* AssetSendVideoView.swift in Sources */,
 				DF8EF6AF2030679100E99CE8 /* UrlWindow.swift in Sources */,

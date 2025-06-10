@@ -141,7 +141,8 @@ class EVMTransferOperation: Web3TransferOperation {
             tokenCount = weiCount * .wei
         }
         let fee = Fee(
-            token: tokenCount,
+            token: feeToken,
+            amount: tokenCount,
             fiatMoney: tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
         )
         await MainActor.run {
@@ -285,7 +286,7 @@ class EVMTransferOperation: Web3TransferOperation {
                 from: fromAddress,
                 rawTransaction: hexEncodedSignedTransaction
             )
-            let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.token)
+            let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.amount)
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
                 try rawTransaction.save(db)
             }

@@ -108,21 +108,13 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             }
         } onSuccess: { [amountIntent, destination] (operation, issues) in
             self.reviewButton.isBusy = false
-            let addressLabel: String? = switch destination {
-            case .address(let address):
-                address.label
-            case .temporary:
-                nil
-            case .classicWallet:
-                R.string.localizable.common_wallet()
-            }
             let preview = WithdrawPreviewViewController(
                 issues: issues,
                 operation: operation,
                 amountDisplay: amountIntent,
                 withdrawalTokenAmount: payment.tokenAmount,
                 withdrawalFiatMoneyAmount: payment.fiatMoneyAmount,
-                addressLabel: addressLabel
+                addressLabel: destination.addressLabel
             )
             self.present(preview, animated: true)
         }

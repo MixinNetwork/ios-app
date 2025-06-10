@@ -2,7 +2,7 @@ import UIKit
 import web3
 import MixinServices
 
-final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
+final class Web3TokenReceiverViewController: TokenReceiverViewController {
     
     private enum Destination {
         case addressBook
@@ -11,16 +11,6 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
     private let payment: Web3SendingTokenPayment
     private let destinations: [Destination]
-    private let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
-    private let trayViewHeight: CGFloat = 82
-    private let walletTipReuseIdentifier = "t"
-    
-    private var verifiedAddress: String?
-    
-    private weak var tableView: UITableView!
-    private weak var trayView: AuthenticationPreviewSingleButtonTrayView!
-    
-    private weak var trayViewBottomConstraint: NSLayoutConstraint!
     
     init(payment: Web3SendingTokenPayment) {
         self.payment = payment
@@ -38,106 +28,56 @@ final class Web3TokenReceiverViewController: KeyboardBasedLayoutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.titleView = NavigationTitleView(
-            title: R.string.localizable.send(),
-            subtitle: R.string.localizable.common_wallet()
-        )
-        navigationItem.rightBarButtonItem = .customerService(
-            target: self,
-            action: #selector(presentCustomerService(_:))
-        )
-        
+        if let titleView = navigationItem.titleView as? NavigationTitleView {
+            titleView.subtitle = R.string.localizable.common_wallet()
+        }
         headerView.load(web3Token: payment.token)
-        headerView.inputPlaceholder = R.string.localizable.hint_address()
-        headerView.delegate = self
         
-        let tableView = UITableView(frame: view.bounds, style: .plain)
-        view.addSubview(tableView)
-        tableView.snp.makeEdgesEqualToSuperview()
-        self.tableView = tableView
-        tableView.backgroundColor = R.color.background_secondary()
-        tableView.separatorStyle = .none
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 74
-        tableView.tableHeaderView = headerView
-        tableView.register(R.nib.sendingDestinationCell)
-        tableView.register(
-            WalletTipTableViewCell.self,
-            forCellReuseIdentifier: walletTipReuseIdentifier
-        )
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.contentInsetAdjustmentBehavior = .always
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 35, right: 0)
-        tableView.keyboardDismissMode = .onDrag
-        
-        let trayView = AuthenticationPreviewSingleButtonTrayView()
-        trayView.isHidden = true
-        trayView.backgroundColor = R.color.background_secondary()
-        view.addSubview(trayView)
-        trayView.snp.makeConstraints { make in
-            make.height.equalTo(trayViewHeight)
-            make.leading.trailing.equalToSuperview()
-            make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom)
-        }
-        trayView.button.setTitle(R.string.localizable.next(), for: .normal)
-        trayView.button.addTarget(self, action: #selector(continueWithOneTimeAddress(_:)), for: .touchUpInside)
-        let bottomConstraint = trayView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        bottomConstraint.priority = .defaultHigh
-        bottomConstraint.isActive = true
-        self.trayView = trayView
-        self.trayViewBottomConstraint = bottomConstraint
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillHide(_:)),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
+        tableView.reloadData()
     }
     
-    override func layout(for keyboardFrame: CGRect) {
-        if let constraint = trayViewBottomConstraint {
-            constraint.constant = -keyboardFrame.height
-            view.layoutIfNeeded()
-        }
+    override func didInputEmpty() {
+        tableView.dataSource = self
     }
     
-    @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
-        present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "send_recipient", "wallet": "web3"])
-    }
-    
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        if let constraint = trayViewBottomConstraint {
-            constraint.constant = 0
-            view.layoutIfNeeded()
+    override func continueAction(inputAddress: String) {
+        let token = payment.token
+        if ExternalTransfer.isWithdrawalLink(raw: inputAddress) {
+            Web3AddressValidator.validateWithdrawLink(
+                paymentLink: inputAddress,
+                token: token,
+                payment: payment) { [weak self, weak nextButton](transfer, operation, payment) in
+                guard let self else {
+                    return
+                }
+                nextButton?.isBusy = false
+                
+                if transfer.amount > 0 {
+                    let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .web3ToAddress(addressLabel: payment.toType.addressLabel))
+                    transfer.manipulateNavigationStackOnFinished = true
+                    Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                } else {
+                    let input = Web3TransferInputAmountViewController(payment: payment)
+                    self.navigationController?.pushViewController(input, animated: true)
+                }
+            } onFailure: { [weak self] error in
+                self?.showError(description: error.localizedDescription)
+            }
+        } else {
+            Web3AddressValidator.validate(destination: inputAddress, token: token, payment: payment) { [weak self](payment) in
+                guard let self else {
+                    return
+                }
+                nextButton?.isBusy = false
+                let input = Web3TransferInputAmountViewController(payment: payment)
+                self.navigationController?.pushViewController(input, animated: true)
+            } onFailure: { [weak self] error in
+                self?.showError(description: error.localizedDescription)
+            }
         }
     }
-    
-    @objc private func continueWithOneTimeAddress(_ sender: Any) {
-        guard let address = verifiedAddress else {
-            return
-        }
-        reporter.report(event: .sendRecipient, tags: ["type": "address"])
-        let payment = Web3SendingTokenToAddressPayment(
-            payment: payment,
-            to: .arbitrary,
-            address: address
-        )
-        let input = Web3TransferInputAmountViewController(payment: payment)
-        navigationController?.pushViewController(input, animated: true)
-    }
-    
-}
-
-extension Web3TokenReceiverViewController: HomeNavigationController.NavigationBarStyling {
-    
-    var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
-        .secondaryBackground
-    }
-    
 }
 
 extension Web3TokenReceiverViewController: UITableViewDataSource {
@@ -210,66 +150,6 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
             reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
             sendToMyMixinWallet(chainID: chainID)
         }
-    }
-    
-}
-
-extension Web3TokenReceiverViewController: AddressInfoInputHeaderView.Delegate {
-    
-    func addressInfoInputHeaderView(_ headerView: AddressInfoInputHeaderView, didUpdateContent content: String) {
-        let newHeaderSize = headerView.systemLayoutSizeFitting(
-            CGSize(width: headerView.bounds.width, height: UIView.layoutFittingExpandedSize.height),
-            withHorizontalFittingPriority: .required,
-            verticalFittingPriority: .fittingSizeLevel
-        )
-        headerView.frame.size.height = newHeaderSize.height
-        tableView.tableHeaderView = headerView
-        if content.isEmpty {
-            tableView.dataSource = self
-            tableView.contentInset.bottom = 0
-            trayView.isHidden = true
-            verifiedAddress = nil
-        } else {
-            tableView.dataSource = nil
-            tableView.contentInset.bottom = trayViewHeight
-            trayView.isHidden = false
-            let trimmedContent = headerView.trimmedContent
-            switch payment.chain.kind {
-            case .evm:
-                let ethereumAddress = EthereumAddress(trimmedContent)
-                if trimmedContent.count != 42 || ethereumAddress.asNumber() == nil {
-                    verifiedAddress = nil
-                } else {
-                    verifiedAddress = ethereumAddress.toChecksumAddress()
-                }
-            case .solana:
-                if Solana.isValidPublicKey(string: trimmedContent) {
-                    verifiedAddress = trimmedContent
-                } else {
-                    verifiedAddress = nil
-                }
-            }
-            trayView.button.isEnabled = verifiedAddress != nil
-        }
-        tableView.reloadData()
-    }
-    
-    func addressInfoInputHeaderViewWantsToScanContent(_ headerView: AddressInfoInputHeaderView) {
-        let scanner = CameraViewController.instance()
-        scanner.asQrCodeScanner = true
-        scanner.delegate = self
-        navigationController?.pushViewController(scanner, animated: true)
-    }
-    
-}
-
-extension Web3TokenReceiverViewController: CameraViewControllerDelegate {
-    
-    func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
-        let destination = IBANAddress(string: string)?.standarizedAddress ?? string
-        headerView.setContent(destination)
-        continueWithOneTimeAddress(controller)
-        return false
     }
     
 }

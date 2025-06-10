@@ -42,6 +42,17 @@ class Web3SendingTokenToAddressPayment: Web3SendingTokenPayment {
         case privacyWallet
         case addressBook(label: String)
         case arbitrary
+        
+        var addressLabel: String? {
+            switch self {
+            case let .addressBook(label):
+                return label
+            case .arbitrary:
+                return nil
+            case .privacyWallet:
+                return R.string.localizable.privacy_wallet()
+            }
+        }
     }
     
     let toType: AddressType

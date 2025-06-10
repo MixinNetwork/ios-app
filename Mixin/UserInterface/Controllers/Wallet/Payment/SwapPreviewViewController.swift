@@ -82,7 +82,7 @@ class SwapPreviewViewController: AuthenticationPreviewViewController {
             }
         case let .web3(destination):
             let fee = destination.fee
-            let feeValue = CurrencyFormatter.localizedString(from: fee.token, format: .precision, sign: .never, symbol: nil)
+            let feeValue = CurrencyFormatter.localizedString(from: fee.amount, format: .precision, sign: .never, symbol: nil)
             let feeCost = if fee.fiatMoney >= 0.01 {
                 CurrencyFormatter.localizedString(from: fee.fiatMoney, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
             } else {

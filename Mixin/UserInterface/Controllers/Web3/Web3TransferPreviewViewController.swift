@@ -9,8 +9,7 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
     
     enum Proposer {
         case dapp(Web3DappProposer)
-        case web3ToMixinWallet
-        case web3ToAddress
+        case web3ToAddress(addressLabel: String?)
         case speedUp(sender: Web3TransactionViewController)
         case cancel(sender: Web3TransactionViewController)
     }
@@ -54,7 +53,7 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
                     imageView.sd_setImage(with: operation.session.iconURL)
                 } else {
                     imageView.image = switch proposer {
-                    case .dapp, .none, .web3ToMixinWallet, .web3ToAddress:
+                    case .dapp, .none, .web3ToAddress:
                         R.image.web3_sign_transfer()
                     case .speedUp:
                         R.image.speedup_transaction()
@@ -66,7 +65,7 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
         }
         
         let title = switch proposer {
-        case .dapp, .web3ToMixinWallet, .web3ToAddress, .none:
+        case .dapp, .web3ToAddress, .none:
             R.string.localizable.web3_transaction_request()
         case .speedUp:
             R.string.localizable.speed_up_transaction()
@@ -81,7 +80,7 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
             case .dapp, .none:
                 let subtitle = R.string.localizable.web3_signing_warning()
                 layoutTableHeaderView(title: title, subtitle: subtitle, style: .destructive)
-            case .web3ToMixinWallet, .web3ToAddress:
+            case .web3ToAddress:
                 let subtitle = R.string.localizable.signature_request_from(.mixinMessenger)
                 layoutTableHeaderView(title: title, subtitle: subtitle, style: [])
             case .speedUp:
@@ -137,15 +136,9 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
         case .dapp(let proposer):
             rows.append(.doubleLineInfo(caption: .from, primary: proposer.name, secondary: proposer.host))
             rows.append(.info(caption: .account, content: operation.fromAddress))
-        case .web3ToMixinWallet:
-            if let account = LoginManager.shared.account {
-                let me = UserItem.createUser(from: account)
-                rows.append(.receivers([me], threshold: nil))
-            }
-            rows.append(.info(caption: .sender, content: operation.fromAddress))
-        case .web3ToAddress:
-            rows.append(.receivingAddress(value: operation.toAddress, label: nil))
-            rows.append(.info(caption: .sender, content: operation.fromAddress))
+        case .web3ToAddress(let addressLabel):
+            rows.append(.receivingAddress(value: operation.toAddress, label: addressLabel))
+            rows.append(.sendingAddress(value: operation.fromAddress, label: R.string.localizable.common_wallet()))
         case .speedUp, .cancel:
             break
         case .none:
@@ -303,7 +296,7 @@ extension Web3TransferPreviewViewController {
     private func loadFee(replacingRowAt index: Int) async throws {
         let fee = try await operation.loadFee()
         let feeValue = CurrencyFormatter.localizedString(
-            from: fee.token,
+            from: fee.amount,
             format: .precision,
             sign: .never,
             symbol: nil

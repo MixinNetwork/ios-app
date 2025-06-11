@@ -72,8 +72,8 @@ final class SettingsViewController: SettingsTableViewController {
     }
     
     @objc private func updateMembershipRow() {
-        let plan = LoginManager.shared.account?.membership?.unexpiredPlan
-        membershipRow.subtitle = switch plan {
+        let membership = LoginManager.shared.account?.membership
+        membershipRow.subtitle = switch membership?.unexpiredPlan {
         case .advance:
                 .icon(R.image.membership_advance()!)
         case .elite:
@@ -81,7 +81,11 @@ final class SettingsViewController: SettingsTableViewController {
         case .prosperity:
                 .icon(UserBadgeIcon.prosperityImage!)
         case nil:
+            if membership?.plan == nil {
                 .text(R.string.localizable.upgrade_plan())
+            } else {
+                .text(R.string.localizable.renew_plan())
+            }
         }
     }
     

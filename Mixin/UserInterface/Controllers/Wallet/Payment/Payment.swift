@@ -374,7 +374,7 @@ extension Payment {
                                             tokenAmount: tokenAmount,
                                             fiatMoneyAmount: fiatMoneyAmount,
                                             memo: memo),
-                    AddressValidityPrecondition(address: address),
+                    InactiveAddressPrecondition(address: address),
                 ]
             case .temporary, .classicWallet:
                 preconditions = [

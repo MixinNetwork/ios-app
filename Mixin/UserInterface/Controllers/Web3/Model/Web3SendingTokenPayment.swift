@@ -36,9 +36,10 @@ class Web3SendingTokenPayment {
     
 }
 
-class Web3SendingTokenToAddressPayment: Web3SendingTokenPayment {
+final class Web3SendingTokenToAddressPayment: Web3SendingTokenPayment {
     
     enum AddressType {
+        
         case privacyWallet
         case addressBook(label: String)
         case arbitrary
@@ -46,13 +47,14 @@ class Web3SendingTokenToAddressPayment: Web3SendingTokenPayment {
         var addressLabel: String? {
             switch self {
             case let .addressBook(label):
-                return label
+                label
             case .arbitrary:
-                return nil
+                nil
             case .privacyWallet:
-                return R.string.localizable.privacy_wallet()
+                R.string.localizable.privacy_wallet()
             }
         }
+        
     }
     
     let toType: AddressType

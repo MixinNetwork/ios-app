@@ -38,10 +38,6 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
         tableView.reloadData()
     }
     
-    override func didInputEmpty() {
-        tableView.dataSource = self
-    }
-    
     override func continueAction(inputAddress: String) {
         let token = payment.token
         if ExternalTransfer.isWithdrawalLink(raw: inputAddress) {

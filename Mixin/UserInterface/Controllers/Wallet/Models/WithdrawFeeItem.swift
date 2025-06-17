@@ -7,6 +7,10 @@ struct WithdrawFeeItem {
     let tokenItem: MixinTokenItem
     let localizedAmountWithSymbol: String
     
+    var assetID: String {
+        tokenItem.assetID
+    }
+    
     init?(amountString: String, tokenItem: MixinTokenItem) {
         guard let amount = Decimal(string: amountString, locale: .enUSPOSIX) else {
             return nil

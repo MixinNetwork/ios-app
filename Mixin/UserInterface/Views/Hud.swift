@@ -59,13 +59,13 @@ final class Hud: NSObject {
         guard isShowing else {
             return
         }
-        let deadline: DispatchTime = if case .error = style {
-            .now() + 2.5
-        } else {
-            .now() + 1.5
+        let delay: TimeInterval = switch style {
+        case .notification, .warning, .busy:
+            1.5
+        case .error:
+            2.5
         }
-        
-        DispatchQueue.main.asyncAfter(deadline: deadline) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             self.hide()
         }
     }

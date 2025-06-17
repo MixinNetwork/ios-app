@@ -655,7 +655,7 @@
 		842347EE2695BA6400009A39 /* InitializeBotJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842347ED2695BA6400009A39 /* InitializeBotJob.swift */; };
 		9401A56F2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A56E2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift */; };
 		9401A57C2BD960F600679686 /* Web3Chain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A57B2BD960F600679686 /* Web3Chain.swift */; };
-		9401A5FF2BDA8B5300679686 /* Web3SendingPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A5FE2BDA8B5300679686 /* Web3SendingPayment.swift */; };
+		9401A5FF2BDA8B5300679686 /* Web3SendingTokenPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401A5FE2BDA8B5300679686 /* Web3SendingTokenPayment.swift */; };
 		9402A2912C2B7F67006E71FA /* InscriptionContentSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9402A2902C2B7F67006E71FA /* InscriptionContentSession.swift */; };
 		94031D712C1C5B41007E53BC /* SafeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94031D702C1C5B41007E53BC /* SafeURL.swift */; };
 		94046B91272DC265007C1D4A /* GroupCallMembersDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */; };
@@ -2244,7 +2244,7 @@
 		8C43D9D96FCB101481DFD90F /* Pods-Mixin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mixin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin.release.xcconfig"; sourceTree = "<group>"; };
 		9401A56E2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferTokenSelectorViewController.swift; sourceTree = "<group>"; };
 		9401A57B2BD960F600679686 /* Web3Chain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3Chain.swift; sourceTree = "<group>"; };
-		9401A5FE2BDA8B5300679686 /* Web3SendingPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SendingPayment.swift; sourceTree = "<group>"; };
+		9401A5FE2BDA8B5300679686 /* Web3SendingTokenPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3SendingTokenPayment.swift; sourceTree = "<group>"; };
 		9402A2902C2B7F67006E71FA /* InscriptionContentSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionContentSession.swift; sourceTree = "<group>"; };
 		94031D702C1C5B41007E53BC /* SafeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeURL.swift; sourceTree = "<group>"; };
 		94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCallMembersDataSource.swift; sourceTree = "<group>"; };
@@ -4222,7 +4222,7 @@
 			children = (
 				9401A57B2BD960F600679686 /* Web3Chain.swift */,
 				948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */,
-				9401A5FE2BDA8B5300679686 /* Web3SendingPayment.swift */,
+				9401A5FE2BDA8B5300679686 /* Web3SendingTokenPayment.swift */,
 				9414A7872BE78D8700FA35EB /* DecimalAccumulator.swift */,
 				94838A432C02ADFB005B6A27 /* Solana.swift */,
 				94FE128A2DA80FF40026AB9A /* Web3Transaction+Localization.swift */,

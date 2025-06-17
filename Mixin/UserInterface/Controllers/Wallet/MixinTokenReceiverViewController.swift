@@ -41,10 +41,6 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
         tableView.reloadData()
     }
     
-    override func didInputEmpty() {
-        tableView.dataSource = self
-    }
-    
     override func continueAction(inputAddress: String) {
         if ExternalTransfer.isWithdrawalLink(raw: inputAddress) {
             AddressValidator.validateWithdrawalLink(paymentLink: inputAddress, token: token) {

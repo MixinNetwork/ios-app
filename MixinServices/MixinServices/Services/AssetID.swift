@@ -36,4 +36,9 @@ public enum AssetID {
     public static let classicBTM = "443e1ef5-bc9b-47d3-be77-07f328876c50"
     public static let omniUSDT = "815b0b1a-2764-3736-8faa-42d694fa620a"
     
+    public static let usdts: Set<String> = [
+        erc20USDT, tronUSDT, eosUSDT,
+        polygonUSDT, bep20USDT, solanaUSDT
+    ]
+    
 }

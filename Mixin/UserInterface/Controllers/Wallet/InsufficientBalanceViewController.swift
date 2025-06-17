@@ -10,9 +10,13 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
     }
     
     private let intent: Intent
+    private let insufficientToken: any (ValuableToken & OnChainToken)
     
-    private var insufficientToken: any (ValuableToken & OnChainToken) {
-        switch intent {
+    private var swappingUSDTAssetIDs: (from: String, to: String)?
+    
+    init(intent: Intent) {
+        self.intent = intent
+        self.insufficientToken = switch intent {
         case let .privacyWalletTransfer(requirement):
             requirement.token
         case let .withdraw(primary, fee), let .commonWalletTransfer(primary, fee):
@@ -22,10 +26,6 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                 fee.token
             }
         }
-    }
-    
-    init(intent: Intent) {
-        self.intent = intent
         super.init(warnings: [])
     }
     
@@ -36,10 +36,8 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let token = self.insufficientToken
-        
-        tableHeaderView.setIcon(token: token)
-        let title = R.string.localizable.insufficient_balance_symbol(token.symbol)
+        tableHeaderView.setIcon(token: insufficientToken)
+        let title = R.string.localizable.insufficient_balance_symbol(insufficientToken.symbol)
         let subtitle: String
         switch intent {
         case let .privacyWalletTransfer(requirement):
@@ -155,8 +153,8 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                 rows.append(
                     .amount(
                         caption: .availableBalance,
-                        token: token.localizedBalanceWithSymbol,
-                        fiatMoney: token.localizedFiatMoneyBalance,
+                        token: insufficientToken.localizedBalanceWithSymbol,
+                        fiatMoney: insufficientToken.localizedFiatMoneyBalance,
                         display: .byToken,
                         boldPrimaryAmount: false
                     )
@@ -167,29 +165,105 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
         rows.append(
             .info(
                 caption: .network,
-                content: token.depositNetworkName ?? ""
+                content: insufficientToken.depositNetworkName ?? ""
             )
         )
         
         reloadData(with: rows)
         
-        loadDoubleButtonTrayView(
-            leftTitle: R.string.localizable.cancel(),
-            leftAction: #selector(close(_:)),
-            rightTitle: R.string.localizable.add_token(token.symbol),
-            rightAction: #selector(addToken(_:)),
-            animation: nil
-        )
+        if AssetID.usdts.contains(insufficientToken.assetID) {
+            let currentUSDT = insufficientToken
+            DispatchQueue.global().async { [intent, weak self] in
+                let mostUSDT: (any ValuableToken)? = {
+                    let otherUSDTAssetIDs = AssetID.usdts.subtracting([currentUSDT.assetID])
+                    let otherUSDTs: [any ValuableToken]
+                    switch intent {
+                    case .privacyWalletTransfer, .withdraw:
+                        otherUSDTs = TokenDAO.shared.tokenItems(with: otherUSDTAssetIDs)
+                    case .commonWalletTransfer:
+                        guard let walletID = (currentUSDT as? Web3TokenItem)?.walletID else {
+                            return nil
+                        }
+                        otherUSDTs = Web3TokenDAO.shared.tokens(walletID: walletID, ids: otherUSDTAssetIDs)
+                    }
+                    return otherUSDTs.max { one, another in
+                        one.decimalBalance > another.decimalBalance
+                    }
+                }()
+                DispatchQueue.main.async {
+                    guard let self else {
+                        return
+                    }
+                    if let mostUSDT, mostUSDT.decimalBalance > 0 {
+                        self.swappingUSDTAssetIDs = (from: mostUSDT.assetID, to: currentUSDT.assetID)
+                        self.loadSwapUSDTView()
+                    } else {
+                        self.loadActionsTrayView()
+                    }
+                }
+            }
+        } else {
+            loadActionsTrayView()
+        }
     }
     
     override func loadInitialTrayView(animated: Bool) {
         // Don't load default tray view
     }
     
+    @objc private func loadActionsTrayView() {
+        loadDoubleButtonTrayView(
+            leftTitle: R.string.localizable.cancel(),
+            leftAction: #selector(close(_:)),
+            rightTitle: R.string.localizable.add_token(insufficientToken.symbol),
+            rightAction: #selector(addToken(_:)),
+            animation: trayView == nil ? .none : .vertical
+        )
+    }
+    
     @objc private func addToken(_ sender: Any) {
         let selector = AddTokenMethodSelectorViewController(token: insufficientToken)
         selector.delegate = self
         present(selector, animated: true)
+    }
+    
+    @objc private func swapUSDT(_ sender: Any) {
+        guard let (from, to) = swappingUSDTAssetIDs else {
+            return
+        }
+        let swap: UIViewController
+        switch intent {
+        case .privacyWalletTransfer, .withdraw:
+            swap = MixinSwapViewController(
+                sendAssetID: from,
+                receiveAssetID: to,
+                referral: nil
+            )
+        case .commonWalletTransfer:
+            guard let walletID = (insufficientToken as? Web3TokenItem)?.walletID else {
+                return
+            }
+            swap = Web3SwapViewController(
+                sendAssetID: from,
+                receiveAssetID: to,
+                walletID: walletID
+            )
+        }
+        presentingViewController?.dismiss(animated: true) {
+            UIApplication.homeNavigationController?.pushViewController(swap, animated: true)
+        }
+    }
+    
+    private func loadSwapUSDTView() {
+        loadDialogTrayView(animation: .vertical) { view in
+            view.iconImageView.image = R.image.ic_warning()?.withRenderingMode(.alwaysTemplate)
+            view.titleLabel.text = R.string.localizable.swap_usdt_hint()
+            view.leftButton.setTitle(R.string.localizable.cancel(), for: .normal)
+            view.leftButton.addTarget(self, action: #selector(loadActionsTrayView), for: .touchUpInside)
+            view.rightButton.setTitle(R.string.localizable.swap(), for: .normal)
+            view.rightButton.addTarget(self, action: #selector(swapUSDT(_:)), for: .touchUpInside)
+            view.style = .info
+        }
     }
     
 }

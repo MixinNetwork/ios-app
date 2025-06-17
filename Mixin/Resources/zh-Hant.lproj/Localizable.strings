@@ -1304,6 +1304,7 @@
 "swap_send" = "支付";
 "swap_token" = "交易 %@";
 "swap_token_description" = "將其他幣種兌換為 %@";
+"swap_usdt_hint" = "當前錢包有其他鏈的 USDT，是否馬上兌換？";
 "switch_account" = "切換賬號";
 "symbol" = "符號";
 "symbol_withdrawal" = "%@ 提現";

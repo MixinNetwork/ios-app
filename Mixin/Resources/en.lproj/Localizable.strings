@@ -1304,6 +1304,7 @@
 "swap_send" = "Send";
 "swap_token" = "Swap %@";
 "swap_token_description" = "Swap other coin to %@";
+"swap_usdt_hint" = "There is USDT on a different network in your wallet. Would you like to swap it now?";
 "switch_account" = "Switch Account";
 "symbol" = "Symbol";
 "symbol_withdrawal" = "%@ Withdrawal";

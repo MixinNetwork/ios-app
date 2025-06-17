@@ -47,6 +47,7 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
     public private(set) lazy var localizedUSDChange = localizeUSDChange()
     public private(set) lazy var localizedFiatMoneyPrice = localizeFiatMoneyPrice()
     public private(set) lazy var localizedBalanceWithSymbol = localizeBalanceWithSymbol()
+    public private(set) lazy var localizedFiatMoneyBalance = localizeFiatMoneyBalance()
     public private(set) lazy var estimatedFiatMoneyBalance = estimateFiatMoneyBalance()
     
     public var chainTag: String? {

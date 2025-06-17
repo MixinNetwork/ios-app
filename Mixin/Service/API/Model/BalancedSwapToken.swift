@@ -9,6 +9,7 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
     private(set) lazy var decimalUSDBalance = decimalBalance * decimalUSDPrice
     private(set) lazy var localizedFiatMoneyPrice = localizeFiatMoneyPrice()
     private(set) lazy var localizedBalanceWithSymbol = localizeBalanceWithSymbol()
+    private(set) lazy var localizedFiatMoneyBalance = localizeFiatMoneyBalance()
     private(set) lazy var estimatedFiatMoneyBalance = estimateFiatMoneyBalance()
     
     init(token: SwapToken, balance: Decimal, usdPrice: Decimal) {

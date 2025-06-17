@@ -515,7 +515,7 @@ class UrlWindow {
     }
     
     class func checkWithdrawal(string: String) -> Bool {
-        guard ExternalTransfer.isWithdrawalLink(raw: string) else {
+        guard ExternalTransfer.isDecodable(raw: string) else {
             return false
         }
         guard let homeContainer = UIApplication.homeContainerViewController else {
@@ -525,18 +525,21 @@ class UrlWindow {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         
-        AddressValidator.validateWithdrawalLink(paymentLink: string) { (transfer, token, fee, withdrawDestination) in
-            let amount = transfer.amount
-            if let fee, amount > 0 {
-                let fiatMoneyAmount = amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
-                let payment = Payment(
-                    traceID: UUID().uuidString.lowercased(),
-                    token: token,
-                    tokenAmount: amount,
-                    fiatMoneyAmount: fiatMoneyAmount,
-                    memo: transfer.memo ?? ""
-                )
-                payment.checkPreconditions(withdrawTo: withdrawDestination, fee: fee, on: homeContainer) { reason in
+        AddressValidator.validate(string: string, withdrawing: nil) { result in
+            switch result {
+            case .tagNeeded:
+                hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
+                hud.scheduleAutoHidden()
+            case let .addressVerified(token, destination):
+                hud.hide()
+                let inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: destination)
+                UIApplication.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
+            case let .insufficientBalance(withdrawing, fee):
+                hud.hide()
+                let insufficient = InsufficientBalanceViewController(intent: .withdraw(withdrawing: withdrawing, fee: fee))
+                homeContainer.present(insufficient, animated: true)
+            case let .withdrawPayment(payment, destination, fee):
+                payment.checkPreconditions(withdrawTo: destination, fee: fee, on: homeContainer) { reason in
                     switch reason {
                     case .userCancelled, .loggedOut:
                         hud.hide()
@@ -546,25 +549,20 @@ class UrlWindow {
                     }
                 } onSuccess: { (operation, issues) in
                     hud.hide()
-                    let preview = WithdrawPreviewViewController(issues: issues,
-                                                                operation: operation,
-                                                                amountDisplay: .byToken,
-                                                                withdrawalTokenAmount: amount,
-                                                                withdrawalFiatMoneyAmount: fiatMoneyAmount,
-                                                                addressLabel: withdrawDestination.addressLabel)
+                    let preview = WithdrawPreviewViewController(
+                        issues: issues,
+                        operation: operation,
+                        amountDisplay: .byToken
+                    )
                     preview.manipulateNavigationStackOnFinished = false
                     homeContainer.present(preview, animated: true)
                 }
-            } else {
-                hud.hide()
-                let inputViewController = WithdrawInputAmountViewController(tokenItem: token, destination: withdrawDestination)
-                UIApplication.homeNavigationController?.pushViewController(withBackRoot: inputViewController)
             }
         } onFailure: { error in
             switch error {
             case AddressValidator.ValidationError.invalidFormat, TransferLinkError.invalidFormat:
                 Logger.general.error(category: "URLWindow", message: "Invalid payment: \(string)")
-            case TransferLinkError.assetNotFound:
+            case AddressValidator.ValidationError.unknownAssetKey:
                 Logger.general.error(category: "URLWindow", message: "Asset not found: \(string)")
             default:
                 Logger.general.debug(category: "UrlWindow", message: "Invalid withdrawal link: \(string)")
@@ -1183,6 +1181,17 @@ extension UrlWindow {
                     completion(errorDescription)
                 }
                 guard let token else {
+                    return
+                }
+                guard token.decimalBalance >= amount else {
+                    let requirement = BalanceRequirement(token: token, amount: amount)
+                    DispatchQueue.main.async {
+                        completion(nil)
+                        let insufficient = InsufficientBalanceViewController(
+                            intent: .privacyWalletTransfer(requirement)
+                        )
+                        homeContainer.present(insufficient, animated: true)
+                    }
                     return
                 }
                 let fiatMoneyAmount = amount * token.decimalUSDPrice * Currency.current.decimalRate

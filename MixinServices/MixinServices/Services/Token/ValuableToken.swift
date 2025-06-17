@@ -8,6 +8,7 @@ public protocol ValuableToken: Token {
     var decimalUSDBalance: Decimal { get }
     var localizedFiatMoneyPrice: String { get }
     var localizedBalanceWithSymbol: String { get }
+    var localizedFiatMoneyBalance: String { get }
     var estimatedFiatMoneyBalance: String { get }
     
 }
@@ -37,7 +38,11 @@ extension ValuableToken {
     }
     
     public func estimateFiatMoneyBalance() -> String {
-        "≈ " + CurrencyFormatter.localizedString(
+        "≈ " + localizeFiatMoneyBalance()
+    }
+    
+    public func localizeFiatMoneyBalance() -> String {
+        CurrencyFormatter.localizedString(
             from: decimalUSDBalance * Currency.current.decimalRate,
             format: .fiatMoney,
             sign: .never,

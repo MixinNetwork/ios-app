@@ -329,7 +329,7 @@ extension Payment {
             }
         }
         
-        var logLabel: String {
+        var reportingType: String {
             switch self {
             case .address:
                 "address_book"

@@ -38,6 +38,7 @@
 "add_stickers" = "添加贴纸";
 "add_tag" = "点击添加 Tag（标签）";
 "add_to_stickers" = "添加贴纸";
+"add_token" = "补充 %@";
 "added" = "已添加";
 "adding_address" = "正在添加地址";
 "adding_address_failed" = "添加地址失败";
@@ -170,7 +171,8 @@
 "auto_download_hint" = "媒体自动下载设定，所有语音消息将自动下载。";
 "auto_lock" = "自动锁定";
 "automatic" = "自动";
-"available_balance" = "可用余额：%@";
+"available_balance" = "可用余额";
+"available_balance_count" = "可用余额：%@";
 "back_to_chat" = "返回聊天";
 "back_to_merchant" = "返回商家";
 "backed_up" = "已备份";
@@ -454,6 +456,8 @@
 "deposit_tip_eos" = "支持所有基于 EOS 发行的代币。";
 "deposit_tip_eth" = "支持所有符合 ERC-20 标准的代币，例如 ETH、XIN 等。";
 "deposit_tip_trx" = "支持 TRX 和所有符合 TRC-10、TRC-20 标准的代币。";
+"deposit_token" = "充值 %@";
+"deposit_token_description" = "从其他交易所或钱包转入";
 "deposits_pending_confirmation" = "有 %d 笔充值确认中";
 "depost_address_updated" = "%@ 充值地址已更新";
 "depost_address_updated_description" = "您的 %@ 充值地址已更新，充值地址将随着系统或网络升级而自动更新，旧的地址仍可充值并会自动入账，但是不推荐使用。";
@@ -651,6 +655,7 @@
 "initializing" = "初始化...";
 "install_messenger_desc" = "访问 mixin.one/mm 或扫描二维码安装";
 "insufficient_balance" = "余额不足";
+"insufficient_balance_symbol" = "%@ 余额不足";
 "insufficient_fee_description" = "需要 %1$@ 以支付 %2$@ 网络费用";
 "insufficient_transaction_fee" = "手续费不足";
 "interface_style" = "外观";
@@ -1297,6 +1302,8 @@
 "swap_order_received" = "已收到";
 "swap_receive" = "获得";
 "swap_send" = "支付";
+"swap_token" = "交易 %@";
+"swap_token_description" = "将其他币种兑换为 %@";
 "switch_account" = "切换账号";
 "symbol" = "符号";
 "symbol_withdrawal" = "%@ 提现";
@@ -1345,12 +1352,15 @@
 "transactions_cannot_be_deleted" = "转账记录不会被删除";
 "transcript" = "聊天记录";
 "transfer" = "转账";
+"transfer_aggregated_insufficient_balance_count" = "转账金额 %1$@，手续费 %2$@，钱包可用余额 %3$@。";
 "transfer_amount_count_down" = "转账金额（%@）";
 "transfer_completed" = "传输已完成";
 "transfer_error_pin_incorrect_with_times" = "错误 20119：PIN 不正确。你还有 %@ 次机会尝试。";
 "transfer_failed" = "转账失败";
 "transfer_from_phone_hint" = "将您的另一部手机的聊天记录转移过来。";
 "transfer_hint" = "同步你的聊天记录到新的设备，请确保两台设备接入同一个 Wi-Fi 或热点。";
+"transfer_insufficient_balance_count" = "转账金额 %1$@，钱包可用余额 %2$@。";
+"transfer_insufficient_fee_count" = "手续费 %1$@，钱包可用余额 %2$@。";
 "transfer_memo" = "备注（可选）";
 "transfer_notifications" = "转账通知";
 "transfer_now" = "开始传输";
@@ -1524,7 +1534,10 @@
 "wifi" = "WLAN";
 "wifi_and_cellular" = "WLAN 与蜂窝移动网";
 "withdraw_address" = "提现地址";
+"withdraw_aggregated_insufficient_balance_count" = "提现金额 %1$@，手续费 %2$@，钱包可用余额 %3$@。";
 "withdraw_all_of_token_warning" = "这个应用可以提取你所有的 %@。";
+"withdraw_insufficient_balance_count" = "提现金额 %1$@，钱包可用余额 %2$@。";
+"withdraw_insufficient_fee_count" = "手续费 %1$@，钱包可用余额 %2$@。";
 "withdrawal" = "提现";
 "withdrawal_addr_has_memo_or_tag" = "地址标签、数字 ID 或备注。如果没有，%@。";
 "withdrawal_addr_new" = "新 %@ 地址";

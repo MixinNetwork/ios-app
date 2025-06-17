@@ -57,6 +57,24 @@ final class AuthenticationPreviewHeaderView: UIView {
         iconView.setIcon(token: token)
     }
     
+    func setIcon(token: any OnChainToken) {
+        let iconView: BadgeIconView
+        if let view = self.assetIconView, view.isDescendant(of: iconWrapperView) {
+            iconView = view
+        } else {
+            for iconView in iconWrapperView.subviews {
+                iconView.removeFromSuperview()
+            }
+            iconView = BadgeIconView()
+            iconWrapperView.addSubview(iconView)
+            iconView.snp.makeEdgesEqualToSuperview()
+            self.assetIconView = iconView
+        }
+        iconView.badgeIconDiameter = 23
+        iconView.badgeOutlineWidth = 0
+        iconView.setIcon(token: token, chain: token.chain)
+    }
+    
     func setIcon(chain: Chain) {
         let iconView: BadgeIconView
         if let view = self.assetIconView, view.isDescendant(of: iconWrapperView) {

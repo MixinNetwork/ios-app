@@ -4,129 +4,149 @@ import MixinServices
 
 enum Web3AddressValidator {
     
+    enum Web3TransferValidationResult {
+        case address(type: Web3SendingTokenToAddressPayment.AddressType, address: String)
+        case insufficientBalance(transferring: BalanceRequirement, fee: BalanceRequirement)
+        case solAmountTooSmall
+        case transfer(operation: Web3TransferOperation, label: String?)
+    }
+    
     enum ValidationError: Error, LocalizedError {
         
         case invalidFormat
+        case unknownAssetKey
         case mismatchedDestination
-        case insufficientBalance(Web3TokenItem)
-        case insufficientFee(Web3WithdrawFeeItem)
-        case insufficientForSolRent
+        case mismatchedTag
         
         var errorDescription: String? {
             switch self {
             case .invalidFormat:
                 R.string.localizable.invalid_payment_link()
-            case .mismatchedDestination:
-                R.string.localizable.invalid_address()
-            case .insufficientBalance:
+            case .unknownAssetKey:
                 R.string.localizable.insufficient_balance()
-            case .insufficientFee(let fee):
-                R.string.localizable.insufficient_fee_description(
-                    fee.localizedAmountWithSymbol,
-                    fee.tokenItem.chain?.name ?? ""
-                )
-            case .insufficientForSolRent:
-                R.string.localizable.send_sol_for_rent(
-                    CurrencyFormatter.localizedString(
-                        from: Solana.accountCreationCost,
-                        format: .precision,
-                        sign: .never,
-                    )
-                )
+            case .mismatchedDestination, .mismatchedTag:
+                R.string.localizable.invalid_address()
             }
         }
-    }
-    
-    static func validateWithdrawLink(
-        paymentLink: String,
-        token: Web3TokenItem,
-        payment: Web3SendingTokenPayment,
-        onSuccess: @escaping @MainActor (ExternalTransfer, Web3TransferOperation, Web3SendingTokenToAddressPayment) -> Void,
-        onFailure: @escaping @MainActor (Error) -> Void
-    ) {
-        Task {
-            do {
-                guard let walletAddress = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: token.chainID)?.destination else {
-                    throw TransferLinkError.assetNotFound
-                }
-                
-                // Parse withdraw link
-                let transfer = try await ExternalTransfer(string: paymentLink) { assetKey in
-                    Web3TokenDAO.shared.assetID(assetKey: assetKey)
-                } resolveAmount: { (_, amount) in
-                    ExternalTransfer.resolve(atomicAmount: amount, with: Int(token.precision))
-                }
-                
-                // Check if the link token matches the current token
-                let linkToken = try await syncToken(walletID: token.walletID, walletAddress: walletAddress, assetID: transfer.assetID)
-                if transfer.amount > 0 {
-                    if token.assetID != linkToken.assetID {
-                        throw ValidationError.invalidFormat
-                    }
-                } else {
-                    if token.chainID != linkToken.chainID {
-                        throw ValidationError.invalidFormat
-                    }
-                }
-                
-                // Check address format
-                let verifiedAddress = try await checkAddress(chainID: token.chainID, assetID: token.assetID, destination: transfer.destination)
-                
-                // Query address lable
-                let localAddress = AddressDAO.shared.getAddress(chainId: token.chainID, destination: verifiedAddress, tag: "")
-                let withdrawDestination: Web3SendingTokenToAddressPayment.AddressType = if let localAddress {
-                    .addressBook(label: localAddress.label)
-                } else {
-                    .arbitrary
-                }
-                let addressPayment = Web3SendingTokenToAddressPayment(
-                    payment: payment,
-                    to: withdrawDestination,
-                    address: transfer.destination
-                )
-                
-                // Validate amount and fee
-                let operation = try await validateAmountAndFee(payment: addressPayment, amount: transfer.amount)
-                await MainActor.run {
-                    onSuccess(transfer, operation, addressPayment)
-                }
-            } catch {
-                await MainActor.run {
-                    onFailure(error)
-                }
-            }
-        }
+        
     }
     
     static func validate(
-        destination: String,
-        token: Web3TokenItem,
+        string: String,
         payment: Web3SendingTokenPayment,
-        onSuccess: @escaping @MainActor (Web3SendingTokenToAddressPayment) -> Void,
+        onSuccess: @escaping @MainActor (Web3TransferValidationResult) -> Void,
         onFailure: @escaping @MainActor (Error) -> Void
     ) {
         Task {
             do {
-                let verifiedAddress = try await checkAddress(
-                    chainID: token.chainID,
-                    assetID: token.assetID,
-                    destination: destination
-                )
+                let walletID = payment.walletID
                 
-                let localAddress = AddressDAO.shared.getAddress(chainId: token.chainID, destination: verifiedAddress, tag: "")
-                let withdrawDestination: Web3SendingTokenToAddressPayment.AddressType = if let localAddress {
-                    .addressBook(label: localAddress.label)
-                } else {
-                    .arbitrary
+                // Web3 wallet don’t support Bitcoin at the moment, so there’s no need to check if the link is for Lightning.
+                let link = try ExternalTransfer(string: string)
+                guard payment.chain.chainID == link.chainID else {
+                    throw ValidationError.invalidFormat
                 }
-                let addressPayment = Web3SendingTokenToAddressPayment(
-                    payment: payment,
-                    to: withdrawDestination,
-                    address: destination
-                )
+                let chain = payment.chain
                 
-                await MainActor.run {
-                    onSuccess(addressPayment)
+                let linkToken: Web3TokenItem
+                switch link.tokenID {
+                case .assetID(let id):
+                    if let localToken = Web3TokenDAO.shared.token(walletID: walletID, assetID: id) {
+                        linkToken = localToken
+                    } else {
+                        guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: link.chainID) else {
+                            throw ValidationError.invalidFormat
+                        }
+                        let remoteToken = try await RouteAPI.asset(assetID: id, address: address.destination)
+                        Web3TokenDAO.shared.save(tokens: [remoteToken])
+                        let chain = ChainDAO.shared.chain(chainId: remoteToken.chainID)
+                        linkToken = Web3TokenItem(token: remoteToken, hidden: false, chain: chain)
+                    }
+                case .assetKey(let key):
+                    if let localToken = Web3TokenDAO.shared.token(walletID: walletID, assetKey: key) {
+                        linkToken = localToken
+                    } else {
+                        throw ValidationError.unknownAssetKey
+                    }
+                }
+                
+                let amount = try await link.decimalAmount {
+                    // Since the amount is decoded from the link, it should be calculated using the token specified in the link.
+                    Int(linkToken.precision)
+                }
+                if let amount, amount > 0 {
+                    if linkToken.assetID != payment.token.assetID {
+                        throw ValidationError.invalidFormat
+                    }
+                    let token = linkToken
+                    let (type, address) = try await validate(
+                        chainID: link.chainID,
+                        assetID: token.assetID,
+                        destination: link.destination
+                    )
+                    if chain.kind == .solana && payment.sendingNativeToken {
+                        let accountExists = try await RouteAPI.solanaAccountExists(pubkey: address)
+                        if !accountExists && amount < Solana.accountCreationCost {
+                            await MainActor.run {
+                                onSuccess(.solAmountTooSmall)
+                            }
+                            return
+                        }
+                    }
+                    let addressPayment = Web3SendingTokenToAddressPayment(
+                        payment: payment,
+                        to: type,
+                        address: address
+                    )
+                    let operation: Web3TransferOperation = switch chain.specification {
+                    case let .evm(chainID):
+                        try EVMTransferToAddressOperation(
+                            evmChainID: chainID,
+                            payment: addressPayment,
+                            decimalAmount: amount
+                        )
+                    case .solana:
+                        try SolanaTransferToAddressOperation(
+                            payment: addressPayment,
+                            decimalAmount: amount
+                        )
+                    }
+                    let fee = try await operation.loadFee()
+                    let transferRequirement = BalanceRequirement(token: token, amount: amount)
+                    let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
+                    let requirements = transferRequirement.merging(with: feeRequirement)
+                    let isBalanceSufficient = requirements.allSatisfy(\.isSufficient)
+                    await MainActor.run {
+                        if isBalanceSufficient {
+                            onSuccess(.transfer(operation: operation, label: type.addressLabel))
+                        } else {
+                            onSuccess(.insufficientBalance(transferring: transferRequirement, fee: feeRequirement))
+                        }
+                    }
+                } else {
+                    let (type, address) = try await validate(
+                        chainID: link.chainID,
+                        assetID: payment.token.assetID,
+                        destination: link.destination
+                    )
+                    await MainActor.run {
+                        onSuccess(.address(type: type, address: address))
+                    }
+                }
+            } catch TransferLinkError.notTransferLink {
+                do {
+                    let (type, address) = try await validate(
+                        chainID: payment.chain.chainID,
+                        assetID: payment.token.assetID,
+                        destination: string
+                    )
+                    await MainActor.run {
+                        onSuccess(.address(type: type, address: address))
+                    }
+                } catch {
+                    await MainActor.run {
+                        onFailure(error)
+                    }
                 }
             } catch {
                 await MainActor.run {
@@ -136,84 +156,30 @@ enum Web3AddressValidator {
         }
     }
     
-    private static func validateAmountAndFee(payment: Web3SendingTokenToAddressPayment, amount: Decimal) async throws -> Web3TransferOperation {
-        let token = payment.token
-        let operation: Web3TransferOperation
-        var minimumTransferAmount: Decimal = 0
-        
-        switch payment.chain.specification {
-        case .evm(let chainID):
-            operation = try EVMTransferToAddressOperation(
-                evmChainID: chainID,
-                payment: payment,
-                decimalAmount: amount
-            )
-        case .solana:
-            operation = try SolanaTransferToAddressOperation(payment: payment, decimalAmount: amount)
-            if payment.sendingNativeToken {
-                let accountExists = try await RouteAPI.solanaAccountExists(pubkey: payment.toAddress)
-                minimumTransferAmount = accountExists ? 0 : Solana.accountCreationCost
-            }
-        }
-        
-        if amount > 0 {
-            if amount > token.decimalBalance {
-                throw ValidationError.insufficientBalance(token)
-            } else if amount < minimumTransferAmount {
-                throw ValidationError.insufficientForSolRent
-            }
-            
-            _ = try await checkFee(amount: amount, payment: payment, operation: operation)
-        }
-        
-        return operation
-    }
-    
-    private static func checkAddress(
+    private static func validate(
         chainID: String,
         assetID: String,
-        destination: String
-    ) async throws -> String {
-        let response = try await ExternalAPI.checkAddress(
-            chainID: chainID,
-            assetID: assetID,
-            destination: destination,
-            tag: nil
-        )
-        guard destination.lowercased() == response.destination.lowercased() else {
-            throw ValidationError.mismatchedDestination
+        destination: String,
+    ) async throws -> (type: Web3SendingTokenToAddressPayment.AddressType, address: String) {
+        if let address = AddressDAO.shared.getAddress(chainId: chainID, destination: destination, tag: "") {
+            return (type: .addressBook(label: address.label), address.destination)
+        } else if let entry = DepositEntryDAO.shared.primaryEntry(ofChainWith: chainID) {
+            return (type: .privacyWallet, address: entry.destination)
+        } else {
+            let response = try await ExternalAPI.checkAddress(
+                chainID: chainID,
+                assetID: assetID,
+                destination: destination,
+                tag: nil
+            )
+            guard destination.lowercased() == response.destination.lowercased() else {
+                throw ValidationError.mismatchedDestination
+            }
+            guard response.tag.isNilOrEmpty else {
+                throw ValidationError.mismatchedTag
+            }
+            return (type: .arbitrary, response.destination)
         }
-        return response.destination
     }
     
-    private static func checkFee(
-        amount: Decimal,
-        payment: Web3SendingTokenToAddressPayment,
-        operation: Web3TransferOperation
-    ) async throws -> Web3WithdrawFeeItem {
-        let fee = try await operation.loadFee()
-        let feeItem = Web3WithdrawFeeItem(amount: fee.amount, tokenItem: fee.token)
-        
-        let feeInsufficient = if payment.sendingNativeToken {
-            amount > payment.token.decimalBalance - fee.amount
-        } else {
-            fee.amount > fee.token.decimalBalance
-        }
-        if feeInsufficient {
-            throw ValidationError.insufficientFee(feeItem)
-        }
-        
-        return feeItem
-    }
-    
-    private static func syncToken(walletID: String, walletAddress: String, assetID: String) async throws -> Web3TokenItem {
-        if let localToken = Web3TokenDAO.shared.token(walletID: walletID, assetID: assetID) {
-            return localToken
-        } else {
-            let remoteToken = try await RouteAPI.asset(assetID: assetID, address: walletAddress)
-            Web3TokenDAO.shared.save(tokens: [remoteToken])
-            let chain = ChainDAO.shared.chain(chainId: remoteToken.chainID)
-            return Web3TokenItem(token: remoteToken, hidden: false, chain: chain)
-        }
-    }
 }

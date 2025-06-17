@@ -70,6 +70,11 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [kernelAssetID])
     }
     
+    public func tokenItem(chainID: String, assetKey: String) -> MixinTokenItem? {
+        let sql = "\(SQL.selector) WHERE t.chain_id = ? AND t.asset_key = ?"
+        return db.select(with: sql, arguments: [chainID, assetKey])
+    }
+    
     public func tokens(with ids: any Sequence<String>) -> [MixinToken] {
         let sql: GRDB.SQL = "SELECT * FROM tokens WHERE asset_id IN \(ids)"
         return db.select(with: sql)

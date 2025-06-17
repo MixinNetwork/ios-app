@@ -9,11 +9,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
             return .insufficient(nil)
         }
         let balanceInsufficient = tokenAmount > token.decimalBalance
-        let feeInsufficient = if payment.sendingNativeToken {
-            tokenAmount > token.decimalBalance - fee.amount
-        } else {
-            fee.amount > feeToken.decimalBalance
-        }
+        let feeInsufficient = isFeeInsufficient(fee: fee, feeToken: feeToken)
         return if balanceInsufficient {
             .insufficient(R.string.localizable.insufficient_balance())
         } else if feeInsufficient {
@@ -121,6 +117,15 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         }
     }
     
+    override func addFee(_ sender: Any) {
+        guard let feeToken else {
+            return
+        }
+        let selector = AddTokenMethodSelectorViewController(token: feeToken)
+        selector.delegate = self
+        present(selector, animated: true)
+    }
+    
     override func inputMultipliedAmount(_ sender: UIButton) {
         guard let fee else {
             return
@@ -148,27 +153,28 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                     try SolanaTransferToAddressOperation(payment: payment, decimalAmount: 0)
                 }
                 let fee = try await operation.loadFee()
+                let feeToken = operation.feeToken
                 let title = CurrencyFormatter.localizedString(
                     from: fee.amount,
                     format: .precision,
                     sign: .never,
-                    symbol: .custom(operation.feeToken.symbol)
+                    symbol: .custom(feeToken.symbol)
                 )
                 let availableBalance = if payment.sendingNativeToken {
                     CurrencyFormatter.localizedString(
                         from: max(0, payment.token.decimalBalance - fee.amount),
                         format: .precision,
                         sign: .never,
-                        symbol: .custom(operation.feeToken.symbol)
+                        symbol: .custom(feeToken.symbol)
                     )
                 } else {
                     payment.token.localizedBalanceWithSymbol
                 }
                 await MainActor.run {
                     self.fee = fee
-                    self.feeToken = operation.feeToken
+                    self.feeToken = feeToken
                     self.feeActivityIndicator?.stopAnimating()
-                    self.tokenBalanceLabel.text = R.string.localizable.available_balance(availableBalance)
+                    self.tokenBalanceLabel.text = R.string.localizable.available_balance_count(availableBalance)
                     if let button = self.changeFeeButton {
                         button.configuration?.attributedTitle = AttributedString(title, attributes: feeAttributes)
                         button.alpha = 1
@@ -178,6 +184,15 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                     if self.minimumTransferAmount != nil {
                         self.reviewButton.isBusy = false
                         self.reloadViewsWithBalanceSufficiency()
+                    }
+                    if self.isFeeInsufficient(fee: fee, feeToken: feeToken) {
+                        self.addAddFeeButton()
+                        self.addFeeButton?.configuration?.attributedTitle = AttributedString(
+                            R.string.localizable.add_token(feeToken.symbol),
+                            attributes: self.addFeeAttributes
+                        )
+                    } else {
+                        self.removeAddFeeButton()
                     }
                 }
             } catch MixinAPIResponseError.unauthorized {
@@ -225,6 +240,45 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                 }
             }
         }
+    }
+    
+    private func isFeeInsufficient(
+        fee: Web3TransferOperation.Fee,
+        feeToken: Web3TokenItem,
+    ) -> Bool {
+        if payment.sendingNativeToken {
+           tokenAmount > token.decimalBalance - fee.amount
+       } else {
+           fee.amount > feeToken.decimalBalance
+       }
+    }
+    
+}
+
+extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewController.Delegate {
+    
+    func addTokenMethodSelectorViewController(
+        _ viewController: AddTokenMethodSelectorViewController,
+        didPickMethod method: AddTokenMethodSelectorViewController.Method
+    ) {
+        guard let feeToken else {
+            return
+        }
+        let next: UIViewController
+        switch method {
+        case .swap:
+            next = Web3SwapViewController(
+                sendAssetID: nil,
+                receiveAssetID: feeToken.assetID,
+                walletID: feeToken.walletID
+            )
+        case .deposit:
+            guard let address = Web3AddressDAO.shared.address(walletID: feeToken.walletID, chainID: feeToken.chainID) else {
+                return
+            }
+            next = Web3DepositViewController(kind: payment.chain.kind, address: address.destination)
+        }
+        navigationController?.pushViewController(next, animated: true)
     }
     
 }

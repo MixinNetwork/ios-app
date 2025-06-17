@@ -38,6 +38,7 @@
 "add_stickers" = "新增貼紙";
 "add_tag" = "點選新增 Tag（標籤）";
 "add_to_stickers" = "新增貼紙";
+"add_token" = "補充 %@";
 "added" = "已新增";
 "adding_address" = "正在新增地址";
 "adding_address_failed" = "新增地址失敗";
@@ -170,7 +171,8 @@
 "auto_download_hint" = "媒體自動下載設定，所有語音訊息將自動下載。";
 "auto_lock" = "自動鎖定";
 "automatic" = "自動";
-"available_balance" = "可用餘額：%@";
+"available_balance" = "可用餘額";
+"available_balance_count" = "可用餘額：%@";
 "back_to_chat" = "返回聊天";
 "back_to_merchant" = "返回商家";
 "backed_up" = "已備份";
@@ -454,6 +456,8 @@
 "deposit_tip_eos" = "支援所有基於 EOS 發行的代幣。";
 "deposit_tip_eth" = "支援所有符合 ERC-20 標準的代幣，例如 ETH、XIN 等。";
 "deposit_tip_trx" = "支援 TRX 和所有符合 TRC-10、TRC-20 標準的代幣。";
+"deposit_token" = "充值 %@";
+"deposit_token_description" = "從其他交易所或錢包轉入";
 "deposits_pending_confirmation" = "有 %d 筆充值確認中";
 "depost_address_updated" = "%@ 充值地址已更新";
 "depost_address_updated_description" = "您的 %@ 充值地址已更新，充值地址將隨著系統或網路升級而自動更新，舊的地址仍可充值並會自動入賬，但是不推薦使用。";
@@ -651,6 +655,7 @@
 "initializing" = "初始化...";
 "install_messenger_desc" = "訪問 mixin.one/mm 或掃描二維碼安裝";
 "insufficient_balance" = "餘額不足";
+"insufficient_balance_symbol" = "%@ 餘額不足";
 "insufficient_fee_description" = "需要 %1$@ 以支付 %2$@ 網路費用";
 "insufficient_transaction_fee" = "手續費不足";
 "interface_style" = "外觀";
@@ -1297,6 +1302,8 @@
 "swap_order_received" = "已收到";
 "swap_receive" = "獲得";
 "swap_send" = "支付";
+"swap_token" = "交易 %@";
+"swap_token_description" = "將其他幣種兌換為 %@";
 "switch_account" = "切換賬號";
 "symbol" = "符號";
 "symbol_withdrawal" = "%@ 提現";
@@ -1345,12 +1352,15 @@
 "transactions_cannot_be_deleted" = "轉賬記錄不會被刪除";
 "transcript" = "聊天記錄";
 "transfer" = "轉賬";
+"transfer_aggregated_insufficient_balance_count" = "轉賬金額 %1$@，手續費 %2$@，錢包可用餘額 %3$@。";
 "transfer_amount_count_down" = "轉賬金額（%@）";
 "transfer_completed" = "傳輸已完成";
 "transfer_error_pin_incorrect_with_times" = "錯誤 20119：PIN 不正確。你還有 %@ 次機會嘗試。";
 "transfer_failed" = "轉賬失敗";
 "transfer_from_phone_hint" = "將您的另一部手機的聊天記錄轉移過來。";
 "transfer_hint" = "同步你的聊天記錄到新的裝置，請確保兩臺裝置接入同一個 Wi-Fi 或熱點。";
+"transfer_insufficient_balance_count" = "轉賬金額 %1$@，錢包可用餘額 %2$@。";
+"transfer_insufficient_fee_count" = "手續費 %1$@，錢包可用餘額 %2$@。";
 "transfer_memo" = "備註（可選）";
 "transfer_notifications" = "轉賬通知";
 "transfer_now" = "開始傳輸";
@@ -1524,7 +1534,10 @@
 "wifi" = "WLAN";
 "wifi_and_cellular" = "WLAN 與行動數據";
 "withdraw_address" = "提現地址";
+"withdraw_aggregated_insufficient_balance_count" = "提現金額 %1$@，手續費 %2$@，錢包可用餘額 %3$@。";
 "withdraw_all_of_token_warning" = "這個應用可以提取你所有的 %@。";
+"withdraw_insufficient_balance_count" = "提現金額 %1$@，錢包可用餘額 %2$@。";
+"withdraw_insufficient_fee_count" = "手續費 %1$@，錢包可用餘額 %2$@。";
 "withdrawal" = "提現";
 "withdrawal_addr_has_memo_or_tag" = "地址標籤、數字 ID 或備註。如果沒有，%@。";
 "withdrawal_addr_new" = "新 %@ 地址";

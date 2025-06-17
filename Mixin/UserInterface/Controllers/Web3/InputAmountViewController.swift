@@ -43,10 +43,19 @@ class InputAmountViewController: UIViewController {
         return container
     }
     
+    var addFeeAttributes: AttributeContainer {
+        var container = AttributeContainer()
+        container.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+        container.foregroundColor = R.color.theme()
+        return container
+    }
+    
     private(set) var amountIntent: AmountIntent
     private(set) var tokenAmount: Decimal = 0
     private(set) var fiatMoneyAmount: Decimal = 0
     
+    private(set) weak var feeStackView: UIStackView?
+    private(set) weak var addFeeButton: UIButton?
     private(set) weak var feeActivityIndicator: ActivityIndicatorView?
     private(set) weak var changeFeeButton: UIButton?
     
@@ -259,6 +268,10 @@ class InputAmountViewController: UIViewController {
         
     }
     
+    @objc func addFee(_ sender: Any) {
+        
+    }
+    
     func multiplier(tag: Int) -> Decimal {
         switch tag {
         case 0:
@@ -316,6 +329,24 @@ class InputAmountViewController: UIViewController {
         feeStackView.snp.makeConstraints { make in
             make.width.equalTo(view.snp.width).offset(-56)
         }
+        self.feeStackView = feeStackView
+    }
+    
+    func addAddFeeButton() {
+        guard addFeeButton == nil else {
+            return
+        }
+        var config: UIButton.Configuration = .plain()
+        config.baseBackgroundColor = .clear
+        let button = UIButton(configuration: config)
+        button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        button.addTarget(self, action: #selector(addFee(_:)), for: .touchUpInside)
+        feeStackView?.insertArrangedSubview(button, at: 1)
+        addFeeButton = button
+    }
+    
+    func removeAddFeeButton() {
+        addFeeButton?.removeFromSuperview()
     }
     
     func reloadViewsWithBalanceSufficiency() {

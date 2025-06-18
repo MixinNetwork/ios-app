@@ -114,50 +114,6 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                     display: .byToken,
                     boldPrimaryAmount: true
                 ),
-            ]
-            if let feeSymbol = requirement.token.chain?.symbol {
-                rows.append(
-                    .amount(
-                        caption: .fee,
-                        token: CurrencyFormatter.localizedString(
-                            from: Decimal.zero,
-                            format: .precision,
-                            sign: .never,
-                            symbol: .custom(feeSymbol)
-                        ),
-                        fiatMoney: CurrencyFormatter.localizedString(
-                            from: Decimal.zero,
-                            format: .fiatMoney,
-                            sign: .never,
-                            symbol: .currencySymbol
-                        ),
-                        display: .byToken,
-                        boldPrimaryAmount: true
-                    )
-                )
-            }
-        case let .withdraw(primary, fee), let .commonWalletTransfer(primary, fee):
-            rows = [
-                .amount(
-                    caption: .amount,
-                    token: primary.localizedAmountWithSymbol,
-                    fiatMoney: primary.localizedFiatMoneyAmountWithSymbol,
-                    display: .byToken,
-                    boldPrimaryAmount: true
-                ),
-                .amount(
-                    caption: .fee,
-                    token: fee.localizedAmountWithSymbol,
-                    fiatMoney: fee.localizedFiatMoneyAmountWithSymbol,
-                    display: .byToken,
-                    boldPrimaryAmount: true
-                ),
-            ]
-        }
-        
-        switch intent {
-        case let .privacyWalletTransfer(requirement):
-            rows.append(
                 .amount(
                     caption: .availableBalance,
                     token: requirement.token.localizedBalanceWithSymbol,
@@ -165,11 +121,25 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                     display: .byToken,
                     boldPrimaryAmount: false
                 )
-            )
+            ]
         case let .withdraw(primary, fee), let .commonWalletTransfer(primary, fee):
             let requirements = primary.merging(with: fee)
             if requirements.count == 1, let total = requirements.first {
-                rows.append(contentsOf: [
+                rows = [
+                    .amount(
+                        caption: .amount,
+                        token: primary.localizedAmountWithSymbol,
+                        fiatMoney: primary.localizedFiatMoneyAmountWithSymbol,
+                        display: .byToken,
+                        boldPrimaryAmount: true
+                    ),
+                    .amount(
+                        caption: .fee,
+                        token: fee.localizedAmountWithSymbol,
+                        fiatMoney: fee.localizedFiatMoneyAmountWithSymbol,
+                        display: .byToken,
+                        boldPrimaryAmount: true
+                    ),
                     .amount(
                         caption: .total,
                         token: total.localizedAmountWithSymbol,
@@ -184,17 +154,25 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                         display: .byToken,
                         boldPrimaryAmount: false
                     ),
-                ])
+                ]
             } else {
-                rows.append(
+                let item = !primary.isSufficient ? primary : fee
+                rows = [
+                    .amount(
+                        caption: .amount,
+                        token: item.localizedAmountWithSymbol,
+                        fiatMoney: item.localizedFiatMoneyAmountWithSymbol,
+                        display: .byToken,
+                        boldPrimaryAmount: true
+                    ),
                     .amount(
                         caption: .availableBalance,
-                        token: insufficientToken.localizedBalanceWithSymbol,
-                        fiatMoney: insufficientToken.localizedFiatMoneyBalance,
+                        token: item.token.localizedBalanceWithSymbol,
+                        fiatMoney: item.token.localizedFiatMoneyBalance,
                         display: .byToken,
                         boldPrimaryAmount: false
-                    )
-                )
+                    ),
+                ]
             }
         }
         

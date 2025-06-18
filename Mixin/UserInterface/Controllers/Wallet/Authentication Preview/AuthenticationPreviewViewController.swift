@@ -4,9 +4,9 @@ import MixinServices
 class AuthenticationPreviewViewController: UIViewController {
     
     let warnings: [String]
-    let tableView = UITableView()
     let tableHeaderView = R.nib.authenticationPreviewHeaderView(withOwner: nil)!
     
+    var tableView: UITableView!
     var canDismissInteractively = true
     var onDismiss: (() -> Void)?
     
@@ -32,6 +32,7 @@ class AuthenticationPreviewViewController: UIViewController {
         
         presentationController?.delegate = self
         
+        loadTableView()
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.backgroundColor = R.color.background()
@@ -72,6 +73,10 @@ class AuthenticationPreviewViewController: UIViewController {
         if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory {
             layoutTableHeaderView()
         }
+    }
+    
+    func loadTableView() {
+        tableView = UITableView(frame: view.bounds)
     }
     
     func layoutTableHeaderView() {
@@ -436,7 +441,7 @@ extension AuthenticationPreviewViewController {
                 view.leftButton.isHidden = true
                 view.rightButton.setTitle(R.string.localizable.got_it(), for: .normal)
                 view.rightButton.addTarget(self, action: #selector(ignoreCurrentWarning(_:)), for: .touchUpInside)
-                view.style = .warning
+                view.style = .red
             }
             unresolvedWarningIndex += 1
         } else {
@@ -477,7 +482,7 @@ extension AuthenticationPreviewViewController {
                 view.leftButton.addTarget(self, action: #selector(enableBiometricAuthentication(_:)), for: .touchUpInside)
                 view.rightButton.setTitle(R.string.localizable.not_now(), for: .normal)
                 view.rightButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
-                view.style = .info
+                view.style = .gray
             }
         }
         

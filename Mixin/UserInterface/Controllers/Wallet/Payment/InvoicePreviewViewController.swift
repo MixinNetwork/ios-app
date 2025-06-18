@@ -156,7 +156,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
                             view.leftButton.addTarget(self, action: #selector(gotoMerchant(_:)), for: .touchUpInside)
                             view.rightButton.setTitle(R.string.localizable.stay_in_mixin(), for: .normal)
                             view.rightButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
-                            view.style = .info
+                            view.style = .gray
                         }
                     }
                     manipulateNavigationStackIfNeeded()

@@ -36,6 +36,8 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.backgroundColor = R.color.background_quaternary()
+        tableHeaderView.style = .insetted
         tableHeaderView.setIcon(token: insufficientToken)
         let title = R.string.localizable.insufficient_balance_symbol(insufficientToken.symbol)
         let subtitle: String
@@ -207,8 +209,33 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
         }
     }
     
+    override func loadTableView() {
+        tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+    }
+    
     override func loadInitialTrayView(animated: Bool) {
         // Don't load default tray view
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        switch cell {
+        case let cell as AuthenticationPreviewInfoCell:
+            if indexPath.row == 0 {
+                cell.contentTopConstraint.constant = 20
+            }
+            cell.contentLeadingConstraint.constant = 16
+            cell.contentTrailingConstraint.constant = 16
+        case let cell as AuthenticationPreviewCompactInfoCell:
+            if indexPath.row == rows.count - 1 {
+                cell.contentBottomConstraint.constant = 20
+            }
+            cell.contentLeadingConstraint.constant = 16
+            cell.contentTrailingConstraint.constant = 16
+        default:
+            break
+        }
+        return cell
     }
     
     @objc private func loadActionsTrayView() {
@@ -219,6 +246,7 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
             rightAction: #selector(addToken(_:)),
             animation: trayView == nil ? .none : .vertical
         )
+        trayView?.backgroundColor = R.color.background_quaternary()
     }
     
     @objc private func addToken(_ sender: Any) {
@@ -256,13 +284,14 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
     
     private func loadSwapUSDTView() {
         loadDialogTrayView(animation: .vertical) { view in
+            view.backgroundColor = R.color.background_quaternary()
             view.iconImageView.image = R.image.ic_warning()?.withRenderingMode(.alwaysTemplate)
             view.titleLabel.text = R.string.localizable.swap_usdt_hint()
             view.leftButton.setTitle(R.string.localizable.cancel(), for: .normal)
             view.leftButton.addTarget(self, action: #selector(loadActionsTrayView), for: .touchUpInside)
             view.rightButton.setTitle(R.string.localizable.swap(), for: .normal)
             view.rightButton.addTarget(self, action: #selector(swapUSDT(_:)), for: .touchUpInside)
-            view.style = .info
+            view.style = .yellow
         }
     }
     

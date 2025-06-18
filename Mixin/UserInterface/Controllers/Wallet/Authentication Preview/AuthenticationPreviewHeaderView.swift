@@ -3,11 +3,26 @@ import MixinServices
 
 final class AuthenticationPreviewHeaderView: UIView {
     
+    enum Style {
+        case plain
+        case insetted
+    }
+    
     @IBOutlet weak var iconWrapperView: UIView!
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     
+    @IBOutlet weak var separatorLineHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var separatorLineBottomConstraint: NSLayoutConstraint!
+    
+    var style: Style = .plain {
+        didSet {
+            layout(style: style)
+        }
+    }
+    
+    private weak var backgroundView: UIView?
     private weak var imageView: UIImageView?
     private weak var assetIconView: BadgeIconView?
     private weak var progressView: AuthenticationProgressView?
@@ -182,6 +197,33 @@ final class AuthenticationPreviewHeaderView: UIView {
             if view != imageView && view != textContentView {
                 view.removeFromSuperview()
             }
+        }
+    }
+    
+    private func layout(style: Style) {
+        switch style {
+        case .plain:
+            backgroundColor = R.color.background()
+            backgroundView?.removeFromSuperview()
+            separatorLineHeightConstraint.constant = 10
+            separatorLineBottomConstraint.constant = 10
+        case .insetted:
+            backgroundColor = R.color.background_quaternary()
+            if backgroundView == nil {
+                let backgroundView = UIView()
+                backgroundView.backgroundColor = R.color.background()
+                backgroundView.layer.cornerRadius = 8
+                backgroundView.layer.masksToBounds = true
+                insertSubview(backgroundView, at: 0)
+                backgroundView.snp.makeConstraints { make in
+                    make.top.leading.equalToSuperview().offset(20)
+                    make.trailing.equalToSuperview().offset(-20)
+                    make.bottom.equalToSuperview().offset(-10)
+                }
+                self.backgroundView = backgroundView
+            }
+            separatorLineHeightConstraint.constant = 0
+            separatorLineBottomConstraint.constant = 2
         }
     }
     

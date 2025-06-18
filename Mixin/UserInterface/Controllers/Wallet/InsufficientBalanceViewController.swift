@@ -156,23 +156,41 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                     ),
                 ]
             } else {
-                let item = !primary.isSufficient ? primary : fee
-                rows = [
-                    .amount(
-                        caption: .amount,
-                        token: item.localizedAmountWithSymbol,
-                        fiatMoney: item.localizedFiatMoneyAmountWithSymbol,
-                        display: .byToken,
-                        boldPrimaryAmount: true
-                    ),
-                    .amount(
-                        caption: .availableBalance,
-                        token: item.token.localizedBalanceWithSymbol,
-                        fiatMoney: item.token.localizedFiatMoneyBalance,
-                        display: .byToken,
-                        boldPrimaryAmount: false
-                    ),
-                ]
+                if !primary.isSufficient {
+                    rows = [
+                        .amount(
+                            caption: .amount,
+                            token: primary.localizedAmountWithSymbol,
+                            fiatMoney: primary.localizedFiatMoneyAmountWithSymbol,
+                            display: .byToken,
+                            boldPrimaryAmount: true
+                        ),
+                        .amount(
+                            caption: .availableBalance,
+                            token: primary.token.localizedBalanceWithSymbol,
+                            fiatMoney: primary.token.localizedFiatMoneyBalance,
+                            display: .byToken,
+                            boldPrimaryAmount: false
+                        ),
+                    ]
+                } else {
+                    rows = [
+                        .amount(
+                            caption: .fee,
+                            token: fee.localizedAmountWithSymbol,
+                            fiatMoney: fee.localizedFiatMoneyAmountWithSymbol,
+                            display: .byToken,
+                            boldPrimaryAmount: true
+                        ),
+                        .amount(
+                            caption: .availableBalance,
+                            token: fee.token.localizedBalanceWithSymbol,
+                            fiatMoney: fee.token.localizedFiatMoneyBalance,
+                            display: .byToken,
+                            boldPrimaryAmount: false
+                        ),
+                    ]
+                }
             }
         }
         

@@ -76,6 +76,7 @@ extension MixinToken: MaliciousDistinguishable {
 extension MixinToken {
     
     public static let precision = 8
+    public static let minimalAmount: Decimal = 0.000_000_01
     
     public var isNFT: Bool {
         !(collectionHash?.isEmpty ?? true)

@@ -14,6 +14,7 @@ enum AddressValidator {
         
         case unknownAssetKey
         case invalidFormat
+        case amountTooSmall
         case mismatchedDestination
         case mismatchedTag
         
@@ -21,7 +22,7 @@ enum AddressValidator {
             switch self {
             case .unknownAssetKey:
                 R.string.localizable.insufficient_balance()
-            case .invalidFormat:
+            case .invalidFormat, .amountTooSmall:
                 R.string.localizable.invalid_payment_link()
             case .mismatchedDestination, .mismatchedTag:
                 R.string.localizable.invalid_address()
@@ -63,6 +64,9 @@ enum AddressValidator {
                     try await AssetAPI.assetPrecision(assetID: linkToken.assetID).precision
                 })
                 if let amount, amount > 0 {
+                    if amount < MixinToken.minimalAmount {
+                        throw ValidationError.amountTooSmall
+                    }
                     if let withdrawingToken, withdrawingToken.assetID != linkToken.assetID {
                         throw ValidationError.invalidFormat
                     }

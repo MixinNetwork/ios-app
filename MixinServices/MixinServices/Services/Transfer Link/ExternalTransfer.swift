@@ -24,10 +24,11 @@ public struct ExternalTransfer {
     
     public let chainID: String
     public let tokenID: Identifier
-    public let atomicAmount: Decimal?
-    public let decimalAmount: Decimal?
     public let destination: String
     public let memo: String?
+    
+    private let atomicAmount: Decimal?
+    private let decimalAmount: Decimal?
     
     public init(string raw: String) throws {
         guard let components = URLComponents(string: raw) else {

@@ -597,6 +597,10 @@ extension AuthenticationPreviewViewController {
             let bottomConstraint = newTrayView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             NSLayoutConstraint.activate([widthConstraint, centerXConstraint, bottomConstraint])
             
+            self.trayView = newTrayView
+            self.trayViewCenterXConstraint = centerXConstraint
+            self.trayViewBottomConstraint = bottomConstraint
+            
             switch animation {
             case .vertical:
                 newTrayView.layoutIfNeeded()
@@ -624,13 +628,9 @@ extension AuthenticationPreviewViewController {
                 // Reduce `UITableViewAlertForLayoutOutsideViewHierarchy`
                 if view.window != nil {
                     view.layoutIfNeeded()
-                    updateTableViewBottomInset()
                 }
+                updateTableViewBottomInset()
             }
-            
-            self.trayView = newTrayView
-            self.trayViewCenterXConstraint = centerXConstraint
-            self.trayViewBottomConstraint = bottomConstraint
         } else {
             self.trayView = nil
             self.trayViewCenterXConstraint = nil

@@ -16,7 +16,7 @@ final class BalanceRequirement {
     )
     private(set) lazy var localizedFiatMoneyAmountWithSymbol = CurrencyFormatter.localizedString(
         from: fiatMoneyAmount,
-        format: .precision,
+        format: .fiatMoney,
         sign: .never,
         symbol: .currencySymbol
     )

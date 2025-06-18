@@ -67,6 +67,8 @@
                 <outlet property="stackView" destination="bDK-3p-lbu" id="8xJ-p0-bk2"/>
                 <outlet property="subtitleLabel" destination="gdg-BJ-S56" id="oKm-tb-DmU"/>
                 <outlet property="titleLabel" destination="9rk-30-04q" id="EP8-lq-ZsB"/>
+                <outlet property="titleStackViewLeadingConstraint" destination="Fya-RI-bXS" id="Bft-HO-I8l"/>
+                <outlet property="titleStackViewTrailingConstraint" destination="YYO-uo-xqb" id="wMc-X4-BGF"/>
             </connections>
             <point key="canvasLocation" x="20.610687022900763" y="198.23943661971833"/>
         </view>

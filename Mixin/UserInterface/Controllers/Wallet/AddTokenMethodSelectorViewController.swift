@@ -32,13 +32,15 @@ final class AddTokenMethodSelectorViewController: PopupSelectorViewController {
         super.viewDidLoad()
         view.backgroundColor = R.color.background_quaternary()
         titleView.backgroundColor = R.color.background_quaternary()
+        tableViewTopConstraint.constant = 6
         tableView.backgroundColor = R.color.background_quaternary()
         tableView.estimatedRowHeight = 72
         tableView.rowHeight = UITableView.automaticDimension
         tableView.register(R.nib.addTokenMethodCell)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
+        tableView.contentInsetAdjustmentBehavior = .always
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 38, right: 0)
         titleView.titleLabel.text = R.string.localizable.add_token(token.symbol)
     }
     

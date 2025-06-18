@@ -13,6 +13,8 @@ final class AuthenticationPreviewHeaderView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     
+    @IBOutlet weak var titleStackViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var titleStackViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var separatorLineHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var separatorLineBottomConstraint: NSLayoutConstraint!
     
@@ -205,6 +207,8 @@ final class AuthenticationPreviewHeaderView: UIView {
         case .plain:
             backgroundColor = R.color.background()
             backgroundView?.removeFromSuperview()
+            titleStackViewLeadingConstraint.constant = 38
+            titleStackViewTrailingConstraint.constant = 38
             separatorLineHeightConstraint.constant = 10
             separatorLineBottomConstraint.constant = 10
         case .insetted:
@@ -222,6 +226,8 @@ final class AuthenticationPreviewHeaderView: UIView {
                 }
                 self.backgroundView = backgroundView
             }
+            titleStackViewLeadingConstraint.constant = 36
+            titleStackViewTrailingConstraint.constant = 36
             separatorLineHeightConstraint.constant = 0
             separatorLineBottomConstraint.constant = 2
         }

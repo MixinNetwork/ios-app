@@ -43,6 +43,7 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
         super.viewDidLoad()
         
         tableView.backgroundColor = R.color.background_quaternary()
+        tableView.allowsSelection = false
         tableHeaderView.style = .insetted
         tableHeaderView.setIcon(token: insufficientToken)
         let title = R.string.localizable.insufficient_balance_symbol(insufficientToken.symbol)
@@ -108,6 +109,27 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                     boldPrimaryAmount: true
                 ),
             ]
+            if let feeSymbol = requirement.token.chain?.symbol {
+                rows.append(
+                    .amount(
+                        caption: .fee,
+                        token: CurrencyFormatter.localizedString(
+                            from: Decimal.zero,
+                            format: .precision,
+                            sign: .never,
+                            symbol: .custom(feeSymbol)
+                        ),
+                        fiatMoney: CurrencyFormatter.localizedString(
+                            from: Decimal.zero,
+                            format: .fiatMoney,
+                            sign: .never,
+                            symbol: .currencySymbol
+                        ),
+                        display: .byToken,
+                        boldPrimaryAmount: true
+                    )
+                )
+            }
         case let .withdraw(primary, fee), let .commonWalletTransfer(primary, fee):
             rows = [
                 .amount(

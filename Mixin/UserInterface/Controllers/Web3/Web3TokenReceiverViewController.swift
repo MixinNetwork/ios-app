@@ -47,9 +47,9 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
             guard let self else {
                 return
             }
+            self.nextButton?.isBusy = false
             switch result {
             case let .address(type, address):
-                self.nextButton?.isBusy = false
                 let addressPayment = Web3SendingTokenToAddressPayment(
                     payment: payment,
                     to: type,
@@ -70,7 +70,13 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
                 transfer.manipulateNavigationStackOnFinished = true
                 Web3PopupCoordinator.enqueue(popup: .request(transfer))
             case .solAmountTooSmall:
-                break
+                let cost = CurrencyFormatter.localizedString(
+                    from: Solana.accountCreationCost,
+                    format: .precision,
+                    sign: .never,
+                )
+                let description = R.string.localizable.send_sol_for_rent(cost)
+                self.showError(description: description)
             }
         } onFailure: { [weak self] error in
             self?.showError(description: error.localizedDescription)

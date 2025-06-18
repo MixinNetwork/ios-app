@@ -11,8 +11,14 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
     
     private let intent: Intent
     private let insufficientToken: any (ValuableToken & OnChainToken)
+    private let stablecoinAssetIDs: Set<String> = [
+        AssetID.erc20USDT, AssetID.tronUSDT, AssetID.eosUSDT,
+        AssetID.polygonUSDT, AssetID.bep20USDT, AssetID.solanaUSDT,
+        AssetID.erc20USDC, AssetID.solanaUSDC, AssetID.baseUSDC,
+        AssetID.polygonUSDC, AssetID.bep20USDC,
+    ]
     
-    private var swappingUSDTAssetIDs: (from: String, to: String)?
+    private var swappingFromAssetID: String?
     
     init(intent: Intent) {
         self.intent = intent
@@ -55,15 +61,15 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                     fee.localizedAmountWithSymbol,
                     fee.token.localizedBalanceWithSymbol,
                 )
-            } else if !fee.isSufficient {
-                R.string.localizable.withdraw_insufficient_fee_count(
-                    fee.localizedAmountWithSymbol,
-                    fee.token.localizedBalanceWithSymbol,
-                )
-            } else {
+            } else if !withdrawing.isSufficient {
                 R.string.localizable.withdraw_insufficient_balance_count(
                     withdrawing.localizedAmountWithSymbol,
                     withdrawing.token.localizedBalanceWithSymbol,
+                )
+            } else {
+                R.string.localizable.withdraw_insufficient_fee_count(
+                    fee.localizedAmountWithSymbol,
+                    fee.token.localizedBalanceWithSymbol,
                 )
             }
         case let .commonWalletTransfer(transferring, fee):
@@ -74,15 +80,15 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                     fee.localizedAmountWithSymbol,
                     fee.token.localizedBalanceWithSymbol,
                 )
-            } else if !fee.isSufficient {
-                R.string.localizable.transfer_insufficient_fee_count(
-                    fee.localizedAmountWithSymbol,
-                    fee.token.localizedBalanceWithSymbol,
-                )
-            } else {
+            } else if !transferring.isSufficient {
                 R.string.localizable.transfer_insufficient_balance_count(
                     transferring.localizedAmountWithSymbol,
                     transferring.token.localizedBalanceWithSymbol,
+                )
+            } else {
+                R.string.localizable.transfer_insufficient_fee_count(
+                    fee.localizedAmountWithSymbol,
+                    fee.token.localizedBalanceWithSymbol,
                 )
             }
         }
@@ -173,31 +179,26 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
         
         reloadData(with: rows)
         
-        if AssetID.usdts.contains(insufficientToken.assetID) {
-            let currentUSDT = insufficientToken
-            DispatchQueue.global().async { [intent, weak self] in
-                let mostUSDT: (any ValuableToken)? = {
-                    let otherUSDTAssetIDs = AssetID.usdts.subtracting([currentUSDT.assetID])
-                    let otherUSDTs: [any ValuableToken]
-                    switch intent {
-                    case .privacyWalletTransfer, .withdraw:
-                        otherUSDTs = TokenDAO.shared.tokenItems(with: otherUSDTAssetIDs)
-                    case .commonWalletTransfer:
-                        guard let walletID = (currentUSDT as? Web3TokenItem)?.walletID else {
-                            return nil
-                        }
-                        otherUSDTs = Web3TokenDAO.shared.tokens(walletID: walletID, ids: otherUSDTAssetIDs)
+        if stablecoinAssetIDs.contains(insufficientToken.assetID) {
+            let currentToken = insufficientToken
+            DispatchQueue.global().async { [intent, stablecoinAssetIDs, weak self] in
+                let assetIDs = stablecoinAssetIDs.subtracting([currentToken.assetID])
+                let mostValuableStablecoin: (any ValuableToken)? = switch intent {
+                case .privacyWalletTransfer, .withdraw:
+                    TokenDAO.shared.greatestBalanceToken(assetIDs: assetIDs)
+                case .commonWalletTransfer:
+                    if let walletID = (currentToken as? Web3TokenItem)?.walletID {
+                        Web3TokenDAO.shared.greatestBalanceToken(walletID: walletID, assetIDs: assetIDs)
+                    } else {
+                        nil
                     }
-                    return otherUSDTs.max { one, another in
-                        one.decimalBalance > another.decimalBalance
-                    }
-                }()
+                }
                 DispatchQueue.main.async {
                     guard let self else {
                         return
                     }
-                    if let mostUSDT, mostUSDT.decimalBalance > 0 {
-                        self.swappingUSDTAssetIDs = (from: mostUSDT.assetID, to: currentUSDT.assetID)
+                    if let mostValuableStablecoin {
+                        self.swappingFromAssetID = mostValuableStablecoin.assetID
                         self.loadSwapUSDTView()
                     } else {
                         self.loadActionsTrayView()
@@ -255,10 +256,11 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
         present(selector, animated: true)
     }
     
-    @objc private func swapUSDT(_ sender: Any) {
-        guard let (from, to) = swappingUSDTAssetIDs else {
+    @objc private func swap(_ sender: Any) {
+        guard let from = swappingFromAssetID else {
             return
         }
+        let to = insufficientToken.assetID
         let swap: UIViewController
         switch intent {
         case .privacyWalletTransfer, .withdraw:
@@ -290,7 +292,7 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
             view.leftButton.setTitle(R.string.localizable.cancel(), for: .normal)
             view.leftButton.addTarget(self, action: #selector(loadActionsTrayView), for: .touchUpInside)
             view.rightButton.setTitle(R.string.localizable.swap(), for: .normal)
-            view.rightButton.addTarget(self, action: #selector(swapUSDT(_:)), for: .touchUpInside)
+            view.rightButton.addTarget(self, action: #selector(swap(_:)), for: .touchUpInside)
             view.style = .yellow
         }
     }

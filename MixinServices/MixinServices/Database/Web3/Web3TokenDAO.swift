@@ -45,6 +45,16 @@ public final class Web3TokenDAO: Web3DAO {
         return db.select(with: sql, arguments: [walletID, assetKey])
     }
     
+    public func greatestBalanceToken(walletID: String, assetIDs: any Collection<String>) -> Web3TokenItem? {
+        var query = GRDB.SQL(sql: SQL.selector)
+        query.append(literal: " WHERE t.wallet_id = \(walletID) AND t.amount > 0")
+        if !assetIDs.isEmpty {
+            query.append(literal: " AND t.asset_id IN \(assetIDs)")
+        }
+        query.append(sql: " ORDER BY t.amount DESC LIMIT 1")
+        return db.select(with: query)
+    }
+    
     public func allTokens() -> [Web3TokenItem] {
         db.select(with: "\(SQL.selector)\n\(SQL.order)")
     }

@@ -75,6 +75,15 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: sql, arguments: [chainID, assetKey])
     }
     
+    public func greatestBalanceToken(assetIDs: any Collection<String>) -> MixinTokenItem? {
+        var query = GRDB.SQL(sql: "\(SQL.selector) WHERE te.balance > 0")
+        if !assetIDs.isEmpty {
+            query.append(literal: " AND t.asset_id IN \(assetIDs)")
+        }
+        query.append(sql: " ORDER BY te.balance DESC LIMIT 1")
+        return db.select(with: query)
+    }
+    
     public func tokens(with ids: any Sequence<String>) -> [MixinToken] {
         let sql: GRDB.SQL = "SELECT * FROM tokens WHERE asset_id IN \(ids)"
         return db.select(with: sql)

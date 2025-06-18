@@ -163,7 +163,7 @@ enum Web3AddressValidator {
     ) async throws -> (type: Web3SendingTokenToAddressPayment.AddressType, address: String) {
         if let address = AddressDAO.shared.getAddress(chainId: chainID, destination: destination, tag: "") {
             return (type: .addressBook(label: address.label), address.destination)
-        } else if let entry = DepositEntryDAO.shared.primaryEntry(ofChainWith: chainID) {
+        } else if let entry = DepositEntryDAO.shared.primaryEntry(ofChainWith: chainID), entry.destination == destination {
             return (type: .privacyWallet, address: entry.destination)
         } else {
             let response = try await ExternalAPI.checkAddress(

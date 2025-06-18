@@ -71,7 +71,7 @@ public final class TokenDAO: UserDatabaseDAO {
     }
     
     public func tokenItem(chainID: String, assetKey: String) -> MixinTokenItem? {
-        let sql = "\(SQL.selector) WHERE t.chain_id = ? AND t.asset_key = ?"
+        let sql = "\(SQL.selector) WHERE t.chain_id = ? AND t.asset_key = ? COLLATE NOCASE"
         return db.select(with: sql, arguments: [chainID, assetKey])
     }
     

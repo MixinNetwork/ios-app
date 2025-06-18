@@ -12,8 +12,14 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
     private let intent: Intent
     private let insufficientToken: any (ValuableToken & OnChainToken)
     private let stablecoinAssetIDs: Set<String> = [
-        AssetID.erc20USDT, AssetID.tronUSDT, AssetID.eosUSDT,
-        AssetID.polygonUSDT, AssetID.bep20USDT, AssetID.solanaUSDT,
+        AssetID.erc20USDT, AssetID.tronUSDT, AssetID.polygonUSDT,
+        AssetID.bep20USDT, AssetID.solanaUSDT, AssetID.eosUSDT,
+        AssetID.erc20USDC, AssetID.solanaUSDC, AssetID.baseUSDC,
+        AssetID.polygonUSDC, AssetID.bep20USDC,
+    ]
+    private let swappableStablecoinAssetIDs: Set<String> = [
+        AssetID.erc20USDT, AssetID.tronUSDT, AssetID.polygonUSDT,
+        AssetID.bep20USDT, AssetID.solanaUSDT,
         AssetID.erc20USDC, AssetID.solanaUSDC, AssetID.baseUSDC,
         AssetID.polygonUSDC, AssetID.bep20USDC,
     ]
@@ -203,14 +209,14 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
         
         if stablecoinAssetIDs.contains(insufficientToken.assetID) {
             let currentToken = insufficientToken
-            DispatchQueue.global().async { [intent, stablecoinAssetIDs, weak self] in
-                let assetIDs = stablecoinAssetIDs.subtracting([currentToken.assetID])
+            let fromAssetIDs = swappableStablecoinAssetIDs.subtracting([currentToken.assetID])
+            DispatchQueue.global().async { [intent, weak self] in
                 let mostValuableStablecoin: (any ValuableToken)? = switch intent {
                 case .privacyWalletTransfer, .withdraw:
-                    TokenDAO.shared.greatestBalanceToken(assetIDs: assetIDs)
+                    TokenDAO.shared.greatestBalanceToken(assetIDs: fromAssetIDs)
                 case .commonWalletTransfer:
                     if let walletID = (currentToken as? Web3TokenItem)?.walletID {
-                        Web3TokenDAO.shared.greatestBalanceToken(walletID: walletID, assetIDs: assetIDs)
+                        Web3TokenDAO.shared.greatestBalanceToken(walletID: walletID, assetIDs: fromAssetIDs)
                     } else {
                         nil
                     }

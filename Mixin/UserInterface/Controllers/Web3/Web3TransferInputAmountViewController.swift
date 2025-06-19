@@ -84,7 +84,6 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         let amount = tokenAmount
         reviewButton.isEnabled = false
         reviewButton.isBusy = true
-        let proposer: Web3TransferPreviewViewController.Proposer = .web3ToAddress(addressLabel: payment.toType.addressLabel)
         DispatchQueue.global().async { [payment] in
             let initError: Error?
             do {
@@ -99,7 +98,10 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                     try SolanaTransferToAddressOperation(payment: payment, decimalAmount: amount)
                 }
                 DispatchQueue.main.async {
-                    let transfer = Web3TransferPreviewViewController(operation: operation, proposer: proposer)
+                    let transfer = Web3TransferPreviewViewController(
+                        operation: operation,
+                        proposer: .user(addressLabel: payment.toType.addressLabel)
+                    )
                     transfer.manipulateNavigationStackOnFinished = true
                     Web3PopupCoordinator.enqueue(popup: .request(transfer))
                 }

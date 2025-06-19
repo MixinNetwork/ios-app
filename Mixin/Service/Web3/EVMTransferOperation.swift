@@ -30,10 +30,10 @@ class EVMTransferOperation: Web3TransferOperation {
     
     private let mixinChainID: String
     
-    private var evmFee: EVMFee?
-    private var fee: Fee?
-    private var transaction: EIP1559Transaction
-    private var account: EthereumAccount?
+    @MainActor private var evmFee: EVMFee?
+    @MainActor private var fee: Fee?
+    @MainActor private var transaction: EIP1559Transaction
+    @MainActor private var account: EthereumAccount?
     
     fileprivate init(
         walletID: String,
@@ -70,7 +70,7 @@ class EVMTransferOperation: Web3TransferOperation {
     fileprivate init(
         walletID: String,
         fromAddress: String,
-        transaction: EVMTransactionPreview,
+        transaction: ExternalEVMTransaction,
         chain: Web3Chain,
         hardcodedSimulation: TransactionSimulation?,
     ) throws {
@@ -155,11 +155,11 @@ class EVMTransferOperation: Web3TransferOperation {
     }
     
     override func simulateTransaction() async throws -> TransactionSimulation {
-        guard let evmFee else {
+        guard let evmFee = await evmFee else {
             throw RequestError.invalidFee
         }
         let nonce = try await self.loadNonce()
-        let pseudoTransaction = EIP1559Transaction(
+        let pseudoTransaction = await EIP1559Transaction(
             chainID: transaction.chainID,
             nonce: nonce,
             maxPriorityFeePerGas: evmFee.maxPriorityFeePerGas,
@@ -180,7 +180,7 @@ class EVMTransferOperation: Web3TransferOperation {
     }
     
     override func start(pin: String) async throws {
-        guard let evmFee, let fee else {
+        guard let evmFee = await evmFee, let fee = await fee else {
             assertionFailure("Missing fee, call `start(with:)` only after fee is arrived")
             return
         }
@@ -198,7 +198,7 @@ class EVMTransferOperation: Web3TransferOperation {
                 throw RequestError.mismatchedAddress
             }
             let nonce = try await self.loadNonce()
-            updatedTransaction = EIP1559Transaction(
+            updatedTransaction = await EIP1559Transaction(
                 chainID: transaction.chainID,
                 nonce: nonce,
                 maxPriorityFeePerGas: evmFee.maxPriorityFeePerGas,
@@ -319,7 +319,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
     init(
         walletID: String,
         fromAddress: String,
-        transaction: EVMTransactionPreview,
+        transaction: ExternalEVMTransaction,
         chain: Web3Chain,
         session: WalletConnectSession,
         request: WalletConnectSign.Request
@@ -365,7 +365,7 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
     init(
         walletID: String,
         fromAddress: String,
-        transaction: EVMTransactionPreview,
+        transaction: ExternalEVMTransaction,
         chain: Web3Chain,
         respondWith respondImpl: @escaping ((String) async throws -> Void),
         rejectWith rejectImpl: @escaping (() -> Void)

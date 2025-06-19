@@ -17,7 +17,7 @@ class SolanaTransferOperation: Web3TransferOperation {
         case noFeeToken(String)
     }
     
-    fileprivate var fee: Fee?
+    @MainActor fileprivate var fee: Fee?
     
     fileprivate init(
         walletID: String,
@@ -107,7 +107,7 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
     
     fileprivate let transaction: Solana.Transaction
     
-    init(
+    @MainActor init(
         walletID: String,
         transaction: Solana.Transaction,
         fromAddress: String,
@@ -160,7 +160,7 @@ final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolana
     let session: WalletConnectSession
     let request: WalletConnectSign.Request
     
-    init(
+    @MainActor init(
         walletID: String,
         transaction: Solana.Transaction,
         fromAddress: String,
@@ -206,7 +206,7 @@ final class SolanaTransferWithCustomRespondingOperation: ArbitraryTransactionSol
     private let respondImpl: ((String) async throws -> Void)?
     private let rejectImpl: (() -> Void)?
     
-    init(
+    @MainActor init(
         walletID: String,
         transaction: Solana.Transaction,
         fromAddress: String,

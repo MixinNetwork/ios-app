@@ -39,7 +39,6 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
     }
     
     override func continueAction(inputAddress: String) {
-        let token = payment.token
         Web3AddressValidator.validate(
             string: inputAddress,
             payment: payment
@@ -65,7 +64,7 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
             case let .transfer(operation, label):
                 let transfer = Web3TransferPreviewViewController(
                     operation: operation,
-                    proposer: .web3ToAddress(addressLabel: label)
+                    proposer: .user(addressLabel: label)
                 )
                 transfer.manipulateNavigationStackOnFinished = true
                 Web3PopupCoordinator.enqueue(popup: .request(transfer))

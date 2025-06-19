@@ -7,6 +7,7 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
         case privacyWalletTransfer(BalanceRequirement)
         case withdraw(withdrawing: BalanceRequirement, fee: BalanceRequirement)
         case commonWalletTransfer(transferring: BalanceRequirement, fee: BalanceRequirement)
+        case externalWeb3Transaction(fee: BalanceRequirement)
     }
     
     private let intent: Intent
@@ -29,7 +30,7 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
     init(intent: Intent) {
         self.intent = intent
         self.insufficientToken = switch intent {
-        case let .privacyWalletTransfer(requirement):
+        case let .privacyWalletTransfer(requirement), let .externalWeb3Transaction(requirement):
             requirement.token
         case let .withdraw(primary, fee), let .commonWalletTransfer(primary, fee):
             if !primary.isSufficient {
@@ -98,6 +99,11 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                     fee.token.localizedBalanceWithSymbol,
                 )
             }
+        case let .externalWeb3Transaction(fee):
+            subtitle = R.string.localizable.transfer_insufficient_fee_count(
+                fee.localizedAmountWithSymbol,
+                fee.token.localizedBalanceWithSymbol,
+            )
         }
         layoutTableHeaderView(title: title, subtitle: subtitle)
         tableHeaderView.titleLabel.textColor = R.color.red()
@@ -192,6 +198,23 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                     ]
                 }
             }
+        case let .externalWeb3Transaction(fee):
+            rows = [
+                .amount(
+                    caption: .fee,
+                    token: fee.localizedAmountWithSymbol,
+                    fiatMoney: fee.localizedFiatMoneyAmountWithSymbol,
+                    display: .byToken,
+                    boldPrimaryAmount: true
+                ),
+                .amount(
+                    caption: .availableBalance,
+                    token: fee.token.localizedBalanceWithSymbol,
+                    fiatMoney: fee.token.localizedFiatMoneyBalance,
+                    display: .byToken,
+                    boldPrimaryAmount: false
+                )
+            ]
         }
         
         rows.append(
@@ -210,7 +233,7 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                 let mostValuableStablecoin: (any ValuableToken)? = switch intent {
                 case .privacyWalletTransfer, .withdraw:
                     TokenDAO.shared.greatestBalanceToken(assetIDs: fromAssetIDs)
-                case .commonWalletTransfer:
+                case .commonWalletTransfer, .externalWeb3Transaction:
                     if let walletID = (currentToken as? Web3TokenItem)?.walletID {
                         Web3TokenDAO.shared.greatestBalanceToken(walletID: walletID, assetIDs: fromAssetIDs)
                     } else {
@@ -277,7 +300,7 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
     @objc private func addToken(_ sender: Any) {
         let selector = AddTokenMethodSelectorViewController(token: insufficientToken)
         selector.delegate = self
-        present(selector, animated: true)
+        present(selector, animated: true, completion: onDismiss)
     }
     
     @objc private func swap(_ sender: Any) {
@@ -293,7 +316,7 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                 receiveAssetID: to,
                 referral: nil
             )
-        case .commonWalletTransfer:
+        case .commonWalletTransfer, .externalWeb3Transaction:
             guard let walletID = (insufficientToken as? Web3TokenItem)?.walletID else {
                 return
             }
@@ -303,7 +326,8 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                 walletID: walletID
             )
         }
-        presentingViewController?.dismiss(animated: true) {
+        presentingViewController?.dismiss(animated: true) { [onDismiss] in
+            onDismiss?()
             UIApplication.homeNavigationController?.pushViewController(swap, animated: true)
         }
     }
@@ -365,6 +389,14 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
         presentingViewController?.dismiss(animated: true) {
             UIApplication.homeNavigationController?.pushViewController(next, animated: true)
         }
+    }
+    
+}
+
+extension InsufficientBalanceViewController: Web3PopupViewController {
+    
+    func reject() {
+        // Rejected immediatly after popup, by the caller
     }
     
 }

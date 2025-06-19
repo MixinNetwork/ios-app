@@ -27,7 +27,7 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
     let isResendingTransactionAvailable: Bool
     let hardcodedSimulation: TransactionSimulation?
     
-    @Published
+    @MainActor @Published
     var state: State = .loading
     var hasTransactionSent = false
     
@@ -74,7 +74,7 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
         reject()
     }
     
-    func resendTransaction() {
+    @MainActor func resendTransaction() {
         
     }
     

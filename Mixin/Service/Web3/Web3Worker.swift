@@ -194,9 +194,9 @@ final class Web3Worker {
             send(error: "Account Locked", to: request)
             return
         }
-        DispatchQueue.global().async { [evmChain, proposer=currentProposer] in
+        Task.detached { [evmChain, proposer=currentProposer] in
             do {
-                let preview = try EVMTransactionPreview(json: object)
+                let preview = try ExternalEVMTransaction(json: object)
                 let operation = try EVMTransferWithBrowserWalletOperation(
                     walletID: address.walletID,
                     fromAddress: address.destination,
@@ -207,12 +207,22 @@ final class Web3Worker {
                 } rejectWith: {
                     self.send(error: "User Rejected", to: request)
                 }
-                DispatchQueue.main.async {
-                    let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))
-                    Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                let fee = try await operation.loadFee()
+                let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
+                await MainActor.run {
+                    if feeRequirement.isSufficient {
+                        let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))
+                        Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                    } else {
+                        let insufficient = InsufficientBalanceViewController(
+                            intent: .externalWeb3Transaction(fee: feeRequirement)
+                        )
+                        Web3PopupCoordinator.enqueue(popup: .request(insufficient))
+                        self.send(error: "Insufficient Fee", to: request)
+                    }
                 }
             } catch {
-                DispatchQueue.main.async {
+                await MainActor.run {
                     self.send(error: "\(error)", to: request)
                 }
             }
@@ -375,9 +385,9 @@ final class Web3Worker {
             send(error: "No Address", to: request)
             return
         }
-        DispatchQueue.global().async { [solanaChain, proposer=currentProposer] in
+        Task.detached { [solanaChain, proposer=currentProposer] in
             do {
-                let operation = try SolanaTransferWithCustomRespondingOperation(
+                let operation = try await SolanaTransferWithCustomRespondingOperation(
                     walletID: walletID,
                     transaction: transaction,
                     fromAddress: address.destination,
@@ -387,12 +397,22 @@ final class Web3Worker {
                 } rejectWith: {
                     self.send(error: "User Rejected", to: request)
                 }
-                DispatchQueue.main.async {
-                    let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))
-                    Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                let fee = try await operation.loadFee()
+                let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
+                await MainActor.run {
+                    if feeRequirement.isSufficient {
+                        let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))
+                        Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                    } else {
+                        let insufficient = InsufficientBalanceViewController(
+                            intent: .externalWeb3Transaction(fee: feeRequirement)
+                        )
+                        Web3PopupCoordinator.enqueue(popup: .request(insufficient))
+                        self.send(error: "Insufficient Fee", to: request)
+                    }
                 }
             } catch {
-                DispatchQueue.main.async {
+                await MainActor.run {
                     self.send(error: "\(error)", to: request)
                 }
             }

@@ -154,7 +154,7 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                         boldPrimaryAmount: false
                     ),
                     .amount(
-                        caption: .availableBalance,
+                        caption: .balance,
                         token: total.token.localizedBalanceWithSymbol,
                         fiatMoney: total.token.localizedFiatMoneyBalance,
                         display: .byToken,
@@ -217,12 +217,11 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
             ]
         }
         
-        rows.append(
-            .info(
-                caption: .network,
-                content: insufficientToken.depositNetworkName ?? ""
+        if let network = insufficientToken.depositNetworkName {
+            rows.append(
+                .info(caption: .network, content: network)
             )
-        )
+        }
         
         reloadData(with: rows)
         

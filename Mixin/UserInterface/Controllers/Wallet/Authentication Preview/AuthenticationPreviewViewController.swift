@@ -345,6 +345,7 @@ extension AuthenticationPreviewViewController {
         case from
         case safe
         case note
+        case balance
         case availableBalance
         
         var rawValue: String {
@@ -385,6 +386,8 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.safe()
             case .note:
                 R.string.localizable.note()
+            case .balance:
+                R.string.localizable.balance()
             case .availableBalance:
                 R.string.localizable.available_balance()
             }

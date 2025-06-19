@@ -167,11 +167,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         }
         tokenBalanceLabel.text = R.string.localizable.available_balance_count(availableBalance)
         if isFeeInsufficient(fee: fee) {
-            addAddFeeButton()
-            addFeeButton?.configuration?.attributedTitle = AttributedString(
-                R.string.localizable.add_token(fee.tokenItem.symbol),
-                attributes: addFeeAttributes
-            )
+            addAddFeeButton(symbol: fee.tokenItem.symbol)
         } else {
             removeAddFeeButton()
         }

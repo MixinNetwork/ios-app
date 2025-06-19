@@ -113,7 +113,14 @@ class InputAmountViewController: UIViewController {
         )
         
         amountStackView.setCustomSpacing(2, after: amountLabel)
-        amountLabel.font = .monospacedDigitSystemFont(ofSize: 64, weight: .regular)
+        amountLabel.font = switch ScreenHeight.current {
+        case .short:
+                .monospacedDigitSystemFont(ofSize: 32, weight: .regular)
+        case .medium:
+                .monospacedDigitSystemFont(ofSize: 48, weight: .regular)
+        case .long, .extraLong:
+                .monospacedDigitSystemFont(ofSize: 64, weight: .regular)
+        }
         
         let multiplierButtons = {
             var config: UIButton.Configuration = .filled()
@@ -333,18 +340,21 @@ class InputAmountViewController: UIViewController {
         self.feeStackView = feeStackView
     }
     
-    func addAddFeeButton() {
-        guard addFeeButton == nil else {
-            return
+    func addAddFeeButton(symbol: String) {
+        if addFeeButton == nil {
+            var config: UIButton.Configuration = .plain()
+            config.baseBackgroundColor = .clear
+            config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 5, bottom: 7, trailing: 5)
+            let button = UIButton(configuration: config)
+            button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            button.addTarget(self, action: #selector(addFee(_:)), for: .touchUpInside)
+            feeStackView?.insertArrangedSubview(button, at: 1)
+            addFeeButton = button
         }
-        var config: UIButton.Configuration = .plain()
-        config.baseBackgroundColor = .clear
-        config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 5, bottom: 7, trailing: 5)
-        let button = UIButton(configuration: config)
-        button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        button.addTarget(self, action: #selector(addFee(_:)), for: .touchUpInside)
-        feeStackView?.insertArrangedSubview(button, at: 1)
-        addFeeButton = button
+        addFeeButton?.configuration?.attributedTitle = AttributedString(
+            R.string.localizable.add_token(symbol),
+            attributes: addFeeAttributes
+        )
     }
     
     func removeAddFeeButton() {

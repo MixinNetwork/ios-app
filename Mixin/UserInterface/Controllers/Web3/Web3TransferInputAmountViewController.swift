@@ -188,11 +188,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                         self.reloadViewsWithBalanceSufficiency()
                     }
                     if self.isFeeInsufficient(fee: fee, feeToken: feeToken) {
-                        self.addAddFeeButton()
-                        self.addFeeButton?.configuration?.attributedTitle = AttributedString(
-                            R.string.localizable.add_token(feeToken.symbol),
-                            attributes: self.addFeeAttributes
-                        )
+                        self.addAddFeeButton(symbol: feeToken.symbol)
                     } else {
                         self.removeAddFeeButton()
                     }

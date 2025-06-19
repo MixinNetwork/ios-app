@@ -21,7 +21,7 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
     
     let walletID: String
     let fromAddress: String
-    let toAddress: String
+    let toAddress: String // Always the receiver, not the contract address
     let chain: Web3Chain
     let feeToken: Web3TokenItem
     let isResendingTransactionAvailable: Bool

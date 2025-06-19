@@ -58,7 +58,7 @@ final class Web3SendingTokenToAddressPayment: Web3SendingTokenPayment {
     }
     
     let toType: AddressType
-    let toAddress: String // Always the receiver. The contract address is filled in further steps.
+    let toAddress: String // Always the receiver, not the contract address
     let toAddressCompactRepresentation: String
     
     init(payment: Web3SendingTokenPayment, to type: AddressType, address: String) {

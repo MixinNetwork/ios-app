@@ -38,6 +38,7 @@ class EVMTransferOperation: Web3TransferOperation {
     fileprivate init(
         walletID: String,
         fromAddress: String,
+        toAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
         hardcodedSimulation: TransactionSimulation?,
@@ -58,7 +59,7 @@ class EVMTransferOperation: Web3TransferOperation {
         super.init(
             walletID: walletID,
             fromAddress: fromAddress,
-            toAddress: transaction.destination.toChecksumAddress(),
+            toAddress: toAddress,
             chain: chain,
             feeToken: feeToken,
             isResendingTransactionAvailable: true,
@@ -112,7 +113,7 @@ class EVMTransferOperation: Web3TransferOperation {
             mixinChainID: mixinChainID,
             hexData: transaction.data?.hexEncodedString(),
             from: fromAddress,
-            to: toAddress
+            to: transaction.destination.toChecksumAddress()
         )
         Logger.web3.info(category: "EVMTransfer", message: "Using limit: \(rawFee.gasLimit), mfpg: \(rawFee.maxFeePerGas), mpfpg: \(rawFee.maxPriorityFeePerGas)")
         guard
@@ -449,6 +450,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
         try super.init(
             walletID: payment.walletID,
             fromAddress: payment.fromAddress,
+            toAddress: payment.toAddress,
             transaction: transaction,
             chain: payment.chain,
             hardcodedSimulation: simulation
@@ -477,6 +479,7 @@ class EVMOverrideOperation: EVMTransferOperation {
     override init(
         walletID: String,
         fromAddress: String,
+        toAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
         hardcodedSimulation: TransactionSimulation?,
@@ -488,6 +491,7 @@ class EVMOverrideOperation: EVMTransferOperation {
         try super.init(
             walletID: walletID,
             fromAddress: fromAddress,
+            toAddress: toAddress,
             transaction: transaction,
             chain: chain,
             hardcodedSimulation: hardcodedSimulation
@@ -519,6 +523,7 @@ final class EVMSpeedUpOperation: EVMOverrideOperation {
         try super.init(
             walletID: walletID,
             fromAddress: fromAddress,
+            toAddress: "",
             transaction: transaction,
             chain: chain,
             hardcodedSimulation: nil
@@ -548,6 +553,7 @@ final class EVMCancelOperation: EVMOverrideOperation {
         try super.init(
             walletID: walletID,
             fromAddress: fromAddress,
+            toAddress: "",
             transaction: emptyTransaction,
             chain: chain,
             hardcodedSimulation: .empty

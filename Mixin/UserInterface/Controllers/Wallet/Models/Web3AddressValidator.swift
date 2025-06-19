@@ -178,7 +178,7 @@ enum Web3AddressValidator {
             guard response.tag.isNilOrEmpty else {
                 throw ValidationError.mismatchedTag
             }
-            return (type: .arbitrary, response.destination)
+            return (type: .arbitrary, destination)
         }
     }
     

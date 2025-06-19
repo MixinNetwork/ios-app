@@ -265,7 +265,7 @@ extension AddressValidator {
             guard (tag.isNilOrEmpty && response.tag.isNilOrEmpty) || tag == response.tag else {
                 throw ValidationError.mismatchedTag
             }
-            let address = TemporaryAddress(destination: response.destination, tag: response.tag ?? "")
+            let address = TemporaryAddress(destination: destination, tag: tag ?? "")
             return .temporary(address)
         }
     }

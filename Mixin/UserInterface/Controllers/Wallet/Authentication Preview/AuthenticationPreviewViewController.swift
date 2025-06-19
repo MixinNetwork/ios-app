@@ -89,19 +89,6 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.tableHeaderView = tableHeaderView
     }
     
-    func layoutTableFooterView() {
-        guard let footerView = tableView.tableFooterView else {
-            return
-        }
-        let sizeToFit = CGSize(width: view.bounds.width,
-                               height: UIView.layoutFittingExpandedSize.height)
-        let fittingSize = footerView.systemLayoutSizeFitting(sizeToFit,
-                                                             withHorizontalFittingPriority: .required,
-                                                             verticalFittingPriority: .fittingSizeLevel)
-        footerView.frame = CGRect(origin: .zero, size: fittingSize)
-        tableView.tableFooterView = footerView
-    }
-    
     func layoutTableHeaderView(title: String, subtitle: String?, style: TableHeaderViewStyle = []) {
         tableHeaderView.titleLabel.text = title
         tableHeaderView.subtitleLabel.text = subtitle

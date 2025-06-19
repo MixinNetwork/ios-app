@@ -222,6 +222,7 @@ extension AddressValidator {
             let requirements = feeRequirement.merging(with: withdrawRequirement)
             if requirements.allSatisfy(\.isSufficient) {
                 feeItem = item
+                break
             }
         }
         if let feeItem {

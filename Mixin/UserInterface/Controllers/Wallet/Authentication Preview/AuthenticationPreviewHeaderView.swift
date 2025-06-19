@@ -5,7 +5,7 @@ final class AuthenticationPreviewHeaderView: UIView {
     
     enum Style {
         case plain
-        case insetted
+        case insetted(margin: CGFloat)
     }
     
     @IBOutlet weak var iconWrapperView: UIView!
@@ -30,6 +30,10 @@ final class AuthenticationPreviewHeaderView: UIView {
     private weak var progressView: AuthenticationProgressView?
     private weak var textContentView: TextInscriptionContentView?
     private weak var multipleTokenIconView: MultipleTokenIconView?
+    
+    private weak var backgroundViewTopConstraint: NSLayoutConstraint?
+    private weak var backgroundViewLeadingConstraint: NSLayoutConstraint?
+    private weak var backgroundViewTrailingConstraint: NSLayoutConstraint?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -211,7 +215,7 @@ final class AuthenticationPreviewHeaderView: UIView {
             titleStackViewTrailingConstraint.constant = 38
             separatorLineHeightConstraint.constant = 10
             separatorLineBottomConstraint.constant = 10
-        case .insetted:
+        case .insetted(let margin):
             backgroundColor = R.color.background_quaternary()
             if backgroundView == nil {
                 let backgroundView = UIView()
@@ -220,14 +224,29 @@ final class AuthenticationPreviewHeaderView: UIView {
                 backgroundView.layer.masksToBounds = true
                 insertSubview(backgroundView, at: 0)
                 backgroundView.snp.makeConstraints { make in
-                    make.top.leading.equalToSuperview().offset(20)
-                    make.trailing.equalToSuperview().offset(-20)
                     make.bottom.equalToSuperview().offset(-10)
                 }
+                let backgroundViewTopConstraint = backgroundView.topAnchor
+                    .constraint(equalTo: topAnchor, constant: margin)
+                let backgroundViewLeadingConstraint = backgroundView.leadingAnchor
+                    .constraint(equalTo: leadingAnchor, constant: margin)
+                let backgroundViewTrailingConstraint = backgroundView.trailingAnchor
+                    .constraint(equalTo: trailingAnchor, constant: -margin)
+                NSLayoutConstraint.activate([
+                    backgroundViewTopConstraint,
+                    backgroundViewLeadingConstraint,
+                    backgroundViewTrailingConstraint
+                ])
                 self.backgroundView = backgroundView
+                self.backgroundViewTopConstraint = backgroundViewTopConstraint
+                self.backgroundViewLeadingConstraint = backgroundViewLeadingConstraint
+                self.backgroundViewTrailingConstraint = backgroundViewTrailingConstraint
             }
-            titleStackViewLeadingConstraint.constant = 36
-            titleStackViewTrailingConstraint.constant = 36
+            backgroundViewTopConstraint?.constant = margin
+            backgroundViewLeadingConstraint?.constant = margin
+            backgroundViewTrailingConstraint?.constant = -margin
+            titleStackViewLeadingConstraint.constant = margin + 16
+            titleStackViewTrailingConstraint.constant = margin + 16
             separatorLineHeightConstraint.constant = 0
             separatorLineBottomConstraint.constant = 2
         }

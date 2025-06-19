@@ -51,7 +51,6 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
         
         tableView.backgroundColor = R.color.background_quaternary()
         tableView.allowsSelection = false
-        tableHeaderView.style = .insetted
         tableHeaderView.setIcon(token: insufficientToken)
         let title = R.string.localizable.insufficient_balance_symbol(insufficientToken.symbol)
         let subtitle: String
@@ -262,6 +261,11 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
     
     override func loadInitialTrayView(animated: Bool) {
         // Don't load default tray view
+    }
+    
+    override func layoutTableHeaderView() {
+        tableHeaderView.style = .insetted(margin: tableView.layoutMargins.left)
+        super.layoutTableHeaderView()
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

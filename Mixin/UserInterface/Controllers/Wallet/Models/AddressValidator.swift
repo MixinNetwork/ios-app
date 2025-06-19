@@ -213,19 +213,19 @@ extension AddressValidator {
             token: withdrawingToken,
             amount: amount
         )
-        var feeItem: WithdrawFeeItem?
-        for item in feeItems {
+        let sufficientFeeItems = feeItems.lazy.compactMap { item in
             let feeRequirement = BalanceRequirement(
                 token: item.tokenItem,
                 amount: item.amount
             )
             let requirements = feeRequirement.merging(with: withdrawRequirement)
             if requirements.allSatisfy(\.isSufficient) {
-                feeItem = item
-                break
+                return item
+            } else {
+                return nil
             }
         }
-        if let feeItem {
+        if let feeItem = sufficientFeeItems.first {
             return .sufficient(feeItem)
         } else {
             let feeRequirement = BalanceRequirement(

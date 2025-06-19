@@ -1360,8 +1360,7 @@
 "transfer_failed" = "Transfer Failed";
 "transfer_from_phone_hint" = "Transfer your chat history from your another phone.";
 "transfer_hint" = "Sync your chat history to a new device, please make sure both devices are connected to the same Wi-Fi or hotspot.";
-"transfer_insufficient_balance_count" = "The transfer amount is %1$@, while the available balance is %2$@.";
-"transfer_insufficient_fee_count" = "The transaction fee is %1$@, and the available balance is %2$@.";
+"transfer_insufficient_balance_count" = "ERROR 20117: The transfer amount is %1$@, while the available balance is %2$@.";
 "transfer_memo" = "Nota (opcional)";
 "transfer_notifications" = "Transferir notificaciones";
 "transfer_now" = "Transfer Now";
@@ -1527,6 +1526,7 @@
 "web3_signing_transaction_success" = "The transaction has been signed and sent successfully, please return to app to continue.";
 "web3_signing_warning" = "We cannot verify this request; please ensure you trust this app before proceeding with the request.";
 "web3_transaction_request" = "Transaction Request";
+"web3_transfer_insufficient_fee_count" = "ERROR 20118: Broadcasting the transaction requires %1$@, and the available balance is %2$@.";
 "weekly" = "Semanalmente";
 "weeks" = "semanas";
 "weeks_count_short" = "%dW";
@@ -1537,8 +1537,8 @@
 "withdraw_address" = "Dirección";
 "withdraw_aggregated_insufficient_balance_count" = "The withdrawal amount is %1$@, the transaction fee is %2$@, and the available balance is %3$@.";
 "withdraw_all_of_token_warning" = "This app can withdraw all your %@.";
-"withdraw_insufficient_balance_count" = "The withdrawal amount is %1$@, and the available balance is %2$@.";
-"withdraw_insufficient_fee_count" = "The transaction fee is %1$@, and the available balance is %2$@.";
+"withdraw_insufficient_balance_count" = "ERROR 20117: The withdrawal amount is %1$@, and the available balance is %2$@.";
+"withdraw_insufficient_fee_count" = "ERROR 20118: The transaction fee is %1$@, and the available balance is %2$@.";
 "withdrawal" = "Retirar";
 "withdrawal_addr_has_memo_or_tag" = "Etiqueta de destino o número de ID o notas. Si no, puedes configurarlo %@.";
 "withdrawal_addr_new" = "Nueva dirección de %@";

@@ -1360,8 +1360,7 @@
 "transfer_failed" = "转账失败";
 "transfer_from_phone_hint" = "将您的另一部手机的聊天记录转移过来。";
 "transfer_hint" = "同步你的聊天记录到新的设备，请确保两台设备接入同一个 Wi-Fi 或热点。";
-"transfer_insufficient_balance_count" = "转账金额 %1$@，钱包可用余额 %2$@。";
-"transfer_insufficient_fee_count" = "手续费 %1$@，钱包可用余额 %2$@。";
+"transfer_insufficient_balance_count" = "错误 20117：转账金额 %1$@，钱包可用余额 %2$@。";
 "transfer_memo" = "备注（可选）";
 "transfer_notifications" = "转账通知";
 "transfer_now" = "开始传输";
@@ -1527,6 +1526,7 @@
 "web3_signing_transaction_success" = "交易已签名并发送成功，请返回 app 继续操作。";
 "web3_signing_warning" = "我们无法验证此请求，在发送此请求之前，请确保您信任此应用程序。";
 "web3_transaction_request" = "交易签名";
+"web3_transfer_insufficient_fee_count" = "错误 20118：广播交易需要 %1$@，钱包可用余额 %2$@。";
 "weekly" = "每周";
 "weeks" = "周";
 "weeks_count_short" = "%d周";
@@ -1537,8 +1537,8 @@
 "withdraw_address" = "提现地址";
 "withdraw_aggregated_insufficient_balance_count" = "提现金额 %1$@，手续费 %2$@，钱包可用余额 %3$@。";
 "withdraw_all_of_token_warning" = "这个应用可以提取你所有的 %@。";
-"withdraw_insufficient_balance_count" = "提现金额 %1$@，钱包可用余额 %2$@。";
-"withdraw_insufficient_fee_count" = "手续费 %1$@，钱包可用余额 %2$@。";
+"withdraw_insufficient_balance_count" = "错误 20117：提现金额 %1$@，钱包可用余额 %2$@。";
+"withdraw_insufficient_fee_count" = "错误 20118：手续费 %1$@，钱包可用余额 %2$@。";
 "withdrawal" = "提现";
 "withdrawal_addr_has_memo_or_tag" = "地址标签、数字 ID 或备注。如果没有，%@。";
 "withdrawal_addr_new" = "新 %@ 地址";

@@ -94,13 +94,13 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                     transferring.token.localizedBalanceWithSymbol,
                 )
             } else {
-                R.string.localizable.transfer_insufficient_fee_count(
+                R.string.localizable.web3_transfer_insufficient_fee_count(
                     fee.localizedAmountWithSymbol,
                     fee.token.localizedBalanceWithSymbol,
                 )
             }
         case let .externalWeb3Transaction(fee):
-            subtitle = R.string.localizable.transfer_insufficient_fee_count(
+            subtitle = R.string.localizable.web3_transfer_insufficient_fee_count(
                 fee.localizedAmountWithSymbol,
                 fee.token.localizedBalanceWithSymbol,
             )

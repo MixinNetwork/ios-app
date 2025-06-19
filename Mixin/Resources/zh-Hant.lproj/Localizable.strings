@@ -1360,8 +1360,7 @@
 "transfer_failed" = "轉賬失敗";
 "transfer_from_phone_hint" = "將您的另一部手機的聊天記錄轉移過來。";
 "transfer_hint" = "同步你的聊天記錄到新的裝置，請確保兩臺裝置接入同一個 Wi-Fi 或熱點。";
-"transfer_insufficient_balance_count" = "轉賬金額 %1$@，錢包可用餘額 %2$@。";
-"transfer_insufficient_fee_count" = "手續費 %1$@，錢包可用餘額 %2$@。";
+"transfer_insufficient_balance_count" = "錯誤 20117：轉賬金額 %1$@，錢包可用餘額 %2$@。";
 "transfer_memo" = "備註（可選）";
 "transfer_notifications" = "轉賬通知";
 "transfer_now" = "開始傳輸";
@@ -1527,6 +1526,7 @@
 "web3_signing_transaction_success" = "交易已簽名併發送成功，請返回 app 繼續操作。";
 "web3_signing_warning" = "我們無法驗證此請求，在傳送此請求之前，請確保您信任此應用程式。";
 "web3_transaction_request" = "交易簽名";
+"web3_transfer_insufficient_fee_count" = "錯誤 20118：廣播交易需要 %1$@，錢包可用餘額 %2$@。";
 "weekly" = "每週";
 "weeks" = "週";
 "weeks_count_short" = "%d周";
@@ -1537,8 +1537,8 @@
 "withdraw_address" = "提現地址";
 "withdraw_aggregated_insufficient_balance_count" = "提現金額 %1$@，手續費 %2$@，錢包可用餘額 %3$@。";
 "withdraw_all_of_token_warning" = "這個應用可以提取你所有的 %@。";
-"withdraw_insufficient_balance_count" = "提現金額 %1$@，錢包可用餘額 %2$@。";
-"withdraw_insufficient_fee_count" = "手續費 %1$@，錢包可用餘額 %2$@。";
+"withdraw_insufficient_balance_count" = "錯誤 20117：提現金額 %1$@，錢包可用餘額 %2$@。";
+"withdraw_insufficient_fee_count" = "錯誤 20118：手續費 %1$@，錢包可用餘額 %2$@。";
 "withdrawal" = "提現";
 "withdrawal_addr_has_memo_or_tag" = "地址標籤、數字 ID 或備註。如果沒有，%@。";
 "withdrawal_addr_new" = "新 %@ 地址";

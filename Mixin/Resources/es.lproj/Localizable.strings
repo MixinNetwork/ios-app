@@ -1353,7 +1353,7 @@
 "transactions_cannot_be_deleted" = "Las transacciones NO se pueden eliminar";
 "transcript" = "Transcripción";
 "transfer" = "Transferir";
-"transfer_aggregated_insufficient_balance_count" = "The transfer amount is %1$@, the transaction fee is %2$@, and the available balance is %3$@.";
+"transfer_aggregated_insufficient_balance_count" = "The transfer amount is %1$@, the transaction fee is %2$@, and the balance is %3$@.";
 "transfer_amount_count_down" = "Importe de la transferencia(%@)";
 "transfer_completed" = "Transfer completed";
 "transfer_error_pin_incorrect_with_times" = "ERROR 20119: PIN incorrecto. Todavía tienes %@ oportunidades.";
@@ -1535,7 +1535,7 @@
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fi y móvil";
 "withdraw_address" = "Dirección";
-"withdraw_aggregated_insufficient_balance_count" = "The withdrawal amount is %1$@, the transaction fee is %2$@, and the available balance is %3$@.";
+"withdraw_aggregated_insufficient_balance_count" = "The withdrawal amount is %1$@, the transaction fee is %2$@, and the balance is %3$@.";
 "withdraw_all_of_token_warning" = "This app can withdraw all your %@.";
 "withdraw_insufficient_balance_count" = "ERROR 20117: The withdrawal amount is %1$@, and the available balance is %2$@.";
 "withdraw_insufficient_fee_count" = "ERROR 20118: The transaction fee is %1$@, and the available balance is %2$@.";

@@ -1353,7 +1353,7 @@
 "transactions_cannot_be_deleted" = "トランザクション履歴を削除することはできません";
 "transcript" = "メッセージ履歴";
 "transfer" = "送金";
-"transfer_aggregated_insufficient_balance_count" = "The transfer amount is %1$@, the transaction fee is %2$@, and the available balance is %3$@.";
+"transfer_aggregated_insufficient_balance_count" = "The transfer amount is %1$@, the transaction fee is %2$@, and the balance is %3$@.";
 "transfer_amount_count_down" = "送金金額(%@)";
 "transfer_completed" = "Transfer completed";
 "transfer_error_pin_incorrect_with_times" = "エラー20119: PINコードが間違っています。あと%@回入力可能です。";
@@ -1535,7 +1535,7 @@
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fiとデータ通信";
 "withdraw_address" = "アドレス";
-"withdraw_aggregated_insufficient_balance_count" = "The withdrawal amount is %1$@, the transaction fee is %2$@, and the available balance is %3$@.";
+"withdraw_aggregated_insufficient_balance_count" = "The withdrawal amount is %1$@, the transaction fee is %2$@, and the balance is %3$@.";
 "withdraw_all_of_token_warning" = "This app can withdraw all your %@.";
 "withdraw_insufficient_balance_count" = "ERROR 20117: The withdrawal amount is %1$@, and the available balance is %2$@.";
 "withdraw_insufficient_fee_count" = "ERROR 20118: The transaction fee is %1$@, and the available balance is %2$@.";

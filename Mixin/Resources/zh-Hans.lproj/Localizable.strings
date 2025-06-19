@@ -1302,7 +1302,7 @@
 "swap_order_received" = "已收到";
 "swap_receive" = "获得";
 "swap_send" = "支付";
-"swap_token" = "交易 %@";
+"swap_token" = "兑换 %@";
 "swap_token_description" = "将其他币种兑换为 %@";
 "swap_usdt_hint" = "当前钱包有其他链的 USDT，是否马上兑换？";
 "switch_account" = "切换账号";
@@ -1353,7 +1353,7 @@
 "transactions_cannot_be_deleted" = "转账记录不会被删除";
 "transcript" = "聊天记录";
 "transfer" = "转账";
-"transfer_aggregated_insufficient_balance_count" = "转账金额 %1$@，手续费 %2$@，钱包可用余额 %3$@。";
+"transfer_aggregated_insufficient_balance_count" = "转账金额 %1$@，手续费 %2$@，钱包余额 %3$@。";
 "transfer_amount_count_down" = "转账金额（%@）";
 "transfer_completed" = "传输已完成";
 "transfer_error_pin_incorrect_with_times" = "错误 20119：PIN 不正确。你还有 %@ 次机会尝试。";
@@ -1535,7 +1535,7 @@
 "wifi" = "WLAN";
 "wifi_and_cellular" = "WLAN 与蜂窝移动网";
 "withdraw_address" = "提现地址";
-"withdraw_aggregated_insufficient_balance_count" = "提现金额 %1$@，手续费 %2$@，钱包可用余额 %3$@。";
+"withdraw_aggregated_insufficient_balance_count" = "提现金额 %1$@，手续费 %2$@，钱包余额 %3$@。";
 "withdraw_all_of_token_warning" = "这个应用可以提取你所有的 %@。";
 "withdraw_insufficient_balance_count" = "错误 20117：提现金额 %1$@，钱包可用余额 %2$@。";
 "withdraw_insufficient_fee_count" = "错误 20118：手续费 %1$@，钱包可用余额 %2$@。";

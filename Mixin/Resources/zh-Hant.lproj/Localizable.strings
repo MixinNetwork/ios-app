@@ -1302,7 +1302,7 @@
 "swap_order_received" = "已收到";
 "swap_receive" = "獲得";
 "swap_send" = "支付";
-"swap_token" = "交易 %@";
+"swap_token" = "兌換 %@";
 "swap_token_description" = "將其他幣種兌換為 %@";
 "swap_usdt_hint" = "當前錢包有其他鏈的 USDT，是否馬上兌換？";
 "switch_account" = "切換賬號";
@@ -1353,7 +1353,7 @@
 "transactions_cannot_be_deleted" = "轉賬記錄不會被刪除";
 "transcript" = "聊天記錄";
 "transfer" = "轉賬";
-"transfer_aggregated_insufficient_balance_count" = "轉賬金額 %1$@，手續費 %2$@，錢包可用餘額 %3$@。";
+"transfer_aggregated_insufficient_balance_count" = "轉賬金額 %1$@，手續費 %2$@，錢包餘額 %3$@。";
 "transfer_amount_count_down" = "轉賬金額（%@）";
 "transfer_completed" = "傳輸已完成";
 "transfer_error_pin_incorrect_with_times" = "錯誤 20119：PIN 不正確。你還有 %@ 次機會嘗試。";
@@ -1535,7 +1535,7 @@
 "wifi" = "WLAN";
 "wifi_and_cellular" = "WLAN 與行動數據";
 "withdraw_address" = "提現地址";
-"withdraw_aggregated_insufficient_balance_count" = "提現金額 %1$@，手續費 %2$@，錢包可用餘額 %3$@。";
+"withdraw_aggregated_insufficient_balance_count" = "提現金額 %1$@，手續費 %2$@，錢包餘額 %3$@。";
 "withdraw_all_of_token_warning" = "這個應用可以提取你所有的 %@。";
 "withdraw_insufficient_balance_count" = "錯誤 20117：提現金額 %1$@，錢包可用餘額 %2$@。";
 "withdraw_insufficient_fee_count" = "錯誤 20118：手續費 %1$@，錢包可用餘額 %2$@。";

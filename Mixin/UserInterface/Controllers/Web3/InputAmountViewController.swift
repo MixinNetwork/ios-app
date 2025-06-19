@@ -45,7 +45,7 @@ class InputAmountViewController: UIViewController {
     
     var addFeeAttributes: AttributeContainer {
         var container = AttributeContainer()
-        container.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+        container.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14, weight: .medium))
         container.foregroundColor = R.color.theme()
         return container
     }
@@ -315,6 +315,7 @@ class InputAmountViewController: UIViewController {
         config.imagePlacement = .trailing
         config.imagePadding = 14
         config.attributedTitle = AttributedString("0", attributes: feeAttributes)
+        config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 5, bottom: 7, trailing: 12)
         let button = UIButton(configuration: config)
         button.tintColor = R.color.icon_tint_tertiary()
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -338,6 +339,7 @@ class InputAmountViewController: UIViewController {
         }
         var config: UIButton.Configuration = .plain()
         config.baseBackgroundColor = .clear
+        config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 5, bottom: 7, trailing: 5)
         let button = UIButton(configuration: config)
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         button.addTarget(self, action: #selector(addFee(_:)), for: .touchUpInside)

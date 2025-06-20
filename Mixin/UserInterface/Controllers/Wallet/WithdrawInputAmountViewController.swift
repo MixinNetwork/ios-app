@@ -131,17 +131,10 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             let bothRequirementsInsufficient = (requirements.count == 1 && tokenAmount != 0)
             || (!inputAmountRequirement.isSufficient && !feeRequirement.isSufficient)
             if bothRequirementsInsufficient {
-                insufficientBalanceLabel.text = R.string.localizable.withdraw_aggregated_insufficient_balance_count(
-                    inputAmountRequirement.localizedAmountWithSymbol,
-                    feeRequirement.localizedAmountWithSymbol,
-                    token.localizedBalanceWithSymbol
-                )
+                insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
                 addAddFeeButton(symbol: feeRequirement.token.symbol)
             } else if !inputAmountRequirement.isSufficient {
-                insufficientBalanceLabel.text = R.string.localizable.withdraw_insufficient_balance_count(
-                    inputAmountRequirement.localizedAmountWithSymbol,
-                    inputAmountRequirement.token.localizedBalanceWithSymbol
-                )
+                insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
                 removeAddFeeButton()
             } else {
                 insufficientBalanceLabel.text = R.string.localizable.withdraw_insufficient_fee_count(

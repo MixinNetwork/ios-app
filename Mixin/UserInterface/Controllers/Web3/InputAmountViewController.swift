@@ -30,6 +30,15 @@ class InputAmountViewController: UIViewController {
         return container
     }
     
+    var addTokenAttributes: AttributeContainer {
+        var container = AttributeContainer()
+        container.font = UIFontMetrics.default.scaledFont(
+            for: .systemFont(ofSize: 14, weight: .medium)
+        )
+        container.foregroundColor = R.color.theme()
+        return container
+    }
+    
     private(set) var amountIntent: AmountIntent
     private(set) var tokenAmount: Decimal = 0
     private(set) var fiatMoneyAmount: Decimal = 0
@@ -70,15 +79,6 @@ class InputAmountViewController: UIViewController {
             }
             reloadViews(inputAmount: accumulator.decimal)
         }
-    }
-    
-    private var addFeeAttributes: AttributeContainer {
-        var container = AttributeContainer()
-        container.font = UIFontMetrics.default.scaledFont(
-            for: .systemFont(ofSize: 14, weight: .medium)
-        )
-        container.foregroundColor = R.color.theme()
-        return container
     }
     
     init(token: ValuableToken & OnChainToken, precision: Int) {
@@ -348,7 +348,7 @@ class InputAmountViewController: UIViewController {
         }
         addFeeButton?.configuration?.attributedTitle = AttributedString(
             R.string.localizable.add_token(symbol),
-            attributes: addFeeAttributes
+            attributes: addTokenAttributes
         )
     }
     

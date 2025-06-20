@@ -760,6 +760,7 @@
 		9427D52725E0EB5B00B1EF0E /* PlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427D52625E0EB5B00B1EF0E /* PlaylistItem.swift */; };
 		94287EE12B8743E50088DEAD /* MixinAPIResponseError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94287EE02B8743E50088DEAD /* MixinAPIResponseError+Localization.swift */; };
 		94287EE62B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94287EE52B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift */; };
+		9429C1472E059F3100206DAA /* FeeRequiredInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9429C1402E059F2400206DAA /* FeeRequiredInputAmountViewController.swift */; };
 		942AA7402C9473C9007B97A4 /* user_membership_prosperity.json in Resources */ = {isa = PBXBuildFile; fileRef = 942AA73F2C9473C9007B97A4 /* user_membership_prosperity.json */; };
 		942AA7422C9473D7007B97A4 /* user_membership_prosperity.json in Resources */ = {isa = PBXBuildFile; fileRef = 942AA7412C9473D6007B97A4 /* user_membership_prosperity.json */; };
 		942BA99C2C689FA10096CCC3 /* MarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942BA99A2C689FA10096CCC3 /* MarketViewController.swift */; };
@@ -2351,6 +2352,7 @@
 		9427D52625E0EB5B00B1EF0E /* PlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistItem.swift; sourceTree = "<group>"; };
 		94287EE02B8743E50088DEAD /* MixinAPIResponseError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MixinAPIResponseError+Localization.swift"; sourceTree = "<group>"; };
 		94287EE52B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebSocketServiceSendingError+Localization.swift"; sourceTree = "<group>"; };
+		9429C1402E059F2400206DAA /* FeeRequiredInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeRequiredInputAmountViewController.swift; sourceTree = "<group>"; };
 		942AA73F2C9473C9007B97A4 /* user_membership_prosperity.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = user_membership_prosperity.json; sourceTree = "<group>"; };
 		942AA7412C9473D6007B97A4 /* user_membership_prosperity.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = user_membership_prosperity.json; sourceTree = "<group>"; };
 		942BA99A2C689FA10096CCC3 /* MarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketViewController.swift; sourceTree = "<group>"; };
@@ -4129,10 +4131,10 @@
 				5260A8532DDF4BAD00ED9714 /* TokenReceiverViewController.swift */,
 				946EA0872D4763CF00DBC308 /* AddressInfoInputView.xib */,
 				946EA0852D4763BD00DBC308 /* AddressInfoInputViewController.swift */,
-				94350E372BCFE8C5007283B7 /* DecimalButton.swift */,
 				94350E362BCFE8C5007283B7 /* InputAmountView.xib */,
 				94350E382BCFE8C5007283B7 /* InputAmountViewController.swift */,
 				946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */,
+				9429C1402E059F2400206DAA /* FeeRequiredInputAmountViewController.swift */,
 				946EA1132D47DD4000DBC308 /* WithdrawInputAmountViewController.swift */,
 				9496DF2B2DFB377100F6DE26 /* InsufficientBalanceViewController.swift */,
 				94B8205F2E00601700D580C9 /* AddTokenMethodSelectorViewController.swift */,
@@ -4751,6 +4753,7 @@
 				944263B32DD648AB003F46DF /* Web3ReputationPickerActionCell.swift */,
 				943F2FF62DF2C3CF0000196A /* WalletTipView.xib */,
 				943F2FEE2DF2C3BF0000196A /* WalletTipView.swift */,
+				94350E372BCFE8C5007283B7 /* DecimalButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -6701,6 +6704,7 @@
 				7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */,
 				94668D682DF06C640068078D /* MembershipOrderRewardsCell.swift in Sources */,
 				DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */,
+				9429C1472E059F3100206DAA /* FeeRequiredInputAmountViewController.swift in Sources */,
 				946331C22C622C3500C54B76 /* TransactionHistoryDateFilterView.swift in Sources */,
 				7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */,
 				7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */,

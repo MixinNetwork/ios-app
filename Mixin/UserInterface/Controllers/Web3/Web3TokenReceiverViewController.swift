@@ -38,46 +38,50 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
         tableView.reloadData()
     }
     
-    override func didInputEmpty() {
-        tableView.dataSource = self
-    }
-    
     override func continueAction(inputAddress: String) {
-        let token = payment.token
-        if ExternalTransfer.isWithdrawalLink(raw: inputAddress) {
-            Web3AddressValidator.validateWithdrawLink(
-                paymentLink: inputAddress,
-                token: token,
-                payment: payment) { [weak self, weak nextButton](transfer, operation, payment) in
-                guard let self else {
-                    return
-                }
-                nextButton?.isBusy = false
-                
-                if transfer.amount > 0 {
-                    let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .web3ToAddress(addressLabel: payment.toType.addressLabel))
-                    transfer.manipulateNavigationStackOnFinished = true
-                    Web3PopupCoordinator.enqueue(popup: .request(transfer))
-                } else {
-                    let input = Web3TransferInputAmountViewController(payment: payment)
-                    self.navigationController?.pushViewController(input, animated: true)
-                }
-            } onFailure: { [weak self] error in
-                self?.showError(description: error.localizedDescription)
+        Web3AddressValidator.validate(
+            string: inputAddress,
+            payment: payment
+        ) { [weak self] result in
+            guard let self else {
+                return
             }
-        } else {
-            Web3AddressValidator.validate(destination: inputAddress, token: token, payment: payment) { [weak self](payment) in
-                guard let self else {
-                    return
-                }
-                nextButton?.isBusy = false
-                let input = Web3TransferInputAmountViewController(payment: payment)
+            self.nextButton?.isBusy = false
+            switch result {
+            case let .address(type, address):
+                let addressPayment = Web3SendingTokenToAddressPayment(
+                    payment: payment,
+                    to: type,
+                    address: address
+                )
+                let input = Web3TransferInputAmountViewController(payment: addressPayment)
                 self.navigationController?.pushViewController(input, animated: true)
-            } onFailure: { [weak self] error in
-                self?.showError(description: error.localizedDescription)
+            case let .insufficientBalance(transferring, fee):
+                let insufficient = InsufficientBalanceViewController(
+                    intent: .commonWalletTransfer(transferring: transferring, fee: fee)
+                )
+                self.present(insufficient, animated: true)
+            case let .transfer(operation, label):
+                let transfer = Web3TransferPreviewViewController(
+                    operation: operation,
+                    proposer: .user(addressLabel: label)
+                )
+                transfer.manipulateNavigationStackOnFinished = true
+                Web3PopupCoordinator.enqueue(popup: .request(transfer))
+            case .solAmountTooSmall:
+                let cost = CurrencyFormatter.localizedString(
+                    from: Solana.accountCreationCost,
+                    format: .precision,
+                    sign: .never,
+                )
+                let description = R.string.localizable.send_sol_for_rent(cost)
+                self.showError(description: description)
             }
+        } onFailure: { [weak self] error in
+            self?.showError(description: error.localizedDescription)
         }
     }
+    
 }
 
 extension Web3TokenReceiverViewController: UITableViewDataSource {

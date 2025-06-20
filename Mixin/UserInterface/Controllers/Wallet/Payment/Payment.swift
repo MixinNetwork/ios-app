@@ -329,7 +329,7 @@ extension Payment {
             }
         }
         
-        var logLabel: String {
+        var reportingType: String {
             switch self {
             case .address:
                 "address_book"
@@ -374,7 +374,7 @@ extension Payment {
                                             tokenAmount: tokenAmount,
                                             fiatMoneyAmount: fiatMoneyAmount,
                                             memo: memo),
-                    AddressValidityPrecondition(address: address),
+                    InactiveAddressPrecondition(address: address),
                 ]
             case .temporary, .classicWallet:
                 preconditions = [

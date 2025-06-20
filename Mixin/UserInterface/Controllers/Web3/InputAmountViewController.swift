@@ -4,11 +4,6 @@ import MixinServices
 
 class InputAmountViewController: UIViewController {
     
-    enum BalanceSufficiency {
-        case sufficient
-        case insufficient(String?)
-    }
-    
     @IBOutlet weak var amountStackView: UIStackView!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var calculatedValueLabel: UILabel!
@@ -26,15 +21,7 @@ class InputAmountViewController: UIViewController {
     
     @IBOutlet weak var numberPadTopConstraint: NSLayoutConstraint!
     
-    let token: ValuableToken
-    
-    var balanceSufficiency: BalanceSufficiency {
-        if tokenAmount > token.decimalBalance {
-            .insufficient(R.string.localizable.insufficient_balance())
-        } else {
-            .sufficient
-        }
-    }
+    let token: ValuableToken & OnChainToken
     
     var feeAttributes: AttributeContainer {
         var container = AttributeContainer()
@@ -43,10 +30,22 @@ class InputAmountViewController: UIViewController {
         return container
     }
     
+    var addTokenAttributes: AttributeContainer {
+        var container = AttributeContainer()
+        container.font = UIFontMetrics.default.scaledFont(
+            for: .systemFont(ofSize: 14, weight: .medium)
+        )
+        container.foregroundColor = R.color.theme()
+        return container
+    }
+    
     private(set) var amountIntent: AmountIntent
     private(set) var tokenAmount: Decimal = 0
     private(set) var fiatMoneyAmount: Decimal = 0
+    private(set) var inputAmountRequirement: BalanceRequirement // Changes when input amout changes
     
+    private(set) weak var feeStackView: UIStackView?
+    private(set) weak var addFeeButton: UIButton?
     private(set) weak var feeActivityIndicator: ActivityIndicatorView?
     private(set) weak var changeFeeButton: UIButton?
     
@@ -82,11 +81,16 @@ class InputAmountViewController: UIViewController {
         }
     }
     
-    init(token: ValuableToken, precision: Int) {
+    init(token: ValuableToken & OnChainToken, precision: Int) {
+        let accumulator = DecimalAccumulator(precision: precision)
         self.token = token
         self.tokenPrecision = precision
         self.amountIntent = .byToken
-        self.accumulator = DecimalAccumulator(precision: precision)
+        self.inputAmountRequirement = BalanceRequirement(
+            token: token,
+            amount: accumulator.decimal
+        )
+        self.accumulator = accumulator
         let nib = R.nib.inputAmountView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -104,7 +108,14 @@ class InputAmountViewController: UIViewController {
         )
         
         amountStackView.setCustomSpacing(2, after: amountLabel)
-        amountLabel.font = .monospacedDigitSystemFont(ofSize: 64, weight: .regular)
+        amountLabel.font = switch ScreenHeight.current {
+        case .short:
+                .monospacedDigitSystemFont(ofSize: 32, weight: .regular)
+        case .medium:
+                .monospacedDigitSystemFont(ofSize: 48, weight: .regular)
+        case .long, .extraLong:
+                .monospacedDigitSystemFont(ofSize: 64, weight: .regular)
+        }
         
         let multiplierButtons = {
             var config: UIButton.Configuration = .filled()
@@ -259,6 +270,10 @@ class InputAmountViewController: UIViewController {
         
     }
     
+    @objc func addFee(_ sender: Any) {
+        
+    }
+    
     func multiplier(tag: Int) -> Decimal {
         switch tag {
         case 0:
@@ -302,6 +317,7 @@ class InputAmountViewController: UIViewController {
         config.imagePlacement = .trailing
         config.imagePadding = 14
         config.attributedTitle = AttributedString("0", attributes: feeAttributes)
+        config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 5, bottom: 7, trailing: 12)
         let button = UIButton(configuration: config)
         button.tintColor = R.color.icon_tint_tertiary()
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -316,16 +332,36 @@ class InputAmountViewController: UIViewController {
         feeStackView.snp.makeConstraints { make in
             make.width.equalTo(view.snp.width).offset(-56)
         }
+        self.feeStackView = feeStackView
     }
     
-    func reloadViewsWithBalanceSufficiency() {
-        switch balanceSufficiency {
-        case .sufficient:
-            insufficientBalanceLabel.alpha = 0
+    func addAddFeeButton(symbol: String) {
+        if addFeeButton == nil {
+            var config: UIButton.Configuration = .plain()
+            config.baseBackgroundColor = .clear
+            config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 5, bottom: 7, trailing: 5)
+            let button = UIButton(configuration: config)
+            button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            button.addTarget(self, action: #selector(addFee(_:)), for: .touchUpInside)
+            feeStackView?.insertArrangedSubview(button, at: 1)
+            addFeeButton = button
+        }
+        addFeeButton?.configuration?.attributedTitle = AttributedString(
+            R.string.localizable.add_token(symbol),
+            attributes: addTokenAttributes
+        )
+    }
+    
+    func removeAddFeeButton() {
+        addFeeButton?.removeFromSuperview()
+    }
+    
+    func reloadViewsWithBalanceRequirements() {
+        if inputAmountRequirement.isSufficient {
+            insufficientBalanceLabel.text = nil
             reviewButton.isEnabled = tokenAmount > 0
-        case .insufficient(let description):
-            insufficientBalanceLabel.text = description
-            insufficientBalanceLabel.alpha = 1
+        } else {
+            insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
             reviewButton.isEnabled = false
         }
     }
@@ -384,7 +420,9 @@ extension InputAmountViewController {
         }
         
         amountLabel.text = inputAmountString
-        reloadViewsWithBalanceSufficiency()
+        
+        inputAmountRequirement = BalanceRequirement(token: token, amount: tokenAmount)
+        reloadViewsWithBalanceRequirements()
     }
     
 }

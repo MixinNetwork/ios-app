@@ -17,7 +17,7 @@ enum PaymentPreconditionIssue {
     case duplication(previous: Date, amount: Decimal, symbol: String)
     case bigAmount(tokenAmount: Decimal, fiatMoneyAmount: Decimal, symbol: String)
     case notContact(opponent: UserItem)
-    case agedAddress(label: String, compactRepresentation: String, age: Int)
+    case inactiveAddress(label: String, compactRepresentation: String, age: Int)
     
     var description: String {
         switch self {
@@ -31,7 +31,7 @@ enum PaymentPreconditionIssue {
             return R.string.localizable.large_amount_reminder(tokenValue, fiatMoneyValue)
         case let .notContact(user):
             return R.string.localizable.unfamiliar_person_reminder(user.fullName, user.identityNumber)
-        case let .agedAddress(label, compactRepresentation, age):
+        case let .inactiveAddress(label, compactRepresentation, age):
             return R.string.localizable.address_validity_reminder(label, compactRepresentation, "\(age)")
         }
     }
@@ -266,21 +266,25 @@ struct NoPendingTransactionPrecondition: PaymentPrecondition {
     
 }
 
-struct AddressValidityPrecondition: PaymentPrecondition {
+struct InactiveAddressPrecondition: PaymentPrecondition {
     
     let address: Address
     let maxNumberOfDays = 30
     
     func check() async -> PaymentPreconditionCheckingResult {
-        if let createdAt = RawTransactionDAO.shared.latestCreatedAt(receiverID: address.fullRepresentation) {
-            let date = createdAt.toUTCDate()
-            if -date.timeIntervalSinceNow > TimeInterval(maxNumberOfDays) * .day {
-                return .passed([.agedAddress(label: address.label, compactRepresentation: address.compactRepresentation, age: maxNumberOfDays)])
-            } else {
-                return .passed([])
-            }
-        } else {
+        let createdAt = RawTransactionDAO.shared.latestCreatedAt(receiverID: address.fullRepresentation)
+        guard let date = createdAt?.toUTCDate() else {
             return .passed([])
+        }
+        let isInactive = -date.timeIntervalSinceNow > TimeInterval(maxNumberOfDays) * .day
+        return if isInactive {
+            .passed([.inactiveAddress(
+                label: address.label,
+                compactRepresentation: address.compactRepresentation,
+                age: maxNumberOfDays
+            )])
+        } else {
+            .passed([])
         }
     }
     

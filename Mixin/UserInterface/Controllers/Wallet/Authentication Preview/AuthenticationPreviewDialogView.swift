@@ -3,8 +3,9 @@ import UIKit
 final class AuthenticationPreviewDialogView: UIView {
     
     enum Style {
-        case info
-        case warning
+        case gray
+        case red
+        case yellow
     }
     
     @IBOutlet weak var contentView: UIView!
@@ -14,7 +15,7 @@ final class AuthenticationPreviewDialogView: UIView {
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var rightButton: UIButton!
     
-    var style: Style = .warning {
+    var style: Style = .red {
         didSet {
             updateTintColors(trait: traitCollection)
         }
@@ -39,28 +40,32 @@ final class AuthenticationPreviewDialogView: UIView {
     
     private func updateTintColors(trait: UITraitCollection) {
         let backgroundColor = switch style {
-        case .info:
+        case .gray:
             R.color.text_tertiary()!
-        case .warning:
+        case .red:
             R.color.red()!
+        case .yellow:
+            UIColor(displayP3RgbValue: 0xfacd59)
         }
         contentView.layer.borderColor = backgroundColor.resolvedColor(with: trait).cgColor
         contentView.backgroundColor = backgroundColor.withAlphaComponent(0.1)
         
         let textColor = switch style {
-        case .info:
+        case .gray, .yellow:
             R.color.text()!
-        case .warning:
+        case .red:
             R.color.red()!
         }
         stepLabel.textColor = textColor
         titleLabel.textColor = textColor
         
         iconImageView.tintColor = switch style {
-        case .info:
+        case .gray:
             R.color.text_secondary()!
-        case .warning:
+        case .red:
             R.color.red()!
+        case .yellow:
+            UIColor(displayP3RgbValue: 0xf6a417)
         }
     }
     

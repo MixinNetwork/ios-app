@@ -4,9 +4,8 @@ import MixinServices
 class Web3TransferOperation: SwapOperation.PaymentOperation {
     
     struct Fee {
-        let token: Web3TokenItem
-        let amount: Decimal
-        let fiatMoney: Decimal
+        let tokenAmount: Decimal
+        let fiatMoneyAmount: Decimal
     }
     
     enum State {
@@ -21,13 +20,13 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
     
     let walletID: String
     let fromAddress: String
-    let toAddress: String
+    let toAddress: String // Always the receiver, not the contract address
     let chain: Web3Chain
     let feeToken: Web3TokenItem
     let isResendingTransactionAvailable: Bool
     let hardcodedSimulation: TransactionSimulation?
     
-    @Published
+    @MainActor @Published
     var state: State = .loading
     var hasTransactionSent = false
     
@@ -74,7 +73,7 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
         reject()
     }
     
-    func resendTransaction() {
+    @MainActor func resendTransaction() {
         
     }
     

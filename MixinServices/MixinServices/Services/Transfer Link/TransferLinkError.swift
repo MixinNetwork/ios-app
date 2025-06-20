@@ -6,4 +6,5 @@ public enum TransferLinkError: Error {
     case assetNotFound
     case alreadyPaid
     case requestError(Error)
+    case mismatchedAmount
 }

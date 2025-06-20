@@ -18,7 +18,10 @@ final class TransferInputAmountViewController: InputAmountViewController {
         }
     }
     
+    private weak var noteStackView: UIStackView!
     private weak var changeNoteButton: UIButton!
+    
+    private var addTokenButton: UIButton?
     
     private var noteAttributes: AttributeContainer {
         var container = AttributeContainer()
@@ -76,6 +79,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
             
             var config: UIButton.Configuration = .plain()
             config.baseBackgroundColor = .clear
+            config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 5, bottom: 7, trailing: 12)
             config.imagePlacement = .trailing
             config.imagePadding = 14
             config.image = R.image.ic_accessory_disclosure()
@@ -99,6 +103,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
         noteStackView.snp.makeConstraints { make in
             make.width.equalTo(view.snp.width).offset(-56)
         }
+        self.noteStackView = noteStackView
         updateChangeNoteButton()
         
         tokenIconView.setIcon(token: tokenItem)
@@ -149,6 +154,21 @@ final class TransferInputAmountViewController: InputAmountViewController {
         }
     }
     
+    override func reloadViewsWithBalanceRequirements() {
+        super.reloadViewsWithBalanceRequirements()
+        if inputAmountRequirement.isSufficient {
+            removeAddTokenButton()
+        } else {
+            addAddTokenButton()
+        }
+    }
+    
+    @objc func addToken(_ sender: Any) {
+        let selector = AddTokenMethodSelectorViewController(token: tokenItem)
+        selector.delegate = self
+        present(selector, animated: true)
+    }
+    
     @objc private func changeNote(_ sender: UIButton) {
         if note.isEmpty {
             presentNoteEditor()
@@ -163,6 +183,29 @@ final class TransferInputAmountViewController: InputAmountViewController {
             sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
             present(sheet, animated: true)
         }
+    }
+    
+    private func addAddTokenButton() {
+        if addTokenButton == nil {
+            var config: UIButton.Configuration = .plain()
+            config.baseBackgroundColor = .clear
+            config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 5, bottom: 7, trailing: 5)
+            let button = UIButton(configuration: config)
+            button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            button.addTarget(self, action: #selector(addToken(_:)), for: .touchUpInside)
+            addTokenButton = button
+        }
+        if let addTokenButton {
+            noteStackView.insertArrangedSubview(addTokenButton, at: 1)
+            addTokenButton.configuration?.attributedTitle = AttributedString(
+                R.string.localizable.add_token(token.symbol),
+                attributes: addTokenAttributes
+            )
+        }
+    }
+    
+    private func removeAddTokenButton() {
+        addTokenButton?.removeFromSuperview()
     }
     
     private func updateChangeNoteButton() {
@@ -205,6 +248,27 @@ extension TransferInputAmountViewController: UITextFieldDelegate {
         let text = (textField.text ?? "") as NSString
         let newText = text.replacingCharacters(in: range, with: string)
         return newText.utf8.count <= maxNoteDataCount
+    }
+    
+}
+
+extension TransferInputAmountViewController: AddTokenMethodSelectorViewController.Delegate {
+    
+    func addTokenMethodSelectorViewController(
+        _ viewController: AddTokenMethodSelectorViewController,
+        didPickMethod method: AddTokenMethodSelectorViewController.Method
+    ) {
+        let next = switch method {
+        case .swap:
+            MixinSwapViewController(
+                sendAssetID: nil,
+                receiveAssetID: token.assetID,
+                referral: nil
+            )
+        case .deposit:
+            DepositViewController(token: tokenItem)
+        }
+        navigationController?.pushViewController(next, animated: true)
     }
     
 }

@@ -141,12 +141,12 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                             assetID: token.assetID,
                             destination: address.destination,
                             tag: address.tag
-                        ) { [weak self] (_, address) in
+                        ) { [weak self] destination in
                             guard let self else {
                                 return
                             }
                             self.nextButton.isBusy = false
-                            self.pushNext(inputContent: .label(address))
+                            self.pushNext(inputContent: .label(destination.withdrawable))
                         } onFailure: { [weak self] error in
                             guard let self else {
                                 return
@@ -169,12 +169,12 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                     assetID: token.assetID,
                     destination: destination,
                     tag: content
-                ) { [weak self] (_, address) in
+                ) { [weak self] destination in
                     guard let self else {
                         return
                     }
                     self.nextButton.isBusy = false
-                    self.pushNext(inputContent: .label(address))
+                    self.pushNext(inputContent: .label(destination.withdrawable))
                 } onFailure: { [weak self] error in
                     guard let self else {
                         return
@@ -285,7 +285,7 @@ extension AddressInfoInputViewController {
         case destination
         case memo(destination: String)
         case tag(destination: String)
-        case label(TemporaryAddress)
+        case label(WithdrawableAddress)
         
         init(token: any OnChainToken, destination: String) {
             switch token.memoPossibility {
@@ -330,7 +330,7 @@ extension AddressInfoInputViewController {
         nextButton.isEnabled = false
     }
     
-    private func saveNewAddress(address: TemporaryAddress, label: String) {
+    private func saveNewAddress(address: any WithdrawableAddress, label: String) {
         let preview = EditAddressPreviewViewController(
             token: token,
             label: label,
@@ -360,13 +360,13 @@ extension AddressInfoInputViewController {
             assetID: token.assetID,
             destination: destination,
             tag: tag
-        ) { [weak self, token] (withdrawalDestination, _) in
+        ) { [weak self, token] (destination) in
             guard let self else {
                 return
             }
             self.nextButton.isBusy = false
             if let token = token as? MixinTokenItem {
-                let next = WithdrawInputAmountViewController(tokenItem: token, destination: withdrawalDestination)
+                let next = WithdrawInputAmountViewController(tokenItem: token, destination: destination)
                 self.navigationController?.pushViewController(next, animated: true)
             }
         } onFailure: { [weak self] error in

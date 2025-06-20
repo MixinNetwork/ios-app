@@ -91,19 +91,15 @@ class TokenReceiverViewController: KeyboardBasedLayoutViewController {
         
     }
     
-    func didInputEmpty() {
-        
-    }
-    
     func showError(description: String) {
         guard let trayView else {
             return
         }
-        
         trayView.nextButton.isBusy = false
         trayView.errorDescriptionLabel.text = description
         trayView.errorDescriptionLabel.isHidden = false
     }
+    
 }
 
 extension TokenReceiverViewController: HomeNavigationController.NavigationBarStyling {
@@ -125,7 +121,7 @@ extension TokenReceiverViewController: AddressInfoInputHeaderView.Delegate {
         headerView.frame.size.height = newHeaderSize.height
         tableView.tableHeaderView = headerView
         if content.isEmpty {
-            didInputEmpty()
+            tableView.dataSource = self as? UITableViewDataSource
             tableView.contentInset.bottom = 0
             trayView?.isHidden = true
         } else {

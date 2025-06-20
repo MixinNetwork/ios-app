@@ -5,15 +5,15 @@ extension TransferLinkError: @retroactive LocalizedError {
     
     public var errorDescription: String? {
         switch self {
-        case .notTransferLink, .invalidFormat:
+        case .notTransferLink, .invalidFormat, .mismatchedAmount:
             R.string.localizable.invalid_payment_link()
         case .assetNotFound:
             R.string.localizable.asset_not_found()
         case .alreadyPaid:
             R.string.localizable.pay_paid()
-        case let .requestError(err):
-            err.localizedDescription
+        case let .requestError(error):
+            error.localizedDescription
         }
     }
+    
 }
-

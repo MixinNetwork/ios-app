@@ -151,14 +151,30 @@ final class Web3SwapViewController: MixinSwapViewController {
                                 decimalAmount: sendAmount
                             )
                         case .solana:
-                            try SolanaTransferToAddressOperation(payment: addressPayment, decimalAmount: sendAmount)
+                            try SolanaTransferToAddressOperation(
+                                payment: addressPayment,
+                                decimalAmount: sendAmount
+                            )
                         }
                         
                         let fee = try await operation.loadFee()
                         let feeTokenSymbol = operation.feeToken.symbol
                         
+                        let sendRequirement = BalanceRequirement(token: sendToken, amount: sendAmount)
+                        let feeRequirement = BalanceRequirement(token: operation.feeToken, amount: fee.tokenAmount)
+                        let requirements = sendRequirement.merging(with: feeRequirement)
+                        let isBalanceSufficient = requirements.allSatisfy(\.isSufficient)
+                        
                         await MainActor.run {
                             guard let homeContainer = UIApplication.homeContainerViewController else {
+                                return
+                            }
+                            guard isBalanceSufficient else {
+                                sender.isBusy = false
+                                let insufficient = InsufficientBalanceViewController(
+                                    intent: .commonWalletTransfer(transferring: sendRequirement, fee: feeRequirement)
+                                )
+                                homeContainer.present(insufficient, animated: true)
                                 return
                             }
                             let destination = SwapOperation.Web3Destination(

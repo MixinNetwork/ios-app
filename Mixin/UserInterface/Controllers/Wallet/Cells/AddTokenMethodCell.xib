@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="add_token_method" id="KGk-i7-Jjw" customClass="AddTokenMethodCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="73"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="73"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1e2-ZO-ybR">
+                        <rect key="frame" x="16" y="4" width="288" height="65"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="rbr-C1-d16">
+                                <rect key="frame" x="20" y="13" width="248" height="39"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="O9y-MM-1UD">
+                                        <rect key="frame" x="0.0" y="7.6666666666666679" width="24" height="24"/>
+                                        <color key="tintColor" red="0.8784313725490196" green="0.8784313725490196" blue="0.8784313725490196" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="O9y-MM-1UD" secondAttribute="height" id="6Hj-F3-hXm"/>
+                                            <constraint firstAttribute="width" constant="24" id="p9C-0Q-tmz"/>
+                                        </constraints>
+                                    </imageView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="vbP-ym-aP6">
+                                        <rect key="frame" x="36" y="0.0" width="212" height="39"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="172" placeholderIntrinsicHeight="19.333333333333332" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vrs-uL-BfO">
+                                                <rect key="frame" x="0.0" y="0.0" width="212" height="19.333333333333332"/>
+                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                                <color key="textColor" name="text"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="172" placeholderIntrinsicHeight="15.666666666666668" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pd1-19-Frf">
+                                                <rect key="frame" x="0.0" y="23.333333333333336" width="212" height="15.666666666666664"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                                <color key="textColor" name="text_tertiary"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="rbr-C1-d16" secondAttribute="bottom" constant="13" id="PXS-Kh-VKR"/>
+                            <constraint firstItem="rbr-C1-d16" firstAttribute="leading" secondItem="1e2-ZO-ybR" secondAttribute="leading" constant="20" id="R5H-As-A0c"/>
+                            <constraint firstAttribute="trailing" secondItem="rbr-C1-d16" secondAttribute="trailing" constant="20" id="adz-aT-cm6"/>
+                            <constraint firstItem="rbr-C1-d16" firstAttribute="top" secondItem="1e2-ZO-ybR" secondAttribute="top" constant="13" id="iXi-82-bX2"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="13"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" name="background_quaternary"/>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="1e2-ZO-ybR" secondAttribute="bottom" constant="4" id="HRG-ck-nJ5"/>
+                    <constraint firstItem="1e2-ZO-ybR" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="4" id="UEt-ag-CPh"/>
+                    <constraint firstItem="1e2-ZO-ybR" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="eNW-oG-foO"/>
+                    <constraint firstAttribute="trailing" secondItem="1e2-ZO-ybR" secondAttribute="trailing" constant="16" id="ifN-gZ-bka"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" name="background_quaternary"/>
+            <connections>
+                <outlet property="iconImageView" destination="O9y-MM-1UD" id="3Dg-Q1-01c"/>
+                <outlet property="subtitleLabel" destination="Pd1-19-Frf" id="38H-OX-aPe"/>
+                <outlet property="titleLabel" destination="Vrs-uL-BfO" id="Ba0-rJ-Hah"/>
+            </connections>
+            <point key="canvasLocation" x="40" y="42"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_quaternary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

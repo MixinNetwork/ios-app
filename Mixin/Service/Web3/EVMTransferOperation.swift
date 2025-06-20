@@ -30,14 +30,15 @@ class EVMTransferOperation: Web3TransferOperation {
     
     private let mixinChainID: String
     
-    private var evmFee: EVMFee?
-    private var fee: Fee?
-    private var transaction: EIP1559Transaction
-    private var account: EthereumAccount?
+    @MainActor private var evmFee: EVMFee?
+    @MainActor private var fee: Fee?
+    @MainActor private var transaction: EIP1559Transaction
+    @MainActor private var account: EthereumAccount?
     
     fileprivate init(
         walletID: String,
         fromAddress: String,
+        toAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
         hardcodedSimulation: TransactionSimulation?,
@@ -58,7 +59,7 @@ class EVMTransferOperation: Web3TransferOperation {
         super.init(
             walletID: walletID,
             fromAddress: fromAddress,
-            toAddress: transaction.destination.toChecksumAddress(),
+            toAddress: toAddress,
             chain: chain,
             feeToken: feeToken,
             isResendingTransactionAvailable: true,
@@ -69,7 +70,7 @@ class EVMTransferOperation: Web3TransferOperation {
     fileprivate init(
         walletID: String,
         fromAddress: String,
-        transaction: EVMTransactionPreview,
+        transaction: ExternalEVMTransaction,
         chain: Web3Chain,
         hardcodedSimulation: TransactionSimulation?,
     ) throws {
@@ -112,7 +113,7 @@ class EVMTransferOperation: Web3TransferOperation {
             mixinChainID: mixinChainID,
             hexData: transaction.data?.hexEncodedString(),
             from: fromAddress,
-            to: toAddress
+            to: transaction.destination.toChecksumAddress()
         )
         Logger.web3.info(category: "EVMTransfer", message: "Using limit: \(rawFee.gasLimit), mfpg: \(rawFee.maxFeePerGas), mpfpg: \(rawFee.maxPriorityFeePerGas)")
         guard
@@ -124,26 +125,25 @@ class EVMTransferOperation: Web3TransferOperation {
             throw RequestError.invalidFee
         }
         let evmFee: EVMFee
-        let tokenCount: Decimal
+        let tokenAmount: Decimal
         if await Web3Diagnostic.usesLowEVMFeeOnce {
             evmFee = EVMFee(
                 gasLimit: gasLimit / 3,
                 maxFeePerGas: maxFeePerGas / 3,
                 maxPriorityFeePerGas: maxPriorityFeePerGas / 3
             )
-            tokenCount = weiCount * .wei / 3
+            tokenAmount = weiCount * .wei / 3
         } else {
             evmFee = EVMFee(
                 gasLimit: gasLimit,
                 maxFeePerGas: maxFeePerGas,
                 maxPriorityFeePerGas: maxPriorityFeePerGas
             )
-            tokenCount = weiCount * .wei
+            tokenAmount = weiCount * .wei
         }
         let fee = Fee(
-            token: feeToken,
-            amount: tokenCount,
-            fiatMoney: tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
+            tokenAmount: tokenAmount,
+            fiatMoneyAmount: tokenAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
         )
         await MainActor.run {
             self.evmFee = evmFee
@@ -154,11 +154,11 @@ class EVMTransferOperation: Web3TransferOperation {
     }
     
     override func simulateTransaction() async throws -> TransactionSimulation {
-        guard let evmFee else {
+        guard let evmFee = await evmFee else {
             throw RequestError.invalidFee
         }
         let nonce = try await self.loadNonce()
-        let pseudoTransaction = EIP1559Transaction(
+        let pseudoTransaction = await EIP1559Transaction(
             chainID: transaction.chainID,
             nonce: nonce,
             maxPriorityFeePerGas: evmFee.maxPriorityFeePerGas,
@@ -179,7 +179,7 @@ class EVMTransferOperation: Web3TransferOperation {
     }
     
     override func start(pin: String) async throws {
-        guard let evmFee, let fee else {
+        guard let evmFee = await evmFee, let fee = await fee else {
             assertionFailure("Missing fee, call `start(with:)` only after fee is arrived")
             return
         }
@@ -197,7 +197,7 @@ class EVMTransferOperation: Web3TransferOperation {
                 throw RequestError.mismatchedAddress
             }
             let nonce = try await self.loadNonce()
-            updatedTransaction = EIP1559Transaction(
+            updatedTransaction = await EIP1559Transaction(
                 chainID: transaction.chainID,
                 nonce: nonce,
                 maxPriorityFeePerGas: evmFee.maxPriorityFeePerGas,
@@ -286,7 +286,7 @@ class EVMTransferOperation: Web3TransferOperation {
                 from: fromAddress,
                 rawTransaction: hexEncodedSignedTransaction
             )
-            let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.amount)
+            let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.tokenAmount)
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
                 try rawTransaction.save(db)
             }
@@ -318,7 +318,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
     init(
         walletID: String,
         fromAddress: String,
-        transaction: EVMTransactionPreview,
+        transaction: ExternalEVMTransaction,
         chain: Web3Chain,
         session: WalletConnectSession,
         request: WalletConnectSign.Request
@@ -364,7 +364,7 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
     init(
         walletID: String,
         fromAddress: String,
-        transaction: EVMTransactionPreview,
+        transaction: ExternalEVMTransaction,
         chain: Web3Chain,
         respondWith respondImpl: @escaping ((String) async throws -> Void),
         rejectWith rejectImpl: @escaping (() -> Void)
@@ -449,6 +449,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
         try super.init(
             walletID: payment.walletID,
             fromAddress: payment.fromAddress,
+            toAddress: payment.toAddress,
             transaction: transaction,
             chain: payment.chain,
             hardcodedSimulation: simulation
@@ -477,6 +478,7 @@ class EVMOverrideOperation: EVMTransferOperation {
     override init(
         walletID: String,
         fromAddress: String,
+        toAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
         hardcodedSimulation: TransactionSimulation?,
@@ -488,6 +490,7 @@ class EVMOverrideOperation: EVMTransferOperation {
         try super.init(
             walletID: walletID,
             fromAddress: fromAddress,
+            toAddress: toAddress,
             transaction: transaction,
             chain: chain,
             hardcodedSimulation: hardcodedSimulation
@@ -519,6 +522,7 @@ final class EVMSpeedUpOperation: EVMOverrideOperation {
         try super.init(
             walletID: walletID,
             fromAddress: fromAddress,
+            toAddress: "",
             transaction: transaction,
             chain: chain,
             hardcodedSimulation: nil
@@ -548,6 +552,7 @@ final class EVMCancelOperation: EVMOverrideOperation {
         try super.init(
             walletID: walletID,
             fromAddress: fromAddress,
+            toAddress: "",
             transaction: emptyTransaction,
             chain: chain,
             hardcodedSimulation: .empty

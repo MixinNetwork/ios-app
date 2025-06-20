@@ -3,89 +3,139 @@ import MixinServices
 
 enum AddressValidator {
     
+    enum WithdrawalValidationResult {
+        case tagNeeded(AddressInfoInputViewController)
+        case addressVerified(MixinTokenItem, Payment.WithdrawalDestination)
+        case insufficientBalance(withdrawing: BalanceRequirement, fee: BalanceRequirement)
+        case withdrawPayment(Payment, Payment.WithdrawalDestination, WithdrawFeeItem)
+    }
+    
     enum ValidationError: Error, LocalizedError {
         
+        case unknownAssetKey
         case invalidFormat
+        case amountTooSmall
         case mismatchedDestination
         case mismatchedTag
-        case insufficientFee(WithdrawFeeItem?)
-        case insufficientBalance(MixinTokenItem)
         
         var errorDescription: String? {
             switch self {
-            case .invalidFormat:
+            case .unknownAssetKey:
+                R.string.localizable.insufficient_balance()
+            case .invalidFormat, .amountTooSmall:
                 R.string.localizable.invalid_payment_link()
             case .mismatchedDestination, .mismatchedTag:
                 R.string.localizable.invalid_address()
-            case .insufficientFee(let fee):
-                if let fee {
-                    R.string.localizable.insufficient_fee_description(
-                        fee.localizedAmountWithSymbol,
-                        fee.tokenItem.chain?.name ?? ""
-                    )
-                } else {
-                    R.string.localizable.insufficient_transaction_fee()
-                }
-            case .insufficientBalance:
-                R.string.localizable.insufficient_balance()
             }
         }
         
     }
     
-    static func validateWithdrawalLink(
-        paymentLink: String,
-        token: MixinTokenItem? = nil,
-        onSuccess: @escaping @MainActor (ExternalTransfer, MixinTokenItem, WithdrawFeeItem?, Payment.WithdrawalDestination) -> Void,
+    static func validate(
+        string: String,
+        withdrawing withdrawingToken: MixinTokenItem?,
+        onSuccess: @escaping @MainActor (WithdrawalValidationResult) -> Void,
         onFailure: @escaping @MainActor (Error) -> Void
     ) {
         Task {
             do {
-                let transfer = try await ExternalTransfer(string: paymentLink)
-                let tokenItem: MixinTokenItem = if let token {
-                    token
+                let link: ExternalTransfer
+                if ExternalTransfer.isLightningAddress(string: string) {
+                    let payment = try await PaymentAPI.payments(lightningPayment: string)
+                    link = try ExternalTransfer(payment: payment)
                 } else {
-                    try await syncToken(assetID: transfer.assetID)
+                    link = try ExternalTransfer(string: string)
                 }
                 
-                if let token {
-                    if transfer.amount > 0 {
-                        if token.assetID != token.assetID {
-                            throw ValidationError.invalidFormat
-                        }
+                let linkToken: MixinTokenItem
+                switch link.tokenID {
+                case .assetID(let id):
+                    linkToken = try await syncToken(assetID: id)
+                case .assetKey(let key):
+                    if let localToken = TokenDAO.shared.tokenItem(chainID: link.chainID, assetKey: key) {
+                        linkToken = localToken
                     } else {
-                        if token.chainID != token.chainID {
-                            throw ValidationError.invalidFormat
+                        throw ValidationError.unknownAssetKey
+                    }
+                }
+                
+                let amount = try await link.decimalAmount(precision: {
+                    // Since the amount is decoded from the link, it should be calculated using the token specified in the link.
+                    try await AssetAPI.assetPrecision(assetID: linkToken.assetID).precision
+                })
+                if let amount, amount > 0 {
+                    if amount < MixinToken.minimalAmount {
+                        throw ValidationError.amountTooSmall
+                    }
+                    if let withdrawingToken, withdrawingToken.assetID != linkToken.assetID {
+                        throw ValidationError.invalidFormat
+                    }
+                    // From now on, withdrawingToken is same as linkToken
+                    let token = linkToken
+                    let destination = try await validate(
+                        chainID: token.chainID,
+                        assetID: token.assetID,
+                        destination: link.destination,
+                        tag: nil
+                    )
+                    let balanceSufficiency = try await checkBalanceSufficiency(
+                        withdrawingToken: token,
+                        amount: amount,
+                        destination: destination.withdrawable.destination
+                    )
+                    switch balanceSufficiency {
+                    case let .insufficient(withdrawing, fee):
+                        await MainActor.run {
+                            onSuccess(.insufficientBalance(withdrawing: withdrawing, fee: fee))
+                        }
+                    case let .sufficient(feeItem):
+                        let fiatMoneyAmount = amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
+                        let payment = Payment(
+                            traceID: UUID().uuidString.lowercased(),
+                            token: token,
+                            tokenAmount: amount,
+                            fiatMoneyAmount: fiatMoneyAmount,
+                            memo: link.memo ?? ""
+                        )
+                        await MainActor.run {
+                            onSuccess(.withdrawPayment(payment, destination, feeItem))
                         }
                     }
-                }
-                
-                let temporaryAddress = try await checkAddress(
-                    chainID: tokenItem.chainID,
-                    assetID: tokenItem.assetID,
-                    destination: transfer.destination,
-                    tag: nil
-                )
-                
-                let withdrawFeeItem: WithdrawFeeItem?
-                if transfer.amount > 0 {
-                    if transfer.amount > tokenItem.decimalBalance {
-                        throw ValidationError.insufficientBalance(tokenItem)
-                    }
-                    
-                    let feeItem = try await checkFee(
-                        assetID: tokenItem.assetID,
-                        amount: transfer.amount,
-                        destination: temporaryAddress.destination)
-                    withdrawFeeItem = WithdrawFeeItem(amount: feeItem.amount, tokenItem: feeItem.tokenItem)
                 } else {
-                    withdrawFeeItem = nil
+                    if let withdrawingToken, withdrawingToken.chainID != linkToken.chainID {
+                        throw ValidationError.invalidFormat
+                    }
+                    let token = withdrawingToken ?? linkToken
+                    let destination = try await validate(
+                        chainID: token.chainID,
+                        assetID: token.assetID,
+                        destination: link.destination,
+                        tag: nil
+                    )
+                    await MainActor.run {
+                        onSuccess(.addressVerified(token, destination))
+                    }
                 }
-                
-                let withdrawDestination = getWithdrawalDestination(chainID: tokenItem.chainID, temporaryAddress: temporaryAddress)
-                
+            } catch TransferLinkError.notTransferLink {
                 await MainActor.run {
-                    onSuccess(transfer, tokenItem, withdrawFeeItem, withdrawDestination)
+                    guard let token = withdrawingToken else {
+                        onFailure(TransferLinkError.notTransferLink)
+                        return
+                    }
+                    if let nextInput = AddressInfoInputViewController.oneTimeWithdraw(token: token, destination: string) {
+                        onSuccess(.tagNeeded(nextInput))
+                    } else {
+                        validate(
+                            chainID: token.chainID,
+                            assetID: token.assetID,
+                            destination: string,
+                            tag: nil
+                        ) { destination in
+                            onSuccess(.addressVerified(token, destination))
+                        } onFailure: { error in
+                            onFailure(error)
+                        }
+                    }
                 }
             } catch {
                 await MainActor.run {
@@ -100,21 +150,19 @@ enum AddressValidator {
         assetID: String,
         destination: String,
         tag: String?,
-        onSuccess: @escaping @MainActor (Payment.WithdrawalDestination, TemporaryAddress) -> Void,
+        onSuccess: @escaping @MainActor (Payment.WithdrawalDestination) -> Void,
         onFailure: @escaping @MainActor (Error) -> Void
     ) {
         Task {
             do {
-                let temporaryAddress = try await checkAddress(
+                let destination = try await validate(
                     chainID: chainID,
                     assetID: assetID,
                     destination: destination,
                     tag: tag
                 )
-                let withdrawDestination = getWithdrawalDestination(chainID: chainID, temporaryAddress: temporaryAddress)
-                
                 await MainActor.run {
-                    onSuccess(withdrawDestination, temporaryAddress)
+                    onSuccess(destination)
                 }
             } catch {
                 await MainActor.run {
@@ -124,80 +172,107 @@ enum AddressValidator {
         }
     }
     
-    private static func getWithdrawalDestination(chainID: String, temporaryAddress: TemporaryAddress) -> Payment.WithdrawalDestination {
-        let localAddress = AddressDAO.shared.getAddress(chainId: chainID, destination: temporaryAddress.destination, tag: temporaryAddress.tag)
-        return if let localAddress {
-            .address(localAddress)
-        } else {
-            .temporary(temporaryAddress)
-        }
+}
+
+extension AddressValidator {
+    
+    private enum BalanceSufficiency {
+        case sufficient(WithdrawFeeItem)
+        case insufficient(withdrawing: BalanceRequirement, fee: BalanceRequirement)
     }
     
-    private static func checkFee(
-        assetID: String,
+    private static func checkBalanceSufficiency(
+        withdrawingToken: MixinTokenItem,
         amount: Decimal,
-        destination: String
-    ) async throws -> WithdrawFeeItem {
+        destination: String,
+    ) async throws -> BalanceSufficiency {
         let fees = try await SafeAPI.fees(
-            assetID: assetID,
+            assetID: withdrawingToken.assetID,
             destination: destination
         )
         
+        var feeItems: [WithdrawFeeItem] = []
         for fee in fees {
-            let feeItem = try await syncFeeToken(fee: fee)
-            let isFeeSufficient = if feeItem.tokenItem.assetID == assetID {
-                (amount + feeItem.amount) <= feeItem.tokenItem.decimalBalance
+            let feeToken = try await syncToken(assetID: fee.assetID)
+            let feeItem = WithdrawFeeItem(amountString: fee.amount, tokenItem: feeToken)
+            if let feeItem {
+                feeItems.append(feeItem)
             } else {
-                feeItem.amount <= feeItem.tokenItem.decimalBalance
-            }
-            
-            if isFeeSufficient {
-                return feeItem
+                Logger.general.error(
+                    category: "AddressValidator",
+                    message: "Invalid fee amount: \(fee.amount), fee token: \(feeToken.assetID)"
+                )
+                throw MixinAPIResponseError.internalServerError
             }
         }
-        
-        guard let firstFee = fees.first else {
+        guard let firstFeeItem = feeItems.first else {
             throw MixinAPIResponseError.withdrawSuspended
         }
-        let feeItem = try await syncFeeToken(fee: firstFee)
-        throw ValidationError.insufficientFee(feeItem)
+        
+        let withdrawRequirement = BalanceRequirement(
+            token: withdrawingToken,
+            amount: amount
+        )
+        let sufficientFeeItems = feeItems.lazy.compactMap { item in
+            let feeRequirement = BalanceRequirement(
+                token: item.tokenItem,
+                amount: item.amount
+            )
+            let requirements = feeRequirement.merging(with: withdrawRequirement)
+            if requirements.allSatisfy(\.isSufficient) {
+                return item
+            } else {
+                return nil
+            }
+        }
+        if let feeItem = sufficientFeeItems.first {
+            return .sufficient(feeItem)
+        } else {
+            let feeRequirement = BalanceRequirement(
+                token: firstFeeItem.tokenItem,
+                amount: firstFeeItem.amount
+            )
+            return .insufficient(withdrawing: withdrawRequirement, fee: feeRequirement)
+        }
     }
     
-    private static func checkAddress(
+}
+
+extension AddressValidator {
+    
+    private static func validate(
         chainID: String,
         assetID: String,
         destination: String,
-        tag: String?
-    ) async throws -> TemporaryAddress {
-        let response = try await ExternalAPI.checkAddress(
-            chainID: chainID,
-            assetID: assetID,
-            destination: destination,
-            tag: tag
-        )
-        guard destination.lowercased() == response.destination.lowercased() else {
-            throw ValidationError.mismatchedDestination
+        tag: String?,
+    ) async throws -> Payment.WithdrawalDestination {
+        if let address = AddressDAO.shared.getAddress(chainId: chainID, destination: destination, tag: tag ?? "") {
+            return .address(address)
+        } else if let address = Web3AddressDAO.shared.classicWalletAddress(chainID: chainID),
+                  address.destination == destination,
+                  address.tag.isEmpty && tag.isNilOrEmpty || address.tag == tag
+        {
+            return .classicWallet(address)
+        } else {
+            let response = try await ExternalAPI.checkAddress(
+                chainID: chainID,
+                assetID: assetID,
+                destination: destination,
+                tag: tag
+            )
+            guard destination.lowercased() == response.destination.lowercased() else {
+                throw ValidationError.mismatchedDestination
+            }
+            guard (tag.isNilOrEmpty && response.tag.isNilOrEmpty) || tag == response.tag else {
+                throw ValidationError.mismatchedTag
+            }
+            let address = TemporaryAddress(destination: destination, tag: tag ?? "")
+            return .temporary(address)
         }
-        guard (tag.isNilOrEmpty && response.tag.isNilOrEmpty) || tag == response.tag else {
-            throw ValidationError.mismatchedTag
-        }
-        return TemporaryAddress(destination: response.destination, tag: response.tag ?? "")
-    }
-    
-    
-    
-    private static func syncFeeToken(fee: WithdrawFee) async throws -> WithdrawFeeItem {
-        let feeToken = try await syncToken(assetID: fee.assetID)
-        guard let feeItem = WithdrawFeeItem(amountString: fee.amount, tokenItem: feeToken) else {
-            Logger.general.error(category: "AddressValidator", message: "Invalid fee amount: \(fee.amount), fee token: \(feeToken.assetID)")
-            throw MixinAPIResponseError.internalServerError
-        }
-        
-        return feeItem
     }
     
     private static func syncToken(assetID: String) async throws -> MixinTokenItem {
-        var token: MixinTokenItem
+        let token: MixinTokenItem
         if let localToken = TokenDAO.shared.tokenItem(assetID: assetID) {
             token = localToken
         } else {
@@ -205,7 +280,6 @@ enum AddressValidator {
             TokenDAO.shared.save(token: remoteToken)
             token = MixinTokenItem(token: remoteToken, balance: "0", isHidden: false, chain: nil)
         }
-        
         if token.chain == nil {
             let chain: Chain
             if let localChain = ChainDAO.shared.chain(chainId: token.chainID) {

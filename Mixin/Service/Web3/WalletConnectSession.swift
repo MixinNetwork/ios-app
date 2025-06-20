@@ -126,10 +126,10 @@ extension WalletConnectSession {
     private func requestETHSendTransaction(with request: Request) {
         assert(Thread.isMainThread)
         let proposer = Web3DappProposer(name: name, host: host)
-        DispatchQueue.global().async {
+        Task.detached {
             Logger.web3.info(category: "Session", message: "Got tx: \(request.id) \(request.params)")
             do {
-                let params = try request.params.get([EVMTransactionPreview].self)
+                let params = try request.params.get([ExternalEVMTransaction].self)
                 guard let transactionPreview = params.first else {
                     throw Error.noTransaction
                 }
@@ -147,21 +147,32 @@ extension WalletConnectSession {
                     session: self,
                     request: request
                 )
-                DispatchQueue.main.async {
-                    let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))
-                    Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                let fee = try await operation.loadFee()
+                let feeRequirement = BalanceRequirement(token: operation.feeToken, amount: fee.tokenAmount)
+                if feeRequirement.isSufficient {
+                    await MainActor.run {
+                        let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))
+                        Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                    }
+                } else {
+                    await MainActor.run {
+                        let insufficient = InsufficientBalanceViewController(
+                            intent: .externalWeb3Transaction(fee: feeRequirement)
+                        )
+                        Web3PopupCoordinator.enqueue(popup: .request(insufficient))
+                    }
+                    let error = JSONRPCError(code: 0, message: "Insufficient Fee")
+                    try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
                 }
             } catch {
-                Logger.web3.error(category: "Session", message: "Failed to request tx: \(error)")
-                DispatchQueue.main.async {
+                await MainActor.run {
+                    Logger.web3.error(category: "Session", message: "Failed to request tx: \(error)")
                     let title = R.string.localizable.request_rejected()
                     let message = R.string.localizable.unable_to_decode_the_request(error.localizedDescription)
                     Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
-                Task {
-                    let error = JSONRPCError(code: 0, message: "Local failed")
-                    try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
-                }
+                let error = JSONRPCError(code: 0, message: "Local failed")
+                try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
             }
         }
     }
@@ -180,7 +191,7 @@ extension WalletConnectSession {
     private func requestSolanaSignTransaction(with request: Request) {
         assert(Thread.isMainThread)
         let proposer = Web3DappProposer(name: name, host: host)
-        DispatchQueue.global().async {
+        Task.detached {
             Logger.web3.info(category: "Session", message: "Got tx: \(request.id) \(request.params)")
             do {
                 struct RequestParams: Codable {
@@ -199,7 +210,7 @@ extension WalletConnectSession {
                 guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: ChainID.solana) else {
                     throw Error.noAddress
                 }
-                let operation = try SolanaTransferWithWalletConnectOperation(
+                let operation = try await SolanaTransferWithWalletConnectOperation(
                     walletID: walletID,
                     transaction: transaction,
                     fromAddress: address.destination,
@@ -207,21 +218,32 @@ extension WalletConnectSession {
                     session: self,
                     request: request
                 )
-                DispatchQueue.main.async {
-                    let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))
-                    Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                let fee = try await operation.loadFee()
+                let feeRequirement = BalanceRequirement(token: operation.feeToken, amount: fee.tokenAmount)
+                if feeRequirement.isSufficient {
+                    await MainActor.run {
+                        let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))
+                        Web3PopupCoordinator.enqueue(popup: .request(transfer))
+                    }
+                } else {
+                    await MainActor.run {
+                        let insufficient = InsufficientBalanceViewController(
+                            intent: .externalWeb3Transaction(fee: feeRequirement)
+                        )
+                        Web3PopupCoordinator.enqueue(popup: .request(insufficient))
+                    }
+                    let error = JSONRPCError(code: 0, message: "Insufficient Fee")
+                    try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
                 }
             } catch {
                 Logger.web3.error(category: "Session", message: "Failed to request tx: \(error)")
-                DispatchQueue.main.async {
+                await MainActor.run {
                     let title = R.string.localizable.request_rejected()
                     let message = R.string.localizable.unable_to_decode_the_request(error.localizedDescription)
                     Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
-                Task {
-                    let error = JSONRPCError(code: 0, message: "Local failed")
-                    try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
-                }
+                let error = JSONRPCError(code: 0, message: "Local failed")
+                try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
             }
         }
     }

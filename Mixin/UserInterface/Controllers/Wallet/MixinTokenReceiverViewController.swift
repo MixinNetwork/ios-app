@@ -41,89 +41,56 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
         tableView.reloadData()
     }
     
-    override func didInputEmpty() {
-        tableView.dataSource = self
-    }
-    
     override func continueAction(inputAddress: String) {
-        if ExternalTransfer.isWithdrawalLink(raw: inputAddress) {
-            AddressValidator.validateWithdrawalLink(paymentLink: inputAddress, token: token) {
-                [weak self, weak nextButton](transfer, token, fee, withdrawalDestination) in
-                guard let self else {
-                    return
-                }
-                
-                let amount = transfer.amount
-                if let fee, amount > 0 {
-                    let fiatMoneyAmount = amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
-                    let payment = Payment(
-                        traceID: UUID().uuidString.lowercased(),
-                        token: token,
-                        tokenAmount: amount,
-                        fiatMoneyAmount: fiatMoneyAmount,
-                        memo: transfer.memo ?? ""
+        AddressValidator.validate(
+            string: inputAddress,
+            withdrawing: token,
+        ) { [weak self] result in
+            guard let self else {
+                return
+            }
+            switch result {
+            case let .tagNeeded(input):
+                self.nextButton?.isBusy = false
+                self.navigationController?.pushViewController(input, animated: true)
+            case let .addressVerified(token, destination):
+                self.nextButton?.isBusy = false
+                let inputAmount = WithdrawInputAmountViewController(tokenItem: token, destination: destination)
+                self.navigationController?.pushViewController(inputAmount, animated: true)
+                reporter.report(event: .sendRecipient, tags: ["type": destination.reportingType])
+            case let .insufficientBalance(withdrawing, fee):
+                self.nextButton?.isBusy = false
+                let insufficient = InsufficientBalanceViewController(intent: .withdraw(withdrawing: withdrawing, fee: fee))
+                self.present(insufficient, animated: true)
+            case let .withdrawPayment(payment, destination, fee):
+                payment.checkPreconditions(
+                    withdrawTo: destination,
+                    fee: fee,
+                    on: self
+                ) { reason in
+                    self.nextButton?.isBusy = false
+                    switch reason {
+                    case .userCancelled, .loggedOut:
+                        break
+                    case .description(let message):
+                        self.showError(description: message)
+                    }
+                } onSuccess: { (operation, issues) in
+                    reporter.report(event: .sendRecipient, tags: ["type": destination.reportingType])
+                    self.nextButton?.isBusy = false
+                    let preview = WithdrawPreviewViewController(
+                        issues: issues,
+                        operation: operation,
+                        amountDisplay: .byToken,
                     )
-                    
-                    payment.checkPreconditions(
-                        withdrawTo: withdrawalDestination,
-                        fee: fee,
-                        on: self
-                    ) { reason in
-                        nextButton?.isBusy = false
-                        switch reason {
-                        case .userCancelled, .loggedOut:
-                            break
-                        case .description(let message):
-                            self.showError(description: message)
-                        }
-                    } onSuccess: { (operation, issues) in
-                        reporter.report(event: .sendRecipient, tags: ["type": withdrawalDestination.logLabel])
-                        nextButton?.isBusy = false
-                        let preview = WithdrawPreviewViewController(
-                            issues: issues,
-                            operation: operation,
-                            amountDisplay: .byToken,
-                            withdrawalTokenAmount: payment.tokenAmount,
-                            withdrawalFiatMoneyAmount: payment.fiatMoneyAmount,
-                            addressLabel: withdrawalDestination.addressLabel
-                        )
-                        self.present(preview, animated: true)
-                    }
-                } else {
-                    reporter.report(event: .sendRecipient, tags: ["type": withdrawalDestination.logLabel])
-                    nextButton?.isBusy = false
-                    let inputAmount = WithdrawInputAmountViewController(tokenItem: token, destination: withdrawalDestination)
-                    self.navigationController?.pushViewController(inputAmount, animated: true)
-                }
-            } onFailure: { [weak self](error) in
-                self?.showError(description: error.localizedDescription)
-            }
-        } else {
-            let destination = inputAddress
-            if let nextInput = AddressInfoInputViewController.oneTimeWithdraw(token: token, destination: destination) {
-                nextButton?.isBusy = false
-                navigationController?.pushViewController(nextInput, animated: true)
-            } else {
-                AddressValidator.validate(
-                    chainID: token.chainID,
-                    assetID: token.assetID,
-                    destination: destination,
-                    tag: nil
-                ) { [weak self, weak nextButton, token] (withdrawalDestination, _) in
-                    guard let self else {
-                        return
-                    }
-                    
-                    reporter.report(event: .sendRecipient, tags: ["type": withdrawalDestination.logLabel])
-                    nextButton?.isBusy = false
-                    let inputAmount = WithdrawInputAmountViewController(tokenItem: token, destination: withdrawalDestination)
-                    self.navigationController?.pushViewController(inputAmount, animated: true)
-                } onFailure: { [weak self] error in
-                    self?.showError(description: error.localizedDescription)
+                    self.present(preview, animated: true)
                 }
             }
+        } onFailure: { [weak self] (error) in
+            self?.showError(description: error.localizedDescription)
         }
     }
+    
 }
 
 extension MixinTokenReceiverViewController: UITableViewDataSource {

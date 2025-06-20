@@ -17,7 +17,7 @@ class SolanaTransferOperation: Web3TransferOperation {
         case noFeeToken(String)
     }
     
-    fileprivate var fee: Fee?
+    @MainActor fileprivate var fee: Fee?
     
     fileprivate init(
         walletID: String,
@@ -47,8 +47,8 @@ class SolanaTransferOperation: Web3TransferOperation {
     func baseFee(for transaction: Solana.Transaction) throws -> Fee {
         let lamportsPerSignature: UInt64 = 5000
         let tokenCount = try transaction.fee(lamportsPerSignature: lamportsPerSignature)
-        let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-        let fee = Fee(token: feeToken, amount: tokenCount, fiatMoney: fiatMoneyCount)
+        let fiatMoneyAmount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
+        let fee = Fee(tokenAmount: tokenCount, fiatMoneyAmount: fiatMoneyAmount)
         return fee
     }
     
@@ -82,7 +82,7 @@ class SolanaTransferOperation: Web3TransferOperation {
                 from: fromAddress,
                 rawTransaction: signedTransaction
             )
-            let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee?.amount)
+            let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee?.tokenAmount)
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
                 try rawTransaction.save(db)
             }
@@ -107,7 +107,7 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
     
     fileprivate let transaction: Solana.Transaction
     
-    init(
+    @MainActor init(
         walletID: String,
         transaction: Solana.Transaction,
         fromAddress: String,
@@ -160,7 +160,7 @@ final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolana
     let session: WalletConnectSession
     let request: WalletConnectSign.Request
     
-    init(
+    @MainActor init(
         walletID: String,
         transaction: Solana.Transaction,
         fromAddress: String,
@@ -206,7 +206,7 @@ final class SolanaTransferWithCustomRespondingOperation: ArbitraryTransactionSol
     private let respondImpl: ((String) async throws -> Void)?
     private let rejectImpl: (() -> Void)?
     
-    init(
+    @MainActor init(
         walletID: String,
         transaction: Solana.Transaction,
         fromAddress: String,
@@ -280,9 +280,9 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         let baseFee = try baseFee(for: transaction)
         let priorityFee = try await RouteAPI.solanaPriorityFee(base64Transaction: transaction.rawTransaction)
         
-        let tokenCount = baseFee.amount + priorityFee.decimalCount
-        let fiatMoneyCount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-        let fee = Fee(token: feeToken, amount: tokenCount, fiatMoney: fiatMoneyCount)
+        let tokenAmount = baseFee.tokenAmount + priorityFee.decimalCount
+        let fiatMoneyAmount = tokenAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
+        let fee = Fee(tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount)
         
         await MainActor.run {
             self.createAssociatedTokenAccountForReceiver = createAccount

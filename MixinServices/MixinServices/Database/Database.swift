@@ -357,6 +357,15 @@ extension Database {
     }
     
     public func select<Record: MixinFetchableRecord>(
+        with query: GRDB.SQL
+    ) -> Record? {
+        try! read { (db) -> Record? in
+            let (sql, arguments) = try query.build(db)
+            return try Record.fetchOne(db, sql: sql, arguments: arguments)
+        }
+    }
+    
+    public func select<Record: MixinFetchableRecord>(
         with sql: String,
         arguments: StatementArguments = StatementArguments()
     ) -> [Record] {

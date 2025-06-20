@@ -12,6 +12,7 @@ public final class MixinTokenItem: MixinToken, ValuableToken, ChangeReportingTok
     
     public private(set) lazy var localizedFiatMoneyPrice = localizeFiatMoneyPrice()
     public private(set) lazy var localizedBalanceWithSymbol = localizeBalanceWithSymbol()
+    public private(set) lazy var localizedFiatMoneyBalance = localizeFiatMoneyBalance()
     public private(set) lazy var estimatedFiatMoneyBalance = estimateFiatMoneyBalance()
     
     public private(set) lazy var localizedUSDChange = localizeUSDChange()

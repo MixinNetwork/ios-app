@@ -14,6 +14,7 @@ final class AuthenticationPreviewInfoCell: UITableViewCell {
     @IBOutlet weak var primaryLabel: UILabel!
     @IBOutlet weak var secondaryLabel: UILabel!
     
+    @IBOutlet weak var contentTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentTrailingConstraint: NSLayoutConstraint!
     

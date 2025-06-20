@@ -9,8 +9,14 @@ public final class PaymentAPI: MixinAPI {
     }
     
     public static func payments(lightningPayment: String) async throws -> LightningPaymentResponse {
-        let param: [String : Any] = ["asset_id": AssetID.lightningBTC, "raw_payment_url": lightningPayment]
-        return try await request(method: .post, path: Path.payments, parameters: param)
+        try await request(
+            method: .post,
+            path: Path.payments,
+            parameters: [
+                "asset_id": AssetID.lightningBTC,
+                "raw_payment_url": lightningPayment,
+            ]
+        )
     }
     
     public static func payments(assetId: String, opponentId: String, amount: String, traceId: String) -> MixinAPI.Result<PaymentResponse> {

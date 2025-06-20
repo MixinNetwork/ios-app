@@ -4,47 +4,6 @@ import MixinServices
 
 final class Web3TransferInputAmountViewController: InputAmountViewController {
     
-    override var balanceSufficiency: BalanceSufficiency {
-        guard let fee, let feeToken, let minimumTransferAmount else {
-            return .insufficient(nil)
-        }
-        let balanceInsufficient = tokenAmount > token.decimalBalance
-        let feeInsufficient = if payment.sendingNativeToken {
-            tokenAmount > token.decimalBalance - fee.amount
-        } else {
-            fee.amount > feeToken.decimalBalance
-        }
-        return if balanceInsufficient {
-            .insufficient(R.string.localizable.insufficient_balance())
-        } else if feeInsufficient {
-            .insufficient(
-                R.string.localizable.insufficient_fee_description(
-                    CurrencyFormatter.localizedString(
-                        from: fee.amount,
-                        format: .precision,
-                        sign: .never,
-                        symbol: .custom(feeToken.symbol)
-                    ),
-                    feeToken.chain?.name ?? ""
-                )
-            )
-        } else if !tokenAmount.isZero && tokenAmount < minimumTransferAmount {
-            // Only SOL transfers invoke minimum amount checking
-            // Change the description when it comes to EVM transfers
-            .insufficient(
-                R.string.localizable.send_sol_for_rent(
-                    CurrencyFormatter.localizedString(
-                        from: Solana.accountCreationCost,
-                        format: .precision,
-                        sign: .never,
-                    )
-                )
-            )
-        } else {
-            .sufficient
-        }
-    }
-    
     private let payment: Web3SendingTokenToAddressPayment
     
     private var fee: Web3TransferOperation.Fee?
@@ -88,7 +47,6 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         let amount = tokenAmount
         reviewButton.isEnabled = false
         reviewButton.isBusy = true
-        let proposer: Web3TransferPreviewViewController.Proposer = .web3ToAddress(addressLabel: payment.toType.addressLabel)
         DispatchQueue.global().async { [payment] in
             let initError: Error?
             do {
@@ -103,7 +61,10 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                     try SolanaTransferToAddressOperation(payment: payment, decimalAmount: amount)
                 }
                 DispatchQueue.main.async {
-                    let transfer = Web3TransferPreviewViewController(operation: operation, proposer: proposer)
+                    let transfer = Web3TransferPreviewViewController(
+                        operation: operation,
+                        proposer: .user(addressLabel: payment.toType.addressLabel)
+                    )
                     transfer.manipulateNavigationStackOnFinished = true
                     Web3PopupCoordinator.enqueue(popup: .request(transfer))
                 }
@@ -121,16 +82,69 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         }
     }
     
+    override func addFee(_ sender: Any) {
+        guard let feeToken else {
+            return
+        }
+        let selector = AddTokenMethodSelectorViewController(token: feeToken)
+        selector.delegate = self
+        present(selector, animated: true)
+    }
+    
     override func inputMultipliedAmount(_ sender: UIButton) {
         guard let fee else {
             return
         }
         let multiplier = self.multiplier(tag: sender.tag)
         if payment.sendingNativeToken {
-            let availableBalance = max(0, token.decimalBalance - fee.amount)
+            let availableBalance = max(0, token.decimalBalance - fee.tokenAmount)
             replaceAmount(availableBalance * multiplier)
         } else {
             replaceAmount(token.decimalBalance * multiplier)
+        }
+    }
+    
+    override func reloadViewsWithBalanceRequirements() {
+        guard let fee, let feeToken, let minimumTransferAmount else {
+            insufficientBalanceLabel.text = nil
+            reviewButton.isEnabled = false
+            return
+        }
+        guard tokenAmount.isZero || tokenAmount >= minimumTransferAmount else {
+            insufficientBalanceLabel.text = R.string.localizable.send_sol_for_rent(
+                CurrencyFormatter.localizedString(
+                    from: minimumTransferAmount,
+                    format: .precision,
+                    sign: .never
+                )
+            )
+            removeAddFeeButton()
+            reviewButton.isEnabled = false
+            return
+        }
+        let feeRequirement = BalanceRequirement(token: feeToken, amount: fee.tokenAmount)
+        let requirements = inputAmountRequirement.merging(with: feeRequirement)
+        if requirements.allSatisfy(\.isSufficient) {
+            insufficientBalanceLabel.text = nil
+            removeAddFeeButton()
+            reviewButton.isEnabled = tokenAmount > 0
+        } else {
+            let bothRequirementsInsufficient = (requirements.count == 1 && tokenAmount != 0)
+            || (!inputAmountRequirement.isSufficient && !feeRequirement.isSufficient)
+            if bothRequirementsInsufficient {
+                insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
+                addAddFeeButton(symbol: feeRequirement.token.symbol)
+            } else if !inputAmountRequirement.isSufficient {
+                insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
+                removeAddFeeButton()
+            } else {
+                insufficientBalanceLabel.text = R.string.localizable.web3_transfer_insufficient_fee_count(
+                    feeRequirement.localizedAmountWithSymbol,
+                    feeRequirement.token.localizedBalanceWithSymbol
+                )
+                addAddFeeButton(symbol: feeRequirement.token.symbol)
+            }
+            reviewButton.isEnabled = false
         }
     }
     
@@ -148,27 +162,28 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                     try SolanaTransferToAddressOperation(payment: payment, decimalAmount: 0)
                 }
                 let fee = try await operation.loadFee()
+                let feeToken = operation.feeToken
                 let title = CurrencyFormatter.localizedString(
-                    from: fee.amount,
+                    from: fee.tokenAmount,
                     format: .precision,
                     sign: .never,
-                    symbol: .custom(operation.feeToken.symbol)
+                    symbol: .custom(feeToken.symbol)
                 )
                 let availableBalance = if payment.sendingNativeToken {
                     CurrencyFormatter.localizedString(
-                        from: max(0, payment.token.decimalBalance - fee.amount),
+                        from: max(0, payment.token.decimalBalance - fee.tokenAmount),
                         format: .precision,
                         sign: .never,
-                        symbol: .custom(operation.feeToken.symbol)
+                        symbol: .custom(feeToken.symbol)
                     )
                 } else {
                     payment.token.localizedBalanceWithSymbol
                 }
                 await MainActor.run {
                     self.fee = fee
-                    self.feeToken = operation.feeToken
+                    self.feeToken = feeToken
                     self.feeActivityIndicator?.stopAnimating()
-                    self.tokenBalanceLabel.text = R.string.localizable.available_balance(availableBalance)
+                    self.tokenBalanceLabel.text = R.string.localizable.available_balance_count(availableBalance)
                     if let button = self.changeFeeButton {
                         button.configuration?.attributedTitle = AttributedString(title, attributes: feeAttributes)
                         button.alpha = 1
@@ -177,7 +192,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                     }
                     if self.minimumTransferAmount != nil {
                         self.reviewButton.isBusy = false
-                        self.reloadViewsWithBalanceSufficiency()
+                        self.reloadViewsWithBalanceRequirements()
                     }
                 }
             } catch MixinAPIResponseError.unauthorized {
@@ -213,7 +228,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                     self.minimumTransferAmount = amount
                     if self.fee != nil {
                         self.reviewButton.isBusy = false
-                        self.reloadViewsWithBalanceSufficiency()
+                        self.reloadViewsWithBalanceRequirements()
                     }
                 }
             } catch MixinAPIResponseError.unauthorized {
@@ -225,6 +240,34 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                 }
             }
         }
+    }
+    
+}
+
+extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewController.Delegate {
+    
+    func addTokenMethodSelectorViewController(
+        _ viewController: AddTokenMethodSelectorViewController,
+        didPickMethod method: AddTokenMethodSelectorViewController.Method
+    ) {
+        guard let feeToken else {
+            return
+        }
+        let next: UIViewController
+        switch method {
+        case .swap:
+            next = Web3SwapViewController(
+                sendAssetID: nil,
+                receiveAssetID: feeToken.assetID,
+                walletID: feeToken.walletID
+            )
+        case .deposit:
+            guard let address = Web3AddressDAO.shared.address(walletID: feeToken.walletID, chainID: feeToken.chainID) else {
+                return
+            }
+            next = Web3DepositViewController(kind: payment.chain.kind, address: address.destination)
+        }
+        navigationController?.pushViewController(next, animated: true)
     }
     
 }

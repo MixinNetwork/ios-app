@@ -4,9 +4,9 @@ import MixinServices
 class AuthenticationPreviewViewController: UIViewController {
     
     let warnings: [String]
-    let tableView = UITableView()
     let tableHeaderView = R.nib.authenticationPreviewHeaderView(withOwner: nil)!
     
+    var tableView: UITableView!
     var canDismissInteractively = true
     var onDismiss: (() -> Void)?
     
@@ -32,6 +32,7 @@ class AuthenticationPreviewViewController: UIViewController {
         
         presentationController?.delegate = self
         
+        loadTableView()
         view.addSubview(tableView)
         tableView.snp.makeEdgesEqualToSuperview()
         tableView.backgroundColor = R.color.background()
@@ -74,6 +75,10 @@ class AuthenticationPreviewViewController: UIViewController {
         }
     }
     
+    func loadTableView() {
+        tableView = UITableView(frame: view.bounds)
+    }
+    
     func layoutTableHeaderView() {
         let sizeToFit = CGSize(width: view.bounds.width,
                                height: UIView.layoutFittingExpandedSize.height)
@@ -82,19 +87,6 @@ class AuthenticationPreviewViewController: UIViewController {
                                                                   verticalFittingPriority: .fittingSizeLevel)
         tableHeaderView.frame = CGRect(origin: .zero, size: fittingSize)
         tableView.tableHeaderView = tableHeaderView
-    }
-    
-    func layoutTableFooterView() {
-        guard let footerView = tableView.tableFooterView else {
-            return
-        }
-        let sizeToFit = CGSize(width: view.bounds.width,
-                               height: UIView.layoutFittingExpandedSize.height)
-        let fittingSize = footerView.systemLayoutSizeFitting(sizeToFit,
-                                                             withHorizontalFittingPriority: .required,
-                                                             verticalFittingPriority: .fittingSizeLevel)
-        footerView.frame = CGRect(origin: .zero, size: fittingSize)
-        tableView.tableFooterView = footerView
     }
     
     func layoutTableHeaderView(title: String, subtitle: String?, style: TableHeaderViewStyle = []) {
@@ -340,6 +332,8 @@ extension AuthenticationPreviewViewController {
         case from
         case safe
         case note
+        case balance
+        case availableBalance
         
         var rawValue: String {
             switch self {
@@ -379,6 +373,10 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.safe()
             case .note:
                 R.string.localizable.note()
+            case .balance:
+                R.string.localizable.balance()
+            case .availableBalance:
+                R.string.localizable.available_balance()
             }
         }
         
@@ -433,7 +431,7 @@ extension AuthenticationPreviewViewController {
                 view.leftButton.isHidden = true
                 view.rightButton.setTitle(R.string.localizable.got_it(), for: .normal)
                 view.rightButton.addTarget(self, action: #selector(ignoreCurrentWarning(_:)), for: .touchUpInside)
-                view.style = .warning
+                view.style = .red
             }
             unresolvedWarningIndex += 1
         } else {
@@ -474,7 +472,7 @@ extension AuthenticationPreviewViewController {
                 view.leftButton.addTarget(self, action: #selector(enableBiometricAuthentication(_:)), for: .touchUpInside)
                 view.rightButton.setTitle(R.string.localizable.not_now(), for: .normal)
                 view.rightButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
-                view.style = .info
+                view.style = .gray
             }
         }
         
@@ -589,6 +587,10 @@ extension AuthenticationPreviewViewController {
             let bottomConstraint = newTrayView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             NSLayoutConstraint.activate([widthConstraint, centerXConstraint, bottomConstraint])
             
+            self.trayView = newTrayView
+            self.trayViewCenterXConstraint = centerXConstraint
+            self.trayViewBottomConstraint = bottomConstraint
+            
             switch animation {
             case .vertical:
                 newTrayView.layoutIfNeeded()
@@ -616,13 +618,9 @@ extension AuthenticationPreviewViewController {
                 // Reduce `UITableViewAlertForLayoutOutsideViewHierarchy`
                 if view.window != nil {
                     view.layoutIfNeeded()
-                    updateTableViewBottomInset()
                 }
+                updateTableViewBottomInset()
             }
-            
-            self.trayView = newTrayView
-            self.trayViewCenterXConstraint = centerXConstraint
-            self.trayViewBottomConstraint = bottomConstraint
         } else {
             self.trayView = nil
             self.trayViewCenterXConstraint = nil

@@ -2,7 +2,12 @@ import Foundation
 
 public struct ExternalTransfer {
     
-    private static let supportedAssetIds = [
+    public enum Identifier {
+        case assetID(String)
+        case assetKey(String)
+    }
+    
+    private static let supportedAssetIDs = [
         "bitcoin"   : AssetID.btc,
         "ethereum"  : AssetID.eth,
         "litecoin"  : AssetID.ltc,
@@ -12,178 +17,181 @@ public struct ExternalTransfer {
         "solana"    : AssetID.sol,
     ]
     
-    private static let chainIds = [
+    private static let chainIDs = [
         "1"   : ChainID.ethereum,
         "137" : ChainID.polygon,
     ]
     
-    public let raw: String
-    public let assetID: String
+    public let chainID: String
+    public let tokenID: Identifier
     public let destination: String
-    
-    // Raw amount provided by string. For Ethereum this amount is
-    // in atomic units, for other chains this is in decimal
-    public let amount: Decimal
-    
     public let memo: String?
     
-    public init(
-        string raw: String,
-        assetIDFinder: (String) -> String? = TokenDAO.shared.assetID(assetKey:),
-        resolveAmount: (String, Decimal) async throws -> Decimal = { (assetID, amount) in
-            let precision = try await AssetAPI.assetPrecision(assetID: assetID).precision
-            return ExternalTransfer.resolve(atomicAmount: amount, with: precision)
-        },
-    ) async throws {
-        self.raw = raw
-        if Self.isLightningAddress(string: raw) {
-            do {
-                let payment = try await PaymentAPI.payments(lightningPayment: raw)
-                if payment.status.knownCase == .paid {
-                    throw TransferLinkError.alreadyPaid
-                } else {
-                    self.assetID = payment.asset.assetID
-                    self.destination = payment.destination
-                    self.amount = Decimal(string: payment.amount, locale: .enUSPOSIX) ?? 0
-                }
-            } catch {
-                switch error {
-                case TransferLinkError.alreadyPaid:
-                    throw error
-                default:
-                    throw TransferLinkError.requestError(error)
-                }
-            }
-            self.memo = nil
-        } else {
-            guard let components = URLComponents(string: raw) else {
-                throw TransferLinkError.notTransferLink
-            }
-            guard let scheme = components.scheme?.lowercased() else {
-                throw TransferLinkError.notTransferLink
-            }
-            guard let schemeAssetID = Self.supportedAssetIds[scheme] else {
-                // Drop schemes which are not listed in `supportedAssetIds`
-                throw TransferLinkError.notTransferLink
-            }
-            let queries = (components.queryItems ?? []).reduce(into: [:]) { queries, item in
-                queries[item.name] = item.value
+    private let atomicAmount: Decimal?
+    private let decimalAmount: Decimal?
+    
+    public init(string raw: String) throws {
+        guard let components = URLComponents(string: raw) else {
+            throw TransferLinkError.notTransferLink
+        }
+        guard let scheme = components.scheme?.lowercased(), let queryItems = components.queryItems else {
+            throw TransferLinkError.notTransferLink
+        }
+        guard let schemeAssetID = Self.supportedAssetIDs[scheme] else {
+            // Drop schemes which are not listed in `supportedAssetIds`
+            throw TransferLinkError.notTransferLink
+        }
+        let queries = queryItems.reduce(into: [:]) { queries, item in
+            queries[item.name] = item.value
+        }
+        if scheme == "ethereum" {
+            // https://eips.ethereum.org/EIPS/eip-681
+            // schema_prefix target_address [ "@" chain_id ] [ "/" function_name ] [ "?" parameters ]
+            let pathRegex = try NSRegularExpression(pattern: #"^(?:pay-)?([^@\/]+)(?:@([^\/]+))?(?:\/(.+))?"#)
+            let parameters = queries
+            let path = components.path
+            let range = NSRange(path.startIndex..<path.endIndex, in: path)
+            guard let match = pathRegex.firstMatch(in: path, range: range), match.numberOfRanges == 4 else {
+                throw TransferLinkError.invalidFormat
             }
             
-            if scheme == "ethereum" {
-                // https://eips.ethereum.org/EIPS/eip-681
-                // schema_prefix target_address [ "@" chain_id ] [ "/" function_name ] [ "?" parameters ]
-                
-                let pathRegex = try NSRegularExpression(pattern: #"^(?:pay-)?([^@\/]+)(?:@([^\/]+))?(?:\/(.+))?"#)
-                let parameters = queries
-                let path = components.path
-                let range = NSRange(path.startIndex..<path.endIndex, in: path)
-                guard let match = pathRegex.firstMatch(in: path, range: range), match.numberOfRanges == 4 else {
-                    throw TransferLinkError.invalidFormat
-                }
-                
-                let targetAddress: String
-                if let range = Range(match.range(at: 1), in: path) {
-                    targetAddress = String(path[range])
-                } else {
-                    throw TransferLinkError.invalidFormat
-                }
-                
-                // https://eips.ethereum.org/EIPS/eip-681
-                // `chain_id` is optional and contains the decimal chain ID, such that transactions
-                // on various test- and private networks can be requested. If no `chain_id` is
-                // present, the client’s current network setting remains effective.
-                let chainID: String
-                if let range = Range(match.range(at: 2), in: path) {
-                    chainID = String(path[range])
-                } else {
-                    chainID = "1"
-                }
-                
-                let arbitraryAmount: Decimal
-                if let amount = queries["amount"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
-                    arbitraryAmount = decimalAmount
-                } else {
-                    arbitraryAmount = 0
-                }
-                
-                if let reqAsset = queries["req-asset"] {
-                    guard let assetID = assetIDFinder(reqAsset) else {
-                        throw TransferLinkError.assetNotFound
-                    }
-                    if let amount = parameters["uint256"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
-                        self.amount = try await resolveAmount(assetID, decimalAmount)
-                    } else {
-                        self.amount = arbitraryAmount
-                    }
-                    self.assetID = assetID
-                    self.destination = targetAddress
-                } else if let range = Range(match.range(at: 3), in: path) {
-                    // ERC-20 Tokens
-                    let functionName = String(path[range])
-                    guard functionName == "transfer", let address = parameters["address"] else {
-                        throw TransferLinkError.invalidFormat
-                    }
-                    guard let assetID = assetIDFinder(targetAddress) else {
-                        throw TransferLinkError.assetNotFound
-                    }
-                    if let amount = parameters["uint256"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
-                        self.amount = try await resolveAmount(assetID, decimalAmount)
-                    } else {
-                        self.amount = arbitraryAmount
-                    }
-                    self.assetID = assetID
-                    self.destination = address
-                } else {
-                    // ETH the native token
-                    guard let assetID = Self.chainIds[chainID] else {
-                        throw TransferLinkError.invalidFormat
-                    }
-                    if let amount = parameters["value"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
-                        self.amount = Self.resolve(atomicAmount: decimalAmount, with: 18)
-                    } else {
-                        self.amount = arbitraryAmount
-                    }
-                    self.assetID = assetID
-                    self.destination = targetAddress
-                }
-                self.memo = nil
+            let targetAddress: String
+            if let range = Range(match.range(at: 1), in: path) {
+                targetAddress = String(path[range])
             } else {
-                let assetID: String? = if scheme == "solana", let key = queries["spl-token"] {
-                    assetIDFinder(key)
-                } else {
-                    schemeAssetID
-                }
-                guard let assetID else {
-                    throw TransferLinkError.assetNotFound
-                }
-                
-                if let amount = queries["amount"] ?? queries["tx_amount"], !amount.contains("e") {
-                    guard let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) else {
-                        throw TransferLinkError.invalidFormat
-                    }
-                    self.amount = decimalAmount
-                } else {
-                    self.amount = 0
-                }
-                self.assetID = assetID
-                self.destination = components.path
-                let memo = queries["memo"]
-                self.memo = if let decoded = memo?.removingPercentEncoding {
-                    decoded
-                } else {
-                    memo
-                }
+                throw TransferLinkError.invalidFormat
             }
+            
+            // https://eips.ethereum.org/EIPS/eip-681
+            // `chain_id` is optional and contains the decimal chain ID, such that transactions
+            // on various test- and private networks can be requested. If no `chain_id` is
+            // present, the client’s current network setting remains effective.
+            let evmChainID: String
+            if let range = Range(match.range(at: 2), in: path) {
+                evmChainID = String(path[range])
+            } else {
+                evmChainID = "1"
+            }
+            
+            let arbitraryAmount: Decimal?
+            if let amount = queries["amount"], let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) {
+                arbitraryAmount = decimalAmount
+            } else {
+                arbitraryAmount = nil
+            }
+            
+            guard let chainID = Self.chainIDs[evmChainID] else {
+                throw TransferLinkError.invalidFormat
+            }
+            self.chainID = chainID
+            if let reqAsset = queries["req-asset"] {
+                self.tokenID = .assetKey(reqAsset)
+                self.atomicAmount = if let amount = parameters["uint256"] {
+                    Decimal(string: amount, locale: .enUSPOSIX)
+                } else{
+                    nil
+                }
+                self.decimalAmount = arbitraryAmount
+                self.destination = targetAddress
+            } else if let range = Range(match.range(at: 3), in: path) {
+                // ERC-20 Tokens
+                let functionName = String(path[range])
+                guard functionName == "transfer", let receiverAddress = parameters["address"] else {
+                    throw TransferLinkError.invalidFormat
+                }
+                self.tokenID = .assetKey(targetAddress)
+                self.atomicAmount = if let amount = parameters["uint256"] {
+                    Decimal(string: amount, locale: .enUSPOSIX)
+                } else{
+                    nil
+                }
+                self.decimalAmount = arbitraryAmount
+                self.destination = receiverAddress
+            } else {
+                // Native token
+                self.tokenID = .assetID(chainID)
+                let atomicAmount: Decimal? = if let amount = parameters["value"] {
+                    Decimal(string: amount, locale: .enUSPOSIX)
+                } else{
+                    nil
+                }
+                let decimalAmount: Decimal? = if let atomicAmount {
+                    Self.resolve(atomicAmount: atomicAmount, with: 18)
+                } else {
+                    nil
+                }
+                self.atomicAmount = atomicAmount
+                self.decimalAmount = arbitraryAmount ?? decimalAmount
+                self.destination = targetAddress
+            }
+        } else {
+            self.chainID = schemeAssetID
+            if scheme == "solana", let key = queries["spl-token"] {
+                self.tokenID = .assetKey(key)
+            } else {
+                self.tokenID = .assetID(schemeAssetID)
+            }
+            self.destination = components.path
+            self.atomicAmount = nil
+            self.decimalAmount = if let amount = queries["amount"] ?? queries["tx_amount"], !amount.contains("e") {
+                Decimal(string: amount, locale: .enUSPOSIX)
+            } else {
+                nil
+            }
+        }
+        self.memo = {
+            let memo = queries["memo"]
+            if let decoded = memo?.removingPercentEncoding {
+                return decoded
+            } else {
+                return memo
+            }
+        }()
+    }
+    
+    public init(payment: LightningPaymentResponse) throws {
+        guard payment.status.knownCase != .paid else {
+            throw TransferLinkError.alreadyPaid
+        }
+        self.chainID = ChainID.lightning
+        self.tokenID = .assetID(payment.asset.assetID)
+        self.atomicAmount = nil
+        self.decimalAmount = Decimal(string: payment.amount, locale: .enUSPOSIX)
+        self.destination = payment.destination
+        self.memo = nil
+    }
+    
+    public func decimalAmount(precision: () async throws -> Int) async throws -> Decimal? {
+        var amount = decimalAmount
+        if let atomicAmount {
+            let precision = try await precision()
+            let resolvedAmount = ExternalTransfer.resolve(atomicAmount: atomicAmount, with: precision)
+            if let amount {
+                guard amount == resolvedAmount else {
+                    throw TransferLinkError.mismatchedAmount
+                }
+            } else {
+                amount = resolvedAmount
+            }
+        }
+        return amount
+    }
+    
+}
+
+extension ExternalTransfer {
+    
+    public static func isDecodable(raw: String) -> Bool {
+        if isLightningAddress(string: raw) {
+            true
+        } else if let scheme = URLComponents(string: raw)?.scheme?.lowercased() {
+            supportedAssetIDs[scheme] != nil
+        } else {
+            false
         }
     }
     
-    public static func resolve(atomicAmount: Decimal, with exponent: Int) -> Decimal {
-        let divisor: Decimal = pow(10, exponent)
-        return atomicAmount / divisor
-    }
-    
-    private static func isLightningAddress(string: String) -> Bool {
+    public static func isLightningAddress(string: String) -> Bool {
         let lowercased = string.lowercased()
         if lowercased.hasPrefix("bitcoin") {
             guard let queryItems = URLComponents(string: string)?.queryItems else {
@@ -207,13 +215,9 @@ public struct ExternalTransfer {
         }
     }
     
-    public static func isWithdrawalLink(raw: String) -> Bool {
-        if Self.isLightningAddress(string: raw) {
-            return true
-        }
-        if let scheme = URLComponents(string: raw)?.scheme?.lowercased() {
-            return Self.supportedAssetIds[scheme] != nil
-        }
-        return false
+    private static func resolve(atomicAmount: Decimal, with exponent: Int) -> Decimal {
+        let divisor: Decimal = pow(10, exponent)
+        return atomicAmount / divisor
     }
+    
 }

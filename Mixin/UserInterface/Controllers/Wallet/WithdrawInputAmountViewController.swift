@@ -3,30 +3,6 @@ import MixinServices
 
 final class WithdrawInputAmountViewController: InputAmountViewController {
     
-    override var balanceSufficiency: BalanceSufficiency {
-        guard let fee = selectedFeeItem else {
-            return .insufficient(nil)
-        }
-        let balanceInsufficient = tokenAmount > token.decimalBalance
-        let feeInsufficient = if feeTokenSameAsWithdrawToken {
-            tokenAmount > tokenItem.decimalBalance - fee.amount
-        } else {
-            fee.amount > tokenItem.decimalBalance
-        }
-        return if balanceInsufficient {
-            .insufficient(R.string.localizable.insufficient_balance())
-        } else if feeInsufficient {
-            .insufficient(
-                R.string.localizable.insufficient_fee_description(
-                    fee.localizedAmountWithSymbol,
-                    fee.tokenItem.chain?.name ?? ""
-                )
-            )
-        } else {
-            .sufficient
-        }
-    }
-    
     private let tokenItem: MixinTokenItem
     private let destination: Payment.WithdrawalDestination
     private let traceID = UUID().uuidString.lowercased()
@@ -106,18 +82,24 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             case .description(let message):
                 showAutoHiddenHud(style: .error, text: message)
             }
-        } onSuccess: { [amountIntent, destination] (operation, issues) in
+        } onSuccess: { [amountIntent] (operation, issues) in
             self.reviewButton.isBusy = false
             let preview = WithdrawPreviewViewController(
                 issues: issues,
                 operation: operation,
                 amountDisplay: amountIntent,
-                withdrawalTokenAmount: payment.tokenAmount,
-                withdrawalFiatMoneyAmount: payment.fiatMoneyAmount,
-                addressLabel: destination.addressLabel
             )
             self.present(preview, animated: true)
         }
+    }
+    
+    override func addFee(_ sender: Any) {
+        guard let feeToken = selectedFeeItem?.tokenItem else {
+            return
+        }
+        let selector = AddTokenMethodSelectorViewController(token: feeToken)
+        selector.delegate = self
+        present(selector, animated: true)
     }
     
     override func inputMultipliedAmount(_ sender: UIButton) {
@@ -133,6 +115,38 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         }
     }
     
+    override func reloadViewsWithBalanceRequirements() {
+        guard let fee = selectedFeeItem else {
+            insufficientBalanceLabel.text = nil
+            reviewButton.isEnabled = false
+            return
+        }
+        let feeRequirement = BalanceRequirement(token: fee.tokenItem, amount: fee.amount)
+        let requirements = inputAmountRequirement.merging(with: feeRequirement)
+        if requirements.allSatisfy(\.isSufficient) {
+            insufficientBalanceLabel.text = nil
+            removeAddFeeButton()
+            reviewButton.isEnabled = tokenAmount > 0
+        } else {
+            let bothRequirementsInsufficient = (requirements.count == 1 && tokenAmount != 0)
+            || (!inputAmountRequirement.isSufficient && !feeRequirement.isSufficient)
+            if bothRequirementsInsufficient {
+                insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
+                addAddFeeButton(symbol: feeRequirement.token.symbol)
+            } else if !inputAmountRequirement.isSufficient {
+                insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
+                removeAddFeeButton()
+            } else {
+                insufficientBalanceLabel.text = R.string.localizable.withdraw_insufficient_fee_count(
+                    feeRequirement.localizedAmountWithSymbol,
+                    feeRequirement.token.localizedBalanceWithSymbol
+                )
+                addAddFeeButton(symbol: feeRequirement.token.symbol)
+            }
+            reviewButton.isEnabled = false
+        }
+    }
+    
     @objc private func changeFee(_ sender: UIButton) {
         guard let selectableFeeItems, let selectedFeeItemIndex else {
             return
@@ -144,7 +158,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
             let feeItem = selectableFeeItems[index]
             self.feeTokenSameAsWithdrawToken = feeItem.tokenItem.assetID == self.tokenItem.assetID
             self.selectedFeeItemIndex = index
-            self.reloadViewsWithBalanceSufficiency()
+            self.reloadViewsWithBalanceRequirements()
             self.updateFeeDisplay(fee: feeItem)
         }
         present(selector, animated: true)
@@ -165,7 +179,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
         } else {
             tokenItem.localizedBalanceWithSymbol
         }
-        tokenBalanceLabel.text = R.string.localizable.available_balance(availableBalance)
+        tokenBalanceLabel.text = R.string.localizable.available_balance_count(availableBalance)
     }
     
     private func reloadWithdrawFee(with token: MixinTokenItem, destination: Payment.WithdrawalDestination) {
@@ -197,7 +211,7 @@ final class WithdrawInputAmountViewController: InputAmountViewController {
                     self.selectedFeeItemIndex = 0
                     self.selectableFeeItems = feeItems
                     self.feeActivityIndicator?.stopAnimating()
-                    self.reloadViewsWithBalanceSufficiency()
+                    self.reloadViewsWithBalanceRequirements()
                     self.updateFeeDisplay(fee: feeToken)
                     if let button = self.changeFeeButton {
                         button.alpha = 1
@@ -245,6 +259,30 @@ extension WithdrawInputAmountViewController: WalletHintViewControllerDelegate {
         }
         viewControllers.append(conversation)
         navigationController.setViewControllers(viewControllers, animated: true)
+    }
+    
+}
+
+extension WithdrawInputAmountViewController: AddTokenMethodSelectorViewController.Delegate {
+    
+    func addTokenMethodSelectorViewController(
+        _ viewController: AddTokenMethodSelectorViewController,
+        didPickMethod method: AddTokenMethodSelectorViewController.Method
+    ) {
+        guard let feeToken = selectedFeeItem?.tokenItem else {
+            return
+        }
+        let next = switch method {
+        case .swap:
+            MixinSwapViewController(
+                sendAssetID: nil,
+                receiveAssetID: feeToken.assetID,
+                referral: nil
+            )
+        case .deposit:
+            DepositViewController(token: feeToken)
+        }
+        navigationController?.pushViewController(next, animated: true)
     }
     
 }

@@ -3,7 +3,7 @@ import BigInt
 import web3
 import MixinServices
 
-struct EVMTransactionPreview {
+struct ExternalEVMTransaction {
     
     enum Error: Swift.Error {
         case invalidValue
@@ -108,7 +108,7 @@ struct EVMTransactionPreview {
     
 }
 
-extension EVMTransactionPreview: Codable {
+extension ExternalEVMTransaction: Codable {
     
     enum CodingKeys: String, CodingKey {
         case from

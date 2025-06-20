@@ -7,23 +7,14 @@ final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
     
     private let operation: WithdrawPaymentOperation
     private let amountDisplay: AmountIntent
-    private let withdrawalTokenAmount: Decimal
-    private let withdrawalFiatMoneyAmount: Decimal
-    private let addressLabel: String?
     
     init(
         issues: [PaymentPreconditionIssue],
         operation: WithdrawPaymentOperation,
         amountDisplay: AmountIntent,
-        withdrawalTokenAmount: Decimal,
-        withdrawalFiatMoneyAmount: Decimal,
-        addressLabel: String?
     ) {
         self.operation = operation
         self.amountDisplay = amountDisplay
-        self.withdrawalTokenAmount = withdrawalTokenAmount
-        self.withdrawalFiatMoneyAmount = withdrawalFiatMoneyAmount
-        self.addressLabel = addressLabel
         super.init(warnings: issues.map(\.description))
     }
     
@@ -36,6 +27,7 @@ final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
         
         let withdrawalToken = operation.withdrawalToken
         let withdrawalTokenAmount = operation.withdrawalTokenAmount
+        let withdrawalFiatMoneyAmount = operation.withdrawalFiatMoneyAmount
         let feeToken = operation.feeToken
         let feeTokenAmount = operation.feeAmount
         

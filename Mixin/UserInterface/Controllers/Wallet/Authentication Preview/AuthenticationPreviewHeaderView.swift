@@ -3,16 +3,37 @@ import MixinServices
 
 final class AuthenticationPreviewHeaderView: UIView {
     
+    enum Style {
+        case plain
+        case insetted(margin: CGFloat)
+    }
+    
     @IBOutlet weak var iconWrapperView: UIView!
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     
+    @IBOutlet weak var titleStackViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var titleStackViewTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var separatorLineHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var separatorLineBottomConstraint: NSLayoutConstraint!
+    
+    var style: Style = .plain {
+        didSet {
+            layout(style: style)
+        }
+    }
+    
+    private weak var backgroundView: UIView?
     private weak var imageView: UIImageView?
     private weak var assetIconView: BadgeIconView?
     private weak var progressView: AuthenticationProgressView?
     private weak var textContentView: TextInscriptionContentView?
     private weak var multipleTokenIconView: MultipleTokenIconView?
+    
+    private weak var backgroundViewTopConstraint: NSLayoutConstraint?
+    private weak var backgroundViewLeadingConstraint: NSLayoutConstraint?
+    private weak var backgroundViewTrailingConstraint: NSLayoutConstraint?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -55,6 +76,24 @@ final class AuthenticationPreviewHeaderView: UIView {
         iconView.badgeIconDiameter = 23
         iconView.badgeOutlineWidth = 0
         iconView.setIcon(token: token)
+    }
+    
+    func setIcon(token: any OnChainToken) {
+        let iconView: BadgeIconView
+        if let view = self.assetIconView, view.isDescendant(of: iconWrapperView) {
+            iconView = view
+        } else {
+            for iconView in iconWrapperView.subviews {
+                iconView.removeFromSuperview()
+            }
+            iconView = BadgeIconView()
+            iconWrapperView.addSubview(iconView)
+            iconView.snp.makeEdgesEqualToSuperview()
+            self.assetIconView = iconView
+        }
+        iconView.badgeIconDiameter = 23
+        iconView.badgeOutlineWidth = 0
+        iconView.setIcon(token: token, chain: token.chain)
     }
     
     func setIcon(chain: Chain) {
@@ -164,6 +203,52 @@ final class AuthenticationPreviewHeaderView: UIView {
             if view != imageView && view != textContentView {
                 view.removeFromSuperview()
             }
+        }
+    }
+    
+    private func layout(style: Style) {
+        switch style {
+        case .plain:
+            backgroundColor = R.color.background()
+            backgroundView?.removeFromSuperview()
+            titleStackViewLeadingConstraint.constant = 38
+            titleStackViewTrailingConstraint.constant = 38
+            separatorLineHeightConstraint.constant = 10
+            separatorLineBottomConstraint.constant = 10
+        case .insetted(let margin):
+            backgroundColor = R.color.background_quaternary()
+            if backgroundView == nil {
+                let backgroundView = UIView()
+                backgroundView.backgroundColor = R.color.background()
+                backgroundView.layer.cornerRadius = 8
+                backgroundView.layer.masksToBounds = true
+                insertSubview(backgroundView, at: 0)
+                backgroundView.snp.makeConstraints { make in
+                    make.bottom.equalToSuperview().offset(-10)
+                }
+                let backgroundViewTopConstraint = backgroundView.topAnchor
+                    .constraint(equalTo: topAnchor, constant: margin)
+                let backgroundViewLeadingConstraint = backgroundView.leadingAnchor
+                    .constraint(equalTo: leadingAnchor, constant: margin)
+                let backgroundViewTrailingConstraint = backgroundView.trailingAnchor
+                    .constraint(equalTo: trailingAnchor, constant: -margin)
+                NSLayoutConstraint.activate([
+                    backgroundViewTopConstraint,
+                    backgroundViewLeadingConstraint,
+                    backgroundViewTrailingConstraint
+                ])
+                self.backgroundView = backgroundView
+                self.backgroundViewTopConstraint = backgroundViewTopConstraint
+                self.backgroundViewLeadingConstraint = backgroundViewLeadingConstraint
+                self.backgroundViewTrailingConstraint = backgroundViewTrailingConstraint
+            }
+            backgroundViewTopConstraint?.constant = margin
+            backgroundViewLeadingConstraint?.constant = margin
+            backgroundViewTrailingConstraint?.constant = -margin
+            titleStackViewLeadingConstraint.constant = margin + 16
+            titleStackViewTrailingConstraint.constant = margin + 16
+            separatorLineHeightConstraint.constant = 0
+            separatorLineBottomConstraint.constant = 2
         }
     }
     

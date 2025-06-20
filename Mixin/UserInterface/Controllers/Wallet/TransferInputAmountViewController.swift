@@ -79,7 +79,7 @@ final class TransferInputAmountViewController: InputAmountViewController {
             
             var config: UIButton.Configuration = .plain()
             config.baseBackgroundColor = .clear
-            config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 5, bottom: 7, trailing: 5)
+            config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 5, bottom: 7, trailing: 12)
             config.imagePlacement = .trailing
             config.imagePadding = 14
             config.image = R.image.ic_accessory_disclosure()

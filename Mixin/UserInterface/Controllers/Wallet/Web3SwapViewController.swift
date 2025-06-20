@@ -161,7 +161,7 @@ final class Web3SwapViewController: MixinSwapViewController {
                         let feeTokenSymbol = operation.feeToken.symbol
                         
                         let sendRequirement = BalanceRequirement(token: sendToken, amount: sendAmount)
-                        let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
+                        let feeRequirement = BalanceRequirement(token: operation.feeToken, amount: fee.tokenAmount)
                         let requirements = sendRequirement.merging(with: feeRequirement)
                         let isBalanceSufficient = requirements.allSatisfy(\.isSufficient)
                         

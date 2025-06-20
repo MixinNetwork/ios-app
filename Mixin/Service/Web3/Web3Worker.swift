@@ -208,7 +208,7 @@ final class Web3Worker {
                     self.send(error: "User Rejected", to: request)
                 }
                 let fee = try await operation.loadFee()
-                let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
+                let feeRequirement = BalanceRequirement(token: operation.feeToken, amount: fee.tokenAmount)
                 await MainActor.run {
                     if feeRequirement.isSufficient {
                         let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))
@@ -398,7 +398,7 @@ final class Web3Worker {
                     self.send(error: "User Rejected", to: request)
                 }
                 let fee = try await operation.loadFee()
-                let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
+                let feeRequirement = BalanceRequirement(token: operation.feeToken, amount: fee.tokenAmount)
                 await MainActor.run {
                     if feeRequirement.isSufficient {
                         let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))

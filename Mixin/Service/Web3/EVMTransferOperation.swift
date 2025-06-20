@@ -125,26 +125,25 @@ class EVMTransferOperation: Web3TransferOperation {
             throw RequestError.invalidFee
         }
         let evmFee: EVMFee
-        let tokenCount: Decimal
+        let tokenAmount: Decimal
         if await Web3Diagnostic.usesLowEVMFeeOnce {
             evmFee = EVMFee(
                 gasLimit: gasLimit / 3,
                 maxFeePerGas: maxFeePerGas / 3,
                 maxPriorityFeePerGas: maxPriorityFeePerGas / 3
             )
-            tokenCount = weiCount * .wei / 3
+            tokenAmount = weiCount * .wei / 3
         } else {
             evmFee = EVMFee(
                 gasLimit: gasLimit,
                 maxFeePerGas: maxFeePerGas,
                 maxPriorityFeePerGas: maxPriorityFeePerGas
             )
-            tokenCount = weiCount * .wei
+            tokenAmount = weiCount * .wei
         }
         let fee = Fee(
-            token: feeToken,
-            amount: tokenCount,
-            fiatMoney: tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
+            tokenAmount: tokenAmount,
+            fiatMoneyAmount: tokenAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
         )
         await MainActor.run {
             self.evmFee = evmFee
@@ -287,7 +286,7 @@ class EVMTransferOperation: Web3TransferOperation {
                 from: fromAddress,
                 rawTransaction: hexEncodedSignedTransaction
             )
-            let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.amount)
+            let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.tokenAmount)
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
                 try rawTransaction.save(db)
             }

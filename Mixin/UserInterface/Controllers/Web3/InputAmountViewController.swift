@@ -4,11 +4,6 @@ import MixinServices
 
 class InputAmountViewController: UIViewController {
     
-    enum BalanceSufficiency {
-        case sufficient
-        case insufficient(String?)
-    }
-    
     @IBOutlet weak var amountStackView: UIStackView!
     @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var calculatedValueLabel: UILabel!
@@ -26,15 +21,7 @@ class InputAmountViewController: UIViewController {
     
     @IBOutlet weak var numberPadTopConstraint: NSLayoutConstraint!
     
-    let token: ValuableToken
-    
-    var balanceSufficiency: BalanceSufficiency {
-        if tokenAmount > token.decimalBalance {
-            .insufficient(R.string.localizable.insufficient_balance())
-        } else {
-            .sufficient
-        }
-    }
+    let token: ValuableToken & OnChainToken
     
     var feeAttributes: AttributeContainer {
         var container = AttributeContainer()
@@ -43,16 +30,10 @@ class InputAmountViewController: UIViewController {
         return container
     }
     
-    var addFeeAttributes: AttributeContainer {
-        var container = AttributeContainer()
-        container.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14, weight: .medium))
-        container.foregroundColor = R.color.theme()
-        return container
-    }
-    
     private(set) var amountIntent: AmountIntent
     private(set) var tokenAmount: Decimal = 0
     private(set) var fiatMoneyAmount: Decimal = 0
+    private(set) var inputAmountRequirement: BalanceRequirement // Changes when input amout changes
     
     private(set) weak var feeStackView: UIStackView?
     private(set) weak var addFeeButton: UIButton?
@@ -91,11 +72,25 @@ class InputAmountViewController: UIViewController {
         }
     }
     
-    init(token: ValuableToken, precision: Int) {
+    private var addFeeAttributes: AttributeContainer {
+        var container = AttributeContainer()
+        container.font = UIFontMetrics.default.scaledFont(
+            for: .systemFont(ofSize: 14, weight: .medium)
+        )
+        container.foregroundColor = R.color.theme()
+        return container
+    }
+    
+    init(token: ValuableToken & OnChainToken, precision: Int) {
+        let accumulator = DecimalAccumulator(precision: precision)
         self.token = token
         self.tokenPrecision = precision
         self.amountIntent = .byToken
-        self.accumulator = DecimalAccumulator(precision: precision)
+        self.inputAmountRequirement = BalanceRequirement(
+            token: token,
+            amount: accumulator.decimal
+        )
+        self.accumulator = accumulator
         let nib = R.nib.inputAmountView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -361,14 +356,12 @@ class InputAmountViewController: UIViewController {
         addFeeButton?.removeFromSuperview()
     }
     
-    func reloadViewsWithBalanceSufficiency() {
-        switch balanceSufficiency {
-        case .sufficient:
-            insufficientBalanceLabel.alpha = 0
+    func reloadViewsWithBalanceRequirements() {
+        if inputAmountRequirement.isSufficient {
+            insufficientBalanceLabel.text = nil
             reviewButton.isEnabled = tokenAmount > 0
-        case .insufficient(let description):
-            insufficientBalanceLabel.text = description
-            insufficientBalanceLabel.alpha = 1
+        } else {
+            insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
             reviewButton.isEnabled = false
         }
     }
@@ -427,7 +420,9 @@ extension InputAmountViewController {
         }
         
         amountLabel.text = inputAmountString
-        reloadViewsWithBalanceSufficiency()
+        
+        inputAmountRequirement = BalanceRequirement(token: token, amount: tokenAmount)
+        reloadViewsWithBalanceRequirements()
     }
     
 }

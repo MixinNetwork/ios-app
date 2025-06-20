@@ -4,43 +4,6 @@ import MixinServices
 
 final class Web3TransferInputAmountViewController: InputAmountViewController {
     
-    override var balanceSufficiency: BalanceSufficiency {
-        guard let fee, let feeToken, let minimumTransferAmount else {
-            return .insufficient(nil)
-        }
-        let balanceInsufficient = tokenAmount > token.decimalBalance
-        let feeInsufficient = isFeeInsufficient(fee: fee, feeToken: feeToken)
-        return if balanceInsufficient {
-            .insufficient(R.string.localizable.insufficient_balance())
-        } else if feeInsufficient {
-            .insufficient(
-                R.string.localizable.insufficient_fee_description(
-                    CurrencyFormatter.localizedString(
-                        from: fee.amount,
-                        format: .precision,
-                        sign: .never,
-                        symbol: .custom(feeToken.symbol)
-                    ),
-                    feeToken.chain?.name ?? ""
-                )
-            )
-        } else if !tokenAmount.isZero && tokenAmount < minimumTransferAmount {
-            // Only SOL transfers invoke minimum amount checking
-            // Change the description when it comes to EVM transfers
-            .insufficient(
-                R.string.localizable.send_sol_for_rent(
-                    CurrencyFormatter.localizedString(
-                        from: Solana.accountCreationCost,
-                        format: .precision,
-                        sign: .never,
-                    )
-                )
-            )
-        } else {
-            .sufficient
-        }
-    }
-    
     private let payment: Web3SendingTokenToAddressPayment
     
     private var fee: Web3TransferOperation.Fee?
@@ -134,10 +97,61 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
         }
         let multiplier = self.multiplier(tag: sender.tag)
         if payment.sendingNativeToken {
-            let availableBalance = max(0, token.decimalBalance - fee.amount)
+            let availableBalance = max(0, token.decimalBalance - fee.tokenAmount)
             replaceAmount(availableBalance * multiplier)
         } else {
             replaceAmount(token.decimalBalance * multiplier)
+        }
+    }
+    
+    override func reloadViewsWithBalanceRequirements() {
+        guard let fee, let feeToken, let minimumTransferAmount else {
+            insufficientBalanceLabel.text = nil
+            reviewButton.isEnabled = false
+            return
+        }
+        guard tokenAmount.isZero || tokenAmount >= minimumTransferAmount else {
+            insufficientBalanceLabel.text = R.string.localizable.send_sol_for_rent(
+                CurrencyFormatter.localizedString(
+                    from: minimumTransferAmount,
+                    format: .precision,
+                    sign: .never
+                )
+            )
+            removeAddFeeButton()
+            reviewButton.isEnabled = false
+            return
+        }
+        let feeRequirement = BalanceRequirement(token: feeToken, amount: fee.tokenAmount)
+        let requirements = inputAmountRequirement.merging(with: feeRequirement)
+        if requirements.allSatisfy(\.isSufficient) {
+            insufficientBalanceLabel.text = nil
+            removeAddFeeButton()
+            reviewButton.isEnabled = tokenAmount > 0
+        } else {
+            let bothRequirementsInsufficient = (requirements.count == 1 && tokenAmount != 0)
+            || (!inputAmountRequirement.isSufficient && !feeRequirement.isSufficient)
+            if bothRequirementsInsufficient {
+                insufficientBalanceLabel.text = R.string.localizable.withdraw_aggregated_insufficient_balance_count(
+                    inputAmountRequirement.localizedAmountWithSymbol,
+                    feeRequirement.localizedAmountWithSymbol,
+                    token.localizedBalanceWithSymbol
+                )
+                addAddFeeButton(symbol: feeRequirement.token.symbol)
+            } else if !inputAmountRequirement.isSufficient {
+                insufficientBalanceLabel.text = R.string.localizable.withdraw_insufficient_balance_count(
+                    inputAmountRequirement.localizedAmountWithSymbol,
+                    inputAmountRequirement.token.localizedBalanceWithSymbol
+                )
+                removeAddFeeButton()
+            } else {
+                insufficientBalanceLabel.text = R.string.localizable.withdraw_insufficient_fee_count(
+                    feeRequirement.localizedAmountWithSymbol,
+                    feeRequirement.token.localizedBalanceWithSymbol
+                )
+                addAddFeeButton(symbol: feeRequirement.token.symbol)
+            }
+            reviewButton.isEnabled = false
         }
     }
     
@@ -157,14 +171,14 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                 let fee = try await operation.loadFee()
                 let feeToken = operation.feeToken
                 let title = CurrencyFormatter.localizedString(
-                    from: fee.amount,
+                    from: fee.tokenAmount,
                     format: .precision,
                     sign: .never,
                     symbol: .custom(feeToken.symbol)
                 )
                 let availableBalance = if payment.sendingNativeToken {
                     CurrencyFormatter.localizedString(
-                        from: max(0, payment.token.decimalBalance - fee.amount),
+                        from: max(0, payment.token.decimalBalance - fee.tokenAmount),
                         format: .precision,
                         sign: .never,
                         symbol: .custom(feeToken.symbol)
@@ -185,12 +199,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                     }
                     if self.minimumTransferAmount != nil {
                         self.reviewButton.isBusy = false
-                        self.reloadViewsWithBalanceSufficiency()
-                    }
-                    if self.isFeeInsufficient(fee: fee, feeToken: feeToken) {
-                        self.addAddFeeButton(symbol: feeToken.symbol)
-                    } else {
-                        self.removeAddFeeButton()
+                        self.reloadViewsWithBalanceRequirements()
                     }
                 }
             } catch MixinAPIResponseError.unauthorized {
@@ -226,7 +235,7 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                     self.minimumTransferAmount = amount
                     if self.fee != nil {
                         self.reviewButton.isBusy = false
-                        self.reloadViewsWithBalanceSufficiency()
+                        self.reloadViewsWithBalanceRequirements()
                     }
                 }
             } catch MixinAPIResponseError.unauthorized {
@@ -238,17 +247,6 @@ final class Web3TransferInputAmountViewController: InputAmountViewController {
                 }
             }
         }
-    }
-    
-    private func isFeeInsufficient(
-        fee: Web3TransferOperation.Fee,
-        feeToken: Web3TokenItem,
-    ) -> Bool {
-        if payment.sendingNativeToken {
-           tokenAmount > token.decimalBalance - fee.amount
-       } else {
-           fee.amount > feeToken.decimalBalance
-       }
     }
     
 }

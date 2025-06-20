@@ -113,7 +113,7 @@ enum Web3AddressValidator {
                     }
                     let fee = try await operation.loadFee()
                     let transferRequirement = BalanceRequirement(token: token, amount: amount)
-                    let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
+                    let feeRequirement = BalanceRequirement(token: operation.feeToken, amount: fee.tokenAmount)
                     let requirements = transferRequirement.merging(with: feeRequirement)
                     let isBalanceSufficient = requirements.allSatisfy(\.isSufficient)
                     await MainActor.run {

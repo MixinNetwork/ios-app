@@ -296,14 +296,14 @@ extension Web3TransferPreviewViewController {
     private func loadFee(replacingRowAt index: Int) async throws {
         let fee = try await operation.loadFee()
         let feeValue = CurrencyFormatter.localizedString(
-            from: fee.amount,
+            from: fee.tokenAmount,
             format: .precision,
             sign: .never,
             symbol: nil
         )
-        let feeCost = if fee.fiatMoney >= 0.01 {
+        let feeCost = if fee.fiatMoneyAmount >= 0.01 {
             CurrencyFormatter.localizedString(
-                from: fee.fiatMoney,
+                from: fee.fiatMoneyAmount,
                 format: .fiatMoney,
                 sign: .never,
                 symbol: .currencySymbol

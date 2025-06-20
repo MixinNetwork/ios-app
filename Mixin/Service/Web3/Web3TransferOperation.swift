@@ -4,9 +4,8 @@ import MixinServices
 class Web3TransferOperation: SwapOperation.PaymentOperation {
     
     struct Fee {
-        let token: Web3TokenItem
-        let amount: Decimal
-        let fiatMoney: Decimal
+        let tokenAmount: Decimal
+        let fiatMoneyAmount: Decimal
     }
     
     enum State {

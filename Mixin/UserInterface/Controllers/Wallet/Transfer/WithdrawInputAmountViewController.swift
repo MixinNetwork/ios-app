@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class WithdrawInputAmountViewController: InputAmountViewController {
+final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewController {
     
     private let tokenItem: MixinTokenItem
     private let destination: Payment.WithdrawalDestination

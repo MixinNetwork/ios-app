@@ -4039,6 +4039,107 @@
 			path = Web3;
 			sourceTree = "<group>";
 		};
+		9429C0E12E059B0E00206DAA /* Transaction History */ = {
+			isa = PBXGroup;
+			children = (
+				946331D52C6282D300C54B76 /* TransactionHistoryDatePickerView.xib */,
+				946331D02C62758000C54B76 /* TransactionHistoryDatePickerViewController.swift */,
+				946331CA2C626FEE00C54B76 /* TransactionHistoryFilterPickerView.xib */,
+				946331C92C626FEE00C54B76 /* TransactionHistoryFilterPickerViewController.swift */,
+				946331E12C638B8200C54B76 /* TransactionHistoryRecipientFilterPickerViewController.swift */,
+				946331E62C638B9800C54B76 /* TransactionHistoryTokenFilterPickerViewController.swift */,
+				94E531BD2D7F5D750008DC76 /* MixinTransactionHistoryTokenFilterPickerViewController.swift */,
+				94E531CE2D7F62410008DC76 /* Web3TransactionHistoryTokenFilterPickerViewController.swift */,
+				9497AEED2C5E69B000966946 /* TransactionHistoryView.xib */,
+				94A28C562D7EC18D00493BC1 /* TransactionHistoryViewController.swift */,
+				9497AEE82C5E264600966946 /* MixinTransactionHistoryViewController.swift */,
+				94ED25312DD4579100A34266 /* Web3ReputationPickerViewController.swift */,
+				94A28C5E2D7EC42E00493BC1 /* Web3TransactionHistoryViewController.swift */,
+				DF8794932074FB4E004A1E55 /* LegacyTransactionViewController.swift */,
+				94062C632AE8CB1200ADAE87 /* SafeSnapshotViewController.swift */,
+				94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */,
+				94317D052AFBE57200FDC9C9 /* MemoCell.swift */,
+				94317D062AFBE57200FDC9C9 /* MemoCell.xib */,
+			);
+			path = "Transaction History";
+			sourceTree = "<group>";
+		};
+		9429C0E82E059B3400206DAA /* Market */ = {
+			isa = PBXGroup;
+			children = (
+				942BA99A2C689FA10096CCC3 /* MarketViewController.swift */,
+				94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */,
+				9443A9202CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift */,
+				94960DA12C929D3C00FB17E2 /* MarketAlertViewController.swift */,
+				942DB9A42CAA9C2F00FFCB40 /* CoinMarketAlertsViewController.swift */,
+				942DB9A62CAA9C8B00FFCB40 /* AllMarketAlertsViewController.swift */,
+				94668E242CB50B6800558755 /* AlertTypeSelectorViewController.swift */,
+				94668E2D2CB5308200558755 /* AlertFrequencySelectorViewController.swift */,
+				948723382C9DF6380034BCB0 /* AddMarketAlertView.xib */,
+				948723372C9DF6380034BCB0 /* AddMarketAlertViewController.swift */,
+				94428D732CA2A8F200157E93 /* EditMarketAlertViewController.swift */,
+			);
+			path = Market;
+			sourceTree = "<group>";
+		};
+		9429C0FE2E059BB700206DAA /* Swap */ = {
+			isa = PBXGroup;
+			children = (
+				94B1E55C2C49222100A2349F /* MixinSwapViewController.swift */,
+				52B2726D2DAE358000F46EC0 /* Web3SwapViewController.swift */,
+				946E9E332D40C46D00DBC308 /* SwapTokenSelectorViewController.swift */,
+				52B273562DB225F500F46EC0 /* Web3SwapTokenSelectorViewController.swift */,
+				942FD6752D38CF46004DCC4C /* SwapOrderTableViewController.swift */,
+				942FD92F2D3A6F66004DCC4C /* SwapOrderViewController.swift */,
+			);
+			path = Swap;
+			sourceTree = "<group>";
+		};
+		9429C1052E059BDE00206DAA /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				94E8794F2D8708F600F97DDD /* WalletSearchView.xib */,
+				7BDFAE8F2559008800296F8B /* WalletSearchViewController.swift */,
+				7BD00F2525597229004D8814 /* WalletSearchTableViewController.swift */,
+				7BD00F1D2559711A004D8814 /* TokenSearchResultsViewController.swift */,
+				7BD00F212559716C004D8814 /* WalletSearchRecommendationViewController.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		9429C1212E059D2D00206DAA /* Transfer */ = {
+			isa = PBXGroup;
+			children = (
+				94B2CD772B0F88D300D268E1 /* DepositView.xib */,
+				DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */,
+				94BF6D5A2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift */,
+				94A709D52B67B0A5007CADAB /* DepositSuspendedView.xib */,
+				7C2AC42828F2B384005F369A /* DepositSuspendedView.swift */,
+				946EA03C2D469A4A00DBC308 /* AddressBookView.xib */,
+				7B894AF2205BF8660065A1B8 /* AddressBookViewController.swift */,
+				DF06D91E222FAE1300FE7FBC /* LegacyTransferOutViewController.swift */,
+				9455EA072AFE598E00C3FD3C /* WithdrawFeeView.xib */,
+				9455EA0C2AFE5A8500C3FD3C /* WithdrawFeeView.swift */,
+				946E9F0A2D440F7500DBC308 /* MixinTokenSelectorViewController.swift */,
+				94327CF62D53662700DEE36D /* AddressInfoInputHeaderView.xib */,
+				94327CF42D53650600DEE36D /* AddressInfoInputHeaderView.swift */,
+				9489247E2D572EA200D9BCCB /* TokenReceiverTrayView.xib */,
+				9489247C2D572E9400D9BCCB /* TokenReceiverTrayView.swift */,
+				946E9F5A2D455F0900DBC308 /* MixinTokenReceiverViewController.swift */,
+				5260A8532DDF4BAD00ED9714 /* TokenReceiverViewController.swift */,
+				946EA0872D4763CF00DBC308 /* AddressInfoInputView.xib */,
+				946EA0852D4763BD00DBC308 /* AddressInfoInputViewController.swift */,
+				94350E372BCFE8C5007283B7 /* DecimalButton.swift */,
+				94350E362BCFE8C5007283B7 /* InputAmountView.xib */,
+				94350E382BCFE8C5007283B7 /* InputAmountViewController.swift */,
+				946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */,
+				946EA1132D47DD4000DBC308 /* WithdrawInputAmountViewController.swift */,
+				9496DF2B2DFB377100F6DE26 /* InsufficientBalanceViewController.swift */,
+				94B8205F2E00601700D580C9 /* AddTokenMethodSelectorViewController.swift */,
+			);
+			path = Transfer;
+			sourceTree = "<group>";
+		};
 		943BC6762BCE99A5003FA778 /* Collectible */ = {
 			isa = PBXGroup;
 			children = (
@@ -4388,10 +4489,7 @@
 				9415D4A12BCBEF6800C78A75 /* Web3DepositViewController.swift */,
 				94B13FC12B5ED5F9001333BE /* Web3BrowserView.xib */,
 				943BC6612BCD1FF4003FA778 /* Web3BrowserViewController.swift */,
-				94350E362BCFE8C5007283B7 /* InputAmountView.xib */,
-				94350E382BCFE8C5007283B7 /* InputAmountViewController.swift */,
 				9414A7822BE78C2F00FA35EB /* Web3TransferInputAmountViewController.swift */,
-				94350E372BCFE8C5007283B7 /* DecimalButton.swift */,
 				948923502D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift */,
 				9401A56E2BD94E9100679686 /* Web3TransferTokenSelectorViewController.swift */,
 				9489237C2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift */,
@@ -5223,6 +5321,11 @@
 				94BE6E922BA0622B00CE65A3 /* Authentication Preview */,
 				94F952512AE60CED0025B995 /* Payment */,
 				94E9795E2D0C151B00FFCC12 /* PIN */,
+				9429C1052E059BDE00206DAA /* Search */,
+				9429C0E12E059B0E00206DAA /* Transaction History */,
+				9429C0E82E059B3400206DAA /* Market */,
+				9429C0FE2E059BB700206DAA /* Swap */,
+				9429C1212E059D2D00206DAA /* Transfer */,
 				94C5BDEB2D687B710012F840 /* WalletContainerViewController.swift */,
 				94D5C0ED2D5C911D0046C20E /* WalletSummaryView.xib */,
 				94D5C0EC2D5C911D0046C20E /* WalletSummaryViewController.swift */,
@@ -5232,76 +5335,13 @@
 				DFA5B5921FB051BB00549728 /* WalletViewController.swift */,
 				9451E86D2D6DFF0A00A6C4FD /* PrivacyWalletViewController.swift */,
 				948FBC872D6EF5CE000795E4 /* ClassicWalletViewController.swift */,
-				94E8794F2D8708F600F97DDD /* WalletSearchView.xib */,
-				7BDFAE8F2559008800296F8B /* WalletSearchViewController.swift */,
-				7BD00F2525597229004D8814 /* WalletSearchTableViewController.swift */,
-				7BD00F1D2559711A004D8814 /* TokenSearchResultsViewController.swift */,
-				7BD00F212559716C004D8814 /* WalletSearchRecommendationViewController.swift */,
 				7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */,
-				946331D52C6282D300C54B76 /* TransactionHistoryDatePickerView.xib */,
-				946331D02C62758000C54B76 /* TransactionHistoryDatePickerViewController.swift */,
-				946331CA2C626FEE00C54B76 /* TransactionHistoryFilterPickerView.xib */,
-				946331C92C626FEE00C54B76 /* TransactionHistoryFilterPickerViewController.swift */,
-				946331E12C638B8200C54B76 /* TransactionHistoryRecipientFilterPickerViewController.swift */,
-				946331E62C638B9800C54B76 /* TransactionHistoryTokenFilterPickerViewController.swift */,
-				94E531BD2D7F5D750008DC76 /* MixinTransactionHistoryTokenFilterPickerViewController.swift */,
-				94E531CE2D7F62410008DC76 /* Web3TransactionHistoryTokenFilterPickerViewController.swift */,
-				9497AEED2C5E69B000966946 /* TransactionHistoryView.xib */,
-				94A28C562D7EC18D00493BC1 /* TransactionHistoryViewController.swift */,
-				9497AEE82C5E264600966946 /* MixinTransactionHistoryViewController.swift */,
-				94A28C5E2D7EC42E00493BC1 /* Web3TransactionHistoryViewController.swift */,
-				94ED25312DD4579100A34266 /* Web3ReputationPickerViewController.swift */,
 				948FC56A2D760017000795E4 /* TokenViewController.swift */,
 				DF5BF55E1FBB281E0092AFB8 /* MixinTokenViewController.swift */,
 				948FC2952D74DE70000795E4 /* Web3TokenViewController.swift */,
-				942BA99A2C689FA10096CCC3 /* MarketViewController.swift */,
-				94510FCD2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift */,
-				9443A9202CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift */,
-				94960DA12C929D3C00FB17E2 /* MarketAlertViewController.swift */,
-				942DB9A42CAA9C2F00FFCB40 /* CoinMarketAlertsViewController.swift */,
-				942DB9A62CAA9C8B00FFCB40 /* AllMarketAlertsViewController.swift */,
-				94668E242CB50B6800558755 /* AlertTypeSelectorViewController.swift */,
-				94668E2D2CB5308200558755 /* AlertFrequencySelectorViewController.swift */,
-				948723382C9DF6380034BCB0 /* AddMarketAlertView.xib */,
-				948723372C9DF6380034BCB0 /* AddMarketAlertViewController.swift */,
-				94428D732CA2A8F200157E93 /* EditMarketAlertViewController.swift */,
-				DF8794932074FB4E004A1E55 /* LegacyTransactionViewController.swift */,
-				94062C632AE8CB1200ADAE87 /* SafeSnapshotViewController.swift */,
-				94317CFE2AFBDEFF00FDC9C9 /* MemoViewController.swift */,
-				94317D052AFBE57200FDC9C9 /* MemoCell.swift */,
-				94317D062AFBE57200FDC9C9 /* MemoCell.xib */,
 				DF9E66E4205B9AF300F1A0B9 /* HiddenTokensViewController.swift */,
 				942C637C2D79E467003B3A5F /* HiddenMixinTokensViewController.swift */,
 				942C637E2D79E5D3003B3A5F /* HiddenWeb3TokensViewController.swift */,
-				94B2CD772B0F88D300D268E1 /* DepositView.xib */,
-				DF5BF5601FBB2D490092AFB8 /* DepositViewController.swift */,
-				94BF6D5A2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift */,
-				94A709D52B67B0A5007CADAB /* DepositSuspendedView.xib */,
-				7C2AC42828F2B384005F369A /* DepositSuspendedView.swift */,
-				946EA03C2D469A4A00DBC308 /* AddressBookView.xib */,
-				7B894AF2205BF8660065A1B8 /* AddressBookViewController.swift */,
-				DF06D91E222FAE1300FE7FBC /* LegacyTransferOutViewController.swift */,
-				9455EA072AFE598E00C3FD3C /* WithdrawFeeView.xib */,
-				9455EA0C2AFE5A8500C3FD3C /* WithdrawFeeView.swift */,
-				946E9F0A2D440F7500DBC308 /* MixinTokenSelectorViewController.swift */,
-				94327CF62D53662700DEE36D /* AddressInfoInputHeaderView.xib */,
-				94327CF42D53650600DEE36D /* AddressInfoInputHeaderView.swift */,
-				9489247E2D572EA200D9BCCB /* TokenReceiverTrayView.xib */,
-				9489247C2D572E9400D9BCCB /* TokenReceiverTrayView.swift */,
-				946E9F5A2D455F0900DBC308 /* MixinTokenReceiverViewController.swift */,
-				5260A8532DDF4BAD00ED9714 /* TokenReceiverViewController.swift */,
-				946EA0872D4763CF00DBC308 /* AddressInfoInputView.xib */,
-				946EA0852D4763BD00DBC308 /* AddressInfoInputViewController.swift */,
-				946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */,
-				946EA1132D47DD4000DBC308 /* WithdrawInputAmountViewController.swift */,
-				94B1E55C2C49222100A2349F /* MixinSwapViewController.swift */,
-				52B2726D2DAE358000F46EC0 /* Web3SwapViewController.swift */,
-				946E9E332D40C46D00DBC308 /* SwapTokenSelectorViewController.swift */,
-				52B273562DB225F500F46EC0 /* Web3SwapTokenSelectorViewController.swift */,
-				942FD6752D38CF46004DCC4C /* SwapOrderTableViewController.swift */,
-				942FD92F2D3A6F66004DCC4C /* SwapOrderViewController.swift */,
-				9496DF2B2DFB377100F6DE26 /* InsufficientBalanceViewController.swift */,
-				94B8205F2E00601700D580C9 /* AddTokenMethodSelectorViewController.swift */,
 			);
 			path = Wallet;
 			sourceTree = "<group>";

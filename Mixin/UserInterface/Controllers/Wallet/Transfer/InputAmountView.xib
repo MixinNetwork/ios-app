@@ -18,12 +18,8 @@
                 <outlet property="decimalSeparatorButton" destination="VAt-Xb-6QC" id="0jg-Tb-S92"/>
                 <outlet property="deleteBackwardsButton" destination="pAe-af-HlB" id="nC2-5l-Jnt"/>
                 <outlet property="insufficientBalanceLabel" destination="SaA-gy-pGd" id="Njk-2d-77e"/>
-                <outlet property="multipliersStackView" destination="6nr-Je-sda" id="ygg-VD-GqA"/>
                 <outlet property="numberPadTopConstraint" destination="s6B-1c-gWe" id="q7a-GN-WaL"/>
                 <outlet property="reviewButton" destination="W8F-Bv-lIc" id="7Uu-iF-iV6"/>
-                <outlet property="tokenBalanceLabel" destination="xTj-6c-Ubg" id="1cm-D7-e90"/>
-                <outlet property="tokenIconView" destination="hm4-se-0DS" id="4hi-D7-qgC"/>
-                <outlet property="tokenNameLabel" destination="8eP-9g-d3P" id="nyN-Qa-whr"/>
                 <outlet property="view" destination="iN0-l3-epB" id="UIp-eP-7EW"/>
                 <outletCollection property="decimalButtons" destination="Caq-Hm-dJF" collectionClass="NSMutableArray" id="l3T-bH-3kk"/>
                 <outletCollection property="decimalButtons" destination="hIe-aS-MK7" collectionClass="NSMutableArray" id="EpW-uY-vQC"/>
@@ -43,10 +39,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DlO-Gt-IZh" userLabel="Input Amount Wrapper View">
-                    <rect key="frame" x="0.0" y="94" width="390" height="230"/>
+                    <rect key="frame" x="0.0" y="94" width="390" height="344"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="PQy-wf-KED">
-                            <rect key="frame" x="30" y="57.333333333333343" width="330" height="115"/>
+                            <rect key="frame" x="30" y="114.33333333333334" width="330" height="115"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="0 USDT" textAlignment="natural" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.25" translatesAutoresizingMaskIntoConstraints="NO" id="cbS-rU-rOn">
                                     <rect key="frame" x="97.666666666666686" y="0.0" width="135" height="48"/>
@@ -55,10 +51,10 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="amk-zh-4db">
-                                    <rect key="frame" x="126.66666666666666" y="58" width="76.666666666666657" height="30"/>
+                                    <rect key="frame" x="126.66666666666666" y="57.999999999999972" width="76.666666666666657" height="30"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 USD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fhQ-Ea-Xwd">
-                                            <rect key="frame" x="0.0" y="5.3333333333333144" width="46.666666666666664" height="19.333333333333332"/>
+                                            <rect key="frame" x="0.0" y="5.3333333333333712" width="46.666666666666664" height="19.333333333333332"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <color key="textColor" name="text_desc"/>
                                             <nil key="highlightedColor"/>
@@ -76,7 +72,7 @@
                                     </subviews>
                                 </stackView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SaA-gy-pGd" userLabel="Insufficient Balance Label">
-                                    <rect key="frame" x="165" y="98" width="0.0" height="17"/>
+                                    <rect key="frame" x="165" y="97.999999999999972" width="0.0" height="17"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                     <color key="textColor" red="0.85882352941176465" green="0.27058823529411763" blue="0.30980392156862746" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -87,7 +83,7 @@
                             </subviews>
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vbe-Ks-z2S">
-                            <rect key="frame" x="196.33333333333334" y="108.33333333333334" width="44" height="44"/>
+                            <rect key="frame" x="196.33333333333334" y="165.33333333333331" width="44" height="44"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="44" id="bl3-x6-jtr"/>
                                 <constraint firstAttribute="width" constant="44" id="w0h-Dv-D39"/>
@@ -108,68 +104,10 @@
                     </constraints>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="C1J-Wa-hHH" userLabel="Accessory Stack View">
-                    <rect key="frame" x="0.0" y="324" width="390" height="114"/>
-                    <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AZB-n1-LJK">
-                            <rect key="frame" x="20" y="0.0" width="350" height="72"/>
-                            <subviews>
-                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="lDV-0o-0g6">
-                                    <rect key="frame" x="20" y="15" width="316" height="42"/>
-                                    <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hm4-se-0DS" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="42" height="42"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="42" id="E0l-gz-mZn"/>
-                                                <constraint firstAttribute="width" secondItem="hm4-se-0DS" secondAttribute="height" id="gpU-12-KN5"/>
-                                            </constraints>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="badgeIconDiameter">
-                                                    <real key="value" value="14"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                        </view>
-                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="SQV-Fa-Iqq">
-                                            <rect key="frame" x="58" y="2.6666666666666856" width="258" height="36.666666666666664"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ethereum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8eP-9g-d3P">
-                                                    <rect key="frame" x="0.0" y="0.0" width="258" height="19.333333333333332"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                                    <color key="textColor" name="text"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8.936217846 ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xTj-6c-Ubg">
-                                                    <rect key="frame" x="0.0" y="22.333333333333314" width="258" height="14.333333333333336"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                    <color key="textColor" name="text_tertiary"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </stackView>
-                                    </subviews>
-                                </stackView>
-                            </subviews>
-                            <color key="backgroundColor" name="background_secondary"/>
-                            <constraints>
-                                <constraint firstItem="lDV-0o-0g6" firstAttribute="centerY" secondItem="AZB-n1-LJK" secondAttribute="centerY" id="CYR-mq-nFI"/>
-                                <constraint firstAttribute="height" constant="72" id="Gi2-vT-U5G"/>
-                                <constraint firstItem="lDV-0o-0g6" firstAttribute="leading" secondItem="AZB-n1-LJK" secondAttribute="leading" constant="20" id="X6O-C6-qpD"/>
-                                <constraint firstAttribute="trailing" secondItem="lDV-0o-0g6" secondAttribute="trailing" constant="14" id="ykt-Ql-7Nd"/>
-                            </constraints>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                    <integer key="value" value="8"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </view>
-                        <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="6nr-Je-sda">
-                            <rect key="frame" x="28" y="82" width="334" height="32"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="32" id="anX-PS-XkA"/>
-                            </constraints>
-                        </stackView>
-                    </subviews>
+                    <rect key="frame" x="0.0" y="438" width="390" height="0.0"/>
+                    <constraints>
+                        <constraint firstAttribute="height" priority="1" id="xIP-Ri-EoY"/>
+                    </constraints>
                 </stackView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="gGb-Mu-a5l" userLabel="Number Pad Stack View">
                     <rect key="frame" x="18" y="450" width="354" height="238"/>
@@ -438,9 +376,7 @@
                 <constraint firstItem="cpf-Ia-i69" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="QW6-I5-Stc"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="C1J-Wa-hHH" secondAttribute="trailing" id="U7r-LP-mau"/>
                 <constraint firstItem="DlO-Gt-IZh" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="You-Yn-aF1"/>
-                <constraint firstItem="AZB-n1-LJK" firstAttribute="width" secondItem="vUN-kp-3ea" secondAttribute="width" constant="-40" id="aSx-1O-bnm"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="DlO-Gt-IZh" secondAttribute="trailing" id="aUx-Hy-yYa"/>
-                <constraint firstItem="6nr-Je-sda" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" constant="-56" id="agB-Lp-h7x"/>
                 <constraint firstItem="gGb-Mu-a5l" firstAttribute="top" secondItem="C1J-Wa-hHH" secondAttribute="bottom" constant="12" id="s6B-1c-gWe" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
@@ -472,9 +408,6 @@
         </namedColor>
         <namedColor name="text_desc">
             <color red="0.73725490196078436" green="0.74509803921568629" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

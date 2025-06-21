@@ -748,6 +748,8 @@
 		941E360B2D78B813000E7093 /* RefreshWeb3WalletTokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941E360A2D78B80E000E7093 /* RefreshWeb3WalletTokenJob.swift */; };
 		9420F2EE2DAF8A8300434E0D /* BalanceChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9420F2ED2DAF8A7F00434E0D /* BalanceChange.swift */; };
 		9420F3052DAF993500434E0D /* RichWeb3RawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9420F2E62DAF895D00434E0D /* RichWeb3RawTransaction.swift */; };
+		9421DA492E05A3B300B9E815 /* TokenConsumingInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9421DA482E05A3A800B9E815 /* TokenConsumingInputAmountViewController.swift */; };
+		9421DA512E05A47800B9E815 /* BalanceReportingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9421DA502E05A47800B9E815 /* BalanceReportingView.xib */; };
 		94227D6E2BEF242200430CAE /* SearchCollectibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94227D6C2BEF242200430CAE /* SearchCollectibleViewController.swift */; };
 		94227D6F2BEF242200430CAE /* SearchCollectibleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94227D6D2BEF242200430CAE /* SearchCollectibleView.xib */; };
 		9423B6B32A6932D50092DE65 /* AccountDeactivatedHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9423B6B22A6932D50092DE65 /* AccountDeactivatedHintView.xib */; };
@@ -2340,6 +2342,8 @@
 		941E360A2D78B80E000E7093 /* RefreshWeb3WalletTokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshWeb3WalletTokenJob.swift; sourceTree = "<group>"; };
 		9420F2E62DAF895D00434E0D /* RichWeb3RawTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichWeb3RawTransaction.swift; sourceTree = "<group>"; };
 		9420F2ED2DAF8A7F00434E0D /* BalanceChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceChange.swift; sourceTree = "<group>"; };
+		9421DA482E05A3A800B9E815 /* TokenConsumingInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenConsumingInputAmountViewController.swift; sourceTree = "<group>"; };
+		9421DA502E05A47800B9E815 /* BalanceReportingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BalanceReportingView.xib; sourceTree = "<group>"; };
 		94227D6C2BEF242200430CAE /* SearchCollectibleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectibleViewController.swift; sourceTree = "<group>"; };
 		94227D6D2BEF242200430CAE /* SearchCollectibleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchCollectibleView.xib; sourceTree = "<group>"; };
 		9423B6B22A6932D50092DE65 /* AccountDeactivatedHintView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountDeactivatedHintView.xib; sourceTree = "<group>"; };
@@ -4133,6 +4137,8 @@
 				946EA0852D4763BD00DBC308 /* AddressInfoInputViewController.swift */,
 				94350E362BCFE8C5007283B7 /* InputAmountView.xib */,
 				94350E382BCFE8C5007283B7 /* InputAmountViewController.swift */,
+				9421DA502E05A47800B9E815 /* BalanceReportingView.xib */,
+				9421DA482E05A3A800B9E815 /* TokenConsumingInputAmountViewController.swift */,
 				946E9FBC2D46237A00DBC308 /* TransferInputAmountViewController.swift */,
 				9429C1402E059F2400206DAA /* FeeRequiredInputAmountViewController.swift */,
 				946EA1132D47DD4000DBC308 /* WithdrawInputAmountViewController.swift */,
@@ -5910,6 +5916,7 @@
 				948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */,
 				943CAA422CC8CD7F00346677 /* SignUpMethodCell.xib in Resources */,
 				5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */,
+				9421DA512E05A47800B9E815 /* BalanceReportingView.xib in Resources */,
 				7C0FAAC927E07A0A008D4021 /* ExpiredMessageTimePickerWindow.xib in Resources */,
 				E041064E23C6076F00A6F08E /* FullscreenPopupView.xib in Resources */,
 				940EE2982C9DDD24001A52FA /* MarketAlertItemView.xib in Resources */,
@@ -7556,6 +7563,7 @@
 				94EDD6142D0C495A00BF55EE /* GeneralAppearanceNavigationController.swift in Sources */,
 				94CD471E2BECAE9D00A3DE10 /* InscriptionHashCell.swift in Sources */,
 				7BA41A9324E123F50042ED03 /* MentionToken.swift in Sources */,
+				9421DA492E05A3B300B9E815 /* TokenConsumingInputAmountViewController.swift in Sources */,
 				7B92F82B1FA1BCD5000B838B /* StateResponsiveButton.swift in Sources */,
 				94CDA9892A5E77D000F1CDEE /* AssetComboBoxView.swift in Sources */,
 				E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */,

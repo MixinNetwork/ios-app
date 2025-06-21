@@ -1,5 +1,4 @@
 import UIKit
-import Alamofire
 import MixinServices
 
 class InputAmountViewController: UIViewController {
@@ -9,10 +8,6 @@ class InputAmountViewController: UIViewController {
     @IBOutlet weak var calculatedValueLabel: UILabel!
     @IBOutlet weak var insufficientBalanceLabel: UILabel!
     @IBOutlet weak var accessoryStackView: UIStackView!
-    @IBOutlet weak var multipliersStackView: UIStackView!
-    @IBOutlet weak var tokenIconView: BadgeIconView!
-    @IBOutlet weak var tokenNameLabel: UILabel!
-    @IBOutlet weak var tokenBalanceLabel: UILabel!
     @IBOutlet weak var decimalSeparatorButton: HighlightableButton!
     @IBOutlet weak var deleteBackwardsButton: HighlightableButton!
     @IBOutlet weak var reviewButton: StyledButton!
@@ -21,25 +16,7 @@ class InputAmountViewController: UIViewController {
     
     @IBOutlet weak var numberPadTopConstraint: NSLayoutConstraint!
     
-    let token: ValuableToken & OnChainToken
-    
-    var addTokenAttributes: AttributeContainer {
-        var container = AttributeContainer()
-        container.font = UIFontMetrics.default.scaledFont(
-            for: .systemFont(ofSize: 14, weight: .medium)
-        )
-        container.foregroundColor = R.color.theme()
-        return container
-    }
-    
-    private(set) var amountIntent: AmountIntent
-    private(set) var tokenAmount: Decimal = 0
-    private(set) var fiatMoneyAmount: Decimal = 0
-    private(set) var inputAmountRequirement: BalanceRequirement // Changes when input amout changes
-    
-    private let tokenPrecision: Int
-    private let feedback = UIImpactFeedbackGenerator(style: .light)
-    private let formatter: NumberFormatter = {
+    let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = .current
@@ -49,18 +26,7 @@ class InputAmountViewController: UIViewController {
         return formatter
     }()
     
-    private weak var clearInputTimer: Timer?
-    
-    private lazy var tokenAmountRoundingHandler = NSDecimalNumberHandler(
-        roundingMode: .plain,
-        scale: Int16(tokenPrecision),
-        raiseOnExactness: false,
-        raiseOnOverflow: false,
-        raiseOnUnderflow: false,
-        raiseOnDivideByZero: false
-    )
-    
-    private var accumulator: DecimalAccumulator {
+    var accumulator: DecimalAccumulator {
         didSet {
             guard isViewLoaded else {
                 return
@@ -69,15 +35,11 @@ class InputAmountViewController: UIViewController {
         }
     }
     
-    init(token: ValuableToken & OnChainToken, precision: Int) {
-        let accumulator = DecimalAccumulator(precision: precision)
-        self.token = token
-        self.tokenPrecision = precision
-        self.amountIntent = .byToken
-        self.inputAmountRequirement = BalanceRequirement(
-            token: token,
-            amount: accumulator.decimal
-        )
+    private let feedback = UIImpactFeedbackGenerator(style: .light)
+    
+    private weak var clearInputTimer: Timer?
+    
+    init(accumulator: DecimalAccumulator) {
         self.accumulator = accumulator
         let nib = R.nib.inputAmountView
         super.init(nibName: nib.name, bundle: nib.bundle)
@@ -105,54 +67,15 @@ class InputAmountViewController: UIViewController {
                 .monospacedDigitSystemFont(ofSize: 64, weight: .regular)
         }
         
-        let multiplierButtons = {
-            var config: UIButton.Configuration = .filled()
-            config.baseForegroundColor = R.color.text()
-            config.baseBackgroundColor = R.color.background_secondary()
-            config.cornerStyle = .capsule
-            
-            let attributes = AttributeContainer([
-                .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
-                .paragraphStyle: {
-                    let style = NSMutableParagraphStyle()
-                    style.alignment = .right
-                    return style
-                }(),
-            ])
-            
-            return (0...2).map { tag in
-                config.attributedTitle = {
-                    let multiplier = self.multiplier(tag: tag)
-                    let title = switch multiplier {
-                    case 1:
-                        R.string.localizable.balance_max()
-                    default:
-                        NumberFormatter.simplePercentage.string(decimal: multiplier) ?? ""
-                    }
-                    return AttributedString(title, attributes: attributes)
-                }()
-                
-                let button = UIButton(configuration: config)
-                button.titleLabel?.adjustsFontForContentSizeCategory = true
-                button.tag = tag
-                button.addTarget(self, action: #selector(inputMultipliedAmount(_:)), for: .touchUpInside)
-                return button
-            }
-        }()
-        for button in multiplierButtons {
-            multipliersStackView.addArrangedSubview(button)
-            button.snp.makeConstraints { make in
-                make.width.equalTo(view.snp.width)
-                    .multipliedBy(0.24)
-                    .priority(.high)
-            }
-        }
-        
         decimalButtons.sort(by: { $0.value < $1.value })
         decimalSeparatorButton.setTitle(Locale.current.decimalSeparator ?? ".", for: .normal)
         reloadViews(inputAmount: accumulator.decimal)
         reviewButton.style = .filled
-        reporter.report(event: .sendAmount)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        feedback.prepare()
     }
     
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
@@ -210,17 +133,7 @@ class InputAmountViewController: UIViewController {
     }
     
     @IBAction func toggleAmountIntent(_ sender: Any) {
-        var accumulator: DecimalAccumulator
-        switch amountIntent {
-        case .byToken:
-            amountIntent = .byFiatMoney
-            accumulator = .fiatMoney()
-        case .byFiatMoney:
-            amountIntent = .byToken
-            accumulator = DecimalAccumulator(precision: tokenPrecision)
-        }
-        accumulator.decimal = self.accumulator.decimal
-        self.accumulator = accumulator
+        
     }
     
     @IBAction func inputValue(_ sender: DecimalButton) {
@@ -258,37 +171,12 @@ class InputAmountViewController: UIViewController {
         
     }
     
-    @objc func inputMultipliedAmount(_ sender: UIButton) {
-        let multiplier = self.multiplier(tag: sender.tag)
-        replaceAmount(token.decimalBalance * multiplier)
-    }
-    
-    func multiplier(tag: Int) -> Decimal {
-        switch tag {
-        case 0:
-            0.25
-        case 1:
-            0.5
-        default:
-            1
-        }
+    func reloadViews(inputAmount: Decimal) {
+        
     }
     
     func replaceAmount(_ amount: Decimal) {
-        var accumulator = DecimalAccumulator(precision: tokenPrecision)
-        accumulator.decimal = amount
-        self.amountIntent = .byToken
-        self.accumulator = accumulator
-    }
-    
-    func reloadViewsWithBalanceRequirements() {
-        if inputAmountRequirement.isSufficient {
-            insufficientBalanceLabel.text = nil
-            reviewButton.isEnabled = tokenAmount > 0
-        } else {
-            insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
-            reviewButton.isEnabled = false
-        }
+        
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
@@ -320,34 +208,6 @@ extension InputAmountViewController {
             }
         }
         
-    }
-    
-    private func reloadViews(inputAmount: Decimal) {
-        let price = token.decimalUSDPrice * Currency.current.decimalRate
-        
-        formatter.alwaysShowsDecimalSeparator = accumulator.willInputFraction
-        formatter.minimumFractionDigits = accumulator.fractions?.count ?? 0
-        var inputAmountString = formatter.string(from: inputAmount as NSDecimalNumber) ?? "0"
-        
-        switch amountIntent {
-        case .byToken:
-            tokenAmount = inputAmount
-            fiatMoneyAmount = inputAmount * price
-            calculatedValueLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencyCode)
-            inputAmountString.append(" " + token.symbol)
-        case .byFiatMoney:
-            tokenAmount = NSDecimalNumber(decimal: inputAmount / price)
-                .rounding(accordingToBehavior: tokenAmountRoundingHandler)
-                .decimalValue
-            fiatMoneyAmount = inputAmount
-            calculatedValueLabel.text = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
-            inputAmountString.append(" " + Currency.current.code)
-        }
-        
-        amountLabel.text = inputAmountString
-        
-        inputAmountRequirement = BalanceRequirement(token: token, amount: tokenAmount)
-        reloadViewsWithBalanceRequirements()
     }
     
 }

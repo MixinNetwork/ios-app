@@ -1,0 +1,589 @@
+import UIKit
+import OrderedCollections
+import PhoneNumberKit
+import MixinServices
+
+final class BuyTokenInputAmountViewController: InputAmountViewController {
+    
+    private typealias Token = ValuableToken & OnChainToken
+    
+    @IBOutlet weak var payingSelectorView: CompactComboBoxView!
+    @IBOutlet weak var receivingSelectorView: CompactComboBoxView!
+    
+    private let wallet: Wallet
+    private let minimalUSDAmount: Decimal = 10
+    
+    private(set) var amountIntent: AmountIntent = .byToken
+    private(set) var tokenAmount: Decimal = 0
+    private(set) var fiatMoneyAmount: Decimal = 0
+    
+    private weak var minimalAmountLabel: UILabel!
+    
+    private var currencies: [Currency] = []
+    private var selectedCurrency: Currency
+    private var fiatMoneyAmountRoudingHandler: NSDecimalNumberHandler?
+    private var minimalFiatMoneyAmount: Decimal = 0
+    
+    private var tokens: [any Token] = []
+    private var selectedToken: (any Token)?
+    private var tokenAmountRoundingHandler: NSDecimalNumberHandler?
+    private var minimalTokenAmount: Decimal = 0
+    
+    private var tokenPrecision: Int {
+        if let token = selectedToken {
+            if let token = token as? Web3TokenItem {
+                Int(token.precision)
+            } else {
+                MixinToken.precision
+            }
+        } else {
+            0
+        }
+    }
+    
+    init(wallet: Wallet) {
+        self.wallet = wallet
+        self.selectedCurrency = if let code = AppGroupUserDefaults.Wallet.lastBuyingCurrencyCode {
+            Currency.map[code] ?? .usd
+        } else {
+            .usd
+        }
+        let accumulator = DecimalAccumulator(precision: MixinToken.precision)
+        super.init(accumulator: accumulator)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        navigationItem.titleView = switch wallet {
+        case .privacy:
+            NavigationTitleView(
+                title: R.string.localizable.buy(),
+                subtitle: R.string.localizable.privacy_wallet()
+            )
+        case .classic(let id):
+            NavigationTitleView(
+                title: R.string.localizable.buy(),
+                subtitle: R.string.localizable.common_wallet()
+            )
+        }
+        calculatedValueLabel.text = CurrencyFormatter.localizedString(
+            from: 0,
+            format: .precision,
+            sign: .never,
+            symbol: .custom(selectedCurrency.code)
+        )
+        insufficientBalanceLabel.isHidden = true
+        
+        let buyingPairView = R.nib.buyingPairView(withOwner: self) as! UIStackView
+        accessoryStackView.addArrangedSubview(buyingPairView)
+        buyingPairView.snp.makeConstraints { make in
+            make.height.equalTo(44)
+            make.width.lessThanOrEqualTo(view.safeAreaLayoutGuide).offset(-56)
+        }
+        if ScreenWidth.current <= .medium {
+            buyingPairView.spacing = 10
+        } else {
+            buyingPairView.spacing = 23
+        }
+        payingSelectorView.load(currency: selectedCurrency)
+        payingSelectorView.accessoryView = .activityIndicator
+        payingSelectorView.addTarget(
+            self,
+            action: #selector(selectPaying(_:)),
+            for: .touchUpInside
+        )
+        receivingSelectorView.addTarget(
+            self,
+            action: #selector(selectReceiving(_:)),
+            for: .touchUpInside
+        )
+        
+        let minimalAmountLabel = UILabel()
+        minimalAmountLabel.textColor = R.color.text_secondary()?.withAlphaComponent(0.9)
+        minimalAmountLabel.font = .preferredFont(forTextStyle: .caption1)
+        minimalAmountLabel.adjustsFontForContentSizeCategory = true
+        minimalAmountLabel.text = "Minimum 10 USD"
+        minimalAmountLabel.alpha = 0
+        reviewButtonStackView.addArrangedSubview(minimalAmountLabel)
+        self.minimalAmountLabel = minimalAmountLabel
+        reviewButtonStackViewBottomConstraint.constant = ScreenHeight.current <= .medium ? 10 : 18
+        
+        DispatchQueue.global().async { [weak self] in
+            let id = AppGroupUserDefaults.Wallet.lastBuyingAssetID ?? AssetID.tronUSDT
+            guard let placeholder = TokenDAO.shared.tokenItem(assetID: id) else {
+                return
+            }
+            DispatchQueue.main.async {
+                guard let self, self.selectedToken == nil else {
+                    return
+                }
+                self.amountLabel.text = CurrencyFormatter.localizedString(
+                    from: 0,
+                    format: .precision,
+                    sign: .never,
+                    symbol: .custom(placeholder.symbol)
+                )
+                self.receivingSelectorView.load(token: placeholder)
+                self.receivingSelectorView.accessoryView = .activityIndicator
+            }
+        }
+        
+        view.isUserInteractionEnabled = false
+        reloadTradingPairs()
+    }
+    
+    override func toggleAmountIntent(_ sender: Any) {
+        let inputValue = self.accumulator.decimal
+        var accumulator: DecimalAccumulator
+        switch amountIntent {
+        case .byToken:
+            amountIntent = .byFiatMoney
+            accumulator = DecimalAccumulator(precision: selectedCurrency.precision)
+        case .byFiatMoney:
+            amountIntent = .byToken
+            accumulator = DecimalAccumulator(precision: tokenPrecision)
+        }
+        accumulator.decimal = inputValue
+        self.accumulator = accumulator
+        self.reloadViews(inputAmount: inputValue)
+        self.updateMinimalAmountLabel()
+    }
+    
+    override func reloadViews(inputAmount: Decimal) {
+        guard let token = selectedToken else {
+            return
+        }
+        let price = token.decimalUSDPrice * selectedCurrency.decimalRate
+        
+        formatter.alwaysShowsDecimalSeparator = accumulator.willInputFraction
+        formatter.minimumFractionDigits = accumulator.fractions?.count ?? 0
+        var inputAmountString = formatter.string(from: inputAmount as NSDecimalNumber) ?? "0"
+        
+        let isAmountGreaterThanMinimum: Bool
+        switch amountIntent {
+        case .byToken:
+            tokenAmount = inputAmount
+            fiatMoneyAmount = NSDecimalNumber(decimal: inputAmount * price)
+                .rounding(accordingToBehavior: fiatMoneyAmountRoudingHandler)
+                .decimalValue
+            calculatedValueLabel.text = CurrencyFormatter.localizedString(
+                from: fiatMoneyAmount,
+                format: .fiatMoney,
+                sign: .never,
+                symbol: .custom(selectedCurrency.code)
+            )
+            inputAmountString.append(" " + token.symbol)
+            isAmountGreaterThanMinimum = inputAmount >= minimalTokenAmount
+        case .byFiatMoney:
+            tokenAmount = NSDecimalNumber(decimal: inputAmount / price)
+                .rounding(accordingToBehavior: tokenAmountRoundingHandler)
+                .decimalValue
+            fiatMoneyAmount = inputAmount
+            calculatedValueLabel.text = CurrencyFormatter.localizedString(
+                from: tokenAmount,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(token.symbol)
+            )
+            inputAmountString.append(" " + selectedCurrency.code)
+            isAmountGreaterThanMinimum = inputAmount >= minimalFiatMoneyAmount
+        }
+        
+        amountLabel.text = inputAmountString
+        minimalAmountLabel.textColor = if inputAmount == 0 || isAmountGreaterThanMinimum {
+            R.color.text_secondary()!.withAlphaComponent(0.9)
+        } else {
+            R.color.error_red()
+        }
+        reviewButton.isEnabled = isAmountGreaterThanMinimum
+    }
+    
+    override func replaceAmount(_ amount: Decimal) {
+        var accumulator = DecimalAccumulator(precision: tokenPrecision)
+        accumulator.decimal = amount
+        self.amountIntent = .byToken
+        self.accumulator = accumulator
+    }
+    
+    override func review(_ sender: Any) {
+        guard let token = selectedToken else {
+            return
+        }
+        guard let amount = NumberFormatter.enUSPOSIXLocalizedDecimal.string(decimal: fiatMoneyAmount) else {
+            return
+        }
+        let currency = selectedCurrency.code
+        reviewButton.isBusy = true
+        Task { [weak self] in
+            do {
+                let destination: String
+                if let token = token as? Web3TokenItem {
+                    let address = Web3AddressDAO.shared.address(
+                        walletID: token.walletID,
+                        chainID: token.chainID
+                    )
+                    guard let address else {
+                        throw BuyingError.unsupportedChain
+                    }
+                    destination = address.destination
+                } else {
+                    let entries = try await SafeAPI.depositEntries(
+                        assetID: token.assetID,
+                        chainID: token.chainID
+                    )
+                    DepositEntryDAO.shared.replace(
+                        entries: entries,
+                        forChainWith: token.chainID
+                    )
+                    let primaryEntry = entries.first { entry in
+                        entry.chainID == token.chainID && entry.isPrimary
+                    }
+                    guard let primaryEntry else {
+                        throw BuyingError.unsupportedChain
+                    }
+                    destination = primaryEntry.destination
+                }
+                Logger.general.info(category: "Buy", message: "Buy \(amount) \(token.symbol) with \(currency), dst: \(destination)")
+                let url = try await RouteAPI.rampURL(
+                    amount: amount,
+                    assetID: token.assetID,
+                    currency: currency,
+                    destination: destination
+                )
+                Logger.general.info(category: "Buy", message: "Redirect to \(url)")
+                await MainActor.run {
+                    guard let self else {
+                        return
+                    }
+                    self.reviewButton.isBusy = false
+                    let ramp = PopupTitledWebViewController(
+                        title: R.string.localizable.buy_asset(token.symbol),
+                        subtitle: nil,
+                        url: url
+                    )
+                    self.present(ramp, animated: true)
+                }
+            } catch {
+                Logger.general.info(category: "Buy", message: "\(error)")
+                await MainActor.run {
+                    guard let self else {
+                        return
+                    }
+                    self.reviewButton.isBusy = false
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    @objc private func selectPaying(_ sender: Any) {
+        let selector = CurrencySelectorViewController(
+            currencies: currencies,
+            selectedCurrencyCode: selectedCurrency.code
+        ) { currency in
+            self.selectedCurrency = currency
+            self.updateWithSelectedCurrency(currency)
+            self.reloadViews(inputAmount: self.accumulator.decimal)
+            self.dismiss(animated: true)
+            AppGroupUserDefaults.Wallet.lastBuyingCurrencyCode = currency.code
+        }
+        present(selector, animated: true, completion: nil)
+    }
+    
+    @objc private func selectReceiving(_ sender: Any) {
+        let selector = BuyTokenSelectorViewController(
+            tokens: tokens,
+            selectedAssetID: selectedToken?.assetID
+        )
+        selector.onSelected = { token in
+            self.selectedToken = token
+            self.updateWithSelectedToken(token)
+            self.reloadViews(inputAmount: self.accumulator.decimal)
+            self.dismiss(animated: true)
+            AppGroupUserDefaults.Wallet.lastBuyingAssetID = token.assetID
+        }
+        present(selector, animated: true, completion: nil)
+    }
+    
+    private func reloadTradingPairs() {
+        Task { [weak self] in
+            do {
+                let profile = try await RouteAPI.profile()
+                guard let firstAssetID = profile.assetIDs.first else {
+                    throw BuyingError.noAsset
+                }
+                
+                let context = PhoneNumberContext()
+                let currencies = profile.currencies.compactMap { code in
+                    Currency.map[code]
+                }
+                let currency: Currency? = {
+                    let code = AppGroupUserDefaults.Wallet.lastBuyingCurrencyCode
+                    ?? context.inferredCurrencyCode
+                    ?? Currency.current.code
+                    return currencies.first(where: { $0.code == code })
+                    ?? currencies.first
+                }()
+                guard let currency else {
+                    throw BuyingError.noAvailableCurrency
+                }
+                
+                let allTokens = try await self?.tokens(assetIDs: profile.assetIDs) ?? [:]
+                let tokens = profile.assetIDs.compactMap { id in
+                    allTokens[id]
+                }
+                let token: any Token
+                if let id = AppGroupUserDefaults.Wallet.lastBuyingAssetID, let item = allTokens[id] {
+                    token = item
+                } else if let item = allTokens[firstAssetID] {
+                    token = item
+                } else {
+                    throw BuyingError.noAvailableAsset
+                }
+                await MainActor.run {
+                    guard let self else {
+                        return
+                    }
+                    self.currencies = currencies
+                    self.selectedCurrency = currency
+                    self.updateWithSelectedCurrency(currency)
+                    self.tokens = tokens
+                    self.selectedToken = token
+                    self.updateWithSelectedToken(token)
+                    self.reloadViews(inputAmount: self.accumulator.decimal)
+                    self.updateMinimalAmountLabel()
+                    self.view.isUserInteractionEnabled = true
+                }
+            } catch {
+                let worthRetrying = if let error = error as? MixinAPIError {
+                    error.worthRetrying
+                } else {
+                    false
+                }
+                if worthRetrying {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        self?.reloadTradingPairs()
+                    }
+                } else {
+                    await MainActor.run {
+                        guard let self else {
+                            return
+                        }
+                        let alert = UIAlertController(
+                            title: "Buying not available",
+                            message: error.localizedDescription,
+                            preferredStyle: .actionSheet
+                        )
+                        let ok = UIAlertAction(
+                            title: R.string.localizable.ok(),
+                            style: .default
+                        ) { _ in
+                            self.navigationController?.popViewController(animated: true)
+                        }
+                        alert.addAction(ok)
+                        self.present(alert, animated: true)
+                    }
+                }
+            }
+        }
+    }
+    
+    // Key is asset id
+    private func tokens(assetIDs: [String]) async throws -> [String: any Token]  {
+        var allTokens: [String: any Token]
+        var assetIDs = Set(assetIDs)
+        switch wallet {
+        case .privacy:
+            let localItems = TokenDAO.shared.tokenItems(with: assetIDs)
+            for item in localItems {
+                assetIDs.remove(item.assetID)
+            }
+            allTokens = localItems.reduce(into: [:]) { result, item in
+                result[item.assetID] = item
+            }
+            
+            if !assetIDs.isEmpty {
+                let remoteTokens = try await SafeAPI.assets(ids: assetIDs)
+                for token in remoteTokens {
+                    let chain = ChainDAO.shared.chain(chainId: token.chainID)
+                    let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                    allTokens[item.assetID] = item
+                }
+            }
+        case .classic(let walletID):
+            let localItems = Web3TokenDAO.shared.tokenItems(walletID: walletID, ids: assetIDs)
+            for item in localItems {
+                assetIDs.remove(item.assetID)
+            }
+            allTokens = localItems.reduce(into: [:]) { result, item in
+                result[item.assetID] = item
+            }
+            
+            // TODO: Get web3 tokens with dedicated API
+            if !assetIDs.isEmpty {
+                let remoteTokens = try await SafeAPI.assets(ids: assetIDs)
+                for token in remoteTokens {
+                    let web3Token = Web3Token(
+                        walletID: walletID,
+                        assetID: token.assetID,
+                        chainID: token.chainID,
+                        assetKey: token.assetKey,
+                        kernelAssetID: token.kernelAssetID,
+                        symbol: token.symbol,
+                        name: token.name,
+                        precision: 0,
+                        iconURL: token.iconURL,
+                        amount: "0",
+                        usdPrice: token.usdPrice,
+                        usdChange: token.usdChange,
+                        level: Web3Reputation.Level.verified.rawValue,
+                    )
+                    let chain = Web3ChainDAO.shared.chain(chainID: token.chainID)
+                    let item = Web3TokenItem(token: web3Token, hidden: false, chain: chain)
+                    allTokens[item.assetID] = item
+                }
+            }
+        }
+        return allTokens
+    }
+    
+    private func updateWithSelectedCurrency(_ currency: Currency) {
+        let fiatMoneyAmountRoudingHandler = NSDecimalNumberHandler(
+            roundingMode: .plain,
+            scale: Int16(currency.precision),
+            raiseOnExactness: false,
+            raiseOnOverflow: false,
+            raiseOnUnderflow: false,
+            raiseOnDivideByZero: false
+        )
+        let minFiatMoneyAmount = NSDecimalNumber(decimal: minimalUSDAmount * currency.decimalRate)
+            .rounding(accordingToBehavior: tokenAmountRoundingHandler)
+            .decimalValue
+        self.payingSelectorView.load(currency: currency)
+        self.fiatMoneyAmountRoudingHandler = fiatMoneyAmountRoudingHandler
+        self.minimalFiatMoneyAmount = minFiatMoneyAmount
+    }
+    
+    private func updateWithSelectedToken(_ token: any Token) {
+        let tokenAmountRoundingHandler = NSDecimalNumberHandler(
+            roundingMode: .plain,
+            scale: Int16(tokenPrecision),
+            raiseOnExactness: false,
+            raiseOnOverflow: false,
+            raiseOnUnderflow: false,
+            raiseOnDivideByZero: false
+        )
+        let minTokenAmount = NSDecimalNumber(decimal:  minimalUSDAmount / token.decimalUSDPrice)
+            .rounding(accordingToBehavior: tokenAmountRoundingHandler)
+            .decimalValue
+        self.receivingSelectorView.load(token: token)
+        self.tokenAmountRoundingHandler = tokenAmountRoundingHandler
+        self.minimalTokenAmount = minTokenAmount
+    }
+    
+    private func updateMinimalAmountLabel() {
+        guard let token = selectedToken else {
+            return
+        }
+        let amount = switch amountIntent {
+        case .byToken:
+            CurrencyFormatter.localizedString(
+                from: minimalTokenAmount,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(token.symbol)
+            )
+        case .byFiatMoney:
+            CurrencyFormatter.localizedString(
+                from: minimalFiatMoneyAmount,
+                format: .fiatMoney,
+                sign: .never,
+                symbol: .custom(selectedCurrency.code)
+            )
+        }
+        minimalAmountLabel.text = R.string.localizable.buying_limitation(amount)
+        minimalAmountLabel.alpha = 1
+    }
+    
+}
+
+extension BuyTokenInputAmountViewController {
+    
+    private enum BuyingError: Error {
+        case noAsset
+        case noAvailableCurrency
+        case noAvailableAsset
+        case unsupportedChain
+    }
+    
+    private struct PhoneNumberContext {
+        
+        let regionCode: String?
+        let inferredCurrencyCode: String?
+        
+        init() {
+            let utility = PhoneNumberUtility()
+            guard
+                let phone = LoginManager.shared.account?.phone,
+                let number = try? utility.parse(phone),
+                let regionCode = utility.getRegionCode(of: number)
+            else {
+                self.regionCode = nil
+                self.inferredCurrencyCode = nil
+                return
+            }
+            
+            let currencyCode: String?
+            switch regionCode {
+            case "AE":
+                currencyCode = "AED"
+            case "AU":
+                currencyCode = "AUD"
+            case "CA":
+                currencyCode = "CAD"
+            case "CN":
+                currencyCode = "CNY"
+            case "IE", "FR", "DE", "AT", "BE", "BG", "CY",
+                "HR", "EE", "FI", "GR", "IT", "LV", "LT",
+                "LU", "MT", "NL", "PT", "SK", "SI", "ES":
+                currencyCode = "EUR"
+            case "GB":
+                currencyCode = "GBP"
+            case "HK":
+                currencyCode = "HKD"
+            case "ID":
+                currencyCode = "IDR"
+            case "JP":
+                currencyCode = "JPY"
+            case "KR":
+                currencyCode = "KRW"
+            case "MY":
+                currencyCode = "MYR"
+            case "PH":
+                currencyCode = "PHP"
+            case "SG":
+                currencyCode = "SGD"
+            case "TR":
+                currencyCode = "TRY"
+            case "TW":
+                currencyCode = "TWD"
+            case "US":
+                currencyCode = "USD"
+            case "VN":
+                currencyCode = "VND"
+            default:
+                currencyCode = nil
+            }
+            
+            self.regionCode = regionCode
+            self.inferredCurrencyCode = currencyCode
+        }
+        
+    }
+    
+}

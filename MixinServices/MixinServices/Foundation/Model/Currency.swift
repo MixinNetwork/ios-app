@@ -4,6 +4,7 @@ public class Currency: CustomDebugStringConvertible {
     
     public let code: String
     public let symbol: String
+    public let precision: Int
     public var rate: Double
     
     public var icon: UIImage {
@@ -15,9 +16,10 @@ public class Currency: CustomDebugStringConvertible {
         Decimal(rate)
     }
     
-    init(code: String, symbol: String, rate: Double) {
+    init(code: String, symbol: String, precision: Int, rate: Double) {
         self.code = code
         self.symbol = symbol
+        self.precision = precision
         self.rate = rate
     }
     
@@ -31,6 +33,8 @@ public extension Currency {
     
     static let currentCurrencyDidChangeNotification = Notification.Name(rawValue: "one.mixin.services.current.currency.did.change")
     
+    static let usd = Currency(code: "USD", symbol: "$", precision: 2, rate: 1)
+    
     private(set) static var current = currentCurrencyStorage {
         didSet {
             NotificationCenter.default.post(name: currentCurrencyDidChangeNotification, object: nil)
@@ -39,23 +43,23 @@ public extension Currency {
     
     private(set) static var all: [Currency] = {
         let currencies = [
-            Currency(code: "USD", symbol: "$", rate: 1),
-            Currency(code: "CNY", symbol: "¥", rate: 7.3),
-            Currency(code: "JPY", symbol: "¥", rate: 147.7),
-            Currency(code: "EUR", symbol: "€", rate: 0.937315),
-            Currency(code: "KRW", symbol: "₩", rate: 1325.47),
-            Currency(code: "HKD", symbol: "HK$", rate: 7.82),
-            Currency(code: "GBP", symbol: "£", rate: 0.807872),
-            Currency(code: "AUD", symbol: "A$", rate: 1.56),
-            Currency(code: "SGD", symbol: "S$", rate: 1.36),
-            Currency(code: "MYR", symbol: "RM", rate: 4.69),
-            Currency(code: "PHP", symbol: "₱", rate: 56.68),
-            Currency(code: "AED", symbol: "AED ", rate: 3.67),
-            Currency(code: "TWD", symbol: "NT$", rate: 31.96),
-            Currency(code: "CAD", symbol: "C$", rate: 1.35),
-            Currency(code: "IDR", symbol: "Rp", rate: 15379.57),
-            Currency(code: "VND", symbol: "₫", rate: 24388),
-            Currency(code: "TRY", symbol: "₺", rate: 27.02),
+            .usd,
+            Currency(code: "CNY", symbol: "¥",      precision: 2, rate: 7.3),
+            Currency(code: "JPY", symbol: "¥",      precision: 0, rate: 147.7),
+            Currency(code: "EUR", symbol: "€",      precision: 2, rate: 0.937315),
+            Currency(code: "KRW", symbol: "₩",      precision: 0, rate: 1325.47),
+            Currency(code: "HKD", symbol: "HK$",    precision: 2, rate: 7.82),
+            Currency(code: "GBP", symbol: "£",      precision: 2, rate: 0.807872),
+            Currency(code: "AUD", symbol: "A$",     precision: 2, rate: 1.56),
+            Currency(code: "SGD", symbol: "S$",     precision: 2, rate: 1.36),
+            Currency(code: "MYR", symbol: "RM",     precision: 2, rate: 4.69),
+            Currency(code: "PHP", symbol: "₱",      precision: 2, rate: 56.68),
+            Currency(code: "AED", symbol: "AED ",   precision: 2, rate: 3.67),
+            Currency(code: "TWD", symbol: "NT$",    precision: 2, rate: 31.96),
+            Currency(code: "CAD", symbol: "C$",     precision: 2, rate: 1.35),
+            Currency(code: "IDR", symbol: "Rp",     precision: 2, rate: 15379.57),
+            Currency(code: "VND", symbol: "₫",      precision: 0, rate: 24388),
+            Currency(code: "TRY", symbol: "₺",      precision: 2, rate: 27.02),
         ]
         let rates = AppGroupUserDefaults.currencyRates
         for currency in currencies {
@@ -67,7 +71,8 @@ public extension Currency {
         return currencies
     }()
     
-    private static var map = [String: Currency](uniqueKeysWithValues: all.map({ ($0.code, $0) }))
+    private(set) static var map = [String: Currency](uniqueKeysWithValues: all.map({ ($0.code, $0) }))
+    
     private static var currentCurrencyStorage: Currency {
         if let code = LoginManager.shared.account?.fiatCurrency, let currency = map[code] {
             return currency

@@ -6,35 +6,33 @@ final class TokenActionView: UIView {
         func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction)
     }
     
-    var swapButton: UIButton {
-        buttons[TokenAction.swap.rawValue]
+    var actions: [TokenAction] = [] {
+        didSet {
+            reloadActionButtons()
+        }
     }
     
-    var badgeOnSwap = false {
+    var badgeActions: Set<TokenAction> = [] {
         didSet {
-            if badgeOnSwap {
-                showBadgeViewOnSwapButton()
-            } else {
-                badgeView?.removeFromSuperview()
-                badgeView = nil
-            }
+            reloadBadgeViews()
         }
     }
     
     weak var delegate: Delegate?
     
-    private var buttons: [UIButton] = []
+    private var buttons: [TokenAction: UIButton] = [:]
+    private var badgeViews: [TokenAction: BadgeDotView] = [:]
     
-    private weak var badgeView: BadgeDotView?
+    private weak var stackView: UIStackView!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        loadSubviews()
+        loadStackView()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        loadSubviews()
+        loadStackView()
     }
     
     @objc private func performAction(_ button: UIButton) {
@@ -44,15 +42,20 @@ final class TokenActionView: UIView {
         delegate?.tokenActionView(self, wantsToPerformAction: action)
     }
     
-    private func loadSubviews() {
+    private func loadStackView() {
         let stackView = UIStackView(frame: bounds)
         stackView.axis = .horizontal
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
         addSubview(stackView)
         stackView.snp.makeEdgesEqualToSuperview()
-        
-        for (index, action) in TokenAction.allCases.enumerated() {
+        self.stackView = stackView
+    }
+    
+    private func reloadActionButtons() {
+        stackView.arrangedSubviews.forEach(stackView.removeArrangedSubview(_:))
+        buttons.removeAll()
+        for action in actions {
             let button = UIButton(type: .system)
             button.configuration = {
                 let textAttributes: [NSAttributedString.Key: Any] = [
@@ -66,6 +69,8 @@ final class TokenActionView: UIView {
                     (R.image.token_action_send(), R.string.localizable.caption_send())
                 case .swap:
                     (R.image.token_action_swap(), R.string.localizable.swap())
+                case .buy:
+                    (R.image.token_action_buy(), R.string.localizable.buy())
                 }
                 var config: UIButton.Configuration = .plain()
                 config.baseBackgroundColor = .clear
@@ -75,29 +80,34 @@ final class TokenActionView: UIView {
                 config.attributedTitle = AttributedString(title, attributes: .init(textAttributes))
                 return config
             }()
-            button.tag = index
+            button.tag = action.rawValue
             button.addTarget(self, action: #selector(performAction(_:)), for: .touchUpInside)
             stackView.addArrangedSubview(button)
-            buttons.append(button)
+            buttons[action] = button
         }
     }
     
-    private func showBadgeViewOnSwapButton() {
-        guard
-            badgeView == nil,
-            !swapButton.isHidden,
-            let imageView = swapButton.imageView
-        else {
-            return
+    private func reloadBadgeViews() {
+        for action in badgeActions {
+            guard
+                let button = buttons[action],
+                let imageView = button.imageView,
+                badgeViews[action] == nil
+            else {
+                continue
+            }
+            let badgeView = BadgeDotView()
+            badgeView.backgroundColor = R.color.background()
+            addSubview(badgeView)
+            badgeView.snp.makeConstraints { make in
+                make.top.equalTo(imageView.snp.top)
+                make.trailing.equalTo(imageView.snp.trailing)
+            }
+            badgeViews[action] = badgeView
         }
-        let badgeView = BadgeDotView()
-        badgeView.backgroundColor = R.color.background()
-        addSubview(badgeView)
-        badgeView.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.top)
-            make.trailing.equalTo(imageView.snp.trailing)
+        for (action, badgeView) in badgeViews where !badgeActions.contains(action) {
+            badgeView.removeFromSuperview()
         }
-        self.badgeView = badgeView
     }
     
 }

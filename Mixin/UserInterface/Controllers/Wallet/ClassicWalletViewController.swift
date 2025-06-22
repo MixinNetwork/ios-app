@@ -22,6 +22,7 @@ final class ClassicWalletViewController: WalletViewController {
         titleLabel.text = R.string.localizable.common_wallet()
         tableView.dataSource = self
         tableView.delegate = self
+        tableHeaderView.actionView.actions = [.buy, .receive, .send, .swap]
         tableHeaderView.actionView.delegate = self
         tableHeaderView.pendingDepositButton.addTarget(
             self,
@@ -228,6 +229,9 @@ extension ClassicWalletViewController: TokenActionView.Delegate {
     
     func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
         switch action {
+        case .buy:
+            let buy = BuyTokenInputAmountViewController(wallet: .classic(id: walletID))
+            navigationController?.pushViewController(buy, animated: true)
         case .send:
             let selector = Web3TokenSelectorViewController(walletID: walletID, tokens: tokens)
             selector.onSelected = { [walletID] token in

@@ -20,6 +20,8 @@
                 <outlet property="insufficientBalanceLabel" destination="SaA-gy-pGd" id="Njk-2d-77e"/>
                 <outlet property="numberPadTopConstraint" destination="s6B-1c-gWe" id="q7a-GN-WaL"/>
                 <outlet property="reviewButton" destination="W8F-Bv-lIc" id="7Uu-iF-iV6"/>
+                <outlet property="reviewButtonStackView" destination="sid-gN-32f" id="jAX-Ze-kgK"/>
+                <outlet property="reviewButtonStackViewBottomConstraint" destination="6ZM-aJ-2ni" id="FzD-Yn-24d"/>
                 <outlet property="view" destination="iN0-l3-epB" id="UIp-eP-7EW"/>
                 <outletCollection property="decimalButtons" destination="Caq-Hm-dJF" collectionClass="NSMutableArray" id="l3T-bH-3kk"/>
                 <outletCollection property="decimalButtons" destination="hIe-aS-MK7" collectionClass="NSMutableArray" id="EpW-uY-vQC"/>
@@ -39,10 +41,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DlO-Gt-IZh" userLabel="Input Amount Wrapper View">
-                    <rect key="frame" x="0.0" y="94" width="390" height="344"/>
+                    <rect key="frame" x="0.0" y="94" width="390" height="350"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="PQy-wf-KED">
-                            <rect key="frame" x="30" y="114.33333333333334" width="330" height="115"/>
+                            <rect key="frame" x="30" y="117.33333333333334" width="330" height="115"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="0 USDT" textAlignment="natural" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.25" translatesAutoresizingMaskIntoConstraints="NO" id="cbS-rU-rOn">
                                     <rect key="frame" x="97.666666666666686" y="0.0" width="135" height="48"/>
@@ -83,7 +85,7 @@
                             </subviews>
                         </stackView>
                         <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vbe-Ks-z2S">
-                            <rect key="frame" x="196.33333333333334" y="165.33333333333331" width="44" height="44"/>
+                            <rect key="frame" x="196.33333333333334" y="168.33333333333331" width="44" height="44"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="44" id="bl3-x6-jtr"/>
                                 <constraint firstAttribute="width" constant="44" id="w0h-Dv-D39"/>
@@ -104,13 +106,13 @@
                     </constraints>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="C1J-Wa-hHH" userLabel="Accessory Stack View">
-                    <rect key="frame" x="0.0" y="438" width="390" height="0.0"/>
+                    <rect key="frame" x="0.0" y="444" width="390" height="0.0"/>
                     <constraints>
                         <constraint firstAttribute="height" priority="1" id="xIP-Ri-EoY"/>
                     </constraints>
                 </stackView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="gGb-Mu-a5l" userLabel="Number Pad Stack View">
-                    <rect key="frame" x="18" y="450" width="354" height="238"/>
+                    <rect key="frame" x="18" y="456" width="354" height="238"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="UBp-aW-xox">
                             <rect key="frame" x="0.0" y="0.0" width="354" height="55"/>
@@ -317,66 +319,63 @@
                         <constraint firstAttribute="width" secondItem="gGb-Mu-a5l" secondAttribute="height" multiplier="339:228" id="c8n-Wx-qCs"/>
                     </constraints>
                 </stackView>
-                <view contentMode="scaleToFill" verticalHuggingPriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="cpf-Ia-i69">
-                    <rect key="frame" x="0.0" y="688" width="390" height="82"/>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="sid-gN-32f">
+                    <rect key="frame" x="0.0" y="694" width="390" height="82"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W8F-Bv-lIc" customClass="StyledButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="70.666666666666686" y="20" width="249" height="42"/>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                            <inset key="contentEdgeInsets" minX="100" minY="12" maxX="100" maxY="12"/>
-                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            <state key="normal" title="Review"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="review"/>
-                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                            </userDefinedRuntimeAttributes>
-                            <connections>
-                                <action selector="review:" destination="-1" eventType="touchUpInside" id="na8-dm-sZy"/>
-                            </connections>
-                        </button>
+                        <view contentMode="scaleToFill" verticalHuggingPriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="cpf-Ia-i69">
+                            <rect key="frame" x="0.0" y="0.0" width="390" height="82"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W8F-Bv-lIc" customClass="StyledButton" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="70.666666666666686" y="20" width="249" height="42"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                    <inset key="contentEdgeInsets" minX="100" minY="12" maxX="100" maxY="12"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <state key="normal" title="Review"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="review"/>
+                                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="review:" destination="-1" eventType="touchUpInside" id="na8-dm-sZy"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" name="background"/>
+                            <constraints>
+                                <constraint firstItem="W8F-Bv-lIc" firstAttribute="top" relation="greaterThanOrEqual" secondItem="cpf-Ia-i69" secondAttribute="top" constant="4" id="0tb-4k-RW0"/>
+                                <constraint firstAttribute="height" priority="750" constant="82" id="BWQ-0T-CNY" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                                            <real key="value" value="60"/>
+                                        </userDefinedRuntimeAttribute>
+                                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                                            <real key="value" value="60"/>
+                                        </userDefinedRuntimeAttribute>
+                                    </userDefinedRuntimeAttributes>
+                                </constraint>
+                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="W8F-Bv-lIc" secondAttribute="bottom" constant="4" id="EBm-qF-xa7"/>
+                                <constraint firstItem="W8F-Bv-lIc" firstAttribute="centerY" secondItem="cpf-Ia-i69" secondAttribute="centerY" id="Rcp-pM-Z7Q"/>
+                                <constraint firstItem="W8F-Bv-lIc" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="cpf-Ia-i69" secondAttribute="leading" id="gzV-2d-Sn3"/>
+                                <constraint firstItem="W8F-Bv-lIc" firstAttribute="centerX" secondItem="cpf-Ia-i69" secondAttribute="centerX" id="lO4-W4-Zb6"/>
+                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="W8F-Bv-lIc" secondAttribute="trailing" id="tv9-um-h2G"/>
+                            </constraints>
+                        </view>
                     </subviews>
-                    <color key="backgroundColor" name="background"/>
-                    <constraints>
-                        <constraint firstItem="W8F-Bv-lIc" firstAttribute="top" relation="greaterThanOrEqual" secondItem="cpf-Ia-i69" secondAttribute="top" constant="4" id="0tb-4k-RW0"/>
-                        <constraint firstAttribute="height" priority="750" constant="82" id="BWQ-0T-CNY" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
-                                    <real key="value" value="60"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
-                                    <real key="value" value="60"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </constraint>
-                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="W8F-Bv-lIc" secondAttribute="bottom" constant="4" id="EBm-qF-xa7"/>
-                        <constraint firstItem="W8F-Bv-lIc" firstAttribute="centerY" secondItem="cpf-Ia-i69" secondAttribute="centerY" id="Rcp-pM-Z7Q"/>
-                        <constraint firstItem="W8F-Bv-lIc" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="cpf-Ia-i69" secondAttribute="leading" id="gzV-2d-Sn3"/>
-                        <constraint firstItem="W8F-Bv-lIc" firstAttribute="centerX" secondItem="cpf-Ia-i69" secondAttribute="centerX" id="lO4-W4-Zb6"/>
-                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="W8F-Bv-lIc" secondAttribute="trailing" id="tv9-um-h2G"/>
-                    </constraints>
-                </view>
+                </stackView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" name="background"/>
             <constraints>
-                <constraint firstItem="cpf-Ia-i69" firstAttribute="top" secondItem="gGb-Mu-a5l" secondAttribute="bottom" id="5tO-TC-dPj" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
-                            <real key="value" value="0.0"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
-                            <real key="value" value="8"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </constraint>
+                <constraint firstItem="sid-gN-32f" firstAttribute="top" secondItem="gGb-Mu-a5l" secondAttribute="bottom" id="65b-pX-VoS"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="sid-gN-32f" secondAttribute="bottom" id="6ZM-aJ-2ni"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="gGb-Mu-a5l" secondAttribute="trailing" constant="18" id="7j4-8K-fAy"/>
                 <constraint firstItem="DlO-Gt-IZh" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="G5Z-m5-OaO"/>
-                <constraint firstAttribute="trailing" secondItem="cpf-Ia-i69" secondAttribute="trailing" id="K8R-h9-4Pr"/>
                 <constraint firstItem="C1J-Wa-hHH" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Mze-Ev-aWu"/>
-                <constraint firstItem="cpf-Ia-i69" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="QW6-I5-Stc"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="C1J-Wa-hHH" secondAttribute="trailing" id="U7r-LP-mau"/>
                 <constraint firstItem="DlO-Gt-IZh" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="You-Yn-aF1"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="DlO-Gt-IZh" secondAttribute="trailing" id="aUx-Hy-yYa"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="sid-gN-32f" secondAttribute="trailing" id="frN-DK-fDF"/>
+                <constraint firstItem="sid-gN-32f" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="m05-UF-hvH"/>
                 <constraint firstItem="gGb-Mu-a5l" firstAttribute="top" secondItem="C1J-Wa-hHH" secondAttribute="bottom" constant="12" id="s6B-1c-gWe" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
@@ -387,7 +386,6 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </constraint>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="cpf-Ia-i69" secondAttribute="bottom" constant="6" id="vze-7P-Z4f"/>
                 <constraint firstItem="gGb-Mu-a5l" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="18" id="xa0-2c-zeg"/>
                 <constraint firstItem="C1J-Wa-hHH" firstAttribute="top" secondItem="DlO-Gt-IZh" secondAttribute="bottom" id="zev-Ye-gHi"/>
             </constraints>

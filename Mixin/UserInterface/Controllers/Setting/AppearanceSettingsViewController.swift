@@ -136,8 +136,31 @@ extension AppearanceSettingsViewController {
     }
     
     private func pickCurrency() {
-        let vc = CurrencySelectorViewController()
-        present(vc, animated: true, completion: nil)
+        var currencies = Currency.all
+        if let index = currencies.firstIndex(where: { $0.code == Currency.current.code }) {
+            let selected = currencies.remove(at: index)
+            currencies.insert(selected, at: 0)
+        }
+        let selector = CurrencySelectorViewController(
+            currencies: currencies,
+            selectedCurrencyCode: Currency.current.code
+        ) { currency in
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            AccountAPI.preferences(preferenceRequest: UserPreferenceRequest(fiat_currency: currency.code), completion: { [weak self] (result) in
+                switch result {
+                case .success(let account):
+                    LoginManager.shared.setAccount(account)
+                    Currency.refreshCurrentCurrency()
+                    hud.set(style: .notification, text: R.string.localizable.saved())
+                    self?.dismiss(animated: true, completion: nil)
+                case let .failure(error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                }
+                hud.scheduleAutoHidden()
+            })
+        }
+        present(selector, animated: true, completion: nil)
     }
     
     private func changeChatBackground() {

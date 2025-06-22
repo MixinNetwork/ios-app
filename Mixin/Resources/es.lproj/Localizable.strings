@@ -204,8 +204,11 @@
 "bots" = "BOTS";
 "bots_title" = "Bots";
 "browser" = "Browser";
+"buy" = "Buy";
+"buy_asset" = "Buy %@";
 "buy_stars" = "Buy Stars";
 "buy_token" = "Buy %@";
+"buying_limitation" = "Minimum %@";
 "calculating" = "Calculating...";
 "call" = "Llamar";
 "call_declined" = "Llamada rechazada";

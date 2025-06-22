@@ -10,11 +10,13 @@ class InputAmountViewController: UIViewController {
     @IBOutlet weak var accessoryStackView: UIStackView!
     @IBOutlet weak var decimalSeparatorButton: HighlightableButton!
     @IBOutlet weak var deleteBackwardsButton: HighlightableButton!
+    @IBOutlet weak var reviewButtonStackView: UIStackView!
     @IBOutlet weak var reviewButton: StyledButton!
     
     @IBOutlet var decimalButtons: [DecimalButton]!
     
     @IBOutlet weak var numberPadTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var reviewButtonStackViewBottomConstraint: NSLayoutConstraint!
     
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()

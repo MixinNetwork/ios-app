@@ -1,23 +1,30 @@
 import UIKit
 import MixinServices
 
-class CurrencySelectorViewController: PopupSearchableTableViewController {
+final class CurrencySelectorViewController: PopupSearchableTableViewController {
     
-    private let currencies: [Currency] = {
-        var currencies = Currency.all
-        if let index = currencies.firstIndex(where: { $0.code == Currency.current.code }) {
-            let selected = currencies.remove(at: index)
-            currencies.insert(selected, at: 0)
-        }
-        return currencies
-    }()
+    private let currencies: [Currency]
+    private let selectedCurrencyCode: String?
+    private let onSelectedChange: (Currency) -> Void
     
     private var searchResults = [Currency]()
     
-    convenience init() {
-        self.init(nib: R.nib.popupSearchableTableView)
+    init(
+        currencies: [Currency],
+        selectedCurrencyCode: String?,
+        onSelectedChange: @escaping (Currency) -> Void
+    ) {
+        self.currencies = currencies
+        self.selectedCurrencyCode = selectedCurrencyCode
+        self.onSelectedChange = onSelectedChange
+        let nib = R.nib.popupSearchableTableView
+        super.init(nibName: nib.name, bundle: nib.bundle)
         transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
         modalPresentationStyle = .custom
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
     }
     
     override func viewDidLoad() {
@@ -30,9 +37,9 @@ class CurrencySelectorViewController: PopupSearchableTableViewController {
     }
     
     override func updateSearchResults(keyword: String) {
-        searchResults = currencies.filter({ (currency) -> Bool in
-            return currency.code.lowercased().contains(keyword)
-        })
+        searchResults = currencies.filter { (currency) -> Bool in
+            currency.code.lowercased().contains(keyword)
+        }
     }
     
 }
@@ -44,14 +51,11 @@ extension CurrencySelectorViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let currency = isSearching ? searchResults[indexPath.row] : currencies[indexPath.row]
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.currency, for: indexPath)!
+        let currency = isSearching ? searchResults[indexPath.row] : currencies[indexPath.row]
         cell.render(currency: currency)
-        
-        let isSelected = currency.code == Currency.current.code
+        let isSelected = currency.code == selectedCurrencyCode
         cell.checkmarkImageView.isHidden = !isSelected
-        
         return cell
     }
     
@@ -62,20 +66,7 @@ extension CurrencySelectorViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let currency = isSearching ? searchResults[indexPath.row] : currencies[indexPath.row]
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: self.view)
-        AccountAPI.preferences(preferenceRequest: UserPreferenceRequest(fiat_currency: currency.code), completion: { [weak self] (result) in
-            switch result {
-            case .success(let account):
-                LoginManager.shared.setAccount(account)
-                Currency.refreshCurrentCurrency()
-                hud.set(style: .notification, text: R.string.localizable.saved())
-                self?.dismiss(animated: true, completion: nil)
-            case let .failure(error):
-                hud.set(style: .error, text: error.localizedDescription)
-            }
-            hud.scheduleAutoHidden()
-        })
+        onSelectedChange(currency)
     }
     
 }

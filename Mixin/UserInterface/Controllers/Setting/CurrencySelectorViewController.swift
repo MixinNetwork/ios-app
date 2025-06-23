@@ -19,8 +19,6 @@ final class CurrencySelectorViewController: PopupSearchableTableViewController {
         self.onSelectedChange = onSelectedChange
         let nib = R.nib.popupSearchableTableView
         super.init(nibName: nib.name, bundle: nib.bundle)
-        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
-        modalPresentationStyle = .custom
     }
     
     required init?(coder: NSCoder) {

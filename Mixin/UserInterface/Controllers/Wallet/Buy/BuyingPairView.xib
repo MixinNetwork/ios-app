@@ -22,7 +22,6 @@
                     <rect key="frame" x="0.0" y="0.0" width="124" height="44"/>
                     <color key="backgroundColor" name="background_secondary"/>
                     <constraints>
-                        <constraint firstAttribute="width" priority="750" constant="124" id="cBB-hy-hAL"/>
                         <constraint firstAttribute="height" constant="44" id="iTw-jg-Ema"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
@@ -39,7 +38,6 @@
                     <color key="backgroundColor" name="background_secondary"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="Uuc-eK-Tru"/>
-                        <constraint firstAttribute="width" priority="750" constant="124" id="tkd-ak-kMv"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">

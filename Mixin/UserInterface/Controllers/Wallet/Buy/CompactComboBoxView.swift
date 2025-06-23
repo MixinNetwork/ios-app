@@ -51,11 +51,14 @@ final class CompactComboBoxView: UIControl {
     private func loadSubviews() {
         iconImageView.setContentHuggingPriority(.required, for: .horizontal)
         iconImageView.setContentCompressionResistancePriority(.required, for: .horizontal)
-        label.text = text
         label.textColor = R.color.text()
         label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        label.textAlignment = .center
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        label.text = text
         activityIndicator.style = .custom(diameter: 10, lineWidth: 2)
         activityIndicator.tintColor = R.color.button_background_disabled()
         activityIndicator.hidesWhenStopped = true

@@ -83,12 +83,13 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         accessoryStackView.addArrangedSubview(buyingPairView)
         buyingPairView.snp.makeConstraints { make in
             make.height.equalTo(44)
-            make.width.lessThanOrEqualTo(view.safeAreaLayoutGuide).offset(-56)
-        }
-        if ScreenWidth.current <= .medium {
-            buyingPairView.spacing = 10
-        } else {
-            buyingPairView.spacing = 23
+            if ScreenWidth.current <= .medium {
+                buyingPairView.spacing = 10
+                make.width.equalTo(view.safeAreaLayoutGuide).offset(-40)
+            } else {
+                buyingPairView.spacing = 23
+                make.width.equalTo(view.safeAreaLayoutGuide).offset(-56)
+            }
         }
         payingSelectorView.load(currency: selectedCurrency)
         payingSelectorView.accessoryView = .activityIndicator

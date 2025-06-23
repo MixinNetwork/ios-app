@@ -314,9 +314,6 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         Task { [weak self] in
             do {
                 let profile = try await RouteAPI.profile()
-                guard let firstAssetID = profile.assetIDs.first else {
-                    throw BuyingError.noAsset
-                }
                 
                 let context = PhoneNumberContext()
                 let currencies = profile.currencies.compactMap { code in
@@ -333,12 +330,15 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                     throw BuyingError.noAvailableCurrency
                 }
                 
-                let tokens = try await self?.tokens(assetIDs: profile.assetIDs) ?? [:]
+                let allTokens = try await self?.tokens(assetIDs: profile.assetIDs) ?? [:]
+                let tokens = profile.assetIDs.compactMap { id in
+                    allTokens[id]
+                }
                 let token: any Token
-                if let id = AppGroupUserDefaults.Wallet.lastBuyingAssetID, let item = tokens[id] {
-                    token = item
-                } else if let item = tokens[firstAssetID] {
-                    token = item
+                if let id = AppGroupUserDefaults.Wallet.lastBuyingAssetID, let lastBuying = allTokens[id] {
+                    token = lastBuying
+                } else if let firstToken = tokens.first {
+                    token = firstToken
                 } else {
                     throw BuyingError.noAvailableAsset
                 }
@@ -349,7 +349,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                     self.currencies = currencies
                     self.selectedCurrency = currency
                     self.updateWithSelectedCurrency(currency)
-                    self.tokens = Array(tokens.values)
+                    self.tokens = tokens
                     self.selectedToken = token
                     self.updateWithSelectedToken(token)
                     self.updateMinimalAmountLabel()
@@ -525,7 +525,6 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
 extension BuyTokenInputAmountViewController {
     
     private enum BuyingError: Error {
-        case noAsset
         case noAvailableCurrency
         case noAvailableAsset
         case unsupportedChain

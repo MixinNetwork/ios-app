@@ -65,7 +65,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                 title: R.string.localizable.buy(),
                 subtitle: R.string.localizable.privacy_wallet()
             )
-        case .classic(let id):
+        case .classic:
             NavigationTitleView(
                 title: R.string.localizable.buy(),
                 subtitle: R.string.localizable.common_wallet()
@@ -333,14 +333,11 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                     throw BuyingError.noAvailableCurrency
                 }
                 
-                let allTokens = try await self?.tokens(assetIDs: profile.assetIDs) ?? [:]
-                let tokens = profile.assetIDs.compactMap { id in
-                    allTokens[id]
-                }
+                let tokens = try await self?.tokens(assetIDs: profile.assetIDs) ?? [:]
                 let token: any Token
-                if let id = AppGroupUserDefaults.Wallet.lastBuyingAssetID, let item = allTokens[id] {
+                if let id = AppGroupUserDefaults.Wallet.lastBuyingAssetID, let item = tokens[id] {
                     token = item
-                } else if let item = allTokens[firstAssetID] {
+                } else if let item = tokens[firstAssetID] {
                     token = item
                 } else {
                     throw BuyingError.noAvailableAsset
@@ -352,7 +349,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                     self.currencies = currencies
                     self.selectedCurrency = currency
                     self.updateWithSelectedCurrency(currency)
-                    self.tokens = tokens
+                    self.tokens = Array(tokens.values)
                     self.selectedToken = token
                     self.updateWithSelectedToken(token)
                     self.reloadViews(inputAmount: self.accumulator.decimal)
@@ -377,7 +374,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                         let alert = UIAlertController(
                             title: "Buying not available",
                             message: error.localizedDescription,
-                            preferredStyle: .actionSheet
+                            preferredStyle: .alert
                         )
                         let ok = UIAlertAction(
                             title: R.string.localizable.ok(),
@@ -426,8 +423,9 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
             
             // TODO: Get web3 tokens with dedicated API
             if !assetIDs.isEmpty {
+                let availableChainIDs = Set(Web3Chain.all.map(\.chainID))
                 let remoteTokens = try await SafeAPI.assets(ids: assetIDs)
-                for token in remoteTokens {
+                for token in remoteTokens where availableChainIDs.contains(token.chainID) {
                     let web3Token = Web3Token(
                         walletID: walletID,
                         assetID: token.assetID,

@@ -3,7 +3,14 @@ import WebKit
 
 class PopupTitledWebViewController: UIViewController {
     
+    enum WebPagePopupBehavior {
+        case ignore
+        case replaceCurrent
+    }
+    
     @IBOutlet weak var titleView: PopupTitleView!
+    
+    var webPagePopupBehavior: WebPagePopupBehavior = .ignore
     
     private let popupTitle: String
     private let popupSubtitle: String?
@@ -11,20 +18,6 @@ class PopupTitledWebViewController: UIViewController {
     private let request: URLRequest
     
     private weak var webView: WKWebView!
-    
-    init(
-        title: String,
-        subtitle: String?,
-        configuration: WKWebViewConfiguration,
-        request: URLRequest
-    ) {
-        self.popupTitle = title
-        self.popupSubtitle = subtitle
-        self.configuration = configuration
-        self.request = request
-        let nib = R.nib.popupTitledWebView
-        super.init(nibName: nib.name, bundle: nib.bundle)
-    }
     
     init(title: String, subtitle: String?, url: URL) {
         self.popupTitle = title
@@ -41,11 +34,20 @@ class PopupTitledWebViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         titleView.titleLabel.font = .scaledFont(ofSize: 16, weight: .medium)
         titleView.titleLabel.text = popupTitle
         titleView.subtitleLabel.text = popupSubtitle
         titleView.closeButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
+        replaceWebView(configuration: configuration)
+        webView.load(request)
+    }
+    
+    @objc private func close(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true)
+    }
+    
+    private func replaceWebView(configuration: WKWebViewConfiguration) {
+        self.webView?.removeFromSuperview()
         
         let webView = WKWebView(frame: .zero, configuration: configuration)
         view.addSubview(webView)
@@ -59,12 +61,8 @@ class PopupTitledWebViewController: UIViewController {
         }
 #endif
         webView.uiDelegate = self
-        webView.load(request)
+        
         self.webView = webView
-    }
-    
-    @objc private func close(_ sender: Any) {
-        presentingViewController?.dismiss(animated: true)
     }
     
 }
@@ -72,13 +70,13 @@ class PopupTitledWebViewController: UIViewController {
 extension PopupTitledWebViewController: WKUIDelegate {
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-        let popup = PopupTitledWebViewController(
-            title: popupTitle,
-            subtitle: popupSubtitle,
-            configuration: configuration,
-            request: navigationAction.request
-        )
-        present(popup, animated: true)
+        switch webPagePopupBehavior {
+        case .ignore:
+            break
+        case .replaceCurrent:
+            replaceWebView(configuration: configuration)
+            self.webView.load(navigationAction.request)
+        }
         return nil
     }
     

@@ -12,7 +12,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
     
     private let wallet: Wallet
     
-    private(set) var amountIntent: AmountIntent = .byToken
+    private(set) var amountIntent: AmountIntent = .byFiatMoney
     private(set) var tokenAmount: Decimal = 0
     private(set) var fiatMoneyAmount: Decimal = 0
     
@@ -71,7 +71,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                 subtitle: R.string.localizable.common_wallet()
             )
         }
-        calculatedValueLabel.text = CurrencyFormatter.localizedString(
+        amountLabel.text = CurrencyFormatter.localizedString(
             from: 0,
             format: .precision,
             sign: .never,
@@ -124,7 +124,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                 guard let self, self.selectedToken == nil else {
                     return
                 }
-                self.amountLabel.text = CurrencyFormatter.localizedString(
+                self.calculatedValueLabel.text = CurrencyFormatter.localizedString(
                     from: 0,
                     format: .precision,
                     sign: .never,

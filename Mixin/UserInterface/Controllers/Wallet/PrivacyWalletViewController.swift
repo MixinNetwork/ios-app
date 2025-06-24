@@ -23,6 +23,7 @@ final class PrivacyWalletViewController: WalletViewController {
             make.width.height.equalTo(22)
         }
         
+        tableHeaderView.actionView.actions = [.buy, .receive, .send, .swap]
         tableHeaderView.actionView.delegate = self
         tableHeaderView.pendingDepositButton.addTarget(
             self,
@@ -68,6 +69,7 @@ final class PrivacyWalletViewController: WalletViewController {
         
         DispatchQueue.global().async {
             let hasWalletSwitchViewed: Bool = PropertiesDAO.shared.value(forKey: .hasWalletSwitchViewed) ?? false
+            let hasBuyingReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasBuyingViewed) ?? false
             let hasSwapReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapReviewed) ?? false
             DispatchQueue.main.async {
                 if !hasWalletSwitchViewed {
@@ -85,8 +87,11 @@ final class PrivacyWalletViewController: WalletViewController {
                         object: nil
                     )
                 }
+                if !hasBuyingReviewed {
+                    self.tableHeaderView.actionView.badgeActions.insert(.buy)
+                }
                 if !hasSwapReviewed {
-                    self.tableHeaderView.actionView.badgeOnSwap = true
+                    self.tableHeaderView.actionView.badgeActions.insert(.swap)
                 }
             }
         }
@@ -337,6 +342,13 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
     func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
         lastSelectedAction = action
         switch action {
+        case .buy:
+            let buy = BuyTokenInputAmountViewController(wallet: .privacy)
+            tableHeaderView.actionView.badgeActions.remove(.buy)
+            navigationController?.pushViewController(buy, animated: true)
+            DispatchQueue.global().async {
+                PropertiesDAO.shared.set(true, forKey: .hasBuyingViewed)
+            }
         case .send:
             reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "wallet_home"])
             let selector = MixinTokenSelectorViewController()
@@ -360,7 +372,7 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
             }
         case .swap:
             reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "wallet_home"])
-            tableHeaderView.actionView.badgeOnSwap = false
+            tableHeaderView.actionView.badgeActions.remove(.swap)
             let swap = MixinSwapViewController(sendAssetID: nil, receiveAssetID: nil, referral: nil)
             navigationController?.pushViewController(swap, animated: true)
             DispatchQueue.global().async {

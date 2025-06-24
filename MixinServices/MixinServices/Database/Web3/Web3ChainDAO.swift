@@ -12,4 +12,8 @@ public final class Web3ChainDAO: Web3DAO {
         db.save(chains)
     }
     
+    public func chain(chainID: String) -> Chain? {
+        db.select(where: Chain.column(of: .chainId) == chainID)
+    }
+    
 }

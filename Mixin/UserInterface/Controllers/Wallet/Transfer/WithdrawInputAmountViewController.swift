@@ -55,6 +55,8 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
         addFeeView()
         changeFeeButton?.addTarget(self, action: #selector(changeFee(_:)), for: .touchUpInside)
         reloadWithdrawFee(with: tokenItem, destination: destination)
+        
+        reporter.report(event: .sendAmount)
     }
     
     override func review(_ sender: Any) {

@@ -21,6 +21,13 @@ public extension NumberFormatter {
         return formatter
     }()
     
+    static let enUSPOSIXLocalizedDecimal: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.locale = .enUSPOSIX
+        return formatter
+    }()
+    
     static let decimal = NumberFormatter(numberStyle: .decimal)
     
     static let simplePercentage: NumberFormatter = {

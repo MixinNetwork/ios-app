@@ -471,6 +471,57 @@ extension RouteAPI {
     
 }
 
+// MARK: - Buy
+extension RouteAPI {
+    
+    static func profile() async throws -> RouteProfile {
+        try await withCheckedThrowingContinuation { continuation in
+            Self.request(method: .get, path: "/profile") { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+    
+    static func quote(
+        currency: String,
+        assetID: String,
+        completion: @escaping (MixinAPI.Result<RouteQuote>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/quote",
+            with: [
+                "currency": currency,
+                "asset_id": assetID,
+            ],
+            completion: completion
+        )
+    }
+    
+    static func rampURL(
+        amount: String,
+        assetID: String,
+        currency: String,
+        destination: String
+    ) async throws -> URL {
+        struct Response: Decodable {
+            let url: URL
+        }
+        let response: Response = try await request(
+            method: .post,
+            path: "/ramp/weburl",
+            with: [
+                "amount": amount,
+                "asset_id": assetID,
+                "currency": currency,
+                "destination": destination,
+            ]
+        )
+        return response.url
+    }
+    
+}
+
 // MARK: - Signing
 extension RouteAPI {
     

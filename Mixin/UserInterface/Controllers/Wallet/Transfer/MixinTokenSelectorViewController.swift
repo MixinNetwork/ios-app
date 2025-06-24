@@ -3,7 +3,7 @@ import OrderedCollections
 import Alamofire
 import MixinServices
 
-final class MixinTokenSelectorViewController: TokenSelectorViewController<MixinTokenItem> {
+final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewController<MixinTokenItem> {
     
     var onSelected: ((MixinTokenItem, PickUpLocation) -> Void)?
     var searchFromRemote = false

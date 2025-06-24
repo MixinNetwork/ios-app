@@ -2,7 +2,7 @@ import UIKit
 import SDWebImage
 import MixinServices
 
-final class TransferInputAmountViewController: InputAmountViewController {
+final class TransferInputAmountViewController: TokenConsumingInputAmountViewController {
     
     var reference: String?
     var redirection: URL?
@@ -109,6 +109,8 @@ final class TransferInputAmountViewController: InputAmountViewController {
         tokenIconView.setIcon(token: tokenItem)
         tokenNameLabel.text = tokenItem.name
         tokenBalanceLabel.text = tokenItem.localizedBalanceWithSymbol
+        
+        reporter.report(event: .sendAmount)
     }
     
     override func review(_ sender: Any) {

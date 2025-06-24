@@ -197,6 +197,8 @@ extension MixinTokenViewController: TokenActionView.Delegate {
             )
             navigationController?.pushViewController(swap, animated: true)
             reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "asset_detail"])
+        case .buy:
+            break
         }
     }
     

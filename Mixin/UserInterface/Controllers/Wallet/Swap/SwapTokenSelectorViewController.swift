@@ -3,7 +3,7 @@ import OrderedCollections
 import Alamofire
 import MixinServices
 
-class SwapTokenSelectorViewController: TokenSelectorViewController<BalancedSwapToken> {
+class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewController<BalancedSwapToken> {
     
     enum Recent {
         

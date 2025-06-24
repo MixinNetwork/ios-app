@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class FeeRequiredInputAmountViewController: InputAmountViewController {
+class FeeRequiredInputAmountViewController: TokenConsumingInputAmountViewController {
     
     var feeAttributes: AttributeContainer {
         var container = AttributeContainer()

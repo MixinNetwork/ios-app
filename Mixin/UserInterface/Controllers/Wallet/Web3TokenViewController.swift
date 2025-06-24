@@ -192,6 +192,8 @@ extension Web3TokenViewController: TokenActionView.Delegate {
             let swap = Web3SwapViewController(sendAssetID: token.assetID, receiveAssetID: AssetID.erc20USDT, walletID: token.walletID)
             navigationController?.pushViewController(swap, animated: true)
             reporter.report(event: .tradeStart, tags: ["source": "asset_detail", "wallet": "web3"])
+        case .buy:
+            break
         }
     }
     

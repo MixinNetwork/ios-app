@@ -2,7 +2,7 @@ import UIKit
 import Alamofire
 import MixinServices
 
-final class Web3TokenSelectorViewController: TokenSelectorViewController<Web3TokenItem> {
+final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewController<Web3TokenItem> {
     
     var onSelected: ((Web3TokenItem) -> Void)?
     

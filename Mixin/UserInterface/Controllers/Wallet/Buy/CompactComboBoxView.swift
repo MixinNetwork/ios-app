@@ -53,20 +53,21 @@ final class CompactComboBoxView: UIControl {
         iconImageView.setContentCompressionResistancePriority(.required, for: .horizontal)
         label.textColor = R.color.text()
         label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-        label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.5
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         label.text = text
         activityIndicator.style = .custom(diameter: 10, lineWidth: 2)
         activityIndicator.tintColor = R.color.button_background_disabled()
         activityIndicator.hidesWhenStopped = true
+        activityIndicator.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        activityIndicator.setContentCompressionResistancePriority(.required, for: .horizontal)
         activityIndicator.startAnimating()
         disclosureImageView.image = R.image.ic_selector_down()
         disclosureImageView.tintColor = R.color.text_tertiary()
         disclosureImageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        disclosureImageView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        disclosureImageView.setContentCompressionResistancePriority(.required, for: .horizontal)
         disclosureImageView.isHidden = true
         
         let stackView = UIStackView(arrangedSubviews: [

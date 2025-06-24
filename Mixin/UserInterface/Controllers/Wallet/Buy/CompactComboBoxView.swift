@@ -84,6 +84,9 @@ final class CompactComboBoxView: UIControl {
         iconImageView.snp.makeConstraints { make in
             make.width.height.equalTo(26)
         }
+        activityIndicator.snp.makeConstraints { make in
+            make.width.equalTo(16).priority(.almostRequired)
+        }
         
         addSubview(button)
         button.snp.makeEdgesEqualToSuperview()

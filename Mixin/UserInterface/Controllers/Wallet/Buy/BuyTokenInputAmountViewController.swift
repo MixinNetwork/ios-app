@@ -156,7 +156,6 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                 .decimalValue
         }
         self.accumulator = accumulator
-        self.updateMinimalLabel()
     }
     
     override func reloadViews(inputAmount: Decimal) {
@@ -554,27 +553,16 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
     }
     
     private func updateMinimalLabel() {
-        guard let token = selectedToken, let minimalAmount else {
+        guard let minimalAmount else {
             return
         }
-        let amount: String
-        switch amountIntent {
-        case .byToken:
-            amount = CurrencyFormatter.localizedString(
-                from: minimalAmount.token,
-                format: .precision,
-                sign: .never,
-                symbol: .custom(token.symbol)
-            )
-        case .byFiatMoney:
-            amount = CurrencyFormatter.localizedString(
-                from: minimalAmount.fiatMoney,
-                format: .fiatMoney,
-                sign: .never,
-                symbol: .custom(selectedCurrency.code)
-            )
-        }
-        minimalAmountLabel.text = R.string.localizable.buying_limitation(amount)
+        let limitation = CurrencyFormatter.localizedString(
+            from: minimalAmount.fiatMoney,
+            format: .fiatMoney,
+            sign: .never,
+            symbol: .custom(selectedCurrency.code)
+        )
+        minimalAmountLabel.text = R.string.localizable.buying_limitation(limitation)
         minimalAmountLabel.alpha = 1
     }
     

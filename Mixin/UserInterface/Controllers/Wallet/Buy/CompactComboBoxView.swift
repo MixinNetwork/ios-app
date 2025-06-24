@@ -94,14 +94,12 @@ final class CompactComboBoxView: UIControl {
         iconImageView.prepareForReuse()
         iconImageView.image = currency.icon
         text = currency.code
-        accessoryView = .disclosure
     }
     
     func load(token: any Token) {
         iconImageView.prepareForReuse()
         iconImageView.setIcon(token: token)
         text = token.symbol
-        accessoryView = .disclosure
     }
     
 }

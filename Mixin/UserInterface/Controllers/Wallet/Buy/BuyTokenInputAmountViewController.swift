@@ -11,7 +11,6 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
     @IBOutlet weak var receivingSelectorView: CompactComboBoxView!
     
     private let wallet: Wallet
-    private let minimalUSDAmount: Decimal = 10
     
     private(set) var amountIntent: AmountIntent = .byToken
     private(set) var tokenAmount: Decimal = 0
@@ -22,12 +21,13 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
     private var currencies: [Currency] = []
     private var selectedCurrency: Currency
     private var fiatMoneyAmountRoudingHandler: NSDecimalNumberHandler?
-    private var minimalFiatMoneyAmount: Decimal = 0
     
     private var tokens: [any Token] = []
     private var selectedToken: (any Token)?
     private var tokenAmountRoundingHandler: NSDecimalNumberHandler?
-    private var minimalTokenAmount: Decimal = 0
+    
+    private var minimalAmounts: [String: MinimalAmount] = [:] // Key is currencyCode + assetID
+    private var minimalAmount: MinimalAmount?
     
     private var tokenPrecision: Int {
         if let token = selectedToken {
@@ -98,6 +98,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
             action: #selector(selectPaying(_:)),
             for: .touchUpInside
         )
+        receivingSelectorView.accessoryView = .activityIndicator
         receivingSelectorView.addTarget(
             self,
             action: #selector(selectReceiving(_:)),
@@ -130,7 +131,6 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                     symbol: .custom(placeholder.symbol)
                 )
                 self.receivingSelectorView.load(token: placeholder)
-                self.receivingSelectorView.accessoryView = .activityIndicator
             }
         }
         
@@ -156,7 +156,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                 .decimalValue
         }
         self.accumulator = accumulator
-        self.updateMinimalAmountLabel()
+        self.updateMinimalLabel()
     }
     
     override func reloadViews(inputAmount: Decimal) {
@@ -183,7 +183,11 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                 symbol: .custom(selectedCurrency.code)
             )
             inputAmountString.append(" " + token.symbol)
-            isAmountGreaterThanMinimum = inputAmount >= minimalTokenAmount
+            isAmountGreaterThanMinimum = if let minimum = minimalAmount?.token {
+                inputAmount >= minimum
+            } else {
+                false
+            }
         case .byFiatMoney:
             tokenAmount = NSDecimalNumber(decimal: inputAmount / price)
                 .rounding(accordingToBehavior: tokenAmountRoundingHandler)
@@ -196,7 +200,11 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                 symbol: .custom(token.symbol)
             )
             inputAmountString.append(" " + selectedCurrency.code)
-            isAmountGreaterThanMinimum = inputAmount >= minimalFiatMoneyAmount
+            isAmountGreaterThanMinimum = if let minimum = minimalAmount?.fiatMoney {
+                inputAmount >= minimum
+            } else {
+                false
+            }
         }
         
         amountLabel.text = inputAmountString
@@ -290,7 +298,8 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         ) { currency in
             self.selectedCurrency = currency
             self.updateWithSelectedCurrency(currency)
-            self.updateMinimalAmountLabel()
+            self.payingSelectorView.accessoryView = .activityIndicator
+            self.reloadMinimalAmount()
             self.dismiss(animated: true)
             AppGroupUserDefaults.Wallet.lastBuyingCurrencyCode = currency.code
         }
@@ -305,6 +314,8 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         selector.onSelected = { token in
             self.selectedToken = token
             self.updateWithSelectedToken(token)
+            self.receivingSelectorView.accessoryView = .activityIndicator
+            self.reloadMinimalAmount()
             self.dismiss(animated: true)
             AppGroupUserDefaults.Wallet.lastBuyingAssetID = token.assetID
         }
@@ -353,7 +364,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                     self.tokens = tokens
                     self.selectedToken = token
                     self.updateWithSelectedToken(token)
-                    self.updateMinimalAmountLabel()
+                    self.reloadMinimalAmount()
                     self.view.isUserInteractionEnabled = true
                 }
             } catch {
@@ -459,9 +470,6 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
             raiseOnUnderflow: false,
             raiseOnDivideByZero: false
         )
-        minimalFiatMoneyAmount = NSDecimalNumber(decimal: minimalUSDAmount * currency.decimalRate)
-            .rounding(accordingToBehavior: fiatMoneyAmountRoudingHandler)
-            .decimalValue
         switch amountIntent {
         case .byToken:
             replaceAmount(accumulator.decimal)
@@ -483,9 +491,6 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
             raiseOnUnderflow: false,
             raiseOnDivideByZero: false
         )
-        minimalTokenAmount = NSDecimalNumber(decimal:  minimalUSDAmount / token.decimalUSDPrice)
-            .rounding(accordingToBehavior: tokenAmountRoundingHandler)
-            .decimalValue
         switch amountIntent {
         case .byToken:
             let amount = self.accumulator.decimal
@@ -497,21 +502,73 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         }
     }
     
-    private func updateMinimalAmountLabel() {
+    private func reloadMinimalAmount() {
         guard let token = selectedToken else {
             return
         }
-        let amount = switch amountIntent {
+        let currency = selectedCurrency
+        let key = currency.code + token.assetID
+        if let amount = minimalAmounts[key] {
+            minimalAmount = amount
+            payingSelectorView.accessoryView = .disclosure
+            receivingSelectorView.accessoryView = .disclosure
+            reloadViews(inputAmount: accumulator.decimal)
+            updateMinimalLabel()
+        } else {
+            minimalAmount = nil
+            minimalAmountLabel.alpha = 0
+            RouteAPI.quote(
+                currency: currency.code,
+                assetID: token.assetID
+            ) { [weak self, tokenAmountRoundingHandler] result in
+                switch result {
+                case .success(let quote):
+                    guard let self else {
+                        return
+                    }
+                    let minimalTokenAmount = quote.minimum / currency.decimalRate / token.decimalUSDPrice
+                    let minimalAmount = MinimalAmount(
+                        token: NSDecimalNumber(decimal: minimalTokenAmount)
+                            .rounding(accordingToBehavior: tokenAmountRoundingHandler)
+                            .decimalValue,
+                        fiatMoney: quote.minimum
+                    )
+                    self.minimalAmounts[key] = minimalAmount
+                    if currency.code == self.selectedCurrency.code,
+                       token.assetID == self.selectedToken?.assetID
+                    {
+                        self.minimalAmount = minimalAmount
+                        self.payingSelectorView.accessoryView = .disclosure
+                        self.receivingSelectorView.accessoryView = .disclosure
+                        self.reloadViews(inputAmount: accumulator.decimal)
+                        self.updateMinimalLabel()
+                    }
+                case .failure(let error):
+                    Logger.general.error(category: "Buy", message: "\(error)")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        self?.reloadMinimalAmount()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func updateMinimalLabel() {
+        guard let token = selectedToken, let minimalAmount else {
+            return
+        }
+        let amount: String
+        switch amountIntent {
         case .byToken:
-            CurrencyFormatter.localizedString(
-                from: minimalTokenAmount,
+            amount = CurrencyFormatter.localizedString(
+                from: minimalAmount.token,
                 format: .precision,
                 sign: .never,
                 symbol: .custom(token.symbol)
             )
         case .byFiatMoney:
-            CurrencyFormatter.localizedString(
-                from: minimalFiatMoneyAmount,
+            amount = CurrencyFormatter.localizedString(
+                from: minimalAmount.fiatMoney,
                 format: .fiatMoney,
                 sign: .never,
                 symbol: .custom(selectedCurrency.code)
@@ -529,6 +586,11 @@ extension BuyTokenInputAmountViewController {
         case noAvailableCurrency
         case noAvailableAsset
         case unsupportedChain
+    }
+    
+    private struct MinimalAmount {
+        let token: Decimal
+        let fiatMoney: Decimal
     }
     
     private struct PhoneNumberContext {

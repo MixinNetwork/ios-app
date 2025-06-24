@@ -1261,6 +1261,7 @@
 		94DC18A92D018D46006501B3 /* LoginLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94DC18A82D018D46006501B3 /* LoginLoadingView.xib */; };
 		94DC229F2D072F76006501B3 /* DesktopSessionValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DC229E2D072F6D006501B3 /* DesktopSessionValidationViewController.swift */; };
 		94DC24392D08051C006501B3 /* DesktopSessionValidationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94DC24382D08051C006501B3 /* DesktopSessionValidationView.xib */; };
+		94DC6DCF2E097EE000D0B7CA /* RouteQuote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DC6DCE2E097EDE00D0B7CA /* RouteQuote.swift */; };
 		94DCDAA0262DAF5B0064D1F3 /* DisplayAwakener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DCDA9F262DAF5B0064D1F3 /* DisplayAwakener.swift */; };
 		94DD0D872DC327ED00C70CA2 /* MembershipPlanSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DD0D852DC327ED00C70CA2 /* MembershipPlanSelectorCell.swift */; };
 		94DD0D882DC327ED00C70CA2 /* MembershipPlanSelectorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94DD0D862DC327ED00C70CA2 /* MembershipPlanSelectorCell.xib */; };
@@ -2873,6 +2874,7 @@
 		94DC18A82D018D46006501B3 /* LoginLoadingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginLoadingView.xib; sourceTree = "<group>"; };
 		94DC229E2D072F6D006501B3 /* DesktopSessionValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopSessionValidationViewController.swift; sourceTree = "<group>"; };
 		94DC24382D08051C006501B3 /* DesktopSessionValidationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DesktopSessionValidationView.xib; sourceTree = "<group>"; };
+		94DC6DCE2E097EDE00D0B7CA /* RouteQuote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteQuote.swift; sourceTree = "<group>"; };
 		94DCDA9F262DAF5B0064D1F3 /* DisplayAwakener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayAwakener.swift; sourceTree = "<group>"; };
 		94DD0D852DC327ED00C70CA2 /* MembershipPlanSelectorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipPlanSelectorCell.swift; sourceTree = "<group>"; };
 		94DD0D862DC327ED00C70CA2 /* MembershipPlanSelectorCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipPlanSelectorCell.xib; sourceTree = "<group>"; };
@@ -5424,6 +5426,7 @@
 				946485612DB774C60034D7AF /* TransactionSimulation.swift */,
 				9420F2E62DAF895D00434E0D /* RichWeb3RawTransaction.swift */,
 				9414D3522E06914700F38028 /* RouteProfile.swift */,
+				94DC6DCE2E097EDE00D0B7CA /* RouteQuote.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -7122,6 +7125,7 @@
 				7B21782122C4E70B00C08106 /* OggOpusPlayer.swift in Sources */,
 				7B3CDA6424FFDD1D003A3E80 /* FavoriteStickerCell.swift in Sources */,
 				7BC3559F2265B7C30073C7BF /* DragDownIndicator.swift in Sources */,
+				94DC6DCF2E097EE000D0B7CA /* RouteQuote.swift in Sources */,
 				52DE7B4F2BEB7C940060A364 /* TransactionViewController.swift in Sources */,
 				7BA398CD242B539900DB5154 /* UIColor+Assets.swift in Sources */,
 				7B8BB588234F160C00991ACB /* SharedMediaCategorizer.swift in Sources */,

@@ -482,6 +482,22 @@ extension RouteAPI {
         }
     }
     
+    static func quote(
+        currency: String,
+        assetID: String,
+        completion: @escaping (MixinAPI.Result<RouteQuote>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/quote",
+            with: [
+                "currency": currency,
+                "asset_id": assetID,
+            ],
+            completion: completion
+        )
+    }
+    
     static func rampURL(
         amount: String,
         assetID: String,

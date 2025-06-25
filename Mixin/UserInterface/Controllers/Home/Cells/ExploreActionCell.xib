@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -29,6 +29,14 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="tintColor" name="text"/>
                     </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mSr-bs-gCD" customClass="BadgeDotView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="59" y="11" width="11" height="11"/>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="11" id="eAY-1f-Iqv"/>
+                            <constraint firstAttribute="width" constant="11" id="vVo-p8-ZRK"/>
+                        </constraints>
+                    </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="WmD-Xc-71Z">
                         <rect key="frame" x="86" y="13.333333333333332" width="214" height="41.333333333333343"/>
                         <subviews>
@@ -53,6 +61,7 @@
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="RG7-8v-MmM" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="3Kw-5U-3fm"/>
+                    <constraint firstItem="mSr-bs-gCD" firstAttribute="trailing" secondItem="RG7-8v-MmM" secondAttribute="trailing" id="BN3-ld-0rD"/>
                     <constraint firstItem="9Zo-7v-r40" firstAttribute="trailing" secondItem="RG7-8v-MmM" secondAttribute="trailing" id="FQg-6p-Iha"/>
                     <constraint firstItem="9Zo-7v-r40" firstAttribute="top" secondItem="RG7-8v-MmM" secondAttribute="top" id="Nke-vt-wiV"/>
                     <constraint firstAttribute="trailing" secondItem="WmD-Xc-71Z" secondAttribute="trailing" constant="20" id="V0T-Y8-k3i"/>
@@ -61,11 +70,13 @@
                     <constraint firstItem="RG7-8v-MmM" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="c9j-ta-jSi"/>
                     <constraint firstAttribute="bottom" secondItem="RG7-8v-MmM" secondAttribute="bottom" constant="10" id="cJ0-EE-1RM"/>
                     <constraint firstItem="WmD-Xc-71Z" firstAttribute="leading" secondItem="RG7-8v-MmM" secondAttribute="trailing" constant="16" id="kv6-3S-PnO"/>
+                    <constraint firstItem="mSr-bs-gCD" firstAttribute="top" secondItem="RG7-8v-MmM" secondAttribute="top" constant="1" id="pdU-zC-W9E"/>
                     <constraint firstItem="9Zo-7v-r40" firstAttribute="bottom" secondItem="RG7-8v-MmM" secondAttribute="bottom" id="zoO-Qa-0ms"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
+                <outlet property="badgeView" destination="mSr-bs-gCD" id="Brg-Rr-ADY"/>
                 <outlet property="iconImageView" destination="9Zo-7v-r40" id="zqC-G1-r6Z"/>
                 <outlet property="iconTrayImageView" destination="RG7-8v-MmM" id="00r-oU-a9s"/>
                 <outlet property="subtitleLabel" destination="Ghx-60-cVk" id="leF-zt-tij"/>
@@ -76,6 +87,9 @@
     </objects>
     <resources>
         <image name="Explore/action_tray" width="50" height="50"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

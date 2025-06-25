@@ -123,6 +123,7 @@ public final class LoginManager {
                 SignalDatabase.current.erase()
                 PropertiesDAO.shared.removeValue(forKey: .iterator)
                 AppGroupUserDefaults.Crypto.clearAll()
+                BadgeManager.shared.prepareForAccountChange()
                 NotificationCenter.default.post(name: LoginManager.didLogoutNotification, object: self)
             }
         }

@@ -8,9 +8,9 @@ final class ExploreBotsViewController: UITableViewController {
         case favorites
     }
     
-    private let headerReuseID = "header"
+    private let headerReuseID = "h"
     private let actions: [ExploreAction] = [
-        .camera, .linkDesktop, .customerService,
+        .buy, .swap, .membership, .linkDesktop, .customerService,
     ]
     
     private(set) var allUsers: [User]? = nil
@@ -49,6 +49,13 @@ final class ExploreBotsViewController: UITableViewController {
                            selector: #selector(updateLinkDesktopAction),
                            name: AppGroupUserDefaults.Account.extensionSessionDidChangeNotification,
                            object: nil)
+        center.addObserver(
+            self,
+            selector: #selector(hideBadgeViewIfMatches(_:)),
+            name: BadgeManager.viewedNotification,
+            object: nil
+        )
+        tableView.reloadData()
     }
     
     // MARK: - UITableViewDataSource
@@ -73,6 +80,16 @@ final class ExploreBotsViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.explore_action, for: indexPath)!
             let action = actions[indexPath.row]
             cell.load(action: action)
+            cell.badgeView.isHidden = switch action {
+            case .buy:
+                BadgeManager.shared.hasViewed(identifier: .buy)
+            case .swap:
+                BadgeManager.shared.hasViewed(identifier: .swap)
+            case .membership:
+                BadgeManager.shared.hasViewed(identifier: .membership)
+            default:
+                true
+            }
             return cell
         case .favorites:
             if indexPath.row < favoriteAppUsers.count {
@@ -84,6 +101,7 @@ final class ExploreBotsViewController: UITableViewController {
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.explore_action, for: indexPath)!
                 cell.load(action: .editFavoriteApps)
+                cell.badgeView.isHidden = true
                 return cell
             }
         default:
@@ -134,6 +152,19 @@ final class ExploreBotsViewController: UITableViewController {
         switch FixedSection(rawValue: indexPath.section) {
         case .actions:
             let action = actions[indexPath.row]
+            switch action {
+            case .buy:
+                BadgeManager.shared.setHasViewed(identifier: .buy)
+            case .swap:
+                BadgeManager.shared.setHasViewed(identifier: .swap)
+            case .membership:
+                BadgeManager.shared.setHasViewed(identifier: .membership)
+            default:
+                break
+            }
+            if let cell = tableView.cellForRow(at: indexPath) as? ExploreActionCell {
+                cell.badgeView.isHidden = true
+            }
             explore.perform(action: action)
         case .favorites:
             if indexPath.row < favoriteAppUsers.count {
@@ -221,6 +252,26 @@ final class ExploreBotsViewController: UITableViewController {
         }
         let indexPath = IndexPath(row: row, section: FixedSection.actions.rawValue)
         tableView.reloadRows(at: [indexPath], with: .none)
+    }
+    
+    @objc private func hideBadgeViewIfMatches(_ notification: Notification) {
+        guard let identifier = notification.userInfo?[BadgeManager.identifierUserInfoKey] as? BadgeManager.Identifier else {
+            return
+        }
+        let row: Int? = switch identifier {
+        case .swap:
+            actions.firstIndex(of: .swap)
+        case .buy:
+            actions.firstIndex(of: .buy)
+        case .membership:
+            actions.firstIndex(of: .membership)
+        default:
+            nil
+        }
+        if let row {
+            let indexPath = IndexPath(row: row, section: FixedSection.actions.rawValue)
+            tableView.reloadRows(at: [indexPath], with: .none)
+        }
     }
     
     private func indexedUsers(at section: Int) -> [User] {

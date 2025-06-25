@@ -109,11 +109,7 @@ extension DiagnoseViewController: UITableViewDelegate {
             InscriptionContentSession.sessionConfiguration.urlCache?.removeAllCachedResponses()
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
         case (9, 0):
-            PropertiesDAO.shared.removeValue(forKey: .hasBuyingViewed)
-            PropertiesDAO.shared.removeValue(forKey: .hasSwapReviewed)
-            PropertiesDAO.shared.removeValue(forKey: .hasSwapOrderReviewed)
-            PropertiesDAO.shared.removeValue(forKey: .hasMarketReviewed)
-            PropertiesDAO.shared.removeValue(forKey: .hasWalletSwitchViewed)
+            BadgeManager.shared.resetAll()
             AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip = false
             AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = false
             AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTipInTransfer = false

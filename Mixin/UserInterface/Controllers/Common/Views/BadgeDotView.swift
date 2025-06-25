@@ -2,8 +2,16 @@ import UIKit
 
 final class BadgeDotView: UIView {
     
+    var dotSize = CGSize(width: 8, height: 8) {
+        didSet {
+            dotLayer.cornerRadius = dotSize.width / 2
+            dotLayer.frame.size = dotSize
+            setNeedsLayout()
+            layoutIfNeeded()
+        }
+    }
+    
     private let dotLayer = CALayer()
-    private let dotSize = CGSize(width: 8, height: 8)
     
     override var intrinsicContentSize: CGSize {
         CGSize(width: 12, height: 12)

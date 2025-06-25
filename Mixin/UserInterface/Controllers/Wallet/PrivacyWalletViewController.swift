@@ -67,34 +67,27 @@ final class PrivacyWalletViewController: WalletViewController {
         )
         reloadData()
         
-        DispatchQueue.global().async {
-            let hasWalletSwitchViewed: Bool = PropertiesDAO.shared.value(forKey: .hasWalletSwitchViewed) ?? false
-            let hasBuyingReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasBuyingViewed) ?? false
-            let hasSwapReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapReviewed) ?? false
-            DispatchQueue.main.async {
-                if !hasWalletSwitchViewed {
-                    let badge = BadgeDotView()
-                    self.titleView.addSubview(badge)
-                    badge.snp.makeConstraints { make in
-                        make.centerY.equalTo(self.walletSwitchImageView.snp.centerY).offset(-8)
-                        make.leading.equalTo(self.walletSwitchImageView.snp.trailing).offset(-2)
-                    }
-                    self.walletSwitchBadgeView = badge
-                    notificationCenter.addObserver(
-                        self,
-                        selector: #selector(self.hideBadgeView(_:)),
-                        name: PropertiesDAO.propertyDidUpdateNotification,
-                        object: nil
-                    )
-                }
-                if !hasBuyingReviewed {
-                    self.tableHeaderView.actionView.badgeActions.insert(.buy)
-                }
-                if !hasSwapReviewed {
-                    self.tableHeaderView.actionView.badgeActions.insert(.swap)
-                }
+        if !BadgeManager.shared.hasViewed(identifier: .walletSwitch) {
+            let badge = BadgeDotView()
+            titleView.addSubview(badge)
+            badge.snp.makeConstraints { make in
+                make.centerY.equalTo(self.walletSwitchImageView.snp.centerY).offset(-8)
+                make.leading.equalTo(self.walletSwitchImageView.snp.trailing).offset(-2)
             }
+            walletSwitchBadgeView = badge
         }
+        if !BadgeManager.shared.hasViewed(identifier: .buy) {
+            tableHeaderView.actionView.badgeActions.insert(.buy)
+        }
+        if !BadgeManager.shared.hasViewed(identifier: .swap) {
+            tableHeaderView.actionView.badgeActions.insert(.swap)
+        }
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(hideBadgeViewIfMatches(_:)),
+            name: BadgeManager.viewedNotification,
+            object: nil
+        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -212,18 +205,19 @@ final class PrivacyWalletViewController: WalletViewController {
         reporter.report(event: .allTransactions, tags: ["source": "wallet_home"])
     }
     
-    @objc private func hideBadgeView(_ notification: Notification) {
-        guard let change = notification.userInfo?[PropertiesDAO.Key.hasWalletSwitchViewed] as? PropertiesDAO.Change else {
+    @objc private func hideBadgeViewIfMatches(_ notification: Notification) {
+        guard let identifier = notification.userInfo?[BadgeManager.identifierUserInfoKey] as? BadgeManager.Identifier else {
             return
         }
-        let hasReviewed = switch change {
-        case .saved(let newValue):
-            (newValue as? Bool) ?? false
-        case .removed:
-            false
-        }
-        if hasReviewed {
+        switch identifier {
+        case .swap:
+            tableHeaderView.actionView.badgeActions.remove(.swap)
+        case .walletSwitch:
             walletSwitchBadgeView?.removeFromSuperview()
+        case .buy:
+            tableHeaderView.actionView.badgeActions.remove(.buy)
+        default:
+            break
         }
     }
     
@@ -346,9 +340,7 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
             let buy = BuyTokenInputAmountViewController(wallet: .privacy)
             tableHeaderView.actionView.badgeActions.remove(.buy)
             navigationController?.pushViewController(buy, animated: true)
-            DispatchQueue.global().async {
-                PropertiesDAO.shared.set(true, forKey: .hasBuyingViewed)
-            }
+            BadgeManager.shared.setHasViewed(identifier: .buy)
         case .send:
             reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "wallet_home"])
             let selector = MixinTokenSelectorViewController()
@@ -375,9 +367,7 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
             tableHeaderView.actionView.badgeActions.remove(.swap)
             let swap = MixinSwapViewController(sendAssetID: nil, receiveAssetID: nil, referral: nil)
             navigationController?.pushViewController(swap, animated: true)
-            DispatchQueue.global().async {
-                PropertiesDAO.shared.set(true, forKey: .hasSwapReviewed)
-            }
+            BadgeManager.shared.setHasViewed(identifier: .swap)
         }
     }
     

@@ -297,7 +297,7 @@ extension MembershipPlansViewController: UICollectionViewDataSource {
         case .introduction:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.membership_plan_introduction, for: indexPath)!
             let plan = selectedPlanDetails?.plan ?? SafeMembership.Plan.allCases[selectedIndex]
-            cell.load(plan: plan)
+            cell.load(plan: plan, isCurrent: plan == currentPlan)
             return cell
         case .badge:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.membership_plan_badge, for: indexPath)!

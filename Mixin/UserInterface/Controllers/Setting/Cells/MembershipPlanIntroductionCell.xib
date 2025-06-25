@@ -42,16 +42,27 @@
                             </label>
                         </subviews>
                     </stackView>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="NTI-XO-fQ9">
+                        <rect key="frame" x="188.66666666666666" y="24" width="20" height="20"/>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="fNp-q2-h8S"/>
+                            <constraint firstAttribute="width" constant="20" id="xbI-lh-CTh"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="ORB-aE-YjC" secondAttribute="bottom" constant="34" id="0Y8-Sy-Wlp"/>
                     <constraint firstItem="ORB-aE-YjC" firstAttribute="leading" secondItem="2wE-UW-RZ4" secondAttribute="leading" constant="16" id="GPT-Gm-Cff"/>
                     <constraint firstItem="ORB-aE-YjC" firstAttribute="top" secondItem="2wE-UW-RZ4" secondAttribute="top" constant="24" id="g9C-rX-EDC"/>
+                    <constraint firstItem="NTI-XO-fQ9" firstAttribute="trailing" secondItem="H2D-jT-5HY" secondAttribute="trailing" constant="2" id="iQh-Vf-FsC"/>
+                    <constraint firstItem="NTI-XO-fQ9" firstAttribute="top" secondItem="H2D-jT-5HY" secondAttribute="top" id="lsp-KS-sOR"/>
                     <constraint firstAttribute="trailing" secondItem="ORB-aE-YjC" secondAttribute="trailing" constant="16" id="mgG-Dq-FT5"/>
                 </constraints>
             </collectionViewCellContentView>
             <connections>
+                <outlet property="checkmarkImageView" destination="NTI-XO-fQ9" id="VjR-g5-Doz"/>
                 <outlet property="contentStackView" destination="ORB-aE-YjC" id="rPq-uT-6ea"/>
                 <outlet property="descriptionLabel" destination="mbX-1S-26E" id="Mxk-mV-JRw"/>
                 <outlet property="iconImageView" destination="H2D-jT-5HY" id="HTb-v0-lZv"/>
@@ -61,6 +72,7 @@
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="checkmark" width="18" height="18"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

@@ -6,6 +6,7 @@ final class MembershipPlanIntroductionCell: UICollectionViewCell {
     
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var iconImageView: SDAnimatedImageView!
+    @IBOutlet weak var checkmarkImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     
@@ -18,9 +19,11 @@ final class MembershipPlanIntroductionCell: UICollectionViewCell {
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )
+        checkmarkImageView.layer.cornerRadius = 10
+        checkmarkImageView.layer.masksToBounds = true
     }
     
-    func load(plan: SafeMembership.Plan) {
+    func load(plan: SafeMembership.Plan, isCurrent: Bool) {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         paragraphStyle.minimumLineHeight = 18
@@ -52,6 +55,7 @@ final class MembershipPlanIntroductionCell: UICollectionViewCell {
                 attributes: descriptionAttributes
             )
         }
+        checkmarkImageView.isHidden = !isCurrent
     }
     
 }

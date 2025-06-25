@@ -55,7 +55,7 @@ final class PopupTitleView: UIView {
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         titleStackView.addArrangedSubview(titleLabel)
         
-        closeButton.setImage(R.image.ic_dialog_close(), for: .normal)
+        closeButton.setImage(R.image.dialog_close(), for: .normal)
         closeButton.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         addSubview(closeButton)
         

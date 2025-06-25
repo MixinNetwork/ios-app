@@ -80,7 +80,7 @@ final class MembershipPlansViewController: UIViewController {
                 section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 16, bottom: 5, trailing: 16)
                 return section
             case .badge:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(88))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(88))
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
@@ -159,6 +159,8 @@ final class MembershipPlansViewController: UIViewController {
     @IBAction func performAction(_ sender: Any) {
         if let order = pendingOrder {
             view(order: order)
+        } else if selectedPlanDetails?.plan == currentPlan {
+            actionButton.layer.addShakeAnimation()
         } else if let detail = selectedPlanDetails, products[detail.appleSubscriptionID] != nil {
             buy(detail: detail)
         } else {
@@ -620,7 +622,7 @@ extension MembershipPlansViewController {
                     configuration.imagePadding = 4
                     configuration.background.backgroundColor = R.color.market_green()
                     actionButton.configuration = configuration
-                    actionButton.isUserInteractionEnabled = false
+                    actionButton.isUserInteractionEnabled = true
                 } else if let currentPlan, detail.plan < currentPlan {
                     hideActionView()
                 } else if let product = products[detail.appleSubscriptionID] {

@@ -863,6 +863,7 @@
 "nobody" = "Никто";
 "none" = "Никто";
 "normal" = "Normal";
+"not_a_group_member" = "You're no longer a member in this group";
 "not_all_signer_success" = "Not all node success";
 "not_backed_up" = "Not Backed Up";
 "not_enough_partials" = "Not enough nodes return key shard";

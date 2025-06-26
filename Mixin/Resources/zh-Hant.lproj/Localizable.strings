@@ -863,6 +863,7 @@
 "nobody" = "沒有人";
 "none" = "無";
 "normal" = "普通";
+"not_a_group_member" = "你已不再是該群組的成員";
 "not_all_signer_success" = "有些節點失敗了";
 "not_backed_up" = "未備份";
 "not_enough_partials" = "沒有足夠的節點返回金鑰分片";

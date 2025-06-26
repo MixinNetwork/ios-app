@@ -262,8 +262,7 @@ extension GroupProfileViewController {
                 self.isAdmin = isAdmin
                 self.isMember = isParticipant
                 self.participantsCount = count
-                self.updateSubtitle()
-                self.updateMenuItems()
+                self.reloadData()
             }
         }
     }
@@ -306,9 +305,34 @@ extension GroupProfileViewController {
         }
         
         if isMember || codeId == nil {
-            shortcutView.leftShortcutButton.setImage(R.image.ic_group_member(), for: .normal)
             shortcutView.leftShortcutButton.removeTarget(nil, action: nil, for: .allEvents)
-            shortcutView.leftShortcutButton.addTarget(self, action: #selector(showParticipants), for: .touchUpInside)
+            if isMember {
+                shortcutView.leftShortcutButton.setImage(R.image.ic_group_member(), for: .normal)
+                shortcutView.leftShortcutButton.addTarget(self, action: #selector(showParticipants), for: .touchUpInside)
+            } else {
+                let notMemberLabel = InsetLabel()
+                notMemberLabel.layer.cornerRadius = 8
+                notMemberLabel.layer.masksToBounds = true
+                notMemberLabel.contentInset = UIEdgeInsets(top: 14, left: 12, bottom: 14, right: 12)
+                notMemberLabel.backgroundColor = R.color.background_quaternary()
+                notMemberLabel.textAlignment = .center
+                notMemberLabel.textColor = R.color.market_red()
+                notMemberLabel.setFont(
+                    scaledFor: .systemFont(ofSize: 13, weight: .medium),
+                    adjustForContentSize: true
+                )
+                notMemberLabel.text = R.string.localizable.not_a_group_member()
+                let notMemberView = UIView()
+                notMemberView.backgroundColor = R.color.background()
+                notMemberView.addSubview(notMemberLabel)
+                centerStackView.addArrangedSubview(notMemberView)
+                notMemberLabel.snp.makeConstraints { make in
+                    let insets = UIEdgeInsets(top: 10, left: 22, bottom: 0, right: 22)
+                    make.edges.equalToSuperview().inset(insets)
+                }
+                shortcutView.leftShortcutButton.setImage(R.image.group_shortcut_search(), for: .normal)
+                shortcutView.leftShortcutButton.addTarget(self, action: #selector(searchConversation), for: .touchUpInside)
+            }
             shortcutView.sendMessageButton.removeTarget(nil, action: nil, for: .allEvents)
             shortcutView.sendMessageButton.addTarget(self, action: #selector(sendMessage(_:)), for: .touchUpInside)
             shortcutView.toggleSizeButton.removeTarget(nil, action: nil, for: .allEvents)

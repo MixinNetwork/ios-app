@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LMD-aO-oLq" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="406" width="414" height="503"/>
+                    <rect key="frame" x="0.0" y="372" width="414" height="537"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="quD-49-o7t" userLabel="User">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
@@ -34,8 +34,9 @@
                                     <rect key="frame" x="358" y="0.0" width="56" height="56"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="56" id="cIg-G3-DsT"/>
+                                        <constraint firstAttribute="width" secondItem="b71-wX-1fk" secondAttribute="height" multiplier="1:1" id="ceu-wf-LUy"/>
                                     </constraints>
-                                    <state key="normal" image="ic_dialog_close"/>
+                                    <state key="normal" image="dialog_close"/>
                                     <connections>
                                         <action selector="dismissAction:" destination="iJf-Rr-1sY" eventType="touchUpInside" id="y2d-4Y-xg1"/>
                                     </connections>
@@ -45,7 +46,6 @@
                             <constraints>
                                 <constraint firstItem="4CH-Ww-ePn" firstAttribute="centerY" secondItem="quD-49-o7t" secondAttribute="centerY" id="6eo-Xk-ezD"/>
                                 <constraint firstAttribute="trailing" secondItem="b71-wX-1fk" secondAttribute="trailing" id="Vj6-bi-9aZ"/>
-                                <constraint firstItem="b71-wX-1fk" firstAttribute="width" secondItem="b71-wX-1fk" secondAttribute="height" multiplier="1:1" id="ceu-wf-LUy"/>
                                 <constraint firstAttribute="height" constant="70" id="dBx-7y-2w6"/>
                                 <constraint firstItem="4CH-Ww-ePn" firstAttribute="leading" secondItem="quD-49-o7t" secondAttribute="leading" constant="20" id="jbc-SP-VaQ"/>
                                 <constraint firstItem="b71-wX-1fk" firstAttribute="top" secondItem="quD-49-o7t" secondAttribute="top" id="wbm-Va-wMJ"/>
@@ -75,6 +75,7 @@
                     </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="Hz1-bl-aCW"/>
             <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="Hz1-bl-aCW" firstAttribute="bottom" secondItem="2Cz-0l-Gdi" secondAttribute="bottom" id="2aT-6o-QaM"/>
@@ -82,7 +83,6 @@
                 <constraint firstAttribute="bottom" secondItem="LMD-aO-oLq" secondAttribute="bottom" constant="-13" id="Ui3-fS-chL"/>
                 <constraint firstAttribute="trailing" secondItem="LMD-aO-oLq" secondAttribute="trailing" id="l7z-GU-lnR"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="Hz1-bl-aCW"/>
             <connections>
                 <outlet property="popupView" destination="LMD-aO-oLq" id="7wb-QN-Zxj"/>
                 <outlet property="tableView" destination="2Cz-0l-Gdi" id="uz0-Cv-uYy"/>
@@ -92,7 +92,7 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_dialog_close" width="26" height="26"/>
+        <image name="dialog_close" width="26" height="26"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

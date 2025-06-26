@@ -863,6 +863,7 @@
 "nobody" = "Nadie";
 "none" = "Ninguno";
 "normal" = "Normal";
+"not_a_group_member" = "You're no longer a member in this group";
 "not_all_signer_success" = "No todos los nodos tienen éxito";
 "not_backed_up" = "Not Backed Up";
 "not_enough_partials" = "No hay suficientes nodos que devuelvan fragmento de clave";

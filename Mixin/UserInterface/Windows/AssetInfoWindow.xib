@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,7 +16,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Ox-pc-6SO">
-                    <rect key="frame" x="0.0" y="501.5" width="414" height="407.5"/>
+                    <rect key="frame" x="0.0" y="467.5" width="414" height="441.5"/>
                     <subviews>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cGA-jl-4XA">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
@@ -43,7 +43,7 @@
                                     <constraints>
                                         <constraint firstAttribute="width" constant="66" id="2wD-t8-Whg"/>
                                     </constraints>
-                                    <state key="normal" image="ic_dialog_close"/>
+                                    <state key="normal" image="dialog_close"/>
                                     <connections>
                                         <action selector="dismissAction:" destination="DyG-Xc-lJk" eventType="touchUpInside" id="7ta-hX-Ebz"/>
                                     </connections>
@@ -213,7 +213,7 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_dialog_close" width="26" height="26"/>
+        <image name="dialog_close" width="26" height="26"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

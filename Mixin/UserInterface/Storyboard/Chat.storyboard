@@ -1159,7 +1159,7 @@
                                                     <constraint firstAttribute="width" secondItem="vM0-0E-bkA" secondAttribute="height" multiplier="1:1" id="QUs-gP-zWp"/>
                                                     <constraint firstAttribute="width" constant="44" id="qKz-8A-ThU"/>
                                                 </constraints>
-                                                <state key="normal" image="ic_dialog_close"/>
+                                                <state key="normal" image="dialog_close"/>
                                                 <connections>
                                                     <action selector="dismissAction:" destination="WSC-FM-Emt" eventType="touchUpInside" id="wSe-Vy-pcB"/>
                                                 </connections>
@@ -1303,7 +1303,7 @@
                                     <constraint firstAttribute="height" constant="44" id="Cmq-bN-X5b"/>
                                     <constraint firstAttribute="width" constant="44" id="lEa-wB-5k1"/>
                                 </constraints>
-                                <state key="normal" image="ic_dialog_close"/>
+                                <state key="normal" image="dialog_close"/>
                                 <connections>
                                     <action selector="dimissAction:" destination="PFT-TF-vIS" eventType="touchUpInside" id="Q4h-si-dwn"/>
                                 </connections>
@@ -2697,7 +2697,7 @@
                                             <constraint firstAttribute="width" constant="44" id="cX5-MF-tgG"/>
                                             <constraint firstAttribute="width" secondItem="jMd-P3-Irq" secondAttribute="height" multiplier="1:1" id="ndm-c0-Cgl"/>
                                         </constraints>
-                                        <state key="normal" image="ic_dialog_close"/>
+                                        <state key="normal" image="dialog_close"/>
                                         <connections>
                                             <action selector="close:" destination="pCL-MA-6t5" eventType="touchUpInside" id="Yq6-oJ-uvP"/>
                                         </connections>
@@ -2812,11 +2812,11 @@
         <image name="Conversation/ic_send" width="30" height="29.5"/>
         <image name="Conversation/ic_sticker" width="22" height="22"/>
         <image name="bg_extension" width="60" height="60"/>
+        <image name="dialog_close" width="26" height="26"/>
         <image name="ic_camera_close" width="20" height="20"/>
         <image name="ic_camera_save" width="60" height="60"/>
         <image name="ic_camera_send" width="60" height="60"/>
         <image name="ic_circle_edit_delete" width="16" height="16"/>
-        <image name="ic_dialog_close" width="26" height="26"/>
         <image name="ic_play_large" width="22" height="22"/>
         <image name="ic_sticker_dot" width="10" height="10"/>
         <image name="ic_sticker_frame" width="325" height="325"/>
@@ -2847,7 +2847,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

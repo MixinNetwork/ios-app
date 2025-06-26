@@ -21,10 +21,6 @@ extension AppGroupUserDefaults {
         public static var serializedAccount: Data?
         
         @available(*, deprecated, message: "Use only for migration")
-        @Default(namespace: .account, key: Key.sessionSecret, defaultValue: nil)
-        public static var sessionSecret: String?
-        
-        @available(*, deprecated, message: "Use only for migration")
         @Default(namespace: .account, key: Key.pinToken, defaultValue: nil)
         public static var pinToken: String?
         
@@ -63,7 +59,6 @@ extension AppGroupUserDefaults {
         
         internal static func migrate() {
             serializedAccount = AccountUserDefault.shared.serializedAccount
-            sessionSecret = AccountUserDefault.shared.getToken()
             pinToken = AccountUserDefault.shared.getPinToken()
             canRestoreMedia = AccountUserDefault.shared.hasRestoreMedia
             hasUnfinishedBackup = AccountUserDefault.shared.hasRebackup

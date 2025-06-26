@@ -106,27 +106,10 @@ final class CheckSessionEnvironmentViewController: UIViewController {
             }
             reload(content: signalLoading)
         } else {
-            let hasLegacySessionSecret: Bool // RSA
-            if let secret = AppGroupUserDefaults.Account.sessionSecret {
-                hasLegacySessionSecret = !secret.isEmpty
-            } else {
-                hasLegacySessionSecret = false
-            }
             let root: UIViewController
-            if hasLegacySessionSecret {
-                Logger.general.debug(category: "CheckSessionEnvironment", message: "RSA")
-                root = LegacyPINViewController()
-            } else if account.tipCounter == 0 {
-                if account.hasPIN {
-                    reporter.report(event: .loginVerifyPIN, method: "upgrade_pin")
-                    Logger.general.debug(category: "CheckSessionEnvironment", message: "Legacy PIN")
-                    root = LegacyPINViewController()
-                } else {
-                    Logger.general.debug(category: "CheckSessionEnvironment", message: "Create PIN")
-                    root = TIPNavigationController(intent: .create)
-                }
-            } else {
-                let isReady = AppGroupUserDefaults.User.loginPINValidated
+            if account.hasPIN {
+                let isReady = account.hasSafe
+                    && AppGroupUserDefaults.User.loginPINValidated
                     && Web3WalletDAO.shared.hasClassicWallet()
                 if isReady {
                     Logger.general.debug(category: "CheckSessionEnvironment", message: "Go home")
@@ -136,6 +119,9 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                     let freshAccount = isAccountFresh ? account : nil
                     root = LoginPINStatusCheckingViewController(freshAccount: freshAccount)
                 }
+            } else {
+                Logger.general.debug(category: "CheckSessionEnvironment", message: "Create PIN")
+                root = TIPNavigationController(intent: .create)
             }
             AppDelegate.current.mainWindow.rootViewController = root
         }

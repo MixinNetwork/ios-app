@@ -57,6 +57,10 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 await MainActor.run {
                     AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController()
                 }
+            } catch MixinAPIResponseError.malformedPin {
+                await MainActor.run {
+                    AppDelegate.current.mainWindow.rootViewController = LegacyPINViewController()
+                }
             } catch {
                 await MainActor.run {
                     self.pinField.clear()

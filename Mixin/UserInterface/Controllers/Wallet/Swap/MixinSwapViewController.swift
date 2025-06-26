@@ -100,13 +100,7 @@ class MixinSwapViewController: SwapViewController {
             showOrdersItem,
         ]
         self.showOrdersItem = showOrdersItem
-        
-        DispatchQueue.global().async { [weak showOrdersItem] in
-            let hasSwapOrderReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasSwapOrderReviewed) ?? false
-            DispatchQueue.main.async {
-                showOrdersItem?.showBadge = !hasSwapOrderReviewed
-            }
-        }
+        showOrdersItem.showBadge = !BadgeManager.shared.hasViewed(identifier: .swapOrder)
     }
     
     override func viewDidAppear(_ animated: Bool) {

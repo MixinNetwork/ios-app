@@ -8,8 +8,6 @@ final class ExploreViewController: UIViewController {
     
     private let hiddenSearchTopMargin: CGFloat = -28
     
-    private var showBadgeOnMarket = false
-    
     private lazy var exploreBotsViewController = ExploreBotsViewController()
     private lazy var exploreMarketViewController = ExploreMarketViewController()
     
@@ -29,30 +27,29 @@ final class ExploreViewController: UIViewController {
         segmentsCollectionView.contentInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         segmentsCollectionView.dataSource = self
         segmentsCollectionView.delegate = self
-        segmentsCollectionView.reloadData()
-        let indexPath = if AppGroupUserDefaults.User.exploreSegmentIndex < Segment.allCases.count {
+        let defaultSelection = if AppGroupUserDefaults.User.exploreSegmentIndex < Segment.allCases.count {
             IndexPath(item: AppGroupUserDefaults.User.exploreSegmentIndex, section: 0)
         } else {
             IndexPath(item: 0, section: 0)
         }
-        segmentsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
-        collectionView(segmentsCollectionView, didSelectItemAt: indexPath)
-        NotificationCenter.default.addObserver(self, selector: #selector(cancelSearchingSilently), name: dismissSearchNotification, object: nil)
-        DispatchQueue.global().async {
-            let hasReviewed: Bool = PropertiesDAO.shared.value(forKey: .hasMarketReviewed) ?? false
-            DispatchQueue.main.async {
-                guard !hasReviewed else {
-                    return
-                }
-                let indexPath = IndexPath(item: Segment.markets.rawValue, section: 0)
-                if self.segmentsCollectionView.indexPathsForSelectedItems?.first == indexPath {
-                    self.markMarketReviewed()
-                } else {
-                    self.showBadgeOnMarket = true
-                    self.reloadItemKeepingSelection(at: indexPath)
-                }
-            }
+        if defaultSelection.item == Segment.markets.rawValue {
+            BadgeManager.shared.setHasViewed(identifier: .market)
         }
+        segmentsCollectionView.reloadData()
+        segmentsCollectionView.selectItem(at: defaultSelection, animated: false, scrollPosition: .left)
+        collectionView(segmentsCollectionView, didSelectItemAt: defaultSelection)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(cancelSearchingSilently),
+            name: dismissSearchNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(hideBadgeIfNeeded(_:)),
+            name: BadgeManager.viewedNotification,
+            object: nil
+        )
     }
     
     @IBAction func searchApps(_ sender: Any) {
@@ -111,8 +108,24 @@ final class ExploreViewController: UIViewController {
     
     func perform(action: ExploreAction) {
         switch action {
-        case .camera:
-            UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: false)
+        case .buy:
+            let buy = BuyTokenInputAmountViewController(wallet: .privacy)
+            navigationController?.pushViewController(buy, animated: true)
+            BadgeManager.shared.setHasViewed(identifier: .buy)
+        case .swap:
+            reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "explore"])
+            let swap = MixinSwapViewController(sendAssetID: nil, receiveAssetID: nil, referral: nil)
+            navigationController?.pushViewController(swap, animated: true)
+            BadgeManager.shared.setHasViewed(identifier: .swap)
+        case .membership:
+            if let membership = LoginManager.shared.account?.membership, let plan = membership.plan {
+                let membership = MembershipViewController(plan: plan, expiredAt: membership.expiredAt)
+                navigationController?.pushViewController(membership, animated: true)
+            } else {
+                let buy = MembershipPlansViewController(selectedPlan: nil)
+                present(buy, animated: true)
+            }
+            BadgeManager.shared.setHasViewed(identifier: .membership)
         case .linkDesktop:
             let desktop = DesktopViewController()
             navigationController?.pushViewController(desktop, animated: true)
@@ -169,15 +182,13 @@ final class ExploreViewController: UIViewController {
         }
     }
     
-    func switchToSegment(_ segment: Segment) {
-        let indexPath = IndexPath(item: segment.rawValue, section: 0)
-        segmentsCollectionView.selectItem(at: indexPath, animated: false, scrollPosition: .left)
-        collectionView(segmentsCollectionView, didSelectItemAt: indexPath)
-    }
-    
 }
 
 extension ExploreViewController: UICollectionViewDataSource {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        1
+    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         Segment.allCases.count
@@ -185,18 +196,17 @@ extension ExploreViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
-        cell.label.text = Segment.allCases[indexPath.item].name
-        switch Segment(rawValue: indexPath.item) {
+        let segment = Segment.allCases[indexPath.item]
+        switch segment {
+        case .explore:
+            cell.label.text = R.string.localizable.explore()
+            cell.badgeView.isHidden = [.swap, .buy, .membership]
+                .allSatisfy(BadgeManager.shared.hasViewed(identifier:))
         case .markets:
-            cell.badgeView.isHidden = !showBadgeOnMarket
-        default:
-            cell.badgeView.isHidden = true
+            cell.label.text = R.string.localizable.markets()
+            cell.badgeView.isHidden = BadgeManager.shared.hasViewed(identifier: .market)
         }
         return cell
-    }
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        1
     }
     
 }
@@ -211,16 +221,13 @@ extension ExploreViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let segment = Segment(rawValue: indexPath.item)!
         switch segment {
-        case .bots:
+        case .explore:
             reporter.report(event: .moreTabSwitch, tags: ["method": "bots"])
             switchToChild(exploreBotsViewController)
         case .markets:
             reporter.report(event: .moreTabSwitch, tags: ["method": "markets"])
-            if showBadgeOnMarket {
-                showBadgeOnMarket = false
-                reloadItemKeepingSelection(at: indexPath)
-                markMarketReviewed()
-            }
+            BadgeManager.shared.setHasViewed(identifier: .market)
+            reloadItemKeepingSelection(at: indexPath)
             switchToChild(exploreMarketViewController)
         }
         AppGroupUserDefaults.User.exploreSegmentIndex = indexPath.item
@@ -228,37 +235,21 @@ extension ExploreViewController: UICollectionViewDelegate {
     
 }
 
-extension ExploreViewController: HomeTabBarControllerChild {
-    
-    func viewControllerDidSwitchToFront() {
-        if let controller = selectedViewController, controller is ExploreMarketViewController {
-            if showBadgeOnMarket {
-                showBadgeOnMarket = false
-                let indexPath = IndexPath(item: Segment.markets.rawValue, section: 0)
-                reloadItemKeepingSelection(at: indexPath)
-                markMarketReviewed()
-            }
-        }
-    }
-    
-}
-
 extension ExploreViewController {
     
-    enum Segment: Int, CaseIterable {
-        
-        case bots
+    private enum Segment: Int, CaseIterable {
+        case explore
         case markets
-        
-        var name: String {
-            switch self {
-            case .bots:
-                R.string.localizable.explore()
-            case .markets:
-                R.string.localizable.markets()
-            }
+    }
+    
+    @objc private func hideBadgeIfNeeded(_ notification: Notification) {
+        guard let identifier = notification.userInfo?[BadgeManager.identifierUserInfoKey] as? BadgeManager.Identifier else {
+            return
         }
-        
+        if [.swap, .buy, .membership].contains(identifier) {
+            let explore = IndexPath(item: Segment.explore.rawValue, section: 0)
+            segmentsCollectionView.reloadItems(at: [explore])
+        }
     }
     
     private func switchToChild(_ newChild: UIViewController) {
@@ -277,12 +268,6 @@ extension ExploreViewController {
         contentContainerView.addSubview(newChild.view)
         newChild.view.snp.makeEdgesEqualToSuperview()
         newChild.didMove(toParent: self)
-    }
-    
-    private func markMarketReviewed() {
-        DispatchQueue.global().async {
-            PropertiesDAO.shared.set(true, forKey: .hasMarketReviewed)
-        }
     }
     
     private func reloadItemKeepingSelection(at indexPath: IndexPath) {

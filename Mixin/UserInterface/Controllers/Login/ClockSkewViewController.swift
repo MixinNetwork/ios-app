@@ -27,7 +27,7 @@ final class ClockSkewViewController: UIViewController, CheckSessionEnvironmentCh
                 Logger.general.error(category: "ClockSkew", message: "Still skewed")
                 if let self {
                     self.continueButton.isBusy = false
-                    self.shakeTips()
+                    self.tipsLabel.layer.addShakeAnimation()
                 }
             case let .failure(error):
                 Logger.general.error(category: "ClockSkew", message: "\(error)")
@@ -35,14 +35,6 @@ final class ClockSkewViewController: UIViewController, CheckSessionEnvironmentCh
                 self?.continueButton.isBusy = false
             }
         }
-    }
-    
-    private func shakeTips() {
-        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
-        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-        animation.duration = 0.6
-        animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0 ]
-        tipsLabel.layer.add(animation, forKey: "shake")
     }
     
 }

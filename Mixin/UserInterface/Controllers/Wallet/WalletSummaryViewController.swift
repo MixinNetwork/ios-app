@@ -141,8 +141,8 @@ final class WalletSummaryViewController: UIViewController {
     }
     
     @objc private func reloadData() {
+        BadgeManager.shared.setHasViewed(identifier: .walletSwitch)
         DispatchQueue.global().async {
-            PropertiesDAO.shared.set(true, forKey: .hasWalletSwitchViewed)
             let privacyWalletDigest = TokenDAO.shared.walletDigest()
             let classicWalletDigests = Web3WalletDAO.shared.walletDigests()
             let summary = WalletSummary(

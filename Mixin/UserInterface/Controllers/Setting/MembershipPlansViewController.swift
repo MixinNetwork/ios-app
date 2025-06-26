@@ -7,7 +7,7 @@ final class MembershipPlansViewController: UIViewController {
     @IBOutlet weak var titleView: PopupTitleView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var actionView: UIView!
-    @IBOutlet weak var actionButton: StyledButton!
+    @IBOutlet weak var actionButton: UIButton!
     @IBOutlet weak var verifyingPaymentLabel: UILabel!
     
     @IBOutlet weak var actionStackViewBottomConstraint: NSLayoutConstraint!
@@ -80,7 +80,7 @@ final class MembershipPlansViewController: UIViewController {
                 section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 16, bottom: 5, trailing: 16)
                 return section
             case .badge:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(88))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(88))
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
@@ -149,22 +149,18 @@ final class MembershipPlansViewController: UIViewController {
             object: nil
         )
         reloadPendingOrder()
-        actionButton.style = .filled
-        actionButton.applyDefaultContentInsets()
-        actionButton.titleLabel?.setFont(
-            scaledFor: .systemFont(ofSize: 16, weight: .medium),
-            adjustForContentSize: true
-        )
         IAPTransactionObserver.global.onStatusChange = { [weak self] (observer) in
-            self?.reloadBuyButtonTitle(observer: observer)
+            self?.updateActionButton(observer: observer)
         }
-        reloadBuyButtonTitle(observer: .global)
+        updateActionButton(observer: .global)
         reloadPlans()
     }
     
     @IBAction func performAction(_ sender: Any) {
         if let order = pendingOrder {
             view(order: order)
+        } else if selectedPlanDetails?.plan == currentPlan {
+            actionButton.layer.addShakeAnimation()
         } else if let detail = selectedPlanDetails, products[detail.appleSubscriptionID] != nil {
             buy(detail: detail)
         } else {
@@ -188,7 +184,7 @@ final class MembershipPlansViewController: UIViewController {
             } else {
                 nil
             }
-            self.reloadBuyButtonTitle(observer: .global)
+            self.updateActionButton(observer: .global)
         }
     }
     
@@ -200,7 +196,7 @@ final class MembershipPlansViewController: UIViewController {
                     return
                 }
                 self.pendingOrder = order
-                self.reloadBuyButtonTitle(observer: .global)
+                self.updateActionButton(observer: .global)
             }
         }
     }
@@ -217,7 +213,7 @@ final class MembershipPlansViewController: UIViewController {
     
     private func buy(detail: SafeMembership.PlanDetail) {
         isPayingPendingOrder = true
-        reloadBuyButtonTitle(observer: .global)
+        updateActionButton(observer: .global)
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinSafe)
         ConcurrentJobQueue.shared.addJob(job: job)
         Task { [products] in
@@ -227,14 +223,14 @@ final class MembershipPlansViewController: UIViewController {
                 guard let productID = order.fiatOrder?.subscriptionID else {
                     Logger.general.error(category: "Membership", message: "No fiat order")
                     await MainActor.run {
-                        self.reloadBuyButtonTitle(observer: .global)
+                        self.updateActionButton(observer: .global)
                     }
                     return
                 }
                 guard let product = products[productID] else {
                     Logger.general.error(category: "Membership", message: "No product: \(productID)")
                     await MainActor.run {
-                        self.reloadBuyButtonTitle(observer: .global)
+                        self.updateActionButton(observer: .global)
                     }
                     return
                 }
@@ -269,7 +265,7 @@ final class MembershipPlansViewController: UIViewController {
             }
             await MainActor.run {
                 self.isPayingPendingOrder = false
-                self.reloadBuyButtonTitle(observer: .global)
+                self.updateActionButton(observer: .global)
             }
         }
     }
@@ -303,7 +299,7 @@ extension MembershipPlansViewController: UICollectionViewDataSource {
         case .introduction:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.membership_plan_introduction, for: indexPath)!
             let plan = selectedPlanDetails?.plan ?? SafeMembership.Plan.allCases[selectedIndex]
-            cell.load(plan: plan)
+            cell.load(plan: plan, isCurrent: plan == currentPlan)
             return cell
         case .badge:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.membership_plan_badge, for: indexPath)!
@@ -346,7 +342,7 @@ extension MembershipPlansViewController: UICollectionViewDelegate {
         case .planSelector:
             self.selectedIndex = indexPath.item
             reload(sections: [.introduction, .badge, .benefits])
-            reloadBuyButtonTitle(observer: .global)
+            updateActionButton(observer: .global)
         case .introduction, .badge, .benefits:
             break
         }
@@ -538,7 +534,7 @@ extension MembershipPlansViewController {
                     return
                 }
                 self.products = products
-                self.reloadBuyButtonTitle(observer: .global)
+                self.updateActionButton(observer: .global)
             }
         }
     }
@@ -562,50 +558,108 @@ extension MembershipPlansViewController {
         }
     }
     
-    private func reloadBuyButtonTitle(observer: IAPTransactionObserver) {
+    private func updateActionButton(observer: IAPTransactionObserver) {
+        var configuration: UIButton.Configuration = .filled()
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 0, bottom: 15, trailing: 0)
+        configuration.cornerStyle = .capsule
+        
+        var titleAttributes = AttributeContainer()
+        titleAttributes.font = UIFontMetrics.default.scaledFont(
+            for: .systemFont(ofSize: 16, weight: .medium)
+        )
+        
+        lazy var busyIndicator = {
+            let indicator = ActivityIndicatorView()
+            indicator.tintColor = .white
+            indicator.isAnimating = true
+            return indicator
+        }()
+        
         if isPayingPendingOrder {
             showActionView(showVerifyPaymentLabel: false)
-            actionButton.isBusy = true
+            titleAttributes.foregroundColor = .clear
+            configuration.attributedTitle = AttributedString(
+                " ",
+                attributes: titleAttributes
+            )
+            configuration.background.backgroundColor = R.color.button_background_disabled()
+            configuration.background.customView = busyIndicator
+            actionButton.configuration = configuration
+            actionButton.isUserInteractionEnabled = false
         } else if let order = pendingOrder, order.status.knownCase == .initial {
             showActionView(showVerifyPaymentLabel: true)
-            actionButton.setTitle(R.string.localizable.view_invoice(), for: .normal)
-            actionButton.isEnabled = true
-            actionButton.isBusy = false
+            configuration.background.backgroundColor = R.color.theme()
+            titleAttributes.foregroundColor = .white
+            configuration.attributedTitle = AttributedString(
+                R.string.localizable.view_invoice(),
+                attributes: titleAttributes
+            )
+            actionButton.configuration = configuration
+            actionButton.isUserInteractionEnabled = true
         } else {
             if planDetails.isEmpty, let currentPlan, SafeMembership.Plan.allCases[selectedIndex] < currentPlan {
                 hideActionView()
             } else if observer.isRunning {
                 showActionView(showVerifyPaymentLabel: false)
-                actionButton.setTitle(R.string.localizable.upgrading_plan(), for: .normal)
-                actionButton.isEnabled = false
-                actionButton.isBusy = false
+                titleAttributes.foregroundColor = .white
+                configuration.attributedTitle = AttributedString(
+                    R.string.localizable.upgrading_plan(),
+                    attributes: titleAttributes
+                )
+                configuration.background.backgroundColor = R.color.button_background_disabled()
+                actionButton.configuration = configuration
+                actionButton.isUserInteractionEnabled = false
             } else if let detail = selectedPlanDetails {
                 if detail.plan == currentPlan {
                     showActionView(showVerifyPaymentLabel: false)
-                    actionButton.setTitle(R.string.localizable.current_plan(), for: .normal)
-                    actionButton.isEnabled = false
-                    actionButton.isBusy = false
+                    titleAttributes.foregroundColor = .white
+                    configuration.attributedTitle = AttributedString(
+                        R.string.localizable.current_plan(),
+                        attributes: titleAttributes
+                    )
+                    configuration.image = R.image.smile()
+                    configuration.imagePlacement = .leading
+                    configuration.imagePadding = 4
+                    configuration.background.backgroundColor = R.color.market_green()
+                    actionButton.configuration = configuration
+                    actionButton.isUserInteractionEnabled = true
                 } else if let currentPlan, detail.plan < currentPlan {
                     hideActionView()
                 } else if let product = products[detail.appleSubscriptionID] {
                     showActionView(showVerifyPaymentLabel: false)
-                    let title = R.string.localizable.upgrade_plan_for(product.displayPrice)
-                    actionButton.setTitle(title, for: .normal)
-                    actionButton.isEnabled = true
-                    actionButton.isBusy = false
+                    titleAttributes.foregroundColor = .white
+                    configuration.attributedTitle = AttributedString(
+                        R.string.localizable.upgrade_plan_for(product.displayPrice),
+                        attributes: titleAttributes
+                    )
+                    configuration.background.backgroundColor = R.color.theme()
+                    actionButton.configuration = configuration
+                    actionButton.isUserInteractionEnabled = true
                 } else {
                     showActionView(showVerifyPaymentLabel: false)
-                    actionButton.setTitle(R.string.localizable.contact_support(), for: .normal)
-                    actionButton.isEnabled = true
-                    actionButton.isBusy = false
+                    titleAttributes.foregroundColor = .white
+                    configuration.attributedTitle = AttributedString(
+                        R.string.localizable.contact_support(),
+                        attributes: titleAttributes
+                    )
+                    configuration.background.backgroundColor = R.color.theme()
+                    actionButton.configuration = configuration
+                    actionButton.isUserInteractionEnabled = true
                 }
             } else {
                 showActionView(showVerifyPaymentLabel: false)
-                actionButton.setTitle(" ", for: .normal)
-                actionButton.isEnabled = false
-                actionButton.isBusy = true
+                titleAttributes.foregroundColor = .clear
+                configuration.attributedTitle = AttributedString(
+                    " ",
+                    attributes: titleAttributes
+                )
+                configuration.background.backgroundColor = R.color.button_background_disabled()
+                configuration.background.customView = busyIndicator
+                actionButton.configuration = configuration
+                actionButton.isUserInteractionEnabled = false
             }
         }
+        actionButton.titleLabel?.adjustsFontForContentSizeCategory = true
         UIView.performWithoutAnimation(view.layoutIfNeeded)
     }
     

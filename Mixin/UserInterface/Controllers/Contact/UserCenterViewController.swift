@@ -5,6 +5,11 @@ final class UserCenterViewController: SettingsTableViewController, MixinNavigati
     
     private lazy var dataSource = SettingsDataSource(sections: [
         SettingsSection(rows: [
+            SettingsRow(icon: R.image.setting.category_membership(),
+                        title: R.string.localizable.mixin_one(),
+                        accessory: .disclosure)
+        ]),
+        SettingsSection(rows: [
             SettingsRow(icon: R.image.ic_user_profile(),
                         title: R.string.localizable.profile(),
                         accessory: .disclosure),
@@ -38,6 +43,10 @@ final class UserCenterViewController: SettingsTableViewController, MixinNavigati
         ]),
     ])
     
+    private var membershipRow: SettingsRow {
+        dataSource.sections[0].rows[0]
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.leftBarButtonItem = .tintedIcon(
@@ -70,6 +79,14 @@ extension UserCenterViewController: UITableViewDelegate {
         let controller: UIViewController
         switch indexPath.section {
         case 0:
+            if let membership = LoginManager.shared.account?.membership, let plan = membership.plan {
+                controller = MembershipViewController(plan: plan, expiredAt: membership.expiredAt)
+            } else {
+                let buy = MembershipPlansViewController(selectedPlan: nil)
+                present(buy, animated: true)
+                return
+            }
+        case 1:
             switch indexPath.row {
             case 0:
                 guard let account = LoginManager.shared.account else {
@@ -84,14 +101,14 @@ extension UserCenterViewController: UITableViewDelegate {
                 showMyMoneyReceivingCode()
                 return
             }
-        case 1:
+        case 2:
             switch indexPath.row {
             case 0:
                 controller = ContactViewController.instance(showAddContactButton: false)
             default:
                 controller = AddMemberViewController.instance()
             }
-        case 2:
+        case 3:
             switch indexPath.row {
             case 0:
                 controller = AddContactViewController()
@@ -109,10 +126,10 @@ extension UserCenterViewController: UITableViewDelegate {
 extension UserCenterViewController {
     
     @objc private func reloadAccount() {
-        guard let account = LoginManager.shared.account, let headerView = tableView.tableHeaderView as? UserCenterTableHeaderView else {
+        guard let account = LoginManager.shared.account else {
             return
         }
-        DispatchQueue.main.async {
+        if let headerView = tableView.tableHeaderView as? UserCenterTableHeaderView {
             headerView.avatarImageView.setImage(with: account.avatarURL, userId: account.userID, name: account.fullName)
             headerView.nameLabel.text = account.fullName
             if let image = account.membership?.badgeImage {
@@ -125,6 +142,20 @@ extension UserCenterViewController {
                 headerView.removeMembershipButton()
             }
             headerView.identityNumberLabel.text = R.string.localizable.contact_mixin_id(account.identityNumber)
+        }
+        membershipRow.subtitle = switch account.membership?.unexpiredPlan {
+        case .advance:
+                .icon(R.image.membership_advance()!)
+        case .elite:
+                .icon(R.image.membership_elite()!)
+        case .prosperity:
+                .icon(UserBadgeIcon.prosperityImage!)
+        case nil:
+            if account.membership?.plan == nil {
+                .text(R.string.localizable.upgrade_plan())
+            } else {
+                .text(R.string.localizable.renew_plan())
+            }
         }
     }
     

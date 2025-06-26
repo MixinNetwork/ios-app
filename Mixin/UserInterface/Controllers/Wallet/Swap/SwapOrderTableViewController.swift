@@ -21,6 +21,7 @@ final class SwapOrderTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        BadgeManager.shared.setHasViewed(identifier: .swapOrder)
         navigationItem.title = R.string.localizable.orders()
         view.backgroundColor = R.color.background()
         
@@ -46,7 +47,6 @@ final class SwapOrderTableViewController: UIViewController {
         updateTableViewContentInsetBottom()
         
         queue.async { [limit=localPageCount] in
-            PropertiesDAO.shared.set(true, forKey: .hasSwapOrderReviewed)
             let orders = SwapOrderDAO.shared.orders(limit: limit)
             let offset = SwapOrderDAO.shared.oldestPendingOrFailedOrderCreatedAt()
             let snapshot = DataSourceSnapshot(orders: orders)

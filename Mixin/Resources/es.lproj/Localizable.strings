@@ -206,6 +206,7 @@
 "browser" = "Browser";
 "buy" = "Buy";
 "buy_asset" = "Buy %@";
+"buy_crypto_with_cash" = "Purchase crypto with cash";
 "buy_stars" = "Buy Stars";
 "buy_token" = "Buy %@";
 "buying_limitation" = "Minimum %@";
@@ -779,6 +780,7 @@
 "mixin_locked" = "Mixin bloqueado";
 "mixin_messenger_desktop" = "Mixin Messenger de Escritorio";
 "mixin_one" = "Mixin One";
+"mixin_one_desc" = "Start your Mixin premium journey";
 "mixin_server_encounters_errors" = "El servidor Mixin encuentra errores";
 "mixin_support" = "Mixin Support";
 "mnemonic_phrase" = "Mnemonic Phrase";
@@ -1318,7 +1320,6 @@
 "system_time_is_unusual" = "La hora del sistema es inusual";
 "tag" = "Etiqueta";
 "tag_placeholder" = "Enter the Tag. If there isn’t one, enter any non-zero number.";
-"take_a_photo" = "Take a photo";
 "tap_to_join" = "Toca para unirte";
 "terms_of_service" = "Términos de servicio";
 "text" = "texto";
@@ -1343,6 +1344,7 @@
 "total_supply" = "Total Supply";
 "touch_id" = "identifición de toque";
 "track_not_found" = "Pista no encontrada";
+"trade_native_tokens" = "Trade thousands of native tokens";
 "transaction" = "Transacción";
 "transaction_approved" = "Transaction Approved";
 "transaction_failed" = "Transaction Failed";

@@ -3,14 +3,16 @@ import MixinServices
 
 enum ExploreAction {
     
-    case camera
+    case buy
+    case swap
+    case membership
     case linkDesktop
     case customerService
     case editFavoriteApps
     
     var trayImage: UIImage? {
         switch self {
-        case .camera, .linkDesktop, .customerService:
+        case .buy, .swap, .membership, .linkDesktop, .customerService:
             R.image.explore.action_tray()
         case .editFavoriteApps:
             R.image.explore.edit_favorite_app()
@@ -19,8 +21,12 @@ enum ExploreAction {
     
     var iconImage: UIImage? {
         switch self {
-        case .camera:
-            R.image.explore.camera()
+        case .buy:
+            R.image.explore.buy()
+        case .swap:
+            R.image.explore.swap()
+        case .membership:
+            R.image.explore.membership()
         case .linkDesktop:
             if AppGroupUserDefaults.Account.isDesktopLoggedIn {
                 R.image.explore.desktop_logged_in()
@@ -36,8 +42,12 @@ enum ExploreAction {
     
     var title: String {
         switch self {
-        case .camera:
-            R.string.localizable.camera()
+        case .buy:
+            R.string.localizable.buy()
+        case .swap:
+            R.string.localizable.swap()
+        case .membership:
+            R.string.localizable.mixin_one()
         case .linkDesktop:
             R.string.localizable.link_desktop()
         case .customerService:
@@ -49,8 +59,12 @@ enum ExploreAction {
     
     var subtitle: String {
         switch self {
-        case .camera:
-            R.string.localizable.take_a_photo()
+        case .buy:
+            R.string.localizable.buy_crypto_with_cash()
+        case .swap:
+            R.string.localizable.trade_native_tokens()
+        case .membership:
+            R.string.localizable.mixin_one_desc()
         case .linkDesktop:
             if AppGroupUserDefaults.Account.isDesktopLoggedIn {
                 R.string.localizable.logined()

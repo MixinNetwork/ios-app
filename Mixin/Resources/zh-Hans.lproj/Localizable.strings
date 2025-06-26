@@ -206,6 +206,7 @@
 "browser" = "浏览器";
 "buy" = "购买";
 "buy_asset" = "购买 %@";
+"buy_crypto_with_cash" = "用现金购买加密货币";
 "buy_stars" = "购买 Stars";
 "buy_token" = "买入 %@";
 "buying_limitation" = "最少 %@";
@@ -779,6 +780,7 @@
 "mixin_locked" = "Mixin 已锁定";
 "mixin_messenger_desktop" = "Mixin Messenger 桌面";
 "mixin_one" = "Mixin 大会员";
+"mixin_one_desc" = "开启您的 Mixin 会员之旅";
 "mixin_server_encounters_errors" = "服务器出错，请稍后重试";
 "mixin_support" = "Mixin 客服";
 "mnemonic_phrase" = "助记词";
@@ -1318,7 +1320,6 @@
 "system_time_is_unusual" = "系统时间异常";
 "tag" = "Tag（标签）";
 "tag_placeholder" = "输入数字地址标签（Tag），如果没有请输入任意非 0 数字。";
-"take_a_photo" = "拍摄照片";
 "tap_to_join" = "点击加入";
 "terms_of_service" = "服务条款";
 "text" = "信息";
@@ -1343,6 +1344,7 @@
 "total_supply" = "总量";
 "touch_id" = "指纹";
 "track_not_found" = "Track 无效";
+"trade_native_tokens" = "交易数千种原生代币";
 "transaction" = "交易详情";
 "transaction_approved" = "批准成功";
 "transaction_failed" = "交易失败";

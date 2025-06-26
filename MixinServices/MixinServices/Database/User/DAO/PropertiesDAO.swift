@@ -9,11 +9,6 @@ public final class PropertiesDAO: UserDatabaseDAO {
         case iterator
         case snapshotOffset     = "snapshot_offset"
         case globalMarket       = "global_market"
-        case hasSwapReviewed    = "has_viewed_swap"
-        case hasMarketReviewed  = "has_viewed_market"
-        case hasSwapOrderReviewed       = "has_viewed_swap_order"
-        case hasWalletSwitchViewed      = "has_viewed_wallet_switch"
-        case hasBuyingViewed            = "has_viewed_buying"
         case mixinSwapRecentSendIDs     = "mixin_swap_recent_send"
         case mixinSwapRecentReceiveIDs  = "mixin_swap_recent_receive"
         case transferRecentAssetIDs     = "transfer_recent_assets"
@@ -126,6 +121,45 @@ extension PropertiesDAO {
                                                 object: self,
                                                 userInfo: [key: Change.removed])
             }
+        }
+    }
+    
+}
+
+// Raw access without notifications
+extension PropertiesDAO {
+    
+    public func unsafeValue<Value: LosslessStringConvertible>(forKey key: String) -> Value? {
+        try? db.read { db -> Value? in
+            let string = try String.fetchOne(
+                db,
+                sql: "SELECT value FROM properties WHERE key=?",
+                arguments: [key]
+            )
+            if let string = string {
+                return Value(string)
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    public func setWithoutNotification(_ value: LosslessStringConvertible, forKey key: String) {
+        try! db.writeAndReturnError { db in
+            let property = Property(
+                key: key,
+                value: value.description,
+                updatedAt: Date().toUTCString()
+            )
+            try property.save(db)
+        }
+    }
+    
+    public func removeValueWithoutNotification(forKey key: String) {
+        try! db.writeAndReturnError { db in
+            try Property
+                .filter(Property.column(of: .key) == key)
+                .deleteAll(db)
         }
     }
     

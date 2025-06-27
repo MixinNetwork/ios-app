@@ -295,12 +295,21 @@ extension Web3TransferPreviewViewController {
     
     private func loadFee(replacingRowAt index: Int) async throws {
         let fee = try await operation.loadFee()
-        let feeValue = CurrencyFormatter.localizedString(
+        var feeValue = CurrencyFormatter.localizedString(
             from: fee.tokenAmount,
             format: .precision,
             sign: .never,
-            symbol: nil
+            symbol: .custom(operation.feeToken.symbol)
         )
+        if let fee = fee as? EVMTransferOperation.EVMDisplayFee {
+            let feePerGas = CurrencyFormatter.localizedString(
+                from: fee.feePerGas,
+                format: .precision,
+                sign: .never,
+                symbol: .custom("Gwei")
+            )
+            feeValue.append(" (\(feePerGas))")
+        }
         let feeCost = if fee.fiatMoneyAmount >= 0.01 {
             CurrencyFormatter.localizedString(
                 from: fee.fiatMoneyAmount,
@@ -318,7 +327,7 @@ extension Web3TransferPreviewViewController {
         }
         let row: Row = .amount(
             caption: .fee,
-            token: feeValue + " " + operation.feeToken.symbol,
+            token: feeValue,
             fiatMoney: feeCost,
             display: .byToken,
             boldPrimaryAmount: false

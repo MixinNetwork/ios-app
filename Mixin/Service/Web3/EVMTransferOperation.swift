@@ -6,6 +6,17 @@ import MixinServices
 
 class EVMTransferOperation: Web3TransferOperation {
     
+    class EVMDisplayFee: DisplayFee {
+        
+        let feePerGas: Decimal // In Gwei
+        
+        init(feePerGas: Decimal, tokenAmount: Decimal, fiatMoneyAmount: Decimal) {
+            self.feePerGas = feePerGas
+            super.init(tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount)
+        }
+        
+    }
+    
     enum InitError: Error {
         case noFeeToken(String)
         case invalidAmount(Decimal)
@@ -30,8 +41,17 @@ class EVMTransferOperation: Web3TransferOperation {
     
     private let mixinChainID: String
     
+    private lazy var gweiRoundingHandler = NSDecimalNumberHandler(
+        roundingMode: .up,
+        scale: 2,
+        raiseOnExactness: false,
+        raiseOnOverflow: false,
+        raiseOnUnderflow: false,
+        raiseOnDivideByZero: false
+    )
+    
     @MainActor private var evmFee: EVMFee?
-    @MainActor private var fee: Fee?
+    @MainActor private var fee: DisplayFee?
     @MainActor private var transaction: EIP1559Transaction
     @MainActor private var account: EthereumAccount?
     
@@ -108,7 +128,7 @@ class EVMTransferOperation: Web3TransferOperation {
         )
     }
     
-    override func loadFee() async throws -> Fee {
+    override func loadFee() async throws -> DisplayFee {
         let rawFee = try await RouteAPI.estimatedEthereumFee(
             mixinChainID: mixinChainID,
             hexData: transaction.data?.hexEncodedString(),
@@ -119,12 +139,14 @@ class EVMTransferOperation: Web3TransferOperation {
         guard
             let gasLimit = BigUInt(rawFee.gasLimit),
             let maxFeePerGas = BigUInt(rawFee.maxFeePerGas),
+            let maxFeePerGasNumber = Decimal(string: maxFeePerGas.description, locale: .enUSPOSIX),
             let maxPriorityFeePerGas = BigUInt(rawFee.maxPriorityFeePerGas),
             let weiCount = Decimal(string: (gasLimit * maxFeePerGas).description, locale: .enUSPOSIX)
         else {
             throw RequestError.invalidFee
         }
         let evmFee: EVMFee
+        let feePerGas: Decimal
         let tokenAmount: Decimal
         if await Web3Diagnostic.usesLowEVMFeeOnce {
             evmFee = EVMFee(
@@ -132,6 +154,7 @@ class EVMTransferOperation: Web3TransferOperation {
                 maxFeePerGas: maxFeePerGas / 3,
                 maxPriorityFeePerGas: maxPriorityFeePerGas / 3
             )
+            feePerGas = maxFeePerGasNumber * .gwei / 3
             tokenAmount = weiCount * .wei / 3
         } else {
             evmFee = EVMFee(
@@ -139,9 +162,13 @@ class EVMTransferOperation: Web3TransferOperation {
                 maxFeePerGas: maxFeePerGas,
                 maxPriorityFeePerGas: maxPriorityFeePerGas
             )
+            feePerGas = maxFeePerGasNumber * .gwei
             tokenAmount = weiCount * .wei
         }
-        let fee = Fee(
+        let fee = EVMDisplayFee(
+            feePerGas: NSDecimalNumber(decimal: feePerGas)
+                .rounding(accordingToBehavior: gweiRoundingHandler)
+                .decimalValue,
             tokenAmount: tokenAmount,
             fiatMoneyAmount: tokenAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
         )
@@ -268,7 +295,7 @@ class EVMTransferOperation: Web3TransferOperation {
         return nonce
     }
     
-    private func send(transaction: EIP1559Transaction, with account: EthereumAccount, fee: Fee) async {
+    private func send(transaction: EIP1559Transaction, with account: EthereumAccount, fee: DisplayFee) async {
         do {
             let transactionDescription = transaction.raw?.hexEncodedString()
                 ?? transaction.jsonRepresentation

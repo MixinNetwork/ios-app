@@ -82,19 +82,37 @@ class SwapPreviewViewController: AuthenticationPreviewViewController {
             }
         case let .web3(destination):
             let fee = destination.fee
-            let feeValue = CurrencyFormatter.localizedString(from: fee.tokenAmount, format: .precision, sign: .never, symbol: nil)
+            var feeValue = CurrencyFormatter.localizedString(
+                from: fee.tokenAmount,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(destination.feeTokenSymbol)
+            )
+            if let fee = fee as? EVMTransferOperation.EVMDisplayFee {
+                let feePerGas = CurrencyFormatter.localizedString(
+                    from: fee.feePerGas,
+                    format: .precision,
+                    sign: .never,
+                    symbol: .custom("Gwei")
+                )
+                feeValue.append(" (\(feePerGas))")
+            }
             let feeCost = if fee.fiatMoneyAmount >= 0.01 {
                 CurrencyFormatter.localizedString(from: fee.fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
             } else {
                 "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
             }
-            rows.append(.amount(caption: .fee,
-                                token: feeValue + " " + destination.feeTokenSymbol,
-                                   fiatMoney: feeCost,
-                                   display: .byToken,
-                                   boldPrimaryAmount: false))
-            rows.append(.receivers([destination.displayReceiver], threshold: nil))
-            rows.append(.sendingAddress(value: destination.senderAddress.destination, label: nil))
+            rows.append(contentsOf: [
+                .amount(
+                    caption: .fee,
+                    token: feeValue,
+                    fiatMoney: feeCost,
+                    display: .byToken,
+                    boldPrimaryAmount: false
+                ),
+                .receivers([destination.displayReceiver], threshold: nil),
+                .sendingAddress(value: destination.senderAddress.destination, label: nil),
+            ])
         }
         
         if let memo = operation.memo, !memo.isEmpty {

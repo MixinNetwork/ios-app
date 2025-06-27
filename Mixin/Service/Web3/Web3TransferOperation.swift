@@ -3,9 +3,16 @@ import MixinServices
 
 class Web3TransferOperation: SwapOperation.PaymentOperation {
     
-    struct Fee {
+    class DisplayFee {
+        
         let tokenAmount: Decimal
         let fiatMoneyAmount: Decimal
+        
+        init(tokenAmount: Decimal, fiatMoneyAmount: Decimal) {
+            self.tokenAmount = tokenAmount
+            self.fiatMoneyAmount = fiatMoneyAmount
+        }
+        
     }
     
     enum State {
@@ -45,7 +52,7 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
         self.hardcodedSimulation = hardcodedSimulation
     }
     
-    func loadFee() async throws -> Fee {
+    func loadFee() async throws -> DisplayFee {
         fatalError("Must override")
     }
     

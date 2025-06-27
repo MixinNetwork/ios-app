@@ -50,7 +50,7 @@ extension SwapOperation {
     struct Web3Destination {
         let displayReceiver: UserItem
         let depositDestination: String
-        let fee: Web3TransferOperation.Fee
+        let fee: Web3TransferOperation.DisplayFee
         let feeTokenSymbol: String
         let senderAddress: Web3Address
     }

@@ -6,7 +6,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
     
     private let payment: Web3SendingTokenToAddressPayment
     
-    private var fee: Web3TransferOperation.Fee?
+    private var fee: Web3TransferOperation.DisplayFee?
     private var feeToken: Web3TokenItem?
     private var minimumTransferAmount: Decimal?
     

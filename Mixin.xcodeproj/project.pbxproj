@@ -1295,6 +1295,7 @@
 		94E82DBC2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E82DBB2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib */; };
 		94E879502D8708F600F97DDD /* WalletSearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E8794F2D8708F600F97DDD /* WalletSearchView.xib */; };
 		94E8913925C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */; };
+		94E9504E2E10082A000AEFE5 /* BuyTokenWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E9504D2E10082A000AEFE5 /* BuyTokenWebViewController.swift */; };
 		94E978B32D09818B00FFCC12 /* ClockSkewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E978B22D09818B00FFCC12 /* ClockSkewView.xib */; };
 		94E978C52D09842000FFCC12 /* DatabaseUpgradeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E978C42D09842000FFCC12 /* DatabaseUpgradeView.xib */; };
 		94E978D12D09B7D600FFCC12 /* LegacyPINView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E978D02D09B7D600FFCC12 /* LegacyPINView.xib */; };
@@ -2908,6 +2909,7 @@
 		94E82DBB2BB54A1C00092249 /* LoadingIndicatorTableFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingIndicatorTableFooterView.xib; sourceTree = "<group>"; };
 		94E8794F2D8708F600F97DDD /* WalletSearchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletSearchView.xib; sourceTree = "<group>"; };
 		94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Pods-Mixin-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-Mixin/Pods-Mixin-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
+		94E9504D2E10082A000AEFE5 /* BuyTokenWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyTokenWebViewController.swift; sourceTree = "<group>"; };
 		94E978B22D09818B00FFCC12 /* ClockSkewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ClockSkewView.xib; sourceTree = "<group>"; };
 		94E978C42D09842000FFCC12 /* DatabaseUpgradeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DatabaseUpgradeView.xib; sourceTree = "<group>"; };
 		94E978CF2D09B7D600FFCC12 /* LegacyPINViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyPINViewController.swift; sourceTree = "<group>"; };
@@ -4311,6 +4313,7 @@
 				94682F0B2E029B2700B1C6D3 /* BuyingPairView.xib */,
 				9414D3A52E069ACD00F38028 /* BuyTokenInputAmountViewController.swift */,
 				9414D5322E07129900F38028 /* BuyTokenSelectorViewController.swift */,
+				94E9504D2E10082A000AEFE5 /* BuyTokenWebViewController.swift */,
 			);
 			path = Buy;
 			sourceTree = "<group>";
@@ -7410,6 +7413,7 @@
 				7B9C102A245588DA00B2718F /* PhoneNumberSettingViewController.swift in Sources */,
 				7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */,
 				946331BB2C622BE200C54B76 /* TransactionHistoryAssetFilterView.swift in Sources */,
+				94E9504E2E10082A000AEFE5 /* BuyTokenWebViewController.swift in Sources */,
 				7B86B1EF23F6A70300C80AD9 /* AudioMessageActionView.swift in Sources */,
 				7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */,
 				94AC15652C3D7A110029E1AB /* AppButtonsViewModel.swift in Sources */,

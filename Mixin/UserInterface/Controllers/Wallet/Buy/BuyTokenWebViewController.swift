@@ -3,14 +3,10 @@ import WebKit
 
 final class BuyTokenWebViewController: PopupTitledWebViewController {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        webView.uiDelegate = self
-    }
-    
     override func replaceWebView(configuration: WKWebViewConfiguration) {
         configuration.allowsInlineMediaPlayback = true
         super.replaceWebView(configuration: configuration)
+        webView.uiDelegate = self
     }
     
 }

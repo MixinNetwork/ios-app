@@ -152,14 +152,22 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
     }
     
     private func wordCountSwitchingButton(count: MixinMnemonics.PhrasesCount) -> UIButton {
-        let button = RoundOutlineButton(type: .custom)
-        button.contentEdgeInsets = UIEdgeInsets(top: 9, left: 14, bottom: 9, right: 14)
-        button.setTitle(R.string.localizable.number_of_words(count.rawValue), for: .normal)
-        button.setTitleColor(R.color.text(), for: .normal)
-        button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        let button = ConfigurationBasedOutlineButton(type: .system)
+        button.configuration = {
+            var config: UIButton.Configuration = .bordered()
+            config.cornerStyle = .capsule
+            config.attributedTitle = AttributedString(
+                R.string.localizable.number_of_words(count.rawValue),
+                attributes: AttributeContainer([
+                    .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+                ])
+            )
+            config.contentInsets = NSDirectionalEdgeInsets(top: 9, leading: 14, bottom: 9, trailing: 14)
+            return config
+        }()
         button.tag = count.rawValue
         button.addTarget(self, action: #selector(switchWordCount(_:)), for: .touchUpInside)
-        button.isSelected = count == self.phrasesCount
+        button.isSelected = count == phrasesCount
         return button
     }
     

@@ -140,6 +140,18 @@ final class WalletSummaryViewController: UIViewController {
         reloadData()
     }
     
+    @IBAction func addWallet(_ sender: Any) {
+        let selector = AddWalletMethodSelectorViewController()
+        selector.onSelected = { [weak self] method in
+            switch method {
+            case .mnemonics:
+                let input = AddWalletInputMnemonicsViewController()
+                self?.navigationController?.pushViewController(input, animated: true)
+            }
+        }
+        present(selector, animated: true)
+    }
+    
     @objc private func reloadData() {
         BadgeManager.shared.setHasViewed(identifier: .walletSwitch)
         DispatchQueue.global().async {
@@ -223,11 +235,11 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
             switch indexPath.item {
             case 0:
                 if let digest = privacyWalletDigest {
-                    cell.load(digest: digest, type: .privacy)
+                    cell.load(digest: digest, kind: .privacy)
                 }
             default:
                 let digest = classicWalletDigests[indexPath.row - 1]
-                cell.load(digest: digest, type: .classic)
+                cell.load(digest: digest, kind: .classic)
             }
             return cell
         case .tips:

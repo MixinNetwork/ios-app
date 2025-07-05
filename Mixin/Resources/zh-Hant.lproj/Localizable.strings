@@ -39,6 +39,7 @@
 "add_tag" = "點選新增 Tag（標籤）";
 "add_to_stickers" = "新增貼紙";
 "add_token" = "補充 %@";
+"add_wallet" = "新增錢包";
 "added" = "已新增";
 "adding_address" = "正在新增地址";
 "adding_address_failed" = "新增地址失敗";
@@ -324,6 +325,7 @@
 "collection_collected" = "已收藏 %d 件";
 "combine_and_forward" = "合併轉發";
 "common_wallet" = "普通錢包";
+"common_wallet_index" = "普通錢包 %d";
 "complete" = "完成";
 "completed" = "已完成";
 "compress_database" = "壓縮資料庫";
@@ -601,10 +603,12 @@
 "fee" = "手續費";
 "fee_selection" = "手續費（%@）";
 "feedback" = "反饋";
+"fetching_in_to_your_wallet" = "正在查詢你的錢包...";
 "file" = "檔案";
 "files" = "檔案";
 "filter" = "篩選";
 "filter_by" = "篩選";
+"find_more_wallets" = "查詢更多錢包";
 "floating" = "浮窗";
 "floats_allows_up_to_count" = "最多支援 %d 個浮窗";
 "follow_us_on_facebook" = "關注我們的 Facebook";
@@ -651,6 +655,9 @@
 "im_ready" = "準備好了";
 "image" = "影像";
 "immediately" = "立刻";
+"import_mnemonic_phrase" = "匯入助記詞";
+"import_wallets" = "匯入錢包";
+"import_wallets_from_another_wallet" = "從其他錢包匯入錢包";
 "in_connecting" = "正在連線...";
 "include_files" = "包含檔案";
 "include_videos" = "包括影片";
@@ -1143,6 +1150,7 @@
 "select" = "選擇";
 "select_a_country_or_region" = "選擇一個國家或地區";
 "select_a_token_for_the_fee" = "選擇支付手續費的幣種";
+"select_all" = "選擇所有";
 "select_date" = "選擇日期";
 "select_emergency_contact" = "選擇恢復聯絡人";
 "select_more_photos" = "選擇更多照片";
@@ -1154,6 +1162,8 @@
 "selected_photo_count" = "已選擇 %d 張圖片";
 "selected_video" = "已選擇 1 個影片";
 "selected_video_count" = "已選擇 %d 個影片";
+"selected_wallet_count" = "已選擇 %d 個錢包";
+"selected_wallet_count_one" = "已選擇 1 個錢包";
 "sell_token" = "賣出 %@";
 "send" = "傳送";
 "send_as_file" = "傳送為檔案";

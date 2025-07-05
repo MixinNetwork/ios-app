@@ -83,14 +83,22 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         title = R.string.localizable.add_alert()
         
         for (i, percentage) in presetChangePercentages.enumerated() {
-            let button = RoundOutlineButton(type: .system)
-            let title = NumberFormatter.percentage.string(decimal: percentage)
-            button.setTitle(title, for: .normal)
-            button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 12, weight: .medium), adjustForContentSize: true)
-            button.setTitleColor(R.color.text(), for: .normal)
+            let button = ConfigurationBasedOutlineButton(type: .system)
+            button.configuration = {
+                var config: UIButton.Configuration = .bordered()
+                config.cornerStyle = .capsule
+                config.attributedTitle = AttributedString(
+                    NumberFormatter.percentage.string(decimal: percentage) ?? "",
+                    attributes: AttributeContainer([
+                        .font: UIFontMetrics.default.scaledFont(
+                            for: .systemFont(ofSize: 12, weight: .medium)
+                        )
+                    ])
+                )
+                config.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 9, bottom: 8, trailing: 9)
+                return config
+            }()
             button.tag = i
-            button.layer.masksToBounds = true
-            button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 9, bottom: 8, right: 9)
             presetPercentageStackView.addArrangedSubview(button)
             button.addTarget(self, action: #selector(loadPresetPercentage(_:)), for: .touchUpInside)
         }

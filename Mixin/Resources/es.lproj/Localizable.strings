@@ -39,6 +39,7 @@
 "add_tag" = "Añadir etiqueta";
 "add_to_stickers" = "Añadir a pegatinas";
 "add_token" = "Add %@";
+"add_wallet" = "Add Wallet";
 "added" = "Añadido";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
@@ -324,6 +325,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Combinar y avanzar";
 "common_wallet" = "Common Wallet";
+"common_wallet_index" = "Common Wallet %d";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Comprimir base de datos";
@@ -601,10 +603,12 @@
 "fee" = "Tarifa";
 "fee_selection" = "Fee (%@)";
 "feedback" = "Comentario";
+"fetching_in_to_your_wallet" = "Fetching in to your wallet...";
 "file" = "Archivo";
 "files" = "Archivos";
 "filter" = "Filtrar";
 "filter_by" = "FILTRADO POR";
+"find_more_wallets" = "Find more wallets";
 "floating" = "Flotante";
 "floats_allows_up_to_count" = "Los flotadores permiten hasta %d unos";
 "follow_us_on_facebook" = "Síguenos en Facebook";
@@ -651,6 +655,9 @@
 "im_ready" = "I'm Ready";
 "image" = "imagen";
 "immediately" = "Inmediatamente";
+"import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_wallets" = "Import Wallets";
+"import_wallets_from_another_wallet" = "Import wallets from another wallet";
 "in_connecting" = "Conectando...";
 "include_files" = "Incluir archivos";
 "include_videos" = "Incluir vídeos";
@@ -1143,6 +1150,7 @@
 "select" = "Seleccionar";
 "select_a_country_or_region" = "Seleccionar un país o región";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_all" = "Select All";
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
 "select_more_photos" = "Seleccionar más fotos";
@@ -1154,6 +1162,8 @@
 "selected_photo_count" = "%d fotos seleccionadas";
 "selected_video" = "1 vídeo seleccionado";
 "selected_video_count" = "%d vídeos seleccionados";
+"selected_wallet_count" = "%d wallets selected";
+"selected_wallet_count_one" = "1 wallet selected";
 "sell_token" = "Sell %@";
 "send" = "Enviar";
 "send_as_file" = "Enviar como Archivo";

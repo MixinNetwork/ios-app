@@ -5,11 +5,45 @@ import secp256k1
 import MixinServices
 
 // https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
-
-fileprivate let bitcoinKey = Data(hexEncodedString: "426974636f696e2073656564")!
-fileprivate let n = BigUInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", radix: 16)!
+// https://github.com/satoshilabs/slips/blob/master/slip-0010.md
 
 struct ExtendedKey {
+    
+    enum Curve {
+        case secp256k1
+        case ed25519
+    }
+    
+    let key: Data
+    let chainCode: Data
+    
+    init(seed: Data, curve: Curve) {
+        let (key, chainCode) = switch curve {
+        case .secp256k1:
+            Self.hmacSHA512(seed, key: "Bitcoin seed".data(using: .utf8)!)
+        case .ed25519:
+            Self.hmacSHA512(seed, key: "ed25519 seed".data(using: .utf8)!)
+        }
+        self.init(key: key, chainCode: chainCode)
+    }
+    
+    private init(key: Data, chainCode: Data) {
+        self.key = key
+        self.chainCode = chainCode
+    }
+    
+    static func hmacSHA512(_ plain: Data, key keyData: Data) -> (left: Data, right: Data) {
+        let key = SymmetricKey(data: keyData)
+        var hasher = HMAC<SHA512>(key: key)
+        hasher.update(data: plain)
+        let hash = Data(hasher.finalize())
+        return (left: hash[..<32], right: hash[32...])
+    }
+    
+}
+
+// Secp256k1
+extension ExtendedKey {
     
     enum Error: Swift.Error {
         case missingStorage
@@ -36,67 +70,6 @@ struct ExtendedKey {
             }
         }
         
-    }
-    
-    let key: Data
-    let chainCode: Data
-    
-    init(seed: Data) {
-        let (key, chainCode) = Self.hmacSHA512(seed, key: bitcoinKey)
-        self.init(key: key, chainCode: chainCode)
-    }
-    
-    private init(key: Data, chainCode: Data) {
-        self.key = key
-        self.chainCode = chainCode
-    }
-    
-    func privateKey(index: Index) throws -> ExtendedKey {
-        let il, ir: Data
-        switch index {
-        case .normal:
-            let kPoint = try Self.point(key)
-            let data = kPoint + index.value.data(endianness: .big)
-            (il, ir) = Self.hmacSHA512(data, key: chainCode)
-        case .hardened:
-            let data = Data([0x00] + key + index.value.data(endianness: .big))
-            (il, ir) = Self.hmacSHA512(data, key: chainCode)
-        }
-        let parse256IL = BigUInt(il)
-        guard parse256IL < n else {
-            throw Error.invalidIndex
-        }
-        let kPar = BigUInt(key)
-        let ki = (parse256IL + kPar) % n
-        guard !ki.isZero else {
-            throw Error.invalidIndex
-        }
-        let kiData = ki.serialize()
-        let key: Data
-        if kiData.count < 32 {
-            key = Data(repeating: 0, count: 32 - kiData.count) + kiData
-        } else if kiData.count == 32 {
-            key = kiData
-        } else {
-            throw Error.invalidKI
-        }
-        return ExtendedKey(key: key, chainCode: ir)
-    }
-    
-    func publicKey() throws -> Data {
-        try Self.point(key)
-    }
-    
-}
-
-extension ExtendedKey {
-    
-    static func hmacSHA512(_ plain: Data, key keyData: Data) -> (left: Data, right: Data) {
-        let key = SymmetricKey(data: keyData)
-        var hasher = HMAC<SHA512>(key: key)
-        hasher.update(data: plain)
-        let hash = Data(hasher.finalize())
-        return (left: hash[..<32], right: hash[32...])
     }
     
     static func point(_ data: Data) throws -> Data {
@@ -139,6 +112,58 @@ extension ExtendedKey {
             }
             return Data(bytesNoCopy: output, count: outputLength, deallocator: .free)
         }
+    }
+    
+    func privateKeyUsingSecp256k1(index: Index) throws -> ExtendedKey {
+        let n = BigUInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", radix: 16)!
+        let il, ir: Data
+        switch index {
+        case .normal:
+            let kPoint = try Self.point(key)
+            let data = kPoint + index.value.data(endianness: .big)
+            (il, ir) = Self.hmacSHA512(data, key: chainCode)
+        case .hardened:
+            let data = Data([0x00] + key + index.value.data(endianness: .big))
+            (il, ir) = Self.hmacSHA512(data, key: chainCode)
+        }
+        let parse256IL = BigUInt(il)
+        guard parse256IL < n else {
+            throw Error.invalidIndex
+        }
+        let kPar = BigUInt(key)
+        let ki = (parse256IL + kPar) % n
+        guard !ki.isZero else {
+            throw Error.invalidIndex
+        }
+        let kiData = ki.serialize()
+        let key: Data
+        if kiData.count < 32 {
+            key = Data(repeating: 0, count: 32 - kiData.count) + kiData
+        } else if kiData.count == 32 {
+            key = kiData
+        } else {
+            throw Error.invalidKI
+        }
+        return ExtendedKey(key: key, chainCode: ir)
+    }
+    
+    func publicKey() throws -> Data {
+        try Self.point(key)
+    }
+    
+}
+
+// ed25519
+extension ExtendedKey {
+    
+    func privateKeyUsingEd25519(hardeningIndex: UInt32) -> ExtendedKey {
+        let index = (hardeningIndex | 0x80000000)
+        let body = [0x00] + key + withUnsafeBytes(of: index.bigEndian, Data.init(_:))
+        let hmacKey = SymmetricKey(data: chainCode)
+        let hmacResult = HMAC<SHA512>.authenticationCode(for: body, using: hmacKey)
+        let key = Data(hmacResult.prefix(32))
+        let chainCode = Data(hmacResult.suffix(32))
+        return ExtendedKey(key: key, chainCode: chainCode)
     }
     
 }

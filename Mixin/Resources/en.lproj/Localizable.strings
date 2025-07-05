@@ -39,6 +39,7 @@
 "add_tag" = "Add Tag";
 "add_to_stickers" = "Add to Stickers";
 "add_token" = "Add %@";
+"add_wallet" = "Add Wallet";
 "added" = "Added";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
@@ -324,6 +325,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Combine and forward";
 "common_wallet" = "Common Wallet";
+"common_wallet_index" = "Common Wallet %d";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Compress Database";
@@ -601,10 +603,12 @@
 "fee" = "Fee";
 "fee_selection" = "Fee (%@)";
 "feedback" = "Feedback";
+"fetching_in_to_your_wallet" = "Fetching in to your wallet...";
 "file" = "File";
 "files" = "Files";
 "filter" = "Filter";
 "filter_by" = "FILTER BY";
+"find_more_wallets" = "Find more wallets";
 "floating" = "Floating";
 "floats_allows_up_to_count" = "Floats allows up to %d ones";
 "follow_us_on_facebook" = "Follow us on Facebook";
@@ -651,6 +655,9 @@
 "im_ready" = "I'm Ready";
 "image" = "image";
 "immediately" = "Immediately";
+"import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_wallets" = "Import Wallets";
+"import_wallets_from_another_wallet" = "Import wallets from another wallet";
 "in_connecting" = "Connecting...";
 "include_files" = "Include Files";
 "include_videos" = "Include Videos";
@@ -1143,6 +1150,7 @@
 "select" = "Select";
 "select_a_country_or_region" = "Select a Country or Region";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_all" = "Select All";
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
 "select_more_photos" = "Select More Photos";
@@ -1154,6 +1162,8 @@
 "selected_photo_count" = "Selected %d Photos";
 "selected_video" = "Selected 1 Video";
 "selected_video_count" = "Selected %d Videos";
+"selected_wallet_count" = "%d wallets selected";
+"selected_wallet_count_one" = "1 wallet selected";
 "sell_token" = "Sell %@";
 "send" = "Send";
 "send_as_file" = "Send as File";

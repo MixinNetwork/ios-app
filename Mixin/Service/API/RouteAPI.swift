@@ -268,6 +268,20 @@ extension RouteAPI {
         )
     }
     
+    static func assets(
+        searchAddresses addresses: [String],
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[AddressAssets]>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/assets/search/address",
+            with: ["addresses": addresses],
+            queue: queue,
+            completion: completion
+        )
+    }
+    
     static func asset(assetID: String, address: String) async throws -> Web3Token {
         try await request(method: .get, path: "/assets/\(assetID)?address=\(address)")
     }

@@ -1,8 +1,15 @@
 import Foundation
 
 public enum Wallet {
+    
+    public enum Kind {
+        case privacy
+        case classic
+    }
+    
     case privacy
     case classic(id: String)
+    
 }
 
 extension Wallet: RawRepresentable {

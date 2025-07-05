@@ -39,6 +39,7 @@
 "add_tag" = "Добавить тега";
 "add_to_stickers" = "Добавить в стикеры";
 "add_token" = "Add %@";
+"add_wallet" = "Add Wallet";
 "added" = "Добавлен";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
@@ -324,6 +325,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Объединить и вперед";
 "common_wallet" = "Common Wallet";
+"common_wallet_index" = "Common Wallet %d";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Сжать базу данных";
@@ -601,10 +603,12 @@
 "fee" = "Комиссия";
 "fee_selection" = "Fee (%@)";
 "feedback" = "Обратная связь";
+"fetching_in_to_your_wallet" = "Fetching in to your wallet...";
 "file" = "Файл";
 "files" = "Файлы";
 "filter" = "Фильтр";
 "filter_by" = "СОРТИРОВАТЬ ПО";
+"find_more_wallets" = "Find more wallets";
 "floating" = "Плавающий";
 "floats_allows_up_to_count" = "Поплавки позволяют использовать до %d единиц.";
 "follow_us_on_facebook" = "Следите за нами на Фейсбуке";
@@ -651,6 +655,9 @@
 "im_ready" = "I'm Ready";
 "image" = "изображение";
 "immediately" = "Немедленно";
+"import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_wallets" = "Import Wallets";
+"import_wallets_from_another_wallet" = "Import wallets from another wallet";
 "in_connecting" = "Подключение...";
 "include_files" = "Включить файлы";
 "include_videos" = "Включить видео";
@@ -1143,6 +1150,7 @@
 "select" = "Выбрать";
 "select_a_country_or_region" = "Выберите страну или регион";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_all" = "Select All";
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
 "select_more_photos" = "Выберите больше фотографий";
@@ -1154,6 +1162,8 @@
 "selected_photo_count" = "Выбрано %d фото";
 "selected_video" = "Выбрано 1 видео";
 "selected_video_count" = "Выбрано %d видео";
+"selected_wallet_count" = "%d wallets selected";
+"selected_wallet_count_one" = "1 wallet selected";
 "sell_token" = "Sell %@";
 "send" = "Отправить";
 "send_as_file" = "Отправить как файл";

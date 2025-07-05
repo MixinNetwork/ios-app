@@ -18,12 +18,12 @@ extension TIP {
     }
     
     static func deriveEthereumPrivateKey(spendKey: Data) throws -> Data {
-        let derived = try ExtendedKey(seed: spendKey)
-            .privateKey(index: .hardened(44))
-            .privateKey(index: .hardened(60))
-            .privateKey(index: .hardened(0))
-            .privateKey(index: .normal(0))
-            .privateKey(index: .normal(0))
+        let derived = try ExtendedKey(seed: spendKey, curve: .secp256k1)
+            .privateKeyUsingSecp256k1(index: .hardened(44))
+            .privateKeyUsingSecp256k1(index: .hardened(60))
+            .privateKeyUsingSecp256k1(index: .hardened(0))
+            .privateKeyUsingSecp256k1(index: .normal(0))
+            .privateKeyUsingSecp256k1(index: .normal(0))
         return derived.key
     }
     
@@ -33,11 +33,11 @@ extension TIP {
     }
     
     static func deriveSolanaPrivateKey(spendKey: Data) throws -> Data {
-        let derived = try ExtendedKey(seed: spendKey)
-            .privateKey(index: .hardened(44))
-            .privateKey(index: .hardened(501))
-            .privateKey(index: .hardened(0))
-            .privateKey(index: .hardened(0))
+        let derived = try ExtendedKey(seed: spendKey, curve: .secp256k1)
+            .privateKeyUsingSecp256k1(index: .hardened(44))
+            .privateKeyUsingSecp256k1(index: .hardened(501))
+            .privateKeyUsingSecp256k1(index: .hardened(0))
+            .privateKeyUsingSecp256k1(index: .hardened(0))
         return derived.key
     }
     

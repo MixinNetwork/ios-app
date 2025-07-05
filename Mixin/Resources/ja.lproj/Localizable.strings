@@ -39,6 +39,7 @@
 "add_tag" = "タグを追加";
 "add_to_stickers" = "スタンプを追加";
 "add_token" = "Add %@";
+"add_wallet" = "Add Wallet";
 "added" = "追加ずみ";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
@@ -324,6 +325,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "まとめて転送";
 "common_wallet" = "Common Wallet";
+"common_wallet_index" = "Common Wallet %d";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "データの圧縮";
@@ -601,10 +603,12 @@
 "fee" = "手数料";
 "fee_selection" = "Fee (%@)";
 "feedback" = "フィードバック";
+"fetching_in_to_your_wallet" = "Fetching in to your wallet...";
 "file" = "ファイル";
 "files" = "ファイル";
 "filter" = "フィルター";
 "filter_by" = "絞り込み：";
+"find_more_wallets" = "Find more wallets";
 "floating" = "フローティング";
 "floats_allows_up_to_count" = "フロート数の上限 %d";
 "follow_us_on_facebook" = "FacebookでMixinをフォロー";
@@ -651,6 +655,9 @@
 "im_ready" = "I'm Ready";
 "image" = "画像";
 "immediately" = "すぐに";
+"import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_wallets" = "Import Wallets";
+"import_wallets_from_another_wallet" = "Import wallets from another wallet";
 "in_connecting" = "接続中...";
 "include_files" = "ファイルが含まれています";
 "include_videos" = "動画が含まれています";
@@ -1143,6 +1150,7 @@
 "select" = "選択";
 "select_a_country_or_region" = "国と地域を選択";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_all" = "Select All";
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
 "select_more_photos" = "さらに選択";
@@ -1154,6 +1162,8 @@
 "selected_photo_count" = "%d枚の写真を選択中";
 "selected_video" = "選択されたビデオ";
 "selected_video_count" = "%d本のビデオを選択中";
+"selected_wallet_count" = "%d wallets selected";
+"selected_wallet_count_one" = "1 wallet selected";
 "sell_token" = "Sell %@";
 "send" = "送る";
 "send_as_file" = "ファイルとして送信する";

@@ -23,7 +23,7 @@ final class ExportMnemonicPhrasesValidationViewController: FullscreenPINValidati
                     throw TIP.Error.invalidUserID
                 }
                 let salt = try await TIP.salt(pin: pin)
-                let mnemonics = try Mnemonics(entropy: salt)
+                let mnemonics = try MixinMnemonics(entropy: salt)
                 let masterKey = try MasterKey.key(from: mnemonics)
                 let publicKey = masterKey.publicKey.rawRepresentation.hexEncodedString()
                 let signature = try masterKey.signature(for: userIDData).hexEncodedString()

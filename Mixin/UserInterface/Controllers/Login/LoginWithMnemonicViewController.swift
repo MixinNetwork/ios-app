@@ -5,7 +5,7 @@ import MixinServices
 final class LoginWithMnemonicViewController: IntroductionViewController, LoginAccountHandler {
     
     enum Action {
-        case signIn(Mnemonics)
+        case signIn(MixinMnemonics)
         case signUp
     }
     
@@ -74,7 +74,7 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
         } else {
             DispatchQueue.global().async { [action, weak self] in
                 do {
-                    let mnemonics: Mnemonics
+                    let mnemonics: MixinMnemonics
                     switch action {
                     case .signIn(let m):
                         mnemonics = m

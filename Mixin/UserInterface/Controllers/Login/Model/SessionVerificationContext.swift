@@ -9,13 +9,13 @@ final class SessionVerificationContext {
         case generateMessageData
     }
     
-    let mnemonics: Mnemonics
+    let mnemonics: MixinMnemonics
     let masterKey: Ed25519PrivateKey
     let publicKey: Data
     let message: Data
     let signature: Data
     
-    init(mnemonics: Mnemonics) throws {
+    init(mnemonics: MixinMnemonics) throws {
         let masterKey = try MasterKey.key(from: mnemonics)
         
         var random = Data(withNumberOfSecuredRandomBytes: 32)

@@ -7,13 +7,13 @@ final class CheckMnemonicsViewController: InputMnemonicsViewController {
         case mismatched
     }
     
-    private let mnemonics: Mnemonics
+    private let mnemonics: MixinMnemonics
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard not supported")
     }
     
-    init(mnemonics: Mnemonics) {
+    init(mnemonics: MixinMnemonics) {
         self.mnemonics = mnemonics
         super.init()
     }
@@ -46,7 +46,7 @@ final class CheckMnemonicsViewController: InputMnemonicsViewController {
     
     override func confirm(_ sender: Any) {
         do {
-            let inputMnemonics = try Mnemonics(phrases: textFieldPhrases)
+            let inputMnemonics = try MixinMnemonics(phrases: textFieldPhrases)
             if inputMnemonics == mnemonics {
                 let alert = UIAlertController(
                     title: R.string.localizable.backup_mnemonic_successfully(),

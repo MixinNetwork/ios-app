@@ -2,7 +2,7 @@ import Foundation
 import zlib
 import TIP
 
-public struct Mnemonics {
+public struct MixinMnemonics {
     
     // Contains extra checksum
     public enum PhrasesCount: Int, CaseIterable {
@@ -95,13 +95,13 @@ public struct Mnemonics {
         self.bip39 = bip39
     }
     
-    public static func random(count: EntropyCount = .default) throws -> Mnemonics {
+    public static func random(count: EntropyCount = .default) throws -> MixinMnemonics {
         
-        func randomMnemonics() throws -> Mnemonics {
+        func randomMnemonics() throws -> MixinMnemonics {
             guard let entropy = Data(withNumberOfSecuredRandomBytes: count.rawValue) else {
                 throw InitError.generateRandomData
             }
-            return try Mnemonics(entropy: entropy)
+            return try MixinMnemonics(entropy: entropy)
         }
         
         var mnemonics = try randomMnemonics()
@@ -120,7 +120,7 @@ public struct Mnemonics {
             guard let phrasesCount = PhrasesCount(rawValue: phrases.count) else {
                 throw InitError.invalidPhrasesCount
             }
-            let mnemonics = try Mnemonics(phrases: phrases)
+            let mnemonics = try MixinMnemonics(phrases: phrases)
             switch phrasesCount {
             case .default:
                 return !mnemonics.hasDuplicatedPhrases()
@@ -146,7 +146,7 @@ public struct Mnemonics {
     
 }
 
-extension Mnemonics: Equatable {
+extension MixinMnemonics: Equatable {
     
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.entropy == rhs.entropy

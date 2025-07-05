@@ -9,7 +9,7 @@ public enum MasterKey {
         case mismatched
     }
     
-    public static func key(from mnemonics: Mnemonics) throws -> Ed25519PrivateKey {
+    public static func key(from mnemonics: MixinMnemonics) throws -> Ed25519PrivateKey {
         let nativeMasterKey = try {
             let privateKeySeed = PBKDF2.derivation(
                 password: mnemonics.bip39,

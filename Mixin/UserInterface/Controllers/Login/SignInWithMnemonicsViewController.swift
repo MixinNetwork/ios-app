@@ -4,7 +4,7 @@ import TIP
 
 final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
     
-    private(set) var phrasesCount: Mnemonics.PhrasesCount = .default
+    private(set) var phrasesCount: MixinMnemonics.PhrasesCount = .default
     
     private var phraseCountSwitchButtons: [UIButton] = []
     
@@ -24,7 +24,7 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
         descriptionLabel.text = R.string.localizable.enter_mnemonic_phrase(phrasesCount.rawValue)
         titleStackView.setCustomSpacing(32, after: descriptionLabel)
         
-        phraseCountSwitchButtons = Mnemonics.PhrasesCount.allCases
+        phraseCountSwitchButtons = MixinMnemonics.PhrasesCount.allCases
             .map(wordCountSwitchingButton(count:))
         for button in phraseCountSwitchButtons {
             button.layer.cornerRadius = button.bounds.height / 2
@@ -49,7 +49,7 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
     
     override func confirm(_ sender: Any) {
         do {
-            let mnemonics = try Mnemonics(phrases: textFieldPhrases)
+            let mnemonics = try MixinMnemonics(phrases: textFieldPhrases)
             let login = LoginWithMnemonicViewController(action: .signIn(mnemonics))
             navigationController?.pushViewController(login, animated: true)
         } catch {
@@ -59,7 +59,7 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
         }
     }
     
-    func reloadInputStackView(count: Mnemonics.PhrasesCount) {
+    func reloadInputStackView(count: MixinMnemonics.PhrasesCount) {
         self.phrasesCount = count
         
         descriptionLabel.text = R.string.localizable.enter_mnemonic_phrase(count.rawValue)
@@ -102,7 +102,7 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
     }
     
     @objc private func switchWordCount(_ button: UIButton) {
-        guard let count = Mnemonics.PhrasesCount(rawValue: button.tag) else {
+        guard let count = MixinMnemonics.PhrasesCount(rawValue: button.tag) else {
             return
         }
         reloadInputStackView(count: count)
@@ -115,7 +115,7 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
         guard let phrases else {
             return
         }
-        if let count = Mnemonics.PhrasesCount(rawValue: phrases.count),
+        if let count = MixinMnemonics.PhrasesCount(rawValue: phrases.count),
            self.phrasesCount != count
         {
             reloadInputStackView(count: count)
@@ -141,7 +141,7 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
         if phrases.contains(where: \.isEmpty) {
             errorDescriptionLabel.isHidden = true
             confirmButton.isEnabled = false
-        } else if Mnemonics.areValid(phrases: phrases) {
+        } else if MixinMnemonics.areValid(phrases: phrases) {
             errorDescriptionLabel.isHidden = true
             confirmButton.isEnabled = true
         } else {
@@ -151,7 +151,7 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
         }
     }
     
-    private func wordCountSwitchingButton(count: Mnemonics.PhrasesCount) -> UIButton {
+    private func wordCountSwitchingButton(count: MixinMnemonics.PhrasesCount) -> UIButton {
         let button = RoundOutlineButton(type: .custom)
         button.contentEdgeInsets = UIEdgeInsets(top: 9, left: 14, bottom: 9, right: 14)
         button.setTitle(R.string.localizable.number_of_words(count.rawValue), for: .normal)

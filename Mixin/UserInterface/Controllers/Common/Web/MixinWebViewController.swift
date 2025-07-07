@@ -3,7 +3,7 @@ import WebKit
 import Alamofire
 import MixinServices
 
-class MixinWebViewController: WebViewController {
+final class MixinWebViewController: WebViewController {
     
     // Only top 2 levels of the domain are matched
     // Be careful when adding country specific SLDs into this list
@@ -486,7 +486,7 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             case .viewAuthorization(let appId):
                 let vc = PermissionsViewController.instance(dataSource: .app(id: appId))
-                navigationController?.pushViewController(vc, animated: true)
+                availableNavigationController?.pushViewController(vc, animated: true)
             }
         }
         
@@ -730,10 +730,8 @@ extension MixinWebViewController {
         guard case .webPage = context.style else {
             return
         }
-        
         let vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))
-        let navigationController = self.navigationController ?? UIApplication.homeNavigationController
-        navigationController?.pushViewController(vc, animated: true)
+        availableNavigationController?.pushViewController(vc, animated: true)
     }
     
     private static func syncUser(userId: String, hud: Hud) -> UserItem? {

@@ -28,6 +28,10 @@ class WebViewController: FullscreenPopupViewController {
         return WKWebViewConfiguration()
     }
     
+    var availableNavigationController: UINavigationController? {
+        navigationController ?? UIApplication.homeNavigationController
+    }
+    
     private let textDarkColor = R.color.text()!.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
     
     private var statusBarStyle = UIStatusBarStyle.default

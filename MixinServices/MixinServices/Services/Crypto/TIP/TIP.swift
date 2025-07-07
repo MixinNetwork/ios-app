@@ -242,7 +242,7 @@ extension TIP {
                 guard let accountSalt = accountBeforeUpdate.salt else {
                     throw Error.missingAccountSalt
                 }
-                let placeholdingSalt = Data(count: Mnemonics.EntropyCount.default.rawValue)
+                let placeholdingSalt = Data(count: MixinMnemonics.EntropyCount.default.rawValue)
                 let newEncryptedPlaceholdingSalt = try AESCryptor.encrypt(placeholdingSalt, with: newSaltKey)
                 pinTokenEncryptedSalt = (
                     old: accountSalt,
@@ -417,10 +417,10 @@ extension TIP {
             let tipPriv = try await getOrRecoverTIPPriv(pin: pin)
             step1 += ", TIP Priv: \(tipPriv.count)"
             
-            let mnemonics: Mnemonics
+            let mnemonics: MixinMnemonics
             if let entropy = AppGroupKeychain.mnemonics {
                 step1 += ", Using saved entropy"
-                mnemonics = try Mnemonics(entropy: entropy)
+                mnemonics = try MixinMnemonics(entropy: entropy)
             } else {
                 if account.isAnonymous {
                     step1 += ", Missing entropy"
@@ -437,7 +437,7 @@ extension TIP {
             let masterKey = try MasterKey.key(from: mnemonics)
             
             let salt = if account.isAnonymous {
-                Data(count: Mnemonics.EntropyCount.default.rawValue)
+                Data(count: MixinMnemonics.EntropyCount.default.rawValue)
             } else {
                 mnemonics.entropy
             }

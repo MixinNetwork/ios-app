@@ -3,13 +3,13 @@ import MixinServices
 
 final class ViewMnemonicsViewController: MnemonicsViewController {
     
-    private let mnemonics: Mnemonics
+    private let mnemonics: MixinMnemonics
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard not supported")
     }
     
-    init(mnemonics: Mnemonics) {
+    init(mnemonics: MixinMnemonics) {
         self.mnemonics = mnemonics
         super.init()
     }

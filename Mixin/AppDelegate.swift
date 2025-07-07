@@ -333,7 +333,7 @@ extension AppDelegate {
                 if isFirstLaunch ?? false {
                     AppGroupKeychain.removeItemsForCurrentSession()
                 }
-                if let entropy = AppGroupKeychain.mnemonics, let mnemonics = try? Mnemonics(entropy: entropy) {
+                if let entropy = AppGroupKeychain.mnemonics, let mnemonics = try? MixinMnemonics(entropy: entropy) {
                     var viewControllers = navigationController.viewControllers
                     viewControllers.append(contentsOf: [
                         SignUpViewController(),

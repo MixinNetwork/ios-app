@@ -140,7 +140,7 @@
 "amount" = "金額";
 "anonymous_number" = "匿名號碼";
 "app_card_shareable_false" = "該卡片已被設定為不允許轉發";
-"app_update_short_hint" = "請從 App Store 更新 Mixin 至最新版";
+"app_update_short_hint" = "請從 App Store 更新 Mixin 至最新版，當前版本號 %@";
 "app_update_tips" = "當前版本（%@）已失效！請點選下方\"更新\"從 App Store 更新至最新版。";
 "appearance" = "外觀";
 "apply" = "應用";

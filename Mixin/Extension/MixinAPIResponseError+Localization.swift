@@ -28,7 +28,7 @@ extension MixinAPIResponseError: LocalizedError {
         case .requiresCaptcha:
             return R.string.localizable.error_requires_captcha()
         case .requiresUpdate:
-            return R.string.localizable.app_update_short_hint()
+            return R.string.localizable.app_update_short_hint(Bundle.main.shortVersionString)
         case .notRegisteredToSafe:
             return R.string.localizable.error_opponent_not_registered_to_safe()
         case .invalidSwap:

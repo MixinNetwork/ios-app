@@ -32,6 +32,7 @@ class AddMarketAlertViewController: KeyboardBasedLayoutViewController {
         formatter.usesGroupingSeparator = false
         formatter.positivePrefix = ""
         formatter.negativePrefix = ""
+        formatter.maximumFractionDigits = 8
         return formatter
     }()
     

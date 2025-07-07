@@ -140,7 +140,7 @@
 "amount" = "数量";
 "anonymous_number" = "匿名番号";
 "app_card_shareable_false" = "このカードを共有することはできません";
-"app_update_short_hint" = "サービスを利用するためにApp StoreでMixinのアップデートをお願いします。";
+"app_update_short_hint" = "Please update Mixin from App Store to continue use the service. Current version %@";
 "app_update_tips" = "現在のバージョン(%@)はもう利用いただけません。App Storeで新しいバージョンを入手してください";
 "appearance" = "言語とテーマ";
 "apply" = "適用";

@@ -140,7 +140,7 @@
 "amount" = "Количество";
 "anonymous_number" = "Anonymous Number";
 "app_card_shareable_false" = "Карта была настроена так, чтобы не разрешать совместное использование";
-"app_update_short_hint" = "Пожалуйста, обновите Mixin из App Store, чтобы продолжить пользоваться сервисом.";
+"app_update_short_hint" = "Please update Mixin from App Store to continue use the service. Current version %@";
 "app_update_tips" = "Текущая версия (%@) больше недоступна! Нажмите «Обновить» ниже, чтобы выполнить обновление до последней версии из App Store.";
 "appearance" = "Вид";
 "apply" = "Подать заявление";

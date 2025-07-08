@@ -3,7 +3,7 @@ import WebKit
 import Alamofire
 import MixinServices
 
-class MixinWebViewController: WebViewController {
+final class MixinWebViewController: WebViewController {
     
     // Only top 2 levels of the domain are matched
     // Be careful when adding country specific SLDs into this list
@@ -224,9 +224,9 @@ class MixinWebViewController: WebViewController {
             }
             DispatchQueue.main.async {
                 hud.hide()
-                UIApplication.homeNavigationController?.pushViewController(withBackRoot: ConversationViewController.instance(ownerUser: developUser))
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                    self?.dismissAsChild(animated: true)
+                if let navigationController = self?.availableNavigationController {
+                    let conversation = ConversationViewController.instance(ownerUser: developUser)
+                    navigationController.pushViewController(withBackRoot: conversation)
                 }
             }
         }
@@ -486,7 +486,7 @@ extension MixinWebViewController: WebMoreMenuControllerDelegate {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             case .viewAuthorization(let appId):
                 let vc = PermissionsViewController.instance(dataSource: .app(id: appId))
-                navigationController?.pushViewController(vc, animated: true)
+                availableNavigationController?.pushViewController(vc, animated: true)
             }
         }
         
@@ -707,6 +707,9 @@ extension MixinWebViewController {
             }
             
             DispatchQueue.main.async {
+                guard let navigationController = self?.availableNavigationController else {
+                    return
+                }
                 let validUrl = currentUrl.absoluteString + "/"
                 if let app = app, let iconUrl = URL(string: app.iconUrl), app.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
                     let content = AppCardData.V0Content(appId: app.appId,
@@ -717,10 +720,10 @@ extension MixinWebViewController {
                                                         updatedAt: nil,
                                                         isShareable: isShareable)
                     let vc = MessageReceiverViewController.instance(content: .appCard(.v0(content)))
-                    UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+                    navigationController.pushViewController(vc, animated: true)
                 } else {
                     let vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))
-                    UIApplication.homeNavigationController?.pushViewController(vc, animated: true)
+                    navigationController.pushViewController(vc, animated: true)
                 }
             }
         }
@@ -730,10 +733,8 @@ extension MixinWebViewController {
         guard case .webPage = context.style else {
             return
         }
-        
         let vc = MessageReceiverViewController.instance(content: .text(currentUrl.absoluteString))
-        let navigationController = self.navigationController ?? UIApplication.homeNavigationController
-        navigationController?.pushViewController(vc, animated: true)
+        availableNavigationController?.pushViewController(vc, animated: true)
     }
     
     private static func syncUser(userId: String, hud: Hud) -> UserItem? {

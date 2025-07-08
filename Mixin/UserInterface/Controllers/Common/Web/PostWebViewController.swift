@@ -3,7 +3,7 @@ import WebKit
 import PDFKit
 import MixinServices
 
-class PostWebViewController: WebViewController {
+final class PostWebViewController: WebViewController {
     
     private var message: Message!
     private var pageTitle: String?
@@ -58,7 +58,7 @@ class PostWebViewController: WebViewController {
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         controller.addAction(UIAlertAction(title: R.string.localizable.forward(), style: .default, handler: { (_) in
             let vc = MessageReceiverViewController.instance(content: .message(self.message))
-            self.navigationController?.pushViewController(vc, animated: true)
+            self.availableNavigationController?.pushViewController(vc, animated: true)
         }))
         if let url = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
             controller.addAction(UIAlertAction(title: R.string.localizable.export(), style: .default, handler: { _ in

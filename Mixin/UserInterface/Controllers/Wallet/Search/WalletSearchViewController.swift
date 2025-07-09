@@ -17,12 +17,12 @@ final class WalletSearchViewController: UIViewController {
     
     private let supportedChainIDs: Set<String>?
     private let recommendation: WalletSearchRecommendationViewController
-    private let searchResults: TokenSearchResultsViewController
+    private let searchResults: WalletSearchResultsViewController
     
     init(supportedChainIDs ids: Set<String>? = nil) {
         self.supportedChainIDs = ids
         self.recommendation = WalletSearchRecommendationViewController(supportedChainIDs: ids)
-        self.searchResults = TokenSearchResultsViewController(supportedChainIDs: ids)
+        self.searchResults = WalletSearchResultsViewController(supportedChainIDs: ids)
         let nib = R.nib.walletSearchView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }

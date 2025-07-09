@@ -109,13 +109,21 @@ public final class TokenDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func search(keyword: String, sortResult: Bool, limit: Int?) -> [MixinTokenItem] {
+    public func search(
+        keyword: String,
+        includesZeroBalanceItems: Bool,
+        sorting: Bool,
+        limit: Int?
+    ) -> [MixinTokenItem] {
         var sql = """
         \(SQL.selector)
         WHERE (t.name LIKE :keyword OR t.symbol LIKE :keyword)
         """
-        if sortResult {
-            sql += " AND te.balance > 0 ORDER BY CASE WHEN t.symbol LIKE :keyword THEN 1 ELSE 0 END DESC, \(SQL.order)"
+        if !includesZeroBalanceItems {
+            sql += " AND te.balance > 0"
+        }
+        if sorting {
+            sql += "\nORDER BY CASE WHEN t.symbol LIKE :keyword THEN 1 ELSE 0 END DESC, \(SQL.order)"
         }
         if let limit = limit {
             sql += " LIMIT \(limit)"

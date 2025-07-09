@@ -418,7 +418,7 @@
 		7BCEAA762350A20600F07635 /* SharedMediaDataTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEAA752350A20600F07635 /* SharedMediaDataTableViewController.swift */; };
 		7BCEAA782350A29000F07635 /* SharedMediaDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCEAA772350A29000F07635 /* SharedMediaDataCell.xib */; };
 		7BCEAA7A2350A3A200F07635 /* SharedMediaDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEAA792350A3A200F07635 /* SharedMediaDataCell.swift */; };
-		7BD00F1E2559711A004D8814 /* TokenSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD00F1D2559711A004D8814 /* TokenSearchResultsViewController.swift */; };
+		7BD00F1E2559711A004D8814 /* WalletSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD00F1D2559711A004D8814 /* WalletSearchResultsViewController.swift */; };
 		7BD00F222559716C004D8814 /* WalletSearchRecommendationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD00F212559716C004D8814 /* WalletSearchRecommendationViewController.swift */; };
 		7BD00F2625597229004D8814 /* WalletSearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD00F2525597229004D8814 /* WalletSearchTableViewController.swift */; };
 		7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD0532720A41F6A00C36F69 /* RangeExtension.swift */; };
@@ -2143,7 +2143,7 @@
 		7BCEAA752350A20600F07635 /* SharedMediaDataTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaDataTableViewController.swift; sourceTree = "<group>"; };
 		7BCEAA772350A29000F07635 /* SharedMediaDataCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SharedMediaDataCell.xib; sourceTree = "<group>"; };
 		7BCEAA792350A3A200F07635 /* SharedMediaDataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMediaDataCell.swift; sourceTree = "<group>"; };
-		7BD00F1D2559711A004D8814 /* TokenSearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenSearchResultsViewController.swift; sourceTree = "<group>"; };
+		7BD00F1D2559711A004D8814 /* WalletSearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSearchResultsViewController.swift; sourceTree = "<group>"; };
 		7BD00F212559716C004D8814 /* WalletSearchRecommendationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSearchRecommendationViewController.swift; sourceTree = "<group>"; };
 		7BD00F2525597229004D8814 /* WalletSearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSearchTableViewController.swift; sourceTree = "<group>"; };
 		7BD0532720A41F6A00C36F69 /* RangeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeExtension.swift; sourceTree = "<group>"; };
@@ -4443,7 +4443,7 @@
 				94E8794F2D8708F600F97DDD /* WalletSearchView.xib */,
 				7BDFAE8F2559008800296F8B /* WalletSearchViewController.swift */,
 				7BD00F2525597229004D8814 /* WalletSearchTableViewController.swift */,
-				7BD00F1D2559711A004D8814 /* TokenSearchResultsViewController.swift */,
+				7BD00F1D2559711A004D8814 /* WalletSearchResultsViewController.swift */,
 				7BD00F212559716C004D8814 /* WalletSearchRecommendationViewController.swift */,
 			);
 			path = Search;
@@ -7581,7 +7581,7 @@
 				DF5D9F281F9C79E10036D5FD /* UIApplicationExtension.swift in Sources */,
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
 				947C5E5B29B0FE9B00838458 /* WalletConnectSession.swift in Sources */,
-				7BD00F1E2559711A004D8814 /* TokenSearchResultsViewController.swift in Sources */,
+				7BD00F1E2559711A004D8814 /* WalletSearchResultsViewController.swift in Sources */,
 				7B8BB592234F37D100991ACB /* SharedMediaAudioCell.swift in Sources */,
 				948922A12D54FC5F00D9BCCB /* IBANAddress.swift in Sources */,
 				7B0BE46021A5630500B91A1E /* CompactAssetCell.swift in Sources */,

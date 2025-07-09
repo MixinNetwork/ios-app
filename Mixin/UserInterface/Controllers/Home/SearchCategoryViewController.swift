@@ -123,8 +123,14 @@ class SearchCategoryViewController: UIViewController, HomeSearchViewController {
             let models: [Any]
             switch category {
             case .asset:
-                models = TokenDAO.shared.search(keyword: keyword, sortResult: true, limit: nil)
-                    .map { AssetSearchResult(asset: $0, keyword: keyword) }
+                models = TokenDAO.shared.search(
+                    keyword: keyword,
+                    includesZeroBalanceItems: false,
+                    sorting: true,
+                    limit: nil
+                ).map { token in
+                    AssetSearchResult(asset: token, keyword: keyword)
+                }
             case .user:
                 models = UserDAO.shared.getUsers(keyword: keyword, limit: nil)
                     .map { UserSearchResult(user: $0, keyword: keyword) }

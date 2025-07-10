@@ -3,12 +3,12 @@ import MixinServices
 
 final class HiddenWeb3TokensViewController: HiddenTokensViewController {
     
-    private let walletID: String
-    
+    private let wallet: Web3Wallet
+
     private var tokens: [Web3TokenItem] = []
     
-    init(walletID: String) {
-        self.walletID = walletID
+    init(wallet: Web3Wallet) {
+        self.wallet = wallet
         super.init()
     }
     
@@ -69,7 +69,7 @@ extension HiddenWeb3TokensViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let token = tokens[indexPath.row]
-        let viewController = Web3TokenViewController(token: token)
+        let viewController = Web3TokenViewController(wallet: wallet, token: token)
         navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -77,14 +77,14 @@ extension HiddenWeb3TokensViewController: UITableViewDelegate {
         let action = UIContextualAction(
             style: .destructive,
             title: R.string.localizable.show()
-        ) { [weak self] (action, _, completion) in
+        ) { [weak self, walletID=wallet.walletID] (action, _, completion) in
             guard let self = self else {
                 return
             }
             let token = self.tokens.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .fade)
             DispatchQueue.global().async {
-                Web3TokenExtraDAO.shared.unhide(walletID: self.walletID, assetID: token.assetID)
+                Web3TokenExtraDAO.shared.unhide(walletID: walletID, assetID: token.assetID)
             }
             completion(true)
         }

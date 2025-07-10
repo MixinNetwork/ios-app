@@ -5,19 +5,24 @@ protocol TokenProportionRepresentableCell {
     var proportionStackView: UIStackView! { get }
 }
 
+enum TokenProportionPlaceholder {
+    case privacyWalletSupportedChains
+    case commonWalletSupportedChains
+}
+
 extension TokenProportionRepresentableCell {
     
-    func loadProportions(kind: Wallet.Kind, tokens: [TokenDigest], usdBalanceSum: Decimal) {
+    func loadProportions(tokens: [TokenDigest], placeholder: TokenProportionPlaceholder, usdBalanceSum: Decimal) {
         for view in proportionStackView.arrangedSubviews {
             view.removeFromSuperview()
         }
         switch tokens.count {
         case 0:
             proportionStackView.distribution = .fill
-            let image = switch kind {
-            case .privacy:
+            let image = switch placeholder {
+            case .privacyWalletSupportedChains:
                 R.image.privacy_wallet_chains()
-            case .classic:
+            case .commonWalletSupportedChains:
                 R.image.classic_wallet_chains()
             }
             let imageView = UIImageView(image: image)

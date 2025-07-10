@@ -56,7 +56,7 @@ class EVMTransferOperation: Web3TransferOperation {
     @MainActor private var account: EthereumAccount?
     
     fileprivate init(
-        walletID: String,
+        wallet: MixinServices.Web3Wallet,
         fromAddress: String,
         toAddress: String,
         transaction: EIP1559Transaction,
@@ -70,14 +70,14 @@ class EVMTransferOperation: Web3TransferOperation {
             throw InitError.notEVMChain(chain.name)
         }
         
-        guard let feeToken = try chain.feeToken(walletID: walletID) else {
+        guard let feeToken = try chain.feeToken(walletID: wallet.walletID) else {
             throw InitError.noFeeToken(chain.feeTokenAssetID)
         }
         self.transaction = transaction
         self.mixinChainID = chain.chainID
         
         super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             toAddress: toAddress,
             chain: chain,
@@ -88,7 +88,7 @@ class EVMTransferOperation: Web3TransferOperation {
     }
     
     fileprivate init(
-        walletID: String,
+        wallet: MixinServices.Web3Wallet,
         fromAddress: String,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
@@ -101,7 +101,7 @@ class EVMTransferOperation: Web3TransferOperation {
         default:
             throw InitError.notEVMChain(chain.name)
         }
-        guard let feeToken = try chain.feeToken(walletID: walletID) else {
+        guard let feeToken = try chain.feeToken(walletID: wallet.walletID) else {
             throw InitError.noFeeToken(chain.feeTokenAssetID)
         }
         
@@ -118,7 +118,7 @@ class EVMTransferOperation: Web3TransferOperation {
         self.mixinChainID = chain.chainID
         
         super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             toAddress: transaction.to.toChecksumAddress(),
             chain: chain,
@@ -217,8 +217,20 @@ class EVMTransferOperation: Web3TransferOperation {
         let account: EthereumAccount
         let updatedTransaction: EIP1559Transaction
         do {
-            let priv = try await TIP.deriveEthereumPrivateKey(pin: pin)
-            let keyStorage = InPlaceKeyStorage(raw: priv)
+            let privateKey: Data
+            switch wallet.category.knownCase {
+            case .classic:
+                privateKey = try await TIP.deriveEthereumPrivateKey(pin: pin)
+            case .importedMnemonic, .importedPrivateKey:
+                guard let encryptedKey = AppGroupKeychain.walletPrivateKey(address: fromAddress) else {
+                    throw SigningError.missingPrivateKey
+                }
+                let spendKey = try await TIP.importedWalletSpendKey(pin: pin)
+                privateKey = try AESCryptor.decrypt(encryptedKey, with: spendKey)
+            case .none:
+                throw SigningError.unknownCategory
+            }
+            let keyStorage = InPlaceKeyStorage(raw: privateKey)
             account = try EthereumAccount(keyStorage: keyStorage)
             guard fromAddress == account.address.toChecksumAddress() else {
                 throw RequestError.mismatchedAddress
@@ -343,7 +355,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
     let request: WalletConnectSign.Request
     
     init(
-        walletID: String,
+        wallet: MixinServices.Web3Wallet,
         fromAddress: String,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
@@ -353,7 +365,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
         self.session = session
         self.request = request
         try super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             transaction: transaction,
             chain: chain,
@@ -389,7 +401,7 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
     private let rejectImpl: (() -> Void)?
     
     init(
-        walletID: String,
+        wallet: MixinServices.Web3Wallet,
         fromAddress: String,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
@@ -399,7 +411,7 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
         self.respondImpl = respondImpl
         self.rejectImpl = rejectImpl
         try super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             transaction: transaction,
             chain: chain,
@@ -474,7 +486,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             amount: decimalAmount
         )
         try super.init(
-            walletID: payment.walletID,
+            wallet: payment.wallet,
             fromAddress: payment.fromAddress,
             toAddress: payment.toAddress,
             transaction: transaction,
@@ -503,7 +515,7 @@ class EVMOverrideOperation: EVMTransferOperation {
     private let nonce: Int
     
     override init(
-        walletID: String,
+        wallet: MixinServices.Web3Wallet,
         fromAddress: String,
         toAddress: String,
         transaction: EIP1559Transaction,
@@ -515,7 +527,7 @@ class EVMOverrideOperation: EVMTransferOperation {
         }
         self.nonce = nonce
         try super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             toAddress: toAddress,
             transaction: transaction,
@@ -541,13 +553,13 @@ class EVMOverrideOperation: EVMTransferOperation {
 final class EVMSpeedUpOperation: EVMOverrideOperation {
     
     init(
-        walletID: String,
+        wallet: MixinServices.Web3Wallet,
         fromAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
     ) throws {
         try super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             toAddress: "",
             transaction: transaction,
@@ -561,7 +573,7 @@ final class EVMSpeedUpOperation: EVMOverrideOperation {
 final class EVMCancelOperation: EVMOverrideOperation {
     
     init(
-        walletID: String,
+        wallet: MixinServices.Web3Wallet,
         fromAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain
@@ -577,7 +589,7 @@ final class EVMCancelOperation: EVMOverrideOperation {
             data: nil
         )
         try super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             toAddress: "",
             transaction: emptyTransaction,

@@ -257,9 +257,9 @@ extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewContr
         switch method {
         case .swap:
             next = Web3SwapViewController(
+                wallet: payment.wallet,
                 sendAssetID: nil,
                 receiveAssetID: feeToken.assetID,
-                walletID: feeToken.walletID
             )
         case .deposit:
             guard let address = Web3AddressDAO.shared.address(walletID: feeToken.walletID, chainID: feeToken.chainID) else {

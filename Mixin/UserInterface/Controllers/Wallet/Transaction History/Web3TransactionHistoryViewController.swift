@@ -7,7 +7,7 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     private typealias DiffableDataSource = UITableViewDiffableDataSource<DateRepresentation, Web3Transaction.ID>
     private typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<DateRepresentation, Web3Transaction.ID>
     
-    private let walletID: String
+    let wallet: Web3Wallet
     
     private var reputationFilterView = TransactionHistoryReputationFilterView()
     
@@ -25,15 +25,15 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     
     private var reviewPendingTransactionJobID: String?
     
-    init(token: Web3TokenItem) {
+    init(wallet: Web3Wallet, token: Web3TokenItem) {
         let reputationOptions = Web3Reputation.FilterOption.options(token: token)
-        self.walletID = token.walletID
+        self.wallet = wallet
         self.filter = .init(tokens: [token], reputationOptions: reputationOptions)
         super.init()
     }
     
-    init(walletID: String, type: Web3Transaction.DisplayType?) {
-        self.walletID = walletID
+    init(wallet: Web3Wallet, type: Web3Transaction.DisplayType?) {
+        self.wallet = wallet
         self.filter = .init(type: type)
         super.init()
     }
@@ -85,9 +85,9 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         let jobs = [
-            SyncWeb3TransactionJob(walletID: walletID),
+            SyncWeb3TransactionJob(walletID: wallet.walletID),
             ReviewPendingWeb3RawTransactionJob(),
-            ReviewPendingWeb3TransactionJob(walletID: walletID),
+            ReviewPendingWeb3TransactionJob(walletID: wallet.walletID),
         ]
         reviewPendingTransactionJobID = jobs[2].getJobId()
         for job in jobs {
@@ -294,7 +294,7 @@ extension Web3TransactionHistoryViewController: UITableViewDelegate {
         guard let id = dataSource.itemIdentifier(for: indexPath), let item = items[id] else {
             return
         }
-        let viewController = Web3TransactionViewController(walletID: walletID, transaction: item)
+        let viewController = Web3TransactionViewController(wallet: wallet, transaction: item)
         navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -463,6 +463,7 @@ extension Web3TransactionHistoryViewController {
             
         }
         
+        private let walletID: String
         private let behavior: Behavior
         private let filter: Web3Transaction.Filter
         private let order: Web3Transaction.Order
@@ -475,16 +476,17 @@ extension Web3TransactionHistoryViewController {
         private weak var viewController: Web3TransactionHistoryViewController?
         
         init(
-            viewController: Web3TransactionHistoryViewController?,
+            viewController: Web3TransactionHistoryViewController,
             behavior: Behavior,
             filter: Web3Transaction.Filter,
             order: Web3Transaction.Order
         ) {
-            self.viewController = viewController
+            self.walletID = viewController.wallet.walletID
             self.behavior = behavior
             self.filter = filter
             self.order = order
-            self.tokenSymbols = viewController?.tokenSymbols ?? [:]
+            self.tokenSymbols = viewController.tokenSymbols
+            self.viewController = viewController
             assert(limit > loadMoreThreshold)
         }
         
@@ -501,7 +503,13 @@ extension Web3TransactionHistoryViewController {
                     .after(offset: offset, includesOffset: false)
             }
             
-            let transactions = Web3TransactionDAO.shared.transactions(offset: offset, filter: filter, order: order, limit: limit)
+            let transactions = Web3TransactionDAO.shared.transactions(
+                walletID: walletID,
+                offset: offset,
+                filter: filter,
+                order: order,
+                limit: limit
+            )
             Logger.general.debug(category: "TxnLoader", message: "Loaded \(transactions.count) items:\n\(transactions.map(\.id))")
             
             var dataSnapshot: DataSourceSnapshot

@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 import web3
 import MixinServices
 import TIP
@@ -59,6 +60,12 @@ extension TIP {
             throw error as Swift.Error
         }
         return address
+    }
+    
+    static func importedWalletSpendKey(pin: String) async throws -> Data {
+        let spendKey = try await TIP.spendPriv(pin: pin)
+        let key = SHA256.hash(data: spendKey)
+        return Data(key)
     }
     
     static func registerClassicWallet(pin: String) async throws {

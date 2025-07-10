@@ -128,6 +128,18 @@ final class WalletSummaryViewController: UIViewController {
         notificationCenter.addObserver(
             self,
             selector: #selector(reloadData),
+            name: Web3WalletDAO.walletsDidChangeNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadData),
+            name: Web3WalletDAO.walletsDidDeleteNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadData),
             name: Web3TokenDAO.tokensDidChangeNotification,
             object: nil
         )
@@ -137,7 +149,13 @@ final class WalletSummaryViewController: UIViewController {
             name: Web3TokenExtraDAO.tokenVisibilityDidChangeNotification,
             object: nil
         )
+        
         reloadData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        BadgeManager.shared.setHasViewed(identifier: .walletSwitch)
     }
     
     @IBAction func addWallet(_ sender: Any) {
@@ -153,7 +171,6 @@ final class WalletSummaryViewController: UIViewController {
     }
     
     @objc private func reloadData() {
-        BadgeManager.shared.setHasViewed(identifier: .walletSwitch)
         DispatchQueue.global().async {
             let privacyWalletDigest = TokenDAO.shared.walletDigest()
             let classicWalletDigests = Web3WalletDAO.shared.walletDigests()
@@ -235,11 +252,11 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
             switch indexPath.item {
             case 0:
                 if let digest = privacyWalletDigest {
-                    cell.load(digest: digest, kind: .privacy)
+                    cell.load(digest: digest)
                 }
             default:
                 let digest = classicWalletDigests[indexPath.row - 1]
-                cell.load(digest: digest, kind: .classic)
+                cell.load(digest: digest)
             }
             return cell
         case .tips:

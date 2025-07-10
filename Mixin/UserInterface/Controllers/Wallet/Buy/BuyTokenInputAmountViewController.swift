@@ -65,10 +65,10 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                 title: R.string.localizable.buy(),
                 subtitle: R.string.localizable.privacy_wallet()
             )
-        case .classic:
+        case .common(let wallet):
             NavigationTitleView(
                 title: R.string.localizable.buy(),
-                subtitle: R.string.localizable.common_wallet()
+                subtitle: wallet.localizedName
             )
         }
         amountLabel.text = CurrencyFormatter.localizedString(
@@ -422,7 +422,8 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                     allTokens[item.assetID] = item
                 }
             }
-        case .classic(let walletID):
+        case .common(let wallet):
+            let walletID = wallet.walletID
             let localItems = Web3TokenDAO.shared.tokenItems(walletID: walletID, ids: assetIDs)
             for item in localItems {
                 assetIDs.remove(item.assetID)

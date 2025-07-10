@@ -49,8 +49,8 @@ final class AddWalletCandidateCell: UICollectionViewCell, TokenProportionReprese
         nameLabel.text = R.string.localizable.common_wallet_index(index + 1)
         valueLabel.attributedText = candidate.value
         loadProportions(
-            kind: .classic,
             tokens: candidate.tokens,
+            placeholder: .commonWalletSupportedChains,
             usdBalanceSum: candidate.usdBalanceSum
         )
     }

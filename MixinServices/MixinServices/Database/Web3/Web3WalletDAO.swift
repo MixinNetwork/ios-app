@@ -5,6 +5,10 @@ public final class Web3WalletDAO: Web3DAO {
     
     public static let shared = Web3WalletDAO()
     
+    public static let walletsDidChangeNotification = Notification.Name("one.mixin.services.Web3WalletDAO.Change")
+    public static let walletsDidDeleteNotification = Notification.Name("one.mixin.services.Web3WalletDAO.Delete")
+    public static let walletIDUserInfoKey = "id"
+    
     public func hasClassicWallet() -> Bool {
         db.recordExists(
             in: Web3Wallet.self,
@@ -33,9 +37,7 @@ public final class Web3WalletDAO: Web3DAO {
         enum SQL {
             
             static let wallets = """
-            SELECT w.wallet_id, w.category
-            FROM wallets w
-            ORDER BY w.created_at ASC
+            SELECT * FROM wallets ORDER BY created_at ASC
             """
             
             static let tokenDigests = """
@@ -50,37 +52,58 @@ public final class Web3WalletDAO: Web3DAO {
             
         }
         
-        struct Wallet: Codable, MixinFetchableRecord {
-            
-            enum CodingKeys: String, CodingKey {
-                case walletID = "wallet_id"
-                case category
-            }
-            
-            static let databaseTableName = "wallets"
-            
-            let walletID: String
-            let category: String
-            
-        }
-        
         return try! db.read { db in
-            let wallets = try Wallet.fetchAll(db, sql: SQL.wallets)
-            return try wallets.compactMap { wallet in
-                guard wallet.category == Web3Wallet.Category.classic.rawValue else {
-                    return nil
-                }
-                let tokenDigests = try TokenDigest.fetchAll(db, sql: SQL.tokenDigests, arguments: [wallet.walletID])
+            try Web3Wallet.fetchAll(db, sql: SQL.wallets).compactMap { wallet in
+                let tokenDigests = try TokenDigest.fetchAll(
+                    db,
+                    sql: SQL.tokenDigests,
+                    arguments: [wallet.walletID]
+                )
                 return WalletDigest(
-                    wallet: .classic(id: wallet.walletID),
+                    wallet: .common(wallet),
                     tokens: tokenDigests
                 )
             }
         }
     }
     
+    public func wallet(id: String) -> Web3Wallet? {
+        db.select(with: "SELECT * FROM wallets WHERE wallet_id = ?", arguments: [id])
+    }
+    
     public func save(wallets: [Web3Wallet]) {
-        db.save(wallets)
+        db.save(wallets) { _ in
+            NotificationCenter.default.post(onMainThread: Self.walletsDidChangeNotification, object: self)
+        }
+    }
+    
+    // Returns address.destination associated with the wallet
+    public func deleteWallet(id: String) -> [String] {
+        let destinations = try? db.writeAndReturnError { db in
+            try db.execute(literal: "DELETE FROM wallets WHERE wallet_id = \(id)")
+            let destinations = try String.fetchAll(
+                db,
+                sql: "DELETE FROM addresses WHERE wallet_id = ? RETURNING destination",
+                arguments: [id]
+            )
+            try Web3PropertiesDAO.shared.deleteTransactionOffset(
+                addresses: destinations,
+                db: db
+            )
+            // FIXME: Delete Web3RawTransaction
+            try db.execute(literal: "DELETE FROM tokens WHERE wallet_id = \(id)")
+            try db.execute(literal: "DELETE FROM tokens_extra WHERE wallet_id = \(id)")
+            try db.execute(literal: "DELETE FROM transactions WHERE address IN \(destinations)")
+            db.afterNextTransaction { _ in
+                NotificationCenter.default.post(
+                    onMainThread: Self.walletsDidDeleteNotification,
+                    object: self,
+                    userInfo: [Self.walletIDUserInfoKey: id]
+                )
+            }
+            return destinations
+        }
+        return destinations ?? []
     }
     
 }

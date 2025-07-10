@@ -445,6 +445,9 @@
 "delete_my_account" = "删除账号";
 "delete_note" = "删除转账备注";
 "delete_synced_contact" = "删除已同步的通讯录";
+"delete_wallet" = "删除钱包";
+"delete_wallet_description" = "移除此钱包不会影响你的资产，请确保已备份助记词。";
+"delete_wallet_title" = "请输入 PIN 码以移除钱包";
 "delete_withdraw_address" = "删除 %@ 地址";
 "deleted" = "已删除";
 "deleting_address" = "正在删除地址";
@@ -656,8 +659,10 @@
 "image" = "图像";
 "immediately" = "立刻";
 "import_mnemonic_phrase" = "导入助记词";
+"import_private_key" = "导入私钥";
 "import_wallets" = "导入钱包";
 "import_wallets_from_another_wallet" = "从其他钱包导入钱包";
+"importing_into_your_wallet" = "正在导入你的钱包...";
 "in_connecting" = "正在连接...";
 "include_files" = "包含文件";
 "include_videos" = "包括视频";
@@ -1064,6 +1069,7 @@
 "remove_emergency_contact_for_sure" = "确定删除恢复联系人？";
 "remove_from_group" = "从群组中移除";
 "remove_stickers" = "移除所有表情";
+"rename_wallet" = "重命名钱包";
 "renew_plan" = "续订会员";
 "reply" = "回复";
 "report" = "举报";
@@ -1521,6 +1527,7 @@
 "wallet_withdrawal_changed" = "手续费已从 %1$@ 变更为 %2$@，要更新手续费并继续提现吗？";
 "wallet_withdrawal_recent_tip" = "你已经在 %1$@ 前提现 %3$@ 到 %2$@，确认还要再提一次吗？";
 "wallets" = "钱包";
+"watch_address" = "观察 %@";
 "watchlist" = "自选";
 "watchlist_add_desc" = "%@ 已经加入自选";
 "watchlist_empty" = "您的自选列表为空";
@@ -1580,6 +1587,7 @@
 "write_down_mnemonic_phrase_desc" = "把它写在一张纸上并放在安全的地方。";
 "years_count_short" = "%d年";
 "you" = "你";
+"you_are_watching_address" = "你正在观察 %@";
 "you_deleted_this_message" = "你撤回了一条消息";
 "you_have_a_new_message" = "你收到了一条消息";
 "you_have_left_the_group" = "你不在此群组";

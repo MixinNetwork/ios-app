@@ -7,7 +7,7 @@ final class Web3TransactionViewController: TransactionViewController {
         URL(string: "https://api.mixin.one/external/explore/\(transaction.chainID)/transactions/\(transaction.transactionHash)")
     }
     
-    private let walletID: String
+    private let wallet: Web3Wallet
     
     private var transaction: Web3Transaction
     private var rows: [Row] = []
@@ -17,8 +17,8 @@ final class Web3TransactionViewController: TransactionViewController {
     
     private var reviewPendingTransactionJobID: String?
     
-    init(walletID: String, transaction: Web3Transaction) {
-        self.walletID = walletID
+    init(wallet: Web3Wallet, transaction: Web3Transaction) {
+        self.wallet = wallet
         self.transaction = transaction
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .custom
@@ -50,7 +50,7 @@ final class Web3TransactionViewController: TransactionViewController {
         if transaction.status == .pending {
             let jobs = [
                 ReviewPendingWeb3RawTransactionJob(),
-                ReviewPendingWeb3TransactionJob(walletID: walletID),
+                ReviewPendingWeb3TransactionJob(walletID: wallet.walletID),
             ]
             reviewPendingTransactionJobID = jobs[1].getJobId()
             for job in jobs {
@@ -323,7 +323,7 @@ extension Web3TransactionViewController {
         case .transferIn, .transferOut:
             if let assetID = transaction.transferAssetID,
                !assetID.isEmpty,
-               let token = Web3TokenDAO.shared.token(walletID: walletID, assetID: assetID)
+               let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: assetID)
             {
                 simpleHeaderView.iconView.setIcon(web3Token: token)
                 simpleHeaderView.symbolLabel.text = token.symbol
@@ -383,7 +383,7 @@ extension Web3TransactionViewController {
         
         layoutTableHeaderView()
         
-        let feeToken = Web3TokenDAO.shared.token(walletID: walletID, assetID: transaction.chainID)
+        let feeToken = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: transaction.chainID)
         let feeRow: Row
         if let feeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
             feeRow = .fee(
@@ -422,7 +422,7 @@ extension Web3TransactionViewController {
             }
             rows.append(feeRow)
         case .swap, .none, .unknown:
-            let tokens = Web3TokenDAO.shared.tokens(walletID: walletID, ids: transaction.allAssetIDs)
+            let tokens = Web3TokenDAO.shared.tokens(walletID: wallet.walletID, ids: transaction.allAssetIDs)
                 .reduce(into: [:]) { result, token in
                     result[token.assetID] = token
                 }
@@ -474,7 +474,7 @@ extension Web3TransactionViewController {
             ])
         case .approval:
             if let approval = transaction.approvals?.first,
-               let token = Web3TokenDAO.shared.token(walletID: walletID, assetID: approval.assetID)
+               let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: approval.assetID)
             {
                 let localizedAmount = switch approval.approvalType {
                 case .known(.unlimited):
@@ -514,7 +514,7 @@ extension Web3TransactionViewController {
         
         if transaction.status == .pending {
             let hash = transaction.transactionHash
-            DispatchQueue.global().async { [walletID, weak self] in
+            DispatchQueue.global().async { [wallet, weak self] in
                 let operations: (speedUp: Web3TransferOperation, cancel: Web3TransferOperation)? = {
                     guard
                         let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash),
@@ -526,13 +526,13 @@ extension Web3TransactionViewController {
                     }
                     do {
                         let speedUp = try EVMSpeedUpOperation(
-                            walletID: walletID,
+                            wallet: wallet,
                             fromAddress: rawTransaction.account,
                             transaction: transaction,
                             chain: chain
                         )
                         let cancel = try EVMCancelOperation(
-                            walletID: walletID,
+                            wallet: wallet,
                             fromAddress: rawTransaction.account,
                             transaction: transaction,
                             chain: chain

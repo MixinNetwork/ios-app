@@ -5,19 +5,19 @@ import MixinServices
 
 final class Web3SwapTokenSelectorViewController: SwapTokenSelectorViewController {
     
-    private let walletID: String
+    private let wallet: Web3Wallet
     
     override var source: RouteTokenSource {
         .web3
     }
     
     init(
+        wallet: Web3Wallet,
         recent: Recent,
         tokens: [BalancedSwapToken],
         selectedAssetID: String?,
-        walletID: String
     ) {
-        self.walletID = walletID
+        self.wallet = wallet
         let chainIDs = Set(tokens.compactMap(\.chain.chainID))
         let chains = Chain.web3Chains(ids: chainIDs)
         super.init(recent: recent, tokens: tokens, chains: chains, selectedAssetID: selectedAssetID)
@@ -42,10 +42,11 @@ final class Web3SwapTokenSelectorViewController: SwapTokenSelectorViewController
     }
     
     override func fillSwappableTokenBalance(swappableTokens: [SwapToken]) -> [BalancedSwapToken] {
-        BalancedSwapToken.fillWeb3Balance(swappableTokens: swappableTokens, walletID: walletID)
+        BalancedSwapToken.fillWeb3Balance(swappableTokens: swappableTokens, walletID: wallet.walletID)
     }
     
     override func chains(with ids: Set<String>) -> OrderedSet<Chain> {
         Chain.web3Chains(ids: ids)
     }
+    
 }

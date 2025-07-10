@@ -18,20 +18,29 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
         )
     }
     
-    func load(digest: WalletDigest, kind: Wallet.Kind) {
-        switch kind {
+    func load(digest: WalletDigest) {
+        switch digest.wallet {
         case .privacy:
             titleLabel.text = R.string.localizable.privacy_wallet()
             privacyIconImageView.isHidden = false
-        case .classic:
-            titleLabel.text = R.string.localizable.common_wallet()
+            loadProportions(
+                tokens: digest.tokens,
+                placeholder: .privacyWalletSupportedChains,
+                usdBalanceSum: digest.usdBalanceSum
+            )
+        case let .common(wallet):
+            titleLabel.text = wallet.localizedName
             privacyIconImageView.isHidden = true
+            loadProportions(
+                tokens: digest.tokens,
+                placeholder: .commonWalletSupportedChains,
+                usdBalanceSum: digest.usdBalanceSum
+            )
         }
         valueLabel.attributedText = FiatMoneyValueAttributedStringBuilder.attributedString(
             usdValue: digest.usdBalanceSum,
             fontSize: 22
         )
-        loadProportions(kind: kind, tokens: digest.tokens, usdBalanceSum: digest.usdBalanceSum)
     }
     
 }

@@ -29,7 +29,7 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
         super.viewDidLoad()
         
         if let titleView = navigationItem.titleView as? NavigationTitleView {
-            titleView.subtitle = R.string.localizable.common_wallet()
+            titleView.subtitle = payment.wallet.localizedName
         }
         headerView.load(web3Token: payment.token)
         
@@ -58,7 +58,7 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
                 self.navigationController?.pushViewController(input, animated: true)
             case let .insufficientBalance(transferring, fee):
                 let insufficient = InsufficientBalanceViewController(
-                    intent: .commonWalletTransfer(transferring: transferring, fee: fee)
+                    intent: .commonWalletTransfer(wallet: payment.wallet, transferring: transferring, fee: fee)
                 )
                 self.present(insufficient, animated: true)
             case let .transfer(operation, label):

@@ -34,12 +34,15 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="VWU-dJ-Nst">
-                                <rect key="frame" x="0.0" y="59" width="279" height="20"/>
+                                <rect key="frame" x="0.0" y="59" width="234.33333333333334" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="Wv9-ia-ZZg"/>
                                 </constraints>
                             </stackView>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="VWU-dJ-Nst" firstAttribute="width" secondItem="FZf-yA-eJ3" secondAttribute="width" multiplier="0.84" id="44h-uA-sDE"/>
+                        </constraints>
                     </stackView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3CA-AE-HlF">
                         <rect key="frame" x="303" y="19" width="16" height="16"/>

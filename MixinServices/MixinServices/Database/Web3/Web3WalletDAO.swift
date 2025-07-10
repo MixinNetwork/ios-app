@@ -90,7 +90,7 @@ public final class Web3WalletDAO: Web3DAO {
                 addresses: destinations,
                 db: db
             )
-            // FIXME: Delete Web3RawTransaction
+            try db.execute(literal: "DELETE FROM raw_transactions WHERE account IN \(destinations)")
             try db.execute(literal: "DELETE FROM tokens WHERE wallet_id = \(id)")
             try db.execute(literal: "DELETE FROM tokens_extra WHERE wallet_id = \(id)")
             try db.execute(literal: "DELETE FROM transactions WHERE address IN \(destinations)")

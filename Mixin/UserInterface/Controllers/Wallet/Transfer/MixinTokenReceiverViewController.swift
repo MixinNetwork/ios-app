@@ -5,16 +5,18 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
     
     private enum Destination {
         case addressBook
-        case classicWallet(chain: Web3Chain, address: Web3Address)
+        case myWallets(Web3Chain)
         case contact
     }
     
     private let token: MixinTokenItem
+    private let web3Chain: Web3Chain?
     
     private var destinations: [Destination] = [.addressBook, .contact]
     
     init(token: MixinTokenItem) {
         self.token = token
+        self.web3Chain = .chain(chainID: token.chainID)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -33,10 +35,8 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        if let web3Chain = Web3Chain.chain(chainID: token.chainID),
-           let address = Web3AddressDAO.shared.classicWalletAddress(chainID: token.chainID)
-        {
-            destinations.append(.classicWallet(chain: web3Chain, address: address))
+        if let chain = web3Chain {
+            destinations.append(.myWallets(chain))
         }
         tableView.reloadData()
     }
@@ -117,16 +117,16 @@ extension MixinTokenReceiverViewController: UITableViewDataSource {
                 cell.titleLabel.text = R.string.localizable.address_book()
                 cell.titleTag = nil
                 cell.descriptionLabel.text = R.string.localizable.send_to_address_description()
+            case .myWallets:
+                cell.iconImageView.image = R.image.token_receiver_wallet()
+                cell.titleLabel.text = R.string.localizable.my_wallets()
+                cell.titleTag = nil
+                cell.descriptionLabel.text = R.string.localizable.send_to_other_wallet_description()
             case .contact:
                 cell.iconImageView.image = R.image.token_receiver_contact()
                 cell.titleLabel.text = R.string.localizable.mixin_contact()
                 cell.titleTag = .free
                 cell.descriptionLabel.text = R.string.localizable.send_to_contact_description()
-            case .classicWallet:
-                cell.iconImageView.image = R.image.token_receiver_wallet()
-                cell.titleLabel.text = R.string.localizable.common_wallet()
-                cell.titleTag = nil
-                cell.descriptionLabel.text = R.string.localizable.send_to_common_wallet_description()
             }
             return cell
         } else {
@@ -160,13 +160,11 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
                 }
             }
             self.present(selector, animated: true)
-        case let .classicWallet(_, address):
+        case .myWallets:
             reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
-            let inputAmount = WithdrawInputAmountViewController(
-                tokenItem: token,
-                destination: .classicWallet(address)
-            )
-            navigationController?.pushViewController(inputAmount, animated: true)
+            let selector = ReceivingWalletSelectorViewController(excluding: .privacy)
+            selector.delegate = self
+            present(selector, animated: true)
         case .addressBook:
             let book = AddressBookViewController(token: token)
             book.onSelect = { [token] (address) in
@@ -190,6 +188,30 @@ extension MixinTokenReceiverViewController: WalletTipView.Delegate {
         AppGroupUserDefaults.Wallet.hasViewedClassicWalletTipInTransfer = true
         let indexPath = IndexPath(row: 0, section: 1)
         tableView.deleteRows(at: [indexPath], with: .fade)
+    }
+    
+}
+
+extension MixinTokenReceiverViewController: ReceivingWalletSelectorViewController.Delegate {
+    
+    func receivingWalletSelectorViewController(_ viewController: ReceivingWalletSelectorViewController, didSelectWallet wallet: Wallet) {
+        switch wallet {
+        case .privacy:
+            assertionFailure("Never transfer between Mixin Wallets through crypto network")
+        case .common(let wallet):
+            let address = Web3AddressDAO.shared.address(
+                walletID: wallet.walletID,
+                chainID: token.chainID
+            )
+            guard let address else {
+                return
+            }
+            let inputAmount = WithdrawInputAmountViewController(
+                tokenItem: token,
+                destination: .commonWallet(wallet, address)
+            )
+            navigationController?.pushViewController(inputAmount, animated: true)
+        }
     }
     
 }

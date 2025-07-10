@@ -58,10 +58,11 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        let walletID = token.walletID
         let jobs = [
-            SyncWeb3TransactionJob(walletID: token.walletID),
-            ReviewPendingWeb3RawTransactionJob(),
-            ReviewPendingWeb3TransactionJob(walletID: token.walletID),
+            SyncWeb3TransactionJob(walletID: walletID),
+            ReviewPendingWeb3RawTransactionJob(walletID: walletID),
+            ReviewPendingWeb3TransactionJob(walletID: walletID),
         ]
         reviewPendingTransactionJobID = jobs[2].getJobId()
         for job in jobs {
@@ -199,8 +200,8 @@ extension Web3TokenViewController: TokenActionView.Delegate {
     func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
         switch action {
         case .receive:
-            withMnemonicsBackupChecked { [token] in
-                let selector = Web3ReceiveSourceViewController(token: token)
+            withMnemonicsBackupChecked { [wallet, token] in
+                let selector = Web3ReceiveSourceViewController(wallet: wallet, token: token)
                 self.navigationController?.pushViewController(selector, animated: true)
             }
         case .send:

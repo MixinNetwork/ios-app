@@ -5,6 +5,21 @@ public enum Wallet {
     case common(Web3Wallet)
 }
 
+extension Wallet: Equatable {
+    
+    public static func == (lhs: Wallet, rhs: Wallet) -> Bool {
+        switch (lhs, rhs) {
+        case (.privacy, .privacy):
+            true
+        case let (.common(l), .common(r)):
+            l.walletID == r.walletID
+        default:
+            false
+        }
+    }
+    
+}
+
 extension Wallet {
     
     public enum Identifier: RawRepresentable {

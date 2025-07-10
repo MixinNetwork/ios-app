@@ -15,7 +15,7 @@ final class ReviewPendingWeb3TransactionJob: BaseJob {
     }
     
     override func run() throws {
-        var transactions = Web3TransactionDAO.shared.pendingTransactions()
+        var transactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
         while LoginManager.shared.isLoggedIn && !transactions.isEmpty {
             Logger.general.debug(category: "ReviewPendingWeb3Txn", message: "\(transactions.count) txns to review")
             let hashes = transactions.map(\.transactionHash)
@@ -41,7 +41,7 @@ final class ReviewPendingWeb3TransactionJob: BaseJob {
             if isCancelled {
                 return
             }
-            transactions = Web3TransactionDAO.shared.pendingTransactions()
+            transactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
         }
         Logger.general.info(category: "ReviewPendingWeb3Txn", message: "Ended")
     }

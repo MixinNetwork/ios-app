@@ -836,6 +836,7 @@
 "my_mixin_id" = "マイMixin ID:%@";
 "my_qr_code" = "マイQRコード";
 "my_stickers" = "マイスタンプ";
+"my_wallets" = "My Wallets";
 "na" = "なし";
 "name" = "名前";
 "name_or_phone_number" = "名前か電話番号";
@@ -1184,10 +1185,9 @@
 "send_this_location" = "位置情報を送信";
 "send_to" = "%@へ送信";
 "send_to_address_description" = "Send to an address in your Address Book, PIN-protected to prevent phishing.";
-"send_to_common_wallet_description" = "Send to your Common Wallet for use with decentralized apps and DeFi protocols.";
 "send_to_contact_description" = "Send to your Mixin friends with privacy, zero fees, and instant delivery.";
 "send_to_developer" = "開発者へ送信";
-"send_to_privacy_wallet_description" = "Send to your Privacy Wallet to keep your assets safe and hidden from potential risks.";
+"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "振替先";
 "send_video" = "ビデオを送信";
 "send_video_count" = "%d本のビデオを送信";

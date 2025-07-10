@@ -68,9 +68,10 @@ final class ClassicWalletViewController: WalletViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        let walletID = wallet.walletID
         let jobs = [
-            ReviewPendingWeb3RawTransactionJob(),
-            ReviewPendingWeb3TransactionJob(walletID: wallet.walletID),
+            ReviewPendingWeb3RawTransactionJob(walletID: walletID),
+            ReviewPendingWeb3TransactionJob(walletID: walletID),
         ]
         reviewPendingTransactionJobID = jobs[1].getJobId()
         for job in jobs {
@@ -155,8 +156,9 @@ final class ClassicWalletViewController: WalletViewController {
     }
     
     @objc private func reloadPendingTransactions() {
+        let walletID = wallet.walletID
         DispatchQueue.global().async { [weak self] in
-            let transactions = Web3TransactionDAO.shared.pendingTransactions()
+            let transactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
             DispatchQueue.main.async {
                 guard let self else {
                     return
@@ -316,8 +318,8 @@ extension ClassicWalletViewController: TokenActionView.Delegate {
             present(selector, animated: true, completion: nil)
         case .receive:
             let selector = Web3TokenSelectorViewController(wallet: wallet, tokens: tokens)
-            selector.onSelected = { token in
-                let selector = Web3ReceiveSourceViewController(token: token)
+            selector.onSelected = { [wallet] token in
+                let selector = Web3ReceiveSourceViewController(wallet: wallet, token: token)
                 self.navigationController?.pushViewController(selector, animated: true)
             }
             withMnemonicsBackupChecked {

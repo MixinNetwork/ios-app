@@ -84,10 +84,11 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        let walletID = wallet.walletID
         let jobs = [
-            SyncWeb3TransactionJob(walletID: wallet.walletID),
-            ReviewPendingWeb3RawTransactionJob(),
-            ReviewPendingWeb3TransactionJob(walletID: wallet.walletID),
+            SyncWeb3TransactionJob(walletID: walletID),
+            ReviewPendingWeb3RawTransactionJob(walletID: walletID),
+            ReviewPendingWeb3TransactionJob(walletID: walletID),
         ]
         reviewPendingTransactionJobID = jobs[2].getJobId()
         for job in jobs {

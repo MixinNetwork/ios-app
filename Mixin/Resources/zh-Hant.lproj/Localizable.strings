@@ -836,6 +836,7 @@
 "my_mixin_id" = "我的 Mixin ID：%@";
 "my_qr_code" = "我的二維碼";
 "my_stickers" = "我的表情";
+"my_wallets" = "我的錢包";
 "na" = "暫無價格";
 "name" = "名稱";
 "name_or_phone_number" = "姓名或手機號";
@@ -1184,10 +1185,9 @@
 "send_this_location" = "傳送這個位置";
 "send_to" = "傳送給 %@";
 "send_to_address_description" = "轉到我地址薄中的地址，地址受到 PIN 保護，避免地址釣魚攻擊。";
-"send_to_common_wallet_description" = "轉到我的普通錢包，用於去中心化應用和 DeFi 協議。";
 "send_to_contact_description" = "轉給我的 Mixin 好友，轉賬隱私、零手續費且秒到賬。";
 "send_to_developer" = "把日誌發給開發者";
-"send_to_privacy_wallet_description" = "轉到我的隱私錢包，保護資產的隱私和安全，避免各種潛在風險。";
+"send_to_other_wallet_description" = "使用區塊鏈網路傳送到我的另一個錢包";
 "send_to_title" = "轉給";
 "send_video" = "傳送 1 個影片";
 "send_video_count" = "傳送 %d 個影片";

@@ -32,13 +32,14 @@ public final class Web3TransactionDAO: Web3DAO {
         return db.select(with: sql, arguments: [walletID, assetID, assetID, limit])
     }
     
-    public func pendingTransactions() -> [Web3Transaction] {
+    public func pendingTransactions(walletID: String) -> [Web3Transaction] {
         let sql = """
         SELECT * from transactions txn
         WHERE txn.status = '\(Web3RawTransaction.State.pending.rawValue)'
+            AND txn.address IN (SELECT destination FROM addresses WHERE wallet_id = ?)
         ORDER BY txn.transaction_at DESC
         """
-        return db.select(with: sql)
+        return db.select(with: sql, arguments: [walletID])
     }
     
     public func save(

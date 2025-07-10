@@ -3,12 +3,19 @@ import MixinServices
 
 final class ReviewPendingWeb3RawTransactionJob: BaseJob {
     
+    private let walletID: String
+    
+    init(walletID: String) {
+        self.walletID = walletID
+        super.init()
+    }
+    
     override func getJobId() -> String {
         "review-pending-Web3RawTxn"
     }
     
     override func run() throws {
-        var transactions = Web3RawTransactionDAO.shared.pendingRawTransactions()
+        var transactions = Web3RawTransactionDAO.shared.pendingRawTransactions(walletID: walletID)
         while LoginManager.shared.isLoggedIn && !transactions.isEmpty {
             Logger.general.debug(category: "ReviewPendingWeb3RawTxn", message: "\(transactions.count) raw txns to review")
             for (i, transaction) in transactions.enumerated() {
@@ -42,7 +49,7 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
             if isCancelled {
                 return
             }
-            transactions = Web3RawTransactionDAO.shared.pendingRawTransactions()
+            transactions = Web3RawTransactionDAO.shared.pendingRawTransactions(walletID: walletID)
         }
         Logger.general.info(category: "ReviewPendingWeb3RawTxn", message: "Ended")
     }

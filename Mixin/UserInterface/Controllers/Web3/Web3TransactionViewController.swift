@@ -48,9 +48,10 @@ final class Web3TransactionViewController: TransactionViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if transaction.status == .pending {
+            let walletID = wallet.walletID
             let jobs = [
-                ReviewPendingWeb3RawTransactionJob(),
-                ReviewPendingWeb3TransactionJob(walletID: wallet.walletID),
+                ReviewPendingWeb3RawTransactionJob(walletID: walletID),
+                ReviewPendingWeb3TransactionJob(walletID: walletID),
             ]
             reviewPendingTransactionJobID = jobs[1].getJobId()
             for job in jobs {

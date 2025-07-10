@@ -293,10 +293,11 @@ class EVMTransferOperation: Web3TransferOperation {
         }()
         
         let nonce: Int
-        if let maxNonce = Web3RawTransactionDAO.shared.maxNonce(chainID: mixinChainID),
-           let n = Int(maxNonce, radix: 10),
-           n >= latestTransactionCount
-        {
+        let maxNonce = Web3RawTransactionDAO.shared.maxNonce(
+            walletID: wallet.walletID,
+            chainID: mixinChainID
+        )
+        if let maxNonce, let n = Int(maxNonce, radix: 10), n >= latestTransactionCount {
             nonce = n + 1
             Logger.general.debug(category: "EVMTransfer", message: "Using local value \(nonce) as nonce")
         } else {

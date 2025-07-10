@@ -29,7 +29,7 @@ final class AuthenticationPreviewHeaderView: UIView {
     private weak var assetIconView: BadgeIconView?
     private weak var progressView: AuthenticationProgressView?
     private weak var textContentView: TextInscriptionContentView?
-    private weak var multipleTokenIconView: MultipleTokenIconView?
+    private weak var multipleTokenIconView: StackedTokenIconView?
     
     private weak var backgroundViewTopConstraint: NSLayoutConstraint?
     private weak var backgroundViewLeadingConstraint: NSLayoutConstraint?
@@ -113,14 +113,15 @@ final class AuthenticationPreviewHeaderView: UIView {
     }
     
     func setIcon(sendToken: Token, receiveToken: SwapToken) {
-        let iconView: MultipleTokenIconView
+        let iconView: StackedTokenIconView
         if let view = self.multipleTokenIconView, view.isDescendant(of: iconWrapperView) {
             iconView = view
         } else {
             for iconView in iconWrapperView.subviews {
                 iconView.removeFromSuperview()
             }
-            iconView = MultipleTokenIconView()
+            iconView = StackedTokenIconView()
+            iconView.size = .large
             iconWrapperView.addSubview(iconView)
             iconView.snp.makeConstraints { make in
                 make.center.equalToSuperview()
@@ -132,14 +133,15 @@ final class AuthenticationPreviewHeaderView: UIView {
     }
     
     func setIcon(tokens: [MixinTokenItem]) {
-        let iconView: MultipleTokenIconView
+        let iconView: StackedTokenIconView
         if let view = self.multipleTokenIconView, view.isDescendant(of: iconWrapperView) {
             iconView = view
         } else {
             for iconView in iconWrapperView.subviews {
                 iconView.removeFromSuperview()
             }
-            iconView = MultipleTokenIconView()
+            iconView = StackedTokenIconView()
+            iconView.size = .large
             iconWrapperView.addSubview(iconView)
             iconView.snp.makeConstraints { make in
                 make.center.equalToSuperview()
@@ -147,7 +149,7 @@ final class AuthenticationPreviewHeaderView: UIView {
             }
             self.multipleTokenIconView = iconView
         }
-        iconView.setIcons(tokens: tokens)
+        iconView.setIcons(urls: tokens.map(\.iconURL))
     }
     
     func setIcon(progress: AuthenticationProgressView.Progress) {
@@ -250,107 +252,6 @@ final class AuthenticationPreviewHeaderView: UIView {
             separatorLineHeightConstraint.constant = 0
             separatorLineBottomConstraint.constant = 2
         }
-    }
-    
-}
-
-extension AuthenticationPreviewHeaderView {
-    
-    private final class MultipleTokenIconView: UIView {
-        
-        private typealias IconWrapperView = StackedIconWrapperView<PlainTokenIconView>
-        
-        private let stackView = UIStackView()
-        private let iconWrapperFrame = CGRect(x: 0, y: 0, width: 68, height: 68)
-        
-        private var wrapperViews: [IconWrapperView] = []
-        
-        private weak var addtionalCountLabel: UILabel?
-        
-        override init(frame: CGRect) {
-            super.init(frame: frame)
-            loadSubviews()
-        }
-        
-        required init?(coder: NSCoder) {
-            super.init(coder: coder)
-            loadSubviews()
-        }
-        
-        func setIcons(tokens: [MixinTokenItem]) {
-            if tokens.count > 3 {
-                loadIconViews(count: 2) { _, wrapperView in
-                    wrapperView.snp.makeConstraints { make in
-                        make.width.equalTo(wrapperView.snp.height).offset(-16)
-                    }
-                }
-                let label: UILabel
-                if let l = addtionalCountLabel {
-                    label = l
-                } else {
-                    let view = StackedIconWrapperView<UILabel>(margin: 2, frame: iconWrapperFrame)
-                    view.backgroundColor = .clear
-                    label = view.iconView
-                    label.backgroundColor = R.color.background_quaternary()
-                    label.textColor = R.color.text_tertiary()
-                    label.font = .systemFont(ofSize: 20)
-                    label.textAlignment = .center
-                    label.minimumScaleFactor = 0.1
-                    label.layer.cornerRadius = 34
-                    label.layer.masksToBounds = true
-                    stackView.addArrangedSubview(view)
-                    view.snp.makeConstraints { make in
-                        make.size.equalTo(70)
-                    }
-                }
-                label.text = "+\(tokens.count - 2)"
-            } else {
-                loadIconViews(count: tokens.count) { index, wrapperView in
-                    let offset = index == tokens.count - 1 ? 0 : -16
-                    wrapperView.snp.makeConstraints { make in
-                        make.width.equalTo(wrapperView.snp.height).offset(offset)
-                    }
-                }
-            }
-            for (i, wrapperView) in wrapperViews.enumerated() {
-                wrapperView.iconView.setIcon(token: tokens[i])
-            }
-        }
-        
-        func setIcon(sendToken: Token, receiveToken: SwapToken) {
-            loadIconViews(count: 2) { index, wrapperView in
-                let offset = index == 1 ? 0 : -16
-                wrapperView.snp.makeConstraints { make in
-                    make.width.equalTo(wrapperView.snp.height).offset(offset)
-                }
-            }
-            wrapperViews[0].iconView.setIcon(token: sendToken)
-            wrapperViews[1].iconView.setIcon(token: receiveToken)
-        }
-        
-        private func loadIconViews(count: Int, makeConstraints maker: (Int, IconWrapperView) -> Void) {
-            guard wrapperViews.count != count else {
-                return
-            }
-            for view in stackView.arrangedSubviews {
-                view.removeFromSuperview()
-            }
-            wrapperViews = []
-            for i in 0..<count {
-                let view = IconWrapperView(margin: 2, frame: iconWrapperFrame)
-                view.backgroundColor = .clear
-                stackView.addArrangedSubview(view)
-                wrapperViews.append(view)
-                maker(i, view)
-            }
-        }
-        
-        private func loadSubviews() {
-            backgroundColor = R.color.background()
-            addSubview(stackView)
-            stackView.snp.makeEdgesEqualToSuperview()
-        }
-        
     }
     
 }

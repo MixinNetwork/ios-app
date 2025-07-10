@@ -39,6 +39,7 @@
 "add_tag" = "Добавить тега";
 "add_to_stickers" = "Добавить в стикеры";
 "add_token" = "Add %@";
+"add_wallet" = "Add Wallet";
 "added" = "Добавлен";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
@@ -324,6 +325,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Объединить и вперед";
 "common_wallet" = "Common Wallet";
+"common_wallet_index" = "Common Wallet %d";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Сжать базу данных";
@@ -443,6 +445,9 @@
 "delete_my_account" = "Удалить мой аккаунт";
 "delete_note" = "Delete Note";
 "delete_synced_contact" = "Удалить синхронизированные контакты";
+"delete_wallet" = "Delete Wallet";
+"delete_wallet_description" = "Deleting this wallet will not affect your assets, make sure you have your mnemonic phrases backed up.";
+"delete_wallet_title" = "Enter your PIN to remove wallet";
 "delete_withdraw_address" = "Удалить адрес %@";
 "deleted" = "Удалено";
 "deleting_address" = "Delete Address";
@@ -601,10 +606,12 @@
 "fee" = "Комиссия";
 "fee_selection" = "Fee (%@)";
 "feedback" = "Обратная связь";
+"fetching_in_to_your_wallet" = "Fetching in to your wallet...";
 "file" = "Файл";
 "files" = "Файлы";
 "filter" = "Фильтр";
 "filter_by" = "СОРТИРОВАТЬ ПО";
+"find_more_wallets" = "Find more wallets";
 "floating" = "Плавающий";
 "floats_allows_up_to_count" = "Поплавки позволяют использовать до %d единиц.";
 "follow_us_on_facebook" = "Следите за нами на Фейсбуке";
@@ -651,6 +658,11 @@
 "im_ready" = "I'm Ready";
 "image" = "изображение";
 "immediately" = "Немедленно";
+"import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_private_key" = "Import Private Key";
+"import_wallets" = "Import Wallets";
+"import_wallets_from_another_wallet" = "Import wallets from another wallet";
+"importing_into_your_wallet" = "Importing into your wallet...";
 "in_connecting" = "Подключение...";
 "include_files" = "Включить файлы";
 "include_videos" = "Включить видео";
@@ -824,6 +836,7 @@
 "my_mixin_id" = "Мой Mixin ID: %@";
 "my_qr_code" = "Мой QR-код";
 "my_stickers" = "Мои стикеры";
+"my_wallets" = "My Wallets";
 "na" = "Нет данных";
 "name" = "Имя";
 "name_or_phone_number" = "Имя или номер телефона";
@@ -1057,6 +1070,7 @@
 "remove_emergency_contact_for_sure" = "Remove recovery contact for sure?";
 "remove_from_group" = "Удалить из группы";
 "remove_stickers" = "Удалить наклейки";
+"rename_wallet" = "Rename Wallet";
 "renew_plan" = "Renew Plan";
 "reply" = "Ответить";
 "report" = "Отчет";
@@ -1143,6 +1157,7 @@
 "select" = "Выбрать";
 "select_a_country_or_region" = "Выберите страну или регион";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_all" = "Select All";
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
 "select_more_photos" = "Выберите больше фотографий";
@@ -1154,6 +1169,8 @@
 "selected_photo_count" = "Выбрано %d фото";
 "selected_video" = "Выбрано 1 видео";
 "selected_video_count" = "Выбрано %d видео";
+"selected_wallet_count" = "%d wallets selected";
+"selected_wallet_count_one" = "1 wallet selected";
 "sell_token" = "Sell %@";
 "send" = "Отправить";
 "send_as_file" = "Отправить как файл";
@@ -1168,10 +1185,9 @@
 "send_this_location" = "Отправить это местоположение";
 "send_to" = "Отправить в %@";
 "send_to_address_description" = "Send to an address in your Address Book, PIN-protected to prevent phishing.";
-"send_to_common_wallet_description" = "Send to your Common Wallet for use with decentralized apps and DeFi protocols.";
 "send_to_contact_description" = "Send to your Mixin friends with privacy, zero fees, and instant delivery.";
 "send_to_developer" = "Отправить разработчику";
-"send_to_privacy_wallet_description" = "Send to your Privacy Wallet to keep your assets safe and hidden from potential risks.";
+"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Отправить в";
 "send_video" = "Отправить 1 видео";
 "send_video_count" = "Отправить %d видео";
@@ -1511,6 +1527,7 @@
 "wallet_withdrawal_changed" = "Комиссия за снятие средств была изменена с %1$@ на %2$@. Вы хотите продолжить обработку запроса?";
 "wallet_withdrawal_recent_tip" = "Вы уже выводили %3$@ на %2$@ %1$@ назад. Хотите вывести еще раз?";
 "wallets" = "Wallets";
+"watch_address" = "Watch %@";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";
@@ -1570,6 +1587,7 @@
 "write_down_mnemonic_phrase_desc" = "Write it down on a piece of paper and keep it in a safe place.";
 "years_count_short" = "%dY";
 "you" = "Вы";
+"you_are_watching_address" = "You are watching %@";
 "you_deleted_this_message" = "Вы удалили это сообщение";
 "you_have_a_new_message" = "У вас новое сообщение";
 "you_have_left_the_group" = "Вы вышли из группы";

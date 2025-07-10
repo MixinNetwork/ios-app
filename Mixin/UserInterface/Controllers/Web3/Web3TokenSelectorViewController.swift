@@ -6,12 +6,12 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
     
     var onSelected: ((Web3TokenItem) -> Void)?
     
-    private let walletID: String
-    
+    private let wallet: Web3Wallet
+
     private weak var searchRequest: Request?
     
-    init(walletID: String, tokens: [Web3TokenItem]) {
-        self.walletID = walletID
+    init(wallet: Web3Wallet, tokens: [Web3TokenItem]) {
+        self.wallet = wallet
         let chainIDs = Set(tokens.compactMap(\.chainID))
         let chains = Chain.mixinChains(ids: chainIDs)
         super.init(
@@ -159,6 +159,7 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
             ChainID.base,
             ChainID.solana,
         ]
+        let walletID = wallet.walletID
         let searchResults: [Web3TokenItem] = tokens.compactMap { token in
             guard supportedChainIDs.contains(token.chainID) else {
                 return nil

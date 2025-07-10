@@ -1,24 +1,30 @@
 import Foundation
 import CommonCrypto
 
-enum PBKDF2 {
+public enum PBKDF2 {
     
-    enum PseudoRandomAlgorithm {
+    public enum PseudoRandomAlgorithm {
         case hmacSHA512
     }
     
-    static func derivation(
+    public enum DerivationError: Error {
+        case invalidPassword
+        case invalidSalt
+        case code(Int32)
+    }
+    
+    public static func derivation(
         password: String,
         salt: String,
         pseudoRandomAlgorithm: PseudoRandomAlgorithm,
         iterationCount rounds: UInt32,
         keyCount: Int
-    ) -> Data? {
+    ) throws -> Data {
         guard let passwordData = password.data(using: .utf8) else {
-            return nil
+            throw DerivationError.invalidPassword
         }
         guard let saltData = salt.data(using: .utf8) else {
-            return nil
+            throw DerivationError.invalidSalt
         }
         let prf = switch pseudoRandomAlgorithm {
         case .hmacSHA512:
@@ -45,7 +51,7 @@ enum PBKDF2 {
         if status == kCCSuccess {
             return key
         } else {
-            return nil
+            throw DerivationError.code(status)
         }
     }
     

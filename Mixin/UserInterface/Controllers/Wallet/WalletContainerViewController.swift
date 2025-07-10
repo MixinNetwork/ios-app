@@ -9,9 +9,9 @@ final class WalletContainerViewController: UIViewController {
         super.viewDidLoad()
         
         switch AppGroupUserDefaults.Wallet.lastSelectedWallet {
-        case .classic(let id):
-            if Web3WalletDAO.shared.hasClassicWallet(id: id) {
-                load(child: ClassicWalletViewController(walletID: id))
+        case .common(let id):
+            if let wallet = Web3WalletDAO.shared.wallet(id: id) {
+                load(child: ClassicWalletViewController(wallet: wallet))
             } else {
                 fallthrough
             }
@@ -58,11 +58,10 @@ final class WalletContainerViewController: UIViewController {
         switch wallet {
         case .privacy:
             viewController = PrivacyWalletViewController()
-            AppGroupUserDefaults.Wallet.lastSelectedWallet = .privacy
-        case .classic(let id):
-            viewController = ClassicWalletViewController(walletID: id)
-            AppGroupUserDefaults.Wallet.lastSelectedWallet = .classic(id: id)
+        case .common(let wallet):
+            viewController = ClassicWalletViewController(wallet: wallet)
         }
+        AppGroupUserDefaults.Wallet.lastSelectedWallet = wallet.identifier
         
         addChild(viewController)
         view.insertSubview(viewController.view, at: 0)

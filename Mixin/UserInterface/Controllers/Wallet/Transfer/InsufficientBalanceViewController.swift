@@ -6,8 +6,8 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
     enum Intent {
         case privacyWalletTransfer(BalanceRequirement)
         case withdraw(withdrawing: BalanceRequirement, fee: BalanceRequirement)
-        case commonWalletTransfer(transferring: BalanceRequirement, fee: BalanceRequirement)
-        case externalWeb3Transaction(fee: BalanceRequirement)
+        case commonWalletTransfer(wallet: Web3Wallet, transferring: BalanceRequirement, fee: BalanceRequirement)
+        case externalWeb3Transaction(wallet: Web3Wallet, fee: BalanceRequirement)
     }
     
     private let intent: Intent
@@ -30,9 +30,9 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
     init(intent: Intent) {
         self.intent = intent
         self.insufficientToken = switch intent {
-        case let .privacyWalletTransfer(requirement), let .externalWeb3Transaction(requirement):
+        case let .privacyWalletTransfer(requirement), let .externalWeb3Transaction(_, requirement):
             requirement.token
-        case let .withdraw(primary, fee), let .commonWalletTransfer(primary, fee):
+        case let .withdraw(primary, fee), let .commonWalletTransfer(_, primary, fee):
             if !primary.isSufficient {
                 primary.token
             } else {
@@ -79,7 +79,7 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                     fee.token.localizedBalanceWithSymbol,
                 )
             }
-        case let .commonWalletTransfer(transferring, fee):
+        case let .commonWalletTransfer(_, transferring, fee):
             let sameToken = transferring.token.assetID == fee.token.assetID
             subtitle = if sameToken {
                 R.string.localizable.transfer_aggregated_insufficient_balance_count(
@@ -98,7 +98,7 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                     fee.token.localizedBalanceWithSymbol,
                 )
             }
-        case let .externalWeb3Transaction(fee):
+        case let .externalWeb3Transaction(_, fee):
             subtitle = R.string.localizable.web3_transfer_insufficient_fee_count(
                 fee.localizedAmountWithSymbol,
                 fee.token.localizedBalanceWithSymbol,
@@ -127,7 +127,7 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                     boldPrimaryAmount: false
                 )
             ]
-        case let .withdraw(primary, fee), let .commonWalletTransfer(primary, fee):
+        case let .withdraw(primary, fee), let .commonWalletTransfer(_, primary, fee):
             let requirements = primary.merging(with: fee)
             if requirements.count == 1, let total = requirements.first {
                 rows = [
@@ -197,7 +197,7 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                     ]
                 }
             }
-        case let .externalWeb3Transaction(fee):
+        case let .externalWeb3Transaction(_, fee):
             rows = [
                 .amount(
                     caption: .fee,
@@ -319,14 +319,11 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                 receiveAssetID: to,
                 referral: nil
             )
-        case .commonWalletTransfer, .externalWeb3Transaction:
-            guard let walletID = (insufficientToken as? Web3TokenItem)?.walletID else {
-                return
-            }
+        case let .commonWalletTransfer(wallet, _, _), let .externalWeb3Transaction(wallet, _):
             swap = Web3SwapViewController(
+                wallet: wallet,
                 sendAssetID: from,
                 receiveAssetID: to,
-                walletID: walletID
             )
         }
         presentingViewController?.dismiss(animated: true) { [onDismiss] in
@@ -372,10 +369,13 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
         case let token as Web3TokenItem:
             switch method {
             case .swap:
+                guard let wallet = Web3WalletDAO.shared.wallet(id: token.walletID) else {
+                    return
+                }
                 next = Web3SwapViewController(
+                    wallet: wallet,
                     sendAssetID: nil,
                     receiveAssetID: token.assetID,
-                    walletID: token.walletID
                 )
             case .deposit:
                 guard let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: token.chainID) else {

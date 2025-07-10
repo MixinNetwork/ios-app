@@ -42,7 +42,7 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
         case .temporary(let address):
             titleView.subtitle = address.compactRepresentation
             titleView.subtitleStyle = .plain
-        case .classicWallet:
+        case .commonWallet:
             titleView.subtitle = R.string.localizable.common_wallet()
             titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
         }

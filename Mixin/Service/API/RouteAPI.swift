@@ -255,6 +255,23 @@ extension RouteAPI {
         try await request(method: .post, path: "/wallets", with: wallet)
     }
     
+    static func renameWallet(id: String, name: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+        request(
+            method: .post,
+            path: "/wallets/\(id)",
+            with: ["name": name],
+            completion: completion
+        )
+    }
+    
+    static func deleteWallet(id: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+        request(
+            method: .post,
+            path: "/wallets/\(id)/delete",
+            completion: completion
+        )
+    }
+    
     static func assets(
         walletID: String,
         queue: DispatchQueue,
@@ -263,6 +280,20 @@ extension RouteAPI {
         request(
             method: .get,
             path: "/wallets/\(walletID)/assets",
+            queue: queue,
+            completion: completion
+        )
+    }
+    
+    static func assets(
+        searchAddresses addresses: [String],
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[AddressAssets]>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/assets/search/address",
+            with: ["addresses": addresses],
             queue: queue,
             completion: completion
         )

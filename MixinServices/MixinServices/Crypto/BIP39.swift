@@ -87,6 +87,7 @@ public enum BIP39 {
 extension BIP39 {
     
     public static let wordlist: [String] = rawWordlist.components(separatedBy: .newlines)
+    public static let wordSet: Set<String> = Set(wordlist)
     
     private static let rawWordlist = """
 abandon

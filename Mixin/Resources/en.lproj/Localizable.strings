@@ -39,6 +39,7 @@
 "add_tag" = "Add Tag";
 "add_to_stickers" = "Add to Stickers";
 "add_token" = "Add %@";
+"add_wallet" = "Add Wallet";
 "added" = "Added";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
@@ -324,6 +325,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Combine and forward";
 "common_wallet" = "Common Wallet";
+"common_wallet_index" = "Common Wallet %d";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Compress Database";
@@ -443,6 +445,9 @@
 "delete_my_account" = "Delete My Account";
 "delete_note" = "Delete Note";
 "delete_synced_contact" = "Delete Synced Contacts";
+"delete_wallet" = "Delete Wallet";
+"delete_wallet_description" = "Deleting this wallet will not affect your assets, make sure you have your mnemonic phrases backed up.";
+"delete_wallet_title" = "Enter your PIN to remove wallet";
 "delete_withdraw_address" = "Delete %@ Address";
 "deleted" = "Deleted";
 "deleting_address" = "Delete Address";
@@ -601,10 +606,12 @@
 "fee" = "Fee";
 "fee_selection" = "Fee (%@)";
 "feedback" = "Feedback";
+"fetching_in_to_your_wallet" = "Fetching in to your wallet...";
 "file" = "File";
 "files" = "Files";
 "filter" = "Filter";
 "filter_by" = "FILTER BY";
+"find_more_wallets" = "Find more wallets";
 "floating" = "Floating";
 "floats_allows_up_to_count" = "Floats allows up to %d ones";
 "follow_us_on_facebook" = "Follow us on Facebook";
@@ -651,6 +658,11 @@
 "im_ready" = "I'm Ready";
 "image" = "image";
 "immediately" = "Immediately";
+"import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_private_key" = "Import Private Key";
+"import_wallets" = "Import Wallets";
+"import_wallets_from_another_wallet" = "Import wallets from another wallet";
+"importing_into_your_wallet" = "Importing into your wallet...";
 "in_connecting" = "Connecting...";
 "include_files" = "Include Files";
 "include_videos" = "Include Videos";
@@ -824,6 +836,7 @@
 "my_mixin_id" = "My Mixin ID: %@";
 "my_qr_code" = "My QR Code";
 "my_stickers" = "My Stickers";
+"my_wallets" = "My Wallets";
 "na" = "N/A";
 "name" = "Name";
 "name_or_phone_number" = "Name or Phone number";
@@ -1057,6 +1070,7 @@
 "remove_emergency_contact_for_sure" = "Remove recovery contact for sure?";
 "remove_from_group" = "Remove from Group";
 "remove_stickers" = "Remove Stickers";
+"rename_wallet" = "Rename Wallet";
 "renew_plan" = "Renew Plan";
 "reply" = "Reply";
 "report" = "Report";
@@ -1143,6 +1157,7 @@
 "select" = "Select";
 "select_a_country_or_region" = "Select a Country or Region";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_all" = "Select All";
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
 "select_more_photos" = "Select More Photos";
@@ -1154,6 +1169,8 @@
 "selected_photo_count" = "Selected %d Photos";
 "selected_video" = "Selected 1 Video";
 "selected_video_count" = "Selected %d Videos";
+"selected_wallet_count" = "%d wallets selected";
+"selected_wallet_count_one" = "1 wallet selected";
 "sell_token" = "Sell %@";
 "send" = "Send";
 "send_as_file" = "Send as File";
@@ -1168,10 +1185,9 @@
 "send_this_location" = "Send This Location";
 "send_to" = "Send to %@";
 "send_to_address_description" = "Send to an address in your Address Book, PIN-protected to prevent phishing.";
-"send_to_common_wallet_description" = "Send to your Common Wallet for use with decentralized apps and DeFi protocols.";
 "send_to_contact_description" = "Send to your Mixin friends with privacy, zero fees, and instant delivery.";
 "send_to_developer" = "Send to Developer";
-"send_to_privacy_wallet_description" = "Send to your Privacy Wallet to keep your assets safe and hidden from potential risks.";
+"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Send To";
 "send_video" = "Send 1 Video";
 "send_video_count" = "Send %d Videos";
@@ -1511,6 +1527,7 @@
 "wallet_withdrawal_changed" = "The withdrawal fee has been changed from %1$@ to %2$@, would you like to proceed with the request?";
 "wallet_withdrawal_recent_tip" = "You have already withdrawn %3$@ to %2$@ %1$@ ago, Do you want to withdraw it again?";
 "wallets" = "Wallets";
+"watch_address" = "Watch %@";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";
@@ -1570,6 +1587,7 @@
 "write_down_mnemonic_phrase_desc" = "Write it down on a piece of paper and keep it in a safe place.";
 "years_count_short" = "%dY";
 "you" = "You";
+"you_are_watching_address" = "You are watching %@";
 "you_deleted_this_message" = "You deleted this message";
 "you_have_a_new_message" = "You have a new message";
 "you_have_left_the_group" = "You have left the group";

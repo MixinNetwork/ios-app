@@ -11,6 +11,7 @@
 #include "Universe.objc.h"
 
 
+@class BlockchainKey;
 @protocol BlockchainKeccakState;
 @class BlockchainKeccakState;
 
@@ -23,13 +24,36 @@
 - (BOOL)write:(NSData* _Nullable)p0 n:(long* _Nullable)n error:(NSError* _Nullable* _Nullable)error;
 @end
 
+@interface BlockchainKey : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+@property (nonatomic) NSData* _Nullable privateKey;
+@property (nonatomic) NSData* _Nullable chainCode;
+@end
+
+// skipped function CKDPriv with unsupported parameter or return types
+
+
+// skipped function CreateSolanaMasterKey with unsupported parameter or return types
+
+
+// skipped function Derived with unsupported parameter or return types
+
+
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateBitcoinSegwitAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateBitcoinTaprootAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEthereumAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
 
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEvmAddressFromMnemonic(NSString* _Nullable mnemonic, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
+
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
+
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddressFromMnemonic(NSString* _Nullable mnemonic, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT BOOL BlockchainIsMnemonicValid(NSString* _Nullable mnemonic);
 

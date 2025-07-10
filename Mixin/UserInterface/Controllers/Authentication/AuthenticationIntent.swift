@@ -17,6 +17,7 @@ struct AuthenticationIntentOptions: OptionSet {
     static let neverRequestAddBiometricAuthentication = AuthenticationIntentOptions(rawValue: 1 << 4)
     static let multipleLineSubtitle = AuthenticationIntentOptions(rawValue: 1 << 5)
     static let viewUnderPINField = AuthenticationIntentOptions(rawValue: 1 << 6)
+    static let destructiveTitle = AuthenticationIntentOptions(rawValue: 1 << 7)
     
 }
 

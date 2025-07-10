@@ -11,16 +11,13 @@ public enum MasterKey {
     
     public static func key(from mnemonics: MixinMnemonics) throws -> Ed25519PrivateKey {
         let nativeMasterKey = try {
-            let privateKeySeed = PBKDF2.derivation(
+            let privateKeySeed = try PBKDF2.derivation(
                 password: mnemonics.bip39,
                 salt: "mnemonic",
                 pseudoRandomAlgorithm: .hmacSHA512,
                 iterationCount: 2048,
                 keyCount: 64
             )
-            guard let privateKeySeed else {
-                throw DerivationError.pbkdf2
-            }
             let hmacKey = SymmetricKey(data: "Bitcoin seed".data(using: .utf8)!)
             let hmac = HMAC<SHA512>.authenticationCode(for: privateKeySeed, using: hmacKey)
             let masterKey = Data(hmac.prefix(32))

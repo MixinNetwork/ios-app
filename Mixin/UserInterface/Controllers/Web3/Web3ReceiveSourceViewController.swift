@@ -8,10 +8,12 @@ final class Web3ReceiveSourceViewController: UIViewController {
         case address = 1
     }
     
+    private let wallet: Web3Wallet
     private let token: Web3TokenItem
     private let tableView = UITableView()
     
-    init(token: Web3TokenItem) {
+    init(wallet: Web3Wallet, token: Web3TokenItem) {
+        self.wallet = wallet
         self.token = token
         super.init(nibName: nil, bundle: nil)
     }
@@ -111,7 +113,7 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
             }
             let input = WithdrawInputAmountViewController(
                 tokenItem: tokenItem,
-                destination: .classicWallet(address)
+                destination: .commonWallet(wallet, address)
             )
             navigationController?.pushViewController(input, animated: true)
         case .address:

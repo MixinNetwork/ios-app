@@ -10,7 +10,7 @@ final class WalletConnectSession {
         case mismatchedNamespaces
         case noTransaction
         case noChain(String)
-        case noAccount
+        case noWallet
         case noAddress
     }
     
@@ -136,11 +136,14 @@ extension WalletConnectSession {
                 guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                     throw Error.noChain(request.chainId.absoluteString)
                 }
-                guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum) else {
-                    throw Error.noAccount
+                guard let wallet = Web3WalletDAO.shared.classicWallet() else {
+                    throw Error.noWallet
+                }
+                guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID) else {
+                    throw Error.noAddress
                 }
                 let operation = try Web3TransferWithWalletConnectOperation(
-                    walletID: address.walletID,
+                    wallet: wallet,
                     fromAddress: address.destination,
                     transaction: transactionPreview,
                     chain: chain,
@@ -157,7 +160,7 @@ extension WalletConnectSession {
                 } else {
                     await MainActor.run {
                         let insufficient = InsufficientBalanceViewController(
-                            intent: .externalWeb3Transaction(fee: feeRequirement)
+                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement)
                         )
                         Web3PopupCoordinator.enqueue(popup: .request(insufficient))
                     }
@@ -204,14 +207,14 @@ extension WalletConnectSession {
                 guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                     throw Error.noChain(request.chainId.absoluteString)
                 }
-                guard let walletID = Web3WalletDAO.shared.classicWallet()?.walletID else {
-                    throw Error.noAccount
+                guard let wallet = Web3WalletDAO.shared.classicWallet() else {
+                    throw Error.noWallet
                 }
-                guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: ChainID.solana) else {
+                guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.solana) else {
                     throw Error.noAddress
                 }
                 let operation = try await SolanaTransferWithWalletConnectOperation(
-                    walletID: walletID,
+                    wallet: wallet,
                     transaction: transaction,
                     fromAddress: address.destination,
                     chain: chain,
@@ -228,7 +231,7 @@ extension WalletConnectSession {
                 } else {
                     await MainActor.run {
                         let insufficient = InsufficientBalanceViewController(
-                            intent: .externalWeb3Transaction(fee: feeRequirement)
+                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement)
                         )
                         Web3PopupCoordinator.enqueue(popup: .request(insufficient))
                     }
@@ -264,7 +267,7 @@ extension WalletConnectSession {
             }
             let address = Web3AddressDAO.shared.classicWalletAddress(chainID: chain.chainID)
             guard let address = address?.destination else {
-                throw Error.noAccount
+                throw Error.noAddress
             }
             let operation = Web3SignWithWalletConnectOperation(address: address, session: self, request: decoded, chain: chain)
             let signRequest = Web3SignViewController(operation: operation, chainName: decoded.chain.name)

@@ -1,0 +1,127 @@
+import UIKit
+import CryptoKit
+import MixinServices
+
+final class AddWalletFetchAddressViewController: IntroductionViewController {
+    
+    private let mnemonics: BIP39Mnemonics
+    private let busyIndicator = ActivityIndicatorView()
+    
+    init(mnemonics: BIP39Mnemonics) {
+        self.mnemonics = mnemonics
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        imageViewTopConstraint.constant = switch ScreenHeight.current {
+        case .short:
+            40
+        case .medium:
+            80
+        case .long, .extraLong:
+            120
+        }
+        imageView.image = R.image.mnemonic_login()
+        titleLabel.text = R.string.localizable.fetching_in_to_your_wallet()
+        
+        contentLabelTopConstraint.constant = 16
+        contentLabel.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+        contentLabel.adjustsFontForContentSizeCategory = true
+        contentLabel.textAlignment = .center
+        
+        busyIndicator.tintColor = R.color.outline_primary()
+        actionStackView.addArrangedSubview(busyIndicator)
+        busyIndicator.snp.makeConstraints { make in
+            make.height.equalTo(48)
+        }
+        
+        fetchAddresses(mnemonics: mnemonics)
+    }
+    
+    @objc private func retry(_ sender: Any) {
+        fetchAddresses(mnemonics: mnemonics)
+    }
+    
+    private func showLoading() {
+        busyIndicator.startAnimating()
+        actionButton.isHidden = true
+        contentLabel.textColor = R.color.text_tertiary()
+        contentLabel.text = R.string.localizable.mnemonic_phrase_take_long()
+        contentLabel.isHidden = false
+    }
+    
+    private func showError(_ description: String) {
+        busyIndicator.stopAnimating()
+        actionButton.style = .filled
+        actionButton.setTitle(R.string.localizable.retry(), for: .normal)
+        actionButton.addTarget(self, action: #selector(retry(_:)), for: .touchUpInside)
+        actionButton.isHidden = false
+        contentLabel.textColor = R.color.error_red()
+        contentLabel.text = description
+        contentLabel.isHidden = false
+    }
+    
+    private func fetchAddresses(mnemonics: BIP39Mnemonics) {
+        showLoading()
+        DispatchQueue.global().async { [weak self] in
+            let wallets: [BIP39Mnemonics.DerivedWallet]
+            let lastIndex: UInt32 = 9
+            do {
+                wallets = try mnemonics.deriveWallets(indices: 0...lastIndex)
+            } catch {
+                DispatchQueue.main.async {
+                    self?.showError(error.localizedDescription)
+                }
+                return
+            }
+            let addresses = wallets.flatMap { wallet in
+                [wallet.evm.address, wallet.solana.address]
+            }
+            RouteAPI.assets(searchAddresses: addresses, queue: .global()) { result in
+                switch result {
+                case let .success(assets):
+                    let candidates: [WalletCandidate]
+                    if assets.isEmpty {
+                        candidates = [
+                            .empty(evmWallet: wallets[0].evm, solanaWallet: wallets[0].solana)
+                        ]
+                    } else {
+                        let tokens = assets.reduce(into: [:]) { result, addressAssets in
+                            result[addressAssets.address] = addressAssets.assets
+                        }
+                        candidates = wallets.compactMap { wallet in
+                            let evmTokens = tokens[wallet.evm.address] ?? []
+                            let solanaTokens = tokens[wallet.solana.address] ?? []
+                            let tokens = evmTokens + solanaTokens
+                            return tokens.isEmpty ? nil : WalletCandidate(
+                                evmWallet: wallet.evm,
+                                solanaWallet: wallet.solana,
+                                tokens: tokens
+                            )
+                        }
+                    }
+                    DispatchQueue.main.async {
+                        let selector = AddWalletSelectorViewController(
+                            mnemonics: mnemonics,
+                            candidates: candidates,
+                            lastIndex: lastIndex
+                        )
+                        self?.navigationController?.pushViewController(replacingCurrent: selector, animated: true)
+                    }
+                case let .failure(error):
+                    Logger.general.debug(category: "AddWallet", message: "\(error)")
+                    DispatchQueue.main.async {
+                        self?.showError(error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
+    
+}

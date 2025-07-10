@@ -10,6 +10,7 @@ public enum AppGroupKeychain {
         static let tipPriv = Data([0x04]) as NSData
         static let salt = Data([0x05]) as NSData
         static let mnemonics = Data([0x06]) as NSData
+        static let importedWalletPrivateKeys = Data([0x07]) as NSData
     }
     
     @Item(query: [kSecClass: kSecClassKey, kSecAttrApplicationTag: Tag.deviceID])
@@ -33,6 +34,9 @@ public enum AppGroupKeychain {
     @Item(query: [kSecClass: kSecClassKey, kSecAttrApplicationTag: Tag.mnemonics])
     public static var mnemonics: Data?
     
+    @Item(query: [kSecClass: kSecClassKey, kSecAttrApplicationTag: Tag.importedWalletPrivateKeys])
+    public static var importedWalletPrivateKeys: Data?
+    
     public static func removeItemsForCurrentSession() {
         sessionSecret = nil
         pinToken = nil
@@ -40,6 +44,7 @@ public enum AppGroupKeychain {
         encryptedTIPPriv = nil
         encryptedSalt = nil
         mnemonics = nil
+        importedWalletPrivateKeys = nil
     }
     
 }

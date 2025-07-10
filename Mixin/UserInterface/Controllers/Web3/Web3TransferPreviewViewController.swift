@@ -138,7 +138,7 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
             rows.append(.info(caption: .account, content: operation.fromAddress))
         case let .user(addressLabel):
             rows.append(.receivingAddress(value: operation.toAddress, label: addressLabel))
-            rows.append(.sendingAddress(value: operation.fromAddress, label: R.string.localizable.common_wallet()))
+            rows.append(.sendingAddress(value: operation.fromAddress, label: operation.wallet.localizedName))
         case .speedUp, .cancel:
             break
         case .none:
@@ -360,7 +360,7 @@ extension Web3TransferPreviewViewController {
         
         if let approve = simulation.approves?.first {
             let token = Web3TokenDAO.shared.token(
-                walletID: operation.walletID,
+                walletID: operation.wallet.walletID,
                 assetID: approve.assetID
             )
             switch approve.amount {
@@ -414,7 +414,7 @@ extension Web3TransferPreviewViewController {
             }
             
             let token = Web3TokenDAO.shared.token(
-                walletID: operation.walletID,
+                walletID: operation.wallet.walletID,
                 assetID: changes[0].assetID
             )
             let fiatMoneyAmount: String? = if let token, let amount {

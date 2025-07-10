@@ -62,7 +62,7 @@ extension AppGroupUserDefaults {
         public static var swapTokens: [String]
         
         @RawRepresentableDefault(namespace: .wallet, key: Key.lastSelectedWallet, defaultValue: .privacy)
-        public static var lastSelectedWallet: MixinServices.Wallet
+        public static var lastSelectedWallet: MixinServices.Wallet.Identifier
         
         @Default(namespace: .wallet, key: Key.hasViewedPrivacyWalletTip, defaultValue: false)
         public static var hasViewedPrivacyWalletTip: Bool

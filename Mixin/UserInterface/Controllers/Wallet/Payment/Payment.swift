@@ -301,15 +301,15 @@ extension Payment {
         
         case address(Address)
         case temporary(TemporaryAddress)
-        case classicWallet(Web3Address)
+        case commonWallet(Web3Wallet, Web3Address)
         
         var withdrawable: WithdrawableAddress {
             switch self {
-            case .address(let address):
+            case let .address(address):
                 address
-            case .temporary(let address):
+            case let .temporary(address):
                 address
-            case .classicWallet(let address):
+            case let .commonWallet(_, address):
                 address
             }
         }
@@ -324,7 +324,7 @@ extension Payment {
                 address.label
             case .temporary:
                 nil
-            case .classicWallet:
+            case .commonWallet:
                 R.string.localizable.common_wallet()
             }
         }
@@ -335,7 +335,7 @@ extension Payment {
                 "address_book"
             case .temporary:
                 "address"
-            case .classicWallet:
+            case .commonWallet:
                 "wallet"
             }
         }
@@ -346,8 +346,8 @@ extension Payment {
                 return "<WithdrawalDestination.address \(address.addressId)>"
             case let .temporary(address):
                 return "<WithdrawalDestination.temporary \(address.destination)>"
-            case let .classicWallet(address):
-                return "<WithdrawalDestination.classicWallet \(address.addressID)>"
+            case let .commonWallet(wallet, address):
+                return "<WithdrawalDestination.commonWallet \(wallet.localizedName)>"
             }
         }
         
@@ -376,7 +376,7 @@ extension Payment {
                                             memo: memo),
                     InactiveAddressPrecondition(address: address),
                 ]
-            case .temporary, .classicWallet:
+            case .temporary, .commonWallet:
                 preconditions = [
                     NoPendingTransactionPrecondition(),
                     DuplicationPrecondition(operation: .withdraw(destination.withdrawable),
@@ -411,7 +411,7 @@ extension Payment {
                     case .temporary:
                         addressLabel = nil
                         addressID = nil
-                    case .classicWallet:
+                    case .commonWallet:
                         addressLabel = .classicWallet
                         addressID = nil
                     }

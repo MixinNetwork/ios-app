@@ -14,6 +14,14 @@ public final class TokenDigest {
         return price * balance
     }()
     
+    public init(token: Web3Token) {
+        self.assetID = token.assetID
+        self.symbol = token.symbol
+        self.iconURL = token.iconURL
+        self.usdPrice = token.usdPrice
+        self.balance = token.amount
+    }
+    
 }
 
 extension TokenDigest: Codable {

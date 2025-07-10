@@ -13,27 +13,39 @@ public final class Web3TransactionDAO: Web3DAO {
         return db.select(with: sql, arguments: [hash, chainID, address])
     }
     
-    public func transactions(assetID: String, limit: Int) -> [Web3Transaction] {
-        let sql = """
-        SELECT txn.*
-        FROM transactions txn
-            LEFT JOIN tokens st ON txn.send_asset_id = st.asset_id
-            LEFT JOIN tokens rt ON txn.receive_asset_id = rt.asset_id
-        WHERE (txn.send_asset_id = ? OR txn.receive_asset_id = ?)
-            AND txn.level >= ifnull(ifnull(st.level, rt.level), 0)
-        ORDER BY txn.transaction_at DESC
-        LIMIT ?
-        """
-        return db.select(with: sql, arguments: [assetID, assetID, limit])
+    public func transactions(
+        walletID: String,
+        assetID: String,
+        limit: Int
+    ) -> [Web3Transaction] {
+        db.select(
+            with: """
+                SELECT txn.*
+                FROM transactions txn
+                    LEFT JOIN tokens st ON txn.send_asset_id = st.asset_id AND st.wallet_id = :wallet_id
+                    LEFT JOIN tokens rt ON txn.receive_asset_id = rt.asset_id AND rt.wallet_id = :wallet_id
+                WHERE txn.address IN (SELECT DISTINCT destination FROM addresses WHERE wallet_id = :wallet_id)
+                    AND (txn.send_asset_id = :asset_id OR txn.receive_asset_id = :asset_id)
+                    AND txn.level >= ifnull(ifnull(st.level, rt.level), 0)
+                ORDER BY txn.transaction_at DESC
+                LIMIT :limit
+            """,
+            arguments: [
+                "wallet_id": walletID,
+                "asset_id": assetID,
+                "limit": limit
+            ]
+        )
     }
     
-    public func pendingTransactions() -> [Web3Transaction] {
+    public func pendingTransactions(walletID: String) -> [Web3Transaction] {
         let sql = """
         SELECT * from transactions txn
         WHERE txn.status = '\(Web3RawTransaction.State.pending.rawValue)'
+            AND txn.address IN (SELECT DISTINCT destination FROM addresses WHERE wallet_id = ?)
         ORDER BY txn.transaction_at DESC
         """
-        return db.select(with: sql)
+        return db.select(with: sql, arguments: [walletID])
     }
     
     public func save(
@@ -125,6 +137,7 @@ extension Web3TransactionDAO {
     // For example, when requesting `newest`, the first item will be the most recent;
     // When requesting `biggestAmount`, the first item will have the largest amount.
     public func transactions(
+        walletID: String,
         offset: Offset? = nil,
         filter: Web3Transaction.Filter,
         order: Web3Transaction.Order,
@@ -132,7 +145,9 @@ extension Web3TransactionDAO {
     ) -> [Web3Transaction] {
         var query = GRDB.SQL(sql: "SELECT * from transactions txn\n")
         
-        var conditions: [GRDB.SQL] = []
+        var conditions: [GRDB.SQL] = [
+            "txn.address IN (SELECT DISTINCT destination FROM addresses WHERE wallet_id = \(walletID))"
+        ]
         
         switch filter.type {
         case .none:

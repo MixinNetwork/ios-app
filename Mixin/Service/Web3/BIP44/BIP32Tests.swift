@@ -3,15 +3,15 @@ import Foundation
 #if DEBUG
 func testBIP32() {
     let seed = Data(hexEncodedString: "67f93560761e20617de26e0cb84f7234aaf373ed2e66295c3d7397e6d7ebe882ea396d5d293808b0defd7edd2babd4c091ad942e6a9351e6d075a29d4df872af")!
-    let key = ExtendedKey(seed: seed)
+    let key = ExtendedKey(seed: seed, curve: .secp256k1)
     let privateKey = try! key
-        .privateKey(index: .hardened(44))
-        .privateKey(index: .hardened(0))
-        .privateKey(index: .hardened(0))
-        .privateKey(index: .normal(0))
+        .privateKeyUsingSecp256k1(index: .hardened(44))
+        .privateKeyUsingSecp256k1(index: .hardened(0))
+        .privateKeyUsingSecp256k1(index: .hardened(0))
+        .privateKeyUsingSecp256k1(index: .normal(0))
     let addresses = try! (0..<20).map { (index: UInt32) in
         let publicKey = try privateKey
-            .privateKey(index: .normal(index))
+            .privateKeyUsingSecp256k1(index: .normal(index))
             .publicKey()
         return P2PKH.address(of: publicKey)
     }
@@ -44,14 +44,14 @@ func testBIP32() {
 
 func testTIPEthereumKey() {
     let seed = Data(hexEncodedString: "67f93560761e20617de26e0cb84f7234aaf373ed2e66295c3d7397e6d7ebe882ea396d5d293808b0defd7edd2babd4c091ad942e6a9351e6d075a29d4df872af")!
-    let key = ExtendedKey(seed: seed)
+    let key = ExtendedKey(seed: seed, curve: .secp256k1)
     let privateKey = try! key
-        .privateKey(index: .hardened(44))
-        .privateKey(index: .hardened(60))
-        .privateKey(index: .hardened(0))
-        .privateKey(index: .normal(0))
+        .privateKeyUsingSecp256k1(index: .hardened(44))
+        .privateKeyUsingSecp256k1(index: .hardened(60))
+        .privateKeyUsingSecp256k1(index: .hardened(0))
+        .privateKeyUsingSecp256k1(index: .normal(0))
     let addresses = try! (0..<20).map { (index: UInt32) in
-        try privateKey.privateKey(index: .normal(index)).key.hexEncodedString()
+        try privateKey.privateKeyUsingSecp256k1(index: .normal(index)).key.hexEncodedString()
     }
     let isEqual = addresses == [
         "322ae50bf8cd9772f46aefde87f0f7d1718ad7ff32e44dc8a81286a0c3867eb4",

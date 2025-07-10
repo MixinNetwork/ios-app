@@ -18,25 +18,31 @@ public final class Web3TransactionDAO: Web3DAO {
         assetID: String,
         limit: Int
     ) -> [Web3Transaction] {
-        let sql = """
-        SELECT txn.*
-        FROM transactions txn
-            LEFT JOIN tokens st ON txn.send_asset_id = st.asset_id
-            LEFT JOIN tokens rt ON txn.receive_asset_id = rt.asset_id
-        WHERE txn.address IN (SELECT destination FROM addresses WHERE wallet_id = ?)
-            AND (txn.send_asset_id = ? OR txn.receive_asset_id = ?)
-            AND txn.level >= ifnull(ifnull(st.level, rt.level), 0)
-        ORDER BY txn.transaction_at DESC
-        LIMIT ?
-        """
-        return db.select(with: sql, arguments: [walletID, assetID, assetID, limit])
+        db.select(
+            with: """
+                SELECT txn.*
+                FROM transactions txn
+                    LEFT JOIN tokens st ON txn.send_asset_id = st.asset_id AND st.wallet_id = :wallet_id
+                    LEFT JOIN tokens rt ON txn.receive_asset_id = rt.asset_id AND rt.wallet_id = :wallet_id
+                WHERE txn.address IN (SELECT DISTINCT destination FROM addresses WHERE wallet_id = :wallet_id)
+                    AND (txn.send_asset_id = :asset_id OR txn.receive_asset_id = :asset_id)
+                    AND txn.level >= ifnull(ifnull(st.level, rt.level), 0)
+                ORDER BY txn.transaction_at DESC
+                LIMIT :limit
+            """,
+            arguments: [
+                "wallet_id": walletID,
+                "asset_id": assetID,
+                "limit": limit
+            ]
+        )
     }
     
     public func pendingTransactions(walletID: String) -> [Web3Transaction] {
         let sql = """
         SELECT * from transactions txn
         WHERE txn.status = '\(Web3RawTransaction.State.pending.rawValue)'
-            AND txn.address IN (SELECT destination FROM addresses WHERE wallet_id = ?)
+            AND txn.address IN (SELECT DISTINCT destination FROM addresses WHERE wallet_id = ?)
         ORDER BY txn.transaction_at DESC
         """
         return db.select(with: sql, arguments: [walletID])
@@ -140,7 +146,7 @@ extension Web3TransactionDAO {
         var query = GRDB.SQL(sql: "SELECT * from transactions txn\n")
         
         var conditions: [GRDB.SQL] = [
-            "txn.address IN (SELECT destination FROM addresses WHERE wallet_id = \(walletID))"
+            "txn.address IN (SELECT DISTINCT destination FROM addresses WHERE wallet_id = \(walletID))"
         ]
         
         switch filter.type {

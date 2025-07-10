@@ -19,7 +19,7 @@ public final class Web3RawTransactionDAO: Web3DAO {
         SELECT *
         FROM raw_transactions 
         WHERE \(Web3RawTransaction.CodingKeys.state.rawValue) = 'pending'
-            AND account IN (SELECT destination FROM addresses WHERE wallet_id = ?)
+            AND account IN (SELECT DISTINCT destination FROM addresses WHERE wallet_id = ?)
         """, arguments: [walletID])
     }
     
@@ -29,7 +29,7 @@ public final class Web3RawTransactionDAO: Web3DAO {
         FROM raw_transactions 
         WHERE chain_id = ?
             AND \(Web3RawTransaction.CodingKeys.state.rawValue) = 'pending'
-            AND account IN (SELECT destination FROM addresses WHERE wallet_id = ?)
+            AND account IN (SELECT DISTINCT destination FROM addresses WHERE wallet_id = ?)
         ORDER BY nonce DESC
         LIMIT 1
         """, arguments: [chainID, walletID])

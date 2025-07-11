@@ -55,7 +55,7 @@ class SolanaTransferOperation: Web3TransferOperation {
             case .classic:
                 privateKey = try await TIP.deriveSolanaPrivateKey(pin: pin)
             case .importedMnemonic, .importedPrivateKey:
-                guard let encryptedKey = AppGroupKeychain.walletPrivateKey(address: fromAddress) else {
+                guard let encryptedKey = AppGroupKeychain.encryptedWalletPrivateKey(address: fromAddress) else {
                     throw SigningError.missingPrivateKey
                 }
                 let spendKey = try await TIP.importedWalletSpendKey(pin: pin)

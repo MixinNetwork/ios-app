@@ -70,7 +70,7 @@ extension DeleteWalletViewController: AuthenticationIntent {
                     switch result {
                     case .success:
                         let addresses = Web3WalletDAO.shared.deleteWallet(id: walletID)
-                        AppGroupKeychain.deleteWalletPrivateKey(addresses: addresses)
+                        AppGroupKeychain.deleteEncryptedWalletPrivateKey(addresses: addresses)
                         completion(.success)
                         controller.presentingViewController?.dismiss(animated: true) {
                             onDeleted()

@@ -6,8 +6,8 @@ extension AppGroupKeychain {
     // Key is address, value is private key
     typealias WalletPrivateKeyStorage = [String: Data]
     
-    static func walletPrivateKey(address: String) -> Data? {
-        guard let data = importedWalletPrivateKeys else {
+    static func encryptedWalletPrivateKey(address: String) -> Data? {
+        guard let data = encryptedWalletPrivateKeys else {
             return nil
         }
         do {
@@ -19,21 +19,9 @@ extension AppGroupKeychain {
         }
     }
     
-    static func allWalletPrivateKeys() -> WalletPrivateKeyStorage? {
-        guard let data = importedWalletPrivateKeys else {
-            return nil
-        }
-        do {
-            return try PropertyListDecoder.default.decode(WalletPrivateKeyStorage.self, from: data)
-        } catch {
-            Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
-            return nil
-        }
-    }
-    
-    static func upsertWalletPrivateKeys(_ keys: WalletPrivateKeyStorage) {
+    static func upsertEncryptedWalletPrivateKeys(_ keys: WalletPrivateKeyStorage) {
         var allKeys: WalletPrivateKeyStorage
-        if let data = importedWalletPrivateKeys {
+        if let data = encryptedWalletPrivateKeys {
             do {
                 allKeys = try PropertyListDecoder.default.decode(WalletPrivateKeyStorage.self, from: data)
             } catch {
@@ -49,14 +37,14 @@ extension AppGroupKeychain {
         do {
             let data = try PropertyListEncoder.default.encode(allKeys)
             Logger.general.debug(category: "AppGroupKeychain", message: "Save wallet keys \(data.count)")
-            importedWalletPrivateKeys = data
+            encryptedWalletPrivateKeys = data
         } catch {
             Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
         }
     }
     
-    static func deleteWalletPrivateKey(addresses: [String]) {
-        guard let data = importedWalletPrivateKeys else {
+    static func deleteEncryptedWalletPrivateKey(addresses: [String]) {
+        guard let data = encryptedWalletPrivateKeys else {
             return
         }
         do {
@@ -64,7 +52,7 @@ extension AppGroupKeychain {
             for address in addresses {
                 keys.removeValue(forKey: address)
             }
-            importedWalletPrivateKeys = try PropertyListEncoder.default.encode(keys)
+            encryptedWalletPrivateKeys = try PropertyListEncoder.default.encode(keys)
         } catch {
             Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
         }

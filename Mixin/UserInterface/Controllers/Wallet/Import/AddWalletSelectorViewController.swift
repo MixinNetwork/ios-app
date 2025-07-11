@@ -121,7 +121,7 @@ final class AddWalletSelectorViewController: UIViewController {
         }
         let intent = EncryptPrivateKeyIntent(wallets: wallets) { [weak self] encryptedPrivateKeys in
             DispatchQueue.global().async {
-                AppGroupKeychain.upsertWalletPrivateKeys(encryptedPrivateKeys)
+                AppGroupKeychain.upsertEncryptedWalletPrivateKeys(encryptedPrivateKeys)
             }
             let importing = AddWalletImportingViewController(wallets: namedWallets)
             self?.navigationController?.pushViewController(importing, animated: true)

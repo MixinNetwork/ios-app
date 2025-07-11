@@ -3,6 +3,8 @@ import MixinServices
 
 final class ClassicWalletViewController: WalletViewController {
     
+    private let maxNameUTF8Count = 32
+    
     private var wallet: Web3Wallet
     private var tokens: [Web3TokenItem] = []
     private var reviewPendingTransactionJobID: String?
@@ -180,7 +182,10 @@ final class ClassicWalletViewController: WalletViewController {
         else {
             return
         }
-        controller.actions[1].isEnabled = !text.isEmpty && text != wallet.name
+        let count = text.utf8.count
+        controller.actions[1].isEnabled = count > 0
+            && count <= maxNameUTF8Count
+            && text != wallet.name
     }
     
     private func hideToken(with assetID: String) {
@@ -199,6 +204,7 @@ final class ClassicWalletViewController: WalletViewController {
         input.addTextField { textField in
             textField.text = self.wallet.name
             textField.addTarget(self, action: #selector(self.renamingInputChanged(_:)), for: .editingChanged)
+            textField.delegate = self
         }
         input.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         let saveAction = UIAlertAction(title: R.string.localizable.save(), style: .default) { _ in
@@ -243,6 +249,20 @@ final class ClassicWalletViewController: WalletViewController {
         }
         let authentication = AuthenticationViewController(intent: deleteWallet)
         present(authentication, animated: true)
+    }
+    
+}
+
+extension ClassicWalletViewController: UITextFieldDelegate {
+    
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        let text = (textField.text ?? "") as NSString
+        let newText = text.replacingCharacters(in: range, with: string)
+        return newText.utf8.count <= maxNameUTF8Count
     }
     
 }

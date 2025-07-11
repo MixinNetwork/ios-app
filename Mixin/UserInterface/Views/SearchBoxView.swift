@@ -4,6 +4,8 @@ class SearchBoxView: UIView, XibDesignable {
     
     @IBOutlet weak var textField: InsetTextField!
     
+    weak var contentView: UIView!
+    
     private let clearButton = UIButton(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
     private let textFieldLeftView = SearchBoxLeftView(frame: CGRect(x: 0, y: 0, width: 17, height: 17))
     
@@ -38,6 +40,12 @@ class SearchBoxView: UIView, XibDesignable {
         return trimmed
     }
     
+    var trimmedLowercaseText: String {
+        (textField.text ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -57,7 +65,7 @@ class SearchBoxView: UIView, XibDesignable {
     }
     
     private func prepare() {
-        loadXib()
+        contentView = loadXib()
         textField.leftView = textFieldLeftView
         textField.leftViewMode = .always
         clearButton.addTarget(self, action: #selector(clear(_:)), for: .touchUpInside)

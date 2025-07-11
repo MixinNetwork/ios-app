@@ -1,4 +1,5 @@
 import UIKit
+import Combine
 import MixinServices
 
 final class ReceivingWalletSelectorViewController: UIViewController {
@@ -15,6 +16,9 @@ final class ReceivingWalletSelectorViewController: UIViewController {
     
     private var excludingWallet: Wallet
     private var walletDigests: [WalletDigest] = []
+    private var searchObserver: AnyCancellable?
+    private var searchingKeyword: String?
+    private var searchResults: [WalletDigest]?
     
     init(excluding wallet: Wallet) {
         self.excludingWallet = wallet
@@ -28,6 +32,23 @@ final class ReceivingWalletSelectorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchBoxView.contentView.backgroundColor = R.color.background()
+        searchBoxView.textField.addTarget(self, action: #selector(prepareForSearch(_:)), for: .editingChanged)
+        searchBoxView.textField.placeholder = R.string.localizable.name()
+        searchObserver = NotificationCenter.default
+            .publisher(for: UITextField.textDidChangeNotification, object: searchBoxView.textField)
+            .debounce(for: .seconds(0.65), scheduler: RunLoop.main)
+            .sink { [weak self] _ in
+                guard let self else {
+                    return
+                }
+                let keyword = self.searchBoxView.trimmedLowercaseText
+                guard !keyword.isEmpty, keyword != self.searchingKeyword else {
+                    self.searchBoxView.isBusy = false
+                    return
+                }
+                self.search(keyword: keyword)
+            }
         cancelButton.configuration?.title = R.string.localizable.cancel()
         collectionView.register(R.nib.walletCell)
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { (_, _) in
@@ -35,7 +56,7 @@ final class ReceivingWalletSelectorViewController: UIViewController {
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
             let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
-            group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: .fixed(5), trailing: nil, bottom: .fixed(5))
+            group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: nil, trailing: nil, bottom: .fixed(5))
             let section = NSCollectionLayoutSection(group: group)
             section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20)
             return section
@@ -65,17 +86,46 @@ final class ReceivingWalletSelectorViewController: UIViewController {
         presentingViewController?.dismiss(animated: true)
     }
     
+    @objc private func prepareForSearch(_ textField: UITextField) {
+        let keyword = searchBoxView.trimmedLowercaseText
+        if keyword.isEmpty {
+            searchingKeyword = nil
+            searchResults = nil
+            collectionView.reloadData()
+            searchBoxView.isBusy = false
+        } else if keyword != searchingKeyword {
+            searchBoxView.isBusy = true
+        }
+    }
+    
+    private func search(keyword: String) {
+        searchingKeyword = keyword
+        searchResults = walletDigests.filter { digest in
+            digest.wallet.localizedName.lowercased().contains(keyword)
+        }
+        collectionView.reloadData()
+        searchBoxView.isBusy = false
+    }
+    
 }
 
 extension ReceivingWalletSelectorViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        walletDigests.count
+        if let searchResults {
+            searchResults.count
+        } else {
+            walletDigests.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet, for: indexPath)!
-        let digest = walletDigests[indexPath.row]
+        let digest = if let searchResults {
+            searchResults[indexPath.row]
+        } else {
+            walletDigests[indexPath.row]
+        }
         cell.load(digest: digest)
         return cell
     }
@@ -85,8 +135,12 @@ extension ReceivingWalletSelectorViewController: UICollectionViewDataSource {
 extension ReceivingWalletSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let digest = if let searchResults {
+            searchResults[indexPath.row]
+        } else {
+            walletDigests[indexPath.row]
+        }
         presentingViewController?.dismiss(animated: true) {
-            let digest = self.walletDigests[indexPath.row]
             self.delegate?.receivingWalletSelectorViewController(self, didSelectWallet: digest.wallet)
         }
     }

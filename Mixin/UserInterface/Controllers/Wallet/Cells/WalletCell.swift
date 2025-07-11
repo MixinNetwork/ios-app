@@ -19,9 +19,9 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
     }
     
     func load(digest: WalletDigest) {
+        titleLabel.text = digest.wallet.localizedName
         switch digest.wallet {
         case .privacy:
-            titleLabel.text = R.string.localizable.privacy_wallet()
             privacyIconImageView.isHidden = false
             loadProportions(
                 tokens: digest.tokens,
@@ -29,7 +29,6 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                 usdBalanceSum: digest.usdBalanceSum
             )
         case let .common(wallet):
-            titleLabel.text = wallet.localizedName
             privacyIconImageView.isHidden = true
             loadProportions(
                 tokens: digest.tokens,

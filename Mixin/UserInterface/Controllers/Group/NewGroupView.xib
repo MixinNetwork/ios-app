@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NewGroupViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="createButton" destination="jYQ-cb-aJp" id="xjV-Lq-Nwv"/>
+                <outlet property="groupImageView" destination="uxH-Bp-FMP" id="6FI-Ib-meR"/>
+                <outlet property="nameTextField" destination="wE1-MX-azn" id="6f8-5d-cfk"/>
+                <outlet property="participentLabel" destination="l7M-hy-sqG" id="0xu-2U-vP0"/>
+                <outlet property="view" destination="eqV-rk-qsP" id="om1-oQ-JGH"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="eqV-rk-qsP">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Np4-ty-Qu5">
+                    <rect key="frame" x="20" y="148" width="353" height="169.66666666666663"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uxH-Bp-FMP" customClass="CornerImageView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="141.66666666666666" y="0.0" width="70" height="70"/>
+                            <color key="backgroundColor" red="0.96078431369999995" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="70" id="3gt-KD-CFv"/>
+                                <constraint firstAttribute="height" constant="70" id="JXt-Cx-MfH"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="35"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="5 Participents" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l7M-hy-sqG">
+                            <rect key="frame" x="134.66666666666666" y="80" width="83.666666666666657" height="15.666666666666671"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                            <color key="textColor" name="text_tertiary"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V3z-nh-vJ8">
+                            <rect key="frame" x="56.666666666666686" y="105.66666666666666" width="240" height="0.0"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" id="9rI-Jc-82R"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dCD-PT-wdR" customClass="CornerView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="115.66666666666669" width="353" height="54"/>
+                            <subviews>
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Group Name" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="wE1-MX-azn">
+                                    <rect key="frame" x="16" y="0.0" width="321" height="54"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="54" id="CMZ-6d-7Pm"/>
+                                    </constraints>
+                                    <color key="textColor" name="text"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                    <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done"/>
+                                    <userDefinedRuntimeAttributes>
+                                        <userDefinedRuntimeAttribute type="string" keyPath="local_placeholder" value="group_name"/>
+                                    </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="updateCreateButton:" destination="-1" eventType="editingChanged" id="f1l-Ym-r5K"/>
+                                    </connections>
+                                </textField>
+                            </subviews>
+                            <color key="backgroundColor" name="background_input"/>
+                            <constraints>
+                                <constraint firstItem="wE1-MX-azn" firstAttribute="centerY" secondItem="dCD-PT-wdR" secondAttribute="centerY" id="4RC-Ah-cSD"/>
+                                <constraint firstAttribute="trailing" secondItem="wE1-MX-azn" secondAttribute="trailing" constant="16" id="8cc-jf-STA"/>
+                                <constraint firstAttribute="height" constant="54" id="gjT-hw-pY8"/>
+                                <constraint firstItem="wE1-MX-azn" firstAttribute="leading" secondItem="dCD-PT-wdR" secondAttribute="leading" constant="16" id="np0-Qf-UUW"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="6"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="dCD-PT-wdR" firstAttribute="width" secondItem="Np4-ty-Qu5" secondAttribute="width" id="fxc-Zc-d2u"/>
+                    </constraints>
+                </stackView>
+                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jYQ-cb-aJp" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="143.66666666666666" y="736" width="106" height="48"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                    <inset key="contentEdgeInsets" minX="30" minY="15" maxX="30" maxY="15"/>
+                    <state key="normal" title="Create">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="create"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="createAction:" destination="-1" eventType="touchUpInside" id="oHt-Kd-jqD"/>
+                    </connections>
+                </button>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="m4X-Dj-phD"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="jYQ-cb-aJp" firstAttribute="centerX" secondItem="m4X-Dj-phD" secondAttribute="centerX" id="KH1-eQ-yyZ"/>
+                <constraint firstItem="m4X-Dj-phD" firstAttribute="trailing" secondItem="Np4-ty-Qu5" secondAttribute="trailing" constant="20" id="RdI-9j-JP0"/>
+                <constraint firstAttribute="bottom" secondItem="jYQ-cb-aJp" secondAttribute="bottom" priority="750" placeholder="YES" id="duM-o4-Zo0"/>
+                <constraint firstItem="Np4-ty-Qu5" firstAttribute="top" secondItem="m4X-Dj-phD" secondAttribute="top" constant="30" id="fdY-N0-SyB"/>
+                <constraint firstItem="Np4-ty-Qu5" firstAttribute="leading" secondItem="m4X-Dj-phD" secondAttribute="leading" constant="20" id="m5y-iK-fXG"/>
+                <constraint firstItem="m4X-Dj-phD" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="jYQ-cb-aJp" secondAttribute="bottom" id="vbE-vJ-P5z"/>
+            </constraints>
+            <point key="canvasLocation" x="-57" y="42"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_input">
+            <color red="0.96100002527236938" green="0.96899998188018799" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

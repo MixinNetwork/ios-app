@@ -1,41 +1,45 @@
 import UIKit
 import MixinServices
 
-class NewGroupViewController: KeyboardBasedLayoutViewController {
+final class NewGroupViewController: UIViewController {
     
     @IBOutlet weak var groupImageView: CornerImageView!
     @IBOutlet weak var participentLabel: UILabel!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var createButton: RoundedButton!
     
-    @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
-    
     private let conversationId = UUID().uuidString.lowercased()
-    private var members = [GroupUser]()
-    private var shouldLayoutByKeyboard = true
+    private let members: [GroupUser]
     
     private var groupName: String {
-        return nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    }
+    
+    init(members: [GroupUser]) {
+        self.members = members
+        let nib = R.nib.newGroupView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.new_group()
-        nameTextField.addTarget(self, action: #selector(nameChangedAction(_:)), for: .editingChanged)
-        participentLabel.text = R.string.localizable.title_participants_count(members.count + 1)
         loadGroupIcon()
+        nameTextField.delegate = self
+        participentLabel.text = R.string.localizable.title_participants_count(members.count + 1)
+        createButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
+                .offset(-20)
+                .priority(.high)
+        }
         nameTextField.becomeFirstResponder()
     }
     
-    override func layout(for keyboardFrame: CGRect) {
-        guard shouldLayoutByKeyboard else {
-            return
-        }
-        keyboardPlaceholderHeightConstraint.constant = view.frame.height - keyboardFrame.origin.y
-        view.layoutIfNeeded()
-    }
-    
-    @objc func nameChangedAction(_ sender: Any) {
+    @IBAction func updateCreateButton(_ sender: Any) {
         createButton.isEnabled = !groupName.isEmpty
     }
     
@@ -67,6 +71,19 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
             }
         }
     }
+    
+}
+
+extension NewGroupViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return false
+    }
+    
+}
+
+extension NewGroupViewController {
     
     private func loadGroupIcon() {
         guard let account = LoginManager.shared.account else {
@@ -115,7 +132,6 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
                 }
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: MixinServices.conversationDidChangeNotification, object: nil)
-                    self?.shouldLayoutByKeyboard = false
                     self?.navigationController?.backToHome()
                 }
             }
@@ -132,18 +148,11 @@ class NewGroupViewController: KeyboardBasedLayoutViewController {
                 if let iconUrl = weakSelf.saveGroupImage(conversationId: conversation.conversationId, participants: participantUsers) {
                     conversation.iconUrl = iconUrl
                 }
-                weakSelf.shouldLayoutByKeyboard = false
                 weakSelf.nameTextField.resignFirstResponder()
                 let vc = ConversationViewController.instance(conversation: conversation)
                 weakSelf.navigationController?.pushViewController(withBackRoot: vc)
             }
         }
-    }
-    
-    class func instance(members: [GroupUser]) -> UIViewController {
-        let vc = R.storyboard.group.new_group()!
-        vc.members = members
-        return vc
     }
     
 }

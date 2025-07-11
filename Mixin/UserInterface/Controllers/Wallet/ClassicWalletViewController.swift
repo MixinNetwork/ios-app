@@ -3,8 +3,7 @@ import MixinServices
 
 final class ClassicWalletViewController: WalletViewController {
     
-    private let wallet: Web3Wallet
-    
+    private var wallet: Web3Wallet
     private var tokens: [Web3TokenItem] = []
     private var reviewPendingTransactionJobID: String?
     
@@ -217,7 +216,20 @@ final class ClassicWalletViewController: WalletViewController {
         }
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        RouteAPI.renameWallet(id: wallet.walletID, name: name) { result in
+        RouteAPI.renameWallet(id: wallet.walletID, name: name) { [weak self] result in
+            switch result {
+            case let .success(wallet):
+                DispatchQueue.global().async {
+                    Web3WalletDAO.shared.save(wallets: [wallet], addresses: [])
+                }
+                if let self {
+                    self.wallet = wallet
+                    self.titleLabel.text = wallet.localizedName
+                }
+                hud.set(style: .notification, text: R.string.localizable.changed())
+            case let .failure(error):
+                hud.set(style: .error, text: error.localizedDescription)
+            }
             hud.scheduleAutoHidden()
         }
     }

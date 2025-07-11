@@ -255,7 +255,11 @@ extension RouteAPI {
         try await request(method: .post, path: "/wallets", with: wallet)
     }
     
-    static func renameWallet(id: String, name: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+    static func renameWallet(
+        id: String,
+        name: String,
+        completion: @escaping (MixinAPI.Result<Web3Wallet>) -> Void
+    ) {
         request(
             method: .post,
             path: "/wallets/\(id)",
@@ -264,7 +268,10 @@ extension RouteAPI {
         )
     }
     
-    static func deleteWallet(id: String, completion: @escaping (MixinAPI.Result<Empty>) -> Void) {
+    static func deleteWallet(
+        id: String,
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
         request(
             method: .post,
             path: "/wallets/\(id)/delete",

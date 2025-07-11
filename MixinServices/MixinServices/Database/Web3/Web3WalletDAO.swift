@@ -3,11 +3,15 @@ import GRDB
 
 public final class Web3WalletDAO: Web3DAO {
     
+    public enum UserInfoKey {
+        static let wallets = "w"
+        static let walletID = "id"
+    }
+    
     public static let shared = Web3WalletDAO()
     
-    public static let walletsDidChangeNotification = Notification.Name("one.mixin.services.Web3WalletDAO.Change")
+    public static let walletsDidSaveNotification = Notification.Name("one.mixin.services.Web3WalletDAO.Save")
     public static let walletsDidDeleteNotification = Notification.Name("one.mixin.services.Web3WalletDAO.Delete")
-    public static let walletIDUserInfoKey = "id"
     
     public func hasClassicWallet() -> Bool {
         db.recordExists(
@@ -71,9 +75,17 @@ public final class Web3WalletDAO: Web3DAO {
         db.select(with: "SELECT * FROM wallets WHERE wallet_id = ?", arguments: [id])
     }
     
-    public func save(wallets: [Web3Wallet]) {
-        db.save(wallets) { _ in
-            NotificationCenter.default.post(onMainThread: Self.walletsDidChangeNotification, object: self)
+    public func save(wallets: [Web3Wallet], addresses: [Web3Address]) {
+        db.write { db in
+            try wallets.save(db)
+            try addresses.save(db)
+            db.afterNextTransaction { _ in
+                NotificationCenter.default.post(
+                    onMainThread: Self.walletsDidSaveNotification,
+                    object: self,
+                    userInfo: [Self.UserInfoKey.wallets: wallets]
+                )
+            }
         }
     }
     
@@ -98,7 +110,7 @@ public final class Web3WalletDAO: Web3DAO {
                 NotificationCenter.default.post(
                     onMainThread: Self.walletsDidDeleteNotification,
                     object: self,
-                    userInfo: [Self.walletIDUserInfoKey: id]
+                    userInfo: [Self.UserInfoKey.walletID: id]
                 )
             }
             return destinations

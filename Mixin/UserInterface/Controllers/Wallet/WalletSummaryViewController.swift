@@ -128,7 +128,7 @@ final class WalletSummaryViewController: UIViewController {
         notificationCenter.addObserver(
             self,
             selector: #selector(reloadData),
-            name: Web3WalletDAO.walletsDidChangeNotification,
+            name: Web3WalletDAO.walletsDidSaveNotification,
             object: nil
         )
         notificationCenter.addObserver(

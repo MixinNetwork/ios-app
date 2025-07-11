@@ -82,8 +82,7 @@ final class AddWalletImportingViewController: IntroductionViewController {
                         ]
                     )
                     let response = try await RouteAPI.createWallet(request)
-                    Web3AddressDAO.shared.save(addresses: response.addresses)
-                    Web3WalletDAO.shared.save(wallets: [response.wallet])
+                    Web3WalletDAO.shared.save(wallets: [response.wallet], addresses: response.addresses)
                     let jobs = [
                         RefreshWeb3WalletTokenJob(walletID: response.wallet.walletID),
                         SyncWeb3TransactionJob(walletID: response.wallet.walletID),

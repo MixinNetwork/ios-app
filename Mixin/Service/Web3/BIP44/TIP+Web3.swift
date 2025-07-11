@@ -98,11 +98,11 @@ extension TIP {
             .init(destination: evmAddress, chainID: ChainID.ethereum),
             .init(destination: solanaAddress, chainID: ChainID.solana),
         ])
-        let classicWallet = try await RouteAPI.createWallet(request)
-        Web3WalletDAO.shared.save(wallets: remoteWallets.map(\.wallet))
-        Web3AddressDAO.shared.save(addresses: remoteWallets.flatMap(\.addresses))
-        Web3WalletDAO.shared.save(wallets: [classicWallet.wallet])
-        Web3AddressDAO.shared.save(addresses: classicWallet.addresses)
+        let commonWallet = try await RouteAPI.createWallet(request)
+        Web3WalletDAO.shared.save(
+            wallets: remoteWallets.map(\.wallet) + [commonWallet.wallet],
+            addresses: remoteWallets.flatMap(\.addresses) + commonWallet.addresses
+        )
     }
     
 }

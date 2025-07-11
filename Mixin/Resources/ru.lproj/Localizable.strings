@@ -836,7 +836,7 @@
 "my_mixin_id" = "Мой Mixin ID: %@";
 "my_qr_code" = "Мой QR-код";
 "my_stickers" = "Мои стикеры";
-"my_wallets" = "My Wallets";
+"my_wallet" = "My Wallet";
 "na" = "Нет данных";
 "name" = "Имя";
 "name_or_phone_number" = "Имя или номер телефона";

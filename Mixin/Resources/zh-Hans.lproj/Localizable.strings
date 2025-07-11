@@ -836,7 +836,7 @@
 "my_mixin_id" = "我的 Mixin ID：%@";
 "my_qr_code" = "我的二维码";
 "my_stickers" = "我的表情";
-"my_wallets" = "我的钱包";
+"my_wallet" = "我的钱包";
 "na" = "暂无价格";
 "name" = "名称";
 "name_or_phone_number" = "姓名或手机号";

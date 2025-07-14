@@ -447,7 +447,7 @@
 "delete_synced_contact" = "删除已同步的通讯录";
 "delete_wallet" = "删除钱包";
 "delete_wallet_description" = "移除此钱包不会影响你的资产，请确保已备份助记词。";
-"delete_wallet_title" = "请输入 PIN 码以移除钱包";
+"delete_wallet_title" = "请输入 PIN 以移除钱包";
 "delete_withdraw_address" = "删除 %@ 地址";
 "deleted" = "已删除";
 "deleting_address" = "正在删除地址";
@@ -470,6 +470,7 @@
 "deposits_pending_confirmation" = "有 %d 笔充值确认中";
 "depost_address_updated" = "%@ 充值地址已更新";
 "depost_address_updated_description" = "您的 %@ 充值地址已更新，充值地址将随着系统或网络升级而自动更新，旧的地址仍可充值并会自动入账，但是不推荐使用。";
+"deselect_all" = "取消所有选择";
 "desktop_login" = "登录 Mixin Messenger 桌面端";
 "desktop_logout" = "退出 Mixin Messenger 桌面端";
 "desktop_on_hint" = "桌面版已登入。";
@@ -660,6 +661,9 @@
 "immediately" = "立刻";
 "import_mnemonic_phrase" = "导入助记词";
 "import_private_key" = "导入私钥";
+"import_selected_wallet" = "导入选中的钱包";
+"import_wallet_count" = "导入 %d 个钱包";
+"import_wallet_count_one" = "导入 1 个钱包";
 "import_wallets" = "导入钱包";
 "import_wallets_from_another_wallet" = "从其他钱包导入钱包";
 "importing_into_your_wallet" = "正在导入你的钱包...";

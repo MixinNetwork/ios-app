@@ -7,6 +7,7 @@ final class AddWalletSelectorViewController: UIViewController {
     @IBOutlet weak var importButton: UIButton!
     
     private let mnemonics: BIP39Mnemonics
+    private let searchWalletDerivationsCount: UInt32 = 10
     
     private var candidates: [WalletCandidate]
     private var lastIndex: UInt32
@@ -22,6 +23,10 @@ final class AddWalletSelectorViewController: UIViewController {
     
     private var collectionViewSelectedCount: Int {
         collectionView.indexPathsForSelectedItems?.count ?? 0
+    }
+    
+    private var hasSelectedAllWallets: Bool {
+        collectionViewSelectedCount == candidates.count
     }
     
     init(mnemonics: BIP39Mnemonics, candidates: [WalletCandidate], lastIndex: UInt32) {
@@ -44,9 +49,9 @@ final class AddWalletSelectorViewController: UIViewController {
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(112))
             let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
-            group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: .fixed(5), trailing: nil, bottom: .fixed(5))
+            group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: .fixed(5), trailing: nil, bottom: nil)
             let section = NSCollectionLayoutSection(group: group)
-            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 13, trailing: 20)
             return section
         }
         let header = NSCollectionLayoutBoundarySupplementaryItem(
@@ -96,17 +101,25 @@ final class AddWalletSelectorViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
-        if !candidates.isEmpty {
-            let first = IndexPath(item: 0, section: 0)
-            collectionView.selectItem(at: first, animated: false, scrollPosition: [])
+        for item in candidates.indices {
+            let indexPath = IndexPath(item: item, section: 0)
+            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
         }
+        
+        importButton.configuration?.titleTextAttributesTransformer = .init { incoming in
+            var outgoing = incoming
+            outgoing.font = UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 16, weight: .medium)
+            )
+            return outgoing
+        }
+        updateViewsWithSelectionCount()
+        importButton.titleLabel?.adjustsFontForContentSizeCategory = true
     }
     
     @IBAction func importSelectedWallets(_ sender: Any) {
-        guard let indices = collectionView.indexPathsForSelectedItems?.map(\.item) else {
-            return
-        }
-        guard !indices.isEmpty else {
+        let indices = collectionView.indexPathsForSelectedItems?.map(\.item).sorted(by: <)
+        guard let indices, !indices.isEmpty else {
             return
         }
         let wallets = indices.flatMap { index in
@@ -130,13 +143,37 @@ final class AddWalletSelectorViewController: UIViewController {
         present(authentication, animated: true)
     }
     
+    private func updateViewsWithSelectionCount() {
+        let count = self.collectionViewSelectedCount
+        if let headerView {
+            headerView.selectedCount = count
+            headerView.action = hasSelectedAllWallets ? .deselectAll : .selectAll
+        }
+        importButton.isEnabled = count != 0
+        importButton.configuration?.title = switch count {
+        case 0:
+            R.string.localizable.import_selected_wallet()
+        case 1:
+            R.string.localizable.import_wallet_count_one()
+        default:
+            R.string.localizable.import_wallet_count(count)
+        }
+    }
+    
     private func selectAllCandidates() {
-        for item in 0..<candidates.count {
+        for item in candidates.indices {
             let indexPath = IndexPath(item: item, section: 0)
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
         }
-        headerView?.selectedCount = collectionViewSelectedCount
-        importButton.isEnabled = collectionViewSelectedCount != 0
+        updateViewsWithSelectionCount()
+    }
+    
+    private func deselectAllCandidates() {
+        for item in candidates.indices {
+            let indexPath = IndexPath(item: item, section: 0)
+            collectionView.deselectItem(at: indexPath, animated: false)
+        }
+        updateViewsWithSelectionCount()
     }
     
     private func showError(_ description: String) {
@@ -146,8 +183,8 @@ final class AddWalletSelectorViewController: UIViewController {
     
     private func findMoreWallets() {
         isSearching = true
-        DispatchQueue.global().async { [mnemonics, lastIndex, weak self] in
-            let indices = (lastIndex + 1)...(lastIndex + 10)
+        let indices = (lastIndex + 1)...(lastIndex + searchWalletDerivationsCount)
+        DispatchQueue.global().async { [mnemonics, weak self] in
             let wallets: [BIP39Mnemonics.DerivedWallet]
             do {
                 wallets = try mnemonics.deriveWallets(indices: indices)
@@ -189,6 +226,9 @@ final class AddWalletSelectorViewController: UIViewController {
                             }
                             self.candidates.append(contentsOf: candidates)
                             self.collectionView.insertItems(at: newIndexPaths)
+                            for indexPath in newIndexPaths {
+                                self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                            }
                         }
                     }
                 case let .failure(error):
@@ -231,8 +271,14 @@ extension AddWalletSelectorViewController: UICollectionViewDataSource {
                 for: indexPath
             ) as! HeaderView
             header.selectedCount = collectionViewSelectedCount
-            header.onSelectAll = { [weak self] in
-                self?.selectAllCandidates()
+            header.action = hasSelectedAllWallets ? .deselectAll : .selectAll
+            header.onSelectionUpdate = { [weak self] (action) in
+                switch action {
+                case .selectAll:
+                    self?.selectAllCandidates()
+                case .deselectAll:
+                    self?.deselectAllCandidates()
+                }
             }
             self.headerView = header
             return header
@@ -258,13 +304,11 @@ extension AddWalletSelectorViewController: UICollectionViewDataSource {
 extension AddWalletSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        headerView?.selectedCount = collectionViewSelectedCount
-        importButton.isEnabled = true
+        updateViewsWithSelectionCount()
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        headerView?.selectedCount = collectionViewSelectedCount
-        importButton.isEnabled = collectionViewSelectedCount != 0
+        updateViewsWithSelectionCount()
     }
     
 }
@@ -283,10 +327,16 @@ extension AddWalletSelectorViewController {
     
     private final class HeaderView: UICollectionReusableView {
         
-        weak var titleLabel: UILabel!
-        weak var selectAllButton: UIButton!
+        enum SelectionAction {
+            case selectAll
+            case deselectAll
+        }
         
-        var onSelectAll: (() -> Void)?
+        weak var titleLabel: UILabel!
+        weak var updateSelectionButton: UIButton!
+        
+        var onSelectionUpdate: ((SelectionAction) -> Void)?
+        
         var selectedCount: Int = 0 {
             didSet {
                 switch selectedCount {
@@ -302,6 +352,17 @@ extension AddWalletSelectorViewController {
             }
         }
         
+        var action: SelectionAction = .deselectAll {
+            didSet {
+                updateSelectionButton.configuration?.title = switch action {
+                case .selectAll:
+                    R.string.localizable.select_all()
+                case .deselectAll:
+                    R.string.localizable.deselect_all()
+                }
+            }
+        }
+        
         override init(frame: CGRect) {
             super.init(frame: frame)
             loadSubviews()
@@ -312,8 +373,8 @@ extension AddWalletSelectorViewController {
             loadSubviews()
         }
         
-        @objc private func selectAllWallets(_ sender: Any) {
-            onSelectAll?()
+        @objc private func updateSelection(_ sender: Any) {
+            onSelectionUpdate?(action)
         }
         
         private func loadSubviews() {
@@ -326,14 +387,14 @@ extension AddWalletSelectorViewController {
                 adjustForContentSize: true
             )
             titleLabel.textColor = R.color.text_secondary()
-            let selectAllButton = UIButton(type: .system)
-            selectAllButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            selectAllButton.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-            selectAllButton.configuration = {
+            let updateSelectionButton = UIButton(type: .system)
+            updateSelectionButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            updateSelectionButton.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            updateSelectionButton.configuration = {
                 var config: UIButton.Configuration = .plain()
                 config.baseForegroundColor = R.color.theme()
                 config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20)
-                config.title = R.string.localizable.select_all()
+                config.title = R.string.localizable.deselect_all()
                 config.titleTextAttributesTransformer = .init { incoming in
                     var outgoing = incoming
                     outgoing.font = UIFontMetrics.default.scaledFont(
@@ -343,13 +404,13 @@ extension AddWalletSelectorViewController {
                 }
                 return config
             }()
-            selectAllButton.titleLabel?.adjustsFontForContentSizeCategory = true
-            selectAllButton.addTarget(
+            updateSelectionButton.titleLabel?.adjustsFontForContentSizeCategory = true
+            updateSelectionButton.addTarget(
                 self,
-                action: #selector(selectAllWallets(_:)),
+                action: #selector(updateSelection(_:)),
                 for: .touchUpInside
             )
-            let stackView = UIStackView(arrangedSubviews: [titleLabel, selectAllButton])
+            let stackView = UIStackView(arrangedSubviews: [titleLabel, updateSelectionButton])
             stackView.spacing = 8
             stackView.axis = .horizontal
             stackView.alignment = .center
@@ -361,7 +422,7 @@ extension AddWalletSelectorViewController {
                 make.bottom.equalToSuperview()
             }
             self.titleLabel = titleLabel
-            self.selectAllButton = selectAllButton
+            self.updateSelectionButton = updateSelectionButton
         }
         
     }

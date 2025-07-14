@@ -470,6 +470,7 @@
 "deposits_pending_confirmation" = "%d Deposits Pending Confirmation";
 "depost_address_updated" = "%@ Deposit Address Updated";
 "depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
+"deselect_all" = "Deselect All";
 "desktop_login" = "Login to Mixin Messenger Desktop";
 "desktop_logout" = "Logout Mixin Messenger Desktop";
 "desktop_on_hint" = "Вы вошли в свой рабочий стол";
@@ -660,6 +661,9 @@
 "immediately" = "Немедленно";
 "import_mnemonic_phrase" = "Import Mnemonic Phrase";
 "import_private_key" = "Import Private Key";
+"import_selected_wallet" = "Import Selected Wallets";
+"import_wallet_count" = "Import %d Wallets";
+"import_wallet_count_one" = "Import 1 Wallet";
 "import_wallets" = "Import Wallets";
 "import_wallets_from_another_wallet" = "Import wallets from another wallet";
 "importing_into_your_wallet" = "Importing into your wallet...";

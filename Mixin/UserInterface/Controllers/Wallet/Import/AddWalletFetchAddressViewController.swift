@@ -6,6 +6,7 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
     
     private let mnemonics: BIP39Mnemonics
     private let busyIndicator = ActivityIndicatorView()
+    private let searchWalletDerivationsCount: UInt32 = 10
     
     init(mnemonics: BIP39Mnemonics) {
         self.mnemonics = mnemonics
@@ -69,9 +70,9 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
     
     private func fetchAddresses(mnemonics: BIP39Mnemonics) {
         showLoading()
+        let lastIndex: UInt32 = searchWalletDerivationsCount - 1
         DispatchQueue.global().async { [weak self] in
             let wallets: [BIP39Mnemonics.DerivedWallet]
-            let lastIndex: UInt32 = 9
             do {
                 wallets = try mnemonics.deriveWallets(indices: 0...lastIndex)
             } catch {

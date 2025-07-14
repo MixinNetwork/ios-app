@@ -30,7 +30,8 @@
                             <buttonConfiguration key="configuration" style="filled" title="Import Selected Wallets" cornerStyle="capsule">
                                 <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="16"/>
                                 <directionalEdgeInsets key="contentInsets" top="14" leading="0.0" bottom="15" trailing="0.0"/>
-                                <color key="baseBackgroundColor" name="background_tinted"/>
+                                <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="baseBackgroundColor" name="theme"/>
                             </buttonConfiguration>
                             <connections>
                                 <action selector="importSelectedWallets:" destination="-1" eventType="touchUpInside" id="pA0-rG-yiQ"/>
@@ -60,8 +61,8 @@
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="background_tinted">
-            <color red="0.29411764705882354" green="0.48627450980392156" blue="0.8666666666666667" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

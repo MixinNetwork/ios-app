@@ -4,6 +4,7 @@ import MixinServices
 class FullscreenPINValidationViewController: KeyboardBasedLayoutViewController {
     
     @IBOutlet weak var contentStackView: UIStackView!
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var pinField: PinField!
     @IBOutlet weak var continueButton: StyledButton!
     

@@ -1319,6 +1319,9 @@
 		94ED08B72B5FB1C300493312 /* ExploreActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94ED08B52B5FB1C300493312 /* ExploreActionCell.xib */; };
 		94ED23AA2DD4159E00A34266 /* String+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED23A92DD4159800A34266 /* String+Constants.swift */; };
 		94ED25322DD4579D00A34266 /* Web3ReputationPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED25312DD4579100A34266 /* Web3ReputationPickerViewController.swift */; };
+		94ED2F872E262BC900B99837 /* EncryptedBIP39Mnemonics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED2F862E262BC200B99837 /* EncryptedBIP39Mnemonics.swift */; };
+		94ED2FB92E26455C00B99837 /* DerivationPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED2FB82E26455900B99837 /* DerivationPath.swift */; };
+		94ED2FEC2E2650EE00B99837 /* AddWalletPINValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED2FEB2E2650EE00B99837 /* AddWalletPINValidationViewController.swift */; };
 		94EDD6142D0C495A00BF55EE /* GeneralAppearanceNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EDD6132D0C495100BF55EE /* GeneralAppearanceNavigationController.swift */; };
 		94EE1AB92B48518D00BE9AD1 /* TemporaryAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1AB82B48518D00BE9AD1 /* TemporaryAddress.swift */; };
 		94EE1ABE2B4851E600BE9AD1 /* WithdrawableAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1ABD2B4851E600BE9AD1 /* WithdrawableAddress.swift */; };
@@ -2952,6 +2955,9 @@
 		94ED08B52B5FB1C300493312 /* ExploreActionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreActionCell.xib; sourceTree = "<group>"; };
 		94ED23A92DD4159800A34266 /* String+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Constants.swift"; sourceTree = "<group>"; };
 		94ED25312DD4579100A34266 /* Web3ReputationPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ReputationPickerViewController.swift; sourceTree = "<group>"; };
+		94ED2F862E262BC200B99837 /* EncryptedBIP39Mnemonics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptedBIP39Mnemonics.swift; sourceTree = "<group>"; };
+		94ED2FB82E26455900B99837 /* DerivationPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DerivationPath.swift; sourceTree = "<group>"; };
+		94ED2FEB2E2650EE00B99837 /* AddWalletPINValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletPINValidationViewController.swift; sourceTree = "<group>"; };
 		94EDD6132D0C495100BF55EE /* GeneralAppearanceNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralAppearanceNavigationController.swift; sourceTree = "<group>"; };
 		94EE1AB82B48518D00BE9AD1 /* TemporaryAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryAddress.swift; sourceTree = "<group>"; };
 		94EE1ABD2B4851E600BE9AD1 /* WithdrawableAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawableAddress.swift; sourceTree = "<group>"; };
@@ -4082,7 +4088,7 @@
 			isa = PBXGroup;
 			children = (
 				94C8C4A12C11A2A200993027 /* API */,
-				94C93C8B2C94880600A31591 /* BIP44 */,
+				94C93C8B2C94880600A31591 /* Mnemonics Derivation */,
 				942F4728299CDF1800528759 /* URLSessionWebSocketFactory.swift */,
 				942F472A299CDF8100528759 /* Web3SignerFactory.swift */,
 				94C0D7E829AD348500E372FC /* InPlaceKeyStorage.swift */,
@@ -4494,16 +4500,19 @@
 			path = API;
 			sourceTree = "<group>";
 		};
-		94C93C8B2C94880600A31591 /* BIP44 */ = {
+		94C93C8B2C94880600A31591 /* Mnemonics Derivation */ = {
 			isa = PBXGroup;
 			children = (
 				94C93C862C94880600A31591 /* BIP32Tests.swift */,
+				94ED2FB82E26455900B99837 /* DerivationPath.swift */,
 				94C93C872C94880600A31591 /* ExtendedKey.swift */,
 				94C93C882C94880600A31591 /* P2PKH.swift */,
 				94C93C892C94880600A31591 /* RIPEMD160.swift */,
+				94F045872E1846C000F363F4 /* BIP39Mnemonics.swift */,
+				94ED2F862E262BC200B99837 /* EncryptedBIP39Mnemonics.swift */,
 				94C93C8A2C94880600A31591 /* TIP+Web3.swift */,
 			);
-			path = BIP44;
+			path = "Mnemonics Derivation";
 			sourceTree = "<group>";
 		};
 		94D72C1D27A2938B00E328F0 /* PIN API Test */ = {
@@ -4579,9 +4588,9 @@
 		94F268182E15BA2300A8A1E0 /* Import */ = {
 			isa = PBXGroup;
 			children = (
-				94F045872E1846C000F363F4 /* BIP39Mnemonics.swift */,
 				94DF0C0F2E1938EA00052866 /* AppGroupKeychain+ImportedWallets.swift */,
 				94F267C02E12DDBD00A8A1E0 /* AddWalletMethodSelectorViewController.swift */,
+				94ED2FEB2E2650EE00B99837 /* AddWalletPINValidationViewController.swift */,
 				94F267802E12B26000A8A1E0 /* AddWalletInputMnemonicsViewController.swift */,
 				94F267D12E12DEAA00A8A1E0 /* AddWalletFetchAddressViewController.swift */,
 				94F268292E15BC9E00A8A1E0 /* AddWalletCandidateCell.xib */,
@@ -7026,6 +7035,7 @@
 				941994EC2CCC3FD300F5425C /* RecoveryKitViewController.swift in Sources */,
 				7B63C49121A4334C0044C4BF /* DepositFieldView.swift in Sources */,
 				7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */,
+				94ED2FB92E26455C00B99837 /* DerivationPath.swift in Sources */,
 				7B17F0712226890C00D617A2 /* ConversationExtensionSwitch.swift in Sources */,
 				940B304B2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift in Sources */,
 				7BE6C7EC242DF07B00A0F2AE /* MessageAction.swift in Sources */,
@@ -7127,6 +7137,7 @@
 				7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */,
 				94145A922CD4FCE900600AD4 /* AddMobileNumberViewController.swift in Sources */,
 				94317D072AFBE57200FDC9C9 /* MemoCell.swift in Sources */,
+				94ED2F872E262BC900B99837 /* EncryptedBIP39Mnemonics.swift in Sources */,
 				7BBA1CA920692C7600B2F0CE /* GalleryItem.swift in Sources */,
 				7CFC1C8A29E78DBE00A290D5 /* RestoreFromCloudViewController.swift in Sources */,
 				DFAD89982418EE0500836EDD /* RecoverMediaJob.swift in Sources */,
@@ -7568,6 +7579,7 @@
 				94C93C902C94880600A31591 /* TIP+Web3.swift in Sources */,
 				7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */,
 				94D5C0EE2D5C911D0046C20E /* WalletSummaryViewController.swift in Sources */,
+				94ED2FEC2E2650EE00B99837 /* AddWalletPINValidationViewController.swift in Sources */,
 				94428E482CA3435300157E93 /* SwapQuote.swift in Sources */,
 				9414D3532E06914900F38028 /* RouteProfile.swift in Sources */,
 				52A056512BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift in Sources */,

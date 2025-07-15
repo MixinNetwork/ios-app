@@ -521,20 +521,21 @@ extension Web3TransactionViewController {
                         let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash),
                         let chain = Web3Chain.chain(chainID: rawTransaction.chainID),
                         chain.kind == .evm,
-                        let transaction = EIP1559Transaction(rawTransaction: rawTransaction.raw)
+                        let transaction = EIP1559Transaction(rawTransaction: rawTransaction.raw),
+                        let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID)
                     else {
                         return nil
                     }
                     do {
                         let speedUp = try EVMSpeedUpOperation(
                             wallet: wallet,
-                            fromAddress: rawTransaction.account,
+                            fromAddress: fromAddress,
                             transaction: transaction,
                             chain: chain
                         )
                         let cancel = try EVMCancelOperation(
                             wallet: wallet,
-                            fromAddress: rawTransaction.account,
+                            fromAddress: fromAddress,
                             transaction: transaction,
                             chain: chain
                         )

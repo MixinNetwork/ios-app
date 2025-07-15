@@ -5,11 +5,13 @@ import MixinServices
 final class AddWalletFetchAddressViewController: IntroductionViewController {
     
     private let mnemonics: BIP39Mnemonics
+    private let encryptedMnemonics: EncryptedBIP39Mnemonics
     private let busyIndicator = ActivityIndicatorView()
     private let searchWalletDerivationsCount: UInt32 = 10
     
-    init(mnemonics: BIP39Mnemonics) {
+    init(mnemonics: BIP39Mnemonics, encryptedMnemonics: EncryptedBIP39Mnemonics) {
         self.mnemonics = mnemonics
+        self.encryptedMnemonics = encryptedMnemonics
         super.init()
     }
     
@@ -71,7 +73,7 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
     private func fetchAddresses(mnemonics: BIP39Mnemonics) {
         showLoading()
         let lastIndex: UInt32 = searchWalletDerivationsCount - 1
-        DispatchQueue.global().async { [weak self] in
+        DispatchQueue.global().async { [weak self, encryptedMnemonics] in
             let wallets: [BIP39Mnemonics.DerivedWallet]
             do {
                 wallets = try mnemonics.deriveWallets(indices: 0...lastIndex)
@@ -110,6 +112,7 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                     DispatchQueue.main.async {
                         let selector = AddWalletSelectorViewController(
                             mnemonics: mnemonics,
+                            encryptedMnemonics: encryptedMnemonics,
                             candidates: candidates,
                             lastIndex: lastIndex
                         )

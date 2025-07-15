@@ -15,7 +15,7 @@ class SolanaTransferOperation: Web3TransferOperation {
     
     fileprivate init(
         wallet: MixinServices.Web3Wallet,
-        fromAddress: String,
+        fromAddress: Web3Address,
         toAddress: String,
         chain: Web3Chain,
         hardcodedSimulation: TransactionSimulation?
@@ -54,12 +54,15 @@ class SolanaTransferOperation: Web3TransferOperation {
             switch wallet.category.knownCase {
             case .classic:
                 privateKey = try await TIP.deriveSolanaPrivateKey(pin: pin)
-            case .importedMnemonic, .importedPrivateKey:
-                guard let encryptedKey = AppGroupKeychain.encryptedWalletPrivateKey(address: fromAddress) else {
+            case .importedMnemonic:
+                let encryptedMnemonics = AppGroupKeychain.importedMnemonics(walletID: wallet.walletID)
+                guard let encryptedMnemonics else {
                     throw SigningError.missingPrivateKey
                 }
-                let spendKey = try await TIP.importedWalletSpendKey(pin: pin)
-                privateKey = try AESCryptor.decrypt(encryptedKey, with: spendKey)
+                let key = try await TIP.importedMnemonicsEncryptionKey(pin: pin)
+                let mnemonics = try encryptedMnemonics.decrypt(with: key)
+                let path = try DerivationPath(string: fromAddress.path)
+                privateKey = try mnemonics.deriveForSolana(path: path).privateKey
             case .none:
                 throw SigningError.unknownCategory
             }
@@ -88,7 +91,7 @@ class SolanaTransferOperation: Web3TransferOperation {
             Logger.web3.info(category: "SolanaTransfer", message: "Will send tx: \(signedTransaction)")
             let rawTransaction = try await RouteAPI.postTransaction(
                 chainID: ChainID.solana,
-                from: fromAddress,
+                from: fromAddress.destination,
                 rawTransaction: signedTransaction
             )
             let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee?.tokenAmount)
@@ -119,7 +122,7 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
     @MainActor init(
         wallet: MixinServices.Web3Wallet,
         transaction: Solana.Transaction,
-        fromAddress: String,
+        fromAddress: Web3Address,
         toAddress: String,
         chain: Web3Chain
     ) throws {
@@ -172,7 +175,7 @@ final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolana
     @MainActor init(
         wallet: MixinServices.Web3Wallet,
         transaction: Solana.Transaction,
-        fromAddress: String,
+        fromAddress: Web3Address,
         chain: Web3Chain,
         session: WalletConnectSession,
         request: WalletConnectSign.Request
@@ -218,7 +221,7 @@ final class SolanaTransferWithCustomRespondingOperation: ArbitraryTransactionSol
     @MainActor init(
         wallet: MixinServices.Web3Wallet,
         transaction: Solana.Transaction,
-        fromAddress: String,
+        fromAddress: Web3Address,
         chain: Web3Chain,
         respondWith respondImpl: ((String) async throws -> Void)? = nil,
         rejectWith rejectImpl: (() -> Void)? = nil
@@ -278,7 +281,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         let receiverAccountExists = try await RouteAPI.solanaAccountExists(pubkey: ata)
         let createAccount = !receiverAccountExists
         let transaction = try Solana.Transaction(
-            from: payment.fromAddress,
+            from: payment.fromAddress.destination,
             to: payment.toAddress,
             createAssociatedTokenAccountForReceiver: createAccount,
             amount: amount,
@@ -314,7 +317,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             state = .signing
         }
         let transaction = try Solana.Transaction(
-            from: payment.fromAddress,
+            from: payment.fromAddress.destination,
             to: payment.toAddress,
             createAssociatedTokenAccountForReceiver: createAccount,
             amount: amount,

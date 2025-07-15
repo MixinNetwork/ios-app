@@ -89,7 +89,7 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
             wallet: wallet,
             chain: chain,
             token: token,
-            fromAddress: address.destination
+            fromAddress: address
         )
         let selector = Web3TokenReceiverViewController(payment: payment)
         self.navigationController?.pushViewController(selector, animated: true)

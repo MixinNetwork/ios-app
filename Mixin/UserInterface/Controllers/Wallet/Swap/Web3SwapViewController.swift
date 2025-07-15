@@ -143,7 +143,7 @@ final class Web3SwapViewController: MixinSwapViewController {
                         wallet: wallet,
                         chain: sendChain,
                         token: sendToken,
-                        fromAddress: sendingAddress.destination
+                        fromAddress: sendingAddress
                     )
                     let addressPayment = Web3SendingTokenToAddressPayment(
                         payment: payment,

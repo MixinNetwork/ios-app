@@ -6,14 +6,14 @@ class Web3SendingTokenPayment {
     let wallet: Web3Wallet
     let chain: Web3Chain
     let token: Web3TokenItem
-    let fromAddress: String
+    let fromAddress: Web3Address
     let sendingNativeToken: Bool
     
     init(
         wallet: Web3Wallet,
         chain: Web3Chain,
         token: Web3TokenItem,
-        fromAddress: String
+        fromAddress: Web3Address
     ) {
         self.wallet = wallet
         self.chain = chain

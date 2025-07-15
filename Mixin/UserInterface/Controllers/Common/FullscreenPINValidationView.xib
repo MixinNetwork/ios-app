@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -15,6 +15,7 @@
                 <outlet property="continueButton" destination="pfe-PL-h0h" id="KvV-z5-iVS"/>
                 <outlet property="continueButtonBottomConstraint" destination="w6z-cA-deA" id="B3G-tg-X41"/>
                 <outlet property="pinField" destination="re8-BN-ipd" id="jne-ZI-PSP"/>
+                <outlet property="titleLabel" destination="TQD-Xf-UmO" id="jY8-gI-Dkg"/>
                 <outlet property="view" destination="2Jf-4f-JsX" id="8rK-CL-Gzb"/>
             </connections>
         </placeholder>
@@ -24,7 +25,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="OeD-UP-3TT">
-                    <rect key="frame" x="0.0" y="114" width="375" height="95.666666666666686"/>
+                    <rect key="frame" x="0.0" y="164" width="375" height="95.666666666666686"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verify PIN" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TQD-Xf-UmO">
                             <rect key="frame" x="146" y="0.0" width="83" height="21.666666666666668"/>
@@ -51,7 +52,7 @@
                     </subviews>
                 </stackView>
                 <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pfe-PL-h0h" customClass="StyledButton" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="36" y="731" width="303" height="47"/>
+                    <rect key="frame" x="36" y="697" width="303" height="47"/>
                     <inset key="contentEdgeInsets" minX="0.0" minY="14" maxX="0.0" maxY="15"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                     <state key="normal" title="Continue"/>

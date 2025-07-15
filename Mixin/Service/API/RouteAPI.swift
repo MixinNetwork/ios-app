@@ -221,10 +221,12 @@ extension RouteAPI {
             enum CodingKeys: String, CodingKey {
                 case destination
                 case chainID = "chain_id"
+                case path
             }
             
             let destination: String
             let chainID: String
+            let path: String
             
         }
         

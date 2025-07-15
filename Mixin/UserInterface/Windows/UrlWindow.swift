@@ -1442,7 +1442,7 @@ extension UrlWindow {
                             let operation = try SolanaTransferWithCustomRespondingOperation(
                                 wallet: wallet,
                                 transaction: transaction,
-                                fromAddress: address.destination,
+                                fromAddress: address,
                                 chain: .solana
                             ) { signature in
                                 guard let requestID, case let .conversation(composer) = source else {

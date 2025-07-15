@@ -135,10 +135,10 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
         switch proposer {
         case let .dapp(proposer):
             rows.append(.doubleLineInfo(caption: .from, primary: proposer.name, secondary: proposer.host))
-            rows.append(.info(caption: .account, content: operation.fromAddress))
+            rows.append(.info(caption: .account, content: operation.fromAddress.destination))
         case let .user(addressLabel):
             rows.append(.receivingAddress(value: operation.toAddress, label: addressLabel))
-            rows.append(.sendingAddress(value: operation.fromAddress, label: operation.wallet.localizedName))
+            rows.append(.sendingAddress(value: operation.fromAddress.destination, label: operation.wallet.localizedName))
         case .speedUp, .cancel:
             break
         case .none:

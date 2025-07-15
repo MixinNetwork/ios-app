@@ -72,7 +72,50 @@ extension ExtendedKey {
         
     }
     
-    static func point(_ data: Data) throws -> Data {
+    func deriveUsingSecp256k1(path: DerivationPath) throws -> ExtendedKey {
+        try path.indices.reduce(self) { key, index in
+            try key.privateKeyUsingSecp256k1(index: index)
+        }
+    }
+    
+    func publicKey() throws -> Data {
+        try Self.point(key)
+    }
+    
+    private func privateKeyUsingSecp256k1(index: Index) throws -> ExtendedKey {
+        let n = BigUInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", radix: 16)!
+        let il, ir: Data
+        switch index {
+        case .normal:
+            let kPoint = try Self.point(key)
+            let data = kPoint + index.value.data(endianness: .big)
+            (il, ir) = Self.hmacSHA512(data, key: chainCode)
+        case .hardened:
+            let data = Data([0x00] + key + index.value.data(endianness: .big))
+            (il, ir) = Self.hmacSHA512(data, key: chainCode)
+        }
+        let parse256IL = BigUInt(il)
+        guard parse256IL < n else {
+            throw Error.invalidIndex
+        }
+        let kPar = BigUInt(key)
+        let ki = (parse256IL + kPar) % n
+        guard !ki.isZero else {
+            throw Error.invalidIndex
+        }
+        let kiData = ki.serialize()
+        let key: Data
+        if kiData.count < 32 {
+            key = Data(repeating: 0, count: 32 - kiData.count) + kiData
+        } else if kiData.count == 32 {
+            key = kiData
+        } else {
+            throw Error.invalidKI
+        }
+        return ExtendedKey(key: key, chainCode: ir)
+    }
+    
+    private static func point(_ data: Data) throws -> Data {
         let signAndVerify = UInt32(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY)
         guard let ctx = secp256k1_context_create(signAndVerify) else {
             throw Error.createContext
@@ -114,49 +157,18 @@ extension ExtendedKey {
         }
     }
     
-    func privateKeyUsingSecp256k1(index: Index) throws -> ExtendedKey {
-        let n = BigUInt("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141", radix: 16)!
-        let il, ir: Data
-        switch index {
-        case .normal:
-            let kPoint = try Self.point(key)
-            let data = kPoint + index.value.data(endianness: .big)
-            (il, ir) = Self.hmacSHA512(data, key: chainCode)
-        case .hardened:
-            let data = Data([0x00] + key + index.value.data(endianness: .big))
-            (il, ir) = Self.hmacSHA512(data, key: chainCode)
-        }
-        let parse256IL = BigUInt(il)
-        guard parse256IL < n else {
-            throw Error.invalidIndex
-        }
-        let kPar = BigUInt(key)
-        let ki = (parse256IL + kPar) % n
-        guard !ki.isZero else {
-            throw Error.invalidIndex
-        }
-        let kiData = ki.serialize()
-        let key: Data
-        if kiData.count < 32 {
-            key = Data(repeating: 0, count: 32 - kiData.count) + kiData
-        } else if kiData.count == 32 {
-            key = kiData
-        } else {
-            throw Error.invalidKI
-        }
-        return ExtendedKey(key: key, chainCode: ir)
-    }
-    
-    func publicKey() throws -> Data {
-        try Self.point(key)
-    }
-    
 }
 
 // ed25519
 extension ExtendedKey {
     
-    func privateKeyUsingEd25519(hardeningIndex: UInt32) -> ExtendedKey {
+    func deriveUsingEd25519(path: DerivationPath) -> ExtendedKey {
+        path.indices.reduce(self) { key, index in
+            key.privateKeyUsingEd25519(hardeningIndex: index.value)
+        }
+    }
+    
+    private func privateKeyUsingEd25519(hardeningIndex: UInt32) -> ExtendedKey {
         let index = (hardeningIndex | 0x80000000)
         let body = [0x00] + key + withUnsafeBytes(of: index.bigEndian, Data.init(_:))
         let hmacKey = SymmetricKey(data: chainCode)

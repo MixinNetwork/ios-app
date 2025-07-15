@@ -56,8 +56,7 @@ extension Web3DiagnosticViewController: UITableViewDelegate {
         case (1, 0):
             Web3TransactionDAO.shared.deleteAll()
             for walletID in Web3WalletDAO.shared.walletIDs() {
-                let addresses = Web3AddressDAO.shared.addresses(walletID: walletID)
-                let destinations = Set(addresses.map(\.destination))
+                let destinations = Web3AddressDAO.shared.destinations(walletID: walletID)
                 Web3PropertiesDAO.shared.deleteTransactionOffset(addresses: destinations)
             }
             showAutoHiddenHud(style: .notification, text: R.string.localizable.done())

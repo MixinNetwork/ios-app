@@ -23,6 +23,13 @@ public final class Web3AddressDAO: Web3DAO {
         db.select(with: "SELECT * FROM addresses WHERE wallet_id = ?", arguments: [walletID])
     }
     
+    public func destinations(walletID: String) -> Set<String> {
+        try! db.read { (db) -> Set<String> in
+            let sql = "SELECT DISTINCT destination FROM addresses WHERE wallet_id = ?"
+            return try String.fetchSet(db, sql: sql, arguments: [walletID])
+        }
+    }
+    
     public func save(addresses: [Web3Address]) {
         db.save(addresses)
     }

@@ -7,6 +7,7 @@ final class AddWalletSelectorViewController: UIViewController {
     @IBOutlet weak var importButton: UIButton!
     
     private let mnemonics: BIP39Mnemonics
+    private let encryptedMnemonics: EncryptedBIP39Mnemonics
     private let searchWalletDerivationsCount: UInt32 = 10
     
     private var candidates: [WalletCandidate]
@@ -29,8 +30,14 @@ final class AddWalletSelectorViewController: UIViewController {
         collectionViewSelectedCount == candidates.count
     }
     
-    init(mnemonics: BIP39Mnemonics, candidates: [WalletCandidate], lastIndex: UInt32) {
+    init(
+        mnemonics: BIP39Mnemonics,
+        encryptedMnemonics: EncryptedBIP39Mnemonics,
+        candidates: [WalletCandidate],
+        lastIndex: UInt32
+    ) {
         self.mnemonics = mnemonics
+        self.encryptedMnemonics = encryptedMnemonics
         self.candidates = candidates
         self.lastIndex = lastIndex
         let nib = R.nib.addWalletSelectorView
@@ -122,25 +129,17 @@ final class AddWalletSelectorViewController: UIViewController {
         guard let indices, !indices.isEmpty else {
             return
         }
-        let wallets = indices.flatMap { index in
-            let wallet = candidates[index]
-            return [wallet.evmWallet, wallet.solanaWallet]
-        }
         let namedWallets = indices.map { index in
             NamedWalletCandidate(
                 name: R.string.localizable.common_wallet_index(index + 1),
                 candidate: candidates[index]
             )
         }
-        let intent = EncryptPrivateKeyIntent(wallets: wallets) { [weak self] encryptedPrivateKeys in
-            DispatchQueue.global().async {
-                AppGroupKeychain.upsertEncryptedWalletPrivateKeys(encryptedPrivateKeys)
-            }
-            let importing = AddWalletImportingViewController(wallets: namedWallets)
-            self?.navigationController?.pushViewController(importing, animated: true)
-        }
-        let authentication = AuthenticationViewController(intent: intent)
-        present(authentication, animated: true)
+        let importing = AddWalletImportingViewController(
+            encryptedMnemonics: encryptedMnemonics,
+            wallets: namedWallets
+        )
+        navigationController?.pushViewController(importing, animated: true)
     }
     
     private func updateViewsWithSelectionCount() {
@@ -496,70 +495,6 @@ extension AddWalletSelectorViewController {
             }
             busyIndicator.isAnimating = false
             self.busyIndicator = busyIndicator
-        }
-        
-    }
-    
-    final class EncryptPrivateKeyIntent: AuthenticationIntent {
-        
-        private let wallets: [BIP39Mnemonics.Derivation]
-        
-        // Key is address, data is the private key
-        @MainActor var onEncrypted: (([String: Data]) -> Void)?
-        
-        var intentTitle: String {
-            R.string.localizable.continue_with_pin()
-        }
-        
-        var intentTitleIcon: UIImage? {
-            R.image.ic_pin_setting()
-        }
-        
-        var intentSubtitleIconURL: AuthenticationIntentSubtitleIcon? {
-            nil
-        }
-        
-        var intentSubtitle: String {
-            ""
-        }
-        
-        var options: AuthenticationIntentOptions {
-            [.allowsBiometricAuthentication, .becomesFirstResponderOnAppear]
-        }
-        
-        @MainActor
-        init(wallets: [BIP39Mnemonics.Derivation], onEncrypted: @escaping ([String: Data]) -> Void) {
-            self.wallets = wallets
-            self.onEncrypted = onEncrypted
-        }
-        
-        func authenticationViewController(
-            _ controller: AuthenticationViewController,
-            didInput pin: String,
-            completion: @escaping @MainActor (AuthenticationViewController.AuthenticationResult) -> Void
-        ) {
-            Task {
-                do {
-                    let key = try await TIP.importedWalletSpendKey(pin: pin)
-                    let results = try wallets.reduce(into: [:]) { results, wallet in
-                        results[wallet.address] = try AESCryptor.encrypt(wallet.privateKey, with: key)
-                    }
-                    await MainActor.run {
-                        completion(.success)
-                        controller.presentingViewController?.dismiss(animated: true) {
-                            self.onEncrypted?(results)
-                        }
-                    }
-                } catch {
-                    await MainActor.run {
-                        completion(.failure(error: error, retry: .inputPINAgain))
-                    }
-                }
-            }
-        }
-        
-        func authenticationViewControllerWillDismiss(_ controller: AuthenticationViewController) {
-            
         }
         
     }

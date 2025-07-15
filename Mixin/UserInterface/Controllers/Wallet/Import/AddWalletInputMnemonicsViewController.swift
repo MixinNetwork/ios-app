@@ -3,17 +3,22 @@ import MixinServices
 
 final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController {
     
-    private let errorDescriptionLabel = {
-        let label = UILabel()
-        label.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
-        label.adjustsFontForContentSizeCategory = true
-        label.textColor = R.color.error_red()
-        return label
-    }()
+    private let mnemonicsEncryptionKey: Data
+    
+    private weak var errorDescriptionLabel: UILabel!
     
     private var phrasesCount: BIP39Mnemonics.PhrasesCount = .medium
     private var phraseCountSwitchButtons: [UIButton] = []
-    private var mnemonics: BIP39Mnemonics?
+    private var mnemonics: (plain: BIP39Mnemonics, encrypted: EncryptedBIP39Mnemonics)?
+    
+    init(mnemonicsEncryptionKey: Data) {
+        self.mnemonicsEncryptionKey = mnemonicsEncryptionKey
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,10 +45,16 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
         spacer.backgroundColor = .clear
         stackView.addArrangedSubview(spacer)
         
+        let errorDescriptionLabel = UILabel()
+        errorDescriptionLabel.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+        errorDescriptionLabel.adjustsFontForContentSizeCategory = true
+        errorDescriptionLabel.textColor = R.color.error_red()
+        footerStackView.addArrangedSubview(errorDescriptionLabel)
+        self.errorDescriptionLabel = errorDescriptionLabel
+        
         inputStackViewTopConstraint.constant = 20
         reloadInputStackView(count: phrasesCount)
         
-        footerStackView.addArrangedSubview(errorDescriptionLabel)
         confirmButton.setTitle(R.string.localizable.next(), for: .normal)
         confirmButton.titleLabel?.setFont(
             scaledFor: .systemFont(ofSize: 16, weight: .semibold),
@@ -62,7 +73,10 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
         guard let mnemonics else {
             return
         }
-        let fetchAddress = AddWalletFetchAddressViewController(mnemonics: mnemonics)
+        let fetchAddress = AddWalletFetchAddressViewController(
+            mnemonics: mnemonics.plain,
+            encryptedMnemonics: mnemonics.encrypted
+        )
         navigationController?.pushViewController(fetchAddress, animated: true)
     }
     
@@ -148,7 +162,12 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
             confirmButton.isEnabled = false
         } else {
             do {
-                mnemonics = try BIP39Mnemonics(phrases: phrases)
+                let plain = try BIP39Mnemonics(phrases: phrases)
+                let encrypted = try EncryptedBIP39Mnemonics(
+                    mnemonics: plain,
+                    key: mnemonicsEncryptionKey
+                )
+                mnemonics = (plain: plain, encrypted: encrypted)
                 errorDescriptionLabel.isHidden = true
                 confirmButton.isEnabled = true
             } catch {

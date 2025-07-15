@@ -101,7 +101,7 @@ final class ClassicWalletViewController: WalletViewController {
         switch wallet.category.knownCase {
         case .classic, .none:
             break
-        case .importedMnemonic, .importedPrivateKey:
+        case .importedMnemonic:
             sheet.addAction(UIAlertAction(title: R.string.localizable.rename_wallet(), style: .default, handler: { (_) in
                 self.inputNewWalletName()
             }))
@@ -342,7 +342,7 @@ extension ClassicWalletViewController: TokenActionView.Delegate {
                     wallet: wallet,
                     chain: chain,
                     token: token,
-                    fromAddress: address.destination
+                    fromAddress: address
                 )
                 let selector = Web3TokenReceiverViewController(payment: payment)
                 self.navigationController?.pushViewController(selector, animated: true)

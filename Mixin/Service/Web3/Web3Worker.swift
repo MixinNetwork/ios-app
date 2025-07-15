@@ -203,7 +203,7 @@ final class Web3Worker {
                 let preview = try ExternalEVMTransaction(json: object)
                 let operation = try EVMTransferWithBrowserWalletOperation(
                     wallet: wallet,
-                    fromAddress: address.destination,
+                    fromAddress: address,
                     transaction: preview,
                     chain: evmChain
                 ) { hash in
@@ -394,7 +394,7 @@ final class Web3Worker {
                 let operation = try await SolanaTransferWithCustomRespondingOperation(
                     wallet: wallet,
                     transaction: transaction,
-                    fromAddress: address.destination,
+                    fromAddress: address,
                     chain: solanaChain
                 ) { signature in
                     try await self.send(result: signature, to: request)

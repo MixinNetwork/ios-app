@@ -144,7 +144,7 @@ extension WalletConnectSession {
                 }
                 let operation = try Web3TransferWithWalletConnectOperation(
                     wallet: wallet,
-                    fromAddress: address.destination,
+                    fromAddress: address,
                     transaction: transactionPreview,
                     chain: chain,
                     session: self,
@@ -216,7 +216,7 @@ extension WalletConnectSession {
                 let operation = try await SolanaTransferWithWalletConnectOperation(
                     wallet: wallet,
                     transaction: transaction,
-                    fromAddress: address.destination,
+                    fromAddress: address,
                     chain: chain,
                     session: self,
                     request: request

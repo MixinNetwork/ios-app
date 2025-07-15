@@ -3,39 +3,22 @@ import MixinServices
 
 extension AppGroupKeychain {
     
-    // Key is address, value is private key
-    typealias WalletPrivateKeyStorage = [String: Data]
+    // Key is wallet id, value is encrypted mnemonics
+    typealias ImportedMnemonicsStorage = [String: EncryptedBIP39Mnemonics]
     
-    static func encryptedWalletPrivateKey(address: String) -> Data? {
-        guard let data = encryptedWalletPrivateKeys else {
-            return nil
-        }
-        do {
-            let keys = try PropertyListDecoder.default.decode(WalletPrivateKeyStorage.self, from: data)
-            return keys[address]
-        } catch {
-            Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
-            return nil
+    static func importedMnemonics(walletID: String) -> EncryptedBIP39Mnemonics? {
+        if let mnemonics = allImportedMnemonics() {
+            mnemonics[walletID]
+        } else {
+            nil
         }
     }
     
-    static func upsertEncryptedWalletPrivateKeys(_ keys: WalletPrivateKeyStorage) {
-        var allKeys: WalletPrivateKeyStorage
-        if let data = encryptedWalletPrivateKeys {
-            do {
-                allKeys = try PropertyListDecoder.default.decode(WalletPrivateKeyStorage.self, from: data)
-            } catch {
-                Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
-                allKeys = [:]
-            }
-        } else {
-            allKeys = [:]
-        }
-        for (address, key) in keys {
-            allKeys[address] = key
-        }
+    static func setImportedMnemonics(_ mnemonics: EncryptedBIP39Mnemonics, forWalletID id: String) {
+        var allMnemonics: ImportedMnemonicsStorage = allImportedMnemonics() ?? [:]
+        allMnemonics[id] = mnemonics
         do {
-            let data = try PropertyListEncoder.default.encode(allKeys)
+            let data = try PropertyListEncoder.default.encode(allMnemonics)
             Logger.general.debug(category: "AppGroupKeychain", message: "Save wallet keys \(data.count)")
             encryptedWalletPrivateKeys = data
         } catch {
@@ -43,18 +26,27 @@ extension AppGroupKeychain {
         }
     }
     
-    static func deleteEncryptedWalletPrivateKey(addresses: [String]) {
-        guard let data = encryptedWalletPrivateKeys else {
+    static func deleteImportedMnemonics(walletID: String) {
+        guard var mnemonics = allImportedMnemonics() else {
             return
         }
         do {
-            var keys = try PropertyListDecoder.default.decode(WalletPrivateKeyStorage.self, from: data)
-            for address in addresses {
-                keys.removeValue(forKey: address)
-            }
-            encryptedWalletPrivateKeys = try PropertyListEncoder.default.encode(keys)
+            mnemonics[walletID] = nil
+            encryptedWalletPrivateKeys = try PropertyListEncoder.default.encode(mnemonics)
         } catch {
             Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
+        }
+    }
+    
+    private static func allImportedMnemonics() -> ImportedMnemonicsStorage? {
+        guard let data = encryptedWalletPrivateKeys else {
+            return nil
+        }
+        do {
+            return try PropertyListDecoder.default.decode(ImportedMnemonicsStorage.self, from: data)
+        } catch {
+            Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
+            return nil
         }
     }
     

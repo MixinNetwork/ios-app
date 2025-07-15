@@ -57,7 +57,7 @@ class EVMTransferOperation: Web3TransferOperation {
     
     fileprivate init(
         wallet: MixinServices.Web3Wallet,
-        fromAddress: String,
+        fromAddress: Web3Address,
         toAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
@@ -89,7 +89,7 @@ class EVMTransferOperation: Web3TransferOperation {
     
     fileprivate init(
         wallet: MixinServices.Web3Wallet,
-        fromAddress: String,
+        fromAddress: Web3Address,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
         hardcodedSimulation: TransactionSimulation?,
@@ -132,7 +132,7 @@ class EVMTransferOperation: Web3TransferOperation {
         let rawFee = try await RouteAPI.estimatedEthereumFee(
             mixinChainID: mixinChainID,
             hexData: transaction.data?.hexEncodedString(),
-            from: fromAddress,
+            from: fromAddress.destination,
             to: transaction.destination.toChecksumAddress()
         )
         Logger.web3.info(category: "EVMTransfer", message: "Using limit: \(rawFee.gasLimit), mfpg: \(rawFee.maxFeePerGas), mpfpg: \(rawFee.maxPriorityFeePerGas)")
@@ -200,7 +200,7 @@ class EVMTransferOperation: Web3TransferOperation {
         }
         return try await RouteAPI.simulateEthereumTransaction(
             chainID: mixinChainID,
-            from: fromAddress,
+            from: fromAddress.destination,
             rawTransaction: "0x" + rawTransaction
         )
     }
@@ -221,18 +221,21 @@ class EVMTransferOperation: Web3TransferOperation {
             switch wallet.category.knownCase {
             case .classic:
                 privateKey = try await TIP.deriveEthereumPrivateKey(pin: pin)
-            case .importedMnemonic, .importedPrivateKey:
-                guard let encryptedKey = AppGroupKeychain.encryptedWalletPrivateKey(address: fromAddress) else {
+            case .importedMnemonic:
+                let encryptedMnemonics = AppGroupKeychain.importedMnemonics(walletID: wallet.walletID)
+                guard let encryptedMnemonics else {
                     throw SigningError.missingPrivateKey
                 }
-                let spendKey = try await TIP.importedWalletSpendKey(pin: pin)
-                privateKey = try AESCryptor.decrypt(encryptedKey, with: spendKey)
+                let key = try await TIP.importedMnemonicsEncryptionKey(pin: pin)
+                let mnemonics = try encryptedMnemonics.decrypt(with: key)
+                let path = try DerivationPath(string: fromAddress.path)
+                privateKey = try mnemonics.deriveForEVM(path: path).privateKey
             case .none:
                 throw SigningError.unknownCategory
             }
             let keyStorage = InPlaceKeyStorage(raw: privateKey)
             account = try EthereumAccount(keyStorage: keyStorage)
-            guard fromAddress == account.address.toChecksumAddress() else {
+            guard fromAddress.destination == account.address.toChecksumAddress() else {
                 throw RequestError.mismatchedAddress
             }
             let nonce = try await self.loadNonce()
@@ -283,7 +286,7 @@ class EVMTransferOperation: Web3TransferOperation {
         let latestTransactionCount = try await {
             let count = try await RouteAPI.ethereumLatestTransactionCount(
                 chainID: mixinChainID,
-                address: fromAddress
+                address: fromAddress.destination
             )
             if let count = Int(count, radix: 16) {
                 return count
@@ -323,7 +326,7 @@ class EVMTransferOperation: Web3TransferOperation {
             }()
             let rawTransaction = try await RouteAPI.postTransaction(
                 chainID: mixinChainID,
-                from: fromAddress,
+                from: fromAddress.destination,
                 rawTransaction: hexEncodedSignedTransaction
             )
             let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.tokenAmount)
@@ -357,7 +360,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
     
     init(
         wallet: MixinServices.Web3Wallet,
-        fromAddress: String,
+        fromAddress: Web3Address,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
         session: WalletConnectSession,
@@ -403,7 +406,7 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
     
     init(
         wallet: MixinServices.Web3Wallet,
-        fromAddress: String,
+        fromAddress: Web3Address,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
         respondWith respondImpl: @escaping ((String) async throws -> Void),
@@ -517,7 +520,7 @@ class EVMOverrideOperation: EVMTransferOperation {
     
     override init(
         wallet: MixinServices.Web3Wallet,
-        fromAddress: String,
+        fromAddress: Web3Address,
         toAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
@@ -555,7 +558,7 @@ final class EVMSpeedUpOperation: EVMOverrideOperation {
     
     init(
         wallet: MixinServices.Web3Wallet,
-        fromAddress: String,
+        fromAddress: Web3Address,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
     ) throws {
@@ -575,7 +578,7 @@ final class EVMCancelOperation: EVMOverrideOperation {
     
     init(
         wallet: MixinServices.Web3Wallet,
-        fromAddress: String,
+        fromAddress: Web3Address,
         transaction: EIP1559Transaction,
         chain: Web3Chain
     ) throws {
@@ -585,7 +588,7 @@ final class EVMCancelOperation: EVMOverrideOperation {
             maxPriorityFeePerGas: nil,
             maxFeePerGas: nil,
             gasLimit: nil,
-            destination: EthereumAddress(fromAddress),
+            destination: EthereumAddress(fromAddress.destination),
             amount: 0,
             data: nil
         )

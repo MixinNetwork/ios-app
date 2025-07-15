@@ -1,0 +1,37 @@
+import UIKit
+import MixinServices
+
+final class AddWalletPINValidationViewController: FullscreenPINValidationViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        titleLabel.text = R.string.localizable.enter_your_pin_to_continue()
+    }
+    
+    override func continueAction(_ sender: Any) {
+        isBusy = true
+        let pin = pinField.text
+        Task {
+            do {
+                let key = try await TIP.importedMnemonicsEncryptionKey(pin: pin)
+                await MainActor.run {
+                    let input = AddWalletInputMnemonicsViewController(mnemonicsEncryptionKey: key)
+                    self.navigationController?.pushViewController(input, animated: true)
+                }
+            } catch {
+                await MainActor.run {
+                    self.pinField.clear()
+                    self.isBusy = false
+                    if let error = error as? MixinAPIError {
+                        PINVerificationFailureHandler.handle(error: error) { (description) in
+                            self.alert(description)
+                        }
+                    } else {
+                        self.alert(error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
+    
+}

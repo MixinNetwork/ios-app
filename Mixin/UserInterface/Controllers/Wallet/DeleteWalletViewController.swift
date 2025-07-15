@@ -69,8 +69,8 @@ extension DeleteWalletViewController: AuthenticationIntent {
                 RouteAPI.deleteWallet(id: walletID) { result in
                     switch result {
                     case .success:
-                        let addresses = Web3WalletDAO.shared.deleteWallet(id: walletID)
-                        AppGroupKeychain.deleteEncryptedWalletPrivateKey(addresses: addresses)
+                        Web3WalletDAO.shared.deleteWallet(id: walletID)
+                        AppGroupKeychain.deleteImportedMnemonics(walletID: walletID)
                         completion(.success)
                         controller.presentingViewController?.dismiss(animated: true) {
                             onDeleted()

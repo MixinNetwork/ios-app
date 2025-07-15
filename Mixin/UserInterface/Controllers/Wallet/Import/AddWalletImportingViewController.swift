@@ -3,10 +3,15 @@ import MixinServices
 
 final class AddWalletImportingViewController: IntroductionViewController {
     
-    private let busyIndicator = ActivityIndicatorView()
+    private let encryptedMnemonics: EncryptedBIP39Mnemonics
     private let wallets: [NamedWalletCandidate]
+    private let busyIndicator = ActivityIndicatorView()
     
-    init(wallets: [NamedWalletCandidate]) {
+    init(
+        encryptedMnemonics: EncryptedBIP39Mnemonics,
+        wallets: [NamedWalletCandidate]
+    ) {
+        self.encryptedMnemonics = encryptedMnemonics
         self.wallets = wallets
         super.init()
     }
@@ -68,7 +73,7 @@ final class AddWalletImportingViewController: IntroductionViewController {
     
     private func importWallets(_ wallets: [NamedWalletCandidate]) {
         showLoading()
-        Task { [weak self] in
+        Task { [weak self, encryptedMnemonics] in
             do {
                 for wallet in wallets {
                     let evmWallet = wallet.candidate.evmWallet
@@ -77,8 +82,16 @@ final class AddWalletImportingViewController: IntroductionViewController {
                         name: wallet.name,
                         category: .importedMnemonic,
                         addresses: [
-                            .init(destination: evmWallet.address, chainID: ChainID.ethereum),
-                            .init(destination: solanaWallet.address, chainID: ChainID.solana),
+                            .init(
+                                destination: evmWallet.address,
+                                chainID: ChainID.ethereum,
+                                path: evmWallet.path.string
+                            ),
+                            .init(
+                                destination: solanaWallet.address,
+                                chainID: ChainID.solana,
+                                path: solanaWallet.path.string
+                            ),
                         ]
                     )
                     let response = try await RouteAPI.createWallet(request)
@@ -90,6 +103,7 @@ final class AddWalletImportingViewController: IntroductionViewController {
                     for job in jobs {
                         ConcurrentJobQueue.shared.addJob(job: job)
                     }
+                    AppGroupKeychain.setImportedMnemonics(encryptedMnemonics, forWalletID: response.wallet.walletID)
                 }
                 await MainActor.run {
                     _ = self?.navigationController?.popToRootViewController(animated: true)

@@ -163,8 +163,8 @@ final class WalletSummaryViewController: UIViewController {
         selector.onSelected = { [weak self] method in
             switch method {
             case .mnemonics:
-                let input = AddWalletInputMnemonicsViewController()
-                self?.navigationController?.pushViewController(input, animated: true)
+                let validation = AddWalletPINValidationViewController()
+                self?.navigationController?.pushViewController(validation, animated: true)
             }
         }
         present(selector, animated: true)

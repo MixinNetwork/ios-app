@@ -20,7 +20,7 @@ extension Web3Wallet {
         switch category.knownCase {
         case .classic:
             R.string.localizable.common_wallet()
-        case .importedMnemonic, .importedPrivateKey, .none:
+        case .importedMnemonic, .none:
             name
         }
     }

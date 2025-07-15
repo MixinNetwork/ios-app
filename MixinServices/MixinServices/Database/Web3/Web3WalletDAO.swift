@@ -89,9 +89,8 @@ public final class Web3WalletDAO: Web3DAO {
         }
     }
     
-    // Returns address.destination associated with the wallet
-    public func deleteWallet(id: String) -> [String] {
-        let destinations = try? db.writeAndReturnError { db in
+    public func deleteWallet(id: String) {
+        try? db.writeAndReturnError { db in
             try db.execute(literal: "DELETE FROM wallets WHERE wallet_id = \(id)")
             let destinations = try String.fetchAll(
                 db,
@@ -113,9 +112,7 @@ public final class Web3WalletDAO: Web3DAO {
                     userInfo: [Self.UserInfoKey.walletID: id]
                 )
             }
-            return destinations
         }
-        return destinations ?? []
     }
     
 }

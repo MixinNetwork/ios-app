@@ -596,9 +596,9 @@
 "export" = "匯出";
 "export_failed" = "匯出失敗";
 "export_mnemonic_phrase" = "匯出助記詞";
-"export_mnemonics_warning_1" = "任何擁有此助記詞的人都可以轉移該錢包中所有的資金。";
-"export_mnemonics_warning_2" = "Mixin Messenger 伺服器不會儲存您的私鑰。";
-"export_mnemonics_warning_3" = "請勿與任何第三方、個人、網站或應用程式分享您的私鑰。";
+"export_mnemonics_warning_1" = "任何擁有此%@的人都可以轉移該錢包中所有的資金。";
+"export_mnemonics_warning_2" = "Mixin Messenger 伺服器不會儲存您的%@。";
+"export_mnemonics_warning_3" = "請勿與任何第三方、個人、網站或應用程式分享您的%@。";
 "export_mnemonics_warning_4" = "確保沒有人或監控攝像頭正在看你的螢幕。";
 "face_id" = "面容";
 "failed" = "失敗";
@@ -811,6 +811,7 @@
 "mnemonic_phrase_take_long" = "這應該不會花太長時間。";
 "mnemonic_phrase_tip_1" = "·存放在保險箱或安全的地方";
 "mnemonic_phrase_tip_2" = "·不要在網路上傳送";
+"mnemonic_phrases" = "助記詞";
 "mnemonics_mismatched" = "助記詞不符";
 "mobile_contacts" = "通訊錄";
 "mobile_number" = "手機號碼";

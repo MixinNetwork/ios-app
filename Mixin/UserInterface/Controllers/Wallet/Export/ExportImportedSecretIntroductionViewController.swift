@@ -15,10 +15,12 @@ final class ExportImportedSecretIntroductionViewController: IntroductionViewCont
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let warningObject: String
         switch secret {
         case .mnemonics:
             imageView.image = R.image.mnemonic_phrase()
             actionButton.setTitle(R.string.localizable.show_mnemonic_phrase(), for: .normal)
+            warningObject = R.string.localizable.mnemonic_phrases()
         }
         titleLabel.text = R.string.localizable.before_you_proceed()
         contentLabelTopConstraint.constant = 12
@@ -37,9 +39,9 @@ final class ExportImportedSecretIntroductionViewController: IntroductionViewCont
                 attributes: attributes
             )
             let items = [
-                R.string.localizable.export_mnemonics_warning_1(),
-                R.string.localizable.export_mnemonics_warning_2(),
-                R.string.localizable.export_mnemonics_warning_3(),
+                R.string.localizable.export_mnemonics_warning_1(warningObject),
+                R.string.localizable.export_mnemonics_warning_2(warningObject),
+                R.string.localizable.export_mnemonics_warning_3(warningObject),
                 R.string.localizable.export_mnemonics_warning_4(),
             ]
             let list: NSAttributedString = .orderedList(items: items) { index in

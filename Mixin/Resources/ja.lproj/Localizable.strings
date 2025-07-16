@@ -596,9 +596,9 @@
 "export" = "エクスポート";
 "export_failed" = "エクスポート失敗";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
-"export_mnemonics_warning_1" = "Anyone who gains access to this mnemonic phrase can transfer all assets from your wallet.";
-"export_mnemonics_warning_2" = "Mixin Messenger does not store your private key on its servers.";
-"export_mnemonics_warning_3" = "Never share your private key with any third party, individual, website, or application.";
+"export_mnemonics_warning_1" = "Anyone who gains access to this %@ can transfer all assets from your wallet.";
+"export_mnemonics_warning_2" = "Mixin Messenger does not store your %@ on its servers.";
+"export_mnemonics_warning_3" = "Never share your %@ with any third party, individual, website, or application.";
 "export_mnemonics_warning_4" = "Ensure that no one — including surveillance cameras — can see your screen.";
 "face_id" = "顔認証";
 "failed" = "失敗しました";
@@ -811,6 +811,7 @@
 "mnemonic_phrase_take_long" = "This shouldn't take long.";
 "mnemonic_phrase_tip_1" = "· Store it in a vault or secure place";
 "mnemonic_phrase_tip_2" = "· Do not share it over the internet";
+"mnemonic_phrases" = "mnemonic phrases";
 "mnemonics_mismatched" = "Mnemonics Mismatched";
 "mobile_contacts" = "連絡先";
 "mobile_number" = "Mobile Number";

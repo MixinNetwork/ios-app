@@ -596,6 +596,10 @@
 "export" = "匯出";
 "export_failed" = "匯出失敗";
 "export_mnemonic_phrase" = "匯出助記詞";
+"export_mnemonics_warning_1" = "任何擁有此助記詞的人都可以轉移該錢包中所有的資金。";
+"export_mnemonics_warning_2" = "Mixin Messenger 伺服器不會儲存您的私鑰。";
+"export_mnemonics_warning_3" = "請勿與任何第三方、個人、網站或應用程式分享您的私鑰。";
+"export_mnemonics_warning_4" = "確保沒有人或監控攝像頭正在看你的螢幕。";
 "face_id" = "面容";
 "failed" = "失敗";
 "failed_to_compose_avatar" = "頭像解析失敗，請嘗試使用其他圖片。";
@@ -1596,6 +1600,7 @@
 "you_have_a_new_message" = "你收到了一條訊息";
 "you_have_left_the_group" = "你不在此群組";
 "your_emergency_contact_has_been_changed" = "恢復聯絡人已更改";
+"your_mnemonic_phrase" = "你的錢包助記詞";
 "your_phone_number_has_been_changed" = "更換手機號";
 "your_pin_has_been_changed" = "修改 PIN";
 "your_pin_has_been_created" = "PIN 已建立";

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class AddWalletPINValidationViewController: FullscreenPINValidationViewController {
+final class AddWalletPINValidationViewController: ErrorReportingPINValidationViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +27,7 @@ final class AddWalletPINValidationViewController: FullscreenPINValidationViewCon
                             self.alert(description)
                         }
                     } else {
-                        self.alert(error.localizedDescription)
+                        self.handle(error: error)
                     }
                 }
             }

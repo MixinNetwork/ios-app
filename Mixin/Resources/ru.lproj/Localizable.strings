@@ -596,6 +596,10 @@
 "export" = "Экспорт";
 "export_failed" = "Не удалось экспортировать";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
+"export_mnemonics_warning_1" = "Anyone who gains access to this mnemonic phrase can transfer all assets from your wallet.";
+"export_mnemonics_warning_2" = "Mixin Messenger does not store your private key on its servers.";
+"export_mnemonics_warning_3" = "Never share your private key with any third party, individual, website, or application.";
+"export_mnemonics_warning_4" = "Ensure that no one — including surveillance cameras — can see your screen.";
 "face_id" = "Идентификатор лица";
 "failed" = "Не удалось";
 "failed_to_compose_avatar" = "Не удалось создать аватар. Вместо этого попробуйте другую картинку.";
@@ -1596,6 +1600,7 @@
 "you_have_a_new_message" = "У вас новое сообщение";
 "you_have_left_the_group" = "Вы вышли из группы";
 "your_emergency_contact_has_been_changed" = "Your recovery contact has been changed";
+"your_mnemonic_phrase" = "Your Mnemonic Phrase";
 "your_phone_number_has_been_changed" = "Ваш номер телефона был изменен";
 "your_pin_has_been_changed" = "Ваш PIN-код был изменен";
 "your_pin_has_been_created" = "Ваш PIN-код был создан";

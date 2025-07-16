@@ -958,6 +958,11 @@
 		945FFC822C3829B00013DC51 /* SwapRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945FFC812C3829B00013DC51 /* SwapRequest.swift */; };
 		945FFC8A2C3832230013DC51 /* SwapResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945FFC892C3832230013DC51 /* SwapResponse.swift */; };
 		94619F1F2C8DA6CA00C58829 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94619F1E2C8DA6CA00C58829 /* GradientView.swift */; };
+		9462A6AD2E278FAE001E4C3E /* ExportImportedSecretIntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A6AC2E278FA3001E4C3E /* ExportImportedSecretIntroductionViewController.swift */; };
+		9462A6BD2E279093001E4C3E /* ImportedSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A6BC2E27908B001E4C3E /* ImportedSecret.swift */; };
+		9462A6CB2E2790F3001E4C3E /* ExportImportedSecretValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A6CA2E2790EA001E4C3E /* ExportImportedSecretValidationViewController.swift */; };
+		9462A6D02E27920B001E4C3E /* ErrorReportingPINValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A6CF2E27920B001E4C3E /* ErrorReportingPINValidationViewController.swift */; };
+		9462A6D82E2793BE001E4C3E /* ExportImportedMnemonicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A6D72E2793BE001E4C3E /* ExportImportedMnemonicsViewController.swift */; };
 		946331B12C6227D500C54B76 /* TransactionHistoryFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946331B02C6227D500C54B76 /* TransactionHistoryFilterView.swift */; };
 		946331B62C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946331B52C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift */; };
 		946331BB2C622BE200C54B76 /* TransactionHistoryAssetFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946331BA2C622BE200C54B76 /* TransactionHistoryAssetFilterView.swift */; };
@@ -1206,7 +1211,6 @@
 		94C886122BA2D5460039F723 /* ConnectWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */; };
 		94C8C4842C11A1A100993027 /* Web3API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C8C4832C11A1A100993027 /* Web3API.swift */; };
 		94C8C49D2C11A29C00993027 /* PriorityFee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C8C49C2C11A29C00993027 /* PriorityFee.swift */; };
-		94C93C8C2C94880600A31591 /* BIP32Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C93C862C94880600A31591 /* BIP32Tests.swift */; };
 		94C93C8D2C94880600A31591 /* ExtendedKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C93C872C94880600A31591 /* ExtendedKey.swift */; };
 		94C93C8E2C94880600A31591 /* P2PKH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C93C882C94880600A31591 /* P2PKH.swift */; };
 		94C93C8F2C94880600A31591 /* RIPEMD160.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C93C892C94880600A31591 /* RIPEMD160.swift */; };
@@ -1322,6 +1326,7 @@
 		94ED2F872E262BC900B99837 /* EncryptedBIP39Mnemonics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED2F862E262BC200B99837 /* EncryptedBIP39Mnemonics.swift */; };
 		94ED2FB92E26455C00B99837 /* DerivationPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED2FB82E26455900B99837 /* DerivationPath.swift */; };
 		94ED2FEC2E2650EE00B99837 /* AddWalletPINValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED2FEB2E2650EE00B99837 /* AddWalletPINValidationViewController.swift */; };
+		94ED306B2E269B4F00B99837 /* MixinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED30692E269B4E00B99837 /* MixinTests.swift */; };
 		94EDD6142D0C495A00BF55EE /* GeneralAppearanceNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EDD6132D0C495100BF55EE /* GeneralAppearanceNavigationController.swift */; };
 		94EE1AB92B48518D00BE9AD1 /* TemporaryAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1AB82B48518D00BE9AD1 /* TemporaryAddress.swift */; };
 		94EE1ABE2B4851E600BE9AD1 /* WithdrawableAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1ABD2B4851E600BE9AD1 /* WithdrawableAddress.swift */; };
@@ -1575,6 +1580,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		94ED305E2E269B2A00B99837 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 277FF6F71F909A1200DBB2EB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 277FF6FE1F909A1200DBB2EB;
+			remoteInfo = Mixin;
+		};
 		DFE861C12422673B009B1833 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 277FF6F71F909A1200DBB2EB /* Project object */;
@@ -2599,6 +2611,11 @@
 		945FFC812C3829B00013DC51 /* SwapRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapRequest.swift; sourceTree = "<group>"; };
 		945FFC892C3832230013DC51 /* SwapResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapResponse.swift; sourceTree = "<group>"; };
 		94619F1E2C8DA6CA00C58829 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
+		9462A6AC2E278FA3001E4C3E /* ExportImportedSecretIntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportImportedSecretIntroductionViewController.swift; sourceTree = "<group>"; };
+		9462A6BC2E27908B001E4C3E /* ImportedSecret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedSecret.swift; sourceTree = "<group>"; };
+		9462A6CA2E2790EA001E4C3E /* ExportImportedSecretValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportImportedSecretValidationViewController.swift; sourceTree = "<group>"; };
+		9462A6CF2E27920B001E4C3E /* ErrorReportingPINValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorReportingPINValidationViewController.swift; sourceTree = "<group>"; };
+		9462A6D72E2793BE001E4C3E /* ExportImportedMnemonicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportImportedMnemonicsViewController.swift; sourceTree = "<group>"; };
 		946331B02C6227D500C54B76 /* TransactionHistoryFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryFilterView.swift; sourceTree = "<group>"; };
 		946331B52C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryTypeFilterView.swift; sourceTree = "<group>"; };
 		946331BA2C622BE200C54B76 /* TransactionHistoryAssetFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryAssetFilterView.swift; sourceTree = "<group>"; };
@@ -2843,7 +2860,6 @@
 		94C886112BA2D5460039F723 /* ConnectWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectWalletViewController.swift; sourceTree = "<group>"; };
 		94C8C4832C11A1A100993027 /* Web3API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3API.swift; sourceTree = "<group>"; };
 		94C8C49C2C11A29C00993027 /* PriorityFee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityFee.swift; sourceTree = "<group>"; };
-		94C93C862C94880600A31591 /* BIP32Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BIP32Tests.swift; sourceTree = "<group>"; };
 		94C93C872C94880600A31591 /* ExtendedKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtendedKey.swift; sourceTree = "<group>"; };
 		94C93C882C94880600A31591 /* P2PKH.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = P2PKH.swift; sourceTree = "<group>"; };
 		94C93C892C94880600A31591 /* RIPEMD160.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RIPEMD160.swift; sourceTree = "<group>"; };
@@ -2958,6 +2974,8 @@
 		94ED2F862E262BC200B99837 /* EncryptedBIP39Mnemonics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptedBIP39Mnemonics.swift; sourceTree = "<group>"; };
 		94ED2FB82E26455900B99837 /* DerivationPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DerivationPath.swift; sourceTree = "<group>"; };
 		94ED2FEB2E2650EE00B99837 /* AddWalletPINValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletPINValidationViewController.swift; sourceTree = "<group>"; };
+		94ED305A2E269B2A00B99837 /* MixinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MixinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		94ED30692E269B4E00B99837 /* MixinTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinTests.swift; sourceTree = "<group>"; };
 		94EDD6132D0C495100BF55EE /* GeneralAppearanceNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralAppearanceNavigationController.swift; sourceTree = "<group>"; };
 		94EE1AB82B48518D00BE9AD1 /* TemporaryAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporaryAddress.swift; sourceTree = "<group>"; };
 		94EE1ABD2B4851E600BE9AD1 /* WithdrawableAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawableAddress.swift; sourceTree = "<group>"; };
@@ -3261,6 +3279,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		94ED30572E269B2A00B99837 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DFE861B62422673B009B1833 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3300,6 +3325,7 @@
 				E090B9F823B3957E0088355B /* MixinNotificationService */,
 				DFE861BA2422673B009B1833 /* MixinShare */,
 				94656C182795395D006C3F1D /* MixinDebug */,
+				94ED306A2E269B4E00B99837 /* MixinTests */,
 				277FF7001F909A1200DBB2EB /* Products */,
 				506A45AFF37DF0AFA7DD4EEE /* Pods */,
 				DBADD0FED15BCB65F6FF70EB /* Frameworks */,
@@ -3313,6 +3339,7 @@
 				E090B9F723B3957E0088355B /* MixinNotificationService.appex */,
 				DFE861B92422673B009B1833 /* MixinShare.appex */,
 				94656C172795395D006C3F1D /* MixinDebug.app */,
+				94ED305A2E269B2A00B99837 /* MixinTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3787,6 +3814,7 @@
 				7BFE47DA228421D100FC4379 /* UserItemPeerViewController.swift */,
 				7B54F94F22B22E2900908A9D /* FullscreenPINValidationView.xib */,
 				7BF4047C2048FA0E004C54E4 /* FullscreenPINValidationViewController.swift */,
+				9462A6CF2E27920B001E4C3E /* ErrorReportingPINValidationViewController.swift */,
 				7BB6111922BA4179000E758C /* PinValidationView.xib */,
 				7B955339224380B200CE95E6 /* PinValidationViewController.swift */,
 				7B7B5DB0230EBA5E00D0F463 /* PopupSearchableTableViewController.swift */,
@@ -4328,6 +4356,17 @@
 			path = GCDWebDAVServer;
 			sourceTree = "<group>";
 		};
+		9462A6B72E27906D001E4C3E /* Export */ = {
+			isa = PBXGroup;
+			children = (
+				9462A6BC2E27908B001E4C3E /* ImportedSecret.swift */,
+				9462A6AC2E278FA3001E4C3E /* ExportImportedSecretIntroductionViewController.swift */,
+				9462A6CA2E2790EA001E4C3E /* ExportImportedSecretValidationViewController.swift */,
+				9462A6D72E2793BE001E4C3E /* ExportImportedMnemonicsViewController.swift */,
+			);
+			path = Export;
+			sourceTree = "<group>";
+		};
 		94656C182795395D006C3F1D /* MixinDebug */ = {
 			isa = PBXGroup;
 			children = (
@@ -4503,7 +4542,6 @@
 		94C93C8B2C94880600A31591 /* Mnemonics Derivation */ = {
 			isa = PBXGroup;
 			children = (
-				94C93C862C94880600A31591 /* BIP32Tests.swift */,
 				94ED2FB82E26455900B99837 /* DerivationPath.swift */,
 				94C93C872C94880600A31591 /* ExtendedKey.swift */,
 				94C93C882C94880600A31591 /* P2PKH.swift */,
@@ -4560,6 +4598,14 @@
 				943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */,
 			);
 			path = PIN;
+			sourceTree = "<group>";
+		};
+		94ED306A2E269B4E00B99837 /* MixinTests */ = {
+			isa = PBXGroup;
+			children = (
+				94ED30692E269B4E00B99837 /* MixinTests.swift */,
+			);
+			path = MixinTests;
 			sourceTree = "<group>";
 		};
 		94ED3EF32990DB8D003BC236 /* Web3 */ = {
@@ -5435,6 +5481,7 @@
 				9429C1212E059D2D00206DAA /* Transfer */,
 				94682F212E029B2700B1C6D3 /* Buy */,
 				94F268182E15BA2300A8A1E0 /* Import */,
+				9462A6B72E27906D001E4C3E /* Export */,
 				94C5BDEB2D687B710012F840 /* WalletContainerViewController.swift */,
 				94D5C0ED2D5C911D0046C20E /* WalletSummaryView.xib */,
 				94D5C0EC2D5C911D0046C20E /* WalletSummaryViewController.swift */,
@@ -5869,6 +5916,26 @@
 			productReference = 94656C172795395D006C3F1D /* MixinDebug.app */;
 			productType = "com.apple.product-type.application";
 		};
+		94ED30592E269B2A00B99837 /* MixinTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 94ED30602E269B2A00B99837 /* Build configuration list for PBXNativeTarget "MixinTests" */;
+			buildPhases = (
+				94ED30562E269B2A00B99837 /* Sources */,
+				94ED30572E269B2A00B99837 /* Frameworks */,
+				94ED30582E269B2A00B99837 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				94ED305F2E269B2A00B99837 /* PBXTargetDependency */,
+			);
+			name = MixinTests;
+			packageProductDependencies = (
+			);
+			productName = MixinTests;
+			productReference = 94ED305A2E269B2A00B99837 /* MixinTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		DFE861B82422673B009B1833 /* MixinShare */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DFE861C62422673B009B1833 /* Build configuration list for PBXNativeTarget "MixinShare" */;
@@ -5920,7 +5987,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1420;
+				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1620;
 				ORGANIZATIONNAME = Mixin;
 				TargetAttributes = {
@@ -5942,6 +6009,10 @@
 					};
 					94656C162795395D006C3F1D = {
 						CreatedOnToolsVersion = 13.2.1;
+					};
+					94ED30592E269B2A00B99837 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 277FF6FE1F909A1200DBB2EB;
 					};
 					DFE861B82422673B009B1833 = {
 						CreatedOnToolsVersion = 11.3.1;
@@ -5985,6 +6056,7 @@
 				E090B9F623B3957E0088355B /* MixinNotificationService */,
 				DFE861B82422673B009B1833 /* MixinShare */,
 				94656C162795395D006C3F1D /* MixinDebug */,
+				94ED30592E269B2A00B99837 /* MixinTests */,
 			);
 		};
 /* End PBXProject section */
@@ -6319,6 +6391,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		94ED30582E269B2A00B99837 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DFE861B72422673B009B1833 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -6590,6 +6669,7 @@
 				9452D39F2C2C6E5800A61372 /* TextInscriptionContentView.swift in Sources */,
 				94D4E4F82B1753FE00EE04A3 /* ModernQRCodeView.swift in Sources */,
 				DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */,
+				9462A6AD2E278FAE001E4C3E /* ExportImportedSecretIntroductionViewController.swift in Sources */,
 				7BCB8C8422BB56B8002A13CC /* DataAndStorageSettingsViewController.swift in Sources */,
 				9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */,
 				DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */,
@@ -7074,7 +7154,6 @@
 				7B97124C247EBF9800F5CBE6 /* RingtonePlayer.swift in Sources */,
 				94E531BE2D7F5D750008DC76 /* MixinTransactionHistoryTokenFilterPickerViewController.swift in Sources */,
 				948926882D5B42D300D9BCCB /* BIP21.swift in Sources */,
-				94C93C8C2C94880600A31591 /* BIP32Tests.swift in Sources */,
 				DF87949C207505F4004A1E55 /* TransactionCell.swift in Sources */,
 				7B93CAA5222963120053AE90 /* PhotoInputGridViewController.swift in Sources */,
 				DF3D191A24EA1E44000BFE53 /* AssetConfirmationWindow.swift in Sources */,
@@ -7317,6 +7396,7 @@
 				7B9D825A22F1BFEA0099381E /* NormalNetworkOperationIconSet.swift in Sources */,
 				9495E0D62CEF79D300124CC7 /* MnemonicsInputAccessoryView.swift in Sources */,
 				94668E2E2CB5308500558755 /* AlertFrequencySelectorViewController.swift in Sources */,
+				9462A6D02E27920B001E4C3E /* ErrorReportingPINValidationViewController.swift in Sources */,
 				7B6E5503223F69D90060E6FC /* KeyboardBasedLayoutViewController.swift in Sources */,
 				9B748DCD1FA71CEF00BC009B /* CameraViewController.swift in Sources */,
 				7B54F95B22B24A5600908A9D /* CreateRecoveryContactVerificationCodeViewController.swift in Sources */,
@@ -7381,6 +7461,7 @@
 				94046B97272DC2CF007C1D4A /* OutgoingPeerCall.swift in Sources */,
 				7B8ED47C21197F220039946B /* RecentStickersViewController.swift in Sources */,
 				948E6CB528AF95CC00DFF5DF /* TIPIntroViewController.swift in Sources */,
+				9462A6D82E2793BE001E4C3E /* ExportImportedMnemonicsViewController.swift in Sources */,
 				94DD0DBB2DC3528B00C70CA2 /* MembershipPlanBadgeCell.swift in Sources */,
 				7BDD4450233766CB00A0491D /* TableHeaderBypassTableView.swift in Sources */,
 				94A28C572D7EC18F00493BC1 /* TransactionHistoryViewController.swift in Sources */,
@@ -7551,6 +7632,7 @@
 				7B4EF79F22D5E55400F19F6A /* RemoveRecoveryContactValidationViewController.swift in Sources */,
 				9489237D2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift in Sources */,
 				7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */,
+				9462A6BD2E279093001E4C3E /* ImportedSecret.swift in Sources */,
 				946E9F0B2D440F7D00DBC308 /* MixinTokenSelectorViewController.swift in Sources */,
 				945D48102D8956040093E30D /* WalletSummary.swift in Sources */,
 				7B91056222CF4A58002E3608 /* LiveMessageCell.swift in Sources */,
@@ -7746,6 +7828,7 @@
 				94F2F9812DEF50590013B820 /* CancelPendingMembershipOrderViewController.swift in Sources */,
 				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,
 				94FE11F72DA7AC830026AB9A /* Web3TransactionCell.swift in Sources */,
+				9462A6CB2E2790F3001E4C3E /* ExportImportedSecretValidationViewController.swift in Sources */,
 				94C0D7E929AD348500E372FC /* InPlaceKeyStorage.swift in Sources */,
 				94287EE62B8744310088DEAD /* WebSocketServiceSendingError+Localization.swift in Sources */,
 				7BB0F9102434821000BEDA97 /* CircleEditorViewController.swift in Sources */,
@@ -7796,6 +7879,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		94ED30562E269B2A00B99837 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				94ED306B2E269B4F00B99837 /* MixinTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DFE861B52422673B009B1833 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -7836,6 +7927,11 @@
 		94C957E52ACFECDE00C1412F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = 94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */;
+		};
+		94ED305F2E269B2A00B99837 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 277FF6FE1F909A1200DBB2EB /* Mixin */;
+			targetProxy = 94ED305E2E269B2A00B99837 /* PBXContainerItemProxy */;
 		};
 		DFE861C22422673B009B1833 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8178,7 +8274,7 @@
 					"$(PODS_ROOT)/libsignal-protocol-c/src/curve25519",
 					"$(PODS_ROOT)/libsignal-protocol-c/src/curve25519/ed25519",
 					"$(PODS_ROOT)/libsignal-protocol-c/src/protobuf-c",
-					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/**",
+					"$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Mixin/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -8291,6 +8387,70 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "MixinDebug/MixinDebug-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		94ED30612E269B2A00B99837 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/**";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.MixinTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mixin.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Mixin";
+				XROS_DEPLOYMENT_TARGET = 2.5;
+			};
+			name = Debug;
+		};
+		94ED30622E269B2A00B99837 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5EL4S7LCG6;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Mixin/Service/Audio/OggOpus/**";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = one.mixin.MixinTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Mixin.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Mixin";
+				XROS_DEPLOYMENT_TARGET = 2.5;
 			};
 			name = Release;
 		};
@@ -8418,6 +8578,15 @@
 			buildConfigurations = (
 				94656C232795395E006C3F1D /* Debug */,
 				94656C242795395E006C3F1D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		94ED30602E269B2A00B99837 /* Build configuration list for PBXNativeTarget "MixinTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				94ED30612E269B2A00B99837 /* Debug */,
+				94ED30622E269B2A00B99837 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

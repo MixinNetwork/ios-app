@@ -596,6 +596,10 @@
 "export" = "Export";
 "export_failed" = "Export failed";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
+"export_mnemonics_warning_1" = "Anyone who gains access to this mnemonic phrase can transfer all assets from your wallet.";
+"export_mnemonics_warning_2" = "Mixin Messenger does not store your private key on its servers.";
+"export_mnemonics_warning_3" = "Never share your private key with any third party, individual, website, or application.";
+"export_mnemonics_warning_4" = "Ensure that no one — including surveillance cameras — can see your screen.";
 "face_id" = "Face ID";
 "failed" = "Failed";
 "failed_to_compose_avatar" = "Failed to compose avatar. Try another picture instead.";
@@ -1596,6 +1600,7 @@
 "you_have_a_new_message" = "You have a new message";
 "you_have_left_the_group" = "You have left the group";
 "your_emergency_contact_has_been_changed" = "Your recovery contact has been changed";
+"your_mnemonic_phrase" = "Your Mnemonic Phrase";
 "your_phone_number_has_been_changed" = "Your phone number has been changed";
 "your_pin_has_been_changed" = "Your PIN has been changed";
 "your_pin_has_been_created" = "Your PIN has been created";

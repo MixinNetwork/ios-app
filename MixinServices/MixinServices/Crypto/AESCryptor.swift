@@ -132,7 +132,7 @@ extension AESCryptor {
                          iv: ivPlusCipher[0..<ivSize])
     }
     
-    private static func crypt(input: Data, operation: CCOperation, key: Data, iv: Data) throws -> Data {
+    static func crypt(input: Data, operation: CCOperation, key: Data, iv: Data) throws -> Data {
         var cryptor: CCCryptorRef! = nil
         var status = key.withUnsafeBytes { keyBuffer in
             iv.withUnsafeBytes { ivBuffer in

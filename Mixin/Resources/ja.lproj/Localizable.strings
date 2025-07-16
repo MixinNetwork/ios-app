@@ -596,6 +596,10 @@
 "export" = "エクスポート";
 "export_failed" = "エクスポート失敗";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
+"export_mnemonics_warning_1" = "Anyone who gains access to this mnemonic phrase can transfer all assets from your wallet.";
+"export_mnemonics_warning_2" = "Mixin Messenger does not store your private key on its servers.";
+"export_mnemonics_warning_3" = "Never share your private key with any third party, individual, website, or application.";
+"export_mnemonics_warning_4" = "Ensure that no one — including surveillance cameras — can see your screen.";
 "face_id" = "顔認証";
 "failed" = "失敗しました";
 "failed_to_compose_avatar" = "アバターの作成に失敗しました。別の画像を使ってください";
@@ -1596,6 +1600,7 @@
 "you_have_a_new_message" = "新しいメッセージがあります";
 "you_have_left_the_group" = "グループから退会しました";
 "your_emergency_contact_has_been_changed" = "Your recovery contact has been changed";
+"your_mnemonic_phrase" = "Your Mnemonic Phrase";
 "your_phone_number_has_been_changed" = "電話番号が変更されました";
 "your_pin_has_been_changed" = "PINコードが変更されました";
 "your_pin_has_been_created" = "PINコードが生成されました";

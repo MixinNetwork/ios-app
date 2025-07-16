@@ -18,7 +18,8 @@ struct BIP39Mnemonics {
     }
     
     let entropy: Data
-    let phrases: String
+    let phrases: [String]
+    let joinedPhrases: String
     
     private let evmMasterKey: ExtendedKey
     private let solMasterKey: ExtendedKey
@@ -53,7 +54,8 @@ struct BIP39Mnemonics {
             keyCount: 64
         )
         self.entropy = entropy
-        self.phrases = joinedPhrases
+        self.phrases = phrases
+        self.joinedPhrases = joinedPhrases
         self.evmMasterKey = ExtendedKey(seed: seed, curve: .secp256k1)
         self.solMasterKey = ExtendedKey(seed: seed, curve: .ed25519)
     }
@@ -85,7 +87,7 @@ extension BIP39Mnemonics {
         let account = try EthereumAccount(keyStorage: keyStorage)
         let evmAddress = account.address.toChecksumAddress()
         let redundantEVMAddress = BlockchainGenerateEvmAddressFromMnemonic(
-            phrases,
+            joinedPhrases,
             path.string,
             &error
         )
@@ -102,7 +104,7 @@ extension BIP39Mnemonics {
         let solanaKey = solMasterKey.deriveUsingEd25519(path: path)
         let solanaAddress = try Solana.publicKey(seed: solanaKey.key)
         let redundantSolanaAddress = BlockchainGenerateSolanaAddressFromMnemonic(
-            phrases,
+            joinedPhrases,
             path.string,
             &error
         )

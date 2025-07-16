@@ -6,6 +6,7 @@ final class ClassicWalletViewController: WalletViewController {
     private let maxNameUTF8Count = 32
     
     private var wallet: Web3Wallet
+    private var mnemonics: EncryptedBIP39Mnemonics?
     private var tokens: [Web3TokenItem] = []
     private var reviewPendingTransactionJobID: String?
     
@@ -105,6 +106,12 @@ final class ClassicWalletViewController: WalletViewController {
             sheet.addAction(UIAlertAction(title: R.string.localizable.rename_wallet(), style: .default, handler: { (_) in
                 self.inputNewWalletName()
             }))
+            if let mnemonics {
+                sheet.addAction(UIAlertAction(title: R.string.localizable.show_mnemonic_phrase(), style: .default, handler: { (_) in
+                    let introduction = ExportImportedSecretIntroductionViewController(secret: .mnemonics(mnemonics))
+                    self.navigationController?.pushViewController(introduction, animated: true)
+                }))
+            }
             sheet.addAction(UIAlertAction(title: R.string.localizable.delete_wallet(), style: .destructive, handler: { (_) in
                 self.deleteWallet()
             }))
@@ -144,10 +151,12 @@ final class ClassicWalletViewController: WalletViewController {
         let walletID = wallet.walletID
         DispatchQueue.global().async { [weak self] in
             let tokens = Web3TokenDAO.shared.notHiddenTokens(walletID: walletID)
+            let mnemonics = AppGroupKeychain.importedMnemonics(walletID: walletID)
             DispatchQueue.main.async {
                 guard let self = self else {
                     return
                 }
+                self.mnemonics = mnemonics
                 self.tokens = tokens
                 self.tableHeaderView.reloadValues(tokens: tokens)
                 self.layoutTableHeaderView()

@@ -1139,7 +1139,9 @@
 "saved" = "已保存";
 "say_hi" = "打招呼";
 "scam_warning" = "警告：此账号被大量用户举报，请谨防网络诈骗，注意个人财产安全";
+"scan" = "扫码";
 "scan_code_add_me" = "用 Mixin 扫描二维码加我为联系人";
+"scan_code_description" = "请用其他设备扫描以下二维码";
 "scan_qr_code" = "扫描二维码";
 "scan_to_restore" = "扫描以恢复";
 "scan_to_restore_hint" = "点下面按钮扫码建立连接";

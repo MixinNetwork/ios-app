@@ -1139,7 +1139,9 @@
 "saved" = "保存しました";
 "say_hi" = "挨拶をしましょう";
 "scam_warning" = "警告：たくさん報告されているユーザーです、詐欺に気をつけてください";
+"scan" = "スキャン";
 "scan_code_add_me" = "QRコードをスキャンして私をMixinで追加してください。";
+"scan_code_description" = "Use another device to scan the QR code below";
 "scan_qr_code" = "QRコードをスキャン";
 "scan_to_restore" = "Scan to Restore";
 "scan_to_restore_hint" = "Click the button below to scan the code and establish a connection.";

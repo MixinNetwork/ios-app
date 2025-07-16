@@ -1139,7 +1139,9 @@
 "saved" = "Saved";
 "say_hi" = "Say Hi";
 "scam_warning" = "Warning: Many users reported this account as a scam. Please be careful, especially if it asks you for money";
+"scan" = "Scan";
 "scan_code_add_me" = "Scan the QR code to add me on Mixin";
+"scan_code_description" = "Use another device to scan the QR code below";
 "scan_qr_code" = "Scan QR Code";
 "scan_to_restore" = "Scan to Restore";
 "scan_to_restore_hint" = "Click the button below to scan the code and establish a connection.";

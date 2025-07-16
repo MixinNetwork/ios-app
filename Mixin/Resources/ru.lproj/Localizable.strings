@@ -1139,7 +1139,9 @@
 "saved" = "Сохранено";
 "say_hi" = "Скажи привет";
 "scam_warning" = "Предупреждение: многие пользователи сообщали об этой учетной записи как о мошенничестве. Пожалуйста, будьте осторожны, особенно если он просит у вас деньги";
+"scan" = "Сканировать";
 "scan_code_add_me" = "Отсканируйте QR-код, чтобы добавить меня в Mixin";
+"scan_code_description" = "Use another device to scan the QR code below";
 "scan_qr_code" = "Сканировать QR-код";
 "scan_to_restore" = "Scan to Restore";
 "scan_to_restore_hint" = "Click the button below to scan the code and establish a connection.";

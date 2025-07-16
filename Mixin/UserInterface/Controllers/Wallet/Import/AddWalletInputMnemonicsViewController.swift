@@ -112,6 +112,11 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
             make.height.equalTo(40)
         }
         addButtonIntoInputFields(
+            image: R.image.explore.web3_send_scan()!,
+            title: R.string.localizable.scan(),
+            action: #selector(scanQRCode(_:))
+        )
+        addButtonIntoInputFields(
             image: R.image.paste()!,
             title: R.string.localizable.paste(),
             action: #selector(pastePhrases(_:))
@@ -121,9 +126,15 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
             title: R.string.localizable.clear(),
             action: #selector(emptyPhrases(_:))
         )
-        addSpacerIntoInputFields()
         
         detectPhrases(self)
+    }
+    
+    @objc private func scanQRCode(_ sender: Any) {
+        let scanner = CameraViewController.instance()
+        scanner.asQrCodeScanner = true
+        scanner.delegate = self
+        navigationController?.pushViewController(scanner, animated: true)
     }
     
     @objc private func pastePhrases(_ sender: Any) {
@@ -133,17 +144,7 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
         guard let phrases else {
             return
         }
-        if let count = BIP39Mnemonics.PhrasesCount(rawValue: phrases.count),
-           self.phrasesCount != count
-        {
-            reloadInputStackView(count: count)
-        }
-        for (index, phrase) in phrases.prefix(inputFields.count).enumerated() {
-            let inputField = inputFields[index]
-            inputField.setTextColor(phrase: phrase)
-            inputField.textField.text = phrase
-        }
-        detectPhrases(sender)
+        input(phrases: phrases)
     }
     
     @objc private func emptyPhrases(_ sender: Any) {
@@ -214,6 +215,30 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
         button.addTarget(self, action: #selector(switchWordCount(_:)), for: .touchUpInside)
         button.isSelected = count == phrasesCount
         return button
+    }
+    
+    private func input(phrases: [String]) {
+        if let count = BIP39Mnemonics.PhrasesCount(rawValue: phrases.count),
+           self.phrasesCount != count
+        {
+            reloadInputStackView(count: count)
+        }
+        for (index, phrase) in phrases.prefix(inputFields.count).enumerated() {
+            let inputField = inputFields[index]
+            inputField.setTextColor(phrase: phrase)
+            inputField.textField.text = phrase
+        }
+        detectPhrases(self)
+    }
+    
+}
+
+extension AddWalletInputMnemonicsViewController: CameraViewControllerDelegate {
+    
+    func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
+        let phrases = string.components(separatedBy: " ")
+        input(phrases: phrases)
+        return false
     }
     
 }

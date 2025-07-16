@@ -4,13 +4,13 @@ final class ExportImportedMnemonicsViewController: MnemonicsViewController {
     
     private let mnemonics: BIP39Mnemonics
     
-    required init?(coder: NSCoder) {
-        fatalError("Storyboard not supported")
-    }
-    
     init(mnemonics: BIP39Mnemonics) {
         self.mnemonics = mnemonics
         super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     override func viewDidLoad() {
@@ -27,11 +27,15 @@ final class ExportImportedMnemonicsViewController: MnemonicsViewController {
             make.height.equalTo(40)
         }
         addButtonIntoInputFields(
+            image: R.image.ic_user_qr_code()!,
+            title: R.string.localizable.qr_code(),
+            action: #selector(showQRCode(_:))
+        )
+        addButtonIntoInputFields(
             image: R.image.web.ic_action_copy()!,
             title: R.string.localizable.copy(),
             action: #selector(copyPhrases(_:))
         )
-        addSpacerIntoInputFields()
         addSpacerIntoInputFields()
         for (index, phrase) in mnemonics.phrases.enumerated() {
             let textField = inputFields[index].textField
@@ -71,6 +75,11 @@ final class ExportImportedMnemonicsViewController: MnemonicsViewController {
     
     override func confirm(_ sender: Any) {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc private func showQRCode(_ sender: Any) {
+        let code = MnemonicsQRCodeViewController(string: mnemonics.joinedPhrases)
+        present(code, animated: true)
     }
     
     @objc private func copyPhrases(_ sender: Any) {

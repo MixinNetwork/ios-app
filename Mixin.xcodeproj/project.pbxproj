@@ -963,6 +963,9 @@
 		9462A6CB2E2790F3001E4C3E /* ExportImportedSecretValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A6CA2E2790EA001E4C3E /* ExportImportedSecretValidationViewController.swift */; };
 		9462A6D02E27920B001E4C3E /* ErrorReportingPINValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A6CF2E27920B001E4C3E /* ErrorReportingPINValidationViewController.swift */; };
 		9462A6D82E2793BE001E4C3E /* ExportImportedMnemonicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A6D72E2793BE001E4C3E /* ExportImportedMnemonicsViewController.swift */; };
+		9462A7022E27BD8B001E4C3E /* MnemonicsQRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A7002E27BD8B001E4C3E /* MnemonicsQRCodeViewController.swift */; };
+		9462A7032E27BD8B001E4C3E /* MnemonicsQRCodeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9462A7012E27BD8B001E4C3E /* MnemonicsQRCodeView.xib */; };
+		9462A7202E27DA51001E4C3E /* QRCodeActivityItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A71F2E27DA4E001E4C3E /* QRCodeActivityItem.swift */; };
 		946331B12C6227D500C54B76 /* TransactionHistoryFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946331B02C6227D500C54B76 /* TransactionHistoryFilterView.swift */; };
 		946331B62C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946331B52C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift */; };
 		946331BB2C622BE200C54B76 /* TransactionHistoryAssetFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946331BA2C622BE200C54B76 /* TransactionHistoryAssetFilterView.swift */; };
@@ -2616,6 +2619,9 @@
 		9462A6CA2E2790EA001E4C3E /* ExportImportedSecretValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportImportedSecretValidationViewController.swift; sourceTree = "<group>"; };
 		9462A6CF2E27920B001E4C3E /* ErrorReportingPINValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorReportingPINValidationViewController.swift; sourceTree = "<group>"; };
 		9462A6D72E2793BE001E4C3E /* ExportImportedMnemonicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportImportedMnemonicsViewController.swift; sourceTree = "<group>"; };
+		9462A7002E27BD8B001E4C3E /* MnemonicsQRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicsQRCodeViewController.swift; sourceTree = "<group>"; };
+		9462A7012E27BD8B001E4C3E /* MnemonicsQRCodeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MnemonicsQRCodeView.xib; sourceTree = "<group>"; };
+		9462A71F2E27DA4E001E4C3E /* QRCodeActivityItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeActivityItem.swift; sourceTree = "<group>"; };
 		946331B02C6227D500C54B76 /* TransactionHistoryFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryFilterView.swift; sourceTree = "<group>"; };
 		946331B52C622BAE00C54B76 /* TransactionHistoryTypeFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryTypeFilterView.swift; sourceTree = "<group>"; };
 		946331BA2C622BE200C54B76 /* TransactionHistoryAssetFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoryAssetFilterView.swift; sourceTree = "<group>"; };
@@ -4363,6 +4369,8 @@
 				9462A6AC2E278FA3001E4C3E /* ExportImportedSecretIntroductionViewController.swift */,
 				9462A6CA2E2790EA001E4C3E /* ExportImportedSecretValidationViewController.swift */,
 				9462A6D72E2793BE001E4C3E /* ExportImportedMnemonicsViewController.swift */,
+				9462A7012E27BD8B001E4C3E /* MnemonicsQRCodeView.xib */,
+				9462A7002E27BD8B001E4C3E /* MnemonicsQRCodeViewController.swift */,
 			);
 			path = Export;
 			sourceTree = "<group>";
@@ -5855,6 +5863,7 @@
 				E0FE4CCD237421F0009A14F6 /* ProfileMenuItem.swift */,
 				7B5E9B4724373380000AE24E /* AlertEditorController.swift */,
 				7BF8AD82244050EE0038D293 /* PopupResizeGestureCoordinator.swift */,
+				9462A71F2E27DA4E001E4C3E /* QRCodeActivityItem.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -6246,6 +6255,7 @@
 				94E9792D2D0B43B100FFCC12 /* UpdateView.xib in Resources */,
 				DF0A713922D5E93300E69C50 /* WithdrawalTipWindow.xib in Resources */,
 				94F64FFD2D65E40100234D7D /* WalletSummaryValueCell.xib in Resources */,
+				9462A7032E27BD8B001E4C3E /* MnemonicsQRCodeView.xib in Resources */,
 				7BB788B6216C5E0D00EDE7B4 /* GiphyPoweredFooterView.xib in Resources */,
 				7BDBDE7022365017006220DF /* SettingCell.xib in Resources */,
 				ABCB87E023F1A56B00780E60 /* PermissionsTableViewCell.xib in Resources */,
@@ -6929,6 +6939,7 @@
 				942BA99C2C689FA10096CCC3 /* MarketViewController.swift in Sources */,
 				7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
+				9462A7202E27DA51001E4C3E /* QRCodeActivityItem.swift in Sources */,
 				DF5BF5611FBB2D490092AFB8 /* DepositViewController.swift in Sources */,
 				7BEED890246D0C3D00387EAE /* CallAdapter.swift in Sources */,
 				94327CF52D53650600DEE36D /* AddressInfoInputHeaderView.swift in Sources */,
@@ -7251,6 +7262,7 @@
 				94E9C0962BC6978F00D6157C /* Web3PopupCoordinator.swift in Sources */,
 				7CEB735C29DBB737006FB5B2 /* DeviceTransferConversation.swift in Sources */,
 				94F35B372D27C625001BCAE7 /* AtomicInvoicePaymentOperation.swift in Sources */,
+				9462A7022E27BD8B001E4C3E /* MnemonicsQRCodeViewController.swift in Sources */,
 				7B0B01921FEA19BA000EEE4F /* DecryptionFailedMessageViewModel.swift in Sources */,
 				7B2E3E4B1FA07F4500DDDDEB /* SelectCountryViewController.swift in Sources */,
 				7BA931F51FC08DF4005DF478 /* TextMessageCell.swift in Sources */,

@@ -1139,7 +1139,9 @@
 "saved" = "已儲存";
 "say_hi" = "打招呼";
 "scam_warning" = "警告：此賬號被大量使用者舉報，請謹防網路詐騙，注意個人財產安全";
+"scan" = "掃碼";
 "scan_code_add_me" = "用 Mixin 掃描二維碼加我為聯絡人";
+"scan_code_description" = "請用其他裝置掃描以下二維碼";
 "scan_qr_code" = "掃描二維碼";
 "scan_to_restore" = "掃描以恢復";
 "scan_to_restore_hint" = "點下面按鈕掃碼建立連線";

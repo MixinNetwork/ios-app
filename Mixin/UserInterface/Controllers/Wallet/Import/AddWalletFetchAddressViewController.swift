@@ -89,10 +89,18 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
             RouteAPI.assets(searchAddresses: addresses, queue: .global()) { result in
                 switch result {
                 case let .success(assets):
+                    let importedDestinations = Web3AddressDAO.shared.allDestinations()
                     let candidates: [WalletCandidate]
                     if assets.isEmpty {
+                        let wallet = wallets[0]
+                        let alreadyImported = importedDestinations.contains(wallet.evm.address)
+                        || importedDestinations.contains(wallet.solana.address)
                         candidates = [
-                            .empty(evmWallet: wallets[0].evm, solanaWallet: wallets[0].solana)
+                            .empty(
+                                evmWallet: wallet.evm,
+                                solanaWallet: wallet.solana,
+                                alreadyImported: alreadyImported
+                            )
                         ]
                     } else {
                         let tokens = assets.reduce(into: [:]) { result, addressAssets in
@@ -102,10 +110,13 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                             let evmTokens = tokens[wallet.evm.address] ?? []
                             let solanaTokens = tokens[wallet.solana.address] ?? []
                             let tokens = evmTokens + solanaTokens
+                            let alreadyImported = importedDestinations.contains(wallet.evm.address)
+                            || importedDestinations.contains(wallet.solana.address)
                             return tokens.isEmpty ? nil : WalletCandidate(
                                 evmWallet: wallet.evm,
                                 solanaWallet: wallet.solana,
-                                tokens: tokens
+                                tokens: tokens,
+                                alreadyImported: alreadyImported
                             )
                         }
                     }

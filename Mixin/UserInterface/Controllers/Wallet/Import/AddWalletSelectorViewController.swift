@@ -27,7 +27,11 @@ final class AddWalletSelectorViewController: UIViewController {
     }
     
     private var hasSelectedAllWallets: Bool {
-        collectionViewSelectedCount == candidates.count
+        let selectableCandidatesCount = candidates.count { candidate in
+            !candidate.alreadyImported
+        }
+        return selectableCandidatesCount != 0
+        && collectionViewSelectedCount == selectableCandidatesCount
     }
     
     init(
@@ -110,6 +114,9 @@ final class AddWalletSelectorViewController: UIViewController {
         collectionView.reloadData()
         for item in candidates.indices {
             let indexPath = IndexPath(item: item, section: 0)
+            guard self.collectionView(collectionView, shouldSelectItemAt: indexPath) else {
+                continue
+            }
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
         }
         
@@ -162,14 +169,19 @@ final class AddWalletSelectorViewController: UIViewController {
     private func selectAllCandidates() {
         for item in candidates.indices {
             let indexPath = IndexPath(item: item, section: 0)
+            guard self.collectionView(collectionView, shouldSelectItemAt: indexPath) else {
+                continue
+            }
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
         }
         updateViewsWithSelectionCount()
     }
     
     private func deselectAllCandidates() {
-        for item in candidates.indices {
-            let indexPath = IndexPath(item: item, section: 0)
+        guard let indexPaths = collectionView.indexPathsForSelectedItems else {
+            return
+        }
+        for indexPath in indexPaths {
             collectionView.deselectItem(at: indexPath, animated: false)
         }
         updateViewsWithSelectionCount()
@@ -199,6 +211,7 @@ final class AddWalletSelectorViewController: UIViewController {
             RouteAPI.assets(searchAddresses: addresses, queue: .global()) { result in
                 switch result {
                 case let .success(assets):
+                    let importedDestinations = Web3AddressDAO.shared.allDestinations()
                     let tokens = assets.reduce(into: [:]) { result, addressAssets in
                         result[addressAssets.address] = addressAssets.assets
                     }
@@ -206,10 +219,13 @@ final class AddWalletSelectorViewController: UIViewController {
                         let evmTokens = tokens[wallet.evm.address] ?? []
                         let solanaTokens = tokens[wallet.solana.address] ?? []
                         let tokens = evmTokens + solanaTokens
+                        let alreadyImported = importedDestinations.contains(wallet.evm.address)
+                        || importedDestinations.contains(wallet.solana.address)
                         return tokens.isEmpty ? nil : WalletCandidate(
                             evmWallet: wallet.evm,
                             solanaWallet: wallet.solana,
-                            tokens: tokens
+                            tokens: tokens,
+                            alreadyImported: alreadyImported
                         )
                     }
                     DispatchQueue.main.async {
@@ -226,6 +242,9 @@ final class AddWalletSelectorViewController: UIViewController {
                             self.candidates.append(contentsOf: candidates)
                             self.collectionView.insertItems(at: newIndexPaths)
                             for indexPath in newIndexPaths {
+                                guard self.collectionView(self.collectionView, shouldSelectItemAt: indexPath) else {
+                                    continue
+                                }
                                 self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
                             }
                         }
@@ -301,6 +320,10 @@ extension AddWalletSelectorViewController: UICollectionViewDataSource {
 }
 
 extension AddWalletSelectorViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        !candidates[indexPath.item].alreadyImported
+    }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         updateViewsWithSelectionCount()

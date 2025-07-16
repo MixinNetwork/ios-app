@@ -4,19 +4,20 @@ final class AddWalletCandidateCell: UICollectionViewCell, TokenProportionReprese
     
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var importedLabel: InsetLabel!
     @IBOutlet weak var valueLabel: UILabel!
     @IBOutlet weak var proportionStackView: UIStackView!
     @IBOutlet weak var selectedImageView: UIImageView!
     
     override var isSelected: Bool {
         didSet {
-            if isSelected {
-                selectedImageView.layer.borderWidth = 0
-                selectedImageView.image = R.image.ic_selected()
-            } else {
-                selectedImageView.layer.borderWidth = 1
-                selectedImageView.image = nil
-            }
+            reloadSelectedImageView()
+        }
+    }
+    
+    private var alreadyImported = false {
+        didSet {
+            reloadSelectedImageView()
         }
     }
     
@@ -29,6 +30,10 @@ final class AddWalletCandidateCell: UICollectionViewCell, TokenProportionReprese
             scaledFor: .systemFont(ofSize: 16, weight: .medium),
             adjustForContentSize: true
         )
+        importedLabel.text = R.string.localizable.imported()
+        importedLabel.contentInset = UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4)
+        importedLabel.layer.cornerRadius = 4
+        importedLabel.layer.masksToBounds = true
         selectedImageView.layer.cornerRadius = 8
         selectedImageView.layer.masksToBounds = true
         selectedImageView.layer.borderColor = R.color.icon_tint_tertiary()!
@@ -47,12 +52,29 @@ final class AddWalletCandidateCell: UICollectionViewCell, TokenProportionReprese
     
     func load(candidate: WalletCandidate, index: Int) {
         nameLabel.text = R.string.localizable.common_wallet_index(index + 1)
+        alreadyImported = candidate.alreadyImported
         valueLabel.attributedText = candidate.value
         loadProportions(
             tokens: candidate.tokens,
             placeholder: .commonWalletSupportedChains,
             usdBalanceSum: candidate.usdBalanceSum
         )
+    }
+    
+    private func reloadSelectedImageView() {
+        if alreadyImported {
+            importedLabel.isHidden = false
+            selectedImageView.layer.borderWidth = 0
+            selectedImageView.image = R.image.ic_deselected_high_contrast()
+        } else if isSelected {
+            importedLabel.isHidden = true
+            selectedImageView.layer.borderWidth = 0
+            selectedImageView.image = R.image.ic_selected()
+        } else {
+            importedLabel.isHidden = true
+            selectedImageView.layer.borderWidth = 1
+            selectedImageView.image = nil
+        }
     }
     
 }

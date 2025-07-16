@@ -10,6 +10,7 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
     private var phrasesCount: BIP39Mnemonics.PhrasesCount = .medium
     private var phraseCountSwitchButtons: [UIButton] = []
     private var mnemonics: (plain: BIP39Mnemonics, encrypted: EncryptedBIP39Mnemonics)?
+    private var eliminateLayoutAnimations = true
     
     init(mnemonicsEncryptionKey: Data) {
         self.mnemonicsEncryptionKey = mnemonicsEncryptionKey
@@ -69,6 +70,11 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
         )
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        eliminateLayoutAnimations = false
+    }
+    
     override func confirm(_ sender: Any) {
         guard let mnemonics else {
             return
@@ -78,6 +84,16 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
             encryptedMnemonics: mnemonics.encrypted
         )
         navigationController?.pushViewController(fetchAddress, animated: true)
+    }
+    
+    override func adjustScrollViewContentInsets(_ notification: Notification) {
+        if eliminateLayoutAnimations {
+            UIView.performWithoutAnimation {
+                super.adjustScrollViewContentInsets(notification)
+            }
+        } else {
+            super.adjustScrollViewContentInsets(notification)
+        }
     }
     
     private func reloadInputStackView(count: BIP39Mnemonics.PhrasesCount) {
@@ -178,10 +194,6 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
                 confirmButton.isEnabled = false
             }
         }
-    }
-    
-    @objc private func scanMnemonics(_ sender: Any) {
-        
     }
     
     @objc private func presentCustomerService(_ sender: Any) {

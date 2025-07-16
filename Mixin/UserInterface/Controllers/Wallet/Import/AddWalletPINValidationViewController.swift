@@ -16,7 +16,7 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
                 let key = try await TIP.importedMnemonicsEncryptionKey(pin: pin)
                 await MainActor.run {
                     let input = AddWalletInputMnemonicsViewController(mnemonicsEncryptionKey: key)
-                    self.navigationController?.pushViewController(input, animated: true)
+                    self.navigationController?.pushViewController(replacingCurrent: input, animated: true)
                 }
             } catch {
                 await MainActor.run {

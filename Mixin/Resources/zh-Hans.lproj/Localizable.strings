@@ -670,6 +670,7 @@
 "import_wallet_count_one" = "导入 1 个钱包";
 "import_wallets" = "导入钱包";
 "import_wallets_from_another_wallet" = "从其他钱包导入钱包";
+"imported" = "已导入";
 "importing_into_your_wallet" = "正在导入你的钱包...";
 "in_connecting" = "正在连接...";
 "include_files" = "包含文件";

@@ -43,6 +43,11 @@ extension TokenProportionRepresentableCell {
                 iconView.setIcon(tokenIconURL: URL(string: token.iconURL))
                 label.text = NumberFormatter.simplePercentage.string(decimal: percentages[index])
             }
+            for _ in 0..<3 - tokens.count {
+                let placeholder = UIView()
+                placeholder.backgroundColor = .clear
+                proportionStackView.addArrangedSubview(placeholder)
+            }
         default:
             proportionStackView.distribution = .fillEqually
             let percentages = tokens.prefix(2).map { token in

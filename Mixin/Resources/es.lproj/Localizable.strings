@@ -670,6 +670,7 @@
 "import_wallet_count_one" = "Import 1 Wallet";
 "import_wallets" = "Import Wallets";
 "import_wallets_from_another_wallet" = "Import wallets from another wallet";
+"imported" = "Imported";
 "importing_into_your_wallet" = "Importing into your wallet...";
 "in_connecting" = "Conectando...";
 "include_files" = "Incluir archivos";

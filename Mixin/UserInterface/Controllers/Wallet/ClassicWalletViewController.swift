@@ -111,6 +111,10 @@ final class ClassicWalletViewController: WalletViewController {
                     let introduction = ExportImportedSecretIntroductionViewController(secret: .mnemonics(mnemonics))
                     self.navigationController?.pushViewController(introduction, animated: true)
                 }))
+                sheet.addAction(UIAlertAction(title: R.string.localizable.show_private_key(), style: .default, handler: { (_) in
+                    let introduction = ExportPrivateKeyNetworkSelectorViewController(wallet: wallet, mnemonics: mnemonics)
+                    self.present(introduction, animated: true)
+                }))
             }
             sheet.addAction(UIAlertAction(title: R.string.localizable.delete_wallet(), style: .destructive, handler: { (_) in
                 self.deleteWallet()

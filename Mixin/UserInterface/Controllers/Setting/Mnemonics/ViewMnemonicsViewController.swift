@@ -17,7 +17,7 @@ final class ViewMnemonicsViewController: MnemonicsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.text = R.string.localizable.write_down_mnemonic_phrase()
-        descriptionLabel.text = R.string.localizable.write_down_mnemonic_phrase_desc()
+        descriptionLabel.text = R.string.localizable.write_down_secret_description()
         addTextFields(count: mnemonics.phrases.count)
         addSpacerIntoInputFields()
         addButtonIntoInputFields(
@@ -34,14 +34,7 @@ final class ViewMnemonicsViewController: MnemonicsViewController {
             R.string.localizable.mnemonic_phrase_tip_1(),
             R.string.localizable.mnemonic_phrase_tip_2(),
         ]
-        for text in footerTexts {
-            let label = UILabel()
-            label.textColor = R.color.text_tertiary()
-            label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-            label.numberOfLines = 0
-            footerStackView.addArrangedSubview(label)
-            label.text = text
-        }
+        footerTexts.forEach(addTextInFooter(text:))
         footerStackViewBottomConstraint.constant = 30
         confirmButton.setTitle(R.string.localizable.check_backup(), for: .normal)
         confirmButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .semibold), adjustForContentSize: true)

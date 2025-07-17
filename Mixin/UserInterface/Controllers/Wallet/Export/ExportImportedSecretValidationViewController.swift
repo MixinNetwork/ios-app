@@ -20,11 +20,27 @@ final class ExportImportedSecretValidationViewController: ErrorReportingPINValid
         Task { [weak self, secret] in
             do {
                 switch secret {
-                case .mnemonics(let encryptedMnemonics):
+                case let .mnemonics(encryptedMnemonics):
                     let key = try await TIP.importedMnemonicsEncryptionKey(pin: pin)
                     let mnemonics = try encryptedMnemonics.decrypt(with: key)
                     await MainActor.run {
                         let view = ExportImportedMnemonicsViewController(mnemonics: mnemonics)
+                        self?.navigationController?.pushViewController(replacingCurrent: view, animated: true)
+                    }
+                case let .privateKeyFromMnemonics(encryptedMnemonics, kind, path):
+                    let key = try await TIP.importedMnemonicsEncryptionKey(pin: pin)
+                    let mnemonics = try encryptedMnemonics.decrypt(with: key)
+                    let privateKey: String
+                    switch kind {
+                    case .evm:
+                        let data = try mnemonics.deriveForEVM(path: path).privateKey
+                        privateKey = "0x" + data.hexEncodedString()
+                    case .solana:
+                        let data = try mnemonics.deriveForSolana(path: path).privateKey
+                        privateKey = data.base58EncodedString()
+                    }
+                    await MainActor.run {
+                        let view = PrivateKeyViewController(privateKey: privateKey)
                         self?.navigationController?.pushViewController(replacingCurrent: view, animated: true)
                     }
                 }

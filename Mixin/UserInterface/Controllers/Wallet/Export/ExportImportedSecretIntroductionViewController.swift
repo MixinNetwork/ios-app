@@ -21,6 +21,10 @@ final class ExportImportedSecretIntroductionViewController: IntroductionViewCont
             imageView.image = R.image.mnemonic_phrase()
             actionButton.setTitle(R.string.localizable.show_mnemonic_phrase(), for: .normal)
             warningObject = R.string.localizable.mnemonic_phrases()
+        case .privateKeyFromMnemonics:
+            imageView.image = R.image.private_key()
+            actionButton.setTitle(R.string.localizable.show_private_key(), for: .normal)
+            warningObject = R.string.localizable.private_key()
         }
         titleLabel.text = R.string.localizable.before_you_proceed()
         contentLabelTopConstraint.constant = 12

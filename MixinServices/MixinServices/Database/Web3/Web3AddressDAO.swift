@@ -37,6 +37,16 @@ public final class Web3AddressDAO: Web3DAO {
         }
     }
     
+    public func networks(walletID: String) -> [Web3WalletNetwork] {
+        let sql = """
+        SELECT c.name, c.chain_id, c.icon_url, a.path, a.destination
+        FROM addresses a
+            INNER JOIN chains c ON a.chain_id = c.chain_id
+        WHERE a.wallet_id = ?
+        """
+        return db.select(with: sql, arguments: [walletID])
+    }
+    
     public func save(addresses: [Web3Address]) {
         db.save(addresses)
     }

@@ -74,6 +74,15 @@ class MnemonicsViewController: UIViewController {
         view.layoutIfNeeded()
     }
     
+    func addTextInFooter(text: String) {
+        let label = UILabel()
+        label.textColor = R.color.text_tertiary()
+        label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        label.numberOfLines = 0
+        footerStackView.addArrangedSubview(label)
+        label.text = text
+    }
+    
 }
 
 // MARK: - Input Field

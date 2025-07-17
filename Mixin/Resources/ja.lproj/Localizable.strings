@@ -285,7 +285,7 @@
 "check_backup" = "Check Backup";
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
-"choose_network" = "Choose Network";
+"choose_deposit_network" = "Choose Network";
 "choose_network_tip" = "Please ensure the network you choose to deposit that Mixin supports. Otherwise, your assets may be lost.";
 "choose_photo" = "画像を選ぶ";
 "choose_token" = "Choose %@ Network";
@@ -1024,6 +1024,7 @@
 "privacy_wallet" = "Privacy Wallet";
 "privacy_wallet_tip_description" = "A multi-chain wallet with private, free, and instant transactions to meet most of your needs.";
 "privacy_wallet_tip_title" = "What’s the Privacy Wallet?";
+"private_key" = "private key";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "プロフィール";
 "profile_badge" = "Profile Badge";
@@ -1172,6 +1173,7 @@
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
 "select_more_photos" = "さらに選択";
+"select_network" = "Select Network";
 "select_token" = "Select Token";
 "selected_count" = "%@を選択しています。";
 "selected_item" = "選択されたアイテム";
@@ -1275,6 +1277,7 @@
 "show_asset" = "資産を表示する";
 "show_in_chat" = "チャット内で表示";
 "show_mnemonic_phrase" = "Show Mnemonic Phrase";
+"show_private_key" = "Show Private Key";
 "sign_in" = "ログイン";
 "sign_in_no_account" = "Don’t have an account yet?";
 "sign_in_with_mnemonic_phrase" = "Sign in with Mnemonic Phrase";
@@ -1597,7 +1600,7 @@
 "withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, hard bifurcation of blockchain network, or congestion. Please try again later.";
 "withdrawal_to" = "%@へ出金";
 "write_down_mnemonic_phrase" = "Write down your mnemonic phrase";
-"write_down_mnemonic_phrase_desc" = "Write it down on a piece of paper and keep it in a safe place.";
+"write_down_secret_description" = "Write it down on a piece of paper and keep it in a safe place.";
 "years_count_short" = "%dY";
 "you" = "自分";
 "you_are_watching_address" = "You are watching %@";
@@ -1609,3 +1612,4 @@
 "your_phone_number_has_been_changed" = "電話番号が変更されました";
 "your_pin_has_been_changed" = "PINコードが変更されました";
 "your_pin_has_been_created" = "PINコードが生成されました";
+"your_private_key" = "Your Private Key";

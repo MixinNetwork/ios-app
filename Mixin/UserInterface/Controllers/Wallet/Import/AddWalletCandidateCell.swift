@@ -30,7 +30,7 @@ final class AddWalletCandidateCell: UICollectionViewCell, TokenProportionReprese
             scaledFor: .systemFont(ofSize: 16, weight: .medium),
             adjustForContentSize: true
         )
-        importedLabel.text = R.string.localizable.imported()
+        importedLabel.text = R.string.localizable.wallet_candidate_imported()
         importedLabel.contentInset = UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4)
         importedLabel.layer.cornerRadius = 4
         importedLabel.layer.masksToBounds = true

@@ -5,6 +5,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var privacyIconImageView: UIImageView!
+    @IBOutlet weak var tagLabel: InsetLabel!
     @IBOutlet weak var valueLabel: UILabel!
     @IBOutlet weak var proportionStackView: UIStackView!
     
@@ -16,6 +17,9 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             scaledFor: .systemFont(ofSize: 16, weight: .medium),
             adjustForContentSize: true
         )
+        tagLabel.contentInset = UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4)
+        tagLabel.layer.cornerRadius = 4
+        tagLabel.layer.masksToBounds = true
     }
     
     func load(digest: WalletDigest) {
@@ -23,6 +27,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
         switch digest.wallet {
         case .privacy:
             privacyIconImageView.isHidden = false
+            tagLabel.isHidden = true
             loadProportions(
                 tokens: digest.tokens,
                 placeholder: .privacyWalletSupportedChains,
@@ -30,6 +35,13 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             )
         case let .common(wallet):
             privacyIconImageView.isHidden = true
+            switch wallet.category.knownCase {
+            case .classic, .none:
+                tagLabel.isHidden = true
+            case .importedMnemonic:
+                tagLabel.text = R.string.localizable.wallet_imported()
+                tagLabel.isHidden = false
+            }
             loadProportions(
                 tokens: digest.tokens,
                 placeholder: .commonWalletSupportedChains,

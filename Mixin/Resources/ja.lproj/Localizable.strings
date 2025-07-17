@@ -446,7 +446,7 @@
 "delete_note" = "Delete Note";
 "delete_synced_contact" = "同期済みの連絡先を削除する";
 "delete_wallet" = "Delete Wallet";
-"delete_wallet_description" = "Deleting this wallet will not affect your assets, make sure you have your mnemonic phrases backed up.";
+"delete_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
 "delete_wallet_title" = "Enter your PIN to remove wallet";
 "delete_withdraw_address" = "%@のアドレス削除";
 "deleted" = "削除しました";
@@ -670,7 +670,6 @@
 "import_wallet_count_one" = "Import 1 Wallet";
 "import_wallets" = "Import Wallets";
 "import_wallets_from_another_wallet" = "Import wallets from another wallet";
-"imported" = "Imported";
 "importing_into_your_wallet" = "Importing into your wallet...";
 "in_connecting" = "接続中...";
 "include_files" = "ファイルが含まれています";
@@ -1525,8 +1524,10 @@
 "waiting_transaction" = "Waiting Transaction";
 "waiting_transaction_description" = "You have a transfer or withdrawal has not been completed, please try again later";
 "wallet" = "ウォレット";
+"wallet_candidate_imported" = "Imported";
 "wallet_enable_biometric_pay" = "一度有効にすると%@を使ってスムーズに送金できます";
 "wallet_hide_asset_confirmation" = "%@を非表示にしますか?";
+"wallet_imported" = "Imported";
 "wallet_password_not_equal" = "PINコードが一致しません、もう一度お試しください";
 "wallet_password_unsafe" = "PINコードがシンプルすぎます";
 "wallet_pin_pay_interval_tips" = "セキュリティ保護のため、PINコードの定期的な再確認が必要です。";

@@ -446,7 +446,7 @@
 "delete_note" = "刪除轉賬備註";
 "delete_synced_contact" = "刪除已同步的通訊錄";
 "delete_wallet" = "刪除錢包";
-"delete_wallet_description" = "移除此錢包不會影響你的資產，請確保已備份助記詞。";
+"delete_wallet_description" = "移除此錢包不會影響你的資產，請確保你的私鑰或助記詞已備份。";
 "delete_wallet_title" = "請輸入 PIN 以移除錢包";
 "delete_withdraw_address" = "刪除 %@ 地址";
 "deleted" = "已刪除";
@@ -670,7 +670,6 @@
 "import_wallet_count_one" = "匯入 1 個錢包";
 "import_wallets" = "匯入錢包";
 "import_wallets_from_another_wallet" = "從其他錢包匯入錢包";
-"imported" = "已匯入";
 "importing_into_your_wallet" = "正在匯入你的錢包...";
 "in_connecting" = "正在連線...";
 "include_files" = "包含檔案";
@@ -1525,8 +1524,10 @@
 "waiting_transaction" = "正在等待交易";
 "waiting_transaction_description" = "您有一筆轉賬或提現未完成，請稍後再試";
 "wallet" = "錢包";
+"wallet_candidate_imported" = "已匯入";
 "wallet_enable_biometric_pay" = "開啟後，轉賬時可驗證%@快速完成付款。";
 "wallet_hide_asset_confirmation" = "您確定要隱藏%@嗎？";
+"wallet_imported" = "匯入";
 "wallet_password_not_equal" = "PIN 不一致, 請重新輸入";
 "wallet_password_unsafe" = "PIN 過於簡單不安全";
 "wallet_pin_pay_interval_tips" = "為了您的資產安全，距離上次輸入支付 PIN 的時間超過以上指定時間時，再次轉賬時依然需要支付 PIN";

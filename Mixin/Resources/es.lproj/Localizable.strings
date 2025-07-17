@@ -446,7 +446,7 @@
 "delete_note" = "Delete Note";
 "delete_synced_contact" = "Eliminar contactos sincronizados";
 "delete_wallet" = "Delete Wallet";
-"delete_wallet_description" = "Deleting this wallet will not affect your assets, make sure you have your mnemonic phrases backed up.";
+"delete_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
 "delete_wallet_title" = "Enter your PIN to remove wallet";
 "delete_withdraw_address" = "Eliminar dirección de %@";
 "deleted" = "Eliminado";
@@ -670,7 +670,6 @@
 "import_wallet_count_one" = "Import 1 Wallet";
 "import_wallets" = "Import Wallets";
 "import_wallets_from_another_wallet" = "Import wallets from another wallet";
-"imported" = "Imported";
 "importing_into_your_wallet" = "Importing into your wallet...";
 "in_connecting" = "Conectando...";
 "include_files" = "Incluir archivos";
@@ -1525,8 +1524,10 @@
 "waiting_transaction" = "Waiting Transaction";
 "waiting_transaction_description" = "You have a transfer or withdrawal has not been completed, please try again later";
 "wallet" = "Wallet";
+"wallet_candidate_imported" = "Imported";
 "wallet_enable_biometric_pay" = "Una vez habilitado, %@ se puede utilizar para realizar transferencias rápidas.";
 "wallet_hide_asset_confirmation" = "¿Estás seguro de que deseas ocultar %@?";
+"wallet_imported" = "Imported";
 "wallet_password_not_equal" = "El PIN no es el mismo las dos veces, inténtalo de nuevo.";
 "wallet_password_unsafe" = "El PIN es demasiado simple e inseguro.";
 "wallet_pin_pay_interval_tips" = "Para la seguridad de tus activos, debes verificar tu PIN durante el intervalo especificado.";

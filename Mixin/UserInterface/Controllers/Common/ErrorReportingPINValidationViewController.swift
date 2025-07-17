@@ -27,6 +27,9 @@ class ErrorReportingPINValidationViewController: FullscreenPINValidationViewCont
             label.textAlignment = .center
             label.numberOfLines = 0
             contentStackView.addArrangedSubview(label)
+            label.snp.makeConstraints { make in
+                make.width.equalToSuperview().offset(-40)
+            }
             errorDescriptionLabel = label
         }
         label.text = error.localizedDescription

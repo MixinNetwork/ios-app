@@ -14,6 +14,11 @@ final class ExportImportedSecretValidationViewController: ErrorReportingPINValid
         fatalError("Storyboard not supported")
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        titleLabel.text = R.string.localizable.enter_your_pin_to_continue()
+    }
+    
     override func continueAction(_ sender: Any) {
         isBusy = true
         let pin = pinField.text

@@ -18,14 +18,7 @@ final class ExportImportedMnemonicsViewController: MnemonicsViewController {
         titleLabel.text = R.string.localizable.your_mnemonic_phrase()
         descriptionLabel.text = R.string.localizable.write_down_secret_description()
         addTextFields(count: mnemonics.phrases.count)
-        let rowStackView = UIStackView()
-        rowStackView.axis = .horizontal
-        rowStackView.distribution = .fillEqually
-        rowStackView.spacing = 10
-        inputStackView.addArrangedSubview(rowStackView)
-        rowStackView.snp.makeConstraints { make in
-            make.height.equalTo(40)
-        }
+        addRowStackViewForButtonsIntoInputStackView()
         addButtonIntoInputFields(
             image: R.image.ic_user_qr_code()!,
             title: R.string.localizable.qr_code(),

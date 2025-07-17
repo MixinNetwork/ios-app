@@ -119,14 +119,7 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
             textField.delegate = self
         }
         
-        let rowStackView = UIStackView()
-        rowStackView.axis = .horizontal
-        rowStackView.distribution = .fillEqually
-        rowStackView.spacing = 10
-        inputStackView.addArrangedSubview(rowStackView)
-        rowStackView.snp.makeConstraints { make in
-            make.height.equalTo(40)
-        }
+        addRowStackViewForButtonsIntoInputStackView()
         addButtonIntoInputFields(
             image: R.image.explore.web3_send_scan()!,
             title: R.string.localizable.scan(),

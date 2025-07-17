@@ -19,7 +19,11 @@ final class ViewMnemonicsViewController: MnemonicsViewController {
         titleLabel.text = R.string.localizable.write_down_mnemonic_phrase()
         descriptionLabel.text = R.string.localizable.write_down_secret_description()
         addTextFields(count: mnemonics.phrases.count)
-        addSpacerIntoInputFields()
+        addButtonIntoInputFields(
+            image: R.image.ic_user_qr_code()!,
+            title: R.string.localizable.qr_code(),
+            action: #selector(showQRCode(_:))
+        )
         addButtonIntoInputFields(
             image: R.image.web.ic_action_copy()!,
             title: R.string.localizable.copy(),
@@ -56,8 +60,13 @@ final class ViewMnemonicsViewController: MnemonicsViewController {
         navigationController?.pushViewController(check, animated: true)
     }
     
+    @objc private func showQRCode(_ sender: Any) {
+        let code = MnemonicsQRCodeViewController(string: mnemonics.joinedPhrases)
+        present(code, animated: true)
+    }
+    
     @objc private func copyPhrases(_ sender: Any) {
-        UIPasteboard.general.string = mnemonics.phrases.joined(separator: " ")
+        UIPasteboard.general.string = mnemonics.joinedPhrases
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     

@@ -247,6 +247,7 @@ final class AddWalletSelectorViewController: UIViewController {
                                 }
                                 self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
                             }
+                            self.updateViewsWithSelectionCount()
                         }
                     }
                 case let .failure(error):

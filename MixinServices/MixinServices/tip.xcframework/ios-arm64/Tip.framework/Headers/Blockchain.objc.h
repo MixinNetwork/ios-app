@@ -34,6 +34,10 @@
 @property (nonatomic) NSData* _Nullable chainCode;
 @end
 
+FOUNDATION_EXPORT NSData* _Nullable BlockchainAesDecrypt(NSData* _Nullable secret, NSData* _Nullable b, NSError* _Nullable* _Nullable error);
+
+FOUNDATION_EXPORT NSData* _Nullable BlockchainAesEncrypt(NSData* _Nullable secret, NSData* _Nullable plaintext, NSData* _Nullable nonce, NSError* _Nullable* _Nullable error);
+
 // skipped function CKDPriv with unsupported parameter or return types
 
 
@@ -51,9 +55,13 @@ FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEthereumAddress(NSString*
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEvmAddressFromMnemonic(NSString* _Nullable mnemonic, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEvmAddressFromPrivateKey(NSString* _Nullable privateKey, NSError* _Nullable* _Nullable error);
+
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddressFromMnemonic(NSString* _Nullable mnemonic, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
+
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddressFromPrivateKey(NSString* _Nullable privateKey, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT BOOL BlockchainIsMnemonicValid(NSString* _Nullable mnemonic);
 

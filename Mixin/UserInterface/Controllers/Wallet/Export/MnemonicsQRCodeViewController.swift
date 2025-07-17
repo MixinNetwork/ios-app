@@ -1,4 +1,5 @@
 import UIKit
+import Photos
 
 final class MnemonicsQRCodeViewController: UIViewController {
     
@@ -55,9 +56,7 @@ final class MnemonicsQRCodeViewController: UIViewController {
         guard let image = codeView.imageView.image else {
             return
         }
-        let item = QRCodeActivityItem(image: image, title: "")
-        let activity = UIActivityViewController(activityItems: [item], applicationActivities: nil)
-        present(activity, animated: true)
+        PHPhotoLibrary.saveImageToLibrary(image: image)
     }
     
     @IBAction func done(_ sender: Any) {

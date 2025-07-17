@@ -123,23 +123,15 @@ struct MixinTests {
         let phrases = ["legal", "winner", "thank", "year", "wave", "sausage", "worth", "useful", "legal", "winner", "thank", "yellow"]
         let spendKey = Data(hexEncodedString: "0f09874fa3dc875b9594cd956977decda74e12dea331cef4585649f27b200950")!
         let key = Data(SHA256.hash(data: spendKey))
-
+        let nonce = try AES.GCM.Nonce(data: Data(hexEncodedString: "d20167853779cde83da34ff3")!)
+        
         let mnemonics = try BIP39Mnemonics(phrases: phrases)
         #expect(mnemonics.entropy == Data(hexEncodedString: "7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f")!)
-        let iv = Data(hexEncodedString: "1a7b83717ed8191c71e34424f5103711")!
-        let encryptedEntropy = try AESCryptor.crypt(
-            input: mnemonics.entropy,
-            operation: CCOperation(kCCEncrypt),
-            key: key,
-            iv: iv
-        )
-        #expect(encryptedEntropy == Data(hexEncodedString: "64a49cf7509434d592558c0f8dce7db9f300d9c5cd9a763314e8a33b2eeac117")!)
-        let ivPlusEntropy = iv + encryptedEntropy
-        #expect(ivPlusEntropy == Data(base64Encoded: "GnuDcX7YGRxx40Qk9RA3EWSknPdQlDTVklWMD43OfbnzANnFzZp2MxToozsu6sEX")!)
-        let decryptedEntropy = try AESCryptor.decrypt(ivPlusEntropy, with: key)
-        #expect(decryptedEntropy == mnemonics.entropy)
-        let reconstructedMnemonic = try BIP39Mnemonics(entropy: decryptedEntropy)
-        #expect(reconstructedMnemonic.phrases == phrases.joined(separator: " "))
+        let encryptedMnemonics = try EncryptedBIP39Mnemonics(mnemonics: mnemonics, key: key, nonce: nonce)
+        #expect(encryptedMnemonics.data == Data(hexEncodedString: "d20167853779cde83da34ff313f98e144e0c78360c41e8d75ebfa8ebeccd5ab6639458880ab9e854fc7d00ee")!)
+        let decrypted = try encryptedMnemonics.decrypt(with: key)
+        #expect(decrypted.entropy == mnemonics.entropy)
+        #expect(decrypted.phrases == phrases)
     }
     
 }

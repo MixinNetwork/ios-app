@@ -1,16 +1,28 @@
 import Foundation
-import MixinServices
+import CryptoKit
 
 struct EncryptedBIP39Mnemonics {
     
-    private let data: Data
+    enum EncryptionError: Error {
+        case invalidLayout
+    }
     
-    init(mnemonics: BIP39Mnemonics, key: Data) throws {
-        self.data = try AESCryptor.encrypt(mnemonics.entropy, with: key)
+    let data: Data
+    
+    // Only provide `nonce` when testing
+    init(mnemonics: BIP39Mnemonics, key: Data, nonce: AES.GCM.Nonce? = nil) throws {
+        let key = SymmetricKey(data: key)
+        let box = try AES.GCM.seal(mnemonics.entropy, using: key, nonce: nonce)
+        guard let data = box.combined else {
+            throw EncryptionError.invalidLayout
+        }
+        self.data = data
     }
     
     func decrypt(with key: Data) throws -> BIP39Mnemonics {
-        let entropy = try AESCryptor.decrypt(data, with: key)
+        let box = try AES.GCM.SealedBox(combined: data)
+        let key = SymmetricKey(data: key)
+        let entropy = try AES.GCM.open(box, using: key)
         return try BIP39Mnemonics(entropy: entropy)
     }
     

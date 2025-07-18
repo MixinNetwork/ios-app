@@ -1,7 +1,12 @@
 import UIKit
 import MixinServices
+import TIP
 
 final class ExportImportedSecretValidationViewController: ErrorReportingPINValidationViewController {
+    
+    private enum ExportError: Error {
+        case mismatch
+    }
     
     private let secret: ImportedSecret
     
@@ -35,14 +40,27 @@ final class ExportImportedSecretValidationViewController: ErrorReportingPINValid
                 case let .privateKeyFromMnemonics(encryptedMnemonics, kind, path):
                     let key = try await TIP.importedMnemonicsEncryptionKey(pin: pin)
                     let mnemonics = try encryptedMnemonics.decrypt(with: key)
+                    var error: NSError?
                     let privateKey: String
                     switch kind {
                     case .evm:
                         let data = try mnemonics.deriveForEVM(path: path).privateKey
                         privateKey = "0x" + data.hexEncodedString()
+                        let redundantPrivateKey = BlockchainExportEvmPrivateKey(mnemonics.joinedPhrases, path.string, &error)
+                        if let error {
+                            throw error
+                        } else if privateKey != redundantPrivateKey {
+                            throw ExportError.mismatch
+                        }
                     case .solana:
-                        let data = try mnemonics.deriveForSolana(path: path).privateKey
-                        privateKey = data.base58EncodedString()
+                        let derivation = try mnemonics.deriveForSolana(path: path)
+                        privateKey = try Solana.expandedPrivateKey(derivation: derivation)
+                        let redundantPrivateKey = BlockchainExportSolanaPrivateKey(mnemonics.joinedPhrases, path.string, &error)
+                        if let error {
+                            throw error
+                        } else if privateKey != redundantPrivateKey {
+                            throw ExportError.mismatch
+                        }
                     }
                     await MainActor.run {
                         let view = PrivateKeyViewController(privateKey: privateKey)

@@ -134,4 +134,19 @@ struct MixinTests {
         #expect(decrypted.phrases == phrases)
     }
     
+    @Test func testExportPrivateKey() throws {
+        let phrases = ["legal", "winner", "thank", "year", "wave", "sausage", "worth", "useful", "legal", "winner", "thank", "yellow"]
+        let mnemonics = try BIP39Mnemonics(phrases: phrases)
+        
+        let evmPath = try DerivationPath(string: "m/44'/60'/0'/0/0")
+        let evmPrivateKey = try mnemonics.deriveForEVM(path: evmPath).privateKey
+        let evmKey = "0x" + evmPrivateKey.hexEncodedString()
+        #expect(evmKey == "0x33fa40f84e854b941c2b0436dd4a256e1df1cb41b9c1c0ccc8446408c19b8bf9")
+        
+        let solanaPath = try DerivationPath(string: "m/44'/501'/0'/0'")
+        let solanaDerivation = try mnemonics.deriveForSolana(path: solanaPath)
+        let solanaKey = try Solana.expandedPrivateKey(derivation: solanaDerivation)
+        #expect(solanaKey == "37NfN7eam3KCwdC6jAc7nFeuDNYCV1K2AgNWmT4Xo6ogQPMnJ1ZoWA7AKN6jzEoQi3FNTEkkXiwu7VjqXdu8FGUs")
+    }
+    
 }

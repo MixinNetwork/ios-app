@@ -47,6 +47,10 @@ FOUNDATION_EXPORT NSData* _Nullable BlockchainAesEncrypt(NSData* _Nullable secre
 // skipped function Derived with unsupported parameter or return types
 
 
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainExportEvmPrivateKey(NSString* _Nullable mnemonic, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
+
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainExportSolanaPrivateKey(NSString* _Nullable mnemonic, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
+
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateBitcoinSegwitAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateBitcoinTaprootAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);

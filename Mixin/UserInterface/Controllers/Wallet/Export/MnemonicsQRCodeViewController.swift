@@ -33,7 +33,13 @@ final class MnemonicsQRCodeViewController: UIViewController {
         titleLabel.text = R.string.localizable.backup_mnemonic_phrase()
         descriptionLabel.text = R.string.localizable.scan_code_description()
         codeView.setDefaultCornerCurve()
-        doneButton.configuration?.title = R.string.localizable.done()
+        doneButton.configuration?.attributedTitle = AttributedString(
+            R.string.localizable.done(),
+            attributes: .init([
+                .font: UIFont.systemFont(ofSize: 16, weight: .medium),
+                .foregroundColor: UIColor.white,
+            ])
+        )
         doneButton.titleLabel?.adjustsFontForContentSizeCategory = true
     }
     

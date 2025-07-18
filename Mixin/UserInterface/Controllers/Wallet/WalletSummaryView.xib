@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WalletSummaryViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="addWalletView" destination="RTR-DM-mcJ" id="Ghn-hm-v7M"/>
                 <outlet property="collectionView" destination="3jQ-cV-9qL" id="PSz-45-JFZ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -33,18 +34,13 @@
                                 <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="wallets"/>
                             </userDefinedRuntimeAttributes>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RTR-DM-mcJ">
+                        <view opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RTR-DM-mcJ" customClass="BadgeBarButtonView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="339" y="0.0" width="44" height="44"/>
+                            <color key="tintColor" name="icon_tint"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="44" id="hrU-Oy-OAs"/>
                             </constraints>
-                            <color key="tintColor" name="icon_tint"/>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" image="ic_title_add"/>
-                            <connections>
-                                <action selector="addWallet:" destination="-1" eventType="touchUpInside" id="8by-G7-zv0"/>
-                            </connections>
-                        </button>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" name="background_secondary"/>
                     <constraints>
@@ -84,7 +80,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_title_add" width="16" height="16"/>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

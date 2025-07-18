@@ -96,7 +96,7 @@ final class HomeTabBarController: UIViewController {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(reloadItemBadgesIfUpdated(_:)),
+            selector: #selector(reloadItemBadges),
             name: BadgeManager.viewedNotification,
             object: nil
         )
@@ -118,13 +118,20 @@ final class HomeTabBarController: UIViewController {
         switchToChildAfterValidated(with: child)
     }
     
-    @objc private func reloadItemBadgesIfUpdated(_ notification: Notification) {
-        guard let identifier = notification.userInfo?[BadgeManager.identifierUserInfoKey] as? BadgeManager.Identifier else {
-            return
-        }
-        if [.walletSwitch, .market].contains(identifier) {
-            reloadItemBadges()
-        }
+    @objc private func reloadItemBadges() {
+        let hasUnviewedWalletItem = [.walletSwitch, .swap, .buy, .addWallet]
+            .lazy
+            .map(BadgeManager.shared.hasViewed(identifier:))
+            .contains(false)
+        let hasUnviewedMoreItem = [.buy, .swap, .membership, .market]
+            .lazy
+            .map(BadgeManager.shared.hasViewed(identifier:))
+            .contains(false)
+        
+        var items = tabBar.items
+        items[ChildID.wallet.rawValue].badge = hasUnviewedWalletItem
+        items[ChildID.more.rawValue].badge = hasUnviewedMoreItem
+        tabBar.items = items
     }
     
     private func updateTabBarShadow(resolveColorUsing traitCollection: UITraitCollection) {
@@ -136,16 +143,6 @@ final class HomeTabBarController: UIViewController {
         @unknown default:
             tabBar.layer.shadowColor = UIColor.black.withAlphaComponent(0.06).cgColor
         }
-    }
-    
-    private func reloadItemBadges() {
-        let hasWalletSwitchViewed = BadgeManager.shared.hasViewed(identifier: .walletSwitch)
-        let hasMarketReviewed = BadgeManager.shared.hasViewed(identifier: .market)
-        
-        var items = tabBar.items
-        items[ChildID.wallet.rawValue].badge = !hasWalletSwitchViewed
-        items[ChildID.more.rawValue].badge = !hasMarketReviewed
-        tabBar.items = items
     }
     
     private func switchToChild(with id: ChildID) {

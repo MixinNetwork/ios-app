@@ -16,6 +16,7 @@ final class WalletSummaryViewController: UIViewController {
     }
     
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var addWalletView: BadgeBarButtonView!
     
     private var summary: WalletSummary?
     private var privacyWalletDigest: WalletDigest?
@@ -35,6 +36,9 @@ final class WalletSummaryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        addWalletView.button.setImage(R.image.ic_title_add(), for: .normal)
+        addWalletView.button.addTarget(self, action: #selector(addWallet(_:)), for: .touchUpInside)
+        addWalletView.badgeView.isHidden = BadgeManager.shared.hasViewed(identifier: .addWallet)
         if !AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip {
             tips.append(.privacy)
         }
@@ -158,7 +162,9 @@ final class WalletSummaryViewController: UIViewController {
         BadgeManager.shared.setHasViewed(identifier: .walletSwitch)
     }
     
-    @IBAction func addWallet(_ sender: Any) {
+    @objc private func addWallet(_ sender: Any) {
+        addWalletView.badgeView.isHidden = true
+        BadgeManager.shared.setHasViewed(identifier: .addWallet)
         let selector = AddWalletMethodSelectorViewController()
         selector.onSelected = { [weak self] method in
             switch method {

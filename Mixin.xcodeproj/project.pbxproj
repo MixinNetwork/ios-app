@@ -1049,6 +1049,7 @@
 		94735E282E28EBF80001C179 /* ImportedWalletNetworkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94735E252E28EBF80001C179 /* ImportedWalletNetworkCell.swift */; };
 		94735E732E28FED90001C179 /* PrivateKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94735E712E28FED90001C179 /* PrivateKeyViewController.swift */; };
 		94735E742E28FED90001C179 /* PrivateKeyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94735E722E28FED90001C179 /* PrivateKeyView.xib */; };
+		94735F432E2A43CD0001C179 /* WalletTipCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94735F422E2A43CC0001C179 /* WalletTipCollectionViewCell.swift */; };
 		94739A5426258F8300E8914D /* Custom-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94739A5326258F8200E8914D /* Custom-acknowledgements.plist */; };
 		947402BA2DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947402B92DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib */; };
 		947402BF2DA69B890085C183 /* ComplexWeb3TransactionTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947402BE2DA69B860085C183 /* ComplexWeb3TransactionTableHeaderView.swift */; };
@@ -2711,6 +2712,7 @@
 		94735E262E28EBF80001C179 /* ImportedWalletNetworkCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImportedWalletNetworkCell.xib; sourceTree = "<group>"; };
 		94735E712E28FED90001C179 /* PrivateKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateKeyViewController.swift; sourceTree = "<group>"; };
 		94735E722E28FED90001C179 /* PrivateKeyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PrivateKeyView.xib; sourceTree = "<group>"; };
+		94735F422E2A43CC0001C179 /* WalletTipCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTipCollectionViewCell.swift; sourceTree = "<group>"; };
 		94739A5326258F8200E8914D /* Custom-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Custom-acknowledgements.plist"; sourceTree = "<group>"; };
 		947402B92DA69B6D0085C183 /* ComplexWeb3TransactionTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ComplexWeb3TransactionTableHeaderView.xib; sourceTree = "<group>"; };
 		947402BE2DA69B860085C183 /* ComplexWeb3TransactionTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplexWeb3TransactionTableHeaderView.swift; sourceTree = "<group>"; };
@@ -5301,6 +5303,7 @@
 				94F64FFA2D65E40100234D7D /* WalletSummaryValueCell.swift */,
 				94C5BDD42D685FCD0012F840 /* WalletCell.xib */,
 				94C5BDD32D685FCD0012F840 /* WalletCell.swift */,
+				94735F422E2A43CC0001C179 /* WalletTipCollectionViewCell.swift */,
 				94DEB05E2D9D339200406E19 /* WalletTipPageControlCell.swift */,
 				94AD96C72DD47E6E00C84DF2 /* Web3ReputationOptionCell.xib */,
 				944263CD2DD6CB98003F46DF /* Web3ReputationOptionCell.swift */,
@@ -6855,6 +6858,7 @@
 				7BC03AB22424EA9B00931D21 /* StorageUsageCell.swift in Sources */,
 				7BD344092334CE13005C26E3 /* UserHandleCell.swift in Sources */,
 				DFB18FFE2330E7350021CAF3 /* AnnouncementViewController.swift in Sources */,
+				94735F432E2A43CD0001C179 /* WalletTipCollectionViewCell.swift in Sources */,
 				E081796C23C32BCD005FEEAC /* PostMessageViewModel.swift in Sources */,
 				E0B53A6B23B0C3FC008DA9F1 /* MessageCategory+Icon.swift in Sources */,
 				94DF0C132E1938F400052866 /* AppGroupKeychain+ImportedWallets.swift in Sources */,

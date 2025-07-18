@@ -34,6 +34,8 @@ extension AppGroupUserDefaults {
             case lastBuyingCurrencyCode = "last_buy_currency"
         }
         
+        public static let didChangeWalletTipNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeWalletTip")
+        
         @Default(namespace: .wallet, key: Key.lastPINVerifiedDate, defaultValue: nil)
         public static var lastPINVerifiedDate: Date?
         
@@ -65,10 +67,18 @@ extension AppGroupUserDefaults {
         public static var lastSelectedWallet: MixinServices.Wallet.Identifier
         
         @Default(namespace: .wallet, key: Key.hasViewedPrivacyWalletTip, defaultValue: false)
-        public static var hasViewedPrivacyWalletTip: Bool
+        public static var hasViewedPrivacyWalletTip: Bool {
+            didSet {
+                NotificationCenter.default.post(onMainThread: didChangeWalletTipNotification, object: self)
+            }
+        }
         
         @Default(namespace: .wallet, key: Key.hasViewedClassicWalletTip, defaultValue: false)
-        public static var hasViewedClassicWalletTip: Bool
+        public static var hasViewedClassicWalletTip: Bool {
+            didSet {
+                NotificationCenter.default.post(onMainThread: didChangeWalletTipNotification, object: self)
+            }
+        }
         
         @Default(namespace: .wallet, key: Key.hasViewedPrivacyWalletTipInTransfer, defaultValue: false)
         public static var hasViewedPrivacyWalletTipInTransfer: Bool

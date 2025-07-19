@@ -128,7 +128,7 @@ struct AlreadyPaidPrecondition: PaymentPrecondition {
     let traceIDs: [String]
     
     init(traceID: String) {
-        self.traceIDs = []
+        self.traceIDs = [traceID]
     }
     
     init(traceIDs: [String]) {

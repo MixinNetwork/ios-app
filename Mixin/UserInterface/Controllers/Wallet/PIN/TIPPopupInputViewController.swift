@@ -136,7 +136,7 @@ final class TIPPopupInputViewController: PinValidationViewController {
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                 try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
                 Logger.tip.info(category: "TIPPopupInput", message: "Registered to safe")
-                try await TIP.registerClassicWallet(pin: pin)
+                try await TIP.registerClassicWalletIfNeeded(pin: pin)
                 Logger.tip.info(category: "TIPPopupInput", message: "Registered classic wallet")
                 AppGroupUserDefaults.User.loginPINValidated = true
                 await MainActor.run(body: onSuccess)
@@ -196,7 +196,7 @@ final class TIPPopupInputViewController: PinValidationViewController {
                     )
                 }
                 try await TIP.registerToSafeIfNeeded(account: account, pin: new)
-                try await TIP.registerClassicWallet(pin: new)
+                try await TIP.registerClassicWalletIfNeeded(pin: new)
                 if AppGroupUserDefaults.Wallet.payWithBiometricAuthentication {
                     Keychain.shared.storePIN(pin: new)
                 }

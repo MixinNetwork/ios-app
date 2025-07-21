@@ -86,7 +86,7 @@ final class TIPActionViewController: UIViewController {
                     )
                     AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                     try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
-                    try await TIP.registerClassicWallet(pin: pin)
+                    try await TIP.registerClassicWalletIfNeeded(pin: pin)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     await MainActor.run {
                         reporter.report(event: .signUpEnd)
@@ -130,7 +130,7 @@ final class TIPActionViewController: UIViewController {
                     AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
                     AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                     try await TIP.registerToSafeIfNeeded(account: account, pin: new)
-                    try await TIP.registerClassicWallet(pin: new)
+                    try await TIP.registerClassicWalletIfNeeded(pin: new)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     await MainActor.run {
                         finish()
@@ -158,7 +158,7 @@ final class TIPActionViewController: UIViewController {
                     )
                     AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
                     try await TIP.registerToSafeIfNeeded(account: account, pin: pin)
-                    try await TIP.registerClassicWallet(pin: pin)
+                    try await TIP.registerClassicWalletIfNeeded(pin: pin)
                     AppGroupUserDefaults.User.loginPINValidated = true
                     await MainActor.run {
                         finish()

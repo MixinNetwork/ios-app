@@ -29,7 +29,18 @@ extension TIP {
         return try deriveSolanaPrivateKey(spendKey: spendKey)
     }
     
-    static func registerClassicWallet(pin: String) async throws {
+    static func registerClassicWalletIfNeeded(pin: String) async throws {
+        let remoteWallets = try await RouteAPI.wallets()
+        Web3WalletDAO.shared.save(
+            wallets: remoteWallets.map(\.wallet),
+            addresses: remoteWallets.flatMap(\.addresses)
+        )
+        if remoteWallets.contains(where: { $0.wallet.category.knownCase == .classic }) {
+            // Already registered
+            Logger.web3.info(category: "TIP+Web3", message: "Skip classic wallet register")
+            return
+        }
+        
         let spendKey = try await TIP.spendPriv(pin: pin)
         let hexSpendKey = spendKey.hexEncodedString()
         
@@ -69,7 +80,6 @@ extension TIP {
             throw GenerationError.solanaMismatched
         }
         
-        let remoteWallets = try await RouteAPI.wallets()
         let request = RouteAPI.WalletRequest(
             name: "Classic Wallet",
             category: .classic,
@@ -88,8 +98,8 @@ extension TIP {
         )
         let commonWallet = try await RouteAPI.createWallet(request)
         Web3WalletDAO.shared.save(
-            wallets: remoteWallets.map(\.wallet) + [commonWallet.wallet],
-            addresses: remoteWallets.flatMap(\.addresses) + commonWallet.addresses
+            wallets: [commonWallet.wallet],
+            addresses: commonWallet.addresses
         )
     }
     

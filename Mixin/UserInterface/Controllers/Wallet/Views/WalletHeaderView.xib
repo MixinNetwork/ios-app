@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -208,53 +208,8 @@
                                 <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                             </userDefinedRuntimeAttributes>
                         </view>
-                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GhD-g8-kWd">
-                            <rect key="frame" x="0.0" y="219" width="393" height="36"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iyb-he-NZ9">
-                                    <rect key="frame" x="20" y="0.0" width="353" height="36"/>
-                                    <color key="backgroundColor" name="background_quaternary"/>
-                                    <state key="normal" title="Button"/>
-                                    <buttonConfiguration key="configuration" style="plain"/>
-                                </button>
-                                <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="SJ5-i6-ZSz">
-                                    <rect key="frame" x="164.66666666666666" y="0.0" width="64" height="36"/>
-                                    <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" placeholderIntrinsicWidth="0.0" placeholderIntrinsicHeight="infinite" translatesAutoresizingMaskIntoConstraints="NO" id="bxJ-6u-KZG">
-                                            <rect key="frame" x="0.0" y="10" width="0.0" height="16"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="16" id="vOA-k5-Gpc"/>
-                                            </constraints>
-                                        </stackView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000000000001" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hQ5-Bo-b0k">
-                                            <rect key="frame" x="4" y="0.0" width="50" height="36"/>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                            <color key="textColor" name="text"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="ogk-Fd-kI2">
-                                            <rect key="frame" x="58" y="13" width="6" height="10"/>
-                                        </imageView>
-                                    </subviews>
-                                </stackView>
-                            </subviews>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstItem="SJ5-i6-ZSz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iyb-he-NZ9" secondAttribute="leading" id="1sX-go-Fbd"/>
-                                <constraint firstItem="SJ5-i6-ZSz" firstAttribute="centerX" secondItem="GhD-g8-kWd" secondAttribute="centerX" id="5XR-lH-szY"/>
-                                <constraint firstItem="SJ5-i6-ZSz" firstAttribute="top" secondItem="GhD-g8-kWd" secondAttribute="top" id="DXx-Vg-IT8"/>
-                                <constraint firstAttribute="trailing" secondItem="iyb-he-NZ9" secondAttribute="trailing" constant="20" id="KNw-eX-9qs"/>
-                                <constraint firstAttribute="bottom" secondItem="iyb-he-NZ9" secondAttribute="bottom" id="Lr3-Vl-EVa"/>
-                                <constraint firstAttribute="height" constant="36" id="TLl-ee-JV1"/>
-                                <constraint firstItem="SJ5-i6-ZSz" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="iyb-he-NZ9" secondAttribute="trailing" id="ZMH-9M-Vfb"/>
-                                <constraint firstAttribute="bottom" secondItem="SJ5-i6-ZSz" secondAttribute="bottom" id="arD-p2-zDy"/>
-                                <constraint firstItem="iyb-he-NZ9" firstAttribute="leading" secondItem="GhD-g8-kWd" secondAttribute="leading" constant="20" id="bhC-Hh-u4e"/>
-                                <constraint firstItem="iyb-he-NZ9" firstAttribute="top" secondItem="GhD-g8-kWd" secondAttribute="top" id="tTU-fH-cF3"/>
-                            </constraints>
-                        </view>
                     </subviews>
                     <constraints>
-                        <constraint firstItem="GhD-g8-kWd" firstAttribute="width" secondItem="48b-kN-ade" secondAttribute="width" id="GaC-on-R1b"/>
                         <constraint firstItem="pij-OH-ggw" firstAttribute="width" secondItem="48b-kN-ade" secondAttribute="width" id="PKA-Za-gDa"/>
                         <constraint firstItem="0Zg-ir-kM5" firstAttribute="width" secondItem="48b-kN-ade" secondAttribute="width" id="ZJB-OD-4Yk"/>
                     </constraints>
@@ -295,11 +250,6 @@
                 <outlet property="middleAssetPercentLabel" destination="D4y-4u-Plm" id="DMF-HU-X8F"/>
                 <outlet property="middleAssetSymbolLabel" destination="bmJ-7p-4Z6" id="PXE-yX-CFz"/>
                 <outlet property="middleAssetWrapperView" destination="5o4-sb-xNB" id="1JJ-Re-HNE"/>
-                <outlet property="pendingDepositButton" destination="iyb-he-NZ9" id="Rv0-TK-mWT"/>
-                <outlet property="pendingDepositIconStackView" destination="bxJ-6u-KZG" id="8Yz-4h-vjS"/>
-                <outlet property="pendingDepositLabel" destination="hQ5-Bo-b0k" id="B2Z-XP-yhC"/>
-                <outlet property="pendingDepositStackView" destination="SJ5-i6-ZSz" id="AQF-xk-LwC"/>
-                <outlet property="pendingDepositView" destination="GhD-g8-kWd" id="Pbm-EZ-Xbr"/>
                 <outlet property="rightAssetPercentLabel" destination="fuF-rL-MJ4" id="2Pg-zB-9CK"/>
                 <outlet property="rightAssetSymbolLabel" destination="qDd-a6-D65" id="cLj-E0-4F0"/>
                 <outlet property="rightAssetWrapperView" destination="kdN-9A-pev" id="ssf-MZ-mss"/>
@@ -312,10 +262,6 @@
         <image name="Wallet/token_sample_primary" width="3" height="9"/>
         <image name="Wallet/token_sample_secondary" width="3" height="9"/>
         <image name="Wallet/token_sample_tertiary" width="3" height="9"/>
-        <image name="ic_accessory_disclosure" width="6" height="10"/>
-        <namedColor name="background_quaternary">
-            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

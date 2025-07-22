@@ -19,6 +19,9 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
                 )
             )
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Remove Mnemonics", accessory: .disclosure),
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -60,6 +63,9 @@ extension Web3DiagnosticViewController: UITableViewDelegate {
                 Web3PropertiesDAO.shared.deleteTransactionOffset(addresses: destinations)
             }
             showAutoHiddenHud(style: .notification, text: R.string.localizable.done())
+        case (3, 0):
+            AppGroupKeychain.deleteAllImportedMnemonics()
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
         default:
             break
         }

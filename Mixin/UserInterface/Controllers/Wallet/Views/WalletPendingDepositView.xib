@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lfr-1X-aXu" customClass="WalletPendingDepositView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="36"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QmY-2n-Bbw">
+                    <rect key="frame" x="20" y="0.0" width="353" height="36"/>
+                    <color key="backgroundColor" name="background_quaternary"/>
+                    <constraints>
+                        <constraint firstAttribute="height" priority="999" constant="36" id="69X-Tv-4A9"/>
+                    </constraints>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain"/>
+                </button>
+                <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="KEd-MI-BXs">
+                    <rect key="frame" x="164.66666666666666" y="0.0" width="64" height="36"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" placeholderIntrinsicWidth="0.0" placeholderIntrinsicHeight="infinite" translatesAutoresizingMaskIntoConstraints="NO" id="UmZ-j0-4Vf">
+                            <rect key="frame" x="0.0" y="10" width="0.0" height="16"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="16" id="3Y4-Jo-CrE"/>
+                            </constraints>
+                        </stackView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumScaleFactor="0.10000000149011612" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ADh-oX-skS">
+                            <rect key="frame" x="4" y="0.0" width="50" height="36"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="jbl-FM-ucS">
+                            <rect key="frame" x="58" y="13" width="6" height="10"/>
+                        </imageView>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="QmY-2n-Bbw" firstAttribute="leading" secondItem="lfr-1X-aXu" secondAttribute="leading" constant="20" id="403-wW-ppf"/>
+                <constraint firstAttribute="bottom" secondItem="KEd-MI-BXs" secondAttribute="bottom" id="4JK-B6-fpv"/>
+                <constraint firstItem="QmY-2n-Bbw" firstAttribute="top" secondItem="lfr-1X-aXu" secondAttribute="top" id="5nn-OB-ETS"/>
+                <constraint firstItem="KEd-MI-BXs" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="QmY-2n-Bbw" secondAttribute="trailing" id="9S3-g3-Pdb"/>
+                <constraint firstItem="KEd-MI-BXs" firstAttribute="centerX" secondItem="lfr-1X-aXu" secondAttribute="centerX" id="ACF-dS-bQf"/>
+                <constraint firstItem="KEd-MI-BXs" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="QmY-2n-Bbw" secondAttribute="leading" id="Kh7-47-cuW"/>
+                <constraint firstAttribute="bottom" secondItem="QmY-2n-Bbw" secondAttribute="bottom" id="OMD-Zw-J2k"/>
+                <constraint firstAttribute="trailing" secondItem="QmY-2n-Bbw" secondAttribute="trailing" constant="20" id="Tvr-YO-Cul"/>
+                <constraint firstItem="KEd-MI-BXs" firstAttribute="top" secondItem="lfr-1X-aXu" secondAttribute="top" id="ybW-MW-e3Y"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="button" destination="QmY-2n-Bbw" id="vFB-bS-CzV"/>
+                <outlet property="contentStackView" destination="KEd-MI-BXs" id="hLg-pa-7ml"/>
+                <outlet property="iconStackView" destination="UmZ-j0-4Vf" id="mER-cf-wbr"/>
+                <outlet property="label" destination="ADh-oX-skS" id="cE2-Tv-dCT"/>
+            </connections>
+            <point key="canvasLocation" x="-21" y="52"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_accessory_disclosure" width="6" height="10"/>
+        <namedColor name="background_quaternary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

@@ -4,7 +4,7 @@ import MixinServices
 extension AppGroupKeychain {
     
     // Key is wallet id, value is encrypted mnemonics
-    typealias ImportedMnemonicsStorage = [String: EncryptedBIP39Mnemonics]
+    private typealias ImportedMnemonicsStorage = [String: EncryptedBIP39Mnemonics]
     
     static func importedMnemonics(walletID: String) -> EncryptedBIP39Mnemonics? {
         if let mnemonics = allImportedMnemonics() {
@@ -36,6 +36,10 @@ extension AppGroupKeychain {
         } catch {
             Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
         }
+    }
+    
+    static func deleteAllImportedMnemonics() {
+        encryptedWalletPrivateKeys = nil
     }
     
     private static func allImportedMnemonics() -> ImportedMnemonicsStorage? {

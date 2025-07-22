@@ -853,6 +853,10 @@
 		943F30302DF2C8F70000196A /* WalletTipTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943F302F2DF2C8F70000196A /* WalletTipTableViewCell.swift */; };
 		943FEB3E2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943FEB3C2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift */; };
 		943FEB3F2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943FEB3D2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib */; };
+		944075D52E2E8B0F00591B45 /* WalletPendingDepositView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944075D42E2E8B0F00591B45 /* WalletPendingDepositView.swift */; };
+		944075DB2E2E8B2A00591B45 /* WalletPendingDepositView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944075DA2E2E8B2A00591B45 /* WalletPendingDepositView.xib */; };
+		944075FB2E2EA5B700591B45 /* WalletWatchingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944075FA2E2EA5A200591B45 /* WalletWatchingIndicatorView.swift */; };
+		944076032E2EA5D000591B45 /* WalletWatchingIndicatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944076022E2EA5D000591B45 /* WalletWatchingIndicatorView.xib */; };
 		94425FE72DD498FB003F46DF /* MaliciousTokenWarningCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94425FE42DD498FB003F46DF /* MaliciousTokenWarningCell.swift */; };
 		944263832DD64337003F46DF /* Web3ReputationPickerActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944263822DD64337003F46DF /* Web3ReputationPickerActionCell.xib */; };
 		944263B42DD648AD003F46DF /* Web3ReputationPickerActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944263B32DD648AB003F46DF /* Web3ReputationPickerActionCell.swift */; };
@@ -2499,6 +2503,10 @@
 		943F302F2DF2C8F70000196A /* WalletTipTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTipTableViewCell.swift; sourceTree = "<group>"; };
 		943FEB3C2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertTokenCell.swift; sourceTree = "<group>"; };
 		943FEB3D2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketAlertTokenCell.xib; sourceTree = "<group>"; };
+		944075D42E2E8B0F00591B45 /* WalletPendingDepositView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletPendingDepositView.swift; sourceTree = "<group>"; };
+		944075DA2E2E8B2A00591B45 /* WalletPendingDepositView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletPendingDepositView.xib; sourceTree = "<group>"; };
+		944075FA2E2EA5A200591B45 /* WalletWatchingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletWatchingIndicatorView.swift; sourceTree = "<group>"; };
+		944076022E2EA5D000591B45 /* WalletWatchingIndicatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletWatchingIndicatorView.xib; sourceTree = "<group>"; };
 		94425FE42DD498FB003F46DF /* MaliciousTokenWarningCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaliciousTokenWarningCell.swift; sourceTree = "<group>"; };
 		944263822DD64337003F46DF /* Web3ReputationPickerActionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3ReputationPickerActionCell.xib; sourceTree = "<group>"; };
 		944263B32DD648AB003F46DF /* Web3ReputationPickerActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ReputationPickerActionCell.swift; sourceTree = "<group>"; };
@@ -4885,6 +4893,12 @@
 			children = (
 				7B1F5370219D3B90006D6983 /* RoundCornerSelectionView.swift */,
 				7BB12FA62192C8DB009BEECF /* BarChartView.swift */,
+				944075DA2E2E8B2A00591B45 /* WalletPendingDepositView.xib */,
+				944075D42E2E8B0F00591B45 /* WalletPendingDepositView.swift */,
+				944076022E2EA5D000591B45 /* WalletWatchingIndicatorView.xib */,
+				944075FA2E2EA5A200591B45 /* WalletWatchingIndicatorView.swift */,
+				94E594D52D1563AD00525538 /* WalletHeaderView.xib */,
+				7B71F5252191CC1500F93B98 /* WalletHeaderView.swift */,
 				7BF39FC8219AA8B000950F06 /* AssetHeaderView.swift */,
 				7BF52B222199AC2E007A5A74 /* NoTransactionFooterView.xib */,
 				94B9FD9D2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib */,
@@ -5511,8 +5525,6 @@
 				94C5BDEB2D687B710012F840 /* WalletContainerViewController.swift */,
 				94D5C0ED2D5C911D0046C20E /* WalletSummaryView.xib */,
 				94D5C0EC2D5C911D0046C20E /* WalletSummaryViewController.swift */,
-				94E594D52D1563AD00525538 /* WalletHeaderView.xib */,
-				7B71F5252191CC1500F93B98 /* WalletHeaderView.swift */,
 				948664FC2CF867DC0032B9BE /* WalletView.xib */,
 				DFA5B5921FB051BB00549728 /* WalletViewController.swift */,
 				9451E86D2D6DFF0A00A6C4FD /* PrivacyWalletViewController.swift */,
@@ -6161,6 +6173,7 @@
 				942FDA842D3CBCE8004DCC4C /* SwapOrderIDCell.xib in Resources */,
 				7B54F95022B22E2900908A9D /* FullscreenPINValidationView.xib in Resources */,
 				94DD0DA62DC331CE00C70CA2 /* MembershipPlanIntroductionCell.xib in Resources */,
+				944076032E2EA5D000591B45 /* WalletWatchingIndicatorView.xib in Resources */,
 				7B51DDB9223A50D5008ACDBB /* VerificationCodeView.xib in Resources */,
 				94658CA92B34829B00F5EB21 /* OutputCell.xib in Resources */,
 				DF44B0CE20C6897D00A099B6 /* EmptyView.xib in Resources */,
@@ -6349,6 +6362,7 @@
 				94E34124261D829200E2F9D3 /* highlight.js in Resources */,
 				944C61FA2B6BFD6F00C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.xib in Resources */,
 				DF846CDB23694A4900AA1197 /* MultisigUsersWindow.xib in Resources */,
+				944075DB2E2E8B2A00591B45 /* WalletPendingDepositView.xib in Resources */,
 				94A709D62B67B0A5007CADAB /* DepositSuspendedView.xib in Resources */,
 				944BC2ED2C7E17BA008700A8 /* ExploreMarketTokenCell.xib in Resources */,
 				7B2E5882244F10FB0073102C /* RecoveryContactTableHeaderView.xib in Resources */,
@@ -7027,6 +7041,7 @@
 				9495E7332CF4420100124CC7 /* RecoveryKitFooterView.swift in Sources */,
 				94ED23AA2DD4159E00A34266 /* String+Constants.swift in Sources */,
 				9495E57E2CF0D71900124CC7 /* MnemonicsBackupChecking.swift in Sources */,
+				944075FB2E2EA5B700591B45 /* WalletWatchingIndicatorView.swift in Sources */,
 				7B54F95422B23A5600908A9D /* RecoveryContactSelectorViewController.swift in Sources */,
 				94EE1C012B4C647500BE9AD1 /* CodeURL.swift in Sources */,
 				DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */,
@@ -7701,6 +7716,7 @@
 				52A056512BE2727A00CEC8A3 /* InscriptionMessageViewModel.swift in Sources */,
 				94FE0C4F2B3083CA006DEFC5 /* SendingDestinationCell.swift in Sources */,
 				94130E292BAB35150098BE48 /* Web3DiagnosticViewController.swift in Sources */,
+				944075D52E2E8B0F00591B45 /* WalletPendingDepositView.swift in Sources */,
 				7B3FD4EA24192D0C00B58006 /* RenderingModeSwitchableImageView.swift in Sources */,
 				94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */,
 				7CEB736229DBC894006FB5B2 /* DeviceTransferAsset.swift in Sources */,

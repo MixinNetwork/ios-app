@@ -4,7 +4,6 @@ import MixinServices
 final class PrivacyWalletViewController: WalletViewController {
     
     private var tokens: [MixinTokenItem] = []
-    private var lastSelectedAction: TokenAction?
     private var hasAssetInLegacyNetwork = false
     
     private weak var walletSwitchBadgeView: BadgeDotView?
@@ -24,12 +23,7 @@ final class PrivacyWalletViewController: WalletViewController {
         }
         
         tableHeaderView.actionView.actions = [.buy, .receive, .send, .swap]
-        tableHeaderView.actionView.delegate = self
-        tableHeaderView.pendingDepositButton.addTarget(
-            self,
-            action: #selector(revealPendingDeposits(_:)),
-            for: .touchUpInside
-        )
+        tableHeaderView.delegate = self
         tableView.dataSource = self
         tableView.delegate = self
         tableView.reloadData()
@@ -199,12 +193,6 @@ final class PrivacyWalletViewController: WalletViewController {
         }
     }
     
-    @objc private func revealPendingDeposits(_ sender: Any) {
-        let transactionHistory = MixinTransactionHistoryViewController(type: .pending)
-        navigationController?.pushViewController(transactionHistory, animated: true)
-        reporter.report(event: .allTransactions, tags: ["source": "wallet_home"])
-    }
-    
     @objc private func hideBadgeViewIfMatches(_ notification: Notification) {
         guard let identifier = notification.userInfo?[BadgeManager.identifierUserInfoKey] as? BadgeManager.Identifier else {
             return
@@ -331,10 +319,9 @@ extension PrivacyWalletViewController: UITableViewDelegate {
     
 }
 
-extension PrivacyWalletViewController: TokenActionView.Delegate {
+extension PrivacyWalletViewController: WalletHeaderView.Delegate {
     
-    func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
-        lastSelectedAction = action
+    func walletHeaderView(_ view: WalletHeaderView, didSelectAction action: TokenAction) {
         switch action {
         case .buy:
             let buy = BuyTokenInputAmountViewController(wallet: .privacy)
@@ -369,6 +356,12 @@ extension PrivacyWalletViewController: TokenActionView.Delegate {
             navigationController?.pushViewController(swap, animated: true)
             BadgeManager.shared.setHasViewed(identifier: .swap)
         }
+    }
+    
+    func walletHeaderViewWantsToRevealPendingDeposits(_ view: WalletHeaderView) {
+        let transactionHistory = MixinTransactionHistoryViewController(type: .pending)
+        navigationController?.pushViewController(transactionHistory, animated: true)
+        reporter.report(event: .allTransactions, tags: ["source": "wallet_home"])
     }
     
 }

@@ -4,12 +4,14 @@ import MixinServices
 final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Transaction> {
     
     private let wallet: Web3Wallet
+    private let canPerformActions: Bool
     
     private var transactionTokenSymbols: [String: String] = [:]
     private var reviewPendingTransactionJobID: String?
     
-    init(wallet: Web3Wallet, token: Web3TokenItem) {
+    init(wallet: Web3Wallet, token: Web3TokenItem, canPerformActions: Bool) {
         self.wallet = wallet
+        self.canPerformActions = canPerformActions
         super.init(token: token)
     }
     
@@ -108,7 +110,12 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     
     override func updateBalanceCell(_ cell: TokenBalanceCell) {
         cell.reloadData(web3Token: token)
-        cell.actionView.delegate = self
+        if canPerformActions {
+            cell.showActionView()
+            cell.actionView.delegate = self
+        } else {
+            cell.hideActionView()
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForTransaction transaction: Web3Transaction) -> UITableViewCell {

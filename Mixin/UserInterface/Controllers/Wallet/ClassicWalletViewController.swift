@@ -27,12 +27,13 @@ final class ClassicWalletViewController: WalletViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableHeaderView.actionView.actions = [.buy, .receive, .send, .swap]
-        tableHeaderView.actionView.delegate = self
-        tableHeaderView.pendingDepositButton.addTarget(
-            self,
-            action: #selector(revealPendingDeposits(_:)),
-            for: .touchUpInside
-        )
+        switch wallet.category.knownCase {
+        case .classic:
+            tableHeaderView.actionView.isHidden = true
+        case .importedMnemonic, .none:
+            tableHeaderView.actionView.isHidden = false
+        }
+        tableHeaderView.delegate = self
         let notificationCenter: NotificationCenter = .default
         notificationCenter.addObserver(
             self,
@@ -96,7 +97,7 @@ final class ClassicWalletViewController: WalletViewController {
             self.navigationController?.pushViewController(history, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
-            let hidden = HiddenWeb3TokensViewController(wallet: wallet)
+            let hidden = HiddenWeb3TokensViewController(wallet: wallet, canPerformActions: self.mnemonics != nil)
             self.navigationController?.pushViewController(hidden, animated: true)
         }))
         switch wallet.category.knownCase {
@@ -152,10 +153,27 @@ final class ClassicWalletViewController: WalletViewController {
     }
     
     @objc private func reloadData() {
-        let walletID = wallet.walletID
-        DispatchQueue.global().async { [weak self] in
+        DispatchQueue.global().async { [weak self, wallet] in
+            let walletID = wallet.walletID
             let tokens = Web3TokenDAO.shared.notHiddenTokens(walletID: walletID)
-            let mnemonics = AppGroupKeychain.importedMnemonics(walletID: walletID)
+            let mnemonics: EncryptedBIP39Mnemonics?
+            let watchingAddresses: String?
+            switch wallet.category.knownCase {
+            case .classic:
+                mnemonics = nil
+                watchingAddresses = nil
+            case .importedMnemonic, .none:
+                mnemonics = AppGroupKeychain.importedMnemonics(walletID: walletID)
+                watchingAddresses = if mnemonics == nil {
+                    Web3AddressDAO.shared.destinations(walletID: walletID)
+                        .map { destination in
+                            TextTruncation.truncateMiddle(string: destination, prefixCount: 6, suffixCount: 4)
+                        }
+                        .joined(separator: ", ")
+                } else {
+                    nil
+                }
+            }
             DispatchQueue.main.async {
                 guard let self = self else {
                     return
@@ -163,6 +181,14 @@ final class ClassicWalletViewController: WalletViewController {
                 self.mnemonics = mnemonics
                 self.tokens = tokens
                 self.tableHeaderView.reloadValues(tokens: tokens)
+                if let watchingAddresses {
+                    self.tableHeaderView.actionView.isHidden = true
+                    let description = R.string.localizable.you_are_watching_address(watchingAddresses)
+                    self.tableHeaderView.showWatchingIndicator(description: description)
+                } else {
+                    self.tableHeaderView.actionView.isHidden = false
+                    self.tableHeaderView.hideWatchingIndicator()
+                }
                 self.layoutTableHeaderView()
                 self.tableView.reloadData()
             }
@@ -181,11 +207,6 @@ final class ClassicWalletViewController: WalletViewController {
                 self.layoutTableHeaderView()
             }
         }
-    }
-    
-    @objc private func revealPendingDeposits(_ sender: Any) {
-        let transactionHistory = Web3TransactionHistoryViewController(wallet: wallet, type: .pending)
-        navigationController?.pushViewController(transactionHistory, animated: true)
     }
     
     @objc private func renamingInputChanged(_ sender: UITextField) {
@@ -304,7 +325,11 @@ extension ClassicWalletViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let token = tokens[indexPath.row]
-        let viewController = Web3TokenViewController(wallet: wallet, token: token)
+        let viewController = Web3TokenViewController(
+            wallet: wallet,
+            token: token,
+            canPerformActions: mnemonics != nil
+        )
         navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -335,9 +360,9 @@ extension ClassicWalletViewController: UITableViewDelegate {
     
 }
 
-extension ClassicWalletViewController: TokenActionView.Delegate {
+extension ClassicWalletViewController: WalletHeaderView.Delegate {
     
-    func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
+    func walletHeaderView(_ view: WalletHeaderView, didSelectAction action: TokenAction) {
         switch action {
         case .buy:
             let buy = BuyTokenInputAmountViewController(wallet: .common(wallet))
@@ -377,6 +402,11 @@ extension ClassicWalletViewController: TokenActionView.Delegate {
         }
     }
     
+    func walletHeaderViewWantsToRevealPendingDeposits(_ view: WalletHeaderView) {
+        let transactionHistory = Web3TransactionHistoryViewController(wallet: wallet, type: .pending)
+        navigationController?.pushViewController(transactionHistory, animated: true)
+    }
+    
 }
 
 extension ClassicWalletViewController: WalletSearchViewControllerDelegate {
@@ -401,7 +431,11 @@ extension ClassicWalletViewController: WalletSearchViewControllerDelegate {
             level: Web3Reputation.Level.verified.rawValue,
         )
         let item = Web3TokenItem(token: web3Token, hidden: isHidden, chain: token.chain)
-        let controller = Web3TokenViewController(wallet: wallet, token: item)
+        let controller = Web3TokenViewController(
+            wallet: wallet,
+            token: item,
+            canPerformActions: mnemonics != nil
+        )
         navigationController?.pushViewController(controller, animated: true)
     }
     

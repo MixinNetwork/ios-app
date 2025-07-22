@@ -4,11 +4,13 @@ import MixinServices
 final class HiddenWeb3TokensViewController: HiddenTokensViewController {
     
     private let wallet: Web3Wallet
-
+    private let canPerformActions: Bool
+    
     private var tokens: [Web3TokenItem] = []
     
-    init(wallet: Web3Wallet) {
+    init(wallet: Web3Wallet, canPerformActions: Bool) {
         self.wallet = wallet
+        self.canPerformActions = canPerformActions
         super.init()
     }
     
@@ -69,7 +71,11 @@ extension HiddenWeb3TokensViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let token = tokens[indexPath.row]
-        let viewController = Web3TokenViewController(wallet: wallet, token: token)
+        let viewController = Web3TokenViewController(
+            wallet: wallet,
+            token: token,
+            canPerformActions: canPerformActions
+        )
         navigationController?.pushViewController(viewController, animated: true)
     }
     

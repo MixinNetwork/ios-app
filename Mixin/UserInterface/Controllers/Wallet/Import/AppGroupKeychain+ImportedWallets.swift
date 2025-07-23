@@ -1,6 +1,7 @@
 import Foundation
 import MixinServices
 
+// MARK: - Mnemonics
 extension AppGroupKeychain {
     
     // Key is wallet id, value is encrypted mnemonics
@@ -20,7 +21,7 @@ extension AppGroupKeychain {
         do {
             let data = try PropertyListEncoder.default.encode(allMnemonics)
             Logger.general.debug(category: "AppGroupKeychain", message: "Save wallet keys \(data.count)")
-            encryptedWalletPrivateKeys = data
+            encryptedImportedWalletMnemonics = data
         } catch {
             Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
         }
@@ -32,22 +33,78 @@ extension AppGroupKeychain {
         }
         do {
             mnemonics[walletID] = nil
-            encryptedWalletPrivateKeys = try PropertyListEncoder.default.encode(mnemonics)
+            encryptedImportedWalletMnemonics = try PropertyListEncoder.default.encode(mnemonics)
         } catch {
             Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
         }
     }
     
     static func deleteAllImportedMnemonics() {
-        encryptedWalletPrivateKeys = nil
+        encryptedImportedWalletMnemonics = nil
     }
     
     private static func allImportedMnemonics() -> ImportedMnemonicsStorage? {
-        guard let data = encryptedWalletPrivateKeys else {
+        guard let data = encryptedImportedWalletMnemonics else {
             return nil
         }
         do {
             return try PropertyListDecoder.default.decode(ImportedMnemonicsStorage.self, from: data)
+        } catch {
+            Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
+            return nil
+        }
+    }
+    
+}
+
+// MARK: - Private Keys
+extension AppGroupKeychain {
+    
+    // Key is wallet id, value is encrypted private key
+    private typealias ImportedPrivateKeyStorage = [String: EncryptedPrivateKey]
+    
+    static func importedPrivateKey(walletID: String) -> EncryptedPrivateKey? {
+        if let keys = allImportedPrivateKey() {
+            keys[walletID]
+        } else {
+            nil
+        }
+    }
+    
+    static func setImportedPrivateKey(_ key: EncryptedPrivateKey, forWalletID id: String) {
+        var allPrivateKey: ImportedPrivateKeyStorage = allImportedPrivateKey() ?? [:]
+        allPrivateKey[id] = key
+        do {
+            let data = try PropertyListEncoder.default.encode(allPrivateKey)
+            Logger.general.debug(category: "AppGroupKeychain", message: "Save wallet keys \(data.count)")
+            encryptedImportedWalletPrivateKeys = data
+        } catch {
+            Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
+        }
+    }
+    
+    static func deleteImportedPrivateKey(walletID: String) {
+        guard var keys = allImportedPrivateKey() else {
+            return
+        }
+        do {
+            keys[walletID] = nil
+            encryptedImportedWalletPrivateKeys = try PropertyListEncoder.default.encode(keys)
+        } catch {
+            Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
+        }
+    }
+    
+    static func deleteAllImportedPrivateKey() {
+        encryptedImportedWalletPrivateKeys = nil
+    }
+    
+    private static func allImportedPrivateKey() -> ImportedPrivateKeyStorage? {
+        guard let data = encryptedImportedWalletPrivateKeys else {
+            return nil
+        }
+        do {
+            return try PropertyListDecoder.default.decode(ImportedPrivateKeyStorage.self, from: data)
         } catch {
             Logger.general.error(category: "AppGroupKeychain", message: "\(error)")
             return nil

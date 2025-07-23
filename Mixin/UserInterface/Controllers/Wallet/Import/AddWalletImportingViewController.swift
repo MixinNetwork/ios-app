@@ -3,16 +3,16 @@ import MixinServices
 
 final class AddWalletImportingViewController: IntroductionViewController {
     
-    private let encryptedMnemonics: EncryptedBIP39Mnemonics
-    private let wallets: [NamedWalletCandidate]
+    enum ImportingWallet {
+        case byMnemonics(mnemonics: EncryptedBIP39Mnemonics, wallets: [NamedWalletCandidate])
+        case byPrivateKey(key: EncryptedPrivateKey, address: String, chainID: String)
+    }
+    
+    private let importingWallet: ImportingWallet
     private let busyIndicator = ActivityIndicatorView()
     
-    init(
-        encryptedMnemonics: EncryptedBIP39Mnemonics,
-        wallets: [NamedWalletCandidate]
-    ) {
-        self.encryptedMnemonics = encryptedMnemonics
-        self.wallets = wallets
+    init(importingWallet: ImportingWallet) {
+        self.importingWallet = importingWallet
         super.init()
     }
     
@@ -45,11 +45,16 @@ final class AddWalletImportingViewController: IntroductionViewController {
             make.height.equalTo(48)
         }
         
-        importWallets(wallets)
+        retry(self)
     }
     
     @objc private func retry(_ sender: Any) {
-        importWallets(wallets)
+        switch importingWallet {
+        case let .byMnemonics(mnemonics, wallets):
+            importWallets(mnemonics: mnemonics, wallets: wallets)
+        case let .byPrivateKey(key, address, chainID):
+            importWallets(key: key, address: address, chainID: chainID)
+        }
     }
     
     private func showLoading() {
@@ -71,9 +76,9 @@ final class AddWalletImportingViewController: IntroductionViewController {
         contentLabel.isHidden = false
     }
     
-    private func importWallets(_ wallets: [NamedWalletCandidate]) {
+    private func importWallets(mnemonics: EncryptedBIP39Mnemonics, wallets: [NamedWalletCandidate]) {
         showLoading()
-        Task { [weak self, encryptedMnemonics] in
+        Task { [weak self] in
             do {
                 for wallet in wallets {
                     let evmWallet = wallet.candidate.evmWallet
@@ -103,8 +108,44 @@ final class AddWalletImportingViewController: IntroductionViewController {
                     for job in jobs {
                         ConcurrentJobQueue.shared.addJob(job: job)
                     }
-                    AppGroupKeychain.setImportedMnemonics(encryptedMnemonics, forWalletID: response.wallet.walletID)
+                    AppGroupKeychain.setImportedMnemonics(mnemonics, forWalletID: response.wallet.walletID)
                 }
+                await MainActor.run {
+                    _ = self?.navigationController?.popToRootViewController(animated: true)
+                }
+            } catch {
+                await MainActor.run {
+                    self?.showError(error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    private func importWallets(key: EncryptedPrivateKey, address: String, chainID: String) {
+        showLoading()
+        Task { [weak self] in
+            do {
+                let request = RouteAPI.WalletRequest(
+                    name: R.string.localizable.common_wallet(),
+                    category: .importedPrivateKey,
+                    addresses: [
+                        .init(
+                            destination: address,
+                            chainID: chainID,
+                            path: nil
+                        ),
+                    ]
+                )
+                let response = try await RouteAPI.createWallet(request)
+                Web3WalletDAO.shared.save(wallets: [response.wallet], addresses: response.addresses)
+                let jobs = [
+                    RefreshWeb3WalletTokenJob(walletID: response.wallet.walletID),
+                    SyncWeb3TransactionJob(walletID: response.wallet.walletID),
+                ]
+                for job in jobs {
+                    ConcurrentJobQueue.shared.addJob(job: job)
+                }
+                AppGroupKeychain.setImportedPrivateKey(key, forWalletID: response.wallet.walletID)
                 await MainActor.run {
                     _ = self?.navigationController?.popToRootViewController(animated: true)
                 }

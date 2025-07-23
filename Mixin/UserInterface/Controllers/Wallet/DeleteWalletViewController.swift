@@ -3,11 +3,11 @@ import MixinServices
 
 final class DeleteWalletViewController: UIViewController {
     
-    private let walletID: String
+    private let wallet: Web3Wallet
     private let onDeleted: () -> Void
     
-    init(walletID: String, onDeleted: @escaping () -> Void) {
-        self.walletID = walletID
+    init(wallet: Web3Wallet, onDeleted: @escaping () -> Void) {
+        self.wallet = wallet
         self.onDeleted = onDeleted
         super.init(nibName: nil, bundle: nil)
     }
@@ -63,14 +63,22 @@ extension DeleteWalletViewController: AuthenticationIntent {
         didInput pin: String,
         completion: @escaping @MainActor (AuthenticationViewController.AuthenticationResult) -> Void
     ) {
-        AccountAPI.verify(pin: pin) { [walletID, onDeleted] result in
+        AccountAPI.verify(pin: pin) { [wallet, onDeleted] result in
             switch result {
             case .success:
+                let walletID = wallet.walletID
                 RouteAPI.deleteWallet(id: walletID) { result in
                     switch result {
                     case .success:
                         Web3WalletDAO.shared.deleteWallet(id: walletID)
-                        AppGroupKeychain.deleteImportedMnemonics(walletID: walletID)
+                        switch wallet.category.knownCase {
+                        case .importedMnemonic:
+                            AppGroupKeychain.deleteImportedMnemonics(walletID: walletID)
+                        case .importedPrivateKey:
+                            AppGroupKeychain.deleteImportedPrivateKey(walletID: walletID)
+                        case .classic, .none:
+                            break
+                        }
                         completion(.success)
                         controller.presentingViewController?.dismiss(animated: true) {
                             onDeleted()

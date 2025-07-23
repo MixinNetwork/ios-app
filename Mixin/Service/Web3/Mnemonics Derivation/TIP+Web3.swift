@@ -120,7 +120,7 @@ extension TIP {
 // MARK: - Imported Mnemonics
 extension TIP {
     
-    static func importedMnemonicsEncryptionKey(pin: String) async throws -> Data {
+    static func importedWalletEncryptionKey(pin: String) async throws -> Data {
         let spendKey = try await TIP.spendPriv(pin: pin)
         let key = SHA256.hash(data: spendKey)
         return Data(key)

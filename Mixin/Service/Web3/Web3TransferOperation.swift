@@ -31,6 +31,7 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
         case invalidTransaction
         case invalidBlockhash
         case noFeeToken(String)
+        case missingDerivationPath
     }
     
     let wallet: Web3Wallet

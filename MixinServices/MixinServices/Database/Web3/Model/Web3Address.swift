@@ -5,7 +5,7 @@ public struct Web3Address {
     
     public let addressID: String
     public let walletID: String
-    public let path: String
+    public let path: String?
     public let chainID: String
     public let destination: String
     public let createdAt: String

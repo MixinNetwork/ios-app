@@ -143,8 +143,7 @@ final class AddWalletSelectorViewController: UIViewController {
             )
         }
         let importing = AddWalletImportingViewController(
-            encryptedMnemonics: encryptedMnemonics,
-            wallets: namedWallets
+            importingWallet: .byMnemonics(mnemonics: encryptedMnemonics, wallets: namedWallets)
         )
         navigationController?.pushViewController(importing, animated: true)
     }

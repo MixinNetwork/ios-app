@@ -24,17 +24,27 @@ public final class Web3AddressDAO: Web3DAO {
     }
     
     public func allDestinations() -> Set<String> {
-        try! db.read { (db) -> Set<String> in
-            let sql = "SELECT DISTINCT destination FROM addresses"
-            return try String.fetchSet(db, sql: sql)
-        }
+        db.selectSet(with: "SELECT DISTINCT destination FROM addresses")
     }
     
     public func destinations(walletID: String) -> Set<String> {
-        try! db.read { (db) -> Set<String> in
-            let sql = "SELECT DISTINCT destination FROM addresses WHERE wallet_id = ?"
-            return try String.fetchSet(db, sql: sql, arguments: [walletID])
-        }
+        db.selectSet(with: "SELECT DISTINCT destination FROM addresses WHERE wallet_id = ?", arguments: [walletID])
+    }
+    
+    public func prettyDestinations(walletID: String) -> String {
+        let destinations: [String] = db.select(
+            with: "SELECT DISTINCT destination FROM addresses WHERE wallet_id = ?",
+            arguments: [walletID]
+        )
+        return destinations
+            .map { destination in
+                TextTruncation.truncateMiddle(string: destination, prefixCount: 6, suffixCount: 4)
+            }
+            .joined(separator: ", ")
+    }
+    
+    public func chainIDs(walletID: String) -> Set<String> {
+        db.selectSet(with: "SELECT DISTINCT chain_id FROM addresses WHERE wallet_id = ?", arguments: [walletID])
     }
     
     public func networks(walletID: String) -> [Web3WalletNetwork] {

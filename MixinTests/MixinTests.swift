@@ -145,7 +145,7 @@ struct MixinTests {
         
         let solanaPath = try DerivationPath(string: "m/44'/501'/0'/0'")
         let solanaDerivation = try mnemonics.deriveForSolana(path: solanaPath)
-        let solanaKey = try Solana.expandedPrivateKey(derivation: solanaDerivation)
+        let solanaKey = try Solana.keyPair(derivation: solanaDerivation)
         #expect(solanaKey == "37NfN7eam3KCwdC6jAc7nFeuDNYCV1K2AgNWmT4Xo6ogQPMnJ1ZoWA7AKN6jzEoQi3FNTEkkXiwu7VjqXdu8FGUs")
     }
     

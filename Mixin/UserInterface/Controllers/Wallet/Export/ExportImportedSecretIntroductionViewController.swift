@@ -2,9 +2,9 @@ import UIKit
 
 final class ExportImportedSecretIntroductionViewController: IntroductionViewController {
     
-    private let secret: ImportedSecret
+    private let secret: ExportingSecret
     
-    init(secret: ImportedSecret) {
+    init(secret: ExportingSecret) {
         self.secret = secret
         super.init()
     }
@@ -21,7 +21,7 @@ final class ExportImportedSecretIntroductionViewController: IntroductionViewCont
             imageView.image = R.image.mnemonic_phrase()
             actionButton.setTitle(R.string.localizable.show_mnemonic_phrase(), for: .normal)
             warningObject = R.string.localizable.mnemonic_phrases()
-        case .privateKeyFromMnemonics:
+        case .privateKeyFromMnemonics, .privateKey:
             imageView.image = R.image.private_key()
             actionButton.setTitle(R.string.localizable.show_private_key(), for: .normal)
             warningObject = R.string.localizable.private_key()

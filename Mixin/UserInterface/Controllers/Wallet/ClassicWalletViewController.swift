@@ -3,14 +3,23 @@ import MixinServices
 
 final class ClassicWalletViewController: WalletViewController {
     
+    private enum Secret {
+        case mnemonics(EncryptedBIP39Mnemonics)
+        case privateKey(EncryptedPrivateKey, Web3Chain.Kind)
+    }
+    
     private let maxNameUTF8Count = 32
     
     private var wallet: Web3Wallet
-    private var mnemonics: EncryptedBIP39Mnemonics?
+    private var secret: Secret?
     private var tokens: [Web3TokenItem] = []
     private var reviewPendingTransactionJobID: String?
     
     private weak var renamingInputController: UIAlertController?
+    
+    private var canPerformActions: Bool {
+        secret != nil
+    }
     
     init(wallet: Web3Wallet) {
         self.wallet = wallet
@@ -29,9 +38,9 @@ final class ClassicWalletViewController: WalletViewController {
         tableHeaderView.actionView.actions = [.buy, .receive, .send, .swap]
         switch wallet.category.knownCase {
         case .classic:
-            tableHeaderView.actionView.isHidden = true
-        case .importedMnemonic, .none:
             tableHeaderView.actionView.isHidden = false
+        case .importedMnemonic, .importedPrivateKey, .none:
+            tableHeaderView.actionView.isHidden = true
         }
         tableHeaderView.delegate = self
         let notificationCenter: NotificationCenter = .default
@@ -97,7 +106,7 @@ final class ClassicWalletViewController: WalletViewController {
             self.navigationController?.pushViewController(history, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
-            let hidden = HiddenWeb3TokensViewController(wallet: wallet, canPerformActions: self.mnemonics != nil)
+            let hidden = HiddenWeb3TokensViewController(wallet: wallet, canPerformActions: self.canPerformActions)
             self.navigationController?.pushViewController(hidden, animated: true)
         }))
         switch wallet.category.knownCase {
@@ -107,7 +116,8 @@ final class ClassicWalletViewController: WalletViewController {
             sheet.addAction(UIAlertAction(title: R.string.localizable.rename_wallet(), style: .default, handler: { (_) in
                 self.inputNewWalletName()
             }))
-            if let mnemonics {
+            switch secret {
+            case .mnemonics(let mnemonics):
                 sheet.addAction(UIAlertAction(title: R.string.localizable.show_mnemonic_phrase(), style: .default, handler: { (_) in
                     let introduction = ExportImportedSecretIntroductionViewController(secret: .mnemonics(mnemonics))
                     self.navigationController?.pushViewController(introduction, animated: true)
@@ -116,6 +126,24 @@ final class ClassicWalletViewController: WalletViewController {
                     let introduction = ExportPrivateKeyNetworkSelectorViewController(wallet: wallet, mnemonics: mnemonics)
                     self.present(introduction, animated: true)
                 }))
+            default:
+                break
+            }
+            sheet.addAction(UIAlertAction(title: R.string.localizable.delete_wallet(), style: .destructive, handler: { (_) in
+                self.deleteWallet()
+            }))
+        case .importedPrivateKey:
+            sheet.addAction(UIAlertAction(title: R.string.localizable.rename_wallet(), style: .default, handler: { (_) in
+                self.inputNewWalletName()
+            }))
+            switch secret {
+            case let .privateKey(privateKey, kind):
+                sheet.addAction(UIAlertAction(title: R.string.localizable.show_private_key(), style: .default, handler: { (_) in
+                    let introduction = ExportImportedSecretIntroductionViewController(secret: .privateKey(privateKey, kind))
+                    self.navigationController?.pushViewController(introduction, animated: true)
+                }))
+            default:
+                break
             }
             sheet.addAction(UIAlertAction(title: R.string.localizable.delete_wallet(), style: .destructive, handler: { (_) in
                 self.deleteWallet()
@@ -156,20 +184,38 @@ final class ClassicWalletViewController: WalletViewController {
         DispatchQueue.global().async { [weak self, wallet] in
             let walletID = wallet.walletID
             let tokens = Web3TokenDAO.shared.notHiddenTokens(walletID: walletID)
-            let mnemonics: EncryptedBIP39Mnemonics?
+            let secret: Secret?
             let watchingAddresses: String?
             switch wallet.category.knownCase {
             case .classic:
-                mnemonics = nil
+                secret = nil
                 watchingAddresses = nil
             case .importedMnemonic, .none:
-                mnemonics = AppGroupKeychain.importedMnemonics(walletID: walletID)
-                watchingAddresses = if mnemonics == nil {
-                    Web3AddressDAO.shared.destinations(walletID: walletID)
-                        .map { destination in
-                            TextTruncation.truncateMiddle(string: destination, prefixCount: 6, suffixCount: 4)
-                        }
-                        .joined(separator: ", ")
+                if let mnemonics = AppGroupKeychain.importedMnemonics(walletID: walletID) {
+                    secret = .mnemonics(mnemonics)
+                } else {
+                    secret = nil
+                }
+                watchingAddresses = if secret == nil {
+                    Web3AddressDAO.shared.prettyDestinations(walletID: walletID)
+                } else {
+                    nil
+                }
+            case .importedPrivateKey:
+                if let privateKey = AppGroupKeychain.importedPrivateKey(walletID: walletID) {
+                    let chainIDs = Web3AddressDAO.shared.chainIDs(walletID: walletID)
+                    if chainIDs.contains(ChainID.ethereum) {
+                        secret = .privateKey(privateKey, .evm)
+                    } else if chainIDs.contains(ChainID.solana) {
+                        secret = .privateKey(privateKey, .solana)
+                    } else {
+                        secret = nil
+                    }
+                } else {
+                    secret = nil
+                }
+                watchingAddresses = if secret == nil {
+                    Web3AddressDAO.shared.prettyDestinations(walletID: walletID)
                 } else {
                     nil
                 }
@@ -178,7 +224,7 @@ final class ClassicWalletViewController: WalletViewController {
                 guard let self = self else {
                     return
                 }
-                self.mnemonics = mnemonics
+                self.secret = secret
                 self.tokens = tokens
                 self.tableHeaderView.reloadValues(tokens: tokens)
                 if let watchingAddresses {
@@ -275,7 +321,7 @@ final class ClassicWalletViewController: WalletViewController {
     }
     
     private func deleteWallet() {
-        let deleteWallet = DeleteWalletViewController(walletID: wallet.walletID) { [weak self] in
+        let deleteWallet = DeleteWalletViewController(wallet: wallet) { [weak self] in
             guard let self else {
                 return
             }
@@ -328,7 +374,7 @@ extension ClassicWalletViewController: UITableViewDelegate {
         let viewController = Web3TokenViewController(
             wallet: wallet,
             token: token,
-            canPerformActions: mnemonics != nil
+            canPerformActions: canPerformActions
         )
         navigationController?.pushViewController(viewController, animated: true)
     }
@@ -434,7 +480,7 @@ extension ClassicWalletViewController: WalletSearchViewControllerDelegate {
         let controller = Web3TokenViewController(
             wallet: wallet,
             token: item,
-            canPerformActions: mnemonics != nil
+            canPerformActions: canPerformActions
         )
         navigationController?.pushViewController(controller, animated: true)
     }

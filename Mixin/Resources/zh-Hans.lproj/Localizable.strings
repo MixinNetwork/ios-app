@@ -663,9 +663,11 @@
 "im_ready" = "准备好了";
 "image" = "图像";
 "immediately" = "立刻";
+"import" = "导入";
 "import_mnemonic_phrase" = "导入助记词";
 "import_private_key" = "导入私钥";
 "import_selected_wallet" = "导入选中的钱包";
+"import_single_chain_wallet" = "导入单链钱包";
 "import_wallet_count" = "导入 %d 个钱包";
 "import_wallet_count_one" = "导入 1 个钱包";
 "import_wallets" = "导入钱包";
@@ -685,6 +687,7 @@
 "interface_style" = "外观";
 "invalid_address" = "无效的地址";
 "invalid_candidate" = "无效的 Candidate";
+"invalid_format" = "格式无效";
 "invalid_height" = "高度无效";
 "invalid_malformed_address_eos_hint" = "地址格式错误。Mixin 不支持提现到 EOS 合约地址！";
 "invalid_malformed_address_hint" = "地址格式错误。请输入正确的 %@ 地址";
@@ -1025,6 +1028,7 @@
 "privacy_wallet_tip_description" = "一个支持多链的钱包，提供私密、免费且即时的交易，满足您的大部分需求。";
 "privacy_wallet_tip_title" = "什么是隐私钱包？";
 "private_key" = "私钥";
+"private_key_storage_description" = "你的私钥只会保存在本地设备上";
 "process_can_not_be_stop" = "流程一旦开始无法取消，请牢记 6 位数字 PIN，意外中止流程需要再次输入";
 "profile" = "个人资料";
 "profile_badge" = "个人资料徽章";
@@ -1418,6 +1422,7 @@
 "trying_connect_tip_network" = "正在连接 TIP 网络";
 "trying_connect_tip_node" = "正在连接节点...";
 "type" = "类型";
+"type_your_private_key" = "请输入你的私钥";
 "unable_connect_to_desktop" = "无法连接到桌面，请稍后重试";
 "unable_synced_between_different_account" = "不同账户之间无法同步聊天记录";
 "unable_to_decode_the_request" = "无法解析请求: %@";

@@ -3,6 +3,17 @@ import MixinServices
 
 final class AddWalletPINValidationViewController: ErrorReportingPINValidationViewController {
     
+    private let method: AddWalletMethod
+    
+    init(method: AddWalletMethod) {
+        self.method = method
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.text = R.string.localizable.enter_your_pin_to_continue()
@@ -13,9 +24,14 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
         let pin = pinField.text
         Task {
             do {
-                let key = try await TIP.importedMnemonicsEncryptionKey(pin: pin)
+                let key = try await TIP.importedWalletEncryptionKey(pin: pin)
                 await MainActor.run {
-                    let input = AddWalletInputMnemonicsViewController(mnemonicsEncryptionKey: key)
+                    let input = switch method {
+                    case .privateKey:
+                        AddWalletInputPrivateKeyViewController(encryptionKey: key)
+                    case .mnemonics:
+                        AddWalletInputMnemonicsViewController(encryptionKey: key)
+                    }
                     self.navigationController?.pushViewController(replacingCurrent: input, animated: true)
                 }
             } catch {

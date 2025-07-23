@@ -36,7 +36,7 @@ public final class Web3Database: Database {
                 CREATE TABLE IF NOT EXISTS `addresses` (
                     `address_id`    TEXT NOT NULL,
                     `wallet_id`     TEXT NOT NULL,
-                    `path`          TEXT NOT NULL,
+                    `path`          TEXT,
                     `chain_id`      TEXT NOT NULL,
                     `destination`   TEXT NOT NULL,
                     `created_at`    TEXT NOT NULL,
@@ -177,7 +177,7 @@ public final class Web3Database: Database {
             let addressInfos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(addresses)")
             let addressColumnNames = addressInfos.map(\.name)
             if !addressColumnNames.contains("path") {
-                try db.execute(sql: "ALTER TABLE addresses ADD COLUMN path TEXT NOT NULL DEFAULT ''")
+                try db.execute(sql: "ALTER TABLE addresses ADD COLUMN path TEXT")
             }
         }
         

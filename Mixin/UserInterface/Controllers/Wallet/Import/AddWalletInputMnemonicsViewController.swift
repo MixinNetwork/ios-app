@@ -3,7 +3,7 @@ import MixinServices
 
 final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController {
     
-    private let mnemonicsEncryptionKey: Data
+    private let encryptionKey: Data
     
     private weak var errorDescriptionLabel: UILabel!
     
@@ -12,8 +12,8 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
     private var mnemonics: (plain: BIP39Mnemonics, encrypted: EncryptedBIP39Mnemonics)?
     private var eliminateLayoutAnimations = true
     
-    init(mnemonicsEncryptionKey: Data) {
-        self.mnemonicsEncryptionKey = mnemonicsEncryptionKey
+    init(encryptionKey: Data) {
+        self.encryptionKey = encryptionKey
         super.init()
     }
     
@@ -175,7 +175,7 @@ final class AddWalletInputMnemonicsViewController: InputMnemonicsViewController 
                 let plain = try BIP39Mnemonics(phrases: phrases)
                 let encrypted = try EncryptedBIP39Mnemonics(
                     mnemonics: plain,
-                    key: mnemonicsEncryptionKey
+                    key: encryptionKey
                 )
                 mnemonics = (plain: plain, encrypted: encrypted)
                 errorDescriptionLabel.isHidden = true

@@ -15,6 +15,7 @@ enum Solana {
     static let lamportsPerSOL = Decimal(SOLANA_LAMPORTS_PER_SOL)
     static let microLamportsPerLamport: Decimal = 1_000_000
     static let accountCreationCost: Decimal = 0.002_039_28
+    static let keyPairCount = 64
     
     static func publicKey(seed: Data) throws -> String {
         try seed.withUnsafeBytes { seed in
@@ -54,11 +55,18 @@ enum Solana {
         }
     }
     
-    static func expandedPrivateKey(derivation: BIP39Mnemonics.Derivation) throws -> String {
+    static func keyPair(derivation: BIP39Mnemonics.Derivation) throws -> String {
         guard let publicKey = Data(base58EncodedString: derivation.address) else {
             throw ExportError.invalidPublicKey
         }
         return (derivation.privateKey + publicKey).base58EncodedString()
+    }
+    
+    static func keyPair(privateKey: Data) throws -> String {
+        guard let publicKey = Data(base58EncodedString: try publicKey(seed: privateKey)) else {
+            throw ExportError.invalidPublicKey
+        }
+        return (privateKey + publicKey).base58EncodedString()
     }
     
     fileprivate static func withSolanaStringPointer(_ assignment: (inout UnsafePointer<CChar>?) -> SolanaErrorCode) throws -> String {

@@ -2,16 +2,13 @@ import UIKit
 
 final class AddWalletMethodSelectorViewController: PopupSelectorViewController {
     
-    enum Method: CaseIterable {
-        case mnemonics
-    }
-    
-    var onSelected: ((Method) -> Void)?
+    var onSelected: ((AddWalletMethod) -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = R.color.background_quaternary()
         titleView.backgroundColor = R.color.background_quaternary()
+        titleView.titleLabel.text = R.string.localizable.add_wallet()
         tableViewTopConstraint.constant = 0
         tableView.backgroundColor = R.color.background_quaternary()
         tableView.estimatedRowHeight = 72
@@ -28,7 +25,6 @@ final class AddWalletMethodSelectorViewController: PopupSelectorViewController {
         case .long, .extraLong:
             UIEdgeInsets(top: 0, left: 0, bottom: 260, right: 0)
         }
-        titleView.titleLabel.text = R.string.localizable.add_wallet()
     }
     
 }
@@ -36,12 +32,16 @@ final class AddWalletMethodSelectorViewController: PopupSelectorViewController {
 extension AddWalletMethodSelectorViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        Method.allCases.count
+        AddWalletMethod.allCases.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.add_token_method, for: indexPath)!
-        switch Method.allCases[indexPath.row] {
+        switch AddWalletMethod.allCases[indexPath.row] {
+        case .privateKey:
+            cell.iconImageView.image = R.image.add_wallet_private_key()
+            cell.titleLabel.text = R.string.localizable.import_private_key()
+            cell.subtitleLabel.text = R.string.localizable.import_single_chain_wallet()
         case .mnemonics:
             cell.iconImageView.image = R.image.add_wallet_mnemonics()
             cell.titleLabel.text = R.string.localizable.import_mnemonic_phrase()
@@ -55,7 +55,7 @@ extension AddWalletMethodSelectorViewController: UITableViewDataSource {
 extension AddWalletMethodSelectorViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let method = Method.allCases[indexPath.row]
+        let method = AddWalletMethod.allCases[indexPath.row]
         presentingViewController?.dismiss(animated: true) { [onSelected] in
             onSelected?(method)
         }

@@ -663,9 +663,11 @@
 "im_ready" = "準備好了";
 "image" = "影像";
 "immediately" = "立刻";
+"import" = "匯入";
 "import_mnemonic_phrase" = "匯入助記詞";
 "import_private_key" = "匯入私鑰";
 "import_selected_wallet" = "匯入選中的錢包";
+"import_single_chain_wallet" = "匯入單鏈錢包";
 "import_wallet_count" = "匯入 %d 個錢包";
 "import_wallet_count_one" = "匯入 1 個錢包";
 "import_wallets" = "匯入錢包";
@@ -685,6 +687,7 @@
 "interface_style" = "外觀";
 "invalid_address" = "無效的地址";
 "invalid_candidate" = "無效的 Candidate";
+"invalid_format" = "格式無效";
 "invalid_height" = "高度無效";
 "invalid_malformed_address_eos_hint" = "地址格式錯誤。Mixin 不支援提現到 EOS 合約地址！";
 "invalid_malformed_address_hint" = "地址格式錯誤。請輸入正確的 %@ 地址";
@@ -1025,6 +1028,7 @@
 "privacy_wallet_tip_description" = "一個支援多鏈的錢包，提供私密、免費且即時的交易，滿足您的大部分需求。";
 "privacy_wallet_tip_title" = "什麼是隱私錢包？";
 "private_key" = "私鑰";
+"private_key_storage_description" = "你的私鑰只會儲存在本地裝置上";
 "process_can_not_be_stop" = "流程一旦開始無法取消，請牢記 6 位數字 PIN，意外中止流程需要再次輸入";
 "profile" = "個人資料";
 "profile_badge" = "個人資料徽章";
@@ -1418,6 +1422,7 @@
 "trying_connect_tip_network" = "正在連線 TIP 網路";
 "trying_connect_tip_node" = "正在連線節點...";
 "type" = "型別";
+"type_your_private_key" = "請輸入你的私鑰";
 "unable_connect_to_desktop" = "無法連線到桌面，請稍後重試";
 "unable_synced_between_different_account" = "不同賬戶之間無法同步聊天記錄";
 "unable_to_decode_the_request" = "無法解析請求: %@";

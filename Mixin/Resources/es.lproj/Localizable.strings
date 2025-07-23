@@ -663,9 +663,11 @@
 "im_ready" = "I'm Ready";
 "image" = "imagen";
 "immediately" = "Inmediatamente";
+"import" = "Importar";
 "import_mnemonic_phrase" = "Import Mnemonic Phrase";
 "import_private_key" = "Import Private Key";
 "import_selected_wallet" = "Import Selected Wallets";
+"import_single_chain_wallet" = "Import a single-chain wallet";
 "import_wallet_count" = "Import %d Wallets";
 "import_wallet_count_one" = "Import 1 Wallet";
 "import_wallets" = "Import Wallets";
@@ -685,6 +687,7 @@
 "interface_style" = "Estilo de interfaz";
 "invalid_address" = "Invalid Address";
 "invalid_candidate" = "Candidato inválido";
+"invalid_format" = "Invalid format";
 "invalid_height" = "Altura inválida";
 "invalid_malformed_address_eos_hint" = "Formato de dirección inválido. ¡Mixin no admite el retiro a la dirección del contrato EOS!";
 "invalid_malformed_address_hint" = "Formato de dirección inválido. Vuelve a intentarlo con una dirección válida de %@";
@@ -1025,6 +1028,7 @@
 "privacy_wallet_tip_description" = "A multi-chain wallet with private, free, and instant transactions to meet most of your needs.";
 "privacy_wallet_tip_title" = "What’s the Privacy Wallet?";
 "private_key" = "private key";
+"private_key_storage_description" = "Your private key will only be stored locally on your device";
 "process_can_not_be_stop" = "El proceso no se puede cancelar cuando comienza. Recuerda el PIN de 6 dígitos y vuelva a introducirlo si el proceso se cancela inesperadamente.";
 "profile" = "Perfil";
 "profile_badge" = "Profile Badge";
@@ -1418,6 +1422,7 @@
 "trying_connect_tip_network" = "Conexión de la red TIP";
 "trying_connect_tip_node" = "Intentando conectar el nodo TIP";
 "type" = "Type";
+"type_your_private_key" = "Type your private key";
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";

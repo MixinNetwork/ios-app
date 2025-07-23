@@ -226,7 +226,7 @@ extension RouteAPI {
             
             let destination: String
             let chainID: String
-            let path: String
+            let path: String?
             
         }
         

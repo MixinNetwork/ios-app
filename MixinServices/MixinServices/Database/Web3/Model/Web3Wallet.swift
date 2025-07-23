@@ -6,6 +6,7 @@ public class Web3Wallet: Codable {
     public enum Category: String, Codable {
         case classic
         case importedMnemonic = "imported_mnemonic"
+        case importedPrivateKey = "imported_private_key"
     }
     
     public enum CodingKeys: String, CodingKey {

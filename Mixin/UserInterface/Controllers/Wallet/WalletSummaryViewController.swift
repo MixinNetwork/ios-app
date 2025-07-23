@@ -168,11 +168,8 @@ final class WalletSummaryViewController: UIViewController {
         BadgeManager.shared.setHasViewed(identifier: .addWallet)
         let selector = AddWalletMethodSelectorViewController()
         selector.onSelected = { [weak self] method in
-            switch method {
-            case .mnemonics:
-                let validation = AddWalletPINValidationViewController()
-                self?.navigationController?.pushViewController(validation, animated: true)
-            }
+            let validation = AddWalletPINValidationViewController(method: method)
+            self?.navigationController?.pushViewController(validation, animated: true)
         }
         present(selector, animated: true)
     }

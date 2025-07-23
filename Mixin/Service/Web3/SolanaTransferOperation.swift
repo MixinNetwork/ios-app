@@ -55,14 +55,24 @@ class SolanaTransferOperation: Web3TransferOperation {
             case .classic:
                 privateKey = try await TIP.deriveSolanaPrivateKey(pin: pin)
             case .importedMnemonic:
+                guard let pathString = fromAddress.path else {
+                    throw SigningError.missingDerivationPath
+                }
                 let encryptedMnemonics = AppGroupKeychain.importedMnemonics(walletID: wallet.walletID)
                 guard let encryptedMnemonics else {
                     throw SigningError.missingPrivateKey
                 }
-                let key = try await TIP.importedMnemonicsEncryptionKey(pin: pin)
+                let key = try await TIP.importedWalletEncryptionKey(pin: pin)
                 let mnemonics = try encryptedMnemonics.decrypt(with: key)
-                let path = try DerivationPath(string: fromAddress.path)
+                let path = try DerivationPath(string: pathString)
                 privateKey = try mnemonics.deriveForSolana(path: path).privateKey
+            case .importedPrivateKey:
+                let encryptedPrivateKey = AppGroupKeychain.importedPrivateKey(walletID: wallet.walletID)
+                guard let encryptedPrivateKey else {
+                    throw SigningError.missingPrivateKey
+                }
+                let key = try await TIP.importedWalletEncryptionKey(pin: pin)
+                privateKey = try encryptedPrivateKey.decrypt(with: key)
             case .none:
                 throw SigningError.unknownCategory
             }

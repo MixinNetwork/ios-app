@@ -8,9 +8,9 @@ final class ExportImportedSecretValidationViewController: ErrorReportingPINValid
         case mismatch
     }
     
-    private let secret: ImportedSecret
+    private let secret: ExportingSecret
     
-    init(secret: ImportedSecret) {
+    init(secret: ExportingSecret) {
         self.secret = secret
         super.init()
     }
@@ -29,16 +29,15 @@ final class ExportImportedSecretValidationViewController: ErrorReportingPINValid
         let pin = pinField.text
         Task { [weak self, secret] in
             do {
+                let key = try await TIP.importedWalletEncryptionKey(pin: pin)
                 switch secret {
                 case let .mnemonics(encryptedMnemonics):
-                    let key = try await TIP.importedMnemonicsEncryptionKey(pin: pin)
                     let mnemonics = try encryptedMnemonics.decrypt(with: key)
                     await MainActor.run {
                         let view = ExportImportedMnemonicsViewController(mnemonics: mnemonics)
                         self?.navigationController?.pushViewController(replacingCurrent: view, animated: true)
                     }
                 case let .privateKeyFromMnemonics(encryptedMnemonics, kind, path):
-                    let key = try await TIP.importedMnemonicsEncryptionKey(pin: pin)
                     let mnemonics = try encryptedMnemonics.decrypt(with: key)
                     var error: NSError?
                     let privateKey: String
@@ -54,7 +53,7 @@ final class ExportImportedSecretValidationViewController: ErrorReportingPINValid
                         }
                     case .solana:
                         let derivation = try mnemonics.deriveForSolana(path: path)
-                        privateKey = try Solana.expandedPrivateKey(derivation: derivation)
+                        privateKey = try Solana.keyPair(derivation: derivation)
                         let redundantPrivateKey = BlockchainExportSolanaPrivateKey(mnemonics.joinedPhrases, path.string, &error)
                         if let error {
                             throw error
@@ -64,6 +63,18 @@ final class ExportImportedSecretValidationViewController: ErrorReportingPINValid
                     }
                     await MainActor.run {
                         let view = PrivateKeyViewController(privateKey: privateKey)
+                        self?.navigationController?.pushViewController(replacingCurrent: view, animated: true)
+                    }
+                case let .privateKey(encryptedPrivateKey, kind):
+                    let privateKey = try encryptedPrivateKey.decrypt(with: key)
+                    let displayPrivateKey = switch kind {
+                    case .evm:
+                        "0x" + privateKey.hexEncodedString()
+                    case .solana:
+                        try Solana.keyPair(privateKey: privateKey)
+                    }
+                    await MainActor.run {
+                        let view = PrivateKeyViewController(privateKey: displayPrivateKey)
                         self?.navigationController?.pushViewController(replacingCurrent: view, animated: true)
                     }
                 }

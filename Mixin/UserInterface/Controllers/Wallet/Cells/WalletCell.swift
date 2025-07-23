@@ -38,7 +38,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             switch wallet.category.knownCase {
             case .classic, .none:
                 tagLabel.isHidden = true
-            case .importedMnemonic:
+            case .importedMnemonic, .importedPrivateKey:
                 tagLabel.text = R.string.localizable.wallet_imported()
                 tagLabel.isHidden = false
             }

@@ -30,7 +30,7 @@ final class ExportPrivateKeyNetworkSelectorViewController: UIViewController {
             make.height.equalTo(70)
         }
         titleView.backgroundColor = R.color.background_secondary()
-        titleView.titleLabel.text = R.string.localizable.select_network()
+        titleView.titleLabel.text = R.string.localizable.choose_network()
         let layout = UICollectionViewCompositionalLayout { (_, _) in
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(64))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)

@@ -4,6 +4,7 @@ import MixinServices
 class AddWalletInputOnChainInfoViewController: UIViewController {
     
     @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var networkSelectorBackgroundView: UIView!
     @IBOutlet weak var networkTitleLabel: UILabel!
     @IBOutlet weak var networkNameLabel: UILabel!
@@ -14,9 +15,8 @@ class AddWalletInputOnChainInfoViewController: UIViewController {
     @IBOutlet weak var deleteInputButton: UIButton!
     @IBOutlet weak var pasteInputButton: UIButton!
     @IBOutlet weak var scanInputButton: UIButton!
-    @IBOutlet weak var descriptionLabel: InsetLabel!
     @IBOutlet weak var errorDescriptionLabel: UILabel!
-    @IBOutlet weak var continueButton: UIButton!
+    @IBOutlet weak var continueButton: ConfigurationBasedBusyButton!
     
     private weak var contentHeightConstraint: NSLayoutConstraint!
     
@@ -66,8 +66,6 @@ class AddWalletInputOnChainInfoViewController: UIViewController {
         inputTextView.font = UIFontMetrics.default.scaledFont(
             for: .monospacedSystemFont(ofSize: 16, weight: .regular)
         )
-        descriptionLabel.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        descriptionLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         errorDescriptionLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         continueButton.titleLabel?.adjustsFontForContentSizeCategory = true
         NotificationCenter.default.addObserver(

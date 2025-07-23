@@ -83,7 +83,7 @@
             </collectionViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
-                <outlet property="privacyIconImageView" destination="xQv-lW-nHu" id="Ns7-vI-sgi"/>
+                <outlet property="iconImageView" destination="xQv-lW-nHu" id="Ns7-vI-sgi"/>
                 <outlet property="proportionStackView" destination="beu-6R-0hW" id="0fR-tM-xuu"/>
                 <outlet property="tagLabel" destination="27K-fz-5sz" id="TCS-BB-1oP"/>
                 <outlet property="titleLabel" destination="Shr-Os-PTO" id="ZiO-GZ-Qvr"/>

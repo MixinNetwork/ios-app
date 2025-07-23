@@ -13,8 +13,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
     
     private struct Wallet {
         let privateKey: EncryptedPrivateKey
-        let address: String
-        let chainID: String
+        let address: CreateWalletRequest.Address
     }
     
     private let encryptionKey: Data
@@ -39,7 +38,11 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
         title = R.string.localizable.import_private_key()
         inputTextView.delegate = self
         inputPlaceholderLabel.text = R.string.localizable.type_your_private_key()
+        let descriptionLabel = InsetLabel()
+        descriptionLabel.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        descriptionLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         descriptionLabel.text = R.string.localizable.private_key_storage_description()
+        contentStackView.addArrangedSubview(descriptionLabel)
         continueButton.configuration?.title = R.string.localizable.import()
     }
     
@@ -48,11 +51,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
             return
         }
         let importing = AddWalletImportingViewController(
-            importingWallet: .byPrivateKey(
-                key: wallet.privateKey,
-                address: wallet.address,
-                chainID: wallet.chainID
-            )
+            importingWallet: .byPrivateKey(key: wallet.privateKey, address: wallet.address)
         )
         navigationController?.pushViewController(importing, animated: true)
     }
@@ -86,8 +85,11 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                 )
                 wallet = Wallet(
                     privateKey: encryptedPrivateKey,
-                    address: account.address.toChecksumAddress(),
-                    chainID: ChainID.ethereum
+                    address: .init(
+                        destination: account.address.toChecksumAddress(),
+                        chainID: ChainID.ethereum,
+                        path: nil
+                    )
                 )
             case .solana:
                 guard let keyPair = Data(base58EncodedString: input) else {
@@ -109,8 +111,11 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                 )
                 wallet = Wallet(
                     privateKey: encryptedPrivateKey,
-                    address: publicKey,
-                    chainID: ChainID.solana
+                    address: .init(
+                        destination: publicKey,
+                        chainID: ChainID.solana,
+                        path: nil
+                    )
                 )
             }
         } catch {

@@ -4,7 +4,7 @@ import MixinServices
 final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
     
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var privacyIconImageView: UIImageView!
+    @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var tagLabel: InsetLabel!
     @IBOutlet weak var valueLabel: UILabel!
     @IBOutlet weak var proportionStackView: UIStackView!
@@ -26,7 +26,8 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
         titleLabel.text = digest.wallet.localizedName
         switch digest.wallet {
         case .privacy:
-            privacyIconImageView.isHidden = false
+            iconImageView.isHidden = false
+            iconImageView.image = R.image.privacy_wallet()
             tagLabel.isHidden = true
             loadProportions(
                 tokens: digest.tokens,
@@ -34,12 +35,18 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                 usdBalanceSum: digest.usdBalanceSum
             )
         case let .common(wallet):
-            privacyIconImageView.isHidden = true
             switch wallet.category.knownCase {
             case .classic, .none:
+                iconImageView.isHidden = true
                 tagLabel.isHidden = true
             case .importedMnemonic, .importedPrivateKey:
+                iconImageView.isHidden = true
                 tagLabel.text = R.string.localizable.wallet_imported()
+                tagLabel.isHidden = false
+            case .watchAddress:
+                iconImageView.isHidden = false
+                iconImageView.image = R.image.watching_wallet()
+                tagLabel.text = R.string.localizable.watching()
                 tagLabel.isHidden = false
             }
             loadProportions(

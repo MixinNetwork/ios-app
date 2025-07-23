@@ -5,7 +5,7 @@ final class AddWalletImportingViewController: IntroductionViewController {
     
     enum ImportingWallet {
         case byMnemonics(mnemonics: EncryptedBIP39Mnemonics, wallets: [NamedWalletCandidate])
-        case byPrivateKey(key: EncryptedPrivateKey, address: String, chainID: String)
+        case byPrivateKey(key: EncryptedPrivateKey, address: CreateWalletRequest.Address)
     }
     
     private let importingWallet: ImportingWallet
@@ -52,8 +52,8 @@ final class AddWalletImportingViewController: IntroductionViewController {
         switch importingWallet {
         case let .byMnemonics(mnemonics, wallets):
             importWallets(mnemonics: mnemonics, wallets: wallets)
-        case let .byPrivateKey(key, address, chainID):
-            importWallets(key: key, address: address, chainID: chainID)
+        case let .byPrivateKey(key, address):
+            importWallets(key: key, address: address)
         }
     }
     
@@ -83,7 +83,7 @@ final class AddWalletImportingViewController: IntroductionViewController {
                 for wallet in wallets {
                     let evmWallet = wallet.candidate.evmWallet
                     let solanaWallet = wallet.candidate.solanaWallet
-                    let request = RouteAPI.WalletRequest(
+                    let request = CreateWalletRequest(
                         name: wallet.name,
                         category: .importedMnemonic,
                         addresses: [
@@ -121,20 +121,14 @@ final class AddWalletImportingViewController: IntroductionViewController {
         }
     }
     
-    private func importWallets(key: EncryptedPrivateKey, address: String, chainID: String) {
+    private func importWallets(key: EncryptedPrivateKey, address: CreateWalletRequest.Address) {
         showLoading()
         Task { [weak self] in
             do {
-                let request = RouteAPI.WalletRequest(
+                let request = CreateWalletRequest(
                     name: R.string.localizable.common_wallet(),
                     category: .importedPrivateKey,
-                    addresses: [
-                        .init(
-                            destination: address,
-                            chainID: chainID,
-                            path: nil
-                        ),
-                    ]
+                    addresses: [address]
                 )
                 let response = try await RouteAPI.createWallet(request)
                 Web3WalletDAO.shared.save(wallets: [response.wallet], addresses: response.addresses)

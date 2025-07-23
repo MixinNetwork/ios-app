@@ -80,7 +80,7 @@ extension TIP {
             throw GenerationError.solanaMismatched
         }
         
-        let request = RouteAPI.WalletRequest(
+        let request = CreateWalletRequest(
             name: "Classic Wallet",
             category: .classic,
             addresses: [

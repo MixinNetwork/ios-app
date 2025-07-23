@@ -43,6 +43,14 @@ public final class Web3AddressDAO: Web3DAO {
             .joined(separator: ", ")
     }
     
+    public func addressExists(destination: String) -> Bool {
+        let id: Int? = db.select(
+            with: "SELECT rowid FROM addresses WHERE destination = ?",
+            arguments: [destination]
+        )
+        return id != nil
+    }
+    
     public func chainIDs(walletID: String) -> Set<String> {
         db.selectSet(with: "SELECT DISTINCT chain_id FROM addresses WHERE wallet_id = ?", arguments: [walletID])
     }

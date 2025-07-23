@@ -31,6 +31,8 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
                         AddWalletInputPrivateKeyViewController(encryptionKey: key)
                     case .mnemonics:
                         AddWalletInputMnemonicsViewController(encryptionKey: key)
+                    case .watch:
+                        AddWalletInputAddressViewController()
                     }
                     self.navigationController?.pushViewController(replacingCurrent: input, animated: true)
                 }

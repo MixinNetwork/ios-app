@@ -19,11 +19,11 @@ final class AddWalletMethodSelectorViewController: PopupSelectorViewController {
         tableView.contentInsetAdjustmentBehavior = .always
         tableView.contentInset = switch ScreenHeight.current {
         case .short:
-            UIEdgeInsets(top: 0, left: 0, bottom: 72, right: 0)
+            UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
         case .medium:
-            UIEdgeInsets(top: 0, left: 0, bottom: 130, right: 0)
+            UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
         case .long, .extraLong:
-            UIEdgeInsets(top: 0, left: 0, bottom: 260, right: 0)
+            UIEdgeInsets(top: 0, left: 0, bottom: 104, right: 0)
         }
     }
     
@@ -46,6 +46,10 @@ extension AddWalletMethodSelectorViewController: UITableViewDataSource {
             cell.iconImageView.image = R.image.add_wallet_mnemonics()
             cell.titleLabel.text = R.string.localizable.import_mnemonic_phrase()
             cell.subtitleLabel.text = R.string.localizable.import_wallets_from_another_wallet()
+        case .watch:
+            cell.iconImageView.image = R.image.watching_wallet()
+            cell.titleLabel.text = R.string.localizable.add_watch_address()
+            cell.subtitleLabel.text = R.string.localizable.add_watch_address_description()
         }
         return cell
     }

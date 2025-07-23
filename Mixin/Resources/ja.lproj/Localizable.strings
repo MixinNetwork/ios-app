@@ -40,6 +40,8 @@
 "add_to_stickers" = "スタンプを追加";
 "add_token" = "Add %@";
 "add_wallet" = "Add Wallet";
+"add_watch_address" = "Add Watch Address";
+"add_watch_address_description" = "Track any public wallet address";
 "added" = "追加ずみ";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
@@ -47,6 +49,7 @@
 "address_added" = "Address Added";
 "address_added_description" = "Address has been added. You can immediately use this address for withdrawals.";
 "address_adding_description" = "The request to add the address is currently under verification by the Mixin server. Please wait a moment.";
+"address_already_exists" = "This address already exists in your wallet";
 "address_book" = "Address Book";
 "address_deleted" = "Address Deleted";
 "address_edited" = "Address Edited";
@@ -286,6 +289,7 @@
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
 "choose_deposit_network" = "Choose Network";
+"choose_network" = "Choose Network";
 "choose_network_tip" = "Please ensure the network you choose to deposit that Mixin supports. Otherwise, your assets may be lost.";
 "choose_photo" = "画像を選ぶ";
 "choose_token" = "Choose %@ Network";
@@ -386,6 +390,7 @@
 "continue_with_pin" = "Continue with PIN";
 "contract" = "Contract";
 "contract_address" = "Contract Address";
+"contract_exchange_address_not_supported" = "Contract or exchange addresses is not supported for watching";
 "convenience" = "Convenience";
 "conversation" = "チャットルーム";
 "conversation_has_too_many_circles" = "グループリスト数を減らしてください";
@@ -1177,7 +1182,6 @@
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
 "select_more_photos" = "さらに選択";
-"select_network" = "Select Network";
 "select_token" = "Select Token";
 "selected_count" = "%@を選択しています。";
 "selected_item" = "選択されたアイテム";
@@ -1423,6 +1427,7 @@
 "trying_connect_tip_node" = "Trying connect TIP node";
 "type" = "Type";
 "type_your_private_key" = "Type your private key";
+"type_your_wallet_address" = "Type your wallet address";
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";
@@ -1549,6 +1554,8 @@
 "wallet_withdrawal_recent_tip" = "あなたは%1$@に同額の出金を%2$@へ送っています。再度%3$@を出金しますか？";
 "wallets" = "ウォレット";
 "watch_address" = "Watch %@";
+"watch_wallet_index" = "Watch Wallet %d";
+"watching" = "Watching";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";

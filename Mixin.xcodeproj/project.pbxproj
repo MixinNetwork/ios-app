@@ -1019,6 +1019,10 @@
 		94682F2A2E029B2700B1C6D3 /* CompactComboBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94682F142E029B2700B1C6D3 /* CompactComboBoxView.swift */; };
 		9468DF8F2E2FD77200EB79C0 /* EncryptedPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468DF8E2E2FD76D00EB79C0 /* EncryptedPrivateKey.swift */; };
 		9468E0182E30C80600EB79C0 /* AddWalletInputPrivateKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E0172E30C80600EB79C0 /* AddWalletInputPrivateKeyViewController.swift */; };
+		9468E04B2E30DE7200EB79C0 /* AddWalletInputAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E04A2E30DE7200EB79C0 /* AddWalletInputAddressViewController.swift */; };
+		9468E0562E30E10400EB79C0 /* CreateWalletRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E0552E30E10000EB79C0 /* CreateWalletRequest.swift */; };
+		9468E06D2E30E16A00EB79C0 /* CreateWalletResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E0602E30E13800EB79C0 /* CreateWalletResponse.swift */; };
+		9468E08D2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E08C2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift */; };
 		946983B029D1A36400E73428 /* NetworkFeeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946983AE29D1A36400E73428 /* NetworkFeeSelectorViewController.swift */; };
 		946983B429D2A0DE00E73428 /* NetworkFeeOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */; };
 		946983B529D2A0DE00E73428 /* NetworkFeeOptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */; };
@@ -2691,6 +2695,10 @@
 		94682F142E029B2700B1C6D3 /* CompactComboBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactComboBoxView.swift; sourceTree = "<group>"; };
 		9468DF8E2E2FD76D00EB79C0 /* EncryptedPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptedPrivateKey.swift; sourceTree = "<group>"; };
 		9468E0172E30C80600EB79C0 /* AddWalletInputPrivateKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletInputPrivateKeyViewController.swift; sourceTree = "<group>"; };
+		9468E04A2E30DE7200EB79C0 /* AddWalletInputAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletInputAddressViewController.swift; sourceTree = "<group>"; };
+		9468E0552E30E10000EB79C0 /* CreateWalletRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateWalletRequest.swift; sourceTree = "<group>"; };
+		9468E0602E30E13800EB79C0 /* CreateWalletResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateWalletResponse.swift; sourceTree = "<group>"; };
+		9468E08C2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationBasedBusyButton.swift; sourceTree = "<group>"; };
 		946983AE29D1A36400E73428 /* NetworkFeeSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeSelectorViewController.swift; sourceTree = "<group>"; };
 		946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeOptionCell.swift; sourceTree = "<group>"; };
 		946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NetworkFeeOptionCell.xib; sourceTree = "<group>"; };
@@ -4685,6 +4693,7 @@
 				947E26792E2F773500D6ECB7 /* AddWalletInputOnChainInfoView.xib */,
 				947E26782E2F773500D6ECB7 /* AddWalletInputOnChainInfoViewController.swift */,
 				9468E0172E30C80600EB79C0 /* AddWalletInputPrivateKeyViewController.swift */,
+				9468E04A2E30DE7200EB79C0 /* AddWalletInputAddressViewController.swift */,
 				94F267802E12B26000A8A1E0 /* AddWalletInputMnemonicsViewController.swift */,
 				94F267D12E12DEAA00A8A1E0 /* AddWalletFetchAddressViewController.swift */,
 				94F268292E15BC9E00A8A1E0 /* AddWalletCandidateCell.xib */,
@@ -5122,6 +5131,7 @@
 				7B2E3E4C1FA07F5D00DDDDEB /* HairlineLayoutConstraint.swift */,
 				7B61B9C92538E1C8001F94A3 /* ScreenHeightCompatibleLayoutConstraint.swift */,
 				7BAD3A8D21A6D10400BAEE0B /* BusyButton.swift */,
+				9468E08C2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift */,
 				7B92F82A1FA1BCD5000B838B /* StateResponsiveButton.swift */,
 				7B2E3E591FA0816D00DDDDEB /* LoginContinueButton.swift */,
 				7BAD50801FA0C8C1009B59FB /* VerificationCodeField.swift */,
@@ -5604,6 +5614,8 @@
 				9414D3522E06914700F38028 /* RouteProfile.swift */,
 				94DC6DCE2E097EDE00D0B7CA /* RouteQuote.swift */,
 				94F268022E1586EB00A8A1E0 /* AddressAssets.swift */,
+				9468E0552E30E10000EB79C0 /* CreateWalletRequest.swift */,
+				9468E0602E30E13800EB79C0 /* CreateWalletResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -6877,6 +6889,7 @@
 				94350E3B2BCFE8C5007283B7 /* DecimalButton.swift in Sources */,
 				DFB6CE2323C485D400FB6615 /* SystemConversationAction+Description.swift in Sources */,
 				7B59534F2267215B00D59DB4 /* BottomShadowView.swift in Sources */,
+				9468E0562E30E10400EB79C0 /* CreateWalletRequest.swift in Sources */,
 				7C66E7B82743988500FF24C1 /* ProfileDescriptionLabel.swift in Sources */,
 				94682F2A2E029B2700B1C6D3 /* CompactComboBoxView.swift in Sources */,
 				9497AEE92C5E264600966946 /* MixinTransactionHistoryViewController.swift in Sources */,
@@ -6957,6 +6970,7 @@
 				DF17B51520525B47006447C2 /* ArrayExtension.swift in Sources */,
 				7BA9F32024A22EC200D7C091 /* CallMemberCell.swift in Sources */,
 				94F267812E12B26000A8A1E0 /* AddWalletInputMnemonicsViewController.swift in Sources */,
+				9468E06D2E30E16A00EB79C0 /* CreateWalletResponse.swift in Sources */,
 				7BBAE9DA244ADB3800CC8670 /* AssetQrCodeScanningController.swift in Sources */,
 				DFA063D222B0D0E80031E151 /* PrivacySettingViewController.swift in Sources */,
 				7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */,
@@ -6964,6 +6978,7 @@
 				7C51F3A927E459AD0095B4D6 /* ExpiredMessageManager.swift in Sources */,
 				DF06D91F222FAE1400FE7FBC /* LegacyTransferOutViewController.swift in Sources */,
 				7B595353226736BD00D59DB4 /* SearchHeaderView.swift in Sources */,
+				9468E08D2E311EA200EB79C0 /* ConfigurationBasedBusyButton.swift in Sources */,
 				940FC5EB2CDBC4F10056BFF2 /* ViewMnemonicsViewController.swift in Sources */,
 				940AE02C2BA0D88100E7A9FE /* ExploreSegmentCell.swift in Sources */,
 				7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */,
@@ -6972,6 +6987,7 @@
 				9429C1472E059F3100206DAA /* FeeRequiredInputAmountViewController.swift in Sources */,
 				946331C22C622C3500C54B76 /* TransactionHistoryDateFilterView.swift in Sources */,
 				7B92F8271FA1AE19000B838B /* CountDownButton.swift in Sources */,
+				9468E04B2E30DE7200EB79C0 /* AddWalletInputAddressViewController.swift in Sources */,
 				7BB06F49228ED8650048C2D6 /* NotificationView.swift in Sources */,
 				7BAB76AC228AAE00009ECB8C /* MessageReceiverSearchResult.swift in Sources */,
 				944C61FF2B6C033500C7DF06 /* EditAddressPreviewViewController.swift in Sources */,

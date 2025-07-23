@@ -39,7 +39,7 @@ final class ClassicWalletViewController: WalletViewController {
         switch wallet.category.knownCase {
         case .classic:
             tableHeaderView.actionView.isHidden = false
-        case .importedMnemonic, .importedPrivateKey, .none:
+        case .importedMnemonic, .importedPrivateKey, .watchAddress, .none:
             tableHeaderView.actionView.isHidden = true
         }
         tableHeaderView.delegate = self
@@ -148,6 +148,13 @@ final class ClassicWalletViewController: WalletViewController {
             sheet.addAction(UIAlertAction(title: R.string.localizable.delete_wallet(), style: .destructive, handler: { (_) in
                 self.deleteWallet()
             }))
+        case .watchAddress:
+            sheet.addAction(UIAlertAction(title: R.string.localizable.rename_wallet(), style: .default, handler: { (_) in
+                self.inputNewWalletName()
+            }))
+            sheet.addAction(UIAlertAction(title: R.string.localizable.delete_wallet(), style: .destructive, handler: { (_) in
+                self.deleteWallet()
+            }))
         }
         sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         present(sheet, animated: true, completion: nil)
@@ -219,6 +226,9 @@ final class ClassicWalletViewController: WalletViewController {
                 } else {
                     nil
                 }
+            case .watchAddress:
+                secret = nil
+                watchingAddresses = Web3AddressDAO.shared.prettyDestinations(walletID: walletID)
             }
             DispatchQueue.main.async {
                 guard let self = self else {

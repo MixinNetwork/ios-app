@@ -73,6 +73,8 @@ class SolanaTransferOperation: Web3TransferOperation {
                 }
                 let key = try await TIP.importedWalletEncryptionKey(pin: pin)
                 privateKey = try encryptedPrivateKey.decrypt(with: key)
+            case .watchAddress:
+                throw SigningError.invalidCategory
             case .none:
                 throw SigningError.unknownCategory
             }

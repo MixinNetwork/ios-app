@@ -40,6 +40,8 @@
 "add_to_stickers" = "新增貼紙";
 "add_token" = "補充 %@";
 "add_wallet" = "新增錢包";
+"add_watch_address" = "新增觀察地址";
+"add_watch_address_description" = "追蹤公開錢包地址";
 "added" = "已新增";
 "adding_address" = "正在新增地址";
 "adding_address_failed" = "新增地址失敗";
@@ -47,6 +49,7 @@
 "address_added" = "地址已新增";
 "address_added_description" = "地址已新增，您可以立刻使用該地址進行提現。";
 "address_adding_description" = "正在新增地址，請稍候。";
+"address_already_exists" = "該地址已存在於你的錢包中";
 "address_book" = "地址簿";
 "address_deleted" = "地址已刪除";
 "address_edited" = "地址已修改";
@@ -286,6 +289,7 @@
 "check_mnemonic_phrase" = "檢查您的助記詞";
 "check_mnemonic_phrase_desc" = "按照呈現給您的順序輸入每個單詞。";
 "choose_deposit_network" = "選擇充值網路";
+"choose_network" = "選擇網路";
 "choose_network_tip" = "請選擇 Mixin 支援的網路進行充值，否則您的充值將不會到賬。";
 "choose_photo" = "選擇照片";
 "choose_token" = "選擇 %@ 網路";
@@ -386,6 +390,7 @@
 "continue_with_pin" = "輸入 PIN 繼續";
 "contract" = "合約";
 "contract_address" = "合約地址";
+"contract_exchange_address_not_supported" = "當前地址為合約地址或交易所地址，暫不支援觀察。";
 "convenience" = "便利";
 "conversation" = "會話";
 "conversation_has_too_many_circles" = "已達圈子數上限";
@@ -1177,7 +1182,6 @@
 "select_date" = "選擇日期";
 "select_emergency_contact" = "選擇恢復聯絡人";
 "select_more_photos" = "選擇更多照片";
-"select_network" = "選擇網路";
 "select_token" = "選擇代幣";
 "selected_count" = "選擇了 %@ 個訊息";
 "selected_item" = "已選擇 1 項";
@@ -1423,6 +1427,7 @@
 "trying_connect_tip_node" = "正在連線節點...";
 "type" = "型別";
 "type_your_private_key" = "請輸入你的私鑰";
+"type_your_wallet_address" = "請輸入錢包地址";
 "unable_connect_to_desktop" = "無法連線到桌面，請稍後重試";
 "unable_synced_between_different_account" = "不同賬戶之間無法同步聊天記錄";
 "unable_to_decode_the_request" = "無法解析請求: %@";
@@ -1549,6 +1554,8 @@
 "wallet_withdrawal_recent_tip" = "你已經在 %1$@ 前提現 %3$@ 到 %2$@，確認還要再提一次嗎？";
 "wallets" = "錢包";
 "watch_address" = "觀察 %@";
+"watch_wallet_index" = "觀察錢包 %d";
+"watching" = "觀察";
 "watchlist" = "自選";
 "watchlist_add_desc" = "%@ 已經加入自選";
 "watchlist_empty" = "您的自選列表為空";

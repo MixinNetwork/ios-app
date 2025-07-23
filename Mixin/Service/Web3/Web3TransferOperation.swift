@@ -27,6 +27,7 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
     
     enum SigningError: Error {
         case unknownCategory
+        case invalidCategory
         case missingPrivateKey
         case invalidTransaction
         case invalidBlockhash

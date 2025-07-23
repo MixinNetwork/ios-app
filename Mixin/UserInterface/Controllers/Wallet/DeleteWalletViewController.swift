@@ -76,7 +76,7 @@ extension DeleteWalletViewController: AuthenticationIntent {
                             AppGroupKeychain.deleteImportedMnemonics(walletID: walletID)
                         case .importedPrivateKey:
                             AppGroupKeychain.deleteImportedPrivateKey(walletID: walletID)
-                        case .classic, .none:
+                        case .classic, .watchAddress, .none:
                             break
                         }
                         completion(.success)

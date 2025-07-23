@@ -11,10 +11,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AddWalletInputOnChainInfoViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="contentStackView" destination="uLN-aU-bC2" id="G3Q-na-BBM"/>
                 <outlet property="contentView" destination="rw6-uo-y7n" id="GDv-Do-lU6"/>
                 <outlet property="continueButton" destination="f1X-kL-YeD" id="pLW-nS-XsB"/>
                 <outlet property="deleteInputButton" destination="m3e-Gk-NDH" id="2GR-FU-PDJ"/>
-                <outlet property="descriptionLabel" destination="Yjl-f2-kxQ" id="488-l3-eJ0"/>
                 <outlet property="errorDescriptionLabel" destination="Ejd-by-cgA" id="fiE-Zz-aRy"/>
                 <outlet property="inputBackgroundView" destination="IDT-va-69m" id="DOs-Wn-20G"/>
                 <outlet property="inputPlaceholderLabel" destination="qld-Nv-bm9" id="Fat-sE-AqR"/>
@@ -40,7 +40,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="393" height="666"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="9" translatesAutoresizingMaskIntoConstraints="NO" id="uLN-aU-bC2">
-                                    <rect key="frame" x="20" y="9.9999999999999858" width="353" height="239.66666666666663"/>
+                                    <rect key="frame" x="20" y="10" width="353" height="197"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lVb-Yo-YMJ">
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="68"/>
@@ -162,12 +162,6 @@
                                                 <constraint firstAttribute="trailing" secondItem="l7J-uK-XAS" secondAttribute="trailing" constant="2" id="y99-ZO-WHi"/>
                                             </constraints>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your private key will only be stored locally on your device" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yjl-f2-kxQ" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="206" width="353" height="33.666666666666657"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" name="text_tertiary"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                     </subviews>
                                 </stackView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ejd-by-cgA">
@@ -176,7 +170,7 @@
                                     <color key="textColor" name="error_red"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="999" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f1X-kL-YeD">
+                                <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="999" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f1X-kL-YeD" customClass="ConfigurationBasedBusyButton" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="134" y="594" width="125" height="42"/>
                                     <inset key="contentEdgeInsets" minX="0.0" minY="14" maxX="0.0" maxY="15"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>

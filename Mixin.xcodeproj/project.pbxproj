@@ -1018,6 +1018,7 @@
 		94682F252E029B2700B1C6D3 /* BuyingPairView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94682F0B2E029B2700B1C6D3 /* BuyingPairView.xib */; };
 		94682F2A2E029B2700B1C6D3 /* CompactComboBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94682F142E029B2700B1C6D3 /* CompactComboBoxView.swift */; };
 		9468DF8F2E2FD77200EB79C0 /* EncryptedPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468DF8E2E2FD76D00EB79C0 /* EncryptedPrivateKey.swift */; };
+		9468E0182E30C80600EB79C0 /* AddWalletInputPrivateKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9468E0172E30C80600EB79C0 /* AddWalletInputPrivateKeyViewController.swift */; };
 		946983B029D1A36400E73428 /* NetworkFeeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946983AE29D1A36400E73428 /* NetworkFeeSelectorViewController.swift */; };
 		946983B429D2A0DE00E73428 /* NetworkFeeOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */; };
 		946983B529D2A0DE00E73428 /* NetworkFeeOptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */; };
@@ -1070,8 +1071,8 @@
 		947E06572798562B0002669B /* PINIteratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947E06562798562B0002669B /* PINIteratorView.swift */; };
 		947E0659279867870002669B /* PINIteratorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947E0658279867870002669B /* PINIteratorTest.swift */; };
 		947E26682E2F70F200D6ECB7 /* AddWalletMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947E26672E2F70EA00D6ECB7 /* AddWalletMethod.swift */; };
-		947E267A2E2F773500D6ECB7 /* AddWalletInputPrivateKeyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947E26792E2F773500D6ECB7 /* AddWalletInputPrivateKeyView.xib */; };
-		947E267B2E2F773500D6ECB7 /* AddWalletInputPrivateKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947E26782E2F773500D6ECB7 /* AddWalletInputPrivateKeyViewController.swift */; };
+		947E267A2E2F773500D6ECB7 /* AddWalletInputOnChainInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947E26792E2F773500D6ECB7 /* AddWalletInputOnChainInfoView.xib */; };
+		947E267B2E2F773500D6ECB7 /* AddWalletInputOnChainInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947E26782E2F773500D6ECB7 /* AddWalletInputOnChainInfoViewController.swift */; };
 		947E3AB62B10A8AB008B2007 /* ConsolidateOutputsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947E3AB42B10A8AB008B2007 /* ConsolidateOutputsViewController.swift */; };
 		947E3AB72B10A8AB008B2007 /* ConsolidateOutputsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947E3AB52B10A8AB008B2007 /* ConsolidateOutputsView.xib */; };
 		947F4AD625866D6C00B0A5F9 /* InitializeFTSJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */; };
@@ -2689,6 +2690,7 @@
 		94682F0B2E029B2700B1C6D3 /* BuyingPairView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BuyingPairView.xib; sourceTree = "<group>"; };
 		94682F142E029B2700B1C6D3 /* CompactComboBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactComboBoxView.swift; sourceTree = "<group>"; };
 		9468DF8E2E2FD76D00EB79C0 /* EncryptedPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptedPrivateKey.swift; sourceTree = "<group>"; };
+		9468E0172E30C80600EB79C0 /* AddWalletInputPrivateKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletInputPrivateKeyViewController.swift; sourceTree = "<group>"; };
 		946983AE29D1A36400E73428 /* NetworkFeeSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeSelectorViewController.swift; sourceTree = "<group>"; };
 		946983B229D2A0DE00E73428 /* NetworkFeeOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeOptionCell.swift; sourceTree = "<group>"; };
 		946983B329D2A0DE00E73428 /* NetworkFeeOptionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NetworkFeeOptionCell.xib; sourceTree = "<group>"; };
@@ -2740,8 +2742,8 @@
 		947E06562798562B0002669B /* PINIteratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINIteratorView.swift; sourceTree = "<group>"; };
 		947E0658279867870002669B /* PINIteratorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINIteratorTest.swift; sourceTree = "<group>"; };
 		947E26672E2F70EA00D6ECB7 /* AddWalletMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletMethod.swift; sourceTree = "<group>"; };
-		947E26782E2F773500D6ECB7 /* AddWalletInputPrivateKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletInputPrivateKeyViewController.swift; sourceTree = "<group>"; };
-		947E26792E2F773500D6ECB7 /* AddWalletInputPrivateKeyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddWalletInputPrivateKeyView.xib; sourceTree = "<group>"; };
+		947E26782E2F773500D6ECB7 /* AddWalletInputOnChainInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletInputOnChainInfoViewController.swift; sourceTree = "<group>"; };
+		947E26792E2F773500D6ECB7 /* AddWalletInputOnChainInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddWalletInputOnChainInfoView.xib; sourceTree = "<group>"; };
 		947E3AB42B10A8AB008B2007 /* ConsolidateOutputsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsolidateOutputsViewController.swift; sourceTree = "<group>"; };
 		947E3AB52B10A8AB008B2007 /* ConsolidateOutputsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConsolidateOutputsView.xib; sourceTree = "<group>"; };
 		947F4AD525866D6C00B0A5F9 /* InitializeFTSJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializeFTSJob.swift; sourceTree = "<group>"; };
@@ -4680,8 +4682,9 @@
 				947E26672E2F70EA00D6ECB7 /* AddWalletMethod.swift */,
 				94F267C02E12DDBD00A8A1E0 /* AddWalletMethodSelectorViewController.swift */,
 				94ED2FEB2E2650EE00B99837 /* AddWalletPINValidationViewController.swift */,
-				947E26792E2F773500D6ECB7 /* AddWalletInputPrivateKeyView.xib */,
-				947E26782E2F773500D6ECB7 /* AddWalletInputPrivateKeyViewController.swift */,
+				947E26792E2F773500D6ECB7 /* AddWalletInputOnChainInfoView.xib */,
+				947E26782E2F773500D6ECB7 /* AddWalletInputOnChainInfoViewController.swift */,
+				9468E0172E30C80600EB79C0 /* AddWalletInputPrivateKeyViewController.swift */,
 				94F267802E12B26000A8A1E0 /* AddWalletInputMnemonicsViewController.swift */,
 				94F267D12E12DEAA00A8A1E0 /* AddWalletFetchAddressViewController.swift */,
 				94F268292E15BC9E00A8A1E0 /* AddWalletCandidateCell.xib */,
@@ -6175,7 +6178,7 @@
 				94E594D62D1563AD00525538 /* WalletHeaderView.xib in Resources */,
 				9495E0D92CEF79DD00124CC7 /* MnemonicsInputAccessoryView.xib in Resources */,
 				94D308782BA72C8F0017494C /* Web3AmountChangeCell.xib in Resources */,
-				947E267A2E2F773500D6ECB7 /* AddWalletInputPrivateKeyView.xib in Resources */,
+				947E267A2E2F773500D6ECB7 /* AddWalletInputOnChainInfoView.xib in Resources */,
 				948ACAA02AF38E5B0057D76B /* SnapshotMessageContentView.xib in Resources */,
 				7BBB6F532451C9E7002798F2 /* BackupTableHeaderView.xib in Resources */,
 				94B9FDA02A55E0DD00C1E286 /* DepositNetworkSwitchView.xib in Resources */,
@@ -6800,7 +6803,7 @@
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
 				7C104A8127D83A51004D0530 /* RefreshExternalSchemeJob.swift in Sources */,
 				52DE7B4A2BEB7C040060A364 /* Web3TransactionViewController.swift in Sources */,
-				947E267B2E2F773500D6ECB7 /* AddWalletInputPrivateKeyViewController.swift in Sources */,
+				947E267B2E2F773500D6ECB7 /* AddWalletInputOnChainInfoViewController.swift in Sources */,
 				94F0458B2E1846E600F363F4 /* BIP39Mnemonics.swift in Sources */,
 				7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */,
 				7BB0F9152434B03300BEDA97 /* SelectedPeerCell.swift in Sources */,
@@ -7629,6 +7632,7 @@
 				9493708C2A1B64CC00C0A21E /* LocalNetworkAuthorization.swift in Sources */,
 				7BA41940209AFBCD00DFCD39 /* AppCardV0MessageViewModel.swift in Sources */,
 				7BEFDC1D1FB07F1600F66885 /* GroupNameCell.swift in Sources */,
+				9468E0182E30C80600EB79C0 /* AddWalletInputPrivateKeyViewController.swift in Sources */,
 				7B9C64312241EDC600465A6A /* ConversationInputAccessible.swift in Sources */,
 				7CB0955326CD18F70049F4C7 /* PinMessagesPreviewViewController.swift in Sources */,
 				7BF0E07C221ABE050053040D /* BadgeIconView.swift in Sources */,

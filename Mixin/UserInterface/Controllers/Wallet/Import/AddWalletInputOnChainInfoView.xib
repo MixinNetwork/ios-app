@@ -9,18 +9,21 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AddWalletInputPrivateKeyViewController" customModule="Mixin" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AddWalletInputOnChainInfoViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="contentView" destination="rw6-uo-y7n" id="GDv-Do-lU6"/>
+                <outlet property="continueButton" destination="f1X-kL-YeD" id="pLW-nS-XsB"/>
+                <outlet property="deleteInputButton" destination="m3e-Gk-NDH" id="2GR-FU-PDJ"/>
                 <outlet property="descriptionLabel" destination="Yjl-f2-kxQ" id="488-l3-eJ0"/>
                 <outlet property="errorDescriptionLabel" destination="Ejd-by-cgA" id="fiE-Zz-aRy"/>
-                <outlet property="importButton" destination="f1X-kL-YeD" id="pLW-nS-XsB"/>
+                <outlet property="inputBackgroundView" destination="IDT-va-69m" id="DOs-Wn-20G"/>
+                <outlet property="inputPlaceholderLabel" destination="qld-Nv-bm9" id="Fat-sE-AqR"/>
+                <outlet property="inputTextView" destination="zUQ-jA-Cgr" id="BVf-2t-3ZI"/>
                 <outlet property="networkNameLabel" destination="wJn-lp-rot" id="uIA-a1-OAC"/>
                 <outlet property="networkSelectorBackgroundView" destination="lVb-Yo-YMJ" id="jh5-ht-Zhv"/>
                 <outlet property="networkTitleLabel" destination="dfK-YU-PJy" id="aif-cJ-dfm"/>
-                <outlet property="privateKeyBackgroundView" destination="IDT-va-69m" id="DOs-Wn-20G"/>
-                <outlet property="privateKeyPlaceholderLabel" destination="qld-Nv-bm9" id="Fat-sE-AqR"/>
-                <outlet property="privateKeyTextView" destination="zUQ-jA-Cgr" id="BVf-2t-3ZI"/>
+                <outlet property="pasteInputButton" destination="W1x-JQ-LMO" id="r2w-80-U3w"/>
+                <outlet property="scanInputButton" destination="9gV-23-mwB" id="d36-Qh-diT"/>
                 <outlet property="selectNetworkButton" destination="B2g-ge-BOF" id="78P-2d-Mq6"/>
                 <outlet property="view" destination="8DR-Ue-cRa" id="LZc-gc-9ha"/>
             </connections>
@@ -104,25 +107,40 @@
                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="l7J-uK-XAS">
                                                     <rect key="frame" x="251" y="74" width="100" height="44"/>
                                                     <subviews>
+                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m3e-Gk-NDH">
+                                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" priority="999" constant="44" id="PMG-rl-Trf"/>
+                                                            </constraints>
+                                                            <color key="tintColor" name="icon_tint_tertiary"/>
+                                                            <state key="normal" title="Button"/>
+                                                            <buttonConfiguration key="configuration" style="plain" image="Explore/web3_send_delete"/>
+                                                            <connections>
+                                                                <action selector="deleteInput:" destination="-1" eventType="touchUpInside" id="SuU-uG-NfO"/>
+                                                            </connections>
+                                                        </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W1x-JQ-LMO">
                                                             <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="44" id="cuz-qT-pqR"/>
+                                                                <constraint firstAttribute="width" priority="999" constant="44" id="cuz-qT-pqR"/>
                                                             </constraints>
                                                             <color key="tintColor" name="icon_tint_tertiary"/>
                                                             <state key="normal" title="Button"/>
                                                             <buttonConfiguration key="configuration" style="plain" image="paste"/>
                                                             <connections>
-                                                                <action selector="pastePrivateKey:" destination="-1" eventType="touchUpInside" id="0cD-GC-eZd"/>
+                                                                <action selector="pasteInput:" destination="-1" eventType="touchUpInside" id="0cD-GC-eZd"/>
                                                             </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9gV-23-mwB">
                                                             <rect key="frame" x="56" y="0.0" width="44" height="44"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" priority="999" constant="44" id="2vd-0a-kLW"/>
+                                                            </constraints>
                                                             <color key="tintColor" name="icon_tint_tertiary"/>
                                                             <state key="normal" title="Button"/>
                                                             <buttonConfiguration key="configuration" style="plain" image="ic_app_category_scan"/>
                                                             <connections>
-                                                                <action selector="scanPrivateKey:" destination="-1" eventType="touchUpInside" id="hQ8-OI-mSz"/>
+                                                                <action selector="scanInput:" destination="-1" eventType="touchUpInside" id="hQ8-OI-mSz"/>
                                                             </connections>
                                                         </button>
                                                     </subviews>
@@ -170,7 +188,7 @@
                                         <color key="baseBackgroundColor" name="theme"/>
                                     </buttonConfiguration>
                                     <connections>
-                                        <action selector="importWallet:" destination="-1" eventType="touchUpInside" id="aHw-ev-TKd"/>
+                                        <action selector="continueToNext:" destination="-1" eventType="touchUpInside" id="aHw-ev-TKd"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -213,6 +231,7 @@
         </view>
     </objects>
     <resources>
+        <image name="Explore/web3_send_delete" width="24" height="24"/>
         <image name="ic_app_category_scan" width="24" height="24"/>
         <image name="ic_arrow_down" width="30" height="30"/>
         <image name="paste" width="24" height="24"/>

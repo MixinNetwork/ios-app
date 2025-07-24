@@ -112,8 +112,6 @@ extension DiagnoseViewController: UITableViewDelegate {
             BadgeManager.shared.resetAll()
             AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip = false
             AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = false
-            AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTipInTransfer = false
-            AppGroupUserDefaults.Wallet.hasViewedClassicWalletTipInTransfer = false
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
 #if DEBUG
         case (10, 0):

@@ -94,47 +94,32 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
 }
 
 extension MixinTokenReceiverViewController: UITableViewDataSource {
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        2
-    }
-    
+        
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            destinations.count
-        } else {
-            AppGroupUserDefaults.Wallet.hasViewedClassicWalletTipInTransfer ? 0 : 1
-        }
+        destinations.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
-            let destination = destinations[indexPath.row]
-            switch destination {
-            case .addressBook:
-                cell.iconImageView.image = R.image.token_receiver_address_book()
-                cell.titleLabel.text = R.string.localizable.address_book()
-                cell.titleTag = nil
-                cell.descriptionLabel.text = R.string.localizable.send_to_address_description()
-            case .myWallets:
-                cell.iconImageView.image = R.image.token_receiver_wallet()
-                cell.titleLabel.text = R.string.localizable.my_wallet()
-                cell.titleTag = nil
-                cell.descriptionLabel.text = R.string.localizable.send_to_other_wallet_description()
-            case .contact:
-                cell.iconImageView.image = R.image.token_receiver_contact()
-                cell.titleLabel.text = R.string.localizable.mixin_contact()
-                cell.titleTag = .free
-                cell.descriptionLabel.text = R.string.localizable.send_to_contact_description()
-            }
-            return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: walletTipReuseIdentifier, for: indexPath) as! WalletTipTableViewCell
-            cell.tipView.content = .classic
-            cell.tipView.delegate = self
-            return cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
+        let destination = destinations[indexPath.row]
+        switch destination {
+        case .addressBook:
+            cell.iconImageView.image = R.image.token_receiver_address_book()
+            cell.titleLabel.text = R.string.localizable.address_book()
+            cell.titleTag = nil
+            cell.descriptionLabel.text = R.string.localizable.send_to_address_description()
+        case .myWallets:
+            cell.iconImageView.image = R.image.token_receiver_wallet()
+            cell.titleLabel.text = R.string.localizable.my_wallet()
+            cell.titleTag = nil
+            cell.descriptionLabel.text = R.string.localizable.send_to_other_wallet_description()
+        case .contact:
+            cell.iconImageView.image = R.image.token_receiver_contact()
+            cell.titleLabel.text = R.string.localizable.mixin_contact()
+            cell.titleTag = .free
+            cell.descriptionLabel.text = R.string.localizable.send_to_contact_description()
         }
+        return cell
     }
     
 }
@@ -143,9 +128,6 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard indexPath.section == 0 else {
-            return
-        }
         switch destinations[indexPath.row] {
         case .contact:
             let selector = TransferReceiverViewController()
@@ -180,16 +162,6 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
             present(book, animated: true)
         }
     }
-}
-
-extension MixinTokenReceiverViewController: WalletTipView.Delegate {
-    
-    func walletTipViewWantsToClose(_ view: WalletTipView) {
-        AppGroupUserDefaults.Wallet.hasViewedClassicWalletTipInTransfer = true
-        let indexPath = IndexPath(row: 0, section: 1)
-        tableView.deleteRows(at: [indexPath], with: .fade)
-    }
-    
 }
 
 extension MixinTokenReceiverViewController: ReceivingWalletSelectorViewController.Delegate {

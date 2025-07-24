@@ -34,6 +34,10 @@ public final class ChainDAO: UserDatabaseDAO {
         }
     }
     
+    public func allChainIDs() -> Set<String> {
+        db.selectSet(with: "SELECT DISTINCT chain_id FROM chains")
+    }
+    
     public func save(_ chains: [Chain]) {
         guard !chains.isEmpty else {
             return

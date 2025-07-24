@@ -144,7 +144,10 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
             self.present(selector, animated: true)
         case .myWallets:
             reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
-            let selector = ReceivingWalletSelectorViewController(excluding: .privacy)
+            let selector = ReceivingWalletSelectorViewController(
+                excluding: .privacy,
+                supportingChainWith: token.chainID
+            )
             selector.delegate = self
             present(selector, animated: true)
         case .addressBook:

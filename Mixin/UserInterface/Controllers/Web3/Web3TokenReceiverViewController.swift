@@ -130,7 +130,10 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
             present(book, animated: true)
         case .myWallets:
             reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
-            let selector = ReceivingWalletSelectorViewController(excluding: .common(payment.wallet))
+            let selector = ReceivingWalletSelectorViewController(
+                excluding: .common(payment.wallet),
+                supportingChainWith: payment.token.chainID
+            )
             selector.delegate = self
             present(selector, animated: true)
         }

@@ -27,7 +27,9 @@ final class ReceivingWalletSelectorViewController: UIViewController {
     
     private weak var tipsPageControl: UIPageControl?
     
-    private var excludingWallet: Wallet
+    private let excludingWallet: Wallet
+    private let chainID: String
+    
     private var walletDigests: [WalletDigest] = []
     private var searchObserver: AnyCancellable?
     private var searchingKeyword: String?
@@ -40,8 +42,9 @@ final class ReceivingWalletSelectorViewController: UIViewController {
         }
     }
     
-    init(excluding wallet: Wallet) {
+    init(excluding wallet: Wallet, supportingChainWith chainID: String) {
         self.excludingWallet = wallet
+        self.chainID = chainID
         let nib = R.nib.receivingWalletSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -119,17 +122,22 @@ final class ReceivingWalletSelectorViewController: UIViewController {
         collectionView.allowsMultipleSelection = false
         collectionView.dataSource = self
         collectionView.delegate = self
-        DispatchQueue.global().async { [excludingWallet] in
-            let digests: [WalletDigest]
-            switch excludingWallet {
+        DispatchQueue.global().async { [excludingWallet, chainID] in
+            let web3Wallets = Web3WalletDAO.shared.walletDigests()
+            
+            var digests: [WalletDigest] = switch excludingWallet {
             case .privacy:
-                digests = Web3WalletDAO.shared.walletDigests()
+                web3Wallets
             case .common:
-                let commonWallets = Web3WalletDAO.shared.walletDigests().filter { digest in
+                [TokenDAO.shared.walletDigest()] + web3Wallets.filter { digest in
                     digest.wallet != excludingWallet
                 }
-                digests = [TokenDAO.shared.walletDigest()] + commonWallets
             }
+            
+            digests.removeAll { digest in
+                !digest.supportedChainIDs.contains(chainID)
+            }
+            
             DispatchQueue.main.async {
                 self.walletDigests = digests
                 self.collectionView.reloadData()

@@ -18,7 +18,14 @@ final class ClassicWalletViewController: WalletViewController {
     private weak var renamingInputController: UIAlertController?
     
     private var canPerformActions: Bool {
-        secret != nil
+        switch wallet.category.knownCase {
+        case .classic:
+            true
+        case .importedMnemonic, .importedPrivateKey:
+            secret != nil
+        case .watchAddress, .none:
+            false
+        }
     }
     
     init(wallet: Web3Wallet) {

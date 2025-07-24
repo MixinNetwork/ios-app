@@ -196,11 +196,8 @@ public final class TokenDAO: UserDatabaseDAO {
             AND CAST(t.price_usd * te.balance AS REAL) > 0
         ORDER BY t.price_usd * te.balance DESC
         """)
-        
-        // XXX: Not in used currently, leave it empty to reduce overhead
-        let supportedChainIDs: Set<String> = []
-        
-        return WalletDigest(wallet: .privacy, tokens: digests, supportedChainIDs: supportedChainIDs)
+        let chainIDs = ChainDAO.shared.allChainIDs()
+        return WalletDigest(wallet: .privacy, tokens: digests, supportedChainIDs: chainIDs)
     }
     
     public func save(assets: [MixinToken], completion: (() -> Void)? = nil) {

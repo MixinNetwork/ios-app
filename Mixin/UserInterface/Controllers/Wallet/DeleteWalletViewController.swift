@@ -24,7 +24,12 @@ final class DeleteWalletViewController: UIViewController {
         label.numberOfLines = 0
         label.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
         label.adjustsFontForContentSizeCategory = true
-        label.text = R.string.localizable.delete_wallet_description()
+        label.text = switch wallet.category.knownCase {
+        case .classic, .importedMnemonic, .importedPrivateKey, .none:
+            R.string.localizable.delete_common_wallet_description()
+        case .watchAddress:
+            R.string.localizable.delete_watch_wallet_description()
+        }
         view.addSubview(label)
         label.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(36)

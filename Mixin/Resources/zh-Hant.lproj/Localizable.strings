@@ -442,6 +442,7 @@
 "delete_address_description" = "確認刪除該地址嗎？";
 "delete_chat" = "刪除聊天";
 "delete_circle" = "刪除圈子";
+"delete_common_wallet_description" = "移除此錢包不會影響你的資產，請確保你的私鑰或助記詞已備份。";
 "delete_contact_chat_confirmation" = "刪除與\"%@\"的會話並清空聊天記錄？";
 "delete_emergency_contact" = "刪除恢復聯絡人";
 "delete_for_everyone" = "撤回";
@@ -451,8 +452,8 @@
 "delete_note" = "刪除轉賬備註";
 "delete_synced_contact" = "刪除已同步的通訊錄";
 "delete_wallet" = "刪除錢包";
-"delete_wallet_description" = "移除此錢包不會影響你的資產，請確保你的私鑰或助記詞已備份。";
 "delete_wallet_title" = "請輸入 PIN 以移除錢包";
+"delete_watch_wallet_description" = "這是一個觀察錢包，移除此錢包不會影響你的資產。";
 "delete_withdraw_address" = "刪除 %@ 地址";
 "deleted" = "已刪除";
 "deleting_address" = "正在刪除地址";

@@ -442,6 +442,7 @@
 "delete_address_description" = "Are you sure to delete this address?";
 "delete_chat" = "Удалить чат";
 "delete_circle" = "Удалить круг";
+"delete_common_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
 "delete_contact_chat_confirmation" = "Удалить чат с %@?";
 "delete_emergency_contact" = "Delete recovery contact";
 "delete_for_everyone" = "Удалить для всех";
@@ -451,8 +452,8 @@
 "delete_note" = "Delete Note";
 "delete_synced_contact" = "Удалить синхронизированные контакты";
 "delete_wallet" = "Delete Wallet";
-"delete_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
 "delete_wallet_title" = "Enter your PIN to remove wallet";
+"delete_watch_wallet_description" = "Deleting this wallet will not affect your assets, as it is a watch-only wallet.";
 "delete_withdraw_address" = "Удалить адрес %@";
 "deleted" = "Удалено";
 "deleting_address" = "Delete Address";

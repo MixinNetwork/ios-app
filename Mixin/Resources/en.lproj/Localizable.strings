@@ -442,6 +442,7 @@
 "delete_address_description" = "Are you sure to delete this address?";
 "delete_chat" = "Delete Chat";
 "delete_circle" = "Delete Circle";
+"delete_common_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
 "delete_contact_chat_confirmation" = "Delete chat with \"%@\"?";
 "delete_emergency_contact" = "Delete recovery contact";
 "delete_for_everyone" = "Delete for Everyone";
@@ -451,8 +452,8 @@
 "delete_note" = "Delete Note";
 "delete_synced_contact" = "Delete Synced Contacts";
 "delete_wallet" = "Delete Wallet";
-"delete_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
 "delete_wallet_title" = "Enter your PIN to remove wallet";
+"delete_watch_wallet_description" = "Deleting this wallet will not affect your assets, as it is a watch-only wallet.";
 "delete_withdraw_address" = "Delete %@ Address";
 "deleted" = "Deleted";
 "deleting_address" = "Delete Address";

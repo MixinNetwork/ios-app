@@ -442,6 +442,7 @@
 "delete_address_description" = "Are you sure to delete this address?";
 "delete_chat" = "チャットを削除";
 "delete_circle" = "グループリストを削除";
+"delete_common_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
 "delete_contact_chat_confirmation" = "\"%@\"からチャットを削除しますか?";
 "delete_emergency_contact" = "Delete recovery contact";
 "delete_for_everyone" = "全員のチャットから削除";
@@ -451,8 +452,8 @@
 "delete_note" = "Delete Note";
 "delete_synced_contact" = "同期済みの連絡先を削除する";
 "delete_wallet" = "Delete Wallet";
-"delete_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
 "delete_wallet_title" = "Enter your PIN to remove wallet";
+"delete_watch_wallet_description" = "Deleting this wallet will not affect your assets, as it is a watch-only wallet.";
 "delete_withdraw_address" = "%@のアドレス削除";
 "deleted" = "削除しました";
 "deleting_address" = "Delete Address";

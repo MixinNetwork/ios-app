@@ -3,7 +3,12 @@ import MixinServices
 
 final class WalletSummaryValueCell: UICollectionViewCell {
     
+    protocol Delegate: AnyObject {
+        func walletSummaryValueCellRequestTip(_ cell: WalletSummaryValueCell)
+    }
+    
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var infoButton: UIButton!
     @IBOutlet weak var valueLabel: UILabel!
     
     @IBOutlet weak var assetChartView: BarChartView!
@@ -21,12 +26,18 @@ final class WalletSummaryValueCell: UICollectionViewCell {
     @IBOutlet weak var rightAssetSymbolLabel: UILabel!
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
     
+    weak var delegate: Delegate?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
         titleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         titleLabel.text = R.string.localizable.total_balance()
+    }
+    
+    @IBAction func requestTip(_ sender: Any) {
+        delegate?.walletSummaryValueCellRequestTip(self)
     }
     
     func load(summary: WalletSummary) {

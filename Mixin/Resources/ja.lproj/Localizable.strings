@@ -1546,6 +1546,7 @@
 "wallet_pin_pay_interval_tips" = "セキュリティ保護のため、PINコードの定期的な再確認が必要です。";
 "wallet_pin_tops_desc" = "PINコードを忘れた場合、ウォレットにアクセスすることができなくなるため、必ず覚えておいてください。PINコードは、分散型キー導出プロトコルであるThrottled Identity Protocolから作成されています。詳しくは、こちらをご覧ください。";
 "wallet_refresh_address_failed" = "出金手数料が変更され、更新に失敗しました。もう一度やり直してください。";
+"wallet_summary_tip" = "Watch wallets and hidden assets are excluded from the total";
 "wallet_transaction_continue_count_down" = "続ける (%d)";
 "wallet_transaction_tip" = "%1$@へ%2$@相当の%3$@を送金してもよろしいですか？";
 "wallet_transactions_asset_key_warning" = "資産キーは入金アドレスではありません！";

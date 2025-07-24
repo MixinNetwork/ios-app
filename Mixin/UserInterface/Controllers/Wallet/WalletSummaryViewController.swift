@@ -283,6 +283,7 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
             if let summary {
                 cell.load(summary: summary)
             }
+            cell.delegate = self
             return cell
         case .wallets:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet, for: indexPath)!
@@ -328,6 +329,20 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
                 container?.switchToWallet(digest.wallet)
             }
         }
+    }
+    
+}
+
+extension WalletSummaryViewController: WalletSummaryValueCell.Delegate {
+    
+    func walletSummaryValueCellRequestTip(_ cell: WalletSummaryValueCell) {
+        let tipView = R.nib.overlayTipView(withOwner: nil)!
+        view.addSubview(tipView)
+        tipView.snp.makeEdgesEqualToSuperview()
+        tipView.label.text = R.string.localizable.wallet_summary_tip()
+        view.layoutIfNeeded()
+        let center = cell.convert(cell.infoButton.center, to: tipView)
+        tipView.placeTip(at: center)
     }
     
 }

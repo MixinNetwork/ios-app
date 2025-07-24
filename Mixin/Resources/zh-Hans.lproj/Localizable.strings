@@ -1546,6 +1546,7 @@
 "wallet_pin_pay_interval_tips" = "为了您的资产安全，距离上次输入支付 PIN 的时间超过以上指定时间时，再次转账时依然需要支付 PIN";
 "wallet_pin_tops_desc" = "注意 PIN 丢失无法找回，6 位数字 PIN 是基于去中心化密钥派生协议 Throttled Identity Protocol，阅读文档以了解更多。";
 "wallet_refresh_address_failed" = "手续费已变更且刷新失败，请重试。";
+"wallet_summary_tip" = "观察钱包、隐藏的资产不计入统计";
 "wallet_transaction_continue_count_down" = "继续 （%d）";
 "wallet_transaction_tip" = "确定给 %1$@ 转价值 %2$@ 的 %3$@ ？";
 "wallet_transactions_asset_key_warning" = "资产标识不是充值地址！";

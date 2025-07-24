@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -19,8 +19,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="335" height="144"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total assets" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cmN-zs-2QT">
-                        <rect key="frame" x="16" y="20" width="303" height="20.333333333333329"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Total assets" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cmN-zs-2QT">
+                        <rect key="frame" x="16" y="20" width="90.333333333333329" height="20.333333333333329"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -173,6 +173,18 @@
                             </view>
                         </subviews>
                     </stackView>
+                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5qi-ej-bUb">
+                        <rect key="frame" x="96.333333333333329" y="8.3333333333333357" width="43.999999999999986" height="44"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="DRh-hU-nAp"/>
+                            <constraint firstAttribute="height" constant="44" id="tEv-6k-nuI"/>
+                        </constraints>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" image="info"/>
+                        <connections>
+                            <action selector="requestTip:" destination="KKB-nT-4jK" eventType="touchUpInside" id="KRL-IV-DMj"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
@@ -181,12 +193,15 @@
                     <constraint firstAttribute="trailing" secondItem="UyU-KC-xqg" secondAttribute="trailing" constant="18" id="NCO-Hl-yP3"/>
                     <constraint firstItem="UyU-KC-xqg" firstAttribute="top" secondItem="cmN-zs-2QT" secondAttribute="bottom" constant="12" id="R75-OY-WLy"/>
                     <constraint firstItem="UyU-KC-xqg" firstAttribute="leading" secondItem="dVS-qm-rqh" secondAttribute="leading" constant="18" id="b90-M9-YDI"/>
-                    <constraint firstAttribute="trailing" secondItem="cmN-zs-2QT" secondAttribute="trailing" constant="16" id="eli-1f-qav"/>
+                    <constraint firstItem="5qi-ej-bUb" firstAttribute="centerY" secondItem="cmN-zs-2QT" secondAttribute="centerY" id="k4X-ur-Lvm"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="5qi-ej-bUb" secondAttribute="trailing" id="lCe-o3-kUz"/>
                     <constraint firstItem="cmN-zs-2QT" firstAttribute="leading" secondItem="dVS-qm-rqh" secondAttribute="leading" constant="16" id="o3M-pW-MI8"/>
+                    <constraint firstItem="5qi-ej-bUb" firstAttribute="leading" secondItem="cmN-zs-2QT" secondAttribute="trailing" constant="-10" id="sjg-3a-obc"/>
                 </constraints>
             </collectionViewCellContentView>
             <connections>
                 <outlet property="assetChartView" destination="tNM-4G-kbn" id="JHz-So-d0e"/>
+                <outlet property="infoButton" destination="5qi-ej-bUb" id="0Cf-w6-5rB"/>
                 <outlet property="leftAssetPercentLabel" destination="EIf-5b-b7v" id="NhF-D5-DwW"/>
                 <outlet property="leftAssetSampleImageView" destination="LRz-Vr-rRx" id="BTZ-FN-70C"/>
                 <outlet property="leftAssetSymbolLabel" destination="pHW-Kc-HZq" id="Af0-hR-gyO"/>
@@ -207,6 +222,7 @@
         <image name="Wallet/token_sample_primary" width="3" height="9"/>
         <image name="Wallet/token_sample_secondary" width="3" height="9"/>
         <image name="Wallet/token_sample_tertiary" width="3" height="9"/>
+        <image name="info" width="16" height="16"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

@@ -13,7 +13,6 @@ final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewCo
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.add_watch_address()
-        inputTextView.delegate = self
         inputPlaceholderLabel.text = R.string.localizable.type_your_wallet_address()
         continueButton.configuration?.title = R.string.localizable.add()
     }
@@ -62,15 +61,14 @@ final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewCo
     }
     
     override func detectInput() {
-        errorDescriptionLabel.text = nil
+        super.detectInput()
         let input = (inputTextView.text ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         guard !input.isEmpty else {
-            inputPlaceholderLabel.isHidden = false
             address = nil
+            errorDescriptionLabel.text = nil
             return
         }
-        inputPlaceholderLabel.isHidden = true
         address = {
             switch selectedChain.kind {
             case .evm:
@@ -94,27 +92,10 @@ final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewCo
                 }
             }
         }()
-    }
-    
-}
-
-extension AddWalletInputAddressViewController: UITextViewDelegate {
-    
-    func textViewDidChange(_ textView: UITextView) {
-        detectInput()
-    }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if text == "\n" {
-            textView.resignFirstResponder()
-            if address == nil {
-                errorDescriptionLabel.text = R.string.localizable.invalid_format()
-            } else {
-                errorDescriptionLabel.text = nil
-            }
-            return false
+        if address == nil {
+            errorDescriptionLabel.text = R.string.localizable.invalid_format()
         } else {
-            return true
+            errorDescriptionLabel.text = nil
         }
     }
     

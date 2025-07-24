@@ -1,4 +1,5 @@
 import UIKit
+import Combine
 import MixinServices
 
 class AddWalletInputOnChainInfoViewController: UIViewController {
@@ -26,6 +27,8 @@ class AddWalletInputOnChainInfoViewController: UIViewController {
             detectInput()
         }
     }
+    
+    private var inputChangeObserver: AnyCancellable?
     
     init() {
         let nib = R.nib.addWalletInputOnChainInfoView
@@ -66,6 +69,13 @@ class AddWalletInputOnChainInfoViewController: UIViewController {
         inputTextView.font = UIFontMetrics.default.scaledFont(
             for: .monospacedSystemFont(ofSize: 16, weight: .regular)
         )
+        inputTextView.delegate = self
+        inputChangeObserver = NotificationCenter.default
+            .publisher(for: UITextView.textDidChangeNotification, object: inputTextView)
+            .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.detectInput()
+            }
         errorDescriptionLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         continueButton.titleLabel?.adjustsFontForContentSizeCategory = true
         NotificationCenter.default.addObserver(
@@ -116,7 +126,7 @@ class AddWalletInputOnChainInfoViewController: UIViewController {
     }
     
     func detectInput() {
-        
+        inputPlaceholderLabel.isHidden = !inputTextView.text.isEmpty
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
@@ -171,6 +181,24 @@ extension AddWalletInputOnChainInfoViewController: HomeNavigationController.Navi
     
     var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
         .secondaryBackground
+    }
+    
+}
+
+extension AddWalletInputOnChainInfoViewController: UITextViewDelegate {
+    
+    func textViewDidChange(_ textView: UITextView) {
+        continueButton.isEnabled = false
+        inputPlaceholderLabel.isHidden = !textView.text.isEmpty
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            textView.resignFirstResponder()
+            return false
+        } else {
+            return true
+        }
     }
     
 }

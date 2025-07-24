@@ -36,11 +36,12 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.import_private_key()
-        inputTextView.delegate = self
         inputPlaceholderLabel.text = R.string.localizable.type_your_private_key()
         let descriptionLabel = InsetLabel()
         descriptionLabel.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         descriptionLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        descriptionLabel.textColor = R.color.text_tertiary()
+        descriptionLabel.numberOfLines = 0
         descriptionLabel.text = R.string.localizable.private_key_storage_description()
         contentStackView.addArrangedSubview(descriptionLabel)
         continueButton.configuration?.title = R.string.localizable.import()
@@ -57,15 +58,14 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
     }
     
     override func detectInput() {
-        errorDescriptionLabel.text = nil
+        super.detectInput()
         let input = (inputTextView.text ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         guard !input.isEmpty else {
-            inputPlaceholderLabel.isHidden = false
             wallet = nil
+            errorDescriptionLabel.text = nil
             return
         }
-        inputPlaceholderLabel.isHidden = true
         do {
             switch selectedChain.kind {
             case .evm:
@@ -122,27 +122,10 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
             Logger.general.debug(category: "InputPrivateKey", message: "\(error)")
             wallet = nil
         }
-    }
-    
-}
-
-extension AddWalletInputPrivateKeyViewController: UITextViewDelegate {
-    
-    func textViewDidChange(_ textView: UITextView) {
-        detectInput()
-    }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if text == "\n" {
-            textView.resignFirstResponder()
-            if wallet == nil {
-                errorDescriptionLabel.text = R.string.localizable.invalid_format()
-            } else {
-                errorDescriptionLabel.text = nil
-            }
-            return false
+        if wallet == nil {
+            errorDescriptionLabel.text = R.string.localizable.invalid_format()
         } else {
-            return true
+            errorDescriptionLabel.text = nil
         }
     }
     

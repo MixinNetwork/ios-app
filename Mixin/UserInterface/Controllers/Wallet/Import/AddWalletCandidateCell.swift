@@ -56,7 +56,7 @@ final class AddWalletCandidateCell: UICollectionViewCell, TokenProportionReprese
         valueLabel.attributedText = candidate.value
         loadProportions(
             tokens: candidate.tokens,
-            placeholder: .commonWalletSupportedChains,
+            placeholder: .commonWalletChains,
             usdBalanceSum: candidate.usdBalanceSum
         )
     }

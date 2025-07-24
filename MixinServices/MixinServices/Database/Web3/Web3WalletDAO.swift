@@ -54,6 +54,10 @@ public final class Web3WalletDAO: Web3DAO {
             ORDER BY t.price_usd * t.amount DESC
             """
             
+            static let chains = """
+            SELECT DISTINCT chain_id FROM addresses WHERE wallet_id = ?
+            """
+            
         }
         
         return try! db.read { db in
@@ -63,9 +67,15 @@ public final class Web3WalletDAO: Web3DAO {
                     sql: SQL.tokenDigests,
                     arguments: [wallet.walletID]
                 )
+                let chainIDs = try String.fetchSet(
+                    db,
+                    sql: SQL.chains,
+                    arguments: [wallet.walletID]
+                )
                 return WalletDigest(
                     wallet: .common(wallet),
-                    tokens: tokenDigests
+                    tokens: tokenDigests,
+                    supportedChainIDs: chainIDs
                 )
             }
         }

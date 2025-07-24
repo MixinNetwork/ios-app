@@ -39,7 +39,10 @@ final class ClassicWalletViewController: WalletViewController {
         switch wallet.category.knownCase {
         case .classic:
             tableHeaderView.actionView.isHidden = false
-        case .importedMnemonic, .importedPrivateKey, .watchAddress, .none:
+        case .importedMnemonic, .importedPrivateKey, .none:
+            tableHeaderView.actionView.isHidden = true
+        case .watchAddress:
+            addIconIntoTitleView(image: R.image.watching_wallet())
             tableHeaderView.actionView.isHidden = true
         }
         tableHeaderView.delegate = self
@@ -211,11 +214,13 @@ final class ClassicWalletViewController: WalletViewController {
             case .importedPrivateKey:
                 if let privateKey = AppGroupKeychain.importedPrivateKey(walletID: walletID) {
                     let chainIDs = Web3AddressDAO.shared.chainIDs(walletID: walletID)
-                    if chainIDs.contains(ChainID.ethereum) {
+                    let kind: Web3Chain.Kind? = .importedWalletKind(chainIDs: chainIDs)
+                    switch kind {
+                    case .evm:
                         secret = .privateKey(privateKey, .evm)
-                    } else if chainIDs.contains(ChainID.solana) {
+                    case .solana:
                         secret = .privateKey(privateKey, .solana)
-                    } else {
+                    case .none:
                         secret = nil
                     }
                 } else {

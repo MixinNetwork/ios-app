@@ -126,7 +126,7 @@ final class AddWalletImportingViewController: IntroductionViewController {
         Task { [weak self] in
             do {
                 let request = CreateWalletRequest(
-                    name: R.string.localizable.common_wallet(),
+                    name: R.string.localizable.common_wallet_index(1),
                     category: .importedPrivateKey,
                     addresses: [address]
                 )

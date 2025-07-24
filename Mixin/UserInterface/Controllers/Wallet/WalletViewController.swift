@@ -106,6 +106,17 @@ class WalletViewController: UIViewController, MnemonicsBackupChecking {
         }
     }
     
+    func addIconIntoTitleView(image: UIImage?) {
+        let iconView = UIImageView(image: image)
+        iconView.contentMode = .scaleAspectFit
+        iconView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        iconView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        titleInfoStackView.addArrangedSubview(iconView)
+        iconView.snp.makeConstraints { make in
+            make.width.height.equalTo(22)
+        }
+    }
+    
     func makeSearchViewController() -> WalletSearchViewController {
         fatalError("Must override")
     }

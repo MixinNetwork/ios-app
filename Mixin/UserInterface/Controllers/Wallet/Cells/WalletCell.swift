@@ -31,7 +31,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             tagLabel.isHidden = true
             loadProportions(
                 tokens: digest.tokens,
-                placeholder: .privacyWalletSupportedChains,
+                placeholder: .privacyWalletChains,
                 usdBalanceSum: digest.usdBalanceSum
             )
         case let .common(wallet):
@@ -39,21 +39,46 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             case .classic, .none:
                 iconImageView.isHidden = true
                 tagLabel.isHidden = true
-            case .importedMnemonic, .importedPrivateKey:
+                loadProportions(
+                    tokens: digest.tokens,
+                    placeholder: .commonWalletChains,
+                    usdBalanceSum: digest.usdBalanceSum
+                )
+            case .importedMnemonic:
                 iconImageView.isHidden = true
                 tagLabel.text = R.string.localizable.wallet_imported()
                 tagLabel.isHidden = false
+                loadProportions(
+                    tokens: digest.tokens,
+                    placeholder: .commonWalletChains,
+                    usdBalanceSum: digest.usdBalanceSum
+                )
+            case .importedPrivateKey:
+                iconImageView.isHidden = true
+                tagLabel.text = R.string.localizable.wallet_imported()
+                tagLabel.isHidden = false
+                let kind: Web3Chain.Kind? = .importedWalletKind(
+                    chainIDs: digest.supportedChainIDs
+                )
+                loadProportions(
+                    tokens: digest.tokens,
+                    placeholder: .importedWallet(kind: kind),
+                    usdBalanceSum: digest.usdBalanceSum
+                )
             case .watchAddress:
                 iconImageView.isHidden = false
                 iconImageView.image = R.image.watching_wallet()
                 tagLabel.text = R.string.localizable.watching()
                 tagLabel.isHidden = false
+                let kind: Web3Chain.Kind? = .importedWalletKind(
+                    chainIDs: digest.supportedChainIDs
+                )
+                loadProportions(
+                    tokens: digest.tokens,
+                    placeholder: .importedWallet(kind: kind),
+                    usdBalanceSum: digest.usdBalanceSum
+                )
             }
-            loadProportions(
-                tokens: digest.tokens,
-                placeholder: .commonWalletSupportedChains,
-                usdBalanceSum: digest.usdBalanceSum
-            )
         }
         valueLabel.attributedText = FiatMoneyValueAttributedStringBuilder.attributedString(
             usdValue: digest.usdBalanceSum,

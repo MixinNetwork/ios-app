@@ -61,6 +61,7 @@ extension MixinAPIResponseError {
     public static let tooManyAlerts                        = MixinAPIResponseError(status: 202, code: 10621)
     public static let tooManyAlertsForAsset                = MixinAPIResponseError(status: 202, code: 10622)
     public static let simulationFailed                     = MixinAPIResponseError(status: 202, code: 10631)
+    public static let tooManyWallets                       = MixinAPIResponseError(status: 202, code: 10632)
     public static let invalidPhoneNumber                   = MixinAPIResponseError(status: 202, code: 20110)
     public static let invalidPhoneVerificationCode         = MixinAPIResponseError(status: 202, code: 20113)
     public static let expiredPhoneVerificationCode         = MixinAPIResponseError(status: 202, code: 20114)

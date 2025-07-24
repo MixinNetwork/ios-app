@@ -6,27 +6,48 @@ protocol TokenProportionRepresentableCell {
 }
 
 enum TokenProportionPlaceholder {
-    case privacyWalletSupportedChains
-    case commonWalletSupportedChains
+    
+    case privacyWalletChains
+    case commonWalletChains
+    case evmChains
+    case solanaChain
+    
+    static func importedWallet(kind: Web3Chain.Kind?) -> TokenProportionPlaceholder? {
+        switch kind {
+        case .evm:
+                .evmChains
+        case .solana:
+                .solanaChain
+        case .none:
+                .none
+        }
+    }
+    
 }
 
 extension TokenProportionRepresentableCell {
     
-    func loadProportions(tokens: [TokenDigest], placeholder: TokenProportionPlaceholder, usdBalanceSum: Decimal) {
+    func loadProportions(tokens: [TokenDigest], placeholder: TokenProportionPlaceholder?, usdBalanceSum: Decimal) {
         for view in proportionStackView.arrangedSubviews {
             view.removeFromSuperview()
         }
         switch tokens.count {
         case 0:
             proportionStackView.distribution = .fill
-            let image = switch placeholder {
-            case .privacyWalletSupportedChains:
-                R.image.privacy_wallet_chains()
-            case .commonWalletSupportedChains:
-                R.image.classic_wallet_chains()
+            if let placeholder {
+                let image = switch placeholder {
+                case .privacyWalletChains:
+                    R.image.privacy_wallet_chains()
+                case .commonWalletChains:
+                    R.image.classic_wallet_chains()
+                case .evmChains:
+                    R.image.evm_chains()
+                case .solanaChain:
+                    R.image.solana_chain()
+                }
+                let imageView = UIImageView(image: image)
+                proportionStackView.addArrangedSubview(imageView)
             }
-            let imageView = UIImageView(image: image)
-            proportionStackView.addArrangedSubview(imageView)
             let placeholder = UIView()
             placeholder.backgroundColor = .clear
             proportionStackView.addArrangedSubview(placeholder)

@@ -196,7 +196,11 @@ public final class TokenDAO: UserDatabaseDAO {
             AND CAST(t.price_usd * te.balance AS REAL) > 0
         ORDER BY t.price_usd * te.balance DESC
         """)
-        return WalletDigest(wallet: .privacy, tokens: digests)
+        
+        // XXX: Not in used currently, leave it empty to reduce overhead
+        let supportedChainIDs: Set<String> = []
+        
+        return WalletDigest(wallet: .privacy, tokens: digests, supportedChainIDs: supportedChainIDs)
     }
     
     public func save(assets: [MixinToken], completion: (() -> Void)? = nil) {

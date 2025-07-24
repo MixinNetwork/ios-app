@@ -47,7 +47,7 @@ extension AddWalletMethodSelectorViewController: UITableViewDataSource {
             cell.titleLabel.text = R.string.localizable.import_mnemonic_phrase()
             cell.subtitleLabel.text = R.string.localizable.import_wallets_from_another_wallet()
         case .watch:
-            cell.iconImageView.image = R.image.watching_wallet()
+            cell.iconImageView.image = R.image.watching_wallet_large()
             cell.titleLabel.text = R.string.localizable.add_watch_address()
             cell.subtitleLabel.text = R.string.localizable.add_watch_address_description()
         }

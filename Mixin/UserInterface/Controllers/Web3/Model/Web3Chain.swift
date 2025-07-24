@@ -20,6 +20,16 @@ final class Web3Chain {
             }
         }
         
+        static func importedWalletKind(chainIDs: Set<String>) -> Kind? {
+            if chainIDs.contains(ChainID.ethereum) {
+                .evm
+            } else if chainIDs.contains(ChainID.solana) {
+                .solana
+            } else {
+                nil
+            }
+        }
+        
     }
     
     enum KindSpecification {

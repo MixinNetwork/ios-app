@@ -17,9 +17,9 @@ final class AddTokenMethodSelectorViewController: PopupSelectorViewController {
     
     weak var delegate: Delegate?
     
-    private let token: any Token
+    private let token: any OnChainToken
     
-    init(token: any Token) {
+    init(token: any OnChainToken) {
         self.token = token
         super.init()
     }
@@ -32,6 +32,8 @@ final class AddTokenMethodSelectorViewController: PopupSelectorViewController {
         super.viewDidLoad()
         view.backgroundColor = R.color.background_quaternary()
         titleView.backgroundColor = R.color.background_quaternary()
+        titleView.titleLabel.text = R.string.localizable.add_token(token.symbol)
+        titleView.subtitleLabel.text = token.depositNetworkName
         tableViewTopConstraint.constant = 6
         tableView.backgroundColor = R.color.background_quaternary()
         tableView.estimatedRowHeight = 72
@@ -41,7 +43,6 @@ final class AddTokenMethodSelectorViewController: PopupSelectorViewController {
         tableView.delegate = self
         tableView.contentInsetAdjustmentBehavior = .always
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 38, right: 0)
-        titleView.titleLabel.text = R.string.localizable.add_token(token.symbol)
     }
     
 }

@@ -190,6 +190,10 @@ final class Web3Worker {
             send(error: "Invalid Data", to: request)
             return
         }
+        guard let wallet = Web3WalletDAO.shared.classicWallet() else {
+            send(error: "No Wallet", to: request)
+            return
+        }
         guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum) else {
             send(error: "Account Locked", to: request)
             return
@@ -198,8 +202,8 @@ final class Web3Worker {
             do {
                 let preview = try ExternalEVMTransaction(json: object)
                 let operation = try EVMTransferWithBrowserWalletOperation(
-                    walletID: address.walletID,
-                    fromAddress: address.destination,
+                    wallet: wallet,
+                    fromAddress: address,
                     transaction: preview,
                     chain: evmChain
                 ) { hash in
@@ -215,7 +219,7 @@ final class Web3Worker {
                         Web3PopupCoordinator.enqueue(popup: .request(transfer))
                     } else {
                         let insufficient = InsufficientBalanceViewController(
-                            intent: .externalWeb3Transaction(fee: feeRequirement)
+                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement)
                         )
                         Web3PopupCoordinator.enqueue(popup: .request(insufficient))
                         self.send(error: "Insufficient Fee", to: request)
@@ -377,20 +381,20 @@ final class Web3Worker {
             send(error: "Invalid Data", to: request)
             return
         }
-        guard let walletID = Web3WalletDAO.shared.classicWallet()?.walletID else {
-            send(error: "Account Locked", to: request)
+        guard let wallet = Web3WalletDAO.shared.classicWallet() else {
+            send(error: "No Wallet", to: request)
             return
         }
-        guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: ChainID.solana) else {
+        guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.solana) else {
             send(error: "No Address", to: request)
             return
         }
         Task.detached { [solanaChain, proposer=currentProposer] in
             do {
                 let operation = try await SolanaTransferWithCustomRespondingOperation(
-                    walletID: walletID,
+                    wallet: wallet,
                     transaction: transaction,
-                    fromAddress: address.destination,
+                    fromAddress: address,
                     chain: solanaChain
                 ) { signature in
                     try await self.send(result: signature, to: request)
@@ -405,7 +409,7 @@ final class Web3Worker {
                         Web3PopupCoordinator.enqueue(popup: .request(transfer))
                     } else {
                         let insufficient = InsufficientBalanceViewController(
-                            intent: .externalWeb3Transaction(fee: feeRequirement)
+                            intent: .externalWeb3Transaction(wallet: wallet, fee: feeRequirement)
                         )
                         Web3PopupCoordinator.enqueue(popup: .request(insufficient))
                         self.send(error: "Insufficient Fee", to: request)

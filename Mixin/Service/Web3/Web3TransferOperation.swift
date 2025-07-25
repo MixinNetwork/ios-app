@@ -25,8 +25,18 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
         case success
     }
     
-    let walletID: String
-    let fromAddress: String
+    enum SigningError: Error {
+        case unknownCategory
+        case invalidCategory
+        case missingPrivateKey
+        case invalidTransaction
+        case invalidBlockhash
+        case noFeeToken(String)
+        case missingDerivationPath
+    }
+    
+    let wallet: Web3Wallet
+    let fromAddress: Web3Address
     let toAddress: String // Always the receiver, not the contract address
     let chain: Web3Chain
     let feeToken: Web3TokenItem
@@ -38,12 +48,12 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
     var hasTransactionSent = false
     
     init(
-        walletID: String, fromAddress: String, toAddress: String,
+        wallet: Web3Wallet, fromAddress: Web3Address, toAddress: String,
         chain: Web3Chain, feeToken: Web3TokenItem,
         isResendingTransactionAvailable: Bool,
         hardcodedSimulation: TransactionSimulation?
     ) {
-        self.walletID = walletID
+        self.wallet = wallet
         self.fromAddress = fromAddress
         self.toAddress = toAddress
         self.chain = chain

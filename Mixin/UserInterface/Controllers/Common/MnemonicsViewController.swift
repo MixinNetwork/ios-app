@@ -74,6 +74,26 @@ class MnemonicsViewController: UIViewController {
         view.layoutIfNeeded()
     }
     
+    func addRowStackViewForButtonsIntoInputStackView() {
+        let rowStackView = UIStackView()
+        rowStackView.axis = .horizontal
+        rowStackView.distribution = .fillEqually
+        rowStackView.spacing = 10
+        inputStackView.addArrangedSubview(rowStackView)
+        rowStackView.snp.makeConstraints { make in
+            make.height.equalTo(40)
+        }
+    }
+    
+    func addTextInFooter(text: String) {
+        let label = UILabel()
+        label.textColor = R.color.text_tertiary()
+        label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        label.numberOfLines = 0
+        footerStackView.addArrangedSubview(label)
+        label.text = text
+    }
+    
 }
 
 // MARK: - Input Field

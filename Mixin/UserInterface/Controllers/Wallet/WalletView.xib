@@ -27,18 +27,18 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R6q-hK-bip">
                     <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                     <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="vam-yF-2Ud">
+                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="vam-yF-2Ud">
                             <rect key="frame" x="20" y="0.0" width="150.66666666666666" height="44"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="hamburger" translatesAutoresizingMaskIntoConstraints="NO" id="24S-mz-CJ3">
-                                    <rect key="frame" x="0.0" y="0.0" width="24" height="44"/>
+                                    <rect key="frame" x="0.0" y="10" width="24" height="24"/>
                                     <color key="tintColor" name="icon_tint"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="24" id="Q4W-Lu-1Qc"/>
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Privacy Wallet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m2F-gU-AVs">
-                                    <rect key="frame" x="32.000000000000007" y="0.0" width="118.66666666666669" height="44"/>
+                                    <rect key="frame" x="32.000000000000007" y="11.333333333333345" width="118.66666666666669" height="21.666666666666671"/>
                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                     <color key="textColor" name="text"/>
                                     <nil key="highlightedColor"/>

@@ -24,14 +24,26 @@ struct WalletSummary {
         let percentage: Decimal
     }
     
-    private static let maxNumberOfComponents = 3
-    
     let usdValue: Decimal
     let components: [Component]
     
     init(privacyWallet: WalletDigest, otherWallets: [WalletDigest]) {
-        let maxNumberOfComponents = Self.maxNumberOfComponents
-        let wallets = [privacyWallet] + otherWallets
+        let maxNumberOfComponents = 3
+        
+        let wallets = [privacyWallet] + otherWallets.filter { digest in
+            switch digest.wallet {
+            case .privacy:
+                true
+            case .common(let wallet):
+                switch wallet.category.knownCase {
+                case .classic, .importedMnemonic, .importedPrivateKey:
+                    true
+                case .watchAddress, .none:
+                    // Watch wallets are excluded from calculation
+                    false
+                }
+            }
+        }
         let usdValues: [Token: Decimal] = wallets
             .flatMap(\.tokens)
             .reduce(into: [:]) { result, digest in
@@ -48,7 +60,7 @@ struct WalletSummary {
                 return Component(symbol: .token(token.symbol), percentage: precentage)
             }.sorted() { one, another in
                 one.percentage > another.percentage
-            }.prefix(Self.maxNumberOfComponents)
+            }.prefix(maxNumberOfComponents)
         )
         
         if !topComponents.isEmpty {

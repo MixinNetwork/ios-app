@@ -24,7 +24,7 @@ final class DepositNetworkSelectorViewController: PopupSelectorViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleView.titleLabel.text = R.string.localizable.choose_network()
+        titleView.titleLabel.text = R.string.localizable.choose_deposit_network()
         titleView.closeButton.isHidden = true
         tableViewTopConstraint.constant = 0
         tableView.estimatedSectionHeaderHeight = 77

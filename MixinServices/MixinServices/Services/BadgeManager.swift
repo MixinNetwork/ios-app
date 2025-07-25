@@ -3,11 +3,12 @@ import Foundation
 public final class BadgeManager {
     
     public enum Identifier: String, CaseIterable {
-        case swap
-        case market
-        case swapOrder = "swap_order"
         case walletSwitch = "wallet_switch"
+        case addWallet = "add_wallet"
         case buy = "buying"
+        case swap
+        case swapOrder = "swap_order"
+        case market
         case membership = "membership"
     }
     

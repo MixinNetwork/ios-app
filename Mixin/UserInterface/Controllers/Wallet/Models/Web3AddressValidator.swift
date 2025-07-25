@@ -39,7 +39,7 @@ enum Web3AddressValidator {
     ) {
         Task {
             do {
-                let walletID = payment.walletID
+                let walletID = payment.wallet.walletID
                 
                 // Web3 wallet don’t support Bitcoin at the moment, so there’s no need to check if the link is for Lightning.
                 let link = try ExternalTransfer(string: string)

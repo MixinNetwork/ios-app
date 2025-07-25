@@ -41,6 +41,10 @@ extension MixinAPIResponseError: LocalizedError {
             return R.string.localizable.alert_limit_exceeded(100)
         case .tooManyAlertsForAsset:
             return R.string.localizable.alert_per_asset_limit_exceeded(10)
+        case .tooManyWallets:
+            return R.string.localizable.error_too_many_wallets()
+        case .unsupportedWatchAddress:
+            return R.string.localizable.error_watch_address_not_supported()
         case .invalidPhoneNumber:
             return R.string.localizable.error_phone_invalid_format()
         case .invalidPhoneVerificationCode:

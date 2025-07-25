@@ -18,6 +18,7 @@
 "add_contact" = "Добавить контакт";
 "add_conversations" = "Добавить беседы";
 "add_emergency_contact" = "Add recovery contact";
+"add_failed" = "Add Failed";
 "add_mobile_number" = "Add Mobile Number";
 "add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "Добавить участников";
@@ -39,6 +40,9 @@
 "add_tag" = "Добавить тега";
 "add_to_stickers" = "Добавить в стикеры";
 "add_token" = "Add %@";
+"add_wallet" = "Add Wallet";
+"add_watch_address" = "Add Watch Address";
+"add_watch_address_description" = "Track any public wallet address";
 "added" = "Добавлен";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
@@ -284,6 +288,7 @@
 "check_backup" = "Check Backup";
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
+"choose_deposit_network" = "Choose Network";
 "choose_network" = "Choose Network";
 "choose_network_tip" = "Please ensure the network you choose to deposit that Mixin supports. Otherwise, your assets may be lost.";
 "choose_photo" = "Выбрать фото";
@@ -324,6 +329,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Объединить и вперед";
 "common_wallet" = "Common Wallet";
+"common_wallet_index" = "Common Wallet %d";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Сжать базу данных";
@@ -435,6 +441,7 @@
 "delete_address_description" = "Are you sure to delete this address?";
 "delete_chat" = "Удалить чат";
 "delete_circle" = "Удалить круг";
+"delete_common_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
 "delete_contact_chat_confirmation" = "Удалить чат с %@?";
 "delete_emergency_contact" = "Delete recovery contact";
 "delete_for_everyone" = "Удалить для всех";
@@ -443,6 +450,9 @@
 "delete_my_account" = "Удалить мой аккаунт";
 "delete_note" = "Delete Note";
 "delete_synced_contact" = "Удалить синхронизированные контакты";
+"delete_wallet" = "Delete Wallet";
+"delete_wallet_title" = "Enter your PIN to remove wallet";
+"delete_watch_wallet_description" = "Deleting this wallet will not affect your assets, as it is a watch-only wallet.";
 "delete_withdraw_address" = "Удалить адрес %@";
 "deleted" = "Удалено";
 "deleting_address" = "Delete Address";
@@ -465,6 +475,7 @@
 "deposits_pending_confirmation" = "%d Deposits Pending Confirmation";
 "depost_address_updated" = "%@ Deposit Address Updated";
 "depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
+"deselect_all" = "Deselect All";
 "desktop_login" = "Login to Mixin Messenger Desktop";
 "desktop_logout" = "Logout Mixin Messenger Desktop";
 "desktop_on_hint" = "Вы вошли в свой рабочий стол";
@@ -567,11 +578,14 @@
 "error_too_many_friends" = "ОШИБКА 20128: Слишком много друзей";
 "error_too_many_request" = "ОШИБКА 429: Превышен предел скорости";
 "error_too_many_stickers" = "ОШИБКА 20126: Слишком много наклеек";
+"error_too_many_wallets" = "ERROR 10632: You have reached the maximum number of imported wallets.";
+"error_too_many_wallets_upgrade" = "ERROR 10632: You have reached the maximum number of imported wallets. Please upgrade your membership to add more.";
 "error_too_small_transfer_amount" = "ОШИБКА 20120: Сумма перевода слишком мала";
 "error_too_small_withdraw_amount" = "ОШИБКА 20127: Слишком маленькая сумма вывода";
 "error_transfer_is_already_paid" = "ОШИБКА 20125: Перевод уже оплачен.";
 "error_two_parts" = "ОШИБКА %@: %@";
 "error_used_phone" = "ОШИБКА 20122: этот номер телефона уже связан с другой учетной записью.";
+"error_watch_address_not_supported" = "ERROR 10633: Contract or exchange addresses is not supported for watching";
 "error_withdrawal_memo_format_incorrect" = "ОШИБКА 20131: Неверный формат уведомления о снятии средств.";
 "error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
 "estimated_balance_change" = "Balance Change (estimate)";
@@ -590,6 +604,10 @@
 "export" = "Экспорт";
 "export_failed" = "Не удалось экспортировать";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
+"export_mnemonics_warning_1" = "Anyone who gains access to this %@ can transfer all assets from your wallet.";
+"export_mnemonics_warning_2" = "Mixin Messenger does not store your %@ on its servers.";
+"export_mnemonics_warning_3" = "Never share your %@ with any third party, individual, website, or application.";
+"export_mnemonics_warning_4" = "Ensure that no one — including surveillance cameras — can see your screen.";
 "face_id" = "Идентификатор лица";
 "failed" = "Не удалось";
 "failed_to_compose_avatar" = "Не удалось создать аватар. Вместо этого попробуйте другую картинку.";
@@ -601,10 +619,12 @@
 "fee" = "Комиссия";
 "fee_selection" = "Fee (%@)";
 "feedback" = "Обратная связь";
+"fetching_in_to_your_wallet" = "Fetching in to your wallet...";
 "file" = "Файл";
 "files" = "Файлы";
 "filter" = "Фильтр";
 "filter_by" = "СОРТИРОВАТЬ ПО";
+"find_more_wallets" = "Find more wallets";
 "floating" = "Плавающий";
 "floats_allows_up_to_count" = "Поплавки позволяют использовать до %d единиц.";
 "follow_us_on_facebook" = "Следите за нами на Фейсбуке";
@@ -651,6 +671,17 @@
 "im_ready" = "I'm Ready";
 "image" = "изображение";
 "immediately" = "Немедленно";
+"import" = "Импорт";
+"import_failed" = "Import Failed";
+"import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_private_key" = "Import Private Key";
+"import_selected_wallet" = "Import Selected Wallets";
+"import_single_chain_wallet" = "Import a single-chain wallet";
+"import_wallet_count" = "Import %d Wallets";
+"import_wallet_count_one" = "Import 1 Wallet";
+"import_wallets" = "Import Wallets";
+"import_wallets_from_another_wallet" = "Import wallets from another wallet";
+"importing_into_your_wallet" = "Importing into your wallet...";
 "in_connecting" = "Подключение...";
 "include_files" = "Включить файлы";
 "include_videos" = "Включить видео";
@@ -665,6 +696,7 @@
 "interface_style" = "Стиль интерфейса";
 "invalid_address" = "Invalid Address";
 "invalid_candidate" = "Недействительный кандидат";
+"invalid_format" = "Invalid format";
 "invalid_height" = "Неверный рост";
 "invalid_malformed_address_eos_hint" = "Неверный формат адреса. Mixin не поддерживает вывод средств на адрес контракта EOS!";
 "invalid_malformed_address_hint" = "Неверный формат адреса. Повторите попытку с действительным адресом %@";
@@ -790,6 +822,7 @@
 "mnemonic_phrase_take_long" = "This shouldn't take long.";
 "mnemonic_phrase_tip_1" = "· Store it in a vault or secure place";
 "mnemonic_phrase_tip_2" = "· Do not share it over the internet";
+"mnemonic_phrases" = "mnemonic phrases";
 "mnemonics_mismatched" = "Mnemonics Mismatched";
 "mobile_contacts" = "Мобильные контакты";
 "mobile_number" = "Mobile Number";
@@ -824,6 +857,7 @@
 "my_mixin_id" = "Мой Mixin ID: %@";
 "my_qr_code" = "Мой QR-код";
 "my_stickers" = "Мои стикеры";
+"my_wallet" = "My Wallet";
 "na" = "Нет данных";
 "name" = "Имя";
 "name_or_phone_number" = "Имя или номер телефона";
@@ -919,6 +953,7 @@
 "owner" = "Владелец";
 "paid" = "Paid";
 "paid_recovery_service" = "Paid Recovery Service";
+"partial_import_successful" = "Partial Import Successful";
 "participants" = "Участники";
 "participants_count" = "%@ УЧАСТНИКОВ";
 "paste" = "Paste";
@@ -1002,6 +1037,8 @@
 "privacy_wallet" = "Privacy Wallet";
 "privacy_wallet_tip_description" = "A multi-chain wallet with private, free, and instant transactions to meet most of your needs.";
 "privacy_wallet_tip_title" = "What’s the Privacy Wallet?";
+"private_key" = "private key";
+"private_key_storage_description" = "Your private key will only be stored locally on your device";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "Профиль";
 "profile_badge" = "Profile Badge";
@@ -1057,6 +1094,7 @@
 "remove_emergency_contact_for_sure" = "Remove recovery contact for sure?";
 "remove_from_group" = "Удалить из группы";
 "remove_stickers" = "Удалить наклейки";
+"rename_wallet" = "Rename Wallet";
 "renew_plan" = "Renew Plan";
 "reply" = "Ответить";
 "report" = "Отчет";
@@ -1117,7 +1155,9 @@
 "saved" = "Сохранено";
 "say_hi" = "Скажи привет";
 "scam_warning" = "Предупреждение: многие пользователи сообщали об этой учетной записи как о мошенничестве. Пожалуйста, будьте осторожны, особенно если он просит у вас деньги";
+"scan" = "Сканировать";
 "scan_code_add_me" = "Отсканируйте QR-код, чтобы добавить меня в Mixin";
+"scan_code_description" = "Use another device to scan the QR code below";
 "scan_qr_code" = "Сканировать QR-код";
 "scan_to_restore" = "Scan to Restore";
 "scan_to_restore_hint" = "Click the button below to scan the code and establish a connection.";
@@ -1143,6 +1183,7 @@
 "select" = "Выбрать";
 "select_a_country_or_region" = "Выберите страну или регион";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_all" = "Select All";
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
 "select_more_photos" = "Выберите больше фотографий";
@@ -1154,6 +1195,8 @@
 "selected_photo_count" = "Выбрано %d фото";
 "selected_video" = "Выбрано 1 видео";
 "selected_video_count" = "Выбрано %d видео";
+"selected_wallet_count" = "%d wallets selected";
+"selected_wallet_count_one" = "1 wallet selected";
 "sell_token" = "Sell %@";
 "send" = "Отправить";
 "send_as_file" = "Отправить как файл";
@@ -1168,10 +1211,9 @@
 "send_this_location" = "Отправить это местоположение";
 "send_to" = "Отправить в %@";
 "send_to_address_description" = "Send to an address in your Address Book, PIN-protected to prevent phishing.";
-"send_to_common_wallet_description" = "Send to your Common Wallet for use with decentralized apps and DeFi protocols.";
 "send_to_contact_description" = "Send to your Mixin friends with privacy, zero fees, and instant delivery.";
 "send_to_developer" = "Отправить разработчику";
-"send_to_privacy_wallet_description" = "Send to your Privacy Wallet to keep your assets safe and hidden from potential risks.";
+"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Отправить в";
 "send_video" = "Отправить 1 видео";
 "send_video_count" = "Отправить %d видео";
@@ -1248,6 +1290,7 @@
 "show_asset" = "Показать актив";
 "show_in_chat" = "Показать в чате";
 "show_mnemonic_phrase" = "Show Mnemonic Phrase";
+"show_private_key" = "Show Private Key";
 "sign_in" = "Войти";
 "sign_in_no_account" = "Don’t have an account yet?";
 "sign_in_with_mnemonic_phrase" = "Sign in with Mnemonic Phrase";
@@ -1388,6 +1431,8 @@
 "trying_connect_tip_network" = "Connecting the TIP network";
 "trying_connect_tip_node" = "Trying connect TIP node";
 "type" = "Type";
+"type_your_private_key" = "Type your private key";
+"type_your_wallet_address" = "Type your wallet address";
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";
@@ -1460,6 +1505,7 @@
 "url_support" = "https://support.mixin.one/en/";
 "url_unrecognized_hint" = "%@ не удалось распознать, обновите Mixin до последней версии или свяжитесь с разработчиком, чтобы проверить ссылку";
 "url_unsupported_message" = "https://support.mixin.one/en/article/how-to-do-when-you-receive-a-message-like-this-this-type-of-message-is-not-supported-please-upgrade-mixin-17j1t3p/";
+"use_another_address" = "Use Another Address";
 "use_biometry" = "Использовать %@";
 "use_system_text_size" = "Use System Text Size";
 "user_delete_hint" = "The user has deleted his own account.";
@@ -1497,13 +1543,17 @@
 "waiting_transaction" = "Waiting Transaction";
 "waiting_transaction_description" = "You have a transfer or withdrawal has not been completed, please try again later";
 "wallet" = "Wallet";
+"wallet_already_added" = "This wallet has already been added";
+"wallet_candidate_imported" = "Imported";
 "wallet_enable_biometric_pay" = "После включения, %@ можно использовать для быстрой передачи.";
 "wallet_hide_asset_confirmation" = "Вы уверены, что хотите скрыть %@?";
+"wallet_imported" = "Imported";
 "wallet_password_not_equal" = "PIN-код не повторяется дважды, попробуйте еще раз.";
 "wallet_password_unsafe" = "PIN-код слишком прост и ненадежен.";
 "wallet_pin_pay_interval_tips" = "В целях безопасности ваших активов вам необходимо подтверждать свой PIN-код в течение указанного интервала времени.";
 "wallet_pin_tops_desc" = "Пожалуйста, помните, что PIN-код невозможно восстановить, если он утерян. PIN-код основан на протоколе Throttled Identity Protocol, который представляет собой децентрализованный протокол получения ключей. Прочтите документ, чтобы узнать больше.";
 "wallet_refresh_address_failed" = "Комиссия за снятие была изменена, и обновление не удалось, попробуйте еще раз.";
+"wallet_summary_tip" = "Watch wallets and hidden assets are excluded from the total";
 "wallet_transaction_continue_count_down" = "Продолжить (%d)";
 "wallet_transaction_tip" = "Вы уверены, что хотите перевести %3$@ на сумму %2$@ на %1$@?";
 "wallet_transactions_asset_key_warning" = "Ключ актива НЕ является депозитным адресом!";
@@ -1511,6 +1561,9 @@
 "wallet_withdrawal_changed" = "Комиссия за снятие средств была изменена с %1$@ на %2$@. Вы хотите продолжить обработку запроса?";
 "wallet_withdrawal_recent_tip" = "Вы уже выводили %3$@ на %2$@ %1$@ назад. Хотите вывести еще раз?";
 "wallets" = "Wallets";
+"watch_address" = "Watch %@";
+"watch_wallet_index" = "Watch Wallet %d";
+"watching" = "Watching";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";
@@ -1567,13 +1620,16 @@
 "withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, hard bifurcation of blockchain network, or congestion. Please try again later.";
 "withdrawal_to" = "Вывод на %@";
 "write_down_mnemonic_phrase" = "Write down your mnemonic phrase";
-"write_down_mnemonic_phrase_desc" = "Write it down on a piece of paper and keep it in a safe place.";
+"write_down_secret_description" = "Write it down on a piece of paper and keep it in a safe place.";
 "years_count_short" = "%dY";
 "you" = "Вы";
+"you_are_watching_address" = "You are watching %@";
 "you_deleted_this_message" = "Вы удалили это сообщение";
 "you_have_a_new_message" = "У вас новое сообщение";
 "you_have_left_the_group" = "Вы вышли из группы";
 "your_emergency_contact_has_been_changed" = "Your recovery contact has been changed";
+"your_mnemonic_phrase" = "Your Mnemonic Phrase";
 "your_phone_number_has_been_changed" = "Ваш номер телефона был изменен";
 "your_pin_has_been_changed" = "Ваш PIN-код был изменен";
 "your_pin_has_been_created" = "Ваш PIN-код был создан";
+"your_private_key" = "Your Private Key";

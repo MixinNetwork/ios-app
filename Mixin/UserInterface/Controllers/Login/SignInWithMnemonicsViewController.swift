@@ -83,10 +83,16 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
         }
         
         addButtonIntoInputFields(
+            image: R.image.explore.web3_send_scan()!,
+            title: R.string.localizable.scan(),
+            action: #selector(scanQRCode(_:))
+        )
+        addButtonIntoInputFields(
             image: R.image.paste()!,
             title: R.string.localizable.paste(),
             action: #selector(pastePhrases(_:))
         )
+        addRowStackViewForButtonsIntoInputStackView()
         addButtonIntoInputFields(
             image: R.image.explore.web3_send_delete()!,
             title: R.string.localizable.clear(),
@@ -108,6 +114,13 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
         reloadInputStackView(count: count)
     }
     
+    @objc private func scanQRCode(_ sender: Any) {
+        let scanner = CameraViewController.instance()
+        scanner.asQrCodeScanner = true
+        scanner.delegate = self
+        navigationController?.pushViewController(scanner, animated: true)
+    }
+    
     @objc private func pastePhrases(_ sender: Any) {
         let phrases = UIPasteboard.general.string?
             .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -115,17 +128,7 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
         guard let phrases else {
             return
         }
-        if let count = MixinMnemonics.PhrasesCount(rawValue: phrases.count),
-           self.phrasesCount != count
-        {
-            reloadInputStackView(count: count)
-        }
-        for (index, phrase) in phrases.prefix(inputFields.count).enumerated() {
-            let inputField = inputFields[index]
-            inputField.setTextColor(phrase: phrase)
-            inputField.textField.text = phrase
-        }
-        detectPhrases(sender)
+        input(phrases: phrases)
     }
     
     @objc private func emptyPhrases(_ sender: Any) {
@@ -152,15 +155,47 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
     }
     
     private func wordCountSwitchingButton(count: MixinMnemonics.PhrasesCount) -> UIButton {
-        let button = RoundOutlineButton(type: .custom)
-        button.contentEdgeInsets = UIEdgeInsets(top: 9, left: 14, bottom: 9, right: 14)
-        button.setTitle(R.string.localizable.number_of_words(count.rawValue), for: .normal)
-        button.setTitleColor(R.color.text(), for: .normal)
-        button.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        let button = ConfigurationBasedOutlineButton(type: .system)
+        button.configuration = {
+            var config: UIButton.Configuration = .bordered()
+            config.cornerStyle = .capsule
+            config.attributedTitle = AttributedString(
+                R.string.localizable.number_of_words(count.rawValue),
+                attributes: AttributeContainer([
+                    .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+                ])
+            )
+            config.contentInsets = NSDirectionalEdgeInsets(top: 9, leading: 14, bottom: 9, trailing: 14)
+            return config
+        }()
         button.tag = count.rawValue
         button.addTarget(self, action: #selector(switchWordCount(_:)), for: .touchUpInside)
-        button.isSelected = count == self.phrasesCount
+        button.isSelected = count == phrasesCount
         return button
+    }
+    
+    private func input(phrases: [String]) {
+        if let count = MixinMnemonics.PhrasesCount(rawValue: phrases.count),
+           self.phrasesCount != count
+        {
+            reloadInputStackView(count: count)
+        }
+        for (index, phrase) in phrases.prefix(inputFields.count).enumerated() {
+            let inputField = inputFields[index]
+            inputField.setTextColor(phrase: phrase)
+            inputField.textField.text = phrase
+        }
+        detectPhrases(self)
+    }
+    
+}
+
+extension SignInWithMnemonicsViewController: CameraViewControllerDelegate {
+    
+    func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
+        let phrases = string.components(separatedBy: " ")
+        input(phrases: phrases)
+        return false
     }
     
 }

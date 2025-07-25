@@ -18,6 +18,7 @@
 "add_contact" = "Añadir contacto";
 "add_conversations" = "Añadir conversaciones";
 "add_emergency_contact" = "Add recovery contact";
+"add_failed" = "Add Failed";
 "add_mobile_number" = "Add Mobile Number";
 "add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "Añadir participantes";
@@ -39,6 +40,9 @@
 "add_tag" = "Añadir etiqueta";
 "add_to_stickers" = "Añadir a pegatinas";
 "add_token" = "Add %@";
+"add_wallet" = "Add Wallet";
+"add_watch_address" = "Add Watch Address";
+"add_watch_address_description" = "Track any public wallet address";
 "added" = "Añadido";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
@@ -284,7 +288,8 @@
 "check_backup" = "Check Backup";
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
-"choose_network" = "Elige Red";
+"choose_deposit_network" = "Elige Red";
+"choose_network" = "Choose Network";
 "choose_network_tip" = "Asegúrate de que la red que elijas para depositar sea compatible con Mixin. De lo contrario, tus bienes pueden perderse.";
 "choose_photo" = "Escoge una foto";
 "choose_token" = "Choose %@ Network";
@@ -324,6 +329,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Combinar y avanzar";
 "common_wallet" = "Common Wallet";
+"common_wallet_index" = "Common Wallet %d";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Comprimir base de datos";
@@ -435,6 +441,7 @@
 "delete_address_description" = "Are you sure to delete this address?";
 "delete_chat" = "Eliminar chat";
 "delete_circle" = "Eliminar círculo";
+"delete_common_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
 "delete_contact_chat_confirmation" = "¿Eliminar el chat con %@?";
 "delete_emergency_contact" = "Delete recovery contact";
 "delete_for_everyone" = "Eliminar para todos";
@@ -443,6 +450,9 @@
 "delete_my_account" = "Borrar mi cuenta";
 "delete_note" = "Delete Note";
 "delete_synced_contact" = "Eliminar contactos sincronizados";
+"delete_wallet" = "Delete Wallet";
+"delete_wallet_title" = "Enter your PIN to remove wallet";
+"delete_watch_wallet_description" = "Deleting this wallet will not affect your assets, as it is a watch-only wallet.";
 "delete_withdraw_address" = "Eliminar dirección de %@";
 "deleted" = "Eliminado";
 "deleting_address" = "Delete Address";
@@ -465,6 +475,7 @@
 "deposits_pending_confirmation" = "%d Deposits Pending Confirmation";
 "depost_address_updated" = "%@ Deposit Address Updated";
 "depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
+"deselect_all" = "Deselect All";
 "desktop_login" = "Login to Mixin Messenger Desktop";
 "desktop_logout" = "Logout Mixin Messenger Desktop";
 "desktop_on_hint" = "Tienes tu escritorio conectado";
@@ -567,11 +578,14 @@
 "error_too_many_friends" = "ERROR 20128: Demasiados amigos";
 "error_too_many_request" = "ERROR 429: Límite de tasa excedido";
 "error_too_many_stickers" = "ERROR 20126: Demasiadas pegatinas";
+"error_too_many_wallets" = "ERROR 10632: You have reached the maximum number of imported wallets.";
+"error_too_many_wallets_upgrade" = "ERROR 10632: You have reached the maximum number of imported wallets. Please upgrade your membership to add more.";
 "error_too_small_transfer_amount" = "ERROR 20120: Importe de la transferencia demasiado pequeño";
 "error_too_small_withdraw_amount" = "ERROR 20127: Cantidad de retiro demasiado pequeña";
 "error_transfer_is_already_paid" = "ERROR 20125: La transferencia ya está pagada.";
 "error_two_parts" = "ERROR %@: %@";
 "error_used_phone" = "ERROR 20122: Este número de teléfono ya está asociado a otra cuenta.";
+"error_watch_address_not_supported" = "ERROR 10633: Contract or exchange addresses is not supported for watching";
 "error_withdrawal_memo_format_incorrect" = "ERROR 20131: Formato de nota de retiro incorrecto.";
 "error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
 "estimated_balance_change" = "Balance Change (estimate)";
@@ -590,6 +604,10 @@
 "export" = "Exportar";
 "export_failed" = "Exportación fallida";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
+"export_mnemonics_warning_1" = "Anyone who gains access to this %@ can transfer all assets from your wallet.";
+"export_mnemonics_warning_2" = "Mixin Messenger does not store your %@ on its servers.";
+"export_mnemonics_warning_3" = "Never share your %@ with any third party, individual, website, or application.";
+"export_mnemonics_warning_4" = "Ensure that no one — including surveillance cameras — can see your screen.";
 "face_id" = "ID facial";
 "failed" = "Fallido";
 "failed_to_compose_avatar" = "No se ha podido componer el avatar. Prueba con otra imagen en su lugar.";
@@ -601,10 +619,12 @@
 "fee" = "Tarifa";
 "fee_selection" = "Fee (%@)";
 "feedback" = "Comentario";
+"fetching_in_to_your_wallet" = "Fetching in to your wallet...";
 "file" = "Archivo";
 "files" = "Archivos";
 "filter" = "Filtrar";
 "filter_by" = "FILTRADO POR";
+"find_more_wallets" = "Find more wallets";
 "floating" = "Flotante";
 "floats_allows_up_to_count" = "Los flotadores permiten hasta %d unos";
 "follow_us_on_facebook" = "Síguenos en Facebook";
@@ -651,6 +671,17 @@
 "im_ready" = "I'm Ready";
 "image" = "imagen";
 "immediately" = "Inmediatamente";
+"import" = "Importar";
+"import_failed" = "Import Failed";
+"import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_private_key" = "Import Private Key";
+"import_selected_wallet" = "Import Selected Wallets";
+"import_single_chain_wallet" = "Import a single-chain wallet";
+"import_wallet_count" = "Import %d Wallets";
+"import_wallet_count_one" = "Import 1 Wallet";
+"import_wallets" = "Import Wallets";
+"import_wallets_from_another_wallet" = "Import wallets from another wallet";
+"importing_into_your_wallet" = "Importing into your wallet...";
 "in_connecting" = "Conectando...";
 "include_files" = "Incluir archivos";
 "include_videos" = "Incluir vídeos";
@@ -665,6 +696,7 @@
 "interface_style" = "Estilo de interfaz";
 "invalid_address" = "Invalid Address";
 "invalid_candidate" = "Candidato inválido";
+"invalid_format" = "Invalid format";
 "invalid_height" = "Altura inválida";
 "invalid_malformed_address_eos_hint" = "Formato de dirección inválido. ¡Mixin no admite el retiro a la dirección del contrato EOS!";
 "invalid_malformed_address_hint" = "Formato de dirección inválido. Vuelve a intentarlo con una dirección válida de %@";
@@ -790,6 +822,7 @@
 "mnemonic_phrase_take_long" = "This shouldn't take long.";
 "mnemonic_phrase_tip_1" = "· Store it in a vault or secure place";
 "mnemonic_phrase_tip_2" = "· Do not share it over the internet";
+"mnemonic_phrases" = "mnemonic phrases";
 "mnemonics_mismatched" = "Mnemonics Mismatched";
 "mobile_contacts" = "Contactos móviles";
 "mobile_number" = "Mobile Number";
@@ -824,6 +857,7 @@
 "my_mixin_id" = "Mi ID de Mixin: %@";
 "my_qr_code" = "Mi código QR";
 "my_stickers" = "Mis pegatinas";
+"my_wallet" = "My Wallet";
 "na" = "N/D";
 "name" = "Nombre";
 "name_or_phone_number" = "Nombre o número de teléfono";
@@ -919,6 +953,7 @@
 "owner" = "Propietario";
 "paid" = "Paid";
 "paid_recovery_service" = "Paid Recovery Service";
+"partial_import_successful" = "Partial Import Successful";
 "participants" = "Participantes";
 "participants_count" = "%@ PARTICIPANTES";
 "paste" = "Paste";
@@ -1002,6 +1037,8 @@
 "privacy_wallet" = "Privacy Wallet";
 "privacy_wallet_tip_description" = "A multi-chain wallet with private, free, and instant transactions to meet most of your needs.";
 "privacy_wallet_tip_title" = "What’s the Privacy Wallet?";
+"private_key" = "private key";
+"private_key_storage_description" = "Your private key will only be stored locally on your device";
 "process_can_not_be_stop" = "El proceso no se puede cancelar cuando comienza. Recuerda el PIN de 6 dígitos y vuelva a introducirlo si el proceso se cancela inesperadamente.";
 "profile" = "Perfil";
 "profile_badge" = "Profile Badge";
@@ -1057,6 +1094,7 @@
 "remove_emergency_contact_for_sure" = "Remove recovery contact for sure?";
 "remove_from_group" = "Eliminar del grupo";
 "remove_stickers" = "Eliminar pegatinas";
+"rename_wallet" = "Rename Wallet";
 "renew_plan" = "Renew Plan";
 "reply" = "Responder";
 "report" = "Informe";
@@ -1117,7 +1155,9 @@
 "saved" = "Guardado";
 "say_hi" = "Di hola";
 "scam_warning" = "Advertencia: Muchos usuarios han reportado esta cuenta como una estafa. Ten cuidado, especialmente si te pide dinero.";
+"scan" = "Escanear";
 "scan_code_add_me" = "Escanea el código QR para añadirme en Mixin";
+"scan_code_description" = "Use another device to scan the QR code below";
 "scan_qr_code" = "Escanear código QR";
 "scan_to_restore" = "Scan to Restore";
 "scan_to_restore_hint" = "Click the button below to scan the code and establish a connection.";
@@ -1143,6 +1183,7 @@
 "select" = "Seleccionar";
 "select_a_country_or_region" = "Seleccionar un país o región";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_all" = "Select All";
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
 "select_more_photos" = "Seleccionar más fotos";
@@ -1154,6 +1195,8 @@
 "selected_photo_count" = "%d fotos seleccionadas";
 "selected_video" = "1 vídeo seleccionado";
 "selected_video_count" = "%d vídeos seleccionados";
+"selected_wallet_count" = "%d wallets selected";
+"selected_wallet_count_one" = "1 wallet selected";
 "sell_token" = "Sell %@";
 "send" = "Enviar";
 "send_as_file" = "Enviar como Archivo";
@@ -1168,10 +1211,9 @@
 "send_this_location" = "Enviar esta ubicación";
 "send_to" = "Enviar a %@";
 "send_to_address_description" = "Send to an address in your Address Book, PIN-protected to prevent phishing.";
-"send_to_common_wallet_description" = "Send to your Common Wallet for use with decentralized apps and DeFi protocols.";
 "send_to_contact_description" = "Send to your Mixin friends with privacy, zero fees, and instant delivery.";
 "send_to_developer" = "Enviar al Desarrollador";
-"send_to_privacy_wallet_description" = "Send to your Privacy Wallet to keep your assets safe and hidden from potential risks.";
+"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Enviar a";
 "send_video" = "Enviar 1 vídeo";
 "send_video_count" = "Enviar %d vídeos";
@@ -1248,6 +1290,7 @@
 "show_asset" = "Mostrar activo";
 "show_in_chat" = "Mostrar en el chat";
 "show_mnemonic_phrase" = "Show Mnemonic Phrase";
+"show_private_key" = "Show Private Key";
 "sign_in" = "Iniciar sesión";
 "sign_in_no_account" = "Don’t have an account yet?";
 "sign_in_with_mnemonic_phrase" = "Sign in with Mnemonic Phrase";
@@ -1388,6 +1431,8 @@
 "trying_connect_tip_network" = "Conexión de la red TIP";
 "trying_connect_tip_node" = "Intentando conectar el nodo TIP";
 "type" = "Type";
+"type_your_private_key" = "Type your private key";
+"type_your_wallet_address" = "Type your wallet address";
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";
@@ -1460,6 +1505,7 @@
 "url_support" = "https://support.mixin.one/en/";
 "url_unrecognized_hint" = "%@ no se ha podido reconocer, actualiza Mixin a la última versión o comunícate con el desarrollador para verificar el enlace";
 "url_unsupported_message" = "https://support.mixin.one/en/article/how-to-do-when-you-receive-a-message-like-this-this-type-of-message-is-not-supported-please-upgrade-mixin-17j1t3p/";
+"use_another_address" = "Use Another Address";
 "use_biometry" = "Usar %@";
 "use_system_text_size" = "Usar tamaño de texto del sistema";
 "user_delete_hint" = "The user has deleted his own account.";
@@ -1497,13 +1543,17 @@
 "waiting_transaction" = "Waiting Transaction";
 "waiting_transaction_description" = "You have a transfer or withdrawal has not been completed, please try again later";
 "wallet" = "Wallet";
+"wallet_already_added" = "This wallet has already been added";
+"wallet_candidate_imported" = "Imported";
 "wallet_enable_biometric_pay" = "Una vez habilitado, %@ se puede utilizar para realizar transferencias rápidas.";
 "wallet_hide_asset_confirmation" = "¿Estás seguro de que deseas ocultar %@?";
+"wallet_imported" = "Imported";
 "wallet_password_not_equal" = "El PIN no es el mismo las dos veces, inténtalo de nuevo.";
 "wallet_password_unsafe" = "El PIN es demasiado simple e inseguro.";
 "wallet_pin_pay_interval_tips" = "Para la seguridad de tus activos, debes verificar tu PIN durante el intervalo especificado.";
 "wallet_pin_tops_desc" = "Recuerda que el PIN es irrecuperable si se pierde. El PIN se basa en el Throttled Identity Protocol, que es el protocolo de derivación de claves descentralizado, lee el documento para obtener más información.";
 "wallet_refresh_address_failed" = "La tarifa de retiro ha cambiado y la actualización falla, inténtalo de nuevo.";
+"wallet_summary_tip" = "Watch wallets and hidden assets are excluded from the total";
 "wallet_transaction_continue_count_down" = "Continuar (%d)";
 "wallet_transaction_tip" = "¿Estás seguro de que quieres transferir %3$@ por valor de %2$@ a %1$@?";
 "wallet_transactions_asset_key_warning" = "¡La clave de activo NO es una dirección de depósito!";
@@ -1511,6 +1561,9 @@
 "wallet_withdrawal_changed" = "La tarifa de retiro se ha cambiado de %1$@ a %2$@, ¿quieres continuar con la solicitud?";
 "wallet_withdrawal_recent_tip" = "Ya has retirado %3$@ a %2$@ hace %1$@, ¿quieres retirarlo de nuevo?";
 "wallets" = "Wallets";
+"watch_address" = "Watch %@";
+"watch_wallet_index" = "Watch Wallet %d";
+"watching" = "Watching";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";
@@ -1567,13 +1620,16 @@
 "withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, hard bifurcation of blockchain network, or congestion. Please try again later.";
 "withdrawal_to" = "Retirar a %@";
 "write_down_mnemonic_phrase" = "Write down your mnemonic phrase";
-"write_down_mnemonic_phrase_desc" = "Write it down on a piece of paper and keep it in a safe place.";
+"write_down_secret_description" = "Write it down on a piece of paper and keep it in a safe place.";
 "years_count_short" = "%dY";
 "you" = "Tú";
+"you_are_watching_address" = "You are watching %@";
 "you_deleted_this_message" = "Has borrado este mensaje";
 "you_have_a_new_message" = "Tienes un nuevo mensaje";
 "you_have_left_the_group" = "Te has ido del grupo";
 "your_emergency_contact_has_been_changed" = "Your recovery contact has been changed";
+"your_mnemonic_phrase" = "Your Mnemonic Phrase";
 "your_phone_number_has_been_changed" = "Tu número de teléfono se ha cambiado";
 "your_pin_has_been_changed" = "Tu PIN se ha cambiado";
 "your_pin_has_been_created" = "Tu PIN se ha creado";
+"your_private_key" = "Your Private Key";

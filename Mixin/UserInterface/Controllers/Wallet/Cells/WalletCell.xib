@@ -22,7 +22,7 @@
                         <rect key="frame" x="16" y="16" width="303" height="80"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="4jd-Gd-Ivt">
-                                <rect key="frame" x="0.0" y="0.0" width="127" height="40"/>
+                                <rect key="frame" x="0.0" y="0.0" width="182.33333333333334" height="40"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Privacy Wallet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Shr-Os-PTO">
                                         <rect key="frame" x="0.0" y="10.333333333333334" width="105" height="19.333333333333329"/>
@@ -37,6 +37,13 @@
                                             <constraint firstAttribute="width" secondItem="xQv-lW-nHu" secondAttribute="height" id="xEV-aK-Fjx"/>
                                         </constraints>
                                     </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="51.333333333333343" placeholderIntrinsicHeight="14.333333333333336" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="27K-fz-5sz" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="131" y="13" width="51.333333333333343" height="14.333333333333336"/>
+                                        <color key="backgroundColor" name="background_quaternary"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                        <color key="textColor" name="text_quaternary"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rWx-vd-OVo">
@@ -76,8 +83,9 @@
             </collectionViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
-                <outlet property="privacyIconImageView" destination="xQv-lW-nHu" id="Ns7-vI-sgi"/>
+                <outlet property="iconImageView" destination="xQv-lW-nHu" id="Ns7-vI-sgi"/>
                 <outlet property="proportionStackView" destination="beu-6R-0hW" id="0fR-tM-xuu"/>
+                <outlet property="tagLabel" destination="27K-fz-5sz" id="TCS-BB-1oP"/>
                 <outlet property="titleLabel" destination="Shr-Os-PTO" id="ZiO-GZ-Qvr"/>
                 <outlet property="valueLabel" destination="rWx-vd-OVo" id="Ewe-In-UBP"/>
             </connections>
@@ -90,8 +98,14 @@
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
+        <namedColor name="background_quaternary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_quaternary">
+            <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

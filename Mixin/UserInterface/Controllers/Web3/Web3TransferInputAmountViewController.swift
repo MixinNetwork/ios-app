@@ -24,12 +24,15 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
         super.viewDidLoad()
         let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
         switch payment.toType {
-        case .privacyWallet:
-            titleView.subtitle = R.string.localizable.privacy_wallet()
-            titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
         case .addressBook(let label):
             titleView.subtitle = label
             titleView.subtitleStyle = .label(backgroundColor: R.color.address_label()!)
+        case .privacyWallet:
+            titleView.subtitle = R.string.localizable.privacy_wallet()
+            titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
+        case .commonWallet(let name):
+            titleView.subtitle = name
+            titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
         case .arbitrary:
             titleView.subtitle = payment.toAddressCompactRepresentation
             titleView.subtitleStyle = .plain
@@ -257,9 +260,9 @@ extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewContr
         switch method {
         case .swap:
             next = Web3SwapViewController(
+                wallet: payment.wallet,
                 sendAssetID: nil,
                 receiveAssetID: feeToken.assetID,
-                walletID: feeToken.walletID
             )
         case .deposit:
             guard let address = Web3AddressDAO.shared.address(walletID: feeToken.walletID, chainID: feeToken.chainID) else {

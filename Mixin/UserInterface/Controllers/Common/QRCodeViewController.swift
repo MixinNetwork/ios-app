@@ -1,5 +1,4 @@
 import UIKit
-import LinkPresentation
 import QRCode
 import MixinServices
 
@@ -139,7 +138,7 @@ class QRCodeViewController: UIViewController {
         let image = renderer.image { (context) in
             contentView.layer.render(in: context.cgContext)
         }
-        let item = ActivityItem(image: image, title: title)
+        let item = QRCodeActivityItem(image: image, title: title)
         let activity = UIActivityViewController(activityItems: [item], applicationActivities: nil)
         present(activity, animated: true)
     }
@@ -149,41 +148,6 @@ class QRCodeViewController: UIViewController {
         let width = view.bounds.width
         let fittingSize = CGSize(width: width, height: UIView.layoutFittingExpandedSize.height)
         preferredContentSize.height = view.systemLayoutSizeFitting(fittingSize).height
-    }
-    
-}
-
-extension QRCodeViewController {
-    
-    private class ActivityItem: NSObject, UIActivityItemSource {
-        
-        private let image: UIImage
-        private let title: String?
-
-        init(image: UIImage, title: String?) {
-            self.image = image
-            self.title = title
-            super.init()
-        }
-        
-        func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
-            image
-        }
-        
-        func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
-            image
-        }
-        
-        func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
-            if let title {
-                let meta = LPLinkMetadata()
-                meta.title = title
-                return meta
-            } else {
-                return nil
-            }
-        }
-        
     }
     
 }

@@ -237,6 +237,11 @@ final class AuthenticationViewController: UIViewController {
     
     func reloadTitleView() {
         titleLabel.text = intent.intentTitle
+        titleLabel.textColor = if intent.options.contains(.destructiveTitle) {
+            R.color.market_red()
+        } else {
+            R.color.text()
+        }
         if let icon = intent.intentTitleIcon {
             if let view = titleImageView {
                 view.image = icon

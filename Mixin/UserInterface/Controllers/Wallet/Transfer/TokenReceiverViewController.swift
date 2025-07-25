@@ -4,7 +4,6 @@ import MixinServices
 class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     
     let headerView = R.nib.addressInfoInputHeaderView(withOwner: nil)!
-    let walletTipReuseIdentifier = "t"
     
     weak var tableView: UITableView!
     
@@ -39,10 +38,6 @@ class TokenReceiverViewController: KeyboardBasedLayoutViewController {
         tableView.separatorStyle = .none
         tableView.tableHeaderView = headerView
         tableView.register(R.nib.sendingDestinationCell)
-        tableView.register(
-            WalletTipTableViewCell.self,
-            forCellReuseIdentifier: walletTipReuseIdentifier
-        )
         tableView.estimatedRowHeight = 74
         tableView.rowHeight = UITableView.automaticDimension
         tableView.contentInsetAdjustmentBehavior = .always

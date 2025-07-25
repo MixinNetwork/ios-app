@@ -3,7 +3,7 @@ import CryptoKit
 
 public enum BIP39 {
     
-    static func mnemonics(from entropy: Data) -> [String]? {
+    public static func mnemonics(from entropy: Data) -> [String]? {
         guard entropy.count % 4 == 0 else {
             return nil
         }
@@ -38,7 +38,7 @@ public enum BIP39 {
         return words
     }
     
-    static func entropy(from mnemonics: [String]) -> Data? {
+    public static func entropy(from mnemonics: [String]) -> Data? {
         guard mnemonics.count % 3 == 0 else {
             return nil
         }

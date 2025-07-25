@@ -3,6 +3,11 @@ import MixinServices
 
 final class WalletHeaderView: InfiniteTopView {
     
+    protocol Delegate: AnyObject {
+        func walletHeaderView(_ view: WalletHeaderView, didSelectAction action: TokenAction)
+        func walletHeaderViewWantsToRevealPendingDeposits(_ view: WalletHeaderView)
+    }
+    
     @IBOutlet weak var contentView: UIStackView!
     
     @IBOutlet weak var fiatMoneyStackView: UIStackView!
@@ -28,15 +33,11 @@ final class WalletHeaderView: InfiniteTopView {
     @IBOutlet weak var rightAssetSymbolLabel: UILabel!
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
     
-    @IBOutlet weak var pendingDepositView: UIView!
-    @IBOutlet weak var pendingDepositButton: UIButton!
-    @IBOutlet weak var pendingDepositStackView: UIStackView!
-    @IBOutlet weak var pendingDepositIconStackView: UIStackView!
-    @IBOutlet weak var pendingDepositLabel: UILabel!
-    
     @IBOutlet weak var separatorView: UIView!
     
     @IBOutlet weak var contentViewBottomConstraint: NSLayoutConstraint!
+    
+    weak var delegate: Delegate?
     
     var showSnowfallEffect = false {
         didSet {
@@ -54,8 +55,6 @@ final class WalletHeaderView: InfiniteTopView {
         .font: UIFont.condensed(size: 14).scaled(),
         .kern: 0.7
     ]
-    
-    private let maxPendingDepositTokenIconCount = 3
     
     private lazy var snowfallLayer: CAEmitterLayer = {
         let cell = CAEmitterCell()
@@ -81,6 +80,8 @@ final class WalletHeaderView: InfiniteTopView {
         return layer
     }()
     
+    private weak var pendingDepositViewIfLoaded: WalletPendingDepositView?
+    private weak var watchingIndicatorViewIfLoaded: WalletWatchingIndicatorView?
     private weak var snowfallLayerIfLoaded: CAEmitterLayer?
     
     private var snowflakeColor: CGColor {
@@ -98,8 +99,7 @@ final class WalletHeaderView: InfiniteTopView {
         contentView.setCustomSpacing(22, after: assetChartWrapperView)
         contentView.setCustomSpacing(13, after: actionView)
         changeLabel.contentInset = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 0)
-        pendingDepositButton.layer.masksToBounds = true
-        pendingDepositButton.layer.cornerRadius = 18
+        actionView.delegate = self
     }
     
     override func layoutSubviews() {
@@ -216,78 +216,99 @@ final class WalletHeaderView: InfiniteTopView {
     
     func reloadPendingDeposits(tokens: [MixinToken], snapshots: [SafeSnapshot]) {
         if tokens.isEmpty || snapshots.isEmpty {
-            pendingDepositView.isHidden = true
-            contentViewBottomConstraint.constant = 17
+            pendingDepositViewIfLoaded?.removeFromSuperview()
         } else {
-            pendingDepositView.isHidden = false
-            contentViewBottomConstraint.constant = 10
-            for iconView in pendingDepositIconStackView.arrangedSubviews {
-                iconView.removeFromSuperview()
-            }
-            let iconViewCount = if tokens.count <= maxPendingDepositTokenIconCount {
-                tokens.count
+            let view: WalletPendingDepositView
+            if let pendingDepositViewIfLoaded {
+                view = pendingDepositViewIfLoaded
             } else {
-                maxPendingDepositTokenIconCount - 1
-            }
-            var iconViews: [UIView] = tokens.prefix(iconViewCount).map { token in
-                let view = StackedIconWrapperView<PlainTokenIconView>()
-                view.backgroundColor = .clear
-                pendingDepositIconStackView.addArrangedSubview(view)
-                view.iconView.setIcon(token: token)
-                return view
-            }
-            if tokens.count > maxPendingDepositTokenIconCount {
-                let view = StackedIconWrapperView<UILabel>()
-                view.backgroundColor = .clear
-                pendingDepositIconStackView.addArrangedSubview(view)
-                view.iconView.backgroundColor = R.color.background_tag()
-                view.iconView.textColor = R.color.text_tertiary()
-                view.iconView.font = .systemFont(ofSize: 8)
-                view.iconView.textAlignment = .center
-                view.iconView.minimumScaleFactor = 0.1
-                view.iconView.text = "+\(tokens.count - iconViewCount)"
-                view.iconView.layer.cornerRadius = 7
-                view.iconView.layer.masksToBounds = true
-                iconViews.append(view)
-            }
-            for i in 0..<iconViews.count {
-                let iconView = iconViews[i]
-                let multiplier = i == iconViews.count - 1 ? 1 : 0.5
-                iconView.snp.makeConstraints { make in
-                    make.width.equalTo(iconView.snp.height)
-                        .multipliedBy(multiplier)
+                view = R.nib.walletPendingDepositView(withOwner: nil)!
+                view.button.addTarget(self, action: #selector(revealPendingDeposits(_:)), for: .touchUpInside)
+                if let indicator = watchingIndicatorViewIfLoaded,
+                   let indicatorIndex = contentView.arrangedSubviews.lastIndex(of: indicator)
+                {
+                    contentView.insertArrangedSubview(view, at: indicatorIndex - 1)
+                } else {
+                    contentView.addArrangedSubview(view)
                 }
+                view.snp.makeConstraints { make in
+                    make.width.equalToSuperview()
+                }
+                pendingDepositViewIfLoaded = view
             }
-            if snapshots.count == 1,
-               let amount = Decimal(string: snapshots[0].amount, locale: .enUSPOSIX),
-               let token = tokens.first(where: { $0.assetID == snapshots[0].assetID })
-            {
-                let item = CurrencyFormatter.localizedString(
-                    from: amount,
-                    format: .precision,
-                    sign: .never,
-                    symbol: .custom(token.symbol)
-                )
-                pendingDepositLabel.text = R.string.localizable.deposit_pending_confirmation(item)
-            } else {
-                pendingDepositLabel.text = R.string.localizable.deposits_pending_confirmation(snapshots.count)
-            }
+            view.reload(tokens: tokens, snapshots: snapshots)
         }
+        updateContentBottomSpacing()
     }
     
     func reloadPendingTransactions(_ transactions: [Web3Transaction]) {
         if transactions.isEmpty {
-            pendingDepositView.isHidden = true
+            pendingDepositViewIfLoaded?.removeFromSuperview()
+        } else {
+            let view: WalletPendingDepositView
+            if let pendingDepositViewIfLoaded {
+                view = pendingDepositViewIfLoaded
+            } else {
+                view = R.nib.walletPendingDepositView(withOwner: nil)!
+                view.button.addTarget(self, action: #selector(revealPendingDeposits(_:)), for: .touchUpInside)
+                if let indicator = watchingIndicatorViewIfLoaded,
+                   let indicatorIndex = contentView.arrangedSubviews.lastIndex(of: indicator)
+                {
+                    contentView.insertArrangedSubview(view, at: indicatorIndex - 1)
+                } else {
+                    contentView.addArrangedSubview(view)
+                }
+                view.snp.makeConstraints { make in
+                    make.width.equalToSuperview()
+                }
+                pendingDepositViewIfLoaded = view
+            }
+            view.reload(pendingTransactions: transactions)
+        }
+        updateContentBottomSpacing()
+    }
+    
+    func showWatchingIndicator(description: String) {
+        let view: WalletWatchingIndicatorView
+        if let watchingIndicatorViewIfLoaded {
+            view = watchingIndicatorViewIfLoaded
+        } else {
+            view = R.nib.walletWatchingIndicatorView(withOwner: nil)!
+            view.label.text = description
+            contentView.addArrangedSubview(view)
+            view.snp.makeConstraints { make in
+                make.width.equalToSuperview()
+            }
+            watchingIndicatorViewIfLoaded = view
+        }
+        updateContentBottomSpacing()
+    }
+    
+    func hideWatchingIndicator() {
+        watchingIndicatorViewIfLoaded?.removeFromSuperview()
+        updateContentBottomSpacing()
+    }
+    
+    @objc private func revealPendingDeposits(_ sender: Any) {
+        delegate?.walletHeaderViewWantsToRevealPendingDeposits(self)
+    }
+    
+    private func updateContentBottomSpacing() {
+        if actionView.isHidden {
+            contentViewBottomConstraint.constant = 10
+        } else if pendingDepositViewIfLoaded == nil && watchingIndicatorViewIfLoaded == nil {
             contentViewBottomConstraint.constant = 17
         } else {
-            pendingDepositView.isHidden = false
             contentViewBottomConstraint.constant = 10
-            pendingDepositLabel.text = if transactions.count == 1 {
-                R.string.localizable.pending_transaction_one()
-            } else {
-                R.string.localizable.pending_transactions_count(transactions.count)
-            }
         }
+    }
+    
+}
+
+extension WalletHeaderView: TokenActionView.Delegate {
+    
+    func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
+        delegate?.walletHeaderView(self, didSelectAction: action)
     }
     
 }

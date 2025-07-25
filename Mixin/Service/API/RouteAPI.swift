@@ -214,45 +214,50 @@ extension RouteAPI {
 // MARK: - Web3 Wallets
 extension RouteAPI {
     
-    struct WalletRequest: Codable {
-        
-        struct Address: Codable {
-            
-            enum CodingKeys: String, CodingKey {
-                case destination
-                case chainID = "chain_id"
-            }
-            
-            let destination: String
-            let chainID: String
-            
-        }
-        
-        let name: String
-        let category: Web3Wallet.Category
-        let addresses: [Address]
-        
-    }
-    
-    struct WalletResponse: Codable {
-        
-        let wallet: Web3Wallet
-        let addresses: [Web3Address]
-        
-        init(from decoder: any Decoder) throws {
-            self.wallet = try Web3Wallet(from: decoder)
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            self.addresses = try container.decode([Web3Address].self, forKey: .addresses)
-        }
-        
-    }
-    
-    static func wallets() async throws -> [WalletResponse] {
+    static func wallets() async throws -> [CreateWalletResponse] {
         try await request(method: .get, path: "/wallets")
     }
     
-    static func createWallet(_ wallet: WalletRequest) async throws -> WalletResponse {
+    static func createWallet(
+        _ wallet: CreateWalletRequest,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<CreateWalletResponse>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/wallets",
+            with: wallet,
+            queue: queue,
+            completion: completion
+        )
+    }
+    
+    static func createWallet(_ wallet: CreateWalletRequest) async throws -> CreateWalletResponse {
         try await request(method: .post, path: "/wallets", with: wallet)
+    }
+    
+    static func renameWallet(
+        id: String,
+        name: String,
+        completion: @escaping (MixinAPI.Result<Web3Wallet>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/wallets/\(id)",
+            with: ["name": name],
+            completion: completion
+        )
+    }
+    
+    static func deleteWallet(
+        id: String,
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/wallets/\(id)/delete",
+            completion: completion
+        )
     }
     
     static func assets(
@@ -263,6 +268,20 @@ extension RouteAPI {
         request(
             method: .get,
             path: "/wallets/\(walletID)/assets",
+            queue: queue,
+            completion: completion
+        )
+    }
+    
+    static func assets(
+        searchAddresses addresses: [String],
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[AddressAssets]>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/assets/search/address",
+            with: ["addresses": addresses],
             queue: queue,
             completion: completion
         )

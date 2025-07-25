@@ -6,18 +6,14 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
     
     private enum Destination {
         case addressBook
-        case privacyWallet(_ mixinChainID: String)
+        case myWallets
     }
     
     private let payment: Web3SendingTokenPayment
-    private let destinations: [Destination]
+    private let destinations: [Destination] = [.addressBook, .myWallets]
     
     init(payment: Web3SendingTokenPayment) {
         self.payment = payment
-        self.destinations = [
-            .addressBook,
-            .privacyWallet(payment.chain.chainID),
-        ]
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -29,7 +25,7 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
         super.viewDidLoad()
         
         if let titleView = navigationItem.titleView as? NavigationTitleView {
-            titleView.subtitle = R.string.localizable.common_wallet()
+            titleView.subtitle = payment.wallet.localizedName
         }
         headerView.load(web3Token: payment.token)
         
@@ -58,7 +54,7 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
                 self.navigationController?.pushViewController(input, animated: true)
             case let .insufficientBalance(transferring, fee):
                 let insufficient = InsufficientBalanceViewController(
-                    intent: .commonWalletTransfer(transferring: transferring, fee: fee)
+                    intent: .commonWalletTransfer(wallet: payment.wallet, transferring: transferring, fee: fee)
                 )
                 self.present(insufficient, animated: true)
             case let .transfer(operation, label):
@@ -86,41 +82,26 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
 
 extension Web3TokenReceiverViewController: UITableViewDataSource {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        2
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            destinations.count
-        } else {
-            AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTipInTransfer ? 0 : 1
-        }
+        destinations.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
-            let destination = destinations[indexPath.row]
-            switch destination {
-            case .privacyWallet:
-                cell.iconImageView.image = R.image.token_receiver_wallet()
-                cell.titleLabel.text = R.string.localizable.privacy_wallet()
-                cell.titleTag = .privacyShield
-                cell.descriptionLabel.text = R.string.localizable.send_to_privacy_wallet_description()
-            case .addressBook:
-                cell.iconImageView.image = R.image.token_receiver_address_book()
-                cell.titleLabel.text = R.string.localizable.address_book()
-                cell.titleTag = nil
-                cell.descriptionLabel.text = R.string.localizable.send_to_address_description()
-            }
-            return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: walletTipReuseIdentifier, for: indexPath) as! WalletTipTableViewCell
-            cell.tipView.content = .privacy
-            cell.tipView.delegate = self
-            return cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
+        let destination = destinations[indexPath.row]
+        switch destination {
+        case .addressBook:
+            cell.iconImageView.image = R.image.token_receiver_address_book()
+            cell.titleLabel.text = R.string.localizable.address_book()
+            cell.titleTag = nil
+            cell.descriptionLabel.text = R.string.localizable.send_to_address_description()
+        case .myWallets:
+            cell.iconImageView.image = R.image.token_receiver_wallet()
+            cell.titleLabel.text = R.string.localizable.my_wallet()
+            cell.titleTag = nil
+            cell.descriptionLabel.text = R.string.localizable.send_to_other_wallet_description()
         }
+        return cell
     }
     
 }
@@ -129,9 +110,6 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard indexPath.section == 0 else {
-            return
-        }
         let destination = destinations[indexPath.row]
         switch destination {
         case .addressBook:
@@ -150,20 +128,28 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
                 }
             }
             present(book, animated: true)
-        case .privacyWallet(let chainID):
+        case .myWallets:
             reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
-            sendToMyMixinWallet(chainID: chainID)
+            let selector = ReceivingWalletSelectorViewController(
+                excluding: .common(payment.wallet),
+                supportingChainWith: payment.token.chainID
+            )
+            selector.delegate = self
+            present(selector, animated: true)
         }
     }
     
 }
 
-extension Web3TokenReceiverViewController: WalletTipView.Delegate {
+extension Web3TokenReceiverViewController: ReceivingWalletSelectorViewController.Delegate {
     
-    func walletTipViewWantsToClose(_ view: WalletTipView) {
-        AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTipInTransfer = true
-        let indexPath = IndexPath(row: 0, section: 1)
-        tableView.deleteRows(at: [indexPath], with: .fade)
+    func receivingWalletSelectorViewController(_ viewController: ReceivingWalletSelectorViewController, didSelectWallet wallet: Wallet) {
+        switch wallet {
+        case .privacy:
+            sendToPrivacyWallet()
+        case .common(let wallet):
+            send(to: wallet)
+        }
     }
     
 }
@@ -174,9 +160,10 @@ extension Web3TokenReceiverViewController {
         case noValidEntry
     }
     
-    private func sendToMyMixinWallet(chainID: String) {
+    private func sendToPrivacyWallet() {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        let chainID = payment.chain.chainID
         Task { [payment, weak self] in
             do {
                 let entries = try await SafeAPI.depositEntries(assetID: nil, chainID: chainID)
@@ -204,6 +191,23 @@ extension Web3TokenReceiverViewController {
                 }
             }
         }
+    }
+    
+    private func send(to wallet: Web3Wallet) {
+        let address = Web3AddressDAO.shared.address(
+            walletID: wallet.walletID,
+            chainID: payment.chain.chainID
+        )
+        guard let destination = address?.destination else {
+            return
+        }
+        let payment = Web3SendingTokenToAddressPayment(
+            payment: payment,
+            to: .commonWallet(name: wallet.localizedName),
+            address: destination
+        )
+        let input = Web3TransferInputAmountViewController(payment: payment)
+        navigationController?.pushViewController(input, animated: true)
     }
     
 }

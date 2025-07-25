@@ -27,12 +27,12 @@ extension AppGroupUserDefaults {
             
             case hasViewedPrivacyWalletTip = "has_viewed_privacy_wallet_tip"
             case hasViewedClassicWalletTip = "has_viewed_classic_wallet_tip"
-            case hasViewedPrivacyWalletTipInTransfer = "has_viewed_privacy_wallet_tip_transfer"
-            case hasViewedClassicWalletTipInTransfer = "has_viewed_classic_wallet_tip_transfer"
             
             case lastBuyingAssetID = "last_buy_asset"
             case lastBuyingCurrencyCode = "last_buy_currency"
         }
+        
+        public static let didChangeWalletTipNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeWalletTip")
         
         @Default(namespace: .wallet, key: Key.lastPINVerifiedDate, defaultValue: nil)
         public static var lastPINVerifiedDate: Date?
@@ -62,19 +62,21 @@ extension AppGroupUserDefaults {
         public static var swapTokens: [String]
         
         @RawRepresentableDefault(namespace: .wallet, key: Key.lastSelectedWallet, defaultValue: .privacy)
-        public static var lastSelectedWallet: MixinServices.Wallet
+        public static var lastSelectedWallet: MixinServices.Wallet.Identifier
         
         @Default(namespace: .wallet, key: Key.hasViewedPrivacyWalletTip, defaultValue: false)
-        public static var hasViewedPrivacyWalletTip: Bool
+        public static var hasViewedPrivacyWalletTip: Bool {
+            didSet {
+                NotificationCenter.default.post(onMainThread: didChangeWalletTipNotification, object: self)
+            }
+        }
         
         @Default(namespace: .wallet, key: Key.hasViewedClassicWalletTip, defaultValue: false)
-        public static var hasViewedClassicWalletTip: Bool
-        
-        @Default(namespace: .wallet, key: Key.hasViewedPrivacyWalletTipInTransfer, defaultValue: false)
-        public static var hasViewedPrivacyWalletTipInTransfer: Bool
-        
-        @Default(namespace: .wallet, key: Key.hasViewedClassicWalletTipInTransfer, defaultValue: false)
-        public static var hasViewedClassicWalletTipInTransfer: Bool
+        public static var hasViewedClassicWalletTip: Bool {
+            didSet {
+                NotificationCenter.default.post(onMainThread: didChangeWalletTipNotification, object: self)
+            }
+        }
         
         @Default(namespace: .user, key: Key.lastBuyingAssetID, defaultValue: nil)
         public static var lastBuyingAssetID: String?

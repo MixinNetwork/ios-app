@@ -235,6 +235,15 @@ extension Database {
         }
     }
     
+    public func selectSet<Value: DatabaseValueConvertible>(
+        with sql: String,
+        arguments: StatementArguments = StatementArguments()
+    ) -> Set<Value> {
+        try! read { (db) -> Set<Value> in
+            try Value.fetchSet(db, sql: sql, arguments: arguments, adapter: nil)
+        }
+    }
+    
     public func select<Value: DatabaseValueConvertible>(
         with query: GRDB.SQL
     ) -> [Value] {

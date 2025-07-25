@@ -14,6 +14,9 @@ final class TokenBalanceCell: UITableViewCell {
     @IBOutlet weak var iconView: BadgeIconView!
     @IBOutlet weak var actionView: TokenActionView!
     
+    @IBOutlet weak var showActionViewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hideActionViewConstraint: NSLayoutConstraint!
+    
     weak var delegate: TokenBalanceCellDelegate?
     
     override func awakeFromNib() {
@@ -99,6 +102,16 @@ final class TokenBalanceCell: UITableViewCell {
         ])
         attributedAmount.append(attributedSymbol)
         amountLabel.attributedText = attributedAmount
+    }
+    
+    func showActionView() {
+        showActionViewConstraint.priority = .defaultHigh
+        hideActionViewConstraint.priority = .defaultLow
+    }
+    
+    func hideActionView() {
+        showActionViewConstraint.priority = .defaultLow
+        hideActionViewConstraint.priority = .defaultHigh
     }
     
     @objc private func revealOutputs(_ sender: Any) {

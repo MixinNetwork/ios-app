@@ -5,14 +5,18 @@ import MixinServices
 
 final class Web3SwapViewController: MixinSwapViewController {
     
-    private let walletID: String
+    private let wallet: Web3Wallet
     
     override var source: RouteTokenSource {
         return .web3
     }
     
-    init(sendAssetID: String?, receiveAssetID: String?, walletID: String) {
-        self.walletID = walletID
+    private var walletID: String {
+        wallet.walletID
+    }
+    
+    init(wallet: Web3Wallet, sendAssetID: String?, receiveAssetID: String?) {
+        self.wallet = wallet
         super.init(sendAssetID: sendAssetID, receiveAssetID: receiveAssetID, referral: nil)
     }
     
@@ -23,7 +27,7 @@ final class Web3SwapViewController: MixinSwapViewController {
     override func initTitleBar() {
         navigationItem.titleView = NavigationTitleView(
             title: R.string.localizable.swap(),
-            subtitle: R.string.localizable.common_wallet()
+            subtitle: wallet.localizedName
         )
         navigationItem.rightBarButtonItems = [
             .customerService(
@@ -34,7 +38,7 @@ final class Web3SwapViewController: MixinSwapViewController {
     }
     
     override func fillSwappableTokenBalance(swappableTokens: [SwapToken]) -> [BalancedSwapToken] {
-        BalancedSwapToken.fillWeb3Balance(swappableTokens: swappableTokens, walletID: walletID)
+        BalancedSwapToken.fillWeb3Balance(swappableTokens: swappableTokens, walletID: wallet.walletID)
     }
     
     override func getTokenSelectorViewController(recent: SwapTokenSelectorViewController.Recent) -> SwapTokenSelectorViewController {
@@ -50,10 +54,10 @@ final class Web3SwapViewController: MixinSwapViewController {
         }
         
         return Web3SwapTokenSelectorViewController(
+            wallet: wallet,
             recent: recent,
             tokens: tokens,
-            selectedAssetID: selectedAssetID,
-            walletID: walletID
+            selectedAssetID: selectedAssetID
         )
     }
     
@@ -106,7 +110,7 @@ final class Web3SwapViewController: MixinSwapViewController {
         sender.isBusy = true
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
         ConcurrentJobQueue.shared.addJob(job: job)
-        RouteAPI.swap(request: request) { [weak self, walletID] response in
+        RouteAPI.swap(request: request) { [weak self, wallet] response in
             guard self != nil else {
                 return
             }
@@ -128,14 +132,19 @@ final class Web3SwapViewController: MixinSwapViewController {
                     guard let displayReceiver = await self?.fetchUser(userID: response.displayUserId, sender: sender) else {
                         return
                     }
-                    guard let sendToken = Web3TokenDAO.shared.token(walletID: walletID, assetID: quote.sendToken.assetID) else {
+                    guard let sendToken = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: quote.sendToken.assetID) else {
                         return
                     }
                     guard let sendChain = Web3Chain.chain(chainID: sendTokenChainID) else {
                         return
                     }
                     
-                    let payment = Web3SendingTokenPayment(chain: sendChain, token: sendToken, fromAddress: sendingAddress.destination)
+                    let payment = Web3SendingTokenPayment(
+                        wallet: wallet,
+                        chain: sendChain,
+                        token: sendToken,
+                        fromAddress: sendingAddress
+                    )
                     let addressPayment = Web3SendingTokenToAddressPayment(
                         payment: payment,
                         to: .arbitrary,
@@ -172,7 +181,11 @@ final class Web3SwapViewController: MixinSwapViewController {
                             guard isBalanceSufficient else {
                                 sender.isBusy = false
                                 let insufficient = InsufficientBalanceViewController(
-                                    intent: .commonWalletTransfer(transferring: sendRequirement, fee: feeRequirement)
+                                    intent: .commonWalletTransfer(
+                                        wallet: wallet,
+                                        transferring: sendRequirement,
+                                        fee: feeRequirement
+                                    )
                                 )
                                 homeContainer.present(insufficient, animated: true)
                                 return

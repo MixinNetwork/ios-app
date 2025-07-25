@@ -18,6 +18,7 @@
 "add_contact" = "友だちを追加";
 "add_conversations" = "チャットルームを追加";
 "add_emergency_contact" = "Add recovery contact";
+"add_failed" = "Add Failed";
 "add_mobile_number" = "Add Mobile Number";
 "add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "メンバーを追加";
@@ -39,6 +40,9 @@
 "add_tag" = "タグを追加";
 "add_to_stickers" = "スタンプを追加";
 "add_token" = "Add %@";
+"add_wallet" = "Add Wallet";
+"add_watch_address" = "Add Watch Address";
+"add_watch_address_description" = "Track any public wallet address";
 "added" = "追加ずみ";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
@@ -284,6 +288,7 @@
 "check_backup" = "Check Backup";
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
+"choose_deposit_network" = "Choose Network";
 "choose_network" = "Choose Network";
 "choose_network_tip" = "Please ensure the network you choose to deposit that Mixin supports. Otherwise, your assets may be lost.";
 "choose_photo" = "画像を選ぶ";
@@ -324,6 +329,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "まとめて転送";
 "common_wallet" = "Common Wallet";
+"common_wallet_index" = "Common Wallet %d";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "データの圧縮";
@@ -435,6 +441,7 @@
 "delete_address_description" = "Are you sure to delete this address?";
 "delete_chat" = "チャットを削除";
 "delete_circle" = "グループリストを削除";
+"delete_common_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
 "delete_contact_chat_confirmation" = "\"%@\"からチャットを削除しますか?";
 "delete_emergency_contact" = "Delete recovery contact";
 "delete_for_everyone" = "全員のチャットから削除";
@@ -443,6 +450,9 @@
 "delete_my_account" = "アカウント削除";
 "delete_note" = "Delete Note";
 "delete_synced_contact" = "同期済みの連絡先を削除する";
+"delete_wallet" = "Delete Wallet";
+"delete_wallet_title" = "Enter your PIN to remove wallet";
+"delete_watch_wallet_description" = "Deleting this wallet will not affect your assets, as it is a watch-only wallet.";
 "delete_withdraw_address" = "%@のアドレス削除";
 "deleted" = "削除しました";
 "deleting_address" = "Delete Address";
@@ -465,6 +475,7 @@
 "deposits_pending_confirmation" = "%d Deposits Pending Confirmation";
 "depost_address_updated" = "%@ Deposit Address Updated";
 "depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
+"deselect_all" = "Deselect All";
 "desktop_login" = "Login to Mixin Messenger Desktop";
 "desktop_logout" = "Logout Mixin Messenger Desktop";
 "desktop_on_hint" = "デスクトップにログインしています";
@@ -567,11 +578,14 @@
 "error_too_many_friends" = "エラー20128：友だちが多すぎます";
 "error_too_many_request" = "エラー 429：レート制限を超過しています";
 "error_too_many_stickers" = "エラー 20126：スタンプが多すぎます";
+"error_too_many_wallets" = "ERROR 10632: You have reached the maximum number of imported wallets.";
+"error_too_many_wallets_upgrade" = "ERROR 10632: You have reached the maximum number of imported wallets. Please upgrade your membership to add more.";
 "error_too_small_transfer_amount" = "送金数量が小さすぎます";
 "error_too_small_withdraw_amount" = "エラー 20127：出金額が小さすぎます";
 "error_transfer_is_already_paid" = "エラー 20125：すでに支払われています";
 "error_two_parts" = "エラー %@：%@";
 "error_used_phone" = "エラー20122：この電話番号はすでに他のアカウントと紐づけられています";
+"error_watch_address_not_supported" = "ERROR 10633: Contract or exchange addresses is not supported for watching";
 "error_withdrawal_memo_format_incorrect" = "エラー20131：出金メモのフォーマットが不正確です";
 "error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
 "estimated_balance_change" = "Balance Change (estimate)";
@@ -590,6 +604,10 @@
 "export" = "エクスポート";
 "export_failed" = "エクスポート失敗";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
+"export_mnemonics_warning_1" = "Anyone who gains access to this %@ can transfer all assets from your wallet.";
+"export_mnemonics_warning_2" = "Mixin Messenger does not store your %@ on its servers.";
+"export_mnemonics_warning_3" = "Never share your %@ with any third party, individual, website, or application.";
+"export_mnemonics_warning_4" = "Ensure that no one — including surveillance cameras — can see your screen.";
 "face_id" = "顔認証";
 "failed" = "失敗しました";
 "failed_to_compose_avatar" = "アバターの作成に失敗しました。別の画像を使ってください";
@@ -601,10 +619,12 @@
 "fee" = "手数料";
 "fee_selection" = "Fee (%@)";
 "feedback" = "フィードバック";
+"fetching_in_to_your_wallet" = "Fetching in to your wallet...";
 "file" = "ファイル";
 "files" = "ファイル";
 "filter" = "フィルター";
 "filter_by" = "絞り込み：";
+"find_more_wallets" = "Find more wallets";
 "floating" = "フローティング";
 "floats_allows_up_to_count" = "フロート数の上限 %d";
 "follow_us_on_facebook" = "FacebookでMixinをフォロー";
@@ -651,6 +671,17 @@
 "im_ready" = "I'm Ready";
 "image" = "画像";
 "immediately" = "すぐに";
+"import" = "インポート";
+"import_failed" = "Import Failed";
+"import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_private_key" = "Import Private Key";
+"import_selected_wallet" = "Import Selected Wallets";
+"import_single_chain_wallet" = "Import a single-chain wallet";
+"import_wallet_count" = "Import %d Wallets";
+"import_wallet_count_one" = "Import 1 Wallet";
+"import_wallets" = "Import Wallets";
+"import_wallets_from_another_wallet" = "Import wallets from another wallet";
+"importing_into_your_wallet" = "Importing into your wallet...";
 "in_connecting" = "接続中...";
 "include_files" = "ファイルが含まれています";
 "include_videos" = "動画が含まれています";
@@ -665,6 +696,7 @@
 "interface_style" = "外観モード";
 "invalid_address" = "Invalid Address";
 "invalid_candidate" = "無効な候補";
+"invalid_format" = "Invalid format";
 "invalid_height" = "無効な高さ";
 "invalid_malformed_address_eos_hint" = "無効なアドレスです。MixinはEOSアドレスへの引き出しに対応していません。";
 "invalid_malformed_address_hint" = "無効なアドレスです。%@の有効なアドレスでもう一度試してください。";
@@ -790,6 +822,7 @@
 "mnemonic_phrase_take_long" = "This shouldn't take long.";
 "mnemonic_phrase_tip_1" = "· Store it in a vault or secure place";
 "mnemonic_phrase_tip_2" = "· Do not share it over the internet";
+"mnemonic_phrases" = "mnemonic phrases";
 "mnemonics_mismatched" = "Mnemonics Mismatched";
 "mobile_contacts" = "連絡先";
 "mobile_number" = "Mobile Number";
@@ -824,6 +857,7 @@
 "my_mixin_id" = "マイMixin ID:%@";
 "my_qr_code" = "マイQRコード";
 "my_stickers" = "マイスタンプ";
+"my_wallet" = "My Wallet";
 "na" = "なし";
 "name" = "名前";
 "name_or_phone_number" = "名前か電話番号";
@@ -919,6 +953,7 @@
 "owner" = "オーナー";
 "paid" = "Paid";
 "paid_recovery_service" = "Paid Recovery Service";
+"partial_import_successful" = "Partial Import Successful";
 "participants" = "参加者";
 "participants_count" = "%@人のメンバー";
 "paste" = "Paste";
@@ -1002,6 +1037,8 @@
 "privacy_wallet" = "Privacy Wallet";
 "privacy_wallet_tip_description" = "A multi-chain wallet with private, free, and instant transactions to meet most of your needs.";
 "privacy_wallet_tip_title" = "What’s the Privacy Wallet?";
+"private_key" = "private key";
+"private_key_storage_description" = "Your private key will only be stored locally on your device";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "プロフィール";
 "profile_badge" = "Profile Badge";
@@ -1057,6 +1094,7 @@
 "remove_emergency_contact_for_sure" = "Remove recovery contact for sure?";
 "remove_from_group" = "グループから退会させる";
 "remove_stickers" = "スタンプの削除";
+"rename_wallet" = "Rename Wallet";
 "renew_plan" = "Renew Plan";
 "reply" = "返信";
 "report" = "報告";
@@ -1117,7 +1155,9 @@
 "saved" = "保存しました";
 "say_hi" = "挨拶をしましょう";
 "scam_warning" = "警告：たくさん報告されているユーザーです、詐欺に気をつけてください";
+"scan" = "スキャン";
 "scan_code_add_me" = "QRコードをスキャンして私をMixinで追加してください。";
+"scan_code_description" = "Use another device to scan the QR code below";
 "scan_qr_code" = "QRコードをスキャン";
 "scan_to_restore" = "Scan to Restore";
 "scan_to_restore_hint" = "Click the button below to scan the code and establish a connection.";
@@ -1143,6 +1183,7 @@
 "select" = "選択";
 "select_a_country_or_region" = "国と地域を選択";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_all" = "Select All";
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
 "select_more_photos" = "さらに選択";
@@ -1154,6 +1195,8 @@
 "selected_photo_count" = "%d枚の写真を選択中";
 "selected_video" = "選択されたビデオ";
 "selected_video_count" = "%d本のビデオを選択中";
+"selected_wallet_count" = "%d wallets selected";
+"selected_wallet_count_one" = "1 wallet selected";
 "sell_token" = "Sell %@";
 "send" = "送る";
 "send_as_file" = "ファイルとして送信する";
@@ -1168,10 +1211,9 @@
 "send_this_location" = "位置情報を送信";
 "send_to" = "%@へ送信";
 "send_to_address_description" = "Send to an address in your Address Book, PIN-protected to prevent phishing.";
-"send_to_common_wallet_description" = "Send to your Common Wallet for use with decentralized apps and DeFi protocols.";
 "send_to_contact_description" = "Send to your Mixin friends with privacy, zero fees, and instant delivery.";
 "send_to_developer" = "開発者へ送信";
-"send_to_privacy_wallet_description" = "Send to your Privacy Wallet to keep your assets safe and hidden from potential risks.";
+"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "振替先";
 "send_video" = "ビデオを送信";
 "send_video_count" = "%d本のビデオを送信";
@@ -1248,6 +1290,7 @@
 "show_asset" = "資産を表示する";
 "show_in_chat" = "チャット内で表示";
 "show_mnemonic_phrase" = "Show Mnemonic Phrase";
+"show_private_key" = "Show Private Key";
 "sign_in" = "ログイン";
 "sign_in_no_account" = "Don’t have an account yet?";
 "sign_in_with_mnemonic_phrase" = "Sign in with Mnemonic Phrase";
@@ -1388,6 +1431,8 @@
 "trying_connect_tip_network" = "Connecting the TIP network";
 "trying_connect_tip_node" = "Trying connect TIP node";
 "type" = "Type";
+"type_your_private_key" = "Type your private key";
+"type_your_wallet_address" = "Type your wallet address";
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";
@@ -1460,6 +1505,7 @@
 "url_support" = "https://support.mixin.one/en/";
 "url_unrecognized_hint" = "%@を認識できません、Mixinを最新版にアップデートするか、もしくは開発陣に連絡してリンクを確認してください。";
 "url_unsupported_message" = "https://support.mixin.one/en/article/how-to-do-when-you-receive-a-message-like-this-this-type-of-message-is-not-supported-please-upgrade-mixin-17j1t3p/";
+"use_another_address" = "Use Another Address";
 "use_biometry" = "%@を使用する";
 "use_system_text_size" = "Use System Text Size";
 "user_delete_hint" = "The user has deleted his own account.";
@@ -1497,13 +1543,17 @@
 "waiting_transaction" = "Waiting Transaction";
 "waiting_transaction_description" = "You have a transfer or withdrawal has not been completed, please try again later";
 "wallet" = "ウォレット";
+"wallet_already_added" = "This wallet has already been added";
+"wallet_candidate_imported" = "Imported";
 "wallet_enable_biometric_pay" = "一度有効にすると%@を使ってスムーズに送金できます";
 "wallet_hide_asset_confirmation" = "%@を非表示にしますか?";
+"wallet_imported" = "Imported";
 "wallet_password_not_equal" = "PINコードが一致しません、もう一度お試しください";
 "wallet_password_unsafe" = "PINコードがシンプルすぎます";
 "wallet_pin_pay_interval_tips" = "セキュリティ保護のため、PINコードの定期的な再確認が必要です。";
 "wallet_pin_tops_desc" = "PINコードを忘れた場合、ウォレットにアクセスすることができなくなるため、必ず覚えておいてください。PINコードは、分散型キー導出プロトコルであるThrottled Identity Protocolから作成されています。詳しくは、こちらをご覧ください。";
 "wallet_refresh_address_failed" = "出金手数料が変更され、更新に失敗しました。もう一度やり直してください。";
+"wallet_summary_tip" = "Watch wallets and hidden assets are excluded from the total";
 "wallet_transaction_continue_count_down" = "続ける (%d)";
 "wallet_transaction_tip" = "%1$@へ%2$@相当の%3$@を送金してもよろしいですか？";
 "wallet_transactions_asset_key_warning" = "資産キーは入金アドレスではありません！";
@@ -1511,6 +1561,9 @@
 "wallet_withdrawal_changed" = "出金手数料が%1$@から%2$@へ変更されました。このまま出金を行いますか？";
 "wallet_withdrawal_recent_tip" = "あなたは%1$@に同額の出金を%2$@へ送っています。再度%3$@を出金しますか？";
 "wallets" = "ウォレット";
+"watch_address" = "Watch %@";
+"watch_wallet_index" = "Watch Wallet %d";
+"watching" = "Watching";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";
@@ -1567,13 +1620,16 @@
 "withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, hard bifurcation of blockchain network, or congestion. Please try again later.";
 "withdrawal_to" = "%@へ出金";
 "write_down_mnemonic_phrase" = "Write down your mnemonic phrase";
-"write_down_mnemonic_phrase_desc" = "Write it down on a piece of paper and keep it in a safe place.";
+"write_down_secret_description" = "Write it down on a piece of paper and keep it in a safe place.";
 "years_count_short" = "%dY";
 "you" = "自分";
+"you_are_watching_address" = "You are watching %@";
 "you_deleted_this_message" = "このメッセージを削除しました。";
 "you_have_a_new_message" = "新しいメッセージがあります";
 "you_have_left_the_group" = "グループから退会しました";
 "your_emergency_contact_has_been_changed" = "Your recovery contact has been changed";
+"your_mnemonic_phrase" = "Your Mnemonic Phrase";
 "your_phone_number_has_been_changed" = "電話番号が変更されました";
 "your_pin_has_been_changed" = "PINコードが変更されました";
 "your_pin_has_been_created" = "PINコードが生成されました";
+"your_private_key" = "Your Private Key";

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_9" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MnemonicsQRCodeViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="codeView" destination="mv7-EQ-srG" id="tNo-TA-eP3"/>
+                <outlet property="contentStackView" destination="H7y-gz-qlC" id="odB-YB-iPT"/>
+                <outlet property="contentView" destination="Nqb-Dg-hZX" id="o5a-Qc-efe"/>
+                <outlet property="descriptionLabel" destination="BZx-GA-3rZ" id="GD8-qF-1qH"/>
+                <outlet property="doneButton" destination="67j-jp-BY1" id="Kdj-uQ-dFv"/>
+                <outlet property="titleLabel" destination="8Uc-OD-0vO" id="apB-0A-Ub3"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="580"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nqb-Dg-hZX">
+                    <rect key="frame" x="0.0" y="10.333333333333314" width="375" height="569.66666666666674"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="H7y-gz-qlC">
+                            <rect key="frame" x="38" y="78.000000000000028" width="299" height="357.66666666666674"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="Backup Mnemonic Phrase" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="8Uc-OD-0vO">
+                                    <rect key="frame" x="30.666666666666686" y="0.0" width="238" height="24"/>
+                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                    <color key="textColor" name="text"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use another device to scan the QR code below." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BZx-GA-3rZ">
+                                    <rect key="frame" x="35.666666666666686" y="36" width="228" height="33.666666666666657"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" name="text"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mv7-EQ-srG" customClass="ModernQRCodeView" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="39.666666666666686" y="81.666666666666686" width="220" height="220"/>
+                                    <color key="backgroundColor" name="background"/>
+                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="mv7-EQ-srG" secondAttribute="height" id="iyL-VL-aki"/>
+                                    </constraints>
+                                </view>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mtn-Ne-Xdy">
+                                    <rect key="frame" x="127.66666666666666" y="313.66666666666669" width="44" height="44"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="Mtn-Ne-Xdy" secondAttribute="height" id="3EU-qG-0nT"/>
+                                        <constraint firstAttribute="height" constant="44" id="Lsd-YU-T1m"/>
+                                    </constraints>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="plain" image="ic_save_qrcode"/>
+                                    <connections>
+                                        <action selector="saveToAlbum:" destination="-1" eventType="touchUpInside" id="pvl-iB-4Yp"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="E4r-Gq-ZQC">
+                            <rect key="frame" x="124.33333333333334" y="473.66666666666669" width="126.33333333333334" height="42.000000000000057"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="67j-jp-BY1">
+                                    <rect key="frame" x="0.0" y="0.0" width="126.33333333333333" height="42"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                    <state key="normal" title="Confirm">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <buttonConfiguration key="configuration" style="filled" title="Done" cornerStyle="capsule">
+                                        <backgroundConfiguration key="background"/>
+                                        <fontDescription key="titleFontDescription" style="UICTFontTextStyleSubhead"/>
+                                        <directionalEdgeInsets key="contentInsets" top="0.0" leading="45" bottom="0.0" trailing="45"/>
+                                        <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="baseBackgroundColor" name="theme"/>
+                                    </buttonConfiguration>
+                                    <connections>
+                                        <action selector="done:" destination="-1" eventType="touchUpInside" id="uNI-Kk-Ece"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="42" id="mc1-jG-DfD"/>
+                            </constraints>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="H7y-gz-qlC" firstAttribute="top" secondItem="Nqb-Dg-hZX" secondAttribute="top" constant="78" id="0MZ-S7-DQM"/>
+                        <constraint firstItem="H7y-gz-qlC" firstAttribute="leading" secondItem="Nqb-Dg-hZX" secondAttribute="leading" constant="38" id="E4s-cQ-ac9"/>
+                        <constraint firstAttribute="trailing" secondItem="H7y-gz-qlC" secondAttribute="trailing" constant="38" id="VwP-fM-UPP"/>
+                        <constraint firstItem="E4r-Gq-ZQC" firstAttribute="centerX" secondItem="Nqb-Dg-hZX" secondAttribute="centerX" id="ZgS-pv-Wb0"/>
+                        <constraint firstItem="E4r-Gq-ZQC" firstAttribute="top" secondItem="H7y-gz-qlC" secondAttribute="bottom" constant="38" id="hMy-j0-Ngl"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Nqb-Dg-hZX" secondAttribute="trailing" id="6z0-cw-8bz"/>
+                <constraint firstAttribute="bottom" secondItem="Nqb-Dg-hZX" secondAttribute="bottom" id="7AH-f7-2eO"/>
+                <constraint firstItem="E4r-Gq-ZQC" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" constant="-20" id="Cnx-av-4K0"/>
+                <constraint firstItem="mv7-EQ-srG" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="220:375" id="LJY-2H-rSw"/>
+                <constraint firstItem="Nqb-Dg-hZX" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Wqz-23-WOU"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-34.399999999999999" y="49.50738916256158"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_save_qrcode" width="22" height="23"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

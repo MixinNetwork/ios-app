@@ -3,8 +3,8 @@ import QRCode
 
 final class ModernQRCodeView: UIView {
     
-    private let imageView = UIImageView()
-    private let activityIndicatorView = ActivityIndicatorView()
+    let imageView = UIImageView()
+    let activityIndicatorView = ActivityIndicatorView()
     
     private let qrCodeGenerator = QRCodeGenerator_External()
     

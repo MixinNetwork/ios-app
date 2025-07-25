@@ -56,8 +56,8 @@ class EVMTransferOperation: Web3TransferOperation {
     @MainActor private var account: EthereumAccount?
     
     fileprivate init(
-        walletID: String,
-        fromAddress: String,
+        wallet: MixinServices.Web3Wallet,
+        fromAddress: Web3Address,
         toAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
@@ -70,14 +70,14 @@ class EVMTransferOperation: Web3TransferOperation {
             throw InitError.notEVMChain(chain.name)
         }
         
-        guard let feeToken = try chain.feeToken(walletID: walletID) else {
+        guard let feeToken = try chain.feeToken(walletID: wallet.walletID) else {
             throw InitError.noFeeToken(chain.feeTokenAssetID)
         }
         self.transaction = transaction
         self.mixinChainID = chain.chainID
         
         super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             toAddress: toAddress,
             chain: chain,
@@ -88,8 +88,8 @@ class EVMTransferOperation: Web3TransferOperation {
     }
     
     fileprivate init(
-        walletID: String,
-        fromAddress: String,
+        wallet: MixinServices.Web3Wallet,
+        fromAddress: Web3Address,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
         hardcodedSimulation: TransactionSimulation?,
@@ -101,7 +101,7 @@ class EVMTransferOperation: Web3TransferOperation {
         default:
             throw InitError.notEVMChain(chain.name)
         }
-        guard let feeToken = try chain.feeToken(walletID: walletID) else {
+        guard let feeToken = try chain.feeToken(walletID: wallet.walletID) else {
             throw InitError.noFeeToken(chain.feeTokenAssetID)
         }
         
@@ -118,7 +118,7 @@ class EVMTransferOperation: Web3TransferOperation {
         self.mixinChainID = chain.chainID
         
         super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             toAddress: transaction.to.toChecksumAddress(),
             chain: chain,
@@ -132,7 +132,7 @@ class EVMTransferOperation: Web3TransferOperation {
         let rawFee = try await RouteAPI.estimatedEthereumFee(
             mixinChainID: mixinChainID,
             hexData: transaction.data?.hexEncodedString(),
-            from: fromAddress,
+            from: fromAddress.destination,
             to: transaction.destination.toChecksumAddress()
         )
         Logger.web3.info(category: "EVMTransfer", message: "Using limit: \(rawFee.gasLimit), mfpg: \(rawFee.maxFeePerGas), mpfpg: \(rawFee.maxPriorityFeePerGas)")
@@ -200,7 +200,7 @@ class EVMTransferOperation: Web3TransferOperation {
         }
         return try await RouteAPI.simulateEthereumTransaction(
             chainID: mixinChainID,
-            from: fromAddress,
+            from: fromAddress.destination,
             rawTransaction: "0x" + rawTransaction
         )
     }
@@ -217,10 +217,37 @@ class EVMTransferOperation: Web3TransferOperation {
         let account: EthereumAccount
         let updatedTransaction: EIP1559Transaction
         do {
-            let priv = try await TIP.deriveEthereumPrivateKey(pin: pin)
-            let keyStorage = InPlaceKeyStorage(raw: priv)
+            let privateKey: Data
+            switch wallet.category.knownCase {
+            case .classic:
+                privateKey = try await TIP.deriveEthereumPrivateKey(pin: pin)
+            case .importedMnemonic:
+                guard let pathString = fromAddress.path else {
+                    throw SigningError.missingDerivationPath
+                }
+                let encryptedMnemonics = AppGroupKeychain.importedMnemonics(walletID: wallet.walletID)
+                guard let encryptedMnemonics else {
+                    throw SigningError.missingPrivateKey
+                }
+                let key = try await TIP.importedWalletEncryptionKey(pin: pin)
+                let mnemonics = try encryptedMnemonics.decrypt(with: key)
+                let path = try DerivationPath(string: pathString)
+                privateKey = try mnemonics.deriveForEVM(path: path).privateKey
+            case .importedPrivateKey:
+                let encryptedPrivateKey = AppGroupKeychain.importedPrivateKey(walletID: wallet.walletID)
+                guard let encryptedPrivateKey else {
+                    throw SigningError.missingPrivateKey
+                }
+                let key = try await TIP.importedWalletEncryptionKey(pin: pin)
+                privateKey = try encryptedPrivateKey.decrypt(with: key)
+            case .watchAddress:
+                throw SigningError.invalidCategory
+            case .none:
+                throw SigningError.unknownCategory
+            }
+            let keyStorage = InPlaceKeyStorage(raw: privateKey)
             account = try EthereumAccount(keyStorage: keyStorage)
-            guard fromAddress == account.address.toChecksumAddress() else {
+            guard fromAddress.destination == account.address.toChecksumAddress() else {
                 throw RequestError.mismatchedAddress
             }
             let nonce = try await self.loadNonce()
@@ -271,7 +298,7 @@ class EVMTransferOperation: Web3TransferOperation {
         let latestTransactionCount = try await {
             let count = try await RouteAPI.ethereumLatestTransactionCount(
                 chainID: mixinChainID,
-                address: fromAddress
+                address: fromAddress.destination
             )
             if let count = Int(count, radix: 16) {
                 return count
@@ -281,10 +308,11 @@ class EVMTransferOperation: Web3TransferOperation {
         }()
         
         let nonce: Int
-        if let maxNonce = Web3RawTransactionDAO.shared.maxNonce(chainID: mixinChainID),
-           let n = Int(maxNonce, radix: 10),
-           n >= latestTransactionCount
-        {
+        let maxNonce = Web3RawTransactionDAO.shared.maxNonce(
+            walletID: wallet.walletID,
+            chainID: mixinChainID
+        )
+        if let maxNonce, let n = Int(maxNonce, radix: 10), n >= latestTransactionCount {
             nonce = n + 1
             Logger.general.debug(category: "EVMTransfer", message: "Using local value \(nonce) as nonce")
         } else {
@@ -310,7 +338,7 @@ class EVMTransferOperation: Web3TransferOperation {
             }()
             let rawTransaction = try await RouteAPI.postTransaction(
                 chainID: mixinChainID,
-                from: fromAddress,
+                from: fromAddress.destination,
                 rawTransaction: hexEncodedSignedTransaction
             )
             let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.tokenAmount)
@@ -343,8 +371,8 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
     let request: WalletConnectSign.Request
     
     init(
-        walletID: String,
-        fromAddress: String,
+        wallet: MixinServices.Web3Wallet,
+        fromAddress: Web3Address,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
         session: WalletConnectSession,
@@ -353,7 +381,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
         self.session = session
         self.request = request
         try super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             transaction: transaction,
             chain: chain,
@@ -389,8 +417,8 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
     private let rejectImpl: (() -> Void)?
     
     init(
-        walletID: String,
-        fromAddress: String,
+        wallet: MixinServices.Web3Wallet,
+        fromAddress: Web3Address,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
         respondWith respondImpl: @escaping ((String) async throws -> Void),
@@ -399,7 +427,7 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
         self.respondImpl = respondImpl
         self.rejectImpl = rejectImpl
         try super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             transaction: transaction,
             chain: chain,
@@ -474,7 +502,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             amount: decimalAmount
         )
         try super.init(
-            walletID: payment.walletID,
+            wallet: payment.wallet,
             fromAddress: payment.fromAddress,
             toAddress: payment.toAddress,
             transaction: transaction,
@@ -503,8 +531,8 @@ class EVMOverrideOperation: EVMTransferOperation {
     private let nonce: Int
     
     override init(
-        walletID: String,
-        fromAddress: String,
+        wallet: MixinServices.Web3Wallet,
+        fromAddress: Web3Address,
         toAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
@@ -515,7 +543,7 @@ class EVMOverrideOperation: EVMTransferOperation {
         }
         self.nonce = nonce
         try super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             toAddress: toAddress,
             transaction: transaction,
@@ -541,13 +569,13 @@ class EVMOverrideOperation: EVMTransferOperation {
 final class EVMSpeedUpOperation: EVMOverrideOperation {
     
     init(
-        walletID: String,
-        fromAddress: String,
+        wallet: MixinServices.Web3Wallet,
+        fromAddress: Web3Address,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
     ) throws {
         try super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             toAddress: "",
             transaction: transaction,
@@ -561,8 +589,8 @@ final class EVMSpeedUpOperation: EVMOverrideOperation {
 final class EVMCancelOperation: EVMOverrideOperation {
     
     init(
-        walletID: String,
-        fromAddress: String,
+        wallet: MixinServices.Web3Wallet,
+        fromAddress: Web3Address,
         transaction: EIP1559Transaction,
         chain: Web3Chain
     ) throws {
@@ -572,12 +600,12 @@ final class EVMCancelOperation: EVMOverrideOperation {
             maxPriorityFeePerGas: nil,
             maxFeePerGas: nil,
             gasLimit: nil,
-            destination: EthereumAddress(fromAddress),
+            destination: EthereumAddress(fromAddress.destination),
             amount: 0,
             data: nil
         )
         try super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             toAddress: "",
             transaction: emptyTransaction,

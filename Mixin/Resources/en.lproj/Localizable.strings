@@ -18,6 +18,7 @@
 "add_contact" = "Add Contact";
 "add_conversations" = "Add Conversations";
 "add_emergency_contact" = "Add recovery contact";
+"add_failed" = "Add Failed";
 "add_mobile_number" = "Add Mobile Number";
 "add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "Add Participants";
@@ -39,6 +40,9 @@
 "add_tag" = "Add Tag";
 "add_to_stickers" = "Add to Stickers";
 "add_token" = "Add %@";
+"add_wallet" = "Add Wallet";
+"add_watch_address" = "Add Watch Address";
+"add_watch_address_description" = "Track any public wallet address";
 "added" = "Added";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
@@ -284,6 +288,7 @@
 "check_backup" = "Check Backup";
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
+"choose_deposit_network" = "Choose Network";
 "choose_network" = "Choose Network";
 "choose_network_tip" = "Please ensure the network you choose to deposit that Mixin supports. Otherwise, your assets may be lost.";
 "choose_photo" = "Choose Photo";
@@ -324,6 +329,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Combine and forward";
 "common_wallet" = "Common Wallet";
+"common_wallet_index" = "Common Wallet %d";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Compress Database";
@@ -435,6 +441,7 @@
 "delete_address_description" = "Are you sure to delete this address?";
 "delete_chat" = "Delete Chat";
 "delete_circle" = "Delete Circle";
+"delete_common_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
 "delete_contact_chat_confirmation" = "Delete chat with \"%@\"?";
 "delete_emergency_contact" = "Delete recovery contact";
 "delete_for_everyone" = "Delete for Everyone";
@@ -443,6 +450,9 @@
 "delete_my_account" = "Delete My Account";
 "delete_note" = "Delete Note";
 "delete_synced_contact" = "Delete Synced Contacts";
+"delete_wallet" = "Delete Wallet";
+"delete_wallet_title" = "Enter your PIN to remove wallet";
+"delete_watch_wallet_description" = "Deleting this wallet will not affect your assets, as it is a watch-only wallet.";
 "delete_withdraw_address" = "Delete %@ Address";
 "deleted" = "Deleted";
 "deleting_address" = "Delete Address";
@@ -465,6 +475,7 @@
 "deposits_pending_confirmation" = "%d Deposits Pending Confirmation";
 "depost_address_updated" = "%@ Deposit Address Updated";
 "depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
+"deselect_all" = "Deselect All";
 "desktop_login" = "Login to Mixin Messenger Desktop";
 "desktop_logout" = "Logout Mixin Messenger Desktop";
 "desktop_on_hint" = "You have your desktop logged in";
@@ -567,11 +578,14 @@
 "error_too_many_friends" = "ERROR 20128: Too many friends";
 "error_too_many_request" = "ERROR 429: Rate limit exceeded";
 "error_too_many_stickers" = "ERROR 20126: Too many stickers";
+"error_too_many_wallets" = "ERROR 10632: You have reached the maximum number of imported wallets.";
+"error_too_many_wallets_upgrade" = "ERROR 10632: You have reached the maximum number of imported wallets. Please upgrade your membership to add more.";
 "error_too_small_transfer_amount" = "ERROR 20120: Transfer amount is too small";
 "error_too_small_withdraw_amount" = "ERROR 20127: Withdraw amount too small";
 "error_transfer_is_already_paid" = "ERROR 20125: Transfer is already paid.";
 "error_two_parts" = "ERROR %@: %@";
 "error_used_phone" = "ERROR 20122: This phone number is already associated with another account.";
+"error_watch_address_not_supported" = "ERROR 10633: Contract or exchange addresses is not supported for watching";
 "error_withdrawal_memo_format_incorrect" = "ERROR 20131: Withdrawal memo format incorrect.";
 "error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
 "estimated_balance_change" = "Balance Change (estimate)";
@@ -590,6 +604,10 @@
 "export" = "Export";
 "export_failed" = "Export failed";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
+"export_mnemonics_warning_1" = "Anyone who gains access to this %@ can transfer all assets from your wallet.";
+"export_mnemonics_warning_2" = "Mixin Messenger does not store your %@ on its servers.";
+"export_mnemonics_warning_3" = "Never share your %@ with any third party, individual, website, or application.";
+"export_mnemonics_warning_4" = "Ensure that no one — including surveillance cameras — can see your screen.";
 "face_id" = "Face ID";
 "failed" = "Failed";
 "failed_to_compose_avatar" = "Failed to compose avatar. Try another picture instead.";
@@ -601,10 +619,12 @@
 "fee" = "Fee";
 "fee_selection" = "Fee (%@)";
 "feedback" = "Feedback";
+"fetching_in_to_your_wallet" = "Fetching in to your wallet...";
 "file" = "File";
 "files" = "Files";
 "filter" = "Filter";
 "filter_by" = "FILTER BY";
+"find_more_wallets" = "Find more wallets";
 "floating" = "Floating";
 "floats_allows_up_to_count" = "Floats allows up to %d ones";
 "follow_us_on_facebook" = "Follow us on Facebook";
@@ -651,6 +671,17 @@
 "im_ready" = "I'm Ready";
 "image" = "image";
 "immediately" = "Immediately";
+"import" = "Import";
+"import_failed" = "Import Failed";
+"import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_private_key" = "Import Private Key";
+"import_selected_wallet" = "Import Selected Wallets";
+"import_single_chain_wallet" = "Import a single-chain wallet";
+"import_wallet_count" = "Import %d Wallets";
+"import_wallet_count_one" = "Import 1 Wallet";
+"import_wallets" = "Import Wallets";
+"import_wallets_from_another_wallet" = "Import wallets from another wallet";
+"importing_into_your_wallet" = "Importing into your wallet...";
 "in_connecting" = "Connecting...";
 "include_files" = "Include Files";
 "include_videos" = "Include Videos";
@@ -665,6 +696,7 @@
 "interface_style" = "Interface Style";
 "invalid_address" = "Invalid Address";
 "invalid_candidate" = "Invalid candidate";
+"invalid_format" = "Invalid format";
 "invalid_height" = "Invalid height";
 "invalid_malformed_address_eos_hint" = "Invalid address format. Mixin does not support withdrawal to the EOS contract address!";
 "invalid_malformed_address_hint" = "Invalid address format. Try again with a valid address of %@";
@@ -790,6 +822,7 @@
 "mnemonic_phrase_take_long" = "This shouldn't take long.";
 "mnemonic_phrase_tip_1" = "· Store it in a vault or secure place";
 "mnemonic_phrase_tip_2" = "· Do not share it over the internet";
+"mnemonic_phrases" = "mnemonic phrases";
 "mnemonics_mismatched" = "Mnemonics Mismatched";
 "mobile_contacts" = "Mobile Contacts";
 "mobile_number" = "Mobile Number";
@@ -824,6 +857,7 @@
 "my_mixin_id" = "My Mixin ID: %@";
 "my_qr_code" = "My QR Code";
 "my_stickers" = "My Stickers";
+"my_wallet" = "My Wallet";
 "na" = "N/A";
 "name" = "Name";
 "name_or_phone_number" = "Name or Phone number";
@@ -919,6 +953,7 @@
 "owner" = "Owner";
 "paid" = "Paid";
 "paid_recovery_service" = "Paid Recovery Service";
+"partial_import_successful" = "Partial Import Successful";
 "participants" = "Participants";
 "participants_count" = "%@ PARTICIPANTS";
 "paste" = "Paste";
@@ -1002,6 +1037,8 @@
 "privacy_wallet" = "Privacy Wallet";
 "privacy_wallet_tip_description" = "A multi-chain wallet with private, free, and instant transactions to meet most of your needs.";
 "privacy_wallet_tip_title" = "What’s the Privacy Wallet?";
+"private_key" = "private key";
+"private_key_storage_description" = "Your private key will only be stored locally on your device";
 "process_can_not_be_stop" = "The process cannot be canceled when it begins. Please remember the 6-digit PIN and reenter it if the process is aborted unexpectedly.";
 "profile" = "Profile";
 "profile_badge" = "Profile Badge";
@@ -1057,6 +1094,7 @@
 "remove_emergency_contact_for_sure" = "Remove recovery contact for sure?";
 "remove_from_group" = "Remove from Group";
 "remove_stickers" = "Remove Stickers";
+"rename_wallet" = "Rename Wallet";
 "renew_plan" = "Renew Plan";
 "reply" = "Reply";
 "report" = "Report";
@@ -1117,7 +1155,9 @@
 "saved" = "Saved";
 "say_hi" = "Say Hi";
 "scam_warning" = "Warning: Many users reported this account as a scam. Please be careful, especially if it asks you for money";
+"scan" = "Scan";
 "scan_code_add_me" = "Scan the QR code to add me on Mixin";
+"scan_code_description" = "Use another device to scan the QR code below";
 "scan_qr_code" = "Scan QR Code";
 "scan_to_restore" = "Scan to Restore";
 "scan_to_restore_hint" = "Click the button below to scan the code and establish a connection.";
@@ -1143,6 +1183,7 @@
 "select" = "Select";
 "select_a_country_or_region" = "Select a Country or Region";
 "select_a_token_for_the_fee" = "Select a token for the fee";
+"select_all" = "Select All";
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
 "select_more_photos" = "Select More Photos";
@@ -1154,6 +1195,8 @@
 "selected_photo_count" = "Selected %d Photos";
 "selected_video" = "Selected 1 Video";
 "selected_video_count" = "Selected %d Videos";
+"selected_wallet_count" = "%d wallets selected";
+"selected_wallet_count_one" = "1 wallet selected";
 "sell_token" = "Sell %@";
 "send" = "Send";
 "send_as_file" = "Send as File";
@@ -1168,10 +1211,9 @@
 "send_this_location" = "Send This Location";
 "send_to" = "Send to %@";
 "send_to_address_description" = "Send to an address in your Address Book, PIN-protected to prevent phishing.";
-"send_to_common_wallet_description" = "Send to your Common Wallet for use with decentralized apps and DeFi protocols.";
 "send_to_contact_description" = "Send to your Mixin friends with privacy, zero fees, and instant delivery.";
 "send_to_developer" = "Send to Developer";
-"send_to_privacy_wallet_description" = "Send to your Privacy Wallet to keep your assets safe and hidden from potential risks.";
+"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Send To";
 "send_video" = "Send 1 Video";
 "send_video_count" = "Send %d Videos";
@@ -1248,6 +1290,7 @@
 "show_asset" = "Show asset";
 "show_in_chat" = "Show in chat";
 "show_mnemonic_phrase" = "Show Mnemonic Phrase";
+"show_private_key" = "Show Private Key";
 "sign_in" = "Sign in";
 "sign_in_no_account" = "Don’t have an account yet?";
 "sign_in_with_mnemonic_phrase" = "Sign in with Mnemonic Phrase";
@@ -1388,6 +1431,8 @@
 "trying_connect_tip_network" = "Connecting the TIP network";
 "trying_connect_tip_node" = "Trying connect TIP node";
 "type" = "Type";
+"type_your_private_key" = "Type your private key";
+"type_your_wallet_address" = "Type your wallet address";
 "unable_connect_to_desktop" = "Unable to connect to the desktop, please try again later";
 "unable_synced_between_different_account" = "Chat history cannot be synced between different accounts";
 "unable_to_decode_the_request" = "Unable to decode the request: %@";
@@ -1460,6 +1505,7 @@
 "url_support" = "https://support.mixin.one/en/";
 "url_unrecognized_hint" = "%@ failed to recognize, please upgrade Mixin to the latest version or contact the developer to check the link";
 "url_unsupported_message" = "https://support.mixin.one/en/article/how-to-do-when-you-receive-a-message-like-this-this-type-of-message-is-not-supported-please-upgrade-mixin-17j1t3p/";
+"use_another_address" = "Use Another Address";
 "use_biometry" = "Use %@";
 "use_system_text_size" = "Use System Text Size";
 "user_delete_hint" = "The user has deleted his own account.";
@@ -1497,13 +1543,17 @@
 "waiting_transaction" = "Waiting Transaction";
 "waiting_transaction_description" = "You have a transfer or withdrawal has not been completed, please try again later";
 "wallet" = "Wallet";
+"wallet_already_added" = "This wallet has already been added";
+"wallet_candidate_imported" = "Imported";
 "wallet_enable_biometric_pay" = "Once enabled, %@ can be used to make quick transfers.";
 "wallet_hide_asset_confirmation" = "Are you sure you want to hide %@?";
+"wallet_imported" = "Imported";
 "wallet_password_not_equal" = "The PIN is not the same twice, please try again.";
 "wallet_password_unsafe" = "The PIN is too simple and insecure.";
 "wallet_pin_pay_interval_tips" = "For the security of your assets, you need to verify your PIN for the specified interval.";
 "wallet_pin_tops_desc" = "Please remember the PIN is unrecoverable if lost. The PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
 "wallet_refresh_address_failed" = "The withdrawal fee has been changed and the refresh fails, please try again.";
+"wallet_summary_tip" = "Watch wallets and hidden assets are excluded from the total";
 "wallet_transaction_continue_count_down" = "Continue (%d)";
 "wallet_transaction_tip" = "Are you sure you want to transfer %3$@ worth %2$@ to %1$@?";
 "wallet_transactions_asset_key_warning" = "Asset key is NOT a deposit address!";
@@ -1511,6 +1561,9 @@
 "wallet_withdrawal_changed" = "The withdrawal fee has been changed from %1$@ to %2$@, would you like to proceed with the request?";
 "wallet_withdrawal_recent_tip" = "You have already withdrawn %3$@ to %2$@ %1$@ ago, Do you want to withdraw it again?";
 "wallets" = "Wallets";
+"watch_address" = "Watch %@";
+"watch_wallet_index" = "Watch Wallet %d";
+"watching" = "Watching";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";
 "watchlist_empty" = "Your watchlist is empty";
@@ -1567,13 +1620,16 @@
 "withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, hard bifurcation of blockchain network, or congestion. Please try again later.";
 "withdrawal_to" = "Withdraw to %@";
 "write_down_mnemonic_phrase" = "Write down your mnemonic phrase";
-"write_down_mnemonic_phrase_desc" = "Write it down on a piece of paper and keep it in a safe place.";
+"write_down_secret_description" = "Write it down on a piece of paper and keep it in a safe place.";
 "years_count_short" = "%dY";
 "you" = "You";
+"you_are_watching_address" = "You are watching %@";
 "you_deleted_this_message" = "You deleted this message";
 "you_have_a_new_message" = "You have a new message";
 "you_have_left_the_group" = "You have left the group";
 "your_emergency_contact_has_been_changed" = "Your recovery contact has been changed";
+"your_mnemonic_phrase" = "Your Mnemonic Phrase";
 "your_phone_number_has_been_changed" = "Your phone number has been changed";
 "your_pin_has_been_changed" = "Your PIN has been changed";
 "your_pin_has_been_created" = "Your PIN has been created";
+"your_private_key" = "Your Private Key";

@@ -18,6 +18,14 @@ final class PlainTokenIconView: UIImageView {
         layer.cornerRadius = bounds.width / 2
     }
     
+    func setIcon(urlString: String) {
+        sd_setImage(
+            with: URL(string: urlString),
+            placeholderImage: nil,
+            context: assetIconContext
+        )
+    }
+    
     func setIcon(tokenIconURL url: URL?) {
         sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
     }

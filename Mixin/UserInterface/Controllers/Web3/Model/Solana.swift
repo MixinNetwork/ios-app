@@ -3,14 +3,19 @@ import MixinServices
 
 enum Solana {
     
-    enum Error: Swift.Error {
+    enum SolanaError: Error {
         case nullResult
         case code(SolanaErrorCode)
+    }
+    
+    enum ExportError: Error {
+        case invalidPublicKey
     }
     
     static let lamportsPerSOL = Decimal(SOLANA_LAMPORTS_PER_SOL)
     static let microLamportsPerLamport: Decimal = 1_000_000
     static let accountCreationCost: Decimal = 0.002_039_28
+    static let keyPairCount = 64
     
     static func publicKey(seed: Data) throws -> String {
         try seed.withUnsafeBytes { seed in
@@ -50,14 +55,28 @@ enum Solana {
         }
     }
     
+    static func keyPair(derivation: BIP39Mnemonics.Derivation) throws -> String {
+        guard let publicKey = Data(base58EncodedString: derivation.address) else {
+            throw ExportError.invalidPublicKey
+        }
+        return (derivation.privateKey + publicKey).base58EncodedString()
+    }
+    
+    static func keyPair(privateKey: Data) throws -> String {
+        guard let publicKey = Data(base58EncodedString: try publicKey(seed: privateKey)) else {
+            throw ExportError.invalidPublicKey
+        }
+        return (privateKey + publicKey).base58EncodedString()
+    }
+    
     fileprivate static func withSolanaStringPointer(_ assignment: (inout UnsafePointer<CChar>?) -> SolanaErrorCode) throws -> String {
         var pointer: UnsafePointer<CChar>?
         let result = assignment(&pointer)
         guard result == SolanaErrorCodeSuccess else {
-            throw Error.code(result)
+            throw SolanaError.code(result)
         }
         guard let pointer else {
-            throw Error.nullResult
+            throw SolanaError.nullResult
         }
         let string = String(cString: UnsafePointer(pointer))
         solana_free_string(pointer)
@@ -148,10 +167,10 @@ extension Solana {
                 }
             }
             guard result == SolanaErrorCodeSuccess else {
-                throw Error.code(result)
+                throw SolanaError.code(result)
             }
             guard let transaction else {
-                throw Error.nullResult
+                throw SolanaError.nullResult
             }
             let rawTransaction = try withSolanaStringPointer { rawTransaction in
                 solana_base64_encode_transaction(transaction, &rawTransaction)
@@ -190,7 +209,7 @@ extension Solana {
             if result == SolanaErrorCodeSuccess {
                 return Decimal(lamports) / Solana.lamportsPerSOL
             } else {
-                throw Error.code(result)
+                throw SolanaError.code(result)
             }
         }
         

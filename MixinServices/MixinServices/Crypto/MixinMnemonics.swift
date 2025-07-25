@@ -31,6 +31,10 @@ public struct MixinMnemonics {
     public let phrases: [String]    // Contains extra checksum
     public let bip39: String        // Standard BIP-0039 string from `entropy`
     
+    public var joinedPhrases: String {
+        phrases.joined(separator: " ")
+    }
+    
     public init(entropy: Data) throws {
         guard let bip39Phrases = BIP39.mnemonics(from: entropy) else {
             throw InitError.invalidEntropy

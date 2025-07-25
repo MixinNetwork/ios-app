@@ -3,18 +3,19 @@ import MixinServices
 
 class Web3SendingTokenPayment {
     
-    let walletID: String
+    let wallet: Web3Wallet
     let chain: Web3Chain
     let token: Web3TokenItem
-    let fromAddress: String
+    let fromAddress: Web3Address
     let sendingNativeToken: Bool
     
     init(
+        wallet: Web3Wallet,
         chain: Web3Chain,
         token: Web3TokenItem,
-        fromAddress: String
+        fromAddress: Web3Address
     ) {
-        self.walletID = token.walletID
+        self.wallet = wallet
         self.chain = chain
         self.token = token
         self.fromAddress = fromAddress
@@ -40,18 +41,21 @@ final class Web3SendingTokenToAddressPayment: Web3SendingTokenPayment {
     
     enum AddressType {
         
-        case privacyWallet
         case addressBook(label: String)
+        case privacyWallet
+        case commonWallet(name: String)
         case arbitrary
         
         var addressLabel: String? {
             switch self {
             case let .addressBook(label):
                 label
-            case .arbitrary:
-                nil
             case .privacyWallet:
                 R.string.localizable.privacy_wallet()
+            case let .commonWallet(name):
+                name
+            case .arbitrary:
+                nil
             }
         }
         
@@ -66,6 +70,7 @@ final class Web3SendingTokenToAddressPayment: Web3SendingTokenPayment {
         self.toAddress = address
         self.toAddressCompactRepresentation = Address.compactRepresentation(of: address)
         super.init(
+            wallet: payment.wallet,
             chain: payment.chain,
             token: payment.token,
             fromAddress: payment.fromAddress

@@ -3,8 +3,21 @@ import MixinServices
 
 final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Transaction> {
     
+    private let wallet: Web3Wallet
+    private let canPerformActions: Bool
+    
     private var transactionTokenSymbols: [String: String] = [:]
     private var reviewPendingTransactionJobID: String?
+    
+    init(wallet: Web3Wallet, token: Web3TokenItem, canPerformActions: Bool) {
+        self.wallet = wallet
+        self.canPerformActions = canPerformActions
+        super.init(token: token)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -47,10 +60,11 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        let walletID = token.walletID
         let jobs = [
-            SyncWeb3TransactionJob(walletID: token.walletID),
-            ReviewPendingWeb3RawTransactionJob(),
-            ReviewPendingWeb3TransactionJob(walletID: token.walletID),
+            SyncWeb3TransactionJob(walletID: walletID),
+            ReviewPendingWeb3RawTransactionJob(walletID: walletID),
+            ReviewPendingWeb3TransactionJob(walletID: walletID),
         ]
         reviewPendingTransactionJobID = jobs[2].getJobId()
         for job in jobs {
@@ -66,16 +80,18 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     }
     
     override func send() {
-        guard let chain = Web3Chain.chain(chainID: token.chainID) else {
-            return
-        }
-        guard let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: chain.chainID) else {
+        guard
+            let chain = Web3Chain.chain(chainID: token.chainID),
+            let wallet = Web3WalletDAO.shared.wallet(id: token.walletID),
+            let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: chain.chainID)
+        else {
             return
         }
         let payment = Web3SendingTokenPayment(
+            wallet: wallet,
             chain: chain,
             token: token,
-            fromAddress: address.destination
+            fromAddress: address
         )
         let selector = Web3TokenReceiverViewController(payment: payment)
         self.navigationController?.pushViewController(selector, animated: true)
@@ -94,7 +110,12 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     
     override func updateBalanceCell(_ cell: TokenBalanceCell) {
         cell.reloadData(web3Token: token)
-        cell.actionView.delegate = self
+        if canPerformActions {
+            cell.showActionView()
+            cell.actionView.delegate = self
+        } else {
+            cell.hideActionView()
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForTransaction transaction: Web3Transaction) -> UITableViewCell {
@@ -110,12 +131,12 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     }
     
     override func view(transaction: Web3Transaction) {
-        let viewController = Web3TransactionViewController(walletID: token.walletID, transaction: transaction)
+        let viewController = Web3TransactionViewController(wallet: wallet, transaction: transaction)
         navigationController?.pushViewController(viewController, animated: true)
     }
     
     override func viewAllTransactions() {
-        let history = Web3TransactionHistoryViewController(token: token)
+        let history = Web3TransactionHistoryViewController(wallet: wallet, token: token)
         navigationController?.pushViewController(history, animated: true)
     }
     
@@ -138,8 +159,12 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     }
     
     @objc private func reloadSnapshots() {
-        queue.async { [limit=transactionsCount, assetID=token.assetID, weak self] in
-            let limitExceededTransactions = Web3TransactionDAO.shared.transactions(assetID: assetID, limit: limit + 1)
+        queue.async { [limit=transactionsCount, token, weak self] in
+            let limitExceededTransactions = Web3TransactionDAO.shared.transactions(
+                walletID: token.walletID,
+                assetID: token.assetID,
+                limit: limit + 1
+            )
             let hasMoreTransactions = limitExceededTransactions.count > limit
             let transactions = Array(limitExceededTransactions.prefix(limit))
             let transactionRows = TransactionRow.rows(
@@ -182,14 +207,18 @@ extension Web3TokenViewController: TokenActionView.Delegate {
     func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
         switch action {
         case .receive:
-            withMnemonicsBackupChecked { [token] in
-                let selector = Web3ReceiveSourceViewController(token: token)
+            withMnemonicsBackupChecked { [wallet, token] in
+                let selector = Web3ReceiveSourceViewController(wallet: wallet, token: token)
                 self.navigationController?.pushViewController(selector, animated: true)
             }
         case .send:
             send()
         case .swap:
-            let swap = Web3SwapViewController(sendAssetID: token.assetID, receiveAssetID: AssetID.erc20USDT, walletID: token.walletID)
+            let swap = Web3SwapViewController(
+                wallet: wallet,
+                sendAssetID: token.assetID,
+                receiveAssetID: AssetID.erc20USDT,
+            )
             navigationController?.pushViewController(swap, animated: true)
             reporter.report(event: .tradeStart, tags: ["source": "asset_detail", "wallet": "web3"])
         case .buy:

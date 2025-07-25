@@ -96,9 +96,19 @@ struct SignedEIP1559Transaction {
         transaction: EIP1559Transaction,
         signature raw: Data
     ) {
+        var r = raw[raw.startIndex.advanced(by: 0)..<raw.startIndex.advanced(by: 32)]
+        while r.first == 0x00 {
+            r.removeFirst()
+        }
+        
+        var s = raw[raw.startIndex.advanced(by: 32)..<raw.startIndex.advanced(by: 64)]
+        while s.first == 0x00 {
+            s.removeFirst()
+        }
+        
         self.transaction = transaction
-        self.r = raw[raw.startIndex.advanced(by: 0)..<raw.startIndex.advanced(by: 32)]
-        self.s = raw[raw.startIndex.advanced(by: 32)..<raw.startIndex.advanced(by: 64)]
+        self.r = r
+        self.s = s
         self.yParity = Int(raw[raw.startIndex.advanced(by: 64)])
     }
     

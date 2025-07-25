@@ -24,11 +24,15 @@ public final class Web3PropertiesDAO: Web3DAO {
         try property.save(db)
     }
     
-    public func deleteTransactionOffset(addresses: Set<String>) {
+    public func deleteTransactionOffset(addresses: Collection<String>) {
         try? db.write { db in
-            for address in addresses {
-                try removeValue(forKey: address, db: db)
-            }
+            try deleteTransactionOffset(addresses: addresses, db: db)
+        }
+    }
+    
+    public func deleteTransactionOffset(addresses: Collection<String>, db: GRDB.Database) throws {
+        for address in addresses {
+            try removeValue(forKey: address, db: db)
         }
     }
     

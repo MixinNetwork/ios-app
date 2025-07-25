@@ -20,17 +20,17 @@ final class SyncWeb3TransactionJob: BaseJob {
     }
     
     override func run() throws {
-        let addresses = Web3AddressDAO.shared.addresses(walletID: walletID)
-        if addresses.isEmpty {
+        var destinations = Web3AddressDAO.shared.destinations(walletID: walletID)
+        if destinations.isEmpty {
             switch RouteAPI.addresses(walletID: walletID) {
             case .success(let addresses):
+                destinations = Set(addresses.map(\.destination))
                 Web3AddressDAO.shared.save(addresses: addresses)
                 reporter.report(error: WalletError.emptyAddress)
             case .failure(let error):
                 throw error
             }
         }
-        let destinations = Set(addresses.map(\.destination))
         Logger.general.debug(category: "SyncWeb3Txn", message: "Wallet: \(walletID), destinations: \(destinations)")
         for address in destinations {
             let initialOffset = Web3PropertiesDAO.shared.transactionOffset(address: address)

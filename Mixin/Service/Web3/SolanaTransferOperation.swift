@@ -11,26 +11,20 @@ class SolanaTransferOperation: Web3TransferOperation {
         case buildTransaction
     }
     
-    private enum SigningError: Error {
-        case invalidTransaction
-        case invalidBlockhash
-        case noFeeToken(String)
-    }
-    
     @MainActor fileprivate var fee: DisplayFee?
     
     fileprivate init(
-        walletID: String,
-        fromAddress: String,
+        wallet: MixinServices.Web3Wallet,
+        fromAddress: Web3Address,
         toAddress: String,
         chain: Web3Chain,
         hardcodedSimulation: TransactionSimulation?
     ) throws {
-        guard let feeToken = try chain.feeToken(walletID: walletID) else {
+        guard let feeToken = try chain.feeToken(walletID: wallet.walletID) else {
             throw InitError.noFeeToken(chain.feeTokenAssetID)
         }
         super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             toAddress: toAddress,
             chain: chain,
@@ -56,14 +50,44 @@ class SolanaTransferOperation: Web3TransferOperation {
         let signedTransaction: String
         do {
             Logger.web3.info(category: "SolanaTransfer", message: "Start")
-            let priv = try await TIP.deriveSolanaPrivateKey(pin: pin)
+            let privateKey: Data
+            switch wallet.category.knownCase {
+            case .classic:
+                privateKey = try await TIP.deriveSolanaPrivateKey(pin: pin)
+            case .importedMnemonic:
+                guard let pathString = fromAddress.path else {
+                    throw SigningError.missingDerivationPath
+                }
+                let encryptedMnemonics = AppGroupKeychain.importedMnemonics(walletID: wallet.walletID)
+                guard let encryptedMnemonics else {
+                    throw SigningError.missingPrivateKey
+                }
+                let key = try await TIP.importedWalletEncryptionKey(pin: pin)
+                let mnemonics = try encryptedMnemonics.decrypt(with: key)
+                let path = try DerivationPath(string: pathString)
+                privateKey = try mnemonics.deriveForSolana(path: path).privateKey
+            case .importedPrivateKey:
+                let encryptedPrivateKey = AppGroupKeychain.importedPrivateKey(walletID: wallet.walletID)
+                guard let encryptedPrivateKey else {
+                    throw SigningError.missingPrivateKey
+                }
+                let key = try await TIP.importedWalletEncryptionKey(pin: pin)
+                privateKey = try encryptedPrivateKey.decrypt(with: key)
+            case .watchAddress:
+                throw SigningError.invalidCategory
+            case .none:
+                throw SigningError.unknownCategory
+            }
             let recentBlockhash = try await RouteAPI.solanaLatestBlockhash()
             Logger.web3.info(category: "SolanaTransfer", message: "Using blockhash: \(recentBlockhash)")
             guard let blockhash = Data(base58EncodedString: recentBlockhash) else {
                 throw SigningError.invalidBlockhash
             }
             Logger.web3.info(category: "SolanaTransfer", message: "Will sign")
-            signedTransaction = try transaction.sign(withPrivateKeyFrom: priv, recentBlockhash: blockhash)
+            signedTransaction = try transaction.sign(
+                withPrivateKeyFrom: privateKey,
+                recentBlockhash: blockhash
+            )
         } catch {
             Logger.web3.error(category: "SolanaTransfer", message: "Failed to sign: \(error)")
             await MainActor.run {
@@ -79,7 +103,7 @@ class SolanaTransferOperation: Web3TransferOperation {
             Logger.web3.info(category: "SolanaTransfer", message: "Will send tx: \(signedTransaction)")
             let rawTransaction = try await RouteAPI.postTransaction(
                 chainID: ChainID.solana,
-                from: fromAddress,
+                from: fromAddress.destination,
                 rawTransaction: signedTransaction
             )
             let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee?.tokenAmount)
@@ -108,15 +132,15 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
     fileprivate let transaction: Solana.Transaction
     
     @MainActor init(
-        walletID: String,
+        wallet: MixinServices.Web3Wallet,
         transaction: Solana.Transaction,
-        fromAddress: String,
+        fromAddress: Web3Address,
         toAddress: String,
         chain: Web3Chain
     ) throws {
         self.transaction = transaction
         try super.init(
-            walletID: walletID,
+            wallet: wallet,
             fromAddress: fromAddress,
             toAddress: toAddress,
             chain: chain,
@@ -161,9 +185,9 @@ final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolana
     let request: WalletConnectSign.Request
     
     @MainActor init(
-        walletID: String,
+        wallet: MixinServices.Web3Wallet,
         transaction: Solana.Transaction,
-        fromAddress: String,
+        fromAddress: Web3Address,
         chain: Web3Chain,
         session: WalletConnectSession,
         request: WalletConnectSign.Request
@@ -171,7 +195,7 @@ final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolana
         self.session = session
         self.request = request
         try super.init(
-            walletID: walletID,
+            wallet: wallet,
             transaction: transaction,
             fromAddress: fromAddress,
             toAddress: "", // FIXME: Decode txn
@@ -207,9 +231,9 @@ final class SolanaTransferWithCustomRespondingOperation: ArbitraryTransactionSol
     private let rejectImpl: (() -> Void)?
     
     @MainActor init(
-        walletID: String,
+        wallet: MixinServices.Web3Wallet,
         transaction: Solana.Transaction,
-        fromAddress: String,
+        fromAddress: Web3Address,
         chain: Web3Chain,
         respondWith respondImpl: ((String) async throws -> Void)? = nil,
         rejectWith rejectImpl: (() -> Void)? = nil
@@ -217,7 +241,7 @@ final class SolanaTransferWithCustomRespondingOperation: ArbitraryTransactionSol
         self.respondImpl = respondImpl
         self.rejectImpl = rejectImpl
         try super.init(
-            walletID: walletID,
+            wallet: wallet,
             transaction: transaction,
             fromAddress: fromAddress,
             toAddress: "",
@@ -256,7 +280,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         self.decimalAmount = decimalAmount
         self.amount = amount.uint64Value
         try super.init(
-            walletID: payment.walletID,
+            wallet: payment.wallet,
             fromAddress: payment.fromAddress,
             toAddress: payment.toAddress,
             chain: payment.chain,
@@ -269,7 +293,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         let receiverAccountExists = try await RouteAPI.solanaAccountExists(pubkey: ata)
         let createAccount = !receiverAccountExists
         let transaction = try Solana.Transaction(
-            from: payment.fromAddress,
+            from: payment.fromAddress.destination,
             to: payment.toAddress,
             createAssociatedTokenAccountForReceiver: createAccount,
             amount: amount,
@@ -305,7 +329,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             state = .signing
         }
         let transaction = try Solana.Transaction(
-            from: payment.fromAddress,
+            from: payment.fromAddress.destination,
             to: payment.toAddress,
             createAssociatedTokenAccountForReceiver: createAccount,
             amount: amount,

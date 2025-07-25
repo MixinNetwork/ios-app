@@ -200,8 +200,7 @@ extension ExploreViewController: UICollectionViewDataSource {
         switch segment {
         case .explore:
             cell.label.text = R.string.localizable.explore()
-            cell.badgeView.isHidden = [.swap, .buy, .membership]
-                .allSatisfy(BadgeManager.shared.hasViewed(identifier:))
+            cell.badgeView.isHidden = true
         case .markets:
             cell.label.text = R.string.localizable.markets()
             cell.badgeView.isHidden = BadgeManager.shared.hasViewed(identifier: .market)

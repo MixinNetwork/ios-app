@@ -118,7 +118,7 @@ final class AddWalletImportingViewController: IntroductionViewController {
             } catch MixinAPIResponseError.tooManyWallets {
                 await MainActor.run {
                     let error = AddWalletErrorViewController(error: .tooManyWallets(hasPartialSuccess: hasPartialSuccess))
-                    self?.navigationController?.pushViewController(error, animated: true)
+                    self?.navigationController?.pushViewController(replacingCurrent: error, animated: true)
                 }
             } catch {
                 await MainActor.run {
@@ -153,7 +153,7 @@ final class AddWalletImportingViewController: IntroductionViewController {
             } catch MixinAPIResponseError.tooManyWallets {
                 await MainActor.run {
                     let error = AddWalletErrorViewController(error: .tooManyWallets(hasPartialSuccess: false))
-                    self?.navigationController?.pushViewController(error, animated: true)
+                    self?.navigationController?.pushViewController(replacingCurrent: error, animated: true)
                 }
             } catch {
                 await MainActor.run {

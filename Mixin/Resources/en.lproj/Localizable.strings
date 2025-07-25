@@ -18,6 +18,7 @@
 "add_contact" = "Add Contact";
 "add_conversations" = "Add Conversations";
 "add_emergency_contact" = "Add recovery contact";
+"add_failed" = "Add Failed";
 "add_mobile_number" = "Add Mobile Number";
 "add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "Add Participants";
@@ -49,7 +50,6 @@
 "address_added" = "Address Added";
 "address_added_description" = "Address has been added. You can immediately use this address for withdrawals.";
 "address_adding_description" = "The request to add the address is currently under verification by the Mixin server. Please wait a moment.";
-"address_already_exists" = "This address already exists in your wallet";
 "address_book" = "Address Book";
 "address_deleted" = "Address Deleted";
 "address_edited" = "Address Edited";
@@ -390,7 +390,6 @@
 "continue_with_pin" = "Continue with PIN";
 "contract" = "Contract";
 "contract_address" = "Contract Address";
-"contract_exchange_address_not_supported" = "Contract or exchange addresses is not supported for watching";
 "convenience" = "Convenience";
 "conversation" = "Conversation";
 "conversation_has_too_many_circles" = "The conversation has too many circles";
@@ -579,11 +578,14 @@
 "error_too_many_friends" = "ERROR 20128: Too many friends";
 "error_too_many_request" = "ERROR 429: Rate limit exceeded";
 "error_too_many_stickers" = "ERROR 20126: Too many stickers";
+"error_too_many_wallets" = "ERROR 10632: You have reached the maximum number of imported wallets.";
+"error_too_many_wallets_upgrade" = "ERROR 10632: You have reached the maximum number of imported wallets. Please upgrade your membership to add more.";
 "error_too_small_transfer_amount" = "ERROR 20120: Transfer amount is too small";
 "error_too_small_withdraw_amount" = "ERROR 20127: Withdraw amount too small";
 "error_transfer_is_already_paid" = "ERROR 20125: Transfer is already paid.";
 "error_two_parts" = "ERROR %@: %@";
 "error_used_phone" = "ERROR 20122: This phone number is already associated with another account.";
+"error_watch_address_not_supported" = "ERROR 10633: Contract or exchange addresses is not supported for watching";
 "error_withdrawal_memo_format_incorrect" = "ERROR 20131: Withdrawal memo format incorrect.";
 "error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
 "estimated_balance_change" = "Balance Change (estimate)";
@@ -670,6 +672,7 @@
 "image" = "image";
 "immediately" = "Immediately";
 "import" = "Import";
+"import_failed" = "Import Failed";
 "import_mnemonic_phrase" = "Import Mnemonic Phrase";
 "import_private_key" = "Import Private Key";
 "import_selected_wallet" = "Import Selected Wallets";
@@ -950,6 +953,7 @@
 "owner" = "Owner";
 "paid" = "Paid";
 "paid_recovery_service" = "Paid Recovery Service";
+"partial_import_successful" = "Partial Import Successful";
 "participants" = "Participants";
 "participants_count" = "%@ PARTICIPANTS";
 "paste" = "Paste";
@@ -1501,6 +1505,7 @@
 "url_support" = "https://support.mixin.one/en/";
 "url_unrecognized_hint" = "%@ failed to recognize, please upgrade Mixin to the latest version or contact the developer to check the link";
 "url_unsupported_message" = "https://support.mixin.one/en/article/how-to-do-when-you-receive-a-message-like-this-this-type-of-message-is-not-supported-please-upgrade-mixin-17j1t3p/";
+"use_another_address" = "Use Another Address";
 "use_biometry" = "Use %@";
 "use_system_text_size" = "Use System Text Size";
 "user_delete_hint" = "The user has deleted his own account.";
@@ -1538,6 +1543,7 @@
 "waiting_transaction" = "Waiting Transaction";
 "waiting_transaction_description" = "You have a transfer or withdrawal has not been completed, please try again later";
 "wallet" = "Wallet";
+"wallet_already_added" = "This wallet has already been added";
 "wallet_candidate_imported" = "Imported";
 "wallet_enable_biometric_pay" = "Once enabled, %@ can be used to make quick transfers.";
 "wallet_hide_asset_confirmation" = "Are you sure you want to hide %@?";

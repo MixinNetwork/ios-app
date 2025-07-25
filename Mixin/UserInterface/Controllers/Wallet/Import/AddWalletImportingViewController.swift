@@ -79,6 +79,7 @@ final class AddWalletImportingViewController: IntroductionViewController {
     private func importWallets(mnemonics: EncryptedBIP39Mnemonics, wallets: [NamedWalletCandidate]) {
         showLoading()
         Task { [weak self] in
+            var hasPartialSuccess = false
             do {
                 for wallet in wallets {
                     let evmWallet = wallet.candidate.evmWallet
@@ -109,9 +110,15 @@ final class AddWalletImportingViewController: IntroductionViewController {
                         ConcurrentJobQueue.shared.addJob(job: job)
                     }
                     AppGroupKeychain.setImportedMnemonics(mnemonics, forWalletID: response.wallet.walletID)
+                    hasPartialSuccess = true
                 }
                 await MainActor.run {
                     _ = self?.navigationController?.popToRootViewController(animated: true)
+                }
+            } catch MixinAPIResponseError.tooManyWallets {
+                await MainActor.run {
+                    let error = AddWalletErrorViewController(error: .tooManyWallets(hasPartialSuccess: hasPartialSuccess))
+                    self?.navigationController?.pushViewController(error, animated: true)
                 }
             } catch {
                 await MainActor.run {
@@ -142,6 +149,11 @@ final class AddWalletImportingViewController: IntroductionViewController {
                 AppGroupKeychain.setImportedPrivateKey(key, forWalletID: response.wallet.walletID)
                 await MainActor.run {
                     _ = self?.navigationController?.popToRootViewController(animated: true)
+                }
+            } catch MixinAPIResponseError.tooManyWallets {
+                await MainActor.run {
+                    let error = AddWalletErrorViewController(error: .tooManyWallets(hasPartialSuccess: false))
+                    self?.navigationController?.pushViewController(error, animated: true)
                 }
             } catch {
                 await MainActor.run {

@@ -18,6 +18,7 @@
 "add_contact" = "新增聯絡人";
 "add_conversations" = "新增會話";
 "add_emergency_contact" = "新增恢復聯絡人";
+"add_failed" = "新增失敗";
 "add_mobile_number" = "新增手機號碼";
 "add_or_remove_favorite_bots" = "新增或刪除收藏的機器人";
 "add_participants" = "新增成員";
@@ -49,7 +50,6 @@
 "address_added" = "地址已新增";
 "address_added_description" = "地址已新增，您可以立刻使用該地址進行提現。";
 "address_adding_description" = "正在新增地址，請稍候。";
-"address_already_exists" = "該地址已存在於你的錢包中";
 "address_book" = "地址簿";
 "address_deleted" = "地址已刪除";
 "address_edited" = "地址已修改";
@@ -390,7 +390,6 @@
 "continue_with_pin" = "輸入 PIN 繼續";
 "contract" = "合約";
 "contract_address" = "合約地址";
-"contract_exchange_address_not_supported" = "當前地址為合約地址或交易所地址，暫不支援觀察。";
 "convenience" = "便利";
 "conversation" = "會話";
 "conversation_has_too_many_circles" = "已達圈子數上限";
@@ -579,11 +578,14 @@
 "error_too_many_friends" = "錯誤 20128：好友數已達上限";
 "error_too_many_request" = "錯誤 429：請求過於頻繁";
 "error_too_many_stickers" = "錯誤 20126：貼紙數已達上限";
+"error_too_many_wallets" = "錯誤 10632：匯入錢包已達上限。";
+"error_too_many_wallets_upgrade" = "錯誤 10632：匯入錢包已達上限，請升級會員以新增更多錢包。";
 "error_too_small_transfer_amount" = "錯誤 20120：轉賬金額太小";
 "error_too_small_withdraw_amount" = "錯誤 20127：提現金額太小";
 "error_transfer_is_already_paid" = "錯誤 20125：轉賬已被支付";
 "error_two_parts" = "錯誤 %@：%@";
 "error_used_phone" = "錯誤 20122：電話號碼已經被佔用。";
+"error_watch_address_not_supported" = "錯誤 10633：當前地址為合約地址或交易所地址，暫不支援觀察。";
 "error_withdrawal_memo_format_incorrect" = "錯誤 20131：提現備註格式不正確";
 "error_withdrawal_suspend" = "錯誤 20137：提現暫停";
 "estimated_balance_change" = "餘額變動（預估）";
@@ -670,6 +672,7 @@
 "image" = "影像";
 "immediately" = "立刻";
 "import" = "匯入";
+"import_failed" = "匯入失敗";
 "import_mnemonic_phrase" = "匯入助記詞";
 "import_private_key" = "匯入私鑰";
 "import_selected_wallet" = "匯入選中的錢包";
@@ -950,6 +953,7 @@
 "owner" = "群主";
 "paid" = "已支付";
 "paid_recovery_service" = "收費的資產恢復服務";
+"partial_import_successful" = "部分匯入成功";
 "participants" = "成員";
 "participants_count" = "%@ 位群組成員";
 "paste" = "貼上";
@@ -1501,6 +1505,7 @@
 "url_support" = "https://support.mixin.one/zh/";
 "url_unrecognized_hint" = "%@ 識別失敗，請升級至 Mixin 最新版本或聯絡開發者檢查連結";
 "url_unsupported_message" = "https://support.mixin.one/zh/article/mixin-h92cxa/";
+"use_another_address" = "換個地址";
 "use_biometry" = "採用%@";
 "use_system_text_size" = "跟隨系統字型大小";
 "user_delete_hint" = "該使用者已經刪除了賬號。";
@@ -1538,6 +1543,7 @@
 "waiting_transaction" = "正在等待交易";
 "waiting_transaction_description" = "您有一筆轉賬或提現未完成，請稍後再試";
 "wallet" = "錢包";
+"wallet_already_added" = "這個錢包已經新增過了";
 "wallet_candidate_imported" = "已匯入";
 "wallet_enable_biometric_pay" = "開啟後，轉賬時可驗證%@快速完成付款。";
 "wallet_hide_asset_confirmation" = "您確定要隱藏%@嗎？";

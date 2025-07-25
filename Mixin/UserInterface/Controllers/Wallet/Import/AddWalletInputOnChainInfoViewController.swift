@@ -28,6 +28,8 @@ class AddWalletInputOnChainInfoViewController: UIViewController {
         }
     }
     
+    private(set) var importedAddresses: Set<String>?
+    
     private var inputChangeObserver: AnyCancellable?
     
     init() {
@@ -84,6 +86,13 @@ class AddWalletInputOnChainInfoViewController: UIViewController {
             name: UITextView.textDidChangeNotification,
             object: inputTextView
         )
+        DispatchQueue.global().async {
+            let destinations = Web3AddressDAO.shared.allDestinations()
+            DispatchQueue.main.async {
+                self.importedAddresses = destinations
+                self.detectInput()
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

@@ -1131,6 +1131,7 @@
 		94911DC42AF00B2C00A33B2A /* TokenItem+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94911DC32AF00B2C00A33B2A /* TokenItem+Description.swift */; };
 		9491E6BB2E3233F600A869F1 /* OverlayTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9491E6BA2E32339C00A869F1 /* OverlayTipView.swift */; };
 		9491E6C02E32340600A869F1 /* OverlayTipView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9491E6BF2E32340600A869F1 /* OverlayTipView.xib */; };
+		9491E7252E335B3D00A869F1 /* AddWalletErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9491E7242E335B3500A869F1 /* AddWalletErrorViewController.swift */; };
 		9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9492285E25DFB7D60000A19F /* MinimizedPlaylistViewController.swift */; };
 		9492286425DFB7EF0000A19F /* MinimizedPlaylistView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9492286325DFB7EF0000A19F /* MinimizedPlaylistView.xib */; };
 		9493708C2A1B64CC00C0A21E /* LocalNetworkAuthorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9AABC329E924B400EBAAF3 /* LocalNetworkAuthorization.swift */; };
@@ -2805,6 +2806,7 @@
 		94911DC32AF00B2C00A33B2A /* TokenItem+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TokenItem+Description.swift"; sourceTree = "<group>"; };
 		9491E6BA2E32339C00A869F1 /* OverlayTipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayTipView.swift; sourceTree = "<group>"; };
 		9491E6BF2E32340600A869F1 /* OverlayTipView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OverlayTipView.xib; sourceTree = "<group>"; };
+		9491E7242E335B3500A869F1 /* AddWalletErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletErrorViewController.swift; sourceTree = "<group>"; };
 		9492285E25DFB7D60000A19F /* MinimizedPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedPlaylistViewController.swift; sourceTree = "<group>"; };
 		9492286325DFB7EF0000A19F /* MinimizedPlaylistView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MinimizedPlaylistView.xib; sourceTree = "<group>"; };
 		949569A5263B12FE00E043FE /* TranscriptMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptMessageCell.swift; sourceTree = "<group>"; };
@@ -4705,6 +4707,7 @@
 				94F268102E15B89A00A8A1E0 /* AddWalletSelectorView.xib */,
 				94F267F72E1512E000A8A1E0 /* AddWalletSelectorViewController.swift */,
 				947013682E19424500444513 /* AddWalletImportingViewController.swift */,
+				9491E7242E335B3500A869F1 /* AddWalletErrorViewController.swift */,
 			);
 			path = Import;
 			sourceTree = "<group>";
@@ -7283,6 +7286,7 @@
 				7B4E3078229565C200A03F6E /* SearchBoxLeftView.swift in Sources */,
 				7B710DFC243637A5008F0D73 /* CirclesTableFooterView.swift in Sources */,
 				94E979252D0B40B000FFCC12 /* LoginPINStatusCheckingViewController.swift in Sources */,
+				9491E7252E335B3D00A869F1 /* AddWalletErrorViewController.swift in Sources */,
 				9497AEA92C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift in Sources */,
 				7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */,
 				7C7579DF29DC61890002DA0B /* TransferToPhoneQRCodeViewController.swift in Sources */,

@@ -4,6 +4,22 @@ import MixinServices
 
 final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewController {
     
+    private enum LoadAddressError: Error, LocalizedError {
+        
+        case invalidAddress
+        case alreadyImported
+        
+        var errorDescription: String? {
+            switch self {
+            case .invalidAddress:
+                R.string.localizable.invalid_format()
+            case .alreadyImported:
+                R.string.localizable.wallet_already_added()
+            }
+        }
+        
+    }
+    
     private var address: CreateWalletRequest.Address? {
         didSet {
             continueButton.isEnabled = address != nil
@@ -21,41 +37,45 @@ final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewCo
         guard let address else {
             return
         }
-        if Web3AddressDAO.shared.addressExists(destination: address.destination) {
-            errorDescriptionLabel.text = R.string.localizable.address_already_exists()
-            return
-        }
         continueButton.isBusy = true
         let request = CreateWalletRequest(
             name: R.string.localizable.watch_wallet_index(1),
             category: .watchAddress,
             addresses: [address]
         )
-        RouteAPI.createWallet(request, queue: .global()) { [weak self] result in
+        RouteAPI.createWallet(request, queue: .main) { [weak self] result in
+            self?.continueButton.isBusy = false
             switch result {
             case let .success(response):
-                Web3WalletDAO.shared.save(
-                    wallets: [response.wallet],
-                    addresses: response.addresses
-                )
-                let jobs = [
-                    RefreshWeb3WalletTokenJob(walletID: response.wallet.walletID),
-                    SyncWeb3TransactionJob(walletID: response.wallet.walletID),
-                ]
-                for job in jobs {
-                    ConcurrentJobQueue.shared.addJob(job: job)
+                DispatchQueue.global().async {
+                    Web3WalletDAO.shared.save(
+                        wallets: [response.wallet],
+                        addresses: response.addresses
+                    )
+                    let jobs = [
+                        RefreshWeb3WalletTokenJob(walletID: response.wallet.walletID),
+                        SyncWeb3TransactionJob(walletID: response.wallet.walletID),
+                    ]
+                    for job in jobs {
+                        ConcurrentJobQueue.shared.addJob(job: job)
+                    }
                 }
-                DispatchQueue.main.async {
-                    self?.navigationController?.popToRootViewController(animated: true)
-                }
-            case let .failure(error):
-                DispatchQueue.main.async {
+                self?.navigationController?.popToRootViewController(animated: true)
+            case .failure(.response(.tooManyWallets)):
+                let error = AddWalletErrorViewController(error: .tooManyWatchWallets)
+                self?.navigationController?.pushViewController(error, animated: true)
+            case .failure(.response(.unsupportedWatchAddress)):
+                let error = AddWalletErrorViewController(error: .unsupportedWatchAddress)
+                error.onUseAnotherAddress = { [weak self] in
                     guard let self else {
                         return
                     }
-                    self.errorDescriptionLabel.text = error.localizedDescription
-                    self.continueButton.isBusy = false
+                    self.inputTextView.text = ""
+                    self.detectInput()
                 }
+                self?.navigationController?.pushViewController(error, animated: true)
+            case let .failure(error):
+                self?.errorDescriptionLabel.text = error.localizedDescription
             }
         }
     }
@@ -64,38 +84,38 @@ final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewCo
         super.detectInput()
         let input = (inputTextView.text ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !input.isEmpty else {
+        guard !input.isEmpty, let importedAddresses else {
             address = nil
             errorDescriptionLabel.text = nil
             return
         }
-        address = {
+        do {
             switch selectedChain.kind {
             case .evm:
                 guard input.hasPrefix("0x"), input.count == 42 else {
-                    return nil
+                    throw LoadAddressError.invalidAddress
                 }
                 let inputAddress = EthereumAddress(input)
                 guard let number = inputAddress.asNumber(), number != 0 else {
-                    return nil
+                    throw LoadAddressError.invalidAddress
                 }
-                return .init(
-                    destination: inputAddress.toChecksumAddress(),
-                    chainID: ChainID.ethereum,
-                    path: nil
-                )
+                let checksumAddress = inputAddress.toChecksumAddress()
+                if importedAddresses.contains(checksumAddress) {
+                    throw LoadAddressError.alreadyImported
+                }
+                address = .init(destination: checksumAddress, chainID: ChainID.ethereum, path: nil)
             case .solana:
-                return if Solana.isValidPublicKey(string: input)  {
-                    .init(destination: input, chainID: ChainID.solana, path: nil)
+                if importedAddresses.contains(input) {
+                    throw LoadAddressError.alreadyImported
+                } else if Solana.isValidPublicKey(string: input)  {
+                    address = .init(destination: input, chainID: ChainID.solana, path: nil)
                 } else {
-                    nil
+                    throw LoadAddressError.invalidAddress
                 }
             }
-        }()
-        if address == nil {
-            errorDescriptionLabel.text = R.string.localizable.invalid_format()
-        } else {
-            errorDescriptionLabel.text = nil
+        } catch {
+            address = nil
+            errorDescriptionLabel.text = error.localizedDescription
         }
     }
     

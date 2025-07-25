@@ -9,6 +9,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
         case invalidBase58
         case invalidLength
         case mismatchedPublicKey
+        case alreadyImported
     }
     
     private struct Wallet {
@@ -61,7 +62,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
         super.detectInput()
         let input = (inputTextView.text ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !input.isEmpty else {
+        guard !input.isEmpty, let importedAddresses else {
             wallet = nil
             errorDescriptionLabel.text = nil
             return
@@ -79,6 +80,10 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                 }
                 let keyStorage = InPlaceKeyStorage(raw: privateKey)
                 let account = try EthereumAccount(keyStorage: keyStorage)
+                let address = account.address.toChecksumAddress()
+                if importedAddresses.contains(address) {
+                    throw LoadKeyError.alreadyImported
+                }
                 let encryptedPrivateKey = try EncryptedPrivateKey(
                     privateKey: privateKey,
                     key: encryptionKey
@@ -86,7 +91,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                 wallet = Wallet(
                     privateKey: encryptedPrivateKey,
                     address: .init(
-                        destination: account.address.toChecksumAddress(),
+                        destination: address,
                         chainID: ChainID.ethereum,
                         path: nil
                     )
@@ -101,6 +106,9 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                 let publicKeyIndex = keyPair.index(keyPair.startIndex, offsetBy: 32)
                 let privateKey = keyPair[keyPair.startIndex..<publicKeyIndex]
                 let publicKey = keyPair[publicKeyIndex...].base58EncodedString()
+                if importedAddresses.contains(publicKey) {
+                    throw LoadKeyError.alreadyImported
+                }
                 let derivedPublicKey = try Solana.publicKey(seed: privateKey)
                 guard publicKey == derivedPublicKey else {
                     throw LoadKeyError.mismatchedPublicKey
@@ -118,14 +126,14 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                     )
                 )
             }
+            errorDescriptionLabel.text = nil
+        } catch LoadKeyError.alreadyImported {
+            wallet = nil
+            errorDescriptionLabel.text = R.string.localizable.wallet_already_added()
         } catch {
             Logger.general.debug(category: "InputPrivateKey", message: "\(error)")
             wallet = nil
-        }
-        if wallet == nil {
             errorDescriptionLabel.text = R.string.localizable.invalid_format()
-        } else {
-            errorDescriptionLabel.text = nil
         }
     }
     

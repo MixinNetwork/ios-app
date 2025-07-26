@@ -218,6 +218,14 @@ public class SendMessageService: MixinService {
             let unreadMessages = MessageDAO.shared.getUnreadMessages(conversationId: conversationId)
             var position = 0
             let pageCount = AppGroupUserDefaults.Account.isDesktopLoggedIn ? 1000 : 2000
+            if unreadMessages.count == 0 {
+                UserDatabase.current.write { (db) in
+                    let unseenMessageCountSQL = "SELECT unseen_message_count FROM \(Conversation.databaseTableName) WHERE conversation_id = ?"
+                    if let unseenMessageCount = try Int.fetchOne(db, sql: unseenMessageCountSQL, arguments: [conversationId]), unseenMessageCount > 0 {
+                        try MessageDAO.shared.updateUnseenMessageCount(database: db, conversationId: conversationId)
+                    }
+                }
+            }
             while unreadMessages.count > 0 && position < unreadMessages.count {
                 let nextPosition = position + pageCount > unreadMessages.count ? unreadMessages.count : position + pageCount
                 let messages = Array(unreadMessages[position..<nextPosition])

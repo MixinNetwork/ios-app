@@ -686,7 +686,6 @@
 		940B6C942C72501A0003FCDB /* UserBadgeIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940B6C932C72501A0003FCDB /* UserBadgeIcon.swift */; };
 		940B6C952C7266150003FCDB /* UserBadgeIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940B6C932C72501A0003FCDB /* UserBadgeIcon.swift */; };
 		940BAE222629741C00FFF753 /* MixinAuthorizationsContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940BAE212629741C00FFF753 /* MixinAuthorizationsContentViewController.swift */; };
-		940C7541299AAE130006338F /* Web3Wallet in Frameworks */ = {isa = PBXBuildFile; productRef = 940C7540299AAE130006338F /* Web3Wallet */; };
 		940D10A52C5C91630071E36D /* InsetGroupedTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940D10A42C5C91630071E36D /* InsetGroupedTitleCell.xib */; };
 		940D10A62C5C91630071E36D /* InsetGroupedTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940D10A32C5C91630071E36D /* InsetGroupedTitleCell.swift */; };
 		940D10B12C5C9A930071E36D /* TokenBalanceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940D10B02C5C9A930071E36D /* TokenBalanceCell.xib */; };
@@ -1353,6 +1352,7 @@
 		94ED2FB92E26455C00B99837 /* DerivationPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED2FB82E26455900B99837 /* DerivationPath.swift */; };
 		94ED2FEC2E2650EE00B99837 /* AddWalletPINValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED2FEB2E2650EE00B99837 /* AddWalletPINValidationViewController.swift */; };
 		94ED306B2E269B4F00B99837 /* MixinTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ED30692E269B4E00B99837 /* MixinTests.swift */; };
+		94ED938A2E37592700A3E337 /* ReownWalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = 94ED93892E37592700A3E337 /* ReownWalletKit */; };
 		94EDD6142D0C495A00BF55EE /* GeneralAppearanceNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EDD6132D0C495100BF55EE /* GeneralAppearanceNavigationController.swift */; };
 		94EE1AB92B48518D00BE9AD1 /* TemporaryAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1AB82B48518D00BE9AD1 /* TemporaryAddress.swift */; };
 		94EE1ABE2B4851E600BE9AD1 /* WithdrawableAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94EE1ABD2B4851E600BE9AD1 /* WithdrawableAddress.swift */; };
@@ -3310,7 +3310,6 @@
 				DF8EF6BA2033FD1800E99CE8 /* AudioToolbox.framework in Frameworks */,
 				DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */,
 				94341BFB2862F302009C9147 /* libopusenc.xcframework in Frameworks */,
-				940C7541299AAE130006338F /* Web3Wallet in Frameworks */,
 				DF2A24481FC7CFA8003A8C1E /* LocalAuthentication.framework in Frameworks */,
 				944B1BEE2A4CB0AA00C36B61 /* CryptoSwift in Frameworks */,
 				DF5D9F331F9C95570036D5FD /* CoreTelephony.framework in Frameworks */,
@@ -3319,6 +3318,7 @@
 				F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */,
 				94341BFA2862F302009C9147 /* libopus.xcframework in Frameworks */,
 				9481C03C2A49A9AA0009DAF8 /* Starscream in Frameworks */,
+				94ED938A2E37592700A3E337 /* ReownWalletKit in Frameworks */,
 				94D916EF2DC0C45E009B8A7F /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5963,13 +5963,13 @@
 			);
 			name = Mixin;
 			packageProductDependencies = (
-				940C7540299AAE130006338F /* Web3Wallet */,
 				9416231929BEEFB800E540B9 /* OrderedCollections */,
 				9481C03B2A49A9AA0009DAF8 /* Starscream */,
 				944B1BED2A4CB0AA00C36B61 /* CryptoSwift */,
 				94787E172A7C071E00BB0124 /* QRCode */,
 				94881FAB2AD035ED00CA7A29 /* RswiftLibrary */,
 				9479B7842BBBE589002A2C4F /* web3.swift */,
+				94ED93892E37592700A3E337 /* ReownWalletKit */,
 			);
 			productName = mixin;
 			productReference = 277FF6FF1F909A1200DBB2EB /* Mixin.app */;
@@ -6117,7 +6117,6 @@
 			);
 			mainGroup = 277FF6F61F909A1200DBB2EB;
 			packageReferences = (
-				940C753F299AAE130006338F /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */,
 				9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
 				944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
@@ -6125,6 +6124,7 @@
 				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */,
 				94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
 				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */,
+				94ED93882E37592700A3E337 /* XCRemoteSwiftPackageReference "reown-swift" */,
 			);
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
 			projectDirPath = "";
@@ -8702,14 +8702,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		940C753F299AAE130006338F /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/WalletConnect/WalletConnectSwiftV2";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
@@ -8766,14 +8758,17 @@
 				version = 0.16.0;
 			};
 		};
+		94ED93882E37592700A3E337 /* XCRemoteSwiftPackageReference "reown-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/reown-com/reown-swift";
+			requirement = {
+				kind = exactVersion;
+				version = 1.6.8;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		940C7540299AAE130006338F /* Web3Wallet */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 940C753F299AAE130006338F /* XCRemoteSwiftPackageReference "WalletConnectSwiftV2" */;
-			productName = Web3Wallet;
-		};
 		9416231929BEEFB800E540B9 /* OrderedCollections */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */;
@@ -8825,6 +8820,11 @@
 		94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
+		};
+		94ED93892E37592700A3E337 /* ReownWalletKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 94ED93882E37592700A3E337 /* XCRemoteSwiftPackageReference "reown-swift" */;
+			productName = ReownWalletKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

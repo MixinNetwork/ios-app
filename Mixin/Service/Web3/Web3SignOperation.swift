@@ -1,6 +1,6 @@
 import Foundation
 import web3
-import Web3Wallet
+import ReownWalletKit
 import MixinServices
 
 class Web3SignOperation {
@@ -156,9 +156,11 @@ final class Web3SignWithWalletConnectOperation: Web3SignOperation {
             case .solana:
                 RPCResult.response(AnyCodable(["signature": signature]))
             }
-            try await Web3Wallet.instance.respond(topic: request.raw.topic,
-                                                  requestId: request.raw.id,
-                                                  response: response)
+            try await WalletKit.instance.respond(
+                topic: request.raw.topic,
+                requestId: request.raw.id,
+                response: response
+            )
             Logger.web3.info(category: "Sign", message: "Signature sent")
             await MainActor.run {
                 self.state = .success
@@ -175,7 +177,11 @@ final class Web3SignWithWalletConnectOperation: Web3SignOperation {
     override func reject() {
         Task {
             let error = JSONRPCError(code: 0, message: "User Rejected")
-            try await Web3Wallet.instance.respond(topic: request.raw.topic, requestId: request.raw.id, response: .error(error))
+            try await WalletKit.instance.respond(
+                topic: request.raw.topic,
+                requestId: request.raw.id,
+                response: .error(error)
+            )
         }
     }
     

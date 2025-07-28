@@ -1,6 +1,6 @@
 import Foundation
 import BigInt
-import Web3Wallet
+import ReownWalletKit
 import MixinServices
 
 final class WalletConnectSession {
@@ -54,7 +54,7 @@ final class WalletConnectSession {
     }
     
     func disconnect() async throws {
-        try await Web3Wallet.instance.disconnect(topic: session.topic)
+        try await WalletKit.instance.disconnect(topic: session.topic)
     }
     
     func handle(request: Request) {
@@ -72,9 +72,11 @@ final class WalletConnectSession {
             Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
             Logger.web3.warn(category: "Session", message: "eth_signTransaction rejected")
             Task {
-                try await Web3Wallet.instance.respond(topic: request.topic,
-                                                      requestId: request.id,
-                                                      response: .error(.init(code: 0, message: "Unsupported method")))
+                try await WalletKit.instance.respond(
+                    topic: request.topic,
+                    requestId: request.id,
+                    response: .error(.init(code: 0, message: "Unsupported method"))
+                )
             }
         case .ethSendTransaction:
             requestETHSendTransaction(with: request)
@@ -88,9 +90,11 @@ final class WalletConnectSession {
             Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
             Logger.web3.warn(category: "Session", message: "Unknown method: \(request.method)")
             Task {
-                try await Web3Wallet.instance.respond(topic: request.topic,
-                                                      requestId: request.id,
-                                                      response: .error(.init(code: 0, message: "Unsupported method")))
+                try await WalletKit.instance.respond(
+                    topic: request.topic,
+                    requestId: request.id,
+                    response: .error(.init(code: 0, message: "Unsupported method"))
+                )
             }
         }
     }
@@ -109,7 +113,11 @@ extension WalletConnectSession {
     private func rejectETHSign(with request: Request) {
         assert(Thread.isMainThread)
         Task {
-            try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(.methodNotFound))
+            try await WalletKit.instance.respond(
+                topic: request.topic,
+                requestId: request.id,
+                response: .error(.methodNotFound)
+            )
         }
         let title = R.string.localizable.request_rejected()
         let message = R.string.localizable.method_not_supported(request.method)
@@ -165,7 +173,7 @@ extension WalletConnectSession {
                         Web3PopupCoordinator.enqueue(popup: .request(insufficient))
                     }
                     let error = JSONRPCError(code: 0, message: "Insufficient Fee")
-                    try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
+                    try await WalletKit.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
                 }
             } catch {
                 await MainActor.run {
@@ -175,7 +183,7 @@ extension WalletConnectSession {
                     Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
                 let error = JSONRPCError(code: 0, message: "Local failed")
-                try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
+                try await WalletKit.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
             }
         }
     }
@@ -236,7 +244,7 @@ extension WalletConnectSession {
                         Web3PopupCoordinator.enqueue(popup: .request(insufficient))
                     }
                     let error = JSONRPCError(code: 0, message: "Insufficient Fee")
-                    try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
+                    try await WalletKit.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
                 }
             } catch {
                 Logger.web3.error(category: "Session", message: "Failed to request tx: \(error)")
@@ -246,7 +254,7 @@ extension WalletConnectSession {
                     Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
                 let error = JSONRPCError(code: 0, message: "Local failed")
-                try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
+                try await WalletKit.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
             }
         }
     }
@@ -279,7 +287,7 @@ extension WalletConnectSession {
             Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
             Task {
                 let error = JSONRPCError(code: 0, message: error.localizedDescription)
-                try await Web3Wallet.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
+                try await WalletKit.instance.respond(topic: request.topic, requestId: request.id, response: .error(error))
             }
         }
     }

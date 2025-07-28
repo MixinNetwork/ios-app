@@ -1,7 +1,7 @@
 import UIKit
 import Combine
 import web3
-import Web3Wallet
+import ReownWalletKit
 import MixinServices
 
 final class Web3SignViewController: AuthenticationPreviewViewController {

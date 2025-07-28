@@ -1,6 +1,6 @@
 import UIKit
 import web3
-import Web3Wallet
+import ReownWalletKit
 import MixinServices
 
 final class ConnectWalletViewController: AuthenticationPreviewViewController {
@@ -96,13 +96,17 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                     }
                 }
                 let methods = WalletConnectSession.Method.allCases.map(\.rawValue)
-                let sessionNamespaces = try AutoNamespaces.build(sessionProposal: proposal,
-                                                                 chains: chains.map(\.caip2),
-                                                                 methods: methods,
-                                                                 events: Array(events),
-                                                                 accounts: accounts)
-                _ = try await Web3Wallet.instance.approve(proposalId: proposal.id,
-                                                          namespaces: sessionNamespaces)
+                let sessionNamespaces = try AutoNamespaces.build(
+                    sessionProposal: proposal,
+                    chains: chains.map(\.caip2),
+                    methods: methods,
+                    events: Array(events),
+                    accounts: accounts
+                )
+                _ = try await WalletKit.instance.approve(
+                    proposalId: proposal.id,
+                    namespaces: sessionNamespaces
+                )
                 Logger.web3.info(category: "Connect", message: "Connected")
                 await MainActor.run {
                     self.canDismissInteractively = true
@@ -146,7 +150,7 @@ extension ConnectWalletViewController: Web3PopupViewController {
     
     func reject() {
         Task {
-            try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .userRejected)
+            try await WalletKit.instance.rejectSession(proposalId: proposal.id, reason: .userRejected)
         }
     }
     

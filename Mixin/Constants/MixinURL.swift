@@ -1,5 +1,5 @@
 import Foundation
-import Web3Wallet
+import ReownWalletKit
 import MixinServices
 
 enum MixinURL {

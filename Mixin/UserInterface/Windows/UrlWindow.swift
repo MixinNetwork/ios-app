@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Alamofire
 import WalletConnectUtils
-import Web3Wallet
+import ReownWalletKit
 import MixinServices
 
 class UrlWindow {

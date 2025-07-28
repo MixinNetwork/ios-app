@@ -1,7 +1,7 @@
 import Foundation
 import CryptoSwift
 import secp256k1
-import Web3Wallet
+import ReownWalletKit
 
 struct Web3CryptoProvider: CryptoProvider {
     

@@ -3,7 +3,7 @@ import Combine
 import OrderedCollections
 import BigInt
 import web3
-import Web3Wallet
+import ReownWalletKit
 import MixinServices
 
 fileprivate var logger: MixinServices.Logger {
@@ -25,30 +25,33 @@ final class WalletConnectService {
     private var subscribes = Set<AnyCancellable>()
     
     private init() {
-        Networking.configure(groupIdentifier: appGroupIdentifier,
-                             projectId: MixinKeys.walletConnect,
-                             socketFactory: StarscreamFactory())
-        let redirect = try! AppMetadata.Redirect(native: "mixin://", universal: nil)
-        let meta = AppMetadata(name: walletName,
-                               description: walletDescription,
-                               url: URL.mixinMessenger.absoluteString,
-                               icons: [],
-                               redirect: redirect)
-        Web3Wallet.configure(metadata: meta, crypto: Web3CryptoProvider())
-        Web3Wallet.instance.sessionsPublisher
+        Networking.configure(
+            groupIdentifier: appGroupIdentifier,
+            projectId: MixinKeys.walletConnect,
+            socketFactory: StarscreamFactory()
+        )
+        let metadata = AppMetadata(
+            name: walletName,
+            description: walletDescription,
+            url: URL.mixinMessenger.absoluteString,
+            icons: [],
+            redirect: try! AppMetadata.Redirect(native: "mixin://", universal: nil)
+        )
+        WalletKit.configure(metadata: metadata, crypto: Web3CryptoProvider())
+        WalletKit.instance.sessionsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] sessions in
                 self?.reloadSessions(sessions: sessions)
             }
             .store(in: &subscribes)
-        Web3Wallet.instance.sessionProposalPublisher
+        WalletKit.instance.sessionProposalPublisher
             .sink { [weak self] (proposal, context) in
                 DispatchQueue.main.async {
                     self?.show(proposal: proposal)
                 }
             }
             .store(in: &subscribes)
-        Web3Wallet.instance.sessionRequestPublisher
+        WalletKit.instance.sessionRequestPublisher
             .sink { [weak self] (request, context) in
                 self?.handle(request: request)
             }
@@ -67,7 +70,7 @@ final class WalletConnectService {
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         Task {
             do {
-                try await Web3Wallet.instance.pair(uri: uri)
+                try await WalletKit.instance.pair(uri: uri)
                 logger.info(category: "Serivce", message: "Finished pairing to: \(uri.topic)")
                 try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
                 await MainActor.run {
@@ -163,7 +166,7 @@ extension WalletConnectService {
                     Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
                 Task {
-                    try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .unsupportedChains)
+                    try await WalletKit.instance.rejectSession(proposalId: proposal.id, reason: .unsupportedChains)
                 }
                 return
             }
@@ -179,12 +182,11 @@ extension WalletConnectService {
                     Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
                 Task {
-                    try await Web3Wallet.instance.rejectSession(proposalId: proposal.id, reason: .unsupportedEvents)
+                    try await WalletKit.instance.rejectSession(proposalId: proposal.id, reason: .unsupportedEvents)
                 }
                 return
             }
             
-            let kinds = Set(chains.map(\.kind))
             DispatchQueue.main.async {
                 let connectWallet = ConnectWalletViewController(proposal: proposal,
                                                                 chains: chains,
@@ -203,7 +205,7 @@ extension WalletConnectService {
                 logger.warn(category: "Service", message: "Missing session for topic: \(topic)")
                 Task {
                     let error = JSONRPCError(code: -1, message: "Missing session")
-                    try await Web3Wallet.instance.respond(topic: topic, requestId: request.id, response: .error(error))
+                    try await WalletKit.instance.respond(topic: topic, requestId: request.id, response: .error(error))
                 }
                 let title = R.string.localizable.request_rejected()
                 let message = R.string.localizable.session_not_found()

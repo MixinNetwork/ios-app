@@ -1,6 +1,6 @@
 import Foundation
 import WalletConnectSign
-import Web3Wallet
+import ReownWalletKit
 import MixinServices
 
 class SolanaTransferOperation: Web3TransferOperation {
@@ -14,7 +14,7 @@ class SolanaTransferOperation: Web3TransferOperation {
     @MainActor fileprivate var fee: DisplayFee?
     
     fileprivate init(
-        wallet: MixinServices.Web3Wallet,
+        wallet: Web3Wallet,
         fromAddress: Web3Address,
         toAddress: String,
         chain: Web3Chain,
@@ -132,7 +132,7 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
     fileprivate let transaction: Solana.Transaction
     
     @MainActor init(
-        wallet: MixinServices.Web3Wallet,
+        wallet: Web3Wallet,
         transaction: Solana.Transaction,
         fromAddress: Web3Address,
         toAddress: String,
@@ -185,7 +185,7 @@ final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolana
     let request: WalletConnectSign.Request
     
     @MainActor init(
-        wallet: MixinServices.Web3Wallet,
+        wallet: Web3Wallet,
         transaction: Solana.Transaction,
         fromAddress: Web3Address,
         chain: Web3Chain,
@@ -205,7 +205,7 @@ final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolana
     
     override func respond(signature: String) async throws {
         let response = RPCResult.response(AnyCodable(["signature": signature]))
-        try await Web3Wallet.instance.respond(
+        try await WalletKit.instance.respond(
             topic: request.topic,
             requestId: request.id,
             response: response
@@ -215,7 +215,7 @@ final class SolanaTransferWithWalletConnectOperation: ArbitraryTransactionSolana
     override func reject() {
         Task {
             let error = JSONRPCError(code: 0, message: "User rejected")
-            try await Web3Wallet.instance.respond(
+            try await WalletKit.instance.respond(
                 topic: request.topic,
                 requestId: request.id,
                 response: .error(error)
@@ -231,7 +231,7 @@ final class SolanaTransferWithCustomRespondingOperation: ArbitraryTransactionSol
     private let rejectImpl: (() -> Void)?
     
     @MainActor init(
-        wallet: MixinServices.Web3Wallet,
+        wallet: Web3Wallet,
         transaction: Solana.Transaction,
         fromAddress: Web3Address,
         chain: Web3Chain,

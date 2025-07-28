@@ -1,7 +1,7 @@
 import Foundation
 import BigInt
 import web3
-import Web3Wallet
+import ReownWalletKit
 import MixinServices
 
 class EVMTransferOperation: Web3TransferOperation {
@@ -56,7 +56,7 @@ class EVMTransferOperation: Web3TransferOperation {
     @MainActor private var account: EthereumAccount?
     
     fileprivate init(
-        wallet: MixinServices.Web3Wallet,
+        wallet: Web3Wallet,
         fromAddress: Web3Address,
         toAddress: String,
         transaction: EIP1559Transaction,
@@ -88,7 +88,7 @@ class EVMTransferOperation: Web3TransferOperation {
     }
     
     fileprivate init(
-        wallet: MixinServices.Web3Wallet,
+        wallet: Web3Wallet,
         fromAddress: Web3Address,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
@@ -371,7 +371,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
     let request: WalletConnectSign.Request
     
     init(
-        wallet: MixinServices.Web3Wallet,
+        wallet: Web3Wallet,
         fromAddress: Web3Address,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
@@ -391,7 +391,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
     
     override func respond(hash: String) async throws {
         let response = RPCResult.response(AnyCodable(hash))
-        try await Web3Wallet.instance.respond(
+        try await WalletKit.instance.respond(
             topic: request.topic,
             requestId: request.id,
             response: response
@@ -401,7 +401,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
     override func reject() {
         Task {
             let error = JSONRPCError(code: 0, message: "User rejected")
-            try await Web3Wallet.instance.respond(
+            try await WalletKit.instance.respond(
                 topic: request.topic,
                 requestId: request.id,
                 response: .error(error)
@@ -417,7 +417,7 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
     private let rejectImpl: (() -> Void)?
     
     init(
-        wallet: MixinServices.Web3Wallet,
+        wallet: Web3Wallet,
         fromAddress: Web3Address,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
@@ -531,7 +531,7 @@ class EVMOverrideOperation: EVMTransferOperation {
     private let nonce: Int
     
     override init(
-        wallet: MixinServices.Web3Wallet,
+        wallet: Web3Wallet,
         fromAddress: Web3Address,
         toAddress: String,
         transaction: EIP1559Transaction,
@@ -569,7 +569,7 @@ class EVMOverrideOperation: EVMTransferOperation {
 final class EVMSpeedUpOperation: EVMOverrideOperation {
     
     init(
-        wallet: MixinServices.Web3Wallet,
+        wallet: Web3Wallet,
         fromAddress: Web3Address,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
@@ -589,7 +589,7 @@ final class EVMSpeedUpOperation: EVMOverrideOperation {
 final class EVMCancelOperation: EVMOverrideOperation {
     
     init(
-        wallet: MixinServices.Web3Wallet,
+        wallet: Web3Wallet,
         fromAddress: Web3Address,
         transaction: EIP1559Transaction,
         chain: Web3Chain

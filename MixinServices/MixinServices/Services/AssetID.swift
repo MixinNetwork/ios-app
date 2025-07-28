@@ -15,6 +15,9 @@ public enum AssetID {
     public static let trx = "25dabac5-056a-48ff-b9f9-f67395dc407c"
     public static let matic = "b7938396-3f94-4e0a-9179-d3440718156f"
     public static let bnb = "1949e683-6a08-49e2-b087-d6b72398588f"
+    public static let baseETH = "3fb612c5-6844-3979-ae4a-5a84e79da870"
+    public static let arbitrumETH = "8c590110-1abc-3697-84f2-05214e6516aa"
+    public static let optimismETH = "60360611-370c-3b69-9826-b13db93f6aba"
     
     public static let btc = "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
     public static let lightningBTC = "59c09123-95cc-3ffd-a659-0f9169074cee"

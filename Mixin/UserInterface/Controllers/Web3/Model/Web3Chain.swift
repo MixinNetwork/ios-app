@@ -200,7 +200,7 @@ extension Web3Chain {
     static let base = Web3Chain.evm(
         chainID: 8453,
         mixinChainID: ChainID.base,
-        feeTokenAssetID: AssetID.eth,
+        feeTokenAssetID: AssetID.baseETH,
         name: "Base",
         failsafeRPCServerURL: URL(string: "https://base.llamarpc.com")!
     )

@@ -100,7 +100,9 @@ final class AddWalletImportingViewController: IntroductionViewController {
                             ),
                         ]
                     )
+                    Logger.general.debug(category: "AddWallet", message: "Request import \(wallet.name) by mnemonics")
                     let response = try await RouteAPI.createWallet(request)
+                    Logger.general.debug(category: "AddWallet", message: "Response wallet \(response.wallet.debugDescription), addresses: \(response.addresses.count)")
                     Web3WalletDAO.shared.save(wallets: [response.wallet], addresses: response.addresses)
                     let jobs = [
                         RefreshWeb3WalletTokenJob(walletID: response.wallet.walletID),
@@ -137,7 +139,9 @@ final class AddWalletImportingViewController: IntroductionViewController {
                     category: .importedPrivateKey,
                     addresses: [address]
                 )
+                Logger.general.debug(category: "AddWallet", message: "Request import wallet by private key")
                 let response = try await RouteAPI.createWallet(request)
+                Logger.general.debug(category: "AddWallet", message: "Response wallet \(response.wallet.debugDescription), addresses: \(response.addresses.count)")
                 Web3WalletDAO.shared.save(wallets: [response.wallet], addresses: response.addresses)
                 let jobs = [
                     RefreshWeb3WalletTokenJob(walletID: response.wallet.walletID),

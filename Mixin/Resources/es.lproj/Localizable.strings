@@ -441,7 +441,7 @@
 "delete_address_description" = "Are you sure to delete this address?";
 "delete_chat" = "Eliminar chat";
 "delete_circle" = "Eliminar círculo";
-"delete_common_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
+"delete_common_wallet_description" = "Make sure you've written down the recovery phrase or private key before removing the wallet. Otherwise you won't be able to recover the wallet.";
 "delete_contact_chat_confirmation" = "¿Eliminar el chat con %@?";
 "delete_emergency_contact" = "Delete recovery contact";
 "delete_for_everyone" = "Eliminar para todos";
@@ -1422,9 +1422,11 @@
 "transfer_to_another_phone" = "Transfer to Another Phone";
 "transfer_to_another_phone_hint" = "Transfer your chat history to another device";
 "transfer_to_mixin_address" = "Transferir a la dirección de Mixin";
+"transfer_to_no_key_wallet_warning" = "This wallet has no private key on this device. Are you sure you want to use it to receive assets?";
 "transfer_to_pc" = "Transfer to PC";
 "transfer_to_pc_hint" = "Synchronize your chat history to the Mixin Messenger desktop version. Please make sure both devices are connected to the same Wi-Fi or hotspot.";
 "transfer_to_user_or_bot" = "Transferir a usuario o bot";
+"transfer_to_watch_wallet_warning" = "This is a watch-only wallet. Are you sure you want to use it to receive assets?";
 "transferring_chat_progress" = "Transferring Chat (%@%%)";
 "trending" = "Tendencias";
 "try_again" = "Intentar otra vez";

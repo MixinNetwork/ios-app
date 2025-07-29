@@ -441,7 +441,7 @@
 "delete_address_description" = "确认删除该地址吗？";
 "delete_chat" = "删除聊天";
 "delete_circle" = "删除圈子";
-"delete_common_wallet_description" = "移除此钱包不会影响你的资产，请确保你的私钥或助记词已备份。";
+"delete_common_wallet_description" = "在删除钱包之前，请确保您已写下助记词或私钥。否则，您将无法恢复钱包。";
 "delete_contact_chat_confirmation" = "删除与\"%@\"的会话并清空聊天记录？";
 "delete_emergency_contact" = "删除恢复联系人";
 "delete_for_everyone" = "撤回";
@@ -1422,9 +1422,11 @@
 "transfer_to_another_phone" = "备份到另一台手机";
 "transfer_to_another_phone_hint" = "备份你的聊天记录到另一台设备";
 "transfer_to_mixin_address" = "给主网地址转账";
+"transfer_to_no_key_wallet_warning" = "该钱包在此设备上没有私钥。你确定要使用它来接收资产吗？";
 "transfer_to_pc" = "备份到桌面端";
 "transfer_to_pc_hint" = "同步你的聊天记录到 Mixin Messenger 桌面端，请确保两台设备接入同一个 Wi-Fi 或热点。";
 "transfer_to_user_or_bot" = "给用户或机器人转账";
+"transfer_to_watch_wallet_warning" = "这是一个观察钱包。你确定要使用它来接收资产吗？";
 "transferring_chat_progress" = "传输聊天记录（%@%%）";
 "trending" = "热门资产";
 "try_again" = "请重试";

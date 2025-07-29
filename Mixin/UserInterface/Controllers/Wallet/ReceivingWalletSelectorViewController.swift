@@ -300,8 +300,45 @@ extension ReceivingWalletSelectorViewController: UICollectionViewDelegate {
         } else {
             walletDigests[indexPath.row]
         }
-        presentingViewController?.dismiss(animated: true) {
-            self.delegate?.receivingWalletSelectorViewController(self, didSelectWallet: digest.wallet)
+        let uncontrolledWallet: Web3Wallet?
+        switch digest.wallet {
+        case .privacy:
+            uncontrolledWallet = nil
+        case .common(let wallet):
+            switch wallet.category.knownCase {
+            case .classic:
+                uncontrolledWallet = nil
+            case .importedMnemonic:
+                if AppGroupKeychain.importedMnemonics(walletID: wallet.walletID) == nil {
+                    uncontrolledWallet = wallet
+                } else {
+                    uncontrolledWallet = nil
+                }
+            case .importedPrivateKey:
+                if AppGroupKeychain.importedPrivateKey(walletID: wallet.walletID) == nil {
+                    uncontrolledWallet = wallet
+                } else {
+                    uncontrolledWallet = nil
+                }
+            case .watchAddress, .none:
+                uncontrolledWallet = wallet
+            }
+        }
+        if let wallet = uncontrolledWallet {
+            let warning = UncontrolledWalletWarningViewController(wallet: wallet)
+            warning.onConfirm = { [weak self] in
+                guard let self else {
+                    return
+                }
+                self.presentingViewController?.dismiss(animated: true) {
+                    self.delegate?.receivingWalletSelectorViewController(self, didSelectWallet: digest.wallet)
+                }
+            }
+            present(warning, animated: true)
+        } else {
+            presentingViewController?.dismiss(animated: true) {
+                self.delegate?.receivingWalletSelectorViewController(self, didSelectWallet: digest.wallet)
+            }
         }
     }
     

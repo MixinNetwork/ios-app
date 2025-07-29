@@ -451,8 +451,8 @@
 "delete_note" = "刪除轉賬備註";
 "delete_synced_contact" = "刪除已同步的通訊錄";
 "delete_wallet" = "刪除錢包";
-"delete_wallet_title" = "請輸入 PIN 以移除錢包";
-"delete_watch_wallet_description" = "這是一個觀察錢包，移除此錢包不會影響你的資產。";
+"delete_wallet_title" = "請輸入 PIN 以刪除錢包";
+"delete_watch_wallet_description" = "這是一個觀察錢包，刪除此錢包不會影響你的資產。";
 "delete_withdraw_address" = "刪除 %@ 地址";
 "deleted" = "已刪除";
 "deleting_address" = "正在刪除地址";

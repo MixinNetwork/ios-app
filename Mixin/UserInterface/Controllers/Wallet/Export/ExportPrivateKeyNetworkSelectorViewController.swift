@@ -31,6 +31,7 @@ final class ExportPrivateKeyNetworkSelectorViewController: UIViewController {
         }
         titleView.backgroundColor = R.color.background_secondary()
         titleView.titleLabel.text = R.string.localizable.choose_network()
+        titleView.closeButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
         let layout = UICollectionViewCompositionalLayout { (_, _) in
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(64))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -59,6 +60,10 @@ final class ExportPrivateKeyNetworkSelectorViewController: UIViewController {
                 collectionView.reloadData()
             }
         }
+    }
+    
+    @objc private func close(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true)
     }
     
 }

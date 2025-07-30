@@ -674,7 +674,9 @@
 "import" = "Import";
 "import_failed" = "Import Failed";
 "import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_now" = "Import Now";
 "import_private_key" = "Import Private Key";
+"import_secret_description" = "The encrypted %@ for this wallet is missing from this device. Please re-import to continue. ";
 "import_selected_wallet" = "Import Selected Wallets";
 "import_single_chain_wallet" = "Import a single-chain wallet";
 "import_wallet_count" = "Import %d Wallets";
@@ -706,6 +708,7 @@
 "invalid_qr_code" = "Invalid QR-Code";
 "invalid_request_body" = "Invalid request body";
 "invalid_sdp" = "Invalid SDP";
+"invalid_secret_for_wallet" = "The %@ does not match the selected wallet. Please try another.";
 "invalid_tag_description" = "Tag must be a non-zero number";
 "invalid_width" = "Invalid width";
 "invite" = "Invite";
@@ -884,6 +887,7 @@
 "no_files" = "NO FILES";
 "no_hidden_assets" = "No hidden assets";
 "no_items_selected" = "No Items Selected";
+"no_key" = "No key";
 "no_logs" = "No logs";
 "no_media" = "NO MEDIA";
 "no_memo" = "No Memo";

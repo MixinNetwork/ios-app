@@ -674,7 +674,9 @@
 "import" = "インポート";
 "import_failed" = "Import Failed";
 "import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_now" = "Import Now";
 "import_private_key" = "Import Private Key";
+"import_secret_description" = "The encrypted %@ for this wallet is missing from this device. Please re-import to continue. ";
 "import_selected_wallet" = "Import Selected Wallets";
 "import_single_chain_wallet" = "Import a single-chain wallet";
 "import_wallet_count" = "Import %d Wallets";
@@ -706,6 +708,7 @@
 "invalid_qr_code" = "無効なQRコード";
 "invalid_request_body" = "無効なリクエストボディ";
 "invalid_sdp" = "無効なSDP";
+"invalid_secret_for_wallet" = "The %@ does not match the selected wallet. Please try another.";
 "invalid_tag_description" = "Tag must be a non-zero number";
 "invalid_width" = "無効な横幅";
 "invite" = "招待する";
@@ -884,6 +887,7 @@
 "no_files" = "ファイルがありません";
 "no_hidden_assets" = "非表示資産はありません";
 "no_items_selected" = "選択してください";
+"no_key" = "No key";
 "no_logs" = "ログがありません";
 "no_media" = "メディアがありません";
 "no_memo" = "メモなし";

@@ -674,7 +674,9 @@
 "import" = "导入";
 "import_failed" = "导入失败";
 "import_mnemonic_phrase" = "导入助记词";
+"import_now" = "立即导入";
 "import_private_key" = "导入私钥";
+"import_secret_description" = "此设备缺少该钱包的加密%@。请重新导入以继续操作。";
 "import_selected_wallet" = "导入选中的钱包";
 "import_single_chain_wallet" = "导入单链钱包";
 "import_wallet_count" = "导入 %d 个钱包";
@@ -706,6 +708,7 @@
 "invalid_qr_code" = "无效的二维码";
 "invalid_request_body" = "无效的请求";
 "invalid_sdp" = "无效的 SDP";
+"invalid_secret_for_wallet" = "导入的%@与钱包不匹配，请重新导入。";
 "invalid_tag_description" = "地址标签（Tag）必须为非 0 的数字";
 "invalid_width" = "宽度无效";
 "invite" = "邀请";
@@ -884,6 +887,7 @@
 "no_files" = "没有文件";
 "no_hidden_assets" = "没有隐藏的资产";
 "no_items_selected" = "未选定项目";
+"no_key" = "缺少私钥";
 "no_logs" = "没有日志";
 "no_media" = "没有媒体";
 "no_memo" = "没有 Memo（备注）";

@@ -3,10 +3,16 @@ import MixinServices
 
 final class AddWalletPINValidationViewController: ErrorReportingPINValidationViewController {
     
-    private let method: AddWalletMethod
+    enum Action {
+        case addWallet(AddWalletMethod)
+        case reimportMnemonics(Web3Wallet)
+        case reimportPrivateKey(Web3Wallet)
+    }
     
-    init(method: AddWalletMethod) {
-        self.method = method
+    private let action: Action
+    
+    init(action: Action) {
+        self.action = action
         super.init()
     }
     
@@ -26,13 +32,20 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
             do {
                 let key = try await TIP.importedWalletEncryptionKey(pin: pin)
                 await MainActor.run {
-                    let input = switch method {
-                    case .privateKey:
-                        AddWalletInputPrivateKeyViewController(encryptionKey: key)
-                    case .mnemonics:
-                        AddWalletInputMnemonicsViewController(encryptionKey: key)
-                    case .watch:
-                        AddWalletInputAddressViewController()
+                    let input = switch action {
+                    case let .addWallet(method):
+                        switch method {
+                        case .privateKey:
+                            AddWalletInputPrivateKeyViewController(encryptionKey: key)
+                        case .mnemonics:
+                             AddWalletInputMnemonicsViewController(encryptionKey: key)
+                        case .watch:
+                             AddWalletInputAddressViewController()
+                        }
+                    case let .reimportMnemonics(wallet):
+                        ReimportMnemonicsViewController(wallet: wallet, encryptionKey: key)
+                    case let .reimportPrivateKey(wallet):
+                        ReimportPrivateKeyViewController(wallet: wallet, encryptionKey: key)
                     }
                     self.navigationController?.pushViewController(replacingCurrent: input, animated: true)
                 }

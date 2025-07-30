@@ -4,13 +4,13 @@ import MixinServices
 final class HiddenWeb3TokensViewController: HiddenTokensViewController {
     
     private let wallet: Web3Wallet
-    private let canPerformActions: Bool
+    private let availability: WalletAvailability
     
     private var tokens: [Web3TokenItem] = []
     
-    init(wallet: Web3Wallet, canPerformActions: Bool) {
+    init(wallet: Web3Wallet, availability: WalletAvailability) {
         self.wallet = wallet
-        self.canPerformActions = canPerformActions
+        self.availability = availability
         super.init()
     }
     
@@ -74,7 +74,7 @@ extension HiddenWeb3TokensViewController: UITableViewDelegate {
         let viewController = Web3TokenViewController(
             wallet: wallet,
             token: token,
-            canPerformActions: canPerformActions
+            availability: availability
         )
         navigationController?.pushViewController(viewController, animated: true)
     }

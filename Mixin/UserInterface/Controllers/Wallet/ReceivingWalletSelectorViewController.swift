@@ -34,6 +34,7 @@ final class ReceivingWalletSelectorViewController: UIViewController {
     private var searchObserver: AnyCancellable?
     private var searchingKeyword: String?
     private var searchResults: [WalletDigest]?
+    private var secretAvailableWalletIDs: Set<String> = []
     
     private var tips: [WalletTipView.Content] = []
     private var tipsCurrentPage: Int = 0 {
@@ -138,8 +139,16 @@ final class ReceivingWalletSelectorViewController: UIViewController {
                 !digest.supportedChainIDs.contains(chainID)
             }
             
+            var secretAvailableWalletIDs: Set<String> = Set(
+                AppGroupKeychain.allImportedMnemonics().keys
+            )
+            secretAvailableWalletIDs.formUnion(
+                AppGroupKeychain.allImportedPrivateKey().keys
+            )
+            
             DispatchQueue.main.async {
                 self.walletDigests = digests
+                self.secretAvailableWalletIDs = secretAvailableWalletIDs
                 self.collectionView.reloadData()
             }
         }
@@ -274,7 +283,13 @@ extension ReceivingWalletSelectorViewController: UICollectionViewDataSource {
             } else {
                 walletDigests[indexPath.row]
             }
-            cell.load(digest: digest)
+            let hasSecret = switch digest.wallet {
+            case .privacy:
+                false
+            case .common(let wallet):
+                secretAvailableWalletIDs.contains(wallet.walletID)
+            }
+            cell.load(digest: digest, hasSecret: hasSecret)
             return cell
         case .tips:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseIdentifier.tip, for: indexPath) as! WalletTipCollectionViewCell

@@ -22,6 +22,7 @@ final class WalletSummaryViewController: UIViewController {
     private var privacyWalletDigest: WalletDigest?
     private var classicWalletDigests: [WalletDigest] = []
     private var tips: [WalletTipView.Content] = []
+    private var secretAvailableWalletIDs: Set<String> = []
     
     private weak var tipsPageControl: UIPageControl?
     private var tipsCurrentPage: Int = 0 {
@@ -168,7 +169,7 @@ final class WalletSummaryViewController: UIViewController {
         BadgeManager.shared.setHasViewed(identifier: .addWallet)
         let selector = AddWalletMethodSelectorViewController()
         selector.onSelected = { [weak self] method in
-            let validation = AddWalletPINValidationViewController(method: method)
+            let validation = AddWalletPINValidationViewController(action: .addWallet(method))
             self?.navigationController?.pushViewController(validation, animated: true)
         }
         present(selector, animated: true)
@@ -225,10 +226,17 @@ final class WalletSummaryViewController: UIViewController {
                 privacyWallet: privacyWalletDigest,
                 otherWallets: classicWalletDigests
             )
+            var secretAvailableWalletIDs: Set<String> = Set(
+                AppGroupKeychain.allImportedMnemonics().keys
+            )
+            secretAvailableWalletIDs.formUnion(
+                AppGroupKeychain.allImportedPrivateKey().keys
+            )
             DispatchQueue.main.async {
                 self.summary = summary
                 self.privacyWalletDigest = privacyWalletDigest
                 self.classicWalletDigests = classicWalletDigests
+                self.secretAvailableWalletIDs = secretAvailableWalletIDs
                 self.collectionView.reloadData()
             }
         }
@@ -290,11 +298,17 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
             switch indexPath.item {
             case 0:
                 if let digest = privacyWalletDigest {
-                    cell.load(digest: digest)
+                    cell.load(digest: digest, hasSecret: false)
                 }
             default:
                 let digest = classicWalletDigests[indexPath.row - 1]
-                cell.load(digest: digest)
+                let hasSecret = switch digest.wallet {
+                case .privacy:
+                    false
+                case .common(let wallet):
+                    secretAvailableWalletIDs.contains(wallet.walletID)
+                }
+                cell.load(digest: digest, hasSecret: hasSecret)
             }
             return cell
         case .tips:

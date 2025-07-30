@@ -61,6 +61,16 @@ final class PopupTipViewController: UIViewController {
             continueButton.setTitle(R.string.localizable.continue(), for: .normal)
         case .appRating:
             assertionFailure("No preview for app rating. Call `AppStore.requestReview(in:)` instead.")
+        case .importPrivateKey:
+            imageView.image = R.image.tips_import_private_key()
+            titleLabel.text = R.string.localizable.import_private_key()
+            descriptionLabel.text = R.string.localizable.import_secret_description(R.string.localizable.private_key())
+            continueButton.setTitle(R.string.localizable.import_now(), for: .normal)
+        case .importMnemonics:
+            imageView.image = R.image.tips_import_mnemonics()
+            titleLabel.text = R.string.localizable.import_mnemonic_phrase()
+            descriptionLabel.text = R.string.localizable.import_secret_description(R.string.localizable.mnemonic_phrase())
+            continueButton.setTitle(R.string.localizable.import_now(), for: .normal)
         }
         continueButton.style = .filled
         continueButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
@@ -118,6 +128,16 @@ final class PopupTipViewController: UIViewController {
             }
         case .appRating:
             break
+        case .importPrivateKey(let wallet):
+            presentingViewController?.dismiss(animated: true) {
+                let validation = AddWalletPINValidationViewController(action: .reimportPrivateKey(wallet))
+                UIApplication.homeNavigationController?.pushViewController(validation, animated: true)
+            }
+        case .importMnemonics(let wallet):
+            presentingViewController?.dismiss(animated: true) {
+                let validation = AddWalletPINValidationViewController(action: .reimportMnemonics(wallet))
+                UIApplication.homeNavigationController?.pushViewController(validation, animated: true)
+            }
         }
     }
     
@@ -131,7 +151,7 @@ final class PopupTipViewController: UIViewController {
             AppGroupUserDefaults.notificationTipDismissalDate = Date()
         case .recoveryContact:
             AppGroupUserDefaults.User.recoveryContactTipDismissalDate = Date()
-        case .appRating:
+        case .appRating, .importPrivateKey, .importMnemonics:
             break
         }
         presentingViewController?.dismiss(animated: true)

@@ -674,7 +674,9 @@
 "import" = "Импорт";
 "import_failed" = "Import Failed";
 "import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_now" = "Import Now";
 "import_private_key" = "Import Private Key";
+"import_secret_description" = "The encrypted %@ for this wallet is missing from this device. Please re-import to continue. ";
 "import_selected_wallet" = "Import Selected Wallets";
 "import_single_chain_wallet" = "Import a single-chain wallet";
 "import_wallet_count" = "Import %d Wallets";
@@ -706,6 +708,7 @@
 "invalid_qr_code" = "Неверный QR-код";
 "invalid_request_body" = "Неверный текст запроса";
 "invalid_sdp" = "Недействительный SDP";
+"invalid_secret_for_wallet" = "The %@ does not match the selected wallet. Please try another.";
 "invalid_tag_description" = "Tag must be a non-zero number";
 "invalid_width" = "Недопустимая ширина";
 "invite" = "Пригласить";
@@ -884,6 +887,7 @@
 "no_files" = "ФАЙЛОВ НЕТ";
 "no_hidden_assets" = "Нет скрытых активов";
 "no_items_selected" = "Элементы не выбраны";
+"no_key" = "No key";
 "no_logs" = "Нет журналов";
 "no_media" = "НЕТ МЕДИА";
 "no_memo" = "Нет памятки";

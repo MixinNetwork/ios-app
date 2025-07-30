@@ -223,7 +223,7 @@ extension Web3TokenViewController: TokenActionView.Delegate {
         switch action {
         case .receive:
             withMnemonicsBackupChecked { [wallet, token] in
-                let selector = Web3ReceiveSourceViewController(wallet: wallet, token: token)
+                let selector = Web3TokenSenderSelectorViewController(receivingWallet: wallet, token: token)
                 self.navigationController?.pushViewController(selector, animated: true)
             }
         case .send:

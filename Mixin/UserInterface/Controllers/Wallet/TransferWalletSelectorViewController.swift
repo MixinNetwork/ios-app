@@ -2,10 +2,10 @@ import UIKit
 import Combine
 import MixinServices
 
-final class ReceivingWalletSelectorViewController: UIViewController {
+final class TransferWalletSelectorViewController: UIViewController {
     
     protocol Delegate: AnyObject {
-        func receivingWalletSelectorViewController(_ viewController: ReceivingWalletSelectorViewController, didSelectWallet wallet: Wallet)
+        func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectWallet wallet: Wallet)
     }
     
     private enum Section: Int, CaseIterable {
@@ -232,7 +232,7 @@ final class ReceivingWalletSelectorViewController: UIViewController {
     
 }
 
-extension ReceivingWalletSelectorViewController: WalletTipView.Delegate {
+extension TransferWalletSelectorViewController: WalletTipView.Delegate {
     
     func walletTipViewWantsToClose(_ view: WalletTipView) {
         guard let content = view.content else {
@@ -248,7 +248,7 @@ extension ReceivingWalletSelectorViewController: WalletTipView.Delegate {
     
 }
 
-extension ReceivingWalletSelectorViewController: UICollectionViewDataSource {
+extension TransferWalletSelectorViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         var sections: [Section] = [.wallets]
@@ -307,7 +307,7 @@ extension ReceivingWalletSelectorViewController: UICollectionViewDataSource {
     
 }
 
-extension ReceivingWalletSelectorViewController: UICollectionViewDelegate {
+extension TransferWalletSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let digest = if let searchResults {
@@ -346,13 +346,13 @@ extension ReceivingWalletSelectorViewController: UICollectionViewDelegate {
                     return
                 }
                 self.presentingViewController?.dismiss(animated: true) {
-                    self.delegate?.receivingWalletSelectorViewController(self, didSelectWallet: digest.wallet)
+                    self.delegate?.transferWalletSelectorViewController(self, didSelectWallet: digest.wallet)
                 }
             }
             present(warning, animated: true)
         } else {
             presentingViewController?.dismiss(animated: true) {
-                self.delegate?.receivingWalletSelectorViewController(self, didSelectWallet: digest.wallet)
+                self.delegate?.transferWalletSelectorViewController(self, didSelectWallet: digest.wallet)
             }
         }
     }

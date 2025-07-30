@@ -112,7 +112,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                 tagLabels.append(label)
             }
         }
-        for label in tagLabels where label.superview == nil {
+        for label in tagLabels.prefix(tags.count) where label.superview == nil {
             titleStackView.addArrangedSubview(label)
         }
         for (index, tag) in tags.enumerated() {

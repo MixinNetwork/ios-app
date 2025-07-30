@@ -65,6 +65,25 @@ final class Web3SendingTokenToAddressPayment: Web3SendingTokenPayment {
     let toAddress: String // Always the receiver, not the contract address
     let toAddressCompactRepresentation: String
     
+    init(
+        chain: Web3Chain,
+        token: Web3TokenItem,
+        fromWallet: Web3Wallet,
+        fromAddress: Web3Address,
+        toType: AddressType,
+        toAddress: String
+    ) {
+        self.toType = toType
+        self.toAddress = toAddress
+        self.toAddressCompactRepresentation = Address.compactRepresentation(of: toAddress)
+        super.init(
+            wallet: fromWallet,
+            chain: chain,
+            token: token,
+            fromAddress: fromAddress
+        )
+    }
+    
     init(payment: Web3SendingTokenPayment, to type: AddressType, address: String) {
         self.toType = type
         self.toAddress = address

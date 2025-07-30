@@ -20,7 +20,7 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
             )
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: "Remove Mnemonics", accessory: .disclosure),
+            SettingsRow(title: "Remove Imported Secrets", accessory: .disclosure),
         ]),
     ])
     
@@ -65,6 +65,7 @@ extension Web3DiagnosticViewController: UITableViewDelegate {
             showAutoHiddenHud(style: .notification, text: R.string.localizable.done())
         case (3, 0):
             AppGroupKeychain.deleteAllImportedMnemonics()
+            AppGroupKeychain.deleteAllImportedPrivateKey()
             showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
         default:
             break

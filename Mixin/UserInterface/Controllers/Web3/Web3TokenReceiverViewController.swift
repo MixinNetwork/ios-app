@@ -4,13 +4,13 @@ import MixinServices
 
 final class Web3TokenReceiverViewController: TokenReceiverViewController {
     
-    private enum Destination {
+    private enum Receiver {
         case addressBook
         case myWallets
     }
     
     private let payment: Web3SendingTokenPayment
-    private let destinations: [Destination] = [.addressBook, .myWallets]
+    private let receivers: [Receiver] = [.addressBook, .myWallets]
     
     init(payment: Web3SendingTokenPayment) {
         self.payment = payment
@@ -83,13 +83,12 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
 extension Web3TokenReceiverViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        destinations.count
+        receivers.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
-        let destination = destinations[indexPath.row]
-        switch destination {
+        switch receivers[indexPath.row] {
         case .addressBook:
             cell.iconImageView.image = R.image.token_receiver_address_book()
             cell.titleLabel.text = R.string.localizable.address_book()
@@ -110,8 +109,7 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let destination = destinations[indexPath.row]
-        switch destination {
+        switch receivers[indexPath.row] {
         case .addressBook:
             reporter.report(event: .sendRecipient, tags: ["type": "address_book"])
             let token = payment.token
@@ -130,7 +128,7 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
             present(book, animated: true)
         case .myWallets:
             reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
-            let selector = ReceivingWalletSelectorViewController(
+            let selector = TransferWalletSelectorViewController(
                 excluding: .common(payment.wallet),
                 supportingChainWith: payment.token.chainID
             )
@@ -141,9 +139,9 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
     
 }
 
-extension Web3TokenReceiverViewController: ReceivingWalletSelectorViewController.Delegate {
+extension Web3TokenReceiverViewController: TransferWalletSelectorViewController.Delegate {
     
-    func receivingWalletSelectorViewController(_ viewController: ReceivingWalletSelectorViewController, didSelectWallet wallet: Wallet) {
+    func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectWallet wallet: Wallet) {
         switch wallet {
         case .privacy:
             sendToPrivacyWallet()

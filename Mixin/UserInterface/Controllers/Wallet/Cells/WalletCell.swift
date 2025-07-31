@@ -3,11 +3,19 @@ import MixinServices
 
 final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
     
+    private enum Tag {
+        case watching
+        case imported
+        case noKey
+    }
+    
+    @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var iconImageView: UIImageView!
-    @IBOutlet weak var tagLabel: InsetLabel!
     @IBOutlet weak var valueLabel: UILabel!
     @IBOutlet weak var proportionStackView: UIStackView!
+    
+    private var tagLabels: [InsetLabel] = []
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -17,18 +25,16 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             scaledFor: .systemFont(ofSize: 16, weight: .medium),
             adjustForContentSize: true
         )
-        tagLabel.contentInset = UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4)
-        tagLabel.layer.cornerRadius = 4
-        tagLabel.layer.masksToBounds = true
     }
     
-    func load(digest: WalletDigest) {
+    func load(digest: WalletDigest, hasSecret: Bool) {
         titleLabel.text = digest.wallet.localizedName
+        var tags: [Tag]
         switch digest.wallet {
         case .privacy:
             iconImageView.isHidden = false
             iconImageView.image = R.image.privacy_wallet()
-            tagLabel.isHidden = true
+            tags = []
             loadProportions(
                 tokens: digest.tokens,
                 placeholder: .privacyWalletChains,
@@ -38,7 +44,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             switch wallet.category.knownCase {
             case .classic, .none:
                 iconImageView.isHidden = true
-                tagLabel.isHidden = true
+                tags = []
                 loadProportions(
                     tokens: digest.tokens,
                     placeholder: .commonWalletChains,
@@ -46,8 +52,10 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                 )
             case .importedMnemonic:
                 iconImageView.isHidden = true
-                tagLabel.text = R.string.localizable.wallet_imported()
-                tagLabel.isHidden = false
+                tags = [.imported]
+                if !hasSecret {
+                    tags.append(.noKey)
+                }
                 loadProportions(
                     tokens: digest.tokens,
                     placeholder: .commonWalletChains,
@@ -55,8 +63,10 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                 )
             case .importedPrivateKey:
                 iconImageView.isHidden = true
-                tagLabel.text = R.string.localizable.wallet_imported()
-                tagLabel.isHidden = false
+                tags = [.imported]
+                if !hasSecret {
+                    tags.append(.noKey)
+                }
                 let kind: Web3Chain.Kind? = .importedWalletKind(
                     chainIDs: digest.supportedChainIDs
                 )
@@ -68,8 +78,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             case .watchAddress:
                 iconImageView.isHidden = false
                 iconImageView.image = R.image.watching_wallet()
-                tagLabel.text = R.string.localizable.watching()
-                tagLabel.isHidden = false
+                tags = [.watching]
                 let kind: Web3Chain.Kind? = .importedWalletKind(
                     chainIDs: digest.supportedChainIDs
                 )
@@ -80,10 +89,50 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                 )
             }
         }
+        load(tags: tags)
         valueLabel.attributedText = FiatMoneyValueAttributedStringBuilder.attributedString(
             usdValue: digest.usdBalanceSum,
             fontSize: 22
         )
+    }
+    
+    private func load(tags: [Tag]) {
+        if tagLabels.count > tags.count {
+            for label in tagLabels.suffix(tagLabels.count - tags.count) {
+                label.removeFromSuperview()
+            }
+        } else {
+            while tagLabels.count < tags.count {
+                let label = InsetLabel()
+                label.layer.cornerRadius = 4
+                label.layer.masksToBounds = true
+                label.font = .preferredFont(forTextStyle: .caption1)
+                label.adjustsFontForContentSizeCategory = true
+                label.contentInset = UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4)
+                label.setContentCompressionResistancePriority(.required, for: .horizontal)
+                tagLabels.append(label)
+            }
+        }
+        for label in tagLabels.prefix(tags.count) where label.superview == nil {
+            titleStackView.addArrangedSubview(label)
+        }
+        for (index, tag) in tags.enumerated() {
+            let label = tagLabels[index]
+            switch tag {
+            case .watching:
+                label.backgroundColor = R.color.background_quaternary()
+                label.textColor = R.color.text_quaternary()
+                label.text = R.string.localizable.watching()
+            case .imported:
+                label.backgroundColor = R.color.background_quaternary()
+                label.textColor = R.color.text_quaternary()
+                label.text = R.string.localizable.wallet_imported()
+            case .noKey:
+                label.backgroundColor = R.color.market_red()!.withAlphaComponent(0.2)
+                label.textColor = R.color.market_red()
+                label.text = R.string.localizable.no_key()
+            }
+        }
     }
     
 }

@@ -4,14 +4,14 @@ import MixinServices
 final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Transaction> {
     
     private let wallet: Web3Wallet
-    private let canPerformActions: Bool
+    private let availability: WalletAvailability
     
     private var transactionTokenSymbols: [String: String] = [:]
     private var reviewPendingTransactionJobID: String?
     
-    init(wallet: Web3Wallet, token: Web3TokenItem, canPerformActions: Bool) {
+    init(wallet: Web3Wallet, token: Web3TokenItem, availability: WalletAvailability) {
         self.wallet = wallet
-        self.canPerformActions = canPerformActions
+        self.availability = availability
         super.init(token: token)
     }
     
@@ -110,10 +110,11 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     
     override func updateBalanceCell(_ cell: TokenBalanceCell) {
         cell.reloadData(web3Token: token)
-        if canPerformActions {
+        switch availability {
+        case .always, .afterImportingMnemonics, .afterImportingPrivateKey:
             cell.showActionView()
             cell.actionView.delegate = self
-        } else {
+        case .never:
             cell.hideActionView()
         }
     }
@@ -205,10 +206,24 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
 extension Web3TokenViewController: TokenActionView.Delegate {
     
     func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
+        switch availability {
+        case .always:
+            break
+        case .never:
+            return
+        case .afterImportingMnemonics:
+            let tip = PopupTipViewController(tip: .importMnemonics(wallet))
+            present(tip, animated: true)
+            return
+        case .afterImportingPrivateKey:
+            let tip = PopupTipViewController(tip: .importPrivateKey(wallet))
+            present(tip, animated: true)
+            return
+        }
         switch action {
         case .receive:
             withMnemonicsBackupChecked { [wallet, token] in
-                let selector = Web3ReceiveSourceViewController(wallet: wallet, token: token)
+                let selector = Web3TokenSenderSelectorViewController(receivingWallet: wallet, token: token)
                 self.navigationController?.pushViewController(selector, animated: true)
             }
         case .send:

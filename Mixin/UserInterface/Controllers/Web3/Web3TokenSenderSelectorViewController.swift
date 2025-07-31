@@ -1,19 +1,23 @@
 import UIKit
 import MixinServices
 
-final class Web3ReceiveSourceViewController: UIViewController {
+final class Web3TokenSenderSelectorViewController: UIViewController {
     
-    private enum Source: Int, CaseIterable {
-        case privacyWallet = 0
+    private enum Sender: Int, CaseIterable {
+        case myWallets = 0
         case address = 1
     }
     
-    private let wallet: Web3Wallet
+    private let receivingWallet: Web3Wallet
     private let token: Web3TokenItem
     private let tableView = UITableView()
     
-    init(wallet: Web3Wallet, token: Web3TokenItem) {
-        self.wallet = wallet
+    private var receivingAddress: Web3Address? {
+        Web3AddressDAO.shared.address(walletID: receivingWallet.walletID, chainID: token.chainID)
+    }
+    
+    init(receivingWallet: Web3Wallet, token: Web3TokenItem) {
+        self.receivingWallet = receivingWallet
         self.token = token
         super.init(nibName: nil, bundle: nil)
     }
@@ -37,7 +41,7 @@ final class Web3ReceiveSourceViewController: UIViewController {
     
 }
 
-extension Web3ReceiveSourceViewController: HomeNavigationController.NavigationBarStyling {
+extension Web3TokenSenderSelectorViewController: HomeNavigationController.NavigationBarStyling {
     
     var navigationBarStyle: HomeNavigationController.NavigationBarStyle {
         .secondaryBackground
@@ -45,21 +49,21 @@ extension Web3ReceiveSourceViewController: HomeNavigationController.NavigationBa
     
 }
 
-extension Web3ReceiveSourceViewController: UITableViewDataSource {
+extension Web3TokenSenderSelectorViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        Source.allCases.count
+        Sender.allCases.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.sending_destination, for: indexPath)!
-        let destination = Source(rawValue: indexPath.row)!
+        let destination = Sender(rawValue: indexPath.row)!
         switch destination {
-        case .privacyWallet:
+        case .myWallets:
             cell.iconImageView.image = R.image.token_receiver_contact()
-            cell.titleLabel.text = R.string.localizable.privacy_wallet()
-            cell.titleTag = .privacyShield
-            cell.descriptionLabel.text = R.string.localizable.receive_from_privacy_wallets_description()
+            cell.titleLabel.text = R.string.localizable.my_wallet()
+            cell.titleTag = nil
+            cell.descriptionLabel.text = R.string.localizable.receive_from_other_wallets_description()
         case .address:
             cell.iconImageView.image = R.image.token_receiver_address()
             cell.titleLabel.text = R.string.localizable.exchanges_or_wallets()
@@ -71,16 +75,41 @@ extension Web3ReceiveSourceViewController: UITableViewDataSource {
     
 }
 
-extension Web3ReceiveSourceViewController: UITableViewDelegate {
+extension Web3TokenSenderSelectorViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: token.chainID)
-        guard let address else {
+        guard let receivingAddress else {
             return
         }
-        let destination = Source(rawValue: indexPath.row)!
+        let destination = Sender(rawValue: indexPath.row)!
         switch destination {
-        case .privacyWallet:
+        case .myWallets:
+            let selector = TransferWalletSelectorViewController(
+                intent: .pickSender,
+                excluding: .common(receivingWallet),
+                supportingChainWith: token.chainID
+            )
+            selector.delegate = self
+            present(selector, animated: true)
+        case .address:
+            guard let kind = Web3Chain.chain(chainID: token.chainID)?.kind else {
+                return
+            }
+            let deposit = Web3DepositViewController(kind: kind, address: receivingAddress.destination)
+            navigationController?.pushViewController(deposit, animated: true)
+        }
+    }
+    
+}
+
+extension Web3TokenSenderSelectorViewController: TransferWalletSelectorViewController.Delegate {
+    
+    func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectWallet wallet: Wallet) {
+        guard let receivingAddress else {
+            return
+        }
+        switch wallet {
+        case .privacy:
             let tokenItem: MixinTokenItem
             if let item = TokenDAO.shared.tokenItem(assetID: token.assetID) {
                 tokenItem = item
@@ -113,15 +142,26 @@ extension Web3ReceiveSourceViewController: UITableViewDelegate {
             }
             let input = WithdrawInputAmountViewController(
                 tokenItem: tokenItem,
-                destination: .commonWallet(wallet, address)
+                destination: .commonWallet(receivingWallet, receivingAddress)
             )
             navigationController?.pushViewController(input, animated: true)
-        case .address:
-            guard let kind = Web3Chain.chain(chainID: token.chainID)?.kind else {
+        case .common(let sendingWallet):
+            guard let chain = Web3Chain.chain(chainID: token.chainID) else {
                 return
             }
-            let deposit = Web3DepositViewController(kind: kind, address: address.destination)
-            navigationController?.pushViewController(deposit, animated: true)
+            guard let sendingAddress = Web3AddressDAO.shared.address(walletID: sendingWallet.walletID, chainID: chain.chainID) else {
+                return
+            }
+            let payment = Web3SendingTokenToAddressPayment(
+                chain: chain,
+                token: token,
+                fromWallet: sendingWallet,
+                fromAddress: sendingAddress,
+                toType: .commonWallet(name: receivingWallet.localizedName),
+                toAddress: receivingAddress.destination
+            )
+            let input = Web3TransferInputAmountViewController(payment: payment)
+            navigationController?.pushViewController(input, animated: true)
         }
     }
     

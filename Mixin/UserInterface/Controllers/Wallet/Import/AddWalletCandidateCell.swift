@@ -51,8 +51,13 @@ final class AddWalletCandidateCell: UICollectionViewCell, TokenProportionReprese
     }
     
     func load(candidate: WalletCandidate, index: Int) {
-        nameLabel.text = R.string.localizable.common_wallet_index(index + 1)
-        alreadyImported = candidate.alreadyImported
+        if let name = candidate.importedAsName {
+            nameLabel.text = name
+            alreadyImported = true
+        } else {
+            nameLabel.text = R.string.localizable.common_wallet_index("\(index)")
+            alreadyImported = false
+        }
         valueLabel.attributedText = candidate.value
         loadProportions(
             tokens: candidate.tokens,

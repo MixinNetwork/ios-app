@@ -2,10 +2,15 @@ import UIKit
 import Combine
 import MixinServices
 
-final class ReceivingWalletSelectorViewController: UIViewController {
+final class TransferWalletSelectorViewController: UIViewController {
     
     protocol Delegate: AnyObject {
-        func receivingWalletSelectorViewController(_ viewController: ReceivingWalletSelectorViewController, didSelectWallet wallet: Wallet)
+        func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectWallet wallet: Wallet)
+    }
+    
+    enum Intent {
+        case pickSender // Will eliminate any wallet without secret
+        case pickReceiver
     }
     
     private enum Section: Int, CaseIterable {
@@ -27,6 +32,7 @@ final class ReceivingWalletSelectorViewController: UIViewController {
     
     private weak var tipsPageControl: UIPageControl?
     
+    private let intent: Intent
     private let excludingWallet: Wallet
     private let chainID: String
     
@@ -34,6 +40,7 @@ final class ReceivingWalletSelectorViewController: UIViewController {
     private var searchObserver: AnyCancellable?
     private var searchingKeyword: String?
     private var searchResults: [WalletDigest]?
+    private var secretAvailableWalletIDs: Set<String> = []
     
     private var tips: [WalletTipView.Content] = []
     private var tipsCurrentPage: Int = 0 {
@@ -42,7 +49,8 @@ final class ReceivingWalletSelectorViewController: UIViewController {
         }
     }
     
-    init(excluding wallet: Wallet, supportingChainWith chainID: String) {
+    init(intent: Intent, excluding wallet: Wallet, supportingChainWith chainID: String) {
+        self.intent = intent
         self.excludingWallet = wallet
         self.chainID = chainID
         let nib = R.nib.receivingWalletSelectorView
@@ -122,7 +130,14 @@ final class ReceivingWalletSelectorViewController: UIViewController {
         collectionView.allowsMultipleSelection = false
         collectionView.dataSource = self
         collectionView.delegate = self
-        DispatchQueue.global().async { [excludingWallet, chainID] in
+        DispatchQueue.global().async { [intent, excludingWallet, chainID] in
+            var secretAvailableWalletIDs: Set<String> = Set(
+                AppGroupKeychain.allImportedMnemonics().keys
+            )
+            secretAvailableWalletIDs.formUnion(
+                AppGroupKeychain.allImportedPrivateKey().keys
+            )
+            
             let web3Wallets = Web3WalletDAO.shared.walletDigests()
             
             var digests: [WalletDigest] = switch excludingWallet {
@@ -134,12 +149,32 @@ final class ReceivingWalletSelectorViewController: UIViewController {
                 }
             }
             
-            digests.removeAll { digest in
-                !digest.supportedChainIDs.contains(chainID)
+            switch intent {
+            case .pickSender:
+                digests.removeAll { digest in
+                    switch digest.wallet {
+                    case .privacy:
+                        false
+                    case .common(let wallet):
+                        switch wallet.category.knownCase {
+                        case .classic:
+                            false
+                        case .importedMnemonic, .importedPrivateKey:
+                            !secretAvailableWalletIDs.contains(wallet.walletID)
+                        case .watchAddress, .none:
+                            true
+                        }
+                    }
+                }
+            case .pickReceiver:
+                digests.removeAll { digest in
+                    !digest.supportedChainIDs.contains(chainID)
+                }
             }
             
             DispatchQueue.main.async {
                 self.walletDigests = digests
+                self.secretAvailableWalletIDs = secretAvailableWalletIDs
                 self.collectionView.reloadData()
             }
         }
@@ -223,7 +258,7 @@ final class ReceivingWalletSelectorViewController: UIViewController {
     
 }
 
-extension ReceivingWalletSelectorViewController: WalletTipView.Delegate {
+extension TransferWalletSelectorViewController: WalletTipView.Delegate {
     
     func walletTipViewWantsToClose(_ view: WalletTipView) {
         guard let content = view.content else {
@@ -239,7 +274,7 @@ extension ReceivingWalletSelectorViewController: WalletTipView.Delegate {
     
 }
 
-extension ReceivingWalletSelectorViewController: UICollectionViewDataSource {
+extension TransferWalletSelectorViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         var sections: [Section] = [.wallets]
@@ -274,7 +309,13 @@ extension ReceivingWalletSelectorViewController: UICollectionViewDataSource {
             } else {
                 walletDigests[indexPath.row]
             }
-            cell.load(digest: digest)
+            let hasSecret = switch digest.wallet {
+            case .privacy:
+                false
+            case .common(let wallet):
+                secretAvailableWalletIDs.contains(wallet.walletID)
+            }
+            cell.load(digest: digest, hasSecret: hasSecret)
             return cell
         case .tips:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseIdentifier.tip, for: indexPath) as! WalletTipCollectionViewCell
@@ -292,7 +333,7 @@ extension ReceivingWalletSelectorViewController: UICollectionViewDataSource {
     
 }
 
-extension ReceivingWalletSelectorViewController: UICollectionViewDelegate {
+extension TransferWalletSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let digest = if let searchResults {
@@ -300,8 +341,45 @@ extension ReceivingWalletSelectorViewController: UICollectionViewDelegate {
         } else {
             walletDigests[indexPath.row]
         }
-        presentingViewController?.dismiss(animated: true) {
-            self.delegate?.receivingWalletSelectorViewController(self, didSelectWallet: digest.wallet)
+        let uncontrolledWallet: Web3Wallet?
+        switch digest.wallet {
+        case .privacy:
+            uncontrolledWallet = nil
+        case .common(let wallet):
+            switch wallet.category.knownCase {
+            case .classic:
+                uncontrolledWallet = nil
+            case .importedMnemonic:
+                if AppGroupKeychain.importedMnemonics(walletID: wallet.walletID) == nil {
+                    uncontrolledWallet = wallet
+                } else {
+                    uncontrolledWallet = nil
+                }
+            case .importedPrivateKey:
+                if AppGroupKeychain.importedPrivateKey(walletID: wallet.walletID) == nil {
+                    uncontrolledWallet = wallet
+                } else {
+                    uncontrolledWallet = nil
+                }
+            case .watchAddress, .none:
+                uncontrolledWallet = wallet
+            }
+        }
+        if let wallet = uncontrolledWallet {
+            let warning = UncontrolledWalletWarningViewController(wallet: wallet)
+            warning.onConfirm = { [weak self] in
+                guard let self else {
+                    return
+                }
+                self.presentingViewController?.dismiss(animated: true) {
+                    self.delegate?.transferWalletSelectorViewController(self, didSelectWallet: digest.wallet)
+                }
+            }
+            present(warning, animated: true)
+        } else {
+            presentingViewController?.dismiss(animated: true) {
+                self.delegate?.transferWalletSelectorViewController(self, didSelectWallet: digest.wallet)
+            }
         }
     }
     

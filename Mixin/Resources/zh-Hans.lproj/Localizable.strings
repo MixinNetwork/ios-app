@@ -329,7 +329,7 @@
 "collection_collected" = "已收藏 %d 件";
 "combine_and_forward" = "合并转发";
 "common_wallet" = "普通钱包";
-"common_wallet_index" = "普通钱包 %d";
+"common_wallet_index" = "普通钱包 %@";
 "complete" = "完成";
 "completed" = "已完成";
 "compress_database" = "压缩数据库";
@@ -441,7 +441,7 @@
 "delete_address_description" = "确认删除该地址吗？";
 "delete_chat" = "删除聊天";
 "delete_circle" = "删除圈子";
-"delete_common_wallet_description" = "移除此钱包不会影响你的资产，请确保你的私钥或助记词已备份。";
+"delete_common_wallet_description" = "在删除钱包之前，请确保您已写下助记词或私钥。否则，您将无法恢复钱包。";
 "delete_contact_chat_confirmation" = "删除与\"%@\"的会话并清空聊天记录？";
 "delete_emergency_contact" = "删除恢复联系人";
 "delete_for_everyone" = "撤回";
@@ -451,8 +451,8 @@
 "delete_note" = "删除转账备注";
 "delete_synced_contact" = "删除已同步的通讯录";
 "delete_wallet" = "删除钱包";
-"delete_wallet_title" = "请输入 PIN 以移除钱包";
-"delete_watch_wallet_description" = "这是一个观察钱包，移除此钱包不会影响你的资产。";
+"delete_wallet_title" = "请输入 PIN 以删除钱包";
+"delete_watch_wallet_description" = "这是一个观察钱包，删除此钱包不会影响你的资产。";
 "delete_withdraw_address" = "删除 %@ 地址";
 "deleted" = "已删除";
 "deleting_address" = "正在删除地址";
@@ -674,7 +674,9 @@
 "import" = "导入";
 "import_failed" = "导入失败";
 "import_mnemonic_phrase" = "导入助记词";
+"import_now" = "立即导入";
 "import_private_key" = "导入私钥";
+"import_secret_description" = "此设备缺少该钱包的加密%@。请重新导入以继续操作。";
 "import_selected_wallet" = "导入选中的钱包";
 "import_single_chain_wallet" = "导入单链钱包";
 "import_wallet_count" = "导入 %d 个钱包";
@@ -706,6 +708,7 @@
 "invalid_qr_code" = "无效的二维码";
 "invalid_request_body" = "无效的请求";
 "invalid_sdp" = "无效的 SDP";
+"invalid_secret_for_wallet" = "导入的%@与钱包不匹配，请重新导入。";
 "invalid_tag_description" = "地址标签（Tag）必须为非 0 的数字";
 "invalid_width" = "宽度无效";
 "invite" = "邀请";
@@ -884,6 +887,7 @@
 "no_files" = "没有文件";
 "no_hidden_assets" = "没有隐藏的资产";
 "no_items_selected" = "未选定项目";
+"no_key" = "缺少私钥";
 "no_logs" = "没有日志";
 "no_media" = "没有媒体";
 "no_memo" = "没有 Memo（备注）";
@@ -1061,7 +1065,7 @@
 "rebate" = "退款";
 "receive" = "充值";
 "receive_from_address_description" = "通过区块链网络从其他交易所或链上钱包接收";
-"receive_from_privacy_wallets_description" = "通过区块链网络从我的另一个钱包接收";
+"receive_from_other_wallets_description" = "通过区块链网络从我的另一个钱包接收";
 "receive_money" = "我的收款码";
 "received" = "收到";
 "receiver" = "至";
@@ -1422,9 +1426,11 @@
 "transfer_to_another_phone" = "备份到另一台手机";
 "transfer_to_another_phone_hint" = "备份你的聊天记录到另一台设备";
 "transfer_to_mixin_address" = "给主网地址转账";
+"transfer_to_no_key_wallet_warning" = "该钱包在此设备上没有私钥。你确定要使用它来接收资产吗？";
 "transfer_to_pc" = "备份到桌面端";
 "transfer_to_pc_hint" = "同步你的聊天记录到 Mixin Messenger 桌面端，请确保两台设备接入同一个 Wi-Fi 或热点。";
 "transfer_to_user_or_bot" = "给用户或机器人转账";
+"transfer_to_watch_wallet_warning" = "这是一个观察钱包。你确定要使用它来接收资产吗？";
 "transferring_chat_progress" = "传输聊天记录（%@%%）";
 "trending" = "热门资产";
 "try_again" = "请重试";
@@ -1562,7 +1568,7 @@
 "wallet_withdrawal_recent_tip" = "你已经在 %1$@ 前提现 %3$@ 到 %2$@，确认还要再提一次吗？";
 "wallets" = "钱包";
 "watch_address" = "观察 %@";
-"watch_wallet_index" = "观察钱包 %d";
+"watch_wallet_index" = "观察钱包 %@";
 "watching" = "观察";
 "watchlist" = "自选";
 "watchlist_add_desc" = "%@ 已经加入自选";

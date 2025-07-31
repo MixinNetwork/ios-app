@@ -329,7 +329,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "まとめて転送";
 "common_wallet" = "Common Wallet";
-"common_wallet_index" = "Common Wallet %d";
+"common_wallet_index" = "Common Wallet %@";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "データの圧縮";
@@ -441,7 +441,7 @@
 "delete_address_description" = "Are you sure to delete this address?";
 "delete_chat" = "チャットを削除";
 "delete_circle" = "グループリストを削除";
-"delete_common_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
+"delete_common_wallet_description" = "Make sure you've written down the recovery phrase or private key before removing the wallet. Otherwise you won't be able to recover the wallet.";
 "delete_contact_chat_confirmation" = "\"%@\"からチャットを削除しますか?";
 "delete_emergency_contact" = "Delete recovery contact";
 "delete_for_everyone" = "全員のチャットから削除";
@@ -674,7 +674,9 @@
 "import" = "インポート";
 "import_failed" = "Import Failed";
 "import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_now" = "Import Now";
 "import_private_key" = "Import Private Key";
+"import_secret_description" = "The encrypted %@ for this wallet is missing from this device. Please re-import to continue. ";
 "import_selected_wallet" = "Import Selected Wallets";
 "import_single_chain_wallet" = "Import a single-chain wallet";
 "import_wallet_count" = "Import %d Wallets";
@@ -706,6 +708,7 @@
 "invalid_qr_code" = "無効なQRコード";
 "invalid_request_body" = "無効なリクエストボディ";
 "invalid_sdp" = "無効なSDP";
+"invalid_secret_for_wallet" = "The %@ does not match the selected wallet. Please try another.";
 "invalid_tag_description" = "Tag must be a non-zero number";
 "invalid_width" = "無効な横幅";
 "invite" = "招待する";
@@ -884,6 +887,7 @@
 "no_files" = "ファイルがありません";
 "no_hidden_assets" = "非表示資産はありません";
 "no_items_selected" = "選択してください";
+"no_key" = "NoKey";
 "no_logs" = "ログがありません";
 "no_media" = "メディアがありません";
 "no_memo" = "メモなし";
@@ -1061,7 +1065,7 @@
 "rebate" = "払い戻し";
 "receive" = "入金";
 "receive_from_address_description" = "Receive from other exchange or on-chain wallet using a crypto network";
-"receive_from_privacy_wallets_description" = "Receive from my other wallet using a crypto network";
+"receive_from_other_wallets_description" = "Receive from my other wallet using a crypto network";
 "receive_money" = "仮想通貨を受け取る";
 "received" = "received";
 "receiver" = "受取人";
@@ -1422,9 +1426,11 @@
 "transfer_to_another_phone" = "Transfer to Another Phone";
 "transfer_to_another_phone_hint" = "Transfer your chat history to another device";
 "transfer_to_mixin_address" = "Mixinのアドレスへ送金する";
+"transfer_to_no_key_wallet_warning" = "This wallet has no private key on this device. Are you sure you want to use it to receive assets?";
 "transfer_to_pc" = "Transfer to PC";
 "transfer_to_pc_hint" = "Synchronize your chat history to the Mixin Messenger desktop version. Please make sure both devices are connected to the same Wi-Fi or hotspot.";
 "transfer_to_user_or_bot" = "ミニアプリまたはユーザーへ送金する";
+"transfer_to_watch_wallet_warning" = "This is a watch-only wallet. Are you sure you want to use it to receive assets?";
 "transferring_chat_progress" = "Transferring Chat (%@%%)";
 "trending" = "トレンド";
 "try_again" = "もう一度試す";
@@ -1562,7 +1568,7 @@
 "wallet_withdrawal_recent_tip" = "あなたは%1$@に同額の出金を%2$@へ送っています。再度%3$@を出金しますか？";
 "wallets" = "ウォレット";
 "watch_address" = "Watch %@";
-"watch_wallet_index" = "Watch Wallet %d";
+"watch_wallet_index" = "Watch Wallet %@";
 "watching" = "Watching";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";

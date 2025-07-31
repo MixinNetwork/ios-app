@@ -144,7 +144,8 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
             self.present(selector, animated: true)
         case .myWallets:
             reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
-            let selector = ReceivingWalletSelectorViewController(
+            let selector = TransferWalletSelectorViewController(
+                intent: .pickReceiver,
                 excluding: .privacy,
                 supportingChainWith: token.chainID
             )
@@ -167,9 +168,9 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
     }
 }
 
-extension MixinTokenReceiverViewController: ReceivingWalletSelectorViewController.Delegate {
+extension MixinTokenReceiverViewController: TransferWalletSelectorViewController.Delegate {
     
-    func receivingWalletSelectorViewController(_ viewController: ReceivingWalletSelectorViewController, didSelectWallet wallet: Wallet) {
+    func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectWallet wallet: Wallet) {
         switch wallet {
         case .privacy:
             assertionFailure("Never transfer between Mixin Wallets through crypto network")

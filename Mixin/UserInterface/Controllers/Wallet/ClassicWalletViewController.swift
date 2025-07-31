@@ -17,14 +17,24 @@ final class ClassicWalletViewController: WalletViewController {
     
     private weak var renamingInputController: UIAlertController?
     
-    private var canPerformActions: Bool {
+    private var availability: WalletAvailability {
         switch wallet.category.knownCase {
         case .classic:
-            true
-        case .importedMnemonic, .importedPrivateKey:
-            secret != nil
+                .always
+        case .importedMnemonic:
+            if secret == nil {
+                .afterImportingMnemonics
+            } else {
+                .always
+            }
+        case .importedPrivateKey:
+            if secret == nil {
+                .afterImportingPrivateKey
+            } else {
+                .always
+            }
         case .watchAddress, .none:
-            false
+                .never
         }
     }
     
@@ -116,7 +126,7 @@ final class ClassicWalletViewController: WalletViewController {
             self.navigationController?.pushViewController(history, animated: true)
         }))
         sheet.addAction(UIAlertAction(title: R.string.localizable.hidden_assets(), style: .default, handler: { (_) in
-            let hidden = HiddenWeb3TokensViewController(wallet: wallet, canPerformActions: self.canPerformActions)
+            let hidden = HiddenWeb3TokensViewController(wallet: wallet, availability: self.availability)
             self.navigationController?.pushViewController(hidden, animated: true)
         }))
         switch wallet.category.knownCase {
@@ -207,17 +217,13 @@ final class ClassicWalletViewController: WalletViewController {
             case .classic:
                 secret = nil
                 watchingAddresses = nil
-            case .importedMnemonic, .none:
+            case .importedMnemonic:
                 if let mnemonics = AppGroupKeychain.importedMnemonics(walletID: walletID) {
                     secret = .mnemonics(mnemonics)
                 } else {
                     secret = nil
                 }
-                watchingAddresses = if secret == nil {
-                    Web3AddressDAO.shared.prettyDestinations(walletID: walletID)
-                } else {
-                    nil
-                }
+                watchingAddresses = nil
             case .importedPrivateKey:
                 if let privateKey = AppGroupKeychain.importedPrivateKey(walletID: walletID) {
                     let chainIDs = Web3AddressDAO.shared.chainIDs(walletID: walletID)
@@ -233,12 +239,8 @@ final class ClassicWalletViewController: WalletViewController {
                 } else {
                     secret = nil
                 }
-                watchingAddresses = if secret == nil {
-                    Web3AddressDAO.shared.prettyDestinations(walletID: walletID)
-                } else {
-                    nil
-                }
-            case .watchAddress:
+                watchingAddresses = nil
+            case .watchAddress, .none:
                 secret = nil
                 watchingAddresses = Web3AddressDAO.shared.prettyDestinations(walletID: walletID)
             }
@@ -396,7 +398,7 @@ extension ClassicWalletViewController: UITableViewDelegate {
         let viewController = Web3TokenViewController(
             wallet: wallet,
             token: token,
-            canPerformActions: canPerformActions
+            availability: availability
         )
         navigationController?.pushViewController(viewController, animated: true)
     }
@@ -431,6 +433,20 @@ extension ClassicWalletViewController: UITableViewDelegate {
 extension ClassicWalletViewController: WalletHeaderView.Delegate {
     
     func walletHeaderView(_ view: WalletHeaderView, didSelectAction action: TokenAction) {
+        switch availability {
+        case .always:
+            break
+        case .never:
+            return
+        case .afterImportingMnemonics:
+            let tip = PopupTipViewController(tip: .importMnemonics(wallet))
+            present(tip, animated: true)
+            return
+        case .afterImportingPrivateKey:
+            let tip = PopupTipViewController(tip: .importPrivateKey(wallet))
+            present(tip, animated: true)
+            return
+        }
         switch action {
         case .buy:
             let buy = BuyTokenInputAmountViewController(wallet: .common(wallet))
@@ -457,7 +473,7 @@ extension ClassicWalletViewController: WalletHeaderView.Delegate {
         case .receive:
             let selector = Web3TokenSelectorViewController(wallet: wallet, tokens: tokens)
             selector.onSelected = { [wallet] token in
-                let selector = Web3ReceiveSourceViewController(wallet: wallet, token: token)
+                let selector = Web3TokenSenderSelectorViewController(receivingWallet: wallet, token: token)
                 self.navigationController?.pushViewController(selector, animated: true)
             }
             withMnemonicsBackupChecked {
@@ -502,7 +518,7 @@ extension ClassicWalletViewController: WalletSearchViewControllerDelegate {
         let controller = Web3TokenViewController(
             wallet: wallet,
             token: item,
-            canPerformActions: canPerformActions
+            availability: availability
         )
         navigationController?.pushViewController(controller, animated: true)
     }

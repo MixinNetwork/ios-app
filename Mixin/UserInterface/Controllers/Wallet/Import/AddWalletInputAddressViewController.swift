@@ -38,8 +38,9 @@ final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewCo
             return
         }
         continueButton.isBusy = true
+        let index = SequentialWalletNameGenerator.nextNameIndex(category: .watch)
         let request = CreateWalletRequest(
-            name: R.string.localizable.watch_wallet_index(1),
+            name: R.string.localizable.watch_wallet_index("\(index)"),
             category: .watchAddress,
             addresses: [address]
         )
@@ -104,11 +105,13 @@ final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewCo
                     throw LoadAddressError.alreadyImported
                 }
                 address = .init(destination: checksumAddress, chainID: ChainID.ethereum, path: nil)
+                errorDescriptionLabel.text = nil
             case .solana:
                 if importedAddresses.contains(input) {
                     throw LoadAddressError.alreadyImported
                 } else if Solana.isValidPublicKey(string: input)  {
                     address = .init(destination: input, chainID: ChainID.solana, path: nil)
+                    errorDescriptionLabel.text = nil
                 } else {
                     throw LoadAddressError.invalidAddress
                 }

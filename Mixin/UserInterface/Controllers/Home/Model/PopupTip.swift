@@ -8,6 +8,8 @@ enum PopupTip {
     case notification
     case recoveryContact
     case appRating
+    case importPrivateKey(Web3Wallet)
+    case importMnemonics(Web3Wallet)
     
     private var detectInterval: TimeInterval {
         switch self {
@@ -21,6 +23,8 @@ enum PopupTip {
             7 * .day
         case .appRating:
             2 * .week
+        case .importPrivateKey, .importMnemonics:
+                .greatestFiniteMagnitude
         }
     }
     

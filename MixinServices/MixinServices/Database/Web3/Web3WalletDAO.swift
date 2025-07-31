@@ -85,6 +85,30 @@ public final class Web3WalletDAO: Web3DAO {
         db.select(with: "SELECT * FROM wallets WHERE wallet_id = ?", arguments: [id])
     }
     
+    public func walletNames(like template: String) -> [String] {
+        db.select(with: "SELECT name FROM wallets WHERE name LIKE ?", arguments: [template])
+    }
+    
+    // Key is address.destination, value is wallet.name
+    public func walletNames() -> [String: String] {
+        try! db.read { (db) -> [String: String] in
+            let sql = """
+            SELECT w.name, a.destination
+            FROM wallets w
+                INNER JOIN addresses a ON w.wallet_id = a.wallet_id
+            """
+            var names: [String: String] = [:]
+            let rows = try Row.fetchCursor(db, sql: sql)
+            while let row = try rows.next() {
+                guard let destination: String = row["destination"] else {
+                    continue
+                }
+                names[destination] = row["name"]
+            }
+            return names
+        }
+    }
+    
     public func save(wallets: [Web3Wallet], addresses: [Web3Address]) {
         db.write { db in
             try wallets.save(db)

@@ -31,3 +31,11 @@ extension Web3Wallet: MixinFetchableRecord, PersistableRecord, DatabaseColumnCon
     public static let databaseTableName = "wallets"
     
 }
+
+extension Web3Wallet: CustomDebugStringConvertible {
+    
+    public var debugDescription: String {
+        "<Web3Wallet id: \(walletID), category: \(category.rawValue), name: \(name)>"
+    }
+    
+}

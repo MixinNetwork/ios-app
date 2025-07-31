@@ -329,7 +329,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "Объединить и вперед";
 "common_wallet" = "Common Wallet";
-"common_wallet_index" = "Common Wallet %d";
+"common_wallet_index" = "Common Wallet %@";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Сжать базу данных";
@@ -441,7 +441,7 @@
 "delete_address_description" = "Are you sure to delete this address?";
 "delete_chat" = "Удалить чат";
 "delete_circle" = "Удалить круг";
-"delete_common_wallet_description" = "Deleting this wallet will not affect your assets. Please make sure your private key or mnemonic phrase is backed up.";
+"delete_common_wallet_description" = "Make sure you've written down the recovery phrase or private key before removing the wallet. Otherwise you won't be able to recover the wallet.";
 "delete_contact_chat_confirmation" = "Удалить чат с %@?";
 "delete_emergency_contact" = "Delete recovery contact";
 "delete_for_everyone" = "Удалить для всех";
@@ -674,7 +674,9 @@
 "import" = "Импорт";
 "import_failed" = "Import Failed";
 "import_mnemonic_phrase" = "Import Mnemonic Phrase";
+"import_now" = "Import Now";
 "import_private_key" = "Import Private Key";
+"import_secret_description" = "The encrypted %@ for this wallet is missing from this device. Please re-import to continue. ";
 "import_selected_wallet" = "Import Selected Wallets";
 "import_single_chain_wallet" = "Import a single-chain wallet";
 "import_wallet_count" = "Import %d Wallets";
@@ -706,6 +708,7 @@
 "invalid_qr_code" = "Неверный QR-код";
 "invalid_request_body" = "Неверный текст запроса";
 "invalid_sdp" = "Недействительный SDP";
+"invalid_secret_for_wallet" = "The %@ does not match the selected wallet. Please try another.";
 "invalid_tag_description" = "Tag must be a non-zero number";
 "invalid_width" = "Недопустимая ширина";
 "invite" = "Пригласить";
@@ -884,6 +887,7 @@
 "no_files" = "ФАЙЛОВ НЕТ";
 "no_hidden_assets" = "Нет скрытых активов";
 "no_items_selected" = "Элементы не выбраны";
+"no_key" = "NoKey";
 "no_logs" = "Нет журналов";
 "no_media" = "НЕТ МЕДИА";
 "no_memo" = "Нет памятки";
@@ -1061,7 +1065,7 @@
 "rebate" = "Скидка";
 "receive" = "ПОЛУЧИТЬ";
 "receive_from_address_description" = "Receive from other exchange or on-chain wallet using a crypto network";
-"receive_from_privacy_wallets_description" = "Receive from my other wallet using a crypto network";
+"receive_from_other_wallets_description" = "Receive from my other wallet using a crypto network";
 "receive_money" = "Получить деньги";
 "received" = "received";
 "receiver" = "Получатель";
@@ -1422,9 +1426,11 @@
 "transfer_to_another_phone" = "Transfer to Another Phone";
 "transfer_to_another_phone_hint" = "Transfer your chat history to another device";
 "transfer_to_mixin_address" = "Перевод на Mixin адрес";
+"transfer_to_no_key_wallet_warning" = "This wallet has no private key on this device. Are you sure you want to use it to receive assets?";
 "transfer_to_pc" = "Transfer to PC";
 "transfer_to_pc_hint" = "Synchronize your chat history to the Mixin Messenger desktop version. Please make sure both devices are connected to the same Wi-Fi or hotspot.";
 "transfer_to_user_or_bot" = "Перевод пользователю или боту";
+"transfer_to_watch_wallet_warning" = "This is a watch-only wallet. Are you sure you want to use it to receive assets?";
 "transferring_chat_progress" = "Transferring Chat (%@%%)";
 "trending" = "В тренде";
 "try_again" = "Попробуйте еще раз";
@@ -1562,7 +1568,7 @@
 "wallet_withdrawal_recent_tip" = "Вы уже выводили %3$@ на %2$@ %1$@ назад. Хотите вывести еще раз?";
 "wallets" = "Wallets";
 "watch_address" = "Watch %@";
-"watch_wallet_index" = "Watch Wallet %d";
+"watch_wallet_index" = "Watch Wallet %@";
 "watching" = "Watching";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";

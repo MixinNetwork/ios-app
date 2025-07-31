@@ -329,7 +329,7 @@
 "collection_collected" = "已收藏 %d 件";
 "combine_and_forward" = "合併轉發";
 "common_wallet" = "普通錢包";
-"common_wallet_index" = "普通錢包 %d";
+"common_wallet_index" = "普通錢包 %@";
 "complete" = "完成";
 "completed" = "已完成";
 "compress_database" = "壓縮資料庫";
@@ -1065,7 +1065,7 @@
 "rebate" = "退款";
 "receive" = "充值";
 "receive_from_address_description" = "透過區塊鏈網路從其他交易所或鏈上錢包接收";
-"receive_from_privacy_wallets_description" = "透過區塊鏈網路從我的另一個錢包接收";
+"receive_from_other_wallets_description" = "透過區塊鏈網路從我的另一個錢包接收";
 "receive_money" = "我的收款碼";
 "received" = "收到";
 "receiver" = "至";
@@ -1568,7 +1568,7 @@
 "wallet_withdrawal_recent_tip" = "你已經在 %1$@ 前提現 %3$@ 到 %2$@，確認還要再提一次嗎？";
 "wallets" = "錢包";
 "watch_address" = "觀察 %@";
-"watch_wallet_index" = "觀察錢包 %d";
+"watch_wallet_index" = "觀察錢包 %@";
 "watching" = "觀察";
 "watchlist" = "自選";
 "watchlist_add_desc" = "%@ 已經加入自選";

@@ -5,7 +5,7 @@ final class AddWalletImportingViewController: IntroductionViewController {
     
     enum ImportingWallet {
         case byMnemonics(mnemonics: EncryptedBIP39Mnemonics, wallets: [NamedWalletCandidate])
-        case byPrivateKey(key: EncryptedPrivateKey, address: CreateWalletRequest.Address)
+        case byPrivateKey(key: EncryptedPrivateKey, request: CreateWalletRequest)
     }
     
     private let importingWallet: ImportingWallet
@@ -52,8 +52,8 @@ final class AddWalletImportingViewController: IntroductionViewController {
         switch importingWallet {
         case let .byMnemonics(mnemonics, wallets):
             importWallets(mnemonics: mnemonics, wallets: wallets)
-        case let .byPrivateKey(key, address):
-            importWallets(key: key, address: address)
+        case let .byPrivateKey(key, request):
+            importWallet(key: key, request: request)
         }
     }
     
@@ -130,15 +130,10 @@ final class AddWalletImportingViewController: IntroductionViewController {
         }
     }
     
-    private func importWallets(key: EncryptedPrivateKey, address: CreateWalletRequest.Address) {
+    private func importWallet(key: EncryptedPrivateKey, request: CreateWalletRequest) {
         showLoading()
         Task { [weak self] in
             do {
-                let request = CreateWalletRequest(
-                    name: R.string.localizable.common_wallet_index(1),
-                    category: .importedPrivateKey,
-                    addresses: [address]
-                )
                 Logger.general.debug(category: "AddWallet", message: "Request import wallet by private key")
                 let response = try await RouteAPI.createWallet(request)
                 Logger.general.debug(category: "AddWallet", message: "Response wallet \(response.wallet.debugDescription), addresses: \(response.addresses.count)")

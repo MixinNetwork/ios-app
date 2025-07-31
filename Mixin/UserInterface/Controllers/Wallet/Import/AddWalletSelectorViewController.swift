@@ -8,10 +8,12 @@ final class AddWalletSelectorViewController: UIViewController {
     
     private let mnemonics: BIP39Mnemonics
     private let encryptedMnemonics: EncryptedBIP39Mnemonics
+    private let firstNameIndex: Int
     private let searchWalletDerivationsCount: UInt32 = 10
     
     private var candidates: [WalletCandidate]
-    private var lastIndex: UInt32
+    private var nameIndices: [Int: Int] // Key is candidateIndex, value is nameIndex
+    private var lastPathIndex: UInt32
     private var isSearching = false {
         didSet {
             footerView?.isBusy = isSearching
@@ -27,9 +29,7 @@ final class AddWalletSelectorViewController: UIViewController {
     }
     
     private var hasSelectedAllWallets: Bool {
-        let selectableCandidatesCount = candidates.count { candidate in
-            !candidate.alreadyImported
-        }
+        let selectableCandidatesCount = candidates.count(where: \.isImportable)
         return selectableCandidatesCount != 0
         && collectionViewSelectedCount == selectableCandidatesCount
     }
@@ -38,12 +38,15 @@ final class AddWalletSelectorViewController: UIViewController {
         mnemonics: BIP39Mnemonics,
         encryptedMnemonics: EncryptedBIP39Mnemonics,
         candidates: [WalletCandidate],
-        lastIndex: UInt32
+        lastPathIndex: UInt32,
+        firstNameIndex: Int
     ) {
         self.mnemonics = mnemonics
         self.encryptedMnemonics = encryptedMnemonics
         self.candidates = candidates
-        self.lastIndex = lastIndex
+        self.nameIndices = Self.nameIndices(candidates: candidates, firstNameIndex: firstNameIndex)
+        self.lastPathIndex = lastPathIndex
+        self.firstNameIndex = firstNameIndex
         let nib = R.nib.addWalletSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -138,7 +141,7 @@ final class AddWalletSelectorViewController: UIViewController {
         }
         let namedWallets = indices.map { index in
             NamedWalletCandidate(
-                name: R.string.localizable.common_wallet_index(index + 1),
+                name: R.string.localizable.common_wallet_index("\(nameIndices[index] ?? 0)"),
                 candidate: candidates[index]
             )
         }
@@ -193,7 +196,7 @@ final class AddWalletSelectorViewController: UIViewController {
     
     private func findMoreWallets() {
         isSearching = true
-        let indices = (lastIndex + 1)...(lastIndex + searchWalletDerivationsCount)
+        let indices = (lastPathIndex + 1)...(lastPathIndex + searchWalletDerivationsCount)
         DispatchQueue.global().async { [mnemonics, weak self] in
             let wallets: [BIP39Mnemonics.DerivedWallet]
             do {
@@ -210,21 +213,20 @@ final class AddWalletSelectorViewController: UIViewController {
             RouteAPI.assets(searchAddresses: addresses, queue: .global()) { result in
                 switch result {
                 case let .success(assets):
-                    let importedDestinations = Web3AddressDAO.shared.allDestinations()
+                    let walletNames = Web3WalletDAO.shared.walletNames()
                     let tokens = assets.reduce(into: [:]) { result, addressAssets in
                         result[addressAssets.address] = addressAssets.assets
                     }
-                    let candidates: [WalletCandidate] = wallets.compactMap { wallet in
+                    let newCandidates: [WalletCandidate] = wallets.compactMap { wallet in
                         let evmTokens = tokens[wallet.evm.address] ?? []
                         let solanaTokens = tokens[wallet.solana.address] ?? []
                         let tokens = evmTokens + solanaTokens
-                        let alreadyImported = importedDestinations.contains(wallet.evm.address)
-                        || importedDestinations.contains(wallet.solana.address)
+                        let name = walletNames[wallet.evm.address] ?? walletNames[wallet.solana.address]
                         return tokens.isEmpty ? nil : WalletCandidate(
                             evmWallet: wallet.evm,
                             solanaWallet: wallet.solana,
                             tokens: tokens,
-                            alreadyImported: alreadyImported
+                            importedAsName: name
                         )
                     }
                     DispatchQueue.main.async {
@@ -232,13 +234,14 @@ final class AddWalletSelectorViewController: UIViewController {
                             return
                         }
                         self.isSearching = false
-                        self.lastIndex = indices.upperBound
-                        if !candidates.isEmpty {
-                            let newItems = (self.candidates.count..<self.candidates.count + candidates.count)
+                        self.lastPathIndex = indices.upperBound
+                        if !newCandidates.isEmpty {
+                            let newItems = (self.candidates.count..<self.candidates.count + newCandidates.count)
                             let newIndexPaths = newItems.map { item in
                                 IndexPath(item: item, section: 0)
                             }
-                            self.candidates.append(contentsOf: candidates)
+                            self.candidates.append(contentsOf: newCandidates)
+                            self.nameIndices = Self.nameIndices(candidates: self.candidates, firstNameIndex: self.firstNameIndex)
                             self.collectionView.insertItems(at: newIndexPaths)
                             for indexPath in newIndexPaths {
                                 guard self.collectionView(self.collectionView, shouldSelectItemAt: indexPath) else {
@@ -276,7 +279,7 @@ extension AddWalletSelectorViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.add_wallet_candidate, for: indexPath)!
-        cell.load(candidate: candidates[indexPath.item], index: indexPath.item)
+        cell.load(candidate: candidates[indexPath.item], index: nameIndices[indexPath.item] ?? 0)
         return cell
     }
     
@@ -322,7 +325,7 @@ extension AddWalletSelectorViewController: UICollectionViewDataSource {
 extension AddWalletSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        !candidates[indexPath.item].alreadyImported
+        candidates[indexPath.item].isImportable
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -520,6 +523,17 @@ extension AddWalletSelectorViewController {
             self.busyIndicator = busyIndicator
         }
         
+    }
+    
+    private static func nameIndices(candidates: [WalletCandidate], firstNameIndex: Int) -> [Int: Int] {
+        var nextNameIndex = firstNameIndex
+        return candidates.indices.reduce(into: [:]) { result, index in
+            guard candidates[index].isImportable else {
+                return
+            }
+            result[index] = nextNameIndex
+            nextNameIndex += 1
+        }
     }
     
 }

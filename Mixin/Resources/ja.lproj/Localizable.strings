@@ -329,7 +329,7 @@
 "collection_collected" = "%d collected";
 "combine_and_forward" = "まとめて転送";
 "common_wallet" = "Common Wallet";
-"common_wallet_index" = "Common Wallet %d";
+"common_wallet_index" = "Common Wallet %@";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "データの圧縮";
@@ -1065,7 +1065,7 @@
 "rebate" = "払い戻し";
 "receive" = "入金";
 "receive_from_address_description" = "Receive from other exchange or on-chain wallet using a crypto network";
-"receive_from_privacy_wallets_description" = "Receive from my other wallet using a crypto network";
+"receive_from_other_wallets_description" = "Receive from my other wallet using a crypto network";
 "receive_money" = "仮想通貨を受け取る";
 "received" = "received";
 "receiver" = "受取人";
@@ -1568,7 +1568,7 @@
 "wallet_withdrawal_recent_tip" = "あなたは%1$@に同額の出金を%2$@へ送っています。再度%3$@を出金しますか？";
 "wallets" = "ウォレット";
 "watch_address" = "Watch %@";
-"watch_wallet_index" = "Watch Wallet %d";
+"watch_wallet_index" = "Watch Wallet %@";
 "watching" = "Watching";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";

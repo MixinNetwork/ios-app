@@ -63,7 +63,7 @@ extension Web3TokenSenderSelectorViewController: UITableViewDataSource {
             cell.iconImageView.image = R.image.token_receiver_contact()
             cell.titleLabel.text = R.string.localizable.my_wallet()
             cell.titleTag = nil
-            cell.descriptionLabel.text = R.string.localizable.receive_from_privacy_wallets_description()
+            cell.descriptionLabel.text = R.string.localizable.receive_from_other_wallets_description()
         case .address:
             cell.iconImageView.image = R.image.token_receiver_address()
             cell.titleLabel.text = R.string.localizable.exchanges_or_wallets()

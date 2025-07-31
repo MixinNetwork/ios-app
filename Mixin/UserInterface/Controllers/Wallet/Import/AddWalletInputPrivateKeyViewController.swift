@@ -52,8 +52,14 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
         guard let wallet else {
             return
         }
+        let nameIndex = SequentialWalletNameGenerator.nextNameIndex(category: .common)
+        let request = CreateWalletRequest(
+            name: R.string.localizable.common_wallet_index("\(nameIndex)"),
+            category: .importedPrivateKey,
+            addresses: [wallet.address]
+        )
         let importing = AddWalletImportingViewController(
-            importingWallet: .byPrivateKey(key: wallet.privateKey, address: wallet.address)
+            importingWallet: .byPrivateKey(key: wallet.privateKey, request: request)
         )
         navigationController?.pushViewController(importing, animated: true)
     }

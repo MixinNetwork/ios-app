@@ -8,13 +8,17 @@ struct WalletCandidate {
     let usdBalanceSum: Decimal
     let value: NSAttributedString
     let tokens: [TokenDigest]
-    let alreadyImported: Bool
+    let importedAsName: String?
+    
+    var isImportable: Bool {
+        importedAsName == nil
+    }
     
     init(
         evmWallet: BIP39Mnemonics.Derivation,
         solanaWallet: BIP39Mnemonics.Derivation,
         tokens: [Web3Token],
-        alreadyImported: Bool
+        importedAsName: String?
     ) {
         let usdBalanceSum = tokens.reduce(0) { result, token in
             result + token.decimalUSDBalance
@@ -30,27 +34,27 @@ struct WalletCandidate {
             usdBalanceSum: usdBalanceSum,
             value: value,
             tokens: tokenDigests,
-            alreadyImported: alreadyImported
+            importedAsName: importedAsName
         )
     }
     
     private init(
         evmWallet: BIP39Mnemonics.Derivation, solanaWallet: BIP39Mnemonics.Derivation,
         usdBalanceSum: Decimal, value: NSAttributedString, tokens: [TokenDigest],
-        alreadyImported: Bool
+        importedAsName: String?
     ) {
         self.evmWallet = evmWallet
         self.solanaWallet = solanaWallet
         self.usdBalanceSum = usdBalanceSum
         self.value = value
         self.tokens = tokens
-        self.alreadyImported = alreadyImported
+        self.importedAsName = importedAsName
     }
     
     static func empty(
         evmWallet: BIP39Mnemonics.Derivation,
         solanaWallet: BIP39Mnemonics.Derivation,
-        alreadyImported: Bool,
+        importedAsName: String?,
     ) -> WalletCandidate {
         let value = FiatMoneyValueAttributedStringBuilder.attributedString(
             usdValue: 0,
@@ -62,7 +66,7 @@ struct WalletCandidate {
             usdBalanceSum: 0,
             value: value,
             tokens: [],
-            alreadyImported: alreadyImported
+            importedAsName: importedAsName
         )
     }
     

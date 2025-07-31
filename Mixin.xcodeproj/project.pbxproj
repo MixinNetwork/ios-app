@@ -1299,6 +1299,7 @@
 		94DA5E61279694E200FCE99A /* AppGroupServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DA5E60279694E200FCE99A /* AppGroupServer.swift */; };
 		94DA83762588E595006B0F16 /* WebRTC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; };
 		94DA83772588E595006B0F16 /* WebRTC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 94DA83722588E58B006B0F16 /* WebRTC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		94DB79062E3A660D0066A8E7 /* SequentialWalletNameGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DB79052E3A66070066A8E7 /* SequentialWalletNameGenerator.swift */; };
 		94DC18A92D018D46006501B3 /* LoginLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94DC18A82D018D46006501B3 /* LoginLoadingView.xib */; };
 		94DC229F2D072F76006501B3 /* DesktopSessionValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DC229E2D072F6D006501B3 /* DesktopSessionValidationViewController.swift */; };
 		94DC24392D08051C006501B3 /* DesktopSessionValidationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94DC24382D08051C006501B3 /* DesktopSessionValidationView.xib */; };
@@ -2981,6 +2982,7 @@
 		94D9DF6025F89D6E00FC2F28 /* PopupTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTip.swift; sourceTree = "<group>"; };
 		94DA5E60279694E200FCE99A /* AppGroupServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroupServer.swift; sourceTree = "<group>"; };
 		94DA83722588E58B006B0F16 /* WebRTC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WebRTC.xcframework; sourceTree = "<group>"; };
+		94DB79052E3A66070066A8E7 /* SequentialWalletNameGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequentialWalletNameGenerator.swift; sourceTree = "<group>"; };
 		94DC18A82D018D46006501B3 /* LoginLoadingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginLoadingView.xib; sourceTree = "<group>"; };
 		94DC229E2D072F6D006501B3 /* DesktopSessionValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopSessionValidationViewController.swift; sourceTree = "<group>"; };
 		94DC24382D08051C006501B3 /* DesktopSessionValidationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DesktopSessionValidationView.xib; sourceTree = "<group>"; };
@@ -3513,6 +3515,7 @@
 				947013702E195DB600444513 /* NamedWalletCandidate.swift */,
 				94038B332E1F88E300A7782D /* Wallet+Localizaton.swift */,
 				94D78FD62E3A1B8400552D2E /* WalletAvailability.swift */,
+				94DB79052E3A66070066A8E7 /* SequentialWalletNameGenerator.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -7318,6 +7321,7 @@
 				9497AEA92C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift in Sources */,
 				7BF3F67C22AE64FA007B6C77 /* ImageUploadJob.swift in Sources */,
 				7C7579DF29DC61890002DA0B /* TransferToPhoneQRCodeViewController.swift in Sources */,
+				94DB79062E3A660D0066A8E7 /* SequentialWalletNameGenerator.swift in Sources */,
 				946331C02C622C1100C54B76 /* TransactionHistoryOpponentFilterView.swift in Sources */,
 				942FB8952C8AD82F00C8025C /* ShareInscriptionAsPictureView.swift in Sources */,
 				94317CFF2AFBDEFF00FDC9C9 /* MemoViewController.swift in Sources */,
@@ -8791,7 +8795,7 @@
 			repositoryURL = "https://github.com/reown-com/reown-swift";
 			requirement = {
 				kind = exactVersion;
-				version = 1.6.8;
+				version = 1.6.10;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

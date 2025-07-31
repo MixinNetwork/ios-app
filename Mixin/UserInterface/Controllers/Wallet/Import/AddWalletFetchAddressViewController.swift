@@ -72,11 +72,11 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
     
     private func fetchAddresses(mnemonics: BIP39Mnemonics) {
         showLoading()
-        let lastIndex: UInt32 = searchWalletDerivationsCount - 1
+        let lastPathIndex: UInt32 = searchWalletDerivationsCount - 1
         DispatchQueue.global().async { [weak self, encryptedMnemonics] in
             let wallets: [BIP39Mnemonics.DerivedWallet]
             do {
-                wallets = try mnemonics.deriveWallets(indices: 0...lastIndex)
+                wallets = try mnemonics.deriveWallets(indices: 0...lastPathIndex)
             } catch {
                 DispatchQueue.main.async {
                     self?.showError(error.localizedDescription)
@@ -86,6 +86,8 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
             let addresses = wallets.flatMap { wallet in
                 [wallet.evm.address, wallet.solana.address]
             }
+            let firstNameIndex = SequentialWalletNameGenerator.nextNameIndex(category: .common)
+            let walletNames = Web3WalletDAO.shared.walletNames()
             RouteAPI.assets(searchAddresses: addresses, queue: .global()) { result in
                 switch result {
                 case let .success(assets):
@@ -93,13 +95,12 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                     let candidates: [WalletCandidate]
                     if assets.isEmpty {
                         let wallet = wallets[0]
-                        let alreadyImported = importedDestinations.contains(wallet.evm.address)
-                        || importedDestinations.contains(wallet.solana.address)
+                        let name = walletNames[wallet.evm.address] ?? walletNames[wallet.solana.address]
                         candidates = [
                             .empty(
                                 evmWallet: wallet.evm,
                                 solanaWallet: wallet.solana,
-                                alreadyImported: alreadyImported
+                                importedAsName: name
                             )
                         ]
                     } else {
@@ -110,13 +111,12 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                             let evmTokens = tokens[wallet.evm.address] ?? []
                             let solanaTokens = tokens[wallet.solana.address] ?? []
                             let tokens = evmTokens + solanaTokens
-                            let alreadyImported = importedDestinations.contains(wallet.evm.address)
-                            || importedDestinations.contains(wallet.solana.address)
+                            let name = walletNames[wallet.evm.address] ?? walletNames[wallet.solana.address]
                             return tokens.isEmpty ? nil : WalletCandidate(
                                 evmWallet: wallet.evm,
                                 solanaWallet: wallet.solana,
                                 tokens: tokens,
-                                alreadyImported: alreadyImported
+                                importedAsName: name
                             )
                         }
                     }
@@ -125,7 +125,8 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                             mnemonics: mnemonics,
                             encryptedMnemonics: encryptedMnemonics,
                             candidates: candidates,
-                            lastIndex: lastIndex
+                            lastPathIndex: lastPathIndex,
+                            firstNameIndex: firstNameIndex
                         )
                         self?.navigationController?.pushViewController(replacingCurrent: selector, animated: true)
                     }

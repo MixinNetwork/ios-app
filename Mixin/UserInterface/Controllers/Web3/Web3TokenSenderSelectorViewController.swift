@@ -85,6 +85,7 @@ extension Web3TokenSenderSelectorViewController: UITableViewDelegate {
         switch destination {
         case .myWallets:
             let selector = TransferWalletSelectorViewController(
+                intent: .pickSender,
                 excluding: .common(receivingWallet),
                 supportingChainWith: token.chainID
             )

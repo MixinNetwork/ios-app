@@ -8,6 +8,11 @@ final class TransferWalletSelectorViewController: UIViewController {
         func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectWallet wallet: Wallet)
     }
     
+    enum Intent {
+        case pickSender // Will eliminate any wallet without secret
+        case pickReceiver
+    }
+    
     private enum Section: Int, CaseIterable {
         case wallets
         case tips
@@ -27,6 +32,7 @@ final class TransferWalletSelectorViewController: UIViewController {
     
     private weak var tipsPageControl: UIPageControl?
     
+    private let intent: Intent
     private let excludingWallet: Wallet
     private let chainID: String
     
@@ -43,7 +49,8 @@ final class TransferWalletSelectorViewController: UIViewController {
         }
     }
     
-    init(excluding wallet: Wallet, supportingChainWith chainID: String) {
+    init(intent: Intent, excluding wallet: Wallet, supportingChainWith chainID: String) {
+        self.intent = intent
         self.excludingWallet = wallet
         self.chainID = chainID
         let nib = R.nib.receivingWalletSelectorView
@@ -123,7 +130,14 @@ final class TransferWalletSelectorViewController: UIViewController {
         collectionView.allowsMultipleSelection = false
         collectionView.dataSource = self
         collectionView.delegate = self
-        DispatchQueue.global().async { [excludingWallet, chainID] in
+        DispatchQueue.global().async { [intent, excludingWallet, chainID] in
+            var secretAvailableWalletIDs: Set<String> = Set(
+                AppGroupKeychain.allImportedMnemonics().keys
+            )
+            secretAvailableWalletIDs.formUnion(
+                AppGroupKeychain.allImportedPrivateKey().keys
+            )
+            
             let web3Wallets = Web3WalletDAO.shared.walletDigests()
             
             var digests: [WalletDigest] = switch excludingWallet {
@@ -135,16 +149,28 @@ final class TransferWalletSelectorViewController: UIViewController {
                 }
             }
             
-            digests.removeAll { digest in
-                !digest.supportedChainIDs.contains(chainID)
+            switch intent {
+            case .pickSender:
+                digests.removeAll { digest in
+                    switch digest.wallet {
+                    case .privacy:
+                        false
+                    case .common(let wallet):
+                        switch wallet.category.knownCase {
+                        case .classic:
+                            false
+                        case .importedMnemonic, .importedPrivateKey:
+                            !secretAvailableWalletIDs.contains(wallet.walletID)
+                        case .watchAddress, .none:
+                            true
+                        }
+                    }
+                }
+            case .pickReceiver:
+                digests.removeAll { digest in
+                    !digest.supportedChainIDs.contains(chainID)
+                }
             }
-            
-            var secretAvailableWalletIDs: Set<String> = Set(
-                AppGroupKeychain.allImportedMnemonics().keys
-            )
-            secretAvailableWalletIDs.formUnion(
-                AppGroupKeychain.allImportedPrivateKey().keys
-            )
             
             DispatchQueue.main.async {
                 self.walletDigests = digests

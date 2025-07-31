@@ -129,6 +129,7 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
         case .myWallets:
             reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
             let selector = TransferWalletSelectorViewController(
+                intent: .pickReceiver,
                 excluding: .common(payment.wallet),
                 supportingChainWith: payment.token.chainID
             )

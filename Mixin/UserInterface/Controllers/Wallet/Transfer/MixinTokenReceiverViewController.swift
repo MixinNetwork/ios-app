@@ -145,6 +145,7 @@ extension MixinTokenReceiverViewController: UITableViewDelegate {
         case .myWallets:
             reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
             let selector = TransferWalletSelectorViewController(
+                intent: .pickReceiver,
                 excluding: .privacy,
                 supportingChainWith: token.chainID
             )

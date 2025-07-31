@@ -109,6 +109,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                 label.font = .preferredFont(forTextStyle: .caption1)
                 label.adjustsFontForContentSizeCategory = true
                 label.contentInset = UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4)
+                label.setContentCompressionResistancePriority(.required, for: .horizontal)
                 tagLabels.append(label)
             }
         }

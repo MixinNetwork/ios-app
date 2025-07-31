@@ -24,7 +24,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="4jd-Gd-Ivt">
                                 <rect key="frame" x="0.0" y="0.0" width="127" height="40"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Privacy Wallet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Shr-Os-PTO">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Privacy Wallet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Shr-Os-PTO">
                                         <rect key="frame" x="0.0" y="10.333333333333334" width="105" height="19.333333333333329"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                         <color key="textColor" name="text"/>
@@ -66,6 +66,7 @@
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
+                    <constraint firstItem="Oh6-tG-sNl" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="4jd-Gd-Ivt" secondAttribute="trailing" constant="16" id="JNh-6c-cqe"/>
                     <constraint firstItem="e61-KP-cyS" firstAttribute="top" secondItem="gwT-Uz-gOv" secondAttribute="top" constant="16" id="Xhd-2K-8Zd"/>
                     <constraint firstItem="e61-KP-cyS" firstAttribute="leading" secondItem="gwT-Uz-gOv" secondAttribute="leading" constant="16" id="bdU-Rs-Yni"/>
                     <constraint firstAttribute="trailing" secondItem="Oh6-tG-sNl" secondAttribute="trailing" constant="12" id="cT4-9s-ob8"/>

@@ -30,7 +30,6 @@ final class WalletConnectService {
             projectId: MixinKeys.walletConnect,
             socketFactory: StarscreamFactory()
         )
-        Networking.instance.setLogging(level: .debug)
         let metadata = AppMetadata(
             name: walletName,
             description: walletDescription,

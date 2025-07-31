@@ -21,8 +21,8 @@ public enum ChainID {
     public static let ethereum = "43d61dcd-e413-450d-80b8-101d5e903357"
     public static let polygon = "b7938396-3f94-4e0a-9179-d3440718156f"
     public static let bnbSmartChain = "1949e683-6a08-49e2-b087-d6b72398588f"
-    public static let arbitrum = "d0688ff7-6656-4a79-bd5f-d764bfa9bc46"
-    public static let optimism = "62d5b01f-24ee-4c96-8214-8e04981d05f2"
     public static let base = "3fb612c5-6844-3979-ae4a-5a84e79da870"
+    public static let arbitrumOne = "8c590110-1abc-3697-84f2-05214e6516aa"
+    public static let opMainnet = "60360611-370c-3b69-9826-b13db93f6aba"
     
 }

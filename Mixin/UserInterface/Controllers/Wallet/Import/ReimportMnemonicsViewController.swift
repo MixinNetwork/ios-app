@@ -5,7 +5,7 @@ final class ReimportMnemonicsViewController: InputBIP39MnemonicsViewController {
     
     private enum ReimportError: Error {
         case missingPath
-        case invalidChain
+        case invalidChain(String)
         case mismatched
     }
     
@@ -61,7 +61,7 @@ final class ReimportMnemonicsViewController: InputBIP39MnemonicsViewController {
                     throw ReimportError.missingPath
                 }
                 guard let kind = Web3Chain.chain(chainID: address.chainID)?.kind else {
-                    throw ReimportError.invalidChain
+                    throw ReimportError.invalidChain(address.chainID)
                 }
                 let path = try DerivationPath(string: pathString)
                 let derivedAddress = switch kind {
@@ -81,6 +81,7 @@ final class ReimportMnemonicsViewController: InputBIP39MnemonicsViewController {
             errorDescriptionLabel.isHidden = true
             confirmButton.isEnabled = true
         } catch {
+            Logger.general.error(category: "ReimportMnemonics", message: "\(error)")
             encryptedMnemonics = nil
             errorDescriptionLabel.text = switch error {
             case ReimportError.mismatched:

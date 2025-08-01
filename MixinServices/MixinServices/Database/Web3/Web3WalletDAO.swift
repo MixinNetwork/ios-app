@@ -20,16 +20,13 @@ public final class Web3WalletDAO: Web3DAO {
         )
     }
     
-    public func hasClassicWallet(id: String) -> Bool {
-        db.recordExists(
-            in: Web3Wallet.self,
-            where: Web3Wallet.column(of: .category) == Web3Wallet.Category.classic.rawValue
-                && Web3Wallet.column(of: .walletID) == id
-        )
-    }
-    
-    public func classicWallet() -> Web3Wallet? {
-        db.select(where: Web3Wallet.column(of: .category) == Web3Wallet.Category.classic.rawValue)
+    public func lastSelectWallet() -> Web3Wallet? {
+        switch AppGroupUserDefaults.Wallet.lastSelectedWallet {
+        case .common(let walletID):
+            db.select(where: Web3Wallet.column(of: .walletID) == walletID)
+        case .privacy:
+            db.select(where: Web3Wallet.column(of: .category) == Web3Wallet.Category.classic.rawValue)
+        }
     }
     
     public func walletIDs() -> [String] {

@@ -4,14 +4,22 @@ public final class Web3AddressDAO: Web3DAO {
     
     public static let shared = Web3AddressDAO()
     
-    public func classicWalletAddress(chainID: String) -> Web3Address? {
-        let sql = """
-        SELECT a.* FROM addresses a
-            INNER JOIN wallets w ON w.wallet_id = a.wallet_id
-        WHERE w.category = '\(Web3Wallet.Category.classic.rawValue)'
-            AND chain_id = ?
-        """
-        return db.select(with: sql, arguments: [chainID])
+    public func lastSelectedWalletAddress(chainID: String) -> Web3Address? {
+        switch AppGroupUserDefaults.Wallet.lastSelectedWallet {
+        case .common(let walletID):
+            db.select(with: """
+            SELECT a.* FROM addresses a
+                INNER JOIN wallets w ON w.wallet_id = a.wallet_id
+            WHERE w.wallet_id = ? AND chain_id = ?
+            """, arguments: [walletID, chainID])
+        case .privacy:
+            db.select(with: """
+            SELECT a.* FROM addresses a
+                INNER JOIN wallets w ON w.wallet_id = a.wallet_id
+            WHERE w.category = '\(Web3Wallet.Category.classic.rawValue)'
+                AND chain_id = ?
+            """, arguments: [chainID])
+        }
     }
     
     public func address(walletID: String, chainID: String) -> Web3Address? {

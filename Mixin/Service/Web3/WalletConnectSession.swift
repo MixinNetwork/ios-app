@@ -99,6 +99,31 @@ final class WalletConnectSession {
         }
     }
     
+    func updatedNamespaces(addresses: [Web3Address]) async throws -> [String: SessionNamespace] {
+        let addresses: [Blockchain: String] = addresses.reduce(into: [:]) { result, address in
+            if let chain = Web3Chain.chain(chainID: address.chainID) {
+                result[chain.caip2] = address.destination
+            }
+        }
+        return session.namespaces.reduce(into: [:]) { (result, pair) in
+            var namespace = pair.value
+            let newAccounts = namespace.accounts.compactMap { account in
+                if let address = addresses[account.blockchain]  {
+                    WalletConnectUtils.Account(
+                        blockchain: account.blockchain,
+                        address: address
+                    )
+                } else {
+                    nil
+                }
+            }
+            if !newAccounts.isEmpty {
+                namespace.accounts = newAccounts
+                result[pair.key] = namespace
+            }
+        }
+    }
+    
 }
 
 extension WalletConnectSession {
@@ -144,7 +169,7 @@ extension WalletConnectSession {
                 guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                     throw Error.noChain(request.chainId.absoluteString)
                 }
-                guard let wallet = Web3WalletDAO.shared.classicWallet() else {
+                guard let wallet = Web3WalletDAO.shared.lastSelectWallet() else {
                     throw Error.noWallet
                 }
                 guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID) else {
@@ -215,7 +240,7 @@ extension WalletConnectSession {
                 guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                     throw Error.noChain(request.chainId.absoluteString)
                 }
-                guard let wallet = Web3WalletDAO.shared.classicWallet() else {
+                guard let wallet = Web3WalletDAO.shared.lastSelectWallet() else {
                     throw Error.noWallet
                 }
                 guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.solana) else {
@@ -273,7 +298,7 @@ extension WalletConnectSession {
             guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                 throw Error.noChain(request.chainId.absoluteString)
             }
-            let address = Web3AddressDAO.shared.classicWalletAddress(chainID: chain.chainID)
+            let address = Web3AddressDAO.shared.lastSelectedWalletAddress(chainID: chain.chainID)
             guard let address = address?.destination else {
                 throw Error.noAddress
             }

@@ -8,6 +8,8 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
     private let proposal: WalletConnectSign.Session.Proposal
     private let chains: [Web3Chain]
     private let events: [String]
+    private let evmAddress = Web3AddressDAO.shared.lastSelectedWalletAddress(chainID: ChainID.ethereum)?.destination
+    private let solanaAddress = Web3AddressDAO.shared.lastSelectedWalletAddress(chainID: ChainID.solana)?.destination
     
     private var isProposalApproved = false
     
@@ -43,11 +45,11 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
             .doubleLineInfo(caption: .from, primary: proposal.proposer.name, secondary: host)
         ]
         let kinds = Set(chains.map(\.kind))
-        if kinds.contains(.evm), let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum) {
-            rows.append(.info(caption: .account, content: address.destination))
+        if kinds.contains(.evm), let evmAddress {
+            rows.append(.info(caption: .account, content: evmAddress))
         }
-        if kinds.contains(.solana), let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.solana) {
-            rows.append(.info(caption: .account, content: address.destination))
+        if kinds.contains(.solana), let solanaAddress {
+            rows.append(.info(caption: .account, content: solanaAddress))
         }
         reloadData(with: rows)
     }
@@ -76,17 +78,21 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
         tableHeaderView.setIcon(progress: .busy)
         tableHeaderView.titleLabel.text = R.string.localizable.connecting()
         replaceTrayView(with: nil, animation: .vertical)
-        Task.detached { [chains, proposal, events] in
+        Task.detached { [chains, proposal, events, evmAddress, solanaAddress] in
             do {
-                let evmAddress = try await {
-                    let priv = try await TIP.deriveEthereumPrivateKey(pin: pin)
-                    let keyStorage = InPlaceKeyStorage(raw: priv)
-                    return try EthereumAccount(keyStorage: keyStorage).address.toChecksumAddress()
-                }()
-                let solanaAddress = try await {
-                    let priv = try await TIP.deriveSolanaPrivateKey(pin: pin)
-                    return try Solana.publicKey(seed: priv)
-                }()
+                guard let evmAddress, let solanaAddress else {
+                    throw WalletConnectSession.Error.noAddress
+                }
+                try await withCheckedThrowingContinuation { continuation in
+                    AccountAPI.verify(pin: pin) { result in
+                        switch result {
+                        case .success:
+                            continuation.resume()
+                        case .failure(let error):
+                            continuation.resume(throwing: error)
+                        }
+                    }
+                }
                 let accounts: [WalletConnectUtils.Account] = chains.compactMap { chain in
                     switch chain.kind {
                     case .evm:

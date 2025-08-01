@@ -45,22 +45,10 @@ class WebViewController: FullscreenPopupViewController {
         titleStackView.snp.makeConstraints { make in
             make.trailing.equalTo(pageControlView.snp.leading).offset(-20)
         }
-        
-        let webView = WKWebView(frame: webViewWrapperView.bounds, configuration: webViewConfiguration)
-        webView.backgroundColor = .clear
-        webView.isOpaque = false
-        webView.scrollView.backgroundColor = .clear
-        webView.scrollView.contentInsetAdjustmentBehavior = .never
-        webViewWrapperView.addSubview(webView)
-        webView.snp.makeEdgesEqualToSuperview()
-        webView.scrollView.panGestureRecognizer.require(toFail: edgePanGestureRecognizer)
-        webView.allowsBackForwardNavigationGestures = true
-        self.webView = webView
-        
+        reloadWebView()
         let extractImageRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(extractImage(_:)))
         extractImageRecognizer.delegate = self
         webContentView.addGestureRecognizer(extractImageRecognizer)
-        
         updateBackground(pageThemeColor: .background, measureDarknessWithUserInterfaceStyle: true)
     }
     
@@ -71,6 +59,30 @@ class WebViewController: FullscreenPopupViewController {
     
     override func popupDidDismissAsChild() {
         NotificationCenter.default.post(name: Self.didDismissNotification, object: self)
+    }
+    
+    func reloadWebView() {
+        let url: URL?
+        if let webView = self.webView {
+            url = webView.url
+            webView.removeFromSuperview()
+        } else {
+            url = nil
+        }
+        let webView = WKWebView(frame: webViewWrapperView.bounds, configuration: webViewConfiguration)
+        webView.backgroundColor = .clear
+        webView.isOpaque = false
+        webView.scrollView.backgroundColor = .clear
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
+        webViewWrapperView.addSubview(webView)
+        webView.snp.makeEdgesEqualToSuperview()
+        webView.scrollView.panGestureRecognizer.require(toFail: edgePanGestureRecognizer)
+        webView.allowsBackForwardNavigationGestures = true
+        self.webView = webView
+        if let url {
+            let request = URLRequest(url: url)
+            webView.load(request)
+        }
     }
     
     func updateBackground(pageThemeColor: UIColor, measureDarknessWithUserInterfaceStyle: Bool) {

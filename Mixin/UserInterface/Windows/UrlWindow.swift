@@ -1427,7 +1427,7 @@ extension UrlWindow {
                         hud.scheduleAutoHidden()
                         return
                     }
-                    guard let wallet = Web3WalletDAO.shared.classicWallet() else {
+                    guard let wallet = Web3WalletDAO.shared.lastSelectWallet() else {
                         hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
                         hud.hide()
                         return

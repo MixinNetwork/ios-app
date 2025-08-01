@@ -74,7 +74,7 @@ final class Web3Worker {
                 send(error: "Unknown Chain", to: request)
                 return
             }
-            guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum)?.destination else {
+            guard let address = Web3AddressDAO.shared.lastSelectedWalletAddress(chainID: ChainID.ethereum)?.destination else {
                 showAutoHiddenHud(style: .error, text: "Account Locked")
                 send(error: "Account Locked", to: request)
                 return
@@ -109,9 +109,9 @@ final class Web3Worker {
     private func requestAccounts(json: [String: Any], to request: Request) {
         let address = switch request.network {
         case .ethereum:
-            Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum)
+            Web3AddressDAO.shared.lastSelectedWalletAddress(chainID: ChainID.ethereum)
         case .solana:
-            Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.solana)
+            Web3AddressDAO.shared.lastSelectedWalletAddress(chainID: ChainID.solana)
         }
         guard let address = address?.destination else {
             send(error: "Account Locked", to: request)
@@ -127,10 +127,10 @@ final class Web3Worker {
         let chain: Web3Chain
         switch request.network {
         case .ethereum:
-            address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum)
+            address = Web3AddressDAO.shared.lastSelectedWalletAddress(chainID: ChainID.ethereum)
             chain = evmChain
         case .solana:
-            address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.solana)
+            address = Web3AddressDAO.shared.lastSelectedWalletAddress(chainID: ChainID.solana)
             chain = solanaChain
         }
         guard let address = address?.destination else {
@@ -158,7 +158,7 @@ final class Web3Worker {
     }
     
     private func signTypedData(data: Data, to request: Request) {
-        guard let address: String = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum)?.destination else {
+        guard let address = Web3AddressDAO.shared.lastSelectedWalletAddress(chainID: ChainID.ethereum)?.destination else {
             send(error: "Account Locked", to: request)
             return
         }
@@ -190,12 +190,12 @@ final class Web3Worker {
             send(error: "Invalid Data", to: request)
             return
         }
-        guard let wallet = Web3WalletDAO.shared.classicWallet() else {
+        guard let wallet = Web3WalletDAO.shared.lastSelectWallet() else {
             send(error: "No Wallet", to: request)
             return
         }
-        guard let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum) else {
-            send(error: "Account Locked", to: request)
+        guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.ethereum) else {
+            send(error: "No Address", to: request)
             return
         }
         Task.detached { [evmChain, proposer=currentProposer] in
@@ -241,7 +241,7 @@ final class Web3Worker {
             send(error: "Invalid Data", to: request)
             return
         }
-        guard let myAddress = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.solana)?.destination else {
+        guard let myAddress = Web3AddressDAO.shared.lastSelectedWalletAddress(chainID: ChainID.solana)?.destination else {
             send(error: "Account Locked", to: request)
             return
         }
@@ -381,7 +381,7 @@ final class Web3Worker {
             send(error: "Invalid Data", to: request)
             return
         }
-        guard let wallet = Web3WalletDAO.shared.classicWallet() else {
+        guard let wallet = Web3WalletDAO.shared.lastSelectWallet() else {
             send(error: "No Wallet", to: request)
             return
         }

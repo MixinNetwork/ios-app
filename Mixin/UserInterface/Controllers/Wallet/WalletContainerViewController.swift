@@ -53,9 +53,7 @@ final class WalletContainerViewController: UIViewController {
         guard let summary = viewController as? WalletSummaryViewController else {
             return
         }
-        let previousCommonWalletID = AppGroupUserDefaults.Wallet.lastSelectedCommonWalletID
         AppGroupUserDefaults.Wallet.lastSelectedWallet = wallet.identifier
-        let commonWalletChanged = previousCommonWalletID != AppGroupUserDefaults.Wallet.lastSelectedCommonWalletID
         
         self.viewController = nil
         let viewController: WalletViewController
@@ -64,10 +62,6 @@ final class WalletContainerViewController: UIViewController {
             viewController = PrivacyWalletViewController()
         case .common(let wallet):
             viewController = ClassicWalletViewController(wallet: wallet)
-            if commonWalletChanged {
-                UIApplication.homeContainerViewController?.clipSwitcher.reloadWebViews()
-                WalletConnectService.shared.updateSessions(with: wallet)
-            }
         }
         addChild(viewController)
         view.insertSubview(viewController.view, at: 0)

@@ -38,9 +38,9 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
                         case .privateKey:
                             AddWalletInputPrivateKeyViewController(encryptionKey: key)
                         case .mnemonics:
-                             AddWalletInputMnemonicsViewController(encryptionKey: key)
+                            AddWalletInputMnemonicsViewController(encryptionKey: key)
                         case .watch:
-                             AddWalletInputAddressViewController()
+                            AddWalletInputAddressViewController()
                         }
                     case let .reimportMnemonics(wallet):
                         ReimportMnemonicsViewController(wallet: wallet, encryptionKey: key)

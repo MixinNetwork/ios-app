@@ -5,7 +5,7 @@ import web3
 import ReownWalletKit
 import MixinServices
 
-final class Web3TransferPreviewViewController: AuthenticationPreviewViewController {
+final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
     enum Proposer {
         case dapp(Web3DappProposer)
@@ -24,7 +24,7 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
     init(operation: Web3TransferOperation, proposer: Proposer?) {
         self.operation = operation
         self.proposer = proposer
-        super.init(warnings: [])
+        super.init(wallet: .common(operation.wallet), warnings: [])
     }
     
     required init?(coder: NSCoder) {

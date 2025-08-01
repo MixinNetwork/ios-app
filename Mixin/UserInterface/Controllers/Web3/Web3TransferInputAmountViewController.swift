@@ -22,22 +22,31 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
-        switch payment.toType {
-        case .addressBook(let label):
-            titleView.subtitle = label
-            titleView.subtitleStyle = .label(backgroundColor: R.color.address_label()!)
-        case .privacyWallet:
-            titleView.subtitle = R.string.localizable.privacy_wallet()
-            titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
-        case .commonWallet(let name):
-            titleView.subtitle = name
-            titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
-        case .arbitrary:
-            titleView.subtitle = payment.toAddressCompactRepresentation
-            titleView.subtitleStyle = .plain
-        }
-        navigationItem.titleView = titleView
+        title = R.string.localizable.send_to_title()
+        navigationItem.titleView = {
+            switch payment.toType {
+            case .addressBook(let label):
+                let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
+                titleView.subtitle = label
+                titleView.subtitleStyle = .label(backgroundColor: R.color.address_label()!)
+                return titleView
+            case .privacyWallet:
+                return WalletIdentifyingNavigationTitleView(
+                    title: R.string.localizable.send_to_title(),
+                    wallet: .privacy
+                )
+            case .commonWallet(let name):
+                let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
+                titleView.subtitle = name
+                titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
+                return titleView
+            case .arbitrary:
+                let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
+                titleView.subtitle = payment.toAddressCompactRepresentation
+                titleView.subtitleStyle = .plain
+                return titleView
+            }
+        }()
         tokenIconView.setIcon(web3Token: payment.token)
         tokenNameLabel.text = payment.token.name
         tokenBalanceLabel.text = payment.token.localizedBalanceWithSymbol

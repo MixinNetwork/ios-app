@@ -32,6 +32,10 @@ final class Web3TransactionViewController: TransactionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.transaction()
+        navigationItem.titleView = NavigationTitleView(
+            title: R.string.localizable.transaction(),
+            subtitle: wallet.localizedName
+        )
         tableView.register(R.nib.multipleAssetChangeCell)
         tableView.register(R.nib.authenticationPreviewInfoCell)
         tableView.dataSource = self

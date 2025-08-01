@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
+final class WithdrawPreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
     var manipulateNavigationStackOnFinished = true
     
@@ -15,7 +15,7 @@ final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
     ) {
         self.operation = operation
         self.amountDisplay = amountDisplay
-        super.init(warnings: issues.map(\.description))
+        super.init(wallet: .privacy, warnings: issues.map(\.description))
     }
     
     required init?(coder: NSCoder) {
@@ -56,10 +56,7 @@ final class WithdrawPreviewViewController: AuthenticationPreviewViewController {
             nil
         }
         rows.append(.receivingAddress(value: operation.address.fullRepresentation, label: label))
-        if let account = LoginManager.shared.account {
-            let user = UserItem.createUser(from: account)
-            rows.append(.senders([user], multisigSigners: nil, threshold: nil))
-        }
+        rows.append(.sender(wallet: .privacy, threshold: nil))
         rows.append(.amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false))
         if operation.isFeeTokenDifferent {
             let totalTokenValue = "\(withdrawalTokenValue) + \(feeTokenValue)"

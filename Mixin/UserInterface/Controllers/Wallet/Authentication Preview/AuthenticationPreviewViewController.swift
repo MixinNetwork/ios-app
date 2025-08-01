@@ -10,6 +10,10 @@ class AuthenticationPreviewViewController: UIViewController {
     var canDismissInteractively = true
     var onDismiss: (() -> Void)?
     
+    var tableViewStyle: UITableView.Style {
+        .plain
+    }
+    
     private(set) var rows: [Row] = []
     private(set) var trayView: UIView?
     
@@ -33,8 +37,6 @@ class AuthenticationPreviewViewController: UIViewController {
         presentationController?.delegate = self
         
         loadTableView()
-        view.addSubview(tableView)
-        tableView.snp.makeEdgesEqualToSuperview()
         tableView.backgroundColor = R.color.background()
         tableView.contentInsetAdjustmentBehavior = .never
         tableView.automaticallyAdjustsScrollIndicatorInsets = false
@@ -49,6 +51,7 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.register(R.nib.web3AmountChangeCell)
         tableView.register(R.nib.multipleAssetChangeCell)
         tableView.register(R.nib.addressReceiversCell)
+        tableView.register(R.nib.authenticationPreviewWalletCell)
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -76,7 +79,9 @@ class AuthenticationPreviewViewController: UIViewController {
     }
     
     func loadTableView() {
-        tableView = UITableView(frame: view.bounds)
+        tableView = UITableView(frame: view.bounds, style: tableViewStyle)
+        view.addSubview(tableView)
+        tableView.snp.makeEdgesEqualToSuperview()
     }
     
     func layoutTableHeaderView() {
@@ -282,6 +287,10 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.address_receivers, for: indexPath)!
             cell.reloadData(token: token, recipients: receivers)
             return cell
+        case let .sender(wallet, threshold):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_wallet, for: indexPath)!
+            cell.load(wallet: wallet, threshold: threshold)
+            return cell
         }
     }
     
@@ -399,6 +408,7 @@ extension AuthenticationPreviewViewController {
         case assetChanges(estimated: Bool, changes: [StyledAssetChange])
         case safeMultisigAmount(token: MixinTokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case addressReceivers(MixinTokenItem, [SafeMultisigResponse.Safe.Recipient])
+        case sender(wallet: Wallet, threshold: Int32?)
     }
     
     struct TableHeaderViewStyle: OptionSet {

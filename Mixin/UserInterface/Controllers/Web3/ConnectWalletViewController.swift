@@ -3,25 +3,32 @@ import web3
 import ReownWalletKit
 import MixinServices
 
-final class ConnectWalletViewController: AuthenticationPreviewViewController {
+final class ConnectWalletViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
+    private let wallet: Web3Wallet
+    private let evmAddress: Web3Address?
+    private let solanaAddress: Web3Address?
     private let proposal: WalletConnectSign.Session.Proposal
     private let chains: [Web3Chain]
     private let events: [String]
-    private let evmAddress = Web3AddressDAO.shared.lastSelectedWalletAddress(chainID: ChainID.ethereum)?.destination
-    private let solanaAddress = Web3AddressDAO.shared.lastSelectedWalletAddress(chainID: ChainID.solana)?.destination
     
     private var isProposalApproved = false
     
     init(
+        wallet: Web3Wallet,
+        evmAddress: Web3Address?,
+        solanaAddress: Web3Address?,
         proposal: WalletConnectSign.Session.Proposal,
         chains: [Web3Chain],
         events: [String]
     ) {
+        self.wallet = wallet
+        self.evmAddress = evmAddress
+        self.solanaAddress = solanaAddress
         self.proposal = proposal
         self.chains = chains
         self.events = events
-        super.init(warnings: [])
+        super.init(wallet: .common(wallet), warnings: [])
     }
     
     required init?(coder: NSCoder) {
@@ -46,10 +53,10 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
         ]
         let kinds = Set(chains.map(\.kind))
         if kinds.contains(.evm), let evmAddress {
-            rows.append(.info(caption: .account, content: evmAddress))
+            rows.append(.info(caption: .account, content: evmAddress.destination))
         }
         if kinds.contains(.solana), let solanaAddress {
-            rows.append(.info(caption: .account, content: solanaAddress))
+            rows.append(.info(caption: .account, content: solanaAddress.destination))
         }
         reloadData(with: rows)
     }
@@ -80,8 +87,19 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
         replaceTrayView(with: nil, animation: .vertical)
         Task.detached { [chains, proposal, events, evmAddress, solanaAddress] in
             do {
-                guard let evmAddress, let solanaAddress else {
-                    throw WalletConnectSession.Error.noAddress
+                let accounts: [WalletConnectUtils.Account] = try chains.compactMap { chain in
+                    switch chain.kind {
+                    case .evm:
+                        guard let address = evmAddress?.destination else {
+                            throw WalletConnectSession.Error.noAddress
+                        }
+                        return .init(blockchain: chain.caip2, address: address)
+                    case .solana:
+                        guard let address = solanaAddress?.destination else {
+                            throw WalletConnectSession.Error.noAddress
+                        }
+                        return .init(blockchain: chain.caip2, address: address)
+                    }
                 }
                 try await withCheckedThrowingContinuation { continuation in
                     AccountAPI.verify(pin: pin) { result in
@@ -91,14 +109,6 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                         case .failure(let error):
                             continuation.resume(throwing: error)
                         }
-                    }
-                }
-                let accounts: [WalletConnectUtils.Account] = chains.compactMap { chain in
-                    switch chain.kind {
-                    case .evm:
-                        WalletConnectUtils.Account(blockchain: chain.caip2, address: evmAddress)
-                    case .solana:
-                        WalletConnectUtils.Account(blockchain: chain.caip2, address: solanaAddress)
                     }
                 }
                 let methods = WalletConnectSession.Method.allCases.map(\.rawValue)

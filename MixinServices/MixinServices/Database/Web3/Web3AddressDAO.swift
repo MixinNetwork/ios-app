@@ -4,7 +4,7 @@ public final class Web3AddressDAO: Web3DAO {
     
     public static let shared = Web3AddressDAO()
     
-    public func lastSelectedWalletAddress(chainID: String) -> Web3Address? {
+    public func currentSelectedWalletAddress(chainID: String) -> Web3Address? {
         if let walletID = AppGroupUserDefaults.Wallet.lastSelectedCommonWalletID {
             db.select(with: """
             SELECT a.* FROM addresses a

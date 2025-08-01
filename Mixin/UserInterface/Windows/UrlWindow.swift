@@ -1237,6 +1237,7 @@ extension UrlWindow {
                         memo: paymentURL.memo
                     )
                     let preview = SwapPreviewViewController(
+                        wallet: .privacy,
                         operation: swap,
                         warnings: issues.map(\.description)
                     )
@@ -1427,7 +1428,7 @@ extension UrlWindow {
                         hud.scheduleAutoHidden()
                         return
                     }
-                    guard let wallet = Web3WalletDAO.shared.lastSelectWallet() else {
+                    guard let wallet = Web3WalletDAO.shared.currentSelectedWallet() else {
                         hud.set(style: .error, text: R.string.localizable.invalid_payment_link())
                         hud.hide()
                         return

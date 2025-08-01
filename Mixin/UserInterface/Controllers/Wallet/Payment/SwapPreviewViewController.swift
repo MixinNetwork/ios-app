@@ -1,13 +1,13 @@
 import UIKit
 import MixinServices
 
-class SwapPreviewViewController: AuthenticationPreviewViewController {
+final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
     private let operation: SwapOperation
     
-    init(operation: SwapOperation, warnings: [String]) {
+    init(wallet: Wallet, operation: SwapOperation, warnings: [String]) {
         self.operation = operation
-        super.init(warnings: warnings)
+        super.init(wallet: wallet, warnings: warnings)
     }
     
     @MainActor required init?(coder: NSCoder) {
@@ -76,10 +76,7 @@ class SwapPreviewViewController: AuthenticationPreviewViewController {
             let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
             rows.append(.amount(caption: .networkFee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false))
             rows.append(.receivers([user], threshold: nil))
-            if let account = LoginManager.shared.account {
-                let user = UserItem.createUser(from: account)
-                rows.append(.senders([user], multisigSigners: nil, threshold: nil))
-            }
+            rows.append(.sender(wallet: .privacy, threshold: nil))
         case let .web3(destination):
             let fee = destination.fee
             var feeValue = CurrencyFormatter.localizedString(

@@ -200,11 +200,20 @@ extension WalletConnectService {
                 }
                 return
             }
-            
+            guard let wallet = Web3WalletDAO.shared.currentSelectedWallet() else {
+                return
+            }
+            let evmAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.ethereum)
+            let solanaAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.solana)
             DispatchQueue.main.async {
-                let connectWallet = ConnectWalletViewController(proposal: proposal,
-                                                                chains: chains,
-                                                                events: Array(events))
+                let connectWallet = ConnectWalletViewController(
+                    wallet: wallet,
+                    evmAddress: evmAddress,
+                    solanaAddress: solanaAddress,
+                    proposal: proposal,
+                    chains: chains,
+                    events: Array(events)
+                )
                 Web3PopupCoordinator.enqueue(popup: .request(connectWallet))
             }
         }

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class TransferPreviewViewController: AuthenticationPreviewViewController {
+final class TransferPreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
     var manipulateNavigationStackOnFinished = true
     
@@ -29,7 +29,7 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
         self.operation = operation
         self.amountDisplay = amountDisplay
         self.redirection = redirection
-        super.init(warnings: issues.map(\.description))
+        super.init(wallet: .privacy, warnings: issues.map(\.description))
     }
     
     required init?(coder: NSCoder) {
@@ -128,10 +128,7 @@ final class TransferPreviewViewController: AuthenticationPreviewViewController {
             rows.append(.mainnetReceiver(address))
             senderThreshold = nil
         }
-        if let account = LoginManager.shared.account {
-            let user = UserItem.createUser(from: account)
-            rows.append(.senders([user], multisigSigners: nil, threshold: senderThreshold))
-        }
+        rows.append(.sender(wallet: .privacy, threshold: senderThreshold))
         
         switch context {
         case .swap:

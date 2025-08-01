@@ -169,7 +169,7 @@ extension WalletConnectSession {
                 guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                     throw Error.noChain(request.chainId.absoluteString)
                 }
-                guard let wallet = Web3WalletDAO.shared.lastSelectWallet() else {
+                guard let wallet = Web3WalletDAO.shared.currentSelectedWallet() else {
                     throw Error.noWallet
                 }
                 guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID) else {
@@ -240,7 +240,7 @@ extension WalletConnectSession {
                 guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                     throw Error.noChain(request.chainId.absoluteString)
                 }
-                guard let wallet = Web3WalletDAO.shared.lastSelectWallet() else {
+                guard let wallet = Web3WalletDAO.shared.currentSelectedWallet() else {
                     throw Error.noWallet
                 }
                 guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.solana) else {
@@ -295,15 +295,18 @@ extension WalletConnectSession {
         assert(Thread.isMainThread)
         do {
             let decoded = try decode(request)
+            guard let wallet = Web3WalletDAO.shared.currentSelectedWallet() else {
+                throw Error.noWallet
+            }
             guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                 throw Error.noChain(request.chainId.absoluteString)
             }
-            let address = Web3AddressDAO.shared.lastSelectedWalletAddress(chainID: chain.chainID)
+            let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID)
             guard let address = address?.destination else {
                 throw Error.noAddress
             }
             let operation = Web3SignWithWalletConnectOperation(address: address, session: self, request: decoded, chain: chain)
-            let signRequest = Web3SignViewController(operation: operation, chainName: decoded.chain.name)
+            let signRequest = Web3SignViewController(wallet: wallet, operation: operation, chainName: decoded.chain.name)
             Web3PopupCoordinator.enqueue(popup: .request(signRequest))
         } catch {
             Logger.web3.error(category: "Session", message: "Failed to sign: \(error)")

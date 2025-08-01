@@ -4,21 +4,23 @@ import web3
 import ReownWalletKit
 import MixinServices
 
-final class Web3SignViewController: AuthenticationPreviewViewController {
+final class Web3SignViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
     enum SignRequestError: Error {
         case mismatchedAddress
     }
     
+    private let wallet: Web3Wallet
     private let operation: Web3SignOperation
     private let chainName: String
     
     private var stateObserver: AnyCancellable?
     
-    init(operation: Web3SignOperation, chainName: String) {
+    init(wallet: Web3Wallet, operation: Web3SignOperation, chainName: String) {
+        self.wallet = wallet
         self.operation = operation
         self.chainName = chainName
-        super.init(warnings: [])
+        super.init(wallet: .common(wallet), warnings: [])
     }
     
     required init?(coder: NSCoder) {

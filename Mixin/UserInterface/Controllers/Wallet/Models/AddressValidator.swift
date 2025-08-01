@@ -248,7 +248,7 @@ extension AddressValidator {
     ) async throws -> Payment.WithdrawalDestination {
         if let address = AddressDAO.shared.getAddress(chainId: chainID, destination: destination, tag: tag ?? "") {
             return .address(address)
-        } else if let wallet = Web3WalletDAO.shared.lastSelectWallet(),
+        } else if let wallet = Web3WalletDAO.shared.currentSelectedWallet(),
                   let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chainID),
                   address.destination == destination,
                   address.tag.isEmpty && tag.isNilOrEmpty || address.tag == tag

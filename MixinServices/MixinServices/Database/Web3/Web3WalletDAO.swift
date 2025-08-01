@@ -20,7 +20,7 @@ public final class Web3WalletDAO: Web3DAO {
         )
     }
     
-    public func lastSelectWallet() -> Web3Wallet? {
+    public func currentSelectedWallet() -> Web3Wallet? {
         if let id = AppGroupUserDefaults.Wallet.lastSelectedCommonWalletID,
            let wallet: Web3Wallet = db.select(where: Web3Wallet.column(of: .walletID) == id)
         {

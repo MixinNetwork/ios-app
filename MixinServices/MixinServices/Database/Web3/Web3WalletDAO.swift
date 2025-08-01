@@ -21,10 +21,11 @@ public final class Web3WalletDAO: Web3DAO {
     }
     
     public func lastSelectWallet() -> Web3Wallet? {
-        switch AppGroupUserDefaults.Wallet.lastSelectedWallet {
-        case .common(let walletID):
-            db.select(where: Web3Wallet.column(of: .walletID) == walletID)
-        case .privacy:
+        if let id = AppGroupUserDefaults.Wallet.lastSelectedCommonWalletID,
+           let wallet: Web3Wallet = db.select(where: Web3Wallet.column(of: .walletID) == id)
+        {
+            wallet
+        } else {
             db.select(where: Web3Wallet.column(of: .category) == Web3Wallet.Category.classic.rawValue)
         }
     }

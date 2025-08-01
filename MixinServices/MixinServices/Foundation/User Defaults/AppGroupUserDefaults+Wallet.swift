@@ -24,6 +24,7 @@ extension AppGroupUserDefaults {
             
             case swapTokens = "swap_tokens"
             case lastSelectedWallet = "last_selected_wallet"
+            case lastSelectedCommonWallet = "last_selected_common_wallet"
             
             case hasViewedPrivacyWalletTip = "has_viewed_privacy_wallet_tip"
             case hasViewedClassicWalletTip = "has_viewed_classic_wallet_tip"
@@ -62,7 +63,19 @@ extension AppGroupUserDefaults {
         public static var swapTokens: [String]
         
         @RawRepresentableDefault(namespace: .wallet, key: Key.lastSelectedWallet, defaultValue: .privacy)
-        public static var lastSelectedWallet: MixinServices.Wallet.Identifier
+        public static var lastSelectedWallet: MixinServices.Wallet.Identifier {
+            didSet {
+                switch lastSelectedWallet {
+                case .privacy:
+                    break
+                case .common(let id):
+                    lastSelectedCommonWalletID = id
+                }
+            }
+        }
+        
+        @Default(namespace: .wallet, key: Key.lastSelectedCommonWallet, defaultValue: nil)
+        public private(set) static var lastSelectedCommonWalletID: String?
         
         @Default(namespace: .wallet, key: Key.hasViewedPrivacyWalletTip, defaultValue: false)
         public static var hasViewedPrivacyWalletTip: Bool {

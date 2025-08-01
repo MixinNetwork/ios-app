@@ -5,14 +5,13 @@ public final class Web3AddressDAO: Web3DAO {
     public static let shared = Web3AddressDAO()
     
     public func lastSelectedWalletAddress(chainID: String) -> Web3Address? {
-        switch AppGroupUserDefaults.Wallet.lastSelectedWallet {
-        case .common(let walletID):
+        if let walletID = AppGroupUserDefaults.Wallet.lastSelectedCommonWalletID {
             db.select(with: """
             SELECT a.* FROM addresses a
                 INNER JOIN wallets w ON w.wallet_id = a.wallet_id
             WHERE w.wallet_id = ? AND chain_id = ?
             """, arguments: [walletID, chainID])
-        case .privacy:
+        } else {
             db.select(with: """
             SELECT a.* FROM addresses a
                 INNER JOIN wallets w ON w.wallet_id = a.wallet_id

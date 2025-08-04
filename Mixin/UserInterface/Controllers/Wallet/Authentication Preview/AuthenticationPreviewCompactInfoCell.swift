@@ -18,7 +18,7 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
     
     private var stackViewBottomMargin: CGFloat = 0
     private var contentTextViewSizeObserver: NSKeyValueObservation?
-    private var labelContent: String?
+    private var labelContent: AddressLabel?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -31,7 +31,7 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
         stackViewBottomMargin = contentBottomConstraint.constant
     }
     
-    func setContent(_ content: String, labelContent: String? = nil) {
+    func setContent(_ content: String, labelContent: AddressLabel? = nil) {
         self.labelContent = labelContent
         contentTextView.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 16))
         contentTextView.text = content
@@ -69,7 +69,6 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
         } else {
             label = InsetLabel()
             label.contentInset = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
-            label.backgroundColor = R.color.address_label()
             label.textColor = .white
             label.setFont(scaledFor: .systemFont(ofSize: 12), adjustForContentSize: true)
             label.numberOfLines = 1
@@ -80,7 +79,14 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
             contentView.addSubview(label)
             self.label = label
         }
-        label.text = labelContent
+        switch labelContent {
+        case .addressBook(let text):
+            label.backgroundColor = R.color.address_label()
+            label.text = text
+        case .wallet(let wallet):
+            label.backgroundColor = R.color.background_tinted()!.withAlphaComponent(0.7)
+            label.text = wallet.localizedName
+        }
         let labelSize = label.intrinsicContentSize
         
         let trailingLabelOrigin: CGPoint? // Value is nil if trailing space is not enough for the label

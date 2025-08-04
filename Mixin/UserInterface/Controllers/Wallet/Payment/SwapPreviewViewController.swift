@@ -108,7 +108,11 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
                     boldPrimaryAmount: false
                 ),
                 .receivers([destination.displayReceiver], threshold: nil),
-                .sendingAddress(value: destination.senderAddress.destination, label: nil),
+                .address(
+                    caption: .sender,
+                    address: destination.senderAddress.destination,
+                    label: destination.senderAddressLabel
+                ),
             ])
         }
         

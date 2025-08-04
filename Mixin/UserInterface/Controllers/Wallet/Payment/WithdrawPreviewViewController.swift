@@ -47,15 +47,7 @@ final class WithdrawPreviewViewController: WalletIdentifyingAuthenticationPrevie
         var rows: [Row] = [
             .amount(caption: .amount, token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),
         ]
-        let label: String? = switch operation.addressLabel {
-        case .addressBook(let label):
-            label
-        case .classicWallet:
-            R.string.localizable.common_wallet()
-        case .none:
-            nil
-        }
-        rows.append(.receivingAddress(value: operation.address.fullRepresentation, label: label))
+        rows.append(.address(caption: .receiver, address: operation.address.fullRepresentation, label: operation.addressLabel))
         rows.append(.sender(wallet: .privacy, threshold: nil))
         rows.append(.amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false))
         if operation.isFeeTokenDifferent {

@@ -5,10 +5,10 @@ import MixinServices
 enum Web3AddressValidator {
     
     enum Web3TransferValidationResult {
-        case address(type: Web3SendingTokenToAddressPayment.AddressType, address: String)
+        case address(address: String, label: AddressLabel?)
         case insufficientBalance(transferring: BalanceRequirement, fee: BalanceRequirement)
         case solAmountTooSmall
-        case transfer(operation: Web3TransferOperation, label: String?)
+        case transfer(operation: Web3TransferOperation, toAddressLabel: AddressLabel?)
     }
     
     enum ValidationError: Error, LocalizedError {
@@ -79,7 +79,7 @@ enum Web3AddressValidator {
                         throw ValidationError.invalidFormat
                     }
                     let token = linkToken
-                    let (type, address) = try await validate(
+                    let (address, label) = try await validate(
                         chainID: link.chainID,
                         assetID: token.assetID,
                         destination: link.destination
@@ -95,8 +95,8 @@ enum Web3AddressValidator {
                     }
                     let addressPayment = Web3SendingTokenToAddressPayment(
                         payment: payment,
-                        to: type,
-                        address: address
+                        toAddress: address,
+                        toAddressLabel: label
                     )
                     let operation: Web3TransferOperation = switch chain.specification {
                     case let .evm(chainID):
@@ -118,30 +118,30 @@ enum Web3AddressValidator {
                     let isBalanceSufficient = requirements.allSatisfy(\.isSufficient)
                     await MainActor.run {
                         if isBalanceSufficient {
-                            onSuccess(.transfer(operation: operation, label: type.addressLabel))
+                            onSuccess(.transfer(operation: operation, toAddressLabel: label))
                         } else {
                             onSuccess(.insufficientBalance(transferring: transferRequirement, fee: feeRequirement))
                         }
                     }
                 } else {
-                    let (type, address) = try await validate(
+                    let (address, label) = try await validate(
                         chainID: link.chainID,
                         assetID: payment.token.assetID,
                         destination: link.destination
                     )
                     await MainActor.run {
-                        onSuccess(.address(type: type, address: address))
+                        onSuccess(.address(address: address, label: label))
                     }
                 }
             } catch TransferLinkError.notTransferLink {
                 do {
-                    let (type, address) = try await validate(
+                    let (address, label) = try await validate(
                         chainID: payment.chain.chainID,
                         assetID: payment.token.assetID,
                         destination: string
                     )
                     await MainActor.run {
-                        onSuccess(.address(type: type, address: address))
+                        onSuccess(.address(address: address, label: label))
                     }
                 } catch {
                     await MainActor.run {
@@ -160,11 +160,11 @@ enum Web3AddressValidator {
         chainID: String,
         assetID: String,
         destination: String,
-    ) async throws -> (type: Web3SendingTokenToAddressPayment.AddressType, address: String) {
+    ) async throws -> (address: String, label: AddressLabel?) {
         if let address = AddressDAO.shared.getAddress(chainId: chainID, destination: destination, tag: "") {
-            return (type: .addressBook(label: address.label), address.destination)
+            return (address: address.destination, label: .addressBook(address.label))
         } else if let entry = DepositEntryDAO.shared.primaryEntry(ofChainWith: chainID), entry.destination == destination {
-            return (type: .privacyWallet, address: entry.destination)
+            return (address: entry.destination, label: .wallet(.privacy))
         } else {
             let response = try await ExternalAPI.checkAddress(
                 chainID: chainID,
@@ -178,7 +178,7 @@ enum Web3AddressValidator {
             guard response.tag.isNilOrEmpty else {
                 throw ValidationError.mismatchedTag
             }
-            return (type: .arbitrary, destination)
+            return (address: destination, label: nil)
         }
     }
     

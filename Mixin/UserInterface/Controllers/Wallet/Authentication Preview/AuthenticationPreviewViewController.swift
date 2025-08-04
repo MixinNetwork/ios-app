@@ -176,15 +176,10 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.setPrimaryLabel(usesBoldFont: boldPrimaryAmount)
             cell.trailingContent = nil
             return cell
-        case let .receivingAddress(value, label):
+        case let .address(caption, address, label):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.receiver().uppercased()
-            cell.setContent(value, labelContent: label)
-            return cell
-        case let .sendingAddress(value, label):
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-            cell.captionLabel.text = R.string.localizable.sender().uppercased()
-            cell.setContent(value, labelContent: label)
+            cell.captionLabel.text = caption.rawValue.uppercased()
+            cell.setContent(address, labelContent: label)
             return cell
         case let .info(caption, content):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
@@ -333,7 +328,7 @@ extension AuthenticationPreviewViewController {
         case tag
         case total
         case totalAmount
-        case account
+        case wallet
         case sender
         case receiver
         case collectible
@@ -366,8 +361,8 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.total()
             case .totalAmount:
                 R.string.localizable.total_amount()
-            case .account:
-                R.string.localizable.account()
+            case .wallet:
+                R.string.localizable.wallet()
             case .sender:
                 R.string.localizable.sender()
             case .receiver:
@@ -396,8 +391,7 @@ extension AuthenticationPreviewViewController {
         case info(caption: Caption, content: String)
         case boldInfo(caption: Caption, content: String)
         case doubleLineInfo(caption: Caption, primary: String, secondary: String)
-        case receivingAddress(value: String, label: String?)
-        case sendingAddress(value: String, label: String?)
+        case address(caption: Caption, address: String, label: AddressLabel?)
         case senders([UserItem], multisigSigners: Set<String>?, threshold: Int32?)
         case receivers([UserItem], threshold: Int32?)
         case mainnetReceiver(String)

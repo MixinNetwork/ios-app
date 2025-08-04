@@ -44,11 +44,11 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
             }
             self.nextButton?.isBusy = false
             switch result {
-            case let .address(type, address):
+            case let .address(address, label):
                 let addressPayment = Web3SendingTokenToAddressPayment(
                     payment: payment,
-                    to: type,
-                    address: address
+                    toAddress: address,
+                    toAddressLabel: label
                 )
                 let input = Web3TransferInputAmountViewController(payment: addressPayment)
                 self.navigationController?.pushViewController(input, animated: true)
@@ -60,7 +60,7 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
             case let .transfer(operation, label):
                 let transfer = Web3TransferPreviewViewController(
                     operation: operation,
-                    proposer: .user(addressLabel: label)
+                    proposer: .user(toAddressLabel: label)
                 )
                 transfer.manipulateNavigationStackOnFinished = true
                 Web3PopupCoordinator.enqueue(popup: .request(transfer))
@@ -118,8 +118,8 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
                 self.dismiss(animated: true) {
                     let payment = Web3SendingTokenToAddressPayment(
                         payment: payment,
-                        to: .addressBook(label: address.label),
-                        address: address.destination
+                        toAddress: address.destination,
+                        toAddressLabel: .addressBook(address.label)
                     )
                     let inputAmount = Web3TransferInputAmountViewController(payment: payment)
                     self.navigationController?.pushViewController(inputAmount, animated: true)
@@ -169,8 +169,8 @@ extension Web3TokenReceiverViewController {
                 if let entry = entries.first(where: { $0.chainID == chainID && $0.isPrimary }) {
                     let payment = Web3SendingTokenToAddressPayment(
                         payment: payment,
-                        to: .privacyWallet,
-                        address: entry.destination
+                        toAddress: entry.destination,
+                        toAddressLabel: .wallet(.privacy)
                     )
                     await MainActor.run {
                         guard let self else {
@@ -202,8 +202,8 @@ extension Web3TokenReceiverViewController {
         }
         let payment = Web3SendingTokenToAddressPayment(
             payment: payment,
-            to: .commonWallet(name: wallet.localizedName),
-            address: destination
+            toAddress: destination,
+            toAddressLabel: .wallet(.common(wallet))
         )
         let input = Web3TransferInputAmountViewController(payment: payment)
         navigationController?.pushViewController(input, animated: true)

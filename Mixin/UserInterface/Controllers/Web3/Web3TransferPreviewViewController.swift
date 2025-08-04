@@ -9,7 +9,7 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
     
     enum Proposer {
         case dapp(Web3DappProposer)
-        case user(addressLabel: String?)
+        case user(toAddressLabel: AddressLabel?)
         case speedUp(sender: Web3TransactionViewController)
         case cancel(sender: Web3TransactionViewController)
     }
@@ -135,10 +135,20 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
         switch proposer {
         case let .dapp(proposer):
             rows.append(.doubleLineInfo(caption: .from, primary: proposer.name, secondary: proposer.host))
-            rows.append(.info(caption: .account, content: operation.fromAddress.destination))
-        case let .user(addressLabel):
-            rows.append(.receivingAddress(value: operation.toAddress, label: addressLabel))
-            rows.append(.sendingAddress(value: operation.fromAddress.destination, label: operation.wallet.localizedName))
+            rows.append(.address(caption: .wallet, address: operation.fromAddress.destination, label: .wallet(.common(operation.wallet))))
+        case let .user(toAddressLabel):
+            rows.append(contentsOf: [
+                .address(
+                    caption: .receiver,
+                    address: operation.toAddress,
+                    label: toAddressLabel
+                ),
+                .address(
+                    caption: .sender,
+                    address: operation.fromAddress.destination,
+                    label: .wallet(.common(operation.wallet))
+                ),
+            ])
         case .speedUp, .cancel:
             break
         case .none:

@@ -78,7 +78,7 @@ final class Web3SignViewController: WalletIdentifyingAuthenticationPreviewViewCo
                 .web3Message(caption: R.string.localizable.unsigned_message(), message: operation.humanReadableMessage),
                 .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
                 .doubleLineInfo(caption: .from, primary: operation.proposer.name, secondary: operation.proposer.host),
-                .info(caption: .account, content: operation.address),
+                .address(caption: .wallet, address: operation.address, label: .wallet(.common(wallet))),
                 .info(caption: .network, content: chainName)
             ])
         case .signing:

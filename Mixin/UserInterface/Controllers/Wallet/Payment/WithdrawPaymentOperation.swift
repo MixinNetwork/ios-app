@@ -4,11 +4,6 @@ import TIP
 
 struct WithdrawPaymentOperation {
     
-    enum AddressLabel {
-        case addressBook(String)
-        case classicWallet
-    }
-    
     enum Error: Swift.Error, LocalizedError {
         
         case buildWithdrawalTx(Swift.Error?)

@@ -44,8 +44,10 @@ final class ConnectWalletViewController: WalletIdentifyingAuthenticationPreviewV
                 .first
             imageView.sd_setImage(with: url)
         }
-        layoutTableHeaderView(title: R.string.localizable.connect_your_account(),
-                              subtitle: R.string.localizable.connect_web3_account_description())
+        layoutTableHeaderView(
+            title: R.string.localizable.connect_your_wallet(),
+            subtitle: R.string.localizable.connect_web3_wallet_description()
+        )
         
         let host = URL(string: proposal.proposer.url)?.host ?? proposal.proposer.url
         var rows: [Row] = [
@@ -53,10 +55,18 @@ final class ConnectWalletViewController: WalletIdentifyingAuthenticationPreviewV
         ]
         let kinds = Set(chains.map(\.kind))
         if kinds.contains(.evm), let evmAddress {
-            rows.append(.info(caption: .account, content: evmAddress.destination))
+            rows.append(.address(
+                caption: .wallet,
+                address: evmAddress.destination,
+                label: .wallet(.common(wallet))
+            ))
         }
         if kinds.contains(.solana), let solanaAddress {
-            rows.append(.info(caption: .account, content: solanaAddress.destination))
+            rows.append(.address(
+                caption: .wallet,
+                address: solanaAddress.destination,
+                label: .wallet(.common(wallet))
+            ))
         }
         reloadData(with: rows)
     }
@@ -128,8 +138,10 @@ final class ConnectWalletViewController: WalletIdentifyingAuthenticationPreviewV
                     self.canDismissInteractively = true
                     self.isProposalApproved = true
                     self.tableHeaderView.setIcon(progress: .success)
-                    self.layoutTableHeaderView(title: R.string.localizable.web3_account_connected(),
-                                               subtitle: R.string.localizable.connect_web3_account_description())
+                    self.layoutTableHeaderView(
+                        title: R.string.localizable.web3_wallet_connected(),
+                        subtitle: R.string.localizable.connect_web3_wallet_description()
+                    )
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.loadSingleButtonTrayView(title: R.string.localizable.done(),
                                                   action: #selector(self.close(_:)))

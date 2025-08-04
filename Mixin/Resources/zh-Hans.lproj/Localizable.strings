@@ -4,7 +4,6 @@
 "access_denied" = "禁止访问";
 "access_to_contacts" = "访问通讯录";
 "account" = "账号";
-"accounts" = "账户";
 "acknowledgements" = "许可证";
 "add" = "添加";
 "add_a_note" = "添加转账备注";
@@ -343,8 +342,8 @@
 "confirm_withdrawal" = "提现确认";
 "connect" = "连接";
 "connect_to_tip_network_failed" = "连接 TIP 网络失败，请尝试切换网络后重试";
-"connect_web3_account_description" = "授权应用查看你的账户地址，或者向你发送交易请求。";
-"connect_your_account" = "连接账户";
+"connect_web3_wallet_description" = "授权应用查看你的钱包地址，或者向你发送交易请求。";
+"connect_your_wallet" = "连接钱包";
 "connected" = "已连接";
 "connecting" = "正在连接";
 "connection_establishment_failed" = "连接建立失败";
@@ -1461,16 +1460,6 @@
 "unit_week_count" = "周";
 "unknown_artist" = "未知艺术家";
 "unlimited_authorization_warning" = "这个应用可以提取你 %1$@ 账号（%2$@）里所有的 %3$@ 资产。";
-"unlock" = "解锁";
-"unlock_web3_account" = "解锁 %@ 账户";
-"unlock_web3_account_agreement" = "建议与去中心化应用程序交互完后尽快将资产转回更安全的 Mixin 钱包。";
-"unlock_web3_account_agreement_1" = "%@ 账户与 Mixin 钱包资产隔离但使用同一个 PIN 进行资产管理。";
-"unlock_web3_account_agreement_2" = "在 %@ 账户与 Mixin 钱包之间划转资产需要支付网络矿工费。";
-"unlock_web3_account_agreement_3" = "当您解锁 %1$@ 账户时，也将自动解锁 %2$@、%3$@ 等 EVM 账户。";
-"unlock_web3_account_description" = "您的 %@ 账户基于 Mixin Messenger 的 MPC 钱包并根据 BIP44 协议派生而来。";
-"unlock_web3_account_failed" = "解锁失败";
-"unlock_web3_account_success" = "解锁成功";
-"unlocking" = "正在解锁";
 "unmute" = "取消静音";
 "unmuted" = "已取消静音";
 "unnamed_location" = "未命名地点";
@@ -1576,9 +1565,6 @@
 "web_cannot_reached_desc" = "无法访问 %@，请检查你的网络并尝试切换 4G、Wi-Fi 或 VPN 后重新载入页面。";
 "web_cannot_reached_title" = "无法访问此网页";
 "web_suspicious_link_tips" = "该链接不在对应的机器人域名白名单内。";
-"web3_account" = "账户";
-"web3_account_connected" = "连接成功";
-"web3_account_network" = "%@ 账户";
 "web3_deposit_description_evm" = "使用此地址在 Ethereum、Polygon、BSC、Base 网络上接收代币";
 "web3_deposit_description_solana" = "使用此地址在 Solana 网络上接收代币";
 "web3_ensure_trust" = "请确保您信任此应用程序。";
@@ -1592,6 +1578,7 @@
 "web3_signing_warning" = "我们无法验证此请求，在发送此请求之前，请确保您信任此应用程序。";
 "web3_transaction_request" = "交易签名";
 "web3_transfer_insufficient_fee_count" = "错误 20118：广播交易需要 %1$@，钱包可用余额 %2$@。";
+"web3_wallet_connected" = "连接成功";
 "weekly" = "每周";
 "weeks" = "周";
 "weeks_count_short" = "%d周";

@@ -318,17 +318,6 @@ extension Payment {
             withdrawable.destination
         }
         
-        var addressLabel: String? {
-            switch self {
-            case .address(let address):
-                address.label
-            case .temporary:
-                nil
-            case .commonWallet:
-                R.string.localizable.common_wallet()
-            }
-        }
-        
         var reportingType: String {
             switch self {
             case .address:
@@ -346,7 +335,7 @@ extension Payment {
                 return "<WithdrawalDestination.address \(address.addressId)>"
             case let .temporary(address):
                 return "<WithdrawalDestination.temporary \(address.destination)>"
-            case let .commonWallet(wallet, address):
+            case let .commonWallet(wallet, _):
                 return "<WithdrawalDestination.commonWallet \(wallet.localizedName)>"
             }
         }
@@ -402,7 +391,7 @@ extension Payment {
                 let result = await collectOutputs(token: token, amount: amount, on: parent)
                 switch result {
                 case .success(let collection):
-                    let addressLabel: WithdrawPaymentOperation.AddressLabel?
+                    let addressLabel: AddressLabel?
                     let addressID: String?
                     switch destination {
                     case let .address(address):
@@ -411,8 +400,8 @@ extension Payment {
                     case .temporary:
                         addressLabel = nil
                         addressID = nil
-                    case .commonWallet:
-                        addressLabel = .classicWallet
+                    case let .commonWallet(wallet, _):
+                        addressLabel = .wallet(.common(wallet))
                         addressID = nil
                     }
                     let operation = WithdrawPaymentOperation(

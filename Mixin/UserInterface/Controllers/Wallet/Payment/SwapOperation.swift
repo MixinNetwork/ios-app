@@ -53,6 +53,7 @@ extension SwapOperation {
         let fee: Web3TransferOperation.DisplayFee
         let feeTokenSymbol: String
         let senderAddress: Web3Address
+        let senderAddressLabel: AddressLabel?
     }
     
 }

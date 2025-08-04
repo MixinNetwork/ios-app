@@ -146,8 +146,8 @@ final class Web3SwapViewController: MixinSwapViewController {
                     )
                     let addressPayment = Web3SendingTokenToAddressPayment(
                         payment: payment,
-                        to: .arbitrary,
-                        address: depositDestination
+                        toAddress: depositDestination,
+                        toAddressLabel: nil
                     )
                     
                     do {
@@ -194,7 +194,8 @@ final class Web3SwapViewController: MixinSwapViewController {
                                 depositDestination: depositDestination,
                                 fee: fee,
                                 feeTokenSymbol: feeTokenSymbol,
-                                senderAddress: sendingAddress
+                                senderAddress: sendingAddress,
+                                senderAddressLabel: .wallet(.common(wallet))
                             )
                             let operation = SwapOperation(
                                 operation: operation,

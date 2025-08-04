@@ -1294,6 +1294,7 @@
 		94D78FD72E3A1B8900552D2E /* WalletAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D78FD62E3A1B8400552D2E /* WalletAvailability.swift */; };
 		94D7E8532CC025420020BC24 /* RecentSearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D7E8522CC025360020BC24 /* RecentSearchHeaderView.swift */; };
 		94D7E8582CC025760020BC24 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D7E8572CC025760020BC24 /* RecentSearchHeaderView.xib */; };
+		94D82BDD2E40B06C000BA0BF /* AddressLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D82BDC2E40B069000BA0BF /* AddressLabel.swift */; };
 		94D8426C2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */; };
 		94D916EF2DC0C45E009B8A7F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D916EE2DC0C45E009B8A7F /* StoreKit.framework */; };
 		94D9DF6125F89D6E00FC2F28 /* PopupTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DF6025F89D6E00FC2F28 /* PopupTip.swift */; };
@@ -2982,6 +2983,7 @@
 		94D78FD62E3A1B8400552D2E /* WalletAvailability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletAvailability.swift; sourceTree = "<group>"; };
 		94D7E8522CC025360020BC24 /* RecentSearchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchHeaderView.swift; sourceTree = "<group>"; };
 		94D7E8572CC025760020BC24 /* RecentSearchHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecentSearchHeaderView.xib; sourceTree = "<group>"; };
+		94D82BDC2E40B069000BA0BF /* AddressLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressLabel.swift; sourceTree = "<group>"; };
 		94D8426B2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAudioMessagePlayingManager.swift; sourceTree = "<group>"; };
 		94D916EE2DC0C45E009B8A7F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		94D9DF6025F89D6E00FC2F28 /* PopupTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTip.swift; sourceTree = "<group>"; };
@@ -3524,6 +3526,7 @@
 				94038B332E1F88E300A7782D /* Wallet+Localizaton.swift */,
 				94D78FD62E3A1B8400552D2E /* WalletAvailability.swift */,
 				94DB79052E3A66070066A8E7 /* SequentialWalletNameGenerator.swift */,
+				94D82BDC2E40B069000BA0BF /* AddressLabel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -6984,6 +6987,7 @@
 				7BBC6EA81FA98D1A00DC130A /* AddPeopleViewController.swift in Sources */,
 				7CB0955926CE69250049F4C7 /* PinMessageViewModel.swift in Sources */,
 				DFD93F1E2111C0030013401A /* UIDeviceExtension.swift in Sources */,
+				94D82BDD2E40B06C000BA0BF /* AddressLabel.swift in Sources */,
 				7C2DE55928DD94D200C00818 /* LiveTextImageView.swift in Sources */,
 				7B35AF78228AA3BD00E8101D /* MessagesWithUserSearchResult.swift in Sources */,
 				942FD9FF2D3B591F004DCC4C /* LocalizedEnum.swift in Sources */,

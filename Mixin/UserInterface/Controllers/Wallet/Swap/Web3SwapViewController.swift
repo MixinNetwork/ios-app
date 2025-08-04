@@ -71,8 +71,7 @@ final class Web3SwapViewController: MixinSwapViewController {
         guard let kind = Web3Chain.chain(chainID: chainID)?.kind else {
             return
         }
-        
-        let deposit = Web3DepositViewController(kind: kind, address: address.destination)
+        let deposit = Web3DepositViewController(wallet: wallet, kind: kind, address: address.destination)
         navigationController?.pushViewController(deposit, animated: true)
     }
     

@@ -277,7 +277,7 @@ extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewContr
             guard let address = Web3AddressDAO.shared.address(walletID: feeToken.walletID, chainID: feeToken.chainID) else {
                 return
             }
-            next = Web3DepositViewController(kind: payment.chain.kind, address: address.destination)
+            next = Web3DepositViewController(wallet: payment.wallet, kind: payment.chain.kind, address: address.destination)
         }
         navigationController?.pushViewController(next, animated: true)
     }

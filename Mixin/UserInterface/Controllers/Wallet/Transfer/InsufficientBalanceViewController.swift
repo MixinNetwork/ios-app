@@ -372,11 +372,11 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
                 DepositViewController(token: token)
             }
         case let token as Web3TokenItem:
+            guard let wallet = Web3WalletDAO.shared.wallet(id: token.walletID) else {
+                return
+            }
             switch method {
             case .swap:
-                guard let wallet = Web3WalletDAO.shared.wallet(id: token.walletID) else {
-                    return
-                }
                 next = Web3SwapViewController(
                     wallet: wallet,
                     sendAssetID: nil,
@@ -389,7 +389,11 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
                 guard let kind = Web3Chain.chain(chainID: token.chainID)?.kind else {
                     return
                 }
-                next = Web3DepositViewController(kind: kind, address: address.destination)
+                next = Web3DepositViewController(
+                    wallet: wallet,
+                    kind: kind,
+                    address: address.destination
+                )
             }
         default:
             return

@@ -282,9 +282,22 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.address_receivers, for: indexPath)!
             cell.reloadData(token: token, recipients: receivers)
             return cell
-        case let .sender(wallet, threshold):
+        case let .wallet(caption, wallet, threshold):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_wallet, for: indexPath)!
-            cell.load(wallet: wallet, threshold: threshold)
+            cell.captionLabel.text = switch caption {
+            case .sender where threshold != nil:
+                R.string.localizable.multisig_sender().uppercased()
+            default:
+                caption.rawValue.uppercased()
+            }
+            switch wallet {
+            case .privacy:
+                cell.nameLabel.text = R.string.localizable.privacy_wallet()
+                cell.iconImageView.isHidden = false
+            case .common(let wallet):
+                cell.nameLabel.text = wallet.localizedName
+                cell.iconImageView.isHidden = true
+            }
             return cell
         }
     }
@@ -402,7 +415,7 @@ extension AuthenticationPreviewViewController {
         case assetChanges(estimated: Bool, changes: [StyledAssetChange])
         case safeMultisigAmount(token: MixinTokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case addressReceivers(MixinTokenItem, [SafeMultisigResponse.Safe.Recipient])
-        case sender(wallet: Wallet, threshold: Int32?)
+        case wallet(caption: Caption, wallet: Wallet, threshold: Int32?)
     }
     
     struct TableHeaderViewStyle: OptionSet {

@@ -128,7 +128,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
             rows.append(.mainnetReceiver(address))
             senderThreshold = nil
         }
-        rows.append(.sender(wallet: .privacy, threshold: senderThreshold))
+        rows.append(.wallet(caption: .sender, wallet: .privacy, threshold: senderThreshold))
         
         switch context {
         case .swap:

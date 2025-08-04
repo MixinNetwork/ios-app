@@ -137,18 +137,13 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
             rows.append(.doubleLineInfo(caption: .from, primary: proposer.name, secondary: proposer.host))
             rows.append(.address(caption: .wallet, address: operation.fromAddress.destination, label: .wallet(.common(operation.wallet))))
         case let .user(toAddressLabel):
-            rows.append(contentsOf: [
-                .address(
-                    caption: .receiver,
-                    address: operation.toAddress,
-                    label: toAddressLabel
-                ),
-                .address(
-                    caption: .sender,
-                    address: operation.fromAddress.destination,
-                    label: .wallet(.common(operation.wallet))
-                ),
-            ])
+            switch toAddressLabel {
+            case .wallet(.privacy):
+                rows.append(.wallet(caption: .receiver, wallet: .privacy, threshold: nil))
+            default:
+                rows.append(.address(caption: .receiver, address: operation.toAddress, label: toAddressLabel))
+            }
+            rows.append(.address(caption: .sender, address: operation.fromAddress.destination, label: .wallet(.common(operation.wallet))))
         case .speedUp, .cancel:
             break
         case .none:

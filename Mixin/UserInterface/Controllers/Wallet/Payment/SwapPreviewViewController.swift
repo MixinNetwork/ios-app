@@ -76,7 +76,7 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
             let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
             rows.append(.amount(caption: .networkFee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false))
             rows.append(.receivers([user], threshold: nil))
-            rows.append(.sender(wallet: .privacy, threshold: nil))
+            rows.append(.wallet(caption: .sender, wallet: .privacy, threshold: nil))
         case let .web3(destination):
             let fee = destination.fee
             var feeValue = CurrencyFormatter.localizedString(

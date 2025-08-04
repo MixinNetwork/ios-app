@@ -48,7 +48,7 @@ final class WithdrawPreviewViewController: WalletIdentifyingAuthenticationPrevie
             .amount(caption: .amount, token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),
         ]
         rows.append(.address(caption: .receiver, address: operation.address.fullRepresentation, label: operation.addressLabel))
-        rows.append(.sender(wallet: .privacy, threshold: nil))
+        rows.append(.wallet(caption: .sender, wallet: .privacy, threshold: nil))
         rows.append(.amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false))
         if operation.isFeeTokenDifferent {
             let totalTokenValue = "\(withdrawalTokenValue) + \(feeTokenValue)"

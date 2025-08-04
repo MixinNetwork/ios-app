@@ -505,13 +505,10 @@ extension Web3TransactionViewController {
             rows.append(.plain(key: .network, value: network))
         }
         
-        let transactionAt: String
-        let date = DateFormatter.iso8601Full.date(from: transaction.transactionAt)
-        ?? ISO8601DateFormatter.default.date(from: transaction.transactionAt)
-        if let date {
-            transactionAt = DateFormatter.dateFull.string(from: date)
+        let transactionAt: String = if let date = transaction.transactionAtDate {
+            DateFormatter.dateFull.string(from: date)
         } else {
-            transactionAt = transaction.transactionAt
+            transaction.transactionAt
         }
         rows.append(.plain(key: .date, value: transactionAt))
         

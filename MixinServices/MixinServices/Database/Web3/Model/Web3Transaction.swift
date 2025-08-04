@@ -88,6 +88,8 @@ public class Web3Transaction: Codable, Identifiable {
         )
     }()
     
+    public lazy var transactionAtDate: Date? = DateFormatter.iso8601Full.date(from: transactionAt)
+    
     public var allAssetIDs: Set<String> {
         let senderIDs = senders?.map(\.assetID) ?? []
         let receiverIDs = receivers?.map(\.assetID) ?? []

@@ -7,6 +7,14 @@ final class Web3DappCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var hostLabel: UILabel!
     
+    @IBOutlet weak var iconDimensionConstraint: NSLayoutConstraint!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        iconImageView.layer.cornerRadius = iconDimensionConstraint.constant / 2
+        iconImageView.layer.masksToBounds = true
+    }
+    
     override func prepareForReuse() {
         iconImageView.sd_cancelCurrentImageLoad()
         iconImageView.image = nil

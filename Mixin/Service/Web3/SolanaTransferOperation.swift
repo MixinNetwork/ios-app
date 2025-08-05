@@ -11,8 +11,6 @@ class SolanaTransferOperation: Web3TransferOperation {
         case buildTransaction
     }
     
-    @MainActor fileprivate var fee: DisplayFee?
-    
     fileprivate init(
         wallet: Web3Wallet,
         fromAddress: Web3Address,

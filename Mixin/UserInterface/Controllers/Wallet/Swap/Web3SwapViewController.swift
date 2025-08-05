@@ -1,15 +1,10 @@
 import UIKit
 import OrderedCollections
-import Alamofire
 import MixinServices
 
-final class Web3SwapViewController: MixinSwapViewController {
+final class Web3SwapViewController: SwapViewController {
     
     private let wallet: Web3Wallet
-    
-    override var source: RouteTokenSource {
-        return .web3
-    }
     
     private var walletID: String {
         wallet.walletID
@@ -17,14 +12,19 @@ final class Web3SwapViewController: MixinSwapViewController {
     
     init(wallet: Web3Wallet, sendAssetID: String?, receiveAssetID: String?) {
         self.wallet = wallet
-        super.init(sendAssetID: sendAssetID, receiveAssetID: receiveAssetID, referral: nil)
+        super.init(
+            tokenSource: .web3,
+            sendAssetID: sendAssetID,
+            receiveAssetID: receiveAssetID
+        )
     }
     
     @MainActor required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func initTitleBar() {
+    override func viewDidLoad() {
+        super.viewDidLoad()
         navigationItem.titleView = WalletIdentifyingNavigationTitleView(
             title: R.string.localizable.swap(),
             wallet: .common(wallet)
@@ -37,28 +37,26 @@ final class Web3SwapViewController: MixinSwapViewController {
         ]
     }
     
-    override func fillSwappableTokenBalance(swappableTokens: [SwapToken]) -> [BalancedSwapToken] {
-        BalancedSwapToken.fillWeb3Balance(swappableTokens: swappableTokens, walletID: wallet.walletID)
-    }
-    
-    override func getTokenSelectorViewController(recent: SwapTokenSelectorViewController.Recent) -> SwapTokenSelectorViewController {
-        let tokens: [BalancedSwapToken]
-        let selectedAssetID: String?
-        switch recent {
-        case .send:
-            tokens = swappableTokens.values.sorted { $0.sortingValues > $1.sortingValues }
-            selectedAssetID = sendToken?.assetID
-        case .receive:
-            tokens = Array(swappableTokens.values)
-            selectedAssetID = receiveToken?.assetID
+    override func changeSendToken(_ sender: Any) {
+        let tokens = swappableTokens.values.sorted {
+            $0.sortingValues > $1.sortingValues
         }
-        
-        return Web3SwapTokenSelectorViewController(
+        let selector = Web3SwapTokenSelectorViewController(
             wallet: wallet,
-            recent: recent,
+            recent: .send,
             tokens: tokens,
-            selectedAssetID: selectedAssetID
+            selectedAssetID: sendToken?.assetID
         )
+        selector.onSelected = { token in
+            if token.assetID == self.receiveToken?.assetID {
+                self.swapSendingReceiving(sender)
+            } else {
+                self.sendToken = token
+                self.scheduleNewRequesterIfAvailable()
+                self.saveTokenIDs()
+            }
+        }
+        present(selector, animated: true)
     }
     
     override func depositSendToken(_ sender: Any) {
@@ -75,11 +73,23 @@ final class Web3SwapViewController: MixinSwapViewController {
         navigationController?.pushViewController(deposit, animated: true)
     }
     
-    override func fetchBalancedSwapToken(assetID: String) -> BalancedSwapToken? {
-        guard let item = Web3TokenDAO.shared.token(walletID: walletID, assetID: assetID), let token = BalancedSwapToken(tokenItem: item) else {
-            return nil
+    override func changeReceiveToken(_ sender: Any) {
+        let selector = Web3SwapTokenSelectorViewController(
+            wallet: wallet,
+            recent: .receive,
+            tokens: Array(swappableTokens.values),
+            selectedAssetID: receiveToken?.assetID
+        )
+        selector.onSelected = { token in
+            if token.assetID == self.sendToken?.assetID {
+                self.swapSendingReceiving(sender)
+            } else {
+                self.receiveToken = token
+                self.scheduleNewRequesterIfAvailable()
+                self.saveTokenIDs()
+            }
         }
-        return token
+        present(selector, animated: true)
     }
     
     override func review(_ sender: RoundedButton) {
@@ -189,26 +199,14 @@ final class Web3SwapViewController: MixinSwapViewController {
                                 homeContainer.present(insufficient, animated: true)
                                 return
                             }
-                            let destination = SwapOperation.Web3Destination(
-                                displayReceiver: displayReceiver,
-                                depositDestination: depositDestination,
-                                fee: fee,
-                                feeTokenSymbol: feeTokenSymbol,
-                                senderAddress: sendingAddress,
-                                senderAddressLabel: .wallet(.common(wallet))
-                            )
-                            let operation = SwapOperation(
-                                operation: operation,
+                            let preview = SwapPreviewViewController(
+                                wallet: .common(wallet),
+                                operation: .web3(operation),
                                 sendToken: quote.sendToken,
                                 sendAmount: sendAmount,
                                 receiveToken: quote.receiveToken,
                                 receiveAmount: receiveAmount,
-                                destination: .web3(destination),
-                                memo: nil
-                            )
-                            let preview = SwapPreviewViewController(
-                                wallet: .common(wallet),
-                                operation: operation,
+                                receiver: displayReceiver,
                                 warnings: []
                             )
                             preview.onDismiss = {
@@ -229,6 +227,37 @@ final class Web3SwapViewController: MixinSwapViewController {
         reporter.report(event: .tradePreview)
     }
     
+    override func balancedSwapToken(assetID: String) -> BalancedSwapToken? {
+        if let item = Web3TokenDAO.shared.token(walletID: walletID, assetID: assetID),
+           let token = BalancedSwapToken(tokenItem: item)
+        {
+            return token
+        } else {
+            return nil
+        }
+    }
+    
+    override func balancedSwapTokens(
+        from swappableTokens: [SwapToken]
+    ) -> OrderedDictionary<String, BalancedSwapToken> {
+        let ids = swappableTokens.map(\.assetID)
+        let tokenItems = Web3TokenDAO.shared.tokens(walletID: walletID, ids: ids)
+        let tokenMaps = tokenItems.reduce(into: [:]) { result, item in
+            result[item.assetID] = item
+        }
+        return swappableTokens.reduce(into: OrderedDictionary()) { result, token in
+            result[token.assetID] = if let item = tokenMaps[token.assetID] {
+                BalancedSwapToken(
+                    token: token,
+                    balance: item.decimalBalance,
+                    usdPrice: item.decimalUSDPrice
+                )
+            } else {
+                BalancedSwapToken(token: token, balance: 0, usdPrice: 0)
+            }
+        }
+    }
+    
     private func fetchUser(userID: String, sender: RoundedButton) async -> UserItem? {
         var receiveUser = UserDAO.shared.getUser(userId: userID)
         if receiveUser == nil {
@@ -245,4 +274,5 @@ final class Web3SwapViewController: MixinSwapViewController {
         }
         return receiveUser
     }
+    
 }

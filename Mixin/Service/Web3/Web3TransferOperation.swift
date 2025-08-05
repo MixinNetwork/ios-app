@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-class Web3TransferOperation: SwapOperation.PaymentOperation {
+class Web3TransferOperation {
     
     class DisplayFee {
         
@@ -45,6 +45,10 @@ class Web3TransferOperation: SwapOperation.PaymentOperation {
     
     @MainActor @Published
     var state: State = .loading
+    
+    @MainActor
+    var fee: DisplayFee?
+    
     var hasTransactionSent = false
     
     init(

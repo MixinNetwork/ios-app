@@ -51,7 +51,6 @@ class EVMTransferOperation: Web3TransferOperation {
     )
     
     @MainActor private var evmFee: EVMFee?
-    @MainActor private var fee: DisplayFee?
     @MainActor private var transaction: EIP1559Transaction
     @MainActor private var account: EthereumAccount?
     

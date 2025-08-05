@@ -56,36 +56,24 @@ public class Web3Transaction: Codable, Identifiable {
         }
     }()
     
-    public lazy var directionalTransferAmount: Decimal? = {
+    // A simple transfer is a basic transaction of type `transfer_in` or `transfer_out`, involving exactly one asset change.
+    public lazy var simpleTransfer: SimpleTransfer? = {
         switch transactionType.knownCase {
         case .transferIn:
-            if let amount = receivers?.first?.amount {
-                Decimal(string: amount, locale: .enUSPOSIX)
+            if let receivers, receivers.count == 1 {
+                SimpleTransfer(receiver: receivers[0])
             } else {
                 nil
             }
         case .transferOut:
-            if let amount = senders?.first?.amount,
-               let decimalAmount = Decimal(string: amount, locale: .enUSPOSIX)
-            {
-                -decimalAmount
+            if let senders, senders.count == 1 {
+                SimpleTransfer(sender: senders[0])
             } else {
                 nil
             }
         default:
             nil
         }
-    }()
-    
-    public lazy var localizedTransferAmount: String? = {
-        guard let amount = directionalTransferAmount else {
-            return nil
-        }
-        return CurrencyFormatter.localizedString(
-            from: amount,
-            format: .precision,
-            sign: .whenNotZero
-        )
     }()
     
     public lazy var transactionAtDate: Date? = DateFormatter.iso8601Full.date(from: transactionAt)
@@ -252,11 +240,6 @@ extension Web3Transaction {
         
     }
     
-    public enum ApprovalAmount {
-        case unlimited
-        case limited(String)
-    }
-    
 }
 
 extension Web3Transaction {
@@ -304,6 +287,56 @@ extension Web3Transaction {
             self.addresses = addresses
             self.startDate = startDate
             self.endDate = endDate
+        }
+        
+    }
+    
+}
+
+extension Web3Transaction {
+    
+    public struct SimpleTransfer {
+        
+        public let assetID: String
+        public let fromAddress: String?
+        public let toAddress: String?
+        public let directionalAmount: Decimal
+        public let localizedAmountString: String
+        
+        init?(receiver: Receiver) {
+            guard !receiver.assetID.isEmpty else {
+                return nil
+            }
+            guard let decimalAmount = Decimal(string: receiver.amount, locale: .enUSPOSIX) else {
+                return nil
+            }
+            self.assetID = receiver.assetID
+            self.fromAddress = nil
+            self.toAddress = receiver.to
+            self.directionalAmount = decimalAmount
+            self.localizedAmountString = CurrencyFormatter.localizedString(
+                from: decimalAmount,
+                format: .precision,
+                sign: .whenNotZero
+            )
+        }
+        
+        init?(sender: Sender) {
+            guard !sender.assetID.isEmpty else {
+                return nil
+            }
+            guard let decimalAmount = Decimal(string: sender.amount, locale: .enUSPOSIX) else {
+                return nil
+            }
+            self.assetID = sender.assetID
+            self.fromAddress = sender.from
+            self.toAddress = nil
+            self.directionalAmount = -decimalAmount
+            self.localizedAmountString = CurrencyFormatter.localizedString(
+                from: -decimalAmount,
+                format: .precision,
+                sign: .whenNotZero
+            )
         }
         
     }

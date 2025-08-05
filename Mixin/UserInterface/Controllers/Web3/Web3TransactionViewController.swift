@@ -319,25 +319,17 @@ extension Web3TransactionViewController {
     }
     
     private func reloadData() {
-        let simpleHeaderView: SimpleWeb3TransactionTableHeaderView = tableView.tableHeaderView as? SimpleWeb3TransactionTableHeaderView
+        if let transfer = transaction.simpleTransfer {
+            let simpleHeaderView = tableView.tableHeaderView as? SimpleWeb3TransactionTableHeaderView
             ?? R.nib.simpleWeb3TransactionTableHeaderView(withOwner: nil)!
-        let complexHeaderView: ComplexWeb3TransactionTableHeaderView = tableView.tableHeaderView as? ComplexWeb3TransactionTableHeaderView
-            ?? R.nib.complexWeb3TransactionTableHeaderView(withOwner: nil)!
-        
-        switch transaction.transactionType.knownCase {
-        case .transferIn, .transferOut:
-            if let assetID = transaction.transferAssetID,
-               !assetID.isEmpty,
-               let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: assetID)
-            {
+            if let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: transfer.assetID) {
                 simpleHeaderView.iconView.setIcon(web3Token: token)
                 simpleHeaderView.symbolLabel.text = token.symbol
             } else {
                 simpleHeaderView.symbolLabel.text = nil
             }
-            let isAmountZero = transaction.directionalTransferAmount?.isZero ?? false
             simpleHeaderView.amountLabel.textColor = switch transaction.status {
-            case .success where !isAmountZero:
+            case .success where !transfer.directionalAmount.isZero:
                 switch transaction.transactionType.knownCase {
                 case .transferIn:
                     R.color.market_green()
@@ -349,35 +341,28 @@ extension Web3TransactionViewController {
             default:
                 R.color.text_tertiary()
             }
-        case .none, .unknown:
-            complexHeaderView.iconView.image = R.image.transaction_type_unknown()
-            complexHeaderView.titleLabel.text = transaction.transactionType.localized
-        case .swap:
-            complexHeaderView.iconView.image = R.image.transaction_type_swap()
-            complexHeaderView.titleLabel.text = R.string.localizable.swap()
-        case .approval:
-            complexHeaderView.iconView.image = R.image.transaction_type_approval()
-            complexHeaderView.titleLabel.text = R.string.localizable.approval()
-        }
-        
-        switch transaction.transactionType.knownCase {
-        case .transferIn, .transferOut:
-            if let amount = transaction.directionalTransferAmount {
-                simpleHeaderView.amountLabel.text = CurrencyFormatter.localizedString(
-                    from: amount,
-                    format: .precision,
-                    sign: .whenNotZero
-                )
-            } else {
-                simpleHeaderView.amountLabel.text = nil
-            }
+            simpleHeaderView.amountLabel.text = transfer.localizedAmountString
             simpleHeaderView.statusLabel.load(status: transaction.status)
             tableView.tableHeaderView = simpleHeaderView
-        case .none, .unknown, .swap, .approval:
+        } else {
+            let complexHeaderView = tableView.tableHeaderView as? ComplexWeb3TransactionTableHeaderView
+            ?? R.nib.complexWeb3TransactionTableHeaderView(withOwner: nil)!
+            switch transaction.transactionType.knownCase {
+            case .transferIn:
+                complexHeaderView.iconView.image = R.image.transaction_type_transfer_in()
+            case .transferOut:
+                complexHeaderView.iconView.image = R.image.transaction_type_transfer_out()
+            case .none, .unknown:
+                complexHeaderView.iconView.image = R.image.transaction_type_unknown()
+            case .swap:
+                complexHeaderView.iconView.image = R.image.transaction_type_swap()
+            case .approval:
+                complexHeaderView.iconView.image = R.image.transaction_type_approval()
+            }
+            complexHeaderView.titleLabel.text = transaction.transactionType.localized
             complexHeaderView.statusLabel.load(status: transaction.status)
             tableView.tableHeaderView = complexHeaderView
         }
-        
         if let headerView = tableView.tableHeaderView as? Web3TransactionTableHeaderView {
             if transaction.isMalicious {
                 headerView.showMaliciousWarningView()
@@ -385,7 +370,6 @@ extension Web3TransactionViewController {
                 headerView.hideMaliciousWarningView()
             }
         }
-        
         layoutTableHeaderView()
         
         let feeToken = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: transaction.chainID)
@@ -409,93 +393,89 @@ extension Web3TransactionViewController {
             feeRow = .plain(key: .fee, value: transaction.fee)
         }
         
-        switch transaction.transactionType.knownCase {
-        case .transferIn:
+        if let transfer = transaction.simpleTransfer {
             rows = [
                 .plain(key: .transactionHash, value: transaction.transactionHash),
             ]
-            if let fromAddress = transaction.senders?.first?.from {
+            if let fromAddress = transfer.fromAddress {
                 rows.append(.plain(key: .from, value: fromAddress))
-            }
-            rows.append(feeRow)
-        case .transferOut:
-            rows = [
-                .plain(key: .transactionHash, value: transaction.transactionHash),
-            ]
-            if let toAddress = transaction.receivers?.first?.to {
+            } else if let toAddress = transfer.toAddress {
                 rows.append(.plain(key: .to, value: toAddress))
             }
             rows.append(feeRow)
-        case .swap, .none, .unknown:
-            let tokens = Web3TokenDAO.shared.tokens(walletID: wallet.walletID, ids: transaction.allAssetIDs)
-                .reduce(into: [:]) { result, token in
-                    result[token.assetID] = token
+        } else {
+            switch transaction.transactionType.knownCase {
+            case .transferIn, .transferOut, .swap, .none, .unknown:
+                let tokens = Web3TokenDAO.shared.tokens(walletID: wallet.walletID, ids: transaction.allAssetIDs)
+                    .reduce(into: [:]) { result, token in
+                        result[token.assetID] = token
+                    }
+                let sendStyle: AssetChange.Style
+                let receiveStyle: AssetChange.Style
+                switch transaction.status {
+                case .success:
+                    sendStyle = .send
+                    receiveStyle = .receive
+                default:
+                    sendStyle = .pending
+                    receiveStyle = .pending
                 }
-            let sendStyle: AssetChange.Style
-            let receiveStyle: AssetChange.Style
-            switch transaction.status {
-            case .success:
-                sendStyle = .send
-                receiveStyle = .receive
-            default:
-                sendStyle = .pending
-                receiveStyle = .pending
-            }
-            let receivers = transaction.receivers ?? []
-            let senders = transaction.senders ?? []
-            let changes = receivers.map { receiver in
-                let token = tokens[receiver.assetID]
-                let amount = if let amount = Decimal(string: receiver.amount, locale: .enUSPOSIX) {
-                    CurrencyFormatter.localizedString(
-                        from: amount,
-                        format: .precision,
-                        sign: .always
-                    )
+                let receivers = transaction.receivers ?? []
+                let senders = transaction.senders ?? []
+                let changes = receivers.map { receiver in
+                    let token = tokens[receiver.assetID]
+                    let amount = if let amount = Decimal(string: receiver.amount, locale: .enUSPOSIX) {
+                        CurrencyFormatter.localizedString(
+                            from: amount,
+                            format: .precision,
+                            sign: .always
+                        )
+                    } else {
+                        receiver.amount
+                    }
+                    return AssetChange(token: token, amount: amount, style: receiveStyle)
+                } + senders.map { sender in
+                    let token = tokens[sender.assetID]
+                    let amount = if let amount = Decimal(string: sender.amount, locale: .enUSPOSIX) {
+                        CurrencyFormatter.localizedString(
+                            from: -amount,
+                            format: .precision,
+                            sign: .always
+                        )
+                    } else {
+                        "-" + sender.amount
+                    }
+                    return AssetChange(token: token, amount: amount, style: sendStyle)
+                }
+                if changes.isEmpty {
+                    rows = []
                 } else {
-                    receiver.amount
+                    rows = [.assetChanges(changes)]
                 }
-                return AssetChange(token: token, amount: amount, style: receiveStyle)
-            } + senders.map { sender in
-                let token = tokens[sender.assetID]
-                let amount = if let amount = Decimal(string: sender.amount, locale: .enUSPOSIX) {
-                    CurrencyFormatter.localizedString(
-                        from: -amount,
-                        format: .precision,
-                        sign: .always
-                    )
+                rows.append(contentsOf: [
+                    .plain(key: .transactionHash, value: transaction.transactionHash),
+                    feeRow,
+                ])
+            case .approval:
+                if let approval = transaction.approvals?.first,
+                   let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: approval.assetID)
+                {
+                    let localizedAmount = switch approval.approvalType {
+                    case .known(.unlimited):
+                        R.string.localizable.approval_unlimited()
+                    case .known(.other):
+                        approval.localizedAmount
+                    case .unknown(let value):
+                        value
+                    }
+                    rows = [.approval(token: token, amount: localizedAmount)]
                 } else {
-                    "-" + sender.amount
+                    rows = []
                 }
-                return AssetChange(token: token, amount: amount, style: sendStyle)
-            }
-            if changes.isEmpty {
-                rows = []
-            } else {
-                rows = [.assetChanges(changes)]
-            }
-            rows.append(contentsOf: [
-                .plain(key: .transactionHash, value: transaction.transactionHash),
-                feeRow,
-            ])
-        case .approval:
-            if let approval = transaction.approvals?.first,
-               let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: approval.assetID)
-            {
-                let localizedAmount = switch approval.approvalType {
-                case .known(.unlimited):
-                    R.string.localizable.approval_unlimited()
-                case .known(.other):
-                    approval.localizedAmount
-                case .unknown(let value):
-                    value
+                rows.append(.plain(key: .transactionHash, value: transaction.transactionHash))
+                if let toAddress = transaction.receivers?.first?.to {
+                    rows.append(.plain(key: .to, value: toAddress))
                 }
-                rows = [.approval(token: token, amount: localizedAmount)]
-            } else {
-                rows = []
-            }
-            rows.append(.plain(key: .transactionHash, value: transaction.transactionHash))
-            if let toAddress = transaction.receivers?.first?.to {
-                rows.append(.plain(key: .to, value: toAddress))
             }
         }
         

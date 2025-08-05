@@ -198,12 +198,12 @@ class MixinSwapViewController: SwapViewController {
         from swappableTokens: [SwapToken]
     ) -> OrderedDictionary<String, BalancedSwapToken> {
         let ids = swappableTokens.map(\.assetID)
-        let tokenItems = TokenDAO.shared.tokenItems(with: ids)
-        let tokenMaps = tokenItems.reduce(into: [:]) { result, item in
-            result[item.assetID] = item
-        }
+        let availableTokens = TokenDAO.shared.tokenItems(with: ids)
+            .reduce(into: [:]) { result, item in
+                result[item.assetID] = item
+            }
         return swappableTokens.reduce(into: OrderedDictionary()) { result, token in
-            result[token.assetID] = if let item = tokenMaps[token.assetID] {
+            result[token.assetID] = if let item = availableTokens[token.assetID] {
                 BalancedSwapToken(
                     token: token,
                     balance: item.decimalBalance,

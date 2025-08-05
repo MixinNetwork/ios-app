@@ -5,6 +5,7 @@ import MixinServices
 final class Web3SwapViewController: SwapViewController {
     
     private let wallet: Web3Wallet
+    private let supportedChainIDs: Set<String>
     
     private var walletID: String {
         wallet.walletID
@@ -12,6 +13,7 @@ final class Web3SwapViewController: SwapViewController {
     
     init(wallet: Web3Wallet, sendAssetID: String?, receiveAssetID: String?) {
         self.wallet = wallet
+        self.supportedChainIDs = Web3AddressDAO.shared.chainIDs(walletID: wallet.walletID)
         super.init(
             tokenSource: .web3,
             sendAssetID: sendAssetID,
@@ -229,6 +231,7 @@ final class Web3SwapViewController: SwapViewController {
     
     override func balancedSwapToken(assetID: String) -> BalancedSwapToken? {
         if let item = Web3TokenDAO.shared.token(walletID: walletID, assetID: assetID),
+           supportedChainIDs.contains(item.chainID), // This could be redundant, no token with unsupported chain should exists in db
            let token = BalancedSwapToken(tokenItem: item)
         {
             return token
@@ -241,12 +244,15 @@ final class Web3SwapViewController: SwapViewController {
         from swappableTokens: [SwapToken]
     ) -> OrderedDictionary<String, BalancedSwapToken> {
         let ids = swappableTokens.map(\.assetID)
-        let tokenItems = Web3TokenDAO.shared.tokens(walletID: walletID, ids: ids)
-        let tokenMaps = tokenItems.reduce(into: [:]) { result, item in
-            result[item.assetID] = item
-        }
+        let availableTokens = Web3TokenDAO.shared.tokens(walletID: walletID, ids: ids)
+            .reduce(into: [:]) { result, item in
+                result[item.assetID] = item
+            }
         return swappableTokens.reduce(into: OrderedDictionary()) { result, token in
-            result[token.assetID] = if let item = tokenMaps[token.assetID] {
+            guard let chainID = token.chain.chainID, supportedChainIDs.contains(chainID) else {
+                return
+            }
+            result[token.assetID] = if let item = availableTokens[token.assetID] {
                 BalancedSwapToken(
                     token: token,
                     balance: item.decimalBalance,

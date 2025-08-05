@@ -117,7 +117,7 @@ final class TokenSearchResultsViewController: WalletSearchTableViewController {
                 return
             }
             
-            localItems = localItems.filter{ $0.balance.doubleValue > 0 }
+            localItems = localItems.filter{ $0.decimalBalance > 0 }
             let localIds = Set(localItems.map(\.assetID))
             let remoteItems = remoteAssets.compactMap({ (token) -> MixinTokenItem? in
                 guard !localIds.contains(token.assetID) else {

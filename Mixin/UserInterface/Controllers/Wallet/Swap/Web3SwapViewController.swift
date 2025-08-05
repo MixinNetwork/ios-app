@@ -21,6 +21,21 @@ final class Web3SwapViewController: SwapViewController {
         )
     }
     
+    init(
+        wallet: Web3Wallet,
+        supportedChainIDs: Set<String>,
+        sendAssetID: String?,
+        receiveAssetID: String?
+    ) {
+        self.wallet = wallet
+        self.supportedChainIDs = supportedChainIDs
+        super.init(
+            tokenSource: .web3,
+            sendAssetID: sendAssetID,
+            receiveAssetID: receiveAssetID
+        )
+    }
+    
     @MainActor required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -178,8 +193,6 @@ final class Web3SwapViewController: SwapViewController {
                         }
                         
                         let fee = try await operation.loadFee()
-                        let feeTokenSymbol = operation.feeToken.symbol
-                        
                         let sendRequirement = BalanceRequirement(token: sendToken, amount: sendAmount)
                         let feeRequirement = BalanceRequirement(token: operation.feeToken, amount: fee.tokenAmount)
                         let requirements = sendRequirement.merging(with: feeRequirement)

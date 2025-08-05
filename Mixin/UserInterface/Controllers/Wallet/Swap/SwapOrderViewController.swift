@@ -53,7 +53,11 @@ final class SwapOrderViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = R.string.localizable.order_details()
+        title = R.string.localizable.order_details()
+        navigationItem.titleView = WalletIdentifyingNavigationTitleView(
+            title: R.string.localizable.order_details(),
+            wallet: .privacy
+        )
         navigationItem.rightBarButtonItem = .customerService(target: self, action: #selector(presentCustomerService(_:)))
         view.backgroundColor = R.color.background_secondary()
         tableView.backgroundColor = R.color.background_secondary()

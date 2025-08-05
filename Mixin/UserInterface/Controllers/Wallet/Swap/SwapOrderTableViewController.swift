@@ -22,7 +22,11 @@ final class SwapOrderTableViewController: UIViewController {
         super.viewDidLoad()
         
         BadgeManager.shared.setHasViewed(identifier: .swapOrder)
-        navigationItem.title = R.string.localizable.orders()
+        title = R.string.localizable.orders()
+        navigationItem.titleView = WalletIdentifyingNavigationTitleView(
+            title: R.string.localizable.orders(),
+            wallet: .privacy
+        )
         view.backgroundColor = R.color.background()
         
         tableView = UITableView(frame: view.bounds, style: .plain)

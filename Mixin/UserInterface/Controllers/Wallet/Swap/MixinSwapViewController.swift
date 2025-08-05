@@ -82,11 +82,10 @@ class MixinSwapViewController: SwapViewController {
     }
     
     func initTitleBar() {
-        navigationItem.titleView = NavigationTitleView(
+        navigationItem.titleView = WalletIdentifyingNavigationTitleView(
             title: R.string.localizable.swap(),
-            subtitle: R.string.localizable.privacy_wallet()
+            wallet: .privacy
         )
-        
         let showOrdersItem = BadgeBarButtonItem(
             image: R.image.ic_title_transaction()!,
             target: self,

@@ -2,7 +2,7 @@ import UIKit
 import WebKit
 import MixinServices
 
-class ClipSwitcher {
+final class ClipSwitcher {
     
     static let maxNumber = 6
     
@@ -108,6 +108,12 @@ class ClipSwitcher {
     @objc func showFullscreenSwitcher() {
         fullscreenSwitcher.clips = clips
         fullscreenSwitcher.show()
+    }
+    
+    func reloadWebViews() {
+        for clip in clips {
+            clip.controllerIfLoaded?.reloadWebView()
+        }
     }
     
     @objc private func updateSerializedClip(_ notification: Notification) {

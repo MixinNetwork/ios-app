@@ -48,6 +48,10 @@ final class SafeSnapshotViewController: TransactionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = R.string.localizable.transaction()
+        navigationItem.titleView = WalletIdentifyingNavigationTitleView(
+            title: R.string.localizable.transaction(),
+            wallet: .privacy
+        )
         tableView.tableHeaderView = tableHeaderView
         tableView.dataSource = self
         tableView.delegate = self
@@ -188,8 +192,8 @@ extension SafeSnapshotViewController {
         
         case transactionID
         case transactionHash
-        case from
-        case to
+        case sender
+        case receiver
         case depositHash
         case withdrawalHash
         case inscriptionHash
@@ -202,37 +206,35 @@ extension SafeSnapshotViewController {
         var localized: String {
             switch self {
             case .transactionID:
-                return R.string.localizable.transaction_id()
+                R.string.localizable.transaction_id()
             case .transactionHash:
-                return R.string.localizable.transaction_hash()
-            case .from:
-                return R.string.localizable.from()
-            case .to:
-                return R.string.localizable.to()
+                R.string.localizable.transaction_hash()
+            case .sender:
+                R.string.localizable.sender()
+            case .receiver:
+                R.string.localizable.receiver()
             case .depositHash:
-                return R.string.localizable.deposit_hash()
+                R.string.localizable.deposit_hash()
             case .withdrawalHash:
-                return R.string.localizable.withdrawal_hash()
+                R.string.localizable.withdrawal_hash()
             case .inscriptionHash:
-                return R.string.localizable.collectible_hash()
+                R.string.localizable.collectible_hash()
             case .collectionName:
-                return R.string.localizable.collection()
+                R.string.localizable.collection()
             case .id:
-                return R.string.localizable.id()
+                R.string.localizable.id()
             case .depositProgress:
-                return R.string.localizable.status()
+                R.string.localizable.status()
             case .createdAt:
-                return R.string.localizable.date()
+                R.string.localizable.date()
             case .memo:
-                return R.string.localizable.memo()
+                R.string.localizable.memo()
             }
         }
         
         var allowsCopy: Bool {
             switch self {
-            case .transactionID, .transactionHash,
-                    .memo, .from, .to, .depositHash,
-                    .withdrawalHash, .inscriptionHash:
+            case .transactionID, .transactionHash, .memo, .sender, .receiver, .depositHash, .withdrawalHash, .inscriptionHash:
                 true
             default:
                 false
@@ -293,7 +295,7 @@ extension SafeSnapshotViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch rows[indexPath.row].key {
-        case .from, .to:
+        case .sender, .receiver:
             guard let id = snapshot.opponentUserID, !id.isEmpty else {
                 return
             }
@@ -431,7 +433,7 @@ extension SafeSnapshotViewController {
                 sender = deposit.sender
                 style = []
             }
-            rows.append(Row(key: .from, value: sender, style: style))
+            rows.append(Row(key: .sender, value: sender, style: style))
             rows.append(Row(key: .depositHash, value: deposit.hash))
         } else if let withdrawal = snapshot.withdrawal {
             let receiver: String
@@ -443,7 +445,7 @@ extension SafeSnapshotViewController {
                 receiver = withdrawal.receiver
                 receiverStyle = []
             }
-            rows.append(Row(key: .to, value: receiver, style: receiverStyle))
+            rows.append(Row(key: .receiver, value: receiver, style: receiverStyle))
             
             let withdrawalHash: String
             let withdrawalStyle: Row.Style
@@ -473,9 +475,9 @@ extension SafeSnapshotViewController {
                 style = .unavailable
             }
             if snapshot.amount.hasMinusPrefix {
-                rows.append(Row(key: .to, value: opponentName, style: style))
+                rows.append(Row(key: .receiver, value: opponentName, style: style))
             } else {
-                rows.append(Row(key: .from, value: opponentName, style: style))
+                rows.append(Row(key: .sender, value: opponentName, style: style))
             }
         }
         if !snapshot.memo.isEmpty {

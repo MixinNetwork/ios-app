@@ -261,6 +261,7 @@ final class ClassicWalletViewController: WalletViewController {
                 }
                 self.layoutTableHeaderView()
                 self.tableView.reloadData()
+                self.updateDappConnectionWalletIfNeeded()
             }
         }
     }
@@ -290,6 +291,19 @@ final class ClassicWalletViewController: WalletViewController {
         controller.actions[1].isEnabled = count > 0
             && count <= maxNameUTF8Count
             && text != wallet.name
+    }
+    
+    private func updateDappConnectionWalletIfNeeded() {
+        switch availability {
+        case .always:
+            if AppGroupUserDefaults.Wallet.dappConnectionWalletID != wallet.walletID {
+                AppGroupUserDefaults.Wallet.dappConnectionWalletID = wallet.walletID
+                UIApplication.homeContainerViewController?.clipSwitcher.reloadWebViews()
+                WalletConnectService.shared.updateSessions(with: wallet)
+            }
+        case .never, .afterImportingMnemonics, .afterImportingPrivateKey:
+            break
+        }
     }
     
     private func hideToken(with assetID: String) {

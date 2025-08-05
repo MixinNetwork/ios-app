@@ -5,11 +5,11 @@ import web3
 import ReownWalletKit
 import MixinServices
 
-final class Web3TransferPreviewViewController: AuthenticationPreviewViewController {
+final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
     enum Proposer {
         case dapp(Web3DappProposer)
-        case user(addressLabel: String?)
+        case user(toAddressLabel: AddressLabel?)
         case speedUp(sender: Web3TransactionViewController)
         case cancel(sender: Web3TransactionViewController)
     }
@@ -24,7 +24,7 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
     init(operation: Web3TransferOperation, proposer: Proposer?) {
         self.operation = operation
         self.proposer = proposer
-        super.init(warnings: [])
+        super.init(wallet: .common(operation.wallet), warnings: [])
     }
     
     required init?(coder: NSCoder) {
@@ -135,10 +135,15 @@ final class Web3TransferPreviewViewController: AuthenticationPreviewViewControll
         switch proposer {
         case let .dapp(proposer):
             rows.append(.doubleLineInfo(caption: .from, primary: proposer.name, secondary: proposer.host))
-            rows.append(.info(caption: .account, content: operation.fromAddress.destination))
-        case let .user(addressLabel):
-            rows.append(.receivingAddress(value: operation.toAddress, label: addressLabel))
-            rows.append(.sendingAddress(value: operation.fromAddress.destination, label: operation.wallet.localizedName))
+            rows.append(.address(caption: .wallet, address: operation.fromAddress.destination, label: .wallet(.common(operation.wallet))))
+        case let .user(toAddressLabel):
+            switch toAddressLabel {
+            case .wallet(.privacy):
+                rows.append(.wallet(caption: .receiver, wallet: .privacy, threshold: nil))
+            default:
+                rows.append(.address(caption: .receiver, address: operation.toAddress, label: toAddressLabel))
+            }
+            rows.append(.address(caption: .sender, address: operation.fromAddress.destination, label: .wallet(.common(operation.wallet))))
         case .speedUp, .cancel:
             break
         case .none:

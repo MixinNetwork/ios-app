@@ -53,6 +53,8 @@ final class WalletContainerViewController: UIViewController {
         guard let summary = viewController as? WalletSummaryViewController else {
             return
         }
+        AppGroupUserDefaults.Wallet.lastSelectedWallet = wallet.identifier
+        
         self.viewController = nil
         let viewController: WalletViewController
         switch wallet {
@@ -61,8 +63,6 @@ final class WalletContainerViewController: UIViewController {
         case .common(let wallet):
             viewController = ClassicWalletViewController(wallet: wallet)
         }
-        AppGroupUserDefaults.Wallet.lastSelectedWallet = wallet.identifier
-        
         addChild(viewController)
         view.insertSubview(viewController.view, at: 0)
         viewController.view.snp.makeEdgesEqualToSuperview()

@@ -35,7 +35,7 @@ final class WalletConnectService {
             description: walletDescription,
             url: URL.mixinMessenger.absoluteString,
             icons: [],
-            redirect: try! AppMetadata.Redirect(native: "mixin://", universal: nil)
+            redirect: try! .init(native: "mixin://", universal: nil)
         )
         WalletKit.configure(metadata: metadata, crypto: Web3CryptoProvider())
         WalletKit.instance.sessionsPublisher
@@ -61,6 +61,20 @@ final class WalletConnectService {
     func reloadSessions() {
         let sessions = Sign.instance.getSessions()
         reloadSessions(sessions: sessions)
+    }
+    
+    func updateSessions(with wallet: Web3Wallet) {
+        Task.detached { [sessions] in
+            for session in sessions {
+                let addresses = Web3AddressDAO.shared.addresses(walletID: wallet.walletID)
+                let namespaces = try await session.updatedNamespaces(addresses: addresses)
+                do {
+                    try await Sign.instance.update(topic: session.topic, namespaces: namespaces)
+                } catch {
+                    logger.error(category: "Service", message: "Update: \(error)")
+                }
+            }
+        }
     }
     
     func connect(to uri: WalletConnectURI) {
@@ -186,11 +200,20 @@ extension WalletConnectService {
                 }
                 return
             }
-            
+            guard let wallet = Web3WalletDAO.shared.currentSelectedWallet() else {
+                return
+            }
+            let evmAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.ethereum)
+            let solanaAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.solana)
             DispatchQueue.main.async {
-                let connectWallet = ConnectWalletViewController(proposal: proposal,
-                                                                chains: chains,
-                                                                events: Array(events))
+                let connectWallet = ConnectWalletViewController(
+                    wallet: wallet,
+                    evmAddress: evmAddress,
+                    solanaAddress: solanaAddress,
+                    proposal: proposal,
+                    chains: chains,
+                    events: Array(events)
+                )
                 Web3PopupCoordinator.enqueue(popup: .request(connectWallet))
             }
         }

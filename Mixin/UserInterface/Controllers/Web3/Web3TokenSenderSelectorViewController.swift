@@ -95,7 +95,7 @@ extension Web3TokenSenderSelectorViewController: UITableViewDelegate {
             guard let kind = Web3Chain.chain(chainID: token.chainID)?.kind else {
                 return
             }
-            let deposit = Web3DepositViewController(kind: kind, address: receivingAddress.destination)
+            let deposit = Web3DepositViewController(wallet: receivingWallet, kind: kind, address: receivingAddress.destination)
             navigationController?.pushViewController(deposit, animated: true)
         }
     }
@@ -157,8 +157,8 @@ extension Web3TokenSenderSelectorViewController: TransferWalletSelectorViewContr
                 token: token,
                 fromWallet: sendingWallet,
                 fromAddress: sendingAddress,
-                toType: .commonWallet(name: receivingWallet.localizedName),
-                toAddress: receivingAddress.destination
+                toAddress: receivingAddress.destination,
+                toAddressLabel: .wallet(.common(receivingWallet)),
             )
             let input = Web3TransferInputAmountViewController(payment: payment)
             navigationController?.pushViewController(input, animated: true)

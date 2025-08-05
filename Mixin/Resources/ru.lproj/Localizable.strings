@@ -4,7 +4,6 @@
 "access_denied" = "В доступе отказано";
 "access_to_contacts" = "Доступ к контактам";
 "account" = "Аккаунт";
-"accounts" = "Accounts";
 "acknowledgements" = "Благодарности";
 "add" = "Добавить";
 "add_a_note" = "Add a note";
@@ -343,8 +342,8 @@
 "confirm_withdrawal" = "Confirm Withdrawal";
 "connect" = "Connect";
 "connect_to_tip_network_failed" = "Unable to connect to TIP network. Check your connection and try again.";
-"connect_web3_account_description" = "Allow the app to view your account address and ask for your approval to make a transaction.";
-"connect_your_account" = "Connect Your Account";
+"connect_web3_wallet_description" = "Allow the app to view your wallet address and ask for your approval to make a transaction.";
+"connect_your_wallet" = "Connect Your Wallet";
 "connected" = "Соединено";
 "connecting" = "Подключение";
 "connection_establishment_failed" = "Connection establishment failed";
@@ -1461,16 +1460,6 @@
 "unit_week_count" = "недели";
 "unknown_artist" = "Неизвестный артист";
 "unlimited_authorization_warning" = "This application can access all %3$@ in your %1$@ account (%2$@).";
-"unlock" = "Unlock";
-"unlock_web3_account" = "Unlock %@ Account";
-"unlock_web3_account_agreement" = "It is recommended to transfer assets back to more secured Mixin wallet as soon as interactions with apps are completed.";
-"unlock_web3_account_agreement_1" = "Your assets in %@ account and Mixin wallet are isolated but managed using the same PIN.";
-"unlock_web3_account_agreement_2" = "Asset transfers between your %@ account and Mixin wallet incur network fees.";
-"unlock_web3_account_agreement_3" = "Unlocking your %1$@ account will also automatically unlock EVM accounts such as %2$@, %3$@ and others.";
-"unlock_web3_account_description" = "Your %@ account is based on your Mixin Messenger MPC wallet and derived according to the BIP44 protocol.";
-"unlock_web3_account_failed" = "Account Unlock Failed";
-"unlock_web3_account_success" = "Account Unlocked";
-"unlocking" = "Unlocking";
 "unmute" = "Включить звук";
 "unmuted" = "Включено";
 "unnamed_location" = "Безымянное местоположение";
@@ -1576,9 +1565,6 @@
 "web_cannot_reached_desc" = "%@ заняло слишком много времени для ответа. Пожалуйста, проверьте свою сеть и попробуйте переключить 4G, Wi-Fi или VPN, чтобы перезагрузить страницу.";
 "web_cannot_reached_title" = "Эта веб-страница недоступна";
 "web_suspicious_link_tips" = "Ссылки нет в соответствующих шаблонах ресурсов.";
-"web3_account" = "Account";
-"web3_account_connected" = "Account Connected";
-"web3_account_network" = "%@ Account";
 "web3_deposit_description_evm" = "Use this address for receiving tokens on Ethereum, Polygon, BSC, Base networks";
 "web3_deposit_description_solana" = "Use this address for receiving tokens on Solana network";
 "web3_ensure_trust" = "Please ensure you trust this app before proceeding with the request.";
@@ -1592,6 +1578,7 @@
 "web3_signing_warning" = "We cannot verify this request; please ensure you trust this app before proceeding with the request.";
 "web3_transaction_request" = "Transaction Request";
 "web3_transfer_insufficient_fee_count" = "ERROR 20118: Broadcasting the transaction requires %1$@, and the available balance is %2$@.";
+"web3_wallet_connected" = "Wallet Connected";
 "weekly" = "Еженедельно";
 "weeks" = "недели";
 "weeks_count_short" = "%dW";

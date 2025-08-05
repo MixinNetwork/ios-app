@@ -29,7 +29,15 @@ final class UncontrolledWalletWarningViewController: UIViewController {
         super.viewDidLoad()
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.cornerRadius = 13
+        nameLabel.setFont(
+            scaledFor: .systemFont(ofSize: 18, weight: .semibold),
+            adjustForContentSize: true
+        )
         nameLabel.text = wallet.name
+        descriptionLabel.setFont(
+            scaledFor: .systemFont(ofSize: 14),
+            adjustForContentSize: true
+        )
         switch wallet.category.knownCase {
         case .watchAddress:
             watchImageView.isHidden = false

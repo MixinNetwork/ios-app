@@ -22,22 +22,32 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
-        switch payment.toType {
-        case .addressBook(let label):
+        title = R.string.localizable.send_to_title()
+        switch payment.toAddressLabel {
+        case let .addressBook(label):
+            let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
             titleView.subtitle = label
             titleView.subtitleStyle = .label(backgroundColor: R.color.address_label()!)
-        case .privacyWallet:
-            titleView.subtitle = R.string.localizable.privacy_wallet()
-            titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
-        case .commonWallet(let name):
-            titleView.subtitle = name
-            titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
-        case .arbitrary:
+            navigationItem.titleView = titleView
+        case let .wallet(wallet):
+            switch wallet {
+            case .privacy:
+                navigationItem.titleView = WalletIdentifyingNavigationTitleView(
+                    title: R.string.localizable.send_to_title(),
+                    wallet: .privacy
+                )
+            case .common(let wallet):
+                let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
+                titleView.subtitle = wallet.localizedName
+                titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
+                navigationItem.titleView = titleView
+            }
+        case .none:
+            let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
             titleView.subtitle = payment.toAddressCompactRepresentation
             titleView.subtitleStyle = .plain
+            navigationItem.titleView = titleView
         }
-        navigationItem.titleView = titleView
         tokenIconView.setIcon(web3Token: payment.token)
         tokenNameLabel.text = payment.token.name
         tokenBalanceLabel.text = payment.token.localizedBalanceWithSymbol
@@ -66,7 +76,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                 DispatchQueue.main.async {
                     let transfer = Web3TransferPreviewViewController(
                         operation: operation,
-                        proposer: .user(addressLabel: payment.toType.addressLabel)
+                        proposer: .user(toAddressLabel: payment.toAddressLabel),
                     )
                     transfer.manipulateNavigationStackOnFinished = true
                     Web3PopupCoordinator.enqueue(popup: .request(transfer))
@@ -268,7 +278,7 @@ extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewContr
             guard let address = Web3AddressDAO.shared.address(walletID: feeToken.walletID, chainID: feeToken.chainID) else {
                 return
             }
-            next = Web3DepositViewController(kind: payment.chain.kind, address: address.destination)
+            next = Web3DepositViewController(wallet: payment.wallet, kind: payment.chain.kind, address: address.destination)
         }
         navigationController?.pushViewController(next, animated: true)
     }

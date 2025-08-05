@@ -1,13 +1,17 @@
 import UIKit
 import MixinServices
 
-final class InsufficientBalanceViewController: AuthenticationPreviewViewController {
+final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
     enum Intent {
         case privacyWalletTransfer(BalanceRequirement)
         case withdraw(withdrawing: BalanceRequirement, fee: BalanceRequirement)
         case commonWalletTransfer(wallet: Web3Wallet, transferring: BalanceRequirement, fee: BalanceRequirement)
         case externalWeb3Transaction(wallet: Web3Wallet, fee: BalanceRequirement)
+    }
+    
+    override var tableViewStyle: UITableView.Style {
+        .insetGrouped
     }
     
     private let intent: Intent
@@ -39,7 +43,12 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
                 fee.token
             }
         }
-        super.init(warnings: [])
+        switch intent {
+        case .privacyWalletTransfer, .withdraw:
+            super.init(wallet: .privacy, warnings: [])
+        case let .commonWalletTransfer(wallet, _, _), let .externalWeb3Transaction(wallet, _):
+            super.init(wallet: .common(wallet), warnings: [])
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -255,10 +264,6 @@ final class InsufficientBalanceViewController: AuthenticationPreviewViewControll
         }
     }
     
-    override func loadTableView() {
-        tableView = UITableView(frame: view.bounds, style: .insetGrouped)
-    }
-    
     override func loadInitialTrayView(animated: Bool) {
         // Don't load default tray view
     }
@@ -367,11 +372,11 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
                 DepositViewController(token: token)
             }
         case let token as Web3TokenItem:
+            guard let wallet = Web3WalletDAO.shared.wallet(id: token.walletID) else {
+                return
+            }
             switch method {
             case .swap:
-                guard let wallet = Web3WalletDAO.shared.wallet(id: token.walletID) else {
-                    return
-                }
                 next = Web3SwapViewController(
                     wallet: wallet,
                     sendAssetID: nil,
@@ -384,7 +389,11 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
                 guard let kind = Web3Chain.chain(chainID: token.chainID)?.kind else {
                     return
                 }
-                next = Web3DepositViewController(kind: kind, address: address.destination)
+                next = Web3DepositViewController(
+                    wallet: wallet,
+                    kind: kind,
+                    address: address.destination
+                )
             }
         default:
             return

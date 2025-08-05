@@ -24,6 +24,7 @@ extension AppGroupUserDefaults {
             
             case swapTokens = "swap_tokens"
             case lastSelectedWallet = "last_selected_wallet"
+            case dappConnectionWalletID = "dapp_connection_wallet_id"
             
             case hasViewedPrivacyWalletTip = "has_viewed_privacy_wallet_tip"
             case hasViewedClassicWalletTip = "has_viewed_classic_wallet_tip"
@@ -63,6 +64,9 @@ extension AppGroupUserDefaults {
         
         @RawRepresentableDefault(namespace: .wallet, key: Key.lastSelectedWallet, defaultValue: .privacy)
         public static var lastSelectedWallet: MixinServices.Wallet.Identifier
+        
+        @Default(namespace: .wallet, key: Key.dappConnectionWalletID, defaultValue: nil)
+        public static var dappConnectionWalletID: String?
         
         @Default(namespace: .wallet, key: Key.hasViewedPrivacyWalletTip, defaultValue: false)
         public static var hasViewedPrivacyWalletTip: Bool {

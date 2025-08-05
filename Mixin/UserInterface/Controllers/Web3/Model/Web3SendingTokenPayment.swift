@@ -39,30 +39,8 @@ class Web3SendingTokenPayment {
 
 final class Web3SendingTokenToAddressPayment: Web3SendingTokenPayment {
     
-    enum AddressType {
-        
-        case addressBook(label: String)
-        case privacyWallet
-        case commonWallet(name: String)
-        case arbitrary
-        
-        var addressLabel: String? {
-            switch self {
-            case let .addressBook(label):
-                label
-            case .privacyWallet:
-                R.string.localizable.privacy_wallet()
-            case let .commonWallet(name):
-                name
-            case .arbitrary:
-                nil
-            }
-        }
-        
-    }
-    
-    let toType: AddressType
     let toAddress: String // Always the receiver, not the contract address
+    let toAddressLabel: AddressLabel?
     let toAddressCompactRepresentation: String
     
     init(
@@ -70,11 +48,11 @@ final class Web3SendingTokenToAddressPayment: Web3SendingTokenPayment {
         token: Web3TokenItem,
         fromWallet: Web3Wallet,
         fromAddress: Web3Address,
-        toType: AddressType,
-        toAddress: String
+        toAddress: String,
+        toAddressLabel: AddressLabel?,
     ) {
-        self.toType = toType
         self.toAddress = toAddress
+        self.toAddressLabel = toAddressLabel
         self.toAddressCompactRepresentation = Address.compactRepresentation(of: toAddress)
         super.init(
             wallet: fromWallet,
@@ -84,10 +62,10 @@ final class Web3SendingTokenToAddressPayment: Web3SendingTokenPayment {
         )
     }
     
-    init(payment: Web3SendingTokenPayment, to type: AddressType, address: String) {
-        self.toType = type
-        self.toAddress = address
-        self.toAddressCompactRepresentation = Address.compactRepresentation(of: address)
+    init(payment: Web3SendingTokenPayment, toAddress: String, toAddressLabel: AddressLabel?) {
+        self.toAddress = toAddress
+        self.toAddressLabel = toAddressLabel
+        self.toAddressCompactRepresentation = Address.compactRepresentation(of: toAddress)
         super.init(
             wallet: payment.wallet,
             chain: payment.chain,

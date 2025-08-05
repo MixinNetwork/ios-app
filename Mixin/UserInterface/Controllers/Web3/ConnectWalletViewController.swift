@@ -3,8 +3,11 @@ import web3
 import ReownWalletKit
 import MixinServices
 
-final class ConnectWalletViewController: AuthenticationPreviewViewController {
+final class ConnectWalletViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
+    private let wallet: Web3Wallet
+    private let evmAddress: Web3Address?
+    private let solanaAddress: Web3Address?
     private let proposal: WalletConnectSign.Session.Proposal
     private let chains: [Web3Chain]
     private let events: [String]
@@ -12,14 +15,20 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
     private var isProposalApproved = false
     
     init(
+        wallet: Web3Wallet,
+        evmAddress: Web3Address?,
+        solanaAddress: Web3Address?,
         proposal: WalletConnectSign.Session.Proposal,
         chains: [Web3Chain],
         events: [String]
     ) {
+        self.wallet = wallet
+        self.evmAddress = evmAddress
+        self.solanaAddress = solanaAddress
         self.proposal = proposal
         self.chains = chains
         self.events = events
-        super.init(warnings: [])
+        super.init(wallet: .common(wallet), warnings: [])
     }
     
     required init?(coder: NSCoder) {
@@ -35,19 +44,29 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                 .first
             imageView.sd_setImage(with: url)
         }
-        layoutTableHeaderView(title: R.string.localizable.connect_your_account(),
-                              subtitle: R.string.localizable.connect_web3_account_description())
+        layoutTableHeaderView(
+            title: R.string.localizable.connect_your_wallet(),
+            subtitle: R.string.localizable.connect_web3_wallet_description()
+        )
         
         let host = URL(string: proposal.proposer.url)?.host ?? proposal.proposer.url
         var rows: [Row] = [
             .doubleLineInfo(caption: .from, primary: proposal.proposer.name, secondary: host)
         ]
         let kinds = Set(chains.map(\.kind))
-        if kinds.contains(.evm), let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.ethereum) {
-            rows.append(.info(caption: .account, content: address.destination))
+        if kinds.contains(.evm), let evmAddress {
+            rows.append(.address(
+                caption: .wallet,
+                address: evmAddress.destination,
+                label: .wallet(.common(wallet))
+            ))
         }
-        if kinds.contains(.solana), let address = Web3AddressDAO.shared.classicWalletAddress(chainID: ChainID.solana) {
-            rows.append(.info(caption: .account, content: address.destination))
+        if kinds.contains(.solana), let solanaAddress {
+            rows.append(.address(
+                caption: .wallet,
+                address: solanaAddress.destination,
+                label: .wallet(.common(wallet))
+            ))
         }
         reloadData(with: rows)
     }
@@ -76,23 +95,30 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
         tableHeaderView.setIcon(progress: .busy)
         tableHeaderView.titleLabel.text = R.string.localizable.connecting()
         replaceTrayView(with: nil, animation: .vertical)
-        Task.detached { [chains, proposal, events] in
+        Task.detached { [chains, proposal, events, evmAddress, solanaAddress] in
             do {
-                let evmAddress = try await {
-                    let priv = try await TIP.deriveEthereumPrivateKey(pin: pin)
-                    let keyStorage = InPlaceKeyStorage(raw: priv)
-                    return try EthereumAccount(keyStorage: keyStorage).address.toChecksumAddress()
-                }()
-                let solanaAddress = try await {
-                    let priv = try await TIP.deriveSolanaPrivateKey(pin: pin)
-                    return try Solana.publicKey(seed: priv)
-                }()
-                let accounts: [WalletConnectUtils.Account] = chains.compactMap { chain in
+                let accounts: [WalletConnectUtils.Account] = try chains.compactMap { chain in
                     switch chain.kind {
                     case .evm:
-                        WalletConnectUtils.Account(blockchain: chain.caip2, address: evmAddress)
+                        guard let address = evmAddress?.destination else {
+                            throw WalletConnectSession.Error.noAddress
+                        }
+                        return .init(blockchain: chain.caip2, address: address)
                     case .solana:
-                        WalletConnectUtils.Account(blockchain: chain.caip2, address: solanaAddress)
+                        guard let address = solanaAddress?.destination else {
+                            throw WalletConnectSession.Error.noAddress
+                        }
+                        return .init(blockchain: chain.caip2, address: address)
+                    }
+                }
+                try await withCheckedThrowingContinuation { continuation in
+                    AccountAPI.verify(pin: pin) { result in
+                        switch result {
+                        case .success:
+                            continuation.resume()
+                        case .failure(let error):
+                            continuation.resume(throwing: error)
+                        }
                     }
                 }
                 let methods = WalletConnectSession.Method.allCases.map(\.rawValue)
@@ -112,8 +138,10 @@ final class ConnectWalletViewController: AuthenticationPreviewViewController {
                     self.canDismissInteractively = true
                     self.isProposalApproved = true
                     self.tableHeaderView.setIcon(progress: .success)
-                    self.layoutTableHeaderView(title: R.string.localizable.web3_account_connected(),
-                                               subtitle: R.string.localizable.connect_web3_account_description())
+                    self.layoutTableHeaderView(
+                        title: R.string.localizable.web3_wallet_connected(),
+                        subtitle: R.string.localizable.connect_web3_wallet_description()
+                    )
                     self.tableView.setContentOffset(.zero, animated: true)
                     self.loadSingleButtonTrayView(title: R.string.localizable.done(),
                                                   action: #selector(self.close(_:)))

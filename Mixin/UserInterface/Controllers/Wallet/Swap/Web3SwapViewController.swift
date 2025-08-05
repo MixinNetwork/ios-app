@@ -25,9 +25,9 @@ final class Web3SwapViewController: MixinSwapViewController {
     }
     
     override func initTitleBar() {
-        navigationItem.titleView = NavigationTitleView(
+        navigationItem.titleView = WalletIdentifyingNavigationTitleView(
             title: R.string.localizable.swap(),
-            subtitle: wallet.localizedName
+            wallet: .common(wallet)
         )
         navigationItem.rightBarButtonItems = [
             .customerService(
@@ -71,8 +71,7 @@ final class Web3SwapViewController: MixinSwapViewController {
         guard let kind = Web3Chain.chain(chainID: chainID)?.kind else {
             return
         }
-        
-        let deposit = Web3DepositViewController(kind: kind, address: address.destination)
+        let deposit = Web3DepositViewController(wallet: wallet, kind: kind, address: address.destination)
         navigationController?.pushViewController(deposit, animated: true)
     }
     
@@ -147,8 +146,8 @@ final class Web3SwapViewController: MixinSwapViewController {
                     )
                     let addressPayment = Web3SendingTokenToAddressPayment(
                         payment: payment,
-                        to: .arbitrary,
-                        address: depositDestination
+                        toAddress: depositDestination,
+                        toAddressLabel: nil
                     )
                     
                     do {
@@ -195,9 +194,10 @@ final class Web3SwapViewController: MixinSwapViewController {
                                 depositDestination: depositDestination,
                                 fee: fee,
                                 feeTokenSymbol: feeTokenSymbol,
-                                senderAddress: sendingAddress
+                                senderAddress: sendingAddress,
+                                senderAddressLabel: .wallet(.common(wallet))
                             )
-                            let op = SwapOperation(
+                            let operation = SwapOperation(
                                 operation: operation,
                                 sendToken: quote.sendToken,
                                 sendAmount: sendAmount,
@@ -206,7 +206,11 @@ final class Web3SwapViewController: MixinSwapViewController {
                                 destination: .web3(destination),
                                 memo: nil
                             )
-                            let preview = SwapPreviewViewController(operation: op, warnings: [])
+                            let preview = SwapPreviewViewController(
+                                wallet: .common(wallet),
+                                operation: operation,
+                                warnings: []
+                            )
                             preview.onDismiss = {
                                 sender.isBusy = false
                             }

@@ -36,14 +36,14 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
         
         let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
         switch destination {
-        case .address(let address):
+        case let .address(address):
             titleView.subtitle = address.label
             titleView.subtitleStyle = .label(backgroundColor: R.color.address_label()!)
-        case .temporary(let address):
+        case let .temporary(address):
             titleView.subtitle = address.compactRepresentation
             titleView.subtitleStyle = .plain
-        case .commonWallet:
-            titleView.subtitle = R.string.localizable.common_wallet()
+        case let .commonWallet(wallet, _):
+            titleView.subtitle = wallet.localizedName
             titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
         }
         navigationItem.titleView = titleView

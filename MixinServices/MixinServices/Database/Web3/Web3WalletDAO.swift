@@ -20,16 +20,14 @@ public final class Web3WalletDAO: Web3DAO {
         )
     }
     
-    public func hasClassicWallet(id: String) -> Bool {
-        db.recordExists(
-            in: Web3Wallet.self,
-            where: Web3Wallet.column(of: .category) == Web3Wallet.Category.classic.rawValue
-                && Web3Wallet.column(of: .walletID) == id
-        )
-    }
-    
-    public func classicWallet() -> Web3Wallet? {
-        db.select(where: Web3Wallet.column(of: .category) == Web3Wallet.Category.classic.rawValue)
+    public func currentSelectedWallet() -> Web3Wallet? {
+        if let id = AppGroupUserDefaults.Wallet.dappConnectionWalletID,
+           let wallet: Web3Wallet = db.select(where: Web3Wallet.column(of: .walletID) == id)
+        {
+            wallet
+        } else {
+            db.select(where: Web3Wallet.column(of: .category) == Web3Wallet.Category.classic.rawValue)
+        }
     }
     
     public func walletIDs() -> [String] {
@@ -83,6 +81,14 @@ public final class Web3WalletDAO: Web3DAO {
     
     public func wallet(id: String) -> Web3Wallet? {
         db.select(with: "SELECT * FROM wallets WHERE wallet_id = ?", arguments: [id])
+    }
+    
+    public func wallet(destination: String) -> Web3Wallet? {
+        db.select(with: """
+        SELECT * FROM wallets w
+            INNER JOIN addresses a ON w.wallet_id = a.wallet_id
+        WHERE a.destination = ?
+        """, arguments: [destination])
     }
     
     public func walletNames(like template: String) -> [String] {

@@ -137,18 +137,19 @@ final class Web3Worker {
             address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.solana)
             chain = solanaChain
         }
-        guard let address = address?.destination else {
+        guard let address else {
             send(error: "No Address", to: request)
             return
         }
         let humanReadable = String(data: data, encoding: .utf8) ?? ""
         let signable: WalletConnectDecodedSigningRequest.Signable = .raw(data)
         let operation = Web3SignWithBrowserWalletOperation(
+            wallet: wallet,
+            chain: chain,
             address: address,
             proposer: currentProposer,
-            humanReadableMessage: humanReadable,
             signable: signable,
-            chain: chain
+            humanReadableMessage: humanReadable
         ) { signature in
             try await self.send(result: signature, to: request)
         } rejectWith: {
@@ -157,7 +158,7 @@ final class Web3Worker {
         if chain == solanaChain {
             operation.solanaLoginWithHexSignatureQuirk = true
         }
-        let sign = Web3SignViewController(wallet: wallet, operation: operation, chainName: evmChain.name)
+        let sign = Web3SignViewController(operation: operation)
         Web3PopupCoordinator.enqueue(popup: .request(sign))
     }
     
@@ -166,7 +167,7 @@ final class Web3Worker {
             send(error: "No Wallet", to: request)
             return
         }
-        guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.ethereum)?.destination else {
+        guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.ethereum) else {
             send(error: "No Address", to: request)
             return
         }
@@ -175,17 +176,18 @@ final class Web3Worker {
             let typedData = try JSONDecoder.default.decode(TypedData.self, from: data)
             let signable: WalletConnectDecodedSigningRequest.Signable = .typed(typedData)
             let operation = Web3SignWithBrowserWalletOperation(
+                wallet: wallet,
+                chain: evmChain,
                 address: address,
                 proposer: currentProposer,
-                humanReadableMessage: humanReadable,
                 signable: signable,
-                chain: evmChain
+                humanReadableMessage: humanReadable
             ) { signature in
                 try await self.send(result: signature, to: request)
             } rejectWith: {
                 self.send(error: "User Rejected", to: request)
             }
-            let sign = Web3SignViewController(wallet: wallet, operation: operation, chainName: evmChain.name)
+            let sign = Web3SignViewController(operation: operation)
             Web3PopupCoordinator.enqueue(popup: .request(sign))
         } catch {
             Logger.web3.error(category: "Web3Worker", message: "\(error)")
@@ -253,15 +255,15 @@ final class Web3Worker {
             send(error: "No Wallet", to: request)
             return
         }
-        guard let myAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.solana)?.destination else {
-            send(error: "Account Locked", to: request)
+        guard let myAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.solana) else {
+            send(error: "No Address", to: request)
             return
         }
         guard let webViewURL = webView?.url, let webViewHost = webViewURL.host else {
             send(error: "Empty WebView", to: request)
             return
         }
-        if let address = input["address"] as? String, address != myAddress {
+        if let address = input["address"] as? String, address != myAddress.destination {
             send(error: "Mismatched address", to: request)
             return
         }
@@ -370,21 +372,18 @@ final class Web3Worker {
         }
         let signable: WalletConnectDecodedSigningRequest.Signable = .raw(messageData)
         let operation = Web3SignWithBrowserWalletOperation(
+            wallet: wallet,
+            chain: solanaChain,
             address: myAddress,
             proposer: currentProposer,
-            humanReadableMessage: message,
             signable: signable,
-            chain: solanaChain
+            humanReadableMessage: message
         ) { signature in
             try await self.send(result: signature, to: request)
         } rejectWith: {
             self.send(error: "User Rejected", to: request)
         }
-        let sign = Web3SignViewController(
-            wallet: wallet,
-            operation: operation,
-            chainName: solanaChain.name
-        )
+        let sign = Web3SignViewController(operation: operation)
         Web3PopupCoordinator.enqueue(popup: .request(sign))
     }
     

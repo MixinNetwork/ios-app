@@ -10,17 +10,13 @@ final class Web3SignViewController: WalletIdentifyingAuthenticationPreviewViewCo
         case mismatchedAddress
     }
     
-    private let wallet: Web3Wallet
     private let operation: Web3SignOperation
-    private let chainName: String
     
     private var stateObserver: AnyCancellable?
     
-    init(wallet: Web3Wallet, operation: Web3SignOperation, chainName: String) {
-        self.wallet = wallet
+    init(operation: Web3SignOperation) {
         self.operation = operation
-        self.chainName = chainName
-        super.init(wallet: .common(wallet), warnings: [])
+        super.init(wallet: .common(operation.wallet), warnings: [])
     }
     
     required init?(coder: NSCoder) {
@@ -78,8 +74,8 @@ final class Web3SignViewController: WalletIdentifyingAuthenticationPreviewViewCo
                 .web3Message(caption: R.string.localizable.unsigned_message(), message: operation.humanReadableMessage),
                 .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),
                 .doubleLineInfo(caption: .from, primary: operation.proposer.name, secondary: operation.proposer.host),
-                .address(caption: .wallet, address: operation.address, label: .wallet(.common(wallet))),
-                .info(caption: .network, content: chainName)
+                .address(caption: .wallet, address: operation.address.destination, label: .wallet(.common(operation.wallet))),
+                .info(caption: .network, content: operation.chain.name)
             ])
         case .signing:
             canDismissInteractively = false

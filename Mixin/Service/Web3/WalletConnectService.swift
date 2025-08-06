@@ -146,22 +146,37 @@ extension WalletConnectService {
         connectionHud?.hide()
         connectionHud = nil
         DispatchQueue.global().async {
-            var chains = Web3Chain.all
-            chains.removeAll { chain in
-                let isRequired = proposal.requiredNamespaces.values.contains { namespace in
-                    namespace.chains?.contains(chain.caip2) ?? false
+            guard let wallet = Web3WalletDAO.shared.currentSelectedWallet() else {
+                Task {
+                    try await WalletKit.instance.rejectSession(
+                        proposalId: proposal.id,
+                        reason: .unsupportedAccounts
+                    )
                 }
-                let isOptional: Bool
-                if let namespaces = proposal.optionalNamespaces {
-                    isOptional = namespaces.values.contains { namespace in
+                return
+            }
+            let walletAddresses = Web3AddressDAO.shared.addresses(walletID: wallet.walletID)
+            let addresses: [Web3Chain: Web3Address] = walletAddresses
+                .reduce(into: [:]) { result, address in
+                    guard let chain = Web3Chain.chain(chainID: address.chainID) else {
+                        return
+                    }
+                    let isRequired = proposal.requiredNamespaces.values.contains { namespace in
                         namespace.chains?.contains(chain.caip2) ?? false
                     }
-                } else {
-                    isOptional = false
+                    let isOptional: Bool
+                    if let namespaces = proposal.optionalNamespaces {
+                        isOptional = namespaces.values.contains { namespace in
+                            namespace.chains?.contains(chain.caip2) ?? false
+                        }
+                    } else {
+                        isOptional = false
+                    }
+                    if isRequired || isOptional {
+                        result[chain] = address
+                    }
                 }
-                return !isRequired && !isOptional
-            }
-            guard !chains.isEmpty else {
+            guard !addresses.isEmpty else {
                 logger.warn(category: "Service", message: "Requires to support \(proposal.requiredNamespaces.values.compactMap(\.chains).flatMap { $0 })")
                 let requiredChains = proposal.requiredNamespaces.values
                     .flatMap { namespace in
@@ -180,7 +195,10 @@ extension WalletConnectService {
                     Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
                 Task {
-                    try await WalletKit.instance.rejectSession(proposalId: proposal.id, reason: .unsupportedChains)
+                    try await WalletKit.instance.rejectSession(
+                        proposalId: proposal.id,
+                        reason: .unsupportedChains
+                    )
                 }
                 return
             }
@@ -196,22 +214,18 @@ extension WalletConnectService {
                     Web3PopupCoordinator.enqueue(popup: .rejection(title: title, message: message))
                 }
                 Task {
-                    try await WalletKit.instance.rejectSession(proposalId: proposal.id, reason: .unsupportedEvents)
+                    try await WalletKit.instance.rejectSession(
+                        proposalId: proposal.id,
+                        reason: .unsupportedEvents
+                    )
                 }
                 return
             }
-            guard let wallet = Web3WalletDAO.shared.currentSelectedWallet() else {
-                return
-            }
-            let evmAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.ethereum)
-            let solanaAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: ChainID.solana)
             DispatchQueue.main.async {
                 let connectWallet = ConnectWalletViewController(
                     wallet: wallet,
-                    evmAddress: evmAddress,
-                    solanaAddress: solanaAddress,
+                    addresses: addresses,
                     proposal: proposal,
-                    chains: chains,
                     events: Array(events)
                 )
                 Web3PopupCoordinator.enqueue(popup: .request(connectWallet))

@@ -1224,21 +1224,17 @@ extension UrlWindow {
                 completion(nil)
                 switch source {
                 case let .swap(context, _):
-                    guard case let .user(userItem) = destination else {
+                    guard case let .user(receiver) = destination else {
                         return
                     }
-                    let swap = SwapOperation(
-                        operation: operation,
+                    let preview = SwapPreviewViewController(
+                        wallet: .privacy,
+                        operation: .mixin(operation),
                         sendToken: context.sendToken,
                         sendAmount: context.sendAmount,
                         receiveToken: context.receiveToken,
                         receiveAmount: context.receiveAmount,
-                        destination: .mixin(userItem),
-                        memo: paymentURL.memo
-                    )
-                    let preview = SwapPreviewViewController(
-                        wallet: .privacy,
-                        operation: swap,
+                        receiver: receiver,
                         warnings: issues.map(\.description)
                     )
                     homeContainer.present(preview, animated: true)

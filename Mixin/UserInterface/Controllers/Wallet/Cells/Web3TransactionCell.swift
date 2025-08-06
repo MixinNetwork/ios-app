@@ -43,14 +43,25 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
         
         switch transaction.transactionType.knownCase {
         case .transferIn, .transferOut:
-            loadRowViews(count: 1)
-            let row = rowViews[0]
-            row.style = .singleTransfer
-            row.amountLabel.text = transaction.localizedTransferAmount
-            if let assetID = transaction.transferAssetID {
-                row.symbolLabel.text = symbols[assetID]
+            if let transfer = transaction.simpleTransfer {
+                loadRowViews(count: 1)
+                let row = rowViews[0]
+                row.style = .singleTransfer
+                row.amountLabel.text = transfer.localizedAmountString
+                row.amountLabel.textColor = if transfer.directionalAmount.isZero {
+                    R.color.text_secondary()
+                } else if transfer.directionalAmount > 0 {
+                    receiveAmountColor
+                } else {
+                    sendAmountColor
+                }
+                if let assetID = transaction.transferAssetID {
+                    row.symbolLabel.text = symbols[assetID]
+                } else {
+                    row.symbolLabel.text = nil
+                }
             } else {
-                row.symbolLabel.text = nil
+                fallthrough
             }
         case .swap, .unknown, .none:
             let senders = transaction.senders ?? []
@@ -104,12 +115,8 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
         switch transaction.transactionType.knownCase {
         case .transferIn:
             iconView.image = R.image.wallet.snapshot_deposit()
-            let isAmountZero = transaction.directionalTransferAmount?.isZero ?? false
-            rowViews[0].amountLabel.textColor = isAmountZero ? R.color.text_secondary()! : receiveAmountColor
         case .transferOut:
             iconView.image = R.image.wallet.snapshot_withdrawal()
-            let isAmountZero = transaction.directionalTransferAmount?.isZero ?? false
-            rowViews[0].amountLabel.textColor = isAmountZero ? R.color.text_secondary()! : sendAmountColor
         case .swap:
             iconView.image = R.image.transaction_type_swap()
         case .approval:

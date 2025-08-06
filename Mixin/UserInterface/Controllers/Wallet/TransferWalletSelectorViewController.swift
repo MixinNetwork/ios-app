@@ -53,7 +53,7 @@ final class TransferWalletSelectorViewController: UIViewController {
         self.intent = intent
         self.excludingWallet = wallet
         self.chainID = chainID
-        let nib = R.nib.receivingWalletSelectorView
+        let nib = R.nib.transferWalletSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
     

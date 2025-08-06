@@ -3,10 +3,33 @@ import MixinServices
 
 final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
-    private let operation: SwapOperation
+    enum Operation {
+        case mixin(TransferPaymentOperation)
+        case web3(Web3TransferOperation)
+    }
     
-    init(wallet: Wallet, operation: SwapOperation, warnings: [String]) {
+    private let operation: Operation
+    
+    private let sendToken: BalancedSwapToken
+    private let sendAmount: Decimal
+    
+    private let receiveToken: SwapToken
+    private let receiveAmount: Decimal
+    
+    private let receiver: UserItem
+    
+    init(
+        wallet: Wallet, operation: Operation,
+        sendToken: BalancedSwapToken, sendAmount: Decimal,
+        receiveToken: SwapToken, receiveAmount: Decimal,
+        receiver: UserItem, warnings: [String]
+    ) {
         self.operation = operation
+        self.sendToken = sendToken
+        self.sendAmount = sendAmount
+        self.receiveToken = receiveToken
+        self.receiveAmount = receiveAmount
+        self.receiver = receiver
         super.init(wallet: wallet, warnings: warnings)
     }
     
@@ -16,13 +39,10 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let sendToken = operation.sendToken
-        let receiveToken = operation.receiveToken
+        
         tableHeaderView.setIcon(sendToken: sendToken, receiveToken: receiveToken)
         tableHeaderView.titleLabel.text = R.string.localizable.swap_confirmation()
         tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(.mixinMessenger)
-        
         
         var rows: [Row]
         rows = [
@@ -32,7 +52,7 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
                     StyledAssetChange(
                         token: sendToken,
                         amount: CurrencyFormatter.localizedString(
-                            from: -operation.sendAmount,
+                            from: -sendAmount,
                             format: .precision,
                             sign: .always,
                             symbol: .custom(sendToken.symbol)
@@ -42,7 +62,7 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
                     StyledAssetChange(
                         token: receiveToken,
                         amount: CurrencyFormatter.localizedString(
-                            from: operation.receiveAmount,
+                            from: receiveAmount,
                             format: .precision,
                             sign: .always,
                             symbol: .custom(receiveToken.symbol)
@@ -54,70 +74,70 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
             .doubleLineInfo(
                 caption: .price,
                 primary: SwapQuote.priceRepresentation(
-                    sendAmount: operation.sendAmount,
+                    sendAmount: sendAmount,
                     sendSymbol: sendToken.symbol,
-                    receiveAmount: operation.receiveAmount,
+                    receiveAmount: receiveAmount,
                     receiveSymbol: receiveToken.symbol,
                     unit: .send
                 ),
                 secondary: SwapQuote.priceRepresentation(
-                    sendAmount: operation.sendAmount,
+                    sendAmount: sendAmount,
                     sendSymbol: sendToken.symbol,
-                    receiveAmount: operation.receiveAmount,
+                    receiveAmount: receiveAmount,
                     receiveSymbol: receiveToken.symbol,
                     unit: .receive
                 )
             ),
         ]
         
-        switch operation.destination {
-        case let .mixin(user):
+        switch operation {
+        case .mixin(let operation):
             let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
             let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
             rows.append(.amount(caption: .networkFee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false))
-            rows.append(.receivers([user], threshold: nil))
+            rows.append(.receivers([receiver], threshold: nil))
             rows.append(.wallet(caption: .sender, wallet: .privacy, threshold: nil))
-        case let .web3(destination):
-            let fee = destination.fee
-            var feeValue = CurrencyFormatter.localizedString(
-                from: fee.tokenAmount,
-                format: .precision,
-                sign: .never,
-                symbol: .custom(destination.feeTokenSymbol)
-            )
-            if let fee = fee as? EVMTransferOperation.EVMDisplayFee {
-                let feePerGas = CurrencyFormatter.localizedString(
-                    from: fee.feePerGas,
+            if let memo = operation.extra.plainValue, !memo.isEmpty {
+                rows.append(.info(caption: .memo, content: memo))
+            }
+        case .web3(let operation):
+            if let fee = operation.fee {
+                var feeValue = CurrencyFormatter.localizedString(
+                    from: fee.tokenAmount,
                     format: .precision,
                     sign: .never,
-                    symbol: .custom("Gwei")
+                    symbol: .custom(operation.feeToken.symbol)
                 )
-                feeValue.append(" (\(feePerGas))")
-            }
-            let feeCost = if fee.fiatMoneyAmount >= 0.01 {
-                CurrencyFormatter.localizedString(from: fee.fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-            } else {
-                "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-            }
-            rows.append(contentsOf: [
-                .amount(
+                if let fee = fee as? EVMTransferOperation.EVMDisplayFee {
+                    let feePerGas = CurrencyFormatter.localizedString(
+                        from: fee.feePerGas,
+                        format: .precision,
+                        sign: .never,
+                        symbol: .custom("Gwei")
+                    )
+                    feeValue.append(" (\(feePerGas))")
+                }
+                let feeCost = if fee.fiatMoneyAmount >= 0.01 {
+                    CurrencyFormatter.localizedString(from: fee.fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+                } else {
+                    "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+                }
+                rows.append(.amount(
                     caption: .fee,
                     token: feeValue,
                     fiatMoney: feeCost,
                     display: .byToken,
                     boldPrimaryAmount: false
-                ),
-                .receivers([destination.displayReceiver], threshold: nil),
+                ))
+            }
+            rows.append(contentsOf: [
+                .receivers([receiver], threshold: nil),
                 .address(
                     caption: .sender,
-                    address: destination.senderAddress.destination,
-                    label: destination.senderAddressLabel
+                    address: operation.fromAddress.destination,
+                    label: .wallet(.common(operation.wallet))
                 ),
             ])
-        }
-        
-        if let memo = operation.memo, !memo.isEmpty {
-            rows.append(.info(caption: .memo, content: memo))
         }
         
         reloadData(with: rows)
@@ -126,30 +146,29 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
     override func performAction(with pin: String) {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
-        
         layoutTableHeaderView(
             title: R.string.localizable.sending(),
             subtitle: R.string.localizable.signature_request_from(.mixinMessenger)
         )
-        
         replaceTrayView(with: nil, animation: .vertical)
         Task {
             do {
-                try await operation.start(pin: pin)
+                switch operation {
+                case .mixin(let operation):
+                    try await operation.start(pin: pin)
+                    reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": "swap"])
+                case .web3(let operation):
+                    try await operation.start(pin: pin)
+                    reporter.report(event: .tradeEnd, tags: ["wallet": "web3", "type": "swap"])
+                }
                 UIDevice.current.playPaymentSuccess()
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
-                    layoutTableHeaderView(title: R.string.localizable.sending_success(),
-                                          subtitle: R.string.localizable.swap_message_success())
-                    
-                    switch operation.destination {
-                    case .mixin:
-                        reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": "swap"])
-                    case .web3:
-                        reporter.report(event: .tradeEnd, tags: ["wallet": "web3", "type": "swap"])
-                    }
-                    
+                    layoutTableHeaderView(
+                        title: R.string.localizable.sending_success(),
+                        subtitle: R.string.localizable.swap_message_success()
+                    )
                     tableView.setContentOffset(.zero, animated: true)
                     loadFinishedTrayView()
                     guard let navigation = UIApplication.homeNavigationController else {
@@ -188,4 +207,5 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
             }
         }
     }
+    
 }

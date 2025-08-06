@@ -531,29 +531,37 @@ extension Web3TransactionHistoryViewController {
             switch offset {
             case .before:
                 for transaction in transactions.reversed() {
-                    let date = DateFormatter.dateSimple.string(from: transaction.createdAt.toUTCDate())
-                    if dataSnapshot.sectionIdentifiers.contains(date) {
-                        if let firstItem = dataSnapshot.itemIdentifiers(inSection: date).first {
+                    let dateRepresentation: String = if let date = transaction.transactionAtDate {
+                        DateFormatter.dateSimple.string(from: date)
+                    } else {
+                        transaction.transactionAt
+                    }
+                    if dataSnapshot.sectionIdentifiers.contains(dateRepresentation) {
+                        if let firstItem = dataSnapshot.itemIdentifiers(inSection: dateRepresentation).first {
                             dataSnapshot.insertItems([transaction.id], beforeItem: firstItem)
                         } else {
-                            dataSnapshot.appendItems([transaction.id], toSection: date)
+                            dataSnapshot.appendItems([transaction.id], toSection: dateRepresentation)
                         }
                     } else {
                         if let firstSection = dataSnapshot.sectionIdentifiers.first {
-                            dataSnapshot.insertSections([date], beforeSection: firstSection)
+                            dataSnapshot.insertSections([dateRepresentation], beforeSection: firstSection)
                         } else {
-                            dataSnapshot.appendSections([date])
+                            dataSnapshot.appendSections([dateRepresentation])
                         }
-                        dataSnapshot.appendItems([transaction.id], toSection: date)
+                        dataSnapshot.appendItems([transaction.id], toSection: dateRepresentation)
                     }
                 }
             case .after, .none:
                 for transaction in transactions {
-                    let date = DateFormatter.dateSimple.string(from: transaction.createdAt.toUTCDate())
-                    if !dataSnapshot.sectionIdentifiers.reversed().contains(date) {
-                        dataSnapshot.appendSections([date])
+                    let dateRepresentation: String = if let date = transaction.transactionAtDate {
+                        DateFormatter.dateSimple.string(from: date)
+                    } else {
+                        transaction.transactionAt
                     }
-                    dataSnapshot.appendItems([transaction.id], toSection: date)
+                    if !dataSnapshot.sectionIdentifiers.reversed().contains(dateRepresentation) {
+                        dataSnapshot.appendSections([dateRepresentation])
+                    }
+                    dataSnapshot.appendItems([transaction.id], toSection: dateRepresentation)
                 }
             }
             

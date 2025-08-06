@@ -12,6 +12,7 @@ final class ClassicWalletViewController: WalletViewController {
     
     private var wallet: Web3Wallet
     private var secret: Secret?
+    private var supportedChainIDs: Set<String> = []
     private var tokens: [Web3TokenItem] = []
     private var reviewPendingTransactionJobID: String?
     
@@ -181,8 +182,7 @@ final class ClassicWalletViewController: WalletViewController {
     }
     
     override func makeSearchViewController() -> WalletSearchViewController {
-        let ids = Set(Web3Chain.all.map(\.chainID))
-        let controller = WalletSearchViewController(supportedChainIDs: ids)
+        let controller = WalletSearchViewController(supportedChainIDs: supportedChainIDs)
         controller.delegate = self
         return controller
     }
@@ -210,8 +210,9 @@ final class ClassicWalletViewController: WalletViewController {
     @objc private func reloadData() {
         DispatchQueue.global().async { [weak self, wallet] in
             let walletID = wallet.walletID
-            let tokens = Web3TokenDAO.shared.notHiddenTokens(walletID: walletID)
             let secret: Secret?
+            let chainIDs = Web3AddressDAO.shared.chainIDs(walletID: walletID)
+            let tokens = Web3TokenDAO.shared.notHiddenTokens(walletID: walletID)
             let watchingAddresses: String?
             switch wallet.category.knownCase {
             case .classic:
@@ -226,7 +227,6 @@ final class ClassicWalletViewController: WalletViewController {
                 watchingAddresses = nil
             case .importedPrivateKey:
                 if let privateKey = AppGroupKeychain.importedPrivateKey(walletID: walletID) {
-                    let chainIDs = Web3AddressDAO.shared.chainIDs(walletID: walletID)
                     let kind: Web3Chain.Kind? = .importedWalletKind(chainIDs: chainIDs)
                     switch kind {
                     case .evm:
@@ -249,6 +249,7 @@ final class ClassicWalletViewController: WalletViewController {
                     return
                 }
                 self.secret = secret
+                self.supportedChainIDs = chainIDs
                 self.tokens = tokens
                 self.tableHeaderView.reloadValues(tokens: tokens)
                 if let watchingAddresses {
@@ -494,7 +495,12 @@ extension ClassicWalletViewController: WalletHeaderView.Delegate {
                 self.present(selector, animated: true, completion: nil)
             }
         case .swap:
-            let swap = Web3SwapViewController(wallet: wallet, sendAssetID: nil, receiveAssetID: nil)
+            let swap = Web3SwapViewController(
+                wallet: wallet,
+                supportedChainIDs: supportedChainIDs,
+                sendAssetID: nil,
+                receiveAssetID: nil
+            )
             navigationController?.pushViewController(swap, animated: true)
             reporter.report(event: .tradeStart, tags: ["source": "wallet_home", "wallet": "web3"])
         }

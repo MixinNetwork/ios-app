@@ -54,9 +54,3 @@ extension DateFormatter {
     }
     
 }
-
-extension ISO8601DateFormatter {
-    
-    static let `default` = ISO8601DateFormatter()
-    
-}

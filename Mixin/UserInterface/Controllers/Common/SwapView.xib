@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -53,10 +53,10 @@
                     <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xgy-fb-KEQ">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="436"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="430"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="brs-gJ-9Xe">
-                                    <rect key="frame" x="20" y="10" width="353" height="426"/>
+                                    <rect key="frame" x="20" y="10" width="353" height="420"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ELq-oS-OR4">
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="144"/>
@@ -300,15 +300,15 @@
                                             </constraints>
                                         </view>
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="IrQ-QA-Uhb">
-                                            <rect key="frame" x="0.0" y="282" width="353" height="144"/>
+                                            <rect key="frame" x="0.0" y="282" width="353" height="138"/>
                                             <subviews>
                                                 <button hidden="YES" opaque="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="f0N-2O-dzm" userLabel="Footer Info Button">
-                                                    <rect key="frame" x="0.0" y="65.666666666666686" width="0.0" height="29"/>
+                                                    <rect key="frame" x="0.0" y="59.666666666666686" width="0.0" height="29"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <state key="normal" title=" "/>
                                                 </button>
                                                 <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zTW-Qk-BeR" customClass="CircularProgressView" customModule="Mixin" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="74.666666666666686" width="11" height="11"/>
+                                                    <rect key="frame" x="0.0" y="68.666666666666686" width="11" height="11"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="zTW-Qk-BeR" secondAttribute="height" priority="999" id="JL4-4R-JRJ"/>
@@ -316,11 +316,11 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="h7c-H7-0Lv">
-                                                    <rect key="frame" x="16" y="16" width="321" height="128"/>
+                                                    <rect key="frame" x="16" y="10" width="321" height="128"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xQi-MQ-HSB">
-                                                    <rect key="frame" x="0.0" y="70" width="0.0" height="20"/>
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xQi-MQ-HSB" userLabel="Swap Price Button">
+                                                    <rect key="frame" x="0.0" y="64" width="0.0" height="20"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="xQi-MQ-HSB" secondAttribute="height" priority="999" id="8XF-W6-OqN"/>
@@ -334,7 +334,7 @@
                                                     </connections>
                                                 </button>
                                             </subviews>
-                                            <edgeInsets key="layoutMargins" top="16" left="16" bottom="0.0" right="16"/>
+                                            <edgeInsets key="layoutMargins" top="10" left="16" bottom="0.0" right="16"/>
                                         </stackView>
                                     </subviews>
                                 </stackView>
@@ -413,7 +413,7 @@
                     <viewLayoutGuide key="frameLayoutGuide" id="jUE-bb-xjT"/>
                 </scrollView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GUA-rJ-cEC">
-                    <rect key="frame" x="138.66666666666666" y="760" width="116" height="58"/>
+                    <rect key="frame" x="138.66666666666666" y="726" width="116" height="58"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p0t-vv-kdZ" customClass="RoundedButton" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="116" height="42"/>

@@ -6,27 +6,21 @@ import MixinServices
 final class ConnectWalletViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
     private let wallet: Web3Wallet
-    private let evmAddress: Web3Address?
-    private let solanaAddress: Web3Address?
+    private let addresses: [Web3Chain: Web3Address]
     private let proposal: WalletConnectSign.Session.Proposal
-    private let chains: [Web3Chain]
     private let events: [String]
     
     private var isProposalApproved = false
     
     init(
         wallet: Web3Wallet,
-        evmAddress: Web3Address?,
-        solanaAddress: Web3Address?,
+        addresses: [Web3Chain: Web3Address],
         proposal: WalletConnectSign.Session.Proposal,
-        chains: [Web3Chain],
         events: [String]
     ) {
         self.wallet = wallet
-        self.evmAddress = evmAddress
-        self.solanaAddress = solanaAddress
+        self.addresses = addresses
         self.proposal = proposal
-        self.chains = chains
         self.events = events
         super.init(wallet: .common(wallet), warnings: [])
     }
@@ -53,21 +47,34 @@ final class ConnectWalletViewController: WalletIdentifyingAuthenticationPreviewV
         var rows: [Row] = [
             .doubleLineInfo(caption: .from, primary: proposal.proposer.name, secondary: host)
         ]
-        let kinds = Set(chains.map(\.kind))
-        if kinds.contains(.evm), let evmAddress {
+        
+        var evmAddress: String?
+        var solanaAddress: String?
+        for (chain, address) in addresses {
+            if evmAddress == nil, chain.kind == .evm {
+                evmAddress = address.destination
+            } else if solanaAddress == nil, chain.kind == .solana {
+                solanaAddress = address.destination
+            }
+            if evmAddress != nil && solanaAddress != nil {
+                break
+            }
+        }
+        if let evmAddress {
             rows.append(.address(
                 caption: .wallet,
-                address: evmAddress.destination,
+                address: evmAddress,
                 label: .wallet(.common(wallet))
             ))
         }
-        if kinds.contains(.solana), let solanaAddress {
+        if let solanaAddress {
             rows.append(.address(
                 caption: .wallet,
-                address: solanaAddress.destination,
+                address: solanaAddress,
                 label: .wallet(.common(wallet))
             ))
         }
+        
         reloadData(with: rows)
     }
     
@@ -95,21 +102,13 @@ final class ConnectWalletViewController: WalletIdentifyingAuthenticationPreviewV
         tableHeaderView.setIcon(progress: .busy)
         tableHeaderView.titleLabel.text = R.string.localizable.connecting()
         replaceTrayView(with: nil, animation: .vertical)
-        Task.detached { [chains, proposal, events, evmAddress, solanaAddress] in
+        Task.detached { [addresses, proposal, events] in
             do {
-                let accounts: [WalletConnectUtils.Account] = try chains.compactMap { chain in
-                    switch chain.kind {
-                    case .evm:
-                        guard let address = evmAddress?.destination else {
-                            throw WalletConnectSession.Error.noAddress
-                        }
-                        return .init(blockchain: chain.caip2, address: address)
-                    case .solana:
-                        guard let address = solanaAddress?.destination else {
-                            throw WalletConnectSession.Error.noAddress
-                        }
-                        return .init(blockchain: chain.caip2, address: address)
-                    }
+                let accounts = try addresses.map { (chain, address) in
+                    try WalletConnectUtils.Account(
+                        blockchain: chain.caip2,
+                        accountAddress: address.destination
+                    )
                 }
                 try await withCheckedThrowingContinuation { continuation in
                     AccountAPI.verify(pin: pin) { result in
@@ -124,7 +123,7 @@ final class ConnectWalletViewController: WalletIdentifyingAuthenticationPreviewV
                 let methods = WalletConnectSession.Method.allCases.map(\.rawValue)
                 let sessionNamespaces = try AutoNamespaces.build(
                     sessionProposal: proposal,
-                    chains: chains.map(\.caip2),
+                    chains: addresses.keys.map(\.caip2),
                     methods: methods,
                     events: Array(events),
                     accounts: accounts

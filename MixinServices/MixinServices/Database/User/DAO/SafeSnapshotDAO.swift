@@ -77,7 +77,7 @@ extension SafeSnapshotDAO {
         let types: [SafeSnapshot.SnapshotType] = if pending {
             [.pending]
         } else {
-            [.snapshot, .withdrawal]
+            [.snapshot, .transaction, .withdrawal]
         }
         var sql = GRDB.SQL(sql: Self.querySQL) + "WHERE s.type IN \(types.map(\.rawValue))"
         if let assetID {

@@ -237,7 +237,8 @@ extension SafeSnapshot {
     }
     
     public enum SnapshotType: String {
-        case snapshot // Only value that returns from remote
+        case snapshot // Appears from `SyncSafeSnapshotJob`
+        case transaction // Appears from `SYSTEM_SAFE_SNAPSHOT`
         case pending // Local only
         case withdrawal // Local only
     }

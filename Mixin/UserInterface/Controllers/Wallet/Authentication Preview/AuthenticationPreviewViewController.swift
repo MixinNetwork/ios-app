@@ -295,7 +295,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
                 cell.nameLabel.text = R.string.localizable.privacy_wallet()
                 cell.iconImageView.isHidden = false
             case .common(let wallet):
-                cell.nameLabel.text = wallet.localizedName
+                cell.nameLabel.text = wallet.name
                 cell.iconImageView.isHidden = true
             }
             return cell

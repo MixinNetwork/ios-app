@@ -38,6 +38,10 @@ extension AddWalletMethodSelectorViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.add_token_method, for: indexPath)!
         switch AddWalletMethod.allCases[indexPath.row] {
+        case .create:
+            cell.iconImageView.image = R.image.add_wallet_create()
+            cell.titleLabel.text = R.string.localizable.create_new_wallet()
+            cell.subtitleLabel.text = R.string.localizable.create_new_wallet_description()
         case .privateKey:
             cell.iconImageView.image = R.image.add_wallet_private_key()
             cell.titleLabel.text = R.string.localizable.import_private_key()

@@ -50,7 +50,7 @@ final class ClassicWalletViewController: WalletViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.text = wallet.localizedName
+        titleLabel.text = wallet.name
         tableView.dataSource = self
         tableView.delegate = self
         tableHeaderView.actionView.actions = [.buy, .receive, .send, .swap]
@@ -349,7 +349,7 @@ final class ClassicWalletViewController: WalletViewController {
                 }
                 if let self {
                     self.wallet = wallet
-                    self.titleLabel.text = wallet.localizedName
+                    self.titleLabel.text = wallet.name
                 }
                 hud.set(style: .notification, text: R.string.localizable.changed())
             case let .failure(error):

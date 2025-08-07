@@ -55,13 +55,13 @@ FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateBitcoinSegwitAddress(NSSt
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateBitcoinTaprootAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
 
-FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEthereumAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEthereumAddress(NSString* _Nullable seed, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEvmAddressFromMnemonic(NSString* _Nullable mnemonic, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEvmAddressFromPrivateKey(NSString* _Nullable privateKey, NSError* _Nullable* _Nullable error);
 
-FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddress(NSString* _Nullable seed, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddressFromMnemonic(NSString* _Nullable mnemonic, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 

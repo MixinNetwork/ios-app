@@ -48,7 +48,7 @@ class WalletIdentifyingAuthenticationPreviewViewController: AuthenticationPrevie
             walletNameLabel.text = R.string.localizable.privacy_wallet()
         case .common(let wallet):
             walletIdentifyingView.backgroundColor = R.color.theme()
-            walletNameLabel.text = wallet.localizedName
+            walletNameLabel.text = wallet.name
         }
         
     }

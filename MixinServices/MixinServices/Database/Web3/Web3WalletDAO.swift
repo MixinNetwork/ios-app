@@ -20,6 +20,13 @@ public final class Web3WalletDAO: Web3DAO {
         )
     }
     
+    public func walletCount(category: Web3Wallet.Category) -> Int {
+        db.count(
+            in: Web3Wallet.self,
+            where: Web3Wallet.column(of: .category) == Web3Wallet.Category.classic.rawValue
+        )
+    }
+    
     public func currentSelectedWallet() -> Web3Wallet? {
         if let id = AppGroupUserDefaults.Wallet.dappConnectionWalletID,
            let wallet: Web3Wallet = db.select(where: Web3Wallet.column(of: .walletID) == id)

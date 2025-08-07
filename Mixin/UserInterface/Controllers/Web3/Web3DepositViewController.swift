@@ -30,7 +30,7 @@ final class Web3DepositViewController: UIViewController {
         title = R.string.localizable.receive()
         navigationItem.titleView = NavigationTitleView(
             title: R.string.localizable.receive(),
-            subtitle: wallet.localizedName
+            subtitle: wallet.name
         )
         qrCodeView.setContent(address, size: qrCodeView.frame.size)
         qrCodeView.setDefaultCornerCurve()

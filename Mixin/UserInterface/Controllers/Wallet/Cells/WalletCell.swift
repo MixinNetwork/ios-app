@@ -41,13 +41,14 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                 usdBalanceSum: digest.usdBalanceSum
             )
         case let .common(wallet):
+            titleLabel.text = switch digest.legacyClassicWalletRenaming {
+            case .notInvolved, .done:
+                wallet.name
+            case .required:
+                R.string.localizable.common_wallet()
+            }
             switch wallet.category.knownCase {
             case .classic:
-                titleLabel.text = if digest.hasLegacyAddresses {
-                    R.string.localizable.common_wallet()
-                } else {
-                    wallet.name
-                }
                 iconImageView.isHidden = true
                 tags = []
                 loadProportions(
@@ -56,7 +57,6 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                     usdBalanceSum: digest.usdBalanceSum
                 )
             case .importedMnemonic:
-                titleLabel.text = wallet.name
                 iconImageView.isHidden = true
                 tags = [.imported]
                 if !hasSecret {
@@ -68,7 +68,6 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                     usdBalanceSum: digest.usdBalanceSum
                 )
             case .importedPrivateKey:
-                titleLabel.text = wallet.name
                 iconImageView.isHidden = true
                 tags = [.imported]
                 if !hasSecret {
@@ -83,7 +82,6 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                     usdBalanceSum: digest.usdBalanceSum
                 )
             case .watchAddress, .none:
-                titleLabel.text = wallet.name
                 iconImageView.isHidden = false
                 iconImageView.image = R.image.watching_wallet()
                 tags = [.watching]

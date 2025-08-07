@@ -14,6 +14,8 @@ final class ClassicWalletViewController: WalletViewController {
     private var secret: Secret?
     private var supportedChainIDs: Set<String> = []
     private var tokens: [Web3TokenItem] = []
+    private var legacyClassicWalletRenaming: WalletDigest.LegacyClassicWalletRenaming?
+    
     private var reviewPendingTransactionJobID: String?
     
     private weak var renamingInputController: UIAlertController?
@@ -130,13 +132,18 @@ final class ClassicWalletViewController: WalletViewController {
             let hidden = HiddenWeb3TokensViewController(wallet: wallet, availability: self.availability)
             self.navigationController?.pushViewController(hidden, animated: true)
         }))
+        switch legacyClassicWalletRenaming {
+        case .none, .required:
+            break
+        case .notInvolved, .done:
+            sheet.addAction(UIAlertAction(title: R.string.localizable.rename_wallet(), style: .default, handler: { (_) in
+                self.inputNewWalletName()
+            }))
+        }
         switch wallet.category.knownCase {
         case .classic, .none:
             break
         case .importedMnemonic:
-            sheet.addAction(UIAlertAction(title: R.string.localizable.rename_wallet(), style: .default, handler: { (_) in
-                self.inputNewWalletName()
-            }))
             switch secret {
             case .mnemonics(let mnemonics):
                 sheet.addAction(UIAlertAction(title: R.string.localizable.show_mnemonic_phrase(), style: .default, handler: { (_) in
@@ -154,9 +161,6 @@ final class ClassicWalletViewController: WalletViewController {
                 self.deleteWallet()
             }))
         case .importedPrivateKey:
-            sheet.addAction(UIAlertAction(title: R.string.localizable.rename_wallet(), style: .default, handler: { (_) in
-                self.inputNewWalletName()
-            }))
             switch secret {
             case let .privateKey(privateKey, kind):
                 sheet.addAction(UIAlertAction(title: R.string.localizable.show_private_key(), style: .default, handler: { (_) in
@@ -170,9 +174,6 @@ final class ClassicWalletViewController: WalletViewController {
                 self.deleteWallet()
             }))
         case .watchAddress:
-            sheet.addAction(UIAlertAction(title: R.string.localizable.rename_wallet(), style: .default, handler: { (_) in
-                self.inputNewWalletName()
-            }))
             sheet.addAction(UIAlertAction(title: R.string.localizable.delete_wallet(), style: .destructive, handler: { (_) in
                 self.deleteWallet()
             }))
@@ -211,15 +212,13 @@ final class ClassicWalletViewController: WalletViewController {
         DispatchQueue.global().async { [weak self, wallet] in
             let walletID = wallet.walletID
             let addresses = Web3AddressDAO.shared.addresses(walletID: walletID)
-            
-            // A Legacy Address refers to an address with a nil path. If a classic wallet contains a Legacy Address, it means the wallet was created with an older version, and no explicit name was assigned during its creation. Therefore, it needs to be renamed.
-            let hasLegacyAddresses = addresses.contains { address in
-                address.path == nil
-            }
-            
             let secret: Secret?
             let chainIDs = Set(addresses.map(\.chainID))
             let tokens = Web3TokenDAO.shared.notHiddenTokens(walletID: walletID)
+            let renaming = WalletDigest.LegacyClassicWalletRenaming(
+                wallet: .common(wallet),
+                hasLegacyAddress: addresses.contains { $0.path == nil }
+            )
             let watchingAddresses: String?
             switch wallet.category.knownCase {
             case .classic:
@@ -255,20 +254,17 @@ final class ClassicWalletViewController: WalletViewController {
                 guard let self = self else {
                     return
                 }
-                switch wallet.category.knownCase {
-                case .classic:
-                    if hasLegacyAddresses {
-                        self.titleLabel.text = R.string.localizable.common_wallet()
-                        self.migrateLegacyAddresses()
-                    } else {
-                        self.titleLabel.text = wallet.name
-                    }
-                case .importedMnemonic, .importedPrivateKey, .watchAddress, .none:
+                switch renaming {
+                case .required:
+                    self.titleLabel.text = R.string.localizable.common_wallet()
+                    self.migrateLegacyClassicWallet()
+                case .notInvolved, .done:
                     self.titleLabel.text = wallet.name
                 }
                 self.secret = secret
                 self.supportedChainIDs = chainIDs
                 self.tokens = tokens
+                self.legacyClassicWalletRenaming = renaming
                 self.tableHeaderView.reloadValues(tokens: tokens)
                 if let watchingAddresses {
                     self.tableHeaderView.actionView.isHidden = true
@@ -489,25 +485,27 @@ extension ClassicWalletViewController: WalletSearchViewControllerDelegate {
 
 extension ClassicWalletViewController {
     
-    private func migrateLegacyAddresses() {
+    private func migrateLegacyClassicWallet() {
+        guard legacyClassicWalletRenaming == .required else {
+            assertionFailure()
+            return
+        }
         // During the renaming process, the backend will check the state of the wallet. If its category is classic and it has no path, the backend will assign a default path with index 0. Therefore, after renaming, the wallet’s addresses should be updated to avoid renaming it again.
         Logger.web3.info(category: "WalletView", message: "Will rename legacy wallet")
         let walletID = wallet.walletID
-        RouteAPI.renameWallet(
-            id: walletID,
-            name: R.string.localizable.common_wallet(),
-            queue: .global()
-        ) { result in
-            switch result {
-            case let .success(wallet):
+        Task { [weak self] in
+            do {
+                let wallet = try await RouteAPI.renameWallet(
+                    id: walletID,
+                    name: R.string.localizable.common_wallet()
+                )
                 Web3WalletDAO.shared.save(wallets: [wallet], addresses: [])
-                switch RouteAPI.addresses(walletID: walletID) {
-                case .success(let addresses):
-                    Web3AddressDAO.shared.save(addresses: addresses)
-                case .failure(let error):
-                    Logger.web3.error(category: "WalletView", message: "Reload addr: \(error)")
+                let addresses = try await RouteAPI.addresses(walletID: walletID)
+                Web3AddressDAO.shared.save(addresses: addresses)
+                await MainActor.run {
+                    self?.legacyClassicWalletRenaming = .done
                 }
-            case let .failure(error):
+            } catch {
                 Logger.web3.error(category: "WalletView", message: "Migrate: \(error)")
             }
         }

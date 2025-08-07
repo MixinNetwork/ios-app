@@ -71,7 +71,7 @@ public final class Web3WalletDAO: Web3DAO {
         
         return try! db.read { db in
             try Web3Wallet.fetchAll(db, sql: SQL.wallets).compactMap { wallet in
-                let hasLegacyAddresses = try Bool.fetchOne(
+                let hasLegacyAddress = try Bool.fetchOne(
                     db,
                     sql: SQL.hasLegacyAddresses,
                     arguments: [wallet.walletID]
@@ -88,9 +88,9 @@ public final class Web3WalletDAO: Web3DAO {
                 )
                 return WalletDigest(
                     wallet: .common(wallet),
-                    hasLegacyAddresses: hasLegacyAddresses,
                     tokens: tokenDigests,
-                    supportedChainIDs: chainIDs
+                    supportedChainIDs: chainIDs,
+                    hasLegacyAddress: hasLegacyAddress
                 )
             }
         }

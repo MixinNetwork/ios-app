@@ -251,6 +251,14 @@ extension RouteAPI {
         )
     }
     
+    static func renameWallet(id: String, name: String) async throws -> Web3Wallet {
+        try await request(
+            method: .post,
+            path: "/wallets/\(id)",
+            with: ["name": name],
+        )
+    }
+    
     static func deleteWallet(
         id: String,
         completion: @escaping (MixinAPI.Result<Empty>) -> Void
@@ -316,6 +324,10 @@ extension RouteAPI {
         }
         semaphore.wait()
         return result
+    }
+    
+    static func addresses(walletID: String) async throws -> [Web3Address] {
+        try await request(method: .get, path: "/wallets/\(walletID)/addresses")
     }
     
     static func transactions(address: String, offset: String?, limit: Int) -> MixinAPI.Result<[Web3Transaction]> {

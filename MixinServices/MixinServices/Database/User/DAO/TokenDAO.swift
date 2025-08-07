@@ -199,9 +199,9 @@ public final class TokenDAO: UserDatabaseDAO {
         let chainIDs = ChainDAO.shared.allChainIDs()
         return WalletDigest(
             wallet: .privacy,
-            hasLegacyAddresses: false,
             tokens: digests,
-            supportedChainIDs: chainIDs
+            supportedChainIDs: chainIDs,
+            hasLegacyAddress: false
         )
     }
     

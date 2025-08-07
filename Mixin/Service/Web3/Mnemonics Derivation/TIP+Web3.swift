@@ -115,14 +115,14 @@ extension TIP {
         
         let addresses = try await deriveAddresses(pin: pin, index: 0)
         let request = CreateWalletRequest(
-            name: "Classic Wallet",
+            name: R.string.localizable.common_wallet(),
             category: .classic,
             addresses: addresses
         )
-        let commonWallet = try await RouteAPI.createWallet(request)
+        let defaultWallet = try await RouteAPI.createWallet(request)
         Web3WalletDAO.shared.save(
-            wallets: [commonWallet.wallet],
-            addresses: commonWallet.addresses
+            wallets: [defaultWallet.wallet],
+            addresses: defaultWallet.addresses
         )
     }
     

@@ -239,12 +239,14 @@ extension RouteAPI {
     static func renameWallet(
         id: String,
         name: String,
+        queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<Web3Wallet>) -> Void
     ) {
         request(
             method: .post,
             path: "/wallets/\(id)",
             with: ["name": name],
+            queue: queue,
             completion: completion
         )
     }

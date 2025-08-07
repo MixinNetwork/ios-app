@@ -20,7 +20,7 @@ final class WalletSummaryViewController: UIViewController {
     
     private var summary: WalletSummary?
     private var privacyWalletDigest: WalletDigest?
-    private var classicWalletDigests: [WalletDigest] = []
+    private var commonWalletDigests: [WalletDigest] = []
     private var tips: [WalletTipView.Content] = []
     private var secretAvailableWalletIDs: Set<String> = []
     
@@ -221,10 +221,10 @@ final class WalletSummaryViewController: UIViewController {
     @objc private func reloadData() {
         DispatchQueue.global().async {
             let privacyWalletDigest = TokenDAO.shared.walletDigest()
-            let classicWalletDigests = Web3WalletDAO.shared.walletDigests()
+            let commonWalletDigests = Web3WalletDAO.shared.walletDigests()
             let summary = WalletSummary(
                 privacyWallet: privacyWalletDigest,
-                otherWallets: classicWalletDigests
+                otherWallets: commonWalletDigests
             )
             var secretAvailableWalletIDs: Set<String> = Set(
                 AppGroupKeychain.allImportedMnemonics().keys
@@ -235,7 +235,7 @@ final class WalletSummaryViewController: UIViewController {
             DispatchQueue.main.async {
                 self.summary = summary
                 self.privacyWalletDigest = privacyWalletDigest
-                self.classicWalletDigests = classicWalletDigests
+                self.commonWalletDigests = commonWalletDigests
                 self.secretAvailableWalletIDs = secretAvailableWalletIDs
                 self.collectionView.reloadData()
             }
@@ -276,7 +276,7 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
         case .summary:
             1
         case .wallets:
-            1 + classicWalletDigests.count
+            1 + commonWalletDigests.count
         case .tips:
             tips.count
         case .tipsPageControl:
@@ -301,7 +301,7 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
                     cell.load(digest: digest, hasSecret: false)
                 }
             default:
-                let digest = classicWalletDigests[indexPath.row - 1]
+                let digest = commonWalletDigests[indexPath.row - 1]
                 let hasSecret = switch digest.wallet {
                 case .privacy:
                     false
@@ -339,7 +339,7 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
             case 0:
                 container?.switchToWallet(.privacy)
             default:
-                let digest = classicWalletDigests[indexPath.row - 1]
+                let digest = commonWalletDigests[indexPath.row - 1]
                 container?.switchToWallet(digest.wallet)
             }
         }

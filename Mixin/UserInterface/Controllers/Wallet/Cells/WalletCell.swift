@@ -28,10 +28,10 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
     }
     
     func load(digest: WalletDigest, hasSecret: Bool) {
-        titleLabel.text = digest.wallet.localizedName
         var tags: [Tag]
         switch digest.wallet {
         case .privacy:
+            titleLabel.text = R.string.localizable.privacy_wallet()
             iconImageView.isHidden = false
             iconImageView.image = R.image.privacy_wallet()
             tags = []
@@ -42,7 +42,12 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             )
         case let .common(wallet):
             switch wallet.category.knownCase {
-            case .classic, .none:
+            case .classic:
+                titleLabel.text = if digest.hasLegacyAddresses {
+                    R.string.localizable.common_wallet()
+                } else {
+                    wallet.name
+                }
                 iconImageView.isHidden = true
                 tags = []
                 loadProportions(
@@ -51,6 +56,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                     usdBalanceSum: digest.usdBalanceSum
                 )
             case .importedMnemonic:
+                titleLabel.text = wallet.name
                 iconImageView.isHidden = true
                 tags = [.imported]
                 if !hasSecret {
@@ -62,29 +68,31 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                     usdBalanceSum: digest.usdBalanceSum
                 )
             case .importedPrivateKey:
+                titleLabel.text = wallet.name
                 iconImageView.isHidden = true
                 tags = [.imported]
                 if !hasSecret {
                     tags.append(.noKey)
                 }
-                let kind: Web3Chain.Kind? = .importedWalletKind(
+                let kind: Web3Chain.Kind? = .singleKindWallet(
                     chainIDs: digest.supportedChainIDs
                 )
                 loadProportions(
                     tokens: digest.tokens,
-                    placeholder: .importedWallet(kind: kind),
+                    placeholder: .singleKindWallet(kind: kind),
                     usdBalanceSum: digest.usdBalanceSum
                 )
-            case .watchAddress:
+            case .watchAddress, .none:
+                titleLabel.text = wallet.name
                 iconImageView.isHidden = false
                 iconImageView.image = R.image.watching_wallet()
                 tags = [.watching]
-                let kind: Web3Chain.Kind? = .importedWalletKind(
+                let kind: Web3Chain.Kind? = .singleKindWallet(
                     chainIDs: digest.supportedChainIDs
                 )
                 loadProportions(
                     tokens: digest.tokens,
-                    placeholder: .importedWallet(kind: kind),
+                    placeholder: .singleKindWallet(kind: kind),
                     usdBalanceSum: digest.usdBalanceSum
                 )
             }

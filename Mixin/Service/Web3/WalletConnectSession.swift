@@ -301,13 +301,18 @@ extension WalletConnectSession {
             guard let chain = Web3Chain.chain(caip2: request.chainId) else {
                 throw Error.noChain(request.chainId.absoluteString)
             }
-            let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID)
-            guard let address = address?.destination else {
+            guard let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID) else {
                 throw Error.noAddress
             }
-            let operation = Web3SignWithWalletConnectOperation(address: address, session: self, request: decoded, chain: chain)
-            let signRequest = Web3SignViewController(wallet: wallet, operation: operation, chainName: decoded.chain.name)
-            Web3PopupCoordinator.enqueue(popup: .request(signRequest))
+            let operation = Web3SignWithWalletConnectOperation(
+                wallet: wallet,
+                chain: chain,
+                address: address,
+                session: self,
+                request: decoded
+            )
+            let sign = Web3SignViewController(operation: operation)
+            Web3PopupCoordinator.enqueue(popup: .request(sign))
         } catch {
             Logger.web3.error(category: "Session", message: "Failed to sign: \(error)")
             let title = R.string.localizable.request_rejected()

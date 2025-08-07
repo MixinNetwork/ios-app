@@ -1090,6 +1090,7 @@
 		948374822A5D49110011A2CA /* PopupSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948374802A5D49110011A2CA /* PopupSelectorViewController.swift */; };
 		948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948374812A5D49110011A2CA /* PopupSelectorView.xib */; };
 		94838A442C02ADFB005B6A27 /* Solana.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94838A432C02ADFB005B6A27 /* Solana.swift */; };
+		948513792E432297008D6FDB /* Web3Wallet+Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948513782E432285008D6FDB /* Web3Wallet+Account.swift */; };
 		948664DD2CF85B490032B9BE /* TokenActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948664DC2CF85B440032B9BE /* TokenActionView.swift */; };
 		948664FD2CF867DC0032B9BE /* WalletView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948664FC2CF867DC0032B9BE /* WalletView.xib */; };
 		948668A42CF912B20032B9BE /* BadgeDotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948668A32CF912910032B9BE /* BadgeDotView.swift */; };
@@ -2782,6 +2783,7 @@
 		948374812A5D49110011A2CA /* PopupSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSelectorView.xib; sourceTree = "<group>"; };
 		94838A432C02ADFB005B6A27 /* Solana.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solana.swift; sourceTree = "<group>"; };
 		94841CC72797D89500B3593B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		948513782E432285008D6FDB /* Web3Wallet+Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Wallet+Account.swift"; sourceTree = "<group>"; };
 		948664DC2CF85B440032B9BE /* TokenActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenActionView.swift; sourceTree = "<group>"; };
 		948664FC2CF867DC0032B9BE /* WalletView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletView.xib; sourceTree = "<group>"; };
 		948668A32CF912910032B9BE /* BadgeDotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeDotView.swift; sourceTree = "<group>"; };
@@ -3525,6 +3527,7 @@
 				94D78FD62E3A1B8400552D2E /* WalletAvailability.swift */,
 				94DB79052E3A66070066A8E7 /* SequentialWalletNameGenerator.swift */,
 				94D82BDC2E40B069000BA0BF /* AddressLabel.swift */,
+				948513782E432285008D6FDB /* Web3Wallet+Account.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -7557,6 +7560,7 @@
 				944A5A722C2604F70021460C /* CollectibleCollectionHeaderView.swift in Sources */,
 				7B3887BE22E1AD74002B0864 /* HomeContainerViewController.swift in Sources */,
 				94046B96272DC2CF007C1D4A /* IncomingPeerCall.swift in Sources */,
+				948513792E432297008D6FDB /* Web3Wallet+Account.swift in Sources */,
 				94FCB83B264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift in Sources */,
 				E05F1B9C23BB545E00A2569D /* AppReceptionView.swift in Sources */,
 				7B57186E24D9375300682D86 /* MixinAPIError+Localization.swift in Sources */,

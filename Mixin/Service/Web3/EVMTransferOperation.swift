@@ -216,36 +216,7 @@ class EVMTransferOperation: Web3TransferOperation {
         let account: EthereumAccount
         let updatedTransaction: EIP1559Transaction
         do {
-            let privateKey: Data
-            switch wallet.category.knownCase {
-            case .classic:
-                privateKey = try await TIP.deriveEthereumPrivateKey(pin: pin)
-            case .importedMnemonic:
-                guard let pathString = fromAddress.path else {
-                    throw SigningError.missingDerivationPath
-                }
-                let encryptedMnemonics = AppGroupKeychain.importedMnemonics(walletID: wallet.walletID)
-                guard let encryptedMnemonics else {
-                    throw SigningError.missingPrivateKey
-                }
-                let key = try await TIP.importedWalletEncryptionKey(pin: pin)
-                let mnemonics = try encryptedMnemonics.decrypt(with: key)
-                let path = try DerivationPath(string: pathString)
-                privateKey = try mnemonics.deriveForEVM(path: path).privateKey
-            case .importedPrivateKey:
-                let encryptedPrivateKey = AppGroupKeychain.importedPrivateKey(walletID: wallet.walletID)
-                guard let encryptedPrivateKey else {
-                    throw SigningError.missingPrivateKey
-                }
-                let key = try await TIP.importedWalletEncryptionKey(pin: pin)
-                privateKey = try encryptedPrivateKey.decrypt(with: key)
-            case .watchAddress:
-                throw SigningError.invalidCategory
-            case .none:
-                throw SigningError.unknownCategory
-            }
-            let keyStorage = InPlaceKeyStorage(raw: privateKey)
-            account = try EthereumAccount(keyStorage: keyStorage)
+            account = try await wallet.ethereumAccount(pin: pin, address: fromAddress)
             guard fromAddress.destination == account.address.toChecksumAddress() else {
                 throw RequestError.mismatchedAddress
             }

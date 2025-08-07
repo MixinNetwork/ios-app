@@ -20,12 +20,12 @@ class Web3SignOperation {
         case invalidSignature
     }
     
-    let address: String
+    let wallet: Web3Wallet
+    let chain: Web3Chain
+    let address: Web3Address
     let proposer: Web3DappProposer
+    let signable: WalletConnectDecodedSigningRequest.Signable
     let humanReadableMessage: String
-    
-    fileprivate let signable: WalletConnectDecodedSigningRequest.Signable
-    fileprivate let chain: Web3Chain
     
     @Published
     fileprivate(set) var state: State = .pending
@@ -34,30 +34,30 @@ class Web3SignOperation {
     fileprivate var hasSignatureSent = false
     
     fileprivate init(
-        address: String,
+        wallet: Web3Wallet,
+        chain: Web3Chain,
+        address: Web3Address,
         proposer: Web3DappProposer,
-        humanReadableMessage: String,
         signable: WalletConnectDecodedSigningRequest.Signable,
-        chain: Web3Chain
+        humanReadableMessage: String,
     ) {
+        self.wallet = wallet
+        self.chain = chain
         self.address = address
         self.proposer = proposer
-        self.humanReadableMessage = humanReadableMessage
         self.signable = signable
-        self.chain = chain
+        self.humanReadableMessage = humanReadableMessage
     }
     
     func start(with pin: String) {
         state = .signing
-        Task.detached { [signable, chain] in
+        Task.detached { [wallet, chain, address, signable] in
             Logger.web3.info(category: "Sign", message: "Will sign")
             let signature: String
             do {
                 switch chain.kind {
                 case .evm:
-                    let priv = try await TIP.deriveEthereumPrivateKey(pin: pin)
-                    let keyStorage = InPlaceKeyStorage(raw: priv)
-                    let account = try EthereumAccount(keyStorage: keyStorage)
+                    let account = try await wallet.ethereumAccount(pin: pin, address: address)
                     signature = switch signable {
                     case .raw(let data):
                         try account.signMessage(message: data)
@@ -67,7 +67,7 @@ class Web3SignOperation {
                 case .solana:
                     switch signable {
                     case .raw(let message):
-                        let priv = try await TIP.deriveSolanaPrivateKey(pin: pin)
+                        let priv = try await wallet.solanaPrivateKey(pin: pin, address: address)
                         signature = try Solana.sign(message: message, withPrivateKeyFrom: priv)
                     case .typed:
                         throw SigningError.invalidSignable
@@ -124,23 +124,26 @@ final class Web3SignWithWalletConnectOperation: Web3SignOperation {
     let request: WalletConnectDecodedSigningRequest
     
     init(
-        address: String,
+        wallet: Web3Wallet,
+        chain: Web3Chain,
+        address: Web3Address,
         session: WalletConnectSession,
         request: WalletConnectDecodedSigningRequest,
-        chain: Web3Chain
     ) {
         self.session = session
         self.request = request
-        let proposer = Web3DappProposer(name: session.name, host: session.host)
-        super.init(address: address,
-                   proposer: proposer,
-                   humanReadableMessage: request.humanReadable,
-                   signable: request.signable,
-                   chain: chain)
+        super.init(
+            wallet: wallet,
+            chain: chain,
+            address: address,
+            proposer: Web3DappProposer(name: session.name, host: session.host),
+            signable: request.signable,
+            humanReadableMessage: request.humanReadable,
+        )
     }
     
     override func start(with pin: String) {
-        guard address.lowercased() == request.address.lowercased() else {
+        guard address.destination.lowercased() == request.address.lowercased() else {
             Logger.web3.error(category: "Sign", message: "Mismatched Address")
             state = .signingFailed(SigningError.mismatchedAddress)
             return
@@ -195,21 +198,25 @@ final class Web3SignWithBrowserWalletOperation: Web3SignOperation {
     private let rejectImpl: (() -> Void)?
     
     init(
-        address: String,
-        proposer: Web3DappProposer,
-        humanReadableMessage: String,
-        signable: WalletConnectDecodedSigningRequest.Signable,
+        wallet: Web3Wallet,
         chain: Web3Chain,
+        address: Web3Address,
+        proposer: Web3DappProposer,
+        signable: WalletConnectDecodedSigningRequest.Signable,
+        humanReadableMessage: String,
         sendWith sendImpl: @escaping ((String) async throws -> Void),
         rejectWith rejectImpl: @escaping (() -> Void)
     ) {
         self.sendImpl = sendImpl
         self.rejectImpl = rejectImpl
-        super.init(address: address,
-                   proposer: proposer,
-                   humanReadableMessage: humanReadableMessage,
-                   signable: signable,
-                   chain: chain)
+        super.init(
+            wallet: wallet,
+            chain: chain,
+            address: address,
+            proposer: proposer,
+            signable: signable,
+            humanReadableMessage: humanReadableMessage
+        )
     }
     
     override func send(signature: String) async {

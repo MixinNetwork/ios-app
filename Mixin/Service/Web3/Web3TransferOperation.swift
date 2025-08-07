@@ -26,13 +26,9 @@ class Web3TransferOperation {
     }
     
     enum SigningError: Error {
-        case unknownCategory
-        case invalidCategory
-        case missingPrivateKey
         case invalidTransaction
         case invalidBlockhash
         case noFeeToken(String)
-        case missingDerivationPath
     }
     
     let wallet: Web3Wallet

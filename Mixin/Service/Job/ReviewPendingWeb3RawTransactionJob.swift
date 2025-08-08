@@ -10,8 +10,12 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
         super.init()
     }
     
+    static func jobID(walletID: String) -> String {
+        "review-pending-Web3RawTxn-\(walletID)"
+    }
+    
     override func getJobId() -> String {
-        "review-pending-Web3RawTxn"
+        Self.jobID(walletID: walletID)
     }
     
     override func run() throws {
@@ -19,6 +23,9 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
         while LoginManager.shared.isLoggedIn && !transactions.isEmpty {
             Logger.general.debug(category: "ReviewPendingWeb3RawTxn", message: "\(transactions.count) raw txns to review")
             for (i, transaction) in transactions.enumerated() {
+                if isCancelled {
+                    return
+                }
                 let result = RouteAPI.transaction(
                     chainID: transaction.chainID,
                     hash: transaction.hash

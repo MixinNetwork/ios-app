@@ -10,11 +10,18 @@ public final class RefreshWeb3WalletTokenJob: AsynchronousJob {
         super.init()
     }
     
-    override public func getJobId() -> String {
+    static func jobID(walletID: String) -> String {
         "refresh-web3token-\(walletID)"
     }
     
+    override public func getJobId() -> String {
+        Self.jobID(walletID: walletID)
+    }
+    
     public override func execute() -> Bool {
+        guard !isCancelled else {
+            return true
+        }
         let walletID = walletID
         RouteAPI.assets(walletID: walletID, queue: .global()) { result in
             switch result {

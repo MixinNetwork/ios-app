@@ -10,13 +10,17 @@ final class ReviewPendingWeb3TransactionJob: BaseJob {
         super.init()
     }
     
+    static func jobID(walletID: String) -> String {
+        "review-pending-Web3Txn-\(walletID)"
+    }
+    
     override func getJobId() -> String {
-        "review-pending-Web3Txn"
+        Self.jobID(walletID: walletID)
     }
     
     override func run() throws {
         var transactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
-        while LoginManager.shared.isLoggedIn && !transactions.isEmpty {
+        while LoginManager.shared.isLoggedIn && !transactions.isEmpty && !isCancelled {
             Logger.general.debug(category: "ReviewPendingWeb3Txn", message: "\(transactions.count) txns to review")
             let hashes = transactions.map(\.transactionHash)
             let rawTransactionsCount = Web3RawTransactionDAO.shared

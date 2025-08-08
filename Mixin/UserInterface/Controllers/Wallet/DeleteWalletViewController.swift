@@ -75,6 +75,15 @@ extension DeleteWalletViewController: AuthenticationIntent {
                 RouteAPI.deleteWallet(id: walletID) { result in
                     switch result {
                     case .success:
+                        let jobIDs = [
+                            SyncWeb3TransactionJob.jobID(walletID: walletID),
+                            ReviewPendingWeb3RawTransactionJob.jobID(walletID: walletID),
+                            ReviewPendingWeb3TransactionJob.jobID(walletID: walletID),
+                            RefreshWeb3WalletTokenJob.jobID(walletID: walletID),
+                        ]
+                        for id in jobIDs {
+                            ConcurrentJobQueue.shared.cancelJob(jobId: id)
+                        }
                         Web3WalletDAO.shared.deleteWallet(id: walletID)
                         switch wallet.category.knownCase {
                         case .importedMnemonic:

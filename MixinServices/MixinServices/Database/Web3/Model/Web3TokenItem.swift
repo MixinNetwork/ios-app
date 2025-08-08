@@ -37,4 +37,12 @@ public final class Web3TokenItem: Web3Token, OnChainToken, HideableToken {
         )
     }
     
+    public convenience init(
+        token: Web3TokenItem,
+        replacingAmountWith arbitraryAmount: String
+    ) {
+        let amountReplacedToken = Web3Token(token: token, replacingAmountWith: arbitraryAmount)
+        self.init(token: amountReplacedToken, hidden: false, chain: token.chain)
+    }
+    
 }

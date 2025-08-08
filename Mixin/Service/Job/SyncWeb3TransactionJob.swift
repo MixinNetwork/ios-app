@@ -7,7 +7,7 @@ final class SyncWeb3TransactionJob: BaseJob {
         case emptyAddress
     }
     
-    private let limit = 300
+    private let limit = 100
     private let walletID: String
     
     init(walletID: String) {
@@ -15,8 +15,12 @@ final class SyncWeb3TransactionJob: BaseJob {
         super.init()
     }
     
-    override func getJobId() -> String {
+    static func jobID(walletID: String) -> String {
         "sync-web3txn-\(walletID)"
+    }
+    
+    override func getJobId() -> String {
+        Self.jobID(walletID: walletID)
     }
     
     override func run() throws {
@@ -39,6 +43,10 @@ final class SyncWeb3TransactionJob: BaseJob {
             while true {
                 let transactions = try result.get()
                 let offset = transactions.last?.createdAt
+                guard !isCancelled else {
+                    Logger.general.debug(category: "SyncWeb3Txn", message: "Cancelled")
+                    return
+                }
                 Web3TransactionDAO.shared.save(transactions: transactions) { db in
                     if let offset {
                         try Web3PropertiesDAO.shared.set(

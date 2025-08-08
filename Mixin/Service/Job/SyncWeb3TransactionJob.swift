@@ -7,7 +7,7 @@ final class SyncWeb3TransactionJob: BaseJob {
         case emptyAddress
     }
     
-    private let limit = 300
+    private let limit = 100
     private let walletID: String
     
     init(walletID: String) {

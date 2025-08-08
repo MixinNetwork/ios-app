@@ -4,11 +4,11 @@ import MixinServices
 final class HiddenWeb3TokensViewController: HiddenTokensViewController {
     
     private let wallet: Web3Wallet
-    private let availability: WalletAvailability
+    private let availability: Web3Wallet.Availability
     
     private var tokens: [Web3TokenItem] = []
     
-    init(wallet: Web3Wallet, availability: WalletAvailability) {
+    init(wallet: Web3Wallet, availability: Web3Wallet.Availability) {
         self.wallet = wallet
         self.availability = availability
         super.init()

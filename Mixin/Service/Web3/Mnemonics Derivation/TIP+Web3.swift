@@ -14,7 +14,7 @@ extension TIP {
         case solanaMismatched
     }
     
-    enum CommonWalletDerivation {
+    enum ClassicWalletDerivation {
         
         static func evmPath(index: Int) throws -> DerivationPath {
             try DerivationPath(string: "m/44'/60'/0'/0/\(index)")
@@ -49,7 +49,7 @@ extension TIP {
         let spendKey = try await TIP.spendPriv(pin: pin)
         let hexSpendKey = spendKey.hexEncodedString()
         
-        let evmPath = try CommonWalletDerivation.evmPath(index: index)
+        let evmPath = try ClassicWalletDerivation.evmPath(index: index)
         let evmAddress = try {
             let priv = try TIP.deriveEthereumPrivateKey(spendKey: spendKey, path: evmPath)
             let keyStorage = InPlaceKeyStorage(raw: priv)
@@ -58,7 +58,7 @@ extension TIP {
         }()
         let redundantEVMAddress = try {
             var error: NSError?
-            let address = BlockchainGenerateEthereumAddress(hexSpendKey, &error)
+            let address = BlockchainGenerateEthereumAddress(hexSpendKey, evmPath.string, &error)
             if let error {
                 throw error
             }
@@ -69,14 +69,14 @@ extension TIP {
             throw GenerationError.evmMismatched
         }
         
-        let solanaPath = try CommonWalletDerivation.solanaPath(index: index)
+        let solanaPath = try ClassicWalletDerivation.solanaPath(index: index)
         let solanaAddress = try {
             let privateKey = try TIP.deriveSolanaPrivateKey(spendKey: spendKey, path: solanaPath)
             return try Solana.publicKey(seed: privateKey)
         }()
         let redundantSolanaAddress = try {
             var error: NSError?
-            let address = BlockchainGenerateSolanaAddress(hexSpendKey, &error)
+            let address = BlockchainGenerateSolanaAddress(hexSpendKey, solanaPath.string, &error)
             if let error {
                 throw error
             }
@@ -115,14 +115,14 @@ extension TIP {
         
         let addresses = try await deriveAddresses(pin: pin, index: 0)
         let request = CreateWalletRequest(
-            name: "Classic Wallet",
+            name: R.string.localizable.common_wallet(),
             category: .classic,
             addresses: addresses
         )
-        let commonWallet = try await RouteAPI.createWallet(request)
+        let defaultWallet = try await RouteAPI.createWallet(request)
         Web3WalletDAO.shared.save(
-            wallets: [commonWallet.wallet],
-            addresses: commonWallet.addresses
+            wallets: [defaultWallet.wallet],
+            addresses: defaultWallet.addresses
         )
     }
     

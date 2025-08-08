@@ -405,6 +405,11 @@
 "create_account" = "Create Account";
 "create_introduction" = "MPC Wallet, 2FA, %@, Self-custody, Social Recovery";
 "create_mnemonic_phrase" = "Create Mnemonic Phrase";
+"create_new_wallet" = "Create New Wallet";
+"create_new_wallet_description" = "Add a new multi-chain wallet";
+"create_new_wallet_instruction_1" = "This wallet is derived based on TIP and does not support viewing the private key.";
+"create_new_wallet_instruction_2" = "Supports multiple networks such as Ethereum, Base, and Solana.";
+"create_new_wallet_instruction_3" = "This wallet cannot be deleted once created.";
 "create_pin" = "Create PIN";
 "created" = "Created";
 "created_this_group" = "%@ created this group";

@@ -197,7 +197,12 @@ public final class TokenDAO: UserDatabaseDAO {
         ORDER BY t.price_usd * te.balance DESC
         """)
         let chainIDs = ChainDAO.shared.allChainIDs()
-        return WalletDigest(wallet: .privacy, tokens: digests, supportedChainIDs: chainIDs)
+        return WalletDigest(
+            wallet: .privacy,
+            tokens: digests,
+            supportedChainIDs: chainIDs,
+            hasLegacyAddress: false
+        )
     }
     
     public func save(assets: [MixinToken], completion: (() -> Void)? = nil) {

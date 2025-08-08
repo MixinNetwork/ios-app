@@ -405,6 +405,11 @@
 "create_account" = "建立帳戶";
 "create_introduction" = "MPC 錢包，2FA，%@，自我保管，社交恢復";
 "create_mnemonic_phrase" = "建立助記詞";
+"create_new_wallet" = "建立新錢包";
+"create_new_wallet_description" = "新增一個新的多鏈錢包";
+"create_new_wallet_instruction_1" = "該錢包基於 TIP 派生，不支援檢視錢包私鑰。";
+"create_new_wallet_instruction_2" = "支援 Ethereum、Base、Solana 等多個網路。";
+"create_new_wallet_instruction_3" = "該錢包建立後無法刪除。";
 "create_pin" = "建立錢包";
 "created" = "建立日期";
 "created_this_group" = "%@建立了這個群組";

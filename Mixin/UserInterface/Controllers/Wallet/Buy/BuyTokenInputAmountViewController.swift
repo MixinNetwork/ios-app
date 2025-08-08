@@ -59,18 +59,11 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.titleView = switch wallet {
-        case .privacy:
-            NavigationTitleView(
-                title: R.string.localizable.buy(),
-                subtitle: R.string.localizable.privacy_wallet()
-            )
-        case .common(let wallet):
-            NavigationTitleView(
-                title: R.string.localizable.buy(),
-                subtitle: wallet.localizedName
-            )
-        }
+        title = R.string.localizable.buy()
+        navigationItem.titleView = NavigationTitleView(
+            title: R.string.localizable.buy(),
+            subtitle: wallet.localizedName
+        )
         amountLabel.text = CurrencyFormatter.localizedString(
             from: 0,
             format: .precision,

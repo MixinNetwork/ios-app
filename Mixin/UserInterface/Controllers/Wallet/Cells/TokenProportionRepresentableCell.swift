@@ -12,7 +12,7 @@ enum TokenProportionPlaceholder {
     case evmChains
     case solanaChain
     
-    static func importedWallet(kind: Web3Chain.Kind?) -> TokenProportionPlaceholder? {
+    static func singleKindWallet(kind: Web3Chain.Kind?) -> TokenProportionPlaceholder? {
         switch kind {
         case .evm:
                 .evmChains

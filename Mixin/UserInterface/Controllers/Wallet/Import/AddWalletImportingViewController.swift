@@ -4,6 +4,7 @@ import MixinServices
 final class AddWalletImportingViewController: IntroductionViewController {
     
     enum ImportingWallet {
+        case byCreating(request: CreateWalletRequest)
         case byMnemonics(mnemonics: EncryptedBIP39Mnemonics, wallets: [NamedWalletCandidate])
         case byPrivateKey(key: EncryptedPrivateKey, request: CreateWalletRequest)
     }
@@ -50,6 +51,8 @@ final class AddWalletImportingViewController: IntroductionViewController {
     
     @objc private func retry(_ sender: Any) {
         switch importingWallet {
+        case let .byCreating(request):
+            createWallet(request: request)
         case let .byMnemonics(mnemonics, wallets):
             importWallets(mnemonics: mnemonics, wallets: wallets)
         case let .byPrivateKey(key, request):
@@ -76,6 +79,37 @@ final class AddWalletImportingViewController: IntroductionViewController {
         contentLabel.isHidden = false
     }
     
+    private func createWallet(request: CreateWalletRequest) {
+        showLoading()
+        Task { [weak self] in
+            do {
+                Logger.general.info(category: "AddWallet", message: "Request create wallet")
+                let response = try await RouteAPI.createWallet(request)
+                Logger.general.info(category: "AddWallet", message: "Response wallet \(response.wallet.debugDescription), addresses: \(response.addresses.count)")
+                Web3WalletDAO.shared.save(wallets: [response.wallet], addresses: response.addresses)
+                let jobs = [
+                    RefreshWeb3WalletTokenJob(walletID: response.wallet.walletID),
+                    SyncWeb3TransactionJob(walletID: response.wallet.walletID),
+                ]
+                for job in jobs {
+                    ConcurrentJobQueue.shared.addJob(job: job)
+                }
+                await MainActor.run {
+                    _ = self?.navigationController?.popToRootViewController(animated: true)
+                }
+            } catch MixinAPIResponseError.tooManyWallets {
+                await MainActor.run {
+                    let error = AddWalletErrorViewController(error: .tooManyWallets(hasPartialSuccess: false))
+                    self?.navigationController?.pushViewController(replacingCurrent: error, animated: true)
+                }
+            } catch {
+                await MainActor.run {
+                    self?.showError(error.localizedDescription)
+                }
+            }
+        }
+    }
+    
     private func importWallets(mnemonics: EncryptedBIP39Mnemonics, wallets: [NamedWalletCandidate]) {
         showLoading()
         Task { [weak self] in
@@ -100,9 +134,9 @@ final class AddWalletImportingViewController: IntroductionViewController {
                             ),
                         ]
                     )
-                    Logger.general.debug(category: "AddWallet", message: "Request import \(wallet.name) by mnemonics")
+                    Logger.general.info(category: "AddWallet", message: "Request import \(wallet.name) by mnemonics")
                     let response = try await RouteAPI.createWallet(request)
-                    Logger.general.debug(category: "AddWallet", message: "Response wallet \(response.wallet.debugDescription), addresses: \(response.addresses.count)")
+                    Logger.general.info(category: "AddWallet", message: "Response wallet \(response.wallet.debugDescription), addresses: \(response.addresses.count)")
                     Web3WalletDAO.shared.save(wallets: [response.wallet], addresses: response.addresses)
                     let jobs = [
                         RefreshWeb3WalletTokenJob(walletID: response.wallet.walletID),
@@ -134,9 +168,9 @@ final class AddWalletImportingViewController: IntroductionViewController {
         showLoading()
         Task { [weak self] in
             do {
-                Logger.general.debug(category: "AddWallet", message: "Request import wallet by private key")
+                Logger.general.info(category: "AddWallet", message: "Request import wallet by private key")
                 let response = try await RouteAPI.createWallet(request)
-                Logger.general.debug(category: "AddWallet", message: "Response wallet \(response.wallet.debugDescription), addresses: \(response.addresses.count)")
+                Logger.general.info(category: "AddWallet", message: "Response wallet \(response.wallet.debugDescription), addresses: \(response.addresses.count)")
                 Web3WalletDAO.shared.save(wallets: [response.wallet], addresses: response.addresses)
                 let jobs = [
                     RefreshWeb3WalletTokenJob(walletID: response.wallet.walletID),

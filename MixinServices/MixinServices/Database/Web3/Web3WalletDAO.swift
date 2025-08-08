@@ -20,6 +20,13 @@ public final class Web3WalletDAO: Web3DAO {
         )
     }
     
+    public func walletCount(category: Web3Wallet.Category) -> Int {
+        db.count(
+            in: Web3Wallet.self,
+            where: Web3Wallet.column(of: .category) == Web3Wallet.Category.classic.rawValue
+        )
+    }
+    
     public func currentSelectedWallet() -> Web3Wallet? {
         if let id = AppGroupUserDefaults.Wallet.dappConnectionWalletID,
            let wallet: Web3Wallet = db.select(where: Web3Wallet.column(of: .walletID) == id)
@@ -42,6 +49,10 @@ public final class Web3WalletDAO: Web3DAO {
             SELECT * FROM wallets ORDER BY created_at ASC
             """
             
+            static let hasLegacyAddresses = """
+            SELECT TRUE FROM addresses WHERE wallet_id = ? AND path IS NULL
+            """
+            
             static let tokenDigests = """
             SELECT t.asset_id, t.symbol, t.name, t.icon_url, t.price_usd, t.amount AS balance
             FROM tokens t
@@ -60,6 +71,11 @@ public final class Web3WalletDAO: Web3DAO {
         
         return try! db.read { db in
             try Web3Wallet.fetchAll(db, sql: SQL.wallets).compactMap { wallet in
+                let hasLegacyAddress = try Bool.fetchOne(
+                    db,
+                    sql: SQL.hasLegacyAddresses,
+                    arguments: [wallet.walletID]
+                ) ?? false
                 let tokenDigests = try TokenDigest.fetchAll(
                     db,
                     sql: SQL.tokenDigests,
@@ -73,7 +89,8 @@ public final class Web3WalletDAO: Web3DAO {
                 return WalletDigest(
                     wallet: .common(wallet),
                     tokens: tokenDigests,
-                    supportedChainIDs: chainIDs
+                    supportedChainIDs: chainIDs,
+                    hasLegacyAddress: hasLegacyAddress
                 )
             }
         }

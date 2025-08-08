@@ -25,7 +25,7 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
         super.viewDidLoad()
         
         if let titleView = navigationItem.titleView as? NavigationTitleView {
-            titleView.subtitle = payment.wallet.localizedName
+            titleView.subtitle = payment.wallet.name
         }
         headerView.load(web3Token: payment.token)
         

@@ -18,7 +18,7 @@ extension Web3Wallet {
             let path = if let string = address.path {
                 try DerivationPath(string: string)
             } else {
-                try TIP.CommonWalletDerivation.evmPath(index: 0)
+                try TIP.ClassicWalletDerivation.evmPath(index: 0)
             }
             privateKey = try await TIP.deriveEthereumPrivateKey(pin: pin, path: path)
         case .importedMnemonic:
@@ -55,7 +55,7 @@ extension Web3Wallet {
             let path = if let string = address.path {
                 try DerivationPath(string: string)
             } else {
-                try TIP.CommonWalletDerivation.solanaPath(index: 0)
+                try TIP.ClassicWalletDerivation.solanaPath(index: 0)
             }
             return try await TIP.deriveSolanaPrivateKey(pin: pin, path: path)
         case .importedMnemonic:

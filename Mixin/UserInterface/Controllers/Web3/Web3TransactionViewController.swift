@@ -34,7 +34,7 @@ final class Web3TransactionViewController: TransactionViewController {
         title = R.string.localizable.transaction()
         navigationItem.titleView = NavigationTitleView(
             title: R.string.localizable.transaction(),
-            subtitle: wallet.localizedName
+            subtitle: wallet.name
         )
         tableView.register(R.nib.multipleAssetChangeCell)
         tableView.register(R.nib.authenticationPreviewInfoCell)

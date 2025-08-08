@@ -14,6 +14,8 @@ final class ClassicWalletViewController: WalletViewController {
     private var secret: Secret?
     private var supportedChainIDs: Set<String> = []
     private var tokens: [Web3TokenItem] = []
+    private var legacyRenaming: WalletDigest.LegacyClassicWalletRenaming?
+    
     private var reviewPendingTransactionJobID: String?
     
     private weak var renamingInputController: UIAlertController?
@@ -50,7 +52,7 @@ final class ClassicWalletViewController: WalletViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.text = wallet.localizedName
+        titleLabel.text = ""
         tableView.dataSource = self
         tableView.delegate = self
         tableHeaderView.actionView.actions = [.buy, .receive, .send, .swap]
@@ -130,13 +132,18 @@ final class ClassicWalletViewController: WalletViewController {
             let hidden = HiddenWeb3TokensViewController(wallet: wallet, availability: self.availability)
             self.navigationController?.pushViewController(hidden, animated: true)
         }))
+        switch legacyRenaming {
+        case .none, .required:
+            break
+        case .notInvolved, .done:
+            sheet.addAction(UIAlertAction(title: R.string.localizable.rename_wallet(), style: .default, handler: { (_) in
+                self.inputNewWalletName()
+            }))
+        }
         switch wallet.category.knownCase {
         case .classic, .none:
             break
         case .importedMnemonic:
-            sheet.addAction(UIAlertAction(title: R.string.localizable.rename_wallet(), style: .default, handler: { (_) in
-                self.inputNewWalletName()
-            }))
             switch secret {
             case .mnemonics(let mnemonics):
                 sheet.addAction(UIAlertAction(title: R.string.localizable.show_mnemonic_phrase(), style: .default, handler: { (_) in
@@ -154,9 +161,6 @@ final class ClassicWalletViewController: WalletViewController {
                 self.deleteWallet()
             }))
         case .importedPrivateKey:
-            sheet.addAction(UIAlertAction(title: R.string.localizable.rename_wallet(), style: .default, handler: { (_) in
-                self.inputNewWalletName()
-            }))
             switch secret {
             case let .privateKey(privateKey, kind):
                 sheet.addAction(UIAlertAction(title: R.string.localizable.show_private_key(), style: .default, handler: { (_) in
@@ -170,9 +174,6 @@ final class ClassicWalletViewController: WalletViewController {
                 self.deleteWallet()
             }))
         case .watchAddress:
-            sheet.addAction(UIAlertAction(title: R.string.localizable.rename_wallet(), style: .default, handler: { (_) in
-                self.inputNewWalletName()
-            }))
             sheet.addAction(UIAlertAction(title: R.string.localizable.delete_wallet(), style: .destructive, handler: { (_) in
                 self.deleteWallet()
             }))
@@ -210,9 +211,14 @@ final class ClassicWalletViewController: WalletViewController {
     @objc private func reloadData() {
         DispatchQueue.global().async { [weak self, wallet] in
             let walletID = wallet.walletID
+            let addresses = Web3AddressDAO.shared.addresses(walletID: walletID)
             let secret: Secret?
-            let chainIDs = Web3AddressDAO.shared.chainIDs(walletID: walletID)
+            let chainIDs = Set(addresses.map(\.chainID))
             let tokens = Web3TokenDAO.shared.notHiddenTokens(walletID: walletID)
+            let renaming = WalletDigest.LegacyClassicWalletRenaming(
+                wallet: .common(wallet),
+                hasLegacyAddress: addresses.contains { $0.path == nil }
+            )
             let watchingAddresses: String?
             switch wallet.category.knownCase {
             case .classic:
@@ -227,7 +233,7 @@ final class ClassicWalletViewController: WalletViewController {
                 watchingAddresses = nil
             case .importedPrivateKey:
                 if let privateKey = AppGroupKeychain.importedPrivateKey(walletID: walletID) {
-                    let kind: Web3Chain.Kind? = .importedWalletKind(chainIDs: chainIDs)
+                    let kind: Web3Chain.Kind? = .singleKindWallet(chainIDs: chainIDs)
                     switch kind {
                     case .evm:
                         secret = .privateKey(privateKey, .evm)
@@ -251,6 +257,14 @@ final class ClassicWalletViewController: WalletViewController {
                 self.secret = secret
                 self.supportedChainIDs = chainIDs
                 self.tokens = tokens
+                self.legacyRenaming = renaming
+                switch renaming {
+                case .required:
+                    self.titleLabel.text = R.string.localizable.common_wallet()
+                    self.renameLegacyClassicWallet()
+                case .notInvolved, .done:
+                    self.titleLabel.text = wallet.name
+                }
                 self.tableHeaderView.reloadValues(tokens: tokens)
                 if let watchingAddresses {
                     self.tableHeaderView.actionView.isHidden = true
@@ -292,82 +306,6 @@ final class ClassicWalletViewController: WalletViewController {
         controller.actions[1].isEnabled = count > 0
             && count <= maxNameUTF8Count
             && text != wallet.name
-    }
-    
-    private func updateDappConnectionWalletIfNeeded() {
-        switch availability {
-        case .always:
-            if AppGroupUserDefaults.Wallet.dappConnectionWalletID != wallet.walletID {
-                AppGroupUserDefaults.Wallet.dappConnectionWalletID = wallet.walletID
-                UIApplication.homeContainerViewController?.clipSwitcher.reloadWebViews()
-                WalletConnectService.shared.updateSessions(with: wallet)
-            }
-        case .never, .afterImportingMnemonics, .afterImportingPrivateKey:
-            break
-        }
-    }
-    
-    private func hideToken(with assetID: String) {
-        guard let index = tokens.firstIndex(where: { $0.assetID == assetID }) else {
-            return
-        }
-        let token = tokens.remove(at: index)
-        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
-        DispatchQueue.global().async {
-            Web3TokenExtraDAO.shared.hide(walletID: token.walletID, assetID: token.assetID)
-        }
-    }
-    
-    private func inputNewWalletName() {
-        let input = UIAlertController(title: R.string.localizable.rename_wallet(), message: nil, preferredStyle: .alert)
-        input.addTextField { textField in
-            textField.text = self.wallet.name
-            textField.addTarget(self, action: #selector(self.renamingInputChanged(_:)), for: .editingChanged)
-            textField.delegate = self
-        }
-        input.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        let saveAction = UIAlertAction(title: R.string.localizable.save(), style: .default) { _ in
-            self.renameWallet()
-        }
-        saveAction.isEnabled = false
-        input.addAction(saveAction)
-        renamingInputController = input
-        present(input, animated: true)
-    }
-    
-    private func renameWallet() {
-        guard let name = renamingInputController?.textFields?.first?.text else {
-            return
-        }
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        RouteAPI.renameWallet(id: wallet.walletID, name: name) { [weak self] result in
-            switch result {
-            case let .success(wallet):
-                DispatchQueue.global().async {
-                    Web3WalletDAO.shared.save(wallets: [wallet], addresses: [])
-                }
-                if let self {
-                    self.wallet = wallet
-                    self.titleLabel.text = wallet.localizedName
-                }
-                hud.set(style: .notification, text: R.string.localizable.changed())
-            case let .failure(error):
-                hud.set(style: .error, text: error.localizedDescription)
-            }
-            hud.scheduleAutoHidden()
-        }
-    }
-    
-    private func deleteWallet() {
-        let deleteWallet = DeleteWalletViewController(wallet: wallet) { [weak self] in
-            guard let self else {
-                return
-            }
-            self.switchFromWallets(self)
-        }
-        let authentication = AuthenticationViewController(intent: deleteWallet)
-        present(authentication, animated: true)
     }
     
 }
@@ -541,6 +479,120 @@ extension ClassicWalletViewController: WalletSearchViewControllerDelegate {
             availability: availability
         )
         navigationController?.pushViewController(controller, animated: true)
+    }
+    
+}
+
+extension ClassicWalletViewController {
+    
+    private func renameLegacyClassicWallet() {
+        guard legacyRenaming == .required else {
+            assertionFailure()
+            return
+        }
+        // During the renaming process, the backend will check the state of the wallet.
+        // If its category is classic and it has no path, the backend will assign
+        // a default path with index 0. Therefore, after renaming, the wallet’s addresses
+        // should be updated to avoid renaming it again.
+        Logger.web3.info(category: "WalletView", message: "Will rename legacy wallet")
+        let walletID = wallet.walletID
+        Task { [weak self] in
+            do {
+                let wallet = try await RouteAPI.renameWallet(
+                    id: walletID,
+                    name: R.string.localizable.common_wallet()
+                )
+                Web3WalletDAO.shared.save(wallets: [wallet], addresses: [])
+                let addresses = try await RouteAPI.addresses(walletID: walletID)
+                Web3AddressDAO.shared.save(addresses: addresses)
+                await MainActor.run {
+                    guard let self else {
+                        return
+                    }
+                    self.wallet = wallet
+                    self.legacyRenaming = .done
+                    self.titleLabel.text = wallet.name
+                }
+            } catch {
+                Logger.web3.error(category: "WalletView", message: "Migrate: \(error)")
+            }
+        }
+    }
+    
+    private func updateDappConnectionWalletIfNeeded() {
+        switch availability {
+        case .always:
+            if AppGroupUserDefaults.Wallet.dappConnectionWalletID != wallet.walletID {
+                AppGroupUserDefaults.Wallet.dappConnectionWalletID = wallet.walletID
+                UIApplication.homeContainerViewController?.clipSwitcher.reloadWebViews()
+                WalletConnectService.shared.updateSessions(with: wallet)
+            }
+        case .never, .afterImportingMnemonics, .afterImportingPrivateKey:
+            break
+        }
+    }
+    
+    private func hideToken(with assetID: String) {
+        guard let index = tokens.firstIndex(where: { $0.assetID == assetID }) else {
+            return
+        }
+        let token = tokens.remove(at: index)
+        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .fade)
+        DispatchQueue.global().async {
+            Web3TokenExtraDAO.shared.hide(walletID: token.walletID, assetID: token.assetID)
+        }
+    }
+    
+    private func inputNewWalletName() {
+        let input = UIAlertController(title: R.string.localizable.rename_wallet(), message: nil, preferredStyle: .alert)
+        input.addTextField { textField in
+            textField.text = self.wallet.name
+            textField.addTarget(self, action: #selector(self.renamingInputChanged(_:)), for: .editingChanged)
+            textField.delegate = self
+        }
+        input.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        let saveAction = UIAlertAction(title: R.string.localizable.save(), style: .default) { _ in
+            self.renameWallet()
+        }
+        saveAction.isEnabled = false
+        input.addAction(saveAction)
+        renamingInputController = input
+        present(input, animated: true)
+    }
+    
+    private func renameWallet() {
+        guard let name = renamingInputController?.textFields?.first?.text else {
+            return
+        }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        RouteAPI.renameWallet(id: wallet.walletID, name: name, queue: .main) { [weak self] result in
+            switch result {
+            case let .success(wallet):
+                DispatchQueue.global().async {
+                    Web3WalletDAO.shared.save(wallets: [wallet], addresses: [])
+                }
+                if let self {
+                    self.wallet = wallet
+                    self.titleLabel.text = wallet.name
+                }
+                hud.set(style: .notification, text: R.string.localizable.changed())
+            case let .failure(error):
+                hud.set(style: .error, text: error.localizedDescription)
+            }
+            hud.scheduleAutoHidden()
+        }
+    }
+    
+    private func deleteWallet() {
+        let deleteWallet = DeleteWalletViewController(wallet: wallet) { [weak self] in
+            guard let self else {
+                return
+            }
+            self.switchFromWallets(self)
+        }
+        let authentication = AuthenticationViewController(intent: deleteWallet)
+        present(authentication, animated: true)
     }
     
 }

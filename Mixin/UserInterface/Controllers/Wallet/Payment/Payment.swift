@@ -336,7 +336,7 @@ extension Payment {
             case let .temporary(address):
                 return "<WithdrawalDestination.temporary \(address.destination)>"
             case let .commonWallet(wallet, _):
-                return "<WithdrawalDestination.commonWallet \(wallet.localizedName)>"
+                return "<WithdrawalDestination.commonWallet \(wallet.name)>"
             }
         }
         

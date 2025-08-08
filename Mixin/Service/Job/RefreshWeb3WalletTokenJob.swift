@@ -19,13 +19,13 @@ public final class RefreshWeb3WalletTokenJob: AsynchronousJob {
     }
     
     public override func execute() -> Bool {
-        guard !isCancelled else {
-            return true
-        }
         let walletID = walletID
         RouteAPI.assets(walletID: walletID, queue: .global()) { result in
             switch result {
             case let .success(tokens):
+                guard !self.isCancelled else {
+                    return
+                }
                 Web3TokenDAO.shared.save(tokens: tokens)
             case let .failure(error):
                 Logger.general.debug(category: "RefreshWeb3WalletToken", message: "\(error)")

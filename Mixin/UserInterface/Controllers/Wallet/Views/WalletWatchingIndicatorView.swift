@@ -9,6 +9,7 @@ final class WalletWatchingIndicatorView: UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        contentStackView.setCustomSpacing(4, after: label)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = 18
     }

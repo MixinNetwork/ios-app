@@ -42,7 +42,7 @@ final class WatchWalletAddressesViewController: UIViewController {
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                 section.boundarySupplementaryItems = [
                     NSCollectionLayoutBoundarySupplementaryItem(
-                        layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(47)),
+                        layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(43)),
                         elementKind: UICollectionView.elementKindSectionHeader,
                         alignment: .top
                     ),
@@ -198,7 +198,7 @@ extension WatchWalletAddressesViewController {
                 make.top.equalToSuperview().offset(20)
                 make.leading.equalToSuperview().offset(16)
                 make.trailing.equalToSuperview().offset(-16)
-                make.bottom.equalToSuperview().offset(-10)
+                make.bottom.equalToSuperview().offset(-6)
             }
             label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
             label.textColor = R.color.text_quaternary()

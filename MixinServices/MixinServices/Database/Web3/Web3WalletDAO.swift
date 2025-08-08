@@ -104,7 +104,7 @@ public final class Web3WalletDAO: Web3DAO {
         db.select(with: """
         SELECT * FROM wallets w
             INNER JOIN addresses a ON w.wallet_id = a.wallet_id
-        WHERE a.destination = ?
+        WHERE a.destination = ? COLLATE NOCASE
         """, arguments: [destination])
     }
     

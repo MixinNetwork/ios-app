@@ -357,6 +357,10 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
         reporter.report(event: .allTransactions, tags: ["source": "wallet_home"])
     }
     
+    func walletHeaderViewWantsToRevealWatchingAddresses(_ view: WalletHeaderView) {
+        
+    }
+    
 }
 
 extension PrivacyWalletViewController: WalletSearchViewControllerDelegate {

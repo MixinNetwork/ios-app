@@ -23,7 +23,7 @@
                     <buttonConfiguration key="configuration" style="plain"/>
                 </button>
                 <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="ZaD-gD-Hau">
-                    <rect key="frame" x="159.66666666666666" y="0.0" width="74" height="36"/>
+                    <rect key="frame" x="148.66666666666666" y="0.0" width="96" height="36"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="watching_wallet_compact" translatesAutoresizingMaskIntoConstraints="NO" id="qNd-z2-VtK">
                             <rect key="frame" x="0.0" y="9" width="18" height="18"/>
@@ -34,6 +34,12 @@
                             <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="IDQ-hi-Fv9">
+                            <rect key="frame" x="80" y="13" width="16" height="10"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="16" id="lpy-9P-Hfk"/>
+                            </constraints>
+                        </imageView>
                     </subviews>
                 </stackView>
             </subviews>
@@ -59,6 +65,7 @@
         </view>
     </objects>
     <resources>
+        <image name="ic_accessory_disclosure" width="6" height="10"/>
         <image name="watching_wallet_compact" width="18" height="18"/>
         <namedColor name="background_quaternary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

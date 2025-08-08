@@ -23,6 +23,7 @@ extension URL {
     static let cantReceiveOTP       = URL(string: R.string.localizable.url_cant_receive_otp())!
     static let recallMessage        = URL(string: R.string.localizable.url_recall_message())!
     static let support              = URL(string: R.string.localizable.url_support())!
+    static let watchWallet          = URL(string: R.string.localizable.url_watch_wallet())!
     
     func getKeyVals() -> [String: String] {
         return URLComponents(url: self, resolvingAgainstBaseURL: true)?.getKeyVals() ?? [:]

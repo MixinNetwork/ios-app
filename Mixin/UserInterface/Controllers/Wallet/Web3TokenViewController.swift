@@ -4,12 +4,12 @@ import MixinServices
 final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Transaction> {
     
     private let wallet: Web3Wallet
-    private let availability: WalletAvailability
+    private let availability: Web3Wallet.Availability
     
     private var transactionTokenSymbols: [String: String] = [:]
     private var reviewPendingTransactionJobID: String?
     
-    init(wallet: Web3Wallet, token: Web3TokenItem, availability: WalletAvailability) {
+    init(wallet: Web3Wallet, token: Web3TokenItem, availability: Web3Wallet.Availability) {
         self.wallet = wallet
         self.availability = availability
         super.init(token: token)

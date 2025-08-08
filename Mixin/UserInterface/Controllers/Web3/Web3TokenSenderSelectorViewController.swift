@@ -9,16 +9,19 @@ final class Web3TokenSenderSelectorViewController: UIViewController {
     }
     
     private let receivingWallet: Web3Wallet
-    private let token: Web3TokenItem
+    private let receivingToken: Web3TokenItem
     private let tableView = UITableView()
     
     private var receivingAddress: Web3Address? {
-        Web3AddressDAO.shared.address(walletID: receivingWallet.walletID, chainID: token.chainID)
+        Web3AddressDAO.shared.address(
+            walletID: receivingWallet.walletID,
+            chainID: receivingToken.chainID
+        )
     }
     
-    init(receivingWallet: Web3Wallet, token: Web3TokenItem) {
+    init(receivingWallet: Web3Wallet, receivingToken: Web3TokenItem) {
         self.receivingWallet = receivingWallet
-        self.token = token
+        self.receivingToken = receivingToken
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -87,15 +90,19 @@ extension Web3TokenSenderSelectorViewController: UITableViewDelegate {
             let selector = TransferWalletSelectorViewController(
                 intent: .pickSender,
                 excluding: .common(receivingWallet),
-                supportingChainWith: token.chainID
+                supportingChainWith: receivingToken.chainID
             )
             selector.delegate = self
             present(selector, animated: true)
         case .address:
-            guard let kind = Web3Chain.chain(chainID: token.chainID)?.kind else {
+            guard let kind = Web3Chain.chain(chainID: receivingToken.chainID)?.kind else {
                 return
             }
-            let deposit = Web3DepositViewController(wallet: receivingWallet, kind: kind, address: receivingAddress.destination)
+            let deposit = Web3DepositViewController(
+                wallet: receivingWallet,
+                kind: kind,
+                address: receivingAddress.destination
+            )
             navigationController?.pushViewController(deposit, animated: true)
         }
     }
@@ -111,22 +118,22 @@ extension Web3TokenSenderSelectorViewController: TransferWalletSelectorViewContr
         switch wallet {
         case .privacy:
             let tokenItem: MixinTokenItem
-            if let item = TokenDAO.shared.tokenItem(assetID: token.assetID) {
+            if let item = TokenDAO.shared.tokenItem(assetID: receivingToken.assetID) {
                 tokenItem = item
             } else {
                 // XXX: It's terrible, but since this token cannot be found in the database,
                 // the balance must be zero. Anyway, operations cannot succeed with a zero
                 // balance, so just make up some random values to get by.
                 let mixinToken = MixinToken(
-                    assetID: token.assetID,
-                    kernelAssetID: token.kernelAssetID,
-                    symbol: token.symbol,
-                    name: token.name,
-                    iconURL: token.iconURL,
+                    assetID: receivingToken.assetID,
+                    kernelAssetID: receivingToken.kernelAssetID,
+                    symbol: receivingToken.symbol,
+                    name: receivingToken.name,
+                    iconURL: receivingToken.iconURL,
                     btcPrice: "0",
-                    usdPrice: token.usdPrice,
-                    chainID: token.chainID,
-                    usdChange: token.usdChange,
+                    usdPrice: receivingToken.usdPrice,
+                    chainID: receivingToken.chainID,
+                    usdChange: receivingToken.usdChange,
                     btcChange: "0",
                     dust: "0",
                     confirmations: -1,
@@ -137,7 +144,7 @@ extension Web3TokenSenderSelectorViewController: TransferWalletSelectorViewContr
                     token: mixinToken,
                     balance: "0",
                     isHidden: false,
-                    chain: token.chain
+                    chain: receivingToken.chain
                 )
             }
             let input = WithdrawInputAmountViewController(
@@ -146,15 +153,23 @@ extension Web3TokenSenderSelectorViewController: TransferWalletSelectorViewContr
             )
             navigationController?.pushViewController(input, animated: true)
         case .common(let sendingWallet):
-            guard let chain = Web3Chain.chain(chainID: token.chainID) else {
+            guard let chain = Web3Chain.chain(chainID: receivingToken.chainID) else {
                 return
             }
             guard let sendingAddress = Web3AddressDAO.shared.address(walletID: sendingWallet.walletID, chainID: chain.chainID) else {
                 return
             }
+            let sendingToken = if let token = Web3TokenDAO.shared.token(walletID: sendingWallet.walletID, assetID: receivingToken.assetID) {
+                token
+            } else {
+                // XXX: It's terrible, but since this token cannot be found in the database,
+                // the balance must be zero. Anyway, operations cannot succeed with a zero
+                // balance, so just make up some random values to get by.
+                Web3TokenItem(token: receivingToken, replacingAmountWith: "0")
+            }
             let payment = Web3SendingTokenToAddressPayment(
                 chain: chain,
-                token: token,
+                token: sendingToken,
                 fromWallet: sendingWallet,
                 fromAddress: sendingAddress,
                 toAddress: receivingAddress.destination,

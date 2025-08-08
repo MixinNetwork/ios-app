@@ -430,7 +430,10 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
         case .receive:
             let selector = Web3TokenSelectorViewController(wallet: wallet, tokens: tokens)
             selector.onSelected = { [wallet] token in
-                let selector = Web3TokenSenderSelectorViewController(receivingWallet: wallet, token: token)
+                let selector = Web3TokenSenderSelectorViewController(
+                    receivingWallet: wallet,
+                    receivingToken: token
+                )
                 self.navigationController?.pushViewController(selector, animated: true)
             }
             withMnemonicsBackupChecked {

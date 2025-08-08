@@ -82,6 +82,25 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
         self.level = level
     }
     
+    public init(
+        token: Web3Token,
+        replacingAmountWith arbitraryAmount: String
+    ) {
+        self.walletID = token.walletID
+        self.assetID = token.assetID
+        self.chainID = token.chainID
+        self.assetKey = token.assetKey
+        self.kernelAssetID = token.kernelAssetID
+        self.symbol = token.symbol
+        self.name = token.name
+        self.precision = token.precision
+        self.iconURL = token.iconURL
+        self.amount = arbitraryAmount
+        self.usdPrice = token.usdPrice
+        self.usdChange = token.usdChange
+        self.level = token.level
+    }
+    
     public func nativeAmount(decimalAmount: Decimal) -> NSDecimalNumber? {
         let decimalAmountNumber = decimalAmount as NSDecimalNumber
         let nativeAmount = decimalAmountNumber.multiplying(byPowerOf10: precision)

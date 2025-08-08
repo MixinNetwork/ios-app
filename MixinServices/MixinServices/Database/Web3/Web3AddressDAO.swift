@@ -38,18 +38,6 @@ public final class Web3AddressDAO: Web3DAO {
         db.selectSet(with: "SELECT DISTINCT destination FROM addresses WHERE wallet_id = ?", arguments: [walletID])
     }
     
-    public func prettyDestinations(walletID: String) -> String {
-        let destinations: [String] = db.select(
-            with: "SELECT DISTINCT destination FROM addresses WHERE wallet_id = ?",
-            arguments: [walletID]
-        )
-        return destinations
-            .map { destination in
-                TextTruncation.truncateMiddle(string: destination, prefixCount: 6, suffixCount: 4)
-            }
-            .joined(separator: ", ")
-    }
-    
     public func chainIDs(walletID: String) -> Set<String> {
         db.selectSet(with: "SELECT DISTINCT chain_id FROM addresses WHERE wallet_id = ?", arguments: [walletID])
     }

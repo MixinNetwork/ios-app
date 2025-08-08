@@ -15,6 +15,7 @@ final class CommonWalletViewController: WalletViewController {
     private var supportedChainIDs: Set<String> = []
     private var tokens: [Web3TokenItem] = []
     private var legacyRenaming: WalletDigest.LegacyClassicWalletRenaming?
+    private var watchingAddresses: WatchingAddresses?
     
     private var reviewPendingTransactionJobID: String?
     
@@ -219,7 +220,7 @@ final class CommonWalletViewController: WalletViewController {
                 wallet: .common(wallet),
                 hasLegacyAddress: addresses.contains { $0.path == nil }
             )
-            let watchingAddresses: String?
+            let watchingAddresses: WatchingAddresses?
             switch wallet.category.knownCase {
             case .classic:
                 secret = nil
@@ -248,7 +249,7 @@ final class CommonWalletViewController: WalletViewController {
                 watchingAddresses = nil
             case .watchAddress, .none:
                 secret = nil
-                watchingAddresses = Web3AddressDAO.shared.prettyDestinations(walletID: walletID)
+                watchingAddresses = WatchingAddresses(addresses: addresses)
             }
             DispatchQueue.main.async {
                 guard let self = self else {
@@ -258,6 +259,7 @@ final class CommonWalletViewController: WalletViewController {
                 self.supportedChainIDs = chainIDs
                 self.tokens = tokens
                 self.legacyRenaming = renaming
+                self.watchingAddresses = watchingAddresses
                 switch renaming {
                 case .required:
                     self.titleLabel.text = R.string.localizable.common_wallet()
@@ -268,7 +270,9 @@ final class CommonWalletViewController: WalletViewController {
                 self.tableHeaderView.reloadValues(tokens: tokens)
                 if let watchingAddresses {
                     self.tableHeaderView.actionView.isHidden = true
-                    let description = R.string.localizable.you_are_watching_address(watchingAddresses)
+                    let description = R.string.localizable.you_are_watching_address(
+                        watchingAddresses.prettyFormatted
+                    )
                     self.tableHeaderView.showWatchingIndicator(description: description)
                 } else {
                     self.tableHeaderView.actionView.isHidden = false
@@ -447,6 +451,14 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
     func walletHeaderViewWantsToRevealPendingDeposits(_ view: WalletHeaderView) {
         let transactionHistory = Web3TransactionHistoryViewController(wallet: wallet, type: .pending)
         navigationController?.pushViewController(transactionHistory, animated: true)
+    }
+    
+    func walletHeaderViewWantsToRevealWatchingAddresses(_ view: WalletHeaderView) {
+        guard let addresses = watchingAddresses?.addresses, !addresses.isEmpty else {
+            return
+        }
+        let description = WatchWalletAddressesViewController(addresses: addresses)
+        navigationController?.pushViewController(description, animated: true)
     }
     
 }

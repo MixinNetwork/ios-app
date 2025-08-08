@@ -904,6 +904,12 @@
 		944ED8D0264640E200C97215 /* WebLoadingFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */; };
 		944ED8D22646535B00C97215 /* WebContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944ED8D12646535B00C97215 /* WebContentView.xib */; };
 		944ED8D4264666AC00C97215 /* FullscreenPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944ED8D3264666AC00C97215 /* FullscreenPopupViewController.swift */; };
+		944F53FE2E45CC4F0064A9A2 /* WatchWalletAddressesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944F53FD2E45CC4F0064A9A2 /* WatchWalletAddressesViewController.swift */; };
+		944F54072E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944F54062E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.xib */; };
+		944F54082E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944F54052E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.swift */; };
+		944F54382E45E7FB0064A9A2 /* WatchWalletAddressCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944F54372E45E7FB0064A9A2 /* WatchWalletAddressCell.xib */; };
+		944F54392E45E7FB0064A9A2 /* WatchWalletAddressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944F54362E45E7FB0064A9A2 /* WatchWalletAddressCell.swift */; };
+		944F547F2E45F9A20064A9A2 /* WatchingAddresses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944F547E2E45F99F0064A9A2 /* WatchingAddresses.swift */; };
 		94509BC12DDDFC5D00DC6A43 /* RefreshWeb3TokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94509BC02DDDFC5800DC6A43 /* RefreshWeb3TokenJob.swift */; };
 		94509D772DE086E100DC6A43 /* IAPTransactionObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94509D762DE086D800DC6A43 /* IAPTransactionObserver.swift */; };
 		94510FBB2C85673C00ACD972 /* ReloadGlobalMarketJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94510FBA2C85673C00ACD972 /* ReloadGlobalMarketJob.swift */; };
@@ -2581,6 +2587,12 @@
 		944ED8CF264640E200C97215 /* WebLoadingFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebLoadingFailureView.xib; sourceTree = "<group>"; };
 		944ED8D12646535B00C97215 /* WebContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WebContentView.xib; sourceTree = "<group>"; };
 		944ED8D3264666AC00C97215 /* FullscreenPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPopupViewController.swift; sourceTree = "<group>"; };
+		944F53FD2E45CC4F0064A9A2 /* WatchWalletAddressesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWalletAddressesViewController.swift; sourceTree = "<group>"; };
+		944F54052E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWalletAddressesIntroductionCell.swift; sourceTree = "<group>"; };
+		944F54062E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WatchWalletAddressesIntroductionCell.xib; sourceTree = "<group>"; };
+		944F54362E45E7FB0064A9A2 /* WatchWalletAddressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchWalletAddressCell.swift; sourceTree = "<group>"; };
+		944F54372E45E7FB0064A9A2 /* WatchWalletAddressCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WatchWalletAddressCell.xib; sourceTree = "<group>"; };
+		944F547E2E45F99F0064A9A2 /* WatchingAddresses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchingAddresses.swift; sourceTree = "<group>"; };
 		94509BC02DDDFC5800DC6A43 /* RefreshWeb3TokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshWeb3TokenJob.swift; sourceTree = "<group>"; };
 		94509D762DE086D800DC6A43 /* IAPTransactionObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPTransactionObserver.swift; sourceTree = "<group>"; };
 		94510FBA2C85673C00ACD972 /* ReloadGlobalMarketJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadGlobalMarketJob.swift; sourceTree = "<group>"; };
@@ -5404,6 +5416,11 @@
 				94B820682E00613100D580C9 /* AddTokenMethodCell.xib */,
 				94B820672E00613100D580C9 /* AddTokenMethodCell.swift */,
 				94F268872E16754A00A8A1E0 /* TokenProportionRepresentableCell.swift */,
+				944F54062E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.xib */,
+				944F54052E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.swift */,
+				944F54372E45E7FB0064A9A2 /* WatchWalletAddressCell.xib */,
+				944F54362E45E7FB0064A9A2 /* WatchWalletAddressCell.swift */,
+				944F547E2E45F99F0064A9A2 /* WatchingAddresses.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -5606,6 +5623,7 @@
 				DFA5B5921FB051BB00549728 /* WalletViewController.swift */,
 				9451E86D2D6DFF0A00A6C4FD /* PrivacyWalletViewController.swift */,
 				948FBC872D6EF5CE000795E4 /* CommonWalletViewController.swift */,
+				944F53FD2E45CC4F0064A9A2 /* WatchWalletAddressesViewController.swift */,
 				94038B742E1FA4A700A7782D /* DeleteWalletViewController.swift */,
 				7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */,
 				94038BC52E1FF51200A7782D /* TransferWalletSelectorView.xib */,
@@ -6305,6 +6323,7 @@
 				7B5F966B241424CD003A087B /* LocationInformationView.xib in Resources */,
 				94B5776F2B5E555B00AE576E /* ExploreView.xib in Resources */,
 				9413A4002C367D8D00B655AC /* SwapView.xib in Resources */,
+				944F54382E45E7FB0064A9A2 /* WatchWalletAddressCell.xib in Resources */,
 				7C11E349281BF4BC00D3362B /* ic_time_animation@2x.gif in Resources */,
 				94B9FD9E2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib in Resources */,
 				94A0C8C22C77259E00BDE672 /* AddressReceiversCell.xib in Resources */,
@@ -6351,6 +6370,7 @@
 				944C60FE2B6A899700C7DF06 /* AuthenticationPreviewHeaderView.xib in Resources */,
 				94A72C992C2EBE1E001E8782 /* InscriptionTraitsCell.xib in Resources */,
 				946EA0882D4763CF00DBC308 /* AddressInfoInputView.xib in Resources */,
+				944F54072E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.xib in Resources */,
 				94B89D532DE75A30002A0DDC /* MembershipViewAllOrdersCell.xib in Resources */,
 				E09C5EC223703FEE0095F729 /* ProfileShortcutView.xib in Resources */,
 				7BBCEC342523A1FF00F270DF /* MinimizedClipSwitcherView.xib in Resources */,
@@ -7107,6 +7127,7 @@
 				7C719E8229D4AB0C00C42E08 /* DeviceTransferTypedRecord.swift in Sources */,
 				94F2F9B32DEF581B0013B820 /* DestructiveRoundedButton.swift in Sources */,
 				7B4CA8BE249B3F840048E46D /* PeerCall.swift in Sources */,
+				944F547F2E45F9A20064A9A2 /* WatchingAddresses.swift in Sources */,
 				7B2E56B2244EC44E0073102C /* PinSettingsViewController.swift in Sources */,
 				7C2475C727795BC100112A30 /* DeleteAccountTableHeaderView.swift in Sources */,
 				7BACFED32459C47C0033A3CD /* BubblePath.swift in Sources */,
@@ -7255,6 +7276,7 @@
 				94CB84D62C6A65C200135641 /* ChartView.swift in Sources */,
 				7BFE47E722845DE100FC4379 /* MessageReceiver.swift in Sources */,
 				94FB8E062D1A92CF002DCA20 /* ChainCategorizedTokenSelectorViewController.swift in Sources */,
+				944F54082E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.swift in Sources */,
 				946FFAD32B6C566800B62B7F /* AuthenticationProgressView.swift in Sources */,
 				7C4C039F28530C9E003DE0C0 /* ContactViewController.swift in Sources */,
 				941994EC2CCC3FD300F5425C /* RecoveryKitViewController.swift in Sources */,
@@ -7595,6 +7617,7 @@
 				E041065023C6079400A6F08E /* MixinWebViewController.swift in Sources */,
 				7BCEAA7A2350A3A200F07635 /* SharedMediaDataCell.swift in Sources */,
 				DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */,
+				944F53FE2E45CC4F0064A9A2 /* WatchWalletAddressesViewController.swift in Sources */,
 				7B60A375206537FE00673CA1 /* GeometryExtension.swift in Sources */,
 				DF8A7521236301C500765A82 /* AuthorizationWindow.swift in Sources */,
 				9489247D2D572E9400D9BCCB /* TokenReceiverTrayView.swift in Sources */,
@@ -7932,6 +7955,7 @@
 				7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */,
 				947B36AE25DEB75A00146111 /* PlaylistViewController.swift in Sources */,
 				9401A5FF2BDA8B5300679686 /* Web3SendingTokenPayment.swift in Sources */,
+				944F54392E45E7FB0064A9A2 /* WatchWalletAddressCell.swift in Sources */,
 				7B49E01F22DC5D9700807F70 /* VerticalPositioningImageView.swift in Sources */,
 				7BEED892246D0C6C00387EAE /* CallKitAdapter.swift in Sources */,
 				94EDD6142D0C495A00BF55EE /* GeneralAppearanceNavigationController.swift in Sources */,

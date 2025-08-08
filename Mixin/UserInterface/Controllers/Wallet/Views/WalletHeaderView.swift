@@ -6,6 +6,7 @@ final class WalletHeaderView: InfiniteTopView {
     protocol Delegate: AnyObject {
         func walletHeaderView(_ view: WalletHeaderView, didSelectAction action: TokenAction)
         func walletHeaderViewWantsToRevealPendingDeposits(_ view: WalletHeaderView)
+        func walletHeaderViewWantsToRevealWatchingAddresses(_ view: WalletHeaderView)
     }
     
     @IBOutlet weak var contentView: UIStackView!
@@ -274,6 +275,7 @@ final class WalletHeaderView: InfiniteTopView {
             view = watchingIndicatorViewIfLoaded
         } else {
             view = R.nib.walletWatchingIndicatorView(withOwner: nil)!
+            view.button.addTarget(self, action: #selector(revealWatchingAddresses(_:)), for: .touchUpInside)
             view.label.text = description
             contentView.addArrangedSubview(view)
             view.snp.makeConstraints { make in
@@ -291,6 +293,10 @@ final class WalletHeaderView: InfiniteTopView {
     
     @objc private func revealPendingDeposits(_ sender: Any) {
         delegate?.walletHeaderViewWantsToRevealPendingDeposits(self)
+    }
+    
+    @objc private func revealWatchingAddresses(_ sender: Any) {
+        delegate?.walletHeaderViewWantsToRevealWatchingAddresses(self)
     }
     
     private func updateContentBottomSpacing() {

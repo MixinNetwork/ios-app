@@ -506,7 +506,12 @@ extension ClassicWalletViewController {
                 let addresses = try await RouteAPI.addresses(walletID: walletID)
                 Web3AddressDAO.shared.save(addresses: addresses)
                 await MainActor.run {
-                    self?.legacyRenaming = .done
+                    guard let self else {
+                        return
+                    }
+                    self.wallet = wallet
+                    self.legacyRenaming = .done
+                    self.titleLabel.text = wallet.name
                 }
             } catch {
                 Logger.web3.error(category: "WalletView", message: "Migrate: \(error)")

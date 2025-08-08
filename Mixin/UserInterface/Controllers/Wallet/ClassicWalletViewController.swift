@@ -254,6 +254,10 @@ final class ClassicWalletViewController: WalletViewController {
                 guard let self = self else {
                     return
                 }
+                self.secret = secret
+                self.supportedChainIDs = chainIDs
+                self.tokens = tokens
+                self.legacyRenaming = renaming
                 switch renaming {
                 case .required:
                     self.titleLabel.text = R.string.localizable.common_wallet()
@@ -261,10 +265,6 @@ final class ClassicWalletViewController: WalletViewController {
                 case .notInvolved, .done:
                     self.titleLabel.text = wallet.name
                 }
-                self.secret = secret
-                self.supportedChainIDs = chainIDs
-                self.tokens = tokens
-                self.legacyRenaming = renaming
                 self.tableHeaderView.reloadValues(tokens: tokens)
                 if let watchingAddresses {
                     self.tableHeaderView.actionView.isHidden = true

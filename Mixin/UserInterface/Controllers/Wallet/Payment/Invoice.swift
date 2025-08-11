@@ -27,12 +27,12 @@ struct Invoice {
 
 extension Invoice {
     
-    enum MaxExtraSize {
+    private enum MaxExtraSize {
         static let general = 256 - 1
         static let storage = 4 * bytesPerMegaByte - 1
     }
     
-    enum Storage {
+    private enum Storage {
         
         static let step: Int = 1024
         static let stepPrice: Decimal = 0.0001
@@ -42,10 +42,6 @@ extension Invoice {
         }
         
     }
-    
-}
-
-extension Invoice {
     
     private enum InitError: Error {
         case invalidString
@@ -250,6 +246,54 @@ extension Invoice {
         self.recipient = recipient
         self.entries = entries
         self.sendingSameTokenMultipleTimes = sendingSameTokenMultipleTimes
+    }
+    
+}
+
+extension Invoice {
+    
+    enum BalanceSufficiency {
+        case sufficient
+        case insufficient(BalanceRequirement)
+        case failure(Error)
+    }
+    
+    func checkBalanceSufficiency(tokens: [String: MixinTokenItem]) -> BalanceSufficiency {
+        var requiredAmounts: [String: Decimal] = [:] // Key is asset id
+        for entry in entries {
+            let amount = requiredAmounts[entry.assetID] ?? 0
+            requiredAmounts[entry.assetID] = entry.decimalAmount + amount
+        }
+        
+        var requirements: [BalanceRequirement] = []
+        for (assetID, amount) in requiredAmounts {
+            if let token = tokens[assetID] {
+                let requirement = BalanceRequirement(token: token, amount: amount)
+                requirements.append(requirement)
+            } else {
+                do {
+                    let token = try SafeAPI.asset(id: assetID).get()
+                    let chain: Chain
+                    if let localChain = ChainDAO.shared.chain(chainId: token.chainID) {
+                        chain = localChain
+                    } else {
+                        chain = try NetworkAPI.chain(id: token.chainID).get()
+                        ChainDAO.shared.save([chain])
+                        Web3ChainDAO.shared.save([chain])
+                    }
+                    let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
+                    let requirement = BalanceRequirement(token: item, amount: amount)
+                    return .insufficient(requirement)
+                } catch {
+                    return .failure(error)
+                }
+            }
+        }
+        if let requirement = requirements.first(where: { !$0.isSufficient }) {
+            return .insufficient(requirement)
+        } else {
+            return .sufficient
+        }
     }
     
 }

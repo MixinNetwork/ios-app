@@ -119,6 +119,11 @@ extension SafeAPI {
         }
     }
     
+    public static func asset(id: String) -> MixinAPI.Result<MixinToken> {
+        let result: MixinAPI.Result<DisplayMixinToken> = request(method: .get, path: "/safe/assets/\(id)")
+        return result.map(\.asToken)
+    }
+    
     public static func asset(
         id: String,
         queue: DispatchQueue,

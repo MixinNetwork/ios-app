@@ -1081,26 +1081,41 @@ extension UrlWindow {
                     .reduce(into: [:]) { result, token in
                         result[token.assetID] = token
                     }
-                invoice.checkPreconditions(
-                    transferTo: destination,
-                    tokens: tokens,
-                    on: homeContainer
-                ) { reason in
-                    switch reason {
-                    case .userCancelled, .loggedOut:
+                switch invoice.checkBalanceSufficiency(tokens: tokens) {
+                case .sufficient:
+                    invoice.checkPreconditions(
+                        transferTo: destination,
+                        tokens: tokens,
+                        on: homeContainer
+                    ) { reason in
+                        switch reason {
+                        case .userCancelled, .loggedOut:
+                            completion(nil)
+                        case .description(let message):
+                            completion(message)
+                        }
+                    } onSuccess: { operation, issues in
                         completion(nil)
-                    case .description(let message):
-                        completion(message)
+                        let redirection = source.isExternal ? paymentURL.redirection : nil
+                        let preview = InvoicePreviewViewController(
+                            issues: issues,
+                            operation: operation,
+                            redirection: redirection
+                        )
+                        homeContainer.present(preview, animated: true)
                     }
-                } onSuccess: { operation, issues in
-                    completion(nil)
-                    let redirection = source.isExternal ? paymentURL.redirection : nil
-                    let preview = InvoicePreviewViewController(
-                        issues: issues,
-                        operation: operation,
-                        redirection: redirection
-                    )
-                    homeContainer.present(preview, animated: true)
+                case .insufficient(let requirement):
+                    DispatchQueue.main.async {
+                        completion(nil)
+                        let insufficientBalance = InsufficientBalanceViewController(
+                            intent: .privacyWalletTransfer(requirement)
+                        )
+                        homeContainer.present(insufficientBalance, animated: true)
+                    }
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        completion(error.localizedDescription)
+                    }
                 }
                 return
             case let .inscription(hash):

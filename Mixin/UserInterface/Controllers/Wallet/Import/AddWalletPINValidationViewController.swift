@@ -42,7 +42,7 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
                     switch method {
                     case .create:
                         let nameIndex = SequentialWalletNameGenerator.nextNameIndex(category: .common)
-                        let pathIndex = Web3WalletDAO.shared.walletCount(category: .classic)
+                        let pathIndex = try SequentialWalletPathGenerator.nextPathIndex(walletCategory: .classic)
                         let addresses = try await TIP.deriveAddresses(pin: pin, index: pathIndex)
                         let request = CreateWalletRequest(
                             name: R.string.localizable.common_wallet_index("\(nameIndex)"),

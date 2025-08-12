@@ -20,6 +20,10 @@ final class AddWalletIntroductionViewController: IntroductionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         imageViewTopConstraint.constant = switch ScreenHeight.current {
         case .short:
             24
@@ -86,6 +90,11 @@ final class AddWalletIntroductionViewController: IntroductionViewController {
         actionButton.setTitle(R.string.localizable.proceed(), for: .normal)
         UIView.performWithoutAnimation(actionButton.layoutIfNeeded)
         actionButton.addTarget(self, action: #selector(proceed(_:)), for: .touchUpInside)
+    }
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController()
+        present(customerService, animated: true)
     }
     
     @objc private func proceed(_ sender: Any) {

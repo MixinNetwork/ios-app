@@ -22,7 +22,14 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.text = R.string.localizable.enter_your_pin_to_continue()
+        switch action {
+        case .addWallet(.create):
+            titleLabel.text = R.string.localizable.enter_pin_create_wallet()
+            continueButton.setTitle(R.string.localizable.create_new_wallet(), for: .normal)
+        default:
+            titleLabel.text = R.string.localizable.enter_your_pin_to_continue()
+            continueButton.setTitle(R.string.localizable.continue(), for: .normal)
+        }
     }
     
     override func continueAction(_ sender: Any) {

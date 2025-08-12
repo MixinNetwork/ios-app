@@ -535,6 +535,7 @@
 "enter_mnemonic_phrase" = "輸入或貼上您的 %d 個助記詞。";
 "enter_new_anonymous_number" = "輸入你的新匿名號碼";
 "enter_new_phone_number" = "輸入你的新手機號碼";
+"enter_pin_create_wallet" = "輸入你的 PIN 以建立新錢包";
 "enter_pin_to_delete_account" = "輸入你的 PIN 以登出你的賬戶";
 "enter_your_anonymous_number" = "輸入你的匿名號碼";
 "enter_your_emergency_contact_mixin_id" = "請輸入恢復聯絡人的 Mixin ID";

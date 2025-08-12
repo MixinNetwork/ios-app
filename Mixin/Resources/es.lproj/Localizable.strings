@@ -40,6 +40,9 @@
 "add_to_stickers" = "Añadir a pegatinas";
 "add_token" = "Add %@";
 "add_wallet" = "Add Wallet";
+"add_wallet_instruction_delete_unsupported" = "This wallet cannot be deleted once created.";
+"add_wallet_instruction_multiple_network" = "Supports multiple networks such as Ethereum, Base, and Solana.";
+"add_wallet_instruction_tip_derivation" = "This wallet is derived based on TIP and does not support viewing the private key.";
 "add_watch_address" = "Add Watch Address";
 "add_watch_address_description" = "Track any public wallet address";
 "added" = "Añadido";
@@ -195,10 +198,6 @@
 "balance_max" = "MAX";
 "batch_transfer_confirmation" = "Batch Transfer Confirmation";
 "before_you_proceed" = "Before you proceed";
-"before_you_proceed_desc" = "Read the following, then save the phrase securely.";
-"before_you_proceed_instruction_1" = "The 13 or 25 mnemonic words generated when creating an account are for Mixin Network-related products only.";
-"before_you_proceed_instruction_2" = "The mnemonic phrase cannot help you recover your PIN.";
-"before_you_proceed_instruction_3" = "Ensure that no one or surveillance cameras are watching your screen.";
 "block" = "Bloquear";
 "block_hint" = "Los contactos bloqueados ya no podrán llamarte ni enviarte mensajes";
 "block_tip" = "Los usuarios bloqueados no pueden enviarte mensajes ni añadirte a grupos.";
@@ -408,9 +407,6 @@
 "create_mnemonic_phrase" = "Create Mnemonic Phrase";
 "create_new_wallet" = "Create New Wallet";
 "create_new_wallet_description" = "Add a new multi-chain wallet";
-"create_new_wallet_instruction_1" = "This wallet is derived based on TIP and does not support viewing the private key.";
-"create_new_wallet_instruction_2" = "Supports multiple networks such as Ethereum, Base, and Solana.";
-"create_new_wallet_instruction_3" = "This wallet cannot be deleted once created.";
 "create_pin" = "Crear PIN";
 "created" = "Created";
 "created_this_group" = "%@ ha creado este grupo";
@@ -609,10 +605,14 @@
 "export" = "Exportar";
 "export_failed" = "Exportación fallida";
 "export_mnemonic_phrase" = "Export mnemonic phrase";
-"export_mnemonics_warning_1" = "Anyone who gains access to this %@ can transfer all assets from your wallet.";
-"export_mnemonics_warning_2" = "Mixin Messenger does not store your %@ on its servers.";
-"export_mnemonics_warning_3" = "Never share your %@ with any third party, individual, website, or application.";
-"export_mnemonics_warning_4" = "Ensure that no one — including surveillance cameras — can see your screen.";
+"export_mnemonics_description" = "Read the following, then save the phrase securely.";
+"export_mnemonics_instruction_1" = "The 13 or 25 mnemonic words generated when creating an account are for Mixin Network-related products only.";
+"export_mnemonics_instruction_2" = "The mnemonic phrase cannot help you recover your PIN.";
+"export_mnemonics_instruction_3" = "Ensure that no one or surveillance cameras are watching your screen.";
+"export_secret_warning_1" = "Anyone who gains access to this %@ can transfer all assets from your wallet.";
+"export_secret_warning_2" = "Mixin Messenger does not store your %@ on its servers.";
+"export_secret_warning_3" = "Never share your %@ with any third party, individual, website, or application.";
+"export_secret_warning_4" = "Ensure that no one — including surveillance cameras — can see your screen.";
 "face_id" = "ID facial";
 "failed" = "Fallido";
 "failed_to_compose_avatar" = "No se ha podido componer el avatar. Prueba con otra imagen en su lugar.";
@@ -1048,6 +1048,7 @@
 "privacy_wallet_tip_title" = "What’s the Privacy Wallet?";
 "private_key" = "private key";
 "private_key_storage_description" = "Your private key will only be stored locally on your device";
+"proceed" = "Proceed";
 "process_can_not_be_stop" = "El proceso no se puede cancelar cuando comienza. Recuerda el PIN de 6 dígitos y vuelva a introducirlo si el proceso se cancela inesperadamente.";
 "profile" = "Perfil";
 "profile_badge" = "Profile Badge";
@@ -1567,6 +1568,8 @@
 "watch_wallet" = "Watch Wallet";
 "watch_wallet_description" = "You are unable to control assets in a watch-only wallet, but you can track them. ";
 "watch_wallet_index" = "Watch Wallet %@";
+"watch_wallet_instruction_benefit" = "Easily monitor the balance and transaction history of the address.";
+"watch_wallet_instruction_restriction" = "Cannot transfer funds or interact with on-chain applications or DeFi projects.";
 "watching" = "Watching";
 "watchlist" = "Watchlist";
 "watchlist_add_desc" = "%@ is now on your watchlist";

@@ -148,7 +148,9 @@ final class CommonWalletViewController: WalletViewController {
             switch secret {
             case .mnemonics(let mnemonics):
                 sheet.addAction(UIAlertAction(title: R.string.localizable.show_mnemonic_phrase(), style: .default, handler: { (_) in
-                    let introduction = ExportImportedSecretIntroductionViewController(secret: .mnemonics(mnemonics))
+                    let introduction = AddWalletIntroductionViewController(
+                        action: .exportSecret(.mnemonics(mnemonics))
+                    )
                     self.navigationController?.pushViewController(introduction, animated: true)
                 }))
                 sheet.addAction(UIAlertAction(title: R.string.localizable.show_private_key(), style: .default, handler: { (_) in
@@ -165,7 +167,9 @@ final class CommonWalletViewController: WalletViewController {
             switch secret {
             case let .privateKey(privateKey, kind):
                 sheet.addAction(UIAlertAction(title: R.string.localizable.show_private_key(), style: .default, handler: { (_) in
-                    let introduction = ExportImportedSecretIntroductionViewController(secret: .privateKey(privateKey, kind))
+                    let introduction = AddWalletIntroductionViewController(
+                        action: .exportSecret(.privateKey(privateKey, kind))
+                    )
                     self.navigationController?.pushViewController(introduction, animated: true)
                 }))
             default:

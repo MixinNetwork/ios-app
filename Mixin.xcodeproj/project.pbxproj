@@ -967,7 +967,6 @@
 		945FFC822C3829B00013DC51 /* SwapRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945FFC812C3829B00013DC51 /* SwapRequest.swift */; };
 		945FFC8A2C3832230013DC51 /* SwapResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945FFC892C3832230013DC51 /* SwapResponse.swift */; };
 		94619F1F2C8DA6CA00C58829 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94619F1E2C8DA6CA00C58829 /* GradientView.swift */; };
-		9462A6AD2E278FAE001E4C3E /* ExportImportedSecretIntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A6AC2E278FA3001E4C3E /* ExportImportedSecretIntroductionViewController.swift */; };
 		9462A6BD2E279093001E4C3E /* ExportingSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A6BC2E27908B001E4C3E /* ExportingSecret.swift */; };
 		9462A6CB2E2790F3001E4C3E /* ExportImportedSecretValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A6CA2E2790EA001E4C3E /* ExportImportedSecretValidationViewController.swift */; };
 		9462A6D02E27920B001E4C3E /* ErrorReportingPINValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9462A6CF2E27920B001E4C3E /* ErrorReportingPINValidationViewController.swift */; };
@@ -1096,7 +1095,7 @@
 		948374822A5D49110011A2CA /* PopupSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948374802A5D49110011A2CA /* PopupSelectorViewController.swift */; };
 		948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948374812A5D49110011A2CA /* PopupSelectorView.xib */; };
 		94838A442C02ADFB005B6A27 /* Solana.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94838A432C02ADFB005B6A27 /* Solana.swift */; };
-		948513592E4313C0008D6FDB /* CreateWalletIntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948513582E4313C0008D6FDB /* CreateWalletIntroductionViewController.swift */; };
+		948513592E4313C0008D6FDB /* AddWalletIntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948513582E4313C0008D6FDB /* AddWalletIntroductionViewController.swift */; };
 		948513792E432297008D6FDB /* Web3Wallet+Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948513782E432285008D6FDB /* Web3Wallet+Account.swift */; };
 		948664DD2CF85B490032B9BE /* TokenActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948664DC2CF85B440032B9BE /* TokenActionView.swift */; };
 		948664FD2CF867DC0032B9BE /* WalletView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948664FC2CF867DC0032B9BE /* WalletView.xib */; };
@@ -2667,7 +2666,6 @@
 		945FFC812C3829B00013DC51 /* SwapRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapRequest.swift; sourceTree = "<group>"; };
 		945FFC892C3832230013DC51 /* SwapResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapResponse.swift; sourceTree = "<group>"; };
 		94619F1E2C8DA6CA00C58829 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
-		9462A6AC2E278FA3001E4C3E /* ExportImportedSecretIntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportImportedSecretIntroductionViewController.swift; sourceTree = "<group>"; };
 		9462A6BC2E27908B001E4C3E /* ExportingSecret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportingSecret.swift; sourceTree = "<group>"; };
 		9462A6CA2E2790EA001E4C3E /* ExportImportedSecretValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportImportedSecretValidationViewController.swift; sourceTree = "<group>"; };
 		9462A6CF2E27920B001E4C3E /* ErrorReportingPINValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorReportingPINValidationViewController.swift; sourceTree = "<group>"; };
@@ -2796,7 +2794,7 @@
 		948374812A5D49110011A2CA /* PopupSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSelectorView.xib; sourceTree = "<group>"; };
 		94838A432C02ADFB005B6A27 /* Solana.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solana.swift; sourceTree = "<group>"; };
 		94841CC72797D89500B3593B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		948513582E4313C0008D6FDB /* CreateWalletIntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateWalletIntroductionViewController.swift; sourceTree = "<group>"; };
+		948513582E4313C0008D6FDB /* AddWalletIntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletIntroductionViewController.swift; sourceTree = "<group>"; };
 		948513782E432285008D6FDB /* Web3Wallet+Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Wallet+Account.swift"; sourceTree = "<group>"; };
 		948664DC2CF85B440032B9BE /* TokenActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenActionView.swift; sourceTree = "<group>"; };
 		948664FC2CF867DC0032B9BE /* WalletView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletView.xib; sourceTree = "<group>"; };
@@ -4456,7 +4454,6 @@
 			isa = PBXGroup;
 			children = (
 				9462A6BC2E27908B001E4C3E /* ExportingSecret.swift */,
-				9462A6AC2E278FA3001E4C3E /* ExportImportedSecretIntroductionViewController.swift */,
 				9462A6CA2E2790EA001E4C3E /* ExportImportedSecretValidationViewController.swift */,
 				9462A6D72E2793BE001E4C3E /* ExportImportedMnemonicsViewController.swift */,
 				9462A7012E27BD8B001E4C3E /* MnemonicsQRCodeView.xib */,
@@ -4749,7 +4746,7 @@
 				947E26672E2F70EA00D6ECB7 /* AddWalletMethod.swift */,
 				94F267C02E12DDBD00A8A1E0 /* AddWalletMethodSelectorViewController.swift */,
 				94ED2FEB2E2650EE00B99837 /* AddWalletPINValidationViewController.swift */,
-				948513582E4313C0008D6FDB /* CreateWalletIntroductionViewController.swift */,
+				948513582E4313C0008D6FDB /* AddWalletIntroductionViewController.swift */,
 				94D78F9E2E3A0E5900552D2E /* AddWalletInputMnemonicsViewController.swift */,
 				9468E0172E30C80600EB79C0 /* AddWalletInputPrivateKeyViewController.swift */,
 				9468E04A2E30DE7200EB79C0 /* AddWalletInputAddressViewController.swift */,
@@ -6819,7 +6816,6 @@
 				9452D39F2C2C6E5800A61372 /* TextInscriptionContentView.swift in Sources */,
 				94D4E4F82B1753FE00EE04A3 /* ModernQRCodeView.swift in Sources */,
 				DF8CECE11FC3054700E40064 /* TransferTypeCell.swift in Sources */,
-				9462A6AD2E278FAE001E4C3E /* ExportImportedSecretIntroductionViewController.swift in Sources */,
 				7BCB8C8422BB56B8002A13CC /* DataAndStorageSettingsViewController.swift in Sources */,
 				9BB351671FB19ECB00EDDD2C /* ConversationDateHeaderView.swift in Sources */,
 				DF2819752014669E001EE5FA /* RefreshAccountJob.swift in Sources */,
@@ -7157,7 +7153,7 @@
 				94ED23AA2DD4159E00A34266 /* String+Constants.swift in Sources */,
 				9495E57E2CF0D71900124CC7 /* MnemonicsBackupChecking.swift in Sources */,
 				944075FB2E2EA5B700591B45 /* WalletWatchingIndicatorView.swift in Sources */,
-				948513592E4313C0008D6FDB /* CreateWalletIntroductionViewController.swift in Sources */,
+				948513592E4313C0008D6FDB /* AddWalletIntroductionViewController.swift in Sources */,
 				7B54F95422B23A5600908A9D /* RecoveryContactSelectorViewController.swift in Sources */,
 				94EE1C012B4C647500BE9AD1 /* CodeURL.swift in Sources */,
 				DF3FF0552011E9B8000A0C0A /* FileUploadJob.swift in Sources */,

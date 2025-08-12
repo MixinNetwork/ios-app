@@ -21,9 +21,9 @@ final class AddWalletMethodSelectorViewController: PopupSelectorViewController {
         case .short:
             UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
         case .medium:
-            UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
+            UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
         case .long, .extraLong:
-            UIEdgeInsets(top: 0, left: 0, bottom: 104, right: 0)
+            UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
         }
     }
     

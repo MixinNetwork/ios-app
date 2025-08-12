@@ -43,8 +43,10 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
                             addresses: addresses
                         )
                         await MainActor.run {
-                            let introduction = CreateWalletIntroductionViewController(request: request)
-                            self.navigationController?.pushViewController(replacingCurrent: introduction, animated: true)
+                            let importing = AddWalletImportingViewController(
+                                importingWallet: .byCreating(request: request)
+                            )
+                            navigationController?.pushViewController(replacingCurrent: importing, animated: true)
                         }
                     case .privateKey:
                         let key = try await TIP.importedWalletEncryptionKey(pin: pin)

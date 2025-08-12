@@ -96,8 +96,9 @@ extension ExportPrivateKeyNetworkSelectorViewController: UICollectionViewDelegat
         do {
             let path = try DerivationPath(string: network.path)
             presentingViewController?.dismiss(animated: true) { [mnemonics] in
-                let secret: ExportingSecret = .privateKeyFromMnemonics(mnemonics, kind, path)
-                let introduction = ExportImportedSecretIntroductionViewController(secret: secret)
+                let introduction = AddWalletIntroductionViewController(
+                    action: .exportSecret(.privateKeyFromMnemonics(mnemonics, kind, path))
+                )
                 UIApplication.homeNavigationController?.pushViewController(introduction, animated: true)
             }
         } catch {

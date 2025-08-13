@@ -80,6 +80,10 @@ extension MixinTokenItem: OnChainToken {
             "Polygon"
         case ChainID.solana:
             "Solana"
+        case ChainID.opMainnet:
+            "Optimism"
+        case ChainID.arbitrumOne:
+            "Arbitrum"
         default:
             nil
         }

@@ -26,19 +26,23 @@ extension OnChainToken {
     public var depositNetworkName: String? {
         switch chainID {
         case ChainID.ethereum:
-            return "Ethereum (ERC-20)"
+            "Ethereum (ERC-20)"
         case ChainID.avalancheXChain:
-            return "Avalanche X-Chain"
+            "Avalanche X-Chain"
         case ChainID.bnbBeaconChain:
-            return "BNB Beacon Chain (BEP-2)"
+            "BNB Beacon Chain (BEP-2)"
         case ChainID.bnbSmartChain:
-            return "BNB Smart Chain (BEP-20)"
+            "BNB Smart Chain (BEP-20)"
         case ChainID.tron:
-            return assetKey.isDigitsOnly ? "Tron (TRC-10)" : "Tron (TRC-20)"
+            assetKey.isDigitsOnly ? "Tron (TRC-10)" : "Tron (TRC-20)"
         case ChainID.bitShares:
-            return "BitShares"
+            "BitShares"
+        case ChainID.opMainnet:
+            "Optimism"
+        case ChainID.arbitrumOne:
+            "Arbitrum"
         default:
-            return chain?.name
+            chain?.name
         }
     }
     

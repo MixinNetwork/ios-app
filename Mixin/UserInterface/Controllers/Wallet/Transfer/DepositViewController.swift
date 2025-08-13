@@ -34,6 +34,11 @@ final class DepositViewController: UIViewController {
         AssetID.arbitrumOneETH: "Arbitrum",
     ]
     
+    private let btcNetworks: OrderedDictionary<String, String> = [
+        AssetID.btc:            "Bitcoin",
+        AssetID.lightningBTC:   "Lightning"
+    ]
+    
     private let initialToken: MixinTokenItem
     
     private var addressGeneratingView: UIView?
@@ -82,7 +87,7 @@ final class DepositViewController: UIViewController {
         }
         
         let (switchableNetworks, selectedNetworkIndex): (OrderedDictionary<String, String>, Int?) = {
-            let selectableNetworks = [usdtNetworks, usdcNetworks, ethNetworks]
+            let selectableNetworks = [usdtNetworks, usdcNetworks, ethNetworks, btcNetworks]
             for networks in selectableNetworks {
                 if let index = networks.index(forKey: initialToken.assetID) {
                     return (networks, index)

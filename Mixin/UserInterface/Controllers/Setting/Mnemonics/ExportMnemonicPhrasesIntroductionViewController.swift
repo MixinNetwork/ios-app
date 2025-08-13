@@ -17,11 +17,11 @@ final class ExportMnemonicPhrasesIntroductionViewController: IntroductionViewCon
                     return style
                 }()
             ]
-            let text = NSMutableAttributedString(string: R.string.localizable.before_you_proceed_desc() + "\n\n\n", attributes: attributes)
+            let text = NSMutableAttributedString(string: R.string.localizable.export_mnemonics_description() + "\n\n\n", attributes: attributes)
             let items = [
-                R.string.localizable.before_you_proceed_instruction_1(),
-                R.string.localizable.before_you_proceed_instruction_2(),
-                R.string.localizable.before_you_proceed_instruction_3(),
+                R.string.localizable.export_mnemonics_instruction_1(),
+                R.string.localizable.export_mnemonics_instruction_2(),
+                R.string.localizable.export_mnemonics_instruction_3(),
             ]
             let list: NSAttributedString = .orderedList(items: items) { index in
                 index < 2 ? R.color.text()! : R.color.error_red()!

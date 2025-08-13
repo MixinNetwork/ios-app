@@ -52,6 +52,18 @@ public final class Web3AddressDAO: Web3DAO {
         return db.select(with: sql, arguments: [walletID])
     }
     
+    public func paths(walletCategory: Web3Wallet.Category) -> [String] {
+        let paths: [String?] = db.select(
+            with: """
+            SELECT a.path FROM addresses a
+                INNER JOIN wallets w ON w.wallet_id = a.wallet_id
+            WHERE w.category = ?
+            """,
+            arguments: [walletCategory.rawValue]
+        )
+        return paths.compactMap({ $0 })
+    }
+    
     public func save(addresses: [Web3Address]) {
         db.save(addresses)
     }

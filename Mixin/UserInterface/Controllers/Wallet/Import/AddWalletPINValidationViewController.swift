@@ -22,7 +22,14 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.text = R.string.localizable.enter_your_pin_to_continue()
+        switch action {
+        case .addWallet(.create):
+            titleLabel.text = R.string.localizable.enter_pin_create_wallet()
+            continueButton.setTitle(R.string.localizable.create_new_wallet(), for: .normal)
+        default:
+            titleLabel.text = R.string.localizable.enter_your_pin_to_continue()
+            continueButton.setTitle(R.string.localizable.continue(), for: .normal)
+        }
     }
     
     override func continueAction(_ sender: Any) {
@@ -35,7 +42,7 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
                     switch method {
                     case .create:
                         let nameIndex = SequentialWalletNameGenerator.nextNameIndex(category: .common)
-                        let pathIndex = Web3WalletDAO.shared.walletCount(category: .classic) + 1
+                        let pathIndex = try SequentialWalletPathGenerator.nextPathIndex(walletCategory: .classic)
                         let addresses = try await TIP.deriveAddresses(pin: pin, index: pathIndex)
                         let request = CreateWalletRequest(
                             name: R.string.localizable.common_wallet_index("\(nameIndex)"),
@@ -43,8 +50,10 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
                             addresses: addresses
                         )
                         await MainActor.run {
-                            let introduction = CreateWalletIntroductionViewController(request: request)
-                            self.navigationController?.pushViewController(replacingCurrent: introduction, animated: true)
+                            let importing = AddWalletImportingViewController(
+                                importingWallet: .byCreating(request: request)
+                            )
+                            navigationController?.pushViewController(replacingCurrent: importing, animated: true)
                         }
                     case .privateKey:
                         let key = try await TIP.importedWalletEncryptionKey(pin: pin)

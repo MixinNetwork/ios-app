@@ -40,6 +40,9 @@
 "add_to_stickers" = "添加贴纸";
 "add_token" = "补充 %@";
 "add_wallet" = "添加钱包";
+"add_wallet_instruction_delete_unsupported" = "该钱包创建后无法删除。";
+"add_wallet_instruction_multiple_network" = "支持 Ethereum、Base、Solana 等多个网络。";
+"add_wallet_instruction_tip_derivation" = "该钱包基于 TIP 派生，不支持查看钱包私钥。";
 "add_watch_address" = "添加观察地址";
 "add_watch_address_description" = "追踪公开钱包地址";
 "added" = "已添加";
@@ -195,10 +198,6 @@
 "balance_max" = "最大";
 "batch_transfer_confirmation" = "批量转账确认";
 "before_you_proceed" = "请在继续之前";
-"before_you_proceed_desc" = "阅读以下内容，然后安全保存助记词。";
-"before_you_proceed_instruction_1" = "创建帐户生成的 13 个或 25 个助记词仅用于 Mixin Network 相关产品。";
-"before_you_proceed_instruction_2" = "助记词无法帮助您恢复您的 PIN。";
-"before_you_proceed_instruction_3" = "确保没有人或监控摄像头正在看您的屏幕。";
 "block" = "屏蔽用户";
 "block_hint" = "屏蔽后对方无法向您拨打电话或发送消息";
 "block_tip" = "被屏蔽的用户不能给你发送消息或者邀请你加入群聊";
@@ -408,9 +407,6 @@
 "create_mnemonic_phrase" = "创建助记词";
 "create_new_wallet" = "创建新钱包";
 "create_new_wallet_description" = "添加一个新的多链钱包";
-"create_new_wallet_instruction_1" = "该钱包基于 TIP 派生，不支持查看钱包私钥。";
-"create_new_wallet_instruction_2" = "支持 Ethereum、Base、Solana 等多个网络。";
-"create_new_wallet_instruction_3" = "该钱包创建后无法删除。";
 "create_pin" = "创建钱包";
 "created" = "创建日期";
 "created_this_group" = "%@创建了这个群组";
@@ -539,6 +535,7 @@
 "enter_mnemonic_phrase" = "输入或粘贴您的 %d 个助记词。";
 "enter_new_anonymous_number" = "输入你的新匿名号码";
 "enter_new_phone_number" = "输入你的新手机号码";
+"enter_pin_create_wallet" = "输入你的 PIN 以创建新钱包";
 "enter_pin_to_delete_account" = "输入你的 PIN 以注销你的账户";
 "enter_your_anonymous_number" = "输入你的匿名号码";
 "enter_your_emergency_contact_mixin_id" = "请输入恢复联系人的 Mixin ID";
@@ -609,10 +606,14 @@
 "export" = "导出";
 "export_failed" = "导出失败";
 "export_mnemonic_phrase" = "导出助记词";
-"export_mnemonics_warning_1" = "任何拥有此%@的人都可以转移该钱包中所有的资金。";
-"export_mnemonics_warning_2" = "Mixin Messenger 服务器不会保存您的%@。";
-"export_mnemonics_warning_3" = "请勿与任何第三方、个人、网站或应用程序分享您的%@。";
-"export_mnemonics_warning_4" = "确保没有人或监控摄像头正在看你的屏幕。";
+"export_mnemonics_description" = "阅读以下内容，然后安全保存助记词。";
+"export_mnemonics_instruction_1" = "创建帐户生成的 13 个或 25 个助记词仅用于 Mixin Network 相关产品。";
+"export_mnemonics_instruction_2" = "助记词无法帮助您恢复您的 PIN。";
+"export_mnemonics_instruction_3" = "确保没有人或监控摄像头正在看您的屏幕。";
+"export_secret_warning_1" = "任何拥有此%@的人都可以转移该钱包中所有的资金。";
+"export_secret_warning_2" = "Mixin Messenger 服务器不会保存您的%@。";
+"export_secret_warning_3" = "请勿与任何第三方、个人、网站或应用程序分享您的%@。";
+"export_secret_warning_4" = "确保没有人或监控摄像头正在看你的屏幕。";
 "face_id" = "面容";
 "failed" = "失败";
 "failed_to_compose_avatar" = "头像解析失败，请尝试使用其他图片。";
@@ -1048,6 +1049,7 @@
 "privacy_wallet_tip_title" = "什么是隐私钱包？";
 "private_key" = "私钥";
 "private_key_storage_description" = "你的私钥只会保存在本地设备上";
+"proceed" = "继续";
 "process_can_not_be_stop" = "流程一旦开始无法取消，请牢记 6 位数字 PIN，意外中止流程需要再次输入";
 "profile" = "个人资料";
 "profile_badge" = "个人资料徽章";
@@ -1567,6 +1569,8 @@
 "watch_wallet" = "观察钱包";
 "watch_wallet_description" = "你无法使用观察钱包中的资产，但可以追踪它们。 ";
 "watch_wallet_index" = "观察钱包 %@";
+"watch_wallet_instruction_benefit" = "可方便地监控指定地址的余额与交易记录。";
+"watch_wallet_instruction_restriction" = "无法转账，不能与链上应用或 DeFi 项目交互。";
 "watching" = "观察";
 "watchlist" = "自选";
 "watchlist_add_desc" = "%@ 已经加入自选";

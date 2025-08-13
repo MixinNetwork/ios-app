@@ -27,6 +27,13 @@ final class DepositViewController: UIViewController {
         AssetID.bep20USDC:      "BEP-20",
     ]
     
+    private let ethNetworks: OrderedDictionary<String, String> = [
+        AssetID.eth:            "Ethereum",
+        AssetID.baseETH:        "Base",
+        AssetID.opMainnetETH:   "Optimism",
+        AssetID.arbitrumOneETH: "Arbitrum",
+    ]
+    
     private let initialToken: MixinTokenItem
     
     private var addressGeneratingView: UIView?
@@ -73,17 +80,17 @@ final class DepositViewController: UIViewController {
         task = Task { [initialToken] in
             try await self.reloadData(token: initialToken)
         }
-        let selectedNetworkIndex: Int?
-        if let index = usdtNetworks.index(forKey: initialToken.assetID) {
-            selectedNetworkIndex = index
-            switchableNetworks = usdtNetworks
-        } else if let index = usdcNetworks.index(forKey: initialToken.assetID) {
-            selectedNetworkIndex = index
-            switchableNetworks = usdcNetworks
-        } else {
-            selectedNetworkIndex = nil
-            switchableNetworks = [:]
-        }
+        
+        let (switchableNetworks, selectedNetworkIndex): (OrderedDictionary<String, String>, Int?) = {
+            let selectableNetworks = [usdtNetworks, usdcNetworks, ethNetworks]
+            for networks in selectableNetworks {
+                if let index = networks.index(forKey: initialToken.assetID) {
+                    return (networks, index)
+                }
+            }
+            return ([:], nil)
+        }()
+        self.switchableNetworks = switchableNetworks
         if let index = selectedNetworkIndex {
             let switchView = R.nib.depositNetworkSwitchView(withOwner: nil)!
             contentStackView.insertArrangedSubview(switchView, at: 0)

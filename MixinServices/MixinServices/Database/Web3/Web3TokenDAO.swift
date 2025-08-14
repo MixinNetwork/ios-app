@@ -111,7 +111,7 @@ public final class Web3TokenDAO: Web3DAO {
         )
     }
     
-    public func save(tokens: [Web3Token]) {
+    public func save(tokens: [Web3Token], zeroOutOthers: Bool) {
         guard let walletID = tokens.first?.walletID else {
             return
         }
@@ -126,6 +126,14 @@ public final class Web3TokenDAO: Web3DAO {
                     )
                     try extra.insert(db, onConflict: .ignore)
                 }
+            }
+            if zeroOutOthers {
+                try db.execute(literal: """
+                UPDATE tokens
+                SET amount = '0'
+                WHERE wallet_id = \(walletID)
+                    AND asset_id NOT IN \(tokens.map(\.assetID))
+                """)
             }
             db.afterNextTransaction { _ in
                 NotificationCenter.default.post(

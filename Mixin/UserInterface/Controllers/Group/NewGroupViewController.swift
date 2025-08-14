@@ -104,11 +104,11 @@ extension NewGroupViewController {
         participantUserIDs: [String],
         randomID: String
     ) -> String {
-        var id = UUID.uniqueObjectIDString(ownerID, groupName)
-        id = UUID.uniqueObjectIDString(id, randomID)
-        let participantIDs = participantUserIDs.sorted()
-        for participantID in participantIDs {
-            id = UUID.uniqueObjectIDString(id, participantID)
+        var id = UUID.uniqueObjectIDString(sorting: [ownerID, groupName])
+        id = UUID.uniqueObjectIDString(sorting: [id, randomID])
+        let sortedParticipantIDs = participantUserIDs.sorted()
+        for participantID in sortedParticipantIDs {
+            id = UUID.uniqueObjectIDString(sorting: [id, participantID])
         }
         return id
     }
@@ -120,7 +120,7 @@ extension NewGroupViewController {
             members.insert(me, at: 0)
         }
         DispatchQueue.global().async { [weak self] in
-            let groupImage = GroupIconMaker.make(participants: members) ?? nil
+            let groupImage = GroupIconMaker.make(participants: members)
             DispatchQueue.main.async {
                 self?.groupImageView.image = groupImage
             }

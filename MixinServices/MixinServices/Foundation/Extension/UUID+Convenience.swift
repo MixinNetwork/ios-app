@@ -44,8 +44,7 @@ extension UUID {
         UUID(uuidString: string) != nil && string.allSatisfy { !$0.isUppercase }
     }
     
-    public static func uniqueObjectIDString(_ inputs: String...) -> String {
-        let input = inputs.joined()
+    public static func uniqueObjectIDString(_ input: String) -> String {
         let dash = "-".utf16.first!
         
         var digest = input.utf8.md5.data
@@ -66,6 +65,14 @@ extension UUID {
         }
         
         return String(utf16CodeUnits: characters, count: characters.count)
+    }
+    
+    public static func uniqueObjectIDString(_ inputs: String...) -> String {
+        uniqueObjectIDString(inputs.joined())
+    }
+    
+    public static func uniqueObjectIDString(sorting inputs: [String]) -> String {
+        uniqueObjectIDString(inputs.sorted().joined())
     }
     
 }

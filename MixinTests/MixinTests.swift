@@ -167,7 +167,7 @@ struct MixinTests {
             participantUserIDs: participantUserIDs,
             randomID: randomID
         )
-        #expect(conversationID == "675257f9-39da-397d-bee4-2a9d761abc89")
+        #expect(conversationID == "5dac944e-2037-31b4-bbd9-e5fd3ffe571e")
     }
     
 }

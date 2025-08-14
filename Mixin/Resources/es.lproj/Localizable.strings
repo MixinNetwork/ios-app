@@ -1578,7 +1578,7 @@
 "web_cannot_reached_desc" = "%@ ha tardado demasiado en responder. Verifica tu red e intenta cambiar 4G, Wi-Fi o VPN para recargar la página.";
 "web_cannot_reached_title" = "No se puede acceder a esta página web";
 "web_suspicious_link_tips" = "El enlace no está en los patrones de recursos correspondientes.";
-"web3_deposit_description_evm" = "Use this address for receiving tokens on Ethereum, Polygon, BSC, Base networks";
+"web3_deposit_description_evm" = "Use this address for receiving tokens on Ethereum, Polygon, BSC, Base, Optimism, Arbitrum networks";
 "web3_deposit_description_solana" = "Use this address for receiving tokens on Solana network";
 "web3_ensure_trust" = "Please ensure you trust this app before proceeding with the request.";
 "web3_message_request" = "Message Request";

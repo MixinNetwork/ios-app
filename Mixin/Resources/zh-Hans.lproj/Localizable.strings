@@ -1578,7 +1578,7 @@
 "web_cannot_reached_desc" = "无法访问 %@，请检查你的网络并尝试切换 4G、Wi-Fi 或 VPN 后重新载入页面。";
 "web_cannot_reached_title" = "无法访问此网页";
 "web_suspicious_link_tips" = "该链接不在对应的机器人域名白名单内。";
-"web3_deposit_description_evm" = "使用此地址在 Ethereum、Polygon、BSC、Base 网络上接收代币";
+"web3_deposit_description_evm" = "使用此地址在 Ethereum、Polygon、BSC、Base、Optimism、Arbitrum 网络上接收代币";
 "web3_deposit_description_solana" = "使用此地址在 Solana 网络上接收代币";
 "web3_ensure_trust" = "请确保您信任此应用程序。";
 "web3_message_request" = "消息签名";

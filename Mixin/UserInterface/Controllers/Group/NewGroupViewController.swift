@@ -50,6 +50,7 @@ final class NewGroupViewController: UIViewController {
         
         createButton.isBusy = true
         
+        // TODO: Create the conversation with a serializable job, which encodes the random id
         let participants = members.map {
             ParticipantRequest(userId: $0.userId, role: "")
         }
@@ -65,7 +66,8 @@ final class NewGroupViewController: UIViewController {
             category: ConversationCategory.GROUP.rawValue,
             participants: participants,
             duration: nil,
-            announcement: nil
+            announcement: nil,
+            randomID: randomID
         )
         ConversationAPI.createConversation(conversation: request) { [weak self](result) in
             guard let weakSelf = self else {
@@ -75,12 +77,8 @@ final class NewGroupViewController: UIViewController {
             case let .success(response):
                 weakSelf.saveConversation(response: response)
             case let .failure(error):
-                if !ReachabilityManger.shared.isReachable {
-                    weakSelf.saveOfflineConversation()
-                } else {
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                    weakSelf.createButton.isBusy = false
-                }
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                weakSelf.createButton.isBusy = false
             }
         }
     }
@@ -143,30 +141,6 @@ extension NewGroupViewController {
         } catch {
             reporter.report(error: error)
             return nil
-        }
-    }
-    
-    private func saveOfflineConversation() {
-        DispatchQueue.global().async { [weak self, groupName, members, randomID] in
-            let conversationID = Self.groupConversationID(
-                ownerID: myUserId,
-                groupName: groupName,
-                participantUserIDs: members.map(\.userId),
-                randomID: randomID
-            )
-            ConversationDAO.shared.createConversation(
-                conversationId: conversationID,
-                name: groupName,
-                members: members
-            ) { success in
-                guard success else {
-                    return
-                }
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: MixinServices.conversationDidChangeNotification, object: nil)
-                    self?.navigationController?.backToHome()
-                }
-            }
         }
     }
     

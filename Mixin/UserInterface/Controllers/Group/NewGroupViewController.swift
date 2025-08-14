@@ -8,14 +8,14 @@ final class NewGroupViewController: UIViewController {
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var createButton: RoundedButton!
     
-    private let conversationId = UUID().uuidString.lowercased()
-    private let members: [GroupUser]
+    private let randomID = UUID().uuidString.lowercased()
+    private let members: [GroupMemberCandidate]
     
     private var groupName: String {
         nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
     
-    init(members: [GroupUser]) {
+    init(members: [GroupMemberCandidate]) {
         self.members = members
         let nib = R.nib.newGroupView
         super.init(nibName: nib.name, bundle: nib.bundle)
@@ -53,7 +53,20 @@ final class NewGroupViewController: UIViewController {
         let participants = members.map {
             ParticipantRequest(userId: $0.userId, role: "")
         }
-        let request = ConversationRequest(conversationId: self.conversationId, name: self.groupName, category: ConversationCategory.GROUP.rawValue, participants: participants, duration: nil, announcement: nil)
+        let conversationID = Self.groupConversationID(
+            ownerID: myUserId,
+            groupName: groupName,
+            participantUserIDs: participants.map(\.userId),
+            randomID: randomID
+        )
+        let request = ConversationRequest(
+            conversationId: conversationID,
+            name: groupName,
+            category: ConversationCategory.GROUP.rawValue,
+            participants: participants,
+            duration: nil,
+            announcement: nil
+        )
         ConversationAPI.createConversation(conversation: request) { [weak self](result) in
             guard let weakSelf = self else {
                 return
@@ -85,16 +98,29 @@ extension NewGroupViewController: UITextFieldDelegate {
 
 extension NewGroupViewController {
     
+    static func groupConversationID(
+        ownerID: String,
+        groupName: String,
+        participantUserIDs: [String],
+        randomID: String
+    ) -> String {
+        var id = UUID.uniqueObjectIDString(ownerID, groupName)
+        id = UUID.uniqueObjectIDString(id, randomID)
+        let participantIDs = participantUserIDs.sorted()
+        for participantID in participantIDs {
+            id = UUID.uniqueObjectIDString(id, participantID)
+        }
+        return id
+    }
+    
     private func loadGroupIcon() {
-        guard let account = LoginManager.shared.account else {
-            return
+        var members = self.members
+        if let account = LoginManager.shared.account {
+            let me = GroupMemberCandidate(account: account)
+            members.insert(me, at: 0)
         }
-        var participants: [ParticipantUser] = members.map { (user) in
-            ParticipantUser(conversationId: conversationId, user: user)
-        }
-        participants.insert(ParticipantUser(conversationId: conversationId, account: account), at: 0)
         DispatchQueue.global().async { [weak self] in
-            let groupImage = GroupIconMaker.make(participants: participants) ?? nil
+            let groupImage = GroupIconMaker.make(participants: members) ?? nil
             DispatchQueue.main.async {
                 self?.groupImageView.image = groupImage
             }
@@ -121,12 +147,18 @@ extension NewGroupViewController {
     }
     
     private func saveOfflineConversation() {
-        let converstionId = self.conversationId
-        let name = self.groupName
-        let members = self.members
-        
-        DispatchQueue.global().async { [weak self] in
-            ConversationDAO.shared.createConversation(conversationId: converstionId, name: name, members: members) { success in
+        DispatchQueue.global().async { [weak self, groupName, members, randomID] in
+            let conversationID = Self.groupConversationID(
+                ownerID: myUserId,
+                groupName: groupName,
+                participantUserIDs: members.map(\.userId),
+                randomID: randomID
+            )
+            ConversationDAO.shared.createConversation(
+                conversationId: conversationID,
+                name: groupName,
+                members: members
+            ) { success in
                 guard success else {
                     return
                 }

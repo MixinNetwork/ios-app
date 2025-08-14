@@ -217,7 +217,7 @@ class AddMemberViewController: PeerViewController<[UserItem], CheckmarkPeerCell,
                 }
             })
         } else {
-            let members = selectedUsers.map(GroupUser.init)
+            let members = selectedUsers.map(GroupMemberCandidate.init)
             let newGroup = NewGroupViewController(members: members)
             navigationController?.pushViewController(newGroup, animated: true)
         }

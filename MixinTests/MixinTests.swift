@@ -149,4 +149,25 @@ struct MixinTests {
         #expect(solanaKey == "37NfN7eam3KCwdC6jAc7nFeuDNYCV1K2AgNWmT4Xo6ogQPMnJ1ZoWA7AKN6jzEoQi3FNTEkkXiwu7VjqXdu8FGUs")
     }
     
+    @Test func testGroupConversationID() {
+        let ownerID = "c8cb0ac7-d456-4341-be66-0b143aa09922"
+        let groupName = "Mixin Rocks"
+        let participantUserIDs = [
+            "f937ca18-d1ff-46f5-99e8-e23fbd6fd5f2",
+            "0e0a20c8-31b8-4093-81b8-9cebd9bc8afc",
+            "8391e472-cdbe-4704-be1f-7d184635b885",
+            "831fdb67-13ed-4dc5-ac64-dda89aeda2bb",
+            "f7ff9dde-18c2-4375-8097-b364068b120e",
+            "088c1e3e-1f07-4065-85b5-6b49b4370d32",
+        ]
+        let randomID = "01d21e2c-76f5-4940-8ea0-9b7f21728674"
+        let conversationID = NewGroupViewController.groupConversationID(
+            ownerID: ownerID,
+            groupName: groupName,
+            participantUserIDs: participantUserIDs,
+            randomID: randomID
+        )
+        #expect(conversationID == "675257f9-39da-397d-bee4-2a9d761abc89")
+    }
+    
 }

@@ -373,7 +373,7 @@ public final class ConversationDAO: UserDatabaseDAO {
         db.save(conversation)
     }
     
-    public func createConversation(conversationId: String, name: String, members: [GroupUser], completion: @escaping (_ success: Bool) -> Void) {
+    public func createConversation(conversationId: String, name: String, members: [GroupMemberCandidate], completion: @escaping (_ success: Bool) -> Void) {
         let createdAt = Date().toUTCString()
         let conversation = Conversation(conversationId: conversationId,
                                         ownerId: myUserId,

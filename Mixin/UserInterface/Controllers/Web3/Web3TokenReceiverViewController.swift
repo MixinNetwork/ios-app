@@ -162,10 +162,13 @@ extension Web3TokenReceiverViewController {
     private func sendToPrivacyWallet() {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        let chainID = payment.chain.chainID
         Task { [payment, weak self] in
             do {
-                let entries = try await SafeAPI.depositEntries(assetID: nil, chainID: chainID)
+                let chainID = payment.chain.chainID
+                let entries = try await SafeAPI.depositEntries(
+                    assetID: payment.token.assetID,
+                    chainID: chainID
+                )
                 if let entry = entries.first(where: { $0.chainID == chainID && $0.isPrimary }) {
                     let payment = Web3SendingTokenToAddressPayment(
                         payment: payment,

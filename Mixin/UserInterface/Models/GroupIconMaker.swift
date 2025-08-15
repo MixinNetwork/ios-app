@@ -2,7 +2,16 @@ import Foundation
 import SDWebImage
 import MixinServices
 
+extension ParticipantUser: GroupIconMaker.Participant { }
+extension GroupMemberCandidate: GroupIconMaker.Participant { }
+
 enum GroupIconMaker {
+    
+    protocol Participant {
+        var userId: String { get }
+        var userFullName: String { get }
+        var userAvatarUrl: String { get }
+    }
     
     private static let faceDetector: CIDetector? = {
         let context = CIContext()
@@ -15,7 +24,7 @@ enum GroupIconMaker {
         case composed(backgroundColor: UIColor, name: String)
     }
     
-    static func make(participants: [ParticipantUser]) -> UIImage? {
+    static func make<P: Participant>(participants: [P]) -> UIImage? {
         var avatars = [AvatarRepresentation]()
         let semaphore = DispatchSemaphore(value: 0)
         for participant in participants {

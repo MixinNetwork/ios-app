@@ -28,24 +28,6 @@ public struct ParticipantUser {
                   userIdentityNumber: user.identityNumber)
     }
     
-    public init(conversationId: String, user: GroupUser) {
-        self.init(conversationId: conversationId,
-                  role: "",
-                  userId: user.userId,
-                  userFullName: user.fullName,
-                  userAvatarUrl: user.avatarUrl,
-                  userIdentityNumber: user.identityNumber)
-    }
-    
-    public init(conversationId: String, account: Account) {
-        self.init(conversationId: conversationId,
-                  role: "",
-                  userId: account.userID,
-                  userFullName: account.fullName,
-                  userAvatarUrl: account.avatarURL,
-                  userIdentityNumber: account.identityNumber)
-    }
-    
 }
 
 extension ParticipantUser: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {

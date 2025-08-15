@@ -76,12 +76,12 @@ public class ConversationAPI : MixinAPI {
     }
     
     public static func updateGroupName(conversationId: String, name: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
-        let conversationRequest = ConversationRequest(conversationId: conversationId, name: name, category: nil, participants: nil, duration: nil, announcement: nil)
+        let conversationRequest = ConversationRequest(conversationId: conversationId, name: name, category: nil, participants: nil, duration: nil, announcement: nil, randomID: nil)
         request(method: .post, path: Path.conversations(id: conversationId), parameters: conversationRequest, completion: completion)
     }
     
     public static func updateGroupAnnouncement(conversationId: String, announcement: String, completion: @escaping (MixinAPI.Result<ConversationResponse>) -> Void) {
-        let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: nil, participants: nil, duration: nil, announcement: announcement)
+        let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: nil, participants: nil, duration: nil, announcement: announcement, randomID: nil)
         request(method: .post, path: Path.conversations(id: conversationId), parameters: conversationRequest, completion: completion)
     }
     

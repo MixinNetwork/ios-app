@@ -135,12 +135,14 @@ public final class Web3TokenDAO: Web3DAO {
                         arguments: [walletID]
                     )
                     .subtracting(tokens.map(\.assetID))
-                try db.execute(literal: """
-                UPDATE tokens
-                SET amount = '0'
-                WHERE wallet_id = \(walletID)
-                    AND asset_id IN \(notUpdatedAssetIDs)
-                """)
+                if !notUpdatedAssetIDs.isEmpty {
+                    try db.execute(literal: """
+                    UPDATE tokens
+                    SET amount = '0'
+                    WHERE wallet_id = \(walletID)
+                        AND asset_id IN \(notUpdatedAssetIDs)
+                    """)
+                }
             }
             db.afterNextTransaction { _ in
                 NotificationCenter.default.post(

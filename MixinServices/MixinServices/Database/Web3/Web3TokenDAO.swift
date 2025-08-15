@@ -128,11 +128,18 @@ public final class Web3TokenDAO: Web3DAO {
                 }
             }
             if zeroOutOthers {
+                let notUpdatedAssetIDs = try String
+                    .fetchSet(
+                        db,
+                        sql: "SELECT asset_id FROM tokens WHERE wallet_id = ?",
+                        arguments: [walletID]
+                    )
+                    .subtracting(tokens.map(\.assetID))
                 try db.execute(literal: """
                 UPDATE tokens
                 SET amount = '0'
                 WHERE wallet_id = \(walletID)
-                    AND asset_id NOT IN \(tokens.map(\.assetID))
+                    AND asset_id IN \(notUpdatedAssetIDs)
                 """)
             }
             db.afterNextTransaction { _ in

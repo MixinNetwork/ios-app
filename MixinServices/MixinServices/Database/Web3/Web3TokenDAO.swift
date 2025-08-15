@@ -111,7 +111,7 @@ public final class Web3TokenDAO: Web3DAO {
         )
     }
     
-    public func save(tokens: [Web3Token]) {
+    public func save(tokens: [Web3Token], zeroOutOthers: Bool) {
         guard let walletID = tokens.first?.walletID else {
             return
         }
@@ -125,6 +125,23 @@ public final class Web3TokenDAO: Web3DAO {
                         isHidden: true
                     )
                     try extra.insert(db, onConflict: .ignore)
+                }
+            }
+            if zeroOutOthers {
+                let notUpdatedAssetIDs = try String
+                    .fetchSet(
+                        db,
+                        sql: "SELECT asset_id FROM tokens WHERE wallet_id = ?",
+                        arguments: [walletID]
+                    )
+                    .subtracting(tokens.map(\.assetID))
+                if !notUpdatedAssetIDs.isEmpty {
+                    try db.execute(literal: """
+                    UPDATE tokens
+                    SET amount = '0'
+                    WHERE wallet_id = \(walletID)
+                        AND asset_id IN \(notUpdatedAssetIDs)
+                    """)
                 }
             }
             db.afterNextTransaction { _ in

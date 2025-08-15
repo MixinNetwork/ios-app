@@ -4,15 +4,15 @@ class AuthorizationScopesTableView: UITableView {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        updateProperties()
+        prepare()
     }
     
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
-        updateProperties()
+        prepare()
     }
     
-    private func updateProperties() {
+    private func prepare() {
         layer.cornerRadius = 13
         clipsToBounds = true
         backgroundColor = R.color.background_input()

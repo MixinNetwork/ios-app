@@ -8,7 +8,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
     
     private var fee: Web3TransferOperation.DisplayFee?
     private var feeToken: Web3TokenItem?
-    private var minimumTransferAmount: Decimal?
+    private var solanaReceiverAccountExists: Bool?
     
     init(payment: Web3SendingTokenToAddressPayment) {
         self.payment = payment
@@ -53,7 +53,6 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
         tokenBalanceLabel.text = payment.token.localizedBalanceWithSymbol
         addFeeView()
         reloadFee(payment: payment)
-        reloadMinimumTransferAmount(payment: payment)
     }
     
     override func review(_ sender: Any) {
@@ -110,7 +109,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
         }
         let multiplier = self.multiplier(tag: sender.tag)
         if payment.sendingNativeToken {
-            let availableBalance = max(0, token.decimalBalance - fee.tokenAmount)
+            let availableBalance = max(0, token.decimalBalance - fee.tokenAmount - Solana.RentExemptionValue.systemAccount)
             replaceAmount(availableBalance * multiplier)
         } else {
             replaceAmount(token.decimalBalance * multiplier)
@@ -118,23 +117,35 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
     }
     
     override func reloadViewsWithBalanceRequirements() {
-        guard let fee, let feeToken, let minimumTransferAmount else {
+        guard let fee, let feeToken, !tokenAmount.isZero else {
             insufficientBalanceLabel.text = nil
             reviewButton.isEnabled = false
             return
         }
-        guard tokenAmount.isZero || tokenAmount >= minimumTransferAmount else {
-            insufficientBalanceLabel.text = R.string.localizable.send_sol_for_rent(
-                CurrencyFormatter.localizedString(
-                    from: minimumTransferAmount,
-                    format: .precision,
-                    sign: .never
+        
+        if let accountExists = solanaReceiverAccountExists {
+            let reason = if payment.sendingNativeToken {
+                Solana.checkRentExemptionForSOLTransfer(
+                    sendingAmount: tokenAmount,
+                    feeAmount: fee.tokenAmount,
+                    senderSOLBalance: payment.token.decimalBalance,
+                    receiverAccountExists: accountExists
                 )
-            )
-            removeAddFeeButton()
-            reviewButton.isEnabled = false
-            return
+            } else {
+                Solana.checkRentExemptionForSPLTokenTransfer(
+                    senderSOLBalance: feeToken.decimalBalance,
+                    feeAmount: fee.tokenAmount,
+                    receiverAccountExists: accountExists
+                )
+            }
+            if let reason {
+                insufficientBalanceLabel.text = reason.localizedDescription
+                removeAddFeeButton()
+                reviewButton.isEnabled = false
+                return
+            }
         }
+        
         let feeRequirement = BalanceRequirement(token: feeToken, amount: fee.tokenAmount)
         let requirements = inputAmountRequirement.merging(with: feeRequirement)
         if requirements.allSatisfy(\.isSufficient) {
@@ -184,7 +195,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                 )
                 let availableBalance = if payment.sendingNativeToken {
                     CurrencyFormatter.localizedString(
-                        from: max(0, payment.token.decimalBalance - fee.tokenAmount),
+                        from: max(0, payment.token.decimalBalance - fee.tokenAmount - Solana.RentExemptionValue.systemAccount),
                         format: .precision,
                         sign: .never,
                         symbol: .custom(feeToken.symbol)
@@ -195,6 +206,11 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                 await MainActor.run {
                     self.fee = fee
                     self.feeToken = feeToken
+                    if let operation = operation as? SolanaTransferToAddressOperation {
+                        self.solanaReceiverAccountExists = operation.receiverAccountExists
+                    } else {
+                        self.solanaReceiverAccountExists = nil
+                    }
                     self.feeActivityIndicator?.stopAnimating()
                     self.tokenBalanceLabel.text = R.string.localizable.available_balance_count(availableBalance)
                     if let button = self.changeFeeButton {
@@ -203,10 +219,8 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                         button.configuration?.image = nil
                         button.isUserInteractionEnabled = false
                     }
-                    if self.minimumTransferAmount != nil {
-                        self.reviewButton.isBusy = false
-                        self.reloadViewsWithBalanceRequirements()
-                    }
+                    self.reviewButton.isBusy = false
+                    self.reloadViewsWithBalanceRequirements()
                 }
             } catch MixinAPIResponseError.unauthorized {
                 return
@@ -215,41 +229,6 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
                     // Check token and address
                     self?.reloadFee(payment: payment)
-                }
-            }
-        }
-    }
-    
-    private func reloadMinimumTransferAmount(payment: Web3SendingTokenToAddressPayment) {
-        // Only SOL transfers invoke minimum amount checking
-        // Review `balanceSufficiency` if it involves EVM transfers
-        Task {
-            do {
-                let amount: Decimal
-                switch payment.chain.kind {
-                case .evm:
-                    amount = 0
-                case .solana:
-                    if payment.sendingNativeToken {
-                        let accountExists = try await RouteAPI.solanaAccountExists(pubkey: payment.toAddress)
-                        amount = accountExists ? 0 : Solana.accountCreationCost
-                    } else {
-                        amount = 0
-                    }
-                }
-                await MainActor.run {
-                    self.minimumTransferAmount = amount
-                    if self.fee != nil {
-                        self.reviewButton.isBusy = false
-                        self.reloadViewsWithBalanceRequirements()
-                    }
-                }
-            } catch MixinAPIResponseError.unauthorized {
-                return
-            } catch {
-                Logger.general.debug(category: "Web3InputAmount", message: "\(error)")
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-                    self?.reloadMinimumTransferAmount(payment: payment)
                 }
             }
         }

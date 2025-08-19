@@ -700,7 +700,7 @@
 "insufficient_balance" = "余额不足";
 "insufficient_balance_symbol" = "%@ 余额不足";
 "insufficient_fee_description" = "需要 %1$@ 以支付 %2$@ 网络费用";
-"insufficient_sol_for_sending_spl_token" = "SOL余额不足，请至少预留 %@ SOL。";
+"insufficient_sol_for_sending_spl_token" = "SOL 余额不足，请至少预留 %@ SOL。";
 "insufficient_transaction_fee" = "手续费不足";
 "interface_style" = "外观";
 "invalid_address" = "无效的地址";

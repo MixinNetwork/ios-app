@@ -700,7 +700,7 @@
 "insufficient_balance" = "餘額不足";
 "insufficient_balance_symbol" = "%@ 餘額不足";
 "insufficient_fee_description" = "需要 %1$@ 以支付 %2$@ 網路費用";
-"insufficient_sol_for_sending_spl_token" = "SOL餘額不足，請至少預留 %@ SOL。";
+"insufficient_sol_for_sending_spl_token" = "SOL 餘額不足，請至少預留 %@ SOL。";
 "insufficient_transaction_fee" = "手續費不足";
 "interface_style" = "外觀";
 "invalid_address" = "無效的地址";

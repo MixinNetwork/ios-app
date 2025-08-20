@@ -16,12 +16,6 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
     
     private let intent: Intent
     private let insufficientToken: any (ValuableToken & OnChainToken)
-    private let stablecoinAssetIDs: Set<String> = [
-        AssetID.erc20USDT, AssetID.tronUSDT, AssetID.polygonUSDT,
-        AssetID.bep20USDT, AssetID.solanaUSDT, AssetID.eosUSDT,
-        AssetID.erc20USDC, AssetID.solanaUSDC, AssetID.baseUSDC,
-        AssetID.polygonUSDC, AssetID.bep20USDC,
-    ]
     private let swappableStablecoinAssetIDs: Set<String> = [
         AssetID.erc20USDT, AssetID.tronUSDT, AssetID.polygonUSDT,
         AssetID.bep20USDT, AssetID.solanaUSDT,
@@ -233,7 +227,7 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
         
         reloadData(with: rows)
         
-        if stablecoinAssetIDs.contains(insufficientToken.assetID) {
+        if AssetID.stablecoins.contains(insufficientToken.assetID) {
             let currentToken = insufficientToken
             let fromAssetIDs = swappableStablecoinAssetIDs.subtracting([currentToken.assetID])
             DispatchQueue.global().async { [intent, weak self] in

@@ -173,7 +173,7 @@ extension Logger {
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.timeZone = .current
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSZ"
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
         return formatter
     }()
     

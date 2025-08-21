@@ -216,7 +216,20 @@ extension SwapOrderViewController: PillActionView.Delegate {
             }
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            RouteAPI.markets(id: order.receiveAssetID, queue: .main) { [order, receivePrice] result in
+            let oneSideStablecoinPair = OneSideStablecoinPair(order: order)
+            let focusAssetID, focusAssetSymbol, buyAction, sellAction: String
+            if let pair = oneSideStablecoinPair {
+                focusAssetID = pair.nonStablecoinAssetID
+                focusAssetSymbol = pair.nonStablecoinSymbol
+                buyAction = "mixin://mixin.one/swap?input=\(pair.stablecoinAssetID)&output=\(pair.nonStablecoinAssetID)"
+                sellAction = "mixin://mixin.one/swap?input=\(pair.nonStablecoinAssetID)&output=\(pair.stablecoinAssetID)"
+            } else {
+                focusAssetID = order.receiveAssetID
+                focusAssetSymbol = order.receiveSymbol
+                buyAction = "mixin://mixin.one/swap?input=\(order.payAssetID)&output=\(order.receiveAssetID)"
+                sellAction = "mixin://mixin.one/swap?input=\(order.receiveAssetID)&output=\(order.payAssetID)"
+            }
+            RouteAPI.markets(id: focusAssetID, queue: .main) { [order, receivePrice] result in
                 hud.hide()
                 let description: String? = switch result {
                 case let .success(market):
@@ -234,20 +247,20 @@ extension SwapOrderViewController: PillActionView.Delegate {
                 }
                 let actions: [AppCardData.V1Content.Action] = [
                     .init(
-                        action: "mixin://mixin.one/swap?input=\(order.payAssetID)&output=\(order.receiveAssetID)",
+                        action: buyAction,
                         color: "#50BD5C",
-                        label: R.string.localizable.buy_token(order.receiveSymbol)
+                        label: R.string.localizable.buy_token(focusAssetSymbol)
                     ),
                     .init(
-                        action: "mixin://mixin.one/swap?input=\(order.receiveAssetID)&output=\(order.payAssetID)",
+                        action: sellAction,
                         color: "#DB454F",
-                        label: R.string.localizable.sell_token(order.receiveSymbol)
+                        label: R.string.localizable.sell_token(focusAssetSymbol)
                     ),
                     .init(
-                        action: "mixin://mixin.one/markets/\(order.receiveAssetID)",
+                        action: "mixin://mixin.one/markets/\(focusAssetID)",
                         color: "#3D75E3",
-                        label: order.receiveSymbol + " " + R.string.localizable.market()
-                    ),
+                        label: focusAssetSymbol + " " + R.string.localizable.market()
+                    )
                 ]
                 let content = AppCardData.V1Content(
                     appID: BotUserID.mixinRoute,
@@ -271,6 +284,37 @@ extension SwapOrderViewController: SwapOrderIDCell.Delegate {
     func swapOrderIDCellRequestCopy(_ cell: SwapOrderIDCell) {
         UIPasteboard.general.string = order.orderID
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
+    }
+    
+}
+
+extension SwapOrderViewController {
+    
+    private struct OneSideStablecoinPair {
+        
+        let stablecoinAssetID: String
+        let stablecoinSymbol: String
+        let nonStablecoinAssetID: String
+        let nonStablecoinSymbol: String
+        
+        init?(order: SwapOrderItem) {
+            let payingStablecoin = AssetID.stablecoins.contains(order.payAssetID)
+            let receivingStablecoin = AssetID.stablecoins.contains(order.receiveAssetID)
+            if payingStablecoin && !receivingStablecoin {
+                stablecoinAssetID = order.payAssetID
+                stablecoinSymbol = order.paySymbol
+                nonStablecoinAssetID = order.receiveAssetID
+                nonStablecoinSymbol = order.receiveSymbol
+            } else if !payingStablecoin && receivingStablecoin {
+                stablecoinAssetID = order.receiveAssetID
+                stablecoinSymbol = order.receiveSymbol
+                nonStablecoinAssetID = order.payAssetID
+                nonStablecoinSymbol = order.paySymbol
+            } else {
+                return nil
+            }
+        }
+        
     }
     
 }

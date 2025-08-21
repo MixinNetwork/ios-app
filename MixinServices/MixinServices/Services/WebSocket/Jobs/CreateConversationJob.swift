@@ -41,7 +41,7 @@ public class CreateConversationJob: BaseJob {
             }
 
             let name = conversation.category == ConversationCategory.CONTACT.rawValue ? nil : conversation.name
-            let request = ConversationRequest(conversationId: conversation.conversationId, name: name, category: conversation.category, participants: participants, duration: nil, announcement: nil)
+            let request = ConversationRequest(conversationId: conversation.conversationId, name: name, category: conversation.category, participants: participants, duration: nil, announcement: nil, randomID: nil)
             let response = try ConversationAPI.createConversation(conversation: request).get()
             ConversationDAO.shared.createConversation(conversation: response, targetStatus: ConversationStatus.SUCCESS)
         }

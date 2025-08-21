@@ -109,8 +109,13 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
         }
         let multiplier = self.multiplier(tag: sender.tag)
         if payment.sendingNativeToken {
-            let availableBalance = max(0, token.decimalBalance - fee.tokenAmount - Solana.RentExemptionValue.systemAccount)
-            replaceAmount(availableBalance * multiplier)
+            let availableBalance = switch payment.chain.kind {
+            case .evm:
+                token.decimalBalance - fee.tokenAmount
+            case .solana:
+                token.decimalBalance - fee.tokenAmount - Solana.RentExemptionValue.systemAccount
+            }
+            replaceAmount(max(0, availableBalance) * multiplier)
         } else {
             replaceAmount(token.decimalBalance * multiplier)
         }
@@ -193,15 +198,22 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                     sign: .never,
                     symbol: .custom(feeToken.symbol)
                 )
-                let availableBalance = if payment.sendingNativeToken {
-                    CurrencyFormatter.localizedString(
-                        from: max(0, payment.token.decimalBalance - fee.tokenAmount - Solana.RentExemptionValue.systemAccount),
+                let availableBalance: String
+                if payment.sendingNativeToken {
+                    let amount = switch payment.chain.kind {
+                    case .evm:
+                        payment.token.decimalBalance - fee.tokenAmount
+                    case .solana:
+                        payment.token.decimalBalance - fee.tokenAmount - Solana.RentExemptionValue.systemAccount
+                    }
+                    availableBalance = CurrencyFormatter.localizedString(
+                        from: max(0, amount),
                         format: .precision,
                         sign: .never,
                         symbol: .custom(feeToken.symbol)
                     )
                 } else {
-                    payment.token.localizedBalanceWithSymbol
+                    availableBalance = payment.token.localizedBalanceWithSymbol
                 }
                 await MainActor.run {
                     self.fee = fee

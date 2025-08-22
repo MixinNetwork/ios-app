@@ -176,7 +176,7 @@ final class UserProfileViewController: ProfileViewController {
         let userId = user.userId
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: ConversationCategory.CONTACT.rawValue, participants: [ParticipantRequest(userId: userId, role: "")], duration: interval, announcement: nil)
+        let conversationRequest = ConversationRequest(conversationId: conversationId, name: nil, category: ConversationCategory.CONTACT.rawValue, participants: [ParticipantRequest(userId: userId, role: "")], duration: interval, announcement: nil, randomID: nil)
         ConversationAPI.mute(conversationId: conversationId, conversationRequest: conversationRequest) { [weak self] (result) in
             switch result {
             case let .success(response):
@@ -570,12 +570,15 @@ extension UserProfileViewController {
         } else {
             let hud = Hud()
             hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            let request = ConversationRequest(conversationId: conversationId,
-                                              name: nil,
-                                              category: ConversationCategory.CONTACT.rawValue,
-                                              participants: [ParticipantRequest(userId: user.userId, role: "")],
-                                              duration: nil,
-                                              announcement: nil)
+            let request = ConversationRequest(
+                conversationId: conversationId,
+                name: nil,
+                category: ConversationCategory.CONTACT.rawValue,
+                participants: [ParticipantRequest(userId: user.userId, role: "")],
+                duration: nil,
+                announcement: nil,
+                randomID: nil
+            )
             ConversationAPI.createConversation(conversation: request) { result in
                 switch result {
                 case let .success(response):

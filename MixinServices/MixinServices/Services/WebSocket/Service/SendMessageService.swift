@@ -794,7 +794,7 @@ extension SendMessageService {
         } else {
             participants = ParticipantDAO.shared.participantRequests(conversationId: conversation.conversationId, currentAccountId: currentAccountId)
         }
-        let request = ConversationRequest(conversationId: conversation.conversationId, name: nil, category: conversation.category, participants: participants, duration: nil, announcement: nil)
+        let request = ConversationRequest(conversationId: conversation.conversationId, name: nil, category: conversation.category, participants: participants, duration: nil, announcement: nil, randomID: nil)
         let response = try ConversationAPI.createConversation(conversation: request).get()
         ConversationDAO.shared.createConversation(conversation: response, targetStatus: .SUCCESS)
         return response.expireIn

@@ -129,8 +129,9 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
             return
         }
         
+        let solanaRentExemptionFailedReason: Solana.RentExemptionFailedReason?
         if let accountExists = solanaReceiverAccountExists {
-            let reason = if payment.sendingNativeToken {
+            solanaRentExemptionFailedReason = if payment.sendingNativeToken {
                 Solana.checkRentExemptionForSOLTransfer(
                     sendingAmount: tokenAmount,
                     feeAmount: fee.tokenAmount,
@@ -144,19 +145,13 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                     receiverAccountExists: accountExists
                 )
             }
-            if let reason {
-                insufficientBalanceLabel.text = reason.localizedDescription
-                // Rent-exemption depends only on SOL balance
-                // Show "Add SOL" button if insufficient
-                addAddFeeButton(symbol: feeToken.symbol)
-                reviewButton.isEnabled = false
-                return
-            }
+        } else {
+            solanaRentExemptionFailedReason = nil
         }
         
         let feeRequirement = BalanceRequirement(token: feeToken, amount: fee.tokenAmount)
         let requirements = inputAmountRequirement.merging(with: feeRequirement)
-        if requirements.allSatisfy(\.isSufficient) {
+        if requirements.allSatisfy(\.isSufficient) && solanaRentExemptionFailedReason == nil {
             insufficientBalanceLabel.text = nil
             removeAddFeeButton()
             reviewButton.isEnabled = tokenAmount > 0
@@ -169,12 +164,18 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
             } else if !inputAmountRequirement.isSufficient {
                 insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
                 removeAddFeeButton()
-            } else {
+            } else if !feeRequirement.isSufficient {
                 insufficientBalanceLabel.text = R.string.localizable.web3_transfer_insufficient_fee_count(
                     feeRequirement.localizedAmountWithSymbol,
                     feeRequirement.token.localizedBalanceWithSymbol
                 )
                 addAddFeeButton(symbol: feeRequirement.token.symbol)
+            } else if let reason = solanaRentExemptionFailedReason {
+                insufficientBalanceLabel.text = reason.localizedDescription
+                // Rent-exemption depends only on SOL balance
+                // Show "Add SOL" button if insufficient
+                addAddFeeButton(symbol: feeToken.symbol)
+                reviewButton.isEnabled = false
             }
             reviewButton.isEnabled = false
         }

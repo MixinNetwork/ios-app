@@ -5,6 +5,10 @@ import MixinServices
 
 class SignUpWithMobileNumberViewController: MobileNumberViewController, Captcha.Reporting {
     
+    var intent: PhoneNumberVerificationContext.Intent {
+        .signUp
+    }
+    
     var reportingContent: (event: Reporter.Event, method: String) {
         (event: .signUpCAPTCHA, method: "phone_number")
     }
@@ -62,21 +66,22 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController, Captcha.
         self.request = AccountAPI.sessionVerifications(
             phoneNumber: phoneNumber,
             captchaToken: token
-        ) { [weak self] (result) in
+        ) { [weak self, intent] (result) in
             guard let self else {
                 return
             }
             switch result {
             case let .success(verification):
                 let context = PhoneNumberVerificationContext(
+                    intent: intent,
                     phoneNumber: phoneNumber,
                     displayPhoneNumber: displayPhoneNumber,
                     deactivation: verification.deactivation,
                     verificationID: verification.id,
                     hasEmergencyContact: verification.hasEmergencyContact
                 )
-                let vc = PhoneNumberLoginVerificationCodeViewController(context: context)
-                self.navigationController?.pushViewController(vc, animated: true)
+                let verify = PhoneNumberLoginVerificationCodeViewController(context: context)
+                self.navigationController?.pushViewController(verify, animated: true)
                 self.updateViews(isBusy: false)
             case let .failure(error):
                 Logger.login.error(category: "SignUpWithMobileNumber", message: "Failed: \(error)")

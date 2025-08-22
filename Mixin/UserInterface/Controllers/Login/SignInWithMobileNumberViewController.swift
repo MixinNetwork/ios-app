@@ -3,6 +3,10 @@ import MixinServices
 
 final class SignInWithMobileNumberViewController: SignUpWithMobileNumberViewController {
     
+    override var intent: PhoneNumberVerificationContext.Intent {
+        .signIn
+    }
+    
     override var reportingContent: (event: Reporter.Event, method: String) {
         (event: .loginCAPTCHA, method: "phone_number")
     }

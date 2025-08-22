@@ -1,7 +1,9 @@
 import Foundation
 import Zip
 
-public enum Logger {
+public enum Logger: Equatable {
+    
+    public static var redirectTIPLogsToLogin = true
     
     case general
     case database
@@ -9,6 +11,7 @@ public enum Logger {
     case conversation(id: String)
     case tip
     case web3
+    case login
     
     public static func migrate() {
         let fileManager = FileManager.default
@@ -53,8 +56,11 @@ public enum Logger {
 
     }
     
-    public static func export(conversationId: String) -> URL? {
-        let subsystems = [general, database, call, conversation(id: conversationId), tip, web3]
+    public static func export(conversationID: String?) -> URL? {
+        var subsystems = [general, database, call, tip, web3, login]
+        if let conversationID {
+            subsystems.append(conversation(id: conversationID))
+        }
         var files = subsystems.compactMap(\.fileURL).filter { url in
             FileManager.default.fileExists(atPath: url.path)
         }
@@ -132,6 +138,25 @@ extension Logger {
         
     }
     
+    public var fileURL: URL {
+        switch self {
+        case .general:
+            AppGroupContainer.logUrl.appendingPathComponent("general.log")
+        case .database:
+            AppGroupContainer.logUrl.appendingPathComponent("database.log")
+        case .call:
+            AppGroupContainer.logUrl.appendingPathComponent("call.log")
+        case .conversation(let id):
+            AppGroupContainer.logUrl.appendingPathComponent("\(id).log")
+        case .tip:
+            AppGroupContainer.logUrl.appendingPathComponent("tip.log")
+        case .web3:
+            AppGroupContainer.logUrl.appendingPathComponent("wc.log")
+        case .login:
+            AppGroupContainer.loginLogURL
+        }
+    }
+    
     private enum Level {
         
         case debug
@@ -177,24 +202,6 @@ extension Logger {
         return formatter
     }()
     
-    private var fileURL: URL {
-        let filename = switch self {
-        case .general:
-            "general.log"
-        case .database:
-            "database.log"
-        case .call:
-            "call.log"
-        case .conversation(let id):
-            "\(id).log"
-        case .tip:
-            "tip.log"
-        case .web3:
-            "wc.log"
-        }
-        return AppGroupContainer.logUrl.appendingPathComponent(filename)
-    }
-    
     private static func isFileCreated(at url: URL) -> Bool {
         do {
             try FileManager.default.createFileIfNotExists(at: url)
@@ -225,27 +232,34 @@ extension Logger {
         guard level != .debug else {
             return
         }
+        let redirectTIPLogsToLogin = Self.redirectTIPLogsToLogin
         Self.queue.async { [url=fileURL] in
-            guard Self.isFileCreated(at: url), let handle = FileHandle(forUpdatingAtPath: url.path) else {
-                return
-            }
-            
             let appExtensionMark = isAppExtension ? "[AppExtension]" : ""
             let output = "\(formattedDate) \(appExtensionMark)\(level.output)[\(category)] \(message)\(formattedUserInfo)\n"
-            
-            let existedFileSize = FileManager.default.fileSize(url.path)
-            if existedFileSize > Self.maxFileSize {
-                let trailingOffset = UInt64(existedFileSize) - UInt64(Self.preservedTrailingLogSize)
-                handle.seek(toFileOffset: trailingOffset)
-                let trailing = String(data: handle.readDataToEndOfFile(), encoding: .utf8) ?? ""
-                if let data = (trailing + "\n" + output).data(using: .utf8) {
-                    try? data.write(to: url)
-                }
+            if redirectTIPLogsToLogin, self == .tip {
+                write(output: output, toFileAt: Logger.login.fileURL)
             } else {
-                if let data = output.data(using: .utf8) {
-                    handle.seekToEndOfFile()
-                    handle.write(data)
-                }
+                write(output: output, toFileAt: url)
+            }
+        }
+    }
+    
+    private func write(output: String, toFileAt url: URL) {
+        guard Self.isFileCreated(at: url), let handle = FileHandle(forUpdatingAtPath: url.path) else {
+            return
+        }
+        let existedFileSize = FileManager.default.fileSize(url.path)
+        if existedFileSize > Self.maxFileSize {
+            let trailingOffset = UInt64(existedFileSize) - UInt64(Self.preservedTrailingLogSize)
+            handle.seek(toFileOffset: trailingOffset)
+            let trailing = String(data: handle.readDataToEndOfFile(), encoding: .utf8) ?? ""
+            if let data = (trailing + "\n" + output).data(using: .utf8) {
+                try? data.write(to: url)
+            }
+        } else {
+            if let data = output.data(using: .utf8) {
+                handle.seekToEndOfFile()
+                handle.write(data)
             }
         }
     }

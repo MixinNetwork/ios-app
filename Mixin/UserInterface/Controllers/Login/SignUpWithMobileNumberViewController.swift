@@ -56,6 +56,7 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController, Captcha.
     
     func requestVerificationCode(captchaToken token: CaptchaToken?) {
         updateViews(isBusy: true)
+        Logger.login.info(category: "SignUpWithMobileNumber", message: "Request code")
         let phoneNumber = fullNumber(withSpacing: false)
         let displayPhoneNumber = fullNumber(withSpacing: true)
         self.request = AccountAPI.sessionVerifications(
@@ -78,6 +79,7 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController, Captcha.
                 self.navigationController?.pushViewController(vc, animated: true)
                 self.updateViews(isBusy: false)
             case let .failure(error):
+                Logger.login.error(category: "SignUpWithMobileNumber", message: "Failed: \(error)")
                 switch error {
                 case .requiresCaptcha:
                     captcha.validate { [weak self] (result) in
@@ -120,7 +122,7 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController, Captcha.
     }
     
     @objc func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
         present(customerService, animated: true)
         reporter.report(event: .customerServiceDialog, tags: ["source": "sign_up_phone_number"])
     }

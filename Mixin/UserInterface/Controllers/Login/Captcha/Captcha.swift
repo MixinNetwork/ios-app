@@ -28,12 +28,12 @@ final class Captcha: NSObject {
     init(viewController: UIViewController) {
         self.viewController = viewController
         super.init()
-        Logger.general.debug(category: "Captcha", message: "Init \(opaquePointer)")
+        Logger.login.debug(category: "Captcha", message: "Init \(opaquePointer)")
     }
     
     deinit {
         clean()
-        Logger.general.debug(category: "Captcha", message: "Deinit \(opaquePointer)")
+        Logger.login.debug(category: "Captcha", message: "Deinit \(opaquePointer)")
     }
     
     func validate(completion: @escaping CompletionCallback) {

@@ -53,52 +53,52 @@ final class CheckSessionEnvironmentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = R.color.background()
-        Logger.general.debug(category: "CheckSessionEnvironment", message: "View loaded with account fresh: \(isAccountFresh)")
+        Logger.login.info(category: "CheckSessionEnvironment", message: "View loaded with account fresh: \(isAccountFresh)")
         check()
     }
     
     func check(freshAccount: Account? = nil) {
         if let freshAccount {
-            Logger.general.debug(category: "CheckSessionEnvironment", message: "Account refreshed")
+            Logger.login.info(category: "CheckSessionEnvironment", message: "Account refreshed")
             self.account = freshAccount
             self.isAccountFresh = true
         }
-        Logger.general.debug(category: "CheckSessionEnvironment", message: "Check environments")
+        Logger.login.info(category: "CheckSessionEnvironment", message: "Check environments")
         if AppGroupUserDefaults.isClockSkewed {
-            Logger.general.debug(category: "CheckSessionEnvironment", message: "Clock skewed")
+            Logger.login.info(category: "CheckSessionEnvironment", message: "Clock skewed")
             while UIApplication.shared.keyWindow?.subviews.last is BottomSheetView {
                 UIApplication.shared.keyWindow?.subviews.last?.removeFromSuperview()
             }
             let clockSkew = ClockSkewViewController()
             reload(content: clockSkew)
         } else if account.fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            Logger.general.debug(category: "CheckSessionEnvironment", message: "Create username")
+            Logger.login.info(category: "CheckSessionEnvironment", message: "Create username")
             isUsernameJustInitialized = true
             let username = UsernameViewController()
             reload(content: username)
         } else if AppGroupUserDefaults.Account.canRestoreFromPhone {
-            Logger.general.debug(category: "CheckSessionEnvironment", message: "Restore chat")
+            Logger.login.info(category: "CheckSessionEnvironment", message: "Restore chat")
             let restore = RestoreChatViewController()
             let navigationController = GeneralAppearanceNavigationController(rootViewController: restore)
             navigationController.delegate = restoreChatNavigationHandler
             reload(content: navigationController)
         } else if DatabaseUpgradeViewController.needsUpgrade {
-            Logger.general.debug(category: "CheckSessionEnvironment", message: "Upgrade db")
+            Logger.login.info(category: "CheckSessionEnvironment", message: "Upgrade db")
             let upgrade = DatabaseUpgradeViewController()
             reload(content: upgrade)
         } else if !SignalLoadingViewController.isLoaded {
-            Logger.general.debug(category: "CheckSessionEnvironment", message: "Load Signal")
+            Logger.login.info(category: "CheckSessionEnvironment", message: "Load Signal")
             let signalLoading = SignalLoadingViewController(isUsernameJustInitialized: isUsernameJustInitialized)
             signalLoading.onFinished = { [weak self] in
                 guard let self else {
                     return
                 }
                 if !self.isUsernameJustInitialized {
-                    Logger.general.debug(category: "CheckSessionEnvironment", message: "Sync contacts")
+                    Logger.login.info(category: "CheckSessionEnvironment", message: "Sync contacts")
                     ContactAPI.syncContacts()
                 }
                 for id in self.allUsersInitialBots {
-                    Logger.general.debug(category: "CheckSessionEnvironment", message: "Initialize bots")
+                    Logger.login.info(category: "CheckSessionEnvironment", message: "Initialize bots")
                     let job = InitializeBotJob(userID: id)
                     ConcurrentJobQueue.shared.addJob(job: job)
                 }
@@ -112,15 +112,16 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                     && AppGroupUserDefaults.User.loginPINValidated
                     && Web3WalletDAO.shared.hasClassicWallet()
                 if isReady {
-                    Logger.general.debug(category: "CheckSessionEnvironment", message: "Go home")
+                    Logger.login.info(category: "CheckSessionEnvironment", message: "Everything ready")
+                    Logger.redirectTIPLogsToLogin = false
                     root = HomeContainerViewController()
                 } else {
-                    Logger.general.debug(category: "CheckSessionEnvironment", message: "Load TIP with account: \(freshAccount != nil)")
+                    Logger.login.info(category: "CheckSessionEnvironment", message: "Load TIP")
                     let freshAccount = isAccountFresh ? account : nil
                     root = LoginPINStatusCheckingViewController(freshAccount: freshAccount)
                 }
             } else {
-                Logger.general.debug(category: "CheckSessionEnvironment", message: "Create PIN")
+                Logger.login.info(category: "CheckSessionEnvironment", message: "Create PIN")
                 root = TIPNavigationController(intent: .create)
             }
             AppDelegate.current.mainWindow.rootViewController = root

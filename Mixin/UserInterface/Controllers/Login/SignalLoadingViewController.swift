@@ -24,7 +24,7 @@ final class SignalLoadingViewController: LoginLoadingViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Logger.general.info(category: "SignalLoading", message: "isPrekeyLoaded:\(AppGroupUserDefaults.Crypto.isPrekeyLoaded), isSessionSynchronized:\(AppGroupUserDefaults.Crypto.isSessionSynchronized), isCircleSynchronized:\(AppGroupUserDefaults.User.isCircleSynchronized)")
+        Logger.login.info(category: "SignalLoading", message: "isPrekeyLoaded:\(AppGroupUserDefaults.Crypto.isPrekeyLoaded), isSessionSynchronized:\(AppGroupUserDefaults.Crypto.isSessionSynchronized), isCircleSynchronized:\(AppGroupUserDefaults.User.isCircleSynchronized)")
         let startTime = Date()
         DispatchQueue.global().async {
             SignalDatabase.reloadCurrent()

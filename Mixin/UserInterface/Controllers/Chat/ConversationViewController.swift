@@ -2687,7 +2687,7 @@ extension ConversationViewController {
                 "isRealConnected": WebSocketService.shared.isRealConnected
             ]
             Logger.conversation(id: conversationId).info(category: "Report", message: "Exported logs", userInfo: info)
-            guard let targetUrl = Logger.export(conversationId: conversationId), FileManager.default.fileSize(targetUrl.path) > 0 else {
+            guard let targetUrl = Logger.export(conversationID: conversationId), FileManager.default.fileSize(targetUrl.path) > 0 else {
                 return
             }
             
@@ -2741,7 +2741,7 @@ extension ConversationViewController {
                 Logger.conversation(id: conversationId).info(category: "Report", message: log)
             }
             
-            guard let developUser = user, let url = Logger.export(conversationId: conversationId) else {
+            guard let developUser = user, let url = Logger.export(conversationID: conversationId) else {
                 return
             }
             let targetUrl = AttachmentContainer.url(for: .files, filename: url.lastPathComponent)

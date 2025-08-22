@@ -8,7 +8,7 @@ final class ClockSkewViewController: UIViewController, CheckSessionEnvironmentCh
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Logger.general.error(category: "ClockSkew", message: "View did load")
+        Logger.login.error(category: "ClockSkew", message: "View did load")
     }
     
     @IBAction func continueAction(_ sender: Any) {
@@ -19,18 +19,18 @@ final class ClockSkewViewController: UIViewController, CheckSessionEnvironmentCh
         AccountAPI.me { [weak self] (result) in
             switch result {
             case let .success(account):
-                Logger.general.info(category: "ClockSkew", message: "Clock fixed")
+                Logger.login.info(category: "ClockSkew", message: "Clock fixed")
                 AppGroupUserDefaults.isClockSkewed = false
                 LoginManager.shared.setAccount(account)
                 self?.checkSessionEnvironmentAgain(freshAccount: account)
             case .failure(.clockSkewDetected):
-                Logger.general.error(category: "ClockSkew", message: "Still skewed")
+                Logger.login.error(category: "ClockSkew", message: "Still skewed")
                 if let self {
                     self.continueButton.isBusy = false
                     self.tipsLabel.layer.addShakeAnimation()
                 }
             case let .failure(error):
-                Logger.general.error(category: "ClockSkew", message: "\(error)")
+                Logger.login.error(category: "ClockSkew", message: "\(error)")
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
                 self?.continueButton.isBusy = false
             }

@@ -24,6 +24,7 @@ final class CustomerServiceViewController: PopupTitledWebViewController {
                 target: self,
                 action: #selector(presentLog(_:))
             )
+            presentLogRecognizer.minimumPressDuration = 3
             titleView.addGestureRecognizer(presentLogRecognizer)
         }
     }

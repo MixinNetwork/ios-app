@@ -14,6 +14,7 @@ final class LoginNavigationController: GeneralAppearanceNavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let presentLogRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(presentLog(_:)))
+        presentLogRecognizer.minimumPressDuration = 3
         navigationBar.addGestureRecognizer(presentLogRecognizer)
     }
     

@@ -124,6 +124,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
     override func reloadViewsWithBalanceRequirements() {
         guard let fee, let feeToken, !tokenAmount.isZero else {
             insufficientBalanceLabel.text = nil
+            removeAddFeeButton()
             reviewButton.isEnabled = false
             return
         }
@@ -145,7 +146,9 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
             }
             if let reason {
                 insufficientBalanceLabel.text = reason.localizedDescription
-                removeAddFeeButton()
+                // Rent-exemption depends only on SOL balance
+                // Show "Add SOL" button if insufficient
+                addAddFeeButton(symbol: feeToken.symbol)
                 reviewButton.isEnabled = false
                 return
             }

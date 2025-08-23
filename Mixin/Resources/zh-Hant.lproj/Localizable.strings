@@ -284,6 +284,7 @@
 "chat_text_size" = "聊天字型大小";
 "chat_waiting" = "等待%1$@上線後建立加密會話。%2$@。";
 "chats" = "聊天";
+"check_answer" = "檢查答案";
 "check_backup" = "檢查備份";
 "check_mnemonic_phrase" = "檢查您的助記詞";
 "check_mnemonic_phrase_desc" = "按照呈現給您的順序輸入每個單詞。";
@@ -1388,6 +1389,12 @@
 "tip_create_pin_title" = "設定 6 位數字 PIN 建立你的第一個數字錢包";
 "tip_creation_introduction" = "設定 6 位數字 PIN 建立你的第一個加密貨幣錢包，PIN 基於去中心化金鑰派生協議 Throttled Identity Protocol，閱讀檔案以瞭解更多。";
 "tip_introduction" = "6 位數字 PIN 基於去中心化金鑰派生協議 Throttled Identity Protocol，閱讀檔案以瞭解更多。";
+"tip_quiz_answer" = "PIN 是你錢包的鑰匙，丟失後無法找回。";
+"tip_quiz_correct_answer" = "我將無法訪問賬戶和資金。";
+"tip_quiz_question" = "如果我丟失了 PIN，會發生什麼？";
+"tip_quiz_title_correct" = "正確！";
+"tip_quiz_title_wrong" = "哎呀，答錯了";
+"tip_quiz_wrong_answer" = "我可以恢復我的賬戶。";
 "title_participants" = "%d 成員";
 "title_participants_count" = "%d 成員";
 "to" = "至";

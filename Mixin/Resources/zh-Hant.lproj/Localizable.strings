@@ -1517,6 +1517,7 @@
 "url_unrecognized_hint" = "%@ 識別失敗，請升級至 Mixin 最新版本或聯絡開發者檢查連結";
 "url_unsupported_message" = "https://support.mixin.one/zh/article/mixin-h92cxa/";
 "url_watch_wallet" = "https://support.mixin.one/zh/article/5aac5l2v5re75yqg6kec5af5zyw5z2a77yf-r3pitk/";
+"url_what_is_pin" = "https://support.mixin.one/zh/article/pin-yhpicw/";
 "use_another_address" = "換個地址";
 "use_biometry" = "採用%@";
 "use_system_text_size" = "跟隨系統字型大小";

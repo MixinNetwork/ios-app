@@ -1517,6 +1517,7 @@
 "url_unrecognized_hint" = "%@ no se ha podido reconocer, actualiza Mixin a la última versión o comunícate con el desarrollador para verificar el enlace";
 "url_unsupported_message" = "https://support.mixin.one/en/article/how-to-do-when-you-receive-a-message-like-this-this-type-of-message-is-not-supported-please-upgrade-mixin-17j1t3p/";
 "url_watch_wallet" = "https://support.mixin.one/en/article/how-to-add-a-watch-only-address-17ifo8w";
+"url_what_is_pin" = "https://support.mixin.one/en/article/what-is-pin-1pjyhow/";
 "use_another_address" = "Use Another Address";
 "use_biometry" = "Usar %@";
 "use_system_text_size" = "Usar tamaño de texto del sistema";

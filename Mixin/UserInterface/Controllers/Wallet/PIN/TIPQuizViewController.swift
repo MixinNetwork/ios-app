@@ -106,7 +106,7 @@ final class TIPQuizViewController: UIViewController {
     }
     
     @IBAction func explainPIN(_ sender: Any) {
-        let safari = SFSafariViewController(url: .tip)
+        let safari = SFSafariViewController(url: .whatIsPIN)
         present(safari, animated: true)
     }
     

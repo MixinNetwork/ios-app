@@ -173,17 +173,20 @@ final class TIPActionViewController: UIViewController {
     @MainActor
     private func finish() {
         Logger.tip.info(category: "TIPAction", message: "Finished successfully")
-        let title: String
         switch action {
         case .create:
-            title = R.string.localizable.set_pin_successfully()
+            alert(R.string.localizable.set_pin_successfully()) { (_) in
+                let quiz = TIPQuizViewController()
+                self.tipNavigationController?.setViewControllers([quiz], animated: true)
+            }
         case .change:
-            title = R.string.localizable.change_pin_successfully()
+            alert(R.string.localizable.change_pin_successfully()) { (_) in
+                self.tipNavigationController?.finish()
+            }
         case .migrate:
-            title = R.string.localizable.upgrade_tip_successfully()
-        }
-        alert(title) { (_) in
-            self.tipNavigationController?.finish()
+            alert(R.string.localizable.upgrade_tip_successfully()) { (_) in
+                self.tipNavigationController?.finish()
+            }
         }
     }
     

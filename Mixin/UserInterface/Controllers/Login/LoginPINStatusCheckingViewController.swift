@@ -54,6 +54,7 @@ final class LoginPINStatusCheckingViewController: LoginLoadingViewController {
                     }
                 }
             } catch {
+                Logger.login.error(category: "LoginPINStatusChecking", message: "Failed: \(error)")
                 await MainActor.run {
                     activityIndicator.stopAnimating()
                     descriptionLabel.text = error.localizedDescription

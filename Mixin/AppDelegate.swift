@@ -28,6 +28,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var isFirstLaunch: Bool? = nil
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        #if DEBUG
+        print("Documents URL:\n\(AppGroupContainer.documentsUrl.path)")
+        #endif
         updateFirstLaunch(isProtectedDataAvailable: application.isProtectedDataAvailable)
         FirebaseApp.configure()
         MixinService.callMessageCoordinator = CallService.shared

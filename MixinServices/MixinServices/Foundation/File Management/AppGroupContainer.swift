@@ -27,6 +27,10 @@ public enum AppGroupContainer {
         return url
     }
     
+    public static var loginLogURL: URL {
+        documentsUrl.appendingPathComponent("login.log", isDirectory: false)
+    }
+    
     public static var logUrl: URL {
         let url = accountUrl.appendingPathComponent("Log", isDirectory: true)
         try? FileManager.default.createDirectoryIfNotExists(at: url)

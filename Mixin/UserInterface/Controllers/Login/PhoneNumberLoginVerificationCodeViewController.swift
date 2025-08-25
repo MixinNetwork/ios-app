@@ -24,8 +24,12 @@ final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCod
         resendButton.onCountDownFinished = { [weak helpButton] in
             helpButton?.isHidden = false
         }
-        
-        reporter.report(event: .signUpSMSVerify)
+        switch context.intent {
+        case .signIn:
+            reporter.report(event: .loginSMSVerify)
+        case .signUp:
+            reporter.report(event: .signUpSMSVerify)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

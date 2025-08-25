@@ -43,6 +43,7 @@ class RecoveryContactIDVerificationViewController: LoginInfoInputViewController 
                 let vc = RecoveryContactLoginVerificationCodeViewController(context: context, identityNumber: identityNumber)
                 weakSelf.navigationController?.pushViewController(vc, animated: true)
             case .failure(let error):
+                Logger.login.error(category: "RecoveryContactIDVerification", message: "Failed: \(error)")
                 weakSelf.alert(error.localizedDescription)
             }
             weakSelf.continueButton.isBusy = false

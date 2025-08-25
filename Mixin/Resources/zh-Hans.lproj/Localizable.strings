@@ -819,6 +819,7 @@
 "mixin_contact" = "Mixin 联系人";
 "mixin_id_or_phone" = "Mixin ID 或手机号";
 "mixin_locked" = "Mixin 已锁定";
+"mixin_logs" = "Mixin 日志";
 "mixin_messenger_desktop" = "Mixin Messenger 桌面";
 "mixin_one" = "Mixin 大会员";
 "mixin_one_desc" = "开启您的 Mixin 会员之旅";

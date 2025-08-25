@@ -12,6 +12,16 @@ final class OnboardingViewController: UIViewController {
     @IBOutlet weak var imageViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var actionsBottomConstraint: NSLayoutConstraint!
     
+    init() {
+        Logger.redirectLogsToLogin = true
+        let nib = R.nib.onboardingView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         switch ScreenHeight.current {
@@ -34,6 +44,7 @@ final class OnboardingViewController: UIViewController {
         signInButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
         signInButton.style = .tinted
         versionLabel.text = R.string.localizable.current_version(Bundle.main.fullVersion)
+        Logger.login.info(category: "Onboarding", message: "App \(Bundle.main.fullVersion) onboards, device: \(Device.current.machineName) \(ProcessInfo.processInfo.operatingSystemVersionString), id: \(Device.current.id)")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -49,13 +60,13 @@ final class OnboardingViewController: UIViewController {
     @IBAction func signUp(_ sender: Any) {
         let signup = SignUpViewController()
         navigationController?.pushViewController(signup, animated: true)
-        Logger.general.info(category: "Login", message: "Sign up")
+        Logger.login.info(category: "Onboarding", message: "Sign up")
     }
     
     @IBAction func signIn(_ sender: Any) {
         let mobileNumber = SignInWithMobileNumberViewController()
         navigationController?.pushViewController(mobileNumber, animated: true)
-        Logger.general.info(category: "Login", message: "Sign in")
+        Logger.login.info(category: "Onboarding", message: "Sign in")
         reporter.report(event: .loginStart)
     }
     

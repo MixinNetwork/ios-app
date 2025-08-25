@@ -38,7 +38,7 @@ final class SignUpViewController: UIViewController {
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
         present(customerService, animated: true)
         reporter.report(event: .customerServiceDialog, tags: ["source": "sign_up"])
     }

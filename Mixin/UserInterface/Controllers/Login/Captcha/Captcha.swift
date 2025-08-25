@@ -103,6 +103,7 @@ extension Captcha: WKScriptMessageHandler {
             captchaViewController.presentationController?.delegate = self
             viewController.present(captchaViewController, animated: true, completion: nil)
         case .hCaptchaFailed:
+            Logger.login.error(category: "Captcha", message: "hCaptcha validation timeout")
             viewController?.dismiss(animated: true, completion: nil)
             showAutoHiddenHud(style: .error, text: R.string.localizable.validation_timed_out())
             completion?(.timedOut)

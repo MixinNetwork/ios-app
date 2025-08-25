@@ -55,15 +55,17 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 AppGroupUserDefaults.User.loginPINValidated = true
                 reporter.report(event: .loginEnd)
                 await MainActor.run {
-                    Logger.login.info(category: "CheckSessionEnvironment", message: "Validated")
+                    Logger.login.info(category: "LoginPINValidation", message: "Validated")
                     Logger.redirectTIPLogsToLogin = false
                     AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController()
                 }
             } catch MixinAPIResponseError.malformedPin {
+                Logger.login.error(category: "LoginPINValidation", message: "malformedPin...hasPIN:\(account.hasPIN)...hasSafe:\(account.hasSafe)")
                 await MainActor.run {
                     AppDelegate.current.mainWindow.rootViewController = LegacyPINViewController()
                 }
             } catch {
+                Logger.login.error(category: "LoginPINValidation", message: "Failed: \(error)")
                 await MainActor.run {
                     self.pinField.clear()
                     self.isBusy = false

@@ -8,7 +8,7 @@ final class ClockSkewViewController: UIViewController, CheckSessionEnvironmentCh
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Logger.login.error(category: "ClockSkew", message: "View did load")
+        Logger.login.info(category: "ClockSkew", message: "View did load")
     }
     
     @IBAction func continueAction(_ sender: Any) {

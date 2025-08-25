@@ -8,7 +8,7 @@ final class UpdateViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         descriptionLabel.text = R.string.localizable.app_update_tips(Bundle.main.shortVersionString)
-        Logger.login.error(category: "UpdateViewController", message: "View did load")
+        Logger.login.info(category: "UpdateViewController", message: "View did load")
     }
     
     @IBAction func continueAction(_ sender: Any) {

@@ -113,7 +113,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                     && Web3WalletDAO.shared.hasClassicWallet()
                 if isReady {
                     Logger.login.info(category: "CheckSessionEnvironment", message: "Everything ready")
-                    Logger.redirectTIPLogsToLogin = false
+                    Logger.redirectLogsToLogin = false
                     root = HomeContainerViewController()
                 } else {
                     Logger.login.info(category: "CheckSessionEnvironment", message: "Load TIP")

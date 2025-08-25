@@ -56,7 +56,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 reporter.report(event: .loginEnd)
                 await MainActor.run {
                     Logger.login.info(category: "LoginPINValidation", message: "Validated")
-                    Logger.redirectTIPLogsToLogin = false
+                    Logger.redirectLogsToLogin = false
                     AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController()
                 }
             } catch MixinAPIResponseError.malformedPin {

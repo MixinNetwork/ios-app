@@ -13,7 +13,7 @@ final class OnboardingViewController: UIViewController {
     @IBOutlet weak var actionsBottomConstraint: NSLayoutConstraint!
     
     init() {
-        Logger.redirectTIPLogsToLogin = true
+        Logger.redirectLogsToLogin = true
         let nib = R.nib.onboardingView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }

@@ -31,7 +31,7 @@ final class TIPNavigationController: GeneralAppearanceNavigationController {
     func finish() {
         if AppDelegate.current.mainWindow.rootViewController == self {
             Logger.tip.info(category: "TIPNavigation", message: "Finished")
-            Logger.redirectTIPLogsToLogin = false
+            Logger.redirectLogsToLogin = false
             AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController()
         } else {
             presentingViewController?.dismiss(animated: true)

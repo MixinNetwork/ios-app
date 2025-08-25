@@ -3,7 +3,7 @@ import Zip
 
 public enum Logger: Equatable {
     
-    public static var redirectTIPLogsToLogin = true
+    public static var redirectLogsToLogin = true
     
     case general
     case database
@@ -232,11 +232,11 @@ extension Logger {
         guard level != .debug else {
             return
         }
-        let redirectTIPLogsToLogin = Self.redirectTIPLogsToLogin
+        let redirectLogsToLogin = Self.redirectLogsToLogin
         Self.queue.async { [url=fileURL] in
             let appExtensionMark = isAppExtension ? "[AppExtension]" : ""
             let output = "\(formattedDate) \(appExtensionMark)\(level.output)[\(category)] \(message)\(formattedUserInfo)\n"
-            if redirectTIPLogsToLogin, self == .tip {
+            if redirectLogsToLogin {
                 write(output: output, toFileAt: Logger.login.fileURL)
             } else {
                 write(output: output, toFileAt: url)

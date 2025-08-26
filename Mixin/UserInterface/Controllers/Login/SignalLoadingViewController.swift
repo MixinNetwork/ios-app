@@ -24,6 +24,10 @@ final class SignalLoadingViewController: LoginLoadingViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         Logger.login.info(category: "SignalLoading", message: "isPrekeyLoaded:\(AppGroupUserDefaults.Crypto.isPrekeyLoaded), isSessionSynchronized:\(AppGroupUserDefaults.Crypto.isSessionSynchronized), isCircleSynchronized:\(AppGroupUserDefaults.User.isCircleSynchronized)")
         let startTime = Date()
         DispatchQueue.global().async {
@@ -45,7 +49,13 @@ final class SignalLoadingViewController: LoginLoadingViewController {
             reporter.report(event: .loginSignalInit)
         }
     }
-
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "sign_up"])
+    }
+    
     private func syncSignalKeys() {
         guard !AppGroupUserDefaults.Crypto.isPrekeyLoaded else {
             return

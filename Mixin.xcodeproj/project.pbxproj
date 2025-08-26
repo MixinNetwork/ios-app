@@ -4042,7 +4042,6 @@
 				7C1E798929DAC4D5006A07A2 /* DeviceTransferActionTableHeaderView.xib */,
 				7C7579D629DC573F0002DA0B /* DeviceTransferProgressView.xib */,
 				7C7579DE29DC61890002DA0B /* TransferToPhoneQRCodeView.xib */,
-				7CEB735329DB24F3006FB5B2 /* RestoreChatView.xib */,
 				7CEB735629DB272F006FB5B2 /* RestoreChatTableViewCell.swift */,
 				7CEB735729DB272F006FB5B2 /* RestoreChatTableViewCell.xib */,
 			);
@@ -4102,6 +4101,7 @@
 			isa = PBXGroup;
 			children = (
 				7C140DAA29E1560100F05506 /* View */,
+				7CEB735329DB24F3006FB5B2 /* RestoreChatView.xib */,
 				7CEB735229DB24F3006FB5B2 /* RestoreChatViewController.swift */,
 				7C140E9329E15B8200F05506 /* DeviceTransferSettingViewController.swift */,
 				7CFC1C8929E78DBE00A290D5 /* RestoreFromCloudViewController.swift */,

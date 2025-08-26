@@ -104,7 +104,11 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                 }
                 self.check()
             }
-            reload(content: signalLoading)
+            let navigationController = UINavigationController(rootViewController: signalLoading)
+            navigationController.navigationBar.standardAppearance = .secondaryBackgroundColor
+            navigationController.navigationBar.scrollEdgeAppearance = .secondaryBackgroundColor
+            navigationController.navigationBar.tintColor = R.color.icon_tint()
+            reload(content: navigationController)
         } else {
             let root: UIViewController
             if account.hasPIN {

@@ -117,10 +117,11 @@ extension TIP {
         )
         if remoteWallets.contains(where: { $0.wallet.category.knownCase == .classic }) {
             // Already registered
-            Logger.web3.info(category: "TIP+Web3", message: "Skip classic wallet register")
+            Logger.login.info(category: "TIP+Web3", message: "Skip classic wallet register")
             return
         }
         
+        Logger.login.info(category: "TIP+Web3", message: "Register default commmon wallet")
         let addresses = try await deriveAddresses(pin: pin, index: 0)
         let request = CreateWalletRequest(
             name: R.string.localizable.common_wallet(),
@@ -132,6 +133,7 @@ extension TIP {
             wallets: [defaultWallet.wallet],
             addresses: defaultWallet.addresses
         )
+        Logger.login.info(category: "TIP+Web3", message: "Registered")
     }
     
     private static func deriveEthereumPrivateKey(

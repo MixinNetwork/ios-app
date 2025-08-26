@@ -13,6 +13,7 @@ open class Reporter {
         case signUpEnd          = "sign_up_end"
         
         case loginStart         = "login_start"
+        case loginSMSVerify     = "login_sms_verify"
         case loginRestore       = "login_restore"
         case loginVerifyPIN     = "login_verify_pin"
         case loginCAPTCHA       = "login_captcha"

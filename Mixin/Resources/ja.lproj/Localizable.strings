@@ -819,6 +819,7 @@
 "mixin_contact" = "Mixin Contact";
 "mixin_id_or_phone" = "Mixin ID, 電話番号";
 "mixin_locked" = "Mixinはロックされています";
+"mixin_logs" = "Mixin Logs";
 "mixin_messenger_desktop" = "Mixin デスクトップ";
 "mixin_one" = "Mixin One";
 "mixin_one_desc" = "Start your Mixin premium journey";

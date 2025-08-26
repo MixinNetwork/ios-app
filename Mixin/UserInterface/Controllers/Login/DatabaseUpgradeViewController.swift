@@ -21,7 +21,7 @@ final class DatabaseUpgradeViewController: UIViewController, CheckSessionEnviron
     }
     
     private func upgrade() {
-        Logger.general.info(category: "DatabaseUpgrade", message: "Begin upgrade with app state: \(UIApplication.shared.applicationStateString)")
+        Logger.login.info(category: "DatabaseUpgrade", message: "Begin upgrade with app state: \(UIApplication.shared.applicationStateString)")
         guard UIApplication.shared.applicationState == .active else {
             return
         }

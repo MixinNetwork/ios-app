@@ -5,6 +5,10 @@ import MixinServices
 
 class SignUpWithMobileNumberViewController: MobileNumberViewController, Captcha.Reporting {
     
+    var intent: PhoneNumberVerificationContext.Intent {
+        .signUp
+    }
+    
     var reportingContent: (event: Reporter.Event, method: String) {
         (event: .signUpCAPTCHA, method: "phone_number")
     }
@@ -56,28 +60,31 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController, Captcha.
     
     func requestVerificationCode(captchaToken token: CaptchaToken?) {
         updateViews(isBusy: true)
+        Logger.login.info(category: "SignUpWithMobileNumber", message: "Request code")
         let phoneNumber = fullNumber(withSpacing: false)
         let displayPhoneNumber = fullNumber(withSpacing: true)
         self.request = AccountAPI.sessionVerifications(
             phoneNumber: phoneNumber,
             captchaToken: token
-        ) { [weak self] (result) in
+        ) { [weak self, intent] (result) in
             guard let self else {
                 return
             }
             switch result {
             case let .success(verification):
                 let context = PhoneNumberVerificationContext(
+                    intent: intent,
                     phoneNumber: phoneNumber,
                     displayPhoneNumber: displayPhoneNumber,
                     deactivation: verification.deactivation,
                     verificationID: verification.id,
                     hasEmergencyContact: verification.hasEmergencyContact
                 )
-                let vc = PhoneNumberLoginVerificationCodeViewController(context: context)
-                self.navigationController?.pushViewController(vc, animated: true)
+                let verify = PhoneNumberLoginVerificationCodeViewController(context: context)
+                self.navigationController?.pushViewController(verify, animated: true)
                 self.updateViews(isBusy: false)
             case let .failure(error):
+                Logger.login.error(category: "SignUpWithMobileNumber", message: "Failed: \(error)")
                 switch error {
                 case .requiresCaptcha:
                     captcha.validate { [weak self] (result) in
@@ -120,7 +127,7 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController, Captcha.
     }
     
     @objc func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
         present(customerService, animated: true)
         reporter.report(event: .customerServiceDialog, tags: ["source": "sign_up_phone_number"])
     }

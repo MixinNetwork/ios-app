@@ -819,6 +819,7 @@
 "mixin_contact" = "Mixin Contact";
 "mixin_id_or_phone" = "Mixin ID, Phone number";
 "mixin_locked" = "Mixin Locked";
+"mixin_logs" = "Mixin Logs";
 "mixin_messenger_desktop" = "Mixin Messenger Desktop";
 "mixin_one" = "Mixin One";
 "mixin_one_desc" = "Start your Mixin premium journey";

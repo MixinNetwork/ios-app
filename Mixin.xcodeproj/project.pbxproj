@@ -1156,6 +1156,8 @@
 		9495E7332CF4420100124CC7 /* RecoveryKitFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9495E7322CF4420100124CC7 /* RecoveryKitFooterView.swift */; };
 		94960DA42C929D3C00FB17E2 /* MarketAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94960DA12C929D3C00FB17E2 /* MarketAlertViewController.swift */; };
 		9496DF2C2DFB377100F6DE26 /* InsufficientBalanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9496DF2B2DFB377100F6DE26 /* InsufficientBalanceViewController.swift */; };
+		949775782E57733C00B0BB81 /* LoginLogView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 949775772E57733C00B0BB81 /* LoginLogView.xib */; };
+		949775792E57733C00B0BB81 /* LoginLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949775762E57733C00B0BB81 /* LoginLogViewController.swift */; };
 		9497AEA92C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9497AEA82C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift */; };
 		9497AEE92C5E264600966946 /* MixinTransactionHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9497AEE82C5E264600966946 /* MixinTransactionHistoryViewController.swift */; };
 		9497AEEE2C5E69B000966946 /* TransactionHistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9497AEED2C5E69B000966946 /* TransactionHistoryView.xib */; };
@@ -2852,6 +2854,8 @@
 		9495E7322CF4420100124CC7 /* RecoveryKitFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryKitFooterView.swift; sourceTree = "<group>"; };
 		94960DA12C929D3C00FB17E2 /* MarketAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertViewController.swift; sourceTree = "<group>"; };
 		9496DF2B2DFB377100F6DE26 /* InsufficientBalanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsufficientBalanceViewController.swift; sourceTree = "<group>"; };
+		949775762E57733C00B0BB81 /* LoginLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLogViewController.swift; sourceTree = "<group>"; };
+		949775772E57733C00B0BB81 /* LoginLogView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginLogView.xib; sourceTree = "<group>"; };
 		9497AEA82C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBackgroundConfiguration+GroupedCell.swift"; sourceTree = "<group>"; };
 		9497AEE82C5E264600966946 /* MixinTransactionHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinTransactionHistoryViewController.swift; sourceTree = "<group>"; };
 		9497AEED2C5E69B000966946 /* TransactionHistoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionHistoryView.xib; sourceTree = "<group>"; };
@@ -3717,6 +3721,8 @@
 				DF75FF4324FE61E1008A7CF3 /* UpdateViewController.swift */,
 				94E978D02D09B7D600FFCC12 /* LegacyPINView.xib */,
 				94E978CF2D09B7D600FFCC12 /* LegacyPINViewController.swift */,
+				949775772E57733C00B0BB81 /* LoginLogView.xib */,
+				949775762E57733C00B0BB81 /* LoginLogViewController.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -4036,7 +4042,6 @@
 				7C1E798929DAC4D5006A07A2 /* DeviceTransferActionTableHeaderView.xib */,
 				7C7579D629DC573F0002DA0B /* DeviceTransferProgressView.xib */,
 				7C7579DE29DC61890002DA0B /* TransferToPhoneQRCodeView.xib */,
-				7CEB735329DB24F3006FB5B2 /* RestoreChatView.xib */,
 				7CEB735629DB272F006FB5B2 /* RestoreChatTableViewCell.swift */,
 				7CEB735729DB272F006FB5B2 /* RestoreChatTableViewCell.xib */,
 			);
@@ -4096,6 +4101,7 @@
 			isa = PBXGroup;
 			children = (
 				7C140DAA29E1560100F05506 /* View */,
+				7CEB735329DB24F3006FB5B2 /* RestoreChatView.xib */,
 				7CEB735229DB24F3006FB5B2 /* RestoreChatViewController.swift */,
 				7C140E9329E15B8200F05506 /* DeviceTransferSettingViewController.swift */,
 				7CFC1C8929E78DBE00A290D5 /* RestoreFromCloudViewController.swift */,
@@ -6339,6 +6345,7 @@
 				94FE11F62DA7AC830026AB9A /* Web3TransactionCell.xib in Resources */,
 				DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */,
 				94038BC62E1FF51200A7782D /* TransferWalletSelectorView.xib in Resources */,
+				949775782E57733C00B0BB81 /* LoginLogView.xib in Resources */,
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
 				9B8D579A1F9F0ADA008A7957 /* Chat.storyboard in Resources */,
 				944C61022B6AB2E700C7DF06 /* AuthenticationPreviewInfoCell.xib in Resources */,
@@ -7216,6 +7223,7 @@
 				E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */,
 				7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */,
 				7B7DACA623505793006AA2AC /* AudioCell.swift in Sources */,
+				949775792E57733C00B0BB81 /* LoginLogViewController.swift in Sources */,
 				5E5CA86D2674B09100C1E113 /* ScreenLockSettingViewController.swift in Sources */,
 				DF5D9F251F9C79E10036D5FD /* LocalizedExtension.swift in Sources */,
 				94510FCE2C8742BC00ACD972 /* MarketTokenSelectorViewController.swift in Sources */,

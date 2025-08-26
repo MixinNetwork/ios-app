@@ -16,6 +16,10 @@ final class RestoreChatViewController: UIViewController, CheckSessionEnvironment
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(R.nib.restoreChatTableViewCell)
@@ -29,6 +33,12 @@ final class RestoreChatViewController: UIViewController, CheckSessionEnvironment
         AppGroupUserDefaults.Account.canRestoreFromPhone = false
         AppGroupUserDefaults.Account.canRestoreMedia = false
         checkSessionEnvironmentAgain()
+    }
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "sign_up"])
     }
     
 }

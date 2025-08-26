@@ -75,7 +75,8 @@ final class CheckSessionEnvironmentViewController: UIViewController {
             Logger.login.info(category: "CheckSessionEnvironment", message: "Create username")
             isUsernameJustInitialized = true
             let username = UsernameViewController()
-            reload(content: username)
+            let navigationController = GeneralAppearanceNavigationController(rootViewController: username)
+            reload(content: navigationController)
         } else if AppGroupUserDefaults.Account.canRestoreFromPhone {
             Logger.login.info(category: "CheckSessionEnvironment", message: "Restore chat")
             let restore = RestoreChatViewController()

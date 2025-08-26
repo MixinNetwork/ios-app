@@ -267,9 +267,12 @@ extension MixinAPI {
         return makeRequest(session)
             .validate(statusCode: 200...299)
             .responseData(queue: queue, completionHandler: { (response) in
+                let requestId = response.request?.value(forHTTPHeaderField: "x-request-id") ?? ""
+                let path = response.request?.url?.path ?? "(null)"
+                
                 switch response.result {
                 case .success(let data):
-                    if let requestId = response.request?.value(forHTTPHeaderField: "x-request-id"), !requestId.isEmpty {
+                    if !requestId.isEmpty {
                         let responseRequestId = response.response?.value(forHTTPHeaderField: "x-request-id") ?? ""
                         if requestId != responseRequestId {
                             Logger.general.error(category: "MixinAPI", message: "Mismatched request id. Request path: \(response.request?.url?.path), id: \(requestId), responded header: \(response.response?.allHeaderFields)")
@@ -289,13 +292,11 @@ extension MixinAPI {
                             completion(.success(try JSONDecoder.default.decode(Response.self, from: data)))
                         }
                     } catch {
-                        Logger.general.error(category: "MixinAPI", message: "Failed to decode response: \(error)" )
+                        Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed to decode response: \(error)" )
                         reporter.report(error: error)
                         completion(.failure(.invalidJSON(error)))
                     }
                 case let .failure(error):
-                    let path = response.request?.url?.path ?? "(null)"
-                    let requestId = response.request?.value(forHTTPHeaderField: "x-request-id") ?? "(null)"
                     Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)" )
                     if shouldToggleServer(for: error) {
                         MixinHost.toggle(currentHttpHost: host)

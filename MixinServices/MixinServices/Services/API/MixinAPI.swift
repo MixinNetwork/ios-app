@@ -287,12 +287,13 @@ extension MixinAPI {
                         } else if case .some(.unauthorized) = responseObject.error {
                             handleDeauthorization(response: response.response)
                         } else if let error = responseObject.error {
+                            Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed with error: \(error)")
                             completion(.failure(.response(error)))
                         } else {
                             completion(.success(try JSONDecoder.default.decode(Response.self, from: data)))
                         }
                     } catch {
-                        Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed to decode response: \(error)" )
+                        Logger.general.error(category: "MixinAPI", message: "Request with path: \(path), id: \(requestId), failed to decode response: \(error)")
                         reporter.report(error: error)
                         completion(.failure(.invalidJSON(error)))
                     }

@@ -6,6 +6,8 @@ final class LoginLogViewController: UIViewController {
     @IBOutlet weak var titleView: PopupTitleView!
     @IBOutlet weak var textView: UITextView!
     
+    private var exportedLogURLs: [URL] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         titleView.titleLabel.text = R.string.localizable.mixin_logs()
@@ -33,16 +35,36 @@ final class LoginLogViewController: UIViewController {
         }
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        DispatchQueue.global().async { [exportedLogURLs] in
+            for url in exportedLogURLs {
+                try? FileManager.default.removeItem(at: url)
+            }
+        }
+    }
+    
     @objc private func close(_ sender: Any) {
         presentingViewController?.dismiss(animated: true)
     }
     
     @objc private func saveLog(_ sender: Any) {
-        guard let url = Logger.export(conversationID: nil), FileManager.default.fileSize(url.path) > 0 else {
-            return
+        do {
+            let fileManager: FileManager = .default
+            let tempURL = try fileManager.url(
+                for: .cachesDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+            let loginLogURL = tempURL.appendingPathComponent("login.txt", conformingTo: .text)
+            try fileManager.copyItem(at: Logger.login.fileURL, to: loginLogURL)
+            let share = UIActivityViewController(activityItems: [loginLogURL], applicationActivities: nil)
+            present(share, animated: true)
+            exportedLogURLs.append(loginLogURL)
+        } catch {
+            alert(R.string.localizable.failed(), message: error.localizedDescription)
         }
-        let share = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-        present(share, animated: true)
     }
     
     @objc private func copyLog(_ sender: Any) {

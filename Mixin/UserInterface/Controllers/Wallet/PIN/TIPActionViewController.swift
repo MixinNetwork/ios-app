@@ -52,6 +52,10 @@ final class TIPActionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         progressLabel.font = UIFontMetrics.default.scaledFont(for: .monospacedDigitSystemFont(ofSize: 14, weight: .regular))
         progressLabel.adjustsFontForContentSizeCategory = true
         performAction()
@@ -60,6 +64,12 @@ final class TIPActionViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         Logger.tip.info(category: "TIPAction", message: "View did appear with action: \(action.debugDescription)")
+    }
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "tip_action"])
     }
     
     private func performAction() {

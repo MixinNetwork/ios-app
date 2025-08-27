@@ -225,6 +225,7 @@ final class TIPActionViewController: UIViewController {
                 }
             }
         } catch {
+            Logger.tip.error(category: "TIPAction", message: "Handle failed with: \(error)")
             await MainActor.run {
                 let intro: TIPIntroViewController
                 switch action {

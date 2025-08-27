@@ -218,15 +218,10 @@ extension TIPIntroViewController {
         default:
             navigationItem.leftBarButtonItem = nil
         }
-        switch intent {
-        case .create:
-            navigationItem.rightBarButtonItem = .customerService(
-                target: self,
-                action: #selector(presentCustomerService(_:))
-            )
-        case .change, .migrate:
-            navigationItem.rightBarButtonItem = nil
-        }
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
     }
     
     private func setNoticeHidden(_ hidden: Bool) {

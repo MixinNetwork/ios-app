@@ -942,6 +942,15 @@
 		9459693628B28F18006F5421 /* TIPNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459693528B28F18006F5421 /* TIPNavigationController.swift */; };
 		9459693928B28FF8006F5421 /* TIPActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9459693728B28FF8006F5421 /* TIPActionViewController.swift */; };
 		9459693A28B28FF8006F5421 /* TIPActionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9459693828B28FF8006F5421 /* TIPActionView.xib */; };
+		945A72782E59BC48006A11E9 /* TIPQuizView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945A72772E59BC48006A11E9 /* TIPQuizView.xib */; };
+		945A72792E59BC48006A11E9 /* TIPQuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A72762E59BC48006A11E9 /* TIPQuizViewController.swift */; };
+		945A72882E59BE1F006A11E9 /* TIPQuizQuestionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945A72872E59BE1F006A11E9 /* TIPQuizQuestionCell.xib */; };
+		945A72892E59BE1F006A11E9 /* TIPQuizQuestionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A72862E59BE1F006A11E9 /* TIPQuizQuestionCell.swift */; };
+		945A72922E59BE2E006A11E9 /* TIPQuizAnswerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945A72912E59BE2E006A11E9 /* TIPQuizAnswerCell.xib */; };
+		945A72932E59BE2E006A11E9 /* TIPQuizAnswerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A72902E59BE2E006A11E9 /* TIPQuizAnswerCell.swift */; };
+		945A72C02E59C8BF006A11E9 /* TIPQuizAnswer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A72BF2E59C8BB006A11E9 /* TIPQuizAnswer.swift */; };
+		945A72E12E59EE38006A11E9 /* TIPQuizAnswerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945A72E02E59EE38006A11E9 /* TIPQuizAnswerView.xib */; };
+		945A72E22E59EE38006A11E9 /* TIPQuizAnswerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945A72DF2E59EE38006A11E9 /* TIPQuizAnswerViewController.swift */; };
 		945AA6582567B18200B39415 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945AA6572567B18200B39415 /* Country.swift */; };
 		945C59102DC215A90024F6DE /* MembershipViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945C590F2DC215A50024F6DE /* MembershipViewController.swift */; };
 		945C59192DC215F60024F6DE /* MembershipCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945C59172DC215F60024F6DE /* MembershipCell.swift */; };
@@ -2627,6 +2636,15 @@
 		9459693528B28F18006F5421 /* TIPNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPNavigationController.swift; sourceTree = "<group>"; };
 		9459693728B28FF8006F5421 /* TIPActionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPActionViewController.swift; sourceTree = "<group>"; };
 		9459693828B28FF8006F5421 /* TIPActionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPActionView.xib; sourceTree = "<group>"; };
+		945A72762E59BC48006A11E9 /* TIPQuizViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPQuizViewController.swift; sourceTree = "<group>"; };
+		945A72772E59BC48006A11E9 /* TIPQuizView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPQuizView.xib; sourceTree = "<group>"; };
+		945A72862E59BE1F006A11E9 /* TIPQuizQuestionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPQuizQuestionCell.swift; sourceTree = "<group>"; };
+		945A72872E59BE1F006A11E9 /* TIPQuizQuestionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPQuizQuestionCell.xib; sourceTree = "<group>"; };
+		945A72902E59BE2E006A11E9 /* TIPQuizAnswerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPQuizAnswerCell.swift; sourceTree = "<group>"; };
+		945A72912E59BE2E006A11E9 /* TIPQuizAnswerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPQuizAnswerCell.xib; sourceTree = "<group>"; };
+		945A72BF2E59C8BB006A11E9 /* TIPQuizAnswer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPQuizAnswer.swift; sourceTree = "<group>"; };
+		945A72DF2E59EE38006A11E9 /* TIPQuizAnswerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPQuizAnswerViewController.swift; sourceTree = "<group>"; };
+		945A72E02E59EE38006A11E9 /* TIPQuizAnswerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPQuizAnswerView.xib; sourceTree = "<group>"; };
 		945AA6572567B18200B39415 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
 		945C590F2DC215A50024F6DE /* MembershipViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipViewController.swift; sourceTree = "<group>"; };
 		945C59172DC215F60024F6DE /* MembershipCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipCell.swift; sourceTree = "<group>"; };
@@ -4709,6 +4727,15 @@
 				94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */,
 				9459693728B28FF8006F5421 /* TIPActionViewController.swift */,
 				943A63E228BDEC27008E0F78 /* TIPPopupInputViewController.swift */,
+				945A72BF2E59C8BB006A11E9 /* TIPQuizAnswer.swift */,
+				945A72872E59BE1F006A11E9 /* TIPQuizQuestionCell.xib */,
+				945A72862E59BE1F006A11E9 /* TIPQuizQuestionCell.swift */,
+				945A72912E59BE2E006A11E9 /* TIPQuizAnswerCell.xib */,
+				945A72902E59BE2E006A11E9 /* TIPQuizAnswerCell.swift */,
+				945A72772E59BC48006A11E9 /* TIPQuizView.xib */,
+				945A72762E59BC48006A11E9 /* TIPQuizViewController.swift */,
+				945A72E02E59EE38006A11E9 /* TIPQuizAnswerView.xib */,
+				945A72DF2E59EE38006A11E9 /* TIPQuizAnswerViewController.swift */,
 			);
 			path = PIN;
 			sourceTree = "<group>";
@@ -6219,6 +6246,7 @@
 				94CD471D2BECAE9D00A3DE10 /* InscriptionHashCell.xib in Resources */,
 				7B833E9D22C4AED20063929D /* ic_app_loading@3x.webp in Resources */,
 				946983B529D2A0DE00E73428 /* NetworkFeeOptionCell.xib in Resources */,
+				945A72782E59BC48006A11E9 /* TIPQuizView.xib in Resources */,
 				274264A920011C79000A8808 /* mixin.caf in Resources */,
 				94317D082AFBE57200FDC9C9 /* MemoCell.xib in Resources */,
 				94095BB725BE8BC100F44832 /* TextPreviewView.xib in Resources */,
@@ -6338,6 +6366,7 @@
 				9417EF352DC3549C005079CB /* MembershipBenefitCell.xib in Resources */,
 				941979552BA47782002BA19F /* Web3MessageCell.xib in Resources */,
 				7B595359226749A100D59DB4 /* PeerCell.xib in Resources */,
+				945A72E12E59EE38006A11E9 /* TIPQuizAnswerView.xib in Resources */,
 				948723392C9DF6380034BCB0 /* AddMarketAlertView.xib in Resources */,
 				940EF8B12C8AE573000AD1C6 /* ShareMarketAsPictureView.xib in Resources */,
 				94DC24392D08051C006501B3 /* DesktopSessionValidationView.xib in Resources */,
@@ -6421,6 +6450,7 @@
 				94DD0D882DC327ED00C70CA2 /* MembershipPlanSelectorCell.xib in Resources */,
 				7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */,
 				949A3686261D9C5C004251B2 /* post.css in Resources */,
+				945A72922E59BE2E006A11E9 /* TIPQuizAnswerCell.xib in Resources */,
 				7C0E15E1270053AC002FC718 /* UnknownURLWindow.xib in Resources */,
 				94E978B32D09818B00FFCC12 /* ClockSkewView.xib in Resources */,
 				94CA5C572CE5F5F80086C484 /* PaymentCollectibleCell.xib in Resources */,
@@ -6486,6 +6516,7 @@
 				7C952D0027E036240083F92B /* ExpiredMessageTableHeaderView.xib in Resources */,
 				94CB85DA2C6B4EC600135641 /* TokenInfoCell.xib in Resources */,
 				94902E462DA6CD6D00E52FC6 /* SimpleWeb3TransactionTableHeaderView.xib in Resources */,
+				945A72882E59BE1F006A11E9 /* TIPQuizQuestionCell.xib in Resources */,
 				944C61082B6AB6B400C7DF06 /* AuthenticationPreviewCompactInfoCell.xib in Resources */,
 				DFE356B51FB4990100E0E3A8 /* Setting.storyboard in Resources */,
 				9489247F2D572EA200D9BCCB /* TokenReceiverTrayView.xib in Resources */,
@@ -7528,6 +7559,7 @@
 				9414A7832BE78C2F00FA35EB /* Web3TransferInputAmountViewController.swift in Sources */,
 				94D3CEA22C3EFD4B00E1E542 /* AppCardV1MessageCell.swift in Sources */,
 				DF2A245E1FCC5D15003A8C1E /* GroupAddMemberCell.swift in Sources */,
+				945A72E22E59EE38006A11E9 /* TIPQuizAnswerViewController.swift in Sources */,
 				DFB6CE1E23C4805B00FB6615 /* KeychainExtension.swift in Sources */,
 				7B2E3E5A1FA0816D00DDDDEB /* LoginContinueButton.swift in Sources */,
 				944C60FC2B6A896400C7DF06 /* AuthenticationPreviewHeaderView.swift in Sources */,
@@ -7861,6 +7893,7 @@
 				7CEB736229DBC894006FB5B2 /* DeviceTransferAsset.swift in Sources */,
 				947BE3EF2DBA95B100A98677 /* ReviewPendingWeb3TransactionJob.swift in Sources */,
 				E08F4DDC2395345500C0D021 /* SharedAppCell.swift in Sources */,
+				945A72792E59BC48006A11E9 /* TIPQuizViewController.swift in Sources */,
 				7B9F810E222EA3EC0012BFDD /* PopupPresentationAnimator.swift in Sources */,
 				94D63DD62646C29100FD7EE8 /* MessageViewModelFactory.swift in Sources */,
 				94BF6D5B2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift in Sources */,
@@ -7902,9 +7935,11 @@
 				94F268032E1586EF00A8A1E0 /* AddressAssets.swift in Sources */,
 				7B5E9B4C2437434D000AE24E /* CircleEditingButton.swift in Sources */,
 				7B4CBDC22528533600BA66D0 /* ClipSwitcher.swift in Sources */,
+				945A72892E59BE1F006A11E9 /* TIPQuizQuestionCell.swift in Sources */,
 				941995022CCE79E700F5425C /* IntroductionViewController.swift in Sources */,
 				942FD6762D38CF46004DCC4C /* SwapOrderTableViewController.swift in Sources */,
 				94CB85CF2C6B43A900135641 /* TokenMyBalanceCell.swift in Sources */,
+				945A72932E59BE2E006A11E9 /* TIPQuizAnswerCell.swift in Sources */,
 				948FBC882D6EF5CE000795E4 /* CommonWalletViewController.swift in Sources */,
 				9458A0942CC9450C00A51154 /* MnemonicsViewController.swift in Sources */,
 				7CB17B642771602A00CF4C94 /* DeleteAccountConfirmWindow.swift in Sources */,
@@ -7999,6 +8034,7 @@
 				7B9F8110222EA40F0012BFDD /* BackgroundDismissablePopupPresentationController.swift in Sources */,
 				7B36920C233B36D4007321A7 /* MediaTypeOverlayView.swift in Sources */,
 				7BC2D27F21992FA9002FAC1D /* SnapshotCell.swift in Sources */,
+				945A72C02E59C8BF006A11E9 /* TIPQuizAnswer.swift in Sources */,
 				94D9DF6125F89D6E00FC2F28 /* PopupTip.swift in Sources */,
 				7B3CDA6824FFF2D8003A3E80 /* AnimatedStickerView.swift in Sources */,
 				7C8FA8F62768926D00855AFD /* SecuritySettingViewController.swift in Sources */,

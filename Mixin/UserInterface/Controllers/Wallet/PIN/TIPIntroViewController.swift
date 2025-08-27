@@ -179,6 +179,12 @@ final class TIPIntroViewController: UIViewController {
         navigationController?.presentingViewController?.dismiss(animated: true)
     }
     
+    @objc func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "tip_intro"])
+    }
+    
 }
 
 extension TIPIntroViewController: CoreTextLabelDelegate {
@@ -212,6 +218,10 @@ extension TIPIntroViewController {
         default:
             navigationItem.leftBarButtonItem = nil
         }
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
     }
     
     private func setNoticeHidden(_ hidden: Bool) {

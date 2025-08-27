@@ -284,6 +284,7 @@
 "chat_text_size" = "Chat Text Size";
 "chat_waiting" = "オンラインで暗号化されたやりとりを開始するまであと%1$@。%2$@";
 "chats" = "Chats";
+"check_answer" = "Check answer";
 "check_backup" = "Check Backup";
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
@@ -1388,6 +1389,12 @@
 "tip_create_pin_title" = "6桁のPINコードを作成してください";
 "tip_creation_introduction" = "Set a 6 digit Wallet PIN to create your first digital wallet, the PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
 "tip_introduction" = "The 6-digit PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
+"tip_quiz_answer" = "The PIN is the key to your wallet, and it’s unrecoverable if lost.";
+"tip_quiz_correct_answer" = "I’ll lose access to my account and funds.";
+"tip_quiz_question" = "What happens if I lose my PIN?";
+"tip_quiz_title_correct" = "Correct!";
+"tip_quiz_title_wrong" = "Oops, wrong answer";
+"tip_quiz_wrong_answer" = "I can recover my account later.";
 "title_participants" = "%d人の参加者";
 "title_participants_count" = "%d人の参加者";
 "to" = "宛先";
@@ -1510,6 +1517,7 @@
 "url_unrecognized_hint" = "%@を認識できません、Mixinを最新版にアップデートするか、もしくは開発陣に連絡してリンクを確認してください。";
 "url_unsupported_message" = "https://support.mixin.one/en/article/how-to-do-when-you-receive-a-message-like-this-this-type-of-message-is-not-supported-please-upgrade-mixin-17j1t3p/";
 "url_watch_wallet" = "https://support.mixin.one/en/article/how-to-add-a-watch-only-address-17ifo8w";
+"url_what_is_pin" = "https://support.mixin.one/en/article/what-is-pin-1pjyhow/";
 "use_another_address" = "Use Another Address";
 "use_biometry" = "%@を使用する";
 "use_system_text_size" = "Use System Text Size";

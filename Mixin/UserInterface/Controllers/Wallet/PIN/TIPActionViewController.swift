@@ -52,6 +52,10 @@ final class TIPActionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         progressLabel.font = UIFontMetrics.default.scaledFont(for: .monospacedDigitSystemFont(ofSize: 14, weight: .regular))
         progressLabel.adjustsFontForContentSizeCategory = true
         performAction()
@@ -60,6 +64,12 @@ final class TIPActionViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         Logger.tip.info(category: "TIPAction", message: "View did appear with action: \(action.debugDescription)")
+    }
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "tip_action"])
     }
     
     private func performAction() {
@@ -173,17 +183,20 @@ final class TIPActionViewController: UIViewController {
     @MainActor
     private func finish() {
         Logger.tip.info(category: "TIPAction", message: "Finished successfully")
-        let title: String
         switch action {
         case .create:
-            title = R.string.localizable.set_pin_successfully()
+            alert(R.string.localizable.set_pin_successfully()) { (_) in
+                let quiz = TIPQuizViewController()
+                self.tipNavigationController?.setViewControllers([quiz], animated: true)
+            }
         case .change:
-            title = R.string.localizable.change_pin_successfully()
+            alert(R.string.localizable.change_pin_successfully()) { (_) in
+                self.tipNavigationController?.finish()
+            }
         case .migrate:
-            title = R.string.localizable.upgrade_tip_successfully()
-        }
-        alert(title) { (_) in
-            self.tipNavigationController?.finish()
+            alert(R.string.localizable.upgrade_tip_successfully()) { (_) in
+                self.tipNavigationController?.finish()
+            }
         }
     }
     
@@ -212,6 +225,7 @@ final class TIPActionViewController: UIViewController {
                 }
             }
         } catch {
+            Logger.tip.error(category: "TIPAction", message: "Handle failed with: \(error)")
             await MainActor.run {
                 let intro: TIPIntroViewController
                 switch action {

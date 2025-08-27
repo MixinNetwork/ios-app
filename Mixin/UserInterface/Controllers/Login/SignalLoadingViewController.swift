@@ -53,7 +53,7 @@ final class SignalLoadingViewController: LoginLoadingViewController {
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
         present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "sign_up"])
+        reporter.report(event: .customerServiceDialog, tags: ["source": "signal_loading"])
     }
     
     private func syncSignalKeys() {

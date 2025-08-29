@@ -875,7 +875,6 @@
 		944A5A722C2604F70021460C /* CollectibleCollectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944A5A712C2604F70021460C /* CollectibleCollectionHeaderView.swift */; };
 		944A5A772C2605720021460C /* CollectibleCollectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944A5A762C2605720021460C /* CollectibleCollectionHeaderView.xib */; };
 		944A5A7C2C260D220021460C /* CollectibleCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944A5A7B2C260D220021460C /* CollectibleCollectionViewController.swift */; };
-		944B1BEE2A4CB0AA00C36B61 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 944B1BED2A4CB0AA00C36B61 /* CryptoSwift */; };
 		944B5A5C2CFCA7EE000BB893 /* UINavigationBarAppearance+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944B5A5B2CFCA7EB000BB893 /* UINavigationBarAppearance+General.swift */; };
 		944B5A822CFCB947000BB893 /* NavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944B5A812CFCB940000BB893 /* NavigationTitleView.swift */; };
 		944BC2D32C7C71B4008700A8 /* OutlineSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944BC2D22C7C71B4008700A8 /* OutlineSegmentedControl.swift */; };
@@ -3373,7 +3372,6 @@
 				DFAA4B37200F627500C696D3 /* SafariServices.framework in Frameworks */,
 				94341BFB2862F302009C9147 /* libopusenc.xcframework in Frameworks */,
 				DF2A24481FC7CFA8003A8C1E /* LocalAuthentication.framework in Frameworks */,
-				944B1BEE2A4CB0AA00C36B61 /* CryptoSwift in Frameworks */,
 				DF5D9F331F9C95570036D5FD /* CoreTelephony.framework in Frameworks */,
 				94DA83762588E595006B0F16 /* WebRTC.xcframework in Frameworks */,
 				273A5E0C1F95EA5100AE802F /* Contacts.framework in Frameworks */,
@@ -6058,7 +6056,6 @@
 			packageProductDependencies = (
 				9416231929BEEFB800E540B9 /* OrderedCollections */,
 				9481C03B2A49A9AA0009DAF8 /* Starscream */,
-				944B1BED2A4CB0AA00C36B61 /* CryptoSwift */,
 				94787E172A7C071E00BB0124 /* QRCode */,
 				94881FAB2AD035ED00CA7A29 /* RswiftLibrary */,
 				9479B7842BBBE589002A2C4F /* web3.swift */,
@@ -6212,7 +6209,6 @@
 			packageReferences = (
 				9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
-				944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 				94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */,
 				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */,
 				94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
@@ -8834,14 +8830,6 @@
 				version = 1.1.0;
 			};
 		};
-		944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
-			requirement = {
-				kind = exactVersion;
-				version = 1.8.1;
-			};
-		};
 		94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/WalletConnect/QRCode";
@@ -8897,11 +8885,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
-		};
-		944B1BED2A4CB0AA00C36B61 /* CryptoSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 944B1BEC2A4CB0AA00C36B61 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
-			productName = CryptoSwift;
 		};
 		94787E172A7C071E00BB0124 /* QRCode */ = {
 			isa = XCSwiftPackageProductDependency;

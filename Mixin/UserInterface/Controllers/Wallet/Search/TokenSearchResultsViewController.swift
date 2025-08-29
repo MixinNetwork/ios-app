@@ -84,9 +84,12 @@ final class TokenSearchResultsViewController: WalletSearchTableViewController {
                 return one.name < another.name
             }
             
-            var localItems = TokenDAO.shared
-                .search(keyword: keyword, sortResult: false, limit: nil)
-                .sorted(by: assetSorting)
+            var localItems = TokenDAO.shared.search(
+                keyword: keyword,
+                includesZeroBalanceItems: true,
+                sorting: false,
+                limit: nil
+            ).sorted(by: assetSorting)
             if let ids = supportedChainIDs {
                 localItems = localItems.filter { item in
                     ids.contains(item.chainID)
@@ -117,7 +120,6 @@ final class TokenSearchResultsViewController: WalletSearchTableViewController {
                 return
             }
             
-            localItems = localItems.filter{ $0.decimalBalance > 0 }
             let localIds = Set(localItems.map(\.assetID))
             let remoteItems = remoteAssets.compactMap({ (token) -> MixinTokenItem? in
                 guard !localIds.contains(token.assetID) else {

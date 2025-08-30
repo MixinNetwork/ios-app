@@ -1,5 +1,5 @@
 import Foundation
-import XKCP_SimpleFIPS202
+import XKCP_FIPS202
 import secp256k1
 import ReownWalletKit
 
@@ -31,11 +31,14 @@ extension Web3CryptoProvider {
             let output = malloc(outputCount)!
             
             var hasher = Keccak_HashInstance()
-            var result = HashReturn(0)
-            Keccak_HashInitialize(&hasher, 1088, 512, 256, 0x01)
+            var result = Keccak_HashInitialize(&hasher, 1088, 512, 256, 0x01)
+            guard result.rawValue == 0 else {
+                free(output)
+                return nil
+            }
             
-            result = data.withUnsafeUInt8Pointer { input in
-                Keccak_HashUpdate(&hasher, input, data.count * 8)
+            result = data.withUnsafeBytes { buffer in
+                Keccak_HashUpdate(&hasher, buffer.baseAddress, buffer.count * 8)
             }
             guard result.rawValue == 0 else {
                 free(output)

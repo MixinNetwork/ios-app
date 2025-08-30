@@ -1,5 +1,5 @@
 import Foundation
-import CryptoSwift
+import XKCP_FIPS202
 import secp256k1
 import ReownWalletKit
 
@@ -16,9 +16,44 @@ struct Web3CryptoProvider: CryptoProvider {
     }
     
     func keccak256(_ data: Data) -> Data {
-        let digest = SHA3(variant: .keccak256)
-        let hash = digest.calculate(for: [UInt8](data))
-        return Data(hash)
+        Keccak256.hash(data: data) ?? Data()
+    }
+    
+}
+
+extension Web3CryptoProvider {
+    
+    private enum Keccak256 {
+        
+        private static let outputCount = 32
+        
+        public static func hash(data: Data) -> Data? {
+            let output = malloc(outputCount)!
+            
+            var hasher = Keccak_HashInstance()
+            var result = Keccak_HashInitialize(&hasher, 1088, 512, 256, 0x01)
+            guard result.rawValue == 0 else {
+                free(output)
+                return nil
+            }
+            
+            result = data.withUnsafeBytes { buffer in
+                Keccak_HashUpdate(&hasher, buffer.baseAddress, buffer.count * 8)
+            }
+            guard result.rawValue == 0 else {
+                free(output)
+                return nil
+            }
+            
+            result = Keccak_HashFinal(&hasher, output)
+            guard result.rawValue == 0 else {
+                free(output)
+                return nil
+            }
+            
+            return Data(bytesNoCopy: output, count: outputCount, deallocator: .free)
+        }
+        
     }
     
 }

@@ -1,0 +1,6 @@
+framework module "XKCP_FIPS202" {
+    header "KeccakHash.h"
+    header "SimpleFIPS202.h"
+
+    export *
+}

@@ -313,7 +313,7 @@ SPEC CHECKSUMS:
   librlottie: 31aadd1f842008260fa7387f7fcb837b2fabeeea
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
-  MixinServices: 790d48227edaec397484ec336ce64a6c87c18850
+  MixinServices: 5e289c988affe160b9aae37c15e50c4104aac409
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PhoneNumberKit: 99c7dddc07c36e76507c37a1e63f475a6faa40b2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47

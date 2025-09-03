@@ -41,74 +41,72 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
             receiveAmountColor = R.color.market_green()!
         }
         
-        switch transaction.transactionType.knownCase {
-        case .transferIn, .transferOut:
-            if let transfer = transaction.simpleTransfer {
+        if let transfer = transaction.simpleTransfer {
+            loadRowViews(count: 1)
+            let row = rowViews[0]
+            row.style = .singleTransfer
+            row.amountLabel.text = transfer.localizedAmountString
+            row.amountLabel.textColor = if transfer.directionalAmount.isZero {
+                R.color.text_secondary()
+            } else if transfer.directionalAmount > 0 {
+                receiveAmountColor
+            } else {
+                sendAmountColor
+            }
+            if let assetID = transaction.transferAssetID {
+                row.symbolLabel.text = symbols[assetID]
+            } else {
+                row.symbolLabel.text = nil
+            }
+        } else {
+            switch transaction.transactionType.knownCase {
+            case .transferIn, .transferOut, .swap, .unknown, .none:
+                let senders = transaction.filteredSenders
+                let receivers = transaction.filteredReceivers
+                let count = min(3, senders.count + receivers.count)
+                loadRowViews(count: count)
+                for i in 0..<count {
+                    let row = rowViews[i]
+                    row.style = .multipleTransfer
+                    if i < receivers.count {
+                        let receiver = receivers[i]
+                        row.amountLabel.text = receiver.localizedAmount
+                        row.amountLabel.textColor = receiveAmountColor
+                        row.symbolLabel.text = symbols[receiver.assetID]
+                    } else {
+                        let sender = senders[i - receivers.count]
+                        row.amountLabel.text = sender.localizedAmount
+                        row.amountLabel.textColor = sendAmountColor
+                        row.symbolLabel.text = symbols[sender.assetID]
+                    }
+                }
+            case .approval:
                 loadRowViews(count: 1)
                 let row = rowViews[0]
-                row.style = .singleTransfer
-                row.amountLabel.text = transfer.localizedAmountString
-                row.amountLabel.textColor = if transfer.directionalAmount.isZero {
-                    R.color.text_secondary()
-                } else if transfer.directionalAmount > 0 {
-                    receiveAmountColor
+                row.style = .contract
+                if let approval = transaction.approvals?.first {
+                    row.amountLabel.text = switch approval.approvalType {
+                    case .known(.unlimited):
+                        R.string.localizable.approval_unlimited()
+                    case .known(.other):
+                        R.string.localizable.approval_count(approval.localizedAmount)
+                    case .unknown(let value):
+                        value
+                    }
                 } else {
-                    sendAmountColor
+                    row.amountLabel.text = nil
                 }
-                if let assetID = transaction.transferAssetID {
-                    row.symbolLabel.text = symbols[assetID]
+                row.amountLabel.textColor = switch transaction.status {
+                case .success:
+                    R.color.market_red()!
+                default:
+                    R.color.text()!
+                }
+                if let id = transaction.sendAssetID {
+                    row.symbolLabel.text = symbols[id]
                 } else {
                     row.symbolLabel.text = nil
                 }
-            } else {
-                fallthrough
-            }
-        case .swap, .unknown, .none:
-            let senders = transaction.senders ?? []
-            let receivers = transaction.receivers ?? []
-            let count = min(3, senders.count + receivers.count)
-            loadRowViews(count: count)
-            for i in 0..<count {
-                let row = rowViews[i]
-                row.style = .multipleTransfer
-                if i < receivers.count {
-                    let receiver = receivers[i]
-                    row.amountLabel.text = receiver.localizedAmount
-                    row.amountLabel.textColor = receiveAmountColor
-                    row.symbolLabel.text = symbols[receiver.assetID]
-                } else {
-                    let sender = senders[i - receivers.count]
-                    row.amountLabel.text = sender.localizedAmount
-                    row.amountLabel.textColor = sendAmountColor
-                    row.symbolLabel.text = symbols[sender.assetID]
-                }
-            }
-        case .approval:
-            loadRowViews(count: 1)
-            let row = rowViews[0]
-            row.style = .contract
-            if let approval = transaction.approvals?.first {
-                row.amountLabel.text = switch approval.approvalType {
-                case .known(.unlimited):
-                    R.string.localizable.approval_unlimited()
-                case .known(.other):
-                    R.string.localizable.approval_count(approval.localizedAmount)
-                case .unknown(let value):
-                    value
-                }
-            } else {
-                row.amountLabel.text = nil
-            }
-            row.amountLabel.textColor = switch transaction.status {
-            case .success:
-                R.color.market_red()!
-            default:
-                R.color.text()!
-            }
-            if let id = transaction.sendAssetID {
-                row.symbolLabel.text = symbols[id]
-            } else {
-                row.symbolLabel.text = nil
             }
         }
         

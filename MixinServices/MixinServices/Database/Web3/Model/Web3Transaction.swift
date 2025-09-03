@@ -76,6 +76,26 @@ public class Web3Transaction: Codable, Identifiable {
         }
     }()
     
+    // Drop receivers if the type is 'transfer_out'
+    public lazy var filteredReceivers: [Receiver] = {
+        switch transactionType.knownCase {
+        case .transferOut:
+            []
+        default:
+            receivers ?? []
+        }
+    }()
+    
+    // Drop senders if the type is 'transfer_in'
+    public lazy var filteredSenders: [Sender] = {
+        switch transactionType.knownCase {
+        case .transferIn:
+            []
+        default:
+            senders ?? []
+        }
+    }()
+    
     public lazy var transactionAtDate: Date? = DateFormatter.iso8601Full.date(from: transactionAt)
     
     public var allAssetIDs: Set<String> {

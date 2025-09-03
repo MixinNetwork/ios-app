@@ -18,8 +18,4 @@ extension MixinTokenItem {
         }
     }
     
-    var memoLabel: String {
-        return usesTag ? R.string.localizable.tag() : R.string.localizable.withdrawal_memo()
-    }
-    
 }

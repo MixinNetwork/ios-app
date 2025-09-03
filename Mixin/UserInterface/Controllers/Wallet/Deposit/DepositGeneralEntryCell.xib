@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="deposit_general_entry" id="b3R-Zx-1rz" customClass="DepositGeneralEntryCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="335" height="462"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="e5N-e2-rD4">
+                <rect key="frame" x="0.0" y="0.0" width="335" height="462"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wc7-F8-8vX">
+                        <rect key="frame" x="16" y="20" width="303" height="45"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="AMOUNT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wC8-xs-FrN">
+                                <rect key="frame" x="0.0" y="0.0" width="303" height="17"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" name="text_quaternary"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="abc" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IBY-sf-ihr">
+                                <rect key="frame" x="0.0" y="25" width="303" height="20"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FKM-qm-E7K" customClass="ModernQRCodeView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="67.666666666666686" y="97" width="200" height="200"/>
+                        <color key="backgroundColor" name="background"/>
+                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="FKM-qm-E7K" secondAttribute="height" id="CyK-p2-qIA"/>
+                            <constraint firstAttribute="height" constant="200" id="YpG-CW-UoJ"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fOr-ez-Mdz">
+                        <rect key="frame" x="143.66666666666666" y="173" width="48" height="48"/>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="48" id="7P5-6e-tdG"/>
+                            <constraint firstAttribute="width" secondItem="fOr-ez-Mdz" secondAttribute="height" id="yqm-PM-7iG"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Wi-1m-qft" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="145.66666666666666" y="175" width="44" height="44"/>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="Ly5-yn-UhP"/>
+                            <constraint firstAttribute="width" secondItem="8Wi-1m-qft" secondAttribute="height" id="krw-2j-7BL"/>
+                        </constraints>
+                    </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="abc" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hRm-sw-xKa">
+                        <rect key="frame" x="16" y="313" width="303" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" name="text_tertiary"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="vx1-9X-ArX">
+                        <rect key="frame" x="0.0" y="360" width="335" height="72"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="72" id="qkr-qP-vYJ"/>
+                        </constraints>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstItem="8Wi-1m-qft" firstAttribute="centerY" secondItem="FKM-qm-E7K" secondAttribute="centerY" id="4bq-UU-Um1"/>
+                    <constraint firstItem="fOr-ez-Mdz" firstAttribute="centerX" secondItem="FKM-qm-E7K" secondAttribute="centerX" id="7EJ-nQ-qZH"/>
+                    <constraint firstItem="fOr-ez-Mdz" firstAttribute="centerY" secondItem="FKM-qm-E7K" secondAttribute="centerY" id="9g5-gc-yzU"/>
+                    <constraint firstItem="wc7-F8-8vX" firstAttribute="top" secondItem="e5N-e2-rD4" secondAttribute="top" constant="20" id="AHl-bj-niF"/>
+                    <constraint firstItem="hRm-sw-xKa" firstAttribute="top" secondItem="FKM-qm-E7K" secondAttribute="bottom" constant="16" id="BLu-za-3bw"/>
+                    <constraint firstItem="FKM-qm-E7K" firstAttribute="top" secondItem="wc7-F8-8vX" secondAttribute="bottom" constant="32" id="DcD-8u-sah"/>
+                    <constraint firstAttribute="trailing" secondItem="wc7-F8-8vX" secondAttribute="trailing" constant="16" id="Ju6-C5-Mjj"/>
+                    <constraint firstItem="wc7-F8-8vX" firstAttribute="leading" secondItem="e5N-e2-rD4" secondAttribute="leading" constant="16" id="LId-6S-0tg"/>
+                    <constraint firstItem="hRm-sw-xKa" firstAttribute="leading" secondItem="e5N-e2-rD4" secondAttribute="leading" constant="16" id="PO9-Ps-GtA"/>
+                    <constraint firstAttribute="trailing" secondItem="hRm-sw-xKa" secondAttribute="trailing" constant="16" id="c3A-uX-ouL"/>
+                    <constraint firstItem="vx1-9X-ArX" firstAttribute="top" secondItem="hRm-sw-xKa" secondAttribute="bottom" constant="30" id="e1n-Gw-Qce"/>
+                    <constraint firstAttribute="trailing" secondItem="vx1-9X-ArX" secondAttribute="trailing" id="kam-Ol-Sgv"/>
+                    <constraint firstAttribute="bottom" secondItem="vx1-9X-ArX" secondAttribute="bottom" constant="30" id="oob-ek-Llo"/>
+                    <constraint firstItem="vx1-9X-ArX" firstAttribute="leading" secondItem="e5N-e2-rD4" secondAttribute="leading" id="qY3-Ge-8sW"/>
+                    <constraint firstItem="FKM-qm-E7K" firstAttribute="centerX" secondItem="e5N-e2-rD4" secondAttribute="centerX" id="uZ5-f7-asA"/>
+                    <constraint firstItem="8Wi-1m-qft" firstAttribute="centerX" secondItem="FKM-qm-E7K" secondAttribute="centerX" id="xrb-cV-abY"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <size key="customSize" width="335" height="413"/>
+            <connections>
+                <outlet property="actionStackView" destination="vx1-9X-ArX" id="8Cm-sH-9zO"/>
+                <outlet property="contentLabel" destination="IBY-sf-ihr" id="Jxp-hf-iLw"/>
+                <outlet property="iconBackgroundDimensionConstraint" destination="7P5-6e-tdG" id="zga-yW-hQA"/>
+                <outlet property="iconBackgroundView" destination="fOr-ez-Mdz" id="7jp-89-gPW"/>
+                <outlet property="iconView" destination="8Wi-1m-qft" id="YTu-pE-eNS"/>
+                <outlet property="qrCodeDimensionConstraint" destination="YpG-CW-UoJ" id="4nZ-gJ-0Ti"/>
+                <outlet property="qrCodeView" destination="FKM-qm-E7K" id="70J-sw-L0L"/>
+                <outlet property="supportedTokensLabel" destination="hRm-sw-xKa" id="NCa-hh-VUO"/>
+                <outlet property="titleLabel" destination="wC8-xs-FrN" id="rOJ-uf-9FH"/>
+            </connections>
+            <point key="canvasLocation" x="60.305343511450381" y="40.845070422535215"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_quaternary">
+            <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

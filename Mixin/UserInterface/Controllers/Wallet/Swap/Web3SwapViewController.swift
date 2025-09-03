@@ -77,16 +77,37 @@ final class Web3SwapViewController: SwapViewController {
     }
     
     override func depositSendToken(_ sender: Any) {
-        guard let chainID = sendToken?.chain.chainID else {
+        guard let sendToken else {
             return
         }
-        guard let address = Web3AddressDAO.shared.address(walletID: walletID, chainID: chainID) else {
+        guard let chainID = sendToken.chain.chainID else {
             return
         }
-        guard let kind = Web3Chain.chain(chainID: chainID)?.kind else {
-            return
-        }
-        let deposit = Web3DepositViewController(wallet: wallet, kind: kind, address: address.destination)
+        let chain = Chain(
+            chainId: chainID,
+            name: sendToken.chain.name,
+            symbol: sendToken.chain.name,
+            iconUrl: sendToken.chain.icon,
+            threshold: -1,
+            withdrawalMemoPossibility: WithdrawalMemoPossibility.possible.rawValue
+        )
+        let token = Web3Token(
+            walletID: wallet.walletID,
+            assetID: sendToken.assetID,
+            chainID: chainID,
+            assetKey: sendToken.address,
+            kernelAssetID: "",
+            symbol: sendToken.symbol,
+            name: sendToken.name,
+            precision: sendToken.decimals,
+            iconURL: sendToken.iconURL,
+            amount: TokenAmountFormatter.string(from: sendToken.decimalBalance),
+            usdPrice: "",
+            usdChange: "",
+            level: Web3Reputation.Level.unknown.rawValue
+        )
+        let item = Web3TokenItem(token: token, hidden: false, chain: chain)
+        let deposit = DepositViewController(wallet: wallet, token: item)
         navigationController?.pushViewController(deposit, animated: true)
     }
     

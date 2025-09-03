@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,6 +14,7 @@
                 <outlet property="actionButtonStackView" destination="BRj-T7-8lv" id="FsV-vD-VDo"/>
                 <outlet property="actionButtonTrayView" destination="1H8-wN-h5l" id="6ai-hd-Ef3"/>
                 <outlet property="closeButtonEffectView" destination="mOn-aS-e37" id="BEW-Z9-Zqm"/>
+                <outlet property="layoutWrapperHeightConstraint" destination="X4N-cr-SYs" id="TcY-Vw-Lb2"/>
                 <outlet property="layoutWrapperView" destination="dMf-Ii-eQE" id="dlu-Xt-T03"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -23,8 +24,8 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dMf-Ii-eQE">
-                    <rect key="frame" x="30" y="131" width="315" height="575"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dMf-Ii-eQE" userLabel="Layout Wrapper View">
+                    <rect key="frame" x="30" y="184" width="315" height="528"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oys-cY-VXv">
                             <rect key="frame" x="269" y="4" width="44" height="44"/>
@@ -68,8 +69,8 @@
                                 <constraint firstAttribute="width" constant="44" id="sBc-AP-J1X"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1H8-wN-h5l">
-                            <rect key="frame" x="0.0" y="470" width="315" height="105"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1H8-wN-h5l" userLabel="Action Button Tray View">
+                            <rect key="frame" x="0.0" y="423" width="315" height="105"/>
                             <subviews>
                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BdN-Mg-u4A">
                                     <rect key="frame" x="0.0" y="0.0" width="315" height="105"/>

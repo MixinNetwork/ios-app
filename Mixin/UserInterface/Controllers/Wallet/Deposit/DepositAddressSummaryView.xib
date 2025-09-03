@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="DepositAddressSummaryView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="295" height="604"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="cBF-ym-d0o">
+                    <rect key="frame" x="20" y="55" width="255" height="46.666666666666657"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="255" placeholderIntrinsicHeight="21.666666666666668" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kMd-k3-Ku1">
+                            <rect key="frame" x="0.0" y="0.0" width="255" height="21.666666666666668"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="255" placeholderIntrinsicHeight="17" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YVm-yZ-qig">
+                            <rect key="frame" x="0.0" y="29.666666666666671" width="255" height="17"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="text_secondary"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="21T-Hv-OXb" customClass="ModernQRCodeView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="47.666666666666657" y="121.66666666666669" width="200" height="200"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="21T-Hv-OXb" secondAttribute="height" multiplier="1:1" id="WLf-ip-gsN"/>
+                        <constraint firstAttribute="height" constant="200" id="Yq3-Sr-FAN"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IBe-QO-tCa">
+                    <rect key="frame" x="123.66666666666669" y="197.66666666666666" width="48" height="48"/>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="IBe-QO-tCa" secondAttribute="height" id="HOA-Li-B86"/>
+                        <constraint firstAttribute="height" constant="48" id="TS6-PY-7Ak"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oFI-tb-j7h" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="125.66666666666669" y="199.66666666666666" width="44" height="44"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="Fdk-u3-Ubh"/>
+                        <constraint firstAttribute="width" secondItem="oFI-tb-j7h" secondAttribute="height" id="Rzj-QD-UQP"/>
+                    </constraints>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="NgM-Xi-8UY">
+                    <rect key="frame" x="20" y="341.66666666666669" width="255" height="242.33333333333331"/>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="cBF-ym-d0o" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="3Uf-r4-kjO"/>
+                <constraint firstItem="oFI-tb-j7h" firstAttribute="centerY" secondItem="21T-Hv-OXb" secondAttribute="centerY" id="496-Ro-ZzS"/>
+                <constraint firstItem="oFI-tb-j7h" firstAttribute="centerX" secondItem="21T-Hv-OXb" secondAttribute="centerX" id="CsQ-06-y9o"/>
+                <constraint firstItem="21T-Hv-OXb" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="FiS-3w-Gv7"/>
+                <constraint firstAttribute="trailing" secondItem="NgM-Xi-8UY" secondAttribute="trailing" constant="20" id="N5a-WE-MpR"/>
+                <constraint firstAttribute="trailing" secondItem="cBF-ym-d0o" secondAttribute="trailing" constant="20" id="VDq-N3-YA5"/>
+                <constraint firstItem="IBe-QO-tCa" firstAttribute="centerY" secondItem="21T-Hv-OXb" secondAttribute="centerY" id="W4M-9c-kwL"/>
+                <constraint firstItem="NgM-Xi-8UY" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="X0v-QG-MTR"/>
+                <constraint firstItem="IBe-QO-tCa" firstAttribute="centerX" secondItem="21T-Hv-OXb" secondAttribute="centerX" id="XQh-H6-KSh"/>
+                <constraint firstItem="cBF-ym-d0o" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="55" id="e2g-EM-T8k"/>
+                <constraint firstAttribute="bottom" secondItem="NgM-Xi-8UY" secondAttribute="bottom" constant="20" id="lg8-aP-w6M"/>
+                <constraint firstItem="NgM-Xi-8UY" firstAttribute="top" secondItem="21T-Hv-OXb" secondAttribute="bottom" constant="20" id="wsZ-28-4fY"/>
+                <constraint firstItem="21T-Hv-OXb" firstAttribute="top" secondItem="cBF-ym-d0o" secondAttribute="bottom" constant="20" id="ya3-1s-0dN"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="descriptionLabel" destination="YVm-yZ-qig" id="51A-Ms-SlC"/>
+                <outlet property="footerStackView" destination="NgM-Xi-8UY" id="04Z-9l-oW0"/>
+                <outlet property="qrCodeDimensionConstraint" destination="Yq3-Sr-FAN" id="MKG-9i-6Sm"/>
+                <outlet property="qrCodeView" destination="21T-Hv-OXb" id="fxa-dG-oj4"/>
+                <outlet property="titleLabel" destination="kMd-k3-Ku1" id="gXE-lM-bQf"/>
+                <outlet property="tokenBackgroundDimensionConstraint" destination="TS6-PY-7Ak" id="7XC-uT-Osb"/>
+                <outlet property="tokenBackgroundView" destination="IBe-QO-tCa" id="qcl-l3-oL8"/>
+                <outlet property="tokenIconView" destination="oFI-tb-j7h" id="B6n-cs-OFK"/>
+            </connections>
+            <point key="canvasLocation" x="93.89312977099236" y="37.323943661971832"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_secondary">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

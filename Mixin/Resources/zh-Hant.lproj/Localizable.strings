@@ -160,6 +160,7 @@
 "approving_transaction" = "正在批准";
 "approving_transaction_failed" = "批准失敗";
 "ask_me_anything" = "向我提問";
+"asset" = "資產";
 "asset_key" = "資產標識";
 "asset_not_found" = "找不到該資產";
 "asset_type" = "資產型別";
@@ -199,6 +200,7 @@
 "batch_transfer_confirmation" = "批次轉賬確認";
 "before_you_proceed" = "請在繼續之前";
 "block" = "封鎖使用者";
+"block_confirmations" = "到賬確認區塊數";
 "block_hint" = "封鎖後對方無法向您撥打電話或傳送訊息";
 "block_tip" = "被封鎖的使用者不能給你傳送訊息或者邀請你加入群聊";
 "blocked" = "已封鎖";
@@ -467,6 +469,7 @@
 "deposit_dust" = "最小充值數：%1$@ %2$@";
 "deposit_hash" = "充值雜湊";
 "deposit_pending_confirmation" = "%@ 充值確認中";
+"deposit_suspended" = "%1$@ 充值已暫停，可能的原因包括：\n• 節點故障\n• 網路硬分叉\n• 網路擁堵\n• 使用率較低\n注意已轉入的 %1$@ 資產可以繼續轉賬。";
 "deposit_tip_btc" = "該充值地址僅支援 BTC。";
 "deposit_tip_common" = "該充值地址僅支援 %@。";
 "deposit_tip_eos" = "支援所有基於 EOS 發行的代幣。";
@@ -474,6 +477,7 @@
 "deposit_tip_trx" = "支援 TRX 和所有符合 TRC-10、TRC-20 標準的代幣。";
 "deposit_token" = "充值 %@";
 "deposit_token_description" = "從其他交易所或錢包轉入";
+"deposit_token_to_mixin" = "充值 %@ 到 Mixin";
 "deposits_pending_confirmation" = "有 %d 筆充值確認中";
 "depost_address_updated" = "%@ 充值地址已更新";
 "depost_address_updated_description" = "您的 %@ 充值地址已更新，充值地址將隨著系統或網路升級而自動更新，舊的地址仍可充值並會自動入賬，但是不推薦使用。";
@@ -533,6 +537,7 @@
 "enable_touch_pay_hint" = "輸入 PIN 啟用指紋支付";
 "end" = "結束";
 "end_to_end_encryption" = "端到端加密";
+"enter_amount" = "輸入金額";
 "enter_mnemonic_phrase" = "輸入或貼上您的 %d 個助記詞。";
 "enter_new_anonymous_number" = "輸入你的新匿名號碼";
 "enter_new_phone_number" = "輸入你的新手機號碼";
@@ -748,6 +753,12 @@
 "legacy_network" = "舊網路";
 "legacy_network_transfer_hint" = "當前轉賬使用的是舊網路";
 "light" = "淺色";
+"lightning_address" = "Lightning 地址";
+"lightning_address_explain" = "%@ 是您的閃電網路地址，透過該地址，您可以便捷、安全地接收支付：";
+"lightning_address_explain_1" = "地址格式類似郵箱，簡單好記。";
+"lightning_address_explain_2" = "可重複使用，無需每次生成新的。";
+"lightning_address_explain_3" = "主流閃電網路錢包都支援。";
+"lightning_address_explain_mao" = "每一個 MAO 域名對應一個閃電網路地址，如果您擁有 MAO 域名，可以按 name@mao.id 格式接收閃電網路轉賬。";
 "line_busy" = "忙線未接聽";
 "line_busy_remote" = "對方忙";
 "link" = "連結";
@@ -790,6 +801,7 @@
 "markets" = "行情";
 "max" = "最大值";
 "max_favorite_bots_description" = "最多可以新增 5 個喜歡的機器人，注意其他人可以在你的個人資訊彈窗裡檢視這些你喜歡的機器人。";
+"maximum_deposit" = "最大充值金額";
 "media" = "媒體";
 "membership_advance" = "進階版";
 "membership_advance_description" = "在多裝置上使用多個金鑰，避免單點故障，並在金鑰丟失時獲得去中心化的恢復服務。";
@@ -813,6 +825,7 @@
 "message_sent" = "訊息已傳送";
 "messages" = "訊息";
 "method_not_supported" = "不支援此方法: %@";
+"minimum_deposit" = "最小充值金額";
 "minimum_withdrawal" = "最小提現數量";
 "minute" = "%d 分鐘";
 "minute_count" = "%d 分鐘";
@@ -1172,6 +1185,8 @@
 "scan_code_add_me" = "用 Mixin 掃描二維碼加我為聯絡人";
 "scan_code_description" = "請用其他裝置掃描以下二維碼";
 "scan_qr_code" = "掃描二維碼";
+"scan_qr_code_to_send_token" = "掃描二維碼向我傳送 %@";
+"scan_qr_code_to_transfer_on_mixin" = "掃描二維碼透過 Mixin 向我轉賬 %@";
 "scan_to_restore" = "掃描以恢復";
 "scan_to_restore_hint" = "點下面按鈕掃碼建立連線";
 "screen_lock" = "鎖屏";
@@ -1243,6 +1258,7 @@
 "sending_withdrawal_request" = "正在傳送提現";
 "session_not_found" = "沒有對應的連線";
 "set" = "設定";
+"set_amount" = "設定金額";
 "set_as_avatar" = "設定為頭像";
 "set_disappearing_message_time_to" = "%1$@將限時訊息設定為 %2$@";
 "set_emergency_create_successfully" = "設定恢復聯絡人成功";
@@ -1350,7 +1366,6 @@
 "storage_usage" = "儲存空間";
 "stranger_hint" = "對方不是你的聯絡人";
 "successful" = "成功";
-"suspended_deposit" = "%1$@ 充值已暫停，可能的原因是因為使用率太低、節點故障、區塊鏈網路硬分叉或者擁堵，注意已轉入的 %2$@ 資產可以繼續轉賬。";
 "suspicious_link" = "可疑連結";
 "swap" = "交易";
 "swap_again" = "再來一筆";
@@ -1510,6 +1525,7 @@
 "url_deposit_suspended" = "https://support.mixin.one/zh/article/5ywz5lqo5pq56en6lwe5lqn5lin5psv5oyb5ywf5yc855qe6k05pio-1sh1z50/";
 "url_disappearing_message" = "https://support.mixin.one/zh/article/5aac5l2v5bya5zcv6zmq5pe25rai5ogv77yf-18dzv5i/";
 "url_forget_pin" = "https://support.mixin.one/zh/article/pin-1vb2rc7/";
+"url_lightning_address" = "https://support.mixin.one/zh/article/lightning-address-1fzf8s4/";
 "url_privacy_wallet" = "https://support.mixin.one/zh/article/5lua5lmi5piv6zqq56eb6zkx5yyf77yf-1s7o0e2/";
 "url_recall_message" = "https://support.mixin.one/zh/article/mixin-messenger-bjr9re/";
 "url_recovery_contact" = "https://support.mixin.one/zh/article/5aac5l2v6k6572u57sn5ocl6igu57o75lq6-d2nssy/";

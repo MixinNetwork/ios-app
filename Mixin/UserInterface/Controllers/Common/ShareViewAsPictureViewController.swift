@@ -8,6 +8,8 @@ class ShareViewAsPictureViewController: UIViewController {
     @IBOutlet weak var actionButtonBackgroundView: UIVisualEffectView!
     @IBOutlet weak var actionButtonStackView: UIStackView!
     
+    @IBOutlet weak var layoutWrapperHeightConstraint: NSLayoutConstraint!
+    
     let contentViewCornerRadius: CGFloat = 12
     
     var contentView: UIView!

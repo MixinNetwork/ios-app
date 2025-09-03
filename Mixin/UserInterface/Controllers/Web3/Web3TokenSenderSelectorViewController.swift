@@ -95,14 +95,7 @@ extension Web3TokenSenderSelectorViewController: UITableViewDelegate {
             selector.delegate = self
             present(selector, animated: true)
         case .address:
-            guard let kind = Web3Chain.chain(chainID: receivingToken.chainID)?.kind else {
-                return
-            }
-            let deposit = Web3DepositViewController(
-                wallet: receivingWallet,
-                kind: kind,
-                address: receivingAddress.destination
-            )
+            let deposit = DepositViewController(wallet: receivingWallet, token: receivingToken)
             navigationController?.pushViewController(deposit, animated: true)
         }
     }

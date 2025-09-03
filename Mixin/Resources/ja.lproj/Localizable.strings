@@ -160,6 +160,7 @@
 "approving_transaction" = "Approving Transaction";
 "approving_transaction_failed" = "Approving Transaction Failed";
 "ask_me_anything" = "Ask me anything";
+"asset" = "Asset";
 "asset_key" = "資産のキー";
 "asset_not_found" = "資産が存在しません";
 "asset_type" = "資産タイプ";
@@ -199,6 +200,7 @@
 "batch_transfer_confirmation" = "Batch Transfer Confirmation";
 "before_you_proceed" = "Before you proceed";
 "block" = "ブロック";
+"block_confirmations" = "Block Confirmations";
 "block_hint" = "あなたにブロックされたユーザーは電話をかけたりメッセージを送ることができなくなります";
 "block_tip" = "ブロックされたユーザーはあなたのグループへ追加やメッセージ送信ができません";
 "blocked" = "ブロック中";
@@ -467,6 +469,7 @@
 "deposit_dust" = "Minimum deposit: %1$@ %2$@";
 "deposit_hash" = "Deposit Hash";
 "deposit_pending_confirmation" = "%@ Pending Confirmation";
+"deposit_suspended" = "%1$@ deposits have been suspended. Possible reasons:\n• Node failure\n• Network hard fork\n• Network congestion\n• Low usage\nNote: %1$@ assets already deposited can still be transferred.";
 "deposit_tip_btc" = "このアドレスはビットコインのみサポートしています";
 "deposit_tip_common" = "このアドレスは%@のみサポートしています";
 "deposit_tip_eos" = "このアドレスはEOSベースの全てのトークンをサポートしています";
@@ -474,6 +477,7 @@
 "deposit_tip_trx" = "このアドレスは全てのTRC-10/TRC-20トークンをサポートしています";
 "deposit_token" = "Deposit %@";
 "deposit_token_description" = "Deposit from other exchanges or wallets";
+"deposit_token_to_mixin" = "Deposit %@ to Mixin";
 "deposits_pending_confirmation" = "%d Deposits Pending Confirmation";
 "depost_address_updated" = "%@ Deposit Address Updated";
 "depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
@@ -533,6 +537,7 @@
 "enable_touch_pay_hint" = "PINコードを確認して指紋認証を利用可能にしてください";
 "end" = "End";
 "end_to_end_encryption" = "E2E暗号化";
+"enter_amount" = "Enter Amount";
 "enter_mnemonic_phrase" = "Enter or paste your %d mnemonic words.";
 "enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "新しい電話番号を入力してください";
@@ -748,6 +753,12 @@
 "legacy_network" = "Legacy Network";
 "legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "light" = "ダーク";
+"lightning_address" = "Lightning Address";
+"lightning_address_explain" = "%@ is your Lightning Network address. With this address, you can conveniently and securely receive payments:";
+"lightning_address_explain_1" = "The address format is similar to an email, simple and easy to remember.";
+"lightning_address_explain_2" = "Reusable, no need to generate a new one each time.";
+"lightning_address_explain_3" = "Supported by mainstream Lightning Network wallets.";
+"lightning_address_explain_mao" = "Each MAO domain corresponds to a Lightning Network address. If you own a MAO domain, you can receive Lightning Network transfers in the format name@mao.id";
 "line_busy" = "お話中です";
 "line_busy_remote" = "お話中です";
 "link" = "Link";
@@ -790,6 +801,7 @@
 "markets" = "Markets";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
+"maximum_deposit" = "Maximum Deposit";
 "media" = "メディア";
 "membership_advance" = "Advance";
 "membership_advance_description" = "Use multiple keys on multiple devices to avoid single point of failure, and get decentralized recovery service in case of key loss.";
@@ -813,6 +825,7 @@
 "message_sent" = "送信完了";
 "messages" = "メッセージ";
 "method_not_supported" = "Method %@ is not supported";
+"minimum_deposit" = "Minimum Deposit";
 "minimum_withdrawal" = "Minimum Withdrawal";
 "minute" = "%d 分";
 "minute_count" = "%d分間";
@@ -1172,6 +1185,8 @@
 "scan_code_add_me" = "QRコードをスキャンして私をMixinで追加してください。";
 "scan_code_description" = "Use another device to scan the QR code below";
 "scan_qr_code" = "QRコードをスキャン";
+"scan_qr_code_to_send_token" = "Scan the QR Code to send me %@";
+"scan_qr_code_to_transfer_on_mixin" = "Scan the QR Code to transfer me %@ on Mixin";
 "scan_to_restore" = "Scan to Restore";
 "scan_to_restore_hint" = "Click the button below to scan the code and establish a connection.";
 "screen_lock" = "画面ロック";
@@ -1243,6 +1258,7 @@
 "sending_withdrawal_request" = "Sending Withdrawal Request";
 "session_not_found" = "Session not found";
 "set" = "設定";
+"set_amount" = "Set Amount";
 "set_as_avatar" = "Set as Avatar";
 "set_disappearing_message_time_to" = "1$sは、消えるメッセージの有効時間を%@に設定しました。";
 "set_emergency_create_successfully" = "Set recovery contact successfully";
@@ -1350,7 +1366,6 @@
 "storage_usage" = "ストレージ使用率";
 "stranger_hint" = "連絡先にない相手からのメッセージです";
 "successful" = "成功";
-"suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "不審なリンクです";
 "swap" = "Swap";
 "swap_again" = "Swap Again";
@@ -1510,6 +1525,7 @@
 "url_deposit_suspended" = "https://support.mixin.one/en/article/the-explanation-about-mixin-stopped-support-for-some-assets-deposits-1im32px/";
 "url_disappearing_message" = "https://support.mixin.one/en/article/how-to-enable-disappearing-messages-2nzaz8/";
 "url_forget_pin" = "https://support.mixin.one/en/article/how-to-do-if-i-forget-the-pin-g12pmo/";
+"url_lightning_address" = "https://support.mixin.one/en/article/what-is-lightning-address-1i8733z/";
 "url_privacy_wallet" = "https://support.mixin.one/en/article/what-is-a-privacy-wallet-1ng5j8f/";
 "url_recall_message" = "https://support.mixin.one/en/article/how-to-recall-in-mixin-messenger-n3v3p1/";
 "url_recovery_contact" = "https://support.mixin.one/en/article/how-to-set-up-an-emergency-contact-1kvd6g8/";

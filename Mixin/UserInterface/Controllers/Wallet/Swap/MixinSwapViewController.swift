@@ -78,7 +78,7 @@ class MixinSwapViewController: SwapViewController {
         }
         let dataSource = MixinDepositDataSource(
             assetID: sendToken.assetID,
-            tokenName: sendToken.name
+            symbol: sendToken.symbol
         )
         let deposit = DepositViewController(dataSource: dataSource)
         navigationController?.pushViewController(deposit, animated: true)

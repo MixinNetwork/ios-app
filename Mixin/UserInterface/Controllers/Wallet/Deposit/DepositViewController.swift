@@ -44,7 +44,7 @@ final class DepositViewController: UIViewController {
         
         title = R.string.localizable.deposit()
         navigationItem.titleView = WalletIdentifyingNavigationTitleView(
-            title: R.string.localizable.deposit_token(dataSource.tokenName),
+            title: R.string.localizable.deposit_token(dataSource.symbol),
             wallet: dataSource.wallet
         )
         navigationItem.rightBarButtonItem = .customerService(
@@ -205,7 +205,7 @@ extension DepositViewController: UICollectionViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .network:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
-            cell.label.text = viewModel.switchableTokens.values[indexPath.item]
+            cell.label.text = viewModel.switchableTokens[indexPath.item].chainName
             return cell
         case .address:
             switch viewModel.entry {
@@ -309,14 +309,17 @@ extension DepositViewController: UICollectionViewDelegate {
         case .address, .info:
             break
         case .network:
-            guard let (assetID, name) = viewModel?.switchableTokens.elements[indexPath.item] else {
+            guard let token = viewModel?.switchableTokens[indexPath.item] else {
                 return
+            }
+            if let titleView = navigationItem.titleView as? WalletIdentifyingNavigationTitleView {
+                titleView.titleLabel.text = R.string.localizable.deposit_token(token.symbol)
             }
             collectionView.isHidden = true
             addressGeneratingView.isHidden = false
             depositSuspendedView?.removeFromSuperview()
             dataSource.cancel()
-            dataSource = MixinDepositDataSource(assetID: assetID, tokenName: name)
+            dataSource = dataSource.dataSource(bySwitchingTo: token)
             dataSource.delegate = self
             dataSource.reload()
         }

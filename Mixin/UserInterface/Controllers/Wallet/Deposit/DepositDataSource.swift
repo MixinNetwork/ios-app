@@ -4,13 +4,9 @@ import MixinServices
 class DepositDataSource {
     
     protocol Delegate: AnyObject {
-        
         func depositDataSource(_ dataSource: DepositDataSource, didUpdateViewModel viewModel: DepositViewModel, hint: WalletHintViewController?)
         func depositDataSource(_ dataSource: DepositDataSource, reportsDepositSuspendedWith suspendedView: DepositSuspendedView)
-        
-        // Return true if presented, false to cancel upcoming loading
-        func depositDataSource(_ dataSource: DepositDataSource, requestNetworkConfirmationWith selector: DepositNetworkSelectorViewController) -> Bool
-        
+        func depositDataSource(_ dataSource: DepositDataSource, requestNetworkConfirmationWith selector: DepositNetworkSelectorViewController)
     }
     
     let tokenName: String
@@ -99,8 +95,9 @@ final class MixinDepositDataSource: DepositDataSource {
                     selector.onDismiss = {
                         continuation.resume(with: .success(()))
                     }
-                    let isConfirmationPresented = delegate?.depositDataSource(self, requestNetworkConfirmationWith: selector) ?? false
-                    if !isConfirmationPresented {
+                    if let delegate {
+                        delegate.depositDataSource(self, requestNetworkConfirmationWith: selector)
+                    } else {
                         continuation.resume(throwing: CancellationError())
                     }
                 }

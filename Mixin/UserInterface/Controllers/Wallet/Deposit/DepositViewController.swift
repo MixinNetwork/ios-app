@@ -15,6 +15,7 @@ final class DepositViewController: UIViewController {
     
     private weak var collectionView: UICollectionView!
     private weak var addressGeneratingView: UIView!
+    private weak var depositSuspendedView: UIView?
     
     private var dataSource: DepositDataSource
     private var viewModel: DepositViewModel?
@@ -146,10 +147,6 @@ final class DepositViewController: UIViewController {
         self.addressGeneratingView = addressGeneratingView
         
         dataSource.delegate = self
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         dataSource.reload()
     }
     
@@ -317,6 +314,7 @@ extension DepositViewController: UICollectionViewDelegate {
             }
             collectionView.isHidden = true
             addressGeneratingView.isHidden = false
+            depositSuspendedView?.removeFromSuperview()
             dataSource.cancel()
             dataSource = MixinDepositDataSource(assetID: assetID, tokenName: name)
             dataSource.delegate = self
@@ -344,13 +342,13 @@ extension DepositViewController: DepositEntryActionDelegate {
             case .address:
                 switch viewModel.entry {
                 case let .general(content, _, _):
-                    copyingContent = content.content
+                    copyingContent = content.value
                 case let .tagging(destination, tag, _):
                     switch indexPath.item {
                     case 0:
-                        copyingContent = tag.content
+                        copyingContent = tag.value
                     default:
-                        copyingContent = destination.content
+                        copyingContent = destination.value
                     }
                 }
             case .info:
@@ -368,7 +366,7 @@ extension DepositViewController: DepositEntryActionDelegate {
             }
             let share = ShareDepositAddressViewController(
                 token: viewModel.token,
-                address: content.content,
+                address: content.value,
                 network: viewModel.token.chain?.name,
                 minimumDeposit: viewModel.minimumDeposit
             )
@@ -424,6 +422,7 @@ extension DepositViewController: DepositDataSource.Delegate {
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
         }
         addressGeneratingView.isHidden = true
+        depositSuspendedView?.removeFromSuperview()
         if let hint {
             hint.delegate = self
             present(hint, animated: true)
@@ -434,18 +433,19 @@ extension DepositViewController: DepositDataSource.Delegate {
         _ dataSource: DepositDataSource,
         reportsDepositSuspendedWith suspendedView: DepositSuspendedView
     ) {
+        addressGeneratingView.isHidden = true
         if suspendedView.superview == nil {
             view.addSubview(suspendedView)
             suspendedView.snp.makeEdgesEqualToSuperview()
+            self.depositSuspendedView = suspendedView
         }
     }
     
     func depositDataSource(
         _ dataSource: DepositDataSource,
         requestNetworkConfirmationWith selector: DepositNetworkSelectorViewController
-    ) -> Bool {
+    ) {
         present(selector, animated: true)
-        return true
     }
     
 }

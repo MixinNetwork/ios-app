@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class DepositAddressSummaryView: UIView {
+final class DepositAddressSummaryView: UIView, XibDesignable {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
@@ -15,11 +15,14 @@ final class DepositAddressSummaryView: UIView {
     @IBOutlet weak var qrCodeDimensionConstraint: NSLayoutConstraint!
     @IBOutlet weak var tokenBackgroundDimensionConstraint: NSLayoutConstraint!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        qrCodeView.setDefaultCornerCurve()
-        tokenBackgroundView.layer.cornerRadius = tokenBackgroundDimensionConstraint.constant / 2
-        tokenBackgroundView.layer.masksToBounds = true
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        loadSubviews()
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        loadSubviews()
     }
     
     func load(token: any Token, address: String, network: String?, minimumDeposit: String?) {
@@ -55,7 +58,40 @@ final class DepositAddressSummaryView: UIView {
         let addressTitleLabel = makeTitleLabel()
         addressTitleLabel.text = R.string.localizable.address()
         let addressContentLabel = makeContentLabel()
-        addressContentLabel.text = address
+        addressContentLabel.attributedText = {
+            let fontSize: CGFloat = if address.count > 100 {
+                10
+            } else if address.count > 80 {
+                12
+            } else {
+                14
+            }
+            let text = NSMutableAttributedString(
+                string: address,
+                attributes: [
+                    .font: UIFont.systemFont(ofSize: fontSize),
+                    .foregroundColor: R.color.text_secondary()!,
+                ]
+            )
+            if address.count > 14 {
+                let prefixRange = NSRange(
+                    address.startIndex..<address.index(address.startIndex, offsetBy: 8),
+                    in: address
+                )
+                let suffixRange = NSRange(
+                    address.index(address.endIndex, offsetBy: -6)..<address.endIndex,
+                    in: address
+                )
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.systemFont(ofSize: fontSize, weight: .medium),
+                    .foregroundColor: R.color.text()!,
+                ]
+                for range in [prefixRange, suffixRange] {
+                    text.setAttributes(attributes, range: range)
+                }
+            }
+            return text
+        }()
         addressContentLabel.numberOfLines = 0
         let addressStackView = UIStackView(
             arrangedSubviews: [addressTitleLabel, addressContentLabel]
@@ -96,6 +132,13 @@ final class DepositAddressSummaryView: UIView {
             infoStackView.distribution = .equalSpacing
             footerStackView.addArrangedSubview(infoStackView)
         }
+    }
+    
+    private func loadSubviews() {
+        loadXib()
+        qrCodeView.setDefaultCornerCurve()
+        tokenBackgroundView.layer.cornerRadius = tokenBackgroundDimensionConstraint.constant / 2
+        tokenBackgroundView.layer.masksToBounds = true
     }
     
 }

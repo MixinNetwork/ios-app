@@ -27,16 +27,15 @@ final class DepositSuspendedView: UIView {
     
     private func description(symbol: String) -> NSAttributedString {
         let string = R.string.localizable.deposit_suspended(symbol)
-        let attributes: [NSAttributedString.Key: Any] = {
-            let style = NSMutableParagraphStyle()
-            style.lineSpacing = 5
-            style.alignment = .center
-            return [
-                .paragraphStyle: style.copy(),
-                .font: UIFont.systemFont(ofSize: 14, weight: .medium),
-                .foregroundColor: R.color.text_secondary()!,
-            ]
-        }()
+        let style = NSMutableParagraphStyle()
+        style.lineSpacing = 5
+        let attributes: [NSAttributedString.Key: Any] = [
+            .paragraphStyle: style.copy(),
+            .font: UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 14, weight: .medium)
+            ),
+            .foregroundColor: R.color.text_secondary()!,
+        ]
         return NSAttributedString(string: string, attributes: attributes)
     }
     

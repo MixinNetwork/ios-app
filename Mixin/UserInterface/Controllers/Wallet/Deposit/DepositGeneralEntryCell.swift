@@ -42,12 +42,22 @@ final class DepositGeneralEntryCell: UICollectionViewCell {
         actions: [DepositViewModel.Entry.Action]
     ) {
         titleLabel.text = content.title
-        contentLabel.text = content.content
+        contentLabel.font = {
+            let font: UIFont = if content.value.count > 120 {
+                .systemFont(ofSize: 12)
+            } else if content.value.count > 100 {
+                .systemFont(ofSize: 14)
+            } else {
+                .systemFont(ofSize: 16)
+            }
+            return UIFontMetrics.default.scaledFont(for: font)
+        }()
+        contentLabel.text = content.value
         let qrCodeSize = CGSize(
             width: qrCodeDimensionConstraint.constant,
             height: qrCodeDimensionConstraint.constant
         )
-        qrCodeView.setContent(content.content, size: qrCodeSize)
+        qrCodeView.setContent(content.value, size: qrCodeSize)
         iconView.setIcon(token: token, chain: token.chain)
         supportedTokensLabel.text = supporting
         

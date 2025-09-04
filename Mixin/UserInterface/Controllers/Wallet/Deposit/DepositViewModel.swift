@@ -32,7 +32,7 @@ struct DepositViewModel {
         self.entry = {
             let destination = Entry.Content(
                 title: R.string.localizable.address(),
-                content: destination,
+                value: destination,
             )
             let supporting = switch token.chainID {
             case ChainID.bitcoin:
@@ -54,14 +54,14 @@ struct DepositViewModel {
                 }
                 return .tagging(
                     destination: destination,
-                    tag: Entry.Content(title: tagTitle, content: tag),
+                    tag: Entry.Content(title: tagTitle, value: tag),
                     supporting: supporting
                 )
             } else {
                 return .general(
                     content: destination,
                     supporting: supporting,
-                    actions: [.copy, .setAmount, .share]
+                    actions: [.copy, .share]
                 )
             }
         }()
@@ -84,14 +84,13 @@ struct DepositViewModel {
                let identityNumber = LoginManager.shared.account?.identityNumber
             {
                 let address = identityNumber + "@mixin.id"
-                infos.append(
-                    Info(
-                        title: R.string.localizable.lightning_address(),
-                        description: address,
-                        presentableInfo: .lightningAddress(address),
-                        actions: [.presentInfo]
-                    )
+                let info = Info(
+                    title: R.string.localizable.lightning_address(),
+                    description: address,
+                    presentableInfo: .lightningAddress(address),
+                    actions: [.presentInfo, .copyDescription]
                 )
+                infos.insert(info, at: 0)
             }
             let minimumDeposit = CurrencyFormatter.localizedString(
                 from: token.decimalDust,
@@ -137,11 +136,11 @@ extension DepositViewModel {
         struct Content {
             
             let title: String
-            let content: String
+            let value: String
             
-            init(title: String, content: String) {
+            init(title: String, value: String) {
                 self.title = title.uppercased()
-                self.content = content
+                self.value = value
             }
             
         }

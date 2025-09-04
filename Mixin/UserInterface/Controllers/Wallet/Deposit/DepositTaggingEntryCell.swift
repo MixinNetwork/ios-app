@@ -32,12 +32,12 @@ final class DepositTaggingEntryCell: UICollectionViewCell {
         token: Token,
     ) {
         titleLabel.text = content.title
-        contentLabel.text = content.content
+        contentLabel.text = content.value
         let qrCodeSize = CGSize(
             width: qrCodeDimensionConstraint.constant,
             height: qrCodeDimensionConstraint.constant
         )
-        qrCodeView.setContent(content.content, size: qrCodeSize)
+        qrCodeView.setContent(content.value, size: qrCodeSize)
         iconView.setIcon(token: token, chain: token.chain)
     }
     

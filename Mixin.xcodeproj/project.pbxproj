@@ -1075,6 +1075,10 @@
 		947013712E195DBC00444513 /* NamedWalletCandidate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947013702E195DB600444513 /* NamedWalletCandidate.swift */; };
 		947015C42DA3A9B300D8AA5A /* EIP1559Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947015C32DA3A9AC00D8AA5A /* EIP1559Transaction.swift */; };
 		947058D52E687FDB0057FBC4 /* DepositInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947058D42E687FDB0057FBC4 /* DepositInputAmountViewController.swift */; };
+		9470596D2E69894C0057FBC4 /* ShareDepositAddressContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9470596C2E6989470057FBC4 /* ShareDepositAddressContentView.swift */; };
+		947059752E698AB10057FBC4 /* ShareObiView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947059742E698AB10057FBC4 /* ShareObiView.xib */; };
+		9470597D2E698B010057FBC4 /* ShareObiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9470597C2E698B000057FBC4 /* ShareObiView.swift */; };
+		947059942E698F8A0057FBC4 /* ShareDepositAddressContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 947059932E698F8A0057FBC4 /* ShareDepositAddressContentView.xib */; };
 		947083AE2D928F25007DF965 /* ExternalTransferError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947083AD2D928F1E007DF965 /* ExternalTransferError.swift */; };
 		947084B42D93F891007DF965 /* InvoicePaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947084B32D93F88F007DF965 /* InvoicePaymentOperation.swift */; };
 		947084C52D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947084C42D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift */; };
@@ -2800,6 +2804,10 @@
 		947013702E195DB600444513 /* NamedWalletCandidate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedWalletCandidate.swift; sourceTree = "<group>"; };
 		947015C32DA3A9AC00D8AA5A /* EIP1559Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EIP1559Transaction.swift; sourceTree = "<group>"; };
 		947058D42E687FDB0057FBC4 /* DepositInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositInputAmountViewController.swift; sourceTree = "<group>"; };
+		9470596C2E6989470057FBC4 /* ShareDepositAddressContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareDepositAddressContentView.swift; sourceTree = "<group>"; };
+		947059742E698AB10057FBC4 /* ShareObiView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareObiView.xib; sourceTree = "<group>"; };
+		9470597C2E698B000057FBC4 /* ShareObiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareObiView.swift; sourceTree = "<group>"; };
+		947059932E698F8A0057FBC4 /* ShareDepositAddressContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareDepositAddressContentView.xib; sourceTree = "<group>"; };
 		947083AD2D928F1E007DF965 /* ExternalTransferError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalTransferError.swift; sourceTree = "<group>"; };
 		947084B32D93F88F007DF965 /* InvoicePaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoicePaymentOperation.swift; sourceTree = "<group>"; };
 		947084C42D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonAtomicInvoicePaymentOperation.swift; sourceTree = "<group>"; };
@@ -4003,6 +4011,8 @@
 				9495E0472CEF2ACD00124CC7 /* BackupMnemonicsWarningViewController.swift */,
 				9495E57D2CF0D71300124CC7 /* MnemonicsBackupChecking.swift */,
 				94EDD6132D0C495100BF55EE /* GeneralAppearanceNavigationController.swift */,
+				947059742E698AB10057FBC4 /* ShareObiView.xib */,
+				9470597C2E698B000057FBC4 /* ShareObiView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -4286,6 +4296,8 @@
 				9419C2392E6741D900BEAB42 /* ExplainLightningAddressViewController.swift */,
 				9419C2712E6758D400BEAB42 /* DepositAddressSummaryView.xib */,
 				9419C26B2E6758C700BEAB42 /* DepositAddressSummaryView.swift */,
+				947059932E698F8A0057FBC4 /* ShareDepositAddressContentView.xib */,
+				9470596C2E6989470057FBC4 /* ShareDepositAddressContentView.swift */,
 				9419C2632E6758A400BEAB42 /* ShareDepositAddressViewController.swift */,
 				947058D42E687FDB0057FBC4 /* DepositInputAmountViewController.swift */,
 			);
@@ -6327,6 +6339,7 @@
 				7BA91A2222B391A40038664F /* HudView.xib in Resources */,
 				DFC2647624E933B700BF954D /* BigAmountConfirmationWindow.xib in Resources */,
 				94AD96C82DD47E6E00C84DF2 /* Web3ReputationOptionCell.xib in Resources */,
+				947059752E698AB10057FBC4 /* ShareObiView.xib in Resources */,
 				7BA9F32124A22EC200D7C091 /* CallMemberCell.xib in Resources */,
 				7B4C656F242354AE003B78F9 /* LocationSearchNoResultView.xib in Resources */,
 				7B3FD4EE241965BE00B58006 /* LocationView.xib in Resources */,
@@ -6545,6 +6558,7 @@
 				7BFD3754249366E7006D758F /* GroupCallIndicatorView.xib in Resources */,
 				94E34124261D829200E2F9D3 /* highlight.js in Resources */,
 				944C61FA2B6BFD6F00C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.xib in Resources */,
+				947059942E698F8A0057FBC4 /* ShareDepositAddressContentView.xib in Resources */,
 				DF846CDB23694A4900AA1197 /* MultisigUsersWindow.xib in Resources */,
 				944075DB2E2E8B2A00591B45 /* WalletPendingDepositView.xib in Resources */,
 				94A709D62B67B0A5007CADAB /* DepositSuspendedView.xib in Resources */,
@@ -6973,6 +6987,7 @@
 				7BC96DE5241779F70047471D /* ExternalApiError.swift in Sources */,
 				94ED25322DD4579D00A34266 /* Web3ReputationPickerViewController.swift in Sources */,
 				DFE48ADE20EBADEE003E0BF8 /* ClearStorageViewController.swift in Sources */,
+				9470597D2E698B010057FBC4 /* ShareObiView.swift in Sources */,
 				7C104A8127D83A51004D0530 /* RefreshExternalSchemeJob.swift in Sources */,
 				52DE7B4A2BEB7C040060A364 /* Web3TransactionViewController.swift in Sources */,
 				947E267B2E2F773500D6ECB7 /* InputOnChainInfoViewController.swift in Sources */,
@@ -7689,6 +7704,7 @@
 				7BD0532820A41F6A00C36F69 /* RangeExtension.swift in Sources */,
 				94D78F9F2E3A0E5900552D2E /* AddWalletInputMnemonicsViewController.swift in Sources */,
 				7BC022E5214A13DC00B7A398 /* MixinAuthorizationsViewController.swift in Sources */,
+				9470596D2E69894C0057FBC4 /* ShareDepositAddressContentView.swift in Sources */,
 				94B5777D2B5E755100AE576E /* SeparatorHeaderFooterView.swift in Sources */,
 				946E9F5C2D455F0900DBC308 /* MixinTokenReceiverViewController.swift in Sources */,
 				94509D772DE086E100DC6A43 /* IAPTransactionObserver.swift in Sources */,

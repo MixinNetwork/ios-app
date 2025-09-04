@@ -32,9 +32,9 @@ class DepositDataSource {
     func dataSource(bySwitchingTo token: DepositViewModel.SwitchableToken) -> DepositDataSource {
         switch wallet {
         case .privacy:
-            MixinDepositDataSource(token: token)
+            MixinDepositDataSource(assetID: token.assetID, symbol: token.symbol)
         case .common(let wallet):
-            Web3DepositDataSource(wallet: wallet, token: token)
+            Web3DepositDataSource(wallet: wallet, assetID: token.assetID, symbol: token.symbol)
         }
     }
     
@@ -64,11 +64,6 @@ final class MixinDepositDataSource: DepositDataSource {
     
     private var token: MixinTokenItem?
     private var task: Task<Void, Error>?
-    
-    init(token: DepositViewModel.SwitchableToken) {
-        self.token = nil
-        super.init(wallet: .privacy, assetID: token.assetID, symbol: token.symbol)
-    }
     
     init(assetID: String, symbol: String) {
         self.token = nil
@@ -206,10 +201,10 @@ final class Web3DepositDataSource: DepositDataSource {
         super.init(wallet: .common(wallet), assetID: token.assetID, symbol: token.symbol)
     }
     
-    init(wallet: Web3Wallet, token: DepositViewModel.SwitchableToken) {
+    init(wallet: Web3Wallet, assetID: String, symbol: String) {
         self.walletID = wallet.walletID
         self.token = nil
-        super.init(wallet: .common(wallet), assetID: token.assetID, symbol: token.symbol)
+        super.init(wallet: .common(wallet), assetID: assetID, symbol: symbol)
     }
     
     override func reload() {

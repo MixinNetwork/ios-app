@@ -80,34 +80,12 @@ final class Web3SwapViewController: SwapViewController {
         guard let sendToken else {
             return
         }
-        guard let chainID = sendToken.chain.chainID else {
-            return
-        }
-        let chain = Chain(
-            chainId: chainID,
-            name: sendToken.chain.name,
-            symbol: sendToken.chain.name,
-            iconUrl: sendToken.chain.icon,
-            threshold: -1,
-            withdrawalMemoPossibility: WithdrawalMemoPossibility.possible.rawValue
-        )
-        let token = Web3Token(
-            walletID: wallet.walletID,
+        let dataSource = Web3DepositDataSource(
+            wallet: wallet,
             assetID: sendToken.assetID,
-            chainID: chainID,
-            assetKey: sendToken.address,
-            kernelAssetID: "",
-            symbol: sendToken.symbol,
-            name: sendToken.name,
-            precision: sendToken.decimals,
-            iconURL: sendToken.iconURL,
-            amount: TokenAmountFormatter.string(from: sendToken.decimalBalance),
-            usdPrice: "",
-            usdChange: "",
-            level: Web3Reputation.Level.unknown.rawValue
+            symbol: sendToken.symbol
         )
-        let item = Web3TokenItem(token: token, hidden: false, chain: chain)
-        let deposit = DepositViewController(wallet: wallet, token: item)
+        let deposit = DepositViewController(dataSource: dataSource)
         navigationController?.pushViewController(deposit, animated: true)
     }
     

@@ -137,8 +137,10 @@ final class DepositAddressSummaryView: UIView, XibDesignable {
     private func loadSubviews() {
         loadXib()
         qrCodeView.setDefaultCornerCurve()
+        tokenBackgroundView.overrideUserInterfaceStyle = .light
         tokenBackgroundView.layer.cornerRadius = tokenBackgroundDimensionConstraint.constant / 2
         tokenBackgroundView.layer.masksToBounds = true
+        tokenIconView.overrideUserInterfaceStyle = .light
     }
     
 }

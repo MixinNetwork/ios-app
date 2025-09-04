@@ -3,7 +3,6 @@ import UIKit
 class ShareViewAsPictureViewController: UIViewController {
     
     @IBOutlet weak var layoutWrapperView: UIView!
-    @IBOutlet weak var closeButtonEffectView: UIVisualEffectView!
     @IBOutlet weak var actionButtonTrayView: UIView!
     @IBOutlet weak var actionButtonBackgroundView: UIVisualEffectView!
     @IBOutlet weak var actionButtonStackView: UIStackView!

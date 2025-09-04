@@ -39,18 +39,6 @@ final class ShareDepositAddressViewController: ShareViewAsPictureViewController 
         actionButtonTrayView.backgroundColor = R.color.background()
     }
     
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-        switch traitCollection.userInterfaceStyle {
-        case .dark:
-            closeButtonEffectView.effect = .lightBlur
-        case .light, .unspecified:
-            fallthrough
-        @unknown default:
-            closeButtonEffectView.effect = .darkBlur
-        }
-    }
-    
     override func share(_ sender: Any) {
         guard let presentingViewController else {
             return

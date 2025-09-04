@@ -758,7 +758,7 @@
 "lightning_address_explain_1" = "The address format is similar to an email, simple and easy to remember.";
 "lightning_address_explain_2" = "Reusable, no need to generate a new one each time.";
 "lightning_address_explain_3" = "Supported by mainstream Lightning Network wallets.";
-"lightning_address_explain_mao" = "Each MAO domain corresponds to a Lightning Network address. If you own a MAO domain, you can receive Lightning Network transfers in the format name@mao.id";
+"lightning_address_explain_mao" = "Each MAO domain corresponds to a Lightning Network address. If you own a MAO domain, you can use name@mao.id to receive Lightning Network transfers. ";
 "line_busy" = "Line busy";
 "line_busy_remote" = "Line busy";
 "link" = "Link";

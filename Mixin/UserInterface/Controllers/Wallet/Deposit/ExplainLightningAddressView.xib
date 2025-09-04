@@ -15,6 +15,7 @@
                 <outlet property="copyAddressButton" destination="cpz-0Y-6yN" id="5wP-dp-g8I"/>
                 <outlet property="textView" destination="YSc-aD-SyP" id="3a9-Kq-HCR"/>
                 <outlet property="titleLabel" destination="oZB-fi-sAL" id="ao9-xR-XYK"/>
+                <outlet property="titleView" destination="C3S-6v-7T0" id="Vxz-Oz-3rF"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

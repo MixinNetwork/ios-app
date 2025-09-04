@@ -2,6 +2,7 @@ import UIKit
 
 final class ExplainLightningAddressViewController: UIViewController {
     
+    @IBOutlet weak var titleView: PopupTitleView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var copyAddressButton: UIButton!
@@ -20,17 +21,21 @@ final class ExplainLightningAddressViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        titleView.closeButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
         titleLabel.text = R.string.localizable.lightning_address()
         titleLabel.setFont(
             scaledFor: .systemFont(ofSize: 18, weight: .semibold),
             adjustForContentSize: true
         )
         textView.attributedText = {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineHeightMultiple = 1.1
             let attributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: R.color.text_secondary()!,
                 .font: UIFontMetrics.default.scaledFont(
-                    for: .systemFont(ofSize: 14, weight: .medium)
+                    for: .systemFont(ofSize: 14)
                 ),
+                .paragraphStyle: paragraphStyle,
             ]
             let text = NSMutableAttributedString(
                 string: R.string.localizable.lightning_address_explain(address) + "\n\n",
@@ -38,8 +43,10 @@ final class ExplainLightningAddressViewController: UIViewController {
             )
             if let range = text.string.range(of: address) {
                 text.addAttribute(
-                    .foregroundColor,
-                    value: R.color.text()!,
+                    .font,
+                    value: UIFontMetrics.default.scaledFont(
+                        for: .systemFont(ofSize: 14, weight: .medium)
+                    ),
                     range: NSRange(range, in: text.string)
                 )
             }
@@ -89,6 +96,10 @@ final class ExplainLightningAddressViewController: UIViewController {
         presentingViewController?.dismiss(animated: true)
         UIPasteboard.general.string = address
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
+    }
+    
+    @objc private func close(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
 }

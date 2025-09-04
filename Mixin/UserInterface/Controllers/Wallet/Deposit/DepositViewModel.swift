@@ -37,10 +37,15 @@ struct DepositViewModel {
         self.token = token
         self.tokenPrecision = MixinToken.precision
         self.entry = {
-            let destination = Entry.Content(
-                title: R.string.localizable.address(),
-                value: entry.destination,
-            )
+            let destination = {
+                let title = switch token.assetID {
+                case AssetID.lightningBTC:
+                    R.string.localizable.invoice()
+                default:
+                    R.string.localizable.address()
+                }
+                return Entry.Content(title: title, value: entry.destination)
+            }()
             let supporting = Self.depositSupportedTokens(
                 chainID: token.chainID,
                 symbol: token.symbol

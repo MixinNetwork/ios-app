@@ -829,6 +829,7 @@
 		94350E3A2BCFE8C5007283B7 /* InputAmountView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94350E362BCFE8C5007283B7 /* InputAmountView.xib */; };
 		94350E3B2BCFE8C5007283B7 /* DecimalButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94350E372BCFE8C5007283B7 /* DecimalButton.swift */; };
 		94350E3C2BCFE8C5007283B7 /* InputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94350E382BCFE8C5007283B7 /* InputAmountViewController.swift */; };
+		9437AEF72E6ACF2400C59776 /* Chain+DepositSupporting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9437AEF62E6ACF1C00C59776 /* Chain+DepositSupporting.swift */; };
 		9438252725EE697300709B7D /* CacheableAssetFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438252625EE697300709B7D /* CacheableAssetFileManager.swift */; };
 		94396D4B2CE3597E009DA4E9 /* InputMnemonicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396D4A2CE3597E009DA4E9 /* InputMnemonicsViewController.swift */; };
 		94396F2629EB11E300A57833 /* DeviceTransferProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2529EB11E300A57833 /* DeviceTransferProtocol.swift */; };
@@ -1159,7 +1160,6 @@
 		94902E3B2DA6CD6200E52FC6 /* SimpleWeb3TransactionTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94902E372DA6CD5C00E52FC6 /* SimpleWeb3TransactionTableHeaderView.swift */; };
 		94902E462DA6CD6D00E52FC6 /* SimpleWeb3TransactionTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94902E452DA6CD6D00E52FC6 /* SimpleWeb3TransactionTableHeaderView.xib */; };
 		94902E4E2DA6CFA600E52FC6 /* TransactionStatusLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94902E4D2DA6CFA100E52FC6 /* TransactionStatusLabel.swift */; };
-		94911DC42AF00B2C00A33B2A /* TokenItem+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94911DC32AF00B2C00A33B2A /* TokenItem+Description.swift */; };
 		9491E6BB2E3233F600A869F1 /* OverlayTipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9491E6BA2E32339C00A869F1 /* OverlayTipView.swift */; };
 		9491E6C02E32340600A869F1 /* OverlayTipView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9491E6BF2E32340600A869F1 /* OverlayTipView.xib */; };
 		9491E7252E335B3D00A869F1 /* AddWalletErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9491E7242E335B3500A869F1 /* AddWalletErrorViewController.swift */; };
@@ -2540,6 +2540,7 @@
 		94350E362BCFE8C5007283B7 /* InputAmountView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InputAmountView.xib; sourceTree = "<group>"; };
 		94350E372BCFE8C5007283B7 /* DecimalButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DecimalButton.swift; sourceTree = "<group>"; };
 		94350E382BCFE8C5007283B7 /* InputAmountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputAmountViewController.swift; sourceTree = "<group>"; };
+		9437AEF62E6ACF1C00C59776 /* Chain+DepositSupporting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Chain+DepositSupporting.swift"; sourceTree = "<group>"; };
 		9438252625EE697300709B7D /* CacheableAssetFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetFileManager.swift; sourceTree = "<group>"; };
 		94396D4A2CE3597E009DA4E9 /* InputMnemonicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputMnemonicsViewController.swift; sourceTree = "<group>"; };
 		94396F2529EB11E300A57833 /* DeviceTransferProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferProtocol.swift; sourceTree = "<group>"; };
@@ -2884,7 +2885,6 @@
 		94902E372DA6CD5C00E52FC6 /* SimpleWeb3TransactionTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleWeb3TransactionTableHeaderView.swift; sourceTree = "<group>"; };
 		94902E452DA6CD6D00E52FC6 /* SimpleWeb3TransactionTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SimpleWeb3TransactionTableHeaderView.xib; sourceTree = "<group>"; };
 		94902E4D2DA6CFA100E52FC6 /* TransactionStatusLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionStatusLabel.swift; sourceTree = "<group>"; };
-		94911DC32AF00B2C00A33B2A /* TokenItem+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TokenItem+Description.swift"; sourceTree = "<group>"; };
 		9491E6BA2E32339C00A869F1 /* OverlayTipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayTipView.swift; sourceTree = "<group>"; };
 		9491E6BF2E32340600A869F1 /* OverlayTipView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OverlayTipView.xib; sourceTree = "<group>"; };
 		9491E7242E335B3500A869F1 /* AddWalletErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletErrorViewController.swift; sourceTree = "<group>"; };
@@ -6052,8 +6052,8 @@
 				7B04FAB6226832B1004F8F04 /* Search Result */,
 				E0B53A6A23B0C3FC008DA9F1 /* MessageCategory+Icon.swift */,
 				E0B53A6C23B0C4D3008DA9F1 /* MessageItem+Quote.swift */,
+				9437AEF62E6ACF1C00C59776 /* Chain+DepositSupporting.swift */,
 				E0B53A6823B0C2C9008DA9F1 /* AssetItem+Description.swift */,
-				94911DC32AF00B2C00A33B2A /* TokenItem+Description.swift */,
 				E090B90E23B0B27F0012C7E9 /* ConversationDAO+Search.swift */,
 				E090B91023B0B2F20012C7E9 /* MessageDAO+Search.swift */,
 				E090B9EA23B0BF940012C7E9 /* MessageDAO+Gallery.swift */,
@@ -7300,7 +7300,6 @@
 				94F64FB52D64CD1E00234D7D /* BadgeBarButtonItem.swift in Sources */,
 				7B894CD620D24BE2004FA5A8 /* RecorderLockView.swift in Sources */,
 				DFB9B39A1FAB01E6009503CE /* HomeNavigationController.swift in Sources */,
-				94911DC42AF00B2C00A33B2A /* TokenItem+Description.swift in Sources */,
 				947E26682E2F70F200D6ECB7 /* AddWalletMethod.swift in Sources */,
 				944C61F72B6BFAA100C7DF06 /* PaymentUserItemView.swift in Sources */,
 				7B7FBF8D2282D51100644693 /* IconPrefixedTextMessageViewModel.swift in Sources */,
@@ -7884,6 +7883,7 @@
 				940EE2992C9DDD24001A52FA /* MarketAlertItemView.swift in Sources */,
 				947B36A925DEB72A00146111 /* PlaylistManager.swift in Sources */,
 				9447A7362CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift in Sources */,
+				9437AEF72E6ACF2400C59776 /* Chain+DepositSupporting.swift in Sources */,
 				7BA9D9C4226DCFFC00255943 /* SearchConversationViewController.swift in Sources */,
 				7B04FAB822684242004F8F04 /* AssetSearchResult.swift in Sources */,
 				7BEB97182366CF42002DB190 /* MessageFontSet.swift in Sources */,

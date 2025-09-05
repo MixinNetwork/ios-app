@@ -37,10 +37,6 @@ struct DepositViewModel {
         self.token = token
         self.tokenPrecision = MixinToken.precision
         self.entry = {
-            let supporting = Self.depositSupportedTokens(
-                chainID: token.chainID,
-                symbol: token.symbol
-            )
             if let tag = entry.tag, !tag.isEmpty {
                 let tagTitle, tagWarning, destinationWarning: String
                 return if token.usesTag {
@@ -55,7 +51,7 @@ struct DepositViewModel {
                             value: tag,
                             warning: R.string.localizable.deposit_tag_notice()
                         ),
-                        supporting: supporting
+                        supporting: token.chain?.depositSupporting
                     )
                 } else {
                     .tagging(
@@ -69,7 +65,7 @@ struct DepositViewModel {
                             value: tag,
                             warning: R.string.localizable.deposit_memo_notice()
                         ),
-                        supporting: supporting
+                        supporting: token.chain?.depositSupporting
                     )
                 }
             } else {
@@ -84,7 +80,7 @@ struct DepositViewModel {
                 }()
                 return .general(
                     content: destination,
-                    supporting: supporting,
+                    supporting: token.chain?.depositSupporting,
                     actions: [.copy, .share]
                 )
             }
@@ -156,10 +152,7 @@ struct DepositViewModel {
                 title: R.string.localizable.address(),
                 value: address,
             ),
-            supporting: Self.depositSupportedTokens(
-                chainID: token.chainID,
-                symbol: token.symbol
-            ),
+            supporting: token.chain?.depositSupporting,
             actions: [.copy, .share]
         )
         self.infos = [
@@ -238,8 +231,8 @@ extension DepositViewModel {
             case share
         }
         
-        case general(content: Content, supporting: String, actions: [Action])
-        case tagging(destination: Content, tag: Content, supporting: String)
+        case general(content: Content, supporting: String?, actions: [Action])
+        case tagging(destination: Content, tag: Content, supporting: String?)
         
     }
     
@@ -381,21 +374,6 @@ extension DepositViewModel {
                 ),
             ],
         ]
-    }
-    
-    private static func depositSupportedTokens(chainID: String, symbol: String) -> String {
-        switch chainID {
-        case ChainID.bitcoin:
-            R.string.localizable.deposit_tip_btc()
-        case ChainID.eos:
-            R.string.localizable.deposit_tip_eos()
-        case ChainID.ethereum:
-            R.string.localizable.deposit_tip_eth()
-        case ChainID.tron:
-            R.string.localizable.deposit_tip_trx()
-        default:
-            R.string.localizable.deposit_tip_common(symbol)
-        }
     }
     
 }

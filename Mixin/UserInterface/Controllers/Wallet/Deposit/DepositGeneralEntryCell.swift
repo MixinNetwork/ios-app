@@ -38,7 +38,7 @@ final class DepositGeneralEntryCell: UICollectionViewCell {
     func load<Token: OnChainToken>(
         content: DepositViewModel.Entry.Content,
         token: Token,
-        supporting: String,
+        supporting: String?,
         actions: [DepositViewModel.Entry.Action]
     ) {
         titleLabel.text = content.title

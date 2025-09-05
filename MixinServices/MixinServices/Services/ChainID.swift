@@ -16,6 +16,7 @@ public enum ChainID {
     public static let bnbBeaconChain = "17f78d7c-ed96-40ff-980c-5dc62fecbc85"
     public static let bitShares = "05891083-63d2-4f3d-bfbe-d14d7fb9b25a"
     public static let mvm = "a0ffd769-5850-4b48-9651-d2ae44a3e64d"
+    public static let ripple = "23dfb5a5-5d7b-48b6-905f-3970e3176e27"
     
     // EVM
     public static let ethereum = "43d61dcd-e413-450d-80b8-101d5e903357"

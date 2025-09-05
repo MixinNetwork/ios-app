@@ -471,12 +471,11 @@
 "deposit_memo_address_notice" = "地址 和 Memo（備註）同時使用才能充值 %@ 到你的賬號。";
 "deposit_memo_notice" = "充值時務必填寫 Memo（備註），否則您會丟失您的數字幣。";
 "deposit_pending_confirmation" = "%@ 充值確認中";
+"deposit_supporting_single_token" = "該充值地址僅支援 %@。";
+"deposit_supporting_token_of_network" = "支援所有基於 %@ 發行的代幣。";
 "deposit_suspended" = "%1$@ 充值已暫停，可能的原因包括：\n• 節點故障\n• 網路硬分叉\n• 網路擁堵\n• 使用率較低\n注意已轉入的 %1$@ 資產可以繼續轉賬。";
 "deposit_tag_address_notice" = "地址 和 Tag（標籤）同時使用才能充值 %@ 到你的賬號。";
 "deposit_tag_notice" = "充值時務必填寫 Tag（標籤），否則您會丟失您的數字幣。";
-"deposit_tip_btc" = "該充值地址僅支援 BTC。";
-"deposit_tip_common" = "該充值地址僅支援 %@。";
-"deposit_tip_eos" = "支援所有基於 EOS 發行的代幣。";
 "deposit_tip_eth" = "支援所有符合 ERC-20 標準的代幣，例如 ETH、XIN 等。";
 "deposit_tip_trx" = "支援 TRX 和所有符合 TRC-10、TRC-20 標準的代幣。";
 "deposit_token" = "充值 %@";

@@ -471,12 +471,11 @@
 "deposit_memo_address_notice" = "Both Memo and Address are required to deposit %@ to your account.";
 "deposit_memo_notice" = "メモが必要です、メモを添付せずに送金した場合に資産を失うおそれがあります";
 "deposit_pending_confirmation" = "%@ Pending Confirmation";
+"deposit_supporting_single_token" = "This address only supports %@.";
+"deposit_supporting_token_of_network" = "This address supports all tokens based on %@ network.";
 "deposit_suspended" = "%1$@ deposits have been suspended. Possible reasons:\n• Node failure\n• Network hard fork\n• Network congestion\n• Low usage\nNote: %1$@ assets already deposited can still be transferred.";
 "deposit_tag_address_notice" = "Both Tag and Address are required to deposit %@ to your account.";
 "deposit_tag_notice" = "Tag is required, or you will lose your coins.";
-"deposit_tip_btc" = "このアドレスはビットコインのみサポートしています";
-"deposit_tip_common" = "このアドレスは%@のみサポートしています";
-"deposit_tip_eos" = "このアドレスはEOSベースの全てのトークンをサポートしています";
 "deposit_tip_eth" = "このアドレスはETHやXINなど全てのERC-20トークンをサポートしています";
 "deposit_tip_trx" = "このアドレスは全てのTRC-10/TRC-20トークンをサポートしています";
 "deposit_token" = "Deposit %@";

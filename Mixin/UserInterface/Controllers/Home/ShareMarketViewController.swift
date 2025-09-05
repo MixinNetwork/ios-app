@@ -31,18 +31,6 @@ final class ShareMarketViewController: ShareViewAsPictureViewController {
         actionButtonTrayView.backgroundColor = R.color.background()
     }
     
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-        switch traitCollection.userInterfaceStyle {
-        case .dark:
-            closeButtonEffectView.effect = .lightBlur
-        case .light, .unspecified:
-            fallthrough
-        @unknown default:
-            closeButtonEffectView.effect = .darkBlur
-        }
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         dismissOnColorAppearanceChange = true

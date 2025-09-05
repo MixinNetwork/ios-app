@@ -377,17 +377,7 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
                     receiveAssetID: token.assetID,
                 )
             case .deposit:
-                guard let address = Web3AddressDAO.shared.address(walletID: token.walletID, chainID: token.chainID) else {
-                    return
-                }
-                guard let kind = Web3Chain.chain(chainID: token.chainID)?.kind else {
-                    return
-                }
-                next = Web3DepositViewController(
-                    wallet: wallet,
-                    kind: kind,
-                    address: address.destination
-                )
+                next = DepositViewController(wallet: wallet, token: token)
             }
         default:
             return

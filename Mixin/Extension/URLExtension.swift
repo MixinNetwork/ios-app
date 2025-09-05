@@ -25,6 +25,7 @@ extension URL {
     static let support              = URL(string: R.string.localizable.url_support())!
     static let watchWallet          = URL(string: R.string.localizable.url_watch_wallet())!
     static let whatIsPIN            = URL(string: R.string.localizable.url_what_is_pin())!
+    static let lightningAddress     = URL(string: R.string.localizable.url_lightning_address())!
     
     func getKeyVals() -> [String: String] {
         return URLComponents(url: self, resolvingAgainstBaseURL: true)?.getKeyVals() ?? [:]

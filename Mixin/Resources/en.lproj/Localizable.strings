@@ -160,6 +160,7 @@
 "approving_transaction" = "Approving Transaction";
 "approving_transaction_failed" = "Approving Transaction Failed";
 "ask_me_anything" = "Ask me anything";
+"asset" = "Asset";
 "asset_key" = "Asset Key";
 "asset_not_found" = "Asset not found.";
 "asset_type" = "Asset Type";
@@ -199,6 +200,7 @@
 "batch_transfer_confirmation" = "Batch Transfer Confirmation";
 "before_you_proceed" = "Before you proceed";
 "block" = "Block";
+"block_confirmations" = "Block Confirmations";
 "block_hint" = "Blocked contacts will no longer be able to call you or send you messages";
 "block_tip" = "Blocked users can't send you messages or add you to groups.";
 "blocked" = "Blocked";
@@ -458,7 +460,7 @@
 "delete_withdraw_address" = "Delete %@ Address";
 "deleted" = "Deleted";
 "deleting_address" = "Delete Address";
-"deleting_address_failed" = "DeleteAddress Failed";
+"deleting_address_failed" = "Delete Address Failed";
 "deposit" = "Deposit";
 "deposit_account_attention" = "Attention: Please try a small amount for the first deposit. Both a Memo and an Address are required to successfully deposit your %@ to Mixin Messenger.";
 "deposit_attention" = "Please try a small amount for the first deposit.";
@@ -466,14 +468,19 @@
 "deposit_confirmation_count" = "Deposit will arrive %d block confirmations";
 "deposit_dust" = "Minimum deposit: %1$@ %2$@";
 "deposit_hash" = "Deposit Hash";
+"deposit_memo_address_notice" = "Both Memo and Address are required to deposit %@ to your account.";
+"deposit_memo_notice" = "Memo is required, or you will lose your coins.";
 "deposit_pending_confirmation" = "%@ Pending Confirmation";
-"deposit_tip_btc" = "This address only supports BTC.";
-"deposit_tip_common" = "This address only supports %@.";
-"deposit_tip_eos" = "This address supports all base on EOS tokens.";
+"deposit_supporting_single_token" = "This address only supports %@.";
+"deposit_supporting_token_of_network" = "This address supports all tokens based on %@ network.";
+"deposit_suspended" = "%1$@ deposits have been suspended. Possible reasons:\n• Node failure\n• Network hard fork\n• Network congestion\n• Low usage\nNote: %1$@ assets already deposited can still be transferred.";
+"deposit_tag_address_notice" = "Both Tag and Address are required to deposit %@ to your account.";
+"deposit_tag_notice" = "Tag is required, or you will lose your coins.";
 "deposit_tip_eth" = "This address supports all ERC-20 tokens, such as ETH, XIN, etc.";
 "deposit_tip_trx" = "This address supports all TRC-10 and TRC-20 tokens.";
 "deposit_token" = "Deposit %@";
 "deposit_token_description" = "Deposit from other exchanges or wallets";
+"deposit_token_to_mixin" = "Deposit %@ to Mixin";
 "deposits_pending_confirmation" = "%d Deposits Pending Confirmation";
 "depost_address_updated" = "%@ Deposit Address Updated";
 "depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
@@ -533,6 +540,7 @@
 "enable_touch_pay_hint" = "Confirm PIN to enable Touch Pay";
 "end" = "End";
 "end_to_end_encryption" = "End-to-end Encrypted";
+"enter_amount" = "Enter Amount";
 "enter_mnemonic_phrase" = "Enter or paste your %d mnemonic words.";
 "enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "Enter your new phone number";
@@ -748,6 +756,12 @@
 "legacy_network" = "Legacy Network";
 "legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "light" = "Light";
+"lightning_address" = "Lightning Address";
+"lightning_address_explain" = "%@ is your Lightning Network address. With this address, you can conveniently and securely receive payments:";
+"lightning_address_explain_1" = "The address format is similar to an email, simple and easy to remember.";
+"lightning_address_explain_2" = "Reusable, no need to generate a new one each time.";
+"lightning_address_explain_3" = "Supported by mainstream Lightning Network wallets.";
+"lightning_address_explain_mao" = "Each MAO domain corresponds to a Lightning Network address. If you own a MAO domain, you can use name@mao.id to receive Lightning Network transfers. ";
 "line_busy" = "Line busy";
 "line_busy_remote" = "Line busy";
 "link" = "Link";
@@ -790,6 +804,7 @@
 "markets" = "Markets";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
+"maximum_deposit" = "Maximum Deposit";
 "media" = "Media";
 "membership_advance" = "Advance";
 "membership_advance_description" = "Use multiple keys on multiple devices to avoid single point of failure, and get decentralized recovery service in case of key loss.";
@@ -813,6 +828,7 @@
 "message_sent" = "Message sent";
 "messages" = "Messages";
 "method_not_supported" = "Method %@ is not supported";
+"minimum_deposit" = "Minimum Deposit";
 "minimum_withdrawal" = "Minimum Withdrawal";
 "minute" = "%d Minute";
 "minute_count" = "%d Minutes";
@@ -1172,6 +1188,8 @@
 "scan_code_add_me" = "Scan the QR code to add me on Mixin";
 "scan_code_description" = "Use another device to scan the QR code below";
 "scan_qr_code" = "Scan QR Code";
+"scan_qr_code_to_send_token" = "Scan the QR Code to send me %@";
+"scan_qr_code_to_transfer_on_mixin" = "Scan the QR Code to transfer me %@ on Mixin";
 "scan_to_restore" = "Scan to Restore";
 "scan_to_restore_hint" = "Click the button below to scan the code and establish a connection.";
 "screen_lock" = "Screen Lock";
@@ -1243,6 +1261,7 @@
 "sending_withdrawal_request" = "Sending Withdrawal Request";
 "session_not_found" = "Session not found";
 "set" = "Set";
+"set_amount" = "Set Amount";
 "set_as_avatar" = "Set as Avatar";
 "set_disappearing_message_time_to" = "%1$@ set disappearing message time to %2$@";
 "set_emergency_create_successfully" = "Set recovery contact successfully";
@@ -1350,7 +1369,6 @@
 "storage_usage" = "Storage Usage";
 "stranger_hint" = "This sender is not in your contacts";
 "successful" = "Successful";
-"suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "Suspicious Link";
 "swap" = "Swap";
 "swap_again" = "Swap Again";
@@ -1510,6 +1528,7 @@
 "url_deposit_suspended" = "https://support.mixin.one/en/article/the-explanation-about-mixin-stopped-support-for-some-assets-deposits-1im32px/";
 "url_disappearing_message" = "https://support.mixin.one/en/article/how-to-enable-disappearing-messages-2nzaz8/";
 "url_forget_pin" = "https://support.mixin.one/en/article/how-to-do-if-i-forget-the-pin-g12pmo/";
+"url_lightning_address" = "https://support.mixin.one/en/article/what-is-lightning-address-1i8733z/";
 "url_privacy_wallet" = "https://support.mixin.one/en/article/what-is-a-privacy-wallet-1ng5j8f/";
 "url_recall_message" = "https://support.mixin.one/en/article/how-to-recall-in-mixin-messenger-n3v3p1/";
 "url_recovery_contact" = "https://support.mixin.one/en/article/how-to-set-up-an-emergency-contact-1kvd6g8/";

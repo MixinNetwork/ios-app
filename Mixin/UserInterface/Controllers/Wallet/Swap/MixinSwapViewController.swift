@@ -73,40 +73,15 @@ class MixinSwapViewController: SwapViewController {
     }
     
     override func depositSendToken(_ sender: Any) {
-        guard let id = sendToken?.assetID else {
+        guard let sendToken else {
             return
         }
-        if let item = TokenDAO.shared.tokenItem(assetID: id) {
-            let deposit = DepositViewController(token: item)
-            navigationController?.pushViewController(deposit, animated: true)
-            return
-        }
-        depositSendTokenButton.isBusy = true
-        depositTokenRequest = SafeAPI.asset(id: id, queue: .global()) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.depositSendTokenButton.isBusy = false
-            }
-            switch result {
-            case .success(let token):
-                if let chain = ChainDAO.shared.chain(chainId: token.chainID) {
-                    let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
-                    DispatchQueue.main.async {
-                        guard let self, id == self.sendToken?.assetID else {
-                            return
-                        }
-                        let deposit = DepositViewController(token: item)
-                        self.navigationController?.pushViewController(deposit, animated: true)
-                    }
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    guard self != nil else {
-                        return
-                    }
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                }
-            }
-        }
+        let dataSource = MixinDepositDataSource(
+            assetID: sendToken.assetID,
+            symbol: sendToken.symbol
+        )
+        let deposit = DepositViewController(dataSource: dataSource)
+        navigationController?.pushViewController(deposit, animated: true)
     }
     
     override func changeReceiveToken(_ sender: Any) {

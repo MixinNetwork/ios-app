@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,7 +13,7 @@
                 <outlet property="actionButtonBackgroundView" destination="BdN-Mg-u4A" id="Q9m-dX-E3s"/>
                 <outlet property="actionButtonStackView" destination="BRj-T7-8lv" id="FsV-vD-VDo"/>
                 <outlet property="actionButtonTrayView" destination="1H8-wN-h5l" id="6ai-hd-Ef3"/>
-                <outlet property="closeButtonEffectView" destination="mOn-aS-e37" id="BEW-Z9-Zqm"/>
+                <outlet property="layoutWrapperHeightConstraint" destination="X4N-cr-SYs" id="TcY-Vw-Lb2"/>
                 <outlet property="layoutWrapperView" destination="dMf-Ii-eQE" id="dlu-Xt-T03"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -23,34 +23,17 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dMf-Ii-eQE">
-                    <rect key="frame" x="30" y="131" width="315" height="575"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dMf-Ii-eQE" userLabel="Layout Wrapper View">
+                    <rect key="frame" x="30" y="184" width="315" height="528"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oys-cY-VXv">
                             <rect key="frame" x="269" y="4" width="44" height="44"/>
                             <subviews>
-                                <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mOn-aS-e37">
-                                    <rect key="frame" x="9" y="9" width="26" height="26"/>
-                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="pNt-u1-axt">
-                                        <rect key="frame" x="0.0" y="0.0" width="26" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    </view>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="26" id="1cc-tJ-KDx"/>
-                                        <constraint firstAttribute="width" secondItem="mOn-aS-e37" secondAttribute="height" id="kyJ-j3-uAW"/>
-                                    </constraints>
-                                    <blurEffect style="light"/>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                            <integer key="value" value="13"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </visualEffectView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o5U-Cc-wet">
                                     <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <state key="normal" image="ic_web_dismiss"/>
+                                    <state key="normal" image="dialog_close"/>
+                                    <buttonConfiguration key="configuration" style="plain" image="dialog_close"/>
                                     <connections>
                                         <action selector="close:" destination="-1" eventType="touchUpInside" id="gKE-hW-FXA"/>
                                     </connections>
@@ -61,15 +44,13 @@
                                 <constraint firstAttribute="trailing" secondItem="o5U-Cc-wet" secondAttribute="trailing" id="64Z-Tm-30g"/>
                                 <constraint firstAttribute="height" constant="44" id="Dqs-zc-ecT"/>
                                 <constraint firstItem="o5U-Cc-wet" firstAttribute="leading" secondItem="oys-cY-VXv" secondAttribute="leading" id="IHb-JR-QnK"/>
-                                <constraint firstItem="mOn-aS-e37" firstAttribute="centerY" secondItem="oys-cY-VXv" secondAttribute="centerY" id="M89-Ml-I8F"/>
                                 <constraint firstAttribute="bottom" secondItem="o5U-Cc-wet" secondAttribute="bottom" id="O7C-bP-xPV"/>
                                 <constraint firstItem="o5U-Cc-wet" firstAttribute="top" secondItem="oys-cY-VXv" secondAttribute="top" id="e6g-Ag-AkO"/>
-                                <constraint firstItem="mOn-aS-e37" firstAttribute="centerX" secondItem="oys-cY-VXv" secondAttribute="centerX" id="o7H-NQ-AkI"/>
                                 <constraint firstAttribute="width" constant="44" id="sBc-AP-J1X"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1H8-wN-h5l">
-                            <rect key="frame" x="0.0" y="470" width="315" height="105"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1H8-wN-h5l" userLabel="Action Button Tray View">
+                            <rect key="frame" x="0.0" y="423" width="315" height="105"/>
                             <subviews>
                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BdN-Mg-u4A">
                                     <rect key="frame" x="0.0" y="0.0" width="315" height="105"/>
@@ -129,6 +110,6 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_web_dismiss" width="12" height="12"/>
+        <image name="dialog_close" width="26" height="26"/>
     </resources>
 </document>

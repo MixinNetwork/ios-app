@@ -468,8 +468,12 @@
 "deposit_confirmation_count" = "充值到账需要 %d 个区块确认。";
 "deposit_dust" = "最小充值数：%1$@ %2$@";
 "deposit_hash" = "充值哈希";
+"deposit_memo_address_notice" = "地址 和 Memo（备注）同时使用才能充值 %@ 到你的账号。";
+"deposit_memo_notice" = "充值时务必填写 Memo（备注），否则您会丢失您的数字币。";
 "deposit_pending_confirmation" = "%@ 充值确认中";
 "deposit_suspended" = "%1$@ 充值已暂停，可能的原因包括：\n• 节点故障\n• 网络硬分叉\n• 网络拥堵\n• 使用率较低\n注意已转入的 %1$@ 资产可以继续转账。";
+"deposit_tag_address_notice" = "地址 和 Tag（标签）同时使用才能充值 %@ 到你的账号。";
+"deposit_tag_notice" = "充值时务必填写 Tag（标签），否则您会丢失您的数字币。";
 "deposit_tip_btc" = "该充值地址仅支持 BTC。";
 "deposit_tip_common" = "该充值地址仅支持 %@。";
 "deposit_tip_eos" = "支持所有基于 EOS 发行的代币。";

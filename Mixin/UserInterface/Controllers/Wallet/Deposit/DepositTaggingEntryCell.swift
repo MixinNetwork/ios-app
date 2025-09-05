@@ -33,6 +33,7 @@ final class DepositTaggingEntryCell: UICollectionViewCell {
     ) {
         titleLabel.text = content.title
         contentLabel.text = content.value
+        warningLabel.text = content.warning
         let qrCodeSize = CGSize(
             width: qrCodeDimensionConstraint.constant,
             height: qrCodeDimensionConstraint.constant

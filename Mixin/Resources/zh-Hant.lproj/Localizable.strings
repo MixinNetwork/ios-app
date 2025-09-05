@@ -468,8 +468,12 @@
 "deposit_confirmation_count" = "充值到賬需要 %d 個區塊確認。";
 "deposit_dust" = "最小充值數：%1$@ %2$@";
 "deposit_hash" = "充值雜湊";
+"deposit_memo_address_notice" = "地址 和 Memo（備註）同時使用才能充值 %@ 到你的賬號。";
+"deposit_memo_notice" = "充值時務必填寫 Memo（備註），否則您會丟失您的數字幣。";
 "deposit_pending_confirmation" = "%@ 充值確認中";
 "deposit_suspended" = "%1$@ 充值已暫停，可能的原因包括：\n• 節點故障\n• 網路硬分叉\n• 網路擁堵\n• 使用率較低\n注意已轉入的 %1$@ 資產可以繼續轉賬。";
+"deposit_tag_address_notice" = "地址 和 Tag（標籤）同時使用才能充值 %@ 到你的賬號。";
+"deposit_tag_notice" = "充值時務必填寫 Tag（標籤），否則您會丟失您的數字幣。";
 "deposit_tip_btc" = "該充值地址僅支援 BTC。";
 "deposit_tip_common" = "該充值地址僅支援 %@。";
 "deposit_tip_eos" = "支援所有基於 EOS 發行的代幣。";

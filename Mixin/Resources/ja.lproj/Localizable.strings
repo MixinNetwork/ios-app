@@ -460,7 +460,7 @@
 "delete_withdraw_address" = "%@のアドレス削除";
 "deleted" = "削除しました";
 "deleting_address" = "Delete Address";
-"deleting_address_failed" = "DeleteAddress Failed";
+"deleting_address_failed" = "Delete Address Failed";
 "deposit" = "入金";
 "deposit_account_attention" = "注意： 最初の入金は少額でお試しください。Mixinに %@ を入金するためには、メモとアドレスの両方の記入が必要です。";
 "deposit_attention" = "注意: 最初は必ず少額で入金テストをしてください。";
@@ -468,8 +468,12 @@
 "deposit_confirmation_count" = "入金した仮想通貨は、%dブロック確認後に着金します";
 "deposit_dust" = "Minimum deposit: %1$@ %2$@";
 "deposit_hash" = "Deposit Hash";
+"deposit_memo_address_notice" = "Both Memo and Address are required to deposit %@ to your account.";
+"deposit_memo_notice" = "メモが必要です、メモを添付せずに送金した場合に資産を失うおそれがあります";
 "deposit_pending_confirmation" = "%@ Pending Confirmation";
 "deposit_suspended" = "%1$@ deposits have been suspended. Possible reasons:\n• Node failure\n• Network hard fork\n• Network congestion\n• Low usage\nNote: %1$@ assets already deposited can still be transferred.";
+"deposit_tag_address_notice" = "Both Tag and Address are required to deposit %@ to your account.";
+"deposit_tag_notice" = "Tag is required, or you will lose your coins.";
 "deposit_tip_btc" = "このアドレスはビットコインのみサポートしています";
 "deposit_tip_common" = "このアドレスは%@のみサポートしています";
 "deposit_tip_eos" = "このアドレスはEOSベースの全てのトークンをサポートしています";

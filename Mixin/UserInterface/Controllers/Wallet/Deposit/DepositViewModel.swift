@@ -37,31 +37,51 @@ struct DepositViewModel {
         self.token = token
         self.tokenPrecision = MixinToken.precision
         self.entry = {
-            let destination = {
-                let title = switch token.assetID {
-                case AssetID.lightningBTC:
-                    R.string.localizable.invoice()
-                default:
-                    R.string.localizable.address()
-                }
-                return Entry.Content(title: title, value: entry.destination)
-            }()
             let supporting = Self.depositSupportedTokens(
                 chainID: token.chainID,
                 symbol: token.symbol
             )
             if let tag = entry.tag, !tag.isEmpty {
-                let tagTitle = if token.usesTag {
-                    R.string.localizable.tag()
+                let tagTitle, tagWarning, destinationWarning: String
+                return if token.usesTag {
+                    .tagging(
+                        destination: Entry.Content(
+                            title: R.string.localizable.address(),
+                            value: entry.destination,
+                            warning: R.string.localizable.deposit_tag_address_notice(token.symbol)
+                        ),
+                        tag: Entry.Content(
+                            title: R.string.localizable.tag(),
+                            value: tag,
+                            warning: R.string.localizable.deposit_tag_notice()
+                        ),
+                        supporting: supporting
+                    )
                 } else {
-                    R.string.localizable.withdrawal_memo()
+                    .tagging(
+                        destination: Entry.Content(
+                            title: R.string.localizable.address(),
+                            value: entry.destination,
+                            warning: R.string.localizable.deposit_memo_address_notice(token.symbol)
+                        ),
+                        tag: Entry.Content(
+                            title: R.string.localizable.withdrawal_memo(),
+                            value: tag,
+                            warning: R.string.localizable.deposit_memo_notice()
+                        ),
+                        supporting: supporting
+                    )
                 }
-                return .tagging(
-                    destination: destination,
-                    tag: Entry.Content(title: tagTitle, value: tag),
-                    supporting: supporting
-                )
             } else {
+                let destination = {
+                    let title = switch token.assetID {
+                    case AssetID.lightningBTC:
+                        R.string.localizable.invoice()
+                    default:
+                        R.string.localizable.address()
+                    }
+                    return Entry.Content(title: title, value: entry.destination)
+                }()
                 return .general(
                     content: destination,
                     supporting: supporting,
@@ -202,10 +222,12 @@ extension DepositViewModel {
             
             let title: String
             let value: String
+            let warning: String?
             
-            init(title: String, value: String) {
+            init(title: String, value: String, warning: String? = nil) {
                 self.title = title.uppercased()
                 self.value = value
+                self.warning = warning
             }
             
         }

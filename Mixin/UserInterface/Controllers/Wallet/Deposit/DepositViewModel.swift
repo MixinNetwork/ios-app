@@ -342,6 +342,12 @@ extension DepositViewModel {
                     symbol: "USDC"
                 ),
                 SwitchableToken(
+                    chainID: ChainID.base,
+                    chainName: "Base",
+                    assetID: AssetID.baseUSDC,
+                    symbol: "USDC"
+                ),
+                SwitchableToken(
                     chainID: ChainID.solana,
                     chainName: "Solana",
                     assetID: AssetID.solanaUSDC,

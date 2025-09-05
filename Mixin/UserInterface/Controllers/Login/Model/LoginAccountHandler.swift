@@ -17,8 +17,10 @@ extension LoginAccountHandler where Self: UIViewController {
                 privateKey: sessionKey.x25519Representation
             )
         else {
+            Logger.login.error(category: "Login", message: "Invalid Server PIN Token")
             return .invalidServerPinToken
         }
+        Logger.login.info(category: "Login", message: "Got account: \(account.userID), has_pin: \(account.hasPIN), has_safe: \(account.hasSafe)")
         AppGroupKeychain.sessionSecret = sessionKey.rawRepresentation
         AppGroupKeychain.pinToken = pinToken
         if !account.isAnonymous {

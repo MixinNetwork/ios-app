@@ -442,6 +442,16 @@ extension DepositViewController: DepositDataSource.Delegate {
             suspendedView.snp.makeEdgesEqualToSuperview()
             self.depositSuspendedView = suspendedView
         }
+        suspendedView.contactSupportButton.removeTarget(
+            self,
+            action: nil,
+            for: .touchUpInside
+        )
+        suspendedView.contactSupportButton.addTarget(
+            self,
+            action: #selector(contactSupport(_:)),
+            for: .touchUpInside
+        )
     }
     
     func depositDataSource(

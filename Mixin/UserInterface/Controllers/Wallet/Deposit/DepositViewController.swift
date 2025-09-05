@@ -56,9 +56,9 @@ final class DepositViewController: UIViewController {
         let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ in
             switch Section(rawValue: sectionIndex)! {
             case .network:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(133), heightDimension: .estimated(38))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .estimated(37))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(38))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(37))
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
                 section.interGroupSpacing = 12

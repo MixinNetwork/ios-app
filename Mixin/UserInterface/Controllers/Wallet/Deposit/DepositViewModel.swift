@@ -271,13 +271,13 @@ extension DepositViewModel {
             [
                 SwitchableToken(
                     chainID: ChainID.ethereum,
-                    chainName: "ERC-20",
+                    chainName: "Ethereum",
                     assetID: AssetID.erc20USDT,
                     symbol: "USDT"
                 ),
                 SwitchableToken(
                     chainID: ChainID.tron,
-                    chainName: "TRON(TRC-20)",
+                    chainName: "TRON",
                     assetID: AssetID.tronUSDT,
                     symbol: "USDT"
                 ),
@@ -289,7 +289,7 @@ extension DepositViewModel {
                 ),
                 SwitchableToken(
                     chainID: ChainID.bnbSmartChain,
-                    chainName: "BEP-20",
+                    chainName: "BSC",
                     assetID: AssetID.bep20USDT,
                     symbol: "USDT"
                 ),
@@ -303,7 +303,7 @@ extension DepositViewModel {
             [
                 SwitchableToken(
                     chainID: ChainID.ethereum,
-                    chainName: "ERC-20",
+                    chainName: "Ethereum",
                     assetID: AssetID.erc20USDC,
                     symbol: "USDC"
                 ),
@@ -315,7 +315,7 @@ extension DepositViewModel {
                 ),
                 SwitchableToken(
                     chainID: ChainID.bnbSmartChain,
-                    chainName: "BEP-20",
+                    chainName: "BSC",
                     assetID: AssetID.bep20USDC,
                     symbol: "USDC"
                 ),

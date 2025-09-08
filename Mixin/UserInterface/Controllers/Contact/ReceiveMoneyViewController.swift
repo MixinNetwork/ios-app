@@ -44,6 +44,7 @@ final class ReceiveMoneyViewController: UIViewController {
     
     @IBAction func setAmount(_ sender: Any) {
         let selector = MixinTokenSelectorViewController()
+        selector.searchFromRemote = true
         selector.onSelected = { [weak self, link] (token, _) in
             let inputAmount = DepositInputAmountViewController(link: link, token: token)
             let navigationController = GeneralAppearanceNavigationController(

@@ -3,9 +3,9 @@ import MixinServices
 
 final class DepositInputAmountViewController: InputAmountViewController {
     
-    let token: ValuableToken & OnChainToken
+    // All the precisions used here are MixinToken.internalPrecision, because whether it is an on-chain transfer or an internal transfer, the amount a user receives has at most 8 decimal places.
     
-    private let tokenPrecision: Int
+    let token: ValuableToken & OnChainToken
     
     private(set) var amountIntent: AmountIntent
     private(set) var tokenAmount: Decimal = 0
@@ -13,7 +13,7 @@ final class DepositInputAmountViewController: InputAmountViewController {
     
     private lazy var tokenAmountRoundingHandler = NSDecimalNumberHandler(
         roundingMode: .plain,
-        scale: Int16(tokenPrecision),
+        scale: Int16(MixinToken.internalPrecision),
         raiseOnExactness: false,
         raiseOnOverflow: false,
         raiseOnUnderflow: false,
@@ -22,11 +22,10 @@ final class DepositInputAmountViewController: InputAmountViewController {
     
     private let link: DepositLink
     
-    init(link: DepositLink, token: ValuableToken & OnChainToken, precision: Int) {
-        let accumulator = DecimalAccumulator(precision: precision)
+    init(link: DepositLink, token: ValuableToken & OnChainToken) {
+        let accumulator = DecimalAccumulator(precision: MixinToken.internalPrecision)
         self.link = link
         self.token = token
-        self.tokenPrecision = precision
         self.amountIntent = .byToken
         super.init(accumulator: accumulator)
     }
@@ -58,7 +57,7 @@ final class DepositInputAmountViewController: InputAmountViewController {
             accumulator = .fiatMoney()
         case .byFiatMoney:
             amountIntent = .byToken
-            accumulator = DecimalAccumulator(precision: tokenPrecision)
+            accumulator = DecimalAccumulator(precision: MixinToken.internalPrecision)
         }
         accumulator.decimal = self.accumulator.decimal
         self.accumulator = accumulator
@@ -75,14 +74,24 @@ final class DepositInputAmountViewController: InputAmountViewController {
         case .byToken:
             tokenAmount = inputAmount
             fiatMoneyAmount = inputAmount * price
-            calculatedValueLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencyCode)
+            calculatedValueLabel.text = CurrencyFormatter.localizedString(
+                from: fiatMoneyAmount,
+                format: .fiatMoney,
+                sign: .never,
+                symbol: .currencyCode
+            )
             inputAmountString.append(" " + token.symbol)
         case .byFiatMoney:
             tokenAmount = NSDecimalNumber(decimal: inputAmount / price)
                 .rounding(accordingToBehavior: tokenAmountRoundingHandler)
                 .decimalValue
             fiatMoneyAmount = inputAmount
-            calculatedValueLabel.text = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
+            calculatedValueLabel.text = CurrencyFormatter.localizedString(
+                from: tokenAmount,
+                format: .precision,
+                sign: .never,
+                symbol: .custom(token.symbol)
+            )
             inputAmountString.append(" " + Currency.current.code)
         }
         

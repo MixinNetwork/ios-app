@@ -4,6 +4,7 @@ public protocol OnChainToken: Token {
     
     var chainID: String { get }
     var assetKey: String { get }
+    var precision: Int16 { get }
     var chain: Chain? { get }
     var chainTag: String? { get }
     
@@ -44,6 +45,10 @@ extension OnChainToken {
         default:
             chain?.name
         }
+    }
+    
+    public var positionalValue: Decimal {
+        Decimal(sign: .plus, exponent: Int(precision), significand: 1)
     }
     
 }

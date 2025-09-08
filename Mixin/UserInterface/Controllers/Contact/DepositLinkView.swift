@@ -91,6 +91,7 @@ final class DepositLinkView: UIView, XibDesignable {
                 footerLabel.textColor = R.color.text_tertiary()
                 footerLabel.text = R.string.localizable.transfer_qrcode_prompt()
             }
+            footerLabel.numberOfLines = 0
             contentView.addArrangedSubview(footerLabel)
             self.footerView = footerLabel
         case .native(let context):
@@ -154,6 +155,7 @@ final class DepositLinkView: UIView, XibDesignable {
                 return text
             }()
             addressContentLabel.numberOfLines = 0
+            addressContentLabel.lineBreakMode = .byCharWrapping
             let addressStackView = UIStackView(
                 arrangedSubviews: [addressTitleLabel, addressContentLabel]
             )

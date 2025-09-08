@@ -369,8 +369,7 @@ extension DepositViewController: DepositEntryActionDelegate {
                     token: viewModel.token,
                     minimumDeposit: viewModel.minimumDeposit
                 ),
-                token: viewModel.token,
-                precision: viewModel.tokenPrecision
+                token: viewModel.token
             )
             let navigationController = GeneralAppearanceNavigationController(
                 rootViewController: inputAmount

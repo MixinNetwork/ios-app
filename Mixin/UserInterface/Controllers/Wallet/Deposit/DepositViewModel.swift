@@ -7,7 +7,6 @@ struct DepositViewModel {
     let switchableTokens: [SwitchableToken]
     let selectedTokenIndex: Int?
     let token: any (OnChainToken & ValuableToken)
-    let tokenPrecision: Int
     let entry: Entry
     let infos: [Info]
     let minimumDeposit: String?
@@ -35,7 +34,6 @@ struct DepositViewModel {
         self.switchableTokens = switchableTokens
         self.selectedTokenIndex = selectedTokenIndex
         self.token = token
-        self.tokenPrecision = MixinToken.precision
         self.entry = {
             if let tag = entry.tag, !tag.isEmpty {
                 return if token.usesTag {
@@ -153,7 +151,6 @@ struct DepositViewModel {
         self.switchableTokens = switchableTokens
         self.selectedTokenIndex = selectedTokenIndex
         self.token = token
-        self.tokenPrecision = Int(token.precision)
         self.entry = .general(
             content: Entry.Content(
                 title: R.string.localizable.address(),

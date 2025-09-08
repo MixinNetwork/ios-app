@@ -62,7 +62,7 @@ struct DepositLink {
                     if id != 1 {
                         value.append("@\(id)")
                     }
-                    value.append("/transfer?address=\(address)&amount=\(amount)") // TODO: Add uint256
+                    value.append("/transfer?address=\(address)&amount=\(amount)&uint256=\(amount * token.positionalValue)")
                 }
             case .solana:
                 value = "solana:\(address)?amount=\(amount)"
@@ -79,8 +79,7 @@ struct DepositLink {
                 case AssetID.ton:
                     value = "ton://transfer/\(address)?amount=\(amount / .nanoton)"
                 default:
-                    // TODO: Jetton tokens
-                    value = address
+                    value = "ton://transfer/\(address)?jetton=\(token.assetKey)&amount=\(amount * token.positionalValue)"
                 }
             case ChainID.bitcoin:
                 value = "bitcoin:\(address)?amount=\(amount)"

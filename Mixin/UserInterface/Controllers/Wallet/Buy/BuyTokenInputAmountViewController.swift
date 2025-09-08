@@ -34,7 +34,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
             if let token = token as? Web3TokenItem {
                 Int(token.precision)
             } else {
-                MixinToken.precision
+                MixinToken.internalPrecision
             }
         } else {
             0
@@ -48,7 +48,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         } else {
             .usd
         }
-        let accumulator = DecimalAccumulator(precision: MixinToken.precision)
+        let accumulator = DecimalAccumulator(precision: MixinToken.internalPrecision)
         super.init(accumulator: accumulator)
     }
     
@@ -437,7 +437,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                         kernelAssetID: token.kernelAssetID,
                         symbol: token.symbol,
                         name: token.name,
-                        precision: Int16(MixinToken.precision), // XXX: No precision in MixinToken
+                        precision: token.precision,
                         iconURL: token.iconURL,
                         amount: "0",
                         usdPrice: token.usdPrice,

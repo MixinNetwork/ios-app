@@ -2,7 +2,7 @@ import Foundation
 
 public struct DeviceTransferCommand {
     
-    public static let localVersion = 2
+    public static let localVersion = 3
     
     public struct PushContext {
         

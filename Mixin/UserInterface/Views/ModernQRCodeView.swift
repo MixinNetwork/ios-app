@@ -29,6 +29,21 @@ final class ModernQRCodeView: UIView {
     
     func setContent(
         _ content: String,
+        dimension: CGFloat,
+        activityIndicator: Bool = true,
+        completion: (() -> Void)? = nil
+    ) {
+        let size = CGSize(width: dimension, height: dimension)
+        setContent(
+            content,
+            size: size,
+            activityIndicator: activityIndicator,
+            completion: completion
+        )
+    }
+    
+    func setContent(
+        _ content: String,
         size: CGSize,
         activityIndicator: Bool = true,
         completion: (() -> Void)? = nil

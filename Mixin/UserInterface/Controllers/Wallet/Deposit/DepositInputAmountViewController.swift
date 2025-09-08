@@ -20,8 +20,11 @@ final class DepositInputAmountViewController: InputAmountViewController {
         raiseOnDivideByZero: false
     )
     
-    init(token: ValuableToken & OnChainToken, precision: Int) {
+    private let link: DepositLink
+    
+    init(link: DepositLink, token: ValuableToken & OnChainToken, precision: Int) {
         let accumulator = DecimalAccumulator(precision: precision)
+        self.link = link
         self.token = token
         self.tokenPrecision = precision
         self.amountIntent = .byToken
@@ -40,6 +43,7 @@ final class DepositInputAmountViewController: InputAmountViewController {
             target: self,
             action: #selector(close(_:))
         )
+        insufficientBalanceLabel.text = nil
     }
     
     @objc private func close(_ sender: Any) {
@@ -83,10 +87,15 @@ final class DepositInputAmountViewController: InputAmountViewController {
         }
         
         amountLabel.text = inputAmountString
+        reviewButton.isEnabled = inputAmount != 0
     }
     
     override func review(_ sender: Any) {
-        
+        guard let link = link.replacing(token: token, amount: tokenAmount) else {
+            return
+        }
+        let preview = DepositLinkPreviewViewController(link: link)
+        navigationController?.pushViewController(preview, animated: true)
     }
     
 }

@@ -18,6 +18,7 @@ public enum ChainID {
     public static let mvm = "a0ffd769-5850-4b48-9651-d2ae44a3e64d"
     public static let ripple = "23dfb5a5-5d7b-48b6-905f-3970e3176e27"
     public static let mobilecoin = "eea900a8-b327-488c-8d8d-1428702fe240"
+    public static let ton = "ef660437-d915-4e27-ad3f-632bfb6ba0ee"
     
     // EVM
     public static let ethereum = "43d61dcd-e413-450d-80b8-101d5e903357"

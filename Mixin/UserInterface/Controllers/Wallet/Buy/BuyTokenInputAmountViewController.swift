@@ -29,10 +29,10 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
     private var minimalAmounts: [String: MinimalAmount] = [:] // Key is currencyCode + assetID
     private var minimalAmount: MinimalAmount?
     
-    private var tokenPrecision: Int {
+    private var tokenPrecision: Int16 {
         if let token = selectedToken {
             if let token = token as? Web3TokenItem {
-                Int(token.precision)
+                token.precision
             } else {
                 MixinToken.internalPrecision
             }
@@ -457,7 +457,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         payingSelectorView.load(currency: currency)
         fiatMoneyAmountRoudingHandler = NSDecimalNumberHandler(
             roundingMode: .plain,
-            scale: Int16(currency.precision),
+            scale: currency.precision,
             raiseOnExactness: false,
             raiseOnOverflow: false,
             raiseOnUnderflow: false,
@@ -478,7 +478,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         receivingSelectorView.load(token: token)
         tokenAmountRoundingHandler = NSDecimalNumberHandler(
             roundingMode: .plain,
-            scale: Int16(tokenPrecision),
+            scale: tokenPrecision,
             raiseOnExactness: false,
             raiseOnOverflow: false,
             raiseOnUnderflow: false,

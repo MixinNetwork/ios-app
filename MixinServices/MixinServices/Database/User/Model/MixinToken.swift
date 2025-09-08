@@ -79,7 +79,7 @@ extension MixinToken: MaliciousDistinguishable {
 
 extension MixinToken {
     
-    public static let internalPrecision = 8
+    public static let internalPrecision: Int16 = 8
     public static let minimalAmount: Decimal = 0.000_000_01
     
     public var isNFT: Bool {

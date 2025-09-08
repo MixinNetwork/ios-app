@@ -18,7 +18,7 @@ class TokenConsumingInputAmountViewController: InputAmountViewController {
         return container
     }
     
-    private let tokenPrecision: Int
+    private let tokenPrecision: Int16
     
     private(set) var amountIntent: AmountIntent
     private(set) var tokenAmount: Decimal = 0
@@ -27,14 +27,14 @@ class TokenConsumingInputAmountViewController: InputAmountViewController {
     
     private lazy var tokenAmountRoundingHandler = NSDecimalNumberHandler(
         roundingMode: .plain,
-        scale: Int16(tokenPrecision),
+        scale: tokenPrecision,
         raiseOnExactness: false,
         raiseOnOverflow: false,
         raiseOnUnderflow: false,
         raiseOnDivideByZero: false
     )
     
-    init(token: ValuableToken & OnChainToken, precision: Int) {
+    init(token: ValuableToken & OnChainToken, precision: Int16) {
         let accumulator = DecimalAccumulator(precision: precision)
         self.token = token
         self.tokenPrecision = precision

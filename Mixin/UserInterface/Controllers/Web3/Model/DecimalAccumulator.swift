@@ -2,8 +2,8 @@ import Foundation
 
 struct DecimalAccumulator {
     
-    private let maximumIntegerDigits: Int
-    private let maximumFractionDigits: Int
+    private let maximumIntegerDigits: Int16
+    private let maximumFractionDigits: Int16
     
     private(set) var integers: [UInt8] = [0]
     private(set) var fractions: [UInt8]? = nil
@@ -70,7 +70,7 @@ struct DecimalAccumulator {
         }
     }
     
-    init(precision: Int) {
+    init(precision: Int16) {
         self.maximumIntegerDigits = 38 - precision
         self.maximumFractionDigits = precision
     }

@@ -13,7 +13,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
     init(payment: Web3SendingTokenToAddressPayment) {
         self.payment = payment
         let token = payment.token
-        super.init(token: token, precision: Int(token.precision))
+        super.init(token: token, precision: token.precision)
     }
     
     required init?(coder: NSCoder) {

@@ -4,7 +4,7 @@ public class Currency: CustomDebugStringConvertible {
     
     public let code: String
     public let symbol: String
-    public let precision: Int
+    public let precision: Int16
     public var rate: Double
     
     public var icon: UIImage {
@@ -16,7 +16,7 @@ public class Currency: CustomDebugStringConvertible {
         Decimal(rate)
     }
     
-    init(code: String, symbol: String, precision: Int, rate: Double) {
+    init(code: String, symbol: String, precision: Int16, rate: Double) {
         self.code = code
         self.symbol = symbol
         self.precision = precision

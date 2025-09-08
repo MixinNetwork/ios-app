@@ -13,7 +13,7 @@ final class DepositInputAmountViewController: InputAmountViewController {
     
     private lazy var tokenAmountRoundingHandler = NSDecimalNumberHandler(
         roundingMode: .plain,
-        scale: Int16(MixinToken.internalPrecision),
+        scale: MixinToken.internalPrecision,
         raiseOnExactness: false,
         raiseOnOverflow: false,
         raiseOnUnderflow: false,

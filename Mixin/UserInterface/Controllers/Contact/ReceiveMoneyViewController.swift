@@ -34,7 +34,7 @@ final class ReceiveMoneyViewController: UIViewController {
         )
         sectionView.layer.cornerRadius = 8
         sectionView.layer.masksToBounds = true
-        linkView.layout(size: .large)
+        linkView.size = .large
         linkView.load(link: link)
     }
     

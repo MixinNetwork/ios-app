@@ -6,12 +6,26 @@ final class DepositLinkView: UIView, XibDesignable {
     enum Size {
         case large
         case medium
+        case small
     }
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var qrCodeView: ModernQRCodeView!
     @IBOutlet weak var qrCodeDimensionConstraint: NSLayoutConstraint!
+    
+    var size: Size = .medium {
+        didSet {
+            switch size {
+            case .large:
+                contentView.setCustomSpacing(12, after: titleLabel)
+                titleLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+            case .medium, .small:
+                contentView.setCustomSpacing(8, after: titleLabel)
+                titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
+            }
+        }
+    }
     
     private let iconBackgroundDimension: CGFloat = 48
     private let iconDimension: CGFloat = 44
@@ -29,17 +43,6 @@ final class DepositLinkView: UIView, XibDesignable {
     override init(frame: CGRect) {
         super.init(frame: frame)
         loadSubviews()
-    }
-    
-    func layout(size: Size) {
-        switch size {
-        case .large:
-            contentView.setCustomSpacing(12, after: titleLabel)
-            titleLabel.font = .systemFont(ofSize: 20, weight: .semibold)
-        case .medium:
-            contentView.setCustomSpacing(8, after: titleLabel)
-            titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
-        }
     }
     
     func load(link: DepositLink) {
@@ -101,17 +104,32 @@ final class DepositLinkView: UIView, XibDesignable {
             
             let footerStackView = UIStackView()
             footerStackView.axis = .vertical
-            footerStackView.spacing = 16
+            footerStackView.spacing = switch size {
+            case .large, .medium:
+                    8
+            case .small:
+                    16
+            }
             func makeTitleLabel() -> UILabel {
                 let label = UILabel()
-                label.font = .systemFont(ofSize: 12)
+                label.font = switch size {
+                case .large, .medium:
+                        .systemFont(ofSize: 14)
+                case .small:
+                        .systemFont(ofSize: 12)
+                }
                 label.textColor = R.color.text_quaternary()
                 return label
             }
             
             func makeContentLabel() -> UILabel {
                 let label = UILabel()
-                label.font = .systemFont(ofSize: 14)
+                label.font = switch size {
+                case .large, .medium:
+                        .systemFont(ofSize: 16)
+                case .small:
+                        .systemFont(ofSize: 14)
+                }
                 label.textColor = R.color.text()
                 return label
             }
@@ -121,13 +139,25 @@ final class DepositLinkView: UIView, XibDesignable {
             addressTitleLabel.text = R.string.localizable.address()
             let addressContentLabel = makeContentLabel()
             addressContentLabel.attributedText = {
-                let fontSize: CGFloat = if address.count > 100 {
-                    10
-                } else if address.count > 80 {
-                    12
-                } else {
-                    14
+                let fontSize: CGFloat = switch size {
+                case .large, .medium:
+                    if address.count > 100 {
+                        12
+                    } else if address.count > 80 {
+                        14
+                    } else {
+                        16
+                    }
+                case .small:
+                    if address.count > 100 {
+                        10
+                    } else if address.count > 80 {
+                        12
+                    } else {
+                        14
+                    }
                 }
+                
                 let text = NSMutableAttributedString(
                     string: address,
                     attributes: [

@@ -27,7 +27,7 @@ final class ShareDepositLinkViewController: ShareViewAsPictureViewController {
         super.viewDidLoad()
         contentView.backgroundColor = R.color.background()
         layoutWrapperHeightConstraint.isActive = false
-        linkView.layout(size: .medium)
+        linkView.size = .small
         linkView.load(link: link)
         actionButtonBackgroundView.effect = nil
         actionButtonTrayView.backgroundColor = R.color.background()

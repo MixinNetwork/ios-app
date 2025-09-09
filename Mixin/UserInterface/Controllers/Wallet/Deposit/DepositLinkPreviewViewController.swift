@@ -42,7 +42,7 @@ final class DepositLinkPreviewViewController: UIViewController {
             make.edges.equalToSuperview()
                 .inset(UIEdgeInsets(top: 54, left: 20, bottom: 0, right: 20))
         }
-        linkView.layout(size: .medium)
+        linkView.size = .medium
         linkView.load(link: link)
         
         let actionView = R.nib.authenticationPreviewDoubleButtonTrayView(withOwner: nil)!

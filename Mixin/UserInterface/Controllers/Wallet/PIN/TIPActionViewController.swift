@@ -92,6 +92,7 @@ final class TIPActionViewController: UIViewController {
                         failedSigners: [],
                         legacyPIN: nil,
                         forRecover: false,
+                        skipAccountUpdate: false,
                         progressHandler: showProgress
                     )
                     AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
@@ -123,6 +124,7 @@ final class TIPActionViewController: UIViewController {
                             failedSigners: [],
                             legacyPIN: old,
                             forRecover: false,
+                            skipAccountUpdate: false,
                             progressHandler: showProgress
                         ).account
                     case let .tip(old):
@@ -131,6 +133,7 @@ final class TIPActionViewController: UIViewController {
                             newPIN: new,
                             isCounterBalanced: true,
                             failedSigners: [],
+                            skipAccountUpdate: false,
                             progressHandler: showProgress
                         )
                     }
@@ -164,6 +167,7 @@ final class TIPActionViewController: UIViewController {
                         failedSigners: [],
                         legacyPIN: pin,
                         forRecover: false,
+                        skipAccountUpdate: false,
                         progressHandler: showProgress
                     )
                     AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()

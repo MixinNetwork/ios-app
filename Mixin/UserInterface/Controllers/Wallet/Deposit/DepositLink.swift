@@ -64,7 +64,7 @@ struct DepositLink {
                     }
                     value.append("/transfer?address=\(address)&amount=\(amount)&uint256=\(amount * positionalValue)")
                 } else {
-                    ConcurrentJobQueue.shared.addJob(job: RefreshTokenJob(assetID: token.assetID))
+                    ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
                     return nil
                 }
             case .solana:
@@ -85,7 +85,7 @@ struct DepositLink {
                     if let positionalValue = token.positionalValue {
                         value = "ton://transfer/\(address)?jetton=\(token.assetKey)&amount=\(amount * positionalValue)"
                     } else {
-                        ConcurrentJobQueue.shared.addJob(job: RefreshTokenJob(assetID: token.assetID))
+                        ConcurrentJobQueue.shared.addJob(job: RefreshAllTokensJob())
                         return nil
                     }
                 }

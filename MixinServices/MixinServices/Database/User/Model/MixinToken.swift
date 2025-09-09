@@ -44,6 +44,10 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
     public private(set) lazy var decimalUSDChange = Decimal(string: usdChange, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalDust = Decimal(string: dust, locale: .enUSPOSIX) ?? 0
     
+    public var isPrecisionReady: Bool {
+        precision != Self.invalidPrecision
+    }
+    
     public init(
         assetID: String, kernelAssetID: String, symbol: String, name: String, iconURL: String,
         btcPrice: String, usdPrice: String, chainID: String, usdChange: String,
@@ -81,6 +85,7 @@ extension MixinToken {
     
     public static let internalPrecision: Int16 = 8
     public static let minimalAmount: Decimal = 0.000_000_01
+    public static let invalidPrecision: Int16 = -1
     
     public var isNFT: Bool {
         !(collectionHash?.isEmpty ?? true)

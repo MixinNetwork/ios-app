@@ -57,12 +57,14 @@ struct DepositLink {
                         value.append("@\(id)")
                     }
                     value.append("?value=\(amount / .wei)")
-                } else {
+                } else if let positionalValue = token.positionalValue {
                     value = "ethereum:\(token.assetKey)"
                     if id != 1 {
                         value.append("@\(id)")
                     }
-                    value.append("/transfer?address=\(address)&amount=\(amount)&uint256=\(amount * token.positionalValue)")
+                    value.append("/transfer?address=\(address)&amount=\(amount)&uint256=\(amount * positionalValue)")
+                } else {
+                    return nil
                 }
             case .solana:
                 value = "solana:\(address)?amount=\(amount)"
@@ -79,7 +81,11 @@ struct DepositLink {
                 case AssetID.ton:
                     value = "ton://transfer/\(address)?amount=\(amount / .nanoton)"
                 default:
-                    value = "ton://transfer/\(address)?jetton=\(token.assetKey)&amount=\(amount * token.positionalValue)"
+                    if let positionalValue = token.positionalValue {
+                        value = "ton://transfer/\(address)?jetton=\(token.assetKey)&amount=\(amount * positionalValue)"
+                    } else {
+                        return nil
+                    }
                 }
             case ChainID.bitcoin:
                 value = "bitcoin:\(address)?amount=\(amount)"

@@ -50,6 +50,10 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
     public private(set) lazy var localizedFiatMoneyBalance = localizeFiatMoneyBalance()
     public private(set) lazy var estimatedFiatMoneyBalance = estimateFiatMoneyBalance()
     
+    public var isPrecisionReady: Bool {
+        true
+    }
+    
     public var chainTag: String? {
         switch chainID {
         case ChainID.solana:

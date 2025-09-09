@@ -5,6 +5,10 @@ public protocol OnChainToken: Token {
     var chainID: String { get }
     var assetKey: String { get }
     var precision: Int16 { get }
+    
+    // The `precision` could be invalid due to historical reasons
+    var isPrecisionReady: Bool { get }
+    
     var chain: Chain? { get }
     var chainTag: String? { get }
     
@@ -47,8 +51,11 @@ extension OnChainToken {
         }
     }
     
-    public var positionalValue: Decimal {
-        Decimal(sign: .plus, exponent: Int(precision), significand: 1)
+    public var positionalValue: Decimal? {
+        guard isPrecisionReady else {
+            return nil
+        }
+        return Decimal(sign: .plus, exponent: Int(precision), significand: 1)
     }
     
 }

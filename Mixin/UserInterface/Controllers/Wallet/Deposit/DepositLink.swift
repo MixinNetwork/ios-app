@@ -70,7 +70,7 @@ struct DepositLink {
             case .solana:
                 value = "solana:\(address)?amount=\(amount)"
                 if token.assetID != AssetID.sol {
-                    value.append("&spl-token=\(token.assetKey)")
+                    value.append("&spl-token=\(token.assetKey)&token=\(token.assetKey)")
                 }
             }
         } else {

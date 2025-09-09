@@ -90,7 +90,7 @@ struct DepositLink {
             case ChainID.dash:
                 value = "dash:\(address)?amount=\(amount)"
             default:
-                value = address
+                return nil
             }
         }
         let context = Native(address: address, token: token, minimumDeposit: nil, amount: amount)

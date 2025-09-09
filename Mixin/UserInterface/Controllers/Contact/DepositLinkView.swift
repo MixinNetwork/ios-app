@@ -14,16 +14,21 @@ final class DepositLinkView: UIView, XibDesignable {
     @IBOutlet weak var qrCodeView: ModernQRCodeView!
     @IBOutlet weak var qrCodeDimensionConstraint: NSLayoutConstraint!
     
+    // By changing this property only, labels are not updated
+    // Request layout by update `size` and call `load(link:) to apply the effect
+    var adjustsFontForContentSizeCategory = true
+    
     var size: Size = .medium {
         didSet {
             switch size {
             case .large:
                 contentView.setCustomSpacing(12, after: titleLabel)
-                titleLabel.font = .systemFont(ofSize: 20, weight: .semibold)
+                titleLabel.font = font(ofSize: 20, weight: .semibold)
             case .medium, .small:
                 contentView.setCustomSpacing(8, after: titleLabel)
-                titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
+                titleLabel.font = font(ofSize: 18, weight: .semibold)
             }
+            subtitleLabel.font = font(ofSize: 14)
         }
     }
     
@@ -72,7 +77,7 @@ final class DepositLinkView: UIView, XibDesignable {
                 let text = NSMutableAttributedString(
                     string: R.string.localizable.scan_qr_code_to_transfer_on_mixin(transferring),
                     attributes: [
-                        .font: UIFont.systemFont(ofSize: 14),
+                        .font: font(ofSize: 14),
                         .foregroundColor: R.color.text_tertiary()!,
                         .paragraphStyle: style,
                     ]
@@ -80,7 +85,7 @@ final class DepositLinkView: UIView, XibDesignable {
                 if let range = text.string.range(of: transferring, options: [.backwards]) {
                     text.addAttributes(
                         [
-                            .font: UIFont.systemFont(ofSize: 14, weight: .medium),
+                            .font: font(ofSize: 14, weight: .medium),
                             .foregroundColor: R.color.text()!,
                         ],
                         range: NSRange(range, in: text.string)
@@ -90,7 +95,7 @@ final class DepositLinkView: UIView, XibDesignable {
             } else {
                 load(icon: .receiveMoneyAvatar(context.account))
                 footerLabel.textAlignment = .center
-                footerLabel.font = .systemFont(ofSize: 14)
+                footerLabel.font = font(ofSize: 14)
                 footerLabel.textColor = R.color.text_tertiary()
                 footerLabel.text = R.string.localizable.transfer_qrcode_prompt()
             }
@@ -114,9 +119,9 @@ final class DepositLinkView: UIView, XibDesignable {
                 let label = UILabel()
                 label.font = switch size {
                 case .large, .medium:
-                        .systemFont(ofSize: 14)
+                    font(ofSize: 14)
                 case .small:
-                        .systemFont(ofSize: 12)
+                    font(ofSize: 12)
                 }
                 label.textColor = R.color.text_quaternary()
                 return label
@@ -126,9 +131,9 @@ final class DepositLinkView: UIView, XibDesignable {
                 let label = UILabel()
                 label.font = switch size {
                 case .large, .medium:
-                        .systemFont(ofSize: 16)
+                    font(ofSize: 16)
                 case .small:
-                        .systemFont(ofSize: 14)
+                    font(ofSize: 14)
                 }
                 label.textColor = R.color.text()
                 return label
@@ -161,7 +166,7 @@ final class DepositLinkView: UIView, XibDesignable {
                 let text = NSMutableAttributedString(
                     string: address,
                     attributes: [
-                        .font: UIFont.systemFont(ofSize: fontSize),
+                        .font: font(ofSize: fontSize),
                         .foregroundColor: R.color.text_secondary()!,
                     ]
                 )
@@ -175,7 +180,7 @@ final class DepositLinkView: UIView, XibDesignable {
                         in: address
                     )
                     let attributes: [NSAttributedString.Key: Any] = [
-                        .font: UIFont.systemFont(ofSize: fontSize, weight: .medium),
+                        .font: font(ofSize: fontSize, weight: .medium),
                         .foregroundColor: R.color.text()!,
                     ]
                     for range in [prefixRange, suffixRange] {
@@ -264,6 +269,15 @@ extension DepositLinkView {
             }
         }
         
+    }
+    
+    private func font(ofSize size: CGFloat, weight: UIFont.Weight = .regular) -> UIFont {
+        let font: UIFont = .systemFont(ofSize: size, weight: weight)
+        if adjustsFontForContentSizeCategory {
+            return UIFontMetrics.default.scaledFont(for: font)
+        } else {
+            return font
+        }
     }
     
     private func load(icon: Icon) {

@@ -106,9 +106,9 @@ final class DepositLinkView: UIView, XibDesignable {
             footerStackView.axis = .vertical
             footerStackView.spacing = switch size {
             case .large, .medium:
-                    8
+                    12
             case .small:
-                    16
+                    8
             }
             func makeTitleLabel() -> UILabel {
                 let label = UILabel()

@@ -64,6 +64,7 @@ struct DepositLink {
                     }
                     value.append("/transfer?address=\(address)&amount=\(amount)&uint256=\(amount * positionalValue)")
                 } else {
+                    refreshToken(token: token)
                     return nil
                 }
             case .solana:
@@ -84,6 +85,7 @@ struct DepositLink {
                     if let positionalValue = token.positionalValue {
                         value = "ton://transfer/\(address)?jetton=\(token.assetKey)&amount=\(amount * positionalValue)"
                     } else {
+                        refreshToken(token: token)
                         return nil
                     }
                 }
@@ -121,6 +123,13 @@ struct DepositLink {
                     token: token,
                     amount: amount
                 )
+        }
+    }
+    
+    private static func refreshToken(token: Token) {
+        ConcurrentJobQueue.shared.addJob(job: RefreshTokenJob(assetID: token.assetID))
+        if let web3Token = token as? Web3Token {
+            ConcurrentJobQueue.shared.addJob(job: RefreshWeb3TokenJob(token: web3Token))
         }
     }
     

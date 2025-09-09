@@ -83,7 +83,7 @@ final class DepositGeneralEntryCell: UICollectionViewCell {
                 actionButtons.append(button)
             }
         } else if diff < 0 {
-            for button in actionButtons.suffix(diff) {
+            for button in actionButtons.suffix(-diff) {
                 button.isHidden = true
             }
         }

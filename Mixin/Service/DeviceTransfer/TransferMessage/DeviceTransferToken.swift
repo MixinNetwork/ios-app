@@ -16,7 +16,7 @@ struct DeviceTransferToken {
     let dust: String
     let confirmations: Int
     let assetKey: String
-    let precision: Int16
+    let precision: Int16?
     let collectionHash: String?
     
     init(token: MixinToken) {
@@ -52,7 +52,7 @@ struct DeviceTransferToken {
             dust: dust,
             confirmations: confirmations,
             assetKey: assetKey,
-            precision: precision,
+            precision: precision ?? MixinToken.invalidPrecision,
             collectionHash: collectionHash
         )
     }

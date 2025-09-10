@@ -840,6 +840,8 @@
 "mixin_messenger_desktop" = "Рабочий стол Mixin Messenger";
 "mixin_one" = "Mixin One";
 "mixin_one_desc" = "Start your Mixin premium journey";
+"mixin_payment_content" = "💰 Amount: %1$@\n🌐 Network: %2$@\n🤝 Receiver: %3$@";
+"mixin_payment_title" = "📣 Mixin Payment";
 "mixin_server_encounters_errors" = "Сервер Mixin обнаруживает ошибки";
 "mixin_support" = "Mixin Support";
 "mnemonic_phrase" = "Mnemonic Phrase";
@@ -988,6 +990,7 @@
 "pause" = "Пауза";
 "paused" = "Paused";
 "pay" = "Pay";
+"pay_now" = "Pay Now";
 "pay_paid" = "Эта платежная ссылка уже кем-то оплачена, повторный платеж сделать нельзя.";
 "pay_with_biometry_type" = "Pay with %@";
 "pay_with_pin_interval" = "Оплата с интервалом PIN";

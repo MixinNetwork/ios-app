@@ -29,12 +29,12 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
     private var minimalAmounts: [String: MinimalAmount] = [:] // Key is currencyCode + assetID
     private var minimalAmount: MinimalAmount?
     
-    private var tokenPrecision: Int {
+    private var tokenPrecision: Int16 {
         if let token = selectedToken {
             if let token = token as? Web3TokenItem {
-                Int(token.precision)
+                token.precision
             } else {
-                MixinToken.precision
+                MixinToken.internalPrecision
             }
         } else {
             0
@@ -48,7 +48,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         } else {
             .usd
         }
-        let accumulator = DecimalAccumulator(precision: MixinToken.precision)
+        let accumulator = DecimalAccumulator(precision: MixinToken.internalPrecision)
         super.init(accumulator: accumulator)
     }
     
@@ -437,7 +437,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                         kernelAssetID: token.kernelAssetID,
                         symbol: token.symbol,
                         name: token.name,
-                        precision: Int16(MixinToken.precision), // XXX: No precision in MixinToken
+                        precision: token.precision,
                         iconURL: token.iconURL,
                         amount: "0",
                         usdPrice: token.usdPrice,
@@ -457,7 +457,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         payingSelectorView.load(currency: currency)
         fiatMoneyAmountRoudingHandler = NSDecimalNumberHandler(
             roundingMode: .plain,
-            scale: Int16(currency.precision),
+            scale: currency.precision,
             raiseOnExactness: false,
             raiseOnOverflow: false,
             raiseOnUnderflow: false,
@@ -478,7 +478,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         receivingSelectorView.load(token: token)
         tokenAmountRoundingHandler = NSDecimalNumberHandler(
             roundingMode: .plain,
-            scale: Int16(tokenPrecision),
+            scale: tokenPrecision,
             raiseOnExactness: false,
             raiseOnOverflow: false,
             raiseOnUnderflow: false,

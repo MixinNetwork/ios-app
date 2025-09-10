@@ -180,12 +180,8 @@ extension UserCenterViewController {
         guard let account = LoginManager.shared.account else {
             return
         }
-        let qrCode = QRCodeViewController(title: R.string.localizable.receive_money(),
-                                          content: "https://mixin.one/pay/\(account.userID)",
-                                          foregroundColor: .black,
-                                          description: R.string.localizable.transfer_qrcode_prompt(),
-                                          centerContent: .receiveMoney({ $0.setImage(with: account) }))
-        present(qrCode, animated: true)
+        let receiveMoney = ReceiveMoneyViewController(account: account)
+        navigationController?.pushViewController(receiveMoney, animated: true)
     }
     
 }

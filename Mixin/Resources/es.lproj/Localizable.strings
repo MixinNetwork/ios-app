@@ -840,6 +840,8 @@
 "mixin_messenger_desktop" = "Mixin Messenger de Escritorio";
 "mixin_one" = "Mixin One";
 "mixin_one_desc" = "Start your Mixin premium journey";
+"mixin_payment_content" = "💰 Amount: %1$@\n🌐 Network: %2$@\n🤝 Receiver: %3$@";
+"mixin_payment_title" = "📣 Mixin Payment";
 "mixin_server_encounters_errors" = "El servidor Mixin encuentra errores";
 "mixin_support" = "Mixin Support";
 "mnemonic_phrase" = "Mnemonic Phrase";
@@ -988,6 +990,7 @@
 "pause" = "Pausa";
 "paused" = "Paused";
 "pay" = "Pay";
+"pay_now" = "Pay Now";
 "pay_paid" = "Este enlace de pago ya ha sido pagado por alguien, no puedes hacer un pago duplicado.";
 "pay_with_biometry_type" = "Pay with %@";
 "pay_with_pin_interval" = "Intervalo de pago con PIN";

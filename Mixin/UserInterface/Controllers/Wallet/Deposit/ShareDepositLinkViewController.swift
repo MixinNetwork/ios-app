@@ -2,39 +2,34 @@ import UIKit
 import Photos
 import MixinServices
 
-final class ShareDepositAddressViewController: ShareViewAsPictureViewController {
+final class ShareDepositLinkViewController: ShareViewAsPictureViewController {
     
-    private let token: any Token
-    private let address: String
-    private let network: String?
-    private let minimumDeposit: String?
-    private let shareAddressContentView = R.nib.shareDepositAddressContentView(withOwner: nil)!
+    private let link: DepositLink
     
-    init(token: any Token, address: String, network: String?, minimumDeposit: String?) {
-        self.token = token
-        self.address = address
-        self.network = network
-        self.minimumDeposit = minimumDeposit
+    private weak var linkView: DepositLinkView!
+    
+    init(link: DepositLink) {
+        self.link = link
         super.init()
     }
     
     required init?(coder: NSCoder) {
-        fatalError("Storyboard is not supported")
+        fatalError("Storyboard not supported")
     }
     
     override func loadContentView() {
-        contentView = shareAddressContentView
+        let linkView = DepositLinkView()
+        self.linkView = linkView
+        self.contentView = ShareObiSurroundedView<DepositLinkView>(contentView: linkView)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        contentView.backgroundColor = R.color.background()
         layoutWrapperHeightConstraint.isActive = false
-        shareAddressContentView.summaryView.load(
-            token: token,
-            address: address,
-            network: network,
-            minimumDeposit: minimumDeposit
-        )
+        linkView.adjustsFontForContentSizeCategory = false
+        linkView.size = .small
+        linkView.load(link: link)
         actionButtonBackgroundView.effect = nil
         actionButtonTrayView.backgroundColor = R.color.background()
     }
@@ -44,7 +39,12 @@ final class ShareDepositAddressViewController: ShareViewAsPictureViewController 
             return
         }
         let image = makeImage()
-        let title = shareAddressContentView.summaryView.titleLabel.text
+        let title = switch link.chain {
+        case .mixin:
+            R.string.localizable.receive_money()
+        case .native:
+            linkView.titleLabel.text
+        }
         let item = QRCodeActivityItem(image: image, title: title)
         let activity = UIActivityViewController(
             activityItems: [item],
@@ -56,7 +56,7 @@ final class ShareDepositAddressViewController: ShareViewAsPictureViewController 
     }
     
     override func copyLink(_ sender: Any) {
-        UIPasteboard.general.string = address
+        UIPasteboard.general.string = link.value
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
         close(sender)
     }
@@ -80,6 +80,38 @@ final class ShareDepositAddressViewController: ShareViewAsPictureViewController 
                 }
             }
         }
+    }
+    
+}
+
+extension ShareDepositLinkViewController {
+    
+    private final class ShareObiSurroundedView<ContentView: UIView>: UIView {
+        
+        let contentView: ContentView
+        let obiView = ShareObiView()
+        
+        init(contentView: ContentView) {
+            self.contentView = contentView
+            super.init(frame: .zero)
+            addSubview(contentView)
+            contentView.snp.makeConstraints { make in
+                make.top.equalToSuperview().offset(54)
+                make.leading.equalToSuperview().offset(18)
+                make.trailing.equalToSuperview().offset(-18)
+            }
+            addSubview(obiView)
+            obiView.snp.makeConstraints { make in
+                make.leading.trailing.bottom.equalToSuperview()
+                make.top.equalTo(contentView.snp.bottom).offset(36)
+                make.height.equalTo(100)
+            }
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("Storyboard/Xib not supported")
+        }
+        
     }
     
     private func makeImage() -> UIImage {

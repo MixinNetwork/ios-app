@@ -227,7 +227,7 @@ final class Web3DepositDataSource: DepositDataSource {
                         kernelAssetID: mixinToken.kernelAssetID,
                         symbol: mixinToken.symbol,
                         name: mixinToken.name,
-                        precision: 0,
+                        precision: mixinToken.precision,
                         iconURL: mixinToken.iconURL,
                         amount: "0",
                         usdPrice: mixinToken.usdPrice,

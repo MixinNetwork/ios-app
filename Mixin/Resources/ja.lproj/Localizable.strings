@@ -840,6 +840,8 @@
 "mixin_messenger_desktop" = "Mixin デスクトップ";
 "mixin_one" = "Mixin One";
 "mixin_one_desc" = "Start your Mixin premium journey";
+"mixin_payment_content" = "💰 Amount: %1$@\n🌐 Network: %2$@\n🤝 Receiver: %3$@";
+"mixin_payment_title" = "📣 Mixin Payment";
 "mixin_server_encounters_errors" = "Mixinのサーバーにエラーが発生しています";
 "mixin_support" = "Mixin Support";
 "mnemonic_phrase" = "Mnemonic Phrase";
@@ -988,6 +990,7 @@
 "pause" = "一時停止";
 "paused" = "Paused";
 "pay" = "Pay";
+"pay_now" = "Pay Now";
 "pay_paid" = "この支払いリンクはすでに使用済みです。重複して支払いを行うことはできません。";
 "pay_with_biometry_type" = "%@で支払う";
 "pay_with_pin_interval" = "PINコードの再確認間隔";

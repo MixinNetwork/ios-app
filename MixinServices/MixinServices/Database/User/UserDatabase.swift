@@ -967,6 +967,13 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("tokens_precision") { db in
+            let columns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(tokens)").map(\.name)
+            if !columns.contains("precision") {
+                try db.execute(sql: "ALTER TABLE `tokens` ADD COLUMN `precision` INTEGER NOT NULL DEFAULT \(MixinToken.invalidPrecision)")
+            }
+        }
+        
         return migrator
     }
     

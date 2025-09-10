@@ -53,11 +53,10 @@ final class DepositGeneralEntryCell: UICollectionViewCell {
             return UIFontMetrics.default.scaledFont(for: font)
         }()
         contentLabel.text = content.value
-        let qrCodeSize = CGSize(
-            width: qrCodeDimensionConstraint.constant,
-            height: qrCodeDimensionConstraint.constant
+        qrCodeView.setContent(
+            content.value,
+            dimension: qrCodeDimensionConstraint.constant
         )
-        qrCodeView.setContent(content.value, size: qrCodeSize)
         iconView.setIcon(token: token, chain: token.chain)
         supportedTokensLabel.text = supporting
         
@@ -84,7 +83,7 @@ final class DepositGeneralEntryCell: UICollectionViewCell {
                 actionButtons.append(button)
             }
         } else if diff < 0 {
-            for button in actionButtons.suffix(diff) {
+            for button in actionButtons.suffix(-diff) {
                 button.isHidden = true
             }
         }

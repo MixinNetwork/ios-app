@@ -175,7 +175,7 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
                 kernelAssetID: token.kernelAssetID,
                 symbol: token.symbol,
                 name: token.name,
-                precision: 0,
+                precision: token.precision,
                 iconURL: token.iconURL,
                 amount: amount ?? "0",
                 usdPrice: token.usdPrice,

@@ -21,6 +21,7 @@ struct DisplayMixinToken {
     let dust: String
     let confirmations: Int
     let assetKey: String
+    let precision: Int16
     let collectionHash: String?
     
     var asToken: MixinToken {
@@ -38,6 +39,7 @@ struct DisplayMixinToken {
             dust: dust,
             confirmations: confirmations,
             assetKey: assetKey,
+            precision: precision,
             collectionHash: collectionHash
         )
     }
@@ -60,6 +62,7 @@ extension DisplayMixinToken: Decodable {
         case dust
         case confirmations
         case assetKey = "asset_key"
+        case precision
         case collectionHash = "collection_hash"
     }
     

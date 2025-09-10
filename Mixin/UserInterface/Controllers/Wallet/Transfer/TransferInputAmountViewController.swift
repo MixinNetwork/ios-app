@@ -47,7 +47,7 @@ final class TransferInputAmountViewController: TokenConsumingInputAmountViewCont
         self.tokenItem = tokenItem
         self.receiver = receiver
         self.note = note
-        super.init(token: tokenItem, precision: MixinToken.precision)
+        super.init(token: tokenItem, precision: MixinToken.internalPrecision)
     }
     
     required init?(coder: NSCoder) {

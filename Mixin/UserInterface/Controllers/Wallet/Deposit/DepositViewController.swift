@@ -360,19 +360,31 @@ extension DepositViewController: DepositEntryActionDelegate {
             UIPasteboard.general.string = copyingContent
             showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
         case .setAmount:
-            let inputAmount = DepositInputAmountViewController(token: viewModel.token, precision: viewModel.tokenPrecision)
-            let navigationController = GeneralAppearanceNavigationController(rootViewController: inputAmount)
+            guard case let .general(content, _, _) = viewModel.entry else {
+                return
+            }
+            let inputAmount = DepositInputAmountViewController(
+                link: .native(
+                    address: content.value,
+                    token: viewModel.token,
+                    minimumDeposit: viewModel.minimumDeposit
+                ),
+                token: viewModel.token
+            )
+            let navigationController = GeneralAppearanceNavigationController(
+                rootViewController: inputAmount
+            )
             present(navigationController, animated: true)
         case .share:
             guard case let .general(content, _, _) = viewModel.entry else {
                 return
             }
-            let share = ShareDepositAddressViewController(
-                token: viewModel.token,
+            let link: DepositLink = .native(
                 address: content.value,
-                network: viewModel.token.chain?.name,
+                token: viewModel.token,
                 minimumDeposit: viewModel.minimumDeposit
             )
+            let share = ShareDepositLinkViewController(link: link)
             present(share, animated: true)
         }
     }

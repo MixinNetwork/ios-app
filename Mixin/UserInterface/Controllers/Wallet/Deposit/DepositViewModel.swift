@@ -7,7 +7,6 @@ struct DepositViewModel {
     let switchableTokens: [SwitchableToken]
     let selectedTokenIndex: Int?
     let token: any (OnChainToken & ValuableToken)
-    let tokenPrecision: Int
     let entry: Entry
     let infos: [Info]
     let minimumDeposit: String?
@@ -35,10 +34,8 @@ struct DepositViewModel {
         self.switchableTokens = switchableTokens
         self.selectedTokenIndex = selectedTokenIndex
         self.token = token
-        self.tokenPrecision = MixinToken.precision
         self.entry = {
             if let tag = entry.tag, !tag.isEmpty {
-                let tagTitle, tagWarning, destinationWarning: String
                 return if token.usesTag {
                     .tagging(
                         destination: Entry.Content(
@@ -78,10 +75,14 @@ struct DepositViewModel {
                     }
                     return Entry.Content(title: title, value: entry.destination)
                 }()
+                var actions: [Entry.Action] = [.copy, .share]
+                if DepositLink.available(address: entry.destination, token: token) {
+                    actions.insert(.setAmount, at: 1)
+                }
                 return .general(
                     content: destination,
                     supporting: token.chain?.depositSupporting,
-                    actions: [.copy, .share]
+                    actions: actions
                 )
             }
         }()
@@ -143,17 +144,20 @@ struct DepositViewModel {
             }
             return ([SwitchableToken(token: token)], 0)
         }()
+        var actions: [Entry.Action] = [.copy, .share]
+        if DepositLink.available(address: address, token: token) {
+            actions.insert(.setAmount, at: 1)
+        }
         self.switchableTokens = switchableTokens
         self.selectedTokenIndex = selectedTokenIndex
         self.token = token
-        self.tokenPrecision = Int(token.precision)
         self.entry = .general(
             content: Entry.Content(
                 title: R.string.localizable.address(),
                 value: address,
             ),
             supporting: token.chain?.depositSupporting,
-            actions: [.copy, .share]
+            actions: actions
         )
         self.infos = [
             Info(
@@ -168,10 +172,6 @@ struct DepositViewModel {
             ),
         ]
         self.minimumDeposit = nil
-    }
-    
-    func depositLink(decimalAmount: Decimal) -> String? {
-        nil
     }
     
 }

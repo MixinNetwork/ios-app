@@ -92,7 +92,7 @@ open class Reporter {
     }
     
     open func registerUserInformation(account: Account) {
-        Bugsnag.setUser(account.userID, withEmail: nil, andName: account.fullName)
+        Bugsnag.setUser(account.userID, withEmail: "\(account.identityNumber)@mixin.id", andName: account.fullName)
     }
     
     open func report(error: Error) {

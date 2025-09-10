@@ -87,6 +87,8 @@ extension MixinTokenItem: OnChainToken {
             "Optimism"
         case ChainID.arbitrumOne:
             "Arbitrum"
+        case ChainID.ton:
+            "TON"
         default:
             nil
         }

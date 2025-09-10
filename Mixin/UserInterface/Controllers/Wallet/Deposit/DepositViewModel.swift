@@ -314,6 +314,12 @@ extension DepositViewModel {
                     assetID: AssetID.solanaUSDT,
                     symbol: "USDT"
                 ),
+                SwitchableToken(
+                    chainID: ChainID.ton,
+                    chainName: "TON",
+                    assetID: AssetID.tonUSDT,
+                    symbol: "USD₮"
+                ),
             ],
             [
                 SwitchableToken(

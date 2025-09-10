@@ -63,6 +63,12 @@ extension SwapToken {
             "Polygon"
         case ChainID.solana:
             "Solana"
+        case ChainID.opMainnet:
+            "Optimism"
+        case ChainID.arbitrumOne:
+            "Arbitrum"
+        case ChainID.ton:
+            "TON"
         default:
             nil
         }

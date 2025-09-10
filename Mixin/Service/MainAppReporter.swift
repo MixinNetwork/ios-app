@@ -2,9 +2,17 @@ import UIKit
 import FirebaseCore
 import FirebaseAnalytics
 import FirebaseCrashlytics
+import BugsnagPerformance
 import MixinServices
 
-final class CrashlyticalReporter: Reporter {
+final class MainAppReporter: Reporter {
+    
+    override func configure() {
+        super.configure()
+        if let key = MixinKeys.bugsnag {
+            BugsnagPerformance.start(withApiKey: key)
+        }
+    }
     
     override func registerUserInformation(account: Account) {
         super.registerUserInformation(account: account)
@@ -16,8 +24,8 @@ final class CrashlyticalReporter: Reporter {
         Analytics.setUserID(account.userID)
     }
     
-    override func report(error: Error, userInfo: UserInfo? = nil) {
-        super.report(error: error, userInfo: userInfo)
+    override func report(error: Error) {
+        super.report(error: error)
         Crashlytics.crashlytics().record(error: error)
     }
     

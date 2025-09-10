@@ -27,6 +27,17 @@ final class TIPActionViewController: UIViewController {
         
     }
     
+    struct ReportingError: Error, CustomNSError {
+        
+        let underlying: Error
+        let counter: UInt64
+        
+        var errorUserInfo: [String : Any] {
+            ["underlying": "\(underlying)", "counter": counter]
+        }
+        
+    }
+    
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
@@ -201,7 +212,8 @@ final class TIPActionViewController: UIViewController {
     }
     
     private func handle(error: Error, accountCounterBefore: UInt64) async {
-        reporter.report(error: error, userInfo: ["counter": "\(accountCounterBefore)", "location": "TIPAction"])
+        let reportingError = ReportingError(underlying: error, counter: accountCounterBefore)
+        reporter.report(error: reportingError)
         Logger.tip.error(category: "TIPAction", message: "Failed with: \(error)")
         do {
             if let context = try await TIP.checkCounter() {

@@ -39,7 +39,7 @@ extension OnChainToken {
         case ChainID.bnbSmartChain:
             "BNB Smart Chain (BEP-20)"
         case ChainID.tron:
-            assetKey.isDigitsOnly ? "Tron (TRC-10)" : "Tron (TRC-20)"
+            assetKey.isDigitsOnly ? "TRON (TRC-10)" : "TRON (TRC-20)"
         case ChainID.bitShares:
             "BitShares"
         case ChainID.opMainnet:

@@ -121,7 +121,7 @@ extension AssetItem {
         case ChainID.bnbSmartChain:
             return "BNB Smart Chain (BEP-20)"
         case ChainID.tron:
-            return assetKey.isDigitsOnly ? "Tron (TRC-10)" : "Tron (TRC-20)"
+            return assetKey.isDigitsOnly ? "TRON (TRC-10)" : "TRON (TRC-20)"
         case ChainID.bitShares:
             return "BitShares"
         default:

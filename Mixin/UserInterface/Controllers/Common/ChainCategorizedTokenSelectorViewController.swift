@@ -378,10 +378,13 @@ extension ChainCategorizedTokenSelectorViewController {
             let all = [
                 Chain(id: ChainID.ethereum, name: "Ethereum"),
                 Chain(id: ChainID.solana, name: "Solana"),
-                Chain(id: ChainID.base, name: "Base"),
-                Chain(id: ChainID.tron, name: "Tron"),
                 Chain(id: ChainID.bnbSmartChain, name: "BSC"),
+                Chain(id: ChainID.base, name: "Base"),
                 Chain(id: ChainID.polygon, name: "Polygon"),
+                Chain(id: ChainID.tron, name: "TRON"),
+                Chain(id: ChainID.arbitrumOne, name: "Arbitrum"),
+                Chain(id: ChainID.opMainnet, name: "Optimism"),
+                Chain(id: ChainID.ton, name: "TON"),
             ]
             let chains = all.filter { chain in
                 ids.contains(chain.id)

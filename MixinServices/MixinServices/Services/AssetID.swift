@@ -29,6 +29,7 @@ public enum AssetID {
     public static let polygonUSDT = "218bc6f4-7927-3f8e-8568-3a3725b74361"
     public static let bep20USDT = "94213408-4ee7-3150-a9c4-9c5cce421c78"
     public static let solanaUSDT = "cb54aed4-1893-3977-b739-ec7b2e04f0c5"
+    public static let tonUSDT = "7369eea0-0c69-3906-b419-e960e3595a4f"
     
     public static let erc20USDC = "9b180ab6-6abe-3dc0-a13f-04169eb34bfa"
     public static let solanaUSDC = "de6fa523-c596-398e-b12f-6d6980544b59"

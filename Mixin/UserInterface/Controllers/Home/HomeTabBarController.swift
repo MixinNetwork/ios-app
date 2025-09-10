@@ -11,7 +11,7 @@ final class HomeTabBarController: UIViewController {
         
         case chat = 0
         case wallet = 1
-        case collectibles = 2
+        case market = 2
         case more = 3
         
         var debugDescription: String {
@@ -20,8 +20,8 @@ final class HomeTabBarController: UIViewController {
                 "chat"
             case .wallet:
                 "wallet"
-            case .collectibles:
-                "collectibles"
+            case .market:
+                "market"
             case .more:
                 "more"
             }
@@ -36,7 +36,7 @@ final class HomeTabBarController: UIViewController {
     private let homeViewController = R.storyboard.home.home()!
     
     private lazy var walletContainerViewController = WalletContainerViewController()
-    private lazy var collectiblesViewController = CollectiblesViewController()
+    private lazy var marketDashboardViewController = MarketDashboardViewController()
     private lazy var exploreViewController = ExploreViewController()
     
     override func viewDidLoad() {
@@ -62,12 +62,12 @@ final class HomeTabBarController: UIViewController {
                     text: R.string.localizable.wallets(),
                     badge: false
                 )
-            case .collectibles:
+            case .market:
                 TabBar.Item(
                     id: id.rawValue,
-                    image: R.image.home_tab_collectibles()!,
-                    selectedImage: R.image.home_tab_collectibles_selected()!,
-                    text: R.string.localizable.collectibles(),
+                    image: R.image.home_tab_market()!,
+                    selectedImage: R.image.home_tab_market_selected()!,
+                    text: R.string.localizable.markets(),
                     badge: false
                 )
             case .more:
@@ -123,13 +123,14 @@ final class HomeTabBarController: UIViewController {
             .lazy
             .map(BadgeManager.shared.hasViewed(identifier:))
             .contains(false)
-        let hasUnviewedMoreItem = [.buy, .swap, .membership, .market]
+        let hasUnviewedMoreItem = [.buy, .swap, .membership]
             .lazy
             .map(BadgeManager.shared.hasViewed(identifier:))
             .contains(false)
         
         var items = tabBar.items
         items[ChildID.wallet.rawValue].badge = hasUnviewedWalletItem
+        items[ChildID.market.rawValue].badge = !BadgeManager.shared.hasViewed(identifier: .market)
         items[ChildID.more.rawValue].badge = hasUnviewedMoreItem
         tabBar.items = items
     }
@@ -152,8 +153,8 @@ final class HomeTabBarController: UIViewController {
             newChild = homeViewController
         case .wallet:
             newChild = walletContainerViewController
-        case .collectibles:
-            newChild = collectiblesViewController
+        case .market:
+            newChild = marketDashboardViewController
         case .more:
             newChild = exploreViewController
         }
@@ -184,8 +185,8 @@ final class HomeTabBarController: UIViewController {
             "Mixin"
         case .wallet:
             R.string.localizable.wallets()
-        case .collectibles:
-            R.string.localizable.collectibles()
+        case .market:
+            R.string.localizable.markets()
         case .more:
             R.string.localizable.more()
         }
@@ -193,7 +194,7 @@ final class HomeTabBarController: UIViewController {
     
     private func switchToChildAfterValidated(with id: ChildID) {
         switch id {
-        case .chat, .collectibles, .more:
+        case .chat, .market, .more:
             switchToChild(with: id)
         case .wallet:
             let shouldValidatePIN: Bool

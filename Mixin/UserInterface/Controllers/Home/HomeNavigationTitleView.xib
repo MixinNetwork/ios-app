@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomeNavigationTitleView" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="scanButton" destination="Ur8-xb-QxJ" id="yx4-rf-6lk"/>
+                <outlet property="searchButton" destination="KVh-iu-OWg" id="tzp-81-T3R"/>
+                <outlet property="settingButton" destination="wBg-Qv-Hs5" id="DTo-I4-Gin"/>
+                <outlet property="titleLabel" destination="JkI-qK-fsE" id="tqk-V8-DTN"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ynO-B3-HUD">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="98.666666666666686" placeholderIntrinsicHeight="21.666666666666664" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JkI-qK-fsE">
+                    <rect key="frame" x="20.000000000000007" y="11.333333333333334" width="98.666666666666686" height="21.666666666666664"/>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                    <color key="textColor" name="text"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="1Sy-sY-Zog">
+                    <rect key="frame" x="231" y="0.0" width="152" height="44"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KVh-iu-OWg">
+                            <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="KVh-iu-OWg" secondAttribute="height" id="abX-az-Eak"/>
+                            </constraints>
+                            <color key="tintColor" name="icon_tint"/>
+                            <state key="normal" image="ic_title_search"/>
+                        </button>
+                        <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ur8-xb-QxJ">
+                            <rect key="frame" x="54" y="0.0" width="44" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="Ur8-xb-QxJ" secondAttribute="height" id="kiv-1o-HNa"/>
+                            </constraints>
+                            <color key="tintColor" name="icon_tint"/>
+                            <state key="normal" image="ic_app_category_scan"/>
+                        </button>
+                        <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wBg-Qv-Hs5">
+                            <rect key="frame" x="108" y="0.0" width="44" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="wBg-Qv-Hs5" secondAttribute="height" id="fmD-Ce-lM4"/>
+                            </constraints>
+                            <color key="tintColor" name="icon_tint"/>
+                            <state key="normal" image="ic_sticker_setting"/>
+                        </button>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="1Sy-sY-Zog" firstAttribute="top" secondItem="ynO-B3-HUD" secondAttribute="top" id="AfT-aK-Ivs"/>
+                <constraint firstAttribute="bottom" secondItem="1Sy-sY-Zog" secondAttribute="bottom" id="Jjn-8u-kz8"/>
+                <constraint firstItem="JkI-qK-fsE" firstAttribute="centerY" secondItem="ynO-B3-HUD" secondAttribute="centerY" id="LPP-1E-ges"/>
+                <constraint firstItem="JkI-qK-fsE" firstAttribute="leading" secondItem="ynO-B3-HUD" secondAttribute="leading" constant="20" id="fGh-ph-OXR"/>
+                <constraint firstAttribute="trailing" secondItem="1Sy-sY-Zog" secondAttribute="trailing" constant="10" id="hjs-zp-kFu"/>
+                <constraint firstItem="1Sy-sY-Zog" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="JkI-qK-fsE" secondAttribute="trailing" constant="8" id="sgC-IQ-tRR"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="40" y="42"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_app_category_scan" width="24" height="24"/>
+        <image name="ic_sticker_setting" width="24" height="24"/>
+        <image name="ic_title_search" width="28" height="28"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="icon_tint">
+            <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

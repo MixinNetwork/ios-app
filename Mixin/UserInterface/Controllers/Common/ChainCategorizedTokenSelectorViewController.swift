@@ -381,7 +381,7 @@ extension ChainCategorizedTokenSelectorViewController {
                 Chain(id: ChainID.bnbSmartChain, name: "BSC"),
                 Chain(id: ChainID.base, name: "Base"),
                 Chain(id: ChainID.polygon, name: "Polygon"),
-                Chain(id: ChainID.tron, name: "Tron"),
+                Chain(id: ChainID.tron, name: "TRON"),
                 Chain(id: ChainID.arbitrumOne, name: "Arbitrum"),
                 Chain(id: ChainID.opMainnet, name: "Optimism"),
                 Chain(id: ChainID.ton, name: "TON"),

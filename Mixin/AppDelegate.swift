@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         updateFirstLaunch(isProtectedDataAvailable: application.isProtectedDataAvailable)
         FirebaseApp.configure()
         MixinService.callMessageCoordinator = CallService.shared
-        reporterClass = CrashlyticalReporter.self
+        reporterClass = MainAppReporter.self
         reporter.configure()
         if let key = MixinKeys.appsFlyer {
             AppsFlyerLib.shared().appsFlyerDevKey = key

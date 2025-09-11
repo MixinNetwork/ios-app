@@ -36,6 +36,9 @@ final class ReceiveMoneyViewController: UIViewController {
         sectionView.layer.masksToBounds = true
         linkView.size = .large
         linkView.load(link: link)
+        scanButton.configuration?.title = R.string.localizable.scan()
+        setAmountButton.configuration?.title = R.string.localizable.set_amount()
+        shareButton.configuration?.title = R.string.localizable.share()
     }
     
     @IBAction func scan(_ sender: Any) {

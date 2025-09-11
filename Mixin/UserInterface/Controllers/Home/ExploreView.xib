@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -22,10 +22,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jml-mB-d6l">
-                    <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                    <rect key="frame" x="0.0" y="118" width="393" height="44"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="More" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wM1-ot-yCR">
-                            <rect key="frame" x="20" y="11.33333333333333" width="43" height="21.666666666666671"/>
+                            <rect key="frame" x="20" y="11.333333333333345" width="43" height="21.666666666666671"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                             <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
@@ -45,7 +45,7 @@
                                     <color key="tintColor" name="icon_tint"/>
                                     <state key="normal" image="ic_title_search"/>
                                     <connections>
-                                        <action selector="searchApps:" destination="-1" eventType="touchUpInside" id="HZ1-z4-bMO"/>
+                                        <action selector="search:" destination="-1" eventType="touchUpInside" id="HZ1-z4-bMO"/>
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OzR-dd-zjy">
@@ -85,7 +85,7 @@
                     </constraints>
                 </view>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="q3X-vD-KBB">
-                    <rect key="frame" x="0.0" y="105" width="393" height="58"/>
+                    <rect key="frame" x="0.0" y="164" width="393" height="58"/>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="58" id="MP2-uy-c36"/>
@@ -98,7 +98,7 @@
                     </collectionViewFlowLayout>
                 </collectionView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SXn-pK-UiW">
-                    <rect key="frame" x="0.0" y="163" width="393" height="689"/>
+                    <rect key="frame" x="0.0" y="222" width="393" height="630"/>
                     <color key="backgroundColor" name="background"/>
                 </view>
             </subviews>

@@ -881,6 +881,10 @@
 		9445C2552B6161F1001C4AAC /* FavoriteAppCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */; };
 		94463C51298D627800E63547 /* AuthenticationFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94463C50298D627800E63547 /* AuthenticationFailureView.xib */; };
 		94463C53298D690F00E63547 /* AuthenticationFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94463C52298D690F00E63547 /* AuthenticationFailureView.swift */; };
+		944731522E71866400ACC49B /* HomeNavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944731512E71865F00ACC49B /* HomeNavigationTitleView.swift */; };
+		9447315A2E71867200ACC49B /* HomeNavigationTitleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944731592E71867200ACC49B /* HomeNavigationTitleView.xib */; };
+		944731682E71A17A00ACC49B /* SearchMarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944731672E71A17200ACC49B /* SearchMarketViewController.swift */; };
+		944731702E71A2AD00ACC49B /* SearchMarketView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9447316F2E71A2AD00ACC49B /* SearchMarketView.xib */; };
 		9447A7362CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9447A7352CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift */; };
 		944A5A722C2604F70021460C /* CollectibleCollectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944A5A712C2604F70021460C /* CollectibleCollectionHeaderView.swift */; };
 		944A5A772C2605720021460C /* CollectibleCollectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944A5A762C2605720021460C /* CollectibleCollectionHeaderView.xib */; };
@@ -888,7 +892,7 @@
 		944B5A5C2CFCA7EE000BB893 /* UINavigationBarAppearance+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944B5A5B2CFCA7EB000BB893 /* UINavigationBarAppearance+General.swift */; };
 		944B5A822CFCB947000BB893 /* NavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944B5A812CFCB940000BB893 /* NavigationTitleView.swift */; };
 		944BC2D32C7C71B4008700A8 /* OutlineSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944BC2D22C7C71B4008700A8 /* OutlineSegmentedControl.swift */; };
-		944BC2D82C7DAFEA008700A8 /* ExploreMarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944BC2D72C7DAFEA008700A8 /* ExploreMarketViewController.swift */; };
+		944BC2D82C7DAFEA008700A8 /* MarketDashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944BC2D72C7DAFEA008700A8 /* MarketDashboardViewController.swift */; };
 		944BC2E02C7DB9E9008700A8 /* ExploreGlobalMarketCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944BC2DF2C7DB9E9008700A8 /* ExploreGlobalMarketCell.xib */; };
 		944BC2E12C7DB9E9008700A8 /* ExploreGlobalMarketCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944BC2DE2C7DB9E9008700A8 /* ExploreGlobalMarketCell.swift */; };
 		944BC2ED2C7E17BA008700A8 /* ExploreMarketTokenCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944BC2EC2C7E17BA008700A8 /* ExploreMarketTokenCell.xib */; };
@@ -2594,6 +2598,10 @@
 		9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FavoriteAppCell.xib; sourceTree = "<group>"; };
 		94463C50298D627800E63547 /* AuthenticationFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationFailureView.xib; sourceTree = "<group>"; };
 		94463C52298D690F00E63547 /* AuthenticationFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationFailureView.swift; sourceTree = "<group>"; };
+		944731512E71865F00ACC49B /* HomeNavigationTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNavigationTitleView.swift; sourceTree = "<group>"; };
+		944731592E71867200ACC49B /* HomeNavigationTitleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeNavigationTitleView.xib; sourceTree = "<group>"; };
+		944731672E71A17200ACC49B /* SearchMarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMarketViewController.swift; sourceTree = "<group>"; };
+		9447316F2E71A2AD00ACC49B /* SearchMarketView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchMarketView.xib; sourceTree = "<group>"; };
 		9447A7352CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchRecommendationViewController.swift; sourceTree = "<group>"; };
 		944A5A712C2604F70021460C /* CollectibleCollectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleCollectionHeaderView.swift; sourceTree = "<group>"; };
 		944A5A762C2605720021460C /* CollectibleCollectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectibleCollectionHeaderView.xib; sourceTree = "<group>"; };
@@ -2601,7 +2609,7 @@
 		944B5A5B2CFCA7EB000BB893 /* UINavigationBarAppearance+General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBarAppearance+General.swift"; sourceTree = "<group>"; };
 		944B5A812CFCB940000BB893 /* NavigationTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTitleView.swift; sourceTree = "<group>"; };
 		944BC2D22C7C71B4008700A8 /* OutlineSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineSegmentedControl.swift; sourceTree = "<group>"; };
-		944BC2D72C7DAFEA008700A8 /* ExploreMarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreMarketViewController.swift; sourceTree = "<group>"; };
+		944BC2D72C7DAFEA008700A8 /* MarketDashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketDashboardViewController.swift; sourceTree = "<group>"; };
 		944BC2DE2C7DB9E9008700A8 /* ExploreGlobalMarketCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreGlobalMarketCell.swift; sourceTree = "<group>"; };
 		944BC2DF2C7DB9E9008700A8 /* ExploreGlobalMarketCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreGlobalMarketCell.xib; sourceTree = "<group>"; };
 		944BC2EB2C7E17BA008700A8 /* ExploreMarketTokenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreMarketTokenCell.swift; sourceTree = "<group>"; };
@@ -5407,6 +5415,8 @@
 				7B34A19622C0B59200665F41 /* MixinNavigationAnimating.swift */,
 				7B3887BD22E1AD74002B0864 /* HomeContainerViewController.swift */,
 				DFB9B3991FAB01E6009503CE /* HomeNavigationController.swift */,
+				944731592E71867200ACC49B /* HomeNavigationTitleView.xib */,
+				944731512E71865F00ACC49B /* HomeNavigationTitleView.swift */,
 				94B61EC22B344A7A00BD39AF /* HomeTabBarController.swift */,
 				DF3C47461FA071F400A07C71 /* HomeViewController.swift */,
 				7B59534422670A5800D59DB4 /* SearchNavigationViewController.swift */,
@@ -5432,7 +5442,9 @@
 				94B13FC02B5ED5F9001333BE /* ExploreAggregatedSearchViewController.swift */,
 				9447A7352CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift */,
 				946E05912CBFD67B004B264E /* ExploreSearchCategoryViewController.swift */,
-				944BC2D72C7DAFEA008700A8 /* ExploreMarketViewController.swift */,
+				944BC2D72C7DAFEA008700A8 /* MarketDashboardViewController.swift */,
+				9447316F2E71A2AD00ACC49B /* SearchMarketView.xib */,
+				944731672E71A17200ACC49B /* SearchMarketViewController.swift */,
 				940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */,
 				940EF8B22C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift */,
 				940EF8B42C8AE74D000AD1C6 /* ShareMarketViewController.swift */,
@@ -6602,6 +6614,8 @@
 				7B8A6A752456E0EC00ADC9EB /* SharedMediaPostCell.xib in Resources */,
 				7B8BB58E234F34FE00991ACB /* SharedMediaAudioCell.xib in Resources */,
 				7BCA2E302452CBF6005BD2E4 /* AboutTableHeaderView.xib in Resources */,
+				9447315A2E71867200ACC49B /* HomeNavigationTitleView.xib in Resources */,
+				944731702E71A2AD00ACC49B /* SearchMarketView.xib in Resources */,
 				94F0A1A72E3BB0AD001732B8 /* AuthenticationPreviewWalletCell.xib in Resources */,
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
 				7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */,
@@ -7550,7 +7564,7 @@
 				94ADE1242CD80C0B0040A426 /* MobileNumberIntroductionViewController.swift in Sources */,
 				7C359DD026A6C173001D3AE4 /* StickerStoreBannerView.swift in Sources */,
 				7B015F51241FA4EC0004A563 /* SearchResultAnnotationView.swift in Sources */,
-				944BC2D82C7DAFEA008700A8 /* ExploreMarketViewController.swift in Sources */,
+				944BC2D82C7DAFEA008700A8 /* MarketDashboardViewController.swift in Sources */,
 				948AB7722DE5DC40005E76A0 /* MembershipOrderStatusCell.swift in Sources */,
 				E090B9EB23B0BF940012C7E9 /* MessageDAO+Gallery.swift in Sources */,
 				7B9553402243860C00CE95E6 /* PinValidationPresentationManager.swift in Sources */,
@@ -7769,6 +7783,7 @@
 				7B04142B240FA09F00BE8D73 /* LocationCell.swift in Sources */,
 				7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */,
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
+				944731682E71A17A00ACC49B /* SearchMarketViewController.swift in Sources */,
 				940EF8B32C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift in Sources */,
 				94425FE72DD498FB003F46DF /* MaliciousTokenWarningCell.swift in Sources */,
 				7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */,
@@ -8045,6 +8060,7 @@
 				94CEEAC4277E06A9001E7A24 /* Date+Holiday.swift in Sources */,
 				7B5BABE31FB57B0300341FE6 /* ImagePickerController.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
+				944731522E71866400ACC49B /* HomeNavigationTitleView.swift in Sources */,
 				946331B12C6227D500C54B76 /* TransactionHistoryFilterView.swift in Sources */,
 				7CEB736029DBC639006FB5B2 /* DeviceTransferUser.swift in Sources */,
 				7BA9D9EE226F114700255943 /* HomeSearchViewController.swift in Sources */,

@@ -8,8 +8,8 @@ final class ExploreViewController: UIViewController {
     
     private let hiddenSearchTopMargin: CGFloat = -28
     
-    private lazy var exploreBotsViewController = ExploreBotsViewController()
-    private lazy var exploreMarketViewController = ExploreMarketViewController()
+    private lazy var botsViewController = ExploreBotsViewController()
+    private lazy var collectiblesViewController = CollectiblesViewController()
     
     private weak var searchViewController: UIViewController?
     private weak var searchViewCenterYConstraint: NSLayoutConstraint?
@@ -32,9 +32,6 @@ final class ExploreViewController: UIViewController {
         } else {
             IndexPath(item: 0, section: 0)
         }
-        if defaultSelection.item == Segment.markets.rawValue {
-            BadgeManager.shared.setHasViewed(identifier: .market)
-        }
         segmentsCollectionView.reloadData()
         segmentsCollectionView.selectItem(at: defaultSelection, animated: false, scrollPosition: .left)
         collectionView(segmentsCollectionView, didSelectItemAt: defaultSelection)
@@ -52,16 +49,29 @@ final class ExploreViewController: UIViewController {
         )
     }
     
-    @IBAction func searchApps(_ sender: Any) {
-        let searchViewController = ExploreAggregatedSearchViewController()
-        let navigationController = SearchNavigationViewController(
-            navigationBarClass: SearchNavigationBar.self,
-            toolbarClass: nil
-        )
-        navigationController.viewControllers = [searchViewController]
-        navigationController.searchNavigationBar.searchBoxView.textField.clearButtonMode = .always
-        presentSearch(with: navigationController)
-        searchViewController.searchTextField.becomeFirstResponder()
+    @IBAction func search(_ sender: Any) {
+        guard
+            let indexPath = segmentsCollectionView.indexPathsForSelectedItems?.first,
+            let segment = Segment(rawValue: indexPath.item)
+        else {
+            return
+        }
+        switch segment {
+        case .explore:
+            let searchViewController = ExploreAggregatedSearchViewController()
+            let navigationController = SearchNavigationViewController(
+                navigationBarClass: SearchNavigationBar.self,
+                toolbarClass: nil
+            )
+            navigationController.viewControllers = [searchViewController]
+            navigationController.searchNavigationBar.searchBoxView.textField.clearButtonMode = .always
+            presentSearch(with: navigationController)
+            searchViewController.searchTextField.becomeFirstResponder()
+        case .collectibles:
+            let searchViewController = SearchCollectibleViewController()
+            presentSearch(with: searchViewController)
+            searchViewController.searchBoxView.textField.becomeFirstResponder()
+        }
     }
     
     @IBAction func scanQRCode(_ sender: Any) {
@@ -200,11 +210,10 @@ extension ExploreViewController: UICollectionViewDataSource {
         switch segment {
         case .explore:
             cell.label.text = R.string.localizable.explore()
-            cell.badgeView.isHidden = true
-        case .markets:
-            cell.label.text = R.string.localizable.markets()
-            cell.badgeView.isHidden = BadgeManager.shared.hasViewed(identifier: .market)
+        case .collectibles:
+            cell.label.text = R.string.localizable.collectibles()
         }
+        cell.badgeView.isHidden = true
         return cell
     }
     
@@ -222,12 +231,11 @@ extension ExploreViewController: UICollectionViewDelegate {
         switch segment {
         case .explore:
             reporter.report(event: .moreTabSwitch, tags: ["method": "bots"])
-            switchToChild(exploreBotsViewController)
-        case .markets:
-            reporter.report(event: .moreTabSwitch, tags: ["method": "markets"])
-            BadgeManager.shared.setHasViewed(identifier: .market)
+            switchToChild(botsViewController)
+        case .collectibles:
+            reporter.report(event: .moreTabSwitch, tags: ["method": "collectibles"])
             reloadItemKeepingSelection(at: indexPath)
-            switchToChild(exploreMarketViewController)
+            switchToChild(collectiblesViewController)
         }
         AppGroupUserDefaults.User.exploreSegmentIndex = indexPath.item
     }
@@ -238,7 +246,7 @@ extension ExploreViewController {
     
     private enum Segment: Int, CaseIterable {
         case explore
-        case markets
+        case collectibles
     }
     
     @objc private func hideBadgeIfNeeded(_ notification: Notification) {
@@ -247,7 +255,7 @@ extension ExploreViewController {
         }
         if [.swap, .buy, .membership].contains(identifier) {
             let explore = IndexPath(item: Segment.explore.rawValue, section: 0)
-            segmentsCollectionView.reloadItems(at: [explore])
+            reloadItemKeepingSelection(at: explore)
         }
     }
     

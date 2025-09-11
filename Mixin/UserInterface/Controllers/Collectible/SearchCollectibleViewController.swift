@@ -57,12 +57,12 @@ final class SearchCollectibleViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         // Cancel on navigation pops
-        (parent as? CollectiblesViewController)?.cancelSearching(animated: false)
+        (parent as? ExploreViewController)?.hideSearch(endEditing: true, animate: false)
     }
     
     @IBAction func cancelSearching(_ sender: Any) {
         searchBoxView.textField.resignFirstResponder()
-        (parent as? CollectiblesViewController)?.cancelSearching(animated: true)
+        (parent as? ExploreViewController)?.hideSearch(endEditing: true, animate: true)
     }
     
     @objc private func searchKeyword(_ sender: Any) {

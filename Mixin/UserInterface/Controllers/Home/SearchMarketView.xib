@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchMarketViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="searchBoxView" destination="eYu-lc-b2v" id="HB5-l0-dR6"/>
+                <outlet property="tableView" destination="qoU-Ug-GPx" id="tfn-E6-hAH"/>
+                <outlet property="view" destination="Xmm-W7-ftl" id="k66-x7-tg3"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Xmm-W7-ftl">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jY1-sj-J2V">
+                    <rect key="frame" x="0.0" y="118" width="393" height="44"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eYu-lc-b2v" customClass="SearchBoxView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="20" y="2" width="288" height="40"/>
+                            <color key="backgroundColor" name="background"/>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aMb-4G-9qR">
+                            <rect key="frame" x="308" y="0.0" width="80" height="44"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <inset key="contentEdgeInsets" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Cancel"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="cancel"/>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="cancelSearching:" destination="-1" eventType="touchUpInside" id="yOV-r8-5Gz"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="6mR-Dy-R8U"/>
+                        <constraint firstAttribute="trailing" secondItem="aMb-4G-9qR" secondAttribute="trailing" constant="5" id="HRc-WQ-TUc"/>
+                        <constraint firstItem="eYu-lc-b2v" firstAttribute="top" secondItem="jY1-sj-J2V" secondAttribute="top" constant="2" id="Plc-Jt-b2o"/>
+                        <constraint firstItem="aMb-4G-9qR" firstAttribute="leading" secondItem="eYu-lc-b2v" secondAttribute="trailing" id="TWL-sp-y5g"/>
+                        <constraint firstItem="eYu-lc-b2v" firstAttribute="leading" secondItem="jY1-sj-J2V" secondAttribute="leading" constant="20" id="UFc-mI-4O7"/>
+                        <constraint firstAttribute="bottom" secondItem="aMb-4G-9qR" secondAttribute="bottom" id="YQP-P5-ZTc"/>
+                        <constraint firstAttribute="bottom" secondItem="eYu-lc-b2v" secondAttribute="bottom" constant="2" id="j3V-5t-kVC"/>
+                        <constraint firstItem="aMb-4G-9qR" firstAttribute="top" secondItem="jY1-sj-J2V" secondAttribute="top" id="yA1-ML-D81"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="qoU-Ug-GPx">
+                    <rect key="frame" x="0.0" y="162" width="393" height="690"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </tableView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="Kov-yp-6SM"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="qoU-Ug-GPx" firstAttribute="top" secondItem="jY1-sj-J2V" secondAttribute="bottom" id="DNj-hw-XQb"/>
+                <constraint firstItem="qoU-Ug-GPx" firstAttribute="leading" secondItem="Xmm-W7-ftl" secondAttribute="leading" id="OPk-p5-yTS"/>
+                <constraint firstItem="Kov-yp-6SM" firstAttribute="trailing" secondItem="jY1-sj-J2V" secondAttribute="trailing" id="U7u-KK-ZmF"/>
+                <constraint firstAttribute="trailing" secondItem="qoU-Ug-GPx" secondAttribute="trailing" id="Ucl-P0-yav"/>
+                <constraint firstItem="jY1-sj-J2V" firstAttribute="leading" secondItem="Kov-yp-6SM" secondAttribute="leading" id="ZXB-Rp-nMc"/>
+                <constraint firstItem="jY1-sj-J2V" firstAttribute="top" secondItem="Kov-yp-6SM" secondAttribute="top" id="ra9-ek-th2"/>
+                <constraint firstAttribute="bottom" secondItem="qoU-Ug-GPx" secondAttribute="bottom" id="zmj-a1-d2e"/>
+            </constraints>
+            <point key="canvasLocation" x="139.69465648854961" y="41.549295774647888"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

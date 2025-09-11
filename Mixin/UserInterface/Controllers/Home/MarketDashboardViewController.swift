@@ -1,9 +1,10 @@
 import UIKit
 import MixinServices
 
-final class ExploreMarketViewController: UIViewController {
+final class MarketDashboardViewController: UIViewController {
     
     private let queue = OperationQueue()
+    private let hiddenSearchTopMargin: CGFloat = -28
     
     private var collectionView: UICollectionView!
     
@@ -27,6 +28,9 @@ final class ExploreMarketViewController: UIViewController {
     private var markets: [FavorableMarket] = []
     private var favoriteMarkets: [FavorableMarket]?
     
+    private weak var searchViewController: UIViewController?
+    private weak var searchViewCenterYConstraint: NSLayoutConstraint?
+    
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -37,6 +41,19 @@ final class ExploreMarketViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let titleView = HomeNavigationTitleView()
+        view.addSubview(titleView)
+        titleView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(44)
+        }
+        titleView.titleLabel.text = R.string.localizable.markets()
+        titleView.searchButton.addTarget(self, action: #selector(searchCoins(_:)), for: .touchUpInside)
+        titleView.scanButton.addTarget(self, action: #selector(scanQRCode(_:)), for: .touchUpInside)
+        titleView.settingButton.addTarget(self, action: #selector(openSettings(_:)), for: .touchUpInside)
+        
         let layout = UICollectionViewCompositionalLayout { (sectionIndex, environment) in
             switch Section(rawValue: sectionIndex)! {
             case .global:
@@ -82,7 +99,7 @@ final class ExploreMarketViewController: UIViewController {
                 return NSCollectionLayoutSection(group: group)
             }
         }
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.register(R.nib.exploreGlobalMarketCell)
         collectionView.register(R.nib.exploreMarketTokenCell)
         collectionView.register(R.nib.watchlistEmptyCell)
@@ -90,7 +107,11 @@ final class ExploreMarketViewController: UIViewController {
         collectionView.backgroundColor = R.color.background()
         collectionView.contentInset.bottom = 20
         view.addSubview(collectionView)
-        collectionView.snp.makeEdgesEqualToSuperview()
+        collectionView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(titleView.snp.bottom)
+        }
+        self.collectionView = collectionView
         collectionView.dataSource = self
         collectionView.delegate = self
         
@@ -118,6 +139,59 @@ final class ExploreMarketViewController: UIViewController {
         super.viewWillDisappear(animated)
         marketsRequester.pause()
         favoritesRequester.pause()
+    }
+    
+    func cancelSearching(animated: Bool) {
+        guard let searchViewController, let searchViewCenterYConstraint else {
+            return
+        }
+        let removeSearch = {
+            searchViewController.willMove(toParent: nil)
+            searchViewController.view.removeFromSuperview()
+            searchViewController.removeFromParent()
+        }
+        if animated {
+            searchViewCenterYConstraint.constant = hiddenSearchTopMargin
+            UIView.animate(withDuration: 0.3) {
+                self.view.layoutIfNeeded()
+                searchViewController.view.alpha = 0
+            } completion: { _ in
+                removeSearch()
+            }
+        } else {
+            removeSearch()
+        }
+    }
+    
+    @objc private func searchCoins(_ sender: Any) {
+        let searchViewController = SearchMarketViewController()
+        addChild(searchViewController)
+        searchViewController.view.alpha = 0
+        view.addSubview(searchViewController.view)
+        searchViewController.view.snp.makeConstraints { make in
+            make.size.centerX.equalToSuperview()
+        }
+        let searchViewCenterYConstraint = searchViewController.view.centerYAnchor
+            .constraint(equalTo: view.centerYAnchor, constant: hiddenSearchTopMargin)
+        searchViewCenterYConstraint.isActive = true
+        searchViewController.didMove(toParent: self)
+        view.layoutIfNeeded()
+        searchViewCenterYConstraint.constant = 0
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+            searchViewController.view.alpha = 1
+        }
+        self.searchViewController = searchViewController
+        self.searchViewCenterYConstraint = searchViewCenterYConstraint
+    }
+    
+    @objc private func scanQRCode(_ sender: Any) {
+        UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
+    }
+    
+    @objc private func openSettings(_ sender: Any) {
+        let settings = SettingsViewController()
+        navigationController?.pushViewController(settings, animated: true)
     }
     
     @objc private func reloadAll(_ notification: Notification) {
@@ -198,7 +272,7 @@ final class ExploreMarketViewController: UIViewController {
     
 }
 
-extension ExploreMarketViewController: UICollectionViewDataSource {
+extension MarketDashboardViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         Section.allCases.count
@@ -268,7 +342,7 @@ extension ExploreMarketViewController: UICollectionViewDataSource {
     
 }
 
-extension ExploreMarketViewController: UICollectionViewDelegate {
+extension MarketDashboardViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section)! {
@@ -291,7 +365,7 @@ extension ExploreMarketViewController: UICollectionViewDelegate {
     
 }
 
-extension ExploreMarketViewController: ExploreMarketHeaderView.Delegate {
+extension MarketDashboardViewController: ExploreMarketHeaderView.Delegate {
     
     func exploreMarketHeaderView(
         _ view: ExploreMarketHeaderView,
@@ -316,7 +390,7 @@ extension ExploreMarketViewController: ExploreMarketHeaderView.Delegate {
     
 }
 
-extension ExploreMarketViewController: ExploreMarketTokenCell.Delegate {
+extension MarketDashboardViewController: ExploreMarketTokenCell.Delegate {
     
     func exploreTokenMarketCellWantsToggleFavorite(_ cell: ExploreMarketTokenCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else {
@@ -379,7 +453,15 @@ extension ExploreMarketViewController: ExploreMarketTokenCell.Delegate {
     
 }
 
-extension ExploreMarketViewController {
+extension MarketDashboardViewController: HomeTabBarControllerChild {
+    
+    func viewControllerDidSwitchToFront() {
+        BadgeManager.shared.setHasViewed(identifier: .market)
+    }
+    
+}
+
+extension MarketDashboardViewController {
     
     private enum Section: Int, CaseIterable {
         case global

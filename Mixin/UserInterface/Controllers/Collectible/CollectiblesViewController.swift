@@ -8,11 +8,6 @@ final class CollectiblesViewController: UIViewController {
     @IBOutlet weak var contentSegmentedControl: OutlineSegmentedControl!
     @IBOutlet weak var sortButton: OutlineButton!
     
-    private let hiddenSearchTopMargin: CGFloat = -28
-    
-    private weak var searchViewController: UIViewController?
-    private weak var searchViewCenterYConstraint: NSLayoutConstraint?
-    
     private var order = AppGroupUserDefaults.User.collectibleOrdering
     private var content = AppGroupUserDefaults.User.collectibleContent
     private var items: [InscriptionOutput] = []
@@ -94,37 +89,6 @@ final class CollectiblesViewController: UIViewController {
         }
     }
     
-    @IBAction func searchCollectibles(_ sender: Any) {
-        let searchViewController = SearchCollectibleViewController()
-        addChild(searchViewController)
-        searchViewController.view.alpha = 0
-        view.addSubview(searchViewController.view)
-        searchViewController.view.snp.makeConstraints { make in
-            make.size.centerX.equalToSuperview()
-        }
-        let searchViewCenterYConstraint = searchViewController.view.centerYAnchor
-            .constraint(equalTo: view.centerYAnchor, constant: hiddenSearchTopMargin)
-        searchViewCenterYConstraint.isActive = true
-        searchViewController.didMove(toParent: self)
-        view.layoutIfNeeded()
-        searchViewCenterYConstraint.constant = 0
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-            searchViewController.view.alpha = 1
-        }
-        self.searchViewController = searchViewController
-        self.searchViewCenterYConstraint = searchViewCenterYConstraint
-    }
-    
-    @IBAction func scanQRCode(_ sender: Any) {
-        UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
-    }
-    
-    @IBAction func openSettings(_ sender: Any) {
-        let settings = SettingsViewController()
-        navigationController?.pushViewController(settings, animated: true)
-    }
-    
     @IBAction func segmentValueChanged(_ control: OutlineSegmentedControl) {
         let content: CollectibleDisplayContent
         switch control.selectedItemIndex {
@@ -138,28 +102,6 @@ final class CollectiblesViewController: UIViewController {
         self.content = content
         AppGroupUserDefaults.User.collectibleContent = content
         reloadData()
-    }
-    
-    func cancelSearching(animated: Bool) {
-        guard let searchViewController, let searchViewCenterYConstraint else {
-            return
-        }
-        let removeSearch = {
-            searchViewController.willMove(toParent: nil)
-            searchViewController.view.removeFromSuperview()
-            searchViewController.removeFromParent()
-        }
-        if animated {
-            searchViewCenterYConstraint.constant = hiddenSearchTopMargin
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
-                searchViewController.view.alpha = 0
-            } completion: { _ in
-                removeSearch()
-            }
-        } else {
-            removeSearch()
-        }
     }
     
     @objc private func reloadCollection(_ notification: Notification) {
@@ -295,14 +237,6 @@ extension CollectiblesViewController: UICollectionViewDelegate {
             let preview = CollectibleCollectionViewController(collection: collection)
             navigationController?.pushViewController(preview, animated: true)
         }
-    }
-    
-}
-
-extension CollectiblesViewController: HomeTabBarControllerChild {
-    
-    func viewControllerDidSwitchToFront() {
-        reloadData()
     }
     
 }

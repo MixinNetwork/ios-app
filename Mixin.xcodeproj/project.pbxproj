@@ -866,6 +866,8 @@
 		944075DB2E2E8B2A00591B45 /* WalletPendingDepositView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944075DA2E2E8B2A00591B45 /* WalletPendingDepositView.xib */; };
 		944075FB2E2EA5B700591B45 /* WalletWatchingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944075FA2E2EA5A200591B45 /* WalletWatchingIndicatorView.swift */; };
 		944076032E2EA5D000591B45 /* WalletWatchingIndicatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944076022E2EA5D000591B45 /* WalletWatchingIndicatorView.xib */; };
+		944124A42E715CEB00705462 /* EnableNotificationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944124A32E715CEB00705462 /* EnableNotificationHeaderView.swift */; };
+		944124A92E715CF600705462 /* EnableNotificationHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944124A82E715CF600705462 /* EnableNotificationHeaderView.xib */; };
 		94425FE72DD498FB003F46DF /* MaliciousTokenWarningCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94425FE42DD498FB003F46DF /* MaliciousTokenWarningCell.swift */; };
 		944263832DD64337003F46DF /* Web3ReputationPickerActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944263822DD64337003F46DF /* Web3ReputationPickerActionCell.xib */; };
 		944263B42DD648AD003F46DF /* Web3ReputationPickerActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944263B32DD648AB003F46DF /* Web3ReputationPickerActionCell.swift */; };
@@ -2583,6 +2585,8 @@
 		944075DA2E2E8B2A00591B45 /* WalletPendingDepositView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletPendingDepositView.xib; sourceTree = "<group>"; };
 		944075FA2E2EA5A200591B45 /* WalletWatchingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletWatchingIndicatorView.swift; sourceTree = "<group>"; };
 		944076022E2EA5D000591B45 /* WalletWatchingIndicatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletWatchingIndicatorView.xib; sourceTree = "<group>"; };
+		944124A32E715CEB00705462 /* EnableNotificationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableNotificationHeaderView.swift; sourceTree = "<group>"; };
+		944124A82E715CF600705462 /* EnableNotificationHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EnableNotificationHeaderView.xib; sourceTree = "<group>"; };
 		94425FE42DD498FB003F46DF /* MaliciousTokenWarningCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaliciousTokenWarningCell.swift; sourceTree = "<group>"; };
 		944263822DD64337003F46DF /* Web3ReputationPickerActionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3ReputationPickerActionCell.xib; sourceTree = "<group>"; };
 		944263B32DD648AB003F46DF /* Web3ReputationPickerActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ReputationPickerActionCell.swift; sourceTree = "<group>"; };
@@ -3826,6 +3830,8 @@
 				941994F52CCC454600F5425C /* ImageTextTableHeaderView.swift */,
 				9495E7322CF4420100124CC7 /* RecoveryKitFooterView.swift */,
 				94B89D0A2DE7441D002A0DDC /* MembershipOrdersHeaderView.swift */,
+				944124A82E715CF600705462 /* EnableNotificationHeaderView.xib */,
+				944124A32E715CEB00705462 /* EnableNotificationHeaderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -6458,6 +6464,7 @@
 				9495E0DD2CEF7D6B00124CC7 /* MnemonicPhraseCell.xib in Resources */,
 				943CAA322CC83FFC00346677 /* LoginSeparatorLineView.xib in Resources */,
 				7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */,
+				944124A92E715CF600705462 /* EnableNotificationHeaderView.xib in Resources */,
 				946EA03D2D469A4A00DBC308 /* AddressBookView.xib in Resources */,
 				7BB7872B24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib in Resources */,
 				94B13FC32B5ED5F9001333BE /* Web3BrowserView.xib in Resources */,
@@ -7183,6 +7190,7 @@
 				940AE02C2BA0D88100E7A9FE /* ExploreSegmentCell.swift in Sources */,
 				7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */,
 				94668D682DF06C640068078D /* MembershipOrderRewardsCell.swift in Sources */,
+				944124A42E715CEB00705462 /* EnableNotificationHeaderView.swift in Sources */,
 				DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */,
 				9429C1472E059F3100206DAA /* FeeRequiredInputAmountViewController.swift in Sources */,
 				946331C22C622C3500C54B76 /* TransactionHistoryDateFilterView.swift in Sources */,

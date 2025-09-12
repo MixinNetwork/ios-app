@@ -59,7 +59,9 @@ final class TokenActionView: UIView {
             let button = UIButton(type: .system)
             button.configuration = {
                 let textAttributes: [NSAttributedString.Key: Any] = [
-                    .font: UIFont.systemFont(ofSize: 12, weight: .medium),
+                    .font: UIFontMetrics.default.scaledFont(
+                        for: .systemFont(ofSize: 12, weight: .medium)
+                    ),
                     .foregroundColor: R.color.text()!,
                 ]
                 let (image, title) = switch action {

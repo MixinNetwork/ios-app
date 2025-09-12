@@ -21,7 +21,7 @@ struct DepositViewModel {
                     return (tokens, index)
                 }
             }
-            return ([SwitchableToken(token: token)], 0)
+            return ([], nil)
         }()
         
         let minimumDeposit = CurrencyFormatter.localizedString(

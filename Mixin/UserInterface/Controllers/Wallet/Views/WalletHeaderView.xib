@@ -47,10 +47,10 @@
                             </constraints>
                         </stackView>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="acY-z7-eLw">
-                            <rect key="frame" x="194" y="40" width="5.3333333333333428" height="53"/>
+                            <rect key="frame" x="194" y="40" width="5.3333333333333428" height="14"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BIn-gQ-RCY" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="5.333333333333333" height="53"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="5.333333333333333" height="14"/>
                                     <fontDescription key="fontDescription" name="MixinCondensed-Regular" family="Mixin Condensed" pointSize="14"/>
                                     <color key="textColor" name="text"/>
                                     <nil key="highlightedColor"/>
@@ -58,7 +58,7 @@
                             </subviews>
                         </stackView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pij-OH-ggw">
-                            <rect key="frame" x="0.0" y="93" width="393" height="40"/>
+                            <rect key="frame" x="0.0" y="54" width="393" height="40"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rno-gB-vZh" customClass="BarChartView" customModule="Mixin" customModuleProvider="target">
                                     <rect key="frame" x="20" y="0.0" width="353" height="4"/>
@@ -79,10 +79,10 @@
                                             <rect key="frame" x="0.0" y="0.0" width="115.66666666666667" height="13"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="uaS-DO-THk">
-                                                    <rect key="frame" x="27.666666666666661" y="-0.66666666666665719" width="60.333333333333343" height="14.333333333333334"/>
+                                                    <rect key="frame" x="27.666666666666661" y="-0.6666666666666714" width="60.333333333333343" height="14.333333333333334"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/token_sample_primary" translatesAutoresizingMaskIntoConstraints="NO" id="TnG-PW-Eog">
-                                                            <rect key="frame" x="0.0" y="2.6666666666666572" width="3" height="9"/>
+                                                            <rect key="frame" x="0.0" y="2.6666666666666714" width="3" height="9"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="9" id="081-xv-RAh"/>
                                                                 <constraint firstAttribute="width" constant="3" id="oqV-3l-Jby"/>
@@ -113,10 +113,10 @@
                                             <rect key="frame" x="123.66666666666666" y="0.0" width="115.66666666666666" height="13"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="UAg-QD-2Ll">
-                                                    <rect key="frame" x="27.666666666666689" y="-0.66666666666665719" width="60.333333333333343" height="14.333333333333334"/>
+                                                    <rect key="frame" x="27.666666666666689" y="-0.6666666666666714" width="60.333333333333343" height="14.333333333333334"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/token_sample_secondary" translatesAutoresizingMaskIntoConstraints="NO" id="Hu3-7l-Jqs">
-                                                            <rect key="frame" x="0.0" y="2.6666666666666572" width="3" height="9"/>
+                                                            <rect key="frame" x="0.0" y="2.6666666666666714" width="3" height="9"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="3" id="A2t-vM-1k1"/>
                                                                 <constraint firstAttribute="height" constant="9" id="jgD-jA-nmK"/>
@@ -147,10 +147,10 @@
                                             <rect key="frame" x="247.33333333333329" y="0.0" width="115.66666666666666" height="13"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="vin-Z4-JUG">
-                                                    <rect key="frame" x="27.666666666666689" y="-0.66666666666665719" width="60.333333333333343" height="14.333333333333334"/>
+                                                    <rect key="frame" x="27.666666666666689" y="-0.6666666666666714" width="60.333333333333343" height="14.333333333333334"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Wallet/token_sample_tertiary" translatesAutoresizingMaskIntoConstraints="NO" id="xip-kj-0YG">
-                                                            <rect key="frame" x="0.0" y="2.6666666666666572" width="3" height="9"/>
+                                                            <rect key="frame" x="0.0" y="2.6666666666666714" width="3" height="9"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="3" id="0yC-AE-qYw"/>
                                                                 <constraint firstAttribute="height" constant="9" id="Xxp-iE-iNO"/>
@@ -195,18 +195,12 @@
                                 <constraint firstItem="Rkq-JR-LPj" firstAttribute="top" secondItem="rno-gB-vZh" secondAttribute="bottom" constant="23" id="tic-eq-mvd"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Zg-ir-kM5" customClass="TokenActionView" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="133" width="393" height="86"/>
+                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="86" translatesAutoresizingMaskIntoConstraints="NO" id="0Zg-ir-kM5" customClass="TokenActionView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="94" width="393" height="125"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="86" id="ctt-D2-aLN"/>
+                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="86" id="ctt-D2-aLN"/>
                             </constraints>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                    <integer key="value" value="12"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
-                            </userDefinedRuntimeAttributes>
                         </view>
                     </subviews>
                     <constraints>
@@ -269,7 +263,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

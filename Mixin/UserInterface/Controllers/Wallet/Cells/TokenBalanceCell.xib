@@ -64,11 +64,11 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jJ2-vj-o2Z" customClass="TokenActionView" customModule="Mixin" customModuleProvider="target">
+                    <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="72" translatesAutoresizingMaskIntoConstraints="NO" id="jJ2-vj-o2Z" customClass="TokenActionView" customModule="Mixin" customModuleProvider="target">
                         <rect key="frame" x="10" y="164" width="300" height="72"/>
                         <color key="backgroundColor" name="background"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="72" id="5O4-gc-DWm"/>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="72" id="5O4-gc-DWm"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">

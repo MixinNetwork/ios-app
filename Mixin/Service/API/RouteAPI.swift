@@ -423,6 +423,10 @@ extension RouteAPI {
         
     }
     
+    struct AccountInfo: Decodable {
+        let owner: String
+    }
+    
     static func estimatedEthereumFee(
         mixinChainID: String,
         hexData: String?,
@@ -500,6 +504,27 @@ extension RouteAPI {
             ]
         )
         return result != "null"
+    }
+    
+    static func solanaGetAccountInfo(pubkey: String) async throws -> AccountInfo {
+        let result: String = try await request(
+            method: .post,
+            path: "/web3/rpc?chain_id=\(ChainID.solana)",
+            with: [
+                "method": "getAccountInfo",
+                "params": [
+                    pubkey,
+                    [
+                        "commitment": "finalized",
+                        "encoding": "jsonParsed",
+                    ],
+                ],
+            ]
+        )
+        guard let data = result.data(using: .utf8) else {
+            throw RPCError.invalidResponse
+        }
+        return try JSONDecoder.default.decode(AccountInfo.self, from: data)
     }
     
 }

@@ -45,11 +45,17 @@ enum Solana {
         }
     }
     
-    static func tokenAssociatedAccount(owner: String, mint: String) throws -> String {
-        try owner.withCString { owner in
+    static func tokenAssociatedAccount(
+        walletAddress: String,
+        mint: String,
+        tokenProgramID: String
+    ) throws -> String {
+        try walletAddress.withCString { address in
             try mint.withCString { mint in
-                try withSolanaStringPointer { account in
-                    solana_associated_token_account(owner, mint, &account)
+                try tokenProgramID.withCString { id in
+                    try withSolanaStringPointer { account in
+                        solana_associated_token_account(address, mint, id, &account)
+                    }
                 }
             }
         }
@@ -141,7 +147,10 @@ extension Solana {
             from: String,
             to: String,
             createAssociatedTokenAccountForReceiver createAccount: Bool,
+            tokenProgramID: String,
+            mint: String,
             amount: UInt64,
+            decimals: UInt8,
             priorityFee: PriorityFee?,
             token: Web3Token
         ) throws {
@@ -157,10 +166,28 @@ extension Solana {
                 to.withCString { to in
                     withOptionalUnsafePointer(to: solanaPriorityFee) { priorityFee in
                         if isSendingSOL {
-                            solana_new_sol_transaction(from, to, amount, priorityFee, &transaction)
+                            solana_new_sol_transaction(
+                                from,
+                                to,
+                                amount,
+                                priorityFee,
+                                &transaction
+                            )
                         } else {
-                            token.assetKey.withCString { mint in
-                                solana_new_spl_transaction(from, to, createAccount, mint, amount, priorityFee, &transaction)
+                            tokenProgramID.withCString { tokenProgramID in
+                                token.assetKey.withCString { mint in
+                                    solana_new_spl_token_transaction(
+                                        from,
+                                        to,
+                                        createAccount,
+                                        tokenProgramID,
+                                        mint,
+                                        amount,
+                                        decimals,
+                                        priorityFee,
+                                        &transaction
+                                    )
+                                }
                             }
                         }
                     }

@@ -36,7 +36,7 @@ open class Database {
         GRDB.Database.logError = { (code, message) in
             switch code.primaryResultCode {
             case .SQLITE_NOTICE:
-                // Ignore notices, mostly SQLITE_NOTICE_RECOVER_WAL
+                // Do not report notices, mostly SQLITE_NOTICE_RECOVER_WAL
                 Logger.database.info(category: "DB", message: "code: \(code), message: \(message)\n")
             case .SQLITE_ERROR:
                 if message.hasPrefix("no such table: grdb_migrations") {
@@ -47,7 +47,7 @@ open class Database {
                 }
             default:
                 // Stupid error from CoreFoundation
-                if !message.hasSuffix("cfurl_cache_response.request_key") {
+                if !message.contains("cfurl_cache_response.request_key") {
                     reporter.report(error: Error(code: code.rawValue, message: message))
                     Logger.database.error(category: "DB", message: "code: \(code), message: \(message)\n")
                 }

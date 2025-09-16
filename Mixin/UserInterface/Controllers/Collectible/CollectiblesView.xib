@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -23,71 +23,8 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jml-mB-d6l">
-                    <rect key="frame" x="0.0" y="59" width="393" height="44"/>
-                    <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Collectibles" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wM1-ot-yCR">
-                            <rect key="frame" x="20.000000000000007" y="11.33333333333333" width="98.666666666666686" height="21.666666666666671"/>
-                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                            <color key="textColor" name="text"/>
-                            <nil key="highlightedColor"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="collectibles"/>
-                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                            </userDefinedRuntimeAttributes>
-                        </label>
-                        <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="KJl-nn-p91">
-                            <rect key="frame" x="231" y="0.0" width="152" height="44"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vjH-X6-KCp">
-                                    <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" secondItem="vjH-X6-KCp" secondAttribute="height" id="CAk-Bo-yMU"/>
-                                    </constraints>
-                                    <color key="tintColor" name="icon_tint"/>
-                                    <state key="normal" image="ic_title_search"/>
-                                    <connections>
-                                        <action selector="searchCollectibles:" destination="-1" eventType="touchUpInside" id="Hfh-Hd-1KO"/>
-                                    </connections>
-                                </button>
-                                <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OzR-dd-zjy">
-                                    <rect key="frame" x="54" y="0.0" width="44" height="44"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" secondItem="OzR-dd-zjy" secondAttribute="height" id="5b2-Of-VaJ"/>
-                                    </constraints>
-                                    <color key="tintColor" name="icon_tint"/>
-                                    <state key="normal" image="ic_app_category_scan"/>
-                                    <connections>
-                                        <action selector="scanQRCode:" destination="-1" eventType="touchUpInside" id="Tms-9z-Y0I"/>
-                                    </connections>
-                                </button>
-                                <button opaque="NO" contentMode="center" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Duu-li-J5Y">
-                                    <rect key="frame" x="108" y="0.0" width="44" height="44"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" secondItem="Duu-li-J5Y" secondAttribute="height" id="SBc-az-VVC"/>
-                                    </constraints>
-                                    <color key="tintColor" name="icon_tint"/>
-                                    <state key="normal" image="ic_sticker_setting"/>
-                                    <connections>
-                                        <action selector="openSettings:" destination="-1" eventType="touchUpInside" id="kQN-PZ-fzl"/>
-                                    </connections>
-                                </button>
-                            </subviews>
-                        </stackView>
-                    </subviews>
-                    <color key="backgroundColor" name="background"/>
-                    <constraints>
-                        <constraint firstItem="KJl-nn-p91" firstAttribute="top" secondItem="jml-mB-d6l" secondAttribute="top" id="FZd-Bh-LOW"/>
-                        <constraint firstItem="KJl-nn-p91" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="wM1-ot-yCR" secondAttribute="trailing" constant="8" id="RND-AP-kgB"/>
-                        <constraint firstAttribute="trailing" secondItem="KJl-nn-p91" secondAttribute="trailing" constant="10" id="g3H-Dx-KGZ"/>
-                        <constraint firstAttribute="bottom" secondItem="KJl-nn-p91" secondAttribute="bottom" id="gPf-L5-j6Z"/>
-                        <constraint firstAttribute="height" constant="44" id="kEd-kH-u4E"/>
-                        <constraint firstItem="wM1-ot-yCR" firstAttribute="centerY" secondItem="jml-mB-d6l" secondAttribute="centerY" id="q5J-CO-DWK"/>
-                        <constraint firstItem="wM1-ot-yCR" firstAttribute="leading" secondItem="jml-mB-d6l" secondAttribute="leading" constant="20" id="t0E-jA-kUB"/>
-                    </constraints>
-                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Sl-Ci-wRr">
-                    <rect key="frame" x="0.0" y="103" width="393" height="60"/>
+                    <rect key="frame" x="0.0" y="118" width="393" height="60"/>
                     <subviews>
                         <view contentMode="scaleToFill" placeholderIntrinsicWidth="97" placeholderIntrinsicHeight="38" translatesAutoresizingMaskIntoConstraints="NO" id="gTf-S6-Nbv" customClass="OutlineSegmentedControl" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="20" y="12" width="97" height="38"/>
@@ -121,7 +58,7 @@
                     </constraints>
                 </view>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="q3X-vD-KBB">
-                    <rect key="frame" x="0.0" y="163" width="393" height="689"/>
+                    <rect key="frame" x="0.0" y="178" width="393" height="674"/>
                     <color key="backgroundColor" name="background"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="oyq-su-z6K" customClass="LeftAlignedCollectionViewFlowLayout" customModule="Mixin" customModuleProvider="target">
                         <size key="itemSize" width="128" height="128"/>
@@ -135,12 +72,9 @@
             <color key="backgroundColor" name="background"/>
             <constraints>
                 <constraint firstItem="6Sl-Ci-wRr" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="372-ij-RYb"/>
-                <constraint firstItem="jml-mB-d6l" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="40F-GY-8rn"/>
-                <constraint firstItem="6Sl-Ci-wRr" firstAttribute="top" secondItem="jml-mB-d6l" secondAttribute="bottom" id="6hQ-D4-brY"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="jml-mB-d6l" secondAttribute="trailing" id="Axl-uK-w27"/>
                 <constraint firstAttribute="bottom" secondItem="q3X-vD-KBB" secondAttribute="bottom" id="GdD-rJ-Jom"/>
                 <constraint firstItem="q3X-vD-KBB" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="L4o-SW-Q5f"/>
-                <constraint firstItem="jml-mB-d6l" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="QgI-nd-VTm"/>
+                <constraint firstItem="6Sl-Ci-wRr" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="XXk-mz-XPk"/>
                 <constraint firstAttribute="trailing" secondItem="6Sl-Ci-wRr" secondAttribute="trailing" id="Y1w-da-ScH"/>
                 <constraint firstItem="q3X-vD-KBB" firstAttribute="top" secondItem="6Sl-Ci-wRr" secondAttribute="bottom" id="aaN-Sa-G4c"/>
                 <constraint firstAttribute="trailing" secondItem="q3X-vD-KBB" secondAttribute="trailing" id="i9m-1C-Xd3"/>
@@ -149,15 +83,9 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_app_category_scan" width="24" height="24"/>
         <image name="ic_arrow_down" width="30" height="30"/>
-        <image name="ic_sticker_setting" width="24" height="24"/>
-        <image name="ic_title_search" width="28" height="28"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="icon_tint">
-            <color red="0.18431372549019609" green="0.18823529411764706" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

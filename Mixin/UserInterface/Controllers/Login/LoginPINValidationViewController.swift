@@ -36,7 +36,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
         Task { [account] in
             do {
                 if account.hasSafe {
-                    Logger.tip.info(category: "LoginPINValidation", message: "Already had safe")
+                    Logger.login.info(category: "LoginPINValidation", message: "Already had safe")
                     try await withCheckedThrowingContinuation { continuation in
                         AccountAPI.verify(pin: pin) { result in
                             switch result {
@@ -55,13 +55,17 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 AppGroupUserDefaults.User.loginPINValidated = true
                 reporter.report(event: .loginEnd)
                 await MainActor.run {
+                    Logger.login.info(category: "LoginPINValidation", message: "Validated")
+                    Logger.redirectLogsToLogin = false
                     AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController()
                 }
             } catch MixinAPIResponseError.malformedPin {
+                Logger.login.error(category: "LoginPINValidation", message: "malformedPin...hasPIN:\(account.hasPIN)...hasSafe:\(account.hasSafe)")
                 await MainActor.run {
                     AppDelegate.current.mainWindow.rootViewController = LegacyPINViewController()
                 }
             } catch {
+                Logger.login.error(category: "LoginPINValidation", message: "Failed: \(error)")
                 await MainActor.run {
                     self.pinField.clear()
                     self.isBusy = false
@@ -78,7 +82,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
         present(customerService, animated: true)
         reporter.report(event: .customerServiceDialog, tags: ["source": "login_pin_verify"])
     }

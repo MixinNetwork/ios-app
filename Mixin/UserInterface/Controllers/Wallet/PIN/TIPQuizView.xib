@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TIPQuizViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="checkAnswerButton" destination="1W6-86-3fd" id="SFL-2f-DoY"/>
+                <outlet property="collectionView" destination="i0T-If-8Sz" id="P7Y-cg-a3b"/>
+                <outlet property="explainPINButton" destination="oPQ-1l-AH0" id="Zar-wO-Au9"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="i0T-If-8Sz">
+                    <rect key="frame" x="0.0" y="118" width="393" height="545.33333333333337"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="UPj-0V-M1V">
+                        <size key="itemSize" width="128" height="128"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="Bi6-om-LtO">
+                    <rect key="frame" x="36" y="675.33333333333337" width="321" height="96.666666666666629"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1W6-86-3fd">
+                            <rect key="frame" x="0.0" y="0.0" width="321" height="42.333333333333336"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="Check Answer" cornerStyle="capsule">
+                                <backgroundConfiguration key="background">
+                                    <color key="backgroundColor" name="background_tinted"/>
+                                </backgroundConfiguration>
+                                <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="16"/>
+                                <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="11" trailing="0.0"/>
+                                <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="baseBackgroundColor" name="background_tinted"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="checkAnswer:" destination="-1" eventType="touchUpInside" id="ZD7-gE-ZKY"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oPQ-1l-AH0">
+                            <rect key="frame" x="0.0" y="54.333333333333258" width="321" height="42.333333333333343"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" title="What is PIN?">
+                                <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="16"/>
+                                <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="11" trailing="0.0"/>
+                                <color key="baseForegroundColor" name="theme"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="explainPIN:" destination="-1" eventType="touchUpInside" id="6Ip-cs-eUN"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="i0T-If-8Sz" secondAttribute="trailing" id="1VI-pA-r5W"/>
+                <constraint firstItem="Bi6-om-LtO" firstAttribute="top" secondItem="i0T-If-8Sz" secondAttribute="bottom" constant="12" id="50n-nh-4dF"/>
+                <constraint firstItem="i0T-If-8Sz" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Qgd-Oy-2sW"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Bi6-om-LtO" secondAttribute="trailing" constant="36" id="V9E-XG-7Ay"/>
+                <constraint firstItem="Bi6-om-LtO" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="36" id="Xy1-tk-7fS"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Bi6-om-LtO" secondAttribute="bottom" constant="12" id="fdj-3f-uQm"/>
+                <constraint firstItem="i0T-If-8Sz" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="sMD-ex-1UO"/>
+            </constraints>
+            <point key="canvasLocation" x="34" y="42"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="background_tinted">
+            <color red="0.29411764705882354" green="0.48627450980392156" blue="0.8666666666666667" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

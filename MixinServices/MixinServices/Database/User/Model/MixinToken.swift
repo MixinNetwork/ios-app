@@ -17,6 +17,7 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
         case dust
         case confirmations
         case assetKey = "asset_key"
+        case precision
         case collectionHash = "collection_hash"
     }
     
@@ -35,6 +36,7 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
     public let dust: String
     public let confirmations: Int
     public let assetKey: String
+    public let precision: Int16
     public let collectionHash: String?
     
     public private(set) lazy var decimalBTCPrice = Decimal(string: btcPrice, locale: .enUSPOSIX) ?? 0
@@ -42,10 +44,15 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
     public private(set) lazy var decimalUSDChange = Decimal(string: usdChange, locale: .enUSPOSIX) ?? 0
     public private(set) lazy var decimalDust = Decimal(string: dust, locale: .enUSPOSIX) ?? 0
     
+    public var isPrecisionReady: Bool {
+        precision != Self.invalidPrecision
+    }
+    
     public init(
         assetID: String, kernelAssetID: String, symbol: String, name: String, iconURL: String,
         btcPrice: String, usdPrice: String, chainID: String, usdChange: String,
-        btcChange: String, dust: String, confirmations: Int, assetKey: String, collectionHash: String?
+        btcChange: String, dust: String, confirmations: Int, assetKey: String, precision: Int16,
+        collectionHash: String?
     ) {
         self.assetID = assetID
         self.kernelAssetID = kernelAssetID
@@ -60,6 +67,7 @@ public class MixinToken: Codable, Token, DatabaseColumnConvertible, MixinFetchab
         self.dust = dust
         self.confirmations = confirmations
         self.assetKey = assetKey
+        self.precision = precision
         self.collectionHash = collectionHash
     }
     
@@ -75,8 +83,9 @@ extension MixinToken: MaliciousDistinguishable {
 
 extension MixinToken {
     
-    public static let precision = 8
+    public static let internalPrecision: Int16 = 8
     public static let minimalAmount: Decimal = 0.000_000_01
+    public static let invalidPrecision: Int16 = -1
     
     public var isNFT: Bool {
         !(collectionHash?.isEmpty ?? true)

@@ -13,7 +13,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
     init(payment: Web3SendingTokenToAddressPayment) {
         self.payment = payment
         let token = payment.token
-        super.init(token: token, precision: Int(token.precision))
+        super.init(token: token, precision: token.precision)
     }
     
     required init?(coder: NSCoder) {
@@ -270,10 +270,7 @@ extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewContr
                 receiveAssetID: feeToken.assetID,
             )
         case .deposit:
-            guard let address = Web3AddressDAO.shared.address(walletID: feeToken.walletID, chainID: feeToken.chainID) else {
-                return
-            }
-            next = Web3DepositViewController(wallet: payment.wallet, kind: payment.chain.kind, address: address.destination)
+            next = DepositViewController(wallet: payment.wallet, token: feeToken)
         }
         navigationController?.pushViewController(next, animated: true)
     }

@@ -20,6 +20,7 @@ typedef enum SolanaErrorCode {
   SolanaErrorCodeBuildSPLInstruction = -12,
   SolanaErrorCodeTransactionToString = -13,
   SolanaErrorCodeNotOnCurve = -14,
+  SolanaErrorCodeInvalidProgramID = -15,
 } SolanaErrorCode;
 
 typedef struct SolanaPriorityFee {
@@ -51,6 +52,8 @@ const void *solana_deserialize_transaction(const uint8_t *txn, size_t txn_len);
 
 bool solana_transaction_contains_set_authority(const void *txn);
 
+int16_t solana_transaction_number_of_required_signatures(const void *txn);
+
 enum SolanaErrorCode solana_sign_transaction(const void *txn,
                                              const uint8_t *recent_blockhash,
                                              size_t recent_blockhash_len,
@@ -70,14 +73,17 @@ enum SolanaErrorCode solana_new_sol_transaction(const char *from,
                                                 const struct SolanaPriorityFee *priority_fee,
                                                 const void **out);
 
-enum SolanaErrorCode solana_associated_token_account(const char *owner,
+enum SolanaErrorCode solana_associated_token_account(const char *wallet_address,
                                                      const char *mint,
+                                                     const char *token_program_id,
                                                      const char **out);
 
-enum SolanaErrorCode solana_new_spl_transaction(const char *from,
-                                                const char *to,
-                                                bool create_to_ata,
-                                                const char *mint,
-                                                uint64_t amount,
-                                                const struct SolanaPriorityFee *priority_fee,
-                                                const void **out);
+enum SolanaErrorCode solana_new_spl_token_transaction(const char *from,
+                                                      const char *to,
+                                                      bool create_to_ata,
+                                                      const char *token_program_id,
+                                                      const char *mint,
+                                                      uint64_t amount,
+                                                      uint8_t decimals,
+                                                      const struct SolanaPriorityFee *priority_fee,
+                                                      const void **out);

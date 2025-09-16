@@ -1,5 +1,5 @@
 import Foundation
-import Sentry
+import Bugsnag
 
 open class Reporter {
     
@@ -13,6 +13,7 @@ open class Reporter {
         case signUpEnd          = "sign_up_end"
         
         case loginStart         = "login_start"
+        case loginSMSVerify     = "login_sms_verify"
         case loginRestore       = "login_restore"
         case loginVerifyPIN     = "login_verify_pin"
         case loginCAPTCHA       = "login_captcha"
@@ -82,44 +83,24 @@ open class Reporter {
     open func configure() {
         guard
             let path = Bundle.main.path(forResource: "Mixin-Keys", ofType: "plist"),
-            let keys = NSDictionary(contentsOfFile: path) as? [String: Any],
-            let sentryKey = keys["Sentry"] as? String
+            let keys = NSDictionary(contentsOfFile: path),
+            let key = keys["Bugsnag"] as? String
         else {
             return
         }
-        
-        SentrySDK.start { options in
-            options.dsn = sentryKey
-            options.enablePerformanceV2 = true
-#if DEBUG
-            options.tracesSampleRate = 1.0
-#else
-            options.tracesSampleRate = 0.1
-#endif
-        }
+        Bugsnag.start(withApiKey: key)
     }
     
     open func registerUserInformation(account: Account) {
-        let user = Sentry.User(userId: account.userID)
-        SentrySDK.setUser(user)
+        Bugsnag.setUser(account.userID, withEmail: "\(account.identityNumber)@mixin.id", andName: account.fullName)
     }
     
-    open func report(error: MixinAPIError) {
-        SentrySDK.capture(error: error)
-    }
-    
-    open func report(error: Error, userInfo: UserInfo? = nil) {
-        if let info = userInfo {
-            let event = Sentry.Event(level: .error)
-            event.extra = userInfo
-            SentrySDK.capture(event: event)
-        } else {
-            SentrySDK.capture(error: error)
-        }
+    open func report(error: Error) {
+        Bugsnag.notifyError(error)
     }
     
     open func report(event: Event, tags: [String: String]? = nil) {
-        // Reduce Sentry usage
+        // Reduce bug report usage
     }
     
     open func updateUserProperties(_ properties: UserProperty, account: Account? = nil) {

@@ -18,7 +18,7 @@ final class LegacyPINViewController: UIViewController {
     }
     
     @IBAction func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
         present(customerService, animated: true)
     }
     

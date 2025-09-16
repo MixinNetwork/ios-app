@@ -54,7 +54,8 @@ public enum TIP {
         case synchronizing(Float)
     }
     
-    public enum Error: Swift.Error {
+    public enum Error: Swift.Error, CustomNSError {
+        
         case missingPINToken
         case unableToGenerateSecuredRandom
         case invalidPIN
@@ -72,11 +73,33 @@ public enum TIP {
         case invalidUserID
         case missingAccountSalt
         case noSalt
-        case invalidSize
+        case invalidSize([String: String])
         case missingMnemonics
         #if DEBUG
         case mock
         #endif
+        
+        public var errorUserInfo: [String : Any] {
+            switch self {
+            case let .invalidSize(sizes):
+                sizes
+            default:
+                [:]
+            }
+        }
+        
+    }
+    
+    struct RegisterSafeError: Swift.Error, CustomNSError {
+        
+        let underlying: Swift.Error
+        let step1: String
+        let step2: String
+        
+        var errorUserInfo: [String : Any] {
+            ["underlying": "\(underlying)", "step1": step1, "step2": step2]
+        }
+        
     }
     
 }
@@ -484,7 +507,8 @@ extension TIP {
             Logger.tip.info(category: "TIP", message: "Encrypted salt is saved")
         } catch {
             Logger.tip.error(category: "TIP", message: "Error: \(error), step1: \(step1), step2: \(step2)")
-            reporter.report(error: error, userInfo: ["step1": step1, "step2": step2])
+            let registerError = RegisterSafeError(underlying: error, step1: step1, step2: step2)
+            reporter.report(error: registerError)
             throw error
         }
     }
@@ -634,7 +658,7 @@ extension TIP {
                     "decrypted": "\(decrypted.count)"
                 ]
                 Logger.tip.error(category: "TIP", message: "Invalid size", userInfo: sizeInfo)
-                reporter.report(error: Error.invalidSize, userInfo: sizeInfo)
+                reporter.report(error: Error.invalidSize(sizeInfo))
             }
         }
         Logger.tip.info(category: "TIP", message: "Using new created priv")

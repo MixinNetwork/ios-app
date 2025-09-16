@@ -24,7 +24,11 @@ final class SignalLoadingViewController: LoginLoadingViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Logger.general.info(category: "SignalLoading", message: "isPrekeyLoaded:\(AppGroupUserDefaults.Crypto.isPrekeyLoaded), isSessionSynchronized:\(AppGroupUserDefaults.Crypto.isSessionSynchronized), isCircleSynchronized:\(AppGroupUserDefaults.User.isCircleSynchronized)")
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
+        Logger.login.info(category: "SignalLoading", message: "isPrekeyLoaded:\(AppGroupUserDefaults.Crypto.isPrekeyLoaded), isSessionSynchronized:\(AppGroupUserDefaults.Crypto.isSessionSynchronized), isCircleSynchronized:\(AppGroupUserDefaults.User.isCircleSynchronized)")
         let startTime = Date()
         DispatchQueue.global().async {
             SignalDatabase.reloadCurrent()
@@ -45,7 +49,13 @@ final class SignalLoadingViewController: LoginLoadingViewController {
             reporter.report(event: .loginSignalInit)
         }
     }
-
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "signal_loading"])
+    }
+    
     private func syncSignalKeys() {
         guard !AppGroupUserDefaults.Crypto.isPrekeyLoaded else {
             return
@@ -139,6 +149,7 @@ final class SignalLoadingViewController: LoginLoadingViewController {
             case .failure(.unauthorized):
                 return
             case let .failure(error):
+                Logger.login.error(category: "SignalLoading", message: "Sync session failed: \(error)")
                 Thread.sleep(forTimeInterval: 2)
                 reporter.report(error: error)
             }
@@ -168,6 +179,7 @@ final class SignalLoadingViewController: LoginLoadingViewController {
                 AppGroupUserDefaults.User.isCircleSynchronized = true
                 return
             case let .failure(error):
+                Logger.login.error(category: "SignalLoading", message: "Sync circles failed: \(error)")
                 Thread.sleep(forTimeInterval: 2)
                 reporter.report(error: error)
             }
@@ -193,8 +205,10 @@ final class SignalLoadingViewController: LoginLoadingViewController {
             case .failure(.notFound):
                 return []
             case let .failure(error) where error.worthRetrying:
+                Logger.login.error(category: "SignalLoading", message: "Sync circle conversation failed: \(error)")
                 Thread.sleep(forTimeInterval: 2)
             case let .failure(error):
+                Logger.login.error(category: "SignalLoading", message: "Sync circle conversation failed: \(error)")
                 reporter.report(error: error)
                 return []
             }
@@ -216,8 +230,10 @@ final class SignalLoadingViewController: LoginLoadingViewController {
             case .failure(.notFound):
                 return
             case let .failure(error) where error.worthRetrying:
+                Logger.login.error(category: "SignalLoading", message: "Sync conversation failed: \(error)")
                 Thread.sleep(forTimeInterval: 2)
             case let .failure(error):
+                Logger.login.error(category: "SignalLoading", message: "Sync conversation failed: \(error)")
                 reporter.report(error: error)
                 return
             }

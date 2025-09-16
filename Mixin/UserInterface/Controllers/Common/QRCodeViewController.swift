@@ -6,7 +6,6 @@ class QRCodeViewController: UIViewController {
     
     enum CenterContent {
         case avatar((AvatarImageView) -> Void)
-        case receiveMoney((AvatarImageView) -> Void)
         case asset(MixinTokenItem)
     }
     
@@ -78,21 +77,6 @@ class QRCodeViewController: UIViewController {
                 make.width.height.equalTo(centerViewDimension)
             }
             avatarSetter(avatarImageView)
-        case .receiveMoney(let avatarSetter):
-            let avatarImageView = AvatarImageView()
-            centerContentWrapperView.addSubview(avatarImageView)
-            avatarImageView.snp.makeConstraints { make in
-                make.center.equalToSuperview()
-                make.width.height.equalTo(centerViewDimension)
-            }
-            avatarSetter(avatarImageView)
-            
-            let iconView = UIImageView(image: R.image.ic_receive_money())
-            iconView.backgroundColor = .clear
-            centerContentWrapperView.addSubview(iconView)
-            iconView.snp.makeConstraints { make in
-                make.trailing.bottom.equalTo(avatarImageView)
-            }
         case .asset(let asset):
             let iconView = BadgeIconView()
             centerContentWrapperView.addSubview(iconView)

@@ -194,8 +194,8 @@ public enum TIPNode {
         }
         guard signature.count == 64 else {
             let error = Error.invalidSignatureSize(signature.count)
-            Logger.tip.error(category: "TIPNode", message: "Invalid signature size, error: \(error)")
-            reporter.report(error: error, userInfo: ["size": "\(signature.count)"])
+            Logger.tip.error(category: "TIPNode", message: "Invalid signature size \(signature.count)")
+            reporter.report(error: error)
             throw error
         }
         let maxCounter = data.map(\.counter).max() ?? data[0].counter

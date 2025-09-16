@@ -3,6 +3,8 @@ PODS:
   - AppsFlyerFramework (6.17.0):
     - AppsFlyerFramework/Main (= 6.17.0)
   - AppsFlyerFramework/Main (6.17.0)
+  - Bugsnag (6.33.0)
+  - BugsnagPerformance (1.15.0)
   - CocoaLumberjack (3.8.5):
     - CocoaLumberjack/Core (= 3.8.5)
   - CocoaLumberjack/Core (3.8.5)
@@ -165,19 +167,19 @@ PODS:
     - libwebp/sharpyuv
   - MixinServices (0.1.0):
     - Alamofire
+    - Bugsnag
     - GRDB.swift
     - libsignal-protocol-c
     - SDWebImage
-    - Sentry
     - SocketRocket
     - Sodium
     - Zip
   - MixinServices/Tests (0.1.0):
     - Alamofire
+    - Bugsnag
     - GRDB.swift
     - libsignal-protocol-c
     - SDWebImage
-    - Sentry
     - SocketRocket
     - Sodium
     - Zip
@@ -204,9 +206,6 @@ PODS:
   - SDWebImageSVGKitPlugin (1.4.0):
     - SDWebImage/Core (~> 5.10)
     - SVGKit (~> 3.0)
-  - Sentry (8.52.1):
-    - Sentry/Core (= 8.52.1)
-  - Sentry/Core (8.52.1)
   - SnapKit (5.7.1)
   - SocketRocket (0.7.1)
   - Sodium (0.9.1)
@@ -216,6 +215,7 @@ PODS:
 
 DEPENDENCIES:
   - AppsFlyerFramework
+  - BugsnagPerformance
   - Firebase/Analytics
   - Firebase/Core
   - Firebase/Crashlytics
@@ -234,6 +234,8 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - AppsFlyerFramework
+    - Bugsnag
+    - BugsnagPerformance
     - CocoaLumberjack
     - Firebase
     - FirebaseABTesting
@@ -261,7 +263,6 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageLottieCoder
     - SDWebImageSVGKitPlugin
-    - Sentry
     - SnapKit
     - SocketRocket
     - Sodium
@@ -291,6 +292,8 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
   AppsFlyerFramework: 34cef9f9653f4fd01c27d4d87784425b9271f82f
+  Bugsnag: e957c79ccb0cccc84794ba616c2e18a8a48ad38d
+  BugsnagPerformance: e92cb72522fd92a4b066eebd48912fd137fdced5
   CocoaLumberjack: 6a459bc897d6d80bd1b8c78482ec7ad05dffc3f0
   Firebase: 38f818b36ca01648fa78ec7402b4ee3076086c2b
   FirebaseABTesting: 13de5629e6d92a6a6c06429a6ddd9b19362de827
@@ -313,7 +316,7 @@ SPEC CHECKSUMS:
   librlottie: 31aadd1f842008260fa7387f7fcb837b2fabeeea
   libsignal-protocol-c: 2fecccb06cc14bdbd28e76a656c0c8c648a482a0
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
-  MixinServices: 790d48227edaec397484ec336ce64a6c87c18850
+  MixinServices: 876e624081b77b32768b995a931555e7105722a4
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PhoneNumberKit: 99c7dddc07c36e76507c37a1e63f475a6faa40b2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
@@ -321,13 +324,12 @@ SPEC CHECKSUMS:
   SDWebImage: f29024626962457f3470184232766516dee8dfea
   SDWebImageLottieCoder: 827c9c82bbaae89627391b4d6fdf39bb89be3336
   SDWebImageSVGKitPlugin: 7542dd07c344ec3415ded0461a1161a6f087e0c9
-  Sentry: 2cbbe3592f30050c60e916c63c7f5a2fa584005e
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Sodium: 23d11554ecd556196d313cf6130d406dfe7ac6da
   SVGKit: 3f02ad9c8227831e508e2e37ecc4005d2f0496a5
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: c31dfe8b8bc965abc120c5da9f2fa74f8cd49002
+PODFILE CHECKSUM: a48ab27e91dd9deab54ec5a403502a975ec6cdde
 
 COCOAPODS: 1.16.2

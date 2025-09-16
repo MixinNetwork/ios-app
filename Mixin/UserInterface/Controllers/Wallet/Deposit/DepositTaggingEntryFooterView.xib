@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="deposit_tagging_entry_footer" id="U6b-Vx-4bR" customClass="DepositTaggingEntryFooterView" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="76"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DgV-ym-fM9">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This address supports all base EOS tokens" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1uZ-6A-gN2">
+                            <rect key="frame" x="34" y="2" width="252" height="34"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="text_tertiary"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" name="background"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="1uZ-6A-gN2" secondAttribute="trailing" constant="34" id="3Ey-4F-xcN"/>
+                        <constraint firstAttribute="bottom" secondItem="1uZ-6A-gN2" secondAttribute="bottom" constant="30" id="4lZ-TC-kPF"/>
+                        <constraint firstItem="1uZ-6A-gN2" firstAttribute="leading" secondItem="DgV-ym-fM9" secondAttribute="leading" constant="34" id="SCQ-RV-Waa"/>
+                        <constraint firstItem="1uZ-6A-gN2" firstAttribute="top" secondItem="DgV-ym-fM9" secondAttribute="top" constant="2" id="bQA-O9-bWd"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="DgV-ym-fM9" secondAttribute="bottom" constant="10" id="07e-5q-SlW"/>
+                <constraint firstItem="DgV-ym-fM9" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" id="Ecf-8B-Xxe"/>
+                <constraint firstAttribute="trailing" secondItem="DgV-ym-fM9" secondAttribute="trailing" id="lWm-t8-YuE"/>
+                <constraint firstItem="DgV-ym-fM9" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" id="qHN-D4-pwg"/>
+            </constraints>
+            <connections>
+                <outlet property="contentView" destination="DgV-ym-fM9" id="M76-a9-GyV"/>
+                <outlet property="label" destination="1uZ-6A-gN2" id="nKv-kM-HBq"/>
+            </connections>
+            <point key="canvasLocation" x="138.93129770992365" y="42.605633802816904"/>
+        </collectionReusableView>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

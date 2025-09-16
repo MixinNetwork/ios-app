@@ -5,6 +5,10 @@ final class UsernameViewController: LoginInfoInputViewController, CheckSessionEn
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         titleLabel.text = R.string.localizable.whats_your_name()
         textField.text = makeDefaultUsername()
         editingChangedAction(self)
@@ -20,10 +24,17 @@ final class UsernameViewController: LoginInfoInputViewController, CheckSessionEn
                 LoginManager.shared.setAccount(account)
                 self?.checkSessionEnvironmentAgain(freshAccount: account)
             case let .failure(error):
+                Logger.login.error(category: "Set Username", message: "Failed: \(error)")
                 reporter.report(error: error)
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }
+    }
+    
+    @objc func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "username"])
     }
     
     private func makeDefaultUsername() -> String? {

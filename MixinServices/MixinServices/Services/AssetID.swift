@@ -18,6 +18,7 @@ public enum AssetID {
     public static let baseETH = "3fb612c5-6844-3979-ae4a-5a84e79da870"
     public static let arbitrumOneETH = "8c590110-1abc-3697-84f2-05214e6516aa"
     public static let opMainnetETH = "60360611-370c-3b69-9826-b13db93f6aba"
+    public static let ton = "ef660437-d915-4e27-ad3f-632bfb6ba0ee"
     
     public static let btc = "c6d0c728-2624-429b-8e0d-d9d19b6592fa"
     public static let lightningBTC = "59c09123-95cc-3ffd-a659-0f9169074cee"
@@ -28,6 +29,7 @@ public enum AssetID {
     public static let polygonUSDT = "218bc6f4-7927-3f8e-8568-3a3725b74361"
     public static let bep20USDT = "94213408-4ee7-3150-a9c4-9c5cce421c78"
     public static let solanaUSDT = "cb54aed4-1893-3977-b739-ec7b2e04f0c5"
+    public static let tonUSDT = "7369eea0-0c69-3906-b419-e960e3595a4f"
     
     public static let erc20USDC = "9b180ab6-6abe-3dc0-a13f-04169eb34bfa"
     public static let solanaUSDC = "de6fa523-c596-398e-b12f-6d6980544b59"

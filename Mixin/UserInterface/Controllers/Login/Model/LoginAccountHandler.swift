@@ -17,20 +17,22 @@ extension LoginAccountHandler where Self: UIViewController {
                 privateKey: sessionKey.x25519Representation
             )
         else {
+            Logger.login.error(category: "Login", message: "Invalid Server PIN Token")
             return .invalidServerPinToken
         }
+        Logger.login.info(category: "Login", message: "Got account: \(account.userID), has_pin: \(account.hasPIN), has_safe: \(account.hasSafe)")
         AppGroupKeychain.sessionSecret = sessionKey.rawRepresentation
         AppGroupKeychain.pinToken = pinToken
         if !account.isAnonymous {
             // That's for mnemonic-based users. Should be cleared after phone number users log in to avoid confusion.
             AppGroupKeychain.mnemonics = nil
-            Logger.general.info(category: "Login", message: "AppGroupKeychain.mnemonics cleared")
+            Logger.login.info(category: "Login", message: "AppGroupKeychain.mnemonics cleared")
         }
         AppGroupKeychain.encryptedTIPPriv = nil
         AppGroupKeychain.ephemeralSeed = nil
         AppGroupKeychain.encryptedSalt = nil
         Keychain.shared.clearPIN()
-        Logger.tip.info(category: "Login", message: "TIP Secrets cleared")
+        Logger.login.info(category: "Login", message: "TIP Secrets cleared")
         LoginManager.shared.setAccount(account, updateUserTable: false)
         
         if AppGroupUserDefaults.User.localVersion == AppGroupUserDefaults.User.uninitializedVersion {
@@ -74,7 +76,7 @@ extension LoginAccountHandler where Self: UIViewController {
                 logs.append("[iCloud][\(backupDatabaseName)]...backupExist:\(backupExist)...fileSize:\(fileSize.sizeRepresentation())")
             }
             logs += debugCloudFiles(baseDir: icloudDir, parentDir: icloudDir)
-            Logger.general.info(category: "LoginRestore", message: logs.joined(separator: "\n"))
+            Logger.login.info(category: "LoginRestore", message: logs.joined(separator: "\n"))
         }
         
         UserDatabase.current.clearSentSenderKey(sessionID: account.sessionID)

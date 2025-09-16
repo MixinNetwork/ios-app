@@ -61,7 +61,7 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
         present(customerService, animated: true)
         reporter.report(event: .customerServiceDialog, tags: ["source": "login_mnemonic_phrase"])
     }
@@ -69,7 +69,7 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     @objc private func login(_ sender: Any) {
         showLoading()
         if let context = loginContext {
-            Logger.general.info(category: "MnemonicLogin", message: "Using saved context")
+            Logger.login.info(category: "MnemonicLogin", message: "Using saved context")
             login(context: context)
         } else {
             DispatchQueue.global().async { [action, weak self] in
@@ -78,17 +78,17 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
                     switch action {
                     case .signIn(let m):
                         mnemonics = m
-                        Logger.general.info(category: "MnemonicLogin", message: "Using arbitrary mnemonics")
+                        Logger.login.info(category: "MnemonicLogin", message: "Using arbitrary mnemonics")
                     case .signUp:
                         mnemonics = try .random()
                         // Save generated random mnemonics
                         AppGroupKeychain.mnemonics = mnemonics.entropy
-                        Logger.general.info(category: "MnemonicLogin", message: "New random mnemonics")
+                        Logger.login.info(category: "MnemonicLogin", message: "New random mnemonics")
                     }
                     let context = try SessionVerificationContext(mnemonics: mnemonics)
                     self?.verifySession(context: context, captchaToken: nil)
                 } catch {
-                    Logger.general.error(category: "MnemonicLogin", message: "\(error)")
+                    Logger.login.error(category: "MnemonicLogin", message: "\(error)")
                     DispatchQueue.main.async {
                         self?.showError(error.localizedDescription)
                     }
@@ -141,6 +141,7 @@ extension LoginWithMnemonicViewController {
     }
     
     private func verifySession(context: SessionVerificationContext, captchaToken: CaptchaToken?) {
+        Logger.login.info(category: "MnemonicLogin", message: "Verificate")
         AccountAPI.anonymousSessionVerifications(
             publicKey: context.publicKey,
             message: context.message,
@@ -171,6 +172,7 @@ extension LoginWithMnemonicViewController {
                     self.login(context: context)
                 }
             case .failure(.requiresCaptcha):
+                Logger.login.info(category: "MnemonicLogin", message: "Captcha")
                 captcha.validate { [weak self] (result) in
                     switch result {
                     case .success(let token):
@@ -180,6 +182,7 @@ extension LoginWithMnemonicViewController {
                     }
                 }
             case .failure(let error):
+                Logger.login.error(category: "MnemonicLogin", message: "\(error)")
                 switch action {
                 case .signIn:
                     reporter.report(event: .errorSessionVerifications, tags: ["source":"login"])
@@ -192,6 +195,7 @@ extension LoginWithMnemonicViewController {
     }
     
     private func login(context: LoginContext) {
+        Logger.login.error(category: "MnemonicLogin", message: "Login")
         do {
             guard let idData = context.verificationID.data(using: .utf8) else {
                 throw LoginError.loadVerificationID
@@ -215,20 +219,22 @@ extension LoginWithMnemonicViewController {
                     case .signIn(let mnemonics):
                         if account.isAnonymous {
                             AppGroupKeychain.mnemonics = mnemonics.entropy
-                            Logger.general.info(category: "MnemonicLogin", message: "Mnemonics saved to Keychain")
+                            Logger.login.info(category: "MnemonicLogin", message: "Mnemonics saved to Keychain")
                         }
                     case .signUp:
                         break
                     }
                     if let error = self.login(account: account, sessionKey: context.sessionKey) {
+                        Logger.login.error(category: "MnemonicLogin", message: "\(error)")
                         self.showError(error.localizedDescription)
                     }
                 case let .failure(error):
+                    Logger.login.error(category: "MnemonicLogin", message: "\(error)")
                     self.showError(error.localizedDescription)
                 }
             }
         } catch {
-            Logger.general.error(category: "MnemonicLogin", message: "\(error)")
+            Logger.login.error(category: "MnemonicLogin", message: "\(error)")
             self.loginContext = nil
             self.showError(error.localizedDescription)
         }

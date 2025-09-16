@@ -160,6 +160,7 @@
 "approving_transaction" = "Approving Transaction";
 "approving_transaction_failed" = "Approving Transaction Failed";
 "ask_me_anything" = "Ask me anything";
+"asset" = "Asset";
 "asset_key" = "Ключ актива";
 "asset_not_found" = "Актив не найден.";
 "asset_type" = "Тип актива";
@@ -199,6 +200,7 @@
 "batch_transfer_confirmation" = "Batch Transfer Confirmation";
 "before_you_proceed" = "Before you proceed";
 "block" = "Блокировать";
+"block_confirmations" = "Block Confirmations";
 "block_hint" = "Заблокированные контакты больше не смогут звонить вам или отправлять вам сообщения";
 "block_tip" = "Заблокированные пользователи не могут отправлять вам сообщения или добавлять вас в группы.";
 "blocked" = "Заблокировано";
@@ -284,6 +286,7 @@
 "chat_text_size" = "Chat Text Size";
 "chat_waiting" = "Ожидание, пока %1$@ подключится к сети и установит зашифрованный сеанс. %2$@.";
 "chats" = "Chats";
+"check_answer" = "Check answer";
 "check_backup" = "Check Backup";
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
@@ -457,7 +460,7 @@
 "delete_withdraw_address" = "Удалить адрес %@";
 "deleted" = "Удалено";
 "deleting_address" = "Delete Address";
-"deleting_address_failed" = "DeleteAddress Failed";
+"deleting_address_failed" = "Delete Address Failed";
 "deposit" = "Депозит";
 "deposit_account_attention" = "Внимание: Пожалуйста, попробуйте небольшую сумму для первого депозита. Для успешного внесения %@ в Mixin Messenger необходимы как памятка, так и адрес.";
 "deposit_attention" = "Пожалуйста, попробуйте небольшую сумму для первого депозита.";
@@ -465,14 +468,19 @@
 "deposit_confirmation_count" = "Депозит получит %d подтверждения блокировки";
 "deposit_dust" = "Minimum deposit: %1$@ %2$@";
 "deposit_hash" = "Deposit Hash";
+"deposit_memo_address_notice" = "Both Memo and Address are required to deposit %@ to your account.";
+"deposit_memo_notice" = "Памятка требуется, или вы потеряете свои монеты.";
 "deposit_pending_confirmation" = "%@ Pending Confirmation";
-"deposit_tip_btc" = "Этот адрес поддерживает только BTC.";
-"deposit_tip_common" = "Этот адрес поддерживает только %@.";
-"deposit_tip_eos" = "Этот адрес поддерживает всю базу токенов EOS.";
+"deposit_supporting_single_token" = "This address only supports %@.";
+"deposit_supporting_token_of_network" = "This address supports all tokens based on %@ network.";
+"deposit_suspended" = "%1$@ deposits have been suspended. Possible reasons:\n• Node failure\n• Network hard fork\n• Network congestion\n• Low usage\nNote: %1$@ assets already deposited can still be transferred.";
+"deposit_tag_address_notice" = "Both Tag and Address are required to deposit %@ to your account.";
+"deposit_tag_notice" = "Tag is required, or you will lose your coins.";
 "deposit_tip_eth" = "Этот адрес поддерживает все токены ERC-20, такие как ETH, XIN и т. д.";
 "deposit_tip_trx" = "Этот адрес поддерживает все токены TRC-10 и TRC-20.";
 "deposit_token" = "Deposit %@";
 "deposit_token_description" = "Deposit from other exchanges or wallets";
+"deposit_token_to_mixin" = "Deposit %@ to Mixin";
 "deposits_pending_confirmation" = "%d Deposits Pending Confirmation";
 "depost_address_updated" = "%@ Deposit Address Updated";
 "depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
@@ -532,6 +540,7 @@
 "enable_touch_pay_hint" = "Подтвердите PIN-код, чтобы включить Touch Pay";
 "end" = "End";
 "end_to_end_encryption" = "Сквозное шифрование";
+"enter_amount" = "Enter Amount";
 "enter_mnemonic_phrase" = "Enter or paste your %d mnemonic words.";
 "enter_new_anonymous_number" = "Enter your new anonymous number";
 "enter_new_phone_number" = "Введите новый номер телефона";
@@ -748,6 +757,12 @@
 "legacy_network" = "Legacy Network";
 "legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "light" = "Светлое";
+"lightning_address" = "Lightning Address";
+"lightning_address_explain" = "%@ is your Lightning Network address. With this address, you can conveniently and securely receive payments:";
+"lightning_address_explain_1" = "The address format is similar to an email, simple and easy to remember.";
+"lightning_address_explain_2" = "Reusable, no need to generate a new one each time.";
+"lightning_address_explain_3" = "Supported by mainstream Lightning Network wallets.";
+"lightning_address_explain_mao" = "Each MAO domain corresponds to a Lightning Network address. If you own a MAO domain, you can use name@mao.id to receive Lightning Network transfers. ";
 "line_busy" = "Линия занята";
 "line_busy_remote" = "Линия занята";
 "link" = "Link";
@@ -790,6 +805,7 @@
 "markets" = "Markets";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
+"maximum_deposit" = "Maximum Deposit";
 "media" = "Медиа";
 "membership_advance" = "Advance";
 "membership_advance_description" = "Use multiple keys on multiple devices to avoid single point of failure, and get decentralized recovery service in case of key loss.";
@@ -813,6 +829,7 @@
 "message_sent" = "Сообщение отправлено";
 "messages" = "Сообщения";
 "method_not_supported" = "Method %@ is not supported";
+"minimum_deposit" = "Minimum Deposit";
 "minimum_withdrawal" = "Minimum Withdrawal";
 "minute" = "%d минута";
 "minute_count" = "%d минуты";
@@ -820,9 +837,12 @@
 "mixin_contact" = "Mixin Contact";
 "mixin_id_or_phone" = "Mixin ID, номер телефона";
 "mixin_locked" = "Миксин заблокирован";
+"mixin_logs" = "Mixin Logs";
 "mixin_messenger_desktop" = "Рабочий стол Mixin Messenger";
 "mixin_one" = "Mixin One";
 "mixin_one_desc" = "Start your Mixin premium journey";
+"mixin_payment_content" = "💰 Amount: %1$@\n🌐 Network: %2$@\n🤝 Receiver: %3$@";
+"mixin_payment_title" = "📣 Mixin Payment";
 "mixin_server_encounters_errors" = "Сервер Mixin обнаруживает ошибки";
 "mixin_support" = "Mixin Support";
 "mnemonic_phrase" = "Mnemonic Phrase";
@@ -971,6 +991,7 @@
 "pause" = "Пауза";
 "paused" = "Paused";
 "pay" = "Pay";
+"pay_now" = "Pay Now";
 "pay_paid" = "Эта платежная ссылка уже кем-то оплачена, повторный платеж сделать нельзя.";
 "pay_with_biometry_type" = "Pay with %@";
 "pay_with_pin_interval" = "Оплата с интервалом PIN";
@@ -1172,6 +1193,8 @@
 "scan_code_add_me" = "Отсканируйте QR-код, чтобы добавить меня в Mixin";
 "scan_code_description" = "Use another device to scan the QR code below";
 "scan_qr_code" = "Сканировать QR-код";
+"scan_qr_code_to_send_token" = "Scan the QR Code to send me %@";
+"scan_qr_code_to_transfer_on_mixin" = "Scan the QR Code to transfer me %@ on Mixin";
 "scan_to_restore" = "Scan to Restore";
 "scan_to_restore_hint" = "Click the button below to scan the code and establish a connection.";
 "screen_lock" = "Блокировка экрана";
@@ -1243,6 +1266,7 @@
 "sending_withdrawal_request" = "Sending Withdrawal Request";
 "session_not_found" = "Session not found";
 "set" = "Установлен";
+"set_amount" = "Set Amount";
 "set_as_avatar" = "Set as Avatar";
 "set_disappearing_message_time_to" = "%1$@ установил время исчезновения сообщения на %2$@.";
 "set_emergency_create_successfully" = "Set recovery contact successfully";
@@ -1350,7 +1374,6 @@
 "storage_usage" = "Использование хранилища";
 "stranger_hint" = "Этого отправителя нет в ваших контактах";
 "successful" = "Успешный";
-"suspended_deposit" = "The deposit for %1$@ has been temporarily suspended. This action has been taken due to potential factors such as low utilization, node failure, blockchain network hard fork, or congestion. We kindly request your attention to the fact that the %2$@ assets already stored in the wallet remain transferable.";
 "suspicious_link" = "Подозрительная ссылка";
 "swap" = "Swap";
 "swap_again" = "Swap Again";
@@ -1389,6 +1412,12 @@
 "tip_create_pin_title" = "Set a 6 digit PIN to create your first digital wallet";
 "tip_creation_introduction" = "Set a 6 digit Wallet PIN to create your first digital wallet, the PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
 "tip_introduction" = "The 6-digit PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
+"tip_quiz_answer" = "The PIN is the key to your wallet, and it’s unrecoverable if lost.";
+"tip_quiz_correct_answer" = "I’ll lose access to my account and funds.";
+"tip_quiz_question" = "What happens if I lose my PIN?";
+"tip_quiz_title_correct" = "Correct!";
+"tip_quiz_title_wrong" = "Oops, wrong answer";
+"tip_quiz_wrong_answer" = "I can recover my account later.";
 "title_participants" = "%d участник";
 "title_participants_count" = "%d участников";
 "to" = "В";
@@ -1504,6 +1533,7 @@
 "url_deposit_suspended" = "https://support.mixin.one/en/article/the-explanation-about-mixin-stopped-support-for-some-assets-deposits-1im32px/";
 "url_disappearing_message" = "https://support.mixin.one/en/article/how-to-enable-disappearing-messages-2nzaz8/";
 "url_forget_pin" = "https://support.mixin.one/en/article/how-to-do-if-i-forget-the-pin-g12pmo/";
+"url_lightning_address" = "https://support.mixin.one/en/article/what-is-lightning-address-1i8733z/";
 "url_privacy_wallet" = "https://support.mixin.one/en/article/what-is-a-privacy-wallet-1ng5j8f/";
 "url_recall_message" = "https://support.mixin.one/en/article/how-to-recall-in-mixin-messenger-n3v3p1/";
 "url_recovery_contact" = "https://support.mixin.one/en/article/how-to-set-up-an-emergency-contact-1kvd6g8/";
@@ -1511,6 +1541,7 @@
 "url_unrecognized_hint" = "%@ не удалось распознать, обновите Mixin до последней версии или свяжитесь с разработчиком, чтобы проверить ссылку";
 "url_unsupported_message" = "https://support.mixin.one/en/article/how-to-do-when-you-receive-a-message-like-this-this-type-of-message-is-not-supported-please-upgrade-mixin-17j1t3p/";
 "url_watch_wallet" = "https://support.mixin.one/en/article/how-to-add-a-watch-only-address-17ifo8w";
+"url_what_is_pin" = "https://support.mixin.one/en/article/what-is-pin-1pjyhow/";
 "use_another_address" = "Use Another Address";
 "use_biometry" = "Использовать %@";
 "use_system_text_size" = "Use System Text Size";

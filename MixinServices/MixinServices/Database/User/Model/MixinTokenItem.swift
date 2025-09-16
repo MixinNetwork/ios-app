@@ -26,20 +26,23 @@ public final class MixinTokenItem: MixinToken, ValuableToken, ChangeReportingTok
         self.balance = balance
         self.isHidden = isHidden
         self.chain = chain
-        super.init(assetID: token.assetID,
-                   kernelAssetID: token.kernelAssetID,
-                   symbol: token.symbol,
-                   name: token.name,
-                   iconURL: token.iconURL,
-                   btcPrice: token.btcPrice,
-                   usdPrice: token.usdPrice,
-                   chainID: token.chainID,
-                   usdChange: token.usdChange,
-                   btcChange: token.btcChange,
-                   dust: token.dust,
-                   confirmations: token.confirmations,
-                   assetKey: token.assetKey,
-                   collectionHash: token.collectionHash)
+        super.init(
+            assetID: token.assetID,
+            kernelAssetID: token.kernelAssetID,
+            symbol: token.symbol,
+            name: token.name,
+            iconURL: token.iconURL,
+            btcPrice: token.btcPrice,
+            usdPrice: token.usdPrice,
+            chainID: token.chainID,
+            usdChange: token.usdChange,
+            btcChange: token.btcChange,
+            dust: token.dust,
+            confirmations: token.confirmations,
+            assetKey: token.assetKey,
+            precision: token.precision,
+            collectionHash: token.collectionHash
+        )
     }
     
     required init(from decoder: Decoder) throws {
@@ -84,6 +87,8 @@ extension MixinTokenItem: OnChainToken {
             "Optimism"
         case ChainID.arbitrumOne:
             "Arbitrum"
+        case ChainID.ton:
+            "TON"
         default:
             nil
         }

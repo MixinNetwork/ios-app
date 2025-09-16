@@ -410,6 +410,7 @@ extension Web3TransactionViewController {
                     .reduce(into: [:]) { result, token in
                         result[token.assetID] = token
                     }
+                
                 let sendStyle: AssetChange.Style
                 let receiveStyle: AssetChange.Style
                 switch transaction.status {
@@ -420,9 +421,8 @@ extension Web3TransactionViewController {
                     sendStyle = .pending
                     receiveStyle = .pending
                 }
-                let receivers = transaction.receivers ?? []
-                let senders = transaction.senders ?? []
-                let changes = receivers.map { receiver in
+                
+                let changes = transaction.filteredReceivers.map { receiver in
                     let token = tokens[receiver.assetID]
                     let amount = if let amount = Decimal(string: receiver.amount, locale: .enUSPOSIX) {
                         CurrencyFormatter.localizedString(
@@ -434,7 +434,7 @@ extension Web3TransactionViewController {
                         receiver.amount
                     }
                     return AssetChange(token: token, amount: amount, style: receiveStyle)
-                } + senders.map { sender in
+                } + transaction.filteredSenders.map { sender in
                     let token = tokens[sender.assetID]
                     let amount = if let amount = Decimal(string: sender.amount, locale: .enUSPOSIX) {
                         CurrencyFormatter.localizedString(

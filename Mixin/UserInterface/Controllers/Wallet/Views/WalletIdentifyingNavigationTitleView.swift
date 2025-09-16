@@ -3,6 +3,8 @@ import MixinServices
 
 final class WalletIdentifyingNavigationTitleView: UIStackView {
     
+    weak var titleLabel: UILabel!
+    
     init(title: String, wallet: Wallet) {
         super.init(frame: .zero)
         
@@ -23,6 +25,7 @@ final class WalletIdentifyingNavigationTitleView: UIStackView {
             return label
         }()
         addArrangedSubview(titleLabel)
+        self.titleLabel = titleLabel
         
         let subtitleStackView = {
             let stackView = UIStackView()

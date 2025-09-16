@@ -81,9 +81,6 @@ extension Web3TokenSenderSelectorViewController: UITableViewDataSource {
 extension Web3TokenSenderSelectorViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let receivingAddress else {
-            return
-        }
         let destination = Sender(rawValue: indexPath.row)!
         switch destination {
         case .myWallets:
@@ -95,14 +92,7 @@ extension Web3TokenSenderSelectorViewController: UITableViewDelegate {
             selector.delegate = self
             present(selector, animated: true)
         case .address:
-            guard let kind = Web3Chain.chain(chainID: receivingToken.chainID)?.kind else {
-                return
-            }
-            let deposit = Web3DepositViewController(
-                wallet: receivingWallet,
-                kind: kind,
-                address: receivingAddress.destination
-            )
+            let deposit = DepositViewController(wallet: receivingWallet, token: receivingToken)
             navigationController?.pushViewController(deposit, animated: true)
         }
     }
@@ -137,7 +127,8 @@ extension Web3TokenSenderSelectorViewController: TransferWalletSelectorViewContr
                     btcChange: "0",
                     dust: "0",
                     confirmations: -1,
-                    assetKey: "",
+                    assetKey: receivingToken.assetKey,
+                    precision: receivingToken.precision,
                     collectionHash: nil
                 )
                 tokenItem = MixinTokenItem(

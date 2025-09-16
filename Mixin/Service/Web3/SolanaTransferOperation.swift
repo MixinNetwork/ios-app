@@ -239,10 +239,9 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
     private let decimalAmount: Decimal
     private let amount: UInt64
     
-    private var priorityFee: PriorityFee?
-    
-    @MainActor
-    private var createAssociatedTokenAccountForReceiver: Bool?
+    @MainActor private var createAssociatedTokenAccountForReceiver: Bool?
+    @MainActor private var tokenProgramID: String?
+    @MainActor private var priorityFee: PriorityFee?
     
     init(payment: Web3SendingTokenToAddressPayment, decimalAmount: Decimal) throws {
         guard let amount = payment.token.nativeAmount(decimalAmount: decimalAmount) else {
@@ -265,13 +264,18 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
     }
     
     override func loadFee() async throws -> DisplayFee {
+        let tokenProgramID = try await RouteAPI.solanaGetAccountInfo(pubkey: payment.token.assetKey).owner
         let receiverAccountExists: Bool
         let createAssociatedTokenAccountForReceiver: Bool
         if payment.sendingNativeToken {
             receiverAccountExists = try await RouteAPI.solanaAccountExists(pubkey: payment.toAddress)
             createAssociatedTokenAccountForReceiver = false
         } else {
-            let ata = try Solana.tokenAssociatedAccount(owner: payment.toAddress, mint: payment.token.assetKey)
+            let ata = try Solana.tokenAssociatedAccount(
+                walletAddress: payment.toAddress,
+                mint: payment.token.assetKey,
+                tokenProgramID: tokenProgramID
+            )
             receiverAccountExists = try await RouteAPI.solanaAccountExists(pubkey: ata)
             createAssociatedTokenAccountForReceiver = !receiverAccountExists
         }
@@ -279,7 +283,10 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             from: payment.fromAddress.destination,
             to: payment.toAddress,
             createAssociatedTokenAccountForReceiver: createAssociatedTokenAccountForReceiver,
+            tokenProgramID: tokenProgramID,
+            mint: payment.token.assetKey,
             amount: amount,
+            decimals: UInt8(payment.token.precision),
             priorityFee: nil,
             token: payment.token
         )
@@ -294,6 +301,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         await MainActor.run {
             self.receiverAccountExists = receiverAccountExists
             self.createAssociatedTokenAccountForReceiver = createAssociatedTokenAccountForReceiver
+            self.tokenProgramID = tokenProgramID
             self.priorityFee = priorityFee
             self.fee = fee
             self.state = .ready
@@ -302,8 +310,14 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
     }
     
     override func start(pin: String) async throws {
-        let (createAccount, priorityFee) = await (self.createAssociatedTokenAccountForReceiver, self.priorityFee)
-        guard let createAccount, let priorityFee else {
+        let (createAccount, tokenProgramID, priorityFee) = await MainActor.run {
+            (
+                self.createAssociatedTokenAccountForReceiver,
+                self.tokenProgramID,
+                self.priorityFee
+            )
+        }
+        guard let createAccount, let tokenProgramID, let priorityFee else {
             assertionFailure("This shouldn't happen. Check when `state` becomes `ready`")
             return
         }
@@ -314,7 +328,10 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             from: payment.fromAddress.destination,
             to: payment.toAddress,
             createAssociatedTokenAccountForReceiver: createAccount,
+            tokenProgramID: tokenProgramID,
+            mint: payment.token.assetKey,
             amount: amount,
+            decimals: UInt8(payment.token.precision),
             priorityFee: priorityFee,
             token: payment.token
         )

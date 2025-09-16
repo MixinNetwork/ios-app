@@ -37,6 +37,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
     }
     
     override func requestVerificationCode(captchaToken token: CaptchaToken?) {
+        Logger.login.info(category: "LoginVerificationCode", message: "Request code")
         AccountAPI.sessionVerifications(
             phoneNumber: context.phoneNumber,
             captchaToken: token
@@ -51,6 +52,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
                 self.resendButton.isBusy = false
                 self.resendButton.beginCountDown(self.resendInterval)
             case .failure(.requiresCaptcha):
+                Logger.login.info(category: "LoginVerificationCode", message: "captcha")
                 captcha.validate { [weak self] (result) in
                     switch result {
                     case .success(let token):
@@ -60,12 +62,18 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
                     }
                 }
             case let .failure(error):
+                Logger.login.error(category: "LoginVerificationCode", message: "Failed: \(error)")
                 reporter.report(event: .errorSessionVerifications, tags: ["source": "login"])
                 reporter.report(error: error)
                 self.alert(error.localizedDescription)
                 self.resendButton.isBusy = false
             }
         }
+    }
+    
+    override func handleVerificationCodeError(_ error: MixinAPIError) {
+        Logger.login.error(category: "LoginVerificationCode", message: "\(error)")
+        super.handleVerificationCodeError(error)
     }
     
     func login() {
@@ -78,6 +86,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
     }
     
     func login(code: String, registrationId: Int, sessionKey: Ed25519PrivateKey) {
+        Logger.login.info(category: "LoginVerificationCode", message: "Login")
         let sessionSecret = sessionKey.publicKey.rawRepresentation.base64EncodedString()
         AccountAPI.login(
             verificationId: context.verificationID,
@@ -100,7 +109,7 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
         present(customerService, animated: true)
         reporter.report(event: .customerServiceDialog, tags: ["source":"login_sms_verify"])
     }

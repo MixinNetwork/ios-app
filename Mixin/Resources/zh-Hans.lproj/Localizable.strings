@@ -160,6 +160,7 @@
 "approving_transaction" = "正在批准";
 "approving_transaction_failed" = "批准失败";
 "ask_me_anything" = "向我提问";
+"asset" = "资产";
 "asset_key" = "资产标识";
 "asset_not_found" = "找不到该资产";
 "asset_type" = "资产类型";
@@ -199,6 +200,7 @@
 "batch_transfer_confirmation" = "批量转账确认";
 "before_you_proceed" = "请在继续之前";
 "block" = "屏蔽用户";
+"block_confirmations" = "到账确认区块数";
 "block_hint" = "屏蔽后对方无法向您拨打电话或发送消息";
 "block_tip" = "被屏蔽的用户不能给你发送消息或者邀请你加入群聊";
 "blocked" = "已屏蔽";
@@ -284,6 +286,7 @@
 "chat_text_size" = "聊天字体大小";
 "chat_waiting" = "等待%1$@上线后建立加密会话。%2$@。";
 "chats" = "聊天";
+"check_answer" = "检查答案";
 "check_backup" = "检查备份";
 "check_mnemonic_phrase" = "检查您的助记词";
 "check_mnemonic_phrase_desc" = "按照呈现给您的顺序输入每个单词。";
@@ -465,14 +468,19 @@
 "deposit_confirmation_count" = "充值到账需要 %d 个区块确认。";
 "deposit_dust" = "最小充值数：%1$@ %2$@";
 "deposit_hash" = "充值哈希";
+"deposit_memo_address_notice" = "地址和 Memo（备注）同时使用才能充值 %@ 到你的账号。";
+"deposit_memo_notice" = "充值时务必填写 Memo（备注），否则可能导致资产丢失。";
 "deposit_pending_confirmation" = "%@ 充值确认中";
-"deposit_tip_btc" = "该充值地址仅支持 BTC。";
-"deposit_tip_common" = "该充值地址仅支持 %@。";
-"deposit_tip_eos" = "支持所有基于 EOS 发行的代币。";
+"deposit_supporting_single_token" = "该充值地址仅支持 %@。";
+"deposit_supporting_token_of_network" = "支持所有基于 %@ 发行的代币。";
+"deposit_suspended" = "%1$@ 充值已暂停，可能的原因包括：\n• 节点故障\n• 网络硬分叉\n• 网络拥堵\n• 使用率较低\n注意已转入的 %1$@ 资产可以继续转账。";
+"deposit_tag_address_notice" = "地址和 Tag（标签）同时使用才能充值 %@ 到你的账号。";
+"deposit_tag_notice" = "充值时务必填写 Tag（标签），否则可能导致资产丢失。";
 "deposit_tip_eth" = "支持所有符合 ERC-20 标准的代币，例如 ETH、XIN 等。";
 "deposit_tip_trx" = "支持 TRX 和所有符合 TRC-10、TRC-20 标准的代币。";
 "deposit_token" = "充值 %@";
 "deposit_token_description" = "从其他交易所或钱包转入";
+"deposit_token_to_mixin" = "充值 %@ 到 Mixin";
 "deposits_pending_confirmation" = "有 %d 笔充值确认中";
 "depost_address_updated" = "%@ 充值地址已更新";
 "depost_address_updated_description" = "您的 %@ 充值地址已更新，充值地址将随着系统或网络升级而自动更新，旧的地址仍可充值并会自动入账，但是不推荐使用。";
@@ -532,6 +540,7 @@
 "enable_touch_pay_hint" = "输入 PIN 启用指纹支付";
 "end" = "结束";
 "end_to_end_encryption" = "端到端加密";
+"enter_amount" = "输入金额";
 "enter_mnemonic_phrase" = "输入或粘贴您的 %d 个助记词。";
 "enter_new_anonymous_number" = "输入你的新匿名号码";
 "enter_new_phone_number" = "输入你的新手机号码";
@@ -748,6 +757,12 @@
 "legacy_network" = "旧网络";
 "legacy_network_transfer_hint" = "当前转账使用的是旧网络";
 "light" = "浅色";
+"lightning_address" = "闪电网络地址";
+"lightning_address_explain" = "%@ 是您的闪电网络地址，通过该地址，您可以便捷、安全地接收支付：";
+"lightning_address_explain_1" = "地址格式类似邮箱，简单好记。";
+"lightning_address_explain_2" = "可重复使用，无需每次生成新的。";
+"lightning_address_explain_3" = "主流闪电网络钱包都支持。";
+"lightning_address_explain_mao" = "每一个 MAO 域名对应一个闪电网络地址，如果您拥有 MAO 域名，可以按 name@mao.id 格式接收闪电网络转账。";
 "line_busy" = "忙线未接听";
 "line_busy_remote" = "对方忙";
 "link" = "链接";
@@ -790,6 +805,7 @@
 "markets" = "行情";
 "max" = "最大值";
 "max_favorite_bots_description" = "最多可以添加 5 个喜欢的机器人，注意其他人可以在你的个人信息弹窗里查看这些你喜欢的机器人。";
+"maximum_deposit" = "最大充值金额";
 "media" = "媒体";
 "membership_advance" = "进阶版";
 "membership_advance_description" = "在多设备上使用多个密钥，避免单点故障，并在密钥丢失时获得去中心化的恢复服务。";
@@ -813,6 +829,7 @@
 "message_sent" = "消息已发送";
 "messages" = "消息";
 "method_not_supported" = "不支持此方法: %@";
+"minimum_deposit" = "最小充值金额";
 "minimum_withdrawal" = "最小提现数量";
 "minute" = "%d 分钟";
 "minute_count" = "%d 分钟";
@@ -820,9 +837,12 @@
 "mixin_contact" = "Mixin 联系人";
 "mixin_id_or_phone" = "Mixin ID 或手机号";
 "mixin_locked" = "Mixin 已锁定";
+"mixin_logs" = "Mixin 日志";
 "mixin_messenger_desktop" = "Mixin Messenger 桌面";
 "mixin_one" = "Mixin 大会员";
 "mixin_one_desc" = "开启您的 Mixin 会员之旅";
+"mixin_payment_content" = "💰 金额：%1$@\n🌐 网络：%2$@\n🤝 收款人：%3$@";
+"mixin_payment_title" = "📣 Mixin 收款";
 "mixin_server_encounters_errors" = "服务器出错，请稍后重试";
 "mixin_support" = "Mixin 客服";
 "mnemonic_phrase" = "助记词";
@@ -971,6 +991,7 @@
 "pause" = "暂停";
 "paused" = "已暂停";
 "pay" = "支付";
+"pay_now" = "立刻支付";
 "pay_paid" = "此付款链接已由某人支付，您无法进行重复付款。";
 "pay_with_biometry_type" = "%@支付";
 "pay_with_pin_interval" = "PIN 使用间隔";
@@ -1172,6 +1193,8 @@
 "scan_code_add_me" = "用 Mixin 扫描二维码加我为联系人";
 "scan_code_description" = "请用其他设备扫描以下二维码";
 "scan_qr_code" = "扫描二维码";
+"scan_qr_code_to_send_token" = "扫描二维码向我发送 %@";
+"scan_qr_code_to_transfer_on_mixin" = "扫描二维码通过 Mixin 向我转账 %@";
 "scan_to_restore" = "扫描以恢复";
 "scan_to_restore_hint" = "点下面按钮扫码建立连接";
 "screen_lock" = "锁屏";
@@ -1243,6 +1266,7 @@
 "sending_withdrawal_request" = "正在发送提现";
 "session_not_found" = "没有对应的连接";
 "set" = "设置";
+"set_amount" = "设置金额";
 "set_as_avatar" = "设置为头像";
 "set_disappearing_message_time_to" = "%1$@将限时消息设置为 %2$@";
 "set_emergency_create_successfully" = "设置恢复联系人成功";
@@ -1350,7 +1374,6 @@
 "storage_usage" = "储存空间";
 "stranger_hint" = "对方不是你的联系人";
 "successful" = "成功";
-"suspended_deposit" = "%1$@ 充值已暂停，可能的原因是因为使用率太低、节点故障、区块链网络硬分叉或者拥堵，注意已转入的 %2$@ 资产可以继续转账。";
 "suspicious_link" = "可疑链接";
 "swap" = "交易";
 "swap_again" = "再来一笔";
@@ -1389,6 +1412,12 @@
 "tip_create_pin_title" = "设置 6 位数字 PIN 创建你的第一个数字钱包";
 "tip_creation_introduction" = "设置 6 位数字 PIN 创建你的第一个加密货币钱包，PIN 基于去中心化密钥派生协议 Throttled Identity Protocol，阅读文档以了解更多。";
 "tip_introduction" = "6 位数字 PIN 基于去中心化密钥派生协议 Throttled Identity Protocol，阅读文档以了解更多。";
+"tip_quiz_answer" = "PIN 是你钱包的钥匙，丢失后无法找回。";
+"tip_quiz_correct_answer" = "我将无法访问账户和资金。";
+"tip_quiz_question" = "如果我丢失了 PIN，会发生什么？";
+"tip_quiz_title_correct" = "正确！";
+"tip_quiz_title_wrong" = "哎呀，答错了";
+"tip_quiz_wrong_answer" = "我可以恢复我的账户。";
 "title_participants" = "%d 成员";
 "title_participants_count" = "%d 成员";
 "to" = "至";
@@ -1504,6 +1533,7 @@
 "url_deposit_suspended" = "https://support.mixin.one/zh/article/5ywz5lqo5pq56en6lwe5lqn5lin5psv5oyb5ywf5yc855qe6k05pio-1sh1z50/";
 "url_disappearing_message" = "https://support.mixin.one/zh/article/5aac5l2v5bya5zcv6zmq5pe25rai5ogv77yf-18dzv5i/";
 "url_forget_pin" = "https://support.mixin.one/zh/article/pin-1vb2rc7/";
+"url_lightning_address" = "https://support.mixin.one/zh/article/lightning-address-1fzf8s4/";
 "url_privacy_wallet" = "https://support.mixin.one/zh/article/5lua5lmi5piv6zqq56eb6zkx5yyf77yf-1s7o0e2/";
 "url_recall_message" = "https://support.mixin.one/zh/article/mixin-messenger-bjr9re/";
 "url_recovery_contact" = "https://support.mixin.one/zh/article/5aac5l2v6k6572u57sn5ocl6igu57o75lq6-d2nssy/";
@@ -1511,6 +1541,7 @@
 "url_unrecognized_hint" = "%@ 识别失败，请升级至 Mixin 最新版本或联系开发者检查链接";
 "url_unsupported_message" = "https://support.mixin.one/zh/article/mixin-h92cxa/";
 "url_watch_wallet" = "https://support.mixin.one/zh/article/5aac5l2v5re75yqg6kec5af5zyw5z2a77yf-r3pitk/";
+"url_what_is_pin" = "https://support.mixin.one/zh/article/pin-yhpicw/";
 "use_another_address" = "换个地址";
 "use_biometry" = "采用%@";
 "use_system_text_size" = "跟随系统字体大小";

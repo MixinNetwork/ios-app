@@ -4,6 +4,11 @@ public protocol OnChainToken: Token {
     
     var chainID: String { get }
     var assetKey: String { get }
+    var precision: Int16 { get }
+    
+    // The `precision` could be invalid due to historical reasons
+    var isPrecisionReady: Bool { get }
+    
     var chain: Chain? { get }
     var chainTag: String? { get }
     
@@ -34,7 +39,7 @@ extension OnChainToken {
         case ChainID.bnbSmartChain:
             "BNB Smart Chain (BEP-20)"
         case ChainID.tron:
-            assetKey.isDigitsOnly ? "Tron (TRC-10)" : "Tron (TRC-20)"
+            assetKey.isDigitsOnly ? "TRON (TRC-10)" : "TRON (TRC-20)"
         case ChainID.bitShares:
             "BitShares"
         case ChainID.opMainnet:
@@ -44,6 +49,13 @@ extension OnChainToken {
         default:
             chain?.name
         }
+    }
+    
+    public var positionalValue: Decimal? {
+        guard isPrecisionReady else {
+            return nil
+        }
+        return Decimal(sign: .plus, exponent: Int(precision), significand: 1)
     }
     
 }

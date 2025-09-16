@@ -24,7 +24,7 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
     ) {
         self.tokenItem = tokenItem
         self.destination = destination
-        super.init(token: tokenItem, precision: MixinToken.precision)
+        super.init(token: tokenItem, precision: MixinToken.internalPrecision)
     }
     
     required init?(coder: NSCoder) {

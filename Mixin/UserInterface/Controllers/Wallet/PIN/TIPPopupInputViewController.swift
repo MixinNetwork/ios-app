@@ -8,6 +8,17 @@ final class TIPPopupInputViewController: PinValidationViewController {
         case `continue`(TIP.InterruptionContext, _ onSuccess: @MainActor @Sendable () -> Void)
     }
     
+    struct ReportingError: Error, CustomNSError {
+        
+        let underlying: Error
+        let location: String
+        
+        var errorUserInfo: [String : Any] {
+            ["underlying": "\(underlying)", "location": location]
+        }
+        
+    }
+    
     private let action: Action
     
     private var oldPIN: String?
@@ -141,7 +152,8 @@ final class TIPPopupInputViewController: PinValidationViewController {
                 AppGroupUserDefaults.User.loginPINValidated = true
                 await MainActor.run(body: onSuccess)
             } catch {
-                reporter.report(error: error, userInfo: ["location": "PI.ContinueCreate"])
+                let reportingError = ReportingError(underlying: error, location: "ContinueCreate")
+                reporter.report(error: reportingError)
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to create: \(error)")
                 await MainActor.run {
                     if let error = error as? MixinAPIError {
@@ -206,7 +218,8 @@ final class TIPPopupInputViewController: PinValidationViewController {
                 Logger.tip.info(category: "TIPPopupInput", message: "Changed successfully")
                 await MainActor.run(body: onSuccess)
             } catch let error as TIPNode.Error {
-                reporter.report(error: error, userInfo: ["location": "PI.ContinueChange.Node"])
+                let reportingError = ReportingError(underlying: error, location: "ContinueChange.Node")
+                reporter.report(error: reportingError)
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to change: \(error)")
                 await MainActor.run {
                     loadingIndicator.stopAnimating()
@@ -219,7 +232,8 @@ final class TIPPopupInputViewController: PinValidationViewController {
                     oldPIN = nil
                 }
             } catch {
-                reporter.report(error: error, userInfo: ["location": "PI.ContinueChange"])
+                let reportingError = ReportingError(underlying: error, location: "ContinueChange")
+                reporter.report(error: reportingError)
                 Logger.tip.error(category: "TIPPopupInput", message: "Failed to change: \(error)")
                 await MainActor.run {
                     if let error = error as? MixinAPIError {

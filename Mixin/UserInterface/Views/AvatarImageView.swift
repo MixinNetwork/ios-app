@@ -32,12 +32,12 @@ class AvatarImageView: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        prepare()
+        loadSubviews()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        prepare()
+        loadSubviews()
     }
     
     override func layoutSubviews() {
@@ -46,6 +46,21 @@ class AvatarImageView: UIView {
         let radius = min(imageView.frame.width, imageView.frame.height) / 2
         imageView.layer.cornerRadius = radius
         updateShadowPath()
+    }
+    
+    func loadSubviews() {
+        layer.shadowColor = R.color.icon_shadow()!.cgColor
+        layer.shadowRadius = 6
+        imageView.clipsToBounds = true
+        imageView.frame = bounds
+        addSubview(imageView)
+        
+        titleLabel.textColor = .white
+        titleLabel.font = .systemFont(ofSize: titleFontSize)
+        titleLabel.textAlignment = .center
+        addSubview(titleLabel)
+        titleLabel.frame = bounds
+        titleLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
     
     func layout(imageView: UIImageView) {
@@ -138,21 +153,6 @@ class AvatarImageView: UIView {
         } else {
             layer.shadowPath = nil
         }
-    }
-    
-    private func prepare() {
-        layer.shadowColor = R.color.icon_shadow()!.cgColor
-        layer.shadowRadius = 6
-        imageView.clipsToBounds = true
-        imageView.frame = bounds
-        addSubview(imageView)
-        
-        titleLabel.textColor = .white
-        titleLabel.font = .systemFont(ofSize: titleFontSize)
-        titleLabel.textAlignment = .center
-        addSubview(titleLabel)
-        titleLabel.frame = bounds
-        titleLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
     
 }

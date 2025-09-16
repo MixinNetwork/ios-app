@@ -475,6 +475,7 @@
 "deposit_tag_address_notice" = "Both Tag and Address are required to deposit %@ to your account.";
 "deposit_tag_notice" = "Tag is required, or you will lose your coins.";
 "deposit_tip_eth" = "このアドレスはETHやXINなど全てのERC-20トークンをサポートしています";
+"deposit_tip_lightning" = "This invoice supports BTC on Lightning Network, as well as USDT and other Taproot Assets.";
 "deposit_tip_trx" = "このアドレスは全てのTRC-10/TRC-20トークンをサポートしています";
 "deposit_token" = "Deposit %@";
 "deposit_token_description" = "Deposit from other exchanges or wallets";

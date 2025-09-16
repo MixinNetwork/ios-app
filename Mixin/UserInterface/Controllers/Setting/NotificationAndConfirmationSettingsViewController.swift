@@ -1,7 +1,8 @@
 import UIKit
+import UserNotifications
 import MixinServices
 
-class NotificationAndConfirmationSettingsViewController: SettingsTableViewController {
+final class NotificationAndConfirmationSettingsViewController: SettingsTableViewController {
     
     private lazy var messagePreviewRow = SettingsRow(title: R.string.localizable.message_preview(),
                                                      accessory: .switch(isOn: showsMessagePreview))
@@ -24,6 +25,10 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
         controller.isNumericOnly = true
         return controller
     }()
+    
+    private var enableNotificationHeaderView: EnableNotificationHeaderView? {
+        tableView.tableHeaderView as? EnableNotificationHeaderView
+    }
     
     private var showsMessagePreview: Bool {
         AppGroupUserDefaults.User.showMessagePreviewInNotification
@@ -48,10 +53,31 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
         title = R.string.localizable.settings()
         dataSource.tableViewDelegate = self
         dataSource.tableView = tableView
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(switchMessagePreview(_:)),
-                                               name: SettingsRow.accessoryDidChangeNotification,
-                                               object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(switchMessagePreview(_:)),
+            name: SettingsRow.accessoryDidChangeNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadEnableNotificationView),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
+        reloadEnableNotificationView()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        enableNotificationHeaderView?.sizeToFit(tableView: tableView)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory {
+            enableNotificationHeaderView?.sizeToFit(tableView: tableView)
+        }
     }
     
     @objc func switchMessagePreview(_ notification: Notification) {
@@ -65,6 +91,25 @@ class NotificationAndConfirmationSettingsViewController: SettingsTableViewContro
             AppGroupUserDefaults.User.showMessagePreviewInNotification = isOn
         } else if row == duplicateTransferRow {
             AppGroupUserDefaults.User.duplicateTransferConfirmation = isOn
+        }
+    }
+    
+    @objc private func reloadEnableNotificationView() {
+        NotificationManager.shared.getAuthorized { [weak self] isAuthorized in
+            guard let self else {
+                return
+            }
+            if isAuthorized {
+                self.tableView.tableHeaderView = nil
+            } else if self.tableView.tableHeaderView == nil {
+                let headerView = R.nib.enableNotificationHeaderView(withOwner: nil)!
+                headerView.enableNotificationButton.addTarget(
+                    self,
+                    action: #selector(enablePushNotifications(_:)),
+                    for: .touchUpInside
+                )
+                self.tableView.tableHeaderView = headerView
+            }
         }
     }
     
@@ -101,6 +146,23 @@ extension NotificationAndConfirmationSettingsViewController: UITableViewDelegate
 }
 
 extension NotificationAndConfirmationSettingsViewController {
+    
+    @objc private func enablePushNotifications(_ sender: Any) {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                switch settings.authorizationStatus {
+                case .notDetermined:
+                    NotificationManager.shared.requestAuthorization()
+                case .denied:
+                    UIApplication.shared.openNotificationSettings()
+                case .authorized, .provisional, .ephemeral:
+                    break
+                @unknown default:
+                    break
+                }
+            }
+        }
+    }
     
     private func makeTransferNotificationThresholdSection() -> SettingsSection {
         let representation = Currency.current.symbol + transferNotificationThreshold

@@ -31,7 +31,10 @@ public final class RefreshAllTokensJob: AsynchronousJob {
                     Web3ChainDAO.shared.save(chains)
                 }
             } catch {
-                reporter.report(error: error)
+                let worthReporting = (error as? MixinAPIError)?.worthReporting ?? true
+                if worthReporting {
+                    reporter.report(error: error)
+                }
                 Logger.general.error(category: "RefreshAllTokensJob", message: error.localizedDescription)
             }
             ExternalAPI.fiats { (result) in
@@ -41,7 +44,9 @@ public final class RefreshAllTokensJob: AsynchronousJob {
                         Currency.updateRate(with: fiatMonies)
                     }
                 case let .failure(error):
-                    reporter.report(error: error)
+                    if error.worthReporting {
+                        reporter.report(error: error)
+                    }
                 }
                 self.finishJob()
             }

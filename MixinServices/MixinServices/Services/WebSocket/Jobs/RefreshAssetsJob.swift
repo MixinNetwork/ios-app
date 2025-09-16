@@ -67,12 +67,16 @@ public class RefreshAssetsJob: AsynchronousJob {
                                 Web3ChainDAO.shared.save(chains)
                             }
                         case let .failure(error):
-                            reporter.report(error: error)
+                            if error.worthReporting {
+                                reporter.report(error: error)
+                            }
                         }
                         self.updateFiats()
                     }
                 case let .failure(error):
-                    reporter.report(error: error)
+                    if error.worthReporting {
+                        reporter.report(error: error)
+                    }
                     self.finishJob()
                 }
             }
@@ -106,13 +110,17 @@ public class RefreshAssetsJob: AsynchronousJob {
                                     Web3ChainDAO.shared.save([chain])
                                 }
                             case let .failure(error):
-                                reporter.report(error: error)
+                                if error.worthReporting {
+                                    reporter.report(error: error)
+                                }
                             }
                             self.updateFiats()
                         }
                     }
                 case let .failure(error):
-                    reporter.report(error: error)
+                    if error.worthReporting {
+                        reporter.report(error: error)
+                    }
                     self.finishJob()
                 }
             }
@@ -133,7 +141,9 @@ public class RefreshAssetsJob: AsynchronousJob {
                     self.finishJob()
                 }
             case let .failure(error):
-                reporter.report(error: error)
+                if error.worthReporting {
+                    reporter.report(error: error)
+                }
                 self.finishJob()
             }
         }
@@ -156,7 +166,9 @@ public class RefreshAssetsJob: AsynchronousJob {
                         self.updateSnapshots(assetId: asset.assetId)
                     }
                 case let .failure(error):
-                    reporter.report(error: error)
+                    if error.worthReporting {
+                        reporter.report(error: error)
+                    }
                     finishedEntryCount += 1
                     if finishedEntryCount == asset.depositEntries.count {
                         self.updateSnapshots(assetId: asset.assetId)
@@ -177,7 +189,9 @@ public class RefreshAssetsJob: AsynchronousJob {
                     SnapshotDAO.shared.saveSnapshots(snapshots: snapshots)
                 }
             case let .failure(error):
-                reporter.report(error: error)
+                if error.worthReporting {
+                    reporter.report(error: error)
+                }
             }
             self.finishJob()
         }

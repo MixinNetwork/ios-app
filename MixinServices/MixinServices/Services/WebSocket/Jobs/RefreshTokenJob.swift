@@ -37,7 +37,10 @@ public final class RefreshTokenJob: AsynchronousJob {
                 }
                 SafeSnapshotDAO.shared.replacePendingSnapshots(assetID: assetID, pendingDeposits: pendingDeposits)
             } catch {
-                reporter.report(error: error)
+                let worthReporting = (error as? MixinAPIError)?.worthReporting ?? true
+                if worthReporting {
+                    reporter.report(error: error)
+                }
             }
             self.finishJob()
         }

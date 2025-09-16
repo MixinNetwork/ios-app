@@ -47,7 +47,7 @@ open class Database {
                 }
             default:
                 // Stupid error from CoreFoundation
-                if !message.contains("cfurl_cache_response.request_key") {
+                if !message.contains("cfurl_cache_response") {
                     reporter.report(error: Error(code: code.rawValue, message: message))
                     Logger.database.error(category: "DB", message: "code: \(code), message: \(message)\n")
                 }

@@ -86,7 +86,9 @@ class VerificationCodeViewController: ContinueButtonViewController {
             verificationCodeField.showError()
             alert(R.string.localizable.the_code_is_incorrect())
         default:
-            reporter.report(error: error)
+            if error.worthReporting {
+                reporter.report(error: error)
+            }
             alert(error.localizedDescription)
         }
     }

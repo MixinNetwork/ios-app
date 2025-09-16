@@ -71,8 +71,6 @@ class PinValidationViewController: UIViewController {
             case let .failure(error):
                 if !pin.isNumeric || pin.trimmingCharacters(in: .whitespacesAndNewlines).count != 6 {
                     reporter.report(error: MixinError.invalidPin)
-                } else if !error.isTransportTimedOut {
-                    reporter.report(error: error)
                 }
                 self.handle(error: error)
             }
@@ -99,8 +97,8 @@ class PinValidationViewController: UIViewController {
                 self.descriptionLabel.textColor = .mixinRed
                 self.descriptionLabel.text = description
             }
-            if case .httpTransport(let afError) = error, (afError.underlyingError as NSError?)?.domain != NSURLErrorDomain {
-                reporter.report(error: afError)
+            if error.worthReporting {
+                reporter.report(error: error)
             }
         }
     }

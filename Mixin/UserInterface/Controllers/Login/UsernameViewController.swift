@@ -25,7 +25,9 @@ final class UsernameViewController: LoginInfoInputViewController, CheckSessionEn
                 self?.checkSessionEnvironmentAgain(freshAccount: account)
             case let .failure(error):
                 Logger.login.error(category: "Set Username", message: "Failed: \(error)")
-                reporter.report(error: error)
+                if error.worthReporting {
+                    reporter.report(error: error)
+                }
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
         }

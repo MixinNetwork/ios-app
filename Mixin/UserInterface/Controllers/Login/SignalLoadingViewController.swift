@@ -75,7 +75,9 @@ final class SignalLoadingViewController: LoginLoadingViewController {
                 return
             case let .failure(error):
                 Thread.sleep(forTimeInterval: 2)
-                reporter.report(error: error)
+                if error.worthReporting {
+                    reporter.report(error: error)
+                }
             }
         } while true
     }
@@ -151,7 +153,9 @@ final class SignalLoadingViewController: LoginLoadingViewController {
             case let .failure(error):
                 Logger.login.error(category: "SignalLoading", message: "Sync session failed: \(error)")
                 Thread.sleep(forTimeInterval: 2)
-                reporter.report(error: error)
+                if error.worthReporting {
+                    reporter.report(error: error)
+                }
             }
         } while true
     }
@@ -181,7 +185,9 @@ final class SignalLoadingViewController: LoginLoadingViewController {
             case let .failure(error):
                 Logger.login.error(category: "SignalLoading", message: "Sync circles failed: \(error)")
                 Thread.sleep(forTimeInterval: 2)
-                reporter.report(error: error)
+                if error.worthReporting {
+                    reporter.report(error: error)
+                }
             }
         } while true
     }
@@ -209,7 +215,9 @@ final class SignalLoadingViewController: LoginLoadingViewController {
                 Thread.sleep(forTimeInterval: 2)
             case let .failure(error):
                 Logger.login.error(category: "SignalLoading", message: "Sync circle conversation failed: \(error)")
-                reporter.report(error: error)
+                if error.worthReporting {
+                    reporter.report(error: error)
+                }
                 return []
             }
         } while true
@@ -234,7 +242,9 @@ final class SignalLoadingViewController: LoginLoadingViewController {
                 Thread.sleep(forTimeInterval: 2)
             case let .failure(error):
                 Logger.login.error(category: "SignalLoading", message: "Sync conversation failed: \(error)")
-                reporter.report(error: error)
+                if error.worthReporting {
+                    reporter.report(error: error)
+                }
                 return
             }
         } while true

@@ -290,9 +290,7 @@
 "check_backup" = "检查备份";
 "check_mnemonic_phrase" = "检查您的助记词";
 "check_mnemonic_phrase_desc" = "按照呈现给您的顺序输入每个单词。";
-"choose_deposit_network" = "选择充值网络";
 "choose_network" = "选择网络";
-"choose_network_tip" = "请选择 Mixin 支持的网络进行充值，否则您的充值将不会到账。";
 "choose_photo" = "选择照片";
 "choose_token" = "选择 %@ 网络";
 "choose_token_desc" = "%@ 在多个网络上发布";

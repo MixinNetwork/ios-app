@@ -290,9 +290,7 @@
 "check_backup" = "Check Backup";
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
-"choose_deposit_network" = "Elige Red";
 "choose_network" = "Choose Network";
-"choose_network_tip" = "Asegúrate de que la red que elijas para depositar sea compatible con Mixin. De lo contrario, tus bienes pueden perderse.";
 "choose_photo" = "Escoge una foto";
 "choose_token" = "Choose %@ Network";
 "choose_token_desc" = "%@ is issued on multiple networks";

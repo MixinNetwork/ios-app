@@ -71,7 +71,7 @@ final class ShareDepositLinkViewController: ShareViewAsPictureViewController {
     }
     
     override func copyLink(_ sender: Any) {
-        UIPasteboard.general.string = link.value
+        UIPasteboard.general.string = link.textValue
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
         close(sender)
     }

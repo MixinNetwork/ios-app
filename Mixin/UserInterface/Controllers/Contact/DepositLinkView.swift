@@ -70,7 +70,7 @@ final class DepositLinkView: UIView, XibDesignable {
     
     func load(link: DepositLink) {
         qrCodeView.setContent(
-            link.value,
+            link.qrCodeValue,
             dimension: qrCodeDimensionConstraint.constant,
             activityIndicator: false
         )

@@ -43,25 +43,18 @@ final class DepositGeneralEntryCell: UICollectionViewCell {
     ) {
         titleLabel.text = content.title
         contentLabel.font = {
-            let font: UIFont = if content.value.count > 120 {
+            let font: UIFont = if content.textValue.count > 120 {
                 .systemFont(ofSize: 12)
-            } else if content.value.count > 100 {
+            } else if content.textValue.count > 100 {
                 .systemFont(ofSize: 14)
             } else {
                 .systemFont(ofSize: 16)
             }
             return UIFontMetrics.default.scaledFont(for: font)
         }()
-        contentLabel.text = content.value
-        
-        let qrContent = switch token.assetID {
-        case AssetID.lightningBTC:
-            content.value.uppercased()
-        default:
-            content.value
-        }
+        contentLabel.text = content.textValue
         qrCodeView.setContent(
-            qrContent,
+            content.qrCodeValue,
             dimension: qrCodeDimensionConstraint.constant
         )
         iconView.setIcon(token: token, chain: token.chain)

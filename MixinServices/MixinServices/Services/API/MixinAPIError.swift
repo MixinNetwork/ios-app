@@ -48,32 +48,15 @@ public enum MixinAPIError: Error {
     public var worthReporting: Bool {
         switch self {
         case .httpTransport(.explicitlyCancelled):
-            return false
+            false
         case .httpTransport(let error):
-            if let underlyingError = error.underlyingError as? NSError,
-               underlyingError.domain == NSURLErrorDomain
-            {
-                let notReportingCodes = [
-                    NSURLErrorCancelled,
-                    NSURLErrorTimedOut,
-                    NSURLErrorCannotFindHost,
-                    NSURLErrorCannotConnectToHost,
-                    NSURLErrorNetworkConnectionLost,
-                    NSURLErrorDNSLookupFailed,
-                    NSURLErrorNotConnectedToInternet,
-                    NSURLErrorBadServerResponse,
-                    NSURLErrorUserCancelledAuthentication,
-                ]
-                if notReportingCodes.contains(underlyingError.code) {
-                    return false
-                } else {
-                    return true
-                }
+            if let underlyingError = error.underlyingError as? URLError {
+                underlyingError.worthReporting
             } else {
-                return true
+                true
             }
         default:
-            return true
+            true
         }
     }
     

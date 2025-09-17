@@ -475,7 +475,7 @@
 "deposit_tag_address_notice" = "地址和 Tag（標籤）同時使用才能充值 %@ 到你的賬號。";
 "deposit_tag_notice" = "充值時務必填寫 Tag（標籤），否則可能導致資產丟失。";
 "deposit_tip_eth" = "支援所有符合 ERC-20 標準的代幣，例如 ETH、XIN 等。";
-"deposit_tip_lightning" = "此票據支援閃電網路上的BTC，以及USDT和其他Taproot資產。";
+"deposit_tip_lightning" = "此票據支援閃電網路上的 BTC，以及 USDT 和其他 Taproot 資產。";
 "deposit_tip_trx" = "支援 TRX 和所有符合 TRC-10、TRC-20 標準的代幣。";
 "deposit_token" = "充值 %@";
 "deposit_token_description" = "從其他交易所或錢包轉入";

@@ -6,7 +6,6 @@ class DepositDataSource {
     protocol Delegate: AnyObject {
         func depositDataSource(_ dataSource: DepositDataSource, didUpdateViewModel viewModel: DepositViewModel, hint: WalletHintViewController?)
         func depositDataSource(_ dataSource: DepositDataSource, reportsDepositSuspendedWith suspendedView: DepositSuspendedView)
-        func depositDataSource(_ dataSource: DepositDataSource, requestNetworkConfirmationWith selector: DepositNetworkSelectorViewController)
     }
     
     let wallet: Wallet
@@ -115,21 +114,6 @@ final class MixinDepositDataSource: DepositDataSource {
             
             let localEntry = DepositEntryDAO.shared.primaryEntry(ofChainWith: chain.chainId)
             try Task.checkCancellation()
-            
-            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                DispatchQueue.main.async {
-                    let selector = DepositNetworkSelectorViewController(token: token, chain: chain)
-                    selector.onDismiss = {
-                        continuation.resume(with: .success(()))
-                    }
-                    if let delegate {
-                        delegate.depositDataSource(self, requestNetworkConfirmationWith: selector)
-                    } else {
-                        continuation.resume(throwing: CancellationError())
-                    }
-                }
-            }
-            
             if let localEntry {
                 let viewModel = DepositViewModel(token: token, entry: localEntry)
                 try await MainActor.run {

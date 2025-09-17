@@ -469,13 +469,6 @@ extension DepositViewController: DepositDataSource.Delegate {
         )
     }
     
-    func depositDataSource(
-        _ dataSource: DepositDataSource,
-        requestNetworkConfirmationWith selector: DepositNetworkSelectorViewController
-    ) {
-        present(selector, animated: true)
-    }
-    
 }
 
 extension DepositViewController: WalletHintViewControllerDelegate {

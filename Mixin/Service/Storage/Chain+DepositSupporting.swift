@@ -12,6 +12,8 @@ extension Chain {
             R.string.localizable.deposit_tip_eth()
         case ChainID.tron:
             R.string.localizable.deposit_tip_trx()
+        case ChainID.lightning:
+            R.string.localizable.deposit_tip_lightning()
         default:
             R.string.localizable.deposit_supporting_single_token(symbol)
         }

@@ -30,7 +30,8 @@ struct DepositLink {
     }
     
     let chain: Chain
-    let value: String
+    let textValue: String
+    let qrCodeValue: String // Could be different from `textValue`. For example, in lightning network the `qrCodeValue` is uppercased.
     
     static func mixin(account: Account, specification: Mixin.Specification? = nil) -> DepositLink {
         let chain = Mixin(account: account, specification: specification)
@@ -38,12 +39,18 @@ struct DepositLink {
         if let specification {
             link.append("?asset=\(specification.token.assetID)&amount=\(specification.amount)")
         }
-        return DepositLink(chain: .mixin(chain), value: link)
+        return DepositLink(chain: .mixin(chain), textValue: link, qrCodeValue: link)
     }
     
     static func native(address: String, token: Token, minimumDeposit: String?) -> DepositLink {
         let context = Native(address: address, token: token, minimumDeposit: minimumDeposit, amount: nil)
-        return DepositLink(chain: .native(context), value: address)
+        let qrCodeValue = switch token.chainID {
+        case ChainID.lightning:
+            address.uppercased()
+        default:
+            address
+        }
+        return DepositLink(chain: .native(context), textValue: address, qrCodeValue: qrCodeValue)
     }
     
     static func native(address: String, token: Token, amount: Decimal) -> DepositLink? {
@@ -102,10 +109,10 @@ struct DepositLink {
             }
         }
         let context = Native(address: address, token: token, minimumDeposit: nil, amount: amount)
-        return DepositLink(chain: .native(context), value: value)
+        return DepositLink(chain: .native(context), textValue: value, qrCodeValue: value)
     }
     
-    static func available(address: String, token: Token) -> Bool {
+    static func availableForSettingAmount(address: String, token: Token) -> Bool {
         let link = DepositLink.native(address: address, token: token, amount: 1)
         return link != nil
     }

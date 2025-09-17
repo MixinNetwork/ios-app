@@ -348,13 +348,13 @@ extension DepositViewController: DepositEntryActionDelegate {
             case .address:
                 switch viewModel.entry {
                 case let .general(content, _, _):
-                    copyingContent = content.value
+                    copyingContent = content.textValue
                 case let .tagging(destination, tag, _):
                     switch indexPath.item {
                     case 0:
-                        copyingContent = tag.value
+                        copyingContent = tag.textValue
                     default:
-                        copyingContent = destination.value
+                        copyingContent = destination.textValue
                     }
                 }
             case .info:
@@ -368,7 +368,7 @@ extension DepositViewController: DepositEntryActionDelegate {
             }
             let inputAmount = DepositInputAmountViewController(
                 link: .native(
-                    address: content.value,
+                    address: content.textValue,
                     token: viewModel.token,
                     minimumDeposit: viewModel.minimumDeposit
                 ),
@@ -383,7 +383,7 @@ extension DepositViewController: DepositEntryActionDelegate {
                 return
             }
             let link: DepositLink = .native(
-                address: content.value,
+                address: content.textValue,
                 token: viewModel.token,
                 minimumDeposit: viewModel.minimumDeposit
             )

@@ -70,7 +70,7 @@ final class DepositLinkPreviewViewController: UIViewController {
     }
     
     @objc private func copyLink(_ sender: Any) {
-        UIPasteboard.general.string = link.value
+        UIPasteboard.general.string = link.textValue
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     
@@ -103,7 +103,7 @@ final class DepositLinkPreviewViewController: UIViewController {
                 "\(account.fullName)(\(account.identityNumber))",
             ),
             actions: [
-                .init(action: link.value, color: "#4B7CDD", label: R.string.localizable.pay_now())
+                .init(action: link.textValue, color: "#4B7CDD", label: R.string.localizable.pay_now())
             ],
             updatedAt: nil,
             isShareable: true

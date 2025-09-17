@@ -40,12 +40,14 @@ struct DepositViewModel {
                     .tagging(
                         destination: Entry.Content(
                             title: R.string.localizable.address(),
-                            value: entry.destination,
+                            textValue: entry.destination,
+                            qrCodeValue: entry.destination,
                             warning: R.string.localizable.deposit_tag_address_notice(token.symbol)
                         ),
                         tag: Entry.Content(
                             title: R.string.localizable.tag(),
-                            value: tag,
+                            textValue: tag,
+                            qrCodeValue: tag,
                             warning: R.string.localizable.deposit_tag_notice()
                         ),
                         supporting: token.chain?.depositSupporting
@@ -54,29 +56,36 @@ struct DepositViewModel {
                     .tagging(
                         destination: Entry.Content(
                             title: R.string.localizable.address(),
-                            value: entry.destination,
+                            textValue: entry.destination,
+                            qrCodeValue: entry.destination,
                             warning: R.string.localizable.deposit_memo_address_notice(token.symbol)
                         ),
                         tag: Entry.Content(
                             title: R.string.localizable.withdrawal_memo(),
-                            value: tag,
+                            textValue: tag,
+                            qrCodeValue: tag,
                             warning: R.string.localizable.deposit_memo_notice()
                         ),
                         supporting: token.chain?.depositSupporting
                     )
                 }
             } else {
-                let destination = {
-                    let title = switch token.assetID {
-                    case AssetID.lightningBTC:
-                        R.string.localizable.invoice()
-                    default:
-                        R.string.localizable.address()
-                    }
-                    return Entry.Content(title: title, value: entry.destination)
-                }()
+                let destination = switch token.chainID {
+                case ChainID.lightning:
+                    Entry.Content(
+                        title: R.string.localizable.invoice(),
+                        textValue: entry.destination,
+                        qrCodeValue: entry.destination.uppercased() // Uppercase for smaller QR-Code image
+                    )
+                default:
+                    Entry.Content(
+                        title: R.string.localizable.address(),
+                        textValue: entry.destination,
+                        qrCodeValue: entry.destination
+                    )
+                }
                 var actions: [Entry.Action] = [.copy, .share]
-                if DepositLink.available(address: entry.destination, token: token) {
+                if DepositLink.availableForSettingAmount(address: entry.destination, token: token) {
                     actions.insert(.setAmount, at: 1)
                 }
                 return .general(
@@ -99,7 +108,7 @@ struct DepositViewModel {
                     actions: []
                 ),
             ]
-            if token.assetID == AssetID.lightningBTC,
+            if token.chainID == ChainID.lightning,
                let identityNumber = LoginManager.shared.account?.identityNumber
             {
                 let address = identityNumber + "@mixin.id"
@@ -145,7 +154,7 @@ struct DepositViewModel {
             return ([], nil)
         }()
         var actions: [Entry.Action] = [.copy, .share]
-        if DepositLink.available(address: address, token: token) {
+        if DepositLink.availableForSettingAmount(address: address, token: token) {
             actions.insert(.setAmount, at: 1)
         }
         self.switchableTokens = switchableTokens
@@ -154,7 +163,8 @@ struct DepositViewModel {
         self.entry = .general(
             content: Entry.Content(
                 title: R.string.localizable.address(),
-                value: address,
+                textValue: address,
+                qrCodeValue: address,
             ),
             supporting: token.chain?.depositSupporting,
             actions: actions
@@ -214,12 +224,19 @@ extension DepositViewModel {
         struct Content {
             
             let title: String
-            let value: String
+            let textValue: String
+            let qrCodeValue: String
             let warning: String?
             
-            init(title: String, value: String, warning: String? = nil) {
+            init(
+                title: String,
+                textValue: String,
+                qrCodeValue: String?,
+                warning: String? = nil
+            ) {
                 self.title = title.uppercased()
-                self.value = value
+                self.textValue = textValue
+                self.qrCodeValue = qrCodeValue ?? textValue
                 self.warning = warning
             }
             

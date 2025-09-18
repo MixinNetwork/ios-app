@@ -83,18 +83,18 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController, Captcha.
                 let verify = PhoneNumberLoginVerificationCodeViewController(context: context)
                 self.navigationController?.pushViewController(verify, animated: true)
                 self.updateViews(isBusy: false)
+            case let .failure(.response(error)) where .requiresCaptcha ~= error:
+                self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
+                    switch result {
+                    case .success(let token):
+                        self?.requestVerificationCode(captchaToken: token)
+                    default:
+                        self?.updateViews(isBusy: false)
+                    }
+                }
             case let .failure(error):
                 Logger.login.error(category: "SignUpWithMobileNumber", message: "Failed: \(error)")
                 switch error {
-                case .requiresCaptcha:
-                    captcha.validate { [weak self] (result) in
-                        switch result {
-                        case .success(let token):
-                            self?.requestVerificationCode(captchaToken: token)
-                        default:
-                            self?.updateViews(isBusy: false)
-                        }
-                    }
                 case let .httpTransport(error):
                     guard let underlying = (error.underlyingError as NSError?), underlying.domain == NSURLErrorDomain else {
                         fallthrough

@@ -8,10 +8,8 @@ final class Captcha: NSObject {
         var reportingContent: (event: Reporter.Event, method: String) { get }
     }
     
-    private let messageHandlerName = "captcha"
-    private let executeReCaptchaJS = "gReCaptchaExecute();"
+    private let messageHandlerName = "mixin_messenger_captcha"
     private let baseURL = URL(string: "https://api.mixin.one/")!
-    private let timeoutInterval: TimeInterval = 10
     
     private weak var viewController: UIViewController?
     
@@ -19,7 +17,7 @@ final class Captcha: NSObject {
     
     private var webView: WKWebView?
     private var completion: CompletionCallback?
-    private var timer: Timer?
+    private var initGTCaptchaAfterNavigationFinished = false
     
     private var opaquePointer: UnsafeMutableRawPointer {
         Unmanaged<Captcha>.passUnretained(self).toOpaque()
@@ -36,24 +34,41 @@ final class Captcha: NSObject {
         Logger.login.debug(category: "Captcha", message: "Deinit \(opaquePointer)")
     }
     
-    func validate(completion: @escaping CompletionCallback) {
+    func validate(
+        errorDescription: String?,
+        completion: @escaping CompletionCallback
+    ) {
         guard let view = viewController?.view else {
             return
         }
         if let content = (viewController as? Reporting)?.reportingContent {
             reporter.report(event: content.event, method: content.method)
         }
+        self.completion = completion
         if webView == nil {
             let config = WKWebViewConfiguration()
             config.preferences.isFraudulentWebsiteWarningEnabled = false
             config.userContentController.add(scriptMessageProxy, name: messageHandlerName)
             let webView = WKWebView(frame: view.bounds, configuration: config)
             webView.frame.origin.y = view.bounds.height
+            webView.navigationDelegate = self
+#if DEBUG
+            if #available(iOS 16.4, *) {
+                webView.isInspectable = true
+            }
+#endif
             view.addSubview(webView)
             self.webView = webView
         }
-        self.completion = completion
-        validateWithReCaptcha()
+        let hint = errorDescription ?? ""
+        if hint.hasPrefix("hCaptcha") {
+            loadPage(key: MixinKeys.hCaptcha, scriptTag: ScriptTag.hCaptcha)
+        } else if hint.hasPrefix("GeeTest") {
+            initGTCaptchaAfterNavigationFinished = true
+            loadPage(key: MixinKeys.geeTest, scriptTag: ScriptTag.gtCaptcha)
+        } else {
+            loadPage(key: MixinKeys.reCaptcha, scriptTag: ScriptTag.reCaptcha)
+        }
     }
     
     func cancel() {
@@ -62,12 +77,30 @@ final class Captcha: NSObject {
     }
     
     private func clean() {
-        timer?.invalidate()
-        timer = nil
         webView?.configuration.userContentController.removeScriptMessageHandler(forName: messageHandlerName)
         webView?.removeFromSuperview()
         webView = nil
         completion = nil
+    }
+    
+}
+
+extension Captcha: UIAdaptivePresentationControllerDelegate {
+    
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        cancel()
+    }
+    
+}
+
+extension Captcha: WKNavigationDelegate {
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        guard initGTCaptchaAfterNavigationFinished else {
+            return
+        }
+        initGTCaptchaAfterNavigationFinished = false
+        webView.evaluateJavaScript(Script.initGTCaptcha)
     }
     
 }
@@ -82,13 +115,7 @@ extension Captcha: WKScriptMessageHandler {
         }
         switch message {
         case .reCaptchaDidLoad:
-            timer?.invalidate()
-            timer = nil
-            webView?.evaluateJavaScript(executeReCaptchaJS) { [weak self] (_, error) in
-                if error != nil {
-                    self?.validateWithHCaptcha()
-                }
-            }
+            webView?.evaluateJavaScript(Script.executeReCaptcha)
         case .challengeChange:
             guard let viewController, let webView = webView else {
                 clean()
@@ -112,61 +139,111 @@ extension Captcha: WKScriptMessageHandler {
             report(token: .reCaptcha(token))
         case let .hCaptchaToken(token):
             report(token: .hCaptcha(token))
+        case let .gtCaptchaResult(result):
+            report(token: .gtCaptcha(result))
+        case .gtCaptchaClose:
+            if let viewController {
+                viewController.dismiss(animated: true) {
+                    self.cancel()
+                }
+            } else {
+                cancel()
+            }
         }
-    }
-    
-}
-
-extension Captcha: UIAdaptivePresentationControllerDelegate {
-    
-    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        cancel()
     }
     
 }
 
 extension Captcha {
     
-    private func validateWithReCaptcha() {
-        guard let htmlFileURL = R.file.captchaHtml.url(),
-              let htmlString = try? String(contentsOf: htmlFileURL),
-              let reCaptchaKey = MixinKeys.reCaptcha
-        else {
-            assertionFailure("Failed to load captcha.html. Probably due to missing of Mixin-Keys.plist")
-            return
-        }
-        
-        let keyReplacedHTMLString = htmlString
-            .replacingOccurrences(of: Replacement.apiKey, with: reCaptchaKey)
-            .replacingOccurrences(of: Replacement.scriptURL, with: ScriptURL.reCaptcha)
-        webView?.loadHTMLString(keyReplacedHTMLString, baseURL: baseURL)
-        timer = Timer.scheduledTimer(withTimeInterval: timeoutInterval, repeats: false) { [weak self] (_) in
-            guard let self = self else {
-                return
-            }
-            self.timer = nil
-            self.validateWithHCaptcha()
-        }
+    typealias CompletionCallback = (Result) -> Void
+    
+    enum Result {
+        case success(CaptchaToken)
+        case cancel
+        case timedOut
+        case failure(message: String)
     }
     
-    private func validateWithHCaptcha() {
+    private enum Replacement {
+        static let apiKey = "${api_key}"
+        static let scriptTag = "${script_tag}"
+    }
+    
+    private enum ScriptTag {
+        
+        static let reCaptcha = #"<script src="https://www.recaptcha.net/recaptcha/api.js?onload=onReCaptchaLoad&render=explicit" async defer>"#
+        static let hCaptcha = #"<script src="https://hcaptcha.com/1/api.js?onload=onHCaptchaLoad&render=explicit" async defer>"#
+        
+        static var gtCaptcha: String {
+            let url = R.file.gt4Js.url()!
+            let content = try! String(contentsOf: url)
+            return "<script>\n" + content
+        }
+        
+    }
+    
+    private enum Script {
+        static let executeReCaptcha = "gReCaptchaExecute();"
+        static let initGTCaptcha = "initGTCaptcha();"
+    }
+    
+    private enum Message {
+        
+        case challengeChange
+        case reCaptchaDidLoad
+        case hCaptchaFailed
+        case reCaptchaToken(String)
+        case hCaptchaToken(String)
+        case gtCaptchaResult([String: String])
+        case gtCaptchaClose
+        
+        init?(messageBody: Any) {
+            if let body = messageBody as? [String: Any],
+               let result = body["gtcaptcha_result"] as? [String: String]
+            {
+                self = .gtCaptchaResult(result)
+            } else if let body = messageBody as? [String: String] {
+                if let message = body["message"] {
+                    switch message {
+                    case "recaptcha_did_load":
+                        self = .reCaptchaDidLoad
+                    case "challenge_change":
+                        self = .challengeChange
+                    case "hcaptcha_failed":
+                        self = .hCaptchaFailed
+                    case "gt_close":
+                        self = .gtCaptchaClose
+                    default:
+                        return nil
+                    }
+                } else if let token = body["recaptcha_token"] {
+                    self = .reCaptchaToken(token)
+                } else if let token = body["hcaptcha_token"] {
+                    self = .hCaptchaToken(token)
+                } else {
+                    return nil
+                }
+            } else {
+                return nil
+            }
+        }
+        
+    }
+    
+    private func loadPage(key: String?, scriptTag: String) {
         guard let webView = webView else {
             return
         }
-        webView.load(URLRequest(url: .blank))
-        WKWebsiteDataStore.default().removeAuthenticationRelatedData()
-        
-        guard let htmlFileURL = R.file.captchaHtml.url(),
-              let htmlString = try? String(contentsOf: htmlFileURL),
-              let hCaptchaKey = MixinKeys.hCaptcha
-        else {
+        let htmlFileURL = R.file.captchaHtml.url()!
+        let htmlString = try! String(contentsOf: htmlFileURL)
+        guard let key else {
             assertionFailure("Failed to load captcha.html. Probably due to missing of Mixin-Keys.plist")
             return
         }
-        
         let keyReplacedHTMLString = htmlString
-            .replacingOccurrences(of: Replacement.apiKey, with: hCaptchaKey)
-            .replacingOccurrences(of: Replacement.scriptURL, with: ScriptURL.hCaptcha)
+            .replacingOccurrences(of: Replacement.apiKey, with: key)
+            .replacingOccurrences(of: Replacement.scriptTag, with: scriptTag)
         webView.loadHTMLString(keyReplacedHTMLString, baseURL: baseURL)
     }
     
@@ -183,61 +260,6 @@ extension Captcha {
             completion?(.success(token))
             clean()
         }
-    }
-    
-}
-
-extension Captcha {
-    
-    typealias CompletionCallback = (Result) -> Void
-    
-    enum Result {
-        case success(CaptchaToken)
-        case cancel
-        case timedOut
-    }
-    
-    private enum Replacement {
-        static let apiKey = "${api_key}"
-        static let scriptURL = "${script_url}"
-    }
-    
-    private enum ScriptURL {
-        static let reCaptcha = "https://www.recaptcha.net/recaptcha/api.js?onload=onReCaptchaLoad&render=explicit"
-        static let hCaptcha = "https://hcaptcha.com/1/api.js?onload=onHCaptchaLoad&render=explicit"
-    }
-    
-    private enum Message {
-        
-        case challengeChange
-        case reCaptchaDidLoad
-        case hCaptchaFailed
-        case reCaptchaToken(String)
-        case hCaptchaToken(String)
-        
-        init?(messageBody: Any) {
-            guard let body = messageBody as? [String: String] else {
-                return nil
-            }
-            if let message = body["message"] {
-                if message == "recaptcha_did_load" {
-                    self = .reCaptchaDidLoad
-                } else if message == "challenge_change" {
-                    self = .challengeChange
-                } else if message == "hcaptcha_failed" {
-                    self = .hCaptchaFailed
-                } else {
-                    return nil
-                }
-            } else if let token = body["recaptcha_token"] {
-                self = .reCaptchaToken(token)
-            } else if let token = body["hcaptcha_token"] {
-                self = .hCaptchaToken(token)
-            } else {
-                return nil
-            }
-        }
-        
     }
     
 }

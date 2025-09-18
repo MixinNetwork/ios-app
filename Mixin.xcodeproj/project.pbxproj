@@ -1203,6 +1203,7 @@
 		94A40C472B2781AF0028BC02 /* TransferPaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A40C462B2781AF0028BC02 /* TransferPaymentOperation.swift */; };
 		94A4CCBC2E38A38200C8AFD0 /* UncontrolledWalletWarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A4CCBA2E38A38200C8AFD0 /* UncontrolledWalletWarningViewController.swift */; };
 		94A4CCBD2E38A38200C8AFD0 /* UncontrolledWalletWarningView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A4CCBB2E38A38200C8AFD0 /* UncontrolledWalletWarningView.xib */; };
+		94A6D65C2E7C10E800E2C05A /* gt4.js in Resources */ = {isa = PBXBuildFile; fileRef = 94A6D65B2E7C10E800E2C05A /* gt4.js */; };
 		94A709D62B67B0A5007CADAB /* DepositSuspendedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A709D52B67B0A5007CADAB /* DepositSuspendedView.xib */; };
 		94A72C992C2EBE1E001E8782 /* InscriptionTraitsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A72C982C2EBE1E001E8782 /* InscriptionTraitsCell.xib */; };
 		94A72C9A2C2EBE1E001E8782 /* InscriptionTraitsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A72C972C2EBE1E001E8782 /* InscriptionTraitsCell.swift */; };
@@ -2932,6 +2933,7 @@
 		94A40C462B2781AF0028BC02 /* TransferPaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferPaymentOperation.swift; sourceTree = "<group>"; };
 		94A4CCBA2E38A38200C8AFD0 /* UncontrolledWalletWarningViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncontrolledWalletWarningViewController.swift; sourceTree = "<group>"; };
 		94A4CCBB2E38A38200C8AFD0 /* UncontrolledWalletWarningView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UncontrolledWalletWarningView.xib; sourceTree = "<group>"; };
+		94A6D65B2E7C10E800E2C05A /* gt4.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = gt4.js; sourceTree = "<group>"; };
 		94A709D52B67B0A5007CADAB /* DepositSuspendedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositSuspendedView.xib; sourceTree = "<group>"; };
 		94A72C972C2EBE1E001E8782 /* InscriptionTraitsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionTraitsCell.swift; sourceTree = "<group>"; };
 		94A72C982C2EBE1E001E8782 /* InscriptionTraitsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionTraitsCell.xib; sourceTree = "<group>"; };
@@ -5395,6 +5397,7 @@
 			children = (
 				DFF44174223A035000DDD5F8 /* GoogleService-Info.plist */,
 				DFF44173223A035000DDD5F8 /* Mixin-Keys.plist */,
+				94A6D65B2E7C10E800E2C05A /* gt4.js */,
 				7BBD8A3220C1D51C00DF2735 /* captcha.html */,
 				277FF7101F909A1200DBB2EB /* Info.plist */,
 				94E8913825C019F000F1E5D4 /* Pods-Mixin-acknowledgements.plist */,
@@ -6617,6 +6620,7 @@
 				DF8CECE71FC317BF00E40064 /* PayWindow.xib in Resources */,
 				7C6132B827953B4F002777EE /* DeleteAccountAbortWindow.xib in Resources */,
 				DFC2646E24E585CE00BF954D /* DuplicateConfirmationWindow.xib in Resources */,
+				94A6D65C2E7C10E800E2C05A /* gt4.js in Resources */,
 				948664FD2CF867DC0032B9BE /* WalletView.xib in Resources */,
 				DF8CECFD1FC58DBD00E40064 /* InfoPlist.strings in Resources */,
 				9419C23B2E6741D900BEAB42 /* ExplainLightningAddressView.xib in Resources */,

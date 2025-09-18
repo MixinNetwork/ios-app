@@ -1,23 +1,59 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="color-scheme" content="light dark">
+        <style>
+            body {
+              background-color: white;
+              color: black;
+            }
+
+            @media (prefers-color-scheme: dark) {
+              body {
+                background-color: #111;
+                color: #eee;
+              }
+            }
+        </style>
         <script type="text/javascript">
-        var postMessage = function(value) {
-            window.webkit.messageHandlers.captcha.postMessage({ message: value });
+
+        // This function is deliberately given a complicated name to avoid conflicts
+        var postMessageToMixinMessenger = function(value) {
+            window.webkit.messageHandlers.mixin_messenger_captcha.postMessage({ message: value });
         }
 
         var postReCaptchaToken = function(value) {
-            window.webkit.messageHandlers.captcha.postMessage({ recaptcha_token: value });
+            window.webkit.messageHandlers.mixin_messenger_captcha.postMessage({ recaptcha_token: value });
         }
 
         var postHCaptchaToken = function(value) {
-            window.webkit.messageHandlers.captcha.postMessage({ hcaptcha_token: value });
+            window.webkit.messageHandlers.mixin_messenger_captcha.postMessage({ hcaptcha_token: value });
         }
 
         var gReCaptchaExecute = function() {
-            var observer = new MutationObserver(function(mutations) { postMessage("challenge_change"); });
+            var observer = new MutationObserver(function(mutations) {
+                postMessageToMixinMessenger("challenge_change");
+            });
             observer.observe(document.getElementsByTagName("div")[4], { attributes: true, attributeFilter: ['style'] });
             grecaptcha.execute();
+        };
+
+        var initGTCaptcha = function() {
+            initGeetest4({
+                captchaId: '${api_key}'
+            },function (captcha) {
+                captcha.appendTo("#html_element");
+                captcha.onReady(function () {
+                    postMessageToMixinMessenger("challenge_change");
+                });
+                captcha.onClose(function () {
+                    postMessageToMixinMessenger("gt_close");
+                });
+                captcha.onSuccess(function () {
+                    var result = captcha.getValidate();
+                    window.webkit.messageHandlers.mixin_messenger_captcha.postMessage({ gtcaptcha_result: result });
+                });
+            });
         };
 
         var onReCaptchaLoad = function() {
@@ -31,7 +67,7 @@
                 }
                 if (inserted) {
                     observer.disconnect();
-                    postMessage("recaptcha_did_load");
+                    postMessageToMixinMessenger("recaptcha_did_load");
                 }
             })
             observer.observe(document.getElementsByTagName("body")[0], { childList: true })
@@ -43,14 +79,14 @@
         };
 
         var onHCaptchaFailed = function() {
-            postMessage("hcaptcha_failed");
+            postMessageToMixinMessenger("hcaptcha_failed");
         }
         
         var onHCaptchaLoad = function() {
             var widgetID = hcaptcha.render('html_element', {
                 'sitekey': '${api_key}',
                 'callback': postHCaptchaToken,
-                'open-callback': function() { postMessage("challenge_change"); },
+                'open-callback': function() { postMessageToMixinMessenger("challenge_change"); },
                 'expired-callback': onHCaptchaFailed,
                 'chalexpired-callback': onHCaptchaFailed,
                 'error-callback': onHCaptchaFailed,
@@ -64,7 +100,7 @@
         <form action="?" method="POST" style="hidden">
             <div id="html_element"></div>
         </form>
-        <script src="${script_url}" async defer>
+        ${script_tag}
         </script>
     </body>
 </html>

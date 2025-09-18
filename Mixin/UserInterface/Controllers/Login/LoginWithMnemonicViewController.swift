@@ -171,14 +171,16 @@ extension LoginWithMnemonicViewController {
                 } else {
                     self.login(context: context)
                 }
-            case .failure(.requiresCaptcha):
+            case let .failure(.response(error)) where .requiresCaptcha ~= error:
                 Logger.login.info(category: "MnemonicLogin", message: "Captcha")
-                captcha.validate { [weak self] (result) in
+                self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
                     switch result {
                     case .success(let token):
                         self?.verifySession(context: context, captchaToken: token)
                     case .cancel, .timedOut:
                         self?.navigationController?.popViewController(animated: true)
+                    case .failure(let message):
+                        self?.showError(message)
                     }
                 }
             case .failure(let error):

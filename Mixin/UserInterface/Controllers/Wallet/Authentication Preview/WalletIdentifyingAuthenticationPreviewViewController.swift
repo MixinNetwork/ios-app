@@ -37,15 +37,15 @@ class WalletIdentifyingAuthenticationPreviewViewController: AuthenticationPrevie
         switch wallet {
         case .privacy:
             walletIdentifyingView.backgroundColor = R.color.privacy_wallet()
+            walletNameLabel.text = R.string.localizable.privacy_wallet()
             let privacyShield = R.image.privacy_wallet()?.withRenderingMode(.alwaysTemplate)
             let privacyShieldView = UIImageView(image: privacyShield)
             privacyShieldView.tintColor = .white
-            walletIdentifyingContentView.insertArrangedSubview(privacyShieldView, at: 0)
+            walletIdentifyingContentView.addArrangedSubview(privacyShieldView)
             privacyShieldView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             privacyShieldView.snp.makeConstraints { make in
                 make.width.height.equalTo(22)
             }
-            walletNameLabel.text = R.string.localizable.privacy_wallet()
         case .common(let wallet):
             walletIdentifyingView.backgroundColor = R.color.theme()
             walletNameLabel.text = wallet.name

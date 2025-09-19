@@ -34,6 +34,16 @@ final class WalletIdentifyingNavigationTitleView: UIStackView {
             stackView.alignment = .center
             stackView.spacing = 4
             
+            let subtitleLabel = {
+                let label = UILabel()
+                label.backgroundColor = .clear
+                label.font = .preferredFont(forTextStyle: .caption1)
+                label.textColor = R.color.text_quaternary()
+                label.text = wallet.localizedName
+                return label
+            }()
+            stackView.addArrangedSubview(subtitleLabel)
+            
             switch wallet {
             case .privacy:
                 let privacyShieldView = UIImageView(image: R.image.privacy_wallet())
@@ -45,16 +55,6 @@ final class WalletIdentifyingNavigationTitleView: UIStackView {
             default:
                 break
             }
-            
-            let subtitleLabel = {
-                let label = UILabel()
-                label.backgroundColor = .clear
-                label.font = .preferredFont(forTextStyle: .caption1)
-                label.textColor = R.color.text_quaternary()
-                label.text = wallet.localizedName
-                return label
-            }()
-            stackView.addArrangedSubview(subtitleLabel)
             
             return stackView
         }()

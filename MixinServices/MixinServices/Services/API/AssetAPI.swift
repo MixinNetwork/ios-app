@@ -110,7 +110,7 @@ public final class AssetAPI: MixinAPI {
     }
     
     public static func ticker(asset: String, offset: String, completion: @escaping (MixinAPI.Result<TickerResponse>) -> Void) {
-        request(method: .get, path: "/ticker?asset=\(asset)&offset=\(offset)", completion: completion)
+        request(method: .get, path: "/network/ticker?asset=\(asset)&offset=\(offset)", completion: completion)
     }
     
     public static func chains(completion: @escaping (MixinAPI.Result<[Chain]>) -> Void) {

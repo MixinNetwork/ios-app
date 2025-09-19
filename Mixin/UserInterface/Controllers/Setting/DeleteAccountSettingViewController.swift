@@ -160,9 +160,6 @@ extension DeleteAccountSettingViewController {
                         self?.requestVerificationCode(for: phone, captchaToken: token)
                     case .cancel, .timedOut:
                         hud.hide()
-                    case .failure(let message):
-                        hud.set(style: .error, text: message)
-                        hud.scheduleAutoHidden()
                     }
                 }
             case let .failure(error):

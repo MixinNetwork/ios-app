@@ -162,7 +162,6 @@ extension Captcha {
         case success(CaptchaToken)
         case cancel
         case timedOut
-        case failure(message: String)
     }
     
     private enum Replacement {

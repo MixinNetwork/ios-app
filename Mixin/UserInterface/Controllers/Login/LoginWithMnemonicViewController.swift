@@ -179,8 +179,6 @@ extension LoginWithMnemonicViewController {
                         self?.verifySession(context: context, captchaToken: token)
                     case .cancel, .timedOut:
                         self?.navigationController?.popViewController(animated: true)
-                    case .failure(let message):
-                        self?.showError(message)
                     }
                 }
             case .failure(let error):

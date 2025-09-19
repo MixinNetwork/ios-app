@@ -214,16 +214,8 @@ extension SafeAPI {
         request(method: .get, path: "/safe/deposits", queue: queue, completion: completion)
     }
     
-    public static func deposits(
-        assetID: String,
-        destination: String,
-        tag: String?
-    ) async throws -> [SafePendingDeposit] {
-        var path = "/safe/deposits?asset=\(assetID)&destination=\(destination)"
-        if let tag, !tag.isEmpty {
-            path.append("&tag=\(tag)")
-        }
-        return try await request(method: .get, path: path)
+    public static func deposits(assetID: String) async throws -> [SafePendingDeposit] {
+        try await request(method: .get, path: "/safe/deposits?asset=\(assetID)")
     }
     
 }

@@ -27,15 +27,11 @@ public final class RefreshTokenJob: AsynchronousJob {
                     Web3ChainDAO.shared.save([chain])
                 }
                 
-                var pendingDeposits: [SafePendingDeposit] = []
-                let entries = DepositEntryDAO.shared.entries(ofChainWith: token.chainID)
-                for entry in entries {
-                    let deposits = try await SafeAPI.deposits(assetID: token.assetID,
-                                                              destination: entry.destination,
-                                                              tag: entry.tag)
-                    pendingDeposits.append(contentsOf: deposits)
-                }
-                SafeSnapshotDAO.shared.replacePendingSnapshots(assetID: assetID, pendingDeposits: pendingDeposits)
+                let pendingDeposits = try await SafeAPI.deposits(assetID: token.assetID)
+                SafeSnapshotDAO.shared.replacePendingSnapshots(
+                    assetID: token.assetID,
+                    pendingDeposits: pendingDeposits
+                )
             } catch {
                 let worthReporting = (error as? MixinAPIError)?.worthReporting ?? true
                 if worthReporting {

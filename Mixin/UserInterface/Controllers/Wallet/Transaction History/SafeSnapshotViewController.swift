@@ -359,19 +359,8 @@ extension SafeSnapshotViewController {
             }
         } else if type == .pending {
             Task { [weak self, assetID=token.assetID, snapshotID=snapshot.id] in
-                guard let chainID = TokenDAO.shared.chainID(assetID: assetID) else {
-                    return
-                }
-                var pendingDeposits: [SafePendingDeposit] = []
-                let entries = DepositEntryDAO.shared.entries(ofChainWith: chainID)
-                for entry in entries {
-                    let deposits = try await SafeAPI.deposits(assetID: assetID,
-                                                              destination: entry.destination,
-                                                              tag: entry.tag)
-                    pendingDeposits.append(contentsOf: deposits)
-                }
+                let pendingDeposits = try await SafeAPI.deposits(assetID: assetID)
                 SafeSnapshotDAO.shared.replacePendingSnapshots(assetID: assetID, pendingDeposits: pendingDeposits)
-                
                 if let deposit = pendingDeposits.first(where: { $0.id == snapshotID }) {
                     let snapshot = SafeSnapshot(pendingDeposit: deposit)
                     await MainActor.run {

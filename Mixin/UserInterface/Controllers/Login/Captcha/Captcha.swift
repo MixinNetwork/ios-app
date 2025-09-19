@@ -100,7 +100,7 @@ extension Captcha: WKNavigationDelegate {
             return
         }
         initGTCaptchaAfterNavigationFinished = false
-        webView.evaluateJavaScript(Script.initGTCaptcha)
+        webView.evaluateJavaScript("initGTCaptcha();")
     }
     
 }
@@ -115,7 +115,7 @@ extension Captcha: WKScriptMessageHandler {
         }
         switch message {
         case .reCaptchaDidLoad:
-            webView?.evaluateJavaScript(Script.executeReCaptcha)
+            webView?.evaluateJavaScript("gReCaptchaExecute();")
         case .challengeChange:
             guard let viewController, let webView = webView else {
                 clean()
@@ -181,11 +181,6 @@ extension Captcha {
             return "<script>\n" + content
         }
         
-    }
-    
-    private enum Script {
-        static let executeReCaptcha = "gReCaptchaExecute();"
-        static let initGTCaptcha = "initGTCaptcha();"
     }
     
     private enum Message {

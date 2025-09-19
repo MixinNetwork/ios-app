@@ -44,18 +44,19 @@
 
         var initGTCaptcha = function() {
             initGeetest4({
-                captchaId: '${api_key}'
-            },function (captcha) {
-                captcha.appendTo("#html_element");
-                captcha.onReady(function () {
+                captchaId: '${api_key}',
+                product: 'bind'
+            }, function(captcha) {
+                captcha.onReady(function(){
                     postMessageToMixinMessenger("challenge_change");
-                });
-                captcha.onClose(function () {
-                    postMessageToMixinMessenger("gt_close");
-                });
-                captcha.onSuccess(function () {
+                    captcha.showCaptcha();
+                }).onSuccess(function(){
                     var result = captcha.getValidate();
-                    window.webkit.messageHandlers.mixin_messenger_captcha.postMessage({ gtcaptcha_result: result });
+                    window.webkit.messageHandlers.mixin_messenger_captcha.postMessage({
+                        gtcaptcha_result: result
+                    });
+                }).onClose(function () {
+                    postMessageToMixinMessenger("gt_close");
                 });
             });
         };

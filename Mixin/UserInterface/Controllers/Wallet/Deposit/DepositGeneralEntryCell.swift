@@ -53,8 +53,15 @@ final class DepositGeneralEntryCell: UICollectionViewCell {
             return UIFontMetrics.default.scaledFont(for: font)
         }()
         contentLabel.text = content.value
+        
+        let qrContent = switch token.assetID {
+        case AssetID.lightningBTC:
+            content.value.uppercased()
+        default:
+            content.value
+        }
         qrCodeView.setContent(
-            content.value,
+            qrContent,
             dimension: qrCodeDimensionConstraint.constant
         )
         iconView.setIcon(token: token, chain: token.chain)

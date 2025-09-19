@@ -29,7 +29,7 @@ public final class RefreshWeb3WalletTokenJob: AsynchronousJob {
                 Web3TokenDAO.shared.save(tokens: tokens, zeroOutOthers: true)
             case let .failure(error):
                 Logger.general.debug(category: "RefreshWeb3WalletToken", message: "\(error)")
-                if !error.isTransportTimedOut {
+                if error.worthReporting {
                     reporter.report(error: error)
                 }
             }

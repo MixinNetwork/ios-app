@@ -31,6 +31,17 @@ final class NotificationManager: NSObject {
         }
     }
     
+    func requestAuthorization() {
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: [.alert, .sound, .badge]
+        ) { granted, error in
+            DispatchQueue.main.async {
+                NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
+            }
+            reporter.updateUserProperties(.notificationAuthorization)
+        }
+    }
+    
     func requestCallNotification(id: String, name: String) {
         let content = UNMutableNotificationContent()
         content.title = name

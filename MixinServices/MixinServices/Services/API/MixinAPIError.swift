@@ -45,6 +45,21 @@ public enum MixinAPIError: Error {
         }
     }
     
+    public var worthReporting: Bool {
+        switch self {
+        case .httpTransport(.explicitlyCancelled):
+            false
+        case .httpTransport(let error):
+            if let underlyingError = error.underlyingError as? URLError {
+                underlyingError.worthReporting
+            } else {
+                true
+            }
+        default:
+            true
+        }
+    }
+    
     var isClientErrorResponse: Bool {
         switch self {
         case let .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(status))):

@@ -58,7 +58,9 @@ public class RefreshAlbumJob: BaseJob {
                         StickerPrefetcher.prefetch(stickers: stickers)
                     }
                 case let .failure(error):
-                    reporter.report(error: error)
+                    if error.worthReporting {
+                        reporter.report(error: error)
+                    }
                 }
             }
             StickerPrefetcher.persistent.prefetchURLs(persistentBannerUrls)
@@ -67,7 +69,9 @@ public class RefreshAlbumJob: BaseJob {
             AppGroupUserDefaults.User.stickerRefreshDate = Date()
             NotificationCenter.default.post(onMainThread: Self.didRefreshNotification, object: self)
         case let .failure(error):
-            reporter.report(error: error)
+            if error.worthReporting {
+                reporter.report(error: error)
+            }
         }
     }
     

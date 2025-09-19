@@ -107,12 +107,7 @@ final class PopupTipViewController: UIViewController {
             center.getNotificationSettings { settings in
                 switch settings.authorizationStatus {
                 case .notDetermined:
-                    center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-                        DispatchQueue.main.async {
-                            NotificationManager.shared.registerForRemoteNotificationsIfAuthorized()
-                        }
-                        reporter.updateUserProperties(.notificationAuthorization)
-                    }
+                    NotificationManager.shared.requestAuthorization()
                 case .denied:
                     DispatchQueue.main.async(execute: UIApplication.shared.openNotificationSettings)
                 case .authorized, .provisional, .ephemeral:

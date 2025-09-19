@@ -615,8 +615,6 @@
 		7CB0955B26CF4DDC0049F4C7 /* PinMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */; };
 		7CB17B642771602A00CF4C94 /* DeleteAccountConfirmWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */; };
 		7CB17B662771608400CF4C94 /* DeleteAccountConfirmWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */; };
-		7CB227862907CE060034F9FD /* DepositNetworkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB227842907CE060034F9FD /* DepositNetworkCell.swift */; };
-		7CB227872907CE060034F9FD /* DepositNetworkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7CB227852907CE060034F9FD /* DepositNetworkCell.xib */; };
 		7CB2A57F27C386F0007D9DEE /* GroupsInCommonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2A57E27C386F0007D9DEE /* GroupsInCommonViewController.swift */; };
 		7CC2226C29D917D00027FAAB /* DeviceTransferRecordType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2226B29D917D00027FAAB /* DeviceTransferRecordType.swift */; };
 		7CC3B1A026C21F7E0018B0D1 /* ScriptMessageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */; };
@@ -866,6 +864,8 @@
 		944075DB2E2E8B2A00591B45 /* WalletPendingDepositView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944075DA2E2E8B2A00591B45 /* WalletPendingDepositView.xib */; };
 		944075FB2E2EA5B700591B45 /* WalletWatchingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944075FA2E2EA5A200591B45 /* WalletWatchingIndicatorView.swift */; };
 		944076032E2EA5D000591B45 /* WalletWatchingIndicatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944076022E2EA5D000591B45 /* WalletWatchingIndicatorView.xib */; };
+		944124A42E715CEB00705462 /* EnableNotificationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944124A32E715CEB00705462 /* EnableNotificationHeaderView.swift */; };
+		944124A92E715CF600705462 /* EnableNotificationHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944124A82E715CF600705462 /* EnableNotificationHeaderView.xib */; };
 		94425FE72DD498FB003F46DF /* MaliciousTokenWarningCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94425FE42DD498FB003F46DF /* MaliciousTokenWarningCell.swift */; };
 		944263832DD64337003F46DF /* Web3ReputationPickerActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944263822DD64337003F46DF /* Web3ReputationPickerActionCell.xib */; };
 		944263B42DD648AD003F46DF /* Web3ReputationPickerActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944263B32DD648AB003F46DF /* Web3ReputationPickerActionCell.swift */; };
@@ -1248,7 +1248,6 @@
 		94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE548D25D96932006575E2 /* OggOpusReader.swift */; };
 		94BED02F2B692F11004381FA /* PopupPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BED02E2B692F11004381FA /* PopupPresentationManager.swift */; };
 		94BED0342B692F73004381FA /* PopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BED0332B692F73004381FA /* PopupPresentationController.swift */; };
-		94BF6D5B2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BF6D5A2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift */; };
 		94BFA98A2B98546000200FC4 /* SyncSafeSnapshotJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BFA9892B98546000200FC4 /* SyncSafeSnapshotJob.swift */; };
 		94C0D7E929AD348500E372FC /* InPlaceKeyStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C0D7E829AD348500E372FC /* InPlaceKeyStorage.swift */; };
 		94C199732A1CA9430098EDB3 /* DeviceTransferError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C199722A1CA9430098EDB3 /* DeviceTransferError.swift */; };
@@ -2331,8 +2330,6 @@
 		7CB0955A26CF4DDC0049F4C7 /* PinMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinMessageCell.swift; sourceTree = "<group>"; };
 		7CB17B632771602A00CF4C94 /* DeleteAccountConfirmWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountConfirmWindow.swift; sourceTree = "<group>"; };
 		7CB17B652771608400CF4C94 /* DeleteAccountConfirmWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeleteAccountConfirmWindow.xib; sourceTree = "<group>"; };
-		7CB227842907CE060034F9FD /* DepositNetworkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositNetworkCell.swift; sourceTree = "<group>"; };
-		7CB227852907CE060034F9FD /* DepositNetworkCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositNetworkCell.xib; sourceTree = "<group>"; };
 		7CB2A57E27C386F0007D9DEE /* GroupsInCommonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsInCommonViewController.swift; sourceTree = "<group>"; };
 		7CC2226B29D917D00027FAAB /* DeviceTransferRecordType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferRecordType.swift; sourceTree = "<group>"; };
 		7CC3B19F26C21F7E0018B0D1 /* ScriptMessageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageProxy.swift; sourceTree = "<group>"; };
@@ -2583,6 +2580,8 @@
 		944075DA2E2E8B2A00591B45 /* WalletPendingDepositView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletPendingDepositView.xib; sourceTree = "<group>"; };
 		944075FA2E2EA5A200591B45 /* WalletWatchingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletWatchingIndicatorView.swift; sourceTree = "<group>"; };
 		944076022E2EA5D000591B45 /* WalletWatchingIndicatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletWatchingIndicatorView.xib; sourceTree = "<group>"; };
+		944124A32E715CEB00705462 /* EnableNotificationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableNotificationHeaderView.swift; sourceTree = "<group>"; };
+		944124A82E715CF600705462 /* EnableNotificationHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EnableNotificationHeaderView.xib; sourceTree = "<group>"; };
 		94425FE42DD498FB003F46DF /* MaliciousTokenWarningCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaliciousTokenWarningCell.swift; sourceTree = "<group>"; };
 		944263822DD64337003F46DF /* Web3ReputationPickerActionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3ReputationPickerActionCell.xib; sourceTree = "<group>"; };
 		944263B32DD648AB003F46DF /* Web3ReputationPickerActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ReputationPickerActionCell.swift; sourceTree = "<group>"; };
@@ -2978,7 +2977,6 @@
 		94BE548D25D96932006575E2 /* OggOpusReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusReader.swift; sourceTree = "<group>"; };
 		94BED02E2B692F11004381FA /* PopupPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationManager.swift; sourceTree = "<group>"; };
 		94BED0332B692F73004381FA /* PopupPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationController.swift; sourceTree = "<group>"; };
-		94BF6D5A2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositNetworkSelectorViewController.swift; sourceTree = "<group>"; };
 		94BFA9892B98546000200FC4 /* SyncSafeSnapshotJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncSafeSnapshotJob.swift; sourceTree = "<group>"; };
 		94C0D7E829AD348500E372FC /* InPlaceKeyStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InPlaceKeyStorage.swift; sourceTree = "<group>"; };
 		94C199722A1CA9430098EDB3 /* DeviceTransferError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferError.swift; sourceTree = "<group>"; };
@@ -3826,6 +3824,8 @@
 				941994F52CCC454600F5425C /* ImageTextTableHeaderView.swift */,
 				9495E7322CF4420100124CC7 /* RecoveryKitFooterView.swift */,
 				94B89D0A2DE7441D002A0DDC /* MembershipOrdersHeaderView.swift */,
+				944124A82E715CF600705462 /* EnableNotificationHeaderView.xib */,
+				944124A32E715CEB00705462 /* EnableNotificationHeaderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4283,7 +4283,6 @@
 		9419C01F2E657EA600BEAB42 /* Deposit */ = {
 			isa = PBXGroup;
 			children = (
-				94BF6D5A2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift */,
 				94B9FD9D2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib */,
 				9419C2E22E6779B800BEAB42 /* DepositAddressGeneratingView.swift */,
 				94A709D52B67B0A5007CADAB /* DepositSuspendedView.xib */,
@@ -5152,8 +5151,6 @@
 				7C53049E28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib */,
 				7BF3F67922AE4733007B6C77 /* IdentityNumberLabel.swift */,
 				7B833E9822C4904F0063929D /* AppLoadingIndicatorView.swift */,
-				7CB227842907CE060034F9FD /* DepositNetworkCell.swift */,
-				7CB227852907CE060034F9FD /* DepositNetworkCell.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -6458,6 +6455,7 @@
 				9495E0DD2CEF7D6B00124CC7 /* MnemonicPhraseCell.xib in Resources */,
 				943CAA322CC83FFC00346677 /* LoginSeparatorLineView.xib in Resources */,
 				7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */,
+				944124A92E715CF600705462 /* EnableNotificationHeaderView.xib in Resources */,
 				946EA03D2D469A4A00DBC308 /* AddressBookView.xib in Resources */,
 				7BB7872B24514ACC0057B4ED /* PhoneContactsSettingTableHeaderView.xib in Resources */,
 				94B13FC32B5ED5F9001333BE /* Web3BrowserView.xib in Resources */,
@@ -6540,7 +6538,6 @@
 				7C2DEFF32824FF0600758208 /* ic_time_animation@3x.gif in Resources */,
 				94EC81FC2BC5A61F00770DCE /* mixin-min.js in Resources */,
 				94DC18A92D018D46006501B3 /* LoginLoadingView.xib in Resources */,
-				7CB227872907CE060034F9FD /* DepositNetworkCell.xib in Resources */,
 				9451E1F42E6B6AC300A5CA45 /* ReceiveMoneyView.xib in Resources */,
 				E0BC7BB7238FADE000E3EF2C /* MyFavoriteAppProfileMenuItemView.xib in Resources */,
 				7B81BF2922893F8B00266A77 /* GroupParticipantCell.xib in Resources */,
@@ -7183,6 +7180,7 @@
 				940AE02C2BA0D88100E7A9FE /* ExploreSegmentCell.swift in Sources */,
 				7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */,
 				94668D682DF06C640068078D /* MembershipOrderRewardsCell.swift in Sources */,
+				944124A42E715CEB00705462 /* EnableNotificationHeaderView.swift in Sources */,
 				DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */,
 				9429C1472E059F3100206DAA /* FeeRequiredInputAmountViewController.swift in Sources */,
 				946331C22C622C3500C54B76 /* TransactionHistoryDateFilterView.swift in Sources */,
@@ -7495,7 +7493,6 @@
 				7BA514862499D96300261289 /* GroupCall.swift in Sources */,
 				94E979232D0B408100FFCC12 /* LoginLoadingViewController.swift in Sources */,
 				7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */,
-				7CB227862907CE060034F9FD /* DepositNetworkCell.swift in Sources */,
 				7B36920E233B47F4007321A7 /* SharedMediaTypeOverlayView.swift in Sources */,
 				7B84358D20D8F89200237242 /* QuotePreviewView.swift in Sources */,
 				946E9F1A2AEF88DF0077CD7A /* RecoverRawTransactionJob.swift in Sources */,
@@ -7987,7 +7984,6 @@
 				945A72792E59BC48006A11E9 /* TIPQuizViewController.swift in Sources */,
 				7B9F810E222EA3EC0012BFDD /* PopupPresentationAnimator.swift in Sources */,
 				94D63DD62646C29100FD7EE8 /* MessageViewModelFactory.swift in Sources */,
-				94BF6D5B2B67EA99002CD556 /* DepositNetworkSelectorViewController.swift in Sources */,
 				947084C52D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift in Sources */,
 				7BF4047D2048FA0E004C54E4 /* FullscreenPINValidationViewController.swift in Sources */,
 				947015C42DA3A9B300D8AA5A /* EIP1559Transaction.swift in Sources */,
@@ -8363,7 +8359,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 754;
+				CURRENT_PROJECT_VERSION = 758;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -8382,7 +8378,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 3.3.1;
+				MARKETING_VERSION = 3.4.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -8426,7 +8422,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 754;
+				CURRENT_PROJECT_VERSION = 758;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -8439,7 +8435,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 3.3.1;
+				MARKETING_VERSION = 3.4.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;

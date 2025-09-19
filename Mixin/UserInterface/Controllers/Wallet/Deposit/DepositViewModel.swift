@@ -21,7 +21,7 @@ struct DepositViewModel {
                     return (tokens, index)
                 }
             }
-            return ([SwitchableToken(token: token)], 0)
+            return ([], nil)
         }()
         
         let minimumDeposit = CurrencyFormatter.localizedString(
@@ -142,7 +142,7 @@ struct DepositViewModel {
                     return (availableTokens, index)
                 }
             }
-            return ([SwitchableToken(token: token)], 0)
+            return ([], nil)
         }()
         var actions: [Entry.Action] = [.copy, .share]
         if DepositLink.available(address: address, token: token) {

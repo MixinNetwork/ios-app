@@ -290,9 +290,7 @@
 "check_backup" = "检查备份";
 "check_mnemonic_phrase" = "检查您的助记词";
 "check_mnemonic_phrase_desc" = "按照呈现给您的顺序输入每个单词。";
-"choose_deposit_network" = "选择充值网络";
 "choose_network" = "选择网络";
-"choose_network_tip" = "请选择 Mixin 支持的网络进行充值，否则您的充值将不会到账。";
 "choose_photo" = "选择照片";
 "choose_token" = "选择 %@ 网络";
 "choose_token_desc" = "%@ 在多个网络上发布";
@@ -477,6 +475,7 @@
 "deposit_tag_address_notice" = "地址和 Tag（标签）同时使用才能充值 %@ 到你的账号。";
 "deposit_tag_notice" = "充值时务必填写 Tag（标签），否则可能导致资产丢失。";
 "deposit_tip_eth" = "支持所有符合 ERC-20 标准的代币，例如 ETH、XIN 等。";
+"deposit_tip_lightning" = "此票据支持闪电网络上的 BTC，以及 USDT 和其他 Taproot 资产。";
 "deposit_tip_trx" = "支持 TRX 和所有符合 TRC-10、TRC-20 标准的代币。";
 "deposit_token" = "充值 %@";
 "deposit_token_description" = "从其他交易所或钱包转入";

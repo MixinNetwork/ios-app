@@ -23,7 +23,9 @@ public class RefreshStickerJob: BaseJob {
             }
             StickerPrefetcher.prefetch(stickers: [stickerItem])
         case let .failure(error):
-            reporter.report(error: error)
+            if error.worthReporting {
+                reporter.report(error: error)
+            }
         }
     }
     

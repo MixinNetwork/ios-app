@@ -65,6 +65,7 @@ final class DepositViewController: UIViewController {
                 section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 15, bottom: 6, trailing: 15)
                 return section
             case .address:
+                let isNetworkSectionEmpty = self?.viewModel?.switchableTokens.isEmpty ?? true
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(489))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(489))
@@ -73,8 +74,9 @@ final class DepositViewController: UIViewController {
                 switch self?.viewModel?.entry {
                 case .tagging:
                     section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                    let headerHeight: CGFloat = isNetworkSectionEmpty ? 26 : 20
                     let header = NSCollectionLayoutBoundarySupplementaryItem(
-                        layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(20)),
+                        layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(headerHeight)),
                         elementKind: UICollectionView.elementKindSectionHeader,
                         alignment: .top
                     )
@@ -85,7 +87,8 @@ final class DepositViewController: UIViewController {
                     )
                     section.boundarySupplementaryItems = [header, footer]
                 default:
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)
+                    let top: CGFloat = isNetworkSectionEmpty ? 16 : 10
+                    section.contentInsets = NSDirectionalEdgeInsets(top: top, leading: 20, bottom: 10, trailing: 20)
                 }
                 return section
             case .info:
@@ -464,13 +467,6 @@ extension DepositViewController: DepositDataSource.Delegate {
             action: #selector(contactSupport(_:)),
             for: .touchUpInside
         )
-    }
-    
-    func depositDataSource(
-        _ dataSource: DepositDataSource,
-        requestNetworkConfirmationWith selector: DepositNetworkSelectorViewController
-    ) {
-        present(selector, animated: true)
     }
     
 }

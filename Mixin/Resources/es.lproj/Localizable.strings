@@ -290,9 +290,7 @@
 "check_backup" = "Check Backup";
 "check_mnemonic_phrase" = "Check your mnemonic phrase";
 "check_mnemonic_phrase_desc" = "Input each word in the order it was presented to you.";
-"choose_deposit_network" = "Elige Red";
 "choose_network" = "Choose Network";
-"choose_network_tip" = "Asegúrate de que la red que elijas para depositar sea compatible con Mixin. De lo contrario, tus bienes pueden perderse.";
 "choose_photo" = "Escoge una foto";
 "choose_token" = "Choose %@ Network";
 "choose_token_desc" = "%@ is issued on multiple networks";
@@ -477,6 +475,7 @@
 "deposit_tag_address_notice" = "Both Tag and Address are required to deposit %@ to your account.";
 "deposit_tag_notice" = "Tag is required, or you will lose your coins.";
 "deposit_tip_eth" = "Esta dirección admite todos los tokens ERC-20, como ETH, XIN, etc.";
+"deposit_tip_lightning" = "This invoice supports BTC on Lightning Network, as well as USDT and other Taproot Assets.";
 "deposit_tip_trx" = "Esta dirección admite todos los tokens TRC-10 y TRC-20.";
 "deposit_token" = "Deposit %@";
 "deposit_token_description" = "Deposit from other exchanges or wallets";

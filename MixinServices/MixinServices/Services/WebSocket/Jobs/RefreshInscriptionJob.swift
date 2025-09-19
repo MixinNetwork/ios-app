@@ -61,7 +61,9 @@ public final class RefreshInscriptionJob: BaseJob {
                     } else {
                         let description = "\(error)"
                         Logger.general.error(category: "Inscription", message: description)
-                        reporter.report(error: error)
+                        if error.worthReporting {
+                            reporter.report(error: error)
+                        }
                         return
                     }
                 }

@@ -51,9 +51,9 @@ class LoginVerificationCodeViewController: VerificationCodeViewController, Login
                 self.context.hasEmergencyContact = verification.hasEmergencyContact
                 self.resendButton.isBusy = false
                 self.resendButton.beginCountDown(self.resendInterval)
-            case .failure(.requiresCaptcha):
+            case let .failure(.response(error)) where .requiresCaptcha ~= error:
                 Logger.login.info(category: "LoginVerificationCode", message: "captcha")
-                captcha.validate { [weak self] (result) in
+                self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
                     switch result {
                     case .success(let token):
                         self?.requestVerificationCode(captchaToken: token)

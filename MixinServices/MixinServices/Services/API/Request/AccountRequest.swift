@@ -20,8 +20,8 @@ extension VerificationRequest {
         var values: [String: Any] = generalValues
         values["purpose"] = VerificationPurpose.session.rawValue
         values["phone"] = phone
-        if let (key, value) = captchaToken?.keyValuePair {
-            values[key] = value
+        if let pairs = captchaToken?.asVerificationParameters() {
+            values.merge(pairs) { (current, _) in current }
         }
         return values
     }
@@ -54,8 +54,8 @@ extension VerificationRequest {
         values["master_public_hex"] = publicKey.hexEncodedString()
         values["master_message_hex"] = message.hexEncodedString()
         values["master_signature_hex"] = signature.hexEncodedString()
-        if let (key, value) = captchaToken?.keyValuePair {
-            values[key] = value
+        if let pairs = captchaToken?.asVerificationParameters() {
+            values.merge(pairs) { (current, _) in current }
         }
         return values
     }
@@ -86,8 +86,8 @@ extension VerificationRequest {
         values["purpose"] = VerificationPurpose.phone.rawValue
         values["phone"] = phone
         values["salt_base64"] = base64Salt
-        if let (key, value) = captchaToken?.keyValuePair {
-            values[key] = value
+        if let pairs = captchaToken?.asVerificationParameters() {
+            values.merge(pairs) { (current, _) in current }
         }
         return values
     }
@@ -103,8 +103,8 @@ extension VerificationRequest {
         var values: [String: Any] = generalValues
         values["purpose"] = VerificationPurpose.deactivate.rawValue
         values["phone"] = phoneNumber
-        if let (key, value) = captchaToken?.keyValuePair {
-            values[key] = value
+        if let pairs = captchaToken?.asVerificationParameters() {
+            values.merge(pairs) { (current, _) in current }
         }
         return values
     }

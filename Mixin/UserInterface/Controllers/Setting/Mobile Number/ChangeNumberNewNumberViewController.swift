@@ -90,21 +90,18 @@ final class ChangeNumberNewNumberViewController: MobileNumberViewController {
                 let vc = ChangeNumberVerificationCodeViewController(context: context)
                 self.navigationController?.pushViewController(vc, animated: true)
                 self.continueButton.isBusy = false
-            case let .failure(error):
-                switch error {
-                case .requiresCaptcha:
-                    self.captcha.validate { [weak self] (result) in
-                        switch result {
-                        case .success(let token):
-                            self?.requestVerificationCode(base64Salt: base64Salt, captchaToken: token)
-                        default:
-                            self?.continueButton.isBusy = false
-                        }
+            case let .failure(.response(error)) where .requiresCaptcha ~= error:
+                self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
+                    switch result {
+                    case .success(let token):
+                        self?.requestVerificationCode(base64Salt: base64Salt, captchaToken: token)
+                    default:
+                        self?.continueButton.isBusy = false
                     }
-                default:
-                    self.alert(error.localizedDescription)
-                    self.continueButton.isBusy = false
                 }
+            case let .failure(error):
+                self.alert(error.localizedDescription)
+                self.continueButton.isBusy = false
             }
         }
     }

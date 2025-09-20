@@ -83,21 +83,18 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
                 self.context.verificationID = verification.id
                 self.resendButton.isBusy = false
                 self.resendButton.beginCountDown(self.resendInterval)
-            case let.failure(error):
-                switch error {
-                case .requiresCaptcha:
-                    self.captcha.validate { [weak self] (result) in
-                        switch result {
-                        case .success(let token):
-                            self?.requestVerificationCode(captchaToken: token)
-                        default:
-                            self?.resendButton.isBusy = false
-                        }
+            case let .failure(.response(error)) where .requiresCaptcha ~= error:
+                self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
+                    switch result {
+                    case .success(let token):
+                        self?.requestVerificationCode(captchaToken: token)
+                    default:
+                        self?.resendButton.isBusy = false
                     }
-                default:
-                    self.alert(error.localizedDescription)
-                    self.resendButton.isBusy = false
                 }
+            case let.failure(error):
+                self.alert(error.localizedDescription)
+                self.resendButton.isBusy = false
             }
         }
     }

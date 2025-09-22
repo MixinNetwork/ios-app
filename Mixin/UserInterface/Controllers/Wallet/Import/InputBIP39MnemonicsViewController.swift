@@ -124,6 +124,7 @@ class InputBIP39MnemonicsViewController: InputMnemonicsViewController {
         guard let count = BIP39Mnemonics.PhrasesCount(rawValue: button.tag) else {
             return
         }
+        view.endEditing(true)
         reloadInputStackView(count: count)
     }
     

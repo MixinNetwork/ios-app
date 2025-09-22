@@ -111,6 +111,7 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
         guard let count = MixinMnemonics.PhrasesCount(rawValue: button.tag) else {
             return
         }
+        view.endEditing(true)
         reloadInputStackView(count: count)
     }
     

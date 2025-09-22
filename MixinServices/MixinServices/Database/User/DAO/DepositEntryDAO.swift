@@ -13,8 +13,15 @@ public final class DepositEntryDAO: UserDatabaseDAO {
         db.select(where: DepositEntry.column(of: .chainID) == chainID)
     }
     
-    public func compactEntries() -> [CompactDepositEntry] {
-        db.select(with: "SELECT destination, tag FROM deposit_entries")
+    public func compactEntries(chainID: String?) -> [CompactDepositEntry] {
+        if let chainID {
+            db.select(
+                with: "SELECT destination, tag FROM deposit_entries WHERE chain_id = ?",
+                arguments: [chainID]
+            )
+        } else {
+            db.select(with: "SELECT destination, tag FROM deposit_entries")
+        }
     }
     
     public func replace(entries: [DepositEntry], forChainWith chainID: String) {

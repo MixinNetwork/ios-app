@@ -19,9 +19,6 @@ class TokenReceiverViewController: KeyboardBasedLayoutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.titleView = NavigationTitleView(
-            title: R.string.localizable.send()
-        )
         navigationItem.rightBarButtonItem = .customerService(
             target: self,
             action: #selector(presentCustomerService(_:))

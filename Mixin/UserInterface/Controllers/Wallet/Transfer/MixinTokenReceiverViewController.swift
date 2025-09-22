@@ -27,9 +27,10 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let titleView = navigationItem.titleView as? NavigationTitleView {
-            titleView.subtitle = R.string.localizable.privacy_wallet()
-        }
+        navigationItem.titleView = WalletIdentifyingNavigationTitleView(
+            title: R.string.localizable.send(),
+            wallet: .privacy
+        )
         headerView.load(token: token)
         
         tableView.dataSource = self

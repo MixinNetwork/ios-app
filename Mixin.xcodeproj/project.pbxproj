@@ -662,6 +662,8 @@
 		94046B93272DC28B007C1D4A /* GroupCallMembersManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B92272DC28B007C1D4A /* GroupCallMembersManager.swift */; };
 		94046B96272DC2CF007C1D4A /* IncomingPeerCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B94272DC2CF007C1D4A /* IncomingPeerCall.swift */; };
 		94046B97272DC2CF007C1D4A /* OutgoingPeerCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B95272DC2CF007C1D4A /* OutgoingPeerCall.swift */; };
+		94051FA42E812D64005B3A16 /* DepositFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94051FA32E812D61005B3A16 /* DepositFilter.swift */; };
+		94051FB22E81306F005B3A16 /* RefreshTokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94051FB12E81306F005B3A16 /* RefreshTokenJob.swift */; };
 		94062C592AE8C61700ADAE87 /* SnapshotTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94062C582AE8C61700ADAE87 /* SnapshotTableHeaderView.xib */; };
 		94062C5D2AE8CA7600ADAE87 /* SnapshotColumnCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94062C5C2AE8CA7600ADAE87 /* SnapshotColumnCell.xib */; };
 		94062C622AE8CA9100ADAE87 /* SnapshotColumnCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94062C612AE8CA9100ADAE87 /* SnapshotColumnCell.swift */; };
@@ -2379,6 +2381,8 @@
 		94046B92272DC28B007C1D4A /* GroupCallMembersManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCallMembersManager.swift; sourceTree = "<group>"; };
 		94046B94272DC2CF007C1D4A /* IncomingPeerCall.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomingPeerCall.swift; sourceTree = "<group>"; };
 		94046B95272DC2CF007C1D4A /* OutgoingPeerCall.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutgoingPeerCall.swift; sourceTree = "<group>"; };
+		94051FA32E812D61005B3A16 /* DepositFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFilter.swift; sourceTree = "<group>"; };
+		94051FB12E81306F005B3A16 /* RefreshTokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenJob.swift; sourceTree = "<group>"; };
 		94062C582AE8C61700ADAE87 /* SnapshotTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotTableHeaderView.xib; sourceTree = "<group>"; };
 		94062C5C2AE8CA7600ADAE87 /* SnapshotColumnCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotColumnCell.xib; sourceTree = "<group>"; };
 		94062C612AE8CA9100ADAE87 /* SnapshotColumnCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotColumnCell.swift; sourceTree = "<group>"; };
@@ -6027,6 +6031,7 @@
 				941E360A2D78B80E000E7093 /* RefreshWeb3WalletTokenJob.swift */,
 				94509BC02DDDFC5800DC6A43 /* RefreshWeb3TokenJob.swift */,
 				94F2F94F2DEF2C750013B820 /* ReloadMembershipOrderJob.swift */,
+				94051FB12E81306F005B3A16 /* RefreshTokenJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -6073,6 +6078,7 @@
 				E090B91023B0B2F20012C7E9 /* MessageDAO+Search.swift */,
 				E090B9EA23B0BF940012C7E9 /* MessageDAO+Gallery.swift */,
 				7BB0F94E2434D75D00BEDA97 /* CircleMember+Convenience.swift */,
+				94051FA32E812D61005B3A16 /* DepositFilter.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -7028,6 +7034,7 @@
 				94463C53298D690F00E63547 /* AuthenticationFailureView.swift in Sources */,
 				94C5BDD52D685FCD0012F840 /* WalletCell.swift in Sources */,
 				94658CB92B358E3100F5EB21 /* TabBar.swift in Sources */,
+				94051FA42E812D64005B3A16 /* DepositFilter.swift in Sources */,
 				94FB8E0E2D1ACB32002DCA20 /* SwapTokenCell.swift in Sources */,
 				94DEB05F2D9D339900406E19 /* WalletTipPageControlCell.swift in Sources */,
 				945FFC822C3829B00013DC51 /* SwapRequest.swift in Sources */,
@@ -7328,6 +7335,7 @@
 				7C7579D229DC54120002DA0B /* RestoreFromDesktopViewController.swift in Sources */,
 				7BCAF54A216B0C3700D6564A /* GiphyCollectionViewFlowLayout.swift in Sources */,
 				DF5D9F241F9C79E10036D5FD /* Constant.swift in Sources */,
+				94051FB22E81306F005B3A16 /* RefreshTokenJob.swift in Sources */,
 				94902E3B2DA6CD6200E52FC6 /* SimpleWeb3TransactionTableHeaderView.swift in Sources */,
 				E041064B23C5C3BC00A6F08E /* CoreTextLabelDelegate.swift in Sources */,
 				7B915F74215FB0C100A562C6 /* GiphySearchViewController.swift in Sources */,

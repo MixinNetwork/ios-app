@@ -1,10 +1,9 @@
 import Foundation
+import MixinServices
 
 public final class RefreshTokenJob: AsynchronousJob {
     
     private let assetID: String
-    
-    private var asset: Asset?
     
     public init(assetID: String) {
         self.assetID = assetID
@@ -27,10 +26,11 @@ public final class RefreshTokenJob: AsynchronousJob {
                     Web3ChainDAO.shared.save([chain])
                 }
                 
-                let pendingDeposits = try await SafeAPI.deposits(assetID: token.assetID)
+                let deposits = try await SafeAPI.deposits(assetID: token.assetID)
+                let myDeposits = DepositFilter.myDeposits(from: deposits, chainID: token.chainID)
                 SafeSnapshotDAO.shared.replacePendingSnapshots(
                     assetID: token.assetID,
-                    pendingDeposits: pendingDeposits
+                    pendingDeposits: myDeposits
                 )
             } catch {
                 let worthReporting = (error as? MixinAPIError)?.worthReporting ?? true

@@ -142,23 +142,7 @@ final class PrivacyWalletViewController: WalletViewController {
                 guard case .success(let deposits) = result else {
                     return
                 }
-                let entries = DepositEntryDAO.shared.compactEntries()
-                let myDeposits = deposits.filter { deposit in
-                    // `SafeAPI.allDeposits` returns all deposits, whether it's mine or other's
-                    // Filter with my entries to get my deposits
-                    entries.contains(where: { (entry) in
-                        let isDestinationMatch = entry.destination == deposit.destination
-                        let isTagMatch: Bool
-                        if entry.tag.isNilOrEmpty && deposit.tag.isNilOrEmpty {
-                            isTagMatch = true
-                        } else if entry.tag == deposit.tag {
-                            isTagMatch = true
-                        } else {
-                            isTagMatch = false
-                        }
-                        return isDestinationMatch && isTagMatch
-                    })
-                }
+                let myDeposits = DepositFilter.myDeposits(from: deposits)
                 let assetIDs = Set(myDeposits.map(\.assetID))
                 
                 var tokens = TokenDAO.shared.tokens(with: assetIDs)

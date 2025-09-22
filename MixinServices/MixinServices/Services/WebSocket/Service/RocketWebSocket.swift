@@ -79,11 +79,6 @@ extension RocketWebSocket: SRWebSocketDelegate {
             delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: true)
         } else {
             delegate?.websocketDidDisconnect(socket: self, isSwitchNetwork: false)
-
-            if nsError.domain == NSPOSIXErrorDomain && nsError.code == 57 {
-                return
-            }
-            reporter.report(error: err)
         }
     }
 

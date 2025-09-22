@@ -94,7 +94,7 @@ final class PopupTipViewController: UIViewController {
     @IBAction func continueToNext(_ sender: Any) {
         switch tip {
         case .appUpdate:
-            UIApplication.shared.openAppStorePage()
+            UIApplication.shared.open(.mixinMessenger, options: [:], completionHandler: nil)
             presentingViewController?.dismiss(animated: true)
         case .backupMnemonics:
             presentingViewController?.dismiss(animated: true) {

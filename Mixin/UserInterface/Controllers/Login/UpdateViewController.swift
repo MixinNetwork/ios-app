@@ -12,7 +12,7 @@ final class UpdateViewController: UIViewController {
     }
     
     @IBAction func continueAction(_ sender: Any) {
-        UIApplication.shared.openAppStorePage()
+        UIApplication.shared.open(.mixinMessenger, options: [:], completionHandler: nil)
     }
     
 }

@@ -76,10 +76,6 @@ extension UIApplication {
         }
     }
     
-    public func openAppStorePage() {
-        openURL(url: "itms-apps://itunes.apple.com/us/app/id\(appStoreAppID)")
-    }
-    
     public func openURL(url: String) {
         guard let url = URL(string: url) else {
             return

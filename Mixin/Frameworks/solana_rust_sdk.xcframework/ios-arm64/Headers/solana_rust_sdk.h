@@ -23,6 +23,11 @@ typedef enum SolanaErrorCode {
   SolanaErrorCodeInvalidProgramID = -15,
 } SolanaErrorCode;
 
+typedef enum SolanaSignatureFormat {
+  SolanaSignatureFormatBase58,
+  SolanaSignatureFormatHex,
+} SolanaSignatureFormat;
+
 typedef struct SolanaPriorityFee {
   uint64_t price;
   uint32_t limit;
@@ -42,6 +47,7 @@ enum SolanaErrorCode solana_sign_message(const uint8_t *seed,
                                          size_t seed_len,
                                          const uint8_t *msg,
                                          size_t msg_len,
+                                         enum SolanaSignatureFormat format,
                                          const char **out);
 
 void solana_free_transaction(const void *txn);

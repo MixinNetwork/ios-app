@@ -66,6 +66,9 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
     
     override func detectInput() {
         super.detectInput()
+        guard let userID = LoginManager.shared.account?.userID else {
+            return
+        }
         let input = (inputTextView.text ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         guard !input.isEmpty, let importedAddresses else {
@@ -94,13 +97,15 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                     privateKey: privateKey,
                     key: encryptionKey
                 )
-                wallet = Wallet(
+                wallet = try Wallet(
                     privateKey: encryptedPrivateKey,
                     address: .init(
                         destination: address,
                         chainID: ChainID.ethereum,
                         path: nil
-                    )
+                    ).sign(userID: userID) { message in
+                        try account.signMessage(message: message)
+                    }
                 )
             case .solana:
                 guard let keyPair = Data(base58EncodedString: input) else {
@@ -123,13 +128,19 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                     privateKey: privateKey,
                     key: encryptionKey
                 )
-                wallet = Wallet(
+                wallet = try Wallet(
                     privateKey: encryptedPrivateKey,
                     address: .init(
                         destination: publicKey,
                         chainID: ChainID.solana,
                         path: nil
-                    )
+                    ).sign(userID: userID) { message in
+                        try Solana.sign(
+                            message: message,
+                            withPrivateKeyFrom: privateKey,
+                            format: .hex
+                        )
+                    }
                 )
             }
             errorDescriptionLabel.text = nil

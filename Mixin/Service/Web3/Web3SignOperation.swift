@@ -68,7 +68,11 @@ class Web3SignOperation {
                     switch signable {
                     case .raw(let message):
                         let priv = try await wallet.solanaPrivateKey(pin: pin, address: address)
-                        signature = try Solana.sign(message: message, withPrivateKeyFrom: priv)
+                        signature = try Solana.sign(
+                            message: message,
+                            withPrivateKeyFrom: priv,
+                            format: .base58
+                        )
                     case .typed:
                         throw SigningError.invalidSignable
                     }

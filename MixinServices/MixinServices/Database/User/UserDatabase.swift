@@ -29,7 +29,6 @@ public final class UserDatabase: Database {
         ColumnMigratableTableDefinition<Address>(constraints: nil, columns: [
             .init(key: .type, constraints: "TEXT NOT NULL"),
             .init(key: .addressId, constraints: "TEXT PRIMARY KEY"),
-            .init(key: .chainId, constraints: "TEXT NOT NULL"),
             .init(key: .assetId, constraints: "TEXT NOT NULL"),
             .init(key: .destination, constraints: "TEXT NOT NULL"),
             .init(key: .label, constraints: "TEXT NOT NULL"),

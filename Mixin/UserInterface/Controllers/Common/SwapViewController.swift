@@ -598,7 +598,7 @@ extension SwapViewController {
         )
         alert.addAction(UIAlertAction(title: R.string.localizable.update(), style: .default, handler: { _ in
             self.navigationController?.popViewController(animated: false)
-            UIApplication.shared.openAppStorePage()
+            UIApplication.shared.open(.mixinMessenger, options: [:], completionHandler: nil)
         }))
         alert.addAction(UIAlertAction(title: R.string.localizable.later(), style: .cancel, handler: { _ in
             self.navigationController?.popViewController(animated: true)

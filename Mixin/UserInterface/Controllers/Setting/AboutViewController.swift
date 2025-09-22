@@ -83,7 +83,7 @@ extension AboutViewController: UITableViewDelegate {
             let acknow = AcknowledgementListViewController()
             navigationController?.pushViewController(acknow, animated: true)
         case 6:
-            UIApplication.shared.openAppStorePage()
+            UIApplication.shared.open(.mixinMessenger, options: [:], completionHandler: nil)
         case 7:
             let diagnose = DiagnoseViewController()
             navigationController?.pushViewController(diagnose, animated: true)

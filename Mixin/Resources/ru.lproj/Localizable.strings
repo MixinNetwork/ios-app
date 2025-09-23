@@ -1,7 +1,6 @@
 "about" = "Про";
 "access_contacts_hint" = "Mixin синхронизирует вашу адресную книгу с серверами Mixin, чтобы помочь вам связаться с другими пользователями Mixin.";
 "access_dapps_defi_projects" = "Access apps and DeFi projects.";
-"access_denied" = "В доступе отказано";
 "access_to_contacts" = "Доступ к контактам";
 "account" = "Аккаунт";
 "acknowledgements" = "Благодарности";
@@ -551,6 +550,7 @@
 "enter_your_old_pin" = "Enter your old PIN";
 "enter_your_pin" = "Введите свой PIN-код";
 "enter_your_pin_to_continue" = "Введите PIN-код, чтобы продолжить";
+"error_access_limited" = "ERROR 403: Access Limited";
 "error_bad_data" = "ОШИБКА 10002: Данные запроса содержат недопустимое поле";
 "error_blockchain" = "ОШИБКА 30100: Блокчейн не синхронизирован, повторите попытку позже.";
 "error_captcha_is_invalid" = "ОШИБКА 10004: CAPTCHA недействительна";

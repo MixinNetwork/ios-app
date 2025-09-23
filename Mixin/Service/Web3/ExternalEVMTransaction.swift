@@ -22,17 +22,8 @@ struct ExternalEVMTransaction {
     let hexEncodedData: String?
     let data: Data?
     
+    let hexValue: String?
     let decimalValue: Decimal?
-    
-    init(from: EthereumAddress, to: EthereumAddress, value: BigUInt?, data: Data?, decimalValue: Decimal?) {
-        self.from = from
-        self.to = to
-        self.value = value
-        self.gas = nil
-        self.hexEncodedData = data?.hexEncodedString()
-        self.data = data
-        self.decimalValue = decimalValue
-    }
     
     init(json: [String: Any]) throws {
         guard let from = json["from"] as? String else {
@@ -44,11 +35,13 @@ struct ExternalEVMTransaction {
         let data = json["data"] as? String
         let value = json["value"] as? String
         let gas = json["gas"] as? String
-        try self.init(from: EthereumAddress(from),
-                      to: EthereumAddress(to),
-                      hexData: data,
-                      hexValue: value,
-                      hexGas: gas)
+        try self.init(
+            from: EthereumAddress(from),
+            to: EthereumAddress(to),
+            hexData: data,
+            hexValue: value,
+            hexGas: gas
+        )
     }
     
     private init(
@@ -103,6 +96,7 @@ struct ExternalEVMTransaction {
         self.gas = gas
         self.hexEncodedData = data?.hexEncodedString()
         self.data = data
+        self.hexValue = hexValue
         self.decimalValue = decimalValue
     }
     
@@ -120,11 +114,13 @@ extension ExternalEVMTransaction: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        try self.init(from: try container.decode(EthereumAddress.self, forKey: .from),
-                      to: try container.decode(EthereumAddress.self, forKey: .to),
-                      hexData: try container.decodeIfPresent(String.self, forKey: .data),
-                      hexValue: try container.decodeIfPresent(String.self, forKey: .value),
-                      hexGas: try container.decodeIfPresent(String.self, forKey: .gas))
+        try self.init(
+            from: try container.decode(EthereumAddress.self, forKey: .from),
+            to: try container.decode(EthereumAddress.self, forKey: .to),
+            hexData: try container.decodeIfPresent(String.self, forKey: .data),
+            hexValue: try container.decodeIfPresent(String.self, forKey: .value),
+            hexGas: try container.decodeIfPresent(String.self, forKey: .gas)
+        )
     }
     
 }

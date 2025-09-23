@@ -431,7 +431,8 @@ extension RouteAPI {
         mixinChainID: String,
         hexData: String?,
         from: String,
-        to: String
+        to: String,
+        value: String?,
     ) async throws -> EthereumFee {
         var parameters = [
             "chain_id": mixinChainID,
@@ -440,6 +441,9 @@ extension RouteAPI {
         ]
         if let hexData {
             parameters["raw_transaction"] = "0x" + hexData
+        }
+        if let value {
+            parameters["value"] = value
         }
         return try await request(method: .post, path: "/web3/estimate-fee", with: parameters)
     }

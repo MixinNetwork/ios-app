@@ -36,7 +36,7 @@ final class SignUpWithMnemonicIntroductionViewController: IntroductionViewContro
             return
         }
         let signUp = LoginWithMnemonicViewController(action: .signUp)
-        navigationController.pushViewController(signUp, animated: true)
+        navigationController.pushViewController(replacingCurrent: signUp, animated: true)
     }
     
 }

@@ -331,19 +331,10 @@ extension AppDelegate {
             }
         } else {
             if UIApplication.shared.isProtectedDataAvailable {
-                let navigationController = LoginNavigationController()
-                mainWindow.rootViewController = navigationController
                 if isFirstLaunch ?? false {
                     AppGroupKeychain.removeItemsForCurrentSession()
                 }
-                if let entropy = AppGroupKeychain.mnemonics, let mnemonics = try? MixinMnemonics(entropy: entropy) {
-                    var viewControllers = navigationController.viewControllers
-                    viewControllers.append(contentsOf: [
-                        SignUpViewController(),
-                        LoginWithMnemonicViewController(action: .signIn(mnemonics))
-                    ])
-                    navigationController.setViewControllers(viewControllers, animated: false)
-                }
+                mainWindow.rootViewController = LoginNavigationController()
             } else {
                 mainWindow.rootViewController = R.storyboard.launchScreen.instantiateInitialViewController()
             }

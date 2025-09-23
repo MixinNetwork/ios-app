@@ -195,7 +195,7 @@ extension LoginWithMnemonicViewController {
     }
     
     private func login(context: LoginContext) {
-        Logger.login.error(category: "MnemonicLogin", message: "Login")
+        Logger.login.info(category: "MnemonicLogin", message: "Login")
         do {
             guard let idData = context.verificationID.data(using: .utf8) else {
                 throw LoginError.loadVerificationID

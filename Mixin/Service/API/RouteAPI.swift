@@ -218,8 +218,8 @@ extension RouteAPI {
         try await request(method: .get, path: "/wallets")
     }
     
-    static func createWallet(
-        _ wallet: CreateWalletRequest,
+    static func createWallet<Request: CreateWalletRequest>(
+        _ wallet: Request,
         queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<CreateWalletResponse>) -> Void
     ) {
@@ -232,7 +232,9 @@ extension RouteAPI {
         )
     }
     
-    static func createWallet(_ wallet: CreateWalletRequest) async throws -> CreateWalletResponse {
+    static func createWallet<Request: CreateWalletRequest>(
+        _ wallet: Request
+    ) async throws -> CreateWalletResponse {
         try await request(method: .post, path: "/wallets", with: wallet)
     }
     

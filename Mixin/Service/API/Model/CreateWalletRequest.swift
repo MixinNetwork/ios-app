@@ -1,13 +1,45 @@
 import Foundation
 import MixinServices
 
-struct CreateWalletRequest: Encodable {
+protocol CreateWalletRequest: Encodable {
+    
+}
+
+struct CreateWatchWalletRequest: CreateWalletRequest {
+    
+    struct Address: Encodable {
+        
+        enum CodingKeys: String, CodingKey {
+            case destination
+            case chainID = "chain_id"
+            case path
+        }
+        
+        let destination: String
+        let chainID: String
+        let path: String?
+        
+    }
+    
+    let name: String
+    let category = "watch_address"
+    let addresses: [Address]
+    
+}
+
+struct CreateSigningWalletRequest: CreateWalletRequest {
     
     enum SigningError: Error {
         case makeContent
     }
     
-    struct Address: Encodable {
+    enum Category: String, Encodable {
+        case classic
+        case importedMnemonic = "imported_mnemonic"
+        case importedPrivateKey = "imported_private_key"
+    }
+    
+    struct SignedAddress: Encodable {
         
         enum CodingKeys: String, CodingKey {
             case destination
@@ -20,24 +52,16 @@ struct CreateWalletRequest: Encodable {
         let destination: String
         let chainID: String
         let path: String?
-        let signature: String?
-        let timestamp: String?
+        let signature: String
+        let timestamp: String
         
         init(
             destination: String,
             chainID: String,
             path: String?,
-            signature: String? = nil,
-            timestamp: String? = nil
-        ) {
-            self.destination = destination
-            self.chainID = chainID
-            self.path = path
-            self.signature = signature
-            self.timestamp = timestamp
-        }
-        
-        func sign(userID: String, sign: (Data) throws -> String) throws -> Address {
+            userID: String,
+            sign: (Data) throws -> String,
+        ) throws {
             let timestampInSeconds = floor(Date().timeIntervalSince1970)
             let timestamp = DateFormatter.iso8601Full.string(
                 from: Date(timeIntervalSince1970: timestampInSeconds)
@@ -51,19 +75,18 @@ struct CreateWalletRequest: Encodable {
                 throw SigningError.makeContent
             }
             let signature = try sign(data)
-            return Address(
-                destination: destination,
-                chainID: chainID,
-                path: path,
-                signature: signature,
-                timestamp: timestamp
-            )
+            
+            self.destination = destination
+            self.chainID = chainID
+            self.path = path
+            self.signature = signature
+            self.timestamp = timestamp
         }
         
     }
     
     let name: String
-    let category: Web3Wallet.Category
-    let addresses: [Address]
+    let category: Category
+    let addresses: [SignedAddress]
     
 }

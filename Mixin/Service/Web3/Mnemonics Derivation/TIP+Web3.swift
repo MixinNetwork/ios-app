@@ -54,7 +54,7 @@ extension TIP {
     static func deriveAddresses(
         pin: String,
         index: Int
-    ) async throws -> [CreateWalletRequest.Address] {
+    ) async throws -> [CreateSigningWalletRequest.SignedAddress] {
         guard let userID = LoginManager.shared.account?.userID else {
             throw GenerationError.noAccount
         }
@@ -81,12 +81,12 @@ extension TIP {
                 Logger.web3.error(category: "TIP+Web3", message: "Derive EVM Address: \(destination), \(validationDestination)")
                 throw GenerationError.evmMismatched
             }
-            let address = CreateWalletRequest.Address(
+            return try CreateSigningWalletRequest.SignedAddress(
                 destination: destination,
                 chainID: ChainID.ethereum,
-                path: path.string
-            )
-            return try address.sign(userID: userID) { message in
+                path: path.string,
+                userID: userID
+            ) { message in
                 try account.signMessage(message: message)
             }
         }()
@@ -107,12 +107,12 @@ extension TIP {
                 Logger.web3.error(category: "TIP+Web3", message: "Derive Solana Address: \(destination), \(validationDestination)")
                 throw GenerationError.solanaMismatched
             }
-            let address = CreateWalletRequest.Address(
+            return try CreateSigningWalletRequest.SignedAddress(
                 destination: destination,
                 chainID: ChainID.solana,
-                path: path.string
-            )
-            return try address.sign(userID: userID) { message in
+                path: path.string,
+                userID: userID
+            ) { message in
                 try Solana.sign(
                     message: message,
                     withPrivateKeyFrom: privateKey,
@@ -138,7 +138,7 @@ extension TIP {
         
         Logger.login.info(category: "TIP+Web3", message: "Register default commmon wallet")
         let addresses = try await deriveAddresses(pin: pin, index: 0)
-        let request = CreateWalletRequest(
+        let request = CreateSigningWalletRequest(
             name: R.string.localizable.common_wallet(),
             category: .classic,
             addresses: addresses

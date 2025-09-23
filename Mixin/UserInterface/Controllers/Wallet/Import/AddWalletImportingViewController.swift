@@ -122,15 +122,16 @@ final class AddWalletImportingViewController: IntroductionViewController {
                 for wallet in wallets {
                     let evmWallet = wallet.candidate.evmWallet
                     let solanaWallet = wallet.candidate.solanaWallet
-                    let request = try CreateWalletRequest(
+                    let request = try CreateSigningWalletRequest(
                         name: wallet.name,
                         category: .importedMnemonic,
                         addresses: [
                             .init(
                                 destination: evmWallet.address,
                                 chainID: ChainID.ethereum,
-                                path: evmWallet.path.string
-                            ).sign(userID: userID) { message in
+                                path: evmWallet.path.string,
+                                userID: userID
+                            ) { message in
                                 let keyStorage = InPlaceKeyStorage(raw: evmWallet.privateKey)
                                 let account = try EthereumAccount(keyStorage: keyStorage)
                                 return try account.signMessage(message: message)
@@ -138,8 +139,9 @@ final class AddWalletImportingViewController: IntroductionViewController {
                             .init(
                                 destination: solanaWallet.address,
                                 chainID: ChainID.solana,
-                                path: solanaWallet.path.string
-                            ).sign(userID: userID) { message in
+                                path: solanaWallet.path.string,
+                                userID: userID
+                            ) { message in
                                 try Solana.sign(
                                     message: message,
                                     withPrivateKeyFrom: solanaWallet.privateKey,

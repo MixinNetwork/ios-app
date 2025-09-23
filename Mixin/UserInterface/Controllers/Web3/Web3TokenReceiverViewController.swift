@@ -66,14 +66,8 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
                 )
                 transfer.manipulateNavigationStackOnFinished = true
                 Web3PopupCoordinator.enqueue(popup: .request(transfer))
-            case .solAmountTooSmall:
-                let cost = CurrencyFormatter.localizedString(
-                    from: Solana.accountCreationCost,
-                    format: .precision,
-                    sign: .never,
-                )
-                let description = R.string.localizable.send_sol_for_rent(cost)
-                self.showError(description: description)
+            case let .rentExemptionFailed(reason):
+                self.showError(description: reason.localizedDescription)
             }
         } onFailure: { [weak self] error in
             self?.showError(description: error.localizedDescription)

@@ -74,14 +74,6 @@ extension SwapToken {
         }
     }
     
-    func isEqual(to token: Web3Token) -> Bool {
-        if address == Web3Token.AssetKey.wrappedSOL && token.assetKey == Web3Token.AssetKey.sol {
-            true
-        } else {
-            address == token.assetKey
-        }
-    }
-    
     func decimalAmount(nativeAmount: Decimal) -> NSDecimalNumber? {
         let nativeAmountNumber = nativeAmount as NSDecimalNumber
         return nativeAmountNumber.multiplying(byPowerOf10: -decimals)

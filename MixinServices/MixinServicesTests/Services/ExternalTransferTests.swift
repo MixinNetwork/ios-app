@@ -159,7 +159,7 @@ final class ExternalTransferTests: XCTestCase {
                     resolvedAmount: "1",
                     memo: "OrderId12345")
         
-        let c2 = try? ExternalTransfer(string: "solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=0.01&spl-token=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")
+        let c2 = try? ExternalTransfer(string: "solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=0.01&spl-token=Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB")
         XCTAssertNil(c2)
         
         let c3 = try? ExternalTransfer(string: "solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=1e7&label=Michael&message=Thanks%20for%20all%20the%20fish&memo=OrderId12345")

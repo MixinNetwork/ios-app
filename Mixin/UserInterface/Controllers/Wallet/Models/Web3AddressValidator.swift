@@ -7,7 +7,7 @@ enum Web3AddressValidator {
     enum Web3TransferValidationResult {
         case address(address: String, label: AddressLabel?)
         case insufficientBalance(transferring: BalanceRequirement, fee: BalanceRequirement)
-        case solAmountTooSmall
+        case rentExemptionFailed(Solana.RentExemptionFailedReason)
         case transfer(operation: Web3TransferOperation, toAddressLabel: AddressLabel?)
     }
     
@@ -84,15 +84,6 @@ enum Web3AddressValidator {
                         assetID: token.assetID,
                         destination: link.destination
                     )
-                    if chain.kind == .solana && payment.sendingNativeToken {
-                        let accountExists = try await RouteAPI.solanaAccountExists(pubkey: address)
-                        if !accountExists && amount < Solana.accountCreationCost {
-                            await MainActor.run {
-                                onSuccess(.solAmountTooSmall)
-                            }
-                            return
-                        }
-                    }
                     let addressPayment = Web3SendingTokenToAddressPayment(
                         payment: payment,
                         toAddress: address,
@@ -112,6 +103,30 @@ enum Web3AddressValidator {
                         )
                     }
                     let fee = try await operation.loadFee()
+                    if let operation = operation as? SolanaTransferToAddressOperation,
+                       let accountExists = await operation.receiverAccountExists
+                    {
+                        let reason = if payment.sendingNativeToken {
+                            Solana.checkRentExemptionForSOLTransfer(
+                                sendingAmount: amount,
+                                feeAmount: fee.tokenAmount,
+                                senderSOLBalance: payment.token.decimalBalance,
+                                receiverAccountExists: accountExists
+                            )
+                        } else {
+                            Solana.checkRentExemptionForSPLTokenTransfer(
+                                senderSOLBalance: operation.feeToken.decimalBalance,
+                                feeAmount: fee.tokenAmount,
+                                receiverAccountExists: accountExists
+                            )
+                        }
+                        if let reason {
+                            await MainActor.run {
+                                onSuccess(.rentExemptionFailed(reason))
+                            }
+                            return
+                        }
+                    }
                     let transferRequirement = BalanceRequirement(token: token, amount: amount)
                     let feeRequirement = BalanceRequirement(token: operation.feeToken, amount: fee.tokenAmount)
                     let requirements = transferRequirement.merging(with: feeRequirement)

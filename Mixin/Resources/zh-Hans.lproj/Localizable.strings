@@ -720,6 +720,7 @@
 "insufficient_balance" = "余额不足";
 "insufficient_balance_symbol" = "%@ 余额不足";
 "insufficient_fee_description" = "需要 %1$@ 以支付 %2$@ 网络费用";
+"insufficient_sol_for_sending_spl_token" = "SOL 余额不足，请至少预留 %@ SOL。";
 "insufficient_transaction_fee" = "手续费不足";
 "interface_style" = "外观";
 "invalid_address" = "无效的地址";
@@ -1176,6 +1177,7 @@
 "request_rejected_reason_another_request_in_process" = "正在处理另一请求，请完成当前请求后重试";
 "resend_code" = "重发验证码";
 "resend_code_pending" = "%@ 后重新发送验证码";
+"reserve_sol_for_rent" = "请预留至少 %@ SOL 以支付租金";
 "reset" = "重置";
 "reset_link" = "重置邀请链接";
 "restore" = "恢复";
@@ -1273,7 +1275,7 @@
 "send_message" = "发消息";
 "send_photo" = "发送 1 张图片";
 "send_photo_count" = "发送 %d 张图片";
-"send_sol_for_rent" = "发送至少 %@ SOL 以支付租金";
+"send_sol_for_rent" = "请发送至少 %@ SOL 以支付租金";
 "send_this_location" = "发送这个位置";
 "send_to" = "发送给 %@";
 "send_to_address_description" = "转到我地址薄中的地址，地址受到 PIN 保护，避免地址钓鱼攻击。";

@@ -112,7 +112,13 @@ extension SignUpViewController: UITableViewDelegate {
             controller = SignUpWithMobileNumberViewController()
             reporter.report(event: .signUpStart, method: "mobile_number")
         } else {
-            controller = SignUpWithMnemonicIntroductionViewController()
+            if let entropy = AppGroupKeychain.mnemonics,
+               let mnemonics = try? MixinMnemonics(entropy: entropy)
+            {
+                controller = LoginWithMnemonicViewController(action: .signIn(mnemonics))
+            } else {
+                controller = SignUpWithMnemonicIntroductionViewController()
+            }
             reporter.report(event: .signUpStart, method: "mnemonic_phrase")
         }
         navigationController?.pushViewController(controller, animated: true)

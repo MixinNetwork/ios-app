@@ -171,9 +171,9 @@ extension LoginWithMnemonicViewController {
                 } else {
                     self.login(context: context)
                 }
-            case .failure(.requiresCaptcha):
+            case let .failure(.response(error)) where .requiresCaptcha ~= error:
                 Logger.login.info(category: "MnemonicLogin", message: "Captcha")
-                captcha.validate { [weak self] (result) in
+                self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
                     switch result {
                     case .success(let token):
                         self?.verifySession(context: context, captchaToken: token)
@@ -195,7 +195,7 @@ extension LoginWithMnemonicViewController {
     }
     
     private func login(context: LoginContext) {
-        Logger.login.error(category: "MnemonicLogin", message: "Login")
+        Logger.login.info(category: "MnemonicLogin", message: "Login")
         do {
             guard let idData = context.verificationID.data(using: .utf8) else {
                 throw LoginError.loadVerificationID

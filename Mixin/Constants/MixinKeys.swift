@@ -24,5 +24,6 @@ enum MixinKeys {
     static let walletConnect = keys["WalletConnect"] as! String
     static let appsFlyer = keys["AppsFlyer"] as? String
     static let bugsnag = keys["Bugsnag"] as? String
+    static let geeTest = keys["GeeTest"] as? String
     
 }

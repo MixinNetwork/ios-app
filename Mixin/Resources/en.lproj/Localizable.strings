@@ -1,7 +1,6 @@
 "about" = "About";
 "access_contacts_hint" = "Mixin syncs your address book to Mixin servers to help you connect with other Mixin users";
 "access_dapps_defi_projects" = "Access apps and DeFi projects.";
-"access_denied" = "Access denied";
 "access_to_contacts" = "Access to Contacts";
 "account" = "Account";
 "acknowledgements" = "Acknowledgements";
@@ -551,6 +550,7 @@
 "enter_your_old_pin" = "Enter your old PIN";
 "enter_your_pin" = "Enter your PIN";
 "enter_your_pin_to_continue" = "Enter your PIN to continue";
+"error_access_limited" = "ERROR 403: Access Limited";
 "error_bad_data" = "ERROR 10002: The request data has invalid field";
 "error_blockchain" = "ERROR 30100: Blockchain not in sync, please try again later.";
 "error_captcha_is_invalid" = "ERROR 10004: CAPTCHA is invalid";

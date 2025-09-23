@@ -10,7 +10,7 @@ extension MixinAPIResponseError: LocalizedError {
         case .unauthorized:
             return R.string.localizable.unauthorized()
         case .forbidden:
-            return R.string.localizable.access_denied()
+            return R.string.localizable.error_access_limited()
         case .notFound:
             return R.string.localizable.error_not_found()
         case Self.tooManyRequests:

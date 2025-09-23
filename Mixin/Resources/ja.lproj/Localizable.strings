@@ -1,7 +1,6 @@
 "about" = "Mixinについて";
 "access_contacts_hint" = "MixinはあなたのアドレスをMixinサーバーに同期させ、Mixinユーザーを自動追加します";
 "access_dapps_defi_projects" = "Access apps and DeFi projects.";
-"access_denied" = "アクセスが拒否されました";
 "access_to_contacts" = "連絡先へのアクセス";
 "account" = "アカウント";
 "acknowledgements" = "謝辞";
@@ -551,6 +550,7 @@
 "enter_your_old_pin" = "Enter your old PIN";
 "enter_your_pin" = "PINコードを入力してください";
 "enter_your_pin_to_continue" = "PINコードを入力して、続けてください";
+"error_access_limited" = "ERROR 403: Access Limited";
 "error_bad_data" = "エラー 10002：リクエストデータが無効です";
 "error_blockchain" = "エラー 30100：ブロックチェーンが同期できていません。後程もう一度お試しください。";
 "error_captcha_is_invalid" = "エラー10004：captchaが無効です";

@@ -1,7 +1,6 @@
 "about" = "Acerca de";
 "access_contacts_hint" = "Mixin sincroniza tu libreta de direcciones con los servidores de Mixin para ayudarte a conectarte con otros usuarios de Mixin";
 "access_dapps_defi_projects" = "Access apps and DeFi projects.";
-"access_denied" = "Acceso denegado";
 "access_to_contacts" = "Acceso a Contactos";
 "account" = "Cuenta";
 "acknowledgements" = "Agradecimientos";
@@ -551,6 +550,7 @@
 "enter_your_old_pin" = "Introduce tu antiguo PIN";
 "enter_your_pin" = "Introduce tu PIN";
 "enter_your_pin_to_continue" = "Introduce tu PIN para continuar";
+"error_access_limited" = "ERROR 403: Access Limited";
 "error_bad_data" = "ERROR 10002: Los datos de la solicitud tienen un campo no válido";
 "error_blockchain" = "ERROR 30100: Blockchain no está sincronizado, inténtalo de nuevo más tarde.";
 "error_captcha_is_invalid" = "ERROR 10004: CAPTCHA no es válido";

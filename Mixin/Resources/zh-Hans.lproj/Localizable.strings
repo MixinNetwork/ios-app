@@ -550,7 +550,7 @@
 "enter_your_old_pin" = "输入你的旧 PIN";
 "enter_your_pin" = "输入你的 PIN";
 "enter_your_pin_to_continue" = "输入你的 PIN 以继续";
-"error_access_limited" = "错误403：访问受限";
+"error_access_limited" = "错误 403：访问受限";
 "error_bad_data" = "错误 10002：请求数据不合法";
 "error_blockchain" = "错误 30100：区块链同步异常，请稍后重试";
 "error_captcha_is_invalid" = "错误 10004：验证失败";

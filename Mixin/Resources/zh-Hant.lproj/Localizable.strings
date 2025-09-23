@@ -550,7 +550,7 @@
 "enter_your_old_pin" = "輸入你的舊 PIN";
 "enter_your_pin" = "輸入你的 PIN";
 "enter_your_pin_to_continue" = "輸入你的 PIN 以繼續";
-"error_access_limited" = "錯誤403：訪問受限";
+"error_access_limited" = "錯誤 403：訪問受限";
 "error_bad_data" = "錯誤 10002：請求資料不合法";
 "error_blockchain" = "錯誤 30100：區塊鏈同步異常，請稍後重試";
 "error_captcha_is_invalid" = "錯誤 10004：驗證失敗";

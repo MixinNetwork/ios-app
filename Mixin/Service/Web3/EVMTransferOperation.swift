@@ -40,6 +40,7 @@ class EVMTransferOperation: Web3TransferOperation {
     }
     
     private let mixinChainID: String
+    private let feeEstimatingValue: String?
     
     private lazy var gweiRoundingHandler = NSDecimalNumberHandler(
         roundingMode: .up,
@@ -74,6 +75,7 @@ class EVMTransferOperation: Web3TransferOperation {
         }
         self.transaction = transaction
         self.mixinChainID = chain.chainID
+        self.feeEstimatingValue = nil
         
         super.init(
             wallet: wallet,
@@ -115,6 +117,7 @@ class EVMTransferOperation: Web3TransferOperation {
             data: transaction.data
         )
         self.mixinChainID = chain.chainID
+        self.feeEstimatingValue = transaction.hexValue
         
         super.init(
             wallet: wallet,
@@ -132,7 +135,8 @@ class EVMTransferOperation: Web3TransferOperation {
             mixinChainID: mixinChainID,
             hexData: transaction.data?.hexEncodedString(),
             from: fromAddress.destination,
-            to: transaction.destination.toChecksumAddress()
+            to: transaction.destination.toChecksumAddress(),
+            value: feeEstimatingValue,
         )
         Logger.web3.info(category: "EVMTransfer", message: "Using limit: \(rawFee.gasLimit), mfpg: \(rawFee.maxFeePerGas), mpfpg: \(rawFee.maxPriorityFeePerGas)")
         guard

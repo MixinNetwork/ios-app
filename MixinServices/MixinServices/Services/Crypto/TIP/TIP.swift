@@ -554,6 +554,7 @@ extension TIP {
     // For mnemonic-based accounts, calling it will return an encrypted placeholder
     public static func custodialEncryptedSalt() async throws -> Data {
         if let salt = AppGroupKeychain.encryptedSalt {
+            Logger.tip.info(category: "TIP", message: "Using saved encrypted salt")
             return salt
         } else {
             let account = try await AccountAPI.me()

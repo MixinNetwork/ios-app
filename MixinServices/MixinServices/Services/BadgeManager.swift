@@ -8,7 +8,6 @@ public final class BadgeManager {
         case buy = "buying"
         case swap
         case swapOrder = "swap_order"
-        case market
         case membership = "membership"
     }
     

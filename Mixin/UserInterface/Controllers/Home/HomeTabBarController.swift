@@ -130,7 +130,6 @@ final class HomeTabBarController: UIViewController {
         
         var items = tabBar.items
         items[ChildID.wallet.rawValue].badge = hasUnviewedWalletItem
-        items[ChildID.market.rawValue].badge = !BadgeManager.shared.hasViewed(identifier: .market)
         items[ChildID.more.rawValue].badge = hasUnviewedMoreItem
         tabBar.items = items
     }

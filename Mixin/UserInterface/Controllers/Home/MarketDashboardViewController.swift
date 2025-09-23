@@ -453,14 +453,6 @@ extension MarketDashboardViewController: ExploreMarketTokenCell.Delegate {
     
 }
 
-extension MarketDashboardViewController: HomeTabBarControllerChild {
-    
-    func viewControllerDidSwitchToFront() {
-        BadgeManager.shared.setHasViewed(identifier: .market)
-    }
-    
-}
-
 extension MarketDashboardViewController {
     
     private enum Section: Int, CaseIterable {

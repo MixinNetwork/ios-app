@@ -11,14 +11,13 @@ struct EIP1559Transaction: Equatable, Codable {
     let gasLimit: BigUInt?
     let destination: EthereumAddress
     let amount: BigUInt
-    let data: Data?
+    let data: Data
     let accessList: [Data] // The type is wrong, not working, may cost more gas.
     
     var rlpEncodingFields: [Any?] {
         [
             chainID, nonce, maxPriorityFeePerGas, maxFeePerGas,
-            gasLimit, destination, amount, data ?? Data(),
-            accessList
+            gasLimit, destination, amount, data, accessList
         ]
     }
     
@@ -33,7 +32,7 @@ struct EIP1559Transaction: Equatable, Codable {
     init(
         chainID: Int, nonce: Int?, maxPriorityFeePerGas: BigUInt?,
         maxFeePerGas: BigUInt?, gasLimit: BigUInt?,
-        destination: EthereumAddress, amount: BigUInt, data: Data?
+        destination: EthereumAddress, amount: BigUInt, data: Data
     ) {
         self.chainID = chainID
         self.nonce = nonce

@@ -33,7 +33,7 @@ class Web3TransferOperation {
     
     let wallet: Web3Wallet
     let fromAddress: Web3Address
-    let toAddress: String // Always the receiver, not the contract address
+    let toAddress: String? // Always the receiver, not the contract address
     let chain: Web3Chain
     let feeToken: Web3TokenItem
     let isResendingTransactionAvailable: Bool
@@ -48,7 +48,7 @@ class Web3TransferOperation {
     var hasTransactionSent = false
     
     init(
-        wallet: Web3Wallet, fromAddress: Web3Address, toAddress: String,
+        wallet: Web3Wallet, fromAddress: Web3Address, toAddress: String?,
         chain: Web3Chain, feeToken: Web3TokenItem,
         isResendingTransactionAvailable: Bool,
         hardcodedSimulation: TransactionSimulation?

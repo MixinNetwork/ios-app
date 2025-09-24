@@ -141,7 +141,9 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
             case .wallet(.privacy):
                 rows.append(.wallet(caption: .receiver, wallet: .privacy, threshold: nil))
             default:
-                rows.append(.address(caption: .receiver, address: operation.toAddress, label: toAddressLabel))
+                if let toAddress = operation.toAddress {
+                    rows.append(.address(caption: .receiver, address: toAddress, label: toAddressLabel))
+                }
             }
             rows.append(.address(caption: .sender, address: operation.fromAddress.destination, label: .wallet(.common(operation.wallet))))
         case .speedUp, .cancel:

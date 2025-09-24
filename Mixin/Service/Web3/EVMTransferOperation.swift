@@ -40,7 +40,6 @@ class EVMTransferOperation: Web3TransferOperation {
     }
     
     private let mixinChainID: String
-    private let feeEstimatingValue: String?
     
     private lazy var gweiRoundingHandler = NSDecimalNumberHandler(
         roundingMode: .up,
@@ -75,7 +74,6 @@ class EVMTransferOperation: Web3TransferOperation {
         }
         self.transaction = transaction
         self.mixinChainID = chain.chainID
-        self.feeEstimatingValue = nil
         
         super.init(
             wallet: wallet,
@@ -112,17 +110,16 @@ class EVMTransferOperation: Web3TransferOperation {
             maxPriorityFeePerGas: nil,
             maxFeePerGas: nil,
             gasLimit: nil,
-            destination: transaction.to,
+            destination: transaction.to ?? EthereumAddress(""),
             amount: transaction.value ?? 0,
-            data: transaction.data
+            data: transaction.data ?? Data()
         )
         self.mixinChainID = chain.chainID
-        self.feeEstimatingValue = transaction.hexValue
         
         super.init(
             wallet: wallet,
             fromAddress: fromAddress,
-            toAddress: transaction.to.toChecksumAddress(),
+            toAddress: transaction.to?.toChecksumAddress(),
             chain: chain,
             feeToken: feeToken,
             isResendingTransactionAvailable: true,
@@ -133,10 +130,10 @@ class EVMTransferOperation: Web3TransferOperation {
     override func loadFee() async throws -> DisplayFee {
         let rawFee = try await RouteAPI.estimatedEthereumFee(
             mixinChainID: mixinChainID,
-            hexData: transaction.data?.hexEncodedString(),
             from: fromAddress.destination,
             to: transaction.destination.toChecksumAddress(),
-            value: feeEstimatingValue,
+            value: "0x" + String(transaction.amount, radix: 16),
+            data: transaction.data.isEmpty ? "" : "0x" + transaction.data.hexEncodedString(),
         )
         Logger.web3.info(category: "EVMTransfer", message: "Using limit: \(rawFee.gasLimit), mfpg: \(rawFee.maxFeePerGas), mpfpg: \(rawFee.maxPriorityFeePerGas)")
         guard
@@ -445,7 +442,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
                 gasLimit: nil,
                 destination: EthereumAddress(payment.toAddress),
                 amount: value,
-                data: nil
+                data: Data(),
             )
         } else {
             guard let receiver = EthereumAddress(payment.toAddress).asData(), receiver.count <= 32 else {
@@ -576,7 +573,7 @@ final class EVMCancelOperation: EVMOverrideOperation {
             gasLimit: nil,
             destination: EthereumAddress(fromAddress.destination),
             amount: 0,
-            data: nil
+            data: Data(),
         )
         try super.init(
             wallet: wallet,

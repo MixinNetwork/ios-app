@@ -1,4 +1,5 @@
 import UIKit
+import web3
 import MixinServices
 
 final class AddWalletImportingViewController: IntroductionViewController {
@@ -112,26 +113,41 @@ final class AddWalletImportingViewController: IntroductionViewController {
     
     private func importWallets(mnemonics: EncryptedBIP39Mnemonics, wallets: [NamedWalletCandidate]) {
         showLoading()
+        guard let userID = LoginManager.shared.account?.userID else {
+            return
+        }
         Task { [weak self] in
             var hasPartialSuccess = false
             do {
                 for wallet in wallets {
                     let evmWallet = wallet.candidate.evmWallet
                     let solanaWallet = wallet.candidate.solanaWallet
-                    let request = CreateWalletRequest(
+                    let request = try CreateSigningWalletRequest(
                         name: wallet.name,
                         category: .importedMnemonic,
                         addresses: [
                             .init(
                                 destination: evmWallet.address,
                                 chainID: ChainID.ethereum,
-                                path: evmWallet.path.string
-                            ),
+                                path: evmWallet.path.string,
+                                userID: userID
+                            ) { message in
+                                let keyStorage = InPlaceKeyStorage(raw: evmWallet.privateKey)
+                                let account = try EthereumAccount(keyStorage: keyStorage)
+                                return try account.signMessage(message: message)
+                            },
                             .init(
                                 destination: solanaWallet.address,
                                 chainID: ChainID.solana,
-                                path: solanaWallet.path.string
-                            ),
+                                path: solanaWallet.path.string,
+                                userID: userID
+                            ) { message in
+                                try Solana.sign(
+                                    message: message,
+                                    withPrivateKeyFrom: solanaWallet.privateKey,
+                                    format: .hex,
+                                )
+                            },
                         ]
                     )
                     Logger.general.info(category: "AddWallet", message: "Request import \(wallet.name) by mnemonics")

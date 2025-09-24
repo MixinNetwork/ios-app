@@ -595,7 +595,7 @@
 "error_transfer_is_already_paid" = "错误 20125：转账已被支付";
 "error_two_parts" = "错误 %@：%@";
 "error_used_phone" = "错误 20122：电话号码已经被占用。";
-"error_watch_address_not_supported" = "错误 10633：当前地址为合约地址或交易所地址，暂不支持观察。";
+"error_watch_address_not_supported" = "错误 10633：地址不可用";
 "error_withdrawal_memo_format_incorrect" = "错误 20131：提现备注格式不正确";
 "error_withdrawal_suspend" = "错误 20137：提现暂停";
 "estimated_balance_change" = "余额变动（预估）";

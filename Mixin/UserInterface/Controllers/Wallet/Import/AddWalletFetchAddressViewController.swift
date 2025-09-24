@@ -91,7 +91,6 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
             RouteAPI.assets(searchAddresses: addresses, queue: .global()) { result in
                 switch result {
                 case let .success(assets):
-                    let importedDestinations = Web3AddressDAO.shared.allDestinations()
                     let candidates: [WalletCandidate]
                     if assets.isEmpty {
                         let wallet = wallets[0]

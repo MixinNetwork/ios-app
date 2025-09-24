@@ -595,7 +595,7 @@
 "error_transfer_is_already_paid" = "錯誤 20125：轉賬已被支付";
 "error_two_parts" = "錯誤 %@：%@";
 "error_used_phone" = "錯誤 20122：電話號碼已經被佔用。";
-"error_watch_address_not_supported" = "錯誤 10633：當前地址為合約地址或交易所地址，暫不支援觀察。";
+"error_watch_address_not_supported" = "錯誤 10633：地址不可用";
 "error_withdrawal_memo_format_incorrect" = "錯誤 20131：提現備註格式不正確";
 "error_withdrawal_suspend" = "錯誤 20137：提現暫停";
 "estimated_balance_change" = "餘額變動（預估）";

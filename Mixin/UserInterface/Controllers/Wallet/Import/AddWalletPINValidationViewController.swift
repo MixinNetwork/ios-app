@@ -44,7 +44,7 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
                         let nameIndex = SequentialWalletNameGenerator.nextNameIndex(category: .common)
                         let pathIndex = try SequentialWalletPathGenerator.nextPathIndex(walletCategory: .classic)
                         let addresses = try await TIP.deriveAddresses(pin: pin, index: pathIndex)
-                        let request = CreateWalletRequest(
+                        let request = CreateSigningWalletRequest(
                             name: R.string.localizable.common_wallet_index("\(nameIndex)"),
                             category: .classic,
                             addresses: addresses

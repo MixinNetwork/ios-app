@@ -20,7 +20,7 @@ final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewCo
         
     }
     
-    private var address: CreateWalletRequest.Address? {
+    private var address: CreateWatchWalletRequest.Address? {
         didSet {
             continueButton.isEnabled = address != nil
         }
@@ -39,9 +39,8 @@ final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewCo
         }
         continueButton.isBusy = true
         let index = SequentialWalletNameGenerator.nextNameIndex(category: .watch)
-        let request = CreateWalletRequest(
+        let request = CreateWatchWalletRequest(
             name: R.string.localizable.watch_wallet_index("\(index)"),
-            category: .watchAddress,
             addresses: [address]
         )
         RouteAPI.createWallet(request, queue: .main) { [weak self] result in

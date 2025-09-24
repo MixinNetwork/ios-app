@@ -10,6 +10,7 @@ import TIP
 extension TIP {
     
     enum GenerationError: Swift.Error {
+        case noAccount
         case evmMismatched
         case solanaMismatched
     }
@@ -53,60 +54,74 @@ extension TIP {
     static func deriveAddresses(
         pin: String,
         index: Int
-    ) async throws -> [CreateWalletRequest.Address] {
+    ) async throws -> [CreateSigningWalletRequest.SignedAddress] {
+        guard let userID = LoginManager.shared.account?.userID else {
+            throw GenerationError.noAccount
+        }
         let spendKey = try await TIP.spendPriv(pin: pin)
         let hexSpendKey = spendKey.hexEncodedString()
         
-        let evmPath = try ClassicWalletDerivation.evmPath(index: index)
         let evmAddress = try {
-            let priv = try TIP.deriveEthereumPrivateKey(spendKey: spendKey, path: evmPath)
-            let keyStorage = InPlaceKeyStorage(raw: priv)
-            let account = try EthereumAccount(keyStorage: keyStorage)
-            return account.address.toChecksumAddress()
-        }()
-        let redundantEVMAddress = try {
-            var error: NSError?
-            let address = BlockchainGenerateEthereumAddress(hexSpendKey, evmPath.string, &error)
-            if let error {
-                throw error
+            let path = try ClassicWalletDerivation.evmPath(index: index)
+            let account = try {
+                let priv = try TIP.deriveEthereumPrivateKey(spendKey: spendKey, path: path)
+                let keyStorage = InPlaceKeyStorage(raw: priv)
+                return try EthereumAccount(keyStorage: keyStorage)
+            }()
+            let destination = account.address.toChecksumAddress()
+            let validationDestination = try {
+                var error: NSError?
+                let address = BlockchainGenerateEthereumAddress(hexSpendKey, path.string, &error)
+                if let error {
+                    throw error
+                }
+                return address
+            }()
+            guard destination == validationDestination else {
+                Logger.web3.error(category: "TIP+Web3", message: "Derive EVM Address: \(destination), \(validationDestination)")
+                throw GenerationError.evmMismatched
             }
-            return address
-        }()
-        guard evmAddress == redundantEVMAddress else {
-            Logger.web3.error(category: "TIP+Web3", message: "Derive EVM Address: \(evmAddress), RA: \(redundantEVMAddress)")
-            throw GenerationError.evmMismatched
-        }
-        
-        let solanaPath = try ClassicWalletDerivation.solanaPath(index: index)
-        let solanaAddress = try {
-            let privateKey = try TIP.deriveSolanaPrivateKey(spendKey: spendKey, path: solanaPath)
-            return try Solana.publicKey(seed: privateKey)
-        }()
-        let redundantSolanaAddress = try {
-            var error: NSError?
-            let address = BlockchainGenerateSolanaAddress(hexSpendKey, solanaPath.string, &error)
-            if let error {
-                throw error
-            }
-            return address
-        }()
-        guard solanaAddress == redundantSolanaAddress else {
-            Logger.web3.error(category: "TIP+Web3", message: "Derive Solana Address: \(solanaAddress), RA: \(redundantSolanaAddress)")
-            throw GenerationError.solanaMismatched
-        }
-        
-        return [
-            CreateWalletRequest.Address(
-                destination: evmAddress,
+            return try CreateSigningWalletRequest.SignedAddress(
+                destination: destination,
                 chainID: ChainID.ethereum,
-                path: evmPath.string
-            ),
-            CreateWalletRequest.Address(
-                destination: solanaAddress,
+                path: path.string,
+                userID: userID
+            ) { message in
+                try account.signMessage(message: message)
+            }
+        }()
+        
+        let solanaAddress = try {
+            let path = try ClassicWalletDerivation.solanaPath(index: index)
+            let privateKey = try TIP.deriveSolanaPrivateKey(spendKey: spendKey, path: path)
+            let destination = try Solana.publicKey(seed: privateKey)
+            let validationDestination = try {
+                var error: NSError?
+                let address = BlockchainGenerateSolanaAddress(hexSpendKey, path.string, &error)
+                if let error {
+                    throw error
+                }
+                return address
+            }()
+            guard destination == validationDestination else {
+                Logger.web3.error(category: "TIP+Web3", message: "Derive Solana Address: \(destination), \(validationDestination)")
+                throw GenerationError.solanaMismatched
+            }
+            return try CreateSigningWalletRequest.SignedAddress(
+                destination: destination,
                 chainID: ChainID.solana,
-                path: solanaPath.string
-            ),
-        ]
+                path: path.string,
+                userID: userID
+            ) { message in
+                try Solana.sign(
+                    message: message,
+                    withPrivateKeyFrom: privateKey,
+                    format: .hex
+                )
+            }
+        }()
+        
+        return [evmAddress, solanaAddress]
     }
     
     static func registerDefaultCommonWalletIfNeeded(pin: String) async throws {
@@ -123,7 +138,7 @@ extension TIP {
         
         Logger.login.info(category: "TIP+Web3", message: "Register default commmon wallet")
         let addresses = try await deriveAddresses(pin: pin, index: 0)
-        let request = CreateWalletRequest(
+        let request = CreateSigningWalletRequest(
             name: R.string.localizable.common_wallet(),
             category: .classic,
             addresses: addresses

@@ -14,7 +14,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
     
     private struct Wallet {
         let privateKey: EncryptedPrivateKey
-        let address: CreateWalletRequest.Address
+        let address: CreateSigningWalletRequest.SignedAddress
     }
     
     private let encryptionKey: Data
@@ -53,7 +53,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
             return
         }
         let nameIndex = SequentialWalletNameGenerator.nextNameIndex(category: .common)
-        let request = CreateWalletRequest(
+        let request = CreateSigningWalletRequest(
             name: R.string.localizable.common_wallet_index("\(nameIndex)"),
             category: .importedPrivateKey,
             addresses: [wallet.address]
@@ -66,6 +66,9 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
     
     override func detectInput() {
         super.detectInput()
+        guard let userID = LoginManager.shared.account?.userID else {
+            return
+        }
         let input = (inputTextView.text ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         guard !input.isEmpty, let importedAddresses else {
@@ -94,13 +97,16 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                     privateKey: privateKey,
                     key: encryptionKey
                 )
-                wallet = Wallet(
+                wallet = try Wallet(
                     privateKey: encryptedPrivateKey,
                     address: .init(
                         destination: address,
                         chainID: ChainID.ethereum,
-                        path: nil
-                    )
+                        path: nil,
+                        userID: userID
+                    ) { message in
+                        try account.signMessage(message: message)
+                    }
                 )
             case .solana:
                 guard let keyPair = Data(base58EncodedString: input) else {
@@ -123,13 +129,20 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                     privateKey: privateKey,
                     key: encryptionKey
                 )
-                wallet = Wallet(
+                wallet = try Wallet(
                     privateKey: encryptedPrivateKey,
                     address: .init(
                         destination: publicKey,
                         chainID: ChainID.solana,
-                        path: nil
-                    )
+                        path: nil,
+                        userID: userID
+                    ) { message in
+                        try Solana.sign(
+                            message: message,
+                            withPrivateKeyFrom: privateKey,
+                            format: .hex
+                        )
+                    }
                 )
             }
             errorDescriptionLabel.text = nil

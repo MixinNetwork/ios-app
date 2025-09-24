@@ -3,6 +3,11 @@ import MixinServices
 
 enum Solana {
     
+    enum SignatureFormat {
+        case base58
+        case hex
+    }
+    
     enum SolanaError: Error {
         case nullResult
         case code(SolanaErrorCode)
@@ -31,15 +36,28 @@ enum Solana {
         }
     }
     
-    static func sign(message: Data, withPrivateKeyFrom seed: Data) throws -> String {
-        try message.withUnsafeBytes { message in
+    static func sign(
+        message: Data,
+        withPrivateKeyFrom seed: Data,
+        format: SignatureFormat,
+    ) throws -> String {
+        let formatValue = switch format {
+        case .base58:
+            SolanaSignatureFormatBase58
+        case .hex:
+            SolanaSignatureFormatHex
+        }
+        return try message.withUnsafeBytes { message in
             try seed.withUnsafeBytes { seed in
                 try withSolanaStringPointer { signature in
-                    solana_sign_message(seed.baseAddress,
-                                        seed.count,
-                                        message.baseAddress,
-                                        message.count,
-                                        &signature)
+                    solana_sign_message(
+                        seed.baseAddress,
+                        seed.count,
+                        message.baseAddress,
+                        message.count,
+                        formatValue,
+                        &signature
+                    )
                 }
             }
         }

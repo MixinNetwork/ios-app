@@ -431,23 +431,22 @@ extension RouteAPI {
     
     static func estimatedEthereumFee(
         mixinChainID: String,
-        hexData: String?,
         from: String,
         to: String,
-        value: String?,
+        value: String,
+        data: String,
     ) async throws -> EthereumFee {
-        var parameters = [
-            "chain_id": mixinChainID,
-            "from": from,
-            "to": to,
-        ]
-        if let hexData {
-            parameters["raw_transaction"] = "0x" + hexData
-        }
-        if let value {
-            parameters["value"] = value
-        }
-        return try await request(method: .post, path: "/web3/estimate-fee", with: parameters)
+        try await request(
+            method: .post,
+            path: "/web3/estimate-fee",
+            with: [
+                "chain_id": mixinChainID,
+                "from": from,
+                "to": to,
+                "value": value,
+                "data": data,
+            ]
+        )
     }
     
     static func ethereumLatestTransactionCount(

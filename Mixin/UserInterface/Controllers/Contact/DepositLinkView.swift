@@ -14,6 +14,13 @@ final class DepositLinkView: UIView, XibDesignable {
     @IBOutlet weak var qrCodeView: ModernQRCodeView!
     @IBOutlet weak var qrCodeDimensionConstraint: NSLayoutConstraint!
     
+    weak var contentView: UIStackView!
+    weak var iconBackgroundView: UIView!
+    weak var iconView: UIView?
+    weak var footerView: UIView?
+    
+    weak var iconBackgroundDimensionConstraint: NSLayoutConstraint!
+    
     // By changing this property only, labels are not updated
     // Request layout by update `size` and call `load(link:) to apply the effect
     var adjustsFontForContentSizeCategory = true
@@ -50,12 +57,6 @@ final class DepositLinkView: UIView, XibDesignable {
             40
         }
     }
-    
-    private weak var contentView: UIStackView!
-    private weak var iconBackgroundView: UIView!
-    private weak var iconBackgroundDimensionConstraint: NSLayoutConstraint!
-    private weak var iconView: UIView?
-    private weak var footerView: UIView?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

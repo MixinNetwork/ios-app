@@ -22,7 +22,7 @@ final class ShareDepositLinkViewController: ShareViewAsPictureViewController {
         let contentView = switch link.chain {
         case .mixin:
             ShareObiSurroundedView<DepositLinkView>(contentView: linkView, spacing: .normal)
-        case .native(let native):
+        case .native:
             ShareObiSurroundedView<DepositLinkView>(contentView: linkView, spacing: .compact)
         }
         self.linkView = linkView
@@ -37,8 +37,12 @@ final class ShareDepositLinkViewController: ShareViewAsPictureViewController {
         switch ScreenHeight.current {
         case .short, .medium:
             linkView.size = .small
-        default:
+        case .long, .extraLong:
             linkView.size = .medium
+        }
+        if case .native = link.chain, ScreenHeight.current <= .long {
+            linkView.subtitleLabel.isHidden = true
+            linkView.contentView.setCustomSpacing(12, after: linkView.titleLabel)
         }
         linkView.load(link: link)
         actionButtonBackgroundView.effect = nil

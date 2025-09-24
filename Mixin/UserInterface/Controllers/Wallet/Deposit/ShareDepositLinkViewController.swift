@@ -28,7 +28,12 @@ final class ShareDepositLinkViewController: ShareViewAsPictureViewController {
         contentView.backgroundColor = R.color.background()
         layoutWrapperHeightConstraint.isActive = false
         linkView.adjustsFontForContentSizeCategory = false
-        linkView.size = .small
+        switch ScreenHeight.current {
+        case .short, .medium:
+            linkView.size = .small
+        default:
+            linkView.size = .medium
+        }
         linkView.load(link: link)
         actionButtonBackgroundView.effect = nil
         actionButtonTrayView.backgroundColor = R.color.background()
@@ -103,7 +108,14 @@ extension ShareDepositLinkViewController {
             addSubview(obiView)
             obiView.snp.makeConstraints { make in
                 make.leading.trailing.bottom.equalToSuperview()
-                make.top.equalTo(contentView.snp.bottom).offset(36)
+                switch ScreenHeight.current {
+                case .short:
+                    make.top.equalTo(contentView.snp.bottom).offset(4)
+                case .medium:
+                    make.top.equalTo(contentView.snp.bottom).offset(8)
+                default:
+                    make.top.equalTo(contentView.snp.bottom).offset(36)
+                }
                 make.height.equalTo(100)
             }
         }

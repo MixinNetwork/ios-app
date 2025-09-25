@@ -20,6 +20,10 @@ final class HiddenWeb3TokensViewController: HiddenTokensViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.titleView = WalletIdentifyingNavigationTitleView(
+            title: R.string.localizable.hidden_assets(),
+            wallet: .common(wallet)
+        )
         tableView.dataSource = self
         tableView.delegate = self
         NotificationCenter.default.addObserver(

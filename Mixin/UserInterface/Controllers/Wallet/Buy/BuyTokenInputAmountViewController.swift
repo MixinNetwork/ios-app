@@ -60,9 +60,9 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         super.viewDidLoad()
         
         title = R.string.localizable.buy()
-        navigationItem.titleView = NavigationTitleView(
+        navigationItem.titleView = WalletIdentifyingNavigationTitleView(
             title: R.string.localizable.buy(),
-            subtitle: wallet.localizedName
+            wallet: wallet
         )
         amountLabel.text = CurrencyFormatter.localizedString(
             from: 0,

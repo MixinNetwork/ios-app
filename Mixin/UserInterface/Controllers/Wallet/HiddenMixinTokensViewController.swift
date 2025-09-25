@@ -7,6 +7,10 @@ final class HiddenMixinTokensViewController: HiddenTokensViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.titleView = WalletIdentifyingNavigationTitleView(
+            title: R.string.localizable.hidden_assets(),
+            wallet: .privacy
+        )
         tableView.dataSource = self
         tableView.delegate = self
         NotificationCenter.default.addObserver(

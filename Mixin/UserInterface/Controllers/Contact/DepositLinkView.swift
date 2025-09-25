@@ -14,6 +14,13 @@ final class DepositLinkView: UIView, XibDesignable {
     @IBOutlet weak var qrCodeView: ModernQRCodeView!
     @IBOutlet weak var qrCodeDimensionConstraint: NSLayoutConstraint!
     
+    weak var contentView: UIStackView!
+    weak var iconBackgroundView: UIView!
+    weak var iconView: UIView?
+    weak var footerView: UIView?
+    
+    weak var iconBackgroundDimensionConstraint: NSLayoutConstraint!
+    
     // By changing this property only, labels are not updated
     // Request layout by update `size` and call `load(link:) to apply the effect
     var adjustsFontForContentSizeCategory = true
@@ -24,21 +31,32 @@ final class DepositLinkView: UIView, XibDesignable {
             case .large:
                 contentView.setCustomSpacing(12, after: titleLabel)
                 titleLabel.font = font(ofSize: 20, weight: .semibold)
-            case .medium, .small:
+                qrCodeDimensionConstraint.constant = 200
+            case .medium:
                 contentView.setCustomSpacing(8, after: titleLabel)
                 titleLabel.font = font(ofSize: 18, weight: .semibold)
+                qrCodeDimensionConstraint.constant = 180
+            case .small:
+                contentView.setCustomSpacing(4, after: titleLabel)
+                titleLabel.font = font(ofSize: 18, weight: .semibold)
+                qrCodeDimensionConstraint.constant = 160
             }
             subtitleLabel.font = font(ofSize: 14)
+            iconBackgroundDimensionConstraint.constant = iconBackgroundDimension
+            iconBackgroundView.layer.cornerRadius = iconBackgroundDimension / 2
         }
     }
     
-    private let iconBackgroundDimension: CGFloat = 48
-    private let iconDimension: CGFloat = 44
-    
-    private weak var contentView: UIStackView!
-    private weak var iconBackgroundView: UIView!
-    private weak var iconView: UIView?
-    private weak var footerView: UIView?
+    private var iconBackgroundDimension: CGFloat {
+        switch size {
+        case .large:
+            48
+        case .medium:
+            44
+        case .small:
+            40
+        }
+    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -272,11 +290,20 @@ extension DepositLinkView {
     }
     
     private func font(ofSize size: CGFloat, weight: UIFont.Weight = .regular) -> UIFont {
-        let font: UIFont = .systemFont(ofSize: size, weight: weight)
         if adjustsFontForContentSizeCategory {
-            return UIFontMetrics.default.scaledFont(for: font)
+            return UIFontMetrics.default.scaledFont(for:
+                    .systemFont(ofSize: size, weight: weight)
+            )
         } else {
-            return font
+            let size = switch ScreenHeight.current {
+            case .short:
+                size * 0.6
+            case .medium:
+                size * 0.75
+            default:
+                size
+            }
+            return .systemFont(ofSize: round(size), weight: weight)
         }
     }
     
@@ -287,8 +314,8 @@ extension DepositLinkView {
             iconView.overrideUserInterfaceStyle = .light
             addSubview(iconView)
             iconView.snp.makeConstraints { make in
-                make.width.height.equalTo(44)
-                make.center.equalTo(qrCodeView.snp.center)
+                let insets = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
+                make.edges.equalTo(iconBackgroundView).inset(insets)
             }
             self.iconView = iconView
         }
@@ -315,14 +342,16 @@ extension DepositLinkView {
         qrCodeView.setDefaultCornerCurve()
         let iconBackgroundView = UIView()
         iconBackgroundView.backgroundColor = .white
-        iconBackgroundView.layer.cornerRadius = iconBackgroundDimension / 2
         iconBackgroundView.layer.masksToBounds = true
         addSubview(iconBackgroundView)
         iconBackgroundView.snp.makeConstraints { make in
             make.center.equalTo(qrCodeView)
-            make.width.height.equalTo(iconBackgroundDimension)
+            make.width.equalTo(iconBackgroundView.snp.height)
         }
         self.iconBackgroundView = iconBackgroundView
+        self.iconBackgroundDimensionConstraint = iconBackgroundView.heightAnchor
+            .constraint(equalToConstant: iconBackgroundDimension)
+        self.iconBackgroundDimensionConstraint.isActive = true
     }
     
 }

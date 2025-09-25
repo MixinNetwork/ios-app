@@ -19,8 +19,14 @@ final class ShareDepositLinkViewController: ShareViewAsPictureViewController {
     
     override func loadContentView() {
         let linkView = DepositLinkView()
+        let contentView = switch link.chain {
+        case .mixin:
+            ShareObiSurroundedView<DepositLinkView>(contentView: linkView, spacing: .normal)
+        case .native:
+            ShareObiSurroundedView<DepositLinkView>(contentView: linkView, spacing: .compact)
+        }
         self.linkView = linkView
-        self.contentView = ShareObiSurroundedView<DepositLinkView>(contentView: linkView)
+        self.contentView = contentView
     }
     
     override func viewDidLoad() {
@@ -28,7 +34,16 @@ final class ShareDepositLinkViewController: ShareViewAsPictureViewController {
         contentView.backgroundColor = R.color.background()
         layoutWrapperHeightConstraint.isActive = false
         linkView.adjustsFontForContentSizeCategory = false
-        linkView.size = .small
+        switch ScreenHeight.current {
+        case .short, .medium:
+            linkView.size = .small
+        case .long, .extraLong:
+            linkView.size = .medium
+        }
+        if case .native = link.chain, ScreenHeight.current <= .long {
+            linkView.subtitleLabel.isHidden = true
+            linkView.contentView.setCustomSpacing(12, after: linkView.titleLabel)
+        }
         linkView.load(link: link)
         actionButtonBackgroundView.effect = nil
         actionButtonTrayView.backgroundColor = R.color.background()
@@ -88,10 +103,15 @@ extension ShareDepositLinkViewController {
     
     private final class ShareObiSurroundedView<ContentView: UIView>: UIView {
         
+        enum Spacing {
+            case normal
+            case compact
+        }
+        
         let contentView: ContentView
         let obiView = ShareObiView()
         
-        init(contentView: ContentView) {
+        init(contentView: ContentView, spacing: Spacing) {
             self.contentView = contentView
             super.init(frame: .zero)
             addSubview(contentView)
@@ -103,7 +123,26 @@ extension ShareDepositLinkViewController {
             addSubview(obiView)
             obiView.snp.makeConstraints { make in
                 make.leading.trailing.bottom.equalToSuperview()
-                make.top.equalTo(contentView.snp.bottom).offset(36)
+                switch spacing {
+                case .normal:
+                    switch ScreenHeight.current {
+                    case .short:
+                        make.top.equalTo(contentView.snp.bottom).offset(24)
+                    case .medium:
+                        make.top.equalTo(contentView.snp.bottom).offset(32)
+                    default:
+                        make.top.equalTo(contentView.snp.bottom).offset(36)
+                    }
+                case .compact:
+                    switch ScreenHeight.current {
+                    case .short:
+                        make.top.equalTo(contentView.snp.bottom).offset(4)
+                    case .medium:
+                        make.top.equalTo(contentView.snp.bottom).offset(8)
+                    default:
+                        make.top.equalTo(contentView.snp.bottom).offset(36)
+                    }
+                }
                 make.height.equalTo(100)
             }
         }

@@ -36,9 +36,27 @@ final class ReceiveMoneyViewController: UIViewController {
         sectionView.layer.masksToBounds = true
         linkView.size = .large
         linkView.load(link: link)
-        scanButton.configuration?.title = R.string.localizable.scan()
-        setAmountButton.configuration?.title = R.string.localizable.set_amount()
-        shareButton.configuration?.title = R.string.localizable.share()
+        
+        let buttonTitleAttributes = {
+            var container = AttributeContainer()
+            container.font = UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 12, weight: .medium)
+            )
+            container.foregroundColor = R.color.text_secondary()
+            return container
+        }()
+        scanButton.configuration?.attributedTitle = AttributedString(
+            R.string.localizable.scan(),
+            attributes: buttonTitleAttributes
+        )
+        setAmountButton.configuration?.attributedTitle = AttributedString(
+            R.string.localizable.set_amount(),
+            attributes: buttonTitleAttributes
+        )
+        shareButton.configuration?.attributedTitle = AttributedString(
+            R.string.localizable.share(),
+            attributes: buttonTitleAttributes
+        )
     }
     
     @IBAction func scan(_ sender: Any) {

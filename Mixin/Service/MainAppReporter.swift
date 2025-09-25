@@ -2,17 +2,9 @@ import UIKit
 import FirebaseCore
 import FirebaseAnalytics
 import FirebaseCrashlytics
-import BugsnagPerformance
 import MixinServices
 
 final class MainAppReporter: Reporter {
-    
-    override func configure() {
-        super.configure()
-        if let key = MixinKeys.bugsnag {
-            BugsnagPerformance.start(withApiKey: key)
-        }
-    }
     
     override func registerUserInformation(account: Account) {
         super.registerUserInformation(account: account)

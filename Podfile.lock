@@ -4,7 +4,6 @@ PODS:
     - AppsFlyerFramework/Main (= 6.17.0)
   - AppsFlyerFramework/Main (6.17.0)
   - Bugsnag (6.33.0)
-  - BugsnagPerformance (1.15.0)
   - CocoaLumberjack (3.8.5):
     - CocoaLumberjack/Core (= 3.8.5)
   - CocoaLumberjack/Core (3.8.5)
@@ -215,7 +214,6 @@ PODS:
 
 DEPENDENCIES:
   - AppsFlyerFramework
-  - BugsnagPerformance
   - Firebase/Analytics
   - Firebase/Core
   - Firebase/Crashlytics
@@ -235,7 +233,6 @@ SPEC REPOS:
     - Alamofire
     - AppsFlyerFramework
     - Bugsnag
-    - BugsnagPerformance
     - CocoaLumberjack
     - Firebase
     - FirebaseABTesting
@@ -293,7 +290,6 @@ SPEC CHECKSUMS:
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
   AppsFlyerFramework: 34cef9f9653f4fd01c27d4d87784425b9271f82f
   Bugsnag: e957c79ccb0cccc84794ba616c2e18a8a48ad38d
-  BugsnagPerformance: e92cb72522fd92a4b066eebd48912fd137fdced5
   CocoaLumberjack: 6a459bc897d6d80bd1b8c78482ec7ad05dffc3f0
   Firebase: 38f818b36ca01648fa78ec7402b4ee3076086c2b
   FirebaseABTesting: 13de5629e6d92a6a6c06429a6ddd9b19362de827
@@ -330,6 +326,6 @@ SPEC CHECKSUMS:
   SVGKit: 3f02ad9c8227831e508e2e37ecc4005d2f0496a5
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: a48ab27e91dd9deab54ec5a403502a975ec6cdde
+PODFILE CHECKSUM: c31dfe8b8bc965abc120c5da9f2fa74f8cd49002
 
 COCOAPODS: 1.16.2

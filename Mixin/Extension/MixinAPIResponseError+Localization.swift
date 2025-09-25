@@ -45,6 +45,10 @@ extension MixinAPIResponseError: LocalizedError {
             return R.string.localizable.error_too_many_wallets()
         case .unsupportedWatchAddress:
             return R.string.localizable.error_watch_address_not_supported()
+        case .referralCodeNotFound:
+            return R.string.localizable.invalid_referral_code()
+        case .referringSelf:
+            return R.string.localizable.cannot_apply_your_own_referral_code()
         case .invalidPhoneNumber:
             return R.string.localizable.error_phone_invalid_format()
         case .invalidPhoneVerificationCode:

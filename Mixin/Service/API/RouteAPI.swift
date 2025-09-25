@@ -585,6 +585,22 @@ extension RouteAPI {
     
 }
 
+// MARK: - Referral
+extension RouteAPI {
+    
+    static func bindReferral(
+        code: String,
+        completion: @escaping (MixinAPI.Result<Empty>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/referral/bind/" + code,
+            completion: completion
+        )
+    }
+    
+}
+
 // MARK: - Signing
 extension RouteAPI {
     

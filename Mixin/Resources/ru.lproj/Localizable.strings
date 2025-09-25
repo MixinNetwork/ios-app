@@ -150,6 +150,8 @@
 "app_update_tips" = "Текущая версия (%@) больше недоступна! Нажмите «Обновить» ниже, чтобы выполнить обновление до последней версии из App Store.";
 "appearance" = "Вид";
 "apply" = "Подать заявление";
+"apply_referral_code" = "Apply Referral Code";
+"apply_referral_code_benefit" = "Apply a referral code to your account to unlock exclusive benefits on Mixin";
 "approval" = "Approval";
 "approval_count" = "Approved %@";
 "approval_unlimited" = "Unlimited";
@@ -235,6 +237,7 @@
 "cancel_waiting" = "Cancel Waiting";
 "canceled" = "Отменено";
 "canceled_by_caller" = "Отменено звонившим";
+"cannot_apply_your_own_referral_code" = "Cannot apply your own referral code";
 "cant_receive_the_code" = "Не можете получить код?";
 "caption_send" = "ОТПРАВИТЬ";
 "card" = "карта";
@@ -720,6 +723,7 @@
 "invalid_parameters" = "Недопустимые параметры";
 "invalid_payment_link" = "Неверная ссылка для оплаты";
 "invalid_qr_code" = "Неверный QR-код";
+"invalid_referral_code" = "Invalid Referral Code";
 "invalid_request_body" = "Неверный текст запроса";
 "invalid_sdp" = "Недействительный SDP";
 "invalid_secret_for_wallet" = "The %@ does not match the selected wallet. Please try another.";
@@ -1108,6 +1112,13 @@
 "red_up_green_down" = "Red Up / Green Down";
 "referral" = "Referral";
 "referral_banner" = "Invite friends and earn up to 70%% of their trading fees!";
+"referral_code" = "Referral Code";
+"referral_code_applied" = "Applied";
+"referral_code_applied_footer" = "All cashback will be settled monthly to your Mixin privacy wallet. ";
+"referral_code_applied_header" = "🎉 Referral code successfully applied! You’ve unlocked the following benefits:";
+"referral_code_applied_introduction_1" = "Up to 50%% cashback on trading fees";
+"referral_code_applied_introduction_2" = "Up to 1,000 USD cashback per transaction when upgrading membership";
+"referral_code_applied_introduction_3" = "Automatic access to all future new benefits";
 "referral_description" = "Invite friends earn crypto";
 "referral_program" = "Referral Program";
 "referral_program_introduction_1" = "Up to 70%% commission on trading fees";

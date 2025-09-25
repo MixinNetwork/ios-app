@@ -150,6 +150,8 @@
 "app_update_tips" = "当前版本（%@）已失效！请点击下方\"更新\"从 App Store 更新至最新版。";
 "appearance" = "外观";
 "apply" = "应用";
+"apply_referral_code" = "绑定邀请码";
+"apply_referral_code_benefit" = "将邀请码绑定到你的账户，解锁 Mixin 专属福利。";
 "approval" = "授权";
 "approval_count" = "已授权 %@";
 "approval_unlimited" = "无限量";
@@ -235,6 +237,7 @@
 "cancel_waiting" = "取消订单";
 "canceled" = "已取消";
 "canceled_by_caller" = "对方已取消";
+"cannot_apply_your_own_referral_code" = "不可绑定自己的邀请码";
 "cant_receive_the_code" = "接收不到验证码？";
 "caption_send" = "转出";
 "card" = "卡片";
@@ -720,6 +723,7 @@
 "invalid_parameters" = "无效的参数";
 "invalid_payment_link" = "无效支付信息";
 "invalid_qr_code" = "无效的二维码";
+"invalid_referral_code" = "无效的邀请码";
 "invalid_request_body" = "无效的请求";
 "invalid_sdp" = "无效的 SDP";
 "invalid_secret_for_wallet" = "导入的%@与钱包不匹配，请重新导入。";
@@ -1108,6 +1112,13 @@
 "red_up_green_down" = "红涨绿跌";
 "referral" = "邀请";
 "referral_banner" = "邀请好友赢取最高 70%% 手续费分佣！";
+"referral_code" = "邀请码";
+"referral_code_applied" = "绑定成功";
+"referral_code_applied_footer" = "所有返现将按月结算到您的 Mixin 隐私钱包。";
+"referral_code_applied_header" = "🎉 邀请码绑定成功，您已自动获得以下权益：";
+"referral_code_applied_introduction_1" = "最高 50%% 交易手续费返现";
+"referral_code_applied_introduction_2" = "升级会员返现单笔最高 1000 USD";
+"referral_code_applied_introduction_3" = "自动获得后续所有新权益";
 "referral_description" = "邀请好友赚币";
 "referral_program" = "邀请计划";
 "referral_program_introduction_1" = "最高 70%% 交易手续费分佣";

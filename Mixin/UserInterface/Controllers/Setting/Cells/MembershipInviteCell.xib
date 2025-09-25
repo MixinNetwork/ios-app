@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="membership_invite" id="KGk-i7-Jjw" customClass="MembershipInviteCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="68"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="68"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V5f-4G-5bk" customClass="GradientView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="68"/>
+                    </view>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="6Tb-TJ-k3B">
+                        <rect key="frame" x="16" y="16" width="288" height="36"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="Explore/referral" translatesAutoresizingMaskIntoConstraints="NO" id="F9f-T5-qVr">
+                                <rect key="frame" x="0.0" y="6" width="24" height="24"/>
+                                <color key="tintColor" red="0.66666666666666663" green="0.44313725490196076" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Invite friends and earn up to 70% of their trading fees!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jfv-VD-rDz">
+                                <rect key="frame" x="40" y="1.3333333333333321" width="226" height="33.666666666666671"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                <color key="textColor" red="0.66666666669999997" green="0.4431372549" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="EG5-kL-E9w">
+                                <rect key="frame" x="282" y="13" width="6" height="10"/>
+                                <color key="tintColor" red="0.66666666669999997" green="0.4431372549" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
+                            </imageView>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <constraints>
+                    <constraint firstItem="6Tb-TJ-k3B" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="16" id="Dyc-xU-Ko0"/>
+                    <constraint firstAttribute="bottom" secondItem="V5f-4G-5bk" secondAttribute="bottom" id="RmV-gb-jqM"/>
+                    <constraint firstAttribute="trailing" secondItem="6Tb-TJ-k3B" secondAttribute="trailing" constant="16" id="bWr-qv-kFK"/>
+                    <constraint firstItem="V5f-4G-5bk" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="ceC-as-e8r"/>
+                    <constraint firstAttribute="bottom" secondItem="6Tb-TJ-k3B" secondAttribute="bottom" constant="16" id="iJi-Vi-wao"/>
+                    <constraint firstItem="6Tb-TJ-k3B" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="q7p-hy-Dh1"/>
+                    <constraint firstAttribute="trailing" secondItem="V5f-4G-5bk" secondAttribute="trailing" id="rM9-aI-puM"/>
+                    <constraint firstItem="V5f-4G-5bk" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="vX9-R4-sfi"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="disclosureIndicatorView" destination="EG5-kL-E9w" id="5Ob-ek-0su"/>
+                <outlet property="gradientBackgroundView" destination="V5f-4G-5bk" id="hSo-lc-vNP"/>
+                <outlet property="label" destination="jfv-VD-rDz" id="iZg-XQ-4Ne"/>
+            </connections>
+            <point key="canvasLocation" x="-52" y="42"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Explore/referral" width="24" height="24"/>
+        <image name="ic_accessory_disclosure" width="6" height="10"/>
+    </resources>
+</document>

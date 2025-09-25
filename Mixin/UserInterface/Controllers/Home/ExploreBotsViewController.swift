@@ -10,7 +10,7 @@ final class ExploreBotsViewController: UITableViewController {
     
     private let headerReuseID = "h"
     private let actions: [ExploreAction] = [
-        .buy, .swap, .membership, .linkDesktop, .customerService,
+        .buy, .swap, .membership, .referral, .linkDesktop, .customerService,
     ]
     
     private(set) var allUsers: [User]? = nil

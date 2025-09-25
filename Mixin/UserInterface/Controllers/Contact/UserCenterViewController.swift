@@ -7,7 +7,10 @@ final class UserCenterViewController: SettingsTableViewController, MixinNavigati
         SettingsSection(rows: [
             SettingsRow(icon: R.image.setting.category_membership(),
                         title: R.string.localizable.mixin_one(),
-                        accessory: .disclosure)
+                        accessory: .disclosure),
+            SettingsRow(icon: R.image.explore.referral(),
+                        title: R.string.localizable.referral(),
+                        accessory: .disclosure),
         ]),
         SettingsSection(rows: [
             SettingsRow(icon: R.image.ic_user_profile(),
@@ -79,11 +82,23 @@ extension UserCenterViewController: UITableViewDelegate {
         let controller: UIViewController
         switch indexPath.section {
         case 0:
-            if let membership = LoginManager.shared.account?.membership, let plan = membership.plan {
-                controller = MembershipViewController(plan: plan, expiredAt: membership.expiredAt)
-            } else {
-                let buy = MembershipPlansViewController(selectedPlan: nil)
-                present(buy, animated: true)
+            switch indexPath.row {
+            case 0:
+                if let membership = LoginManager.shared.account?.membership, let plan = membership.plan {
+                    controller = MembershipViewController(plan: plan, expiredAt: membership.expiredAt)
+                } else {
+                    let buy = MembershipPlansViewController(selectedPlan: nil)
+                    present(buy, animated: true)
+                    return
+                }
+            default:
+                if LoginManager.shared.account?.membership?.unexpiredPlan == nil {
+                    let introduction = ReferralIntroductionViewController()
+                    present(introduction, animated: true)
+                } else {
+                    let context = MixinWebViewController.Context(conversationId: "", initialUrl: .referral)
+                    UIApplication.homeContainerViewController?.presentWebViewController(context: context)
+                }
                 return
             }
         case 1:

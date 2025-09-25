@@ -1106,6 +1106,15 @@
 "recovery_kit_attention" = "Attention: The Recovery Kit cannot help you recover your PIN";
 "recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your phone number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "red_up_green_down" = "Red Up / Green Down";
+"referral" = "Referral";
+"referral_banner" = "Invite friends and earn up to 70%% of their trading fees!";
+"referral_description" = "Invite friends earn crypto";
+"referral_program" = "Referral Program";
+"referral_program_introduction_1" = "Up to 70%% commission on trading fees";
+"referral_program_introduction_2" = "Up to 2,000 USD rebate per transaction";
+"referral_program_introduction_3" = "Rebate eligibility is valid for life";
+"referral_program_introduction_footer" = "* Referral rewards are available only to paid Mixin One members. ";
+"referral_program_introduction_header" = "Join the referral program and invite friends to earn crypto together:";
 "refresh" = "更新";
 "refunded" = "Refunded";
 "reject" = "Reject";
@@ -1511,6 +1520,7 @@
 "update_now" = "Update Now";
 "upgrade" = "Upgrade";
 "upgrade_database" = "データベースをアップグレード";
+"upgrade_membership_now" = "Upgrade Now";
 "upgrade_plan" = "Upgrade Plan";
 "upgrade_plan_for" = "Upgrade for %@";
 "upgrade_safe" = "Upgrade safe";

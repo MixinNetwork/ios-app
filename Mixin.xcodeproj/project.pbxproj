@@ -683,6 +683,10 @@
 		940B6C942C72501A0003FCDB /* UserBadgeIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940B6C932C72501A0003FCDB /* UserBadgeIcon.swift */; };
 		940B6C952C7266150003FCDB /* UserBadgeIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940B6C932C72501A0003FCDB /* UserBadgeIcon.swift */; };
 		940BAE222629741C00FFF753 /* MixinAuthorizationsContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940BAE212629741C00FFF753 /* MixinAuthorizationsContentViewController.swift */; };
+		940C073B2E85061900552130 /* MembershipInviteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940C07392E85061900552130 /* MembershipInviteCell.swift */; };
+		940C073C2E85061900552130 /* MembershipInviteCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940C073A2E85061900552130 /* MembershipInviteCell.xib */; };
+		940C077A2E850EFA00552130 /* ReferralIntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940C07782E850EFA00552130 /* ReferralIntroductionViewController.swift */; };
+		940C077B2E850EFA00552130 /* ReferralIntroductionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940C07792E850EFA00552130 /* ReferralIntroductionView.xib */; };
 		940D10A52C5C91630071E36D /* InsetGroupedTitleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940D10A42C5C91630071E36D /* InsetGroupedTitleCell.xib */; };
 		940D10A62C5C91630071E36D /* InsetGroupedTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940D10A32C5C91630071E36D /* InsetGroupedTitleCell.swift */; };
 		940D10B12C5C9A930071E36D /* TokenBalanceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940D10B02C5C9A930071E36D /* TokenBalanceCell.xib */; };
@@ -2402,6 +2406,10 @@
 		940B304A2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferServerDataSource.swift; sourceTree = "<group>"; };
 		940B6C932C72501A0003FCDB /* UserBadgeIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBadgeIcon.swift; sourceTree = "<group>"; };
 		940BAE212629741C00FFF753 /* MixinAuthorizationsContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinAuthorizationsContentViewController.swift; sourceTree = "<group>"; };
+		940C07392E85061900552130 /* MembershipInviteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipInviteCell.swift; sourceTree = "<group>"; };
+		940C073A2E85061900552130 /* MembershipInviteCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipInviteCell.xib; sourceTree = "<group>"; };
+		940C07782E850EFA00552130 /* ReferralIntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralIntroductionViewController.swift; sourceTree = "<group>"; };
+		940C07792E850EFA00552130 /* ReferralIntroductionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReferralIntroductionView.xib; sourceTree = "<group>"; };
 		940D10A32C5C91630071E36D /* InsetGroupedTitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetGroupedTitleCell.swift; sourceTree = "<group>"; };
 		940D10A42C5C91630071E36D /* InsetGroupedTitleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InsetGroupedTitleCell.xib; sourceTree = "<group>"; };
 		940D10AF2C5C9A930071E36D /* TokenBalanceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenBalanceCell.swift; sourceTree = "<group>"; };
@@ -5560,6 +5568,8 @@
 				7BDBDE6F22365017006220DF /* SettingCell.xib */,
 				7BC03AB12424EA9B00931D21 /* StorageUsageCell.swift */,
 				7C8CC5A6280D40E900F7CBDF /* PreviewWallpaperCell.swift */,
+				940C073A2E85061900552130 /* MembershipInviteCell.xib */,
+				940C07392E85061900552130 /* MembershipInviteCell.swift */,
 				945C59182DC215F60024F6DE /* MembershipCell.xib */,
 				945C59172DC215F60024F6DE /* MembershipCell.swift */,
 				94DD0D862DC327ED00C70CA2 /* MembershipPlanSelectorCell.xib */,
@@ -5970,6 +5980,8 @@
 				9425EACE2DC2218400BB018C /* MembershipPlansView.xib */,
 				9425EACD2DC2218400BB018C /* MembershipPlansViewController.swift */,
 				948AB7542DE5C0C2005E76A0 /* MembershipOrderViewController.swift */,
+				940C07792E850EFA00552130 /* ReferralIntroductionView.xib */,
+				940C07782E850EFA00552130 /* ReferralIntroductionViewController.swift */,
 				DFE48AD920E69B31003E0BF8 /* StorageUsageViewController.swift */,
 				7C1E797F29DAB701006A07A2 /* ChatsViewController.swift */,
 				9495E0AC2CEF684E00124CC7 /* LogoutHandler.swift */,
@@ -6463,6 +6475,7 @@
 				7B86B1EB23F6A1C000C80AD9 /* DataMessageExtensionIconView.xib in Resources */,
 				9495E0DD2CEF7D6B00124CC7 /* MnemonicPhraseCell.xib in Resources */,
 				943CAA322CC83FFC00346677 /* LoginSeparatorLineView.xib in Resources */,
+				940C073C2E85061900552130 /* MembershipInviteCell.xib in Resources */,
 				7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */,
 				944124A92E715CF600705462 /* EnableNotificationHeaderView.xib in Resources */,
 				946EA03D2D469A4A00DBC308 /* AddressBookView.xib in Resources */,
@@ -6532,6 +6545,7 @@
 				7BEC4DF121A7D054003336F2 /* AssetCell.xib in Resources */,
 				949A3686261D9C5C004251B2 /* post.css in Resources */,
 				945A72922E59BE2E006A11E9 /* TIPQuizAnswerCell.xib in Resources */,
+				940C077B2E850EFA00552130 /* ReferralIntroductionView.xib in Resources */,
 				7C0E15E1270053AC002FC718 /* UnknownURLWindow.xib in Resources */,
 				94E978B32D09818B00FFCC12 /* ClockSkewView.xib in Resources */,
 				94CA5C572CE5F5F80086C484 /* PaymentCollectibleCell.xib in Resources */,
@@ -7091,6 +7105,7 @@
 				DFB6CE2323C485D400FB6615 /* SystemConversationAction+Description.swift in Sources */,
 				94E681732E5ED27B003304DF /* DepositGeneralEntryCell.swift in Sources */,
 				7B59534F2267215B00D59DB4 /* BottomShadowView.swift in Sources */,
+				940C073B2E85061900552130 /* MembershipInviteCell.swift in Sources */,
 				9468E0562E30E10400EB79C0 /* CreateWalletRequest.swift in Sources */,
 				7C66E7B82743988500FF24C1 /* ProfileDescriptionLabel.swift in Sources */,
 				94682F2A2E029B2700B1C6D3 /* CompactComboBoxView.swift in Sources */,
@@ -7455,6 +7470,7 @@
 				DF3D191A24EA1E44000BFE53 /* AssetConfirmationWindow.swift in Sources */,
 				942D90F82B06145F00E81358 /* TouchEventBypassView.swift in Sources */,
 				DF768569200687010055F3FF /* PreviewView.swift in Sources */,
+				940C077A2E850EFA00552130 /* ReferralIntroductionViewController.swift in Sources */,
 				7B9C642F2240B62600465A6A /* SolidBackgroundColoredView.swift in Sources */,
 				7C140E9429E15B8200F05506 /* DeviceTransferSettingViewController.swift in Sources */,
 				94D308802BA73F810017494C /* Web3TransferPreviewViewController.swift in Sources */,

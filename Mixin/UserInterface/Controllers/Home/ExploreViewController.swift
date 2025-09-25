@@ -136,6 +136,14 @@ final class ExploreViewController: UIViewController {
                 present(buy, animated: true)
             }
             BadgeManager.shared.setHasViewed(identifier: .membership)
+        case .referral:
+            if LoginManager.shared.account?.membership?.unexpiredPlan == nil {
+                let introduction = ReferralIntroductionViewController()
+                present(introduction, animated: true)
+            } else {
+                let context = MixinWebViewController.Context(conversationId: "", initialUrl: .referral)
+                UIApplication.homeContainerViewController?.presentWebViewController(context: context)
+            }
         case .linkDesktop:
             let desktop = DesktopViewController()
             navigationController?.pushViewController(desktop, animated: true)

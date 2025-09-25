@@ -4,6 +4,7 @@ import MixinServices
 final class MembershipViewController: UIViewController {
     
     private enum Section: Int, CaseIterable {
+        case invite
         case plan
         case invoices
     }
@@ -44,6 +45,7 @@ final class MembershipViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.sectionFooterHeight = .leastNormalMagnitude
         tableView.sectionHeaderTopPadding = 10
+        tableView.register(R.nib.membershipInviteCell)
         tableView.register(R.nib.membershipCell)
         tableView.register(R.nib.insetGroupedTitleCell)
         tableView.register(R.nib.membershipInvoiceCell)
@@ -115,6 +117,8 @@ extension MembershipViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
+        case .invite:
+            1
         case .plan:
             1
         case .invoices:
@@ -128,6 +132,8 @@ extension MembershipViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
+        case .invite:
+            return tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.membership_invite, for: indexPath)!
         case .plan:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.membership, for: indexPath)!
             cell.load(plan: plan, expiredAt: expiredAt)
@@ -157,12 +163,7 @@ extension MembershipViewController: UITableViewDataSource {
 extension MembershipViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch Section(rawValue: section)! {
-        case .plan:
-                .leastNormalMagnitude
-        case .invoices:
-                .leastNormalMagnitude
-        }
+        .leastNormalMagnitude
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -175,6 +176,9 @@ extension MembershipViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section)! {
+        case .invite:
+            let context = MixinWebViewController.Context(conversationId: "", initialUrl: .referral)
+            UIApplication.homeContainerViewController?.presentWebViewController(context: context)
         case .plan:
             break
         case .invoices:

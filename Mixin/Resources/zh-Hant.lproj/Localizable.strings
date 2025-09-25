@@ -1106,6 +1106,15 @@
 "recovery_kit_attention" = "注意：賬號恢復無法幫助您恢復 PIN";
 "recovery_kit_instruction" = "Mixin Messenger 的 MPC 錢包基於去中心化金鑰協議 TIP 構建，您可以透過手機號、助記詞或可信聯絡人登入恢復你的賬號，錢包完整的金鑰只存在當前裝置的 TEE 安全環境中，閱讀檔案以瞭解%@。";
 "red_up_green_down" = "紅漲綠跌";
+"referral" = "邀請";
+"referral_banner" = "邀請好友贏取最高 70%% 手續費分傭！";
+"referral_description" = "邀請好友賺幣";
+"referral_program" = "邀請計劃";
+"referral_program_introduction_1" = "最高 70%% 交易手續費分傭";
+"referral_program_introduction_2" = "會員返佣單筆最高 2000 USD";
+"referral_program_introduction_3" = "返佣資格終生有效";
+"referral_program_introduction_footer" = "* 推薦獎勵僅限於付費 Mixin One 會員。";
+"referral_program_introduction_header" = "參與邀請計劃，邀請好友分享賺幣：";
 "refresh" = "重新整理";
 "refunded" = "已退款";
 "reject" = "拒絕";
@@ -1511,6 +1520,7 @@
 "update_now" = "立即更新";
 "upgrade" = "升級";
 "upgrade_database" = "資料庫升級";
+"upgrade_membership_now" = "升級會員";
 "upgrade_plan" = "升級會員";
 "upgrade_plan_for" = "升級會員僅需 %@";
 "upgrade_safe" = "升級 Safe";

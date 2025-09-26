@@ -588,6 +588,40 @@ extension RouteAPI {
 // MARK: - Signing
 extension RouteAPI {
     
+    public struct RouteSignature {
+        let timestamp: String
+        let signature: String
+    }
+    
+    public static func sign(
+        publicKey: Data,
+        method: String,
+        path: String,
+        body: Data?
+    ) throws -> RouteSignature {
+        guard let secret = AppGroupKeychain.sessionSecret else {
+            throw SigningError.missingPrivateKey
+        }
+        let privateKey = try Ed25519PrivateKey(rawRepresentation: secret)
+        let usk = privateKey.x25519Representation
+        guard let keyData = AgreementCalculator.agreement(publicKey: publicKey, privateKey: usk) else {
+            throw SigningError.calculateAgreement
+        }
+        
+        let timestamp = "\(Int64(Date().timeIntervalSince1970))"
+        guard var message = (timestamp + method + path).data(using: .utf8) else {
+            throw SigningError.encodeMessage
+        }
+        if let body {
+            message.append(body)
+        }
+        
+        let hash = HMACSHA256.mac(for: message, using: keyData)
+        let signature = (myUserId.data(using: .utf8)! + hash).base64RawURLEncodedString()
+        
+        return RouteSignature(timestamp: timestamp, signature: signature)
+    }
+    
     private enum Config {
         static let botUserID: String = "61cb8dd4-16b1-4744-ba0c-7b2d2e52fc59"
         static let host: String = "https://api.route.mixin.one"
@@ -629,29 +663,15 @@ extension RouteAPI {
                     }
                 }
                 
-                guard let secret = AppGroupKeychain.sessionSecret else {
-                    throw SigningError.missingPrivateKey
-                }
-                let privateKey = try Ed25519PrivateKey(rawRepresentation: secret)
-                let usk = privateKey.x25519Representation
-                guard let keyData = AgreementCalculator.agreement(publicKey: botPublicKey, privateKey: usk) else {
-                    throw SigningError.calculateAgreement
-                }
-                
-                let timestamp = "\(Int64(Date().timeIntervalSince1970))"
-                guard var message = (timestamp + method.rawValue + path).data(using: .utf8) else {
-                    throw SigningError.encodeMessage
-                }
-                if let body = urlRequest.httpBody {
-                    message.append(body)
-                }
-                
-                let hash = HMACSHA256.mac(for: message, using: keyData)
-                let signature = (myUserId.data(using: .utf8)! + hash).base64RawURLEncodedString()
-                
+                let signature = try RouteAPI.sign(
+                    publicKey: botPublicKey,
+                    method: method.rawValue,
+                    path: path,
+                    body: urlRequest.httpBody
+                )
                 var request = urlRequest
-                request.setValue(signature, forHTTPHeaderField: "MR-ACCESS-SIGN")
-                request.setValue(timestamp, forHTTPHeaderField: "MR-ACCESS-TIMESTAMP")
+                request.setValue(signature.signature, forHTTPHeaderField: "MR-ACCESS-SIGN")
+                request.setValue(signature.timestamp, forHTTPHeaderField: "MR-ACCESS-TIMESTAMP")
                 request.setValue(MixinAPI.userAgent, forHTTPHeaderField: "User-Agent")
                 if let timeoutInterval {
                     request.timeoutInterval = timeoutInterval

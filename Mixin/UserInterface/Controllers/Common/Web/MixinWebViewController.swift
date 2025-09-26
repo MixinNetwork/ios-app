@@ -5,6 +5,8 @@ import MixinServices
 
 final class MixinWebViewController: WebViewController {
     
+    private static var botPublicKeys: [String: Data] = [:]
+    
     // Only top 2 levels of the domain are matched
     // Be careful when adding country specific SLDs into this list
     // e.g. "anything.co.uk" will be matched if "something.co.uk" is added
@@ -34,6 +36,7 @@ final class MixinWebViewController: WebViewController {
         case tipSign = "tipSign"
         case getAssets = "getAssets"
         case web3Bridge = "_mw_"
+        case signBotSignature = "signBotSignature"
     }
     
     private enum FradulentWarningBehavior {
@@ -435,6 +438,60 @@ extension MixinWebViewController: WKScriptMessageHandler {
                 return
             }
             web3Worker.handleRequest(json: body)
+        case .signBotSignature:
+            enum SigningError: Error {
+                case noSuchApp
+                case missingPublicKey
+                case invalidPublicKey
+            }
+            
+            if let messageBody = message.body as? [Any],
+               messageBody.count == 6,
+               let appID = messageBody[0] as? String,
+               let reloadPublicKey = messageBody[1] as? Bool,
+               let method = messageBody[2] as? String,
+               let path = messageBody[3] as? String,
+               let body = messageBody[4] as? String,
+               let callback = messageBody[5] as? String
+            {
+                DispatchQueue.global().async {
+                    do {
+                        let publicKey: Data
+                        // TODO: Thread safety
+                        if !reloadPublicKey, let key = Self.botPublicKeys[appID] {
+                            publicKey = key
+                        } else {
+                            switch UserAPI.fetchSessions(userIds: [appID]) {
+                            case let .failure(error):
+                                throw error
+                            case let .success(sessions):
+                                guard let value = sessions.first?.publicKey else {
+                                    throw SigningError.missingPublicKey
+                                }
+                                guard let key = Data(base64URLEncoded: value) else {
+                                    throw SigningError.invalidPublicKey
+                                }
+                                Self.botPublicKeys[appID] = key
+                                publicKey = key
+                            }
+                        }
+                        // TODO: Check if webView.url is valid by app.resourcePatterns
+                        let signature = try RouteAPI.sign(
+                            publicKey: publicKey,
+                            method: method,
+                            path: path,
+                            body: body.data(using: .utf8)
+                        )
+                        DispatchQueue.main.async {
+                            self.webView.evaluateJavaScript("\(callback)('\(signature.timestamp)', '\(signature.signature)');")
+                        }
+                    } catch {
+                        DispatchQueue.main.async {
+                            self.alert("Error", message: "\(error)")
+                        }
+                    }
+                }
+            }
         }
     }
     

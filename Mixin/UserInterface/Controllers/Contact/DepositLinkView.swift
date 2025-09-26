@@ -77,6 +77,7 @@ final class DepositLinkView: UIView, XibDesignable {
         footerView?.removeFromSuperview()
         switch link.chain {
         case .mixin(let context):
+            qrCodeView.setDefaultCornerCurve()
             titleLabel.text = context.account.fullName
             subtitleLabel.text = R.string.localizable.contact_mixin_id(
                 context.account.identityNumber
@@ -121,17 +122,27 @@ final class DepositLinkView: UIView, XibDesignable {
             contentView.addArrangedSubview(footerLabel)
             self.footerView = footerLabel
         case .native(let context):
-            titleLabel.text = R.string.localizable.deposit_token_to_mixin(context.token.symbol)
-            subtitleLabel.text = R.string.localizable.scan_qr_code_to_send_token(context.token.symbol)
-            load(icon: .token(context.token))
+            switch context.token.chainID {
+            case ChainID.lightning:
+                qrCodeView.setContinuousCornerCurve(radius: 6)
+            default:
+                qrCodeView.setDefaultCornerCurve()
+            }
+            
+            let token = context.token
+            let address = context.address
+            
+            titleLabel.text = R.string.localizable.deposit_token_to_mixin(token.symbol)
+            subtitleLabel.text = R.string.localizable.scan_qr_code_to_send_token(token.symbol)
+            load(icon: .token(token))
             
             let footerStackView = UIStackView()
             footerStackView.axis = .vertical
             footerStackView.spacing = switch size {
             case .large, .medium:
-                    12
+                12
             case .small:
-                    8
+                8
             }
             func makeTitleLabel() -> UILabel {
                 let label = UILabel()
@@ -157,7 +168,6 @@ final class DepositLinkView: UIView, XibDesignable {
                 return label
             }
             
-            let address = context.address
             let addressTitleLabel = makeTitleLabel()
             addressTitleLabel.text = R.string.localizable.address()
             let addressContentLabel = makeContentLabel()
@@ -218,7 +228,7 @@ final class DepositLinkView: UIView, XibDesignable {
             
             let infoStackView = UIStackView()
             
-            if let network = context.token.depositNetworkName {
+            if let network = token.depositNetworkName {
                 let networkTitleLabel = makeTitleLabel()
                 networkTitleLabel.text = R.string.localizable.network()
                 let networkContentLabel = makeContentLabel()
@@ -246,7 +256,7 @@ final class DepositLinkView: UIView, XibDesignable {
                     from: amount,
                     format: .precision,
                     sign: .never,
-                    symbol: .custom(context.token.symbol)
+                    symbol: .custom(token.symbol)
                 )
                 infoStackView.addArrangedSubview(amountStackView)
             } else if let minimumDeposit = context.minimumDeposit {
@@ -339,7 +349,6 @@ extension DepositLinkView {
         contentView = loadXib() as? UIStackView
         contentView.setCustomSpacing(20, after: subtitleLabel)
         contentView.setCustomSpacing(16, after: qrCodeView)
-        qrCodeView.setDefaultCornerCurve()
         let iconBackgroundView = UIView()
         iconBackgroundView.backgroundColor = .white
         iconBackgroundView.layer.masksToBounds = true

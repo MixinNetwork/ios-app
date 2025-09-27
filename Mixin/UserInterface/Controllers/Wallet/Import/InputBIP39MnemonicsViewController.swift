@@ -149,6 +149,7 @@ class InputBIP39MnemonicsViewController: InputMnemonicsViewController {
             }
             textField.clearButtonMode = .whileEditing
             textField.delegate = self
+            textField.deleteDelegate = self
         }
         
         addRowStackViewForButtonsIntoInputStackView()

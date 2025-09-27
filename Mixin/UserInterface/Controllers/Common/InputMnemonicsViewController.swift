@@ -10,6 +10,14 @@ class InputMnemonicsViewController: MnemonicsViewController {
         mnemonicsInputAccessoryView.delegate = self
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let textFields = inputFields.map(\.textField)
+        if textFields.allSatisfy(\.text.isNilOrEmpty) {
+            textFields.first?.becomeFirstResponder()
+        }
+    }
+    
     private func showInputAccessoryView(textField: UITextField) {
         guard textField.inputAccessoryView == nil else {
             return
@@ -83,6 +91,23 @@ extension InputMnemonicsViewController: UITextFieldDelegate {
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         hideInputAccessoryView(textField: textField)
         return true
+    }
+    
+}
+
+extension InputMnemonicsViewController: MnemonicTextField.DeleteDelegate {
+    
+    func mnemonicTextField(
+        _ textField: MnemonicTextField,
+        didDeleteBackwardFrom textBefore: String?,
+        to textAfter: String?
+    ) {
+        if textBefore.isNilOrEmpty && textAfter.isNilOrEmpty {
+            let previousIndex = textField.tag - 1
+            if previousIndex >= 0 {
+                inputFields[previousIndex].textField.becomeFirstResponder()
+            }
+        }
     }
     
 }

@@ -107,7 +107,7 @@ extension MnemonicsViewController {
         }
         
         let label: UILabel
-        let textField: UITextField
+        let textField: MnemonicTextField
         
         func setTextColor(_ color: TextColor) {
             switch color {
@@ -158,12 +158,14 @@ extension MnemonicsViewController {
             }
             
             let insets = UIEdgeInsets(top: 0, left: 29, bottom: 0, right: 0)
-            let textField = InsetTextField(frame: frame, insets: insets)
+            let textField = MnemonicTextField(frame: frame, insets: insets)
             textField.tag = i
             textField.font = .systemFont(ofSize: 13, weight: .medium)
             textField.adjustsFontSizeToFitWidth = true
             textField.minimumFontSize = 5
             textField.autocapitalizationType = .none
+            textField.autocorrectionType = .no
+            textField.spellCheckingType = .no
             wrapper.addSubview(textField)
             textField.snp.makeConstraints { make in
                 make.edges.equalToSuperview()

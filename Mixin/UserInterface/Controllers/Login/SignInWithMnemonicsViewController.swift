@@ -80,6 +80,7 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
             }
             textField.clearButtonMode = .whileEditing
             textField.delegate = self
+            textField.deleteDelegate = self
         }
         
         addButtonIntoInputFields(

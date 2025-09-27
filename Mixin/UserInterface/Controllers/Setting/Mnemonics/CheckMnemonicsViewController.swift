@@ -31,6 +31,7 @@ final class CheckMnemonicsViewController: InputMnemonicsViewController {
             }
             textField.clearButtonMode = .whileEditing
             textField.delegate = self
+            textField.deleteDelegate = self
         }
         addSpacerIntoInputFields()
         addButtonIntoInputFields(

@@ -10,14 +10,6 @@ class InputMnemonicsViewController: MnemonicsViewController {
         mnemonicsInputAccessoryView.delegate = self
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        let textFields = inputFields.map(\.textField)
-        if textFields.allSatisfy(\.text.isNilOrEmpty) {
-            textFields.first?.becomeFirstResponder()
-        }
-    }
-    
     private func showInputAccessoryView(textField: UITextField) {
         guard textField.inputAccessoryView == nil else {
             return

@@ -1122,7 +1122,7 @@
 "referral_description" = "邀請好友賺幣";
 "referral_program" = "邀請計劃";
 "referral_program_introduction_1" = "最高 70%% 交易手續費分傭";
-"referral_program_introduction_2" = "會員返佣單筆最高 2000 USD";
+"referral_program_introduction_2" = "會員返佣單筆最高 1000 USD";
 "referral_program_introduction_3" = "返佣資格終生有效";
 "referral_program_introduction_footer" = "* 推薦獎勵僅限於付費 Mixin One 會員。";
 "referral_program_introduction_header" = "參與邀請計劃，邀請好友分享賺幣：";
@@ -1555,6 +1555,7 @@
 "url_privacy_wallet" = "https://support.mixin.one/zh/article/5lua5lmi5piv6zqq56eb6zkx5yyf77yf-1s7o0e2/";
 "url_recall_message" = "https://support.mixin.one/zh/article/mixin-messenger-bjr9re/";
 "url_recovery_contact" = "https://support.mixin.one/zh/article/5aac5l2v6k6572u57sn5ocl6igu57o75lq6-d2nssy/";
+"url_referral" = "https://support.mixin.one/zh/article/5aac5l2v6i635b6x6yka6k35aww5yqx-2tmv1n/";
 "url_support" = "https://support.mixin.one/zh/";
 "url_unrecognized_hint" = "%@ 識別失敗，請升級至 Mixin 最新版本或聯絡開發者檢查連結";
 "url_unsupported_message" = "https://support.mixin.one/zh/article/mixin-h92cxa/";

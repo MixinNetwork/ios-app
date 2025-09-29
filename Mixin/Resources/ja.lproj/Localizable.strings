@@ -1122,7 +1122,7 @@
 "referral_description" = "Invite friends earn crypto";
 "referral_program" = "Referral Program";
 "referral_program_introduction_1" = "Up to 70%% commission on trading fees";
-"referral_program_introduction_2" = "Up to 2,000 USD rebate per transaction";
+"referral_program_introduction_2" = "Membership commission rebate up to 1,000 USD per order";
 "referral_program_introduction_3" = "Rebate eligibility is valid for life";
 "referral_program_introduction_footer" = "* Referral rewards are available only to paid Mixin One members. ";
 "referral_program_introduction_header" = "Join the referral program and invite friends to earn crypto together:";
@@ -1555,6 +1555,7 @@
 "url_privacy_wallet" = "https://support.mixin.one/en/article/what-is-a-privacy-wallet-1ng5j8f/";
 "url_recall_message" = "https://support.mixin.one/en/article/how-to-recall-in-mixin-messenger-n3v3p1/";
 "url_recovery_contact" = "https://support.mixin.one/en/article/how-to-set-up-an-emergency-contact-1kvd6g8/";
+"url_referral" = "https://support.mixin.one/en/article/how-to-get-a-referral-reward-vmxho0/";
 "url_support" = "https://support.mixin.one/en/";
 "url_unrecognized_hint" = "%@を認識できません、Mixinを最新版にアップデートするか、もしくは開発陣に連絡してリンクを確認してください。";
 "url_unsupported_message" = "https://support.mixin.one/en/article/how-to-do-when-you-receive-a-message-like-this-this-type-of-message-is-not-supported-please-upgrade-mixin-17j1t3p/";

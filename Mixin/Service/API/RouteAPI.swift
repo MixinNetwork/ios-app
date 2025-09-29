@@ -214,6 +214,10 @@ extension RouteAPI {
 // MARK: - Web3 Wallets
 extension RouteAPI {
     
+    static func dapps(queue: DispatchQueue, completion: @escaping (MixinAPI.Result<[Web3ChainUpdate]>) -> Void) {
+        request(method: .get, path: "/web3/dapps", queue: queue, completion: completion)
+    }
+    
     static func wallets() async throws -> [CreateWalletResponse] {
         try await request(method: .get, path: "/wallets")
     }
@@ -604,12 +608,64 @@ extension RouteAPI {
 // MARK: - Signing
 extension RouteAPI {
     
+    public struct Signature {
+        let timestamp: String
+        let signature: String
+    }
+    
+    public static func sign(
+        appID: String,
+        reloadPublicKey: Bool,
+        method: String,
+        path: String,
+        body: Data?
+    ) throws -> Signature {
+        let appPublicKey: Data
+        if !reloadPublicKey, let bpk = AppGroupUserDefaults.appPublicKey[appID] {
+            appPublicKey = bpk
+        } else {
+            switch UserAPI.fetchSessions(userIds: [appID]) {
+            case let .failure(error):
+                throw error
+            case let .success(sessions):
+                guard
+                    let publicKey = sessions.first?.publicKey,
+                    let bpk = Data(base64URLEncoded: publicKey)
+                else {
+                    throw SigningError.missingPublicKey
+                }
+                AppGroupUserDefaults.appPublicKey[appID] = bpk
+                appPublicKey = bpk
+            }
+        }
+        
+        guard let secret = AppGroupKeychain.sessionSecret else {
+            throw SigningError.missingPrivateKey
+        }
+        let privateKey = try Ed25519PrivateKey(rawRepresentation: secret)
+        let usk = privateKey.x25519Representation
+        guard let keyData = AgreementCalculator.agreement(publicKey: appPublicKey, privateKey: usk) else {
+            throw SigningError.calculateAgreement
+        }
+        
+        let timestamp = "\(Int64(Date().timeIntervalSince1970))"
+        guard var message = (timestamp + method + path).data(using: .utf8) else {
+            throw SigningError.encodeMessage
+        }
+        if let body {
+            message.append(body)
+        }
+        
+        let hash = HMACSHA256.mac(for: message, using: keyData)
+        let signature = (myUserId.data(using: .utf8)! + hash).base64RawURLEncodedString()
+        
+        return Signature(timestamp: timestamp, signature: signature)
+    }
+    
     private enum Config {
         static let botUserID: String = "61cb8dd4-16b1-4744-ba0c-7b2d2e52fc59"
         static let host: String = "https://api.route.mixin.one"
     }
-    
-    private static var botPublicKey: Data?
     
     private final class RouteSigningInterceptor: RequestInterceptor {
         
@@ -629,45 +685,16 @@ extension RouteAPI {
             completion: @escaping (Result<URLRequest, Swift.Error>) -> Void
         ) {
             do {
-                let botPublicKey: Data
-                if let bpk = RouteAPI.botPublicKey {
-                    botPublicKey = bpk
-                } else {
-                    switch UserAPI.fetchSessions(userIds: [Config.botUserID]) {
-                    case let .failure(error):
-                        throw error
-                    case let .success(sessions):
-                        guard let publicKey = sessions.first?.publicKey, let bpk = Data(base64URLEncoded: publicKey) else {
-                            throw SigningError.missingPublicKey
-                        }
-                        RouteAPI.botPublicKey = bpk
-                        botPublicKey = bpk
-                    }
-                }
-                
-                guard let secret = AppGroupKeychain.sessionSecret else {
-                    throw SigningError.missingPrivateKey
-                }
-                let privateKey = try Ed25519PrivateKey(rawRepresentation: secret)
-                let usk = privateKey.x25519Representation
-                guard let keyData = AgreementCalculator.agreement(publicKey: botPublicKey, privateKey: usk) else {
-                    throw SigningError.calculateAgreement
-                }
-                
-                let timestamp = "\(Int64(Date().timeIntervalSince1970))"
-                guard var message = (timestamp + method.rawValue + path).data(using: .utf8) else {
-                    throw SigningError.encodeMessage
-                }
-                if let body = urlRequest.httpBody {
-                    message.append(body)
-                }
-                
-                let hash = HMACSHA256.mac(for: message, using: keyData)
-                let signature = (myUserId.data(using: .utf8)! + hash).base64RawURLEncodedString()
-                
+                let signature = try RouteAPI.sign(
+                    appID: Config.botUserID,
+                    reloadPublicKey: false, // The bot guarantees for not changing the public key
+                    method: method.rawValue,
+                    path: path,
+                    body: urlRequest.httpBody
+                )
                 var request = urlRequest
-                request.setValue(signature, forHTTPHeaderField: "MR-ACCESS-SIGN")
-                request.setValue(timestamp, forHTTPHeaderField: "MR-ACCESS-TIMESTAMP")
+                request.setValue(signature.signature, forHTTPHeaderField: "MR-ACCESS-SIGN")
+                request.setValue(signature.timestamp, forHTTPHeaderField: "MR-ACCESS-TIMESTAMP")
                 request.setValue(MixinAPI.userAgent, forHTTPHeaderField: "User-Agent")
                 if let timeoutInterval {
                     request.timeoutInterval = timeoutInterval

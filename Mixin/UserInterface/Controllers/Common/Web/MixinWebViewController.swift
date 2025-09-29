@@ -22,9 +22,6 @@ final class MixinWebViewController: WebViewController {
         "mixwallet.app",
     ]
     
-    @IBOutlet weak var loadFailLabel: UILabel!
-    @IBOutlet weak var contactDeveloperButton: UIButton!
-    
     private enum HandlerName: String, CaseIterable {
         case mixinContext = "MixinContext"
         case reloadTheme = "reloadTheme"
@@ -34,12 +31,21 @@ final class MixinWebViewController: WebViewController {
         case tipSign = "tipSign"
         case getAssets = "getAssets"
         case web3Bridge = "_mw_"
+        case signBotSignature = "signBotSignature"
     }
     
     private enum FradulentWarningBehavior {
         case byWhitelist // See `fraudulentWarningDisabledHosts`
         case disabled
     }
+    
+    private enum AppSigningError: Error {
+        case noSuchApp
+        case mismatchResource
+    }
+    
+    @IBOutlet weak var loadFailLabel: UILabel!
+    @IBOutlet weak var contactDeveloperButton: UIButton!
     
     weak var associatedClip: Clip?
     
@@ -435,6 +441,38 @@ extension MixinWebViewController: WKScriptMessageHandler {
                 return
             }
             web3Worker.handleRequest(json: body)
+        case .signBotSignature:
+            guard
+                let messageBody = message.body as? [Any],
+                messageBody.count >= 6,
+                let appID = messageBody[0] as? String,
+                let reloadPublicKey = messageBody[1] as? Bool,
+                let method = messageBody[2] as? String,
+                let path = messageBody[3] as? String,
+                let body = messageBody[4] as? String,
+                let callback = messageBody[5] as? String
+            else {
+                return
+            }
+            DispatchQueue.global().async { [weak webView] in
+                do {
+                    // FIXME: Check if webView.url is valid by app.resourcePatterns
+                    let signature = try RouteAPI.sign(
+                        appID: appID,
+                        reloadPublicKey: reloadPublicKey,
+                        method: method,
+                        path: path,
+                        body: body.data(using: .utf8)
+                    )
+                    DispatchQueue.main.async {
+                        webView?.evaluateJavaScript("\(callback)('\(signature.timestamp)', '\(signature.signature)');")
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        webView?.evaluateJavaScript("\(callback)(null);")
+                    }
+                }
+            }
         }
     }
     

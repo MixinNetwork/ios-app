@@ -87,6 +87,23 @@ extension InputMnemonicsViewController: UITextFieldDelegate {
     
 }
 
+extension InputMnemonicsViewController: MnemonicTextField.DeleteDelegate {
+    
+    func mnemonicTextField(
+        _ textField: MnemonicTextField,
+        didDeleteBackwardFrom textBefore: String?,
+        to textAfter: String?
+    ) {
+        if textBefore.isNilOrEmpty && textAfter.isNilOrEmpty {
+            let previousIndex = textField.tag - 1
+            if previousIndex >= 0 {
+                inputFields[previousIndex].textField.becomeFirstResponder()
+            }
+        }
+    }
+    
+}
+
 extension InputMnemonicsViewController: MnemonicsInputAccessoryView.Delegate {
     
     func mnemonicsInputAccessoryView(_ view: MnemonicsInputAccessoryView, didSelect word: String) {

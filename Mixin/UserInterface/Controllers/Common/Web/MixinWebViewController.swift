@@ -41,7 +41,7 @@ final class MixinWebViewController: WebViewController {
     
     private enum AppSigningError: Error {
         case noSuchApp
-        case mismatchResource
+        case unauthorizedResource
     }
     
     @IBOutlet weak var loadFailLabel: UILabel!
@@ -443,6 +443,7 @@ extension MixinWebViewController: WKScriptMessageHandler {
             web3Worker.handleRequest(json: body)
         case .signBotSignature:
             guard
+                let url = webView.url,
                 let messageBody = message.body as? [Any],
                 messageBody.count >= 6,
                 let appID = messageBody[0] as? String,
@@ -456,7 +457,24 @@ extension MixinWebViewController: WKScriptMessageHandler {
             }
             DispatchQueue.global().async { [weak webView] in
                 do {
-                    // FIXME: Check if webView.url is valid by app.resourcePatterns
+                    let app: App?
+                    if let localApp = AppDAO.shared.getApp(appId: appID) {
+                        app = localApp
+                    } else {
+                        switch UserAPI.showUser(userId: appID) {
+                        case .success(let response):
+                            UserDAO.shared.updateUsers(users: [response])
+                            app = response.app
+                        case .failure:
+                            app = nil
+                        }
+                    }
+                    guard let app else {
+                        throw AppSigningError.noSuchApp
+                    }
+                    guard app.resourcePatterns(accepts: url) else {
+                        throw AppSigningError.unauthorizedResource
+                    }
                     let signature = try RouteAPI.sign(
                         appID: appID,
                         reloadPublicKey: reloadPublicKey,
@@ -621,10 +639,10 @@ extension MixinWebViewController {
             if isHomeUrl {
                 loadAppUrl(title: title, iconUrl: iconUrl, appID: appId)
             } else {
-                let validUrl = context.initialUrl.absoluteString + "/"
+                let initialURL = context.initialUrl
                 DispatchQueue.global().async { [weak self] in
                     var app = AppDAO.shared.getApp(appId: appId)
-                    if app == nil || !(app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false) {
+                    if app == nil || !(app?.resourcePatterns(accepts: initialURL) ?? false) {
                         if case let .success(response) = UserAPI.showUser(userId: appId) {
                             UserDAO.shared.updateUsers(users: [response])
                             app = response.app
@@ -634,7 +652,7 @@ extension MixinWebViewController {
                         guard let self = self else {
                             return
                         }
-                        if app?.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
+                        if app?.resourcePatterns(accepts: initialURL) ?? false {
                             self.loadAppUrl(title: title, iconUrl: iconUrl, appID: appId)
                         } else {
                             if self.suspicousLinkView.superview == nil {
@@ -748,8 +766,10 @@ extension MixinWebViewController {
                 guard let navigationController = self?.availableNavigationController else {
                     return
                 }
-                let validUrl = currentUrl.absoluteString + "/"
-                if let app = app, let iconUrl = URL(string: app.iconUrl), app.resourcePatterns?.contains(where: validUrl.hasPrefix) ?? false {
+                if let app = app,
+                   let iconUrl = URL(string: app.iconUrl),
+                   app.resourcePatterns(accepts: currentUrl)
+                {
                     let content = AppCardData.V0Content(appId: app.appId,
                                                         iconUrl: iconUrl,
                                                         title: String(cardTitle.prefix(32)),

@@ -762,6 +762,7 @@
 		941D3BFA2A7912C700538504 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941D3BF82A7912C700538504 /* QRCodeViewController.swift */; };
 		941D3BFB2A7912C700538504 /* QRCodeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 941D3BF92A7912C700538504 /* QRCodeView.xib */; };
 		941D93FE27B4E315007F2F95 /* TextFieldAlertModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */; };
+		941DADD82E8AC70B00FE65BE /* App+URLValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DADD72E8AC6F900FE65BE /* App+URLValidation.swift */; };
 		941E360B2D78B813000E7093 /* RefreshWeb3WalletTokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941E360A2D78B80E000E7093 /* RefreshWeb3WalletTokenJob.swift */; };
 		9420F2EE2DAF8A8300434E0D /* BalanceChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9420F2ED2DAF8A7F00434E0D /* BalanceChange.swift */; };
 		9420F3052DAF993500434E0D /* RichWeb3RawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9420F2E62DAF895D00434E0D /* RichWeb3RawTransaction.swift */; };
@@ -2488,6 +2489,7 @@
 		941D3BF82A7912C700538504 /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
 		941D3BF92A7912C700538504 /* QRCodeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QRCodeView.xib; sourceTree = "<group>"; };
 		941D93FD27B4E315007F2F95 /* TextFieldAlertModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlertModifier.swift; sourceTree = "<group>"; };
+		941DADD72E8AC6F900FE65BE /* App+URLValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "App+URLValidation.swift"; sourceTree = "<group>"; };
 		941E360A2D78B80E000E7093 /* RefreshWeb3WalletTokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshWeb3WalletTokenJob.swift; sourceTree = "<group>"; };
 		9420F2E62DAF895D00434E0D /* RichWeb3RawTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichWeb3RawTransaction.swift; sourceTree = "<group>"; };
 		9420F2ED2DAF8A7F00434E0D /* BalanceChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceChange.swift; sourceTree = "<group>"; };
@@ -6106,6 +6108,7 @@
 				E090B9EA23B0BF940012C7E9 /* MessageDAO+Gallery.swift */,
 				7BB0F94E2434D75D00BEDA97 /* CircleMember+Convenience.swift */,
 				94051FA32E812D61005B3A16 /* DepositFilter.swift */,
+				941DADD72E8AC6F900FE65BE /* App+URLValidation.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -7533,6 +7536,7 @@
 				94CD0FB32CD36CFA00363C93 /* LoginAccountHandler.swift in Sources */,
 				7BA514862499D96300261289 /* GroupCall.swift in Sources */,
 				94E979232D0B408100FFCC12 /* LoginLoadingViewController.swift in Sources */,
+				941DADD82E8AC70B00FE65BE /* App+URLValidation.swift in Sources */,
 				7BB06F47228EA78F0048C2D6 /* NotificationController.swift in Sources */,
 				7B36920E233B47F4007321A7 /* SharedMediaTypeOverlayView.swift in Sources */,
 				7B84358D20D8F89200237242 /* QuotePreviewView.swift in Sources */,

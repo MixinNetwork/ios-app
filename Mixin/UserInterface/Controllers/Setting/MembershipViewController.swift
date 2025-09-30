@@ -178,6 +178,7 @@ extension MembershipViewController: UITableViewDelegate {
         switch Section(rawValue: indexPath.section)! {
         case .invite:
             UIApplication.homeContainerViewController?.presentReferralPage()
+            BadgeManager.shared.setHasViewed(identifier: .referral)
         case .plan:
             break
         case .invoices:

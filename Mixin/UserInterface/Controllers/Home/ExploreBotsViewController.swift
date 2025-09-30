@@ -87,6 +87,8 @@ final class ExploreBotsViewController: UITableViewController {
                 BadgeManager.shared.hasViewed(identifier: .swap)
             case .membership:
                 BadgeManager.shared.hasViewed(identifier: .membership)
+            case .referral:
+                BadgeManager.shared.hasViewed(identifier: .referral)
             default:
                 true
             }
@@ -152,16 +154,6 @@ final class ExploreBotsViewController: UITableViewController {
         switch FixedSection(rawValue: indexPath.section) {
         case .actions:
             let action = actions[indexPath.row]
-            switch action {
-            case .buy:
-                BadgeManager.shared.setHasViewed(identifier: .buy)
-            case .swap:
-                BadgeManager.shared.setHasViewed(identifier: .swap)
-            case .membership:
-                BadgeManager.shared.setHasViewed(identifier: .membership)
-            default:
-                break
-            }
             if let cell = tableView.cellForRow(at: indexPath) as? ExploreActionCell {
                 cell.badgeView.isHidden = true
             }
@@ -265,6 +257,8 @@ final class ExploreBotsViewController: UITableViewController {
             actions.firstIndex(of: .buy)
         case .membership:
             actions.firstIndex(of: .membership)
+        case .referral:
+            actions.firstIndex(of: .referral)
         default:
             nil
         }

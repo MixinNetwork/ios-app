@@ -93,6 +93,7 @@ extension UserCenterViewController: UITableViewDelegate {
                 }
             default:
                 UIApplication.homeContainerViewController?.presentReferralPage()
+                BadgeManager.shared.setHasViewed(identifier: .referral)
                 return
             }
         case 1:

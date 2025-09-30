@@ -9,6 +9,7 @@ public final class BadgeManager {
         case swap
         case swapOrder = "swap_order"
         case membership = "membership"
+        case referral = "referral"
     }
     
     public static let shared = BadgeManager()

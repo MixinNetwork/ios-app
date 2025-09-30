@@ -177,8 +177,7 @@ extension MembershipViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section)! {
         case .invite:
-            let context = MixinWebViewController.Context(conversationId: "", initialUrl: .referral)
-            UIApplication.homeContainerViewController?.presentWebViewController(context: context)
+            UIApplication.homeContainerViewController?.presentReferralPage()
         case .plan:
             break
         case .invoices:

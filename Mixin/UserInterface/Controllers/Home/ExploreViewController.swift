@@ -137,8 +137,7 @@ final class ExploreViewController: UIViewController {
             }
             BadgeManager.shared.setHasViewed(identifier: .membership)
         case .referral:
-            let context = MixinWebViewController.Context(conversationId: "", initialUrl: .referral)
-            UIApplication.homeContainerViewController?.presentWebViewController(context: context)
+            UIApplication.homeContainerViewController?.presentReferralPage()
         case .linkDesktop:
             let desktop = DesktopViewController()
             navigationController?.pushViewController(desktop, animated: true)

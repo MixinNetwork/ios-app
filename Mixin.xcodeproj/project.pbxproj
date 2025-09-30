@@ -1147,6 +1147,7 @@
 		9487233A2C9DF6380034BCB0 /* AddMarketAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948723372C9DF6380034BCB0 /* AddMarketAlertViewController.swift */; };
 		948723432C9E0D8D0034BCB0 /* MarketAlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948723422C9E0D8D0034BCB0 /* MarketAlertViewModel.swift */; };
 		9487234B2C9EE7150034BCB0 /* TokenAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9487234A2C9EE7150034BCB0 /* TokenAction.swift */; };
+		948762512E87C037002F162B /* MnemonicTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948762502E87C036002F162B /* MnemonicTextField.swift */; };
 		94881FA82AD035C300CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FA72AD035C300CA7A29 /* RswiftLibrary */; };
 		94881FAA2AD035CC00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FA92AD035CC00CA7A29 /* RswiftLibrary */; };
 		94881FAC2AD035ED00CA7A29 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 94881FAB2AD035ED00CA7A29 /* RswiftLibrary */; };
@@ -2892,6 +2893,7 @@
 		948723382C9DF6380034BCB0 /* AddMarketAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddMarketAlertView.xib; sourceTree = "<group>"; };
 		948723422C9E0D8D0034BCB0 /* MarketAlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertViewModel.swift; sourceTree = "<group>"; };
 		9487234A2C9EE7150034BCB0 /* TokenAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenAction.swift; sourceTree = "<group>"; };
+		948762502E87C036002F162B /* MnemonicTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicTextField.swift; sourceTree = "<group>"; };
 		948922A02D54FC5A00D9BCCB /* IBANAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IBANAddress.swift; sourceTree = "<group>"; };
 		948923502D55EC3100D9BCCB /* Web3TokenSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenSelectorViewController.swift; sourceTree = "<group>"; };
 		9489237C2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenReceiverViewController.swift; sourceTree = "<group>"; };
@@ -3762,6 +3764,7 @@
 				94428D382CA245BA00157E93 /* MenuTriggerButton.swift */,
 				943CAA072CC6A83F00346677 /* StyledButton.swift */,
 				948668A32CF912910032B9BE /* BadgeDotView.swift */,
+				948762502E87C036002F162B /* MnemonicTextField.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -7446,6 +7449,7 @@
 				940B304B2A160BAB00B45D26 /* DeviceTransferServerDataSource.swift in Sources */,
 				7BE6C7EC242DF07B00A0F2AE /* MessageAction.swift in Sources */,
 				7C4C03A328532AC2003DE0C0 /* PhoneContactViewController.swift in Sources */,
+				948762512E87C037002F162B /* MnemonicTextField.swift in Sources */,
 				944263B42DD648AD003F46DF /* Web3ReputationPickerActionCell.swift in Sources */,
 				9419C2E32E6779B900BEAB42 /* DepositAddressGeneratingView.swift in Sources */,
 				7C36BE88274F248C00089B6D /* StickerStoreBannerCell.swift in Sources */,

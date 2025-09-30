@@ -237,7 +237,6 @@
 "cancel_waiting" = "取消订单";
 "canceled" = "已取消";
 "canceled_by_caller" = "对方已取消";
-"cannot_apply_your_own_referral_code" = "不可绑定自己的邀请码";
 "cant_receive_the_code" = "接收不到验证码？";
 "caption_send" = "转出";
 "card" = "卡片";
@@ -554,8 +553,10 @@
 "enter_your_pin" = "输入你的 PIN";
 "enter_your_pin_to_continue" = "输入你的 PIN 以继续";
 "error_access_limited" = "错误 403：访问受限";
+"error_already_bonded_referral_code" = "错误 10731：当前账户已绑定邀请码，无法修改绑定。";
 "error_bad_data" = "错误 10002：请求数据不合法";
 "error_blockchain" = "错误 30100：区块链同步异常，请稍后重试";
+"error_cannot_apply_your_own_referral_code" = "错误 10732：不可绑定自己的邀请码";
 "error_captcha_is_invalid" = "错误 10004：验证失败";
 "error_card_expired" = "错误 10601: 卡片已过期";
 "error_card_not_supported" = "错误 10604: 不支持此卡片";
@@ -570,7 +571,9 @@
 "error_invalid_emergency_contact" = "错误 20130：恢复联系人不正确";
 "error_invalid_pin_format" = "错误 20118：PIN 格式不正确";
 "error_invalid_quote_amount" = "错误 10614: 输入金额太小或太大，请重新输入。";
+"error_invalid_referral_code" = "错误 10730：无效的邀请码";
 "error_invalid_swap" = "错误 10611: 暂无报价，请稍后重试。";
+"error_inviter_plan_expired" = "错误 10737：绑定失败，邀请人的会员已过期";
 "error_legacy_pin" = "错误 20118：为了加强 Mixin 网络的安全，Mixin API 现已暂停 D3M-PIN 升级到 TIP，详情请查看文档并登记等待处理。";
 "error_network_task_failed" = "网络连接失败。检查或切换网络并重试";
 "error_no_available_quote" = "错误 10615: 暂不支持该交易对，请尝试切换币种。";
@@ -724,7 +727,6 @@
 "invalid_parameters" = "无效的参数";
 "invalid_payment_link" = "无效支付信息";
 "invalid_qr_code" = "无效的二维码";
-"invalid_referral_code" = "无效的邀请码";
 "invalid_request_body" = "无效的请求";
 "invalid_sdp" = "无效的 SDP";
 "invalid_secret_for_wallet" = "导入的%@与钱包不匹配，请重新导入。";
@@ -1116,7 +1118,7 @@
 "referral_banner" = "邀请好友赢取最高 70%% 手续费分佣！";
 "referral_code" = "邀请码";
 "referral_code_applied" = "绑定成功";
-"referral_code_applied_footer" = "所有返现将按月结算到您的 Mixin 隐私钱包。";
+"referral_code_applied_footer" = "手续费按月、按实际消耗的手续费币种和金额汇总返还到您的 Mixin 隐私钱包，阅读文档了解更多。";
 "referral_code_applied_header" = "🎉 邀请码绑定成功，您已自动获得以下权益：";
 "referral_code_applied_introduction_1" = "最高 50%% 交易手续费返现";
 "referral_code_applied_introduction_2" = "升级会员返现单笔最高 1000 USD";

@@ -38,17 +38,17 @@ final class ReferralCodeAppliedViewController: UIViewController {
                     .foregroundColor: R.color.text()!,
                 ]
             )
-            let learnMore = NSAttributedString(
-                string: R.string.localizable.learn_more(),
-                attributes: [
-                    .font: UIFontMetrics.default.scaledFont(
-                        for: .systemFont(ofSize: 14)
-                    ),
-                    .foregroundColor: R.color.theme()!,
-                    .link: URL.referral,
-                ]
+            let learnMoreRange = text.string.range(
+                of: R.string.localizable.learn_more(),
+                options: [.backwards, .caseInsensitive]
             )
-            text.append(learnMore)
+            if let learnMoreRange {
+                let linkRange = NSRange(learnMoreRange, in: text.string)
+                text.addAttributes(
+                    [.foregroundColor: R.color.theme()!, .link: URL.referral],
+                    range: linkRange
+                )
+            }
             return text
         }()
         footerTextView.adjustsFontForContentSizeCategory = true

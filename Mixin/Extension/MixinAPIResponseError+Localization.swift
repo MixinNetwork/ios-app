@@ -46,9 +46,13 @@ extension MixinAPIResponseError: LocalizedError {
         case .unsupportedWatchAddress:
             return R.string.localizable.error_watch_address_not_supported()
         case .referralCodeNotFound:
-            return R.string.localizable.invalid_referral_code()
+            return R.string.localizable.error_invalid_referral_code()
+        case .alreadyBondedReferralCode:
+            return R.string.localizable.error_already_bonded_referral_code()
         case .referringSelf:
-            return R.string.localizable.cannot_apply_your_own_referral_code()
+            return R.string.localizable.error_cannot_apply_your_own_referral_code()
+        case .inviterPlanExpired:
+            return R.string.localizable.error_inviter_plan_expired()
         case .invalidPhoneNumber:
             return R.string.localizable.error_phone_invalid_format()
         case .invalidPhoneVerificationCode:

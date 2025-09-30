@@ -237,7 +237,6 @@
 "cancel_waiting" = "Cancel Waiting";
 "canceled" = "Cancelado";
 "canceled_by_caller" = "Cancelado por la persona que llama";
-"cannot_apply_your_own_referral_code" = "Cannot apply your own referral code";
 "cant_receive_the_code" = "¿No puedes recibir el código?";
 "caption_send" = "Enviar";
 "card" = "tarjeta";
@@ -554,8 +553,10 @@
 "enter_your_pin" = "Introduce tu PIN";
 "enter_your_pin_to_continue" = "Introduce tu PIN para continuar";
 "error_access_limited" = "ERROR 403: Access Limited";
+"error_already_bonded_referral_code" = "ERROR 10731: This account has already applied a referral code";
 "error_bad_data" = "ERROR 10002: Los datos de la solicitud tienen un campo no válido";
 "error_blockchain" = "ERROR 30100: Blockchain no está sincronizado, inténtalo de nuevo más tarde.";
+"error_cannot_apply_your_own_referral_code" = "ERROR 10732: Cannot apply your own referral code";
 "error_captcha_is_invalid" = "ERROR 10004: CAPTCHA no es válido";
 "error_card_expired" = "ERROR 10601: Card expired";
 "error_card_not_supported" = "ERROR 10604: Card not supported";
@@ -570,7 +571,9 @@
 "error_invalid_emergency_contact" = "ERROR 20130: Invalid recovery contact";
 "error_invalid_pin_format" = "ERROR 20118: Formato de PIN no válido. ";
 "error_invalid_quote_amount" = "ERROR 10614: The input amount is either too small or too large, please adjust the amount.";
+"error_invalid_referral_code" = "ERROR 10730: Invalid Referral Code";
 "error_invalid_swap" = "ERROR 10611: No quotes available at the moment, please try again later.";
+"error_inviter_plan_expired" = "ERROR 10737: The inviter has no valid plan";
 "error_legacy_pin" = "ERROR 20118: To enhance the security of the Mixin network, Mixin API has temporarily suspended the upgrading from D3M-PIN to TIP. Please refer to the documentation for details and register for processing.";
 "error_network_task_failed" = "La conexión de red ha fallado. Comprueba o cambia tu red e inténtalo de nuevo";
 "error_no_available_quote" = "ERROR 10615: This trading pair is currently not supported, please try switching to a different token.";
@@ -724,7 +727,6 @@
 "invalid_parameters" = "Parámetros inválidos";
 "invalid_payment_link" = "Enlace de pago inválido";
 "invalid_qr_code" = "Código QR inválido";
-"invalid_referral_code" = "Invalid Referral Code";
 "invalid_request_body" = "Cuerpo de solicitud inválido";
 "invalid_sdp" = "SDP inválido";
 "invalid_secret_for_wallet" = "The %@ does not match the selected wallet. Please try another.";
@@ -1116,7 +1118,7 @@
 "referral_banner" = "Invite friends and earn up to 70%% of their trading fees!";
 "referral_code" = "Referral Code";
 "referral_code_applied" = "Applied";
-"referral_code_applied_footer" = "All cashback will be settled monthly to your Mixin privacy wallet. ";
+"referral_code_applied_footer" = "The fees are refunded monthly to your Mixin privacy wallet, summarized by the actual fee tokens and amounts consumed. Read the documentation to learn more.";
 "referral_code_applied_header" = "🎉 Referral code successfully applied! You’ve unlocked the following benefits:";
 "referral_code_applied_introduction_1" = "Up to 50%% cashback on trading fees";
 "referral_code_applied_introduction_2" = "Up to 1,000 USD cashback per transaction when upgrading membership";

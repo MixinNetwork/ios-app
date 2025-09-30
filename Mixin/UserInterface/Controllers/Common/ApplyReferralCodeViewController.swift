@@ -14,6 +14,8 @@ final class ApplyReferralCodeViewController: UIViewController {
     @IBOutlet weak var laterButton: UIButton!
     
     private let initialCode: String?
+    private let codeCharacters = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+    private let codeCount = 8
     
     private var isBusy = false {
         didSet {
@@ -99,7 +101,7 @@ final class ApplyReferralCodeViewController: UIViewController {
     }
     
     @IBAction func confirm(_ sender: Any) {
-        guard let code = codeField.text else {
+        guard let code = codeField.text?.uppercased() else {
             return
         }
         errorDescriptionLabel.isHidden = true
@@ -127,7 +129,10 @@ final class ApplyReferralCodeViewController: UIViewController {
     }
     
     @objc private func detectCode() {
-        if let code = codeField.text, !code.isEmpty {
+        if let code = codeField.text,
+           code.count == codeCount,
+           code.unicodeScalars.allSatisfy(codeCharacters.contains(_:))
+        {
             confirmButton.isEnabled = true
         } else {
             confirmButton.isEnabled = false
@@ -142,6 +147,16 @@ extension ApplyReferralCodeViewController: UITextFieldDelegate {
         if textField.text?.isEmpty ?? true {
             startInputButton.isHidden = false
         }
+        codeField.text = codeField.text?.uppercased()
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard string.isEmpty || string.unicodeScalars.allSatisfy(codeCharacters.contains(_:)) else {
+            return false
+        }
+        let text = (textField.text ?? "") as NSString
+        let newText = text.replacingCharacters(in: range, with: string)
+        return newText.count <= codeCount
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

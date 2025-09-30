@@ -9,7 +9,7 @@ struct DepositViewModel {
     let token: any (OnChainToken & ValuableToken)
     let entry: Entry
     let infos: [Info]
-    let minimumDeposit: String?
+    let limitation: DepositAmountLimitation?
     
     init(token: MixinTokenItem, entry: DepositEntry) {
         let (switchableTokens, selectedTokenIndex): ([SwitchableToken], Int?) = {
@@ -23,13 +23,7 @@ struct DepositViewModel {
             }
             return ([], nil)
         }()
-        
-        let minimumDeposit = CurrencyFormatter.localizedString(
-            from: token.decimalDust,
-            format: .precision,
-            sign: .never,
-            symbol: .custom(token.symbol)
-        )
+        let limitation = DepositAmountLimitation(minimum: entry.minimum, maximum: entry.maximum)
         
         self.switchableTokens = switchableTokens
         self.selectedTokenIndex = selectedTokenIndex
@@ -120,22 +114,36 @@ struct DepositViewModel {
                 )
                 infos.insert(info, at: 0)
             }
-            infos.append(contentsOf: [
-                Info(
-                    title: R.string.localizable.minimum_deposit(),
-                    description: minimumDeposit,
-                    actions: []
-                ),
+            if let minimum = limitation.minimumDescription(symbol: token.symbol) {
+                infos.append(
+                    Info(
+                        title: R.string.localizable.minimum_deposit(),
+                        description: minimum,
+                        actions: []
+                    )
+                )
+            }
+            if let maximum = limitation.maximumDescription(symbol: token.symbol) {
+                infos.append(
+                    Info(
+                        title: R.string.localizable.maximum_deposit(),
+                        description: maximum,
+                        actions: []
+                    )
+                )
+            }
+            infos.append(
                 Info(
                     title: R.string.localizable.block_confirmations(),
                     description: "\(token.confirmations)",
                     presentableInfo: .confirmations(token.confirmations),
                     actions: [.presentInfo]
-                ),
-            ])
+                )
+            )
             return infos
         }()
-        self.minimumDeposit = minimumDeposit
+        
+        self.limitation = limitation
     }
     
     init(token: Web3TokenItem, address: String, switchableChainIDs: Set<String>) {
@@ -181,7 +189,16 @@ struct DepositViewModel {
                 actions: []
             ),
         ]
-        self.minimumDeposit = nil
+        self.limitation = nil
+    }
+    
+    func link() -> DepositLink? {
+        switch entry {
+        case let .general(content, _, _):
+                .native(address: content.textValue, token: token, limitation: limitation)
+        case .tagging:
+            nil
+        }
     }
     
 }

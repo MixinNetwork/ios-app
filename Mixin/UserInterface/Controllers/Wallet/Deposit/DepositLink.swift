@@ -30,7 +30,7 @@ struct DepositLink {
         case ChainID.lightning:
             true
         default:
-            DepositLink.native(address: address, token: token, amount: 1) != nil
+            DepositLink.native(address: address, token: token, limitation: nil, amount: 1) != nil
         }
     }
     
@@ -66,16 +66,30 @@ extension DepositLink {
     struct Native {
         let address: String
         let token: Token
-        let minimumDeposit: String?
+        let limitation: DepositAmountLimitation?
         let amount: Decimal?
     }
     
-    static func native(address: String, token: Token, minimumDeposit: String?) -> DepositLink {
-        let context = Native(address: address, token: token, minimumDeposit: minimumDeposit, amount: nil)
+    static func native(
+        address: String,
+        token: Token,
+        limitation: DepositAmountLimitation?
+    ) -> DepositLink {
+        let context = Native(
+            address: address,
+            token: token,
+            limitation: limitation,
+            amount: nil
+        )
         return DepositLink(chain: .native(context), value: address)
     }
     
-    static func native(address: String, token: Token, amount: Decimal) -> DepositLink? {
+    static func native(
+        address: String,
+        token: Token,
+        limitation: DepositAmountLimitation?,
+        amount: Decimal
+    ) -> DepositLink? {
         var value: String
         if let chain = Web3Chain.chain(chainID: token.chainID) {
             switch chain.specification {
@@ -132,7 +146,7 @@ extension DepositLink {
                 return nil
             }
         }
-        let context = Native(address: address, token: token, minimumDeposit: nil, amount: amount)
+        let context = Native(address: address, token: token, limitation: limitation, amount: amount)
         return DepositLink(chain: .native(context), value: value)
     }
     

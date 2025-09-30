@@ -39,8 +39,17 @@ final class DepositLinkPreviewViewController: UIViewController {
         let linkView = DepositLinkView()
         contentView.addSubview(linkView)
         linkView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-                .inset(UIEdgeInsets(top: 54, left: 20, bottom: 0, right: 20))
+            let insets = switch ScreenHeight.current {
+            case .short:
+                UIEdgeInsets(top: 8, left: 20, bottom: 0, right: 20)
+            case .medium:
+                UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
+            case .long:
+                UIEdgeInsets(top: 36, left: 20, bottom: 0, right: 20)
+            case .extraLong:
+                UIEdgeInsets(top: 54, left: 20, bottom: 0, right: 20)
+            }
+            make.edges.equalToSuperview().inset(insets)
         }
         linkView.size = .medium
         linkView.load(link: link)

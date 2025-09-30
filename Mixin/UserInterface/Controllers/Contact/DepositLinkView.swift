@@ -259,9 +259,9 @@ final class DepositLinkView: UIView, XibDesignable {
                     symbol: .custom(token.symbol)
                 )
                 infoStackView.addArrangedSubview(amountStackView)
-            } else if let minimumDeposit = context.minimumDeposit {
+            } else if let limitation = context.limitation {
                 amountTitleLabel.text = R.string.localizable.minimum_deposit()
-                amountValueLabel.text = minimumDeposit
+                amountValueLabel.text = limitation.minimumDescription(symbol: context.token.symbol)
                 infoStackView.addArrangedSubview(amountStackView)
             }
             

@@ -458,7 +458,9 @@ extension MixinWebViewController: WKScriptMessageHandler {
             DispatchQueue.global().async { [weak webView] in
                 do {
                     let app: App?
-                    if let localApp = AppDAO.shared.getApp(appId: appID) {
+                    if let localApp = AppDAO.shared.getApp(appId: appID),
+                       localApp.resourcePatterns(accepts: url)
+                    {
                         app = localApp
                     } else {
                         switch UserAPI.showUser(userId: appID) {

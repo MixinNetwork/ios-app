@@ -45,7 +45,8 @@
         var initGTCaptcha = function() {
             initGeetest4({
                 captchaId: '${api_key}',
-                product: 'bind'
+                product: 'bind',
+                hideBar: ['close']
             }, function(captcha) {
                 captcha.onReady(function(){
                     postMessageToMixinMessenger("challenge_change");

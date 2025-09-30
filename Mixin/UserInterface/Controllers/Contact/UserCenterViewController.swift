@@ -92,13 +92,8 @@ extension UserCenterViewController: UITableViewDelegate {
                     return
                 }
             default:
-                if LoginManager.shared.account?.membership?.unexpiredPlan == nil {
-                    let introduction = ReferralIntroductionViewController()
-                    present(introduction, animated: true)
-                } else {
-                    let context = MixinWebViewController.Context(conversationId: "", initialUrl: .referral)
-                    UIApplication.homeContainerViewController?.presentWebViewController(context: context)
-                }
+                let context = MixinWebViewController.Context(conversationId: "", initialUrl: .referral)
+                UIApplication.homeContainerViewController?.presentWebViewController(context: context)
                 return
             }
         case 1:

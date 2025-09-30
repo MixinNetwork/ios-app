@@ -707,6 +707,7 @@
 "incoming_voice_call" = "語音通話來電";
 "info" = "資訊";
 "initializing" = "初始化...";
+"input_referral_code_hint" = "輸入邀請碼";
 "install_messenger_desc" = "訪問 mixin.one/mm 或掃描二維碼安裝";
 "insufficient_balance" = "餘額不足";
 "insufficient_balance_symbol" = "%@ 餘額不足";
@@ -845,6 +846,7 @@
 "mixin_one_desc" = "開啟您的 Mixin 會員之旅";
 "mixin_payment_content" = "💰 金額：%1$@\n🌐 網路：%2$@\n🤝 收款人：%3$@";
 "mixin_payment_title" = "📣 Mixin 收款";
+"mixin_referral" = "Mixin 邀請";
 "mixin_server_encounters_errors" = "伺服器出錯，請稍後重試";
 "mixin_support" = "Mixin 客服";
 "mnemonic_phrase" = "助記詞";
@@ -1120,7 +1122,6 @@
 "referral_code_applied_introduction_2" = "升級會員返現單筆最高 1000 USD";
 "referral_code_applied_introduction_3" = "自動獲得後續所有新權益";
 "referral_description" = "邀請好友賺幣";
-"referral_program" = "邀請計劃";
 "referral_program_introduction_1" = "最高 70%% 交易手續費分傭";
 "referral_program_introduction_2" = "會員返佣單筆最高 1000 USD";
 "referral_program_introduction_3" = "返佣資格終生有效";

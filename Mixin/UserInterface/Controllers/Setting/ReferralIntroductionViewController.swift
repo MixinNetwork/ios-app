@@ -8,17 +8,17 @@ final class ReferralIntroductionViewController: UIViewController {
     @IBOutlet weak var introductionsLabel: UILabel!
     @IBOutlet weak var footerTextView: UITextView!
     @IBOutlet weak var upgradeNowButton: UIButton!
-    @IBOutlet weak var notNowButton: UIButton!
+    @IBOutlet weak var inputCodeButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        titleLabel.text = R.string.localizable.referral_program()
+        titleLabel.text = R.string.localizable.mixin_referral()
         textStackView.setCustomSpacing(24, after: titleLabel)
         
         headerLabel.text = R.string.localizable.referral_program_introduction_header()
         headerLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-        textStackView.setCustomSpacing(16, after: headerLabel)
+        textStackView.setCustomSpacing(24, after: headerLabel)
         
         introductionsLabel.attributedText = .orderedList(
             items: [
@@ -29,10 +29,10 @@ final class ReferralIntroductionViewController: UIViewController {
             font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
             paragraphSpacing: 10,
         ) { _ in
-            R.color.text_secondary()!
+            R.color.text()!
         }
         introductionsLabel.adjustsFontForContentSizeCategory = true
-        textStackView.setCustomSpacing(32, after: introductionsLabel)
+        textStackView.setCustomSpacing(24, after: introductionsLabel)
         
         footerTextView.textContainerInset = .zero
         footerTextView.textContainer.lineFragmentPadding = 0
@@ -78,18 +78,22 @@ final class ReferralIntroductionViewController: UIViewController {
         }()
         upgradeNowButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
-        notNowButton.configuration?.attributedTitle = {
+        inputCodeButton.configuration?.attributedTitle = {
             var attributes = AttributeContainer()
             attributes.font = UIFontMetrics.default.scaledFont(
                 for: .systemFont(ofSize: 16, weight: .medium)
             )
             attributes.foregroundColor = R.color.theme()
             return AttributedString(
-                R.string.localizable.not_now(),
+                R.string.localizable.input_referral_code_hint(),
                 attributes: attributes
             )
         }()
-        notNowButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        inputCodeButton.titleLabel?.adjustsFontForContentSizeCategory = true
+    }
+    
+    @IBAction func close(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true)
     }
     
     @IBAction func upgradeNow(_ sender: Any) {
@@ -102,8 +106,14 @@ final class ReferralIntroductionViewController: UIViewController {
         }
     }
     
-    @IBAction func notNow(_ sender: Any) {
-        presentingViewController?.dismiss(animated: true)
+    @IBAction func inputCode(_ sender: Any) {
+        guard let presentingViewController else {
+            return
+        }
+        presentingViewController.dismiss(animated: true) {
+            let input = ApplyReferralCodeViewController(code: nil)
+            presentingViewController.present(input, animated: true)
+        }
     }
     
 }

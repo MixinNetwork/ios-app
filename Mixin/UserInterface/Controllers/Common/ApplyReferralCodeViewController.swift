@@ -56,6 +56,7 @@ final class ApplyReferralCodeViewController: UIViewController {
         }
         codeField.delegate = self
         benefitLabel.text = R.string.localizable.apply_referral_code_benefit()
+        startInputButton.configuration?.title = R.string.localizable.referral_code()
         
         confirmButton.configuration?.attributedTitle = {
             var attributes = AttributeContainer()

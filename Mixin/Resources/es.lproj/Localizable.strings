@@ -707,6 +707,7 @@
 "incoming_voice_call" = "Llamada de voz entrante";
 "info" = "Información";
 "initializing" = "Inicializando...";
+"input_referral_code_hint" = "Invited by a friend?";
 "install_messenger_desc" = "Visit mixin.one/mm or scan the QR code to install";
 "insufficient_balance" = "Insufficient balance";
 "insufficient_balance_symbol" = "Insufficient %@";
@@ -845,6 +846,7 @@
 "mixin_one_desc" = "Start your Mixin premium journey";
 "mixin_payment_content" = "💰 Amount: %1$@\n🌐 Network: %2$@\n🤝 Receiver: %3$@";
 "mixin_payment_title" = "📣 Mixin Payment";
+"mixin_referral" = "Mixin Referral";
 "mixin_server_encounters_errors" = "El servidor Mixin encuentra errores";
 "mixin_support" = "Mixin Support";
 "mnemonic_phrase" = "Mnemonic Phrase";
@@ -1120,7 +1122,6 @@
 "referral_code_applied_introduction_2" = "Up to 1,000 USD cashback per transaction when upgrading membership";
 "referral_code_applied_introduction_3" = "Automatic access to all future new benefits";
 "referral_description" = "Invite friends earn crypto";
-"referral_program" = "Referral Program";
 "referral_program_introduction_1" = "Up to 70%% commission on trading fees";
 "referral_program_introduction_2" = "Membership commission rebate up to 1,000 USD per order";
 "referral_program_introduction_3" = "Rebate eligibility is valid for life";

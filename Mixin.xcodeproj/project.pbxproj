@@ -9001,7 +9001,7 @@
 			repositoryURL = "https://github.com/mac-cain13/R.swift";
 			requirement = {
 				kind = exactVersion;
-				version = 7.5.0;
+				version = 7.8.0;
 			};
 		};
 		94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */ = {

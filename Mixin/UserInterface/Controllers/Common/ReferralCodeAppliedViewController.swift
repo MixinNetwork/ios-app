@@ -24,7 +24,7 @@ final class ReferralCodeAppliedViewController: UIViewController {
             font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
             paragraphSpacing: 10,
         ) { _ in
-            R.color.text_secondary()!
+            R.color.text()!
         }
         footerTextView.textContainerInset = .zero
         footerTextView.textContainer.lineFragmentPadding = 0

@@ -54,13 +54,13 @@
                                             <rect key="frame" x="0.0" y="41" width="337" height="17"/>
                                             <color key="backgroundColor" name="background"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" name="text_secondary"/>
+                                            <color key="textColor" name="text"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Pf5-Tb-iXp">
                                             <rect key="frame" x="0.0" y="82" width="337" height="17"/>
                                             <color key="backgroundColor" name="background"/>
-                                            <color key="textColor" name="text_secondary"/>
+                                            <color key="textColor" name="text"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                         </textView>
@@ -144,9 +144,6 @@
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="text_secondary">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

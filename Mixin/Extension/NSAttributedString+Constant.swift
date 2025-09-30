@@ -68,7 +68,11 @@ extension NSAttributedString {
             
             var itemAttributes = attributes
             itemAttributes[.foregroundColor] = textColor(index)
-            let attributedItem = NSAttributedString(string: item + "\n", attributes: itemAttributes)
+            let attributedItem = if index == items.count - 1 {
+                NSAttributedString(string: item, attributes: itemAttributes)
+            } else {
+                NSAttributedString(string: item + "\n", attributes: itemAttributes)
+            }
             attributedString.append(attributedItem)
         }
         return attributedString

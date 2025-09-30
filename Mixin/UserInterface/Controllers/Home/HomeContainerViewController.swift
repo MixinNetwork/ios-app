@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 final class HomeContainerViewController: UIViewController {
     
@@ -108,6 +109,35 @@ final class HomeContainerViewController: UIViewController {
             topMost = next
         }
         topMost.present(viewControllerToPresent, animated: true)
+    }
+    
+    func presentReferralPage() {
+        let appID = BotUserID.referral
+        
+        if let app = AppDAO.shared.getApp(appId: appID) {
+            presentWebViewController(context: .init(conversationId: "", app: app))
+            let updateUser = RefreshUserJob(userIds: [appID])
+            ConcurrentJobQueue.shared.addJob(job: updateUser)
+            return
+        }
+        
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: view)
+        UserAPI.showUser(userId: appID) { [weak self] result in
+            switch result {
+            case .success(let response):
+                DispatchQueue.global().async {
+                    UserDAO.shared.updateUsers(users: [response])
+                }
+                hud.hide()
+                if let app = response.app {
+                    self?.presentWebViewController(context: .init(conversationId: "", app: app))
+                }
+            case .failure(let error):
+                hud.set(style: .error, text: error.localizedDescription)
+                hud.scheduleAutoHidden()
+            }
+        }
     }
     
     func presentWebViewController(context: MixinWebViewController.Context) {

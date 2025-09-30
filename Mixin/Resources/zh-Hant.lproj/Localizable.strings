@@ -150,6 +150,8 @@
 "app_update_tips" = "當前版本（%@）已失效！請點選下方\"更新\"從 App Store 更新至最新版。";
 "appearance" = "外觀";
 "apply" = "應用";
+"apply_referral_code" = "繫結邀請碼";
+"apply_referral_code_benefit" = "將邀請碼繫結到你的賬戶，解鎖 Mixin 專屬福利。";
 "approval" = "授權";
 "approval_count" = "已授權 %@";
 "approval_unlimited" = "無限量";
@@ -551,8 +553,10 @@
 "enter_your_pin" = "輸入你的 PIN";
 "enter_your_pin_to_continue" = "輸入你的 PIN 以繼續";
 "error_access_limited" = "錯誤 403：訪問受限";
+"error_already_bonded_referral_code" = "錯誤 10731：當前賬戶已繫結邀請碼，無法修改繫結。";
 "error_bad_data" = "錯誤 10002：請求資料不合法";
 "error_blockchain" = "錯誤 30100：區塊鏈同步異常，請稍後重試";
+"error_cannot_apply_your_own_referral_code" = "錯誤 10732：不可繫結自己的邀請碼";
 "error_captcha_is_invalid" = "錯誤 10004：驗證失敗";
 "error_card_expired" = "錯誤 10601: 卡片已過期";
 "error_card_not_supported" = "錯誤 10604: 不支援此卡片";
@@ -567,7 +571,9 @@
 "error_invalid_emergency_contact" = "錯誤 20130：恢復聯絡人不正確";
 "error_invalid_pin_format" = "錯誤 20118：PIN 格式不正確";
 "error_invalid_quote_amount" = "錯誤 10614: 輸入金額太小或太大，請重新輸入。";
+"error_invalid_referral_code" = "錯誤 10730：無效的邀請碼";
 "error_invalid_swap" = "錯誤 10611: 暫無報價，請稍後重試。";
+"error_inviter_plan_expired" = "錯誤 10737：繫結失敗，邀請人的會員已過期";
 "error_legacy_pin" = "錯誤 20118：為了加強 Mixin 網路的安全，Mixin API 現已暫停 D3M-PIN 升級到 TIP，詳情請檢視檔案並登記等待處理。";
 "error_network_task_failed" = "網路連線失敗。檢查或切換網路並重試";
 "error_no_available_quote" = "錯誤 10615: 暫不支援該交易對，請嘗試切換幣種。";
@@ -704,6 +710,7 @@
 "incoming_voice_call" = "語音通話來電";
 "info" = "資訊";
 "initializing" = "初始化...";
+"input_referral_code_hint" = "輸入邀請碼";
 "install_messenger_desc" = "訪問 mixin.one/mm 或掃描二維碼安裝";
 "insufficient_balance" = "餘額不足";
 "insufficient_balance_symbol" = "%@ 餘額不足";
@@ -841,6 +848,7 @@
 "mixin_one_desc" = "開啟您的 Mixin 會員之旅";
 "mixin_payment_content" = "💰 金額：%1$@\n🌐 網路：%2$@\n🤝 收款人：%3$@";
 "mixin_payment_title" = "📣 Mixin 收款";
+"mixin_referral" = "Mixin 邀請";
 "mixin_server_encounters_errors" = "伺服器出錯，請稍後重試";
 "mixin_support" = "Mixin 客服";
 "mnemonic_phrase" = "助記詞";
@@ -1106,6 +1114,21 @@
 "recovery_kit_attention" = "注意：賬號恢復無法幫助您恢復 PIN";
 "recovery_kit_instruction" = "Mixin Messenger 的 MPC 錢包基於去中心化金鑰協議 TIP 構建，您可以透過手機號、助記詞或可信聯絡人登入恢復你的賬號，錢包完整的金鑰只存在當前裝置的 TEE 安全環境中，閱讀檔案以瞭解%@。";
 "red_up_green_down" = "紅漲綠跌";
+"referral" = "邀請";
+"referral_banner" = "邀請好友贏取最高 70%% 手續費分傭！";
+"referral_code" = "邀請碼";
+"referral_code_applied" = "繫結成功";
+"referral_code_applied_footer" = "手續費按月、按實際消耗的手續費幣種和金額彙總返還到您的 Mixin 隱私錢包，閱讀檔案瞭解更多。";
+"referral_code_applied_header" = "🎉 邀請碼繫結成功，您已自動獲得以下權益：";
+"referral_code_applied_introduction_1" = "最高 50%% 交易手續費返現";
+"referral_code_applied_introduction_2" = "升級會員返現單筆最高 1000 USD";
+"referral_code_applied_introduction_3" = "自動獲得後續所有新權益";
+"referral_description" = "邀請好友賺幣";
+"referral_program_introduction_1" = "最高 70%% 交易手續費分傭";
+"referral_program_introduction_2" = "會員返佣單筆最高 1000 USD";
+"referral_program_introduction_3" = "返佣資格終生有效";
+"referral_program_introduction_footer" = "* 推薦獎勵僅限於付費 Mixin One 會員。";
+"referral_program_introduction_header" = "參與邀請計劃，邀請好友分享賺幣：";
 "refresh" = "重新整理";
 "refunded" = "已退款";
 "reject" = "拒絕";
@@ -1511,6 +1534,7 @@
 "update_now" = "立即更新";
 "upgrade" = "升級";
 "upgrade_database" = "資料庫升級";
+"upgrade_membership_now" = "升級會員";
 "upgrade_plan" = "升級會員";
 "upgrade_plan_for" = "升級會員僅需 %@";
 "upgrade_safe" = "升級 Safe";
@@ -1534,6 +1558,7 @@
 "url_privacy_wallet" = "https://support.mixin.one/zh/article/5lua5lmi5piv6zqq56eb6zkx5yyf77yf-1s7o0e2/";
 "url_recall_message" = "https://support.mixin.one/zh/article/mixin-messenger-bjr9re/";
 "url_recovery_contact" = "https://support.mixin.one/zh/article/5aac5l2v6k6572u57sn5ocl6igu57o75lq6-d2nssy/";
+"url_referral" = "https://support.mixin.one/zh/article/5aac5l2v6i635b6x6yka6k35aww5yqx-2tmv1n/";
 "url_support" = "https://support.mixin.one/zh/";
 "url_unrecognized_hint" = "%@ 識別失敗，請升級至 Mixin 最新版本或聯絡開發者檢查連結";
 "url_unsupported_message" = "https://support.mixin.one/zh/article/mixin-h92cxa/";

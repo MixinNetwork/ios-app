@@ -243,7 +243,7 @@ extension UserProfileViewController: UIGestureRecognizerDelegate {
 extension UserProfileViewController: ImagePickerControllerDelegate {
     
     func imagePickerController(_ controller: ImagePickerController, didPickImage image: UIImage) {
-        guard let avatarBase64 = image.imageByScaling(to: .avatar)?.base64 else {
+        guard let avatarBase64 = image.imageByScaling(to: .avatar)?.asBase64Avatar() else {
             alert(R.string.localizable.failed_to_compose_avatar())
             return
         }

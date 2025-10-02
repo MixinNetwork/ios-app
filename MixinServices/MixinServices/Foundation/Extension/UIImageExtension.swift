@@ -45,10 +45,10 @@ public extension UIImage {
             return false
         }
     }
-
-    public var base64: String? {
-        let data = self.jpegData(compressionQuality: JPEGCompressionQuality.medium)
-        return data?.base64EncodedString()
+    
+    public func asBase64Avatar() -> String? {
+        let data = jpegData(compressionQuality: JPEGCompressionQuality.medium)
+        return data?.base64RawURLEncodedString()
     }
     
     public func imageByScaling(to size: CGSize) -> UIImage? {

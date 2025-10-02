@@ -66,8 +66,13 @@ final class DepositLinkPreviewViewController: UIViewController {
             actionView.leftButton.addTarget(self, action: #selector(share(_:)), for: .touchUpInside)
             actionView.rightButton.setTitle(R.string.localizable.forward(), for: .normal)
             actionView.rightButton.addTarget(self, action: #selector(forward(_:)), for: .touchUpInside)
-        case .native:
-            actionView.leftButton.setTitle(R.string.localizable.copy_link(), for: .normal)
+        case .native(let context):
+            switch context.token.chainID {
+            case ChainID.lightning:
+                actionView.leftButton.setTitle(R.string.localizable.copy_deposit_invoice(), for: .normal)
+            default:
+                actionView.leftButton.setTitle(R.string.localizable.copy_link(), for: .normal)
+            }
             actionView.leftButton.addTarget(self, action: #selector(copyLink(_:)), for: .touchUpInside)
             actionView.rightButton.setTitle(R.string.localizable.share(), for: .normal)
             actionView.rightButton.addTarget(self, action: #selector(share(_:)), for: .touchUpInside)

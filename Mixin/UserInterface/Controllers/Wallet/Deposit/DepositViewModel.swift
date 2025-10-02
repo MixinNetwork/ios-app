@@ -67,7 +67,7 @@ struct DepositViewModel {
                 let destination = switch token.chainID {
                 case ChainID.lightning:
                     Entry.Content(
-                        title: R.string.localizable.invoice(),
+                        title: R.string.localizable.deposit_invoice(),
                         textValue: entry.destination,
                         qrCodeValue: entry.destination.uppercased() // Uppercase for smaller QR-Code image
                     )

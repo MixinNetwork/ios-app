@@ -169,7 +169,12 @@ final class DepositLinkView: UIView, XibDesignable {
             }
             
             let addressTitleLabel = makeTitleLabel()
-            addressTitleLabel.text = R.string.localizable.address()
+            addressTitleLabel.text = switch context.token.chainID {
+            case ChainID.lightning:
+                R.string.localizable.deposit_invoice()
+            default:
+                R.string.localizable.address()
+            }
             let addressContentLabel = makeContentLabel()
             addressContentLabel.attributedText = {
                 let fontSize: CGFloat = switch size {

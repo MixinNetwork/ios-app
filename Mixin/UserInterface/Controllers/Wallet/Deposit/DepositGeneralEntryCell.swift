@@ -23,7 +23,6 @@ final class DepositGeneralEntryCell: UICollectionViewCell {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
-        qrCodeView.setDefaultCornerCurve()
         qrCodeView.tintColor = .black
         iconBackgroundView.layer.cornerRadius = iconBackgroundDimensionConstraint.constant / 2
         iconBackgroundView.layer.masksToBounds = true
@@ -43,25 +42,24 @@ final class DepositGeneralEntryCell: UICollectionViewCell {
     ) {
         titleLabel.text = content.title
         contentLabel.font = {
-            let font: UIFont = if content.value.count > 120 {
+            let font: UIFont = if content.textValue.count > 120 {
                 .systemFont(ofSize: 12)
-            } else if content.value.count > 100 {
+            } else if content.textValue.count > 100 {
                 .systemFont(ofSize: 14)
             } else {
                 .systemFont(ofSize: 16)
             }
             return UIFontMetrics.default.scaledFont(for: font)
         }()
-        contentLabel.text = content.value
-        
-        let qrContent = switch token.assetID {
-        case AssetID.lightningBTC:
-            content.value.uppercased()
+        contentLabel.text = content.textValue
+        switch token.chainID {
+        case ChainID.lightning:
+            qrCodeView.setContinuousCornerCurve(radius: 6)
         default:
-            content.value
+            qrCodeView.setDefaultCornerCurve()
         }
         qrCodeView.setContent(
-            qrContent,
+            content.qrCodeValue,
             dimension: qrCodeDimensionConstraint.constant
         )
         iconView.setIcon(token: token, chain: token.chain)

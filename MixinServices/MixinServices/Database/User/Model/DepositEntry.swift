@@ -12,6 +12,8 @@ public struct DepositEntry {
     public let tag: String?
     public let signature: String
     public let threshold: Int
+    public let minimum: String
+    public let maximum: String
     
 }
 
@@ -26,6 +28,8 @@ extension DepositEntry: Codable, DatabaseColumnConvertible, MixinFetchableRecord
         case tag
         case signature
         case threshold
+        case minimum
+        case maximum
     }
     
 }

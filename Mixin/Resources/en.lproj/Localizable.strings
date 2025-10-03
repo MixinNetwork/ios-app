@@ -398,6 +398,7 @@
 "copy" = "Copy";
 "copy_address" = "Copy Address";
 "copy_conversation_id" = "Copy Conversation ID";
+"copy_deposit_invoice" = "Copy Invoice";
 "copy_invite" = "Copy Invite Link";
 "copy_link" = "Copy Link";
 "copy_user_id" = "Copy User ID";
@@ -465,6 +466,7 @@
 "deposit_confirmation_count" = "Deposit will arrive %d block confirmations";
 "deposit_dust" = "Minimum deposit: %1$@ %2$@";
 "deposit_hash" = "Deposit Hash";
+"deposit_invoice" = "Invoice";
 "deposit_memo_address_notice" = "Both Memo and Address are required to deposit %@ to your account.";
 "deposit_memo_notice" = "Memo is required, or you will lose your coins.";
 "deposit_pending_confirmation" = "%@ Pending Confirmation";

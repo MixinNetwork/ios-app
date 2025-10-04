@@ -38,8 +38,8 @@ public final class StickerAPI : MixinAPI {
         request(method: .get, path: Path.albums(id: albumId))
     }
     
-    public static func addSticker(stickerBase64: String, completion: @escaping (MixinAPI.Result<StickerResponse>) -> Void) {
-        request(method: .post, path: Path.add, parameters: ["data_base64": stickerBase64], completion: completion)
+    public static func addSticker(base64EncodedImage data: String, completion: @escaping (MixinAPI.Result<StickerResponse>) -> Void) {
+        request(method: .post, path: Path.add, parameters: ["data_base64": data], completion: completion)
     }
     
     public static func addSticker(stickerId: String, completion: @escaping (MixinAPI.Result<StickerResponse>) -> Void) {

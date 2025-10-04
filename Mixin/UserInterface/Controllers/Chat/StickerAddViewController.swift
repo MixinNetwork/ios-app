@@ -188,8 +188,8 @@ extension StickerAddViewController {
             showMalformedAlert()
             return
         }
-        let base64 = data.base64EncodedString()
-        StickerAPI.addSticker(stickerBase64: base64, completion: { [weak self] (result) in
+        let image = data.base64RawURLEncodedString()
+        StickerAPI.addSticker(base64EncodedImage: image) { [weak self] (result) in
             switch result {
             case let .success(sticker):
                 SDImageCache.persistentSticker.storeImageData(toDisk: data, forKey: sticker.assetUrl)
@@ -204,8 +204,7 @@ extension StickerAddViewController {
                 self?.rightBarButton?.isBusy = false
                 showAutoHiddenHud(style: .error, text: error.localizedDescription)
             }
-        })
+        }
     }
     
 }
-

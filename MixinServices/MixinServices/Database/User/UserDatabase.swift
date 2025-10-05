@@ -973,6 +973,21 @@ public final class UserDatabase: Database {
             }
         }
         
+        migrator.registerMigration("deposit_entries_3") { db in
+            let columns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(deposit_entries)").map(\.name)
+            let hasMinimum = columns.contains("minimum")
+            let hasMaximum = columns.contains("maximum")
+            if !hasMinimum || !hasMaximum {
+                try db.execute(sql: "DELETE FROM `deposit_entries`")
+                if !hasMinimum {
+                    try db.execute(sql: "ALTER TABLE `deposit_entries` ADD COLUMN `minimum` TEXT NOT NULL")
+                }
+                if !hasMaximum {
+                    try db.execute(sql: "ALTER TABLE `deposit_entries` ADD COLUMN `maximum` TEXT NOT NULL")
+                }
+            }
+        }
+        
         return migrator
     }
     

@@ -398,6 +398,7 @@
 "copy" = "コピー";
 "copy_address" = "Copy Address";
 "copy_conversation_id" = "チャットルームIDをコピー";
+"copy_deposit_invoice" = "Copy Invoice";
 "copy_invite" = "招待リンクをコピーする";
 "copy_link" = "リンクをコピー";
 "copy_user_id" = "ユーザーIDをコピー";
@@ -465,6 +466,7 @@
 "deposit_confirmation_count" = "入金した仮想通貨は、%dブロック確認後に着金します";
 "deposit_dust" = "Minimum deposit: %1$@ %2$@";
 "deposit_hash" = "Deposit Hash";
+"deposit_invoice" = "Invoice";
 "deposit_memo_address_notice" = "Both Memo and Address are required to deposit %@ to your account.";
 "deposit_memo_notice" = "メモが必要です、メモを添付せずに送金した場合に資産を失うおそれがあります";
 "deposit_pending_confirmation" = "%@ Pending Confirmation";

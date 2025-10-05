@@ -39,8 +39,17 @@ final class DepositLinkPreviewViewController: UIViewController {
         let linkView = DepositLinkView()
         contentView.addSubview(linkView)
         linkView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-                .inset(UIEdgeInsets(top: 54, left: 20, bottom: 0, right: 20))
+            let insets = switch ScreenHeight.current {
+            case .short:
+                UIEdgeInsets(top: 8, left: 20, bottom: 0, right: 20)
+            case .medium:
+                UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
+            case .long:
+                UIEdgeInsets(top: 36, left: 20, bottom: 0, right: 20)
+            case .extraLong:
+                UIEdgeInsets(top: 54, left: 20, bottom: 0, right: 20)
+            }
+            make.edges.equalToSuperview().inset(insets)
         }
         linkView.size = .medium
         linkView.load(link: link)
@@ -57,8 +66,13 @@ final class DepositLinkPreviewViewController: UIViewController {
             actionView.leftButton.addTarget(self, action: #selector(share(_:)), for: .touchUpInside)
             actionView.rightButton.setTitle(R.string.localizable.forward(), for: .normal)
             actionView.rightButton.addTarget(self, action: #selector(forward(_:)), for: .touchUpInside)
-        case .native:
-            actionView.leftButton.setTitle(R.string.localizable.copy_link(), for: .normal)
+        case .native(let context):
+            switch context.token.chainID {
+            case ChainID.lightning:
+                actionView.leftButton.setTitle(R.string.localizable.copy_deposit_invoice(), for: .normal)
+            default:
+                actionView.leftButton.setTitle(R.string.localizable.copy_link(), for: .normal)
+            }
             actionView.leftButton.addTarget(self, action: #selector(copyLink(_:)), for: .touchUpInside)
             actionView.rightButton.setTitle(R.string.localizable.share(), for: .normal)
             actionView.rightButton.addTarget(self, action: #selector(share(_:)), for: .touchUpInside)
@@ -70,7 +84,7 @@ final class DepositLinkPreviewViewController: UIViewController {
     }
     
     @objc private func copyLink(_ sender: Any) {
-        UIPasteboard.general.string = link.value
+        UIPasteboard.general.string = link.textValue
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }
     
@@ -103,7 +117,7 @@ final class DepositLinkPreviewViewController: UIViewController {
                 "\(account.fullName)(\(account.identityNumber))",
             ),
             actions: [
-                .init(action: link.value, color: "#4B7CDD", label: R.string.localizable.pay_now())
+                .init(action: link.textValue, color: "#4B7CDD", label: R.string.localizable.pay_now())
             ],
             updatedAt: nil,
             isShareable: true

@@ -890,6 +890,7 @@
 		9443A9212CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9443A9202CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift */; };
 		944506602C1C5D9700F9C583 /* TIPURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445065F2C1C5D9700F9C583 /* TIPURL.swift */; };
 		9445C2552B6161F1001C4AAC /* FavoriteAppCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */; };
+		9445D6642E82838F003BD76C /* WalletSearchModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445D6632E82838E003BD76C /* WalletSearchModelController.swift */; };
 		94463C51298D627800E63547 /* AuthenticationFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94463C50298D627800E63547 /* AuthenticationFailureView.xib */; };
 		94463C53298D690F00E63547 /* AuthenticationFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94463C52298D690F00E63547 /* AuthenticationFailureView.swift */; };
 		944731522E71866400ACC49B /* HomeNavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944731512E71865F00ACC49B /* HomeNavigationTitleView.swift */; };
@@ -2624,6 +2625,7 @@
 		9443A9202CA6BB3D0030A636 /* MarketAlertCoinPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertCoinPickerViewController.swift; sourceTree = "<group>"; };
 		9445065F2C1C5D9700F9C583 /* TIPURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPURL.swift; sourceTree = "<group>"; };
 		9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FavoriteAppCell.xib; sourceTree = "<group>"; };
+		9445D6632E82838E003BD76C /* WalletSearchModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSearchModelController.swift; sourceTree = "<group>"; };
 		94463C50298D627800E63547 /* AuthenticationFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationFailureView.xib; sourceTree = "<group>"; };
 		94463C52298D690F00E63547 /* AuthenticationFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationFailureView.swift; sourceTree = "<group>"; };
 		944731512E71865F00ACC49B /* HomeNavigationTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNavigationTitleView.swift; sourceTree = "<group>"; };
@@ -4440,6 +4442,7 @@
 		9429C1052E059BDE00206DAA /* Search */ = {
 			isa = PBXGroup;
 			children = (
+				9445D6632E82838E003BD76C /* WalletSearchModelController.swift */,
 				94E8794F2D8708F600F97DDD /* WalletSearchView.xib */,
 				7BDFAE8F2559008800296F8B /* WalletSearchViewController.swift */,
 				7BD00F2525597229004D8814 /* WalletSearchTableViewController.swift */,
@@ -7065,6 +7068,7 @@
 				9470597D2E698B010057FBC4 /* ShareObiView.swift in Sources */,
 				7C104A8127D83A51004D0530 /* RefreshExternalSchemeJob.swift in Sources */,
 				52DE7B4A2BEB7C040060A364 /* Web3TransactionViewController.swift in Sources */,
+				9445D6642E82838F003BD76C /* WalletSearchModelController.swift in Sources */,
 				947E267B2E2F773500D6ECB7 /* InputOnChainInfoViewController.swift in Sources */,
 				94F0458B2E1846E600F363F4 /* BIP39Mnemonics.swift in Sources */,
 				7B3FD4EC241965AB00B58006 /* LocationViewController.swift in Sources */,

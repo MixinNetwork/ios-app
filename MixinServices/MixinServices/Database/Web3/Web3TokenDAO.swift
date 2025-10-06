@@ -94,6 +94,20 @@ public final class Web3TokenDAO: Web3DAO {
         return db.select(with: query)
     }
     
+    public func search(
+        keyword: String,
+        limit: Int?
+    ) -> [Web3TokenItem] {
+        var sql = """
+        \(SQL.selector)
+        WHERE t.wallet_id = ? AND (t.name LIKE :keyword OR t.symbol LIKE :keyword)
+        """
+        if let limit = limit {
+            sql += " LIMIT \(limit)"
+        }
+        return db.select(with: sql, arguments: ["keyword": "%\(keyword)%"])
+    }
+    
     // Key is asset id, value is symbol
     public func tokenSymbols(ids: any Collection<String>) -> [String: String] {
         db.select(

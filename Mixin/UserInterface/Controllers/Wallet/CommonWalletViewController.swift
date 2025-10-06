@@ -187,10 +187,14 @@ final class CommonWalletViewController: WalletViewController {
         present(sheet, animated: true, completion: nil)
     }
     
-    override func makeSearchViewController() -> WalletSearchViewController {
-        let controller = WalletSearchViewController(supportedChainIDs: supportedChainIDs)
-        controller.delegate = self
-        return controller
+    override func makeSearchViewController() -> UIViewController {
+        let modelController = WalletSearchWeb3TokenController(
+            walletID: wallet.walletID,
+            supportedChainIDs: supportedChainIDs
+        )
+        modelController.delegate = self
+        let viewController = WalletSearchViewController(modelController: modelController)
+        return viewController
     }
     
     @objc private func reloadTokensFromRemote() {
@@ -470,34 +474,77 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
     
 }
 
-extension CommonWalletViewController: WalletSearchViewControllerDelegate {
+extension CommonWalletViewController: WalletSearchWeb3TokenController.Delegate {
     
-    func walletSearchViewController(_ controller: WalletSearchViewController, didSelectToken token: MixinTokenItem) {
-        let walletID = wallet.walletID
-        let amount = Web3TokenDAO.shared.amount(walletID: walletID, assetID: token.assetID)
-        let isHidden = Web3TokenExtraDAO.shared.isHidden(walletID: walletID, assetID: token.assetID)
-        let web3Token = Web3Token(
-            walletID: walletID,
-            assetID: token.assetID,
-            chainID: token.chainID,
-            assetKey: token.assetKey,
-            kernelAssetID: token.kernelAssetID,
-            symbol: token.symbol,
-            name: token.name,
-            precision: token.precision,
-            iconURL: token.iconURL,
-            amount: amount ?? "0",
-            usdPrice: token.usdPrice,
-            usdChange: token.usdChange,
-            level: Web3Reputation.Level.verified.rawValue,
-        )
-        let item = Web3TokenItem(token: web3Token, hidden: isHidden, chain: token.chain)
+    func walletSearchWeb3TokenController(_ controller: WalletSearchWeb3TokenController, didSelectToken token: Web3TokenItem) {
         let controller = Web3TokenViewController(
             wallet: wallet,
-            token: item,
+            token: token,
             availability: availability
         )
         navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func walletSearchWeb3TokenController(_ controller: WalletSearchWeb3TokenController, didSelectTrendingItem item: AssetItem) {
+        let walletID = wallet.walletID
+        if let item = Web3TokenDAO.shared.token(walletID: walletID, assetID: item.assetId) {
+            walletSearchWeb3TokenController(controller, didSelectToken: item)
+        } else {
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            DispatchQueue.global().async { [weak self] in
+                func report(error: Error) {
+                    DispatchQueue.main.sync {
+                        hud.set(style: .error, text: error.localizedDescription)
+                        hud.scheduleAutoHidden()
+                    }
+                }
+                
+                let chainID = item.chainId
+                let chain: Chain
+                if let localChain = ChainDAO.shared.chain(chainId: chainID) {
+                    chain = localChain
+                } else {
+                    switch NetworkAPI.chain(id: chainID) {
+                    case .success(let remoteChain):
+                        chain = remoteChain
+                        ChainDAO.shared.save([chain])
+                        Web3ChainDAO.shared.save([chain])
+                    case .failure(let error):
+                        report(error: error)
+                        return
+                    }
+                }
+                switch SafeAPI.assets(id: item.assetId) {
+                case .failure(let error):
+                    report(error: error)
+                case .success(let token):
+                    let item = Web3TokenItem(
+                        token: Web3Token(
+                            walletID: walletID,
+                            assetID: token.assetID,
+                            chainID: token.chainID,
+                            assetKey: token.assetKey,
+                            kernelAssetID: token.kernelAssetID,
+                            symbol: token.symbol,
+                            name: token.name,
+                            precision: token.precision,
+                            iconURL: token.iconURL,
+                            amount: "0",
+                            usdPrice: token.usdPrice,
+                            usdChange: token.usdChange,
+                            level: Web3Reputation.Level.verified.rawValue
+                        ),
+                        hidden: false,
+                        chain: chain
+                    )
+                    DispatchQueue.main.sync {
+                        hud.hide()
+                        self?.walletSearchWeb3TokenController(controller, didSelectToken: item)
+                    }
+                }
+            }
+        }
     }
     
 }

@@ -1,18 +1,18 @@
 import UIKit
 import MixinServices
 
-final class WalletSearchResultsViewController: WalletSearchTableViewController {
+final class WalletSearchResultsViewController<ModelController: WalletSearchModelController>: WalletSearchTableViewController, UITableViewDataSource, UITableViewDelegate {
     
     let activityIndicator = ActivityIndicatorView()
     
-    var searchResults: [MixinTokenItem] = []
+    var searchResults: [ModelController.Item] = []
     var lastKeyword: String?
     
+    private let modelController: ModelController
     private let queue = OperationQueue()
-    private let supportedChainIDs: Set<String>?
     
-    init(supportedChainIDs: Set<String>? = nil) {
-        self.supportedChainIDs = supportedChainIDs
+    init(modelController: ModelController) {
+        self.modelController = modelController
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -50,7 +50,7 @@ final class WalletSearchResultsViewController: WalletSearchTableViewController {
         }
         activityIndicator.startAnimating()
         let op = BlockOperation()
-        op.addExecutionBlock { [unowned op, supportedChainIDs] in
+        op.addExecutionBlock { [unowned op, modelController] in
             usleep(200 * 1000)
             guard !op.isCancelled else {
                 return
@@ -58,7 +58,7 @@ final class WalletSearchResultsViewController: WalletSearchTableViewController {
             
             let lowercasedKeyword = keyword.lowercased()
             let defaultIconUrl = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
-            func assetSorting(_ one: MixinTokenItem, _ another: MixinTokenItem) -> Bool {
+            func assetSorting(_ one: ModelController.Item, _ another: ModelController.Item) -> Bool {
                 let oneSymbolEqualsToKeyword = one.symbol.lowercased() == lowercasedKeyword
                 let anotherSymbolEqualsToKeyword = another.symbol.lowercased() == lowercasedKeyword
                 if oneSymbolEqualsToKeyword && !anotherSymbolEqualsToKeyword {
@@ -84,17 +84,9 @@ final class WalletSearchResultsViewController: WalletSearchTableViewController {
                 return one.name < another.name
             }
             
-            var localItems = TokenDAO.shared.search(
-                keyword: keyword,
-                includesZeroBalanceItems: true,
-                sorting: false,
-                limit: nil
-            ).sorted(by: assetSorting)
-            if let ids = supportedChainIDs {
-                localItems = localItems.filter { item in
-                    ids.contains(item.chainID)
-                }
-            }
+            let localItems = modelController
+                .localItems(keyword: keyword)
+                .sorted(by: assetSorting)
             guard !op.isCancelled else {
                 return
             }
@@ -104,44 +96,22 @@ final class WalletSearchResultsViewController: WalletSearchTableViewController {
                 self.tableView.removeEmptyIndicator()
             }
             
+            let localAssetIDs = Set(localItems.map(\.assetID))
             let remoteAssets: [MixinToken]
             switch AssetAPI.search(keyword: keyword) {
-            case .success(var assets):
-                if let ids = supportedChainIDs {
-                    assets = assets.filter { asset in
-                        ids.contains(asset.chainID)
-                    }
+            case .success(let assets):
+                remoteAssets = assets.filter { token in
+                    !localAssetIDs.contains(token.assetID)
                 }
-                remoteAssets = assets
             case .failure:
                 DispatchQueue.main.sync {
                     self.activityIndicator.stopAnimating()
                 }
                 return
             }
+            let remoteItems = modelController.remoteItems(from: remoteAssets)
             
-            let localIds = Set(localItems.map(\.assetID))
-            let remoteItems = remoteAssets.compactMap({ (token) -> MixinTokenItem? in
-                guard !localIds.contains(token.assetID) else {
-                    return nil
-                }
-                let chain: Chain
-                if let localChain = ChainDAO.shared.chain(chainId: token.chainID) {
-                    chain = localChain
-                } else if case let .success(remoteChain) = AssetAPI.chain(chainId: token.chainID) {
-                    DispatchQueue.global().async {
-                        ChainDAO.shared.save([remoteChain])
-                        Web3ChainDAO.shared.save([remoteChain])
-                    }
-                    chain = remoteChain
-                } else {
-                    return nil
-                }
-                let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
-                return item
-            })
-            
-            let allItems: [MixinTokenItem]?
+            let allItems: [ModelController.Item]?
             if remoteItems.isEmpty {
                 allItems = nil
             } else {
@@ -168,10 +138,7 @@ final class WalletSearchResultsViewController: WalletSearchTableViewController {
         queue.addOperation(op)
     }
     
-}
-
-extension WalletSearchResultsViewController: UITableViewDataSource {
-    
+    // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         searchResults.count
     }
@@ -183,16 +150,11 @@ extension WalletSearchResultsViewController: UITableViewDataSource {
         return cell
     }
     
-}
-
-extension WalletSearchResultsViewController: UITableViewDelegate {
-    
+    // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let item = searchResults[indexPath.row]
-        if let parent = self.parent as? WalletSearchViewController {
-            parent.delegate?.walletSearchViewController(parent, didSelectToken: item)
-        }
+        modelController.reportUserSelection(token: item)
         DispatchQueue.global().async {
             AppGroupUserDefaults.User.insertAssetSearchHistory(with: item.assetID)
         }

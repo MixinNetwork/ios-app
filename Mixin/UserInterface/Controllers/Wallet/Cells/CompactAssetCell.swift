@@ -60,8 +60,8 @@ final class CompactAssetCell: ModernSelectedBackgroundCell {
         checkmarkImageView.isHidden = true
     }
     
-    func render(token: MixinTokenItem, style: Style) {
-        assetIconView.setIcon(token: token)
+    func render<T: ValuableToken & OnChainToken & ChangeReportingToken>(token: T, style: Style) {
+        assetIconView.setIcon(token: token, chain: token.chain)
         switch style {
         case .symbolWithName:
             nameLabel.text = token.symbol

@@ -55,7 +55,7 @@ class MixinSwapViewController: SwapViewController {
         let tokens = swappableTokens.values.sorted {
             $0.sortingValues > $1.sortingValues
         }
-        let selector = SwapTokenSelectorViewController(
+        let selector = SwapMixinTokenSelectorViewController(
             recent: .send,
             tokens: tokens,
             selectedAssetID: sendToken?.assetID
@@ -85,7 +85,7 @@ class MixinSwapViewController: SwapViewController {
     }
     
     override func changeReceiveToken(_ sender: Any) {
-        let selector = SwapTokenSelectorViewController(
+        let selector = SwapMixinTokenSelectorViewController(
             recent: .receive,
             tokens: Array(swappableTokens.values),
             selectedAssetID: receiveToken?.assetID

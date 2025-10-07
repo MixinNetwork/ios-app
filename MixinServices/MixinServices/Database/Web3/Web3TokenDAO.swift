@@ -20,8 +20,7 @@ public final class Web3TokenDAO: Web3DAO {
             ORDER BY t.amount * t.price_usd DESC,
                 cast(t.amount AS REAL) DESC,
                 cast(t.price_usd AS REAL) DESC,
-                t.name ASC,
-                t.rowid DESC
+                t.name ASC
         """
         
     }
@@ -95,17 +94,26 @@ public final class Web3TokenDAO: Web3DAO {
     }
     
     public func search(
+        walletID: String,
         keyword: String,
         limit: Int?
     ) -> [Web3TokenItem] {
         var sql = """
         \(SQL.selector)
-        WHERE t.wallet_id = ? AND (t.name LIKE :keyword OR t.symbol LIKE :keyword)
+        WHERE t.wallet_id = :id
+            AND (t.level >= 10 OR hidden IS FALSE)
+            AND (t.name LIKE :keyword OR t.symbol LIKE :keyword)
         """
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }
-        return db.select(with: sql, arguments: ["keyword": "%\(keyword)%"])
+        return db.select(
+            with: sql,
+            arguments: [
+                "id": walletID,
+                "keyword": "%\(keyword)%",
+            ]
+        )
     }
     
     // Key is asset id, value is symbol

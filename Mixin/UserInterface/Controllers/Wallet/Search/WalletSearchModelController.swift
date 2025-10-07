@@ -101,10 +101,12 @@ final class WalletSearchWeb3TokenController: WalletSearchModelController {
     }
     
     func localItems(keyword: String) -> [Web3TokenItem] {
-        Web3TokenDAO.shared.search(
+        let items = Web3TokenDAO.shared.search(
+            walletID: walletID,
             keyword: keyword,
             limit: nil
         )
+        return items
     }
     
     func remoteItems(from tokens: [MixinToken]) -> [Web3TokenItem] {

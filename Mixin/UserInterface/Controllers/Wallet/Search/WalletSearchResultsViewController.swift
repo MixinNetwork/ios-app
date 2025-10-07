@@ -55,38 +55,11 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
             guard !op.isCancelled else {
                 return
             }
-            
-            let lowercasedKeyword = keyword.lowercased()
-            let defaultIconUrl = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
-            func assetSorting(_ one: ModelController.Item, _ another: ModelController.Item) -> Bool {
-                let oneSymbolEqualsToKeyword = one.symbol.lowercased() == lowercasedKeyword
-                let anotherSymbolEqualsToKeyword = another.symbol.lowercased() == lowercasedKeyword
-                if oneSymbolEqualsToKeyword && !anotherSymbolEqualsToKeyword {
-                    return true
-                } else if !oneSymbolEqualsToKeyword && anotherSymbolEqualsToKeyword {
-                    return false
-                }
-                
-                let oneCapitalization = one.decimalBalance * one.decimalUSDPrice
-                let anotherCapitalization = another.decimalBalance * another.decimalUSDPrice
-                if oneCapitalization != anotherCapitalization {
-                    return oneCapitalization > anotherCapitalization
-                }
-                
-                let oneHasIcon = one.iconURL != defaultIconUrl
-                let anotherHasIcon = another.iconURL != defaultIconUrl
-                if oneHasIcon && !anotherHasIcon {
-                    return true
-                } else if !oneHasIcon && anotherHasIcon {
-                    return false
-                }
-                
-                return one.name < another.name
-            }
+            let comparator = TokenComparator<ModelController>(keyword: keyword)
             
             let localItems = modelController
                 .localItems(keyword: keyword)
-                .sorted(by: assetSorting)
+                .sorted(using: comparator)
             guard !op.isCancelled else {
                 return
             }
@@ -96,42 +69,46 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
                 self.tableView.removeEmptyIndicator()
             }
             
-            let localAssetIDs = Set(localItems.map(\.assetID))
-            let remoteAssets: [MixinToken]
+            let remoteTokens: [MixinToken]
             switch AssetAPI.search(keyword: keyword) {
             case .success(let assets):
-                remoteAssets = assets.filter { token in
-                    !localAssetIDs.contains(token.assetID)
-                }
+                remoteTokens = assets
             case .failure:
                 DispatchQueue.main.sync {
+                    guard !op.isCancelled else {
+                        return
+                    }
+                    self.tableView.checkEmpty(
+                        dataCount: self.searchResults.count,
+                        text: R.string.localizable.no_results(),
+                        photo: R.image.emptyIndicator.ic_search_result()!
+                    )
                     self.activityIndicator.stopAnimating()
                 }
                 return
             }
-            let remoteItems = modelController.remoteItems(from: remoteAssets)
             
-            let allItems: [ModelController.Item]?
-            if remoteItems.isEmpty {
-                allItems = nil
-            } else {
-                allItems = (localItems + remoteItems).sorted(by: assetSorting)
+            var allItems: [String: ModelController.Item] = modelController
+                .remoteItems(from: remoteTokens)
+                .reduce(into: [:]) { result, token in
+                    result[token.assetID] = token
+                }
+            for item in localItems where allItems[item.assetID] == nil {
+                allItems[item.assetID] = item
             }
-            guard !op.isCancelled else {
-                return
-            }
+            let sortedAllItems = allItems.values.sorted(using: comparator)
             
             DispatchQueue.main.sync {
                 guard !op.isCancelled else {
                     return
                 }
-                if let items = allItems {
-                    self.searchResults = items
-                    self.tableView.reloadData()
-                }
-                self.tableView.checkEmpty(dataCount: self.searchResults.count,
-                                          text: R.string.localizable.no_results(),
-                                          photo: R.image.emptyIndicator.ic_search_result()!)
+                self.searchResults = sortedAllItems
+                self.tableView.reloadData()
+                self.tableView.checkEmpty(
+                    dataCount: self.searchResults.count,
+                    text: R.string.localizable.no_results(),
+                    photo: R.image.emptyIndicator.ic_search_result()!
+                )
                 self.activityIndicator.stopAnimating()
             }
         }
@@ -158,6 +135,59 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
         DispatchQueue.global().async {
             AppGroupUserDefaults.User.insertAssetSearchHistory(with: item.assetID)
         }
+    }
+    
+}
+
+fileprivate struct TokenComparator<ModelController: WalletSearchModelController>: SortComparator {
+    
+    var order: SortOrder = .forward
+    
+    private let lowercasedKeyword: String
+    
+    init(keyword: String) {
+        self.lowercasedKeyword = keyword.lowercased()
+    }
+    
+    func compare(_ lhs: ModelController.Item, _ rhs: ModelController.Item) -> ComparisonResult {
+        let leftDeterminant = determinant(item: lhs)
+        let rightDeterminant = determinant(item: rhs)
+        let forwardResult: ComparisonResult = if leftDeterminant == rightDeterminant {
+            lhs.name.compare(rhs.name)
+        } else if leftDeterminant < rightDeterminant {
+            .orderedDescending
+        } else {
+            .orderedAscending
+        }
+        return switch order {
+        case .forward:
+             forwardResult
+        case .reverse:
+            switch forwardResult {
+            case .orderedAscending:
+                    .orderedDescending
+            case .orderedDescending:
+                    .orderedAscending
+            case .orderedSame:
+                    .orderedSame
+            }
+        }
+    }
+    
+    func determinant(item: ModelController.Item) -> (Int, Decimal, Decimal) {
+        let lowercasedSymbol = item.symbol.lowercased()
+        let symbolPriority = if lowercasedSymbol == lowercasedKeyword {
+            2
+        } else if lowercasedSymbol.contains(lowercasedKeyword) {
+            1
+        } else {
+            0
+        }
+        return (
+            symbolPriority,
+            item.decimalBalance * item.decimalUSDPrice,
+            item.decimalBalance,
+        )
     }
     
 }

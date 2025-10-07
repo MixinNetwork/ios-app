@@ -20,7 +20,7 @@ public final class TokenDAO: UserDatabaseDAO {
                 LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
         """
         
-        static let order = "te.balance * t.price_usd DESC, cast(te.balance AS REAL) DESC, cast(t.price_usd AS REAL) DESC, t.name ASC, t.rowid DESC"
+        static let order = "te.balance * t.price_usd DESC, cast(te.balance AS REAL) DESC, cast(t.price_usd AS REAL) DESC, t.name ASC"
         
         static let selectWithAssetID = "\(SQL.selector) WHERE t.asset_id = ?"
         
@@ -165,13 +165,8 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: query)
     }
     
-    public func positiveBalancedTokens(chainIDs: [String] = []) -> [MixinTokenItem] {
-        var query = GRDB.SQL(sql: "\(SQL.selector) WHERE te.balance > 0")
-        if !chainIDs.isEmpty {
-            query.append(literal: " AND t.chain_id IN \(chainIDs)")
-        }
-        query.append(sql: " ORDER BY \(SQL.order)")
-        return db.select(with: query)
+    public func positiveBalancedTokens() -> [MixinTokenItem] {
+        db.select(with: "\(SQL.selector) WHERE te.balance > 0 ORDER BY \(SQL.order)")
     }
     
     public func appTokens(ids: [String]) -> [AppToken] {

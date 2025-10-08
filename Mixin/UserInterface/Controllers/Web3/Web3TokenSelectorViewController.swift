@@ -1,4 +1,5 @@
 import UIKit
+import OrderedCollections
 import Alamofire
 import MixinServices
 
@@ -7,11 +8,13 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
     var onSelected: ((Web3TokenItem) -> Void)?
     
     private let wallet: Web3Wallet
-
+    private let supportedChainIDs: Set<String>
+    
     private weak var searchRequest: Request?
     
-    init(wallet: Web3Wallet, tokens: [Web3TokenItem]) {
+    init(wallet: Web3Wallet, supportedChainIDs: Set<String>, tokens: [Web3TokenItem]) {
         self.wallet = wallet
+        self.supportedChainIDs = supportedChainIDs
         let chainIDs = Set(tokens.compactMap(\.chainID))
         let chains = Chain.mixinChains(ids: chainIDs)
         super.init(
@@ -73,21 +76,21 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
     }
     
     override func search(keyword: String) {
-        let searchResults = defaultTokens.filter { item in
-            item.symbol.lowercased().contains(keyword) || item.name.lowercased().contains(keyword)
-        }.sorted { (one, another) in
-            let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
-            let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
-            return left > right
-        }
-        let chainIDs = Set(searchResults.compactMap(\.chainID))
-        let searchResultChains = Chain.web3Chains(ids: chainIDs)
+        let comparator = TokenComparator<Web3TokenItem>(keyword: keyword)
+        let localResults = defaultTokens
+            .filter { item in
+                item.symbol.lowercased().contains(keyword)
+                || item.name.lowercased().contains(keyword)
+            }
+            .sorted(using: comparator)
+        let chainIDs = Set(localResults.compactMap(\.chainID))
+        let localResultChains = Chain.web3Chains(ids: chainIDs)
         
         self.searchResultsKeyword = keyword
-        self.searchResults = searchResults
-        self.searchResultChains = searchResultChains
+        self.searchResults = localResults
+        self.searchResultChains = localResultChains
         if let chain = self.selectedChain, chainIDs.contains(chain.id) {
-            self.tokenIndicesForSelectedChain = self.tokenIndices(tokens: searchResults, chainID: chain.id)
+            self.tokenIndicesForSelectedChain = self.tokenIndices(tokens: localResults, chainID: chain.id)
         } else {
             self.selectedChain = nil
             self.tokenIndicesForSelectedChain = nil
@@ -99,9 +102,19 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
         searchRequest = AssetAPI.search(keyword: keyword, queue: .global()) { [weak self] result in
             switch result {
             case .success(let tokens):
-                self?.reloadSearchResults(keyword: keyword, tokens: tokens)
+                self?.reloadSearchResults(
+                    keyword: keyword,
+                    localResults: localResults,
+                    remoteResults: tokens,
+                    comparator: comparator
+                )
             case .failure(.emptyResponse):
-                self?.reloadSearchResults(keyword: keyword, tokens: [])
+                self?.reloadSearchResults(
+                    keyword: keyword,
+                    localResults: localResults,
+                    remoteResults: [],
+                    comparator: comparator
+                )
             case .failure(let error):
                 Logger.general.debug(category: "Web3TokenSelector", message: "\(error)")
                 DispatchQueue.main.async {
@@ -150,73 +163,79 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
         }
     }
     
-    private func reloadSearchResults(keyword: String, tokens: [MixinToken]) {
+    private func reloadSearchResults(
+        keyword: String,
+        localResults: [Web3TokenItem],
+        remoteResults: [MixinToken],
+        comparator: TokenComparator<Web3TokenItem>,
+    ) {
         assert(!Thread.isMainThread)
-        let supportedChainIDs: Set<String> = [
-            ChainID.ethereum,
-            ChainID.polygon,
-            ChainID.bnbSmartChain,
-            ChainID.base,
-            ChainID.solana,
-        ]
-        let walletID = wallet.walletID
-        let searchResults: [Web3TokenItem] = tokens.compactMap { token in
-            guard supportedChainIDs.contains(token.chainID) else {
-                return nil
+        let mixedSearchResults: (items: [Web3TokenItem], chains: OrderedSet<Chain>, chainIDs: Set<String>)?
+        if remoteResults.isEmpty {
+            mixedSearchResults = nil
+        } else {
+            let walletID = wallet.walletID
+            let allChains = ChainDAO.shared.allChains()
+            var allItems: [String: Web3TokenItem] = remoteResults.reduce(into: [:]) { result, token in
+                guard supportedChainIDs.contains(token.chainID) else {
+                    return
+                }
+                let assetID = token.assetID
+                let amount = Web3TokenDAO.shared.amount(walletID: walletID, assetID: assetID)
+                let level = Web3TokenDAO.shared.level(walletID: walletID, assetID: assetID)
+                let web3Token = Web3Token(
+                    walletID: walletID,
+                    assetID: assetID,
+                    chainID: token.chainID,
+                    assetKey: token.assetKey,
+                    kernelAssetID: token.kernelAssetID,
+                    symbol: token.symbol,
+                    name: token.name,
+                    precision: token.precision,
+                    iconURL: token.iconURL,
+                    amount: amount ?? "0",
+                    usdPrice: token.usdPrice,
+                    usdChange: token.usdChange,
+                    level: level ?? Web3Reputation.Level.verified.rawValue,
+                )
+                let isHidden = Web3TokenExtraDAO.shared.isHidden(walletID: walletID, assetID: assetID)
+                let chain = allChains[token.chainID]
+                result[assetID] = Web3TokenItem(token: web3Token, hidden: isHidden, chain: chain)
             }
-            let amount = Web3TokenDAO.shared.amount(walletID: walletID, assetID: token.assetID)
-            let isHidden = Web3TokenExtraDAO.shared.isHidden(walletID: walletID, assetID: token.assetID)
-            let chain = ChainDAO.shared.chain(chainId: token.chainID)
-            let web3Token = Web3Token(
-                walletID: walletID,
-                assetID: token.assetID,
-                chainID: token.chainID,
-                assetKey: token.assetKey,
-                kernelAssetID: token.kernelAssetID,
-                symbol: token.symbol,
-                name: token.name,
-                precision: token.precision,
-                iconURL: token.iconURL,
-                amount: amount ?? "0",
-                usdPrice: token.usdPrice,
-                usdChange: token.usdChange,
-                level: Web3Reputation.Level.verified.rawValue,
-            )
-            return Web3TokenItem(token: web3Token, hidden: isHidden, chain: chain)
-        }.sorted { (one, another) in
-            let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
-            let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
-            return left > right
+            for item in localResults where allItems[item.assetID] == nil {
+                allItems[item.assetID] = item
+            }
+            let sortedAllItems = allItems.values.sorted(using: comparator)
+            let chainIDs = Set(sortedAllItems.map(\.chainID))
+            let chains = Chain.web3Chains(ids: chainIDs)
+            mixedSearchResults = (sortedAllItems, chains, chainIDs)
         }
-        let chainIDs = Set(searchResults.compactMap(\.chainID))
-        let searchResultChains = Chain.mixinChains(ids: chainIDs)
         DispatchQueue.main.async {
             guard self.trimmedKeyword == keyword else {
                 return
             }
-            self.searchResultsKeyword = keyword
-            self.searchResults = searchResults
-            self.searchResultChains = searchResultChains
-            if let chain = self.selectedChain, chainIDs.contains(chain.id) {
-                self.tokenIndicesForSelectedChain = tokens.enumerated().compactMap { (index, token) in
-                    if token.chainID == chain.id {
-                        index
-                    } else {
-                        nil
-                    }
+            if let mixedSearchResults {
+                self.searchResultsKeyword = keyword
+                self.searchResults = mixedSearchResults.items
+                self.searchResultChains = mixedSearchResults.chains
+                if let chain = self.selectedChain, mixedSearchResults.chainIDs.contains(chain.id) {
+                    self.tokenIndicesForSelectedChain = self.tokenIndices(
+                        tokens: mixedSearchResults.items,
+                        chainID: chain.id
+                    )
+                } else {
+                    self.selectedChain = nil
+                    self.tokenIndicesForSelectedChain = nil
                 }
-            } else {
-                self.selectedChain = nil
-                self.tokenIndicesForSelectedChain = nil
+                self.collectionView.reloadData()
+                self.reloadChainSelection()
+                self.reloadTokenSelection()
             }
-            self.collectionView.reloadData()
             self.collectionView.checkEmpty(
-                dataCount: searchResults.count,
+                dataCount: self.searchResults?.count ?? 0,
                 text: R.string.localizable.no_results(),
                 photo: R.image.emptyIndicator.ic_search_result()!
             )
-            self.reloadChainSelection()
-            self.reloadTokenSelection()
             self.searchBoxView.isBusy = false
         }
     }

@@ -23,14 +23,13 @@ extension ExploreSearchViewController where Self: UIViewController {
         parent?.parent as? ExploreViewController
     }
     
-    func pushMarketViewController(market: FavorableMarket) {
+    func pushTokenViewController(token: MixinTokenItem) {
         guard let navigationController = UIApplication.homeNavigationController else {
             return
         }
-        let viewController = MarketViewController(market: market)
-        viewController.pushingViewController = self
+        let viewController = MixinTokenViewController(token: token)
         navigationController.pushViewController(viewController, animated: true)
-        AppGroupUserDefaults.User.insertRecentSearch(.market(coinID: market.coinID))
+        AppGroupUserDefaults.User.insertRecentSearch(.mixinToken(assetID: token.assetID))
     }
     
     func pushConversationViewController(userItem: UserItem) {

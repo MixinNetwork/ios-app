@@ -64,9 +64,9 @@ final class ExploreSearchRecommendationViewController: UIViewController {
             let searches = AppGroupUserDefaults.User.recentSearches
             let viewModels: [RecentSearchViewModel] = searches.compactMap { item in
                 switch item {
-                case let .market(coinID):
-                    if let market = MarketDAO.shared.market(coinID: coinID) {
-                       return .market(market)
+                case let .mixinToken(assetID):
+                    if let token = TokenDAO.shared.tokenItem(assetID: assetID) {
+                       return .mixinToken(token)
                     } else {
                         return nil
                     }
@@ -112,9 +112,9 @@ extension ExploreSearchRecommendationViewController: UICollectionViewDataSource 
         cell.size = .large
         let viewModel = viewModels[indexPath.item]
         switch viewModel.content {
-        case let .market(market):
+        case let .mixinToken(token):
             cell.setImage { iconView in
-                iconView.setIcon(market: market)
+                iconView.setIcon(token: token)
             }
         case let .user(item):
             cell.setAvatar { imageView in
@@ -158,8 +158,8 @@ extension ExploreSearchRecommendationViewController: UICollectionViewDelegate {
         let parent = parent as? ExploreAggregatedSearchViewController
         let viewModel = viewModels[indexPath.item]
         switch viewModel.content {
-        case let .market(market):
-            parent?.pushMarketViewController(market: market)
+        case let .mixinToken(token):
+            parent?.pushTokenViewController(token: token)
         case let .user(item):
             parent?.pushConversationViewController(userItem: item)
         case let .link(url):
@@ -193,7 +193,7 @@ extension ExploreSearchRecommendationViewController {
     private struct RecentSearchViewModel {
         
         enum Content {
-            case market(FavorableMarket)
+            case mixinToken(MixinTokenItem)
             case user(UserItem)
             case link(URL)
             case dapp(Web3Dapp)
@@ -204,12 +204,12 @@ extension ExploreSearchRecommendationViewController {
         let subtitle: String
         let subtitleColor: MarketColor?
         
-        static func market(_ market: FavorableMarket) -> RecentSearchViewModel {
+        static func mixinToken(_ token: MixinTokenItem) -> RecentSearchViewModel {
             RecentSearchViewModel(
-                content: .market(market),
-                title: market.symbol,
-                subtitle: market.localizedPriceChangePercentage24H ?? "",
-                subtitleColor: .byValue(market.decimalPriceChangePercentage24H)
+                content: .mixinToken(token),
+                title: token.symbol,
+                subtitle: token.localizedUSDChange,
+                subtitleColor: .byValue(token.decimalUSDChange)
             )
         }
         

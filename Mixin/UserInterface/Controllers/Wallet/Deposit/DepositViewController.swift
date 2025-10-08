@@ -143,6 +143,7 @@ final class DepositViewController: UIViewController {
         collectionView.delegate = self
         collectionView.isHidden = true
         self.collectionView = collectionView
+        updateCollectionViewBottomInset()
         
         let addressGeneratingView = R.nib.depositAddressGeneratingView(withOwner: nil)!
         view.addSubview(addressGeneratingView)
@@ -151,6 +152,11 @@ final class DepositViewController: UIViewController {
         
         dataSource.delegate = self
         dataSource.reload()
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        updateCollectionViewBottomInset()
     }
     
     @objc private func contactSupport(_ sender: Any) {
@@ -164,6 +170,14 @@ final class DepositViewController: UIViewController {
         }
         viewControllers.append(conversation)
         navigationController.setViewControllers(viewControllers, animated: true)
+    }
+    
+    private func updateCollectionViewBottomInset() {
+        if view.safeAreaInsets.bottom < 10 {
+            collectionView.contentInset.bottom = 10
+        } else {
+            collectionView.contentInset.bottom = 0
+        }
     }
     
 }
@@ -348,13 +362,13 @@ extension DepositViewController: DepositEntryActionDelegate {
             case .address:
                 switch viewModel.entry {
                 case let .general(content, _, _):
-                    copyingContent = content.value
+                    copyingContent = content.textValue
                 case let .tagging(destination, tag, _):
                     switch indexPath.item {
                     case 0:
-                        copyingContent = tag.value
+                        copyingContent = tag.textValue
                     default:
-                        copyingContent = destination.value
+                        copyingContent = destination.textValue
                     }
                 }
             case .info:
@@ -363,15 +377,11 @@ extension DepositViewController: DepositEntryActionDelegate {
             UIPasteboard.general.string = copyingContent
             showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
         case .setAmount:
-            guard case let .general(content, _, _) = viewModel.entry else {
+            guard let link = viewModel.link() else {
                 return
             }
             let inputAmount = DepositInputAmountViewController(
-                link: .native(
-                    address: content.value,
-                    token: viewModel.token,
-                    minimumDeposit: viewModel.minimumDeposit
-                ),
+                link: link,
                 token: viewModel.token
             )
             let navigationController = GeneralAppearanceNavigationController(
@@ -379,14 +389,9 @@ extension DepositViewController: DepositEntryActionDelegate {
             )
             present(navigationController, animated: true)
         case .share:
-            guard case let .general(content, _, _) = viewModel.entry else {
+            guard let link = viewModel.link() else {
                 return
             }
-            let link: DepositLink = .native(
-                address: content.value,
-                token: viewModel.token,
-                minimumDeposit: viewModel.minimumDeposit
-            )
             let share = ShareDepositLinkViewController(link: link)
             present(share, animated: true)
         }

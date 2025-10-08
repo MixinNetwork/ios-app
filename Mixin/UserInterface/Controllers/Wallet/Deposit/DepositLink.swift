@@ -5,6 +5,39 @@ struct DepositLink {
     
     typealias Token = any (OnChainToken & ValuableToken)
     
+    enum Chain {
+        case mixin(Mixin)
+        case native(Native)
+    }
+    
+    let chain: Chain
+    let textValue: String
+    let qrCodeValue: String // Could be different from `textValue`. For example, in lightning network the `qrCodeValue` is uppercased.
+    
+    private init(chain: Chain, value: String) {
+        self.chain = chain
+        self.textValue = value
+        self.qrCodeValue = switch chain {
+        case .native(let context) where context.token.chainID == ChainID.lightning:
+            value.uppercased() // Uppercase for smaller QR-Code image
+        default:
+            value
+        }
+    }
+    
+    static func availableForSettingAmount(address: String, token: Token) -> Bool {
+        switch token.chainID {
+        case ChainID.lightning:
+            true
+        default:
+            DepositLink.native(address: address, token: token, limitation: nil, amount: 1) != nil
+        }
+    }
+    
+}
+
+extension DepositLink {
+    
     struct Mixin {
         
         struct Specification {
@@ -17,21 +50,6 @@ struct DepositLink {
         
     }
     
-    struct Native {
-        let address: String
-        let token: Token
-        let minimumDeposit: String?
-        let amount: Decimal?
-    }
-    
-    enum Chain {
-        case mixin(Mixin)
-        case native(Native)
-    }
-    
-    let chain: Chain
-    let value: String
-    
     static func mixin(account: Account, specification: Mixin.Specification? = nil) -> DepositLink {
         let chain = Mixin(account: account, specification: specification)
         var link = "https://mixin.one/pay/\(account.userID)"
@@ -41,12 +59,37 @@ struct DepositLink {
         return DepositLink(chain: .mixin(chain), value: link)
     }
     
-    static func native(address: String, token: Token, minimumDeposit: String?) -> DepositLink {
-        let context = Native(address: address, token: token, minimumDeposit: minimumDeposit, amount: nil)
+}
+
+extension DepositLink {
+    
+    struct Native {
+        let address: String
+        let token: Token
+        let limitation: DepositAmountLimitation?
+        let amount: Decimal?
+    }
+    
+    static func native(
+        address: String,
+        token: Token,
+        limitation: DepositAmountLimitation?
+    ) -> DepositLink {
+        let context = Native(
+            address: address,
+            token: token,
+            limitation: limitation,
+            amount: nil
+        )
         return DepositLink(chain: .native(context), value: address)
     }
     
-    static func native(address: String, token: Token, amount: Decimal) -> DepositLink? {
+    static func native(
+        address: String,
+        token: Token,
+        limitation: DepositAmountLimitation?,
+        amount: Decimal
+    ) -> DepositLink? {
         var value: String
         if let chain = Web3Chain.chain(chainID: token.chainID) {
             switch chain.specification {
@@ -97,33 +140,14 @@ struct DepositLink {
                 value = "dogecoin:\(address)?amount=\(amount)"
             case ChainID.dash:
                 value = "dash:\(address)?amount=\(amount)"
+            case ChainID.lightning:
+                value = address
             default:
                 return nil
             }
         }
-        let context = Native(address: address, token: token, minimumDeposit: nil, amount: amount)
+        let context = Native(address: address, token: token, limitation: limitation, amount: amount)
         return DepositLink(chain: .native(context), value: value)
-    }
-    
-    static func available(address: String, token: Token) -> Bool {
-        let link = DepositLink.native(address: address, token: token, amount: 1)
-        return link != nil
-    }
-    
-    func replacing(token: Token, amount: Decimal) -> DepositLink? {
-        switch chain {
-        case .mixin(let context):
-                .mixin(
-                    account: context.account,
-                    specification: .init(token: token, amount: amount)
-                )
-        case .native(let context):
-                .native(
-                    address: context.address,
-                    token: token,
-                    amount: amount
-                )
-        }
     }
     
 }

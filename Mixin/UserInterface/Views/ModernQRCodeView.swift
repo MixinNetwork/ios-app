@@ -22,8 +22,12 @@ final class ModernQRCodeView: UIView {
     }
     
     func setDefaultCornerCurve() {
+        setContinuousCornerCurve(radius: 14)
+    }
+    
+    func setContinuousCornerCurve(radius: CGFloat) {
         layer.cornerCurve = .continuous
-        layer.cornerRadius = 14
+        layer.cornerRadius = radius
         layer.masksToBounds = true
     }
     

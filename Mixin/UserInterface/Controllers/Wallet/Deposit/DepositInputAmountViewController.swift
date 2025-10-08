@@ -96,15 +96,98 @@ final class DepositInputAmountViewController: InputAmountViewController {
         }
         
         amountLabel.text = inputAmountString
-        reviewButton.isEnabled = inputAmount != 0
+        switch link.chain {
+        case .native(let context):
+            guard tokenAmount != 0, let limitation = context.limitation else {
+                fallthrough
+            }
+            switch limitation.check(value: tokenAmount) {
+            case .lessThanMinimum(let minimum):
+                let min = CurrencyFormatter.localizedString(
+                    from: minimum,
+                    format: .precision,
+                    sign: .never,
+                )
+                insufficientBalanceLabel.text = R.string.localizable.single_transaction_should_be_greater_than(min, context.token.symbol)
+                reviewButton.isEnabled = false
+            case .greaterThanMaximum(let maximum):
+                let max = CurrencyFormatter.localizedString(
+                    from: maximum,
+                    format: .precision,
+                    sign: .never,
+                )
+                insufficientBalanceLabel.text = R.string.localizable.single_transaction_should_be_less_than(max, context.token.symbol)
+                reviewButton.isEnabled = false
+            case .within:
+                insufficientBalanceLabel.text = nil
+                reviewButton.isEnabled = true
+            }
+        case .mixin:
+            insufficientBalanceLabel.text = nil
+            reviewButton.isEnabled = tokenAmount != 0
+        }
     }
     
     override func review(_ sender: Any) {
-        guard let link = link.replacing(token: token, amount: tokenAmount) else {
-            return
+        switch token.chainID {
+        case ChainID.lightning:
+            insufficientBalanceLabel.text = nil
+            reviewButton.isBusy = true
+            let amount = self.tokenAmount
+            let amountString = TokenAmountFormatter.string(from: amount)
+            Task { [token] in
+                do {
+                    let entries = try await SafeAPI.depositEntries(
+                        assetID: token.assetID,
+                        chainID: token.chainID,
+                        amount: amountString
+                    )
+                    let entry = entries.first(where: \.isPrimary) ?? entries.first
+                    guard let entry else {
+                        throw MixinAPIResponseError.withdrawSuspended
+                    }
+                    await MainActor.run {
+                        self.reviewButton.isBusy = false
+                        let linkWithAmount: DepositLink? = .native(
+                            address: entry.destination,
+                            token: token,
+                            limitation: .init(minimum: entry.minimum, maximum: entry.maximum),
+                            amount: amount
+                        )
+                        if let linkWithAmount {
+                            let preview = DepositLinkPreviewViewController(link: linkWithAmount)
+                            self.navigationController?.pushViewController(preview, animated: true)
+                        }
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.reviewButton.isBusy = false
+                        self.insufficientBalanceLabel.text = error.localizedDescription
+                    }
+                }
+            }
+        default:
+            switch link.chain {
+            case .mixin(let context):
+                let linkWithAmount: DepositLink = .mixin(
+                    account: context.account,
+                    specification: .init(token: token, amount: tokenAmount)
+                )
+                let preview = DepositLinkPreviewViewController(link: linkWithAmount)
+                navigationController?.pushViewController(preview, animated: true)
+            case .native(let context):
+                let linkWithAmount: DepositLink? = .native(
+                    address: context.address,
+                    token: context.token,
+                    limitation: context.limitation,
+                    amount: tokenAmount
+                )
+                if let linkWithAmount {
+                    let preview = DepositLinkPreviewViewController(link: linkWithAmount)
+                    navigationController?.pushViewController(preview, animated: true)
+                }
+            }
         }
-        let preview = DepositLinkPreviewViewController(link: link)
-        navigationController?.pushViewController(preview, animated: true)
     }
     
 }

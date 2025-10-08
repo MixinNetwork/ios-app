@@ -1258,6 +1258,7 @@
 		94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */; };
 		94B9FD9E2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B9FD9D2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib */; };
 		94BD7E772B2983CA0004576D /* MultisigURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BD7E762B2983CA0004576D /* MultisigURL.swift */; };
+		94BE14BF2E891CC200BA95A7 /* DepositAmountLimitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE14BE2E891CBC00BA95A7 /* DepositAmountLimitation.swift */; };
 		94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE548D25D96932006575E2 /* OggOpusReader.swift */; };
 		94BED02F2B692F11004381FA /* PopupPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BED02E2B692F11004381FA /* PopupPresentationManager.swift */; };
 		94BED0342B692F73004381FA /* PopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BED0332B692F73004381FA /* PopupPresentationController.swift */; };
@@ -3000,6 +3001,7 @@
 		94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DatabaseDiagnosticView.xib; sourceTree = "<group>"; };
 		94B9FD9D2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositAddressGeneratingView.xib; sourceTree = "<group>"; };
 		94BD7E762B2983CA0004576D /* MultisigURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultisigURL.swift; sourceTree = "<group>"; };
+		94BE14BE2E891CBC00BA95A7 /* DepositAmountLimitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositAmountLimitation.swift; sourceTree = "<group>"; };
 		94BE548D25D96932006575E2 /* OggOpusReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusReader.swift; sourceTree = "<group>"; };
 		94BED02E2B692F11004381FA /* PopupPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationManager.swift; sourceTree = "<group>"; };
 		94BED0332B692F73004381FA /* PopupPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupPresentationController.swift; sourceTree = "<group>"; };
@@ -4318,6 +4320,7 @@
 				9419C2E22E6779B800BEAB42 /* DepositAddressGeneratingView.swift */,
 				94A709D52B67B0A5007CADAB /* DepositSuspendedView.xib */,
 				7C2AC42828F2B384005F369A /* DepositSuspendedView.swift */,
+				94BE14BE2E891CBC00BA95A7 /* DepositAmountLimitation.swift */,
 				943270B52E5C6F4D00DFC486 /* DepositViewModel.swift */,
 				943270E12E5D894400DFC486 /* DepositDataSource.swift */,
 				9419C2032E672CB700BEAB42 /* DepositEntryActionDelegate.swift */,
@@ -7734,6 +7737,7 @@
 				7BBA2814246D10DE00787E61 /* GeneralAdapter.swift in Sources */,
 				7B8A6A6D2456C39F00ADC9EB /* SharedMediaPostTableViewController.swift in Sources */,
 				E0A14D3C2372F0340044D131 /* GroupProfileViewController.swift in Sources */,
+				94BE14BF2E891CC200BA95A7 /* DepositAmountLimitation.swift in Sources */,
 				7B7FBF8F2282D75400644693 /* RecalledMessageViewModel.swift in Sources */,
 				7B9D825A22F1BFEA0099381E /* NormalNetworkOperationIconSet.swift in Sources */,
 				9495E0D62CEF79D300124CC7 /* MnemonicsInputAccessoryView.swift in Sources */,
@@ -8409,7 +8413,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 760;
+				CURRENT_PROJECT_VERSION = 763;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -8428,7 +8432,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 3.4.2;
+				MARKETING_VERSION = 3.4.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -8472,7 +8476,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 760;
+				CURRENT_PROJECT_VERSION = 763;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -8485,7 +8489,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 3.4.2;
+				MARKETING_VERSION = 3.4.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;

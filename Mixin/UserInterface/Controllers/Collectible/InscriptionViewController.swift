@@ -547,7 +547,10 @@ extension InscriptionViewController: InscriptionActionCellDelegate {
 extension InscriptionViewController: ImageCropViewControllerDelegate {
     
     func imageCropViewController(_ controller: ImageCropViewController, didCropImage croppedImage: UIImage) {
-        guard let navigationController, let avatarBase64 = croppedImage.imageByScaling(to: .avatar)?.base64 else {
+        guard let navigationController else {
+            return
+        }
+        guard let avatarBase64 = croppedImage.imageByScaling(to: .avatar)?.asBase64Avatar() else {
             alert(R.string.localizable.failed_to_compose_avatar())
             return
         }

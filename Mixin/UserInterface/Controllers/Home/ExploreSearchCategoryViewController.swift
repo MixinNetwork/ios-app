@@ -59,7 +59,7 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
         tableView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         switch category {
         case .asset:
-            tableView.register(R.nib.marketCoinCell)
+            tableView.register(R.nib.assetCell)
         case .bot:
             tableView.register(R.nib.peerCell)
         }
@@ -130,7 +130,14 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
             let models: [Any]
             switch category {
             case .asset:
-                models = MarketDAO.shared.markets(keyword: keyword, limit: nil)
+                models = TokenDAO.shared.search(
+                    keyword: keyword,
+                    includesZeroBalanceItems: false,
+                    sorting: true,
+                    limit: nil
+                ).map { token in
+                    AssetSearchResult(asset: token, keyword: keyword)
+                }
             case .bot:
                 models = UserDAO.shared.getAppUsers(keyword: keyword, limit: nil)
                     .map { user in UserSearchResult(user: user, keyword: keyword) }
@@ -143,45 +150,6 @@ final class ExploreSearchCategoryViewController: UIViewController, ExploreSearch
                 self.reloadTableViewData(showEmptyIndicatorIfEmpty: false)
                 self.lastKeyword = keyword
                 self.navigationSearchBoxView?.isBusy = false
-            }
-            
-            switch category {
-            case .bot:
-                break
-            case .asset:
-                let localMarkets = models as! [FavorableMarket]
-                Logger.general.debug(category: "ExploreSearch", message: "Search remote markets for: \(keyword)")
-                RouteAPI.markets(keyword: keyword, queue: .global()) { result in
-                    guard let self else {
-                        return
-                    }
-                    switch result {
-                    case .failure:
-                        break
-                    case .success(let markets):
-                        MarketDAO.shared.save(markets: markets)
-                        var remoteMarkets = markets.reduce(into: [:]) { results, market in
-                            results[market.coinID] = market
-                        }
-                        let combinedMarkets = localMarkets.map { market in
-                            if let remoteMarket = remoteMarkets.removeValue(forKey: market.coinID) {
-                                FavorableMarket(market: remoteMarket, isFavorite: market.isFavorite)
-                            } else {
-                                market
-                            }
-                        } + remoteMarkets.values.map { market in
-                            FavorableMarket(market: market, isFavorite: false)
-                        }
-                        DispatchQueue.main.async {
-                            guard keyword == self.lastKeyword else {
-                                return
-                            }
-                            Logger.general.debug(category: "ExploreSearch", message: "Showing remote markets for: \(markets.map(\.symbol))")
-                            self.models = combinedMarkets
-                            self.reloadTableViewData(showEmptyIndicatorIfEmpty: true)
-                        }
-                    }
-                }
             }
         }
         queue.addOperation(op)
@@ -213,9 +181,9 @@ extension ExploreSearchCategoryViewController: UITableViewDataSource {
         let model = models[indexPath.row]
         switch category {
         case .asset:
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.market_coin, for: indexPath)!
-            let market = model as! FavorableMarket
-            cell.load(market: market)
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
+            let result = model as! AssetSearchResult
+            cell.render(token: result.asset, attributedSymbol: result.attributedSymbol)
             return cell
         case .bot:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
@@ -235,8 +203,8 @@ extension ExploreSearchCategoryViewController: UITableViewDelegate {
         let model = models[indexPath.row]
         switch category {
         case .asset:
-            let market = model as! FavorableMarket
-            pushMarketViewController(market: market)
+            let result = model as! AssetSearchResult
+            pushTokenViewController(token: result.asset)
         case .bot:
             let result = models[indexPath.row] as! UserSearchResult
             pushConversationViewController(userItem: result.user)

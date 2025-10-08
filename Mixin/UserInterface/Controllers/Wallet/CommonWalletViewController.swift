@@ -417,7 +417,11 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
             let buy = BuyTokenInputAmountViewController(wallet: .common(wallet))
             navigationController?.pushViewController(buy, animated: true)
         case .send:
-            let selector = Web3TokenSelectorViewController(wallet: wallet, tokens: tokens)
+            let selector = Web3TokenSelectorViewController(
+                wallet: wallet,
+                supportedChainIDs: supportedChainIDs,
+                tokens: tokens,
+            )
             selector.onSelected = { [wallet] token in
                 guard
                     let chain = Web3Chain.chain(chainID: token.chainID),
@@ -436,7 +440,11 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
             }
             present(selector, animated: true, completion: nil)
         case .receive:
-            let selector = Web3TokenSelectorViewController(wallet: wallet, tokens: tokens)
+            let selector = Web3TokenSelectorViewController(
+                wallet: wallet,
+                supportedChainIDs: supportedChainIDs,
+                tokens: tokens,
+            )
             selector.onSelected = { [wallet] token in
                 let selector = Web3TokenSenderSelectorViewController(
                     receivingWallet: wallet,

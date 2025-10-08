@@ -55,7 +55,7 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
             guard !op.isCancelled else {
                 return
             }
-            let comparator = TokenComparator<ModelController>(keyword: keyword)
+            let comparator = TokenComparator<ModelController.Item>(keyword: keyword)
             
             let localItems = modelController
                 .localItems(keyword: keyword)
@@ -135,59 +135,6 @@ final class WalletSearchResultsViewController<ModelController: WalletSearchModel
         DispatchQueue.global().async {
             AppGroupUserDefaults.User.insertAssetSearchHistory(with: item.assetID)
         }
-    }
-    
-}
-
-fileprivate struct TokenComparator<ModelController: WalletSearchModelController>: SortComparator {
-    
-    var order: SortOrder = .forward
-    
-    private let lowercasedKeyword: String
-    
-    init(keyword: String) {
-        self.lowercasedKeyword = keyword.lowercased()
-    }
-    
-    func compare(_ lhs: ModelController.Item, _ rhs: ModelController.Item) -> ComparisonResult {
-        let leftDeterminant = determinant(item: lhs)
-        let rightDeterminant = determinant(item: rhs)
-        let forwardResult: ComparisonResult = if leftDeterminant == rightDeterminant {
-            lhs.name.compare(rhs.name)
-        } else if leftDeterminant < rightDeterminant {
-            .orderedDescending
-        } else {
-            .orderedAscending
-        }
-        return switch order {
-        case .forward:
-             forwardResult
-        case .reverse:
-            switch forwardResult {
-            case .orderedAscending:
-                    .orderedDescending
-            case .orderedDescending:
-                    .orderedAscending
-            case .orderedSame:
-                    .orderedSame
-            }
-        }
-    }
-    
-    func determinant(item: ModelController.Item) -> (Int, Decimal, Decimal) {
-        let lowercasedSymbol = item.symbol.lowercased()
-        let symbolPriority = if lowercasedSymbol == lowercasedKeyword {
-            2
-        } else if lowercasedSymbol.contains(lowercasedKeyword) {
-            1
-        } else {
-            0
-        }
-        return (
-            symbolPriority,
-            item.decimalBalance * item.decimalUSDPrice,
-            item.decimalBalance,
-        )
     }
     
 }

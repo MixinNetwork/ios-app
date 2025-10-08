@@ -133,6 +133,13 @@ public final class Web3TokenDAO: Web3DAO {
         )
     }
     
+    public func level(walletID: String, assetID: String) -> Int? {
+        db.select(
+            with: "SELECT level FROM tokens WHERE wallet_id = ? AND asset_id = ?",
+            arguments: [walletID, assetID]
+        )
+    }
+    
     public func save(tokens: [Web3Token], zeroOutOthers: Bool) {
         guard let walletID = tokens.first?.walletID else {
             return

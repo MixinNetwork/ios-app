@@ -179,10 +179,11 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
     
     private func reloadSearchResults(keyword: String, tokens: [SwapToken]) {
         assert(!Thread.isMainThread)
+        let comparator = TokenComparator<BalancedSwapToken>(keyword: keyword)
         let searchResults = fillBalance(to: tokens)
-            .sorted { $0.sortingValues > $1.sortingValues }
-        let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-        let searchResultChains = Self.chains(with: chainIDs)
+            .sorted(using: comparator)
+        let searchResultChainIDs = Set(searchResults.compactMap(\.chain.chainID))
+        let searchResultChains = Self.chains(with: searchResultChainIDs)
         DispatchQueue.main.async {
             guard self.trimmedKeyword == keyword else {
                 return
@@ -190,7 +191,7 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
             self.searchResultsKeyword = keyword
             self.searchResults = searchResults
             self.searchResultChains = searchResultChains
-            if let chain = self.selectedChain, chainIDs.contains(chain.id) {
+            if let chain = self.selectedChain, searchResultChainIDs.contains(chain.id) {
                 self.tokenIndicesForSelectedChain = self.tokenIndices(tokens: searchResults, chainID: chain.id)
             } else {
                 self.selectedChain = nil

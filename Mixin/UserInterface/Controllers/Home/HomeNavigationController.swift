@@ -72,6 +72,16 @@ class HomeNavigationController: GeneralAppearanceNavigationController {
         }
     }
     
+    func pushMarketViewController(_ viewController: MarketViewController, animated: Bool) {
+        if let index = viewControllers.firstIndex(where: { $0 is MarketViewController }) {
+            var viewControllers = Array(self.viewControllers[..<index])
+            viewControllers.append(viewController)
+            setViewControllers(viewControllers, animated: animated)
+        } else {
+            pushViewController(viewController, animated: animated)
+        }
+    }
+    
 }
 
 extension HomeNavigationController: UINavigationControllerDelegate {

@@ -139,6 +139,10 @@ extension AppGroupUserDefaults {
     @Default(namespace: nil, key: "clock_skew", defaultValue: false)
     public static var isClockSkewed: Bool
     
+    // Key is app id
+    @Default(namespace: nil, key: "app_public_key", defaultValue: [:])
+    public static var appPublicKey: [String: Data]
+    
 }
 
 extension AppGroupUserDefaults {

@@ -150,6 +150,8 @@
 "app_update_tips" = "The current version (%@) is no longer available! Please click \"Update\" below to update to the latest version from the App Store.";
 "appearance" = "Appearance";
 "apply" = "Apply";
+"apply_referral_code" = "Apply Referral Code";
+"apply_referral_code_benefit" = "Apply a referral code to your account to unlock exclusive benefits on Mixin";
 "approval" = "Approval";
 "approval_count" = "Approved %@";
 "approval_unlimited" = "Unlimited";
@@ -553,8 +555,10 @@
 "enter_your_pin" = "Enter your PIN";
 "enter_your_pin_to_continue" = "Enter your PIN to continue";
 "error_access_limited" = "ERROR 403: Access Limited";
+"error_already_bonded_referral_code" = "ERROR 10731: This account has already applied a referral code";
 "error_bad_data" = "ERROR 10002: The request data has invalid field";
 "error_blockchain" = "ERROR 30100: Blockchain not in sync, please try again later.";
+"error_cannot_apply_your_own_referral_code" = "ERROR 10732: Cannot apply your own referral code";
 "error_captcha_is_invalid" = "ERROR 10004: CAPTCHA is invalid";
 "error_card_expired" = "ERROR 10601: Card expired";
 "error_card_not_supported" = "ERROR 10604: Card not supported";
@@ -569,7 +573,9 @@
 "error_invalid_emergency_contact" = "ERROR 20130: Invalid recovery contact";
 "error_invalid_pin_format" = "ERROR 20118: Invalid PIN format.";
 "error_invalid_quote_amount" = "ERROR 10614: The input amount is either too small or too large, please adjust the amount.";
+"error_invalid_referral_code" = "ERROR 10730: Invalid Referral Code";
 "error_invalid_swap" = "ERROR 10611: No quotes available at the moment, please try again later.";
+"error_inviter_plan_expired" = "ERROR 10737: The inviter has no valid plan";
 "error_legacy_pin" = "ERROR 20118: To enhance the security of the Mixin network, Mixin API has temporarily suspended the upgrading from D3M-PIN to TIP. Please refer to the documentation for details and register for processing.";
 "error_network_task_failed" = "Network connection failed. Check or switch your network and try again";
 "error_no_available_quote" = "ERROR 10615: This trading pair is currently not supported, please try switching to a different token.";
@@ -706,6 +712,7 @@
 "incoming_voice_call" = "Incoming voice call";
 "info" = "Info";
 "initializing" = "Initializing...";
+"input_referral_code_hint" = "Invited by a friend?";
 "install_messenger_desc" = "Visit mixin.one/mm or scan the QR code to install";
 "insufficient_balance" = "Insufficient balance";
 "insufficient_balance_symbol" = "Insufficient %@";
@@ -843,6 +850,7 @@
 "mixin_one_desc" = "Start your Mixin premium journey";
 "mixin_payment_content" = "💰 Amount: %1$@\n🌐 Network: %2$@\n🤝 Receiver: %3$@";
 "mixin_payment_title" = "📣 Mixin Payment";
+"mixin_referral" = "Mixin Referral";
 "mixin_server_encounters_errors" = "Mixin server encounters errors";
 "mixin_support" = "Mixin Support";
 "mnemonic_phrase" = "Mnemonic Phrase";
@@ -1108,6 +1116,21 @@
 "recovery_kit_attention" = "Attention: The Recovery Kit cannot help you recover your PIN";
 "recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your phone number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "red_up_green_down" = "Red Up / Green Down";
+"referral" = "Referral";
+"referral_banner" = "Invite friends and earn up to 70%% of their trading fees!";
+"referral_code" = "Referral Code";
+"referral_code_applied" = "Applied";
+"referral_code_applied_footer" = "The fees are refunded monthly to your Mixin privacy wallet, summarized by the actual fee tokens and amounts consumed. Read the documentation to learn more.";
+"referral_code_applied_header" = "🎉 Referral code successfully applied! You’ve unlocked the following benefits:";
+"referral_code_applied_introduction_1" = "Up to 50%% cashback on trading fees";
+"referral_code_applied_introduction_2" = "Up to 1,000 USD cashback per transaction when upgrading membership";
+"referral_code_applied_introduction_3" = "Automatic access to all future new benefits";
+"referral_description" = "Invite friends earn crypto";
+"referral_program_introduction_1" = "Up to 70%% commission on trading fees";
+"referral_program_introduction_2" = "Membership commission rebate up to 1,000 USD per order";
+"referral_program_introduction_3" = "Rebate eligibility is valid for life";
+"referral_program_introduction_footer" = "* Referral rewards are available only to paid Mixin One members. ";
+"referral_program_introduction_header" = "Join the referral program and invite friends to earn crypto together:";
 "refresh" = "Refresh";
 "refunded" = "Refunded";
 "reject" = "Reject";
@@ -1513,6 +1536,7 @@
 "update_now" = "Update Now";
 "upgrade" = "Upgrade";
 "upgrade_database" = "Upgrade Database";
+"upgrade_membership_now" = "Upgrade Now";
 "upgrade_plan" = "Upgrade Plan";
 "upgrade_plan_for" = "Upgrade for %@";
 "upgrade_safe" = "Upgrade safe";
@@ -1536,6 +1560,7 @@
 "url_privacy_wallet" = "https://support.mixin.one/en/article/what-is-a-privacy-wallet-1ng5j8f/";
 "url_recall_message" = "https://support.mixin.one/en/article/how-to-recall-in-mixin-messenger-n3v3p1/";
 "url_recovery_contact" = "https://support.mixin.one/en/article/how-to-set-up-an-emergency-contact-1kvd6g8/";
+"url_referral" = "https://support.mixin.one/en/article/how-to-get-a-referral-reward-vmxho0/";
 "url_support" = "https://support.mixin.one/en/";
 "url_unrecognized_hint" = "%@ failed to recognize, please upgrade Mixin to the latest version or contact the developer to check the link";
 "url_unsupported_message" = "https://support.mixin.one/en/article/how-to-do-when-you-receive-a-message-like-this-this-type-of-message-is-not-supported-please-upgrade-mixin-17j1t3p/";

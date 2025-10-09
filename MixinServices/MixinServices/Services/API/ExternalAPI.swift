@@ -1,9 +1,20 @@
 import MixinServices
+import Alamofire
 
 public final class ExternalAPI: MixinAPI {
     
     public static func schemes(completion: @escaping (MixinAPI.Result<[String]>) -> Void) {
         request(method: .get, path: "/external/schemes", completion: completion)
+    }
+    
+    public static func checkAddressSkippingTag(
+        chainID: String,
+        assetID: String,
+        destination: String,
+        completion: @escaping (MixinAPI.Result<AddressResponse>) -> Void,
+    ) {
+        var path = "/external/addresses/check?asset=\(assetID)&chain=\(chainID)&destination=\(destination)&insecureSkipTagCheck=true"
+        request(method: .get, path: path, completion: completion)
     }
     
     public static func checkAddress(

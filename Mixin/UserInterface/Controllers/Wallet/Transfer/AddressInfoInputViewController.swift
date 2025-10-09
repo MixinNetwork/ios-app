@@ -132,8 +132,34 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                 if !destination.isEmpty {
                     let nextInputContent = InputContent(token: token, destination: destination)
                     switch nextInputContent {
-                    case .destination, .memo, .tag:
-                        pushNext(inputContent: nextInputContent)
+                    case .destination:
+                        // Impossible, user just input the destination
+                        break
+                    case .memo, .tag:
+                        nextButton.isBusy = true
+                        ExternalAPI.checkAddressSkippingTag(
+                            chainID: token.chainID,
+                            assetID: token.assetID,
+                            destination: destination
+                        ) { [weak self] result in
+                            switch result {
+                            case .success(let response):
+                                guard let self else {
+                                    return
+                                }
+                                guard destination.lowercased() == response.destination.lowercased() else {
+                                    fallthrough
+                                }
+                                self.nextButton.isBusy = false
+                                self.pushNext(inputContent: nextInputContent)
+                            case .failure:
+                                guard let self else {
+                                    return
+                                }
+                                self.nextButton.isBusy = false
+                                self.reportError(description: R.string.localizable.invalid_address())
+                            }
+                        }
                     case let .label(address):
                         nextButton.isBusy = true
                         AddressValidator.validate(

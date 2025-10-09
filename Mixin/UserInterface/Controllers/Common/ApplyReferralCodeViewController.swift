@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 final class ApplyReferralCodeViewController: UIViewController {
     
@@ -106,7 +107,7 @@ final class ApplyReferralCodeViewController: UIViewController {
         }
         errorDescriptionLabel.isHidden = true
         isBusy = true
-        RouteAPI.bindReferral(code: code) { [weak self] result in
+        ReferralAPI.bindReferral(code: code) { [weak self] result in
             guard let self else {
                 return
             }

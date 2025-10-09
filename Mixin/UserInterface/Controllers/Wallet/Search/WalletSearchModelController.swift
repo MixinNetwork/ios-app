@@ -3,7 +3,7 @@ import MixinServices
 
 protocol WalletSearchModelController {
     
-    associatedtype Item: ValuableToken & OnChainToken & ChangeReportingToken
+    associatedtype Item: ValuableToken & OnChainToken & ChangeReportingToken & ComparableToken
     
     func history() -> [Item]
     func isTrendingItemAvailable(item: AssetItem) -> Bool

@@ -20,7 +20,8 @@ public final class Web3TokenDAO: Web3DAO {
             ORDER BY t.amount * t.price_usd DESC,
                 cast(t.amount AS REAL) DESC,
                 cast(t.price_usd AS REAL) DESC,
-                t.name ASC
+                t.name ASC,
+                c.name ASC
         """
         
     }

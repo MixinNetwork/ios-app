@@ -1,7 +1,35 @@
 import Foundation
 import MixinServices
 
-struct TokenComparator<Token: ValuableToken>: SortComparator {
+protocol ComparableToken: ValuableToken {
+    var chainName: String? { get }
+}
+
+extension MixinTokenItem: ComparableToken {
+    
+    var chainName: String? {
+        chain?.name
+    }
+    
+}
+
+extension Web3TokenItem: ComparableToken {
+    
+    var chainName: String? {
+        chain?.name
+    }
+    
+}
+
+extension BalancedSwapToken: ComparableToken {
+    
+    var chainName: String? {
+        chain.name
+    }
+    
+}
+
+struct TokenComparator<Token: ComparableToken>: SortComparator {
     
     var order: SortOrder = .forward
     
@@ -14,13 +42,24 @@ struct TokenComparator<Token: ValuableToken>: SortComparator {
     func compare(_ lhs: Token, _ rhs: Token) -> ComparisonResult {
         let leftDeterminant = determinant(item: lhs)
         let rightDeterminant = determinant(item: rhs)
-        let forwardResult: ComparisonResult = if leftDeterminant == rightDeterminant {
-            lhs.name.compare(rhs.name)
+        
+        let forwardResult: ComparisonResult
+        if leftDeterminant == rightDeterminant {
+            let nameComparisonResult = lhs.name.compare(rhs.name)
+            switch nameComparisonResult {
+            case .orderedDescending, .orderedAscending:
+                forwardResult = nameComparisonResult
+            case .orderedSame:
+                let left = lhs.chainName ?? ""
+                let right = rhs.chainName ?? ""
+                forwardResult = left.compare(right)
+            }
         } else if leftDeterminant < rightDeterminant {
-            .orderedDescending
+            forwardResult = .orderedDescending
         } else {
-            .orderedAscending
+            forwardResult = .orderedAscending
         }
+        
         return switch order {
         case .forward:
              forwardResult

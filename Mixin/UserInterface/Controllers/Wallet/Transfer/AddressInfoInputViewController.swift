@@ -142,22 +142,19 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                             assetID: token.assetID,
                             destination: destination
                         ) { [weak self] result in
+                            guard let self else {
+                                return
+                            }
+                            self.nextButton.isBusy = false
                             switch result {
                             case .success(let response):
-                                guard let self else {
-                                    return
+                                if destination.lowercased() == response.destination.lowercased() {
+                                    self.pushNext(inputContent: nextInputContent)
+                                } else {
+                                    self.reportError(description: R.string.localizable.invalid_address())
                                 }
-                                guard destination.lowercased() == response.destination.lowercased() else {
-                                    fallthrough
-                                }
-                                self.nextButton.isBusy = false
-                                self.pushNext(inputContent: nextInputContent)
-                            case .failure:
-                                guard let self else {
-                                    return
-                                }
-                                self.nextButton.isBusy = false
-                                self.reportError(description: R.string.localizable.invalid_address())
+                            case .failure(let error):
+                                self.reportError(description: error.localizedDescription)
                             }
                         }
                     case let .label(address):
@@ -178,7 +175,7 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                                 return
                             }
                             self.nextButton.isBusy = false
-                            self.reportError(description: R.string.localizable.invalid_address())
+                            self.reportError(description: error.localizedDescription)
                         }
                     }
                 }
@@ -206,7 +203,7 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                         return
                     }
                     self.nextButton.isBusy = false
-                    self.reportError(description: R.string.localizable.invalid_address())
+                    self.reportError(description: error.localizedDescription)
                 }
             case let .label(address):
                 if !content.isEmpty {

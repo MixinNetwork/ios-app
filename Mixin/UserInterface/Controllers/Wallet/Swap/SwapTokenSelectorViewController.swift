@@ -24,28 +24,26 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
     var onSelected: ((BalancedSwapToken) -> Void)?
     
     private let recent: Recent
+    private let supportedChainIDs: Set<String>? // nil for supporting all chains
+    private let searchSource: RouteTokenSource
     
     private weak var searchRequest: Request?
     
-    var source: RouteTokenSource {
-        .mixin
-    }
-    
     init(
         recent: Recent,
+        supportedChainIDs: Set<String>?,
+        searchSource: RouteTokenSource,
         tokens: [BalancedSwapToken],
-        chains: OrderedSet<Chain>? = nil,
-        selectedAssetID: String?
+        selectedAssetID: String?,
     ) {
         self.recent = recent
-        let defaultChains = if let chains {
-            chains
-        } else {
-            Chain.mixinChains(ids: Set(tokens.compactMap(\.chain.chainID)))
-        }
+        self.supportedChainIDs = supportedChainIDs
+        self.searchSource = searchSource
+        let chainIDs = Set(tokens.compactMap(\.chain.chainID))
+        let chains = Chain.web3Chains(ids: chainIDs)
         super.init(
             defaultTokens: tokens,
-            defaultChains: defaultChains,
+            defaultChains: chains,
             searchDebounceInterval: 1,
             selectedID: selectedAssetID
         )
@@ -59,26 +57,44 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
         searchRequest?.cancel()
     }
     
+    class func chains(with ids: Set<String>) -> OrderedSet<Chain> {
+        assertionFailure("Must Override")
+        return []
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         reloadTokenSelection()
-        DispatchQueue.global().async { [recent, weak self] in
-            guard let tokens = PropertiesDAO.shared.jsonObject(forKey: recent.key, type: [SwapToken.Codable].self) else {
+        DispatchQueue.global().async { [recent, supportedChainIDs, weak self] in
+            let recentTokens = PropertiesDAO.shared.jsonObject(
+                forKey: recent.key,
+                type: [SwapToken.Codable].self
+            )
+            guard let recentTokens else {
                 return
             }
-            let recentTokens = self?.filterRecentTokens(swappableTokens: tokens) ?? []
-            let assetIDs = recentTokens.map(\.assetID)
-            let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
+            let availableRecentTokens = if let supportedChainIDs {
+                recentTokens.filter { token in
+                    if let chainID = token.chain.chainID {
+                        supportedChainIDs.contains(chainID)
+                    } else {
+                        false
+                    }
+                }
+            } else {
+                recentTokens
+            }
+            guard let tokens = self?.fillBalance(to: availableRecentTokens) else {
+                return
+            }
+            let assetIDs = tokens.map(\.assetID)
+            let changes: [String: TokenChange] = MarketDAO.shared
                 .priceChangePercentage24H(assetIDs: assetIDs)
                 .compactMapValues(TokenChange.init(change:))
             DispatchQueue.main.async {
-                self?.reloadRecents(tokens: recentTokens, changes: recentTokenChanges)
+                self?.reloadRecents(tokens: tokens, changes: changes)
             }
         }
-    }
-    
-    func filterRecentTokens(swappableTokens: [SwapToken]) -> [BalancedSwapToken] {
-        fillSwappableTokenBalance(swappableTokens: swappableTokens)
     }
     
     override func prepareForSearch(_ textField: UITextField) {
@@ -87,7 +103,11 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
     }
     
     override func search(keyword: String) {
-        searchRequest = RouteAPI.search(keyword: keyword, source: source, queue: .global()) { [weak self] result in
+        searchRequest = RouteAPI.search(
+            keyword: keyword,
+            source: searchSource,
+            queue: .global()
+        ) { [weak self] result in
             switch result {
             case .success(let tokens):
                 self?.reloadSearchResults(keyword: keyword, tokens: tokens)
@@ -152,20 +172,18 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
         reporter.report(event: .tradeTokenSelect, method: location.asEventMethod)
     }
     
-    func chains(with ids: Set<String>) -> OrderedSet<Chain> {
-        Chain.mixinChains(ids: ids)
-    }
-    
-    func fillSwappableTokenBalance(swappableTokens: [SwapToken]) -> [BalancedSwapToken] {
-        BalancedSwapToken.fillMixinBalance(swappableTokens: swappableTokens)
+    func fillBalance(to tokens: [SwapToken]) -> [BalancedSwapToken] {
+        assertionFailure("Must Override")
+        return []
     }
     
     private func reloadSearchResults(keyword: String, tokens: [SwapToken]) {
         assert(!Thread.isMainThread)
-        let searchResults = fillSwappableTokenBalance(swappableTokens: tokens)
-            .sorted { $0.sortingValues > $1.sortingValues }
-        let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-        let searchResultChains = chains(with: chainIDs)
+        let comparator = TokenComparator<BalancedSwapToken>(keyword: keyword)
+        let searchResults = fillBalance(to: tokens)
+            .sorted(using: comparator)
+        let searchResultChainIDs = Set(searchResults.compactMap(\.chain.chainID))
+        let searchResultChains = Self.chains(with: searchResultChainIDs)
         DispatchQueue.main.async {
             guard self.trimmedKeyword == keyword else {
                 return
@@ -173,7 +191,7 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
             self.searchResultsKeyword = keyword
             self.searchResults = searchResults
             self.searchResultChains = searchResultChains
-            if let chain = self.selectedChain, chainIDs.contains(chain.id) {
+            if let chain = self.selectedChain, searchResultChainIDs.contains(chain.id) {
                 self.tokenIndicesForSelectedChain = self.tokenIndices(tokens: searchResults, chainID: chain.id)
             } else {
                 self.selectedChain = nil

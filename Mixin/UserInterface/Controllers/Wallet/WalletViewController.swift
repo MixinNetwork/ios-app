@@ -15,7 +15,7 @@ class WalletViewController: UIViewController, MnemonicsBackupChecking {
     private let searchAppearingAnimationDistance: CGFloat = 20
     
     private var searchCenterYConstraint: NSLayoutConstraint?
-    private var searchViewController: WalletSearchViewController?
+    private var searchViewController: UIViewController?
     
     init() {
         let nib = R.nib.walletView
@@ -117,7 +117,7 @@ class WalletViewController: UIViewController, MnemonicsBackupChecking {
         }
     }
     
-    func makeSearchViewController() -> WalletSearchViewController {
+    func makeSearchViewController() -> UIViewController {
         fatalError("Must override")
     }
     

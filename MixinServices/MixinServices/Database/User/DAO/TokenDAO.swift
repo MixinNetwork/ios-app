@@ -20,7 +20,7 @@ public final class TokenDAO: UserDatabaseDAO {
                 LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
         """
         
-        static let order = "te.balance * t.price_usd DESC, cast(te.balance AS REAL) DESC, cast(t.price_usd AS REAL) DESC, t.name ASC"
+        static let order = "te.balance * t.price_usd DESC, cast(te.balance AS REAL) DESC, cast(t.price_usd AS REAL) DESC, t.name ASC, c.name ASC"
         
         static let selectWithAssetID = "\(SQL.selector) WHERE t.asset_id = ?"
         

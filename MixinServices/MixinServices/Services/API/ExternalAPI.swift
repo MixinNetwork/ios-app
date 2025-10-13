@@ -11,10 +11,9 @@ public final class ExternalAPI: MixinAPI {
         chainID: String,
         assetID: String,
         destination: String,
-        completion: @escaping (MixinAPI.Result<AddressResponse>) -> Void,
-    ) {
-        var path = "/external/addresses/check?asset=\(assetID)&chain=\(chainID)&destination=\(destination)&insecureSkipTagCheck=true"
-        request(method: .get, path: path, completion: completion)
+    ) async throws -> AddressResponse {
+        let path = "/external/addresses/check?asset=\(assetID)&chain=\(chainID)&destination=\(destination)&insecureSkipTagCheck=true"
+        return try await request(method: .get, path: path)
     }
     
     public static func checkAddress(

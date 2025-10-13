@@ -137,25 +137,22 @@ final class AddressInfoInputViewController: KeyboardBasedLayoutViewController {
                         break
                     case .memo, .tag:
                         nextButton.isBusy = true
-                        ExternalAPI.checkAddressSkippingTag(
+                        AddressValidator.validateSkippingTag(
                             chainID: token.chainID,
                             assetID: token.assetID,
                             destination: destination
-                        ) { [weak self] result in
+                        ) { [weak self] in
                             guard let self else {
                                 return
                             }
                             self.nextButton.isBusy = false
-                            switch result {
-                            case .success(let response):
-                                if destination.lowercased() == response.destination.lowercased() {
-                                    self.pushNext(inputContent: nextInputContent)
-                                } else {
-                                    self.reportError(description: R.string.localizable.invalid_address())
-                                }
-                            case .failure(let error):
-                                self.reportError(description: error.localizedDescription)
+                            self.pushNext(inputContent: nextInputContent)
+                        } onFailure: { [weak self] error in
+                            guard let self else {
+                                return
                             }
+                            self.nextButton.isBusy = false
+                            self.reportError(description: error.localizedDescription)
                         }
                     case let .label(address):
                         nextButton.isBusy = true

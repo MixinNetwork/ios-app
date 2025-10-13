@@ -122,8 +122,20 @@ enum AddressValidator {
                         onFailure(TransferLinkError.notTransferLink)
                         return
                     }
-                    if let nextInput = AddressInfoInputViewController.oneTimeWithdraw(token: token, destination: string) {
-                        onSuccess(.tagNeeded(nextInput))
+                    let tagInput: AddressInfoInputViewController? = .oneTimeWithdraw(
+                        token: token,
+                        destination: string
+                    )
+                    if let tagInput {
+                        validateSkippingTag(
+                            chainID: token.chainID,
+                            assetID: token.assetID,
+                            destination: string
+                        ) {
+                            onSuccess(.tagNeeded(tagInput))
+                        } onFailure: { error in
+                            onFailure(error)
+                        }
                     } else {
                         validate(
                             chainID: token.chainID,
@@ -163,6 +175,34 @@ enum AddressValidator {
                 )
                 await MainActor.run {
                     onSuccess(destination)
+                }
+            } catch {
+                await MainActor.run {
+                    onFailure(error)
+                }
+            }
+        }
+    }
+    
+    static func validateSkippingTag(
+        chainID: String,
+        assetID: String,
+        destination: String,
+        onSuccess: @escaping @MainActor () -> Void,
+        onFailure: @escaping @MainActor (Error) -> Void
+    ) {
+        Task {
+            do {
+                let response = try await ExternalAPI.checkAddressSkippingTag(
+                    chainID: chainID,
+                    assetID: assetID,
+                    destination: destination
+                )
+                guard destination.lowercased() == response.destination.lowercased() else {
+                    throw ValidationError.mismatchedDestination
+                }
+                await MainActor.run {
+                    onSuccess()
                 }
             } catch {
                 await MainActor.run {

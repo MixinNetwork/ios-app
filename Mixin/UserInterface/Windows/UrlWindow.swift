@@ -897,7 +897,7 @@ class UrlWindow {
         }
         if let market {
             let viewController = MarketViewController(market: market)
-            UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
+            UIApplication.homeNavigationController?.pushMarketViewController(viewController, animated: true)
             return
         }
         let hud = Hud()
@@ -909,7 +909,7 @@ class UrlWindow {
                     DispatchQueue.main.async {
                         hud.hide()
                         let viewController = MarketViewController(market: market)
-                        UIApplication.homeNavigationController?.pushViewController(viewController, animated: true)
+                        UIApplication.homeNavigationController?.pushMarketViewController(viewController, animated: true)
                     }
                 } else {
                     DispatchQueue.main.async(execute: hud.hide)

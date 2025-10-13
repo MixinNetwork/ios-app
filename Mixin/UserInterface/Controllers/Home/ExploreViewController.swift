@@ -136,6 +136,9 @@ final class ExploreViewController: UIViewController {
                 present(buy, animated: true)
             }
             BadgeManager.shared.setHasViewed(identifier: .membership)
+        case .referral:
+            UIApplication.homeContainerViewController?.presentReferralPage()
+            BadgeManager.shared.setHasViewed(identifier: .referral)
         case .linkDesktop:
             let desktop = DesktopViewController()
             navigationController?.pushViewController(desktop, animated: true)

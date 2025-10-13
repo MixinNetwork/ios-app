@@ -6,13 +6,14 @@ enum ExploreAction {
     case buy
     case swap
     case membership
+    case referral
     case linkDesktop
     case customerService
     case editFavoriteApps
     
     var trayImage: UIImage? {
         switch self {
-        case .buy, .swap, .membership, .linkDesktop, .customerService:
+        case .buy, .swap, .membership, .referral, .linkDesktop, .customerService:
             R.image.explore.action_tray()
         case .editFavoriteApps:
             R.image.explore.edit_favorite_app()
@@ -27,6 +28,8 @@ enum ExploreAction {
             R.image.explore.swap()
         case .membership:
             R.image.explore.membership()
+        case .referral:
+            R.image.explore.referral()
         case .linkDesktop:
             if AppGroupUserDefaults.Account.isDesktopLoggedIn {
                 R.image.explore.desktop_logged_in()
@@ -48,6 +51,8 @@ enum ExploreAction {
             R.string.localizable.swap()
         case .membership:
             R.string.localizable.mixin_one()
+        case .referral:
+            R.string.localizable.referral()
         case .linkDesktop:
             R.string.localizable.link_desktop()
         case .customerService:
@@ -65,6 +70,8 @@ enum ExploreAction {
             R.string.localizable.trade_native_tokens()
         case .membership:
             R.string.localizable.mixin_one_desc()
+        case .referral:
+            R.string.localizable.referral_description()
         case .linkDesktop:
             if AppGroupUserDefaults.Account.isDesktopLoggedIn {
                 R.string.localizable.logined()

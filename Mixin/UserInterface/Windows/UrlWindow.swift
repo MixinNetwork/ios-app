@@ -92,6 +92,10 @@ class UrlWindow {
                     homeContainer.present(plans, animated: true)
                 }
                 return true
+            case let .referral(code):
+                let apply = ApplyReferralCodeViewController(code: code)
+                UIApplication.homeContainerViewController?.present(apply, animated: true)
+                return true
             }
         } else if let mixinURL = MixinURL(url: url) {
             let result: Bool

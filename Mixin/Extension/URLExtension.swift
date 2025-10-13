@@ -12,6 +12,7 @@ extension URL {
     static let tip                  = URL(string: "https://tip.id")!
     static let customerService      = URL(string: "https://go.crisp.chat/chat/embed/?website_id=52662bba-be49-4b06-9edc-7baa9a78f714")!
     static let openSource           = URL(string: "https://github.com/MixinNetwork/ios-app")!
+    static let referral             = URL(string: R.string.localizable.url_referral())!
     static let recoveryContact      = URL(string: R.string.localizable.url_recovery_contact())!
     static let unsupportedMessage   = URL(string: R.string.localizable.url_unsupported_message())!
     static let deleteAccount        = URL(string: R.string.localizable.url_delete_account())!

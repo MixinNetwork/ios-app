@@ -12,6 +12,7 @@ enum SafeURL {
     case send(ExternalSharingContext)
     case market(id: String)
     case membership
+    case referral(String?)
     
 }
 
@@ -59,6 +60,11 @@ extension SafeURL {
                 } else {
                     return nil
                 }
+            case 2 where pathComponents[1] == "referrals":
+                self = .referral(nil)
+            case 3 where pathComponents[1] == "referrals":
+                let code = pathComponents[2]
+                self = .referral(code)
             case 2 where pathComponents[1] == "membership":
                 self = .membership
             case 3 where pathComponents[1] == "schemes":

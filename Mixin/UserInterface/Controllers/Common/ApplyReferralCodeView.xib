@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_3" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ApplyReferralCodeViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="benefitLabel" destination="VTY-BU-LlN" id="BHi-9t-0oB"/>
+                <outlet property="codeField" destination="J4g-m7-NCm" id="wht-4G-Hmo"/>
+                <outlet property="codeFieldTitleLabel" destination="O3N-12-bjA" id="4UD-uG-UgM"/>
+                <outlet property="confirmButton" destination="eV9-QA-8os" id="xKQ-bZ-fy7"/>
+                <outlet property="contentStackView" destination="C4F-zP-4bL" id="GZq-iE-sdm"/>
+                <outlet property="errorDescriptionLabel" destination="vZ7-X2-QDO" id="6RB-dI-i6w"/>
+                <outlet property="inputSectionView" destination="Xsf-ad-agf" id="lbb-wp-QyS"/>
+                <outlet property="laterButton" destination="fYq-ze-aty" id="NiM-GO-YKv"/>
+                <outlet property="startInputButton" destination="9mB-AJ-5GO" id="PCw-Rj-0sd"/>
+                <outlet property="titleLabel" destination="WMC-aU-xZI" id="REo-hr-YVn"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="dbY-Lo-bF4">
+                    <rect key="frame" x="0.0" y="0.0" width="402" height="685.33333333333337"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7uy-3S-FNK">
+                            <rect key="frame" x="0.0" y="0.0" width="402" height="447.66666666666669"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="referral_introduction" translatesAutoresizingMaskIntoConstraints="NO" id="NLh-ko-QRf">
+                                    <rect key="frame" x="0.0" y="0.0" width="402" height="269"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="NLh-ko-QRf" secondAttribute="height" multiplier="375:251" id="Iyd-P0-KZ3"/>
+                                    </constraints>
+                                </imageView>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="C4F-zP-4bL">
+                                    <rect key="frame" x="20" y="299" width="362" height="148.66666666666663"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apply Referral Code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WMC-aU-xZI">
+                                            <rect key="frame" x="81.333333333333329" y="0.0" width="199.33333333333337" height="26.333333333333332"/>
+                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
+                                            <color key="textColor" name="text"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xsf-ad-agf">
+                                            <rect key="frame" x="0.0" y="36.333333333333314" width="362" height="72"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="Referral Code" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O3N-12-bjA" userLabel="Placeholder Label">
+                                                    <rect key="frame" x="16" y="14" width="330" height="17"/>
+                                                    <color key="backgroundColor" name="background"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" name="text_tertiary"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="J4g-m7-NCm" userLabel="Code Field">
+                                                    <rect key="frame" x="16" y="37" width="330" height="21"/>
+                                                    <color key="textColor" name="text"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="done" smartDashesType="no" smartQuotesType="no"/>
+                                                </textField>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9mB-AJ-5GO">
+                                                    <rect key="frame" x="0.0" y="0.0" width="362" height="72"/>
+                                                    <color key="backgroundColor" name="background"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain" title="Referral Code">
+                                                        <fontDescription key="titleFontDescription" style="UICTFontTextStyleCallout"/>
+                                                        <color key="baseForegroundColor" name="text_quaternary"/>
+                                                    </buttonConfiguration>
+                                                    <connections>
+                                                        <action selector="startInput:" destination="-1" eventType="touchUpInside" id="2Ce-uM-jDh"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" name="background"/>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="9mB-AJ-5GO" secondAttribute="bottom" id="9yu-mU-WH8"/>
+                                                <constraint firstItem="O3N-12-bjA" firstAttribute="top" secondItem="Xsf-ad-agf" secondAttribute="top" constant="14" id="CBE-la-Ng2"/>
+                                                <constraint firstItem="9mB-AJ-5GO" firstAttribute="top" secondItem="Xsf-ad-agf" secondAttribute="top" id="CY1-Mc-eQG"/>
+                                                <constraint firstItem="J4g-m7-NCm" firstAttribute="top" secondItem="O3N-12-bjA" secondAttribute="bottom" constant="6" id="KM1-VV-mSO"/>
+                                                <constraint firstItem="O3N-12-bjA" firstAttribute="leading" secondItem="Xsf-ad-agf" secondAttribute="leading" constant="16" id="POE-gZ-xID"/>
+                                                <constraint firstItem="J4g-m7-NCm" firstAttribute="leading" secondItem="Xsf-ad-agf" secondAttribute="leading" constant="16" id="UqV-Q3-tZQ"/>
+                                                <constraint firstAttribute="trailing" secondItem="9mB-AJ-5GO" secondAttribute="trailing" id="XoV-hY-i6A"/>
+                                                <constraint firstItem="9mB-AJ-5GO" firstAttribute="leading" secondItem="Xsf-ad-agf" secondAttribute="leading" id="eVS-xD-YBS"/>
+                                                <constraint firstAttribute="trailing" secondItem="O3N-12-bjA" secondAttribute="trailing" constant="16" id="pO9-IY-ogH"/>
+                                                <constraint firstAttribute="bottom" secondItem="J4g-m7-NCm" secondAttribute="bottom" constant="14" id="pOI-7b-SGn"/>
+                                                <constraint firstAttribute="trailing" secondItem="J4g-m7-NCm" secondAttribute="trailing" constant="16" id="vQN-Rh-YQG"/>
+                                            </constraints>
+                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apply a referral code to your account to unlock exclusive benefits on Mixin." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VTY-BU-LlN" userLabel="Benefit Label">
+                                            <rect key="frame" x="16" y="118.3333333333333" width="330" height="30.333333333333329"/>
+                                            <color key="backgroundColor" name="background_secondary"/>
+                                            <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                            <color key="textColor" name="text_quaternary"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="VTY-BU-LlN" firstAttribute="width" secondItem="C4F-zP-4bL" secondAttribute="width" constant="-32" id="OFq-Kg-9pL"/>
+                                        <constraint firstItem="Xsf-ad-agf" firstAttribute="width" secondItem="C4F-zP-4bL" secondAttribute="width" id="xtq-si-lIk"/>
+                                    </constraints>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" name="background_secondary"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="NLh-ko-QRf" secondAttribute="trailing" id="09a-Ck-Mqa"/>
+                                <constraint firstItem="NLh-ko-QRf" firstAttribute="top" secondItem="7uy-3S-FNK" secondAttribute="top" id="S7z-lQ-4ya"/>
+                                <constraint firstItem="NLh-ko-QRf" firstAttribute="leading" secondItem="7uy-3S-FNK" secondAttribute="leading" id="bqh-kJ-twu"/>
+                                <constraint firstItem="C4F-zP-4bL" firstAttribute="leading" secondItem="7uy-3S-FNK" secondAttribute="leading" constant="20" id="gvE-Xm-7aO"/>
+                                <constraint firstAttribute="bottom" secondItem="C4F-zP-4bL" secondAttribute="bottom" id="o1s-1G-C1Y"/>
+                                <constraint firstAttribute="trailing" secondItem="C4F-zP-4bL" secondAttribute="trailing" constant="20" id="qhP-WC-FCg"/>
+                                <constraint firstItem="C4F-zP-4bL" firstAttribute="top" secondItem="NLh-ko-QRf" secondAttribute="bottom" constant="30" id="xrl-bl-rZ1"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" name="background_secondary"/>
+                    <constraints>
+                        <constraint firstItem="7uy-3S-FNK" firstAttribute="bottom" secondItem="bBt-s1-QDp" secondAttribute="bottom" id="XkQ-dx-Ni9"/>
+                        <constraint firstItem="7uy-3S-FNK" firstAttribute="leading" secondItem="bBt-s1-QDp" secondAttribute="leading" id="cRV-nM-wSa"/>
+                        <constraint firstItem="7uy-3S-FNK" firstAttribute="top" secondItem="bBt-s1-QDp" secondAttribute="top" id="g1e-lN-3mC"/>
+                        <constraint firstItem="7uy-3S-FNK" firstAttribute="trailing" secondItem="bBt-s1-QDp" secondAttribute="trailing" id="g7S-sM-Owm"/>
+                        <constraint firstItem="7uy-3S-FNK" firstAttribute="width" secondItem="o2v-YV-F32" secondAttribute="width" id="tct-bu-Lty"/>
+                    </constraints>
+                    <viewLayoutGuide key="contentLayoutGuide" id="bBt-s1-QDp"/>
+                    <viewLayoutGuide key="frameLayoutGuide" id="o2v-YV-F32"/>
+                </scrollView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="vj0-Se-3Ap">
+                    <rect key="frame" x="36" y="693.33333333333337" width="330" height="100.66666666666663"/>
+                    <subviews>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vZ7-X2-QDO">
+                            <rect key="frame" x="0.0" y="0.0" width="330" height="0.0"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="error_red"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eV9-QA-8os" customClass="ConfigurationBasedBusyButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="330" height="44.333333333333336"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="filled" title="Confirm" cornerStyle="capsule">
+                                <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="16"/>
+                                <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="13" trailing="0.0"/>
+                                <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="baseBackgroundColor" name="theme"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="confirm:" destination="-1" eventType="touchUpInside" id="6EG-m2-iMe"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fYq-ze-aty">
+                            <rect key="frame" x="0.0" y="56.333333333333258" width="330" height="44.333333333333343"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" title="Later">
+                                <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="16"/>
+                                <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="13" trailing="0.0"/>
+                                <color key="baseForegroundColor" name="theme"/>
+                            </buttonConfiguration>
+                            <connections>
+                                <action selector="close:" destination="-1" eventType="touchUpInside" id="3yQ-Z4-3RY"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" name="background_secondary"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="vj0-Se-3Ap" secondAttribute="trailing" constant="36" id="1no-vi-Fzt"/>
+                <constraint firstItem="dbY-Lo-bF4" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="C3Z-Xd-BqI"/>
+                <constraint firstAttribute="trailing" secondItem="dbY-Lo-bF4" secondAttribute="trailing" id="UvF-rw-knu"/>
+                <constraint firstItem="dbY-Lo-bF4" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="VAY-SR-bAq"/>
+                <constraint firstItem="vj0-Se-3Ap" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="36" id="XWx-dh-zTI"/>
+                <constraint firstItem="vj0-Se-3Ap" firstAttribute="top" secondItem="dbY-Lo-bF4" secondAttribute="bottom" constant="8" id="xbz-1C-CLf"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="vj0-Se-3Ap" secondAttribute="bottom" constant="12" id="yKX-ug-XUR"/>
+            </constraints>
+            <point key="canvasLocation" x="-48.091603053435115" y="41.549295774647888"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="referral_introduction" width="375" height="251"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="error_red">
+            <color red="0.85882352941176465" green="0.27058823529411763" blue="0.30980392156862746" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_quaternary">
+            <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

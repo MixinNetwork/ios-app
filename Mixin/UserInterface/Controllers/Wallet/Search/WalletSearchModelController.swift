@@ -92,6 +92,8 @@ final class WalletSearchWeb3TokenController: WalletSearchModelController {
     
     func history() -> [Web3TokenItem] {
         AppGroupUserDefaults.User.assetSearchHistory.compactMap { assetID in
+            // No need to filter with `supportedChainIDs`
+            // Unsupported tokens will not be in database
             Web3TokenDAO.shared.token(walletID: walletID, assetID: assetID)
         }
     }
@@ -111,6 +113,7 @@ final class WalletSearchWeb3TokenController: WalletSearchModelController {
     
     func remoteItems(from tokens: [MixinToken]) -> [Web3TokenItem] {
         let chainIDs = Set(tokens.map(\.chainID))
+            .filter(supportedChainIDs.contains(_:))
         let chains = Web3ChainDAO.shared.chains(chainIDs: chainIDs)
         return tokens.compactMap { token in
             guard let chain = chains[token.chainID] else {

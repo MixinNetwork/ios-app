@@ -7,6 +7,10 @@ public final class TokenExtraDAO: UserDatabaseDAO {
     
     public static let tokenVisibilityDidChangeNotification = Notification.Name("one.mixin.service.TokenExtraDAO.TokenVisibilityDidChange")
     
+    public func tokenExtra(assetID: String) -> TokenExtra? {
+        db.select(with: "SELECT * FROM tokens_extra WHERE asset_id = ?", arguments: [assetID])
+    }
+    
     public func insertOrUpdateBalance(
         extra: TokenExtra,
         into db: GRDB.Database,

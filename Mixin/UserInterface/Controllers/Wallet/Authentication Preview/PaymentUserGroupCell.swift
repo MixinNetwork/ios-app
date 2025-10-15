@@ -43,12 +43,7 @@ final class PaymentUserGroupCell: UITableViewCell {
         }
         for (i, user) in users.enumerated() {
             let itemView = itemViews[i]
-            let badgeImage = user.badgeImage
-            itemView.avatarImageView.setImage(with: user)
-            itemView.usernameLabel.text = user.fullName
-            itemView.identityNumberLabel.text = "(\(user.identityNumber))"
-            itemView.badgeImageView.image = badgeImage
-            itemView.badgeImageView.isHidden = badgeImage == nil
+            itemView.load(user: user)
             switch checkmarkCondition {
             case .never:
                 itemView.checkmark = nil

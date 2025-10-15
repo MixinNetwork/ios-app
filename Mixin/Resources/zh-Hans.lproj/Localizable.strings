@@ -641,6 +641,9 @@
 "fee" = "手续费";
 "fee_selection" = "手续费（%@）";
 "feedback" = "反馈";
+"fetching_address" = "正在查找地址...";
+"fetching_address_failed" = "找不到地址";
+"fetching_address_failed_reason" = "该联系人还没有注册普通钱包";
 "fetching_in_to_your_wallet" = "正在查找你的钱包...";
 "file" = "文件";
 "files" = "文档";

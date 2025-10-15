@@ -641,6 +641,9 @@
 "fee" = "手續費";
 "fee_selection" = "手續費（%@）";
 "feedback" = "反饋";
+"fetching_address" = "正在查詢地址...";
+"fetching_address_failed" = "找不到地址";
+"fetching_address_failed_reason" = "該聯絡人還沒有註冊普通錢包";
 "fetching_in_to_your_wallet" = "正在查詢你的錢包...";
 "file" = "檔案";
 "files" = "檔案";

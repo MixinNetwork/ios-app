@@ -1,5 +1,6 @@
 import UIKit
 import SDWebImage
+import MixinServices
 
 final class PaymentUserItemView: UIView {
     
@@ -47,6 +48,15 @@ final class PaymentUserItemView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         contentStackView.setCustomSpacing(2, after: usernameLabel)
+    }
+    
+    func load(user: UserItem) {
+        let badgeImage = user.badgeImage
+        avatarImageView.setImage(with: user)
+        usernameLabel.text = user.fullName
+        identityNumberLabel.text = "(\(user.identityNumber))"
+        badgeImageView.image = badgeImage
+        badgeImageView.isHidden = badgeImage == nil
     }
     
 }

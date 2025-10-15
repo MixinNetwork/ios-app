@@ -410,6 +410,22 @@ extension RouteAPI {
         )
     }
     
+    static func userAddressDestination(
+        userID: String,
+        chainID: String,
+        completion: @escaping (MixinAPI.Result<String>) -> Void
+    ) {
+        struct UserAddressView: Decodable {
+            let destination: String
+        }
+        request(
+            method: .get,
+            path: "/users/\(userID)/address?chain_id=\(chainID)"
+        ) { (result: MixinAPI.Result<UserAddressView>) in
+            completion(result.map(\.destination))
+        }
+    }
+    
 }
 
 // MARK: - RPC

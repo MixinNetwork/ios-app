@@ -52,6 +52,7 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.register(R.nib.multipleAssetChangeCell)
         tableView.register(R.nib.addressReceiversCell)
         tableView.register(R.nib.authenticationPreviewWalletCell)
+        tableView.register(R.nib.commonWalletReceiverCell)
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -299,6 +300,12 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
                 cell.iconImageView.isHidden = true
             }
             return cell
+        case let .commonWalletReceiver(user, address):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.common_wallet_receiver, for: indexPath)!
+            cell.userItemView.load(user: user)
+            cell.captionLabel.text = R.string.localizable.receiver().uppercased()
+            cell.addressLabel.text = address
+            return cell
         }
     }
     
@@ -416,6 +423,7 @@ extension AuthenticationPreviewViewController {
         case safeMultisigAmount(token: MixinTokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case addressReceivers(MixinTokenItem, [SafeMultisigResponse.Safe.Recipient])
         case wallet(caption: Caption, wallet: Wallet, threshold: Int32?)
+        case commonWalletReceiver(user: UserItem, address: String)
     }
     
     struct TableHeaderViewStyle: OptionSet {

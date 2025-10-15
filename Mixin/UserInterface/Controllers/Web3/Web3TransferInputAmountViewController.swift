@@ -42,6 +42,11 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                 titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
                 navigationItem.titleView = titleView
             }
+        case let .contact(user):
+            navigationItem.titleView = UserNavigationTitleView(
+                title: R.string.localizable.send_to_title(),
+                user: user
+            )
         case .none:
             let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
             titleView.subtitle = payment.toAddressCompactRepresentation

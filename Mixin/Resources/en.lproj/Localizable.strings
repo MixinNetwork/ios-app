@@ -641,6 +641,9 @@
 "fee" = "Fee";
 "fee_selection" = "Fee (%@)";
 "feedback" = "Feedback";
+"fetching_address" = "Fetching address...";
+"fetching_address_failed" = "Fetch Failed";
+"fetching_address_failed_reason" = "This contact hasn’t registered a common wallet.";
 "fetching_in_to_your_wallet" = "Fetching in to your wallet...";
 "file" = "File";
 "files" = "Files";

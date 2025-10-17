@@ -6,11 +6,12 @@ final class Web3TokenReceiverViewController: TokenReceiverViewController {
     
     private enum Receiver {
         case addressBook
+        case contact
         case myWallets
     }
     
     private let payment: Web3SendingTokenPayment
-    private let receivers: [Receiver] = [.addressBook, .myWallets]
+    private let receivers: [Receiver] = [.addressBook, .contact, .myWallets]
     
     init(payment: Web3SendingTokenPayment) {
         self.payment = payment
@@ -95,6 +96,11 @@ extension Web3TokenReceiverViewController: UITableViewDataSource {
             cell.titleLabel.text = R.string.localizable.address_book()
             cell.titleTag = nil
             cell.descriptionLabel.text = R.string.localizable.send_to_address_description()
+        case .contact:
+            cell.iconImageView.image = R.image.token_receiver_contact()
+            cell.titleLabel.text = R.string.localizable.mixin_contact()
+            cell.titleTag = nil
+            cell.descriptionLabel.text = R.string.localizable.send_to_contact_common_wallet_description()
         case .myWallets:
             cell.iconImageView.image = R.image.token_receiver_wallet()
             cell.titleLabel.text = R.string.localizable.my_wallet()
@@ -127,6 +133,20 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
                 }
             }
             present(book, animated: true)
+        case .contact:
+            reporter.report(event: .sendRecipient, tags: ["type": "contact"])
+            let selector = TransferReceiverViewController()
+            selector.onSelect = { [payment] user in
+                self.dismiss(animated: true) {
+                    let loader = LoadContactCommonWalletAddressViewController(
+                        payment: payment,
+                        user: user,
+                        chainID: payment.chain.chainID
+                    )
+                    self.navigationController?.pushViewController(loader, animated: true)
+                }
+            }
+            present(selector, animated: true)
         case .myWallets:
             reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
             let selector = TransferWalletSelectorViewController(

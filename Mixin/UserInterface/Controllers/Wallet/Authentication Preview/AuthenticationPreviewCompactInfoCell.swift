@@ -86,6 +86,8 @@ final class AuthenticationPreviewCompactInfoCell: UITableViewCell {
         case .wallet(let wallet):
             label.backgroundColor = R.color.background_tinted()!.withAlphaComponent(0.7)
             label.text = wallet.localizedName
+        case .contact:
+            assertionFailure("Use CommonWalletReceiverCell?")
         }
         let labelSize = label.intrinsicContentSize
         

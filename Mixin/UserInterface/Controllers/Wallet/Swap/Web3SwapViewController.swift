@@ -61,7 +61,7 @@ final class Web3SwapViewController: SwapViewController {
         let selector = SwapWeb3TokenSelectorViewController(
             wallet: wallet,
             supportedChainIDs: supportedChainIDs,
-            recent: .send,
+            intent: .send,
             tokens: tokens,
             selectedAssetID: sendToken?.assetID
         )
@@ -94,7 +94,7 @@ final class Web3SwapViewController: SwapViewController {
         let selector = SwapWeb3TokenSelectorViewController(
             wallet: wallet,
             supportedChainIDs: supportedChainIDs,
-            recent: .receive,
+            intent: .receive,
             tokens: Array(swappableTokens.values),
             selectedAssetID: receiveToken?.assetID
         )

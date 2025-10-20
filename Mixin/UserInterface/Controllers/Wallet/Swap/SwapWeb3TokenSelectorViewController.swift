@@ -10,13 +10,13 @@ final class SwapWeb3TokenSelectorViewController: SwapTokenSelectorViewController
     init(
         wallet: Web3Wallet,
         supportedChainIDs: Set<String>,
-        recent: Recent,
+        intent: Intent,
         tokens: [BalancedSwapToken],
         selectedAssetID: String?,
     ) {
         self.wallet = wallet
         super.init(
-            recent: recent,
+            intent: intent,
             supportedChainIDs: supportedChainIDs,
             searchSource: .web3,
             tokens: tokens,

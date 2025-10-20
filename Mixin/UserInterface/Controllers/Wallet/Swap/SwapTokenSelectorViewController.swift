@@ -5,12 +5,12 @@ import MixinServices
 
 class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewController<BalancedSwapToken> {
     
-    enum Recent {
+    enum Intent {
         
         case send
         case receive
         
-        fileprivate var key: PropertiesDAO.Key {
+        fileprivate var recentAssetIDsKey: PropertiesDAO.Key {
             switch self {
             case .send:
                     .mixinSwapRecentSendIDs
@@ -21,22 +21,23 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
         
     }
     
+    let intent: Intent
+    
     var onSelected: ((BalancedSwapToken) -> Void)?
     
-    private let recent: Recent
     private let supportedChainIDs: Set<String>? // nil for supporting all chains
     private let searchSource: RouteTokenSource
     
     private weak var searchRequest: Request?
     
     init(
-        recent: Recent,
+        intent: Intent,
         supportedChainIDs: Set<String>?,
         searchSource: RouteTokenSource,
         tokens: [BalancedSwapToken],
         selectedAssetID: String?,
     ) {
-        self.recent = recent
+        self.intent = intent
         self.supportedChainIDs = supportedChainIDs
         self.searchSource = searchSource
         let chainIDs = Set(tokens.compactMap(\.chain.chainID))
@@ -65,9 +66,9 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         reloadTokenSelection()
-        DispatchQueue.global().async { [recent, supportedChainIDs, weak self] in
+        DispatchQueue.global().async { [intent, supportedChainIDs, weak self] in
             let recentTokens = PropertiesDAO.shared.jsonObject(
-                forKey: recent.key,
+                forKey: intent.recentAssetIDsKey,
                 type: [SwapToken.Codable].self
             )
             guard let recentTokens else {
@@ -121,11 +122,11 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
     
     override func saveRecentsToStorage(tokens: any Sequence<BalancedSwapToken>) {
         let tokens = tokens.map(\.codable)
-        PropertiesDAO.shared.set(jsonObject: tokens, forKey: recent.key)
+        PropertiesDAO.shared.set(jsonObject: tokens, forKey: intent.recentAssetIDsKey)
     }
     
     override func clearRecentsStorage() {
-        PropertiesDAO.shared.removeValue(forKey: recent.key)
+        PropertiesDAO.shared.removeValue(forKey: intent.recentAssetIDsKey)
     }
     
     override func tokenIndices(tokens: [BalancedSwapToken], chainID: String) -> [Int] {

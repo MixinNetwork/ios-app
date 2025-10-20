@@ -5,12 +5,12 @@ import MixinServices
 final class SwapMixinTokenSelectorViewController: SwapTokenSelectorViewController {
     
     init(
-        recent: Recent,
+        intent: Intent,
         tokens: [BalancedSwapToken],
         selectedAssetID: String?
     ) {
         super.init(
-            recent: recent,
+            intent: intent,
             supportedChainIDs: nil,
             searchSource: .mixin,
             tokens: tokens,

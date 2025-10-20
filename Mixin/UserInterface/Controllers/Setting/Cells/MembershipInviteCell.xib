@@ -26,7 +26,7 @@
                                 <rect key="frame" x="0.0" y="6" width="24" height="24"/>
                                 <color key="tintColor" red="0.66666666666666663" green="0.44313725490196076" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Invite friends and earn up to 70% of their trading fees!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jfv-VD-rDz">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Invite friends and earn up to 60% of their trading fees!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jfv-VD-rDz">
                                 <rect key="frame" x="40" y="1.3333333333333321" width="226" height="33.666666666666671"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                 <color key="textColor" red="0.66666666669999997" green="0.4431372549" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>

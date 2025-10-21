@@ -220,7 +220,7 @@ extension HomeTabBarController: TabBarDelegate {
     
     func tabBar(_ tabBar: TabBar, didSelect item: TabBar.Item) {
         let id = ChildID(rawValue: item.id)!
-        reporter.report(event: .homeTabSwitch, method: id.debugDescription)
+        reporter.report(event: .homeTabSwitch, tags: ["method": id.debugDescription])
         switchToChildAfterValidated(with: id)
     }
     

@@ -309,7 +309,7 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
             reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "wallet_home"])
             let selector = MixinTokenSelectorViewController()
             selector.onSelected = { (token, location) in
-                reporter.report(event: .sendTokenSelect, method: location.asEventMethod)
+                reporter.report(event: .sendTokenSelect, tags: ["method": location.asEventMethod])
                 let receiver = MixinTokenReceiverViewController(token: token)
                 self.navigationController?.pushViewController(receiver, animated: true)
             }
@@ -319,7 +319,7 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
             let selector = MixinTokenSelectorViewController()
             selector.searchFromRemote = true
             selector.onSelected = { (token, location) in
-                reporter.report(event: .receiveTokenSelect, method: location.asEventMethod)
+                reporter.report(event: .receiveTokenSelect, tags: ["method": location.asEventMethod])
                 let deposit = DepositViewController(token: token)
                 self.navigationController?.pushViewController(deposit, animated: true)
             }

@@ -9,8 +9,8 @@ class SignUpWithMobileNumberViewController: MobileNumberViewController, Captcha.
         .signUp
     }
     
-    var reportingContent: (event: Reporter.Event, method: String) {
-        (event: .signUpCAPTCHA, method: "phone_number")
+    var reportingContent: (event: Reporter.Event, type: String) {
+        (event: .signUpCAPTCHA, type: "phone_number")
     }
     
     private let cellularData = CTCellularData()

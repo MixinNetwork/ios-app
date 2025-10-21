@@ -5,7 +5,7 @@ import MixinServices
 final class Captcha: NSObject {
     
     protocol Reporting {
-        var reportingContent: (event: Reporter.Event, method: String) { get }
+        var reportingContent: (event: Reporter.Event, type: String) { get }
     }
     
     private let messageHandlerName = "mixin_messenger_captcha"
@@ -42,7 +42,7 @@ final class Captcha: NSObject {
             return
         }
         if let content = (viewController as? Reporting)?.reportingContent {
-            reporter.report(event: content.event, method: content.method)
+            reporter.report(event: content.event, tags: ["type": content.type])
         }
         self.completion = completion
         if webView == nil {

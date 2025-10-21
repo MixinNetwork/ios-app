@@ -108,11 +108,3 @@ open class Reporter {
     }
     
 }
-
-extension Reporter {
-    
-    public func report(event: Event, method: String) {
-        report(event: event, tags: ["method": method])
-    }
-    
-}

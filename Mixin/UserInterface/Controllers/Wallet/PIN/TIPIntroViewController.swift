@@ -161,7 +161,7 @@ final class TIPIntroViewController: UIViewController {
                     reporter.report(event: .signUpEnd)
                 case .change:
                     if report {
-                        reporter.report(event: .loginVerifyPIN, method: "change_pin")
+                        reporter.report(event: .loginVerifyPIN, tags: ["type": "change_pin"])
                     }
                 case .migrate:
                     break

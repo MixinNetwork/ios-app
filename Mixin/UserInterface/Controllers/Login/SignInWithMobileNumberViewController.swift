@@ -7,8 +7,8 @@ final class SignInWithMobileNumberViewController: SignUpWithMobileNumberViewCont
         .signIn
     }
     
-    override var reportingContent: (event: Reporter.Event, method: String) {
-        (event: .loginCAPTCHA, method: "phone_number")
+    override var reportingContent: (event: Reporter.Event, type: String) {
+        (event: .loginCAPTCHA, type: "phone_number")
     }
     
     private let separatorLineView = R.nib.loginSeparatorLineView(withOwner: nil)!

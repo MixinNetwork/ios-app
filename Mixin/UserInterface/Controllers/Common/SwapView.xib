@@ -91,7 +91,7 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="vFl-mb-1ym" userLabel="Send Token Stack View">
                                                             <rect key="frame" x="0.0" y="27" width="321" height="50"/>
                                                             <subviews>
-                                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="0" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dwa-uE-gGI" userLabel="Send Amount Text Field">
+                                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="0" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="dwa-uE-gGI" userLabel="Send Amount Text Field">
                                                                     <rect key="frame" x="0.0" y="7.3333333333333357" width="207" height="35.333333333333336"/>
                                                                     <color key="textColor" name="text"/>
                                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="28"/>
@@ -230,7 +230,7 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="VtN-HO-ttl" userLabel="Receive Token Stack View">
                                                             <rect key="frame" x="0.0" y="27" width="321" height="50"/>
                                                             <subviews>
-                                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="0" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ugc-43-XHy" userLabel="Receive Amount Text Field">
+                                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="0" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="ugc-43-XHy" userLabel="Receive Amount Text Field">
                                                                     <rect key="frame" x="0.0" y="7.3333333333333428" width="207" height="35.333333333333336"/>
                                                                     <color key="textColor" name="text"/>
                                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="28"/>

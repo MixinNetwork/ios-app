@@ -393,11 +393,10 @@ extension ChainCategorizedTokenSelectorViewController {
         }
         
         static func web3Chains(ids: Set<String>) -> OrderedSet<Chain> {
-            let all = Web3Chain.all.map { chain in
+            let chains = Web3Chain.all.filter { chain in
+                ids.contains(chain.chainID)
+            }.map { chain in
                 Chain(id: chain.chainID, name: chain.name)
-            }
-            let chains = all.filter { chain in
-                ids.contains(chain.id)
             }
             return OrderedSet(chains)
         }

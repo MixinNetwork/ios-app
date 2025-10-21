@@ -16,7 +16,8 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
         self.wallet = wallet
         self.supportedChainIDs = supportedChainIDs
         let chainIDs = Set(tokens.compactMap(\.chainID))
-        let chains = Chain.mixinChains(ids: chainIDs)
+            .intersection(supportedChainIDs)
+        let chains = Chain.web3Chains(ids: chainIDs)
         super.init(
             defaultTokens: tokens,
             defaultChains: chains,
@@ -43,13 +44,9 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
             let recentTokens = recentAssetIDs.compactMap { id in
                 tokens[id]
             }
-            let chainIDs = Set(defaultTokens.compactMap(\.chainID))
-            let chains = Chain.web3Chains(ids: chainIDs)
             DispatchQueue.main.async {
                 self.recentTokens = recentTokens
-                self.defaultChains = chains
                 self.collectionView.reloadData()
-                self.reloadChainSelection()
                 self.collectionView.checkEmpty(
                     dataCount: tokens.count,
                     text: R.string.localizable.dont_have_assets(),

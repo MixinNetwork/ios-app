@@ -10,7 +10,7 @@ final class SwapWeb3TokenSelectorViewController: SwapTokenSelectorViewController
     init(
         wallet: Web3Wallet,
         supportedChainIDs: Set<String>,
-        intent: Intent,
+        intent: TokenSelectorIntent,
         tokens: [BalancedSwapToken],
         selectedAssetID: String?,
     ) {

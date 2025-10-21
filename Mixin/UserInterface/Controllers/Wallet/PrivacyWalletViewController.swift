@@ -114,7 +114,7 @@ final class PrivacyWalletViewController: WalletViewController {
     
     @objc private func reloadData() {
         DispatchQueue.global().async { [weak self] in
-            let tokens = TokenDAO.shared.notHiddenTokens()
+            let tokens = TokenDAO.shared.notHiddenTokens(includesZeroBalanceItems: true)
             DispatchQueue.main.async {
                 guard let self = self else {
                     return
@@ -308,7 +308,7 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
             BadgeManager.shared.setHasViewed(identifier: .buy)
         case .send:
             reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "wallet_home"])
-            let selector = MixinTokenSelectorViewController()
+            let selector = MixinTokenSelectorViewController(intent: .send)
             selector.onSelected = { (token, location) in
                 reporter.report(event: .sendTokenSelect, tags: ["method": location.asEventMethod])
                 let receiver = MixinTokenReceiverViewController(token: token)
@@ -317,7 +317,7 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
             present(selector, animated: true, completion: nil)
         case .receive:
             reporter.report(event: .receiveStart, tags: ["wallet": "main", "source": "wallet_home"])
-            let selector = MixinTokenSelectorViewController()
+            let selector = MixinTokenSelectorViewController(intent: .receive)
             selector.searchFromRemote = true
             selector.onSelected = { (token, location) in
                 reporter.report(event: .receiveTokenSelect, tags: ["method": location.asEventMethod])

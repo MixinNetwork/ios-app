@@ -223,7 +223,10 @@ final class CommonWalletViewController: WalletViewController {
             let addresses = Web3AddressDAO.shared.addresses(walletID: walletID)
             let secret: Secret?
             let chainIDs = Set(addresses.map(\.chainID))
-            let tokens = Web3TokenDAO.shared.notHiddenTokens(walletID: walletID)
+            let tokens = Web3TokenDAO.shared.notHiddenTokens(
+                walletID: walletID,
+                includesZeroBalanceItems: true
+            )
             let renaming = WalletDigest.LegacyClassicWalletRenaming(
                 wallet: .common(wallet),
                 hasLegacyAddress: addresses.contains { $0.path == nil }
@@ -420,7 +423,7 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
             let selector = Web3TokenSelectorViewController(
                 wallet: wallet,
                 supportedChainIDs: supportedChainIDs,
-                tokens: tokens,
+                intent: .send,
             )
             selector.onSelected = { [wallet] token in
                 guard
@@ -443,7 +446,7 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
             let selector = Web3TokenSelectorViewController(
                 wallet: wallet,
                 supportedChainIDs: supportedChainIDs,
-                tokens: tokens,
+                intent: .receive,
             )
             selector.onSelected = { [wallet] token in
                 let selector = Web3TokenSenderSelectorViewController(

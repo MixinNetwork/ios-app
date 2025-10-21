@@ -1309,7 +1309,7 @@ final class ConversationViewController: UIViewController {
             return
         }
         reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "chat"])
-        let selector = MixinTokenSelectorViewController()
+        let selector = MixinTokenSelectorViewController(intent: .send)
         selector.onSelected = { (token, location) in
             reporter.report(event: .sendTokenSelect, tags: ["method": location.asEventMethod])
             reporter.report(event: .sendRecipient, tags: ["type": "contact"])

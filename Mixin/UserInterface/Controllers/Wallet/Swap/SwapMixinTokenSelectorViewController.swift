@@ -5,7 +5,7 @@ import MixinServices
 final class SwapMixinTokenSelectorViewController: SwapTokenSelectorViewController {
     
     init(
-        intent: Intent,
+        intent: TokenSelectorIntent,
         tokens: [BalancedSwapToken],
         selectedAssetID: String?
     ) {

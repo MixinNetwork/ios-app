@@ -8,9 +8,12 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
     var onSelected: ((MixinTokenItem, PickUpLocation) -> Void)?
     var searchFromRemote = false
     
+    private let intent: TokenSelectorIntent
+    
     private weak var searchRequest: Request?
     
-    init() {
+    init(intent: TokenSelectorIntent) {
+        self.intent = intent
         super.init(
             defaultTokens: [],
             defaultChains: [],
@@ -29,6 +32,12 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let includesZeroBalanceItems = switch intent {
+        case .send:
+            false
+        case .receive:
+            true
+        }
         DispatchQueue.global().async {
             let recentAssetIDs = PropertiesDAO.shared.jsonObject(forKey: .transferRecentAssetIDs, type: [String].self) ?? []
             let recentTokens = TokenDAO.shared.tokenItems(with: recentAssetIDs)
@@ -41,7 +50,9 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
             let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
                 .priceChangePercentage24H(assetIDs: recentAssetIDs)
                 .compactMapValues(TokenChange.init(change:))
-            let tokens = TokenDAO.shared.notHiddenTokens()
+            let tokens = TokenDAO.shared.notHiddenTokens(
+                includesZeroBalanceItems: includesZeroBalanceItems
+            )
             let chainIDs = Set(tokens.compactMap(\.chainID))
             let chains = Chain.mixinChains(ids: chainIDs)
             DispatchQueue.main.async {

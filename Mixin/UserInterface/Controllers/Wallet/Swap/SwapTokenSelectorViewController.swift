@@ -5,39 +5,31 @@ import MixinServices
 
 class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewController<BalancedSwapToken> {
     
-    enum Intent {
-        
-        case send
-        case receive
-        
-        fileprivate var recentAssetIDsKey: PropertiesDAO.Key {
-            switch self {
-            case .send:
-                    .mixinSwapRecentSendIDs
-            case .receive:
-                    .mixinSwapRecentReceiveIDs
-            }
-        }
-        
-    }
     
-    let intent: Intent
+    let intent: TokenSelectorIntent
     
     var onSelected: ((BalancedSwapToken) -> Void)?
     
+    private let recentAssetIDsKey: PropertiesDAO.Key
     private let supportedChainIDs: Set<String>? // nil for supporting all chains
     private let searchSource: RouteTokenSource
     
     private weak var searchRequest: Request?
     
     init(
-        intent: Intent,
+        intent: TokenSelectorIntent,
         supportedChainIDs: Set<String>?,
         searchSource: RouteTokenSource,
         tokens: [BalancedSwapToken],
         selectedAssetID: String?,
     ) {
         self.intent = intent
+        self.recentAssetIDsKey = switch intent {
+        case .send:
+                .mixinSwapRecentSendIDs
+        case .receive:
+                .mixinSwapRecentReceiveIDs
+        }
         self.supportedChainIDs = supportedChainIDs
         self.searchSource = searchSource
         let chainIDs = Set(tokens.compactMap(\.chain.chainID))
@@ -66,9 +58,9 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         reloadTokenSelection()
-        DispatchQueue.global().async { [intent, supportedChainIDs, weak self] in
+        DispatchQueue.global().async { [recentAssetIDsKey, supportedChainIDs, weak self] in
             let recentTokens = PropertiesDAO.shared.jsonObject(
-                forKey: intent.recentAssetIDsKey,
+                forKey: recentAssetIDsKey,
                 type: [SwapToken.Codable].self
             )
             guard let recentTokens else {
@@ -122,11 +114,11 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
     
     override func saveRecentsToStorage(tokens: any Sequence<BalancedSwapToken>) {
         let tokens = tokens.map(\.codable)
-        PropertiesDAO.shared.set(jsonObject: tokens, forKey: intent.recentAssetIDsKey)
+        PropertiesDAO.shared.set(jsonObject: tokens, forKey: recentAssetIDsKey)
     }
     
     override func clearRecentsStorage() {
-        PropertiesDAO.shared.removeValue(forKey: intent.recentAssetIDsKey)
+        PropertiesDAO.shared.removeValue(forKey: recentAssetIDsKey)
     }
     
     override func tokenIndices(tokens: [BalancedSwapToken], chainID: String) -> [Int] {

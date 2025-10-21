@@ -9,18 +9,21 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
     
     private let wallet: Web3Wallet
     private let supportedChainIDs: Set<String>
+    private let intent: TokenSelectorIntent
     
     private weak var searchRequest: Request?
     
-    init(wallet: Web3Wallet, supportedChainIDs: Set<String>, tokens: [Web3TokenItem]) {
+    init(
+        wallet: Web3Wallet,
+        supportedChainIDs: Set<String>,
+        intent: TokenSelectorIntent,
+    ) {
         self.wallet = wallet
         self.supportedChainIDs = supportedChainIDs
-        let chainIDs = Set(tokens.compactMap(\.chainID))
-            .intersection(supportedChainIDs)
-        let chains = Chain.web3Chains(ids: chainIDs)
+        self.intent = intent
         super.init(
-            defaultTokens: tokens,
-            defaultChains: chains,
+            defaultTokens: [],
+            defaultChains: [],
             searchDebounceInterval: 0.5,
             selectedID: nil
         )
@@ -36,17 +39,33 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        DispatchQueue.global().async { [defaultTokens] in
-            let tokens = defaultTokens.reduce(into: [:]) { results, item in
-                results[item.assetID] = item
+        let walletID = wallet.walletID
+        let includesZeroBalanceItems = switch intent {
+        case .send:
+            false
+        case .receive:
+            true
+        }
+        DispatchQueue.global().async {
+            let tokens = Web3TokenDAO.shared.notHiddenTokens(
+                walletID: walletID,
+                includesZeroBalanceItems: includesZeroBalanceItems,
+            )
+            let chainIDs = Set(tokens.compactMap(\.chainID))
+            let chains = Chain.web3Chains(ids: chainIDs)
+            let tokensMap = tokens.reduce(into: [:]) { results, token in
+                results[token.assetID] = token
             }
             let recentAssetIDs = PropertiesDAO.shared.jsonObject(forKey: .transferRecentAssetIDs, type: [String].self) ?? []
             let recentTokens = recentAssetIDs.compactMap { id in
-                tokens[id]
+                tokensMap[id]
             }
             DispatchQueue.main.async {
                 self.recentTokens = recentTokens
+                self.defaultTokens = tokens
+                self.defaultChains = chains
                 self.collectionView.reloadData()
+                self.reloadChainSelection()
                 self.collectionView.checkEmpty(
                     dataCount: tokens.count,
                     text: R.string.localizable.dont_have_assets(),

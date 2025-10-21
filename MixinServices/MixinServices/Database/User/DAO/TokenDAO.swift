@@ -143,8 +143,13 @@ public final class TokenDAO: UserDatabaseDAO {
         db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS TRUE ORDER BY \(SQL.order)")
     }
     
-    public func notHiddenTokens() -> [MixinTokenItem] {
-        db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS FALSE ORDER BY \(SQL.order)")
+    public func notHiddenTokens(includesZeroBalanceItems: Bool) -> [MixinTokenItem] {
+        var sql = "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS FALSE"
+        if !includesZeroBalanceItems {
+            sql += " AND te.balance > 0"
+        }
+        sql.append(" ORDER BY \(SQL.order)")
+        return db.select(with: sql)
     }
     
     public func defaultTransferToken() -> MixinTokenItem? {

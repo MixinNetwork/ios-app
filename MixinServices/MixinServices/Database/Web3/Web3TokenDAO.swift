@@ -59,12 +59,18 @@ public final class Web3TokenDAO: Web3DAO {
         db.select(with: "\(SQL.selector)\n\(SQL.order)")
     }
     
-    public func notHiddenTokens(walletID: String) -> [Web3TokenItem] {
-        let sql = """
+    public func notHiddenTokens(
+        walletID: String,
+        includesZeroBalanceItems: Bool,
+    ) -> [Web3TokenItem] {
+        var sql = """
         \(SQL.selector)
         WHERE t.wallet_id = ? AND ifnull(te.hidden,FALSE) IS FALSE
-        \(SQL.order)
         """
+        if !includesZeroBalanceItems {
+            sql += " AND t.amount > 0"
+        }
+        sql += "\n\(SQL.order)"
         return db.select(with: sql, arguments: [walletID])
     }
     

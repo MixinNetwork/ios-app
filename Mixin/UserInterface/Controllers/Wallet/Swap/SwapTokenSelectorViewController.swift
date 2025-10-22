@@ -7,8 +7,6 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
     
     let intent: TokenSelectorIntent
     let recentAssetIDsKey: PropertiesDAO.Key
-    let queue = DispatchQueue(label: "one.mixin.messenger.SwapTokenSelector")
-    let operationQueue = OperationQueue()
     
     weak var searchRequest: Request?
     
@@ -31,8 +29,6 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
             searchDebounceInterval: 0.5,
             selectedID: selectedAssetID
         )
-        self.operationQueue.underlyingQueue = queue
-        self.operationQueue.maxConcurrentOperationCount = 1
     }
     
     required init?(coder: NSCoder) {

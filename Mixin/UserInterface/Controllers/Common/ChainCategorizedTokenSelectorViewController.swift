@@ -5,10 +5,8 @@ import MixinServices
 
 class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: TokenSelectorViewController, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
     
-    private let maxNumberOfRecents = 6
-    private let recentGroupHorizontalMargin: CGFloat = 20
-    private let searchDebounceInterval: TimeInterval
-    private let selectedID: String?
+    let operationQueue = OperationQueue()
+    let queue = DispatchQueue(label: "one.mixin.messenger.ChainCategorizedTokenSelector")
     
     var recentTokens: [SelectableToken] = []
     var recentTokenChanges: [String: TokenChange] = [:] // Key is token's id
@@ -24,6 +22,11 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
     var searchResults: [SelectableToken]?
     var searchResultChains: OrderedSet<Chain>?
     
+    private let maxNumberOfRecents = 6
+    private let recentGroupHorizontalMargin: CGFloat = 20
+    private let searchDebounceInterval: TimeInterval
+    private let selectedID: String?
+    
     init(
         defaultTokens: [SelectableToken],
         defaultChains: OrderedSet<Chain>,
@@ -35,6 +38,8 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
         self.searchDebounceInterval = searchDebounceInterval
         self.selectedID = selectedID
         super.init()
+        self.operationQueue.underlyingQueue = queue
+        self.operationQueue.maxConcurrentOperationCount = 1
     }
     
     required init?(coder: NSCoder) {

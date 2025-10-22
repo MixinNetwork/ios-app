@@ -11,8 +11,6 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
     private let supportedChainIDs: Set<String>
     private let intent: TokenSelectorIntent
     private let displayZeroBalanceItems: Bool
-    private let operationQueue = OperationQueue()
-    private let queue = DispatchQueue(label: "one.mixin.messenger.Web3TokenSelector")
     
     private weak var searchRequest: Request?
     
@@ -36,8 +34,6 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
             searchDebounceInterval: 0.5,
             selectedID: nil
         )
-        self.operationQueue.underlyingQueue = queue
-        self.operationQueue.maxConcurrentOperationCount = 1
     }
     
     required init?(coder: NSCoder) {

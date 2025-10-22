@@ -58,25 +58,7 @@ final class MainAppReporter: Reporter {
         if properties.contains(.assetLevel) {
             DispatchQueue.global().async {
                 let sum = TokenDAO.shared.usdBalanceSum()
-                let value = switch sum {
-                case 0:
-                    "v0"
-                case ..<100:
-                    "v1"
-                case ..<1_000:
-                    "v100"
-                case ..<10_000:
-                    "v1,000"
-                case ..<100_000:
-                    "v10,000"
-                case ..<1_000_000:
-                    "v100,000"
-                case ..<10_000_000:
-                    "v1,000,000"
-                default:
-                    "v10,000,000"
-                }
-                Analytics.setUserProperty(value, forName: "asset_level")
+                Analytics.setUserProperty(sum.reportAsAssetLevel, forName: "asset_level")
             }
         }
     }

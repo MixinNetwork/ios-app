@@ -451,7 +451,7 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
                 receiveAssetID: nil
             )
             navigationController?.pushViewController(swap, animated: true)
-            reporter.report(event: .tradeStart, tags: ["source": "wallet_home", "wallet": "web3"])
+            reporter.report(event: .tradeStart, tags: ["wallet": "web3", "source": "wallet_home"])
         }
     }
     

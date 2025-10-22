@@ -105,6 +105,26 @@ public extension Decimal {
         max(-exponent, 0)
     }
     
+    public var reportAsAssetLevel: String {
+        switch self {
+        case 0:
+            "v0"
+        case ..<100:
+            "v1"
+        case ..<1_000:
+            "v100"
+        case ..<10_000:
+            "v1,000"
+        case ..<100_000:
+            "v10,000"
+        case ..<1_000_000:
+            "v100,000"
+        case ..<10_000_000:
+            "v1,000,000"
+        default:
+            "v10,000,000"
+        }
+    }
 }
 
 public extension NSDecimalNumberHandler {

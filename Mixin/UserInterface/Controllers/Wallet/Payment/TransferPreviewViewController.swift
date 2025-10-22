@@ -184,7 +184,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
                     tableHeaderView.setIcon(progress: .success)
                     switch context {
                     case .swap:
-                        reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": "swap"])
+                        reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": "swap", "trade_asset_level": operation.amount.reportAsAssetLevel])
                     case .inscription(let context):
                         switch context.operation {
                         case .transfer:

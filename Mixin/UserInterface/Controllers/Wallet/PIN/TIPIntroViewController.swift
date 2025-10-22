@@ -21,8 +21,6 @@ final class TIPIntroViewController: UIViewController {
         case noInputNeeded(TIPActionViewController.Action, Error)
     }
     
-    var reportLoginEventOnChangingInterruptionRecovered = false
-    
     private let intent: TIP.Action
     private let checkCounterTimeoutInterval: TimeInterval = 10
     
@@ -81,6 +79,7 @@ final class TIPIntroViewController: UIViewController {
                 description = R.string.localizable.tip_creation_introduction()
             case .inputNeeded, .noInputNeeded:
                 description = R.string.localizable.creating_wallet_terminated_unexpectedly()
+                reporter.report(event: .accountResumePIN, tags: ["type": "pin_create"])
             }
             setNoticeHidden(false)
         case .change:
@@ -90,6 +89,7 @@ final class TIPIntroViewController: UIViewController {
                 description = R.string.localizable.tip_introduction()
             case .inputNeeded, .noInputNeeded:
                 description = R.string.localizable.changing_pin_terminated_unexpectedly()
+                reporter.report(event: .accountResumePIN, tags: ["type": "pin_change"])
             }
             setNoticeHidden(false)
         case .migrate:
@@ -99,6 +99,7 @@ final class TIPIntroViewController: UIViewController {
                 description = R.string.localizable.tip_introduction()
             case .inputNeeded, .noInputNeeded:
                 description = R.string.localizable.upgrading_tip_terminated_unexpectedly()
+                reporter.report(event: .accountResumePIN, tags: ["type": "pin_upgrade"])
             }
             setNoticeHidden(false)
         }
@@ -154,15 +155,12 @@ final class TIPIntroViewController: UIViewController {
             }
         case .inputNeeded(let context):
             let navigationController = self.tipNavigationController
-            let report = self.reportLoginEventOnChangingInterruptionRecovered
             let validator = TIPPopupInputViewController(action: .continue(context, { [weak navigationController] in
                 switch context.action {
                 case .create:
                     reporter.report(event: .signUpEnd)
                 case .change:
-                    if report {
-                        reporter.report(event: .loginVerifyPIN, tags: ["type": "change_pin"])
-                    }
+                    break
                 case .migrate:
                     break
                 }

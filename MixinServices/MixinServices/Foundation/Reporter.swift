@@ -53,6 +53,8 @@ open class Reporter {
         case homeTabSwitch      = "home_tab_switch"
         case moreTabSwitch      = "more_tab_switch"
         
+        case accountResumePIN     = "account_resume_pin"
+        
         case customerServiceDialog       = "customer_service_dialog"
         case errorSessionVerifications   = "error_session_verifications"
     }

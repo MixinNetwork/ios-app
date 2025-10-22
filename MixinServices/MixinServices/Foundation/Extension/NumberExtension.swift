@@ -105,7 +105,7 @@ public extension Decimal {
         max(-exponent, 0)
     }
     
-    public var reportAsAssetLevel: String {
+    public var reportingAssetLevel: String {
         switch self {
         case 0:
             "v0"

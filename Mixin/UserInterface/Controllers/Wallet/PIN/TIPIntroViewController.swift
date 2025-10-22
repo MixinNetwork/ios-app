@@ -79,7 +79,7 @@ final class TIPIntroViewController: UIViewController {
                 description = R.string.localizable.tip_creation_introduction()
             case .inputNeeded, .noInputNeeded:
                 description = R.string.localizable.creating_wallet_terminated_unexpectedly()
-                reporter.report(event: .accountResumePIN, tags: ["type": "pin_create"])
+                reporter.report(event: .accountRecoverPIN, tags: ["type": "pin_create"])
             }
             setNoticeHidden(false)
         case .change:
@@ -89,7 +89,7 @@ final class TIPIntroViewController: UIViewController {
                 description = R.string.localizable.tip_introduction()
             case .inputNeeded, .noInputNeeded:
                 description = R.string.localizable.changing_pin_terminated_unexpectedly()
-                reporter.report(event: .accountResumePIN, tags: ["type": "pin_change"])
+                reporter.report(event: .accountRecoverPIN, tags: ["type": "pin_change"])
             }
             setNoticeHidden(false)
         case .migrate:
@@ -99,7 +99,7 @@ final class TIPIntroViewController: UIViewController {
                 description = R.string.localizable.tip_introduction()
             case .inputNeeded, .noInputNeeded:
                 description = R.string.localizable.upgrading_tip_terminated_unexpectedly()
-                reporter.report(event: .accountResumePIN, tags: ["type": "pin_upgrade"])
+                reporter.report(event: .accountRecoverPIN, tags: ["type": "pin_upgrade"])
             }
             setNoticeHidden(false)
         }

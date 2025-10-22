@@ -156,10 +156,10 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
                 switch operation {
                 case .mixin(let operation):
                     try await operation.start(pin: pin)
-                    reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": "swap", "trade_asset_level": sendAmount.reportAsAssetLevel])
+                    reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": "swap", "trade_asset_level": sendAmount.reportingAssetLevel])
                 case .web3(let operation):
                     try await operation.start(pin: pin)
-                    reporter.report(event: .tradeEnd, tags: ["wallet": "web3", "type": "swap", "trade_asset_level": sendAmount.reportAsAssetLevel])
+                    reporter.report(event: .tradeEnd, tags: ["wallet": "web3", "type": "swap", "trade_asset_level": sendAmount.reportingAssetLevel])
                 }
                 UIDevice.current.playPaymentSuccess()
                 await MainActor.run {

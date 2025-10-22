@@ -60,7 +60,7 @@ public enum MixinAPIError: Error {
         }
     }
     
-    var isClientErrorResponse: Bool {
+    public var isClientErrorResponse: Bool {
         switch self {
         case let .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(status))):
             return status >= 400 && status < 500
@@ -71,7 +71,7 @@ public enum MixinAPIError: Error {
         }
     }
     
-    var isServerErrorResponse: Bool {
+    public var isServerErrorResponse: Bool {
         switch self {
         case let .httpTransport(.responseValidationFailed(reason: .unacceptableStatusCode(status))):
             return status >= 500

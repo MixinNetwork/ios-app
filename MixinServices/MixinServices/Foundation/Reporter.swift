@@ -53,6 +53,8 @@ open class Reporter {
         case homeTabSwitch      = "home_tab_switch"
         case moreTabSwitch      = "more_tab_switch"
         
+        case accountRecoverPIN     = "account_recover_pin"
+        
         case customerServiceDialog       = "customer_service_dialog"
         case errorSessionVerifications   = "error_session_verifications"
     }
@@ -105,14 +107,6 @@ open class Reporter {
     
     open func updateUserProperties(_ properties: UserProperty, account: Account? = nil) {
         
-    }
-    
-}
-
-extension Reporter {
-    
-    public func report(event: Event, method: String) {
-        report(event: event, tags: ["method": method])
     }
     
 }

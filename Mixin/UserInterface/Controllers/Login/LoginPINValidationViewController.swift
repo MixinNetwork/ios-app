@@ -27,7 +27,7 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 action: #selector(presentCustomerService(_:))
             ),
         ]
-        reporter.report(event: .loginVerifyPIN, method: "verify_pin")
+        reporter.report(event: .loginVerifyPIN, tags: ["type": "verify_pin"])
     }
     
     override func continueAction(_ sender: Any) {

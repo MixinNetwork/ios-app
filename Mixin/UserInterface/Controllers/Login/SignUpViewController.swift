@@ -110,7 +110,7 @@ extension SignUpViewController: UITableViewDelegate {
         let controller: UIViewController
         if indexPath.section == 0 {
             controller = SignUpWithMobileNumberViewController()
-            reporter.report(event: .signUpStart, method: "mobile_number")
+            reporter.report(event: .signUpStart, tags: ["type": "phone_number"])
         } else {
             if let entropy = AppGroupKeychain.mnemonics,
                let mnemonics = try? MixinMnemonics(entropy: entropy)
@@ -119,7 +119,7 @@ extension SignUpViewController: UITableViewDelegate {
             } else {
                 controller = SignUpWithMnemonicIntroductionViewController()
             }
-            reporter.report(event: .signUpStart, method: "mnemonic_phrase")
+            reporter.report(event: .signUpStart, tags: ["type": "mnemonic_phrase"])
         }
         navigationController?.pushViewController(controller, animated: true)
     }

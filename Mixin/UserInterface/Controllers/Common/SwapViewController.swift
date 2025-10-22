@@ -349,31 +349,43 @@ extension SwapViewController: SwapQuotePeriodicRequesterDelegate {
             footerInfoProgressView.setProgress(1, animationDuration: nil)
             reviewButton.isEnabled = quote.sendAmount > 0
             && quote.sendAmount <= quote.sendToken.decimalBalance
-            reporter.report(event: .tradeQuote, tags: ["result": "success", "type": "swap"])
+            reporter.report(event: .tradeQuote, tags: ["type": "swap", "result": "success"])
         case .failure(let error):
             let description: String
             let amountRange: SwapQuotePeriodicRequester.AmountRange?
+            let reason: String
             switch error {
             case let SwapQuotePeriodicRequester.ResponseError.invalidAmount(range):
                 description = range.description
                 amountRange = range
+                reason = "invalid_amount"
             case MixinAPIResponseError.invalidQuoteAmount:
                 description = R.string.localizable.swap_invalid_amount()
                 amountRange = nil
+                reason = "invalid_amount"
             case MixinAPIResponseError.noAvailableQuote:
                 description = R.string.localizable.swap_no_available_quote()
                 amountRange = nil
+                reason = "no_available_quote"
             case let error as MixinAPIError:
                 description = error.localizedDescription
                 amountRange = nil
+                reason = if error.isClientErrorResponse {
+                    "client_error"
+                } else if error.isServerErrorResponse {
+                    "server_error"
+                } else {
+                    "other"
+                }
             default:
                 description = "\(error)"
                 amountRange = nil
+                reason = "other"
             }
             Logger.general.debug(category: "Swap", message: description)
             setFooter(.error(description))
             self.amountRange = amountRange
-            reporter.report(event: .tradeQuote, tags: ["result": "failure", "type": "swap"])
+            reporter.report(event: .tradeQuote, tags: ["type": "swap", "result": "failure", "reason": reason])
         }
     }
     

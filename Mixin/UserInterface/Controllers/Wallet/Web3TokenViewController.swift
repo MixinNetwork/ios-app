@@ -238,7 +238,7 @@ extension Web3TokenViewController: TokenActionView.Delegate {
                 receiveAssetID: AssetID.erc20USDT,
             )
             navigationController?.pushViewController(swap, animated: true)
-            reporter.report(event: .tradeStart, tags: ["source": "asset_detail", "wallet": "web3"])
+            reporter.report(event: .tradeStart, tags: ["wallet": "web3", "source": "asset_detail"])
         case .buy:
             break
         }

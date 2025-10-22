@@ -387,7 +387,7 @@ extension UserProfileViewController {
         let user: UserItem = self.user
         let selector = MixinTokenSelectorViewController()
         selector.onSelected = { (token, location) in
-            reporter.report(event: .sendTokenSelect, method: location.asEventMethod)
+            reporter.report(event: .sendTokenSelect, tags: ["method": location.asEventMethod])
             reporter.report(event: .sendRecipient, tags: ["type": "contact"])
             let inputAmount = TransferInputAmountViewController(tokenItem: token, receiver: .user(user))
             UIApplication.homeNavigationController?.pushViewController(inputAmount, animated: true)

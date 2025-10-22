@@ -1061,7 +1061,7 @@ extension UrlWindow {
                         reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "schema"])
                         let selector = MixinTokenSelectorViewController()
                         selector.onSelected = { (token, location) in
-                            reporter.report(event: .sendTokenSelect, method: location.asEventMethod)
+                            reporter.report(event: .sendTokenSelect, tags: ["method": location.asEventMethod])
                             reporter.report(event: .sendRecipient, tags: ["type": "contact"])
                             let inputAmount = TransferInputAmountViewController(
                                 tokenItem: token,

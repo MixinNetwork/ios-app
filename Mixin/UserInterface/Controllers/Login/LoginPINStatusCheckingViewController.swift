@@ -38,7 +38,6 @@ final class LoginPINStatusCheckingViewController: LoginLoadingViewController {
                 await MainActor.run {
                     if let context {
                         let intro = TIPIntroViewController(context: context)
-                        intro.reportLoginEventOnChangingInterruptionRecovered = true
                         let navigation = TIPNavigationController(intro: intro)
                         AppDelegate.current.mainWindow.rootViewController = navigation
                     } else {

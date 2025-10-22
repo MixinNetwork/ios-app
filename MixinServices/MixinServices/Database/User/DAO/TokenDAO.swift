@@ -178,7 +178,7 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: query)
     }
     
-    public func usdBalanceSum() -> Int {
+    public func usdBalanceSum() -> Decimal {
         let sql = """
         SELECT SUM(ifnull(te.balance,'0') * t.price_usd)
         FROM tokens t

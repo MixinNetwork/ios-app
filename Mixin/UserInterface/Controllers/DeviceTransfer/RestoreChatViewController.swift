@@ -28,7 +28,7 @@ final class RestoreChatViewController: UIViewController, CheckSessionEnvironment
     }
     
     @IBAction func skipButton(_ sender: Any) {
-        reporter.report(event: .loginRestore, method: "skip")
+        reporter.report(event: .loginRestore, tags: ["type": "skip"])
         Logger.general.info(category: "RestoreChat", message: "Restoration skipped")
         AppGroupUserDefaults.Account.canRestoreFromPhone = false
         AppGroupUserDefaults.Account.canRestoreMedia = false
@@ -73,10 +73,10 @@ extension RestoreChatViewController: UITableViewDelegate, UITableViewDataSource 
         let next: UIViewController
         if indexPath.section == 0 {
             next = RestoreFromPhoneViewController()
-            reporter.report(event: .loginRestore, method: "another_phone")
+            reporter.report(event: .loginRestore, tags: ["type": "another_phone"])
         } else {
             next = RestoreFromCloudViewController()
-            reporter.report(event: .loginRestore, method: "icloud")
+            reporter.report(event: .loginRestore, tags: ["type": "icloud"])
         }
         navigationController?.pushViewController(next, animated: true)
     }

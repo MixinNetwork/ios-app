@@ -88,7 +88,10 @@ public final class AssetAPI: MixinAPI {
         guard let url = Path.search(keyword: keyword) else {
             return .success([])
         }
-        return request(method: .get, path: url)
+        let result: MixinAPI.Result<[DisplayMixinToken]> = request(method: .get, path: url)
+        return result.map { tokens in
+            tokens.map(\.asToken)
+        }
     }
     
     public static func search(
@@ -102,7 +105,16 @@ public final class AssetAPI: MixinAPI {
             }
             return nil
         }
-        return request(method: .get, path: url, queue: queue, completion: completion)
+        return request(
+            method: .get,
+            path: url,
+            queue: queue
+        ) { (result: Result<[DisplayMixinToken]>) in
+            let tokenResult = result.map { tokens in
+                tokens.map(\.asToken)
+            }
+            completion(tokenResult)
+        }
     }
     
     public static func topAssets(completion: @escaping (MixinAPI.Result<[TopAsset]>) -> Void) {

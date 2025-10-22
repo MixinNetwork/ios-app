@@ -116,8 +116,14 @@ class SearchViewController: UIViewController, HomeSearchViewController {
             }
             
             let quickAccess = QuickAccessSearchResult(keyword: keyword)
-            let assets = TokenDAO.shared.search(keyword: keyword, sortResult: true, limit: limit)
-                .map { AssetSearchResult(asset: $0, keyword: keyword) }
+            let assets = TokenDAO.shared.search(
+                keyword: keyword,
+                includesZeroBalanceItems: false,
+                sorting: true,
+                limit: limit
+            ).map { token in
+                AssetSearchResult(asset: token, keyword: keyword)
+            }
             guard !op.isCancelled else {
                 return
             }

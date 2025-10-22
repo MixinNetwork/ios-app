@@ -169,9 +169,17 @@ extension Web3Chain {
 // MARK: - Chains
 extension Web3Chain {
     
-    static let all = Kind.allCases.reduce(into: []) { results, kind in
-        results.append(contentsOf: kind.chains)
-    }
+    static let all: [Web3Chain] = {
+        let chains: [Web3Chain] = [
+            .ethereum, .solana, .bnbSmartChain, .base, .polygon, .arbitrumOne, .opMainnet
+        ]
+        // Make sure all chains are included
+        let allChains = Kind.allCases.reduce(into: []) { results, kind in
+            results.append(contentsOf: kind.chains)
+        }
+        assert(chains.count == allChains.count, "New chains added? Put it into `chains` with ordering.")
+        return chains
+    }()
     
     static let ethereum = Web3Chain.evm(
         chainID: 1,

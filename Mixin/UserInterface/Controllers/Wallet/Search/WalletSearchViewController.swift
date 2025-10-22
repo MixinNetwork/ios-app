@@ -1,11 +1,7 @@
 import UIKit
 import MixinServices
 
-protocol WalletSearchViewControllerDelegate: AnyObject {
-    func walletSearchViewController(_ controller: WalletSearchViewController, didSelectToken token: MixinTokenItem)
-}
-
-final class WalletSearchViewController: UIViewController {
+final class WalletSearchViewController<ModelController: WalletSearchModelController>: UIViewController {
     
     @IBOutlet weak var searchBoxWrapperView: UIView!
     @IBOutlet weak var searchBoxView: SearchBoxView!
@@ -13,16 +9,12 @@ final class WalletSearchViewController: UIViewController {
     
     @IBOutlet weak var keyboardPlaceholderHeightConstraint: NSLayoutConstraint!
     
-    weak var delegate: WalletSearchViewControllerDelegate?
+    private let recommendation: WalletSearchRecommendationViewController<ModelController>
+    private let searchResults: WalletSearchResultsViewController<ModelController>
     
-    private let supportedChainIDs: Set<String>?
-    private let recommendation: WalletSearchRecommendationViewController
-    private let searchResults: TokenSearchResultsViewController
-    
-    init(supportedChainIDs ids: Set<String>? = nil) {
-        self.supportedChainIDs = ids
-        self.recommendation = WalletSearchRecommendationViewController(supportedChainIDs: ids)
-        self.searchResults = TokenSearchResultsViewController(supportedChainIDs: ids)
+    init(modelController: ModelController) {
+        self.recommendation = WalletSearchRecommendationViewController(modelController: modelController)
+        self.searchResults = WalletSearchResultsViewController(modelController: modelController)
         let nib = R.nib.walletSearchView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }

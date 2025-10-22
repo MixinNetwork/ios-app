@@ -6,11 +6,20 @@ import MixinServices
 final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewController<MixinTokenItem> {
     
     var onSelected: ((MixinTokenItem, PickUpLocation) -> Void)?
-    var searchFromRemote = false
+    
+    private let intent: TokenSelectorIntent
+    private let displayZeroBalanceItems: Bool
     
     private weak var searchRequest: Request?
     
-    init() {
+    init(intent: TokenSelectorIntent) {
+        self.intent = intent
+        self.displayZeroBalanceItems = switch intent {
+        case .send:
+            false
+        case .receive:
+            true
+        }
         super.init(
             defaultTokens: [],
             defaultChains: [],
@@ -29,7 +38,7 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        DispatchQueue.global().async {
+        queue.async { [displayZeroBalanceItems] in
             let recentAssetIDs = PropertiesDAO.shared.jsonObject(forKey: .transferRecentAssetIDs, type: [String].self) ?? []
             let recentTokens = TokenDAO.shared.tokenItems(with: recentAssetIDs)
                 .reduce(into: [:]) { results, item in
@@ -41,7 +50,9 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
             let recentTokenChanges: [String: TokenChange] = MarketDAO.shared
                 .priceChangePercentage24H(assetIDs: recentAssetIDs)
                 .compactMapValues(TokenChange.init(change:))
-            let tokens = TokenDAO.shared.positiveBalancedTokens()
+            let tokens = TokenDAO.shared.notHiddenTokens(
+                includesZeroBalanceItems: displayZeroBalanceItems
+            )
             let chainIDs = Set(tokens.compactMap(\.chainID))
             let chains = Chain.mixinChains(ids: chainIDs)
             DispatchQueue.main.async {
@@ -77,59 +88,83 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
     }
     
     override func search(keyword: String) {
-        let searchResults = defaultTokens.filter { item in
-            item.symbol.lowercased().contains(keyword) || item.name.lowercased().contains(keyword)
-        }.sorted { (one, another) in
-            let left = (one.decimalBalance * one.decimalUSDPrice, one.decimalBalance, one.decimalUSDPrice)
-            let right = (another.decimalBalance * another.decimalUSDPrice, another.decimalBalance, another.decimalUSDPrice)
-            return left > right
-        }
-        let chainIDs = Set(searchResults.compactMap(\.chainID))
-        let searchResultChains = Chain.mixinChains(ids: chainIDs)
-        
-        self.searchResultsKeyword = keyword
-        self.searchResults = searchResults
-        self.searchResultChains = searchResultChains
-        if let chain = self.selectedChain, chainIDs.contains(chain.id) {
-            tokenIndicesForSelectedChain = tokenIndices(tokens: searchResults, chainID: chain.id)
-        } else {
-            selectedChain = nil
-            tokenIndicesForSelectedChain = nil
-        }
-        collectionView.reloadData()
-        reloadChainSelection()
-        reloadTokenSelection()
-        
-        if searchFromRemote {
-            searchRequest = AssetAPI.search(keyword: keyword, queue: .global()) { [weak self] result in
-                switch result {
-                case .success(let tokens):
-                    self?.reloadSearchResults(keyword: keyword, localTokens: searchResults, searchResults: tokens)
-                case .failure(.emptyResponse):
-                    self?.reloadSearchResults(keyword: keyword, localTokens: searchResults, searchResults: [])
-                case .failure(let error):
-                    Logger.general.debug(category: "MixinTokenSelector", message: "\(error)")
-                    DispatchQueue.main.async {
-                        guard let self else {
-                            return
-                        }
-                        self.collectionView.checkEmpty(
-                            dataCount: searchResults.count,
-                            text: R.string.localizable.no_results(),
-                            photo: R.image.emptyIndicator.ic_search_result()!
+        let op = BlockOperation()
+        op.addExecutionBlock { [unowned op, weak self, intent, displayZeroBalanceItems] in
+            guard !op.isCancelled else {
+                return
+            }
+            let comparator = TokenComparator<MixinTokenItem>(keyword: keyword)
+            let localResults = TokenDAO.shared
+                .search(
+                    keyword: keyword,
+                    includesZeroBalanceItems: displayZeroBalanceItems,
+                    sorting: false,
+                    limit: nil
+                )
+                .sorted(using: comparator)
+            let chainIDs = Set(localResults.compactMap(\.chainID))
+            let localResultChains = Chain.mixinChains(ids: chainIDs)
+            
+            guard !op.isCancelled else {
+                return
+            }
+            DispatchQueue.main.async {
+                guard let self, self.trimmedKeyword == keyword else {
+                    return
+                }
+                self.searchResultsKeyword = keyword
+                self.searchResults = localResults
+                self.searchResultChains = localResultChains
+                if let chain = self.selectedChain, chainIDs.contains(chain.id) {
+                    self.tokenIndicesForSelectedChain = self.tokenIndices(tokens: localResults, chainID: chain.id)
+                } else {
+                    self.selectedChain = nil
+                    self.tokenIndicesForSelectedChain = nil
+                }
+                self.collectionView.reloadData()
+                self.reloadChainSelection()
+                self.reloadTokenSelection()
+                
+                guard intent == .receive else {
+                    // Search from remote only when receiving
+                    // Sending requires non-zero balance, which must be included in `localResults`
+                    self.collectionView.checkEmpty(
+                        dataCount: localResults.count,
+                        text: R.string.localizable.no_results(),
+                        photo: R.image.emptyIndicator.ic_search_result()!
+                    )
+                    self.searchBoxView.isBusy = false
+                    return
+                }
+                self.searchRequest = AssetAPI.search(
+                    keyword: keyword,
+                    queue: self.queue
+                ) { [weak self] result in
+                    switch result {
+                    case .success(let tokens):
+                        self?.reloadSearchResults(
+                            keyword: keyword,
+                            localResults: localResults,
+                            remoteResults: tokens,
+                            comparator: comparator
                         )
-                        self.searchBoxView.isBusy = false
+                    case .failure(.emptyResponse):
+                        self?.reloadSearchResults(
+                            keyword: keyword,
+                            localResults: localResults,
+                            remoteResults: [],
+                            comparator: comparator
+                        )
+                    case .failure(let error):
+                        Logger.general.debug(category: "MixinTokenSelector", message: "\(error)")
+                        DispatchQueue.main.async {
+                            self?.searchBoxView.isBusy = false
+                        }
                     }
                 }
             }
-        } else {
-            collectionView.checkEmpty(
-                dataCount: searchResults.count,
-                text: R.string.localizable.no_results(),
-                photo: R.image.emptyIndicator.ic_search_result()!
-            )
-            searchBoxView.isBusy = false
         }
+        operationQueue.addOperation(op)
     }
     
     override func tokenIndices(tokens: [MixinTokenItem], chainID: String) -> [Int] {
@@ -178,55 +213,59 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
     
     private func reloadSearchResults(
         keyword: String,
-        localTokens: [MixinTokenItem],
-        searchResults: [MixinToken]
+        localResults: [MixinTokenItem],
+        remoteResults: [MixinToken],
+        comparator: TokenComparator<MixinTokenItem>,
     ) {
         assert(!Thread.isMainThread)
-        let localAssetIDs = Set(localTokens.map(\.assetID))
-        let allChains = ChainDAO.shared.allChains()
-        let allSearchResults = localTokens + searchResults.filter{ token in
-            !localAssetIDs.contains(token.assetID)
-        }.compactMap { token in
-            MixinTokenItem(
-                token: token,
-                balance: "0",
-                isHidden: false,
-                chain: allChains[token.chainID]
-            )
-        }.sorted { (one, another) in
-            one.decimalUSDPrice > another.decimalUSDPrice
+        let mixedSearchResults: (items: [MixinTokenItem], chains: OrderedSet<Chain>, chainIDs: Set<String>)?
+        if remoteResults.isEmpty {
+            mixedSearchResults = nil
+        } else {
+            let allChains = ChainDAO.shared.allChains()
+            var allItems: [String: MixinTokenItem] = remoteResults.reduce(into: [:]) { result, token in
+                let extra = TokenExtraDAO.shared.tokenExtra(assetID: token.assetID)
+                result[token.assetID] = MixinTokenItem(
+                    token: token,
+                    balance: extra?.balance ?? "0",
+                    isHidden: extra?.isHidden ?? false,
+                    chain: allChains[token.chainID],
+                )
+            }
+            for item in localResults where allItems[item.assetID] == nil {
+                allItems[item.assetID] = item
+            }
+            let sortedAllItems = allItems.values.sorted(using: comparator)
+            let chainIDs = Set(sortedAllItems.map(\.chainID))
+            let chains = Chain.mixinChains(ids: chainIDs)
+            mixedSearchResults = (sortedAllItems, chains, chainIDs)
         }
-        let chainIDs = Set(allSearchResults.compactMap(\.chainID))
-        let searchResultChains = Chain.mixinChains(ids: chainIDs)
         DispatchQueue.main.async {
             guard self.trimmedKeyword == keyword else {
                 return
             }
-            self.searchResultsKeyword = keyword
-            self.searchResults = allSearchResults
-            self.searchResultChains = searchResultChains
-            if let chain = self.selectedChain, chainIDs.contains(chain.id) {
-                self.tokenIndicesForSelectedChain = allSearchResults
-                    .enumerated()
-                    .compactMap { (index, token) in
-                        if token.chainID == chain.id {
-                            index
-                        } else {
-                            nil
-                        }
-                    }
-            } else {
-                self.selectedChain = nil
-                self.tokenIndicesForSelectedChain = nil
+            if let mixedSearchResults {
+                self.searchResultsKeyword = keyword
+                self.searchResults = mixedSearchResults.items
+                self.searchResultChains = mixedSearchResults.chains
+                if let chain = self.selectedChain, mixedSearchResults.chainIDs.contains(chain.id) {
+                    self.tokenIndicesForSelectedChain = self.tokenIndices(
+                        tokens: mixedSearchResults.items,
+                        chainID: chain.id
+                    )
+                } else {
+                    self.selectedChain = nil
+                    self.tokenIndicesForSelectedChain = nil
+                }
+                self.collectionView.reloadData()
+                self.reloadChainSelection()
+                self.reloadTokenSelection()
             }
-            self.collectionView.reloadData()
             self.collectionView.checkEmpty(
-                dataCount: allSearchResults.count,
+                dataCount: self.searchResults?.count ?? 0,
                 text: R.string.localizable.no_results(),
                 photo: R.image.emptyIndicator.ic_search_result()!
             )
-            self.reloadChainSelection()
-            self.reloadTokenSelection()
             self.searchBoxView.isBusy = false
         }
     }

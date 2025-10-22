@@ -21,7 +21,7 @@ public final class Web3TokenDAO: Web3DAO {
                 cast(t.amount AS REAL) DESC,
                 cast(t.price_usd AS REAL) DESC,
                 t.name ASC,
-                t.rowid DESC
+                c.name ASC
         """
         
     }
@@ -59,12 +59,18 @@ public final class Web3TokenDAO: Web3DAO {
         db.select(with: "\(SQL.selector)\n\(SQL.order)")
     }
     
-    public func notHiddenTokens(walletID: String) -> [Web3TokenItem] {
-        let sql = """
+    public func notHiddenTokens(
+        walletID: String,
+        includesZeroBalanceItems: Bool,
+    ) -> [Web3TokenItem] {
+        var sql = """
         \(SQL.selector)
         WHERE t.wallet_id = ? AND ifnull(te.hidden,FALSE) IS FALSE
-        \(SQL.order)
         """
+        if !includesZeroBalanceItems {
+            sql += " AND t.amount > 0"
+        }
+        sql += "\n\(SQL.order)"
         return db.select(with: sql, arguments: [walletID])
     }
     
@@ -94,6 +100,33 @@ public final class Web3TokenDAO: Web3DAO {
         return db.select(with: query)
     }
     
+    public func search(
+        walletID: String,
+        keyword: String,
+        includesZeroBalanceItems: Bool,
+        limit: Int?
+    ) -> [Web3TokenItem] {
+        var sql = """
+        \(SQL.selector)
+        WHERE t.wallet_id = :id
+            AND (t.level >= 10 OR hidden IS FALSE)
+            AND (t.name LIKE :keyword OR t.symbol LIKE :keyword)
+        """
+        if !includesZeroBalanceItems {
+            sql += "\nAND t.amount > 0"
+        }
+        if let limit = limit {
+            sql += " LIMIT \(limit)"
+        }
+        return db.select(
+            with: sql,
+            arguments: [
+                "id": walletID,
+                "keyword": "%\(keyword)%",
+            ]
+        )
+    }
+    
     // Key is asset id, value is symbol
     public func tokenSymbols(ids: any Collection<String>) -> [String: String] {
         db.select(
@@ -107,6 +140,13 @@ public final class Web3TokenDAO: Web3DAO {
     public func amount(walletID: String, assetID: String) -> String? {
         db.select(
             with: "SELECT amount FROM tokens WHERE wallet_id = ? AND asset_id = ?",
+            arguments: [walletID, assetID]
+        )
+    }
+    
+    public func level(walletID: String, assetID: String) -> Int? {
+        db.select(
+            with: "SELECT level FROM tokens WHERE wallet_id = ? AND asset_id = ?",
             arguments: [walletID, assetID]
         )
     }

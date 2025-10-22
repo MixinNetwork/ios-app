@@ -1,11 +1,11 @@
 import UIKit
 import MixinServices
 
-final class WalletSearchRecommendationViewController: WalletSearchTableViewController {
+final class WalletSearchRecommendationViewController<ModelController: WalletSearchModelController>: WalletSearchTableViewController, UITableViewDataSource, UITableViewDelegate {
     
     private enum ReuseID {
-        static let header = "h"
-        static let footer = "f"
+        static var header: String { "h" }
+        static var footer: String { "f" }
     }
     
     private enum Section: Int, CaseIterable {
@@ -13,14 +13,14 @@ final class WalletSearchRecommendationViewController: WalletSearchTableViewContr
         case trending
     }
     
+    private let modelController: ModelController
     private let queue = DispatchQueue(label: "one.mixin.messenger.WalletSearchRecommendation")
-    private let supportedChainIDs: Set<String>?
     
-    private var history: [MixinTokenItem] = []
+    private var history: [ModelController.Item] = []
     private var trending: [AssetItem] = []
     
-    init(supportedChainIDs: Set<String>? = nil) {
-        self.supportedChainIDs = supportedChainIDs
+    init(modelController: ModelController) {
+        self.modelController = modelController
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -42,18 +42,10 @@ final class WalletSearchRecommendationViewController: WalletSearchTableViewContr
         tableView.dataSource = self
         tableView.delegate = self
         
-        queue.async { [weak self, supportedChainIDs] in
-            var history = AppGroupUserDefaults.User.assetSearchHistory
-                .compactMap(TokenDAO.shared.tokenItem(assetID:))
-            var trending = TopAssetsDAO.shared.getAssets()
-            if let ids = supportedChainIDs {
-                history = history.filter { item in
-                    ids.contains(item.chainID)
-                }
-                trending = trending.filter { item in
-                    ids.contains(item.chainId)
-                }
-            }
+        queue.async { [modelController, weak self] in
+            let history = modelController.history()
+            let trending = TopAssetsDAO.shared.getAssets()
+                .filter(modelController.isTrendingItemAvailable(item:))
             DispatchQueue.main.sync {
                 guard let self = self else {
                     return
@@ -74,13 +66,9 @@ final class WalletSearchRecommendationViewController: WalletSearchTableViewContr
     
     @objc private func reloadTrending() {
         let trendingSection = IndexSet(arrayLiteral: Section.trending.rawValue)
-        queue.async { [weak self, supportedChainIDs] in
-            var trending = TopAssetsDAO.shared.getAssets()
-            if let ids = supportedChainIDs {
-                trending = trending.filter { item in
-                    ids.contains(item.chainId)
-                }
-            }
+        queue.async { [modelController, weak self] in
+            let trending = TopAssetsDAO.shared.getAssets()
+                .filter(modelController.isTrendingItemAvailable(item:))
             DispatchQueue.main.sync {
                 guard let self = self else {
                     return
@@ -91,10 +79,7 @@ final class WalletSearchRecommendationViewController: WalletSearchTableViewContr
         }
     }
     
-}
-
-extension WalletSearchRecommendationViewController: UITableViewDataSource {
-    
+    // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
         case .history:
@@ -121,10 +106,7 @@ extension WalletSearchRecommendationViewController: UITableViewDataSource {
         Section.allCases.count
     }
     
-}
-
-extension WalletSearchRecommendationViewController: UITableViewDelegate {
-    
+    // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch Section(rawValue: section)! {
         case .history where !history.isEmpty:
@@ -170,59 +152,13 @@ extension WalletSearchRecommendationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard let parent = self.parent as? WalletSearchViewController else {
-            return
-        }
         switch Section(rawValue: indexPath.section)! {
         case .history:
             let item = history[indexPath.row]
-            parent.delegate?.walletSearchViewController(parent, didSelectToken: item)
+            modelController.reportUserSelection(token: item)
         case .trending:
             let item = trending[indexPath.row]
-            let hud = Hud()
-            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-            queue.async {
-                func report(token: MixinTokenItem) {
-                    DispatchQueue.main.sync {
-                        hud.hide()
-                        parent.delegate?.walletSearchViewController(parent, didSelectToken: token)
-                    }
-                }
-                
-                func report(error: Error) {
-                    DispatchQueue.main.sync {
-                        hud.set(style: .error, text: error.localizedDescription)
-                        hud.scheduleAutoHidden()
-                    }
-                }
-                
-                if let token = TokenDAO.shared.tokenItem(assetID: item.assetId) {
-                    report(token: token)
-                } else {
-                    let chainID = item.chainId
-                    let chain: Chain
-                    if let localChain = ChainDAO.shared.chain(chainId: chainID) {
-                        chain = localChain
-                    } else {
-                        switch NetworkAPI.chain(id: chainID) {
-                        case .success(let remoteChain):
-                            chain = remoteChain
-                            ChainDAO.shared.save([chain])
-                            Web3ChainDAO.shared.save([chain])
-                        case .failure(let error):
-                            report(error: error)
-                            return
-                        }
-                    }
-                    switch SafeAPI.assets(id: item.assetId) {
-                    case .success(let token):
-                        let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
-                        report(token: item)
-                    case .failure(let error):
-                        report(error: error)
-                    }
-                }
-            }
+            modelController.reportUserSelection(trending: item)
         }
     }
     

@@ -6,6 +6,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
     
     private enum Section: Int, CaseIterable {
         case quickAccess
+        case asset
         case bot
         case dapp
     }
@@ -32,6 +33,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
     
     private var lastSearchFieldText: String?
     private var quickAccess: QuickAccessSearchResult?
+    private var assetSearchResults: [AssetSearchResult] = []
     private var botSearchResults: [UserSearchResult] = []
     private var dappSearchResults: [Web3Dapp] = []
     private var lastKeyword: String?
@@ -68,6 +70,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         tableView.register(SearchHeaderView.self, forHeaderFooterViewReuseIdentifier: ReuseId.header)
         tableView.register(SearchFooterView.self, forHeaderFooterViewReuseIdentifier: ReuseId.footer)
         tableView.register(R.nib.quickAccessResultCell)
+        tableView.register(R.nib.assetCell)
         tableView.register(R.nib.peerCell)
         tableView.register(R.nib.web3DappCell)
         tableView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
@@ -122,6 +125,14 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
                 return
             }
             let quickAccess = QuickAccessSearchResult(keyword: keyword)
+            let assetSearchResults = TokenDAO.shared.search(
+                keyword: keyword,
+                includesZeroBalanceItems: false,
+                sorting: true,
+                limit: limit
+            ).map { token in
+                AssetSearchResult(asset: token, keyword: keyword)
+            }
             let botSearchResults = UserDAO.shared.getAppUsers(keyword: keyword, limit: limit)
                 .map { user in UserSearchResult(user: user, keyword: keyword) }
             let dappSearchResults: [Web3Dapp]
@@ -142,6 +153,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
                 }
                 self.quickAccess = quickAccess
                 self.lastKeyword = keyword
+                self.assetSearchResults = assetSearchResults
                 self.botSearchResults = botSearchResults
                 self.dappSearchResults = dappSearchResults
                 self.reloadTableViewData(showEmptyIndicatorIfEmpty: false)
@@ -156,6 +168,8 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         switch section {
         case .quickAccess:
             quickAccess == nil
+        case .asset:
+            assetSearchResults.isEmpty
         case .bot:
             botSearchResults.isEmpty
         case .dapp:
@@ -168,10 +182,12 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         return switch section {
         case .quickAccess:
             showTopResult
-        case .bot:
+        case .asset:
             !showTopResult
+        case .bot:
+            !showTopResult && assetSearchResults.isEmpty
         case .dapp:
-            !showTopResult && botSearchResults.isEmpty
+            !showTopResult && assetSearchResults.isEmpty && botSearchResults.isEmpty
         }
     }
     
@@ -179,6 +195,8 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
         switch section {
         case .quickAccess:
             false
+        case .asset:
+            !assetSearchResults.isEmpty && !botSearchResults.isEmpty && !dappSearchResults.isEmpty
         case .bot:
             !botSearchResults.isEmpty && !dappSearchResults.isEmpty
         case .dapp:
@@ -210,6 +228,8 @@ extension ExploreAggregatedSearchViewController: UITableViewDataSource {
         switch Section(rawValue: section)! {
         case .quickAccess:
             quickAccess == nil ? 0 : 1
+        case .asset:
+            min(maxResultsCount, assetSearchResults.count)
         case .bot:
             min(maxResultsCount, botSearchResults.count)
         case .dapp:
@@ -223,6 +243,11 @@ extension ExploreAggregatedSearchViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.quick_access, for: indexPath)!
             cell.result = quickAccess
             cell.topShadowView.backgroundColor = R.color.background_secondary()
+            return cell
+        case .asset:
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.asset, for: indexPath)!
+            let result = assetSearchResults[indexPath.row]
+            cell.render(token: result.asset, attributedSymbol: result.attributedSymbol)
             return cell
         case .bot:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.peer, for: indexPath)!
@@ -260,7 +285,7 @@ extension ExploreAggregatedSearchViewController: UITableViewDelegate {
         return switch section {
         case .quickAccess:
             .leastNormalMagnitude
-        case .bot, .dapp:
+        case .asset, .bot, .dapp:
             if isSectionEmpty(section) {
                 .leastNormalMagnitude
             } else {
@@ -291,6 +316,10 @@ extension ExploreAggregatedSearchViewController: UITableViewDelegate {
             switch section {
             case .quickAccess:
                 return nil
+            case .asset:
+                view.label.text = R.string.localizable.assets()
+                view.button.isHidden = assetSearchResults.count <= maxResultsCount
+                return view
             case .bot:
                 view.label.text = R.string.localizable.bots_title()
                 view.button.isHidden = botSearchResults.count <= maxResultsCount
@@ -326,6 +355,9 @@ extension ExploreAggregatedSearchViewController: UITableViewDelegate {
                     self?.present(profile, animated: true)
                 }
             }
+        case .asset:
+            let item = assetSearchResults[indexPath.row]
+            pushTokenViewController(token: item.asset)
         case .bot:
             let item = botSearchResults[indexPath.row]
             pushConversationViewController(userItem: item.user)
@@ -346,12 +378,12 @@ extension ExploreAggregatedSearchViewController: SearchHeaderViewDelegate {
         searchTextField.resignFirstResponder()
         let viewController: ExploreSearchCategoryViewController
         switch section {
-        case .quickAccess:
+        case .quickAccess, .dapp:
             return
+        case .asset:
+            viewController = .init(category: .asset)
         case .bot:
             viewController = .init(category: .bot)
-        case .dapp:
-            return
         }
         searchNavigationController?.pushViewController(viewController, animated: true)
     }

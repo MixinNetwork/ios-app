@@ -1059,7 +1059,7 @@ extension UrlWindow {
                         // Receive money QR code
                         completion(nil)
                         reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "schema"])
-                        let selector = MixinTokenSelectorViewController()
+                        let selector = MixinTokenSelectorViewController(intent: .send)
                         selector.onSelected = { (token, location) in
                             reporter.report(event: .sendTokenSelect, tags: ["method": location.asEventMethod])
                             reporter.report(event: .sendRecipient, tags: ["type": "contact"])

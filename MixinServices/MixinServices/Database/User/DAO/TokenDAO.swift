@@ -20,7 +20,7 @@ public final class TokenDAO: UserDatabaseDAO {
                 LEFT JOIN tokens_extra te ON t.asset_id = te.asset_id
         """
         
-        static let order = "te.balance * t.price_usd DESC, cast(te.balance AS REAL) DESC, cast(t.price_usd AS REAL) DESC, t.name ASC, t.rowid DESC"
+        static let order = "te.balance * t.price_usd DESC, cast(te.balance AS REAL) DESC, cast(t.price_usd AS REAL) DESC, t.name ASC, c.name ASC"
         
         static let selectWithAssetID = "\(SQL.selector) WHERE t.asset_id = ?"
         
@@ -109,13 +109,21 @@ public final class TokenDAO: UserDatabaseDAO {
         return count ?? 0
     }
     
-    public func search(keyword: String, sortResult: Bool, limit: Int?) -> [MixinTokenItem] {
+    public func search(
+        keyword: String,
+        includesZeroBalanceItems: Bool,
+        sorting: Bool,
+        limit: Int?
+    ) -> [MixinTokenItem] {
         var sql = """
         \(SQL.selector)
         WHERE (t.name LIKE :keyword OR t.symbol LIKE :keyword)
         """
-        if sortResult {
-            sql += " AND te.balance > 0 ORDER BY CASE WHEN t.symbol LIKE :keyword THEN 1 ELSE 0 END DESC, \(SQL.order)"
+        if !includesZeroBalanceItems {
+            sql += " AND te.balance > 0"
+        }
+        if sorting {
+            sql += "\nORDER BY CASE WHEN t.symbol LIKE :keyword THEN 1 ELSE 0 END DESC, \(SQL.order)"
         }
         if let limit = limit {
             sql += " LIMIT \(limit)"
@@ -135,8 +143,13 @@ public final class TokenDAO: UserDatabaseDAO {
         db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS TRUE ORDER BY \(SQL.order)")
     }
     
-    public func notHiddenTokens() -> [MixinTokenItem] {
-        db.select(with: "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS FALSE ORDER BY \(SQL.order)")
+    public func notHiddenTokens(includesZeroBalanceItems: Bool) -> [MixinTokenItem] {
+        var sql = "\(SQL.selector) WHERE ifnull(te.hidden,FALSE) IS FALSE"
+        if !includesZeroBalanceItems {
+            sql += " AND te.balance > 0"
+        }
+        sql.append(" ORDER BY \(SQL.order)")
+        return db.select(with: sql)
     }
     
     public func defaultTransferToken() -> MixinTokenItem? {
@@ -157,13 +170,8 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: query)
     }
     
-    public func positiveBalancedTokens(chainIDs: [String] = []) -> [MixinTokenItem] {
-        var query = GRDB.SQL(sql: "\(SQL.selector) WHERE te.balance > 0")
-        if !chainIDs.isEmpty {
-            query.append(literal: " AND t.chain_id IN \(chainIDs)")
-        }
-        query.append(sql: " ORDER BY \(SQL.order)")
-        return db.select(with: query)
+    public func positiveBalancedTokens() -> [MixinTokenItem] {
+        db.select(with: "\(SQL.selector) WHERE te.balance > 0 ORDER BY \(SQL.order)")
     }
     
     public func appTokens(ids: [String]) -> [AppToken] {

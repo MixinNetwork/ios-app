@@ -1,7 +1,7 @@
 import Foundation
 
 public enum RecentSearch: InstanceInitializable, Codable {
-    case market(coinID: String)
+    case mixinToken(assetID: String)
     case app(userID: String)
     case link(title: String, url: URL)
     case dapp(name: String)

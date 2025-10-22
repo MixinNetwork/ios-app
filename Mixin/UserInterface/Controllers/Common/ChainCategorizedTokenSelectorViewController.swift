@@ -5,10 +5,8 @@ import MixinServices
 
 class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: TokenSelectorViewController, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
     
-    private let maxNumberOfRecents = 6
-    private let recentGroupHorizontalMargin: CGFloat = 20
-    private let searchDebounceInterval: TimeInterval
-    private let selectedID: String?
+    let operationQueue = OperationQueue()
+    let queue = DispatchQueue(label: "one.mixin.messenger.ChainCategorizedTokenSelector")
     
     var recentTokens: [SelectableToken] = []
     var recentTokenChanges: [String: TokenChange] = [:] // Key is token's id
@@ -24,6 +22,11 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
     var searchResults: [SelectableToken]?
     var searchResultChains: OrderedSet<Chain>?
     
+    private let maxNumberOfRecents = 6
+    private let recentGroupHorizontalMargin: CGFloat = 20
+    private let searchDebounceInterval: TimeInterval
+    private let selectedID: String?
+    
     init(
         defaultTokens: [SelectableToken],
         defaultChains: OrderedSet<Chain>,
@@ -35,6 +38,8 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
         self.searchDebounceInterval = searchDebounceInterval
         self.selectedID = selectedID
         super.init()
+        self.operationQueue.underlyingQueue = queue
+        self.operationQueue.maxConcurrentOperationCount = 1
     }
     
     required init?(coder: NSCoder) {
@@ -57,11 +62,11 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
                     return
                 }
                 let keyword = self.trimmedKeyword
-                guard !keyword.isEmpty, keyword != self.searchResultsKeyword else {
+                if !keyword.isEmpty && keyword != self.searchResultsKeyword {
+                    self.search(keyword: keyword)
+                } else {
                     self.searchBoxView.isBusy = false
-                    return
                 }
-                self.search(keyword: keyword)
             }
         collectionView.register(
             R.nib.recentSearchHeaderView,
@@ -393,11 +398,10 @@ extension ChainCategorizedTokenSelectorViewController {
         }
         
         static func web3Chains(ids: Set<String>) -> OrderedSet<Chain> {
-            let all = Web3Chain.all.map { chain in
+            let chains = Web3Chain.all.filter { chain in
+                ids.contains(chain.chainID)
+            }.map { chain in
                 Chain(id: chain.chainID, name: chain.name)
-            }
-            let chains = all.filter { chain in
-                ids.contains(chain.id)
             }
             return OrderedSet(chains)
         }

@@ -5,22 +5,17 @@ import MixinServices
 
 class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewController<BalancedSwapToken> {
     
-    
     let intent: TokenSelectorIntent
+    let recentAssetIDsKey: PropertiesDAO.Key
+    let queue = DispatchQueue(label: "one.mixin.messenger.SwapTokenSelector")
+    let operationQueue = OperationQueue()
+    
+    weak var searchRequest: Request?
     
     var onSelected: ((BalancedSwapToken) -> Void)?
     
-    private let recentAssetIDsKey: PropertiesDAO.Key
-    private let supportedChainIDs: Set<String>? // nil for supporting all chains
-    private let searchSource: RouteTokenSource
-    
-    private weak var searchRequest: Request?
-    
     init(
         intent: TokenSelectorIntent,
-        supportedChainIDs: Set<String>?,
-        searchSource: RouteTokenSource,
-        tokens: [BalancedSwapToken],
         selectedAssetID: String?,
     ) {
         self.intent = intent
@@ -30,16 +25,14 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
         case .receive:
                 .mixinSwapRecentReceiveIDs
         }
-        self.supportedChainIDs = supportedChainIDs
-        self.searchSource = searchSource
-        let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-        let chains = Chain.web3Chains(ids: chainIDs)
         super.init(
-            defaultTokens: tokens,
-            defaultChains: chains,
-            searchDebounceInterval: 1,
+            defaultTokens: [],
+            defaultChains: [],
+            searchDebounceInterval: 0.5,
             selectedID: selectedAssetID
         )
+        self.operationQueue.underlyingQueue = queue
+        self.operationQueue.maxConcurrentOperationCount = 1
     }
     
     required init?(coder: NSCoder) {
@@ -48,68 +41,13 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
     
     deinit {
         searchRequest?.cancel()
-    }
-    
-    class func chains(with ids: Set<String>) -> OrderedSet<Chain> {
-        assertionFailure("Must Override")
-        return []
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        reloadTokenSelection()
-        DispatchQueue.global().async { [recentAssetIDsKey, supportedChainIDs, weak self] in
-            let recentTokens = PropertiesDAO.shared.jsonObject(
-                forKey: recentAssetIDsKey,
-                type: [SwapToken.Codable].self
-            )
-            guard let recentTokens else {
-                return
-            }
-            let availableRecentTokens = if let supportedChainIDs {
-                recentTokens.filter { token in
-                    if let chainID = token.chain.chainID {
-                        supportedChainIDs.contains(chainID)
-                    } else {
-                        false
-                    }
-                }
-            } else {
-                recentTokens
-            }
-            guard let tokens = self?.fillBalance(to: availableRecentTokens) else {
-                return
-            }
-            let assetIDs = tokens.map(\.assetID)
-            let changes: [String: TokenChange] = MarketDAO.shared
-                .priceChangePercentage24H(assetIDs: assetIDs)
-                .compactMapValues(TokenChange.init(change:))
-            DispatchQueue.main.async {
-                self?.reloadRecents(tokens: tokens, changes: changes)
-            }
-        }
+        operationQueue.cancelAllOperations()
     }
     
     override func prepareForSearch(_ textField: UITextField) {
         searchRequest?.cancel()
+        operationQueue.cancelAllOperations()
         super.prepareForSearch(textField)
-    }
-    
-    override func search(keyword: String) {
-        searchRequest = RouteAPI.search(
-            keyword: keyword,
-            source: searchSource,
-            queue: .global()
-        ) { [weak self] result in
-            switch result {
-            case .success(let tokens):
-                self?.reloadSearchResults(keyword: keyword, tokens: tokens)
-            case .failure(.emptyResponse):
-                self?.reloadSearchResults(keyword: keyword, tokens: [])
-            case .failure(let error):
-                Logger.general.debug(category: "SwapTokenSelector", message: "\(error)")
-            }
-        }
     }
     
     override func saveRecentsToStorage(tokens: any Sequence<BalancedSwapToken>) {
@@ -163,43 +101,6 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
         presentingViewController?.dismiss(animated: true)
         onSelected?(token)
         reporter.report(event: .tradeTokenSelect, tags: ["method": location.asEventMethod])
-    }
-    
-    func fillBalance(to tokens: [SwapToken]) -> [BalancedSwapToken] {
-        assertionFailure("Must Override")
-        return []
-    }
-    
-    private func reloadSearchResults(keyword: String, tokens: [SwapToken]) {
-        assert(!Thread.isMainThread)
-        let comparator = TokenComparator<BalancedSwapToken>(keyword: keyword)
-        let searchResults = fillBalance(to: tokens)
-            .sorted(using: comparator)
-        let searchResultChainIDs = Set(searchResults.compactMap(\.chain.chainID))
-        let searchResultChains = Self.chains(with: searchResultChainIDs)
-        DispatchQueue.main.async {
-            guard self.trimmedKeyword == keyword else {
-                return
-            }
-            self.searchResultsKeyword = keyword
-            self.searchResults = searchResults
-            self.searchResultChains = searchResultChains
-            if let chain = self.selectedChain, searchResultChainIDs.contains(chain.id) {
-                self.tokenIndicesForSelectedChain = self.tokenIndices(tokens: searchResults, chainID: chain.id)
-            } else {
-                self.selectedChain = nil
-                self.tokenIndicesForSelectedChain = nil
-            }
-            self.collectionView.reloadData()
-            self.collectionView.checkEmpty(
-                dataCount: searchResults.count,
-                text: R.string.localizable.no_results(),
-                photo: R.image.emptyIndicator.ic_search_result()!
-            )
-            self.reloadChainSelection()
-            self.reloadTokenSelection()
-            self.searchBoxView.isBusy = false
-        }
     }
     
 }

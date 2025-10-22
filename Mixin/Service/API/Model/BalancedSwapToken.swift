@@ -33,9 +33,9 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
         self.decimalBalance = i.decimalBalance
         self.decimalUSDPrice = i.decimalUSDPrice
         super.init(
-            address: "",
+            address: i.assetKey,
             assetID: i.assetID,
-            decimals: 0,
+            decimals: i.precision,
             name: i.name,
             symbol: i.symbol,
             iconURL: i.iconURL,

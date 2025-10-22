@@ -6,7 +6,6 @@ import MixinServices
 final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewController<MixinTokenItem> {
     
     var onSelected: ((MixinTokenItem, PickUpLocation) -> Void)?
-    var searchFromRemote = false
     
     private let intent: TokenSelectorIntent
     
@@ -111,48 +110,50 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
         reloadChainSelection()
         reloadTokenSelection()
         
-        if searchFromRemote {
-            searchRequest = AssetAPI.search(
-                keyword: keyword,
-                queue: .global()
-            ) { [weak self] result in
-                switch result {
-                case .success(let tokens):
-                    self?.reloadSearchResults(
-                        keyword: keyword,
-                        localResults: localResults,
-                        remoteResults: tokens,
-                        comparator: comparator
-                    )
-                case .failure(.emptyResponse):
-                    self?.reloadSearchResults(
-                        keyword: keyword,
-                        localResults: localResults,
-                        remoteResults: [],
-                        comparator: comparator
-                    )
-                case .failure(let error):
-                    Logger.general.debug(category: "MixinTokenSelector", message: "\(error)")
-                    DispatchQueue.main.async {
-                        guard let self else {
-                            return
-                        }
-                        self.collectionView.checkEmpty(
-                            dataCount: localResults.count,
-                            text: R.string.localizable.no_results(),
-                            photo: R.image.emptyIndicator.ic_search_result()!
-                        )
-                        self.searchBoxView.isBusy = false
-                    }
-                }
-            }
-        } else {
+        guard intent == .receive else {
+            // Search from remote only when receiving
+            // Sending requires non-zero balance, which must be included in `localResults`
             collectionView.checkEmpty(
                 dataCount: localResults.count,
                 text: R.string.localizable.no_results(),
                 photo: R.image.emptyIndicator.ic_search_result()!
             )
             searchBoxView.isBusy = false
+            return
+        }
+        searchRequest = AssetAPI.search(
+            keyword: keyword,
+            queue: .global()
+        ) { [weak self] result in
+            switch result {
+            case .success(let tokens):
+                self?.reloadSearchResults(
+                    keyword: keyword,
+                    localResults: localResults,
+                    remoteResults: tokens,
+                    comparator: comparator
+                )
+            case .failure(.emptyResponse):
+                self?.reloadSearchResults(
+                    keyword: keyword,
+                    localResults: localResults,
+                    remoteResults: [],
+                    comparator: comparator
+                )
+            case .failure(let error):
+                Logger.general.debug(category: "MixinTokenSelector", message: "\(error)")
+                DispatchQueue.main.async {
+                    guard let self else {
+                        return
+                    }
+                    self.collectionView.checkEmpty(
+                        dataCount: localResults.count,
+                        text: R.string.localizable.no_results(),
+                        photo: R.image.emptyIndicator.ic_search_result()!
+                    )
+                    self.searchBoxView.isBusy = false
+                }
+            }
         }
     }
     

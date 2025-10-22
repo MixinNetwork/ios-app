@@ -52,13 +52,9 @@ class MixinSwapViewController: SwapViewController {
     }
     
     override func changeSendToken(_ sender: Any) {
-        let tokens = swappableTokens.values.sorted {
-            $0.sortingValues > $1.sortingValues
-        }
         let selector = SwapMixinTokenSelectorViewController(
             intent: .send,
-            tokens: tokens,
-            selectedAssetID: sendToken?.assetID
+            selectedAssetID: sendToken?.assetID,
         )
         selector.onSelected = { token in
             if token.assetID == self.receiveToken?.assetID {
@@ -87,7 +83,6 @@ class MixinSwapViewController: SwapViewController {
     override func changeReceiveToken(_ sender: Any) {
         let selector = SwapMixinTokenSelectorViewController(
             intent: .receive,
-            tokens: Array(swappableTokens.values),
             selectedAssetID: receiveToken?.assetID
         )
         selector.onSelected = { token in

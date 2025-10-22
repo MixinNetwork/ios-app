@@ -103,6 +103,7 @@ public final class Web3TokenDAO: Web3DAO {
     public func search(
         walletID: String,
         keyword: String,
+        includesZeroBalanceItems: Bool,
         limit: Int?
     ) -> [Web3TokenItem] {
         var sql = """
@@ -111,6 +112,9 @@ public final class Web3TokenDAO: Web3DAO {
             AND (t.level >= 10 OR hidden IS FALSE)
             AND (t.name LIKE :keyword OR t.symbol LIKE :keyword)
         """
+        if !includesZeroBalanceItems {
+            sql += "\nAND t.amount > 0"
+        }
         if let limit = limit {
             sql += " LIMIT \(limit)"
         }

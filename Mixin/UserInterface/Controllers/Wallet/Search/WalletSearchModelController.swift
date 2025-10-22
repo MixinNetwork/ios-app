@@ -106,6 +106,7 @@ final class WalletSearchWeb3TokenController: WalletSearchModelController {
         let items = Web3TokenDAO.shared.search(
             walletID: walletID,
             keyword: keyword,
+            includesZeroBalanceItems: true,
             limit: nil
         )
         return items

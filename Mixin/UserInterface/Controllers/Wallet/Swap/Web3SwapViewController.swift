@@ -55,14 +55,10 @@ final class Web3SwapViewController: SwapViewController {
     }
     
     override func changeSendToken(_ sender: Any) {
-        let tokens = swappableTokens.values.sorted {
-            $0.sortingValues > $1.sortingValues
-        }
         let selector = SwapWeb3TokenSelectorViewController(
             wallet: wallet,
             supportedChainIDs: supportedChainIDs,
             intent: .send,
-            tokens: tokens,
             selectedAssetID: sendToken?.assetID
         )
         selector.onSelected = { token in
@@ -95,7 +91,6 @@ final class Web3SwapViewController: SwapViewController {
             wallet: wallet,
             supportedChainIDs: supportedChainIDs,
             intent: .receive,
-            tokens: Array(swappableTokens.values),
             selectedAssetID: receiveToken?.assetID
         )
         selector.onSelected = { token in

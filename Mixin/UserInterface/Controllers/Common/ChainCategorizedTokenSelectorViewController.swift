@@ -57,11 +57,11 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
                     return
                 }
                 let keyword = self.trimmedKeyword
-                guard !keyword.isEmpty, keyword != self.searchResultsKeyword else {
+                if !keyword.isEmpty && keyword != self.searchResultsKeyword {
+                    self.search(keyword: keyword)
+                } else {
                     self.searchBoxView.isBusy = false
-                    return
                 }
-                self.search(keyword: keyword)
             }
         collectionView.register(
             R.nib.recentSearchHeaderView,

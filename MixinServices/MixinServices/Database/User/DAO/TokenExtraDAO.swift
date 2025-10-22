@@ -11,6 +11,18 @@ public final class TokenExtraDAO: UserDatabaseDAO {
         db.select(with: "SELECT * FROM tokens_extra WHERE asset_id = ?", arguments: [assetID])
     }
     
+    public func decimalBalance(assetID: String) -> Decimal? {
+        let balance: String? = db.select(
+            with: "SELECT balance FROM tokens_extra WHERE asset_id = ?",
+            arguments: [assetID]
+        )
+        if let balance {
+            return Decimal(string: balance, locale: .enUSPOSIX)
+        } else {
+            return nil
+        }
+    }
+    
     public func insertOrUpdateBalance(
         extra: TokenExtra,
         into db: GRDB.Database,

@@ -1,9 +1,10 @@
 import UIKit
+import SDWebImage
 
 final class ExploreActionCell: ModernSelectedBackgroundCell {
     
     @IBOutlet weak var iconTrayImageView: UIImageView!
-    @IBOutlet weak var iconImageView: UIImageView!
+    @IBOutlet weak var iconImageView: SDAnimatedImageView!
     @IBOutlet weak var badgeView: BadgeDotView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!

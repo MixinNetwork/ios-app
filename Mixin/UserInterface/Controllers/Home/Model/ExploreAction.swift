@@ -29,7 +29,7 @@ enum ExploreAction {
         case .membership:
             R.image.explore.membership()
         case .referral:
-            R.image.explore.referral()
+            referralIconImage
         case .linkDesktop:
             if AppGroupUserDefaults.Account.isDesktopLoggedIn {
                 R.image.explore.desktop_logged_in()

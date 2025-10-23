@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import SDWebImage
 import MixinServices
 
 enum MuteInterval {
@@ -45,3 +46,17 @@ let maxNumberOfTranscriptChildren = 99
 let minimumTransferAmount: Decimal = 0.000_000_01
 
 let maxGroupMemberCount = 1024
+
+let referralIconImage: UIImage? = {
+    let scale = UIScreen.main.scale
+    let url = switch UIScreen.main.scale {
+    case 2:
+        R.file.referral2xJson()!
+    default:
+        R.file.referral3xJson()!
+    }
+    guard let data = try? Data(contentsOf: url) else {
+        return nil
+    }
+    return SDAnimatedImage(data: data, scale: UIScreen.main.scale)
+}()

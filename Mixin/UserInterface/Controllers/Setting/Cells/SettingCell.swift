@@ -1,4 +1,5 @@
 import UIKit
+import SDWebImage
 
 final class SettingCell: ModernSelectedBackgroundCell {
     
@@ -7,14 +8,17 @@ final class SettingCell: ModernSelectedBackgroundCell {
     @IBOutlet weak var subtitleLabel: UILabel!
     
     private(set) lazy var iconImageView: UIImageView = {
-        let view = UIImageView()
+        let view = SDAnimatedImageView()
         view.contentMode = .center
         view.setContentHuggingPriority(.required, for: .horizontal)
         view.setContentCompressionResistancePriority(.required, for: .horizontal)
         view.tintColor = R.color.icon_tint()
         view.snp.makeConstraints { (make) in
-            make.width.height.equalTo(24).priority(.almostRequired)
+            make.width.equalTo(24)
+            make.height.equalTo(24).priority(.almostRequired)
         }
+        view.shouldCustomLoopCount = true
+        view.animationRepeatCount = 3
         iconImageViewIfLoaded = view
         return view
     }()

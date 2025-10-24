@@ -8,7 +8,7 @@ final class UserCenterViewController: SettingsTableViewController, MixinNavigati
             SettingsRow(icon: R.image.setting.category_membership(),
                         title: R.string.localizable.mixin_one(),
                         accessory: .disclosure),
-            SettingsRow(icon: R.image.explore.referral(),
+            SettingsRow(icon: referralIconImage,
                         title: R.string.localizable.referral(),
                         accessory: .disclosure),
         ]),

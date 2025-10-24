@@ -194,12 +194,25 @@ final class ExploreBotsViewController: UITableViewController {
             let indexedUsers = indexedObjcUsers.map { $0.map(\.user) }
             DispatchQueue.main.async {
                 self.allUsers = allUsers
-                self.indexTitles = titles
                 self.indexedUsers = indexedUsers
-                self.tableView.reloadData()
-                self.tableView.checkEmpty(dataCount: allUsers.count,
-                                          text: R.string.localizable.no_bots(),
-                                          photo: R.image.emptyIndicator.ic_data()!)
+                self.tableView.performBatchUpdates {
+                    var lastSectionIndex = self.numberOfSections(in: self.tableView) - 1
+                    if lastSectionIndex > 2 {
+                        self.indexTitles = nil
+                        self.tableView.deleteSections(IndexSet(integersIn: 2...lastSectionIndex), with: .none)
+                    }
+                    
+                    self.indexTitles = titles
+                    lastSectionIndex = self.numberOfSections(in: self.tableView) - 1
+                    if lastSectionIndex > 2 {
+                        self.tableView.insertSections(IndexSet(integersIn: 2...lastSectionIndex), with: .none)
+                    }
+                }
+                self.tableView.checkEmpty(
+                    dataCount: allUsers.count,
+                    text: R.string.localizable.no_bots(),
+                    photo: R.image.emptyIndicator.ic_data()!
+                )
             }
         }
     }

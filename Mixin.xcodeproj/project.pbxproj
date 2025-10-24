@@ -694,6 +694,8 @@
 		940D10B52C5CC3380071E36D /* NoTransactionIndicatorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940D10B42C5CC3380071E36D /* NoTransactionIndicatorCell.xib */; };
 		940D10B62C5CC3380071E36D /* NoTransactionIndicatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940D10B32C5CC3380071E36D /* NoTransactionIndicatorCell.swift */; };
 		940DC5922B075E03009A15D1 /* SafePaymentURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940DC5912B075E03009A15D1 /* SafePaymentURL.swift */; };
+		940EADA22EAA12AC009B3DAA /* referral@2x.json in Resources */ = {isa = PBXBuildFile; fileRef = 940EADA02EAA12AC009B3DAA /* referral@2x.json */; };
+		940EADA32EAA12AC009B3DAA /* referral@3x.json in Resources */ = {isa = PBXBuildFile; fileRef = 940EADA12EAA12AC009B3DAA /* referral@3x.json */; };
 		940EE2982C9DDD24001A52FA /* MarketAlertItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EE2972C9DDD24001A52FA /* MarketAlertItemView.xib */; };
 		940EE2992C9DDD24001A52FA /* MarketAlertItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EE2962C9DDD24001A52FA /* MarketAlertItemView.swift */; };
 		940EF8B12C8AE573000AD1C6 /* ShareMarketAsPictureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */; };
@@ -2432,6 +2434,8 @@
 		940D10B32C5CC3380071E36D /* NoTransactionIndicatorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoTransactionIndicatorCell.swift; sourceTree = "<group>"; };
 		940D10B42C5CC3380071E36D /* NoTransactionIndicatorCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoTransactionIndicatorCell.xib; sourceTree = "<group>"; };
 		940DC5912B075E03009A15D1 /* SafePaymentURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafePaymentURL.swift; sourceTree = "<group>"; };
+		940EADA02EAA12AC009B3DAA /* referral@2x.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "referral@2x.json"; sourceTree = "<group>"; };
+		940EADA12EAA12AC009B3DAA /* referral@3x.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "referral@3x.json"; sourceTree = "<group>"; };
 		940EE2962C9DDD24001A52FA /* MarketAlertItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertItemView.swift; sourceTree = "<group>"; };
 		940EE2972C9DDD24001A52FA /* MarketAlertItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketAlertItemView.xib; sourceTree = "<group>"; };
 		940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareMarketAsPictureView.xib; sourceTree = "<group>"; };
@@ -5441,6 +5445,8 @@
 				7C2DEFF02824FCF500758208 /* ic_time_animation_dark@3x.gif */,
 				942AA73F2C9473C9007B97A4 /* user_membership_prosperity.json */,
 				94F2FA922DF039A80013B820 /* user_membership_prosperity_large.json */,
+				940EADA02EAA12AC009B3DAA /* referral@2x.json */,
+				940EADA12EAA12AC009B3DAA /* referral@3x.json */,
 				949A3685261D9C5C004251B2 /* post.css */,
 				94EC81FB2BC5A61F00770DCE /* mixin-min.js */,
 			);
@@ -6502,6 +6508,8 @@
 				7BB6111A22BA4179000E758C /* PinValidationView.xib in Resources */,
 				9417EF352DC3549C005079CB /* MembershipBenefitCell.xib in Resources */,
 				941979552BA47782002BA19F /* Web3MessageCell.xib in Resources */,
+				940EADA22EAA12AC009B3DAA /* referral@2x.json in Resources */,
+				940EADA32EAA12AC009B3DAA /* referral@3x.json in Resources */,
 				7B595359226749A100D59DB4 /* PeerCell.xib in Resources */,
 				945A72E12E59EE38006A11E9 /* TIPQuizAnswerView.xib in Resources */,
 				948723392C9DF6380034BCB0 /* AddMarketAlertView.xib in Resources */,

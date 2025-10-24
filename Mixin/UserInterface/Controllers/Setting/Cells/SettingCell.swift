@@ -18,7 +18,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
             make.height.equalTo(24).priority(.almostRequired)
         }
         view.shouldCustomLoopCount = true
-        view.animationRepeatCount = 1
+        view.animationRepeatCount = 3
         iconImageViewIfLoaded = view
         return view
     }()

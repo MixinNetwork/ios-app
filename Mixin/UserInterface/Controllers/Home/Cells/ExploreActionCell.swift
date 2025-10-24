@@ -12,7 +12,7 @@ final class ExploreActionCell: ModernSelectedBackgroundCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         iconImageView.shouldCustomLoopCount = true
-        iconImageView.animationRepeatCount = 1
+        iconImageView.animationRepeatCount = 3
         badgeView.dotSize = CGSize(width: 10, height: 10)
     }
     

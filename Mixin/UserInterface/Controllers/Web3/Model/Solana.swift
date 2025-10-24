@@ -19,7 +19,6 @@ enum Solana {
     
     static let lamportsPerSOL = Decimal(SOLANA_LAMPORTS_PER_SOL)
     static let microLamportsPerLamport: Decimal = 1_000_000
-    static let accountCreationCost: Decimal = 0.002_039_28
     static let keyPairCount = 64
     
     static func publicKey(seed: Data) throws -> String {
@@ -172,8 +171,7 @@ extension Solana {
             priorityFee: PriorityFee?,
             token: Web3Token
         ) throws {
-            let isSendingSOL = token.chainID == ChainID.solana
-                && (token.assetKey == Web3Token.AssetKey.sol || token.assetKey == Web3Token.AssetKey.wrappedSOL)
+            let isSendingSOL = token.chainID == ChainID.solana && token.assetKey == Web3Token.AssetKey.sol
             let solanaPriorityFee: SolanaPriorityFee? = if let fee = priorityFee {
                 SolanaPriorityFee(price: fee.unitPrice, limit: fee.unitLimit)
             } else {
@@ -258,6 +256,80 @@ extension Solana {
             }
         }
         
+    }
+    
+}
+
+extension Solana {
+    
+    enum RentExemptionFailedReason {
+        
+        case reserveSOLForRent(Decimal)
+        case sendSOLForRent(Decimal)
+        case insufficientSOL(requiredAmount: Decimal)
+        
+        var localizedDescription: String {
+            switch self {
+            case .reserveSOLForRent(let amount):
+                R.string.localizable.reserve_sol_for_rent(
+                    CurrencyFormatter.localizedString(
+                        from: amount,
+                        format: .precision,
+                        sign: .never
+                    )
+                )
+            case .sendSOLForRent(let amount):
+                R.string.localizable.send_sol_for_rent(
+                    CurrencyFormatter.localizedString(
+                        from: amount,
+                        format: .precision,
+                        sign: .never
+                    )
+                )
+            case .insufficientSOL(let requiredAmount):
+                R.string.localizable.insufficient_sol_for_sending_spl_token(
+                    CurrencyFormatter.localizedString(
+                        from: requiredAmount,
+                        format: .precision,
+                        sign: .never
+                    )
+                )
+            }
+        }
+        
+    }
+    
+    enum RentExemptionValue {
+        static let systemAccount: Decimal = 0.00089088
+        static let tokenAccount: Decimal = 0.00203928
+    }
+    
+    static func checkRentExemptionForSOLTransfer(
+        sendingAmount: Decimal,
+        feeAmount: Decimal,
+        senderSOLBalance: Decimal,
+        receiverAccountExists: Bool
+    ) -> RentExemptionFailedReason? {
+        if senderSOLBalance - sendingAmount - feeAmount < RentExemptionValue.systemAccount {
+            .reserveSOLForRent(RentExemptionValue.systemAccount)
+        } else if !receiverAccountExists && sendingAmount < RentExemptionValue.tokenAccount {
+            .sendSOLForRent(RentExemptionValue.tokenAccount)
+        } else {
+            nil
+        }
+    }
+    
+    static func checkRentExemptionForSPLTokenTransfer(
+        senderSOLBalance: Decimal,
+        feeAmount: Decimal,
+        receiverAccountExists: Bool
+    ) -> RentExemptionFailedReason? {
+        let minBalance = RentExemptionValue.systemAccount + RentExemptionValue.tokenAccount + feeAmount
+        if receiverAccountExists || senderSOLBalance >= minBalance {
+            return nil
+        } else {
+            return .insufficientSOL(requiredAmount: minBalance)
+        }
     }
     
 }

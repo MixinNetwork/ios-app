@@ -208,6 +208,9 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
             let preview = R.nib.textPreviewView(withOwner: nil)!
             preview.textView.text = message
             preview.show(on: AppDelegate.current.mainWindow)
+        case .waivedFee:
+            let description = CrossWalletTransactionFreeIntroductionViewController()
+            present(description, animated: true)
         default:
             break
         }
@@ -336,13 +339,27 @@ extension Web3TransferPreviewViewController {
                 symbol: .currencySymbol
             )
         }
-        let row: Row = .amount(
-            caption: .fee,
-            token: feeValue,
-            fiatMoney: feeCost,
-            display: .byToken,
-            boldPrimaryAmount: false
-        )
+        let isFeeWaived: Bool = switch proposer {
+        case .user(let label):
+            label?.isFeeWaived() ?? false
+        case .speedUp, .cancel, .dapp, .none:
+            false
+        }
+        let row: Row = if isFeeWaived {
+            .waivedFee(
+                token: feeValue,
+                fiatMoney: feeCost,
+                display: .byToken
+            )
+        } else {
+            .amount(
+                caption: .fee,
+                token: feeValue,
+                fiatMoney: feeCost,
+                display: .byToken,
+                boldPrimaryAmount: false
+            )
+        }
         await MainActor.run {
             self.replaceRow(at: index, with: row)
         }

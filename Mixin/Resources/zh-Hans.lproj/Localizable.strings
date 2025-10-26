@@ -775,6 +775,11 @@
 "lightning_address_explain_2" = "可重复使用，无需每次生成新的。";
 "lightning_address_explain_3" = "主流闪电网络钱包都支持。";
 "lightning_address_explain_mao" = "每一个 MAO 域名对应一个闪电网络地址，如果您拥有 MAO 域名，可以按 name@mao.id 格式接收闪电网络转账。";
+"limited_time_free" = "限时免费";
+"limited_time_free_condition" = "活动期间，钱包转账符合以下任意情况即可获得手续费全额返现：";
+"limited_time_free_condition_1" = "隐私钱包转账到普通钱包、Mixin Safe 金库。";
+"limited_time_free_condition_2" = "普通钱包转账到其他普通钱包、隐私钱包、Mixin Safe 金库或联系人。";
+"limited_time_free_description" = "手续费按月、按实际消耗的手续费币种和金额汇总返还到您的隐私钱包，阅读文档了解更多。";
 "line_busy" = "忙线未接听";
 "line_busy_remote" = "对方忙";
 "link" = "链接";
@@ -1555,6 +1560,7 @@
 "url_api_upgrade" = "https://support.mixin.one/zh/article/mixin-api-l4jruq/";
 "url_cant_receive_otp" = "https://support.mixin.one/zh/article/5ps25lin5yiw5oml5py66aqm6kb56cb5oco5lmi5yqe77yf-f32qa2/";
 "url_classic_wallet" = "https://support.mixin.one/zh/article/5lua5lmi5piv5pmu6yca6zkx5yyf77yf-8308b1/";
+"url_cross_wallet_transaction_free" = "https://support.mixin.one/zh/article/mixin-10yozl6/";
 "url_delete_account" = "https://support.mixin.one/zh/article/5aac5l2v5yig6zmk6lsm5y377yf-1uteq30/";
 "url_deposit" = "https://support.mixin.one/zh/article/mixin-messenger-5ynqjm/";
 "url_deposit_suspended" = "https://support.mixin.one/zh/article/5ywz5lqo5pq56en6lwe5lqn5lin5psv5oyb5ywf5yc855qe6k05pio-1sh1z50/";

@@ -53,6 +53,7 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.register(R.nib.addressReceiversCell)
         tableView.register(R.nib.authenticationPreviewWalletCell)
         tableView.register(R.nib.commonWalletReceiverCell)
+        tableView.register(R.nib.waivedFeeCell)
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -312,6 +313,17 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.reloadUsers(with: [user], checkmarkCondition: .never)
             cell.delegate = self
             return cell
+        case let .waivedFee(token, fiatMoney, display):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.waived_fee, for: indexPath)!
+            switch display {
+            case .byToken:
+                cell.updatePrimaryLabel(text: token)
+                cell.secondaryLabel.text = fiatMoney
+            case .byFiatMoney:
+                cell.updatePrimaryLabel(text: fiatMoney)
+                cell.secondaryLabel.text = token
+            }
+            return cell
         }
     }
     
@@ -434,6 +446,7 @@ extension AuthenticationPreviewViewController {
         case wallet(caption: Caption, wallet: Wallet, threshold: Int32?)
         case commonWalletReceiver(user: UserItem, address: String)
         case user(title: String, user: UserItem)
+        case waivedFee(token: String, fiatMoney: String, display: AmountIntent)
     }
     
     struct TableHeaderViewStyle: OptionSet {

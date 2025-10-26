@@ -27,6 +27,7 @@ extension URL {
     static let watchWallet          = URL(string: R.string.localizable.url_watch_wallet())!
     static let whatIsPIN            = URL(string: R.string.localizable.url_what_is_pin())!
     static let lightningAddress     = URL(string: R.string.localizable.url_lightning_address())!
+    static let crossWalletTransactionFree = URL(string: R.string.localizable.url_cross_wallet_transaction_free())!
     
     func getKeyVals() -> [String: String] {
         return URLComponents(url: self, resolvingAgainstBaseURL: true)?.getKeyVals() ?? [:]

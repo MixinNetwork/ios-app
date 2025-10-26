@@ -696,6 +696,9 @@
 		940DC5922B075E03009A15D1 /* SafePaymentURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940DC5912B075E03009A15D1 /* SafePaymentURL.swift */; };
 		940EADA22EAA12AC009B3DAA /* referral@2x.json in Resources */ = {isa = PBXBuildFile; fileRef = 940EADA02EAA12AC009B3DAA /* referral@2x.json */; };
 		940EADA32EAA12AC009B3DAA /* referral@3x.json in Resources */ = {isa = PBXBuildFile; fileRef = 940EADA12EAA12AC009B3DAA /* referral@3x.json */; };
+		940EADCD2EAA217F009B3DAA /* CrossWalletTransactionFreeIntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EADCC2EAA217F009B3DAA /* CrossWalletTransactionFreeIntroductionViewController.swift */; };
+		940EAFC92EAE454A009B3DAA /* WaivedFeeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EAFC72EAE454A009B3DAA /* WaivedFeeCell.swift */; };
+		940EAFCA2EAE454A009B3DAA /* WaivedFeeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EAFC82EAE454A009B3DAA /* WaivedFeeCell.xib */; };
 		940EE2982C9DDD24001A52FA /* MarketAlertItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EE2972C9DDD24001A52FA /* MarketAlertItemView.xib */; };
 		940EE2992C9DDD24001A52FA /* MarketAlertItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EE2962C9DDD24001A52FA /* MarketAlertItemView.swift */; };
 		940EF8B12C8AE573000AD1C6 /* ShareMarketAsPictureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */; };
@@ -2435,6 +2438,9 @@
 		940DC5912B075E03009A15D1 /* SafePaymentURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafePaymentURL.swift; sourceTree = "<group>"; };
 		940EADA02EAA12AC009B3DAA /* referral@2x.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "referral@2x.json"; sourceTree = "<group>"; };
 		940EADA12EAA12AC009B3DAA /* referral@3x.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "referral@3x.json"; sourceTree = "<group>"; };
+		940EADCC2EAA217F009B3DAA /* CrossWalletTransactionFreeIntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossWalletTransactionFreeIntroductionViewController.swift; sourceTree = "<group>"; };
+		940EAFC72EAE454A009B3DAA /* WaivedFeeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaivedFeeCell.swift; sourceTree = "<group>"; };
+		940EAFC82EAE454A009B3DAA /* WaivedFeeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WaivedFeeCell.xib; sourceTree = "<group>"; };
 		940EE2962C9DDD24001A52FA /* MarketAlertItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertItemView.swift; sourceTree = "<group>"; };
 		940EE2972C9DDD24001A52FA /* MarketAlertItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketAlertItemView.xib; sourceTree = "<group>"; };
 		940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareMarketAsPictureView.xib; sourceTree = "<group>"; };
@@ -4487,6 +4493,7 @@
 				946EA1132D47DD4000DBC308 /* WithdrawInputAmountViewController.swift */,
 				9496DF2B2DFB377100F6DE26 /* InsufficientBalanceViewController.swift */,
 				94B8205F2E00601700D580C9 /* AddTokenMethodSelectorViewController.swift */,
+				940EADCC2EAA217F009B3DAA /* CrossWalletTransactionFreeIntroductionViewController.swift */,
 			);
 			path = Transfer;
 			sourceTree = "<group>";
@@ -4781,6 +4788,8 @@
 				94F0A1A52E3BB0AD001732B8 /* AuthenticationPreviewWalletCell.swift */,
 				946CBA052E9F7A950099FFCB /* CommonWalletReceiverCell.xib */,
 				946CBA042E9F7A950099FFCB /* CommonWalletReceiverCell.swift */,
+				940EAFC82EAE454A009B3DAA /* WaivedFeeCell.xib */,
+				940EAFC72EAE454A009B3DAA /* WaivedFeeCell.swift */,
 				9457F7712B6F4186008FC98F /* AuthenticationPreviewSingleButtonTrayView.swift */,
 				944C61F92B6BFD6F00C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.xib */,
 				944C62032B6C185300C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.swift */,
@@ -6647,6 +6656,7 @@
 				7C225E8927C4C5FE00154143 /* GroupInCommonCell.xib in Resources */,
 				7BFD3754249366E7006D758F /* GroupCallIndicatorView.xib in Resources */,
 				94E34124261D829200E2F9D3 /* highlight.js in Resources */,
+				940EAFCA2EAE454A009B3DAA /* WaivedFeeCell.xib in Resources */,
 				944C61FA2B6BFD6F00C7DF06 /* AuthenticationPreviewDoubleButtonTrayView.xib in Resources */,
 				DF846CDB23694A4900AA1197 /* MultisigUsersWindow.xib in Resources */,
 				944075DB2E2E8B2A00591B45 /* WalletPendingDepositView.xib in Resources */,
@@ -7983,6 +7993,7 @@
 				7BAD2E55207DE046006D7887 /* UnreadHintMessageCell.swift in Sources */,
 				946331BB2C622BE200C54B76 /* TransactionHistoryAssetFilterView.swift in Sources */,
 				94E9504E2E10082A000AEFE5 /* BuyTokenWebViewController.swift in Sources */,
+				940EAFC92EAE454A009B3DAA /* WaivedFeeCell.swift in Sources */,
 				7B86B1EF23F6A70300C80AD9 /* AudioMessageActionView.swift in Sources */,
 				7C4E2B0626A9BE50008190F5 /* StickersEditingCell.swift in Sources */,
 				94AC15652C3D7A110029E1AB /* AppButtonsViewModel.swift in Sources */,
@@ -8106,6 +8117,7 @@
 				E05D99192390C3CB009F9E8D /* EditFavoriteAppsViewController.swift in Sources */,
 				E0E32602238D4FBF00D1188A /* UserAvatarStackView.swift in Sources */,
 				7C9A734027392FAF00E0127A /* PinSettingTableHeaderView.swift in Sources */,
+				940EADCD2EAA217F009B3DAA /* CrossWalletTransactionFreeIntroductionViewController.swift in Sources */,
 				7C4E2B0426A9BDAD008190F5 /* StickersEditingViewController.swift in Sources */,
 				94E978D22D09B7D600FFCC12 /* LegacyPINViewController.swift in Sources */,
 				947FA4CD299577B700EF13A0 /* AuthorizationsViewController.swift in Sources */,

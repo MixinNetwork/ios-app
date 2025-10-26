@@ -16,7 +16,8 @@ class SolanaTransferOperation: Web3TransferOperation {
         fromAddress: Web3Address,
         toAddress: String,
         chain: Web3Chain,
-        hardcodedSimulation: TransactionSimulation?
+        hardcodedSimulation: TransactionSimulation?,
+        isFeeWaived: Bool,
     ) throws {
         guard let feeToken = try chain.feeToken(walletID: wallet.walletID) else {
             throw InitError.noFeeToken(chain.feeTokenAssetID)
@@ -29,6 +30,7 @@ class SolanaTransferOperation: Web3TransferOperation {
             feeToken: feeToken,
             isResendingTransactionAvailable: false,
             hardcodedSimulation: hardcodedSimulation,
+            isFeeWaived: isFeeWaived,
         )
     }
     
@@ -75,7 +77,8 @@ class SolanaTransferOperation: Web3TransferOperation {
             let rawTransaction = try await RouteAPI.postTransaction(
                 chainID: ChainID.solana,
                 from: fromAddress.destination,
-                rawTransaction: signedTransaction
+                rawTransaction: signedTransaction,
+                waivingFee: isFeeWaived,
             )
             let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee?.tokenAmount)
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
@@ -115,7 +118,8 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
             fromAddress: fromAddress,
             toAddress: toAddress,
             chain: chain,
-            hardcodedSimulation: nil
+            hardcodedSimulation: nil,
+            isFeeWaived: false
         )
         self.state = .ready
     }
@@ -248,6 +252,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             token: payment.token,
             amount: decimalAmount
         )
+        let isFeeWaived = payment.toAddressLabel?.isFeeWaived() ?? false
         self.payment = payment
         self.decimalAmount = decimalAmount
         self.amount = amount.uint64Value
@@ -256,7 +261,8 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             fromAddress: payment.fromAddress,
             toAddress: payment.toAddress,
             chain: payment.chain,
-            hardcodedSimulation: simulation
+            hardcodedSimulation: simulation,
+            isFeeWaived: isFeeWaived,
         )
     }
     

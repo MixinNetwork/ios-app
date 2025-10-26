@@ -38,6 +38,7 @@ class Web3TransferOperation {
     let feeToken: Web3TokenItem
     let isResendingTransactionAvailable: Bool
     let hardcodedSimulation: TransactionSimulation?
+    let isFeeWaived: Bool
     
     @MainActor @Published
     var state: State = .loading
@@ -51,7 +52,7 @@ class Web3TransferOperation {
         wallet: Web3Wallet, fromAddress: Web3Address, toAddress: String?,
         chain: Web3Chain, feeToken: Web3TokenItem,
         isResendingTransactionAvailable: Bool,
-        hardcodedSimulation: TransactionSimulation?
+        hardcodedSimulation: TransactionSimulation?, isFeeWaived: Bool
     ) {
         self.wallet = wallet
         self.fromAddress = fromAddress
@@ -60,6 +61,7 @@ class Web3TransferOperation {
         self.feeToken = feeToken
         self.isResendingTransactionAvailable = isResendingTransactionAvailable
         self.hardcodedSimulation = hardcodedSimulation
+        self.isFeeWaived = isFeeWaived
     }
     
     func loadFee() async throws -> DisplayFee {

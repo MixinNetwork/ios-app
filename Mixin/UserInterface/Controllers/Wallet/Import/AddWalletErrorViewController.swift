@@ -45,10 +45,10 @@ final class AddWalletErrorViewController: IntroductionViewController {
             120
         }
         contentLabelTopConstraint.constant = 16
-        contentLabel.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
-        contentLabel.textColor = R.color.error_red()
-        contentLabel.adjustsFontForContentSizeCategory = true
-        contentLabel.textAlignment = .center
+        contentTextView.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+        contentTextView.textColor = R.color.error_red()
+        contentTextView.adjustsFontForContentSizeCategory = true
+        contentTextView.textAlignment = .center
         actionButton.titleLabel?.setFont(
             scaledFor: .systemFont(ofSize: 16, weight: .medium),
             adjustForContentSize: true
@@ -69,17 +69,17 @@ final class AddWalletErrorViewController: IntroductionViewController {
         switch error {
         case .tooManyWallets, .tooManyWatchWallets:
             if isMembershipUpgradable {
-                contentLabel.text = R.string.localizable.error_too_many_wallets_upgrade()
+                contentTextView.text = R.string.localizable.error_too_many_wallets_upgrade()
                 actionButton.setTitle(R.string.localizable.upgrade_plan(), for: .normal)
                 actionButton.addTarget(self, action: #selector(upgradePlan(_:)), for: .touchUpInside)
                 addNotNowButton()
             } else {
-                contentLabel.text = R.string.localizable.error_too_many_wallets()
+                contentTextView.text = R.string.localizable.error_too_many_wallets()
                 actionButton.setTitle(R.string.localizable.ok(), for: .normal)
                 actionButton.addTarget(self, action: #selector(leave(_:)), for: .touchUpInside)
             }
         case .unsupportedWatchAddress:
-            contentLabel.text = R.string.localizable.error_watch_address_not_supported()
+            contentTextView.text = R.string.localizable.error_watch_address_not_supported()
             actionButton.setTitle(R.string.localizable.use_another_address(), for: .normal)
             actionButton.addTarget(self, action: #selector(useAnotherAddress(_:)), for: .touchUpInside)
         }

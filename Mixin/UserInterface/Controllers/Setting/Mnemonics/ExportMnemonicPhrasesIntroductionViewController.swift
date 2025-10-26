@@ -7,7 +7,7 @@ final class ExportMnemonicPhrasesIntroductionViewController: IntroductionViewCon
         imageView.image = R.image.mnemonic_phrase()
         titleLabel.text = R.string.localizable.before_you_proceed()
         contentLabelTopConstraint.constant = 12
-        contentLabel.attributedText = {
+        contentTextView.attributedText = {
             let attributes: [NSAttributedString.Key: Any] = [
                 .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
                 .foregroundColor: R.color.text_tertiary()!,

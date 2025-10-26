@@ -34,9 +34,9 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
         titleLabel.text = R.string.localizable.fetching_in_to_your_wallet()
         
         contentLabelTopConstraint.constant = 16
-        contentLabel.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
-        contentLabel.adjustsFontForContentSizeCategory = true
-        contentLabel.textAlignment = .center
+        contentTextView.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+        contentTextView.adjustsFontForContentSizeCategory = true
+        contentTextView.textAlignment = .center
         
         busyIndicator.tintColor = R.color.outline_primary()
         actionStackView.addArrangedSubview(busyIndicator)
@@ -54,9 +54,9 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
     private func showLoading() {
         busyIndicator.startAnimating()
         actionButton.isHidden = true
-        contentLabel.textColor = R.color.text_tertiary()
-        contentLabel.text = R.string.localizable.mnemonic_phrase_take_long()
-        contentLabel.isHidden = false
+        contentTextView.textColor = R.color.text_tertiary()
+        contentTextView.text = R.string.localizable.mnemonic_phrase_take_long()
+        contentTextView.isHidden = false
     }
     
     private func showError(_ description: String) {
@@ -65,9 +65,9 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
         actionButton.setTitle(R.string.localizable.retry(), for: .normal)
         actionButton.addTarget(self, action: #selector(retry(_:)), for: .touchUpInside)
         actionButton.isHidden = false
-        contentLabel.textColor = R.color.error_red()
-        contentLabel.text = description
-        contentLabel.isHidden = false
+        contentTextView.textColor = R.color.error_red()
+        contentTextView.text = description
+        contentTextView.isHidden = false
     }
     
     private func fetchAddresses(mnemonics: BIP39Mnemonics) {

@@ -12,7 +12,7 @@ final class RecoveryContactIntroduction2ViewController: IntroductionViewControll
             R.string.localizable.add_recovery_contact_before_instruction_2(),
             R.string.localizable.add_recovery_contact_before_instruction_3(myIdentityNumber),
         ]
-        contentLabel.attributedText = .orderedList(items: items) { index in
+        contentTextView.attributedText = .orderedList(items: items) { index in
             index == 2 ? R.color.error_red()! : R.color.text()!
         }
         actionButton.addTarget(self, action: #selector(continueToNext(_:)), for: .touchUpInside)

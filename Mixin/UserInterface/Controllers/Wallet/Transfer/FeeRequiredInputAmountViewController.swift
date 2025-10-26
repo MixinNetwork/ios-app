@@ -3,20 +3,38 @@ import MixinServices
 
 class FeeRequiredInputAmountViewController: TokenConsumingInputAmountViewController {
     
-    var feeAttributes: AttributeContainer {
-        var container = AttributeContainer()
-        container.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
-        container.foregroundColor = R.color.text_tertiary()
-        return container
+    enum FeeStyle {
+        case normal
+        case waived
     }
     
     private(set) weak var feeStackView: UIStackView?
     private(set) weak var addFeeButton: UIButton?
     private(set) weak var feeActivityIndicator: ActivityIndicatorView?
+    private(set) weak var feeWaivedButton: UIButton?
     private(set) weak var changeFeeButton: UIButton?
     
-    @objc func addFee(_ sender: Any) {
-        
+    private lazy var feeAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+        var outgoing = incoming
+        outgoing.font = UIFontMetrics.default.scaledFont(
+            for: .systemFont(ofSize: 14)
+        )
+        outgoing.foregroundColor = R.color.text_tertiary()
+        outgoing.strikethroughStyle = .none
+        outgoing.inlinePresentationIntent = nil
+        return outgoing
+    }
+    
+    private lazy var feeFreeAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+        var outgoing = incoming
+        outgoing.font = UIFontMetrics.default.scaledFont(
+            for: .systemFont(ofSize: 14)
+        )
+        outgoing.foregroundColor = R.color.text_tertiary()
+        outgoing.strikethroughColor = R.color.text_tertiary()
+        outgoing.strikethroughStyle = .single
+        outgoing.inlinePresentationIntent = .strikethrough
+        return outgoing
     }
     
     func addFeeView() {
@@ -26,6 +44,8 @@ class FeeRequiredInputAmountViewController: TokenConsumingInputAmountViewControl
         titleLabel.textColor = R.color.text_tertiary()
         titleLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
         titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        titleLabel.adjustsFontSizeToFitWidth = true
+        titleLabel.minimumScaleFactor = 0.5
         
         let activityIndicator = ActivityIndicatorView()
         activityIndicator.style = .custom(diameter: 16, lineWidth: 2)
@@ -38,15 +58,18 @@ class FeeRequiredInputAmountViewController: TokenConsumingInputAmountViewControl
         config.baseBackgroundColor = .clear
         config.imagePlacement = .trailing
         config.imagePadding = 14
-        config.attributedTitle = AttributedString("0", attributes: feeAttributes)
+        config.titleTextAttributesTransformer = feeAttributesTransformer
+        config.title = "0"
         config.contentInsets = NSDirectionalEdgeInsets(top: 7, leading: 5, bottom: 7, trailing: 12)
-        let button = UIButton(configuration: config)
-        button.tintColor = R.color.icon_tint_tertiary()
-        button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        button.alpha = 0
-        self.changeFeeButton = button
+        let changeFeeButton = UIButton(configuration: config)
+        changeFeeButton.tintColor = R.color.icon_tint_tertiary()
+        changeFeeButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        changeFeeButton.alpha = 0
+        self.changeFeeButton = changeFeeButton
         
-        let feeStackView = UIStackView(arrangedSubviews: [titleLabel, activityIndicator, button])
+        let feeStackView = UIStackView(
+            arrangedSubviews: [titleLabel, activityIndicator, changeFeeButton]
+        )
         feeStackView.axis = .horizontal
         feeStackView.alignment = .center
         
@@ -57,7 +80,49 @@ class FeeRequiredInputAmountViewController: TokenConsumingInputAmountViewControl
         self.feeStackView = feeStackView
     }
     
-    func addAddFeeButton(symbol: String) {
+    func updateFeeView(style: FeeStyle) {
+        switch style {
+        case .normal:
+            changeFeeButton?.configuration?.titleTextAttributesTransformer = feeAttributesTransformer
+            feeWaivedButton?.isHidden = true
+        case .waived:
+            changeFeeButton?.configuration?.titleTextAttributesTransformer = feeFreeAttributesTransformer
+            if let feeWaivedButton {
+                feeWaivedButton.isHidden = false
+            } else {
+                var config: UIButton.Configuration = .filled()
+                config.baseBackgroundColor = R.color.background_tinted()
+                var attributes = AttributeContainer()
+                attributes.font = UIFont.preferredFont(forTextStyle: .caption1)
+                attributes.foregroundColor = .white
+                config.attributedTitle = AttributedString(
+                    R.string.localizable.free(),
+                    attributes: attributes
+                )
+                config.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 6, bottom: 2, trailing: 6)
+                let button = UIButton(configuration: config)
+                button.addTarget(
+                    self,
+                    action: #selector(presentCrossWalletTransactionFreeDescription(_:)),
+                    for: .touchUpInside
+                )
+                feeStackView?.insertArrangedSubview(button, at: 2)
+                button.titleLabel?.adjustsFontForContentSizeCategory = true
+                feeWaivedButton = button
+            }
+        }
+    }
+    
+    @objc private func presentCrossWalletTransactionFreeDescription(_ sender: Any) {
+        let introduction = CrossWalletTransactionFreeIntroductionViewController()
+        present(introduction, animated: true)
+    }
+    
+}
+
+extension FeeRequiredInputAmountViewController {
+    
+    func insertAddFeeButton(symbol: String) {
         if addFeeButton == nil {
             var config: UIButton.Configuration = .plain()
             config.baseBackgroundColor = .clear
@@ -76,6 +141,10 @@ class FeeRequiredInputAmountViewController: TokenConsumingInputAmountViewControl
     
     func removeAddFeeButton() {
         addFeeButton?.removeFromSuperview()
+    }
+    
+    @objc func addFee(_ sender: Any) {
+        
     }
     
 }

@@ -99,12 +99,12 @@ extension Web3TokenReceiverViewController: UITableViewDataSource {
         case .contact:
             cell.iconImageView.image = R.image.token_receiver_contact()
             cell.titleLabel.text = R.string.localizable.mixin_contact()
-            cell.titleTag = nil
+            cell.titleTag = CrossWalletTransaction.isFeeWaived ? .free : nil
             cell.descriptionLabel.text = R.string.localizable.send_to_contact_common_wallet_description()
         case .myWallets:
             cell.iconImageView.image = R.image.token_receiver_wallet()
             cell.titleLabel.text = R.string.localizable.my_wallet()
-            cell.titleTag = nil
+            cell.titleTag = CrossWalletTransaction.isFeeWaived ? .free : nil
             cell.descriptionLabel.text = R.string.localizable.send_to_other_wallet_description()
         }
         return cell

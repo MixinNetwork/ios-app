@@ -61,6 +61,7 @@ class EVMTransferOperation: Web3TransferOperation {
         transaction: EIP1559Transaction,
         chain: Web3Chain,
         hardcodedSimulation: TransactionSimulation?,
+        isFeeWaived: Bool,
     ) throws {
         switch chain.specification {
         case .evm:
@@ -83,6 +84,7 @@ class EVMTransferOperation: Web3TransferOperation {
             feeToken: feeToken,
             isResendingTransactionAvailable: true,
             hardcodedSimulation: hardcodedSimulation,
+            isFeeWaived: isFeeWaived,
         )
     }
     
@@ -92,6 +94,7 @@ class EVMTransferOperation: Web3TransferOperation {
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
         hardcodedSimulation: TransactionSimulation?,
+        isFeeWaived: Bool,
     ) throws {
         let chainID: Int
         switch chain.specification {
@@ -124,6 +127,7 @@ class EVMTransferOperation: Web3TransferOperation {
             feeToken: feeToken,
             isResendingTransactionAvailable: true,
             hardcodedSimulation: hardcodedSimulation,
+            isFeeWaived: isFeeWaived,
         )
     }
     
@@ -310,7 +314,8 @@ class EVMTransferOperation: Web3TransferOperation {
             let rawTransaction = try await RouteAPI.postTransaction(
                 chainID: mixinChainID,
                 from: fromAddress.destination,
-                rawTransaction: hexEncodedSignedTransaction
+                rawTransaction: hexEncodedSignedTransaction,
+                waivingFee: isFeeWaived,
             )
             let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.tokenAmount)
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
@@ -357,6 +362,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
             transaction: transaction,
             chain: chain,
             hardcodedSimulation: nil,
+            isFeeWaived: false,
         )
     }
     
@@ -403,6 +409,7 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
             transaction: transaction,
             chain: chain,
             hardcodedSimulation: nil,
+            isFeeWaived: false,
         )
     }
     
@@ -472,13 +479,17 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             token: payment.token,
             amount: decimalAmount
         )
+        
+        let isFeeWaived = payment.toAddressLabel?.isFeeWaived() ?? false
+        
         try super.init(
             wallet: payment.wallet,
             fromAddress: payment.fromAddress,
             toAddress: payment.toAddress,
             transaction: transaction,
             chain: payment.chain,
-            hardcodedSimulation: simulation
+            hardcodedSimulation: simulation,
+            isFeeWaived: isFeeWaived,
         )
     }
     
@@ -501,7 +512,7 @@ class EVMOverrideOperation: EVMTransferOperation {
     
     private let nonce: Int
     
-    override init(
+    init(
         wallet: Web3Wallet,
         fromAddress: Web3Address,
         toAddress: String,
@@ -519,7 +530,8 @@ class EVMOverrideOperation: EVMTransferOperation {
             toAddress: toAddress,
             transaction: transaction,
             chain: chain,
-            hardcodedSimulation: hardcodedSimulation
+            hardcodedSimulation: hardcodedSimulation,
+            isFeeWaived: false,
         )
     }
     

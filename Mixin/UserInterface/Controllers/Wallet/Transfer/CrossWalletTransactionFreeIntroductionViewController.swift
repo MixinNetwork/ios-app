@@ -16,7 +16,7 @@ final class CrossWalletTransactionFreeIntroductionViewController: IntroductionVi
         }
         imageView.image = R.image.transaction_fee()
         titleLabel.text = R.string.localizable.limited_time_free()
-        contentLabel.attributedText = {
+        contentTextView.attributedText = {
             let text = NSMutableAttributedString(
                 string: R.string.localizable.limited_time_free_condition() + "\n\n",
                 attributes: [

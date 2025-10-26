@@ -16,7 +16,7 @@ final class SignUpWithMnemonicIntroductionViewController: IntroductionViewContro
         }
         imageView.image = R.image.mnemonic_phrase()
         titleLabel.text = R.string.localizable.create_mnemonic_phrase()
-        contentLabel.attributedText = .orderedList(items: [
+        contentTextView.attributedText = .orderedList(items: [
             R.string.localizable.mnemonic_phrase_instruction_1(),
             R.string.localizable.mnemonic_phrase_instruction_2(),
         ], textColor: { _ in R.color.text()! })

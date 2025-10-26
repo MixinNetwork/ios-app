@@ -35,7 +35,7 @@ final class AddWalletIntroductionViewController: IntroductionViewController {
         contentLabelTopConstraint.constant = 16
         imageView.image = R.image.introduction_warning()
         titleLabel.text = R.string.localizable.before_you_proceed()
-        contentLabel.attributedText = switch action {
+        contentTextView.attributedText = switch action {
         case .addWallet(.create):
                 .orderedList(
                     items: [

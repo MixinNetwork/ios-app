@@ -777,8 +777,8 @@
 "lightning_address_explain_mao" = "Each MAO domain corresponds to a Lightning Network address. If you own a MAO domain, you can use name@mao.id to receive Lightning Network transfers. ";
 "limited_time_free" = "Limited-Time Free";
 "limited_time_free_condition" = "During the promotion period, you’ll receive a full refund of transaction fees if your transfer meets any of the following conditions:";
-"limited_time_free_condition_1" = "Privacy Wallet transfer to a Common Wallet or Mixin Safe.";
-"limited_time_free_condition_2" = "Common Wallet transfer to another Common Wallet, Privacy Wallet, Mixin Safe, or contact.";
+"limited_time_free_condition_1" = "Privacy Wallet transfer to a Common Wallet.";
+"limited_time_free_condition_2" = "Common Wallet transfer to another Common Wallet, Privacy Wallet, or contact.";
 "limited_time_free_description" = "Fees will be refunded monthly to your Privacy Wallet, summarized by the actual fee tokens and amounts consumed. Read the documentation to learn more.";
 "line_busy" = "Line busy";
 "line_busy_remote" = "Line busy";

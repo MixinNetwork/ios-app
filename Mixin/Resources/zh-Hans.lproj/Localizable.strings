@@ -777,8 +777,8 @@
 "lightning_address_explain_mao" = "每一个 MAO 域名对应一个闪电网络地址，如果您拥有 MAO 域名，可以按 name@mao.id 格式接收闪电网络转账。";
 "limited_time_free" = "限时免费";
 "limited_time_free_condition" = "活动期间，钱包转账符合以下任意情况即可获得手续费全额返现：";
-"limited_time_free_condition_1" = "隐私钱包转账到普通钱包、Mixin Safe 金库。";
-"limited_time_free_condition_2" = "普通钱包转账到其他普通钱包、隐私钱包、Mixin Safe 金库或联系人。";
+"limited_time_free_condition_1" = "隐私钱包转账到普通钱包。";
+"limited_time_free_condition_2" = "普通钱包转账到其他普通钱包、隐私钱包或联系人。";
 "limited_time_free_description" = "手续费按月、按实际消耗的手续费币种和金额汇总返还到您的隐私钱包，阅读文档了解更多。";
 "line_busy" = "忙线未接听";
 "line_busy_remote" = "对方忙";

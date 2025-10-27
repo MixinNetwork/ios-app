@@ -398,15 +398,15 @@ extension RouteAPI {
         chainID: String,
         from: String,
         rawTransaction: String,
-        waivingFee: Bool,
+        feeType: FeeType?,
     ) async throws -> RichWeb3RawTransaction {
         var parameters = [
             "chain_id": chainID,
             "from": from,
             "raw_transaction": rawTransaction,
         ]
-        if waivingFee {
-            parameters["fee_type"] = "free"
+        if let feeType {
+            parameters["fee_type"] = feeType.rawValue
         }
         return try await request(
             method: .post,

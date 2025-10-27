@@ -78,7 +78,7 @@ class SolanaTransferOperation: Web3TransferOperation {
                 chainID: ChainID.solana,
                 from: fromAddress.destination,
                 rawTransaction: signedTransaction,
-                waivingFee: isFeeWaived,
+                feeType: isFeeWaived ? .free : nil,
             )
             let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee?.tokenAmount)
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in

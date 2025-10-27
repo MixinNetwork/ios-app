@@ -208,6 +208,8 @@ struct WithdrawPaymentOperation {
                                               traceID: traceID,
                                               inscriptionHash: nil,
                                               withdrawal: .init(hash: "", receiver: address.destination))
+        let isFeeWaived = addressLabel?.isFeeWaived() ?? false
+        let feeType: FeeType? = isFeeWaived ? .free : nil
         if let feeOutputs, let feeTx {
             guard let feeResponse = verifyResponses.first(where: { $0.requestID == feeTraceID }) else {
                 throw Error.missingFeeResponse
@@ -234,7 +236,7 @@ struct WithdrawPaymentOperation {
                                            traceID: feeTraceID, 
                                            inscriptionHash: nil)
             broadcastRequests = [
-                TransactionRequest(id: traceID, raw: signedWithdrawal.raw),
+                TransactionRequest(id: traceID, raw: signedWithdrawal.raw, feeType: feeType),
                 TransactionRequest(id: feeTraceID, raw: signedFee.raw)
             ]
             let spendingOutputIDs = withdrawalOutputs.outputs.map(\.id) + feeOutputs.outputs.map(\.id)
@@ -292,7 +294,7 @@ struct WithdrawPaymentOperation {
             }
         } else {
             broadcastRequests = [
-                TransactionRequest(id: traceID, raw: signedWithdrawal.raw)
+                TransactionRequest(id: traceID, raw: signedWithdrawal.raw, feeType: feeType)
             ]
             let spendingOutputIDs = withdrawalOutputs.outputs.map(\.id)
             let rawTransaction = RawTransaction(requestID: traceID,

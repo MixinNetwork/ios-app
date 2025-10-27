@@ -315,7 +315,7 @@ class EVMTransferOperation: Web3TransferOperation {
                 chainID: mixinChainID,
                 from: fromAddress.destination,
                 rawTransaction: hexEncodedSignedTransaction,
-                waivingFee: isFeeWaived,
+                feeType: isFeeWaived ? .free : nil,
             )
             let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.tokenAmount)
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in

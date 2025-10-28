@@ -17,6 +17,8 @@ final class CrossWalletTransactionFreeIntroductionViewController: IntroductionVi
         imageView.image = R.image.transaction_fee()
         titleLabel.text = R.string.localizable.limited_time_free()
         contentTextView.attributedText = {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineHeightMultiple = 1.3
             let text = NSMutableAttributedString(
                 string: R.string.localizable.limited_time_free_condition() + "\n\n",
                 attributes: [
@@ -24,6 +26,7 @@ final class CrossWalletTransactionFreeIntroductionViewController: IntroductionVi
                         for: .systemFont(ofSize: 14)
                     ),
                     .foregroundColor: R.color.text()!,
+                    .paragraphStyle: paragraphStyle,
                 ]
             )
             text.append(
@@ -47,6 +50,7 @@ final class CrossWalletTransactionFreeIntroductionViewController: IntroductionVi
                             for: .systemFont(ofSize: 14)
                         ),
                         .foregroundColor: R.color.text_secondary()!,
+                        .paragraphStyle: paragraphStyle,
                     ]
                 )
             )

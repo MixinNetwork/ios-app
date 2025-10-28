@@ -397,16 +397,21 @@ extension RouteAPI {
     static func postTransaction(
         chainID: String,
         from: String,
-        rawTransaction: String
+        rawTransaction: String,
+        feeType: FeeType?,
     ) async throws -> RichWeb3RawTransaction {
-        try await request(
+        var parameters = [
+            "chain_id": chainID,
+            "from": from,
+            "raw_transaction": rawTransaction,
+        ]
+        if let feeType {
+            parameters["fee_type"] = feeType.rawValue
+        }
+        return try await request(
             method: .post,
             path: "/web3/transactions",
-            with: [
-                "chain_id": chainID,
-                "from": from,
-                "raw_transaction": rawTransaction,
-            ]
+            with: parameters
         )
     }
     

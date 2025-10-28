@@ -6,7 +6,7 @@ class IntroductionViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var contentLabel: UILabel!
+    @IBOutlet weak var contentTextView: UITextView!
     @IBOutlet weak var actionStackView: UIStackView!
     @IBOutlet weak var actionButton: StyledButton!
     
@@ -25,6 +25,8 @@ class IntroductionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.setFont(scaledFor: .systemFont(ofSize: 18, weight: .semibold), adjustForContentSize: true)
+        contentTextView.textContainerInset = .zero
+        contentTextView.textContainer.lineFragmentPadding = 0
         actionButton.style = .filled
     }
     

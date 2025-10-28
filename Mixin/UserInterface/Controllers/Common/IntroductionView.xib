@@ -13,8 +13,8 @@
             <connections>
                 <outlet property="actionButton" destination="IDF-Xm-klx" id="1Lg-cB-1dd"/>
                 <outlet property="actionStackView" destination="XaA-bY-zrH" id="BjT-4B-ehm"/>
-                <outlet property="contentLabel" destination="d93-Xh-2Yg" id="uZI-MT-F5Z"/>
                 <outlet property="contentLabelTopConstraint" destination="fyv-eD-xjA" id="vn0-S4-rKW"/>
+                <outlet property="contentTextView" destination="d93-Xh-2Yg" id="uZI-MT-F5Z"/>
                 <outlet property="imageView" destination="6za-yF-yF1" id="X31-bQ-0NF"/>
                 <outlet property="imageViewTopConstraint" destination="e1l-VD-duR" id="fxC-el-686"/>
                 <outlet property="scrollView" destination="DMm-rr-4YE" id="LXU-vo-P1P"/>
@@ -48,12 +48,11 @@
                                         </label>
                                     </subviews>
                                 </stackView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d93-Xh-2Yg" userLabel="Content Label">
-                                    <rect key="frame" x="36" y="190" width="321" height="0.0"/>
+                                <textView opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="d93-Xh-2Yg" userLabel="Content Label" customClass="IntroTextView" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="36" y="190" width="321" height="36.333333333333343"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
+                                    <textInputTraits key="textInputTraits"/>
+                                </textView>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="XaA-bY-zrH">
                                     <rect key="frame" x="36" y="589" width="321" height="47"/>
                                     <subviews>

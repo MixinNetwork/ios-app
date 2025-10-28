@@ -12,7 +12,7 @@ final class RecoveryContactIntroduction1ViewController: IntroductionViewControll
             R.string.localizable.add_recovery_contact_instruction_3(),
             R.string.localizable.add_recovery_contact_instruction_4(),
         ]
-        contentLabel.attributedText = .orderedList(items: items) { index in
+        contentTextView.attributedText = .orderedList(items: items) { index in
             index == 3 ? R.color.error_red()! : R.color.text()!
         }
         actionButton.setTitle(R.string.localizable.add_emergency_contact(), for: .normal)

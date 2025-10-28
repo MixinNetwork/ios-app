@@ -349,15 +349,13 @@ final class MarketViewController: UIViewController {
                 }
             update(with: tokens)
             if tokens.count != uniqueIDs.count {
-                var missingAssetIDs = uniqueIDs
-                for token in tokens {
-                    missingAssetIDs.remove(token.assetID)
-                }
+                let missingAssetIDs = uniqueIDs.subtracting(tokens.map(\.assetID))
                 Logger.general.debug(category: "MarketView", message: "Load missing asset: \(missingAssetIDs)")
                 switch SafeAPI.assets(ids: missingAssetIDs) {
                 case .success(let missingTokens):
                     let missingTokenItems = missingTokens.map { token in
-                        MixinTokenItem(token: token, balance: "0", isHidden: false, chain: nil)
+                        let chain = ChainDAO.shared.chain(chainId: token.chainID)
+                        return MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
                     }
                     update(with: tokens + missingTokenItems)
                 case .failure(let error):

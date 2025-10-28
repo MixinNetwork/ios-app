@@ -4053,12 +4053,6 @@
 				941D3BF92A7912C700538504 /* QRCodeView.xib */,
 				941D3BF82A7912C700538504 /* QRCodeViewController.swift */,
 				52DE7B4E2BEB7C940060A364 /* TransactionViewController.swift */,
-				9413A3FF2C367D8D00B655AC /* SwapView.xib */,
-				9413A3FE2C367D8D00B655AC /* SwapViewController.swift */,
-				94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */,
-				94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */,
-				94FB8E0C2D1ACB32002DCA20 /* SwapTokenCell.xib */,
-				94FB8E0B2D1ACB32002DCA20 /* SwapTokenCell.swift */,
 				94FB8E052D1A92CF002DCA20 /* TokenSelectorView.xib */,
 				9414D4FC2E070AF500F38028 /* TokenSelectorViewController.swift */,
 				94FB8E042D1A92CF002DCA20 /* ChainCategorizedTokenSelectorViewController.swift */,
@@ -4442,6 +4436,12 @@
 		9429C0FE2E059BB700206DAA /* Swap */ = {
 			isa = PBXGroup;
 			children = (
+				9413A3FF2C367D8D00B655AC /* SwapView.xib */,
+				9413A3FE2C367D8D00B655AC /* SwapViewController.swift */,
+				94F7BCE32D2B9EFC00BA27D9 /* SwapInputAccessoryView.xib */,
+				94F7BCE12D2B9ED700BA27D9 /* SwapInputAccessoryView.swift */,
+				94FB8E0C2D1ACB32002DCA20 /* SwapTokenCell.xib */,
+				94FB8E0B2D1ACB32002DCA20 /* SwapTokenCell.swift */,
 				94B1E55C2C49222100A2349F /* MixinSwapViewController.swift */,
 				52B2726D2DAE358000F46EC0 /* Web3SwapViewController.swift */,
 				946E9E332D40C46D00DBC308 /* SwapTokenSelectorViewController.swift */,

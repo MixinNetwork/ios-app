@@ -1,6 +1,6 @@
 import UIKit
 
-final class WaivedFeeCell: UITableViewCell {
+final class WaivedFeeCell: ModernSelectedBackgroundCell {
     
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var captionLabel: UILabel!

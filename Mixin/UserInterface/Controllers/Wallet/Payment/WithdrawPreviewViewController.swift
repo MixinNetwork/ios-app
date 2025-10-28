@@ -79,6 +79,16 @@ final class WithdrawPreviewViewController: WalletIdentifyingAuthenticationPrevie
         reporter.report(event: .sendPreview)
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRow row: Row) {
+        switch row {
+        case .waivedFee:
+            let description = CrossWalletTransactionFreeIntroductionViewController()
+            present(description, animated: true)
+        default:
+            break
+        }
+    }
+    
     override func performAction(with pin: String) {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)

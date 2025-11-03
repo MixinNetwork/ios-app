@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="swap_expiry_selector" id="0fb-7T-ejw" customClass="SwapExpirySelectorCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="335" height="49"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="A1F-1p-Cl7">
+                <rect key="frame" x="0.0" y="0.0" width="335" height="49"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Ls1-wx-ict">
+                        <rect key="frame" x="16" y="0.0" width="303" height="49"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Expiry" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qbI-y7-ocg">
+                                <rect key="frame" x="0.0" y="0.0" width="208" height="49"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" name="text_tertiary"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z2D-VI-Jos">
+                                <rect key="frame" x="212" y="0.0" width="91" height="49"/>
+                                <color key="tintColor" name="text_tertiary"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="arrow_down_compact" imagePlacement="trailing" title="Forever" imagePadding="8">
+                                    <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                </buttonConfiguration>
+                            </button>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" name="background_secondary"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="Ls1-wx-ict" secondAttribute="trailing" constant="16" id="6Vl-G9-oNf"/>
+                    <constraint firstItem="Ls1-wx-ict" firstAttribute="top" secondItem="A1F-1p-Cl7" secondAttribute="top" id="NOu-ea-rnh"/>
+                    <constraint firstAttribute="bottom" secondItem="Ls1-wx-ict" secondAttribute="bottom" id="kNp-SM-Qnc"/>
+                    <constraint firstItem="Ls1-wx-ict" firstAttribute="leading" secondItem="A1F-1p-Cl7" secondAttribute="leading" constant="16" id="noL-Hx-emh"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <color key="backgroundColor" name="background_secondary"/>
+            <connections>
+                <outlet property="button" destination="Z2D-VI-Jos" id="NYX-hm-hY1"/>
+                <outlet property="titleLabel" destination="qbI-y7-ocg" id="DUq-nD-aaM"/>
+            </connections>
+            <point key="canvasLocation" x="-32" y="42"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="arrow_down_compact" width="10" height="10"/>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

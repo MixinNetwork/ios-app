@@ -3,7 +3,11 @@ import OrderedCollections
 import Alamofire
 import MixinServices
 
-class MixinSwapViewController: SwapViewController {
+final class MixinSwapViewController: SwapViewController {
+    
+    override var advanceModeAvailable: Bool {
+        true
+    }
     
     override var sendToken: BalancedSwapToken? {
         didSet {
@@ -19,6 +23,7 @@ class MixinSwapViewController: SwapViewController {
     init(sendAssetID: String?, receiveAssetID: String?, referral: String?) {
         self.referral = referral
         super.init(
+            mode: .simple,
             tokenSource: .mixin,
             sendAssetID: sendAssetID,
             receiveAssetID: receiveAssetID

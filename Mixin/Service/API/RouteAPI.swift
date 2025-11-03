@@ -72,6 +72,40 @@ extension RouteAPI {
         request(method: .get, path: path, queue: queue, completion: completion)
     }
     
+    static func createLimitOrder(
+        request: LimitOrderRequest,
+        completion: @escaping (MixinAPI.Result<LimitOrderResponse>) -> Void
+    ) {
+        Self.request(method: .post, path: "/web3/limit_orders", with: request, completion: completion)
+    }
+    
+    static func limitOrders(
+        category: LimitOrder.Category,
+        limit: Int,
+        offset: String?,
+        completion: @escaping (MixinAPI.Result<[LimitOrder]>) -> Void
+    ) {
+        var path = "/web3/limit_orders?category=\(category)&limit=\(limit)"
+        if let offset {
+            path.append("&offset=\(offset)")
+        }
+        request(method: .get, path: path, completion: completion)
+    }
+    
+    static func limitOrder(
+        id: String,
+        completion: @escaping (MixinAPI.Result<LimitOrder>) -> Void
+    ) {
+        request(method: .get, path: "/web3/limit_orders/\(id)", completion: completion)
+    }
+    
+    static func cancelLimitOrder(
+        id: String,
+        completion: @escaping (MixinAPI.Result<LimitOrder>) -> Void
+    ) {
+        request(method: .get, path: "/web3/limit_orders/\(id)/cancel", completion: completion)
+    }
+    
 }
 
 // MARK: - Markets

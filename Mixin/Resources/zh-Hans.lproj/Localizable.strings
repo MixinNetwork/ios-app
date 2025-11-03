@@ -419,6 +419,7 @@
 "currency_code" = "货币代码";
 "current_language" = "中文";
 "current_location" = "当前位置";
+"current_market_price" = "市价";
 "current_plan" = "当前会员";
 "current_price" = "当前价格：%@";
 "current_selected" = "当前选择";
@@ -435,6 +436,7 @@
 "date_format_day" = "ahh:mm";
 "date_format_month" = "MM 月 d 日 E";
 "date_format_week_date" = "yyyy 年 MM 月 d 日 E";
+"days_count" = "%d 天";
 "days_count_short" = "%d天";
 "declined" = "已拒绝";
 "decode_transaction_failed" = "无法估计资产变化，注意只给您信任的应用程序签名。";
@@ -972,7 +974,9 @@
 "oldest" = "最早";
 "onboarding_description" = "带有端对端加密消息功能的开源加密钱包";
 "one_by_one_forward" = "逐条转发";
+"one_day" = "1 天";
 "one_hour" = "1 小时";
+"one_month" = "1 月";
 "one_week" = "1 星期";
 "one_year" = "1 年";
 "open" = "打开";
@@ -983,6 +987,7 @@
 "open_in_google_maps" = "在 Google Maps 中打开";
 "open_in_maps" = "在地图中打开";
 "open_link" = "打开链接：%@";
+"open_orders_count" = "当前委托（%d）";
 "open_source" = "版权所有 Mixin Messenger\n根据 GPL-3.0 授权许可";
 "open_url" = "打开链接";
 "opening_balance" = "期初余额";
@@ -1407,8 +1412,11 @@
 "successful" = "成功";
 "suspicious_link" = "可疑链接";
 "swap" = "交易";
+"swap_advanced" = "挂单";
 "swap_again" = "再来一笔";
 "swap_confirmation" = "确认交易";
+"swap_expiry" = "过期";
+"swap_expiry_never" = "永不";
 "swap_failed" = "交易失败";
 "swap_invalid_amount" = "没有报价。请尝试修改金额。";
 "swap_message_success" = "您的交易已发送至网络，将很快被处理。";
@@ -1418,6 +1426,7 @@
 "swap_order_received" = "已收到";
 "swap_receive" = "获得";
 "swap_send" = "支付";
+"swap_simple" = "闪兑";
 "swap_token" = "兑换 %@";
 "swap_token_description" = "将其他币种兑换为 %@";
 "swap_usdt_hint" = "当前钱包有其他链的 USDT，是否马上兑换？";

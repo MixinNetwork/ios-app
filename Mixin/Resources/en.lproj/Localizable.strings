@@ -419,6 +419,7 @@
 "currency_code" = "Code";
 "current_language" = "English";
 "current_location" = "Current Location";
+"current_market_price" = "Market";
 "current_plan" = "Current Plan";
 "current_price" = "Current price: %@";
 "current_selected" = "Current Selected";
@@ -435,6 +436,7 @@
 "date_format_day" = "hh:mm a";
 "date_format_month" = "E, d MMM";
 "date_format_week_date" = "E, d MMM yyyy";
+"days_count" = "%d Days";
 "days_count_short" = "%dD";
 "declined" = "Declined";
 "decode_transaction_failed" = "Unable to estimate balance changes. Be cautious and only sign transactions for apps you trust.";
@@ -972,7 +974,9 @@
 "oldest" = "Oldest";
 "onboarding_description" = "An open source crypto wallet with Signal messaging";
 "one_by_one_forward" = "One-by-One Forward";
+"one_day" = "1 Day";
 "one_hour" = "1 Hour";
+"one_month" = "1 Month";
 "one_week" = "1 Week";
 "one_year" = "1 Year";
 "open" = "Open";
@@ -983,6 +987,7 @@
 "open_in_google_maps" = "Open in Google Maps";
 "open_in_maps" = "Open in Maps";
 "open_link" = "Open Link: %@";
+"open_orders_count" = "Open Orders (%d)";
 "open_source" = "Copyright Mixin Messenger\nLicensed under the GPLv3";
 "open_url" = "Open URL";
 "opening_balance" = "Opening Balance";
@@ -1407,8 +1412,11 @@
 "successful" = "Successful";
 "suspicious_link" = "Suspicious Link";
 "swap" = "Swap";
+"swap_advanced" = "Advanced";
 "swap_again" = "Swap Again";
 "swap_confirmation" = "Swap Confirmation";
+"swap_expiry" = "Expiry";
+"swap_expiry_never" = "Never";
 "swap_failed" = "Swap Failed";
 "swap_invalid_amount" = "No available quote found. Please try a different amount.";
 "swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
@@ -1418,6 +1426,7 @@
 "swap_order_received" = "Received";
 "swap_receive" = "Receive";
 "swap_send" = "Send";
+"swap_simple" = "Simple";
 "swap_token" = "Swap %@";
 "swap_token_description" = "Swap other coin to %@";
 "swap_usdt_hint" = "There is USDT on a different network in your wallet. Would you like to swap it now?";

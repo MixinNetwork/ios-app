@@ -15,6 +15,7 @@ final class Web3SwapViewController: SwapViewController {
         self.wallet = wallet
         self.supportedChainIDs = Web3AddressDAO.shared.chainIDs(walletID: wallet.walletID)
         super.init(
+            mode: .simple,
             tokenSource: .web3,
             sendAssetID: sendAssetID,
             receiveAssetID: receiveAssetID
@@ -30,6 +31,7 @@ final class Web3SwapViewController: SwapViewController {
         self.wallet = wallet
         self.supportedChainIDs = supportedChainIDs
         super.init(
+            mode: .simple,
             tokenSource: .web3,
             sendAssetID: sendAssetID,
             receiveAssetID: receiveAssetID

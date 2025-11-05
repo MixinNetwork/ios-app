@@ -62,17 +62,27 @@ final class SwapAmountInputCell: UICollectionViewCell {
         updateReceiveView(style: .loading)
     }
     
+    func updateSendAmountTextField(amount: Decimal?) {
+        sendAmountTextField.text = if let amount {
+            NumberFormatter.userInputAmountSimulation.string(decimal: amount)
+        } else {
+            nil
+        }
+    }
+    
+    func updateReceiveAmountTextField(amount: Decimal?) {
+        receiveAmountTextField.text = if let amount {
+            NumberFormatter.userInputAmountSimulation.string(decimal: amount)
+        } else {
+            nil
+        }
+    }
+    
 }
 
 extension SwapAmountInputCell {
     
-    enum TokenSelectorStyle {
-        case loading
-        case selectable
-        case token(BalancedSwapToken)
-    }
-    
-    func updateSendView(style: TokenSelectorStyle) {
+    func updateSendView(style: SwapTokenSelectorStyle) {
         UIView.performWithoutAnimation {
             switch style {
             case .loading:
@@ -117,7 +127,7 @@ extension SwapAmountInputCell {
         }
     }
     
-    func updateReceiveView(style: TokenSelectorStyle) {
+    func updateReceiveView(style: SwapTokenSelectorStyle) {
         switch style {
         case .loading:
             receiveTokenStackView.alpha = 0

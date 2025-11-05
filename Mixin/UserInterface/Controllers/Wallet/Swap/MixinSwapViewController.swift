@@ -66,7 +66,6 @@ final class MixinSwapViewController: SwapViewController {
                 self.swapSendingReceiving(sender)
             } else {
                 self.sendToken = token
-                self.scheduleNewRequesterIfAvailable()
                 self.saveTokenIDs()
             }
         }
@@ -95,7 +94,6 @@ final class MixinSwapViewController: SwapViewController {
                 self.swapSendingReceiving(sender)
             } else {
                 self.receiveToken = token
-                self.scheduleNewRequesterIfAvailable()
                 self.saveTokenIDs()
             }
         }
@@ -103,60 +101,14 @@ final class MixinSwapViewController: SwapViewController {
     }
     
     override func review(_ sender: RoundedButton) {
-        guard let quote else {
-            return
-        }
-        sender.isBusy = true
-        let request = SwapRequest(
-            walletId: nil,
-            sendToken: quote.sendToken,
-            sendAmount: quote.sendAmount,
-            receiveToken: quote.receiveToken,
-            source: .mixin,
-            slippage: 0.01,
-            payload: quote.payload,
-            withdrawalDestination: nil,
-            referral: referral
-        )
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
         ConcurrentJobQueue.shared.addJob(job: job)
-        RouteAPI.swap(request: request) { [weak self] response in
-            guard self != nil else {
-                return
-            }
-            switch response {
-            case .success(let response):
-                guard
-                    let tx = response.tx,
-                    let url = URL(string: tx),
-                    quote.sendToken.assetID == response.quote.inputMint,
-                    quote.receiveToken.assetID == response.quote.outputMint,
-                    let sendAmount = Decimal(string: response.quote.inAmount, locale: .enUSPOSIX),
-                    let receiveAmount = Decimal(string: response.quote.outAmount, locale: .enUSPOSIX)
-                else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
-                    sender.isBusy = false
-                    return
-                }
-                let context = Payment.SwapContext(
-                    sendToken: quote.sendToken,
-                    sendAmount: sendAmount,
-                    receiveToken: quote.receiveToken,
-                    receiveAmount: receiveAmount
-                )
-                let source: UrlWindow.Source = .swap(context: context) { description in
-                    if let description {
-                        showAutoHiddenHud(style: .error, text: description)
-                    }
-                    sender.isBusy = false
-                }
-                _ = UrlWindow.checkUrl(url: url, from: source)
-            case .failure(let error):
-                showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                sender.isBusy = false
-            }
+        switch mode {
+        case .simple:
+            reviewSimpleOrder(reviewButton: sender)
+        case .advanced:
+            reviewAdvancedOrder(reviewButton: sender)
         }
-        reporter.report(event: .tradePreview)
     }
     
     override func balancedSwapToken(assetID: String) -> BalancedSwapToken? {
@@ -195,6 +147,109 @@ final class MixinSwapViewController: SwapViewController {
         showOrdersItem?.showBadge = false
         let orders = SwapOrderTableViewController()
         navigationController?.pushViewController(orders, animated: true)
+    }
+    
+    private func reviewSimpleOrder(reviewButton: RoundedButton) {
+        guard let quote else {
+            return
+        }
+        reviewButton.isBusy = true
+        let request = SwapRequest(
+            walletId: nil,
+            sendToken: quote.sendToken,
+            sendAmount: quote.sendAmount,
+            receiveToken: quote.receiveToken,
+            source: .mixin,
+            slippage: 0.01,
+            payload: quote.payload,
+            withdrawalDestination: nil,
+            referral: referral
+        )
+        RouteAPI.swap(request: request) { [weak self] response in
+            guard self != nil else {
+                return
+            }
+            switch response {
+            case .success(let response):
+                guard
+                    let tx = response.tx,
+                    let url = URL(string: tx),
+                    quote.sendToken.assetID == response.quote.inputMint,
+                    quote.receiveToken.assetID == response.quote.outputMint,
+                    let sendAmount = Decimal(string: response.quote.inAmount, locale: .enUSPOSIX),
+                    let receiveAmount = Decimal(string: response.quote.outAmount, locale: .enUSPOSIX)
+                else {
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
+                    reviewButton.isBusy = false
+                    return
+                }
+                let context = Payment.SwapContext(
+                    mode: .simple,
+                    sendToken: quote.sendToken,
+                    sendAmount: sendAmount,
+                    receiveToken: quote.receiveToken,
+                    receiveAmount: receiveAmount
+                )
+                let source: UrlWindow.Source = .swap(context: context) { description in
+                    if let description {
+                        showAutoHiddenHud(style: .error, text: description)
+                    }
+                    reviewButton.isBusy = false
+                }
+                _ = UrlWindow.checkUrl(url: url, from: source)
+            case .failure(let error):
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                reviewButton.isBusy = false
+            }
+        }
+        reporter.report(event: .tradePreview)
+    }
+    
+    private func reviewAdvancedOrder(reviewButton: RoundedButton) {
+        guard
+            let sendToken,
+            let sendAmount = pricingModel.sendAmount,
+            let receiveToken,
+            let receiveAmount = pricingModel.receiveAmount
+        else {
+            return
+        }
+        reviewButton.isBusy = true
+        let request = LimitOrderRequest(
+            assetID: sendToken.assetID,
+            amount: sendAmount,
+            receiveAssetID: receiveToken.assetID,
+            expectedReceiveAmount: receiveAmount,
+            expireAt: selectedExpiry.date
+        )
+        RouteAPI.createLimitOrder(request: request) { [selectedExpiry] result in
+            switch result {
+            case let .success(response):
+                guard let url = URL(string: response.tx) else {
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
+                    reviewButton.isBusy = false
+                    return
+                }
+                let context = Payment.SwapContext(
+                    mode: .advanced(selectedExpiry),
+                    sendToken: sendToken,
+                    sendAmount: sendAmount,
+                    receiveToken: receiveToken,
+                    receiveAmount: receiveAmount
+                )
+                let source: UrlWindow.Source = .swap(context: context) { description in
+                    if let description {
+                        showAutoHiddenHud(style: .error, text: description)
+                    }
+                    reviewButton.isBusy = false
+                }
+                _ = UrlWindow.checkUrl(url: url, from: source)
+            case let .failure(error):
+                showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                reviewButton.isBusy = false
+            }
+        }
+        reporter.report(event: .tradePreview)
     }
     
 }

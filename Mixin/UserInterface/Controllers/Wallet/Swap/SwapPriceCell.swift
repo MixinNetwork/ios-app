@@ -5,7 +5,7 @@ final class SwapPriceCell: UICollectionViewCell {
     @IBOutlet weak var footerInfoButton: UIButton!
     @IBOutlet weak var footerInfoProgressView: CircularProgressView!
     @IBOutlet weak var footerSpacingView: UIView!
-    @IBOutlet weak var swapPriceButton: UIButton!
+    @IBOutlet weak var togglePriceUnitButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -33,26 +33,26 @@ extension SwapPriceCell {
             footerInfoButton.isHidden = false
             footerInfoProgressView.isHidden = true
             footerSpacingView.isHidden = true
-            swapPriceButton.isHidden = true
+            togglePriceUnitButton.isHidden = true
         case .error(let description):
             footerInfoButton.setTitleColor(R.color.red(), for: .normal)
             footerInfoButton.setTitle(description, for: .normal)
             footerInfoButton.isHidden = false
             footerInfoProgressView.isHidden = true
             footerSpacingView.isHidden = true
-            swapPriceButton.isHidden = true
+            togglePriceUnitButton.isHidden = true
         case .price(let price):
             footerInfoButton.setTitleColor(R.color.text_tertiary(), for: .normal)
             footerInfoButton.setTitle(price, for: .normal)
             footerInfoButton.isHidden = false
             footerInfoProgressView.isHidden = false
             footerSpacingView.isHidden = false
-            swapPriceButton.isHidden = false
+            togglePriceUnitButton.isHidden = false
         case nil:
             footerInfoButton.isHidden = true
             footerInfoProgressView.isHidden = true
             footerSpacingView.isHidden = true
-            swapPriceButton.isHidden = true
+            togglePriceUnitButton.isHidden = true
         }
     }
     

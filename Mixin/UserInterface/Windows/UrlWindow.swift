@@ -1248,6 +1248,7 @@ extension UrlWindow {
                     }
                     let preview = SwapPreviewViewController(
                         wallet: .privacy,
+                        mode: context.mode,
                         operation: .mixin(operation),
                         sendToken: context.sendToken,
                         sendAmount: context.sendAmount,

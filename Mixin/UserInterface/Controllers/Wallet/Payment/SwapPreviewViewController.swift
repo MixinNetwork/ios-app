@@ -8,6 +8,7 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
         case web3(Web3TransferOperation)
     }
     
+    private let mode: Payment.SwapContext.Mode
     private let operation: Operation
     
     private let sendToken: BalancedSwapToken
@@ -19,11 +20,13 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
     private let receiver: UserItem
     
     init(
-        wallet: Wallet, operation: Operation,
+        wallet: Wallet, mode: Payment.SwapContext.Mode,
+        operation: Operation,
         sendToken: BalancedSwapToken, sendAmount: Decimal,
         receiveToken: SwapToken, receiveAmount: Decimal,
         receiver: UserItem, warnings: [String]
     ) {
+        self.mode = mode
         self.operation = operation
         self.sendToken = sendToken
         self.sendAmount = sendAmount
@@ -43,6 +46,13 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
         tableHeaderView.setIcon(sendToken: sendToken, receiveToken: receiveToken)
         tableHeaderView.titleLabel.text = R.string.localizable.swap_confirmation()
         tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixinMessenger)
+        
+        let orderType = switch mode {
+        case .simple:
+            R.string.localizable.order_type_swap()
+        case .advanced:
+            R.string.localizable.order_type_limit()
+        }
         
         var rows: [Row]
         rows = [
@@ -71,6 +81,10 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
                     ),
                 ]
             ),
+            .info(
+                caption: .string(R.string.localizable.order_type()),
+                content: orderType
+            ),
             .doubleLineInfo(
                 caption: .price,
                 primary: SwapQuote.priceRepresentation(
@@ -89,6 +103,18 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
                 )
             ),
         ]
+        
+        switch mode {
+        case .simple:
+            break
+        case .advanced(let expiry):
+            rows.append(
+                .info(
+                    caption: .string(R.string.localizable.swap_expiry()),
+                    content: expiry.localizedName
+                )
+            )
+        }
         
         switch operation {
         case .mixin(let operation):
@@ -151,15 +177,21 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
             subtitle: R.string.localizable.signature_request_from(.mixinMessenger)
         )
         replaceTrayView(with: nil, animation: .vertical)
+        let reportType = switch mode {
+        case .simple:
+            "swap"
+        case .advanced:
+            "limit"
+        }
         Task {
             do {
                 switch operation {
                 case .mixin(let operation):
                     try await operation.start(pin: pin)
-                    reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": "swap", "trade_asset_level": sendAmount.reportingAssetLevel])
+                    reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": reportType, "trade_asset_level": sendAmount.reportingAssetLevel])
                 case .web3(let operation):
                     try await operation.start(pin: pin)
-                    reporter.report(event: .tradeEnd, tags: ["wallet": "web3", "type": "swap", "trade_asset_level": sendAmount.reportingAssetLevel])
+                    reporter.report(event: .tradeEnd, tags: ["wallet": "web3", "type": reportType, "trade_asset_level": sendAmount.reportingAssetLevel])
                 }
                 UIDevice.current.playPaymentSuccess()
                 await MainActor.run {

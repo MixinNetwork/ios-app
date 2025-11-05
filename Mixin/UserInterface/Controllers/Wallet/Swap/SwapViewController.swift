@@ -9,7 +9,7 @@ class SwapViewController: UIViewController {
         case advanced
     }
     
-    enum Section: Int, CaseIterable {
+    private enum Section: Int, CaseIterable {
         case modeSelector
         case amountInput
         case priceInput
@@ -22,6 +22,10 @@ class SwapViewController: UIViewController {
     @IBOutlet weak var reviewButtonWrapperView: UIView!
     @IBOutlet weak var reviewButton: RoundedButton!
     
+    @IBOutlet weak var reviewButtonWrapperAboveSafeAreaBottomConstraint: NSLayoutConstraint!
+    
+    let pricingModel = SwapPricingModel()
+    
     var advanceModeAvailable: Bool {
         false
     }
@@ -30,32 +34,44 @@ class SwapViewController: UIViewController {
         didSet {
             switch mode {
             case .simple:
-                break
+                scheduleNewRequesterIfAvailable()
             case .advanced:
                 requester?.stop()
                 requester = nil
             }
-            reloadSections(mode: mode, price: price)
+            reloadSections(mode: mode, price: pricingModel.displayPrice?.value)
         }
     }
     
     var sendToken: BalancedSwapToken? {
         didSet {
-            if let sendToken {
-                sendViewStyle = .token(sendToken)
+            let style: SwapTokenSelectorStyle = if let sendToken {
+                .token(sendToken)
             } else {
-                sendViewStyle = .selectable
+                .selectable
             }
+            sendViewStyle = style
+            if pricingModel.priceUnit == .send {
+                priceStyle = style
+            }
+            pricingModel.sendToken = sendToken
+            scheduleNewRequesterIfAvailable()
         }
     }
     
     var receiveToken: BalancedSwapToken? {
         didSet {
-            if let receiveToken {
-                receiveViewStyle = .token(receiveToken)
+            let style: SwapTokenSelectorStyle = if let receiveToken {
+                .token(receiveToken)
             } else {
-                receiveViewStyle = .selectable
+                .selectable
             }
+            receiveViewStyle = style
+            if pricingModel.priceUnit == .receive {
+                priceStyle = style
+            }
+            pricingModel.receiveToken = receiveToken
+            scheduleNewRequesterIfAvailable()
         }
     }
     
@@ -70,41 +86,31 @@ class SwapViewController: UIViewController {
     private weak var showReviewButtonConstraint: NSLayoutConstraint!
     private weak var hideReviewButtonConstraint: NSLayoutConstraint!
     
-    private lazy var userInputSimulationFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.locale = .current
-        formatter.roundingMode = .floor
-        formatter.maximumFractionDigits = 8
-        formatter.usesGroupingSeparator = false
-        return formatter
-    }()
+    private lazy var tokenAmountRoundingHandler = NSDecimalNumberHandler(
+        roundingMode: .plain,
+        scale: MixinToken.internalPrecision,
+        raiseOnExactness: false,
+        raiseOnOverflow: false,
+        raiseOnUnderflow: false,
+        raiseOnDivideByZero: false
+    )
     
     private var sections: [Section] = []
     private var contentSizeObservation: NSKeyValueObservation?
     private var requester: SwapQuotePeriodicRequester?
     private var amountRange: SwapQuotePeriodicRequester.AmountRange?
-    private var priceUnit: SwapQuote.PriceUnit = .send
     private var openOrders: [LimitOrder] = []
     
     // SwapAmountInputCell
     private weak var swapAmountInputCell: SwapAmountInputCell?
     
-    private var sendAmountTextField: UITextField? {
-        swapAmountInputCell?.sendAmountTextField
-    }
-    
-    private var receiveAmountTextField: UITextField? {
-        swapAmountInputCell?.receiveAmountTextField
-    }
-    
-    private var sendViewStyle: SwapAmountInputCell.TokenSelectorStyle = .loading {
+    private var sendViewStyle: SwapTokenSelectorStyle = .loading {
         didSet {
             swapAmountInputCell?.updateSendView(style: sendViewStyle)
         }
     }
     
-    private var receiveViewStyle: SwapAmountInputCell.TokenSelectorStyle = .loading {
+    private var receiveViewStyle: SwapTokenSelectorStyle = .loading {
         didSet {
             swapAmountInputCell?.updateReceiveView(style: receiveViewStyle)
         }
@@ -124,14 +130,14 @@ class SwapViewController: UIViewController {
     // SwapPriceInputCell
     private weak var priceInputCell: SwapPriceInputCell?
     
-    private var price: Decimal = 0 {
+    private var priceStyle: SwapTokenSelectorStyle = .loading {
         didSet {
-            reloadSections(mode: mode, price: price)
+            priceInputCell?.update(style: priceStyle)
         }
     }
     
     // SwapExpirySelectorCell
-    private var selectedExpiry: LimitOrder.Expiry = .never
+    private(set) var selectedExpiry: LimitOrder.Expiry = .never
     
     init(
         mode: Mode,
@@ -154,12 +160,14 @@ class SwapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        pricingModel.delegate = self
+        
         showReviewButtonConstraint = reviewButtonWrapperView.bottomAnchor.constraint(
             equalTo: view.keyboardLayoutGuide.topAnchor
         )
         showReviewButtonConstraint.priority = .almostRequired
         hideReviewButtonConstraint = reviewButtonWrapperView.topAnchor.constraint(
-            equalTo: view.keyboardLayoutGuide.topAnchor
+            equalTo: view.bottomAnchor
         )
         hideReviewButtonConstraint.priority = .almostInexist
         NSLayoutConstraint.activate([showReviewButtonConstraint, hideReviewButtonConstraint])
@@ -248,15 +256,9 @@ class SwapViewController: UIViewController {
         }
         collectionView.dataSource = self
         collectionView.delegate = self
-        reloadSections(mode: mode, price: price)
+        reloadSections(mode: mode, price: pricingModel.displayPrice?.value)
         
         reloadTokens()
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(applicationDidBecomeActive(_:)),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -279,8 +281,13 @@ class SwapViewController: UIViewController {
         reporter.report(event: .customerServiceDialog, tags: ["source": "trade_home"])
     }
     
-    @objc func sendAmountEditingChanged(_ sender: Any) {
+    @objc func sendAmountEditingChanged(_ sender: UITextField) {
         amountRange = nil
+        pricingModel.sendAmount = if let text = sender.text {
+            Decimal(string: text, locale: .current)
+        } else {
+            nil
+        }
         scheduleNewRequesterIfAvailable()
     }
     
@@ -300,16 +307,8 @@ class SwapViewController: UIViewController {
         
     }
     
-    @objc func swapPrice(_ sender: Any) {
-        priceUnit = switch priceUnit {
-        case .send:
-                .receive
-        case .receive:
-                .send
-        }
-        if let quote {
-            updateCurrentPriceRepresentation(quote: quote)
-        }
+    @objc func togglePriceUnit(_ sender: Any) {
+        pricingModel.togglePriceUnit()
     }
     
     @objc func swapSendingReceiving(_ sender: Any) {
@@ -322,17 +321,23 @@ class SwapViewController: UIViewController {
             sender.layer.add(animation, forKey: nil)
         }
         swap(&sendToken, &receiveToken)
-        scheduleNewRequesterIfAvailable()
         saveTokenIDs()
     }
     
     @objc func priceEditingChanged(_ sender: UITextField) {
-        self.price = if let text = sender.text {
-            Decimal(string: text, locale: .current) ?? 0
+        if let text = sender.text, let value = Decimal(string: text, locale: .current) {
+            let priceWasNil = pricingModel.displayPrice == nil
+            pricingModel.displayPrice = .nonVolatile(value)
+            if priceWasNil {
+                reloadSections(mode: mode, price: value)
+            }
         } else {
-            0
+            pricingModel.displayPrice = nil
         }
-        
+    }
+    
+    @objc func priceEditingDidEnd(_ sender: UITextField) {
+        reloadSections(mode: mode, price: pricingModel.displayPrice?.value)
     }
     
     func prepareForReuse(sender: Any) {
@@ -341,15 +346,15 @@ class SwapViewController: UIViewController {
 //        reloadTokens() // Update send token balance
     }
     
-    func reloadSections(mode: Mode, price: Decimal) {
+    func reloadSections(mode: Mode, price: Decimal?) {
         var sections: [Section] = switch mode {
         case .simple:
             [.modeSelector, .amountInput, .simpleModePrice]
         case .advanced:
-            if price == 0 {
-                [.modeSelector, .amountInput, .priceInput, .openOrders]
-            } else {
+            if let price, price != 0 {
                 [.modeSelector, .amountInput, .priceInput, .expiry]
+            } else {
+                [.modeSelector, .amountInput, .priceInput, .openOrders]
             }
         }
         if !advanceModeAvailable {
@@ -365,14 +370,18 @@ class SwapViewController: UIViewController {
                     collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
                 }
             } else {
-                let sections = IndexSet(integer: sections.count - 1)
-                collectionView.reloadSections(sections)
+                UIView.performWithoutAnimation {
+                    let sections = IndexSet(integer: sections.count - 1)
+                    collectionView.reloadSections(sections)
+                }
             }
             if sections.contains(.openOrders) {
+                reviewButtonWrapperAboveSafeAreaBottomConstraint.priority = .almostInexist
                 showReviewButtonConstraint.priority = .almostInexist
                 hideReviewButtonConstraint.priority = .almostRequired
                 reviewButtonWrapperView.alpha = 0
             } else {
+                reviewButtonWrapperAboveSafeAreaBottomConstraint.priority = .almostRequired
                 showReviewButtonConstraint.priority = .almostRequired
                 hideReviewButtonConstraint.priority = .almostInexist
                 reviewButtonWrapperView.alpha = 1
@@ -389,50 +398,6 @@ class SwapViewController: UIViewController {
         from swappableTokens: [SwapToken]
     ) -> OrderedDictionary<String, BalancedSwapToken> {
         [:]
-    }
-    
-    func handleInputChange() {
-        switch mode {
-        case .simple:
-            scheduleNewRequesterIfAvailable()
-        case .advanced:
-            break
-        }
-    }
-    
-    func scheduleNewRequesterIfAvailable() {
-        receiveAmountTextField?.text = nil
-        quote = nil
-        reviewButton.isEnabled = false
-        requester?.stop()
-        requester = nil
-        guard
-            let text = sendAmountTextField?.text,
-            let sendAmount = Decimal(string: text, locale: .current),
-            sendAmount > 0,
-            let sendToken,
-            let receiveToken
-        else {
-            swapPriceContent = nil
-            reviewButton.setTitle(R.string.localizable.review(), for: .normal)
-            return
-        }
-        if sendAmount > sendToken.decimalBalance {
-            reviewButton.setTitle(R.string.localizable.insufficient_balance(), for: .normal)
-        } else {
-            reviewButton.setTitle(R.string.localizable.review(), for: .normal)
-        }
-        swapPriceContent = .calculating
-        let requester = SwapQuotePeriodicRequester(
-            sendToken: sendToken,
-            sendAmount: sendAmount,
-            receiveToken: receiveToken,
-            slippage: 0.01,
-            source: tokenSource
-        )
-        requester.delegate = self
-        self.requester = requester
-        requester.start(delay: 1)
     }
     
 }
@@ -530,27 +495,15 @@ extension SwapViewController: UICollectionViewDataSource {
                 swapAmountInputCell = cell
             }
             cell.updateSendView(style: sendViewStyle)
+            cell.updateSendAmountTextField(amount: pricingModel.sendAmount)
+            cell.updateReceiveAmountTextField(amount: pricingModel.receiveAmount)
             cell.updateReceiveView(style: receiveViewStyle)
             return cell
         case .priceInput:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_price_input, for: indexPath)!
-            cell.textField.text = if price.isZero {
-                nil
-            } else {
-                "\(price)"
-            }
-            let token = switch priceUnit {
-            case .send:
-                sendToken
-            case .receive:
-                receiveToken
-            }
-            if let token {
-                cell.networkLabel.text = token.chainName
-                cell.tokenIconView.setIcon(swappableToken: token)
-                cell.symbolLabel.text = token.symbol
-                cell.tokenNameLabel.text = token.name
-            }
+            cell.textField.text = pricingModel.displayPrice?.localizedValue
+            cell.update(style: priceStyle)
+            cell.priceRepresentationLabel.text = pricingModel.priceEquation()
             if priceInputCell != cell {
                 let inputAccessoryView = SwapInputAccessoryView(
                     frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 44)
@@ -575,6 +528,16 @@ extension SwapViewController: UICollectionViewDataSource {
                     action: #selector(priceEditingChanged(_:)),
                     for: .editingChanged
                 )
+                cell.textField.addTarget(
+                    self,
+                    action: #selector(priceEditingDidEnd(_:)),
+                    for: .editingDidEnd
+                )
+                cell.togglePriceUnitButton.addTarget(
+                    self,
+                    action: #selector(togglePriceUnit(_:)),
+                    for: .touchUpInside
+                )
                 priceInputCell = cell
             }
             return cell
@@ -586,9 +549,9 @@ extension SwapViewController: UICollectionViewDataSource {
                     action: #selector(inputAmountByRange(_:)),
                     for: .touchUpInside
                 )
-                cell.swapPriceButton.addTarget(
+                cell.togglePriceUnitButton.addTarget(
                     self,
-                    action: #selector(swapPrice(_:)),
+                    action: #selector(togglePriceUnit(_:)),
                     for: .touchUpInside
                 )
                 swapPriceCell = cell
@@ -666,6 +629,45 @@ extension SwapViewController: UITextFieldDelegate {
     
 }
 
+extension SwapViewController: SwapPricingModel.Delegate {
+    
+    func swapPricingModel(_ model: SwapPricingModel, didUpdate updates: [SwapPricingModel.Update]) {
+        for update in updates {
+            switch update {
+            case .receiveAmount(let amount):
+                swapAmountInputCell?.updateReceiveAmountTextField(amount: amount)
+            case .displayPrice(let text):
+                priceInputCell?.textField.text = text
+            case .priceToken(let token):
+                if let token {
+                    priceInputCell?.update(style: .token(token))
+                } else {
+                    priceInputCell?.update(style: .selectable)
+                }
+            case .priceEquation(let text):
+                priceInputCell?.priceRepresentationLabel.text = text
+                if let text {
+                    swapPriceContent = .price(text)
+                } else {
+                    swapPriceContent = .calculating
+                }
+            }
+        }
+        switch mode {
+        case .simple:
+            break
+        case .advanced:
+            // TODO: Any better way to detect availability?
+            reviewButton.isEnabled = if let sendAmount = model.sendAmount, let sendToken = model.sendToken {
+                sendAmount <= sendToken.decimalBalance && model.receiveAmount != nil
+            } else {
+                false
+            }
+        }
+    }
+    
+}
+
 extension SwapViewController: SwapQuotePeriodicRequesterDelegate {
     
     func swapQuotePeriodicRequesterWillUpdate(_ requester: SwapQuotePeriodicRequester) {
@@ -679,12 +681,8 @@ extension SwapViewController: SwapQuotePeriodicRequesterDelegate {
             self.quote = quote
             self.amountRange = nil
             Logger.general.debug(category: "Swap", message: "Got quote: \(quote)")
-            swapAmountInputCell?.receiveAmountTextField.text = CurrencyFormatter.localizedString(
-                from: quote.receiveAmount,
-                format: .precision,
-                sign: .never
-            )
-            updateCurrentPriceRepresentation(quote: quote)
+            pricingModel.receiveAmount = quote.receiveAmount
+            swapAmountInputCell?.updateReceiveAmountTextField(amount: quote.receiveAmount)
             swapPriceProgress = 1
             swapPriceCell?.footerInfoProgressView.setProgress(1, animationDuration: nil)
             reviewButton.isEnabled = quote.sendAmount > 0
@@ -768,28 +766,16 @@ extension SwapViewController {
 
 extension SwapViewController {
     
-    @objc private func applicationDidBecomeActive(_ notification: Notification) {
-        guard presentedViewController == nil else {
-            return
-        }
-        swapAmountInputCell?.sendAmountTextField.becomeFirstResponder()
-    }
-    
     @objc private func inputAmountByRange(_ sender: Any) {
-        guard
-            let amountRange,
-            let sendAmountTextField,
-            let text = sendAmountTextField.text,
-            let sendAmount = Decimal(string: text, locale: .current)
-        else {
+        guard let amountRange, let sendAmount = pricingModel.sendAmount else {
             return
         }
         if let minimum = amountRange.minimum, sendAmount < minimum {
-            sendAmountTextField.text = userInputSimulationFormatter.string(from: minimum as NSDecimalNumber)
-            sendAmountTextField.sendActions(for: .editingChanged)
+            pricingModel.sendAmount = minimum
+            swapAmountInputCell?.updateSendAmountTextField(amount: minimum)
         } else if let maximum = amountRange.maximum, sendAmount > maximum {
-            sendAmountTextField.text = userInputSimulationFormatter.string(from: maximum as NSDecimalNumber)
-            sendAmountTextField.sendActions(for: .editingChanged)
+            pricingModel.sendAmount = maximum
+            swapAmountInputCell?.updateSendAmountTextField(amount: maximum)
         }
     }
     
@@ -889,20 +875,56 @@ extension SwapViewController {
         }
     }
     
-    private func updateCurrentPriceRepresentation(quote: SwapQuote) {
-        let priceRepresentation = quote.priceRepresentation(unit: priceUnit)
-        swapPriceContent = .price(priceRepresentation)
-    }
-    
     private func inputSendAmount(multiplier: Decimal) {
-        guard let sendToken, let sendAmountTextField else {
+        guard let sendToken else {
             return
         }
-        let amount = sendToken.decimalBalance * multiplier
-        if amount >= 0.00000001 {
-            sendAmountTextField.text = userInputSimulationFormatter.string(from: amount as NSDecimalNumber)
-            sendAmountTextField.sendActions(for: .editingChanged)
+        let amount = NSDecimalNumber(decimal: sendToken.decimalBalance * multiplier)
+            .rounding(accordingToBehavior: tokenAmountRoundingHandler)
+            .decimalValue
+        if amount >= MixinToken.minimalAmount {
+            pricingModel.sendAmount = amount
+            swapAmountInputCell?.updateSendAmountTextField(amount: amount)
+            scheduleNewRequesterIfAvailable()
         }
+    }
+    
+    private func scheduleNewRequesterIfAvailable() {
+        guard mode == .simple else {
+            return
+        }
+        pricingModel.receiveAmount = nil
+        swapAmountInputCell?.updateReceiveAmountTextField(amount: nil)
+        quote = nil
+        reviewButton.isEnabled = false
+        requester?.stop()
+        requester = nil
+        guard
+            let sendAmount = pricingModel.sendAmount,
+            sendAmount > 0,
+            let sendToken,
+            let receiveToken
+        else {
+            swapPriceContent = nil
+            reviewButton.setTitle(R.string.localizable.review(), for: .normal)
+            return
+        }
+        if sendAmount > sendToken.decimalBalance {
+            reviewButton.setTitle(R.string.localizable.insufficient_balance(), for: .normal)
+        } else {
+            reviewButton.setTitle(R.string.localizable.review(), for: .normal)
+        }
+        swapPriceContent = .calculating
+        let requester = SwapQuotePeriodicRequester(
+            sendToken: sendToken,
+            sendAmount: sendAmount,
+            receiveToken: receiveToken,
+            slippage: 0.01,
+            source: tokenSource
+        )
+        requester.delegate = self
+        self.requester = requester
+        requester.start(delay: 1)
     }
     
 }

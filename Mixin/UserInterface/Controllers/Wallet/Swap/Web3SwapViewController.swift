@@ -68,7 +68,6 @@ final class Web3SwapViewController: SwapViewController {
                 self.swapSendingReceiving(sender)
             } else {
                 self.sendToken = token
-                self.scheduleNewRequesterIfAvailable()
                 self.saveTokenIDs()
             }
         }
@@ -100,7 +99,6 @@ final class Web3SwapViewController: SwapViewController {
                 self.swapSendingReceiving(sender)
             } else {
                 self.receiveToken = token
-                self.scheduleNewRequesterIfAvailable()
                 self.saveTokenIDs()
             }
         }
@@ -215,6 +213,7 @@ final class Web3SwapViewController: SwapViewController {
                             }
                             let preview = SwapPreviewViewController(
                                 wallet: .common(wallet),
+                                mode: .simple,
                                 operation: .web3(operation),
                                 sendToken: quote.sendToken,
                                 sendAmount: sendAmount,

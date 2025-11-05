@@ -64,7 +64,7 @@
                 <outlet property="footerInfoButton" destination="MYw-ec-hLb" id="5UC-TA-bcl"/>
                 <outlet property="footerInfoProgressView" destination="Fq1-TC-3qP" id="TmA-tk-W7x"/>
                 <outlet property="footerSpacingView" destination="HFb-eQ-FOV" id="Tsh-2L-Pry"/>
-                <outlet property="swapPriceButton" destination="HRI-kO-qUo" id="ZL0-cP-jq8"/>
+                <outlet property="togglePriceUnitButton" destination="HRI-kO-qUo" id="ZL0-cP-jq8"/>
             </connections>
             <point key="canvasLocation" x="-350" y="40"/>
         </collectionViewCell>

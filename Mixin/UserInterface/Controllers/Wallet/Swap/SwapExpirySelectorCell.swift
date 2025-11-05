@@ -44,6 +44,7 @@ final class SwapExpirySelectorCell: UICollectionViewCell {
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )
+        titleLabel.text = R.string.localizable.swap_expiry()
         button.showsMenuAsPrimaryAction = true
     }
     

@@ -37,8 +37,19 @@ final class SwapQuote: SwapQuoteDraft {
 extension SwapQuote {
     
     enum PriceUnit {
+        
         case send
         case receive
+        
+        func toggled() -> PriceUnit {
+            switch self {
+            case .send:
+                    .receive
+            case .receive:
+                    .send
+            }
+        }
+        
     }
     
     static func priceRepresentation(

@@ -60,6 +60,7 @@
 "address_validity_reminder" = "您已经超过 %3$@ 天没有使用地址 %1$@（%2$@），请注意检查地址是否仍然有效。";
 "addresses" = "地址";
 "admin" = "管理员";
+"advanced_swap_confirmation" = "确认挂单";
 "agree_hint" = "继续使用即表示你同意 %@ 和 %@";
 "albums" = "相册";
 "alert" = "价格预警";
@@ -999,6 +1000,7 @@
 "or" = "或者";
 "order_details" = "订单详情";
 "order_id" = "订单 ID";
+"order_type" = "订单类型";
 "order_type_limit" = "限价";
 "order_type_swap" = "闪兑";
 "orders" = "订单";

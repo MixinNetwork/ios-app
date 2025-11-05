@@ -47,6 +47,25 @@ struct LimitOrder: Decodable {
             }
         }
         
+        var date: Date {
+            switch self {
+            case .never:
+                    .distantFuture
+            case .tenMinutes:
+                    .now.addingTimeInterval(10 * .minute)
+            case .oneHour:
+                    .now.addingTimeInterval(.hour)
+            case .oneDay:
+                    .now.addingTimeInterval(.day)
+            case .threeDays:
+                    .now.addingTimeInterval(.day)
+            case .oneWeek:
+                    .now.addingTimeInterval(.week)
+            case .oneMonth:
+                    .now.addingTimeInterval(.month)
+            }
+        }
+        
     }
     
 }

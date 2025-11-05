@@ -60,6 +60,7 @@
 "address_validity_reminder" = "The address %1$@(%2$@) has not been used for over %3$@ days. Please check if the address is still valid.";
 "addresses" = "Addresses";
 "admin" = "Администратор";
+"advanced_swap_confirmation" = "Order Confirmation";
 "agree_hint" = "Продолжая, вы соглашаетесь с %@ и %@.";
 "albums" = "Альбомы";
 "alert" = "Alert";
@@ -999,6 +1000,7 @@
 "or" = "or";
 "order_details" = "Order Details";
 "order_id" = "Order ID";
+"order_type" = "Order Type";
 "order_type_limit" = "Limit";
 "order_type_swap" = "Swap";
 "orders" = "Orders";

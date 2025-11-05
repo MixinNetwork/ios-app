@@ -32,7 +32,7 @@ extension LimitOrderRequest: Encodable {
         case amount
         case receiveAssetID = "receive_asset_id"
         case expectedReceiveAmount = "expected_receive_amount"
-        case expireAt = "expire_at"
+        case expireAt = "expired_at"
     }
     
 }

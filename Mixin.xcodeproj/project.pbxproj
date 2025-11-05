@@ -1195,6 +1195,8 @@
 		948AB7912DE5EF27005E76A0 /* MembershipOrderInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AB78E2DE5EF27005E76A0 /* MembershipOrderInfoCell.swift */; };
 		948ACAA02AF38E5B0057D76B /* SnapshotMessageContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */; };
 		948ACAA52AF3950C0057D76B /* SnapshotMessageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */; };
+		948AF9AB2EB9CB140035C9BF /* SwapTokenSelectorStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AF9AA2EB9CB0F0035C9BF /* SwapTokenSelectorStyle.swift */; };
+		948AF9D42EB9EDB10035C9BF /* SwapPricingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AF9D32EB9EDB00035C9BF /* SwapPricingModel.swift */; };
 		948E276B29D2A521002BFCE1 /* NetworkFeeOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */; };
 		948E6CB528AF95CC00DFF5DF /* TIPIntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948E6CB328AF95CC00DFF5DF /* TIPIntroViewController.swift */; };
 		948E6CB628AF95CC00DFF5DF /* TIPIntroView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948E6CB428AF95CC00DFF5DF /* TIPIntroView.xib */; };
@@ -2967,6 +2969,8 @@
 		948AB78F2DE5EF27005E76A0 /* MembershipOrderInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipOrderInfoCell.xib; sourceTree = "<group>"; };
 		948ACA9F2AF38E5B0057D76B /* SnapshotMessageContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotMessageContentView.xib; sourceTree = "<group>"; };
 		948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMessageContentView.swift; sourceTree = "<group>"; };
+		948AF9AA2EB9CB0F0035C9BF /* SwapTokenSelectorStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapTokenSelectorStyle.swift; sourceTree = "<group>"; };
+		948AF9D32EB9EDB00035C9BF /* SwapPricingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapPricingModel.swift; sourceTree = "<group>"; };
 		948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeOption.swift; sourceTree = "<group>"; };
 		948E6CB328AF95CC00DFF5DF /* TIPIntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPIntroViewController.swift; sourceTree = "<group>"; };
 		948E6CB428AF95CC00DFF5DF /* TIPIntroView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPIntroView.xib; sourceTree = "<group>"; };
@@ -4468,6 +4472,8 @@
 		9429C0FE2E059BB700206DAA /* Swap */ = {
 			isa = PBXGroup;
 			children = (
+				948AF9AA2EB9CB0F0035C9BF /* SwapTokenSelectorStyle.swift */,
+				948AF9D32EB9EDB00035C9BF /* SwapPricingModel.swift */,
 				940A3D232EB7BEF0001A458F /* SwapOpenOrderHeaderView.xib */,
 				940A3D222EB7BEF0001A458F /* SwapOpenOrderHeaderView.swift */,
 				940EB0AA2EB0A3D1009B3DAA /* SwapAmountInputCell.xib */,
@@ -7618,6 +7624,7 @@
 				DFB19002233219650021CAF3 /* LogViewController.swift in Sources */,
 				94B5776A2B5E554800AE576E /* ExploreViewController.swift in Sources */,
 				7B054052243CCCD500C1FCB6 /* HomeTitleButton.swift in Sources */,
+				948AF9AB2EB9CB140035C9BF /* SwapTokenSelectorStyle.swift in Sources */,
 				9425EAD02DC2218400BB018C /* MembershipPlansViewController.swift in Sources */,
 				7BD127FC22D8892200BB5316 /* GalleryViewController.swift in Sources */,
 				DFD1FBC72302CB7A00C570D4 /* DatabaseUpgradeViewController.swift in Sources */,
@@ -8061,6 +8068,7 @@
 				94AC15652C3D7A110029E1AB /* AppButtonsViewModel.swift in Sources */,
 				94E66F002D13F91F00578F19 /* MAONameSearchResult.swift in Sources */,
 				940EE2992C9DDD24001A52FA /* MarketAlertItemView.swift in Sources */,
+				948AF9D42EB9EDB10035C9BF /* SwapPricingModel.swift in Sources */,
 				947B36A925DEB72A00146111 /* PlaylistManager.swift in Sources */,
 				9447A7362CBD44E900EA35BC /* ExploreSearchRecommendationViewController.swift in Sources */,
 				9437AEF72E6ACF2400C59776 /* Chain+DepositSupporting.swift in Sources */,

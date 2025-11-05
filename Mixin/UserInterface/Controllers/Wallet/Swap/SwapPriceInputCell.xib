@@ -101,22 +101,47 @@
                             </stackView>
                         </subviews>
                     </stackView>
+                    <view contentMode="scaleToFill" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="Vzn-tj-PBU" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="262" y="53.333333333333336" width="20" height="20.000000000000007"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" name="chat_pin_count_background"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="isAnimating" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ryc-oT-Usi">
+                        <rect key="frame" x="153.66666666666666" y="80.666666666666671" width="44" height="38.333333333333329"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="m6h-QO-Rhi"/>
+                        </constraints>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain"/>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="paN-Kk-QWU" secondAttribute="bottom" constant="14" id="7cf-b9-EgW"/>
                     <constraint firstAttribute="trailing" secondItem="paN-Kk-QWU" secondAttribute="trailing" constant="16" id="KLd-MG-rOc"/>
+                    <constraint firstItem="Vzn-tj-PBU" firstAttribute="centerX" secondItem="MQp-iC-Zr2" secondAttribute="centerX" id="LDc-IE-tP1"/>
+                    <constraint firstItem="ryc-oT-Usi" firstAttribute="top" secondItem="8eQ-oJ-z3b" secondAttribute="bottom" id="TOS-Rg-YcI"/>
                     <constraint firstItem="paN-Kk-QWU" firstAttribute="top" secondItem="Bpu-ap-ljP" secondAttribute="top" constant="16" id="VdQ-2R-ct8"/>
                     <constraint firstItem="paN-Kk-QWU" firstAttribute="leading" secondItem="Bpu-ap-ljP" secondAttribute="leading" constant="16" id="WfL-HI-Obf"/>
+                    <constraint firstItem="Vzn-tj-PBU" firstAttribute="centerY" secondItem="MQp-iC-Zr2" secondAttribute="centerY" id="bIO-6n-IXS"/>
+                    <constraint firstAttribute="bottom" secondItem="ryc-oT-Usi" secondAttribute="bottom" id="gq7-4x-jmx"/>
+                    <constraint firstItem="ryc-oT-Usi" firstAttribute="centerX" secondItem="Yw6-V2-vyQ" secondAttribute="centerX" id="iCW-Va-Z3b"/>
                 </constraints>
             </collectionViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
+                <outlet property="inputStackView" destination="8Pj-kk-c4G" id="LM0-6j-p9j"/>
+                <outlet property="loadingIndicator" destination="Vzn-tj-PBU" id="KFc-hL-M1P"/>
                 <outlet property="networkLabel" destination="FGy-2Z-1YY" id="QzC-uH-Yf9"/>
                 <outlet property="priceRepresentationLabel" destination="BXp-l8-eQJ" id="iER-9v-mci"/>
                 <outlet property="symbolLabel" destination="Frc-Ad-hLz" id="Z7s-Xi-m1x"/>
                 <outlet property="textField" destination="8eQ-oJ-z3b" id="IXK-5l-4xb"/>
                 <outlet property="titleLabel" destination="ZHF-Ka-aE0" id="8p5-YO-CM4"/>
+                <outlet property="togglePriceUnitButton" destination="ryc-oT-Usi" id="EQ6-vQ-kWc"/>
                 <outlet property="tokenIconView" destination="MQp-iC-Zr2" id="zoP-e6-DF5"/>
                 <outlet property="tokenNameLabel" destination="CNe-sG-agT" id="WZX-Ow-Ggi"/>
             </connections>
@@ -127,6 +152,9 @@
         <image name="swap_price" width="20" height="20"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="chat_pin_count_background">
+            <color red="0.32899999618530273" green="0.32400000095367432" blue="0.4779999852180481" alpha="0.33000001311302185" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -163,10 +163,18 @@ extension Payment {
     }
     
     struct SwapContext {
+        
+        enum Mode {
+            case simple
+            case advanced(LimitOrder.Expiry)
+        }
+        
+        let mode: Mode
         let sendToken: BalancedSwapToken
         let sendAmount: Decimal
         let receiveToken: SwapToken
         let receiveAmount: Decimal
+        
     }
     
     enum InscriptionError: Error, LocalizedError {

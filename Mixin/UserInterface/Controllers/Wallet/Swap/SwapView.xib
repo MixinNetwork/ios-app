@@ -13,6 +13,7 @@
             <connections>
                 <outlet property="collectionView" destination="F3c-1w-40E" id="0Ha-kF-dfO"/>
                 <outlet property="reviewButton" destination="p0t-vv-kdZ" id="EXb-rF-bCp"/>
+                <outlet property="reviewButtonWrapperAboveSafeAreaBottomConstraint" destination="vcq-jE-2dD" id="BL4-4k-Hg7"/>
                 <outlet property="reviewButtonWrapperView" destination="GUA-rJ-cEC" id="nTM-KS-5Gu"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -69,7 +70,7 @@
                 <constraint firstItem="F3c-1w-40E" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="W5D-Wn-vIo"/>
                 <constraint firstItem="F3c-1w-40E" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="iei-fc-Q5v"/>
                 <constraint firstAttribute="trailing" secondItem="F3c-1w-40E" secondAttribute="trailing" id="mQ7-eD-CNX"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="GUA-rJ-cEC" secondAttribute="bottom" id="vcq-jE-2dD"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="GUA-rJ-cEC" secondAttribute="bottom" priority="999" id="vcq-jE-2dD"/>
                 <constraint firstItem="GUA-rJ-cEC" firstAttribute="top" secondItem="F3c-1w-40E" secondAttribute="bottom" id="wwa-cy-D3q"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="GUA-rJ-cEC" secondAttribute="trailing" id="yuG-Yf-JVB"/>
             </constraints>

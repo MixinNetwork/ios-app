@@ -742,6 +742,8 @@
 "invite_info" = "リンクを知っている人はだれでもグループに参加可能です、信頼できる人だけに共有してください";
 "invite_to_group_via_link" = "リンクを使って招待する";
 "invited_by_stranger" = "招待者はあなたの連絡先に存在しません";
+"invitee_commission" = "Invitee Commission";
+"inviter" = "Inviter";
 "invites_you_to_a_voice_call" = "グループ通話に招待されました";
 "invoice" = "Invoice";
 "invoice_renew_plan" = "Renew %@ Plan";
@@ -1123,11 +1125,8 @@
 "referral_banner" = "Invite friends and earn up to 60%% of their trading fees!";
 "referral_code" = "Referral Code";
 "referral_code_applied" = "Applied";
-"referral_code_applied_footer" = "The fees are refunded monthly to your Mixin privacy wallet, summarized by the actual fee tokens and amounts consumed. Read the documentation to learn more.";
-"referral_code_applied_header" = "🎉 Referral code successfully applied! You’ve unlocked the following benefits:";
-"referral_code_applied_introduction_1" = "Up to 50%% cashback on trading fees";
-"referral_code_applied_introduction_2" = "Up to 1,000 USD cashback per transaction when upgrading membership";
-"referral_code_applied_introduction_3" = "Automatic access to all future new benefits";
+"referral_code_applied_header" = "The fees are refunded monthly to your Mixin privacy wallet, summarized by the actual fee tokens and amounts consumed. Read the documentation to learn more.";
+"referral_code_applying_failed" = "Applying Failed";
 "referral_description" = "Invite friends earn crypto";
 "referral_program_introduction_1" = "Up to 60%% commission on trading fees";
 "referral_program_introduction_2" = "Membership commission rebate up to 1,000 USD per order";

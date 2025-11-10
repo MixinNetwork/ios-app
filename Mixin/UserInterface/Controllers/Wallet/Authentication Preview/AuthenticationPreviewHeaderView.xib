@@ -31,7 +31,7 @@
                             <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <textView opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" text="Subtitle" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="gdg-BJ-S56" customClass="IntroTextView" customModule="Mixin" customModuleProvider="target">
+                        <textView opaque="NO" contentMode="left" horizontalHuggingPriority="251" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" text="Subtitle" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="gdg-BJ-S56" customClass="IntroTextView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="31.666666666666661" width="317" height="40.333333333333343"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="textColor" name="text_secondary"/>

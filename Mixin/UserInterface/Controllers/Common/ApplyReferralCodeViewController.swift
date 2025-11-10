@@ -107,18 +107,42 @@ final class ApplyReferralCodeViewController: UIViewController {
         }
         errorDescriptionLabel.isHidden = true
         isBusy = true
-        ReferralAPI.bindReferral(code: code) { [weak self] result in
-            guard let self else {
-                return
-            }
-            self.isBusy = false
-            switch result {
-            case .success:
-                let success = ReferralCodeAppliedViewController()
-                self.addChild(success)
-                self.view.addSubview(success.view)
-                success.view.snp.makeEdgesEqualToSuperview()
-            case .failure(let error):
+        Task { [weak self] in
+            do {
+                let info = try await ReferralAPI.referralCodeInfo(code: code)
+                guard
+                    let percent = Decimal(string: info.inviteePercent, locale: .enUSPOSIX),
+                    let percentage = NumberFormatter.percentage.string(decimal: percent)
+                else {
+                    throw RequestError.invalidPercent
+                }
+                let inviter: UserItem
+                if let user = UserDAO.shared.getUser(userId: info.inviterUserID) {
+                    inviter = user
+                } else {
+                    let response = try await UserAPI.user(userID: info.inviterUserID)
+                    UserDAO.shared.updateUsers(users: [response])
+                    inviter = UserItem.createUser(from: response)
+                }
+                await MainActor.run {
+                    guard let self, let presentingViewController = self.presentingViewController else {
+                        return
+                    }
+                    self.isBusy = false
+                    let preview = ApplyReferralCodePreviewViewController(
+                        code: info.code,
+                        precentage: percentage,
+                        inviter: inviter
+                    )
+                    presentingViewController.dismiss(animated: true) {
+                        presentingViewController.present(preview, animated: true)
+                    }
+                }
+            } catch {
+                guard let self else {
+                    return
+                }
+                self.isBusy = false
                 self.errorDescriptionLabel.text = error.localizedDescription
                 self.errorDescriptionLabel.isHidden = false
             }
@@ -171,6 +195,20 @@ extension ApplyReferralCodeViewController: UIAdaptivePresentationControllerDeleg
     
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
         !isBusy
+    }
+    
+}
+
+extension ApplyReferralCodeViewController {
+    
+    private enum RequestError: Error, LocalizedError {
+        
+        case invalidPercent
+        
+        var errorDescription: String? {
+            R.string.localizable.data_parsing_error()
+        }
+        
     }
     
 }

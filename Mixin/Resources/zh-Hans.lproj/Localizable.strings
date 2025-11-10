@@ -575,7 +575,7 @@
 "error_invalid_quote_amount" = "错误 10614: 输入金额太小或太大，请重新输入。";
 "error_invalid_referral_code" = "错误 10730：无效的邀请码";
 "error_invalid_swap" = "错误 10611: 暂无报价，请稍后重试。";
-"error_inviter_plan_expired" = "错误 10737：绑定失败，邀请人的会员已过期";
+"error_inviter_plan_expired" = "错误 10737：邀请人的会员已过期";
 "error_legacy_pin" = "错误 20118：为了加强 Mixin 网络的安全，Mixin API 现已暂停 D3M-PIN 升级到 TIP，详情请查看文档并登记等待处理。";
 "error_network_task_failed" = "网络连接失败。检查或切换网络并重试";
 "error_no_available_quote" = "错误 10615: 暂不支持该交易对，请尝试切换币种。";
@@ -742,6 +742,8 @@
 "invite_info" = "Mixin 使用者可以使用此链接加入这个群组，请只跟您信任的人共享链接。";
 "invite_to_group_via_link" = "群邀请链接";
 "invited_by_stranger" = "邀请人不是你的联系人";
+"invitee_commission" = "被邀请人佣金";
+"inviter" = "邀请人";
 "invites_you_to_a_voice_call" = "发起了语音通话";
 "invoice" = "账单";
 "invoice_renew_plan" = "续订%@会员";
@@ -1123,11 +1125,8 @@
 "referral_banner" = "邀请好友赢取最高 60%% 手续费分佣！";
 "referral_code" = "邀请码";
 "referral_code_applied" = "绑定成功";
-"referral_code_applied_footer" = "手续费按月、按实际消耗的手续费币种和金额汇总返还到您的 Mixin 隐私钱包，阅读文档了解更多。";
-"referral_code_applied_header" = "🎉 邀请码绑定成功，您已自动获得以下权益：";
-"referral_code_applied_introduction_1" = "最高 50%% 交易手续费返现";
-"referral_code_applied_introduction_2" = "升级会员返现单笔最高 1000 USD";
-"referral_code_applied_introduction_3" = "自动获得后续所有新权益";
+"referral_code_applied_header" = "手续费按月、按实际消耗的手续费币种和金额汇总返还到您的 Mixin 隐私钱包，阅读文档了解更多。";
+"referral_code_applying_failed" = "绑定失败";
 "referral_description" = "邀请好友赚币";
 "referral_program_introduction_1" = "最高 60%% 交易手续费分佣";
 "referral_program_introduction_2" = "会员返佣单笔最高 1000 USD";

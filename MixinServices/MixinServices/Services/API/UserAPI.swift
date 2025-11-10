@@ -68,6 +68,12 @@ public final class UserAPI: MixinAPI {
         }
     }
     
+    public static func user(userID: String) async throws -> UserResponse {
+        try await withCheckedThrowingContinuation { continuation in
+            showUser(userId: userID, completion: continuation.resume(with:))
+        }
+    }
+    
     @discardableResult
     public static func search(keyword: String, completion: @escaping (MixinAPI.Result<UserResponse>) -> Void) -> Request? {
         return request(method: .get, path: Path.search(keyword: keyword), completion: completion)

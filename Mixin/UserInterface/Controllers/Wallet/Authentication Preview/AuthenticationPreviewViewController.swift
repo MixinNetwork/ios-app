@@ -97,11 +97,11 @@ class AuthenticationPreviewViewController: UIViewController {
     
     func layoutTableHeaderView(title: String, subtitle: String?, style: TableHeaderViewStyle = []) {
         tableHeaderView.titleLabel.text = title
-        tableHeaderView.subtitleLabel.text = subtitle
+        tableHeaderView.subtitleTextView.text = subtitle
         if style.contains(.destructive) {
-            tableHeaderView.subtitleLabel.textColor = R.color.red()
+            tableHeaderView.subtitleTextView.textColor = R.color.red()
         } else {
-            tableHeaderView.subtitleLabel.textColor = R.color.text_secondary()
+            tableHeaderView.subtitleTextView.textColor = R.color.text_secondary()
         }
         layoutTableHeaderView()
     }

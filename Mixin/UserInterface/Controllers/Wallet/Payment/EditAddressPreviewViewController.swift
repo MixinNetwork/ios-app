@@ -42,13 +42,13 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
         case .add:
             reporter.report(event: .addAddressPreview)
             tableHeaderView.titleLabel.text = R.string.localizable.confirm_adding_address()
-            tableHeaderView.subtitleLabel.text = R.string.localizable.review_address_hint()
+            tableHeaderView.subtitleTextView.text = R.string.localizable.review_address_hint()
         case .update:
             tableHeaderView.titleLabel.text = R.string.localizable.confirm_editing_address()
-            tableHeaderView.subtitleLabel.text = R.string.localizable.review_address_hint()
+            tableHeaderView.subtitleTextView.text = R.string.localizable.review_address_hint()
         case .delete:
             tableHeaderView.titleLabel.text = R.string.localizable.confirm_deleting_address()
-            tableHeaderView.subtitleLabel.text = R.string.localizable.delete_address_description()
+            tableHeaderView.subtitleTextView.text = R.string.localizable.delete_address_description()
         }
         
         var rows: [Row] = [

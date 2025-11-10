@@ -42,7 +42,7 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
         
         tableHeaderView.setIcon(sendToken: sendToken, receiveToken: receiveToken)
         tableHeaderView.titleLabel.text = R.string.localizable.swap_confirmation()
-        tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(.mixinMessenger)
+        tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixinMessenger)
         
         var rows: [Row]
         rows = [

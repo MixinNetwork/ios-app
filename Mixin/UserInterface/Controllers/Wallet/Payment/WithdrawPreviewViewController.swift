@@ -33,7 +33,7 @@ final class WithdrawPreviewViewController: WalletIdentifyingAuthenticationPrevie
         
         tableHeaderView.setIcon(token: withdrawalToken)
         tableHeaderView.titleLabel.text = R.string.localizable.confirm_withdrawal()
-        tableHeaderView.subtitleLabel.text = R.string.localizable.review_withdrawal_hint()
+        tableHeaderView.subtitleTextView.text = R.string.localizable.review_withdrawal_hint()
         
         let feeFiatMoneyAmount = feeTokenAmount * feeToken.decimalUSDPrice * Decimal(Currency.current.rate)
         let totalFiatMoneyAmount = withdrawalFiatMoneyAmount + feeFiatMoneyAmount

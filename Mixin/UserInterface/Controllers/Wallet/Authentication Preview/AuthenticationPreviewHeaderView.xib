@@ -31,12 +31,13 @@
                             <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Subtitle" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gdg-BJ-S56">
+                        <textView opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" text="Subtitle" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="gdg-BJ-S56" customClass="IntroTextView" customModule="Mixin" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="31.666666666666661" width="317" height="40.333333333333343"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="textColor" name="text_secondary"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </textView>
                     </subviews>
                 </stackView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WQ9-rk-nRi">
@@ -65,7 +66,7 @@
                 <outlet property="separatorLineBottomConstraint" destination="vwk-rn-nQL" id="v1J-sR-4ye"/>
                 <outlet property="separatorLineHeightConstraint" destination="ZBS-3y-C7s" id="uaS-j6-ttE"/>
                 <outlet property="stackView" destination="bDK-3p-lbu" id="8xJ-p0-bk2"/>
-                <outlet property="subtitleLabel" destination="gdg-BJ-S56" id="oKm-tb-DmU"/>
+                <outlet property="subtitleTextView" destination="gdg-BJ-S56" id="oKm-tb-DmU"/>
                 <outlet property="titleLabel" destination="9rk-30-04q" id="EP8-lq-ZsB"/>
                 <outlet property="titleStackViewLeadingConstraint" destination="Fya-RI-bXS" id="Bft-HO-I8l"/>
                 <outlet property="titleStackViewTrailingConstraint" destination="YYO-uo-xqb" id="wMc-X4-BGF"/>

@@ -84,7 +84,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
             case .paid:
                 tableHeaderView.setIcon(progress: .success)
                 tableHeaderView.titleLabel.text = R.string.localizable.transaction_approved()
-                tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(.mixinSafe) + R.string.localizable.multisig_state_paid()
+                tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixinSafe) + R.string.localizable.multisig_state_paid()
             case .signed, .revoked, .pending:
                 tableHeaderView.setIcon { imageView in
                     imageView.image = R.image.transaction_checklist()
@@ -95,14 +95,14 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 case .revoke:
                     tableHeaderView.titleLabel.text = R.string.localizable.reject_transaction()
                 }
-                tableHeaderView.subtitleLabel.text = R.string.localizable.signature_request_from(.mixinSafe)
+                tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixinSafe)
             }
         } else {
             switch state {
             case .paid:
                 tableHeaderView.setIcon(progress: .success)
                 tableHeaderView.titleLabel.text = R.string.localizable.multisig_signed()
-                tableHeaderView.subtitleLabel.text = R.string.localizable.multisig_state_paid()
+                tableHeaderView.subtitleTextView.text = R.string.localizable.multisig_state_paid()
             case .signed:
                 tableHeaderView.setIcon(progress: .failure)
                 tableHeaderView.titleLabel.text = switch action {
@@ -111,7 +111,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 case .revoke:
                     R.string.localizable.revoke_multisig_transaction()
                 }
-                tableHeaderView.subtitleLabel.text = R.string.localizable.multisig_state_signed()
+                tableHeaderView.subtitleTextView.text = R.string.localizable.multisig_state_signed()
             case .revoked:
                 tableHeaderView.setIcon(progress: .failure)
                 tableHeaderView.titleLabel.text = switch action {
@@ -120,16 +120,16 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
                 case .revoke:
                     R.string.localizable.revoke_multisig_transaction()
                 }
-                tableHeaderView.subtitleLabel.text = R.string.localizable.multisig_state_unlocked()
+                tableHeaderView.subtitleTextView.text = R.string.localizable.multisig_state_unlocked()
             case .pending:
                 tableHeaderView.setIcon(token: token)
                 switch action {
                 case .sign:
                     tableHeaderView.titleLabel.text = R.string.localizable.confirm_signing_multisig()
-                    tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+                    tableHeaderView.subtitleTextView.text = R.string.localizable.review_transfer_hint()
                 case .revoke:
                     tableHeaderView.titleLabel.text = R.string.localizable.revoke_multisig_signature()
-                    tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+                    tableHeaderView.subtitleTextView.text = R.string.localizable.review_transfer_hint()
                 }
             }
         }

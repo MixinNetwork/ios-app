@@ -186,6 +186,16 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: query)
     }
     
+    public func swapOrderToken(id: String) -> SwapOrder.Token? {
+        let sql = """
+            SELECT t.asset_id, t.symbol, c.name, t.icon_url
+            FROM tokens t
+                LEFT JOIN chains c ON t.chain_id = c.chain_id
+            WHERE t.asset_id = ?
+        """
+        return db.select(with: sql, arguments: [id])
+    }
+    
     public func usdBalanceSum() -> Decimal {
         let sql = """
         SELECT SUM(ifnull(te.balance,'0') * t.price_usd)

@@ -99,7 +99,7 @@ class SwapViewController: UIViewController {
     private var contentSizeObservation: NSKeyValueObservation?
     private var requester: SwapQuotePeriodicRequester?
     private var amountRange: SwapQuotePeriodicRequester.AmountRange?
-    private var openOrders: [LimitOrder] = []
+    private var openOrders: [SwapOrderViewModel] = []
     
     // SwapAmountInputCell
     private weak var swapAmountInputCell: SwapAmountInputCell?
@@ -137,7 +137,7 @@ class SwapViewController: UIViewController {
     }
     
     // SwapExpirySelectorCell
-    private(set) var selectedExpiry: LimitOrder.Expiry = .never
+    private(set) var selectedExpiry: SwapOrder.Expiry = .never
     
     init(
         mode: Mode,
@@ -181,7 +181,7 @@ class SwapViewController: UIViewController {
         collectionView.register(R.nib.swapPriceInputCell)
         collectionView.register(R.nib.swapPriceCell)
         collectionView.register(R.nib.swapNoOpenOrderCell)
-        collectionView.register(R.nib.swapOpenOrderCell)
+        collectionView.register(R.nib.swapOrderCell)
         collectionView.register(R.nib.swapExpirySelectorCell)
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, _) in
             switch self?.sections[sectionIndex] {
@@ -259,6 +259,7 @@ class SwapViewController: UIViewController {
         reloadSections(mode: mode, price: pricingModel.displayPrice?.value)
         
         reloadTokens()
+        ConcurrentJobQueue.shared.addJob(job: RefreshWeb3OrdersJob())
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -398,6 +399,16 @@ class SwapViewController: UIViewController {
         from swappableTokens: [SwapToken]
     ) -> OrderedDictionary<String, BalancedSwapToken> {
         [:]
+    }
+    
+    func reload(openOrders: [SwapOrderViewModel]) {
+        self.openOrders = openOrders
+        if let section = sections.firstIndex(of: .openOrders) {
+            UIView.performWithoutAnimation {
+                let sections = IndexSet(integer: section)
+                collectionView.reloadSections(sections)
+            }
+        }
     }
     
 }
@@ -562,7 +573,7 @@ extension SwapViewController: UICollectionViewDataSource {
             if openOrders.isEmpty {
                 return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_no_open_order, for: indexPath)!
             } else {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_open_order, for: indexPath)!
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_order, for: indexPath)!
                 return cell
             }
         case .expiry:

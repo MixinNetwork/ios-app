@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class SwapOrderCell: ModernSelectedBackgroundCell {
+final class SwapOrderCell: UICollectionViewCell {
     
     @IBOutlet weak var swapIconView: SwapIconView!
     @IBOutlet weak var symbolLabel: UILabel!
@@ -30,31 +30,25 @@ final class SwapOrderCell: ModernSelectedBackgroundCell {
         swapIconView.prepareForReuse()
     }
     
-    func load(order: SwapOrderItem) {
-        swapIconView.setTokenIcon(pay: order.payIconURL, receive: order.receiveIconURL)
-        symbolLabel.text = order.exchangingSymbolRepresentation
-        if let date = order.createdAtDate {
-            dateLabel.text = DateFormatter.dateFull.string(from: date)
-        } else {
-            dateLabel.text = order.createdAt
-        }
-        payAmountLabel.text = CurrencyFormatter.localizedString(
-            from: -order.payAmount,
-            format: .precision,
-            sign: .always,
-            symbol: .custom(order.paySymbol)
+    func load(viewModel: SwapOrderViewModel) {
+        swapIconView.setTokenIcon(
+            pay: viewModel.payToken?.iconURL,
+            receive: viewModel.receiveToken?.iconURL
         )
-        typeLabel.text = order.type.localizedDescription
-        receiveAmountLabel.text = order.actualReceivingAmount
-        stateLabel.text = order.state.localizedDescription
-        switch order.state.knownCase {
+        symbolLabel.text = viewModel.exchangingSymbolRepresentation
+        dateLabel.text = viewModel.createdAt
+        payAmountLabel.text = viewModel.paying.amount
+        typeLabel.text = viewModel.type.localizedDescription
+        receiveAmountLabel.text = viewModel.receivings.map(\.amount).joined(separator: " ")
+        stateLabel.text = viewModel.state.localizedDescription
+        switch viewModel.state.knownCase {
         case .success:
             receiveAmountLabel.textColor = R.color.market_green()
             stateLabel.textColor = R.color.market_green()
-        case .pending, .none:
+        case .created, .pending, .none:
             receiveAmountLabel.textColor = R.color.text_tertiary()
             stateLabel.textColor = R.color.text_tertiary()
-        case .failed:
+        case .failed, .cancelled, .expired:
             receiveAmountLabel.textColor = R.color.market_green()
             stateLabel.textColor = R.color.market_red()
         }

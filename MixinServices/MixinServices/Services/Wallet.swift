@@ -20,6 +20,19 @@ extension Wallet: Equatable {
     
 }
 
+extension Wallet: CustomDebugStringConvertible {
+    
+    public var debugDescription: String {
+        switch self {
+        case .privacy:
+            "PrivacyWallet"
+        case .common(let wallet):
+            "CommonWallet \(wallet.name)"
+        }
+    }
+    
+}
+
 extension Wallet {
     
     public enum Identifier: RawRepresentable {

@@ -3,10 +3,9 @@ import MixinServices
 
 final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
     
-    private enum Tag {
-        case watching
-        case imported
-        case noKey
+    enum Accessory {
+        case disclosure
+        case selection
     }
     
     @IBOutlet weak var titleStackView: UIStackView!
@@ -14,6 +13,29 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var valueLabel: UILabel!
     @IBOutlet weak var proportionStackView: UIStackView!
+    @IBOutlet weak var accessoryImageView: UIImageView!
+    
+    override var isSelected: Bool {
+        didSet {
+            guard accessory == .selection else {
+                return
+            }
+            accessoryImageView.image = isSelected
+            ? R.image.ic_selected()
+            : R.image.ic_deselected()
+        }
+    }
+    
+    var accessory: Accessory = .disclosure {
+        didSet {
+            accessoryImageView.image = switch accessory {
+            case .disclosure:
+                R.image.ic_accessory_disclosure()
+            case .selection:
+                isSelected ? R.image.ic_selected() : R.image.ic_deselected()
+            }
+        }
+    }
     
     private var tagLabels: [InsetLabel] = []
     
@@ -100,6 +122,16 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             usdValue: digest.usdBalanceSum,
             fontSize: 22
         )
+    }
+    
+}
+
+extension WalletCell {
+    
+    private enum Tag {
+        case watching
+        case imported
+        case noKey
     }
     
     private func load(tags: [Tag]) {

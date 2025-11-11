@@ -11,7 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="swap_open_order" id="209-V6-bay" customClass="SwapOpenOrderCell" customModule="Mixin" customModuleProvider="target">
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="swap_order" id="209-V6-bay" customClass="SwapOrderCell" customModule="Mixin" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="335" height="70"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="nKR-M8-Azi">
@@ -19,7 +19,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NVd-sD-G5h" customClass="SwapIconView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="20" y="14" width="44" height="44"/>
+                        <rect key="frame" x="20" y="4" width="44" height="44"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="44" id="Hcg-Ad-ocx"/>
@@ -27,19 +27,19 @@
                         </constraints>
                     </view>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Bp7-UX-XQ1">
-                        <rect key="frame" x="76" y="10" width="239" height="50"/>
+                        <rect key="frame" x="76" y="2" width="239" height="66"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="6DN-vo-Hee">
-                                <rect key="frame" x="0.0" y="0.0" width="239" height="4"/>
+                                <rect key="frame" x="0.0" y="0.0" width="239" height="20"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="19.333333333333329" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qup-Dk-cHQ" userLabel="Symbol Label">
-                                        <rect key="frame" x="0.0" y="0.0" width="195.66666666666666" height="4"/>
+                                        <rect key="frame" x="0.0" y="0.33333333333333393" width="195.66666666666666" height="19.333333333333329"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="35.333333333333371" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t2q-Su-fUg" userLabel="Date Label">
-                                        <rect key="frame" x="203.66666666666669" y="0.0" width="35.333333333333343" height="4"/>
+                                        <rect key="frame" x="203.66666666666669" y="1.6666666666666661" width="35.333333333333343" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" name="text_tertiary"/>
                                         <nil key="highlightedColor"/>
@@ -47,7 +47,7 @@
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="M7P-21-Ogf">
-                                <rect key="frame" x="0.0" y="10" width="239" height="17"/>
+                                <rect key="frame" x="0.0" y="26" width="239" height="17"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="35.333333333333336" placeholderIntrinsicHeight="17" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sqd-lo-qNa" userLabel="Pay Amount Label">
                                         <rect key="frame" x="0.0" y="0.0" width="35.333333333333336" height="17"/>
@@ -64,7 +64,7 @@
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ut4-Wc-GkD">
-                                <rect key="frame" x="0.0" y="33" width="239" height="17"/>
+                                <rect key="frame" x="0.0" y="49" width="239" height="17"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="35.333333333333336" placeholderIntrinsicHeight="17" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="USH-cw-vU7" userLabel="Receive Amount Label">
                                         <rect key="frame" x="0.0" y="0.0" width="35.333333333333336" height="17"/>
@@ -87,10 +87,10 @@
                 <constraints>
                     <constraint firstItem="NVd-sD-G5h" firstAttribute="leading" secondItem="nKR-M8-Azi" secondAttribute="leading" constant="20" id="H6u-4H-2Kh"/>
                     <constraint firstAttribute="trailing" secondItem="Bp7-UX-XQ1" secondAttribute="trailing" constant="20" id="I7B-VM-J6h"/>
-                    <constraint firstItem="NVd-sD-G5h" firstAttribute="top" secondItem="nKR-M8-Azi" secondAttribute="top" constant="14" id="K46-Yb-gG6"/>
-                    <constraint firstAttribute="bottom" secondItem="Bp7-UX-XQ1" secondAttribute="bottom" constant="10" id="SdL-t5-n8I"/>
+                    <constraint firstItem="NVd-sD-G5h" firstAttribute="top" secondItem="nKR-M8-Azi" secondAttribute="top" constant="4" id="K46-Yb-gG6"/>
+                    <constraint firstAttribute="bottom" secondItem="Bp7-UX-XQ1" secondAttribute="bottom" constant="2" id="SdL-t5-n8I"/>
                     <constraint firstItem="Bp7-UX-XQ1" firstAttribute="leading" secondItem="NVd-sD-G5h" secondAttribute="trailing" constant="12" id="X0R-BC-wVn"/>
-                    <constraint firstItem="Bp7-UX-XQ1" firstAttribute="top" secondItem="nKR-M8-Azi" secondAttribute="top" constant="10" id="rEg-eI-Hz5"/>
+                    <constraint firstItem="Bp7-UX-XQ1" firstAttribute="top" secondItem="nKR-M8-Azi" secondAttribute="top" constant="2" id="rEg-eI-Hz5"/>
                 </constraints>
             </collectionViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -117,7 +117,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

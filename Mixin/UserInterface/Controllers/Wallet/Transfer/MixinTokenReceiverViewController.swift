@@ -191,4 +191,8 @@ extension MixinTokenReceiverViewController: TransferWalletSelectorViewController
         }
     }
     
+    func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectMultipleWallets wallets: [MixinServices.Wallet]) {
+        
+    }
+    
 }

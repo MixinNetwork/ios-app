@@ -6,7 +6,24 @@ final class PillActionView: UIView {
         func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int)
     }
     
-    var actions: [String] = [] {
+    struct Action: Equatable {
+        
+        enum Style {
+            case normal
+            case destructive
+        }
+        
+        let title: String
+        let style: Style
+        
+        init(title: String, style: Style = .normal) {
+            self.title = title
+            self.style = style
+        }
+        
+    }
+    
+    var actions: [Action] = [] {
         didSet {
             guard actions != oldValue else {
                 return
@@ -41,7 +58,7 @@ final class PillActionView: UIView {
         self.stackView = stackView
     }
     
-    private func reloadData(actions: [String]) {
+    private func reloadData(actions: [Action]) {
         for view in stackView.arrangedSubviews {
             view.removeFromSuperview()
         }
@@ -49,9 +66,19 @@ final class PillActionView: UIView {
             let button = UIButton(type: .system)
             button.tag = i
             button.addTarget(self, action: #selector(invokeAction(_:)), for: .touchUpInside)
-            button.setTitle(action, for: .normal)
-            button.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
-            button.setTitleColor(R.color.text(), for: .normal)
+            var configuration: UIButton.Configuration = .plain()
+            var attributes = AttributeContainer()
+            attributes.font = UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 16, weight: .semibold)
+            )
+            attributes.foregroundColor = switch action.style {
+            case .normal:
+                R.color.text()
+            case .destructive:
+                R.color.error_red()
+            }
+            configuration.attributedTitle = AttributedString(action.title, attributes: attributes)
+            button.configuration = configuration
             stackView.addArrangedSubview(button)
         }
         

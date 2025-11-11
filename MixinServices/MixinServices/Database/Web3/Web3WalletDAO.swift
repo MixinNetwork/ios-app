@@ -30,6 +30,10 @@ public final class Web3WalletDAO: Web3DAO {
         }
     }
     
+    public func wallets() -> [Web3Wallet] {
+        db.select(with: "SELECT * FROM wallets")
+    }
+    
     public func walletIDs() -> [String] {
         db.select(with: "SELECT wallet_id FROM wallets")
     }

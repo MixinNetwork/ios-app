@@ -171,4 +171,8 @@ extension Web3TokenSenderSelectorViewController: TransferWalletSelectorViewContr
         }
     }
     
+    func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectMultipleWallets wallets: [Wallet]) {
+        
+    }
+    
 }

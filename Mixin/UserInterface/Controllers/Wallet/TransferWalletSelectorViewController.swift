@@ -6,11 +6,20 @@ final class TransferWalletSelectorViewController: UIViewController {
     
     protocol Delegate: AnyObject {
         func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectWallet wallet: Wallet)
+        func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectMultipleWallets wallets: [Wallet])
     }
     
     enum Intent {
-        case pickSender // Will eliminate any wallet without secret
+        
+        // Multiple selections, all wallets
+        case pickSwapOrderFilter(selectedWallets: [Wallet])
+        
+        // Single selection, wallets with secret only
+        case pickSender
+        
+        // Single selection, all wallets
         case pickReceiver
+        
     }
     
     private enum Section: Int, CaseIterable {
@@ -33,8 +42,8 @@ final class TransferWalletSelectorViewController: UIViewController {
     private weak var tipsPageControl: UIPageControl?
     
     private let intent: Intent
-    private let excludingWallet: Wallet
-    private let chainID: String
+    private let excludingWallet: Wallet?
+    private let chainID: String?
     
     private var walletDigests: [WalletDigest] = []
     private var searchObserver: AnyCancellable?
@@ -49,7 +58,11 @@ final class TransferWalletSelectorViewController: UIViewController {
         }
     }
     
-    init(intent: Intent, excluding wallet: Wallet, supportingChainWith chainID: String) {
+    init(
+        intent: Intent,
+        excluding wallet: Wallet?,
+        supportingChainWith chainID: String? // nil for all chains
+    ) {
         self.intent = intent
         self.excludingWallet = wallet
         self.chainID = chainID
@@ -81,6 +94,30 @@ final class TransferWalletSelectorViewController: UIViewController {
                 self.search(keyword: keyword)
             }
         cancelButton.configuration?.title = R.string.localizable.cancel()
+        switch intent {
+        case .pickSwapOrderFilter:
+            let trayView = R.nib.authenticationPreviewDoubleButtonTrayView(withOwner: nil)!
+            trayView.backgroundColor = R.color.background_secondary()
+            UIView.performWithoutAnimation {
+                trayView.leftButton.setTitle(R.string.localizable.reset(), for: .normal)
+                trayView.leftButton.layoutIfNeeded()
+                trayView.rightButton.setTitle(R.string.localizable.apply(), for: .normal)
+                trayView.rightButton.layoutIfNeeded()
+            }
+            view.addSubview(trayView)
+            trayView.snp.makeConstraints { make in
+                make.top.equalTo(collectionView.snp.bottom)
+                make.leading.trailing.bottom.equalTo(view)
+            }
+            trayView.leftButton.addTarget(self, action: #selector(resetSelections(_:)), for: .touchUpInside)
+            trayView.rightButton.addTarget(self, action: #selector(applySelections(_:)), for: .touchUpInside)
+            collectionView.allowsMultipleSelection = true
+        case .pickSender, .pickReceiver:
+            collectionView.snp.makeConstraints { make in
+                make.bottom.equalToSuperview()
+            }
+            collectionView.allowsMultipleSelection = false
+        }
         collectionView.register(R.nib.walletCell)
         collectionView.register(
             WalletTipCollectionViewCell.self,
@@ -127,7 +164,6 @@ final class TransferWalletSelectorViewController: UIViewController {
                 return section
             }
         }
-        collectionView.allowsMultipleSelection = false
         collectionView.dataSource = self
         collectionView.delegate = self
         DispatchQueue.global().async { [intent, excludingWallet, chainID] in
@@ -141,6 +177,8 @@ final class TransferWalletSelectorViewController: UIViewController {
             let web3Wallets = Web3WalletDAO.shared.walletDigests()
             
             var digests: [WalletDigest] = switch excludingWallet {
+            case .none:
+                [TokenDAO.shared.walletDigest()] + web3Wallets
             case .privacy:
                 web3Wallets
             case .common:
@@ -166,16 +204,35 @@ final class TransferWalletSelectorViewController: UIViewController {
                         }
                     }
                 }
-            case .pickReceiver:
-                digests.removeAll { digest in
-                    !digest.supportedChainIDs.contains(chainID)
+            case .pickSwapOrderFilter, .pickReceiver:
+                if let chainID {
+                    digests.removeAll { digest in
+                        !digest.supportedChainIDs.contains(chainID)
+                    }
                 }
+            }
+            
+            let selectedIndices: [Int]? = switch intent {
+            case .pickSwapOrderFilter(let selectedWallets):
+                digests.indices.filter { index in
+                    selectedWallets.contains(digests[index].wallet)
+                }
+            case .pickSender, .pickReceiver:
+                nil
             }
             
             DispatchQueue.main.async {
                 self.walletDigests = digests
                 self.secretAvailableWalletIDs = secretAvailableWalletIDs
                 self.collectionView.reloadData()
+                if let selectedIndices {
+                    let indexPaths = selectedIndices.map { item in
+                        IndexPath(item: item, section: Section.wallets.rawValue)
+                    }
+                    for indexPath in indexPaths {
+                        self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                    }
+                }
             }
         }
         
@@ -202,6 +259,26 @@ final class TransferWalletSelectorViewController: UIViewController {
         } else if keyword != searchingKeyword {
             searchBoxView.isBusy = true
         }
+    }
+    
+    @objc private func resetSelections(_ sender: Any) {
+        guard let indexPaths = collectionView.indexPathsForSelectedItems else {
+            return
+        }
+        for indexPath in indexPaths {
+            collectionView.deselectItem(at: indexPath, animated: false)
+        }
+    }
+    
+    @objc private func applySelections(_ sender: Any) {
+        guard let indexPaths = collectionView.indexPathsForSelectedItems, !indexPaths.isEmpty else {
+            return
+        }
+        let digests = searchResults ?? walletDigests
+        let wallets = indexPaths.map { indexPath in
+            digests[indexPath.item].wallet
+        }
+        delegate?.transferWalletSelectorViewController(self, didSelectMultipleWallets: wallets)
     }
     
     @objc private func reloadTips() {
@@ -304,6 +381,12 @@ extension TransferWalletSelectorViewController: UICollectionViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .wallets:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet, for: indexPath)!
+            switch intent {
+            case .pickSwapOrderFilter:
+                cell.accessory = .selection
+            case .pickSender, .pickReceiver:
+                cell.accessory = .disclosure
+            }
             let digest = if let searchResults {
                 searchResults[indexPath.row]
             } else {
@@ -335,7 +418,17 @@ extension TransferWalletSelectorViewController: UICollectionViewDataSource {
 
 extension TransferWalletSelectorViewController: UICollectionViewDelegate {
     
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        Section(rawValue: indexPath.section) == .wallets
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch intent {
+        case .pickSwapOrderFilter:
+            return
+        case .pickReceiver, .pickSender:
+            break
+        }
         let digest = if let searchResults {
             searchResults[indexPath.row]
         } else {

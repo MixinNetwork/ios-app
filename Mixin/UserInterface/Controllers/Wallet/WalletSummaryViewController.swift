@@ -295,6 +295,7 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
             return cell
         case .wallets:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet, for: indexPath)!
+            cell.accessory = .disclosure
             switch indexPath.item {
             case 0:
                 if let digest = privacyWalletDigest {

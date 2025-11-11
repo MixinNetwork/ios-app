@@ -15,24 +15,20 @@ final class SwapOrderHeaderCell: UITableViewCell {
         stateLabel.layer.cornerRadius = 4
         stateLabel.layer.masksToBounds = true
         stateLabel.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-        actionView.actions = [
-            R.string.localizable.swap_again(),
-            R.string.localizable.share_pair(),
-        ]
     }
     
-    func load(order: SwapOrderItem) {
-        iconView.setTokenIcon(pay: order.payIconURL, receive: order.receiveIconURL)
-        symbolLabel.text = order.exchangingSymbolRepresentation
-        stateLabel.text = order.state.localizedDescription
-        switch order.state.knownCase {
+    func load(viewModel: SwapOrderViewModel) {
+        iconView.setTokenIcon(pay: viewModel.payToken?.iconURL, receive: viewModel.receiveToken?.iconURL)
+        symbolLabel.text = viewModel.exchangingSymbolRepresentation
+        stateLabel.text = viewModel.state.localizedDescription
+        switch viewModel.state.knownCase {
         case .success:
             stateLabel.textColor = R.color.market_green()
             stateLabel.backgroundColor = R.color.market_green()!.withAlphaComponent(0.2)
-        case .pending, .none:
+        case .created, .pending, .none:
             stateLabel.textColor = R.color.text_secondary()
             stateLabel.backgroundColor = R.color.button_background_disabled()
-        case .failed:
+        case .failed, .cancelled, .expired:
             stateLabel.textColor = R.color.market_red()
             stateLabel.backgroundColor = R.color.market_red()!.withAlphaComponent(0.2)
         }

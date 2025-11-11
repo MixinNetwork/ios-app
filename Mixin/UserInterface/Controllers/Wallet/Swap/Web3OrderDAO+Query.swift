@@ -1,0 +1,124 @@
+import Foundation
+import GRDB
+import MixinServices
+
+extension Web3OrderDAO {
+    
+    enum Offset: CustomDebugStringConvertible {
+        
+        case before(offset: SwapOrderViewModel, includesOffset: Bool)
+        case after(offset: SwapOrderViewModel, includesOffset: Bool)
+        
+        var debugDescription: String {
+            switch self {
+            case .before(let offset, let includesOffset):
+                "<Offset before: \(offset), include: \(includesOffset)>"
+            case .after(let offset, let includesOffset):
+                "<Offset after: \(offset), include: \(includesOffset)>"
+            }
+        }
+        
+    }
+    
+    // The returned data will be ordered according to its display sequence.
+    // For example, when requesting `newest`, the first item will be the most recent;
+    // When requesting `biggestAmount`, the first item will have the largest amount.
+    func orders(
+        offset: Offset? = nil,
+        filter: SwapOrder.Filter,
+        order: SwapOrder.Sorting,
+        limit: Int
+    ) -> [SwapOrder] {
+        var query = GRDB.SQL(sql: "SELECT * FROM orders\n")
+        
+        var conditions: [GRDB.SQL] = []
+        
+        if !filter.wallets.isEmpty {
+            let walletIDs = filter.wallets.map { wallet in
+                switch wallet {
+                case .privacy:
+                    myUserId
+                case .common(let wallet):
+                    wallet.walletID
+                }
+            }
+            conditions.append("wallet_id IN \(walletIDs)")
+        }
+        
+        if let type = filter.type {
+            switch type {
+            case .swap:
+                conditions.append("order_type = '\(SwapOrder.OrderType.swap.rawValue)'")
+            case .limit:
+                conditions.append("order_type = '\(SwapOrder.OrderType.limit.rawValue)'")
+            }
+        }
+        
+        switch filter.status {
+        case .none:
+            break
+        case .pending:
+            let states: [SwapOrder.State] = [.created, .pending]
+            conditions.append("state IN \(states.map(\.rawValue))")
+        case .done:
+            let states: [SwapOrder.State] = [.success]
+            conditions.append("state IN \(states.map(\.rawValue))")
+        case .other:
+            let states: [SwapOrder.State] = [.success]
+            conditions.append("state IN \(states.map(\.rawValue))")
+        }
+        
+        if let startDate = filter.startDate?.toUTCString() {
+            conditions.append("created_at >= \(startDate)")
+        }
+        if let endDate = filter.endDate?.toUTCString() {
+            conditions.append("created_at <= \(endDate)")
+        }
+        
+        if let offset {
+            switch (order, offset) {
+            case let (.oldest, .after(offset, includesOffset)), let (.newest, .before(offset, includesOffset)):
+                if includesOffset {
+                    conditions.append("created_at >= \(offset.createdAt)")
+                } else {
+                    conditions.append("created_at > \(offset.createdAt)")
+                }
+            case let (.oldest, .before(offset, includesOffset)), let (.newest, .after(offset, includesOffset)):
+                if includesOffset {
+                    conditions.append("created_at <= \(offset.createdAt)")
+                } else {
+                    conditions.append("created_at < \(offset.createdAt)")
+                }
+            }
+        }
+        if !conditions.isEmpty {
+            query.append(literal: "WHERE \(conditions.joined(operator: .and))\n")
+        }
+        
+        let reverseResults: Bool
+        switch (order, offset) {
+        case (.newest, .after), (.newest, .none):
+            query.append(sql: "ORDER BY created_at DESC")
+            reverseResults = false
+        case (.newest, .before):
+            query.append(sql: "ORDER BY created_at ASC")
+            reverseResults = true
+        case (.oldest, .after), (.oldest, .none):
+            query.append(sql: "ORDER BY created_at ASC")
+            reverseResults = false
+        case (.oldest, .before):
+            query.append(sql: "ORDER BY created_at DESC")
+            reverseResults = true
+        }
+        
+        query.append(literal: "\nLIMIT \(limit)")
+        
+        let results: [SwapOrder] = db.select(with: query)
+        if reverseResults {
+            return results.reversed()
+        } else {
+            return results
+        }
+    }
+    
+}

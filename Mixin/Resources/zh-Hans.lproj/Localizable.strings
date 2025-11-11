@@ -233,6 +233,7 @@
 "camera" = "相机";
 "cancel" = "取消";
 "cancel_floating" = "取消浮窗";
+"cancel_order" = "取消订单";
 "cancel_transaction" = "取消交易";
 "cancel_transaction_description" = "如果交易已接近完成，可能无法取消";
 "cancel_waiting" = "取消订单";
@@ -778,6 +779,7 @@
 "lightning_address_explain_2" = "可重复使用，无需每次生成新的。";
 "lightning_address_explain_3" = "主流闪电网络钱包都支持。";
 "lightning_address_explain_mao" = "每一个 MAO 域名对应一个闪电网络地址，如果您拥有 MAO 域名，可以按 name@mao.id 格式接收闪电网络转账。";
+"limit_price" = "限定价格";
 "limited_time_free" = "限时免费";
 "limited_time_free_condition" = "活动期间，钱包转账符合以下任意情况即可获得手续费全额返现：";
 "limited_time_free_condition_1" = "隐私钱包转账到普通钱包。";
@@ -1420,6 +1422,7 @@
 "swap_expiry" = "过期";
 "swap_expiry_never" = "永不";
 "swap_failed" = "交易失败";
+"swap_filled" = "已成交";
 "swap_invalid_amount" = "没有报价。请尝试修改金额。";
 "swap_message_success" = "您的交易已发送至网络，将很快被处理。";
 "swap_no_available_quote" = "没有报价。请尝试切换币种。";
@@ -1539,6 +1542,7 @@
 "unit_second_count" = "秒";
 "unit_week" = "周";
 "unit_week_count" = "周";
+"unknown" = "未知";
 "unknown_artist" = "未知艺术家";
 "unlimited_authorization_warning" = "这个应用可以提取你 %1$@ 账号（%2$@）里所有的 %3$@ 资产。";
 "unmute" = "取消静音";
@@ -1643,6 +1647,7 @@
 "wallet_withdrawal_changed" = "手续费已从 %1$@ 变更为 %2$@，要更新手续费并继续提现吗？";
 "wallet_withdrawal_recent_tip" = "你已经在 %1$@ 前提现 %3$@ 到 %2$@，确认还要再提一次吗？";
 "wallets" = "钱包";
+"wallets_count" = "%d 个钱包";
 "watch_address" = "观察 %@";
 "watch_wallet" = "观察钱包";
 "watch_wallet_description" = "你无法使用观察钱包中的资产，但可以追踪它们。 ";

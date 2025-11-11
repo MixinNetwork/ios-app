@@ -3,6 +3,7 @@ import MixinServices
 
 struct LimitOrderRequest {
     
+    let walletID: String
     let assetID: String
     let amount: String
     let receiveAssetID: String
@@ -10,12 +11,14 @@ struct LimitOrderRequest {
     let expireAt: String
     
     init(
+        walletID: String,
         assetID: String,
         amount: Decimal,
         receiveAssetID: String,
         expectedReceiveAmount: Decimal,
         expireAt: Date,
     ) {
+        self.walletID = walletID
         self.assetID = assetID
         self.amount = TokenAmountFormatter.string(from: amount)
         self.receiveAssetID = receiveAssetID
@@ -28,6 +31,7 @@ struct LimitOrderRequest {
 extension LimitOrderRequest: Encodable {
     
     enum CodingKeys: String, CodingKey {
+        case walletID = "wallet_id"
         case assetID = "asset_id"
         case amount
         case receiveAssetID = "receive_asset_id"

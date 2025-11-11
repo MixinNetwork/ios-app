@@ -51,7 +51,9 @@ final class TokenPriceChartCell: UITableViewCell {
                 tokenActionViewBottomConstraint.priority = .defaultLow
             } else {
                 tokenActionView.isHidden = false
-                tokenActionView.actions = tokenActions.map(\.title)
+                tokenActionView.actions = tokenActions.map { action in
+                        .init(title: action.title)
+                }
                 periodSelectorScrollViewBottomConstraint.priority = .defaultLow
                 tokenActionViewBottomConstraint.priority = .defaultHigh
             }

@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 final class SwapExpirySelectorCell: UICollectionViewCell {
     
@@ -14,13 +15,13 @@ final class SwapExpirySelectorCell: UICollectionViewCell {
         return container
     }()
     
-    var selectedExpiry: LimitOrder.Expiry = .never {
+    var selectedExpiry: SwapOrder.Expiry = .never {
         didSet {
             button.configuration?.attributedTitle = AttributedString(
                 selectedExpiry.localizedName,
                 attributes: buttonAttributes
             )
-            button.menu = UIMenu(children: LimitOrder.Expiry.allCases.map { expiry in
+            button.menu = UIMenu(children: SwapOrder.Expiry.allCases.map { expiry in
                 UIAction(
                     title: expiry.localizedName,
                     state: selectedExpiry == expiry ? .on : .off,
@@ -36,7 +37,7 @@ final class SwapExpirySelectorCell: UICollectionViewCell {
         }
     }
     
-    var onChange: ((LimitOrder.Expiry) -> Void)?
+    var onChange: ((SwapOrder.Expiry) -> Void)?
     
     override func awakeFromNib() {
         super.awakeFromNib()

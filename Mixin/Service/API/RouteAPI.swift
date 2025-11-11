@@ -80,30 +80,30 @@ extension RouteAPI {
     }
     
     static func limitOrders(
-        category: LimitOrder.Category,
+        category: SwapOrder.Category,
         limit: Int,
         offset: String?,
-        completion: @escaping (MixinAPI.Result<[LimitOrder]>) -> Void
+        completion: @escaping (MixinAPI.Result<[SwapOrder]>) -> Void
     ) {
-        var path = "/web3/limit_orders?category=\(category)&limit=\(limit)"
+        var path = "/web3/swap/orders?category=\(category)&limit=\(limit)"
         if let offset {
             path.append("&offset=\(offset)")
         }
         request(method: .get, path: path, completion: completion)
     }
     
-    static func limitOrder(
+    static func swapOrder(
         id: String,
-        completion: @escaping (MixinAPI.Result<LimitOrder>) -> Void
+        completion: @escaping (MixinAPI.Result<SwapOrder>) -> Void
     ) {
         request(method: .get, path: "/web3/limit_orders/\(id)", completion: completion)
     }
     
-    static func cancelLimitOrder(
+    static func cancelSwapOrder(
         id: String,
-        completion: @escaping (MixinAPI.Result<LimitOrder>) -> Void
+        completion: @escaping (MixinAPI.Result<SwapOrder>) -> Void
     ) {
-        request(method: .get, path: "/web3/limit_orders/\(id)/cancel", completion: completion)
+        request(method: .post, path: "/web3/limit_orders/\(id)/cancel", completion: completion)
     }
     
 }

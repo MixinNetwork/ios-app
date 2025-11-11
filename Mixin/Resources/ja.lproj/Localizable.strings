@@ -233,6 +233,7 @@
 "camera" = "カメラ";
 "cancel" = "キャンセル";
 "cancel_floating" = "フローティングのキャンセル";
+"cancel_order" = "Cancel Order";
 "cancel_transaction" = "Cancel Transaction";
 "cancel_transaction_description" = "If the transaction is too far along cancellation may not be possible";
 "cancel_waiting" = "Cancel Waiting";
@@ -778,6 +779,7 @@
 "lightning_address_explain_2" = "Reusable, no need to generate a new one each time.";
 "lightning_address_explain_3" = "Supported by mainstream Lightning Network wallets.";
 "lightning_address_explain_mao" = "Each MAO domain corresponds to a Lightning Network address. If you own a MAO domain, you can use name@mao.id to receive Lightning Network transfers. ";
+"limit_price" = "Limit Price";
 "limited_time_free" = "Limited-Time Free";
 "limited_time_free_condition" = "During the promotion period, you’ll receive a full refund of transaction fees if your transfer meets any of the following conditions:";
 "limited_time_free_condition_1" = "Privacy Wallet transfer to a Common Wallet.";
@@ -1420,6 +1422,7 @@
 "swap_expiry" = "Expiry";
 "swap_expiry_never" = "Never";
 "swap_failed" = "Swap Failed";
+"swap_filled" = "Filled";
 "swap_invalid_amount" = "No available quote found. Please try a different amount.";
 "swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
 "swap_no_available_quote" = "No available quote found. Please try a different token.";
@@ -1539,6 +1542,7 @@
 "unit_second_count" = "秒間";
 "unit_week" = "週";
 "unit_week_count" = "週間";
+"unknown" = "不明";
 "unknown_artist" = "不明なアーティスト";
 "unlimited_authorization_warning" = "This application can access all %3$@ in your %1$@ account (%2$@).";
 "unmute" = "ミュート解除";
@@ -1643,6 +1647,7 @@
 "wallet_withdrawal_changed" = "出金手数料が%1$@から%2$@へ変更されました。このまま出金を行いますか？";
 "wallet_withdrawal_recent_tip" = "あなたは%1$@に同額の出金を%2$@へ送っています。再度%3$@を出金しますか？";
 "wallets" = "ウォレット";
+"wallets_count" = "%d Wallets";
 "watch_address" = "Watch %@";
 "watch_wallet" = "Watch Wallet";
 "watch_wallet_description" = "You are unable to control assets in a watch-only wallet, but you can track them. ";

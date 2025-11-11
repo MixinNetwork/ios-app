@@ -109,7 +109,7 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
         }
         layoutTableHeaderView(title: title, subtitle: subtitle)
         tableHeaderView.titleLabel.textColor = R.color.red()
-        tableHeaderView.subtitleLabel.textColor = R.color.red()
+        tableHeaderView.subtitleTextView.textColor = R.color.red()
         
         var rows: [Row]
         switch intent {

@@ -742,6 +742,8 @@
 "invite_info" = "Любой, у кого есть Mixin, может перейти по этой ссылке, чтобы присоединиться к этой группе. Делитесь ею только с теми, кому вы доверяете.";
 "invite_to_group_via_link" = "Пригласить в группу по ссылке";
 "invited_by_stranger" = "Приглашающего нет в ваших контактах";
+"invitee_commission" = "Invitee Commission";
+"inviter" = "Inviter";
 "invites_you_to_a_voice_call" = "приглашает вас на голосовой вызов";
 "invoice" = "Invoice";
 "invoice_renew_plan" = "Renew %@ Plan";
@@ -1064,6 +1066,7 @@
 "preauthorize_amount" = "Pre-authorize Amount";
 "preparing" = "Подготовка...";
 "preparing_progress" = "Подготовка...(%@)";
+"preview" = "Preview";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
 "price_change_24h" = "24h Price Change";
@@ -1123,11 +1126,8 @@
 "referral_banner" = "Invite friends and earn up to 60%% of their trading fees!";
 "referral_code" = "Referral Code";
 "referral_code_applied" = "Applied";
-"referral_code_applied_footer" = "The fees are refunded monthly to your Mixin privacy wallet, summarized by the actual fee tokens and amounts consumed. Read the documentation to learn more.";
-"referral_code_applied_header" = "🎉 Referral code successfully applied! You’ve unlocked the following benefits:";
-"referral_code_applied_introduction_1" = "Up to 50%% cashback on trading fees";
-"referral_code_applied_introduction_2" = "Up to 1,000 USD cashback per transaction when upgrading membership";
-"referral_code_applied_introduction_3" = "Automatic access to all future new benefits";
+"referral_code_applied_header" = "The fees are refunded monthly to your Mixin privacy wallet, summarized by the actual fee tokens and amounts consumed. Read the documentation to learn more.";
+"referral_code_applying_failed" = "Applying Failed";
 "referral_description" = "Invite friends earn crypto";
 "referral_program_introduction_1" = "Up to 60%% commission on trading fees";
 "referral_program_introduction_2" = "Membership commission rebate up to 1,000 USD per order";

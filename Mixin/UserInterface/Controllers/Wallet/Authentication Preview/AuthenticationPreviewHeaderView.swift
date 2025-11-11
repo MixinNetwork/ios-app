@@ -11,7 +11,7 @@ final class AuthenticationPreviewHeaderView: UIView {
     @IBOutlet weak var iconWrapperView: UIView!
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var subtitleTextView: UITextView!
     
     @IBOutlet weak var titleStackViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleStackViewTrailingConstraint: NSLayoutConstraint!
@@ -39,8 +39,10 @@ final class AuthenticationPreviewHeaderView: UIView {
         super.awakeFromNib()
         titleLabel.setFont(scaledFor: .systemFont(ofSize: 18, weight: .medium),
                            adjustForContentSize: true)
-        subtitleLabel.setFont(scaledFor: .systemFont(ofSize: 14, weight: .regular),
-                              adjustForContentSize: true)
+        subtitleTextView.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+        subtitleTextView.adjustsFontForContentSizeCategory = true
+        subtitleTextView.textContainerInset = .zero
+        subtitleTextView.textContainer.lineFragmentPadding = 0
     }
     
     func setIcon(setter: (UIImageView) -> Void) {

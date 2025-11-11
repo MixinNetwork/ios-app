@@ -197,14 +197,14 @@ final class ExploreBotsViewController: UITableViewController {
                 self.indexedUsers = indexedUsers
                 self.tableView.performBatchUpdates {
                     var lastSectionIndex = self.numberOfSections(in: self.tableView) - 1
-                    if lastSectionIndex > 2 {
+                    if lastSectionIndex >= 2 {
                         self.indexTitles = nil
                         self.tableView.deleteSections(IndexSet(integersIn: 2...lastSectionIndex), with: .none)
                     }
                     
                     self.indexTitles = titles
                     lastSectionIndex = self.numberOfSections(in: self.tableView) - 1
-                    if lastSectionIndex > 2 {
+                    if lastSectionIndex >= 2 {
                         self.tableView.insertSections(IndexSet(integersIn: 2...lastSectionIndex), with: .none)
                     }
                 }

@@ -15,6 +15,9 @@ final class PaymentUserGroupCell: UITableViewCell {
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var captionLabel: UILabel!
     
+    @IBOutlet weak var contentLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contentTrailingConstraint: NSLayoutConstraint!
+    
     weak var delegate: PaymentUserGroupCellDelegate?
     
     private var users: [UserItem] = []

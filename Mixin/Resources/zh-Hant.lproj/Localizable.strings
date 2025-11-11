@@ -575,7 +575,7 @@
 "error_invalid_quote_amount" = "錯誤 10614: 輸入金額太小或太大，請重新輸入。";
 "error_invalid_referral_code" = "錯誤 10730：無效的邀請碼";
 "error_invalid_swap" = "錯誤 10611: 暫無報價，請稍後重試。";
-"error_inviter_plan_expired" = "錯誤 10737：繫結失敗，邀請人的會員已過期";
+"error_inviter_plan_expired" = "錯誤 10737：邀請人的會員已過期";
 "error_legacy_pin" = "錯誤 20118：為了加強 Mixin 網路的安全，Mixin API 現已暫停 D3M-PIN 升級到 TIP，詳情請檢視檔案並登記等待處理。";
 "error_network_task_failed" = "網路連線失敗。檢查或切換網路並重試";
 "error_no_available_quote" = "錯誤 10615: 暫不支援該交易對，請嘗試切換幣種。";
@@ -742,6 +742,8 @@
 "invite_info" = "Mixin 使用者可以使用此連結加入這個群組，請只跟您信任的人共享連結。";
 "invite_to_group_via_link" = "群邀請連結";
 "invited_by_stranger" = "邀請人不是你的聯絡人";
+"invitee_commission" = "被邀請人返現";
+"inviter" = "邀請人";
 "invites_you_to_a_voice_call" = "發起了語音通話";
 "invoice" = "賬單";
 "invoice_renew_plan" = "續訂%@會員";
@@ -1064,6 +1066,7 @@
 "preauthorize_amount" = "預授權額度";
 "preparing" = "正在準備...";
 "preparing_progress" = "備份中...（%@）";
+"preview" = "預覽";
 "price" = "價格";
 "price_alert_notification_permission" = "價格預警需要開啟通知許可權";
 "price_change_24h" = "24 小時價格變化";
@@ -1123,11 +1126,8 @@
 "referral_banner" = "邀請好友贏取最高 60%% 手續費分傭！";
 "referral_code" = "邀請碼";
 "referral_code_applied" = "繫結成功";
-"referral_code_applied_footer" = "手續費按月、按實際消耗的手續費幣種和金額彙總返還到您的 Mixin 隱私錢包，閱讀檔案瞭解更多。";
-"referral_code_applied_header" = "🎉 邀請碼繫結成功，您已自動獲得以下權益：";
-"referral_code_applied_introduction_1" = "最高 50%% 交易手續費返現";
-"referral_code_applied_introduction_2" = "升級會員返現單筆最高 1000 USD";
-"referral_code_applied_introduction_3" = "自動獲得後續所有新權益";
+"referral_code_applied_header" = "手續費按月、按實際消耗的手續費幣種和金額彙總返還到您的 Mixin 隱私錢包，閱讀檔案瞭解更多。";
+"referral_code_applying_failed" = "繫結失敗";
 "referral_description" = "邀請好友賺幣";
 "referral_program_introduction_1" = "最高 60%% 交易手續費分傭";
 "referral_program_introduction_2" = "會員返佣單筆最高 1000 USD";

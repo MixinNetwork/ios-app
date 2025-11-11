@@ -875,10 +875,8 @@
 		944076032E2EA5D000591B45 /* WalletWatchingIndicatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944076022E2EA5D000591B45 /* WalletWatchingIndicatorView.xib */; };
 		944124A42E715CEB00705462 /* EnableNotificationHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944124A32E715CEB00705462 /* EnableNotificationHeaderView.swift */; };
 		944124A92E715CF600705462 /* EnableNotificationHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944124A82E715CF600705462 /* EnableNotificationHeaderView.xib */; };
-		9441E1EB2E8570C200526B0D /* ApplyReferralCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9441E1E92E8570C200526B0D /* ApplyReferralCodeViewController.swift */; };
-		9441E1EC2E8570C200526B0D /* ApplyReferralCodeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9441E1EA2E8570C200526B0D /* ApplyReferralCodeView.xib */; };
-		9441E2102E858DE400526B0D /* ReferralCodeAppliedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9441E20E2E858DE400526B0D /* ReferralCodeAppliedViewController.swift */; };
-		9441E2112E858DE400526B0D /* ReferralCodeAppliedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9441E20F2E858DE400526B0D /* ReferralCodeAppliedView.xib */; };
+		9441E1EB2E8570C200526B0D /* InputReferralCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9441E1E92E8570C200526B0D /* InputReferralCodeViewController.swift */; };
+		9441E1EC2E8570C200526B0D /* InputReferralCodeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9441E1EA2E8570C200526B0D /* InputReferralCodeView.xib */; };
 		94425FE72DD498FB003F46DF /* MaliciousTokenWarningCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94425FE42DD498FB003F46DF /* MaliciousTokenWarningCell.swift */; };
 		944263832DD64337003F46DF /* Web3ReputationPickerActionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944263822DD64337003F46DF /* Web3ReputationPickerActionCell.xib */; };
 		944263B42DD648AD003F46DF /* Web3ReputationPickerActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944263B32DD648AB003F46DF /* Web3ReputationPickerActionCell.swift */; };
@@ -1110,6 +1108,7 @@
 		947084B42D93F891007DF965 /* InvoicePaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947084B32D93F88F007DF965 /* InvoicePaymentOperation.swift */; };
 		947084C52D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947084C42D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift */; };
 		9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */; };
+		9471007D2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9471007C2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift */; };
 		94735E182E28E8D30001C179 /* ExportPrivateKeyNetworkSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94735E172E28E8D30001C179 /* ExportPrivateKeyNetworkSelectorViewController.swift */; };
 		94735E272E28EBF80001C179 /* ImportedWalletNetworkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94735E262E28EBF80001C179 /* ImportedWalletNetworkCell.xib */; };
 		94735E282E28EBF80001C179 /* ImportedWalletNetworkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94735E252E28EBF80001C179 /* ImportedWalletNetworkCell.swift */; };
@@ -2615,10 +2614,8 @@
 		944076022E2EA5D000591B45 /* WalletWatchingIndicatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletWatchingIndicatorView.xib; sourceTree = "<group>"; };
 		944124A32E715CEB00705462 /* EnableNotificationHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableNotificationHeaderView.swift; sourceTree = "<group>"; };
 		944124A82E715CF600705462 /* EnableNotificationHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EnableNotificationHeaderView.xib; sourceTree = "<group>"; };
-		9441E1E92E8570C200526B0D /* ApplyReferralCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyReferralCodeViewController.swift; sourceTree = "<group>"; };
-		9441E1EA2E8570C200526B0D /* ApplyReferralCodeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ApplyReferralCodeView.xib; sourceTree = "<group>"; };
-		9441E20E2E858DE400526B0D /* ReferralCodeAppliedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralCodeAppliedViewController.swift; sourceTree = "<group>"; };
-		9441E20F2E858DE400526B0D /* ReferralCodeAppliedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReferralCodeAppliedView.xib; sourceTree = "<group>"; };
+		9441E1E92E8570C200526B0D /* InputReferralCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputReferralCodeViewController.swift; sourceTree = "<group>"; };
+		9441E1EA2E8570C200526B0D /* InputReferralCodeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InputReferralCodeView.xib; sourceTree = "<group>"; };
 		94425FE42DD498FB003F46DF /* MaliciousTokenWarningCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaliciousTokenWarningCell.swift; sourceTree = "<group>"; };
 		944263822DD64337003F46DF /* Web3ReputationPickerActionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3ReputationPickerActionCell.xib; sourceTree = "<group>"; };
 		944263B32DD648AB003F46DF /* Web3ReputationPickerActionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3ReputationPickerActionCell.swift; sourceTree = "<group>"; };
@@ -2868,6 +2865,7 @@
 		947084B32D93F88F007DF965 /* InvoicePaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoicePaymentOperation.swift; sourceTree = "<group>"; };
 		947084C42D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonAtomicInvoicePaymentOperation.swift; sourceTree = "<group>"; };
 		9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+General.swift"; sourceTree = "<group>"; };
+		9471007C2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyReferralCodeViewController.swift; sourceTree = "<group>"; };
 		94735E172E28E8D30001C179 /* ExportPrivateKeyNetworkSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPrivateKeyNetworkSelectorViewController.swift; sourceTree = "<group>"; };
 		94735E252E28EBF80001C179 /* ImportedWalletNetworkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedWalletNetworkCell.swift; sourceTree = "<group>"; };
 		94735E262E28EBF80001C179 /* ImportedWalletNetworkCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImportedWalletNetworkCell.xib; sourceTree = "<group>"; };
@@ -4075,10 +4073,9 @@
 				94EDD6132D0C495100BF55EE /* GeneralAppearanceNavigationController.swift */,
 				947059742E698AB10057FBC4 /* ShareObiView.xib */,
 				9470597C2E698B000057FBC4 /* ShareObiView.swift */,
-				9441E1EA2E8570C200526B0D /* ApplyReferralCodeView.xib */,
-				9441E1E92E8570C200526B0D /* ApplyReferralCodeViewController.swift */,
-				9441E20F2E858DE400526B0D /* ReferralCodeAppliedView.xib */,
-				9441E20E2E858DE400526B0D /* ReferralCodeAppliedViewController.swift */,
+				9441E1EA2E8570C200526B0D /* InputReferralCodeView.xib */,
+				9441E1E92E8570C200526B0D /* InputReferralCodeViewController.swift */,
+				9471007C2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -6404,7 +6401,7 @@
 				7BFE47E32284394000FC4379 /* CheckmarkPeerCell.xib in Resources */,
 				DF846CDF2369551D00AA1197 /* MultisigUserCell.xib in Resources */,
 				943CAA242CC82C9E00346677 /* MobileNumberView.xib in Resources */,
-				9441E1EC2E8570C200526B0D /* ApplyReferralCodeView.xib in Resources */,
+				9441E1EC2E8570C200526B0D /* InputReferralCodeView.xib in Resources */,
 				948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */,
 				943CAA422CC8CD7F00346677 /* SignUpMethodCell.xib in Resources */,
 				5E5CA7872674AC8E00C1E113 /* ScreenLockView.xib in Resources */,
@@ -6530,7 +6527,6 @@
 				7B86B1EB23F6A1C000C80AD9 /* DataMessageExtensionIconView.xib in Resources */,
 				9495E0DD2CEF7D6B00124CC7 /* MnemonicPhraseCell.xib in Resources */,
 				943CAA322CC83FFC00346677 /* LoginSeparatorLineView.xib in Resources */,
-				9441E2112E858DE400526B0D /* ReferralCodeAppliedView.xib in Resources */,
 				940C073C2E85061900552130 /* MembershipInviteCell.xib in Resources */,
 				7B600D282453186B001D8146 /* DesktopTableHeaderView.xib in Resources */,
 				944124A92E715CF600705462 /* EnableNotificationHeaderView.xib in Resources */,
@@ -7494,7 +7490,7 @@
 				9419C2E32E6779B900BEAB42 /* DepositAddressGeneratingView.swift in Sources */,
 				7C36BE88274F248C00089B6D /* StickerStoreBannerCell.swift in Sources */,
 				7BBCABAE2524644C00601762 /* HomeOverlayViewController.swift in Sources */,
-				9441E1EB2E8570C200526B0D /* ApplyReferralCodeViewController.swift in Sources */,
+				9441E1EB2E8570C200526B0D /* InputReferralCodeViewController.swift in Sources */,
 				7B9D825922F1BFEA0099381E /* LargeNetworkOperationIconSet.swift in Sources */,
 				9457F7722B6F4186008FC98F /* AuthenticationPreviewSingleButtonTrayView.swift in Sources */,
 				7B08CD2C2178700C00FB8CCF /* CallService.swift in Sources */,
@@ -7829,7 +7825,6 @@
 				7BC681AA1FA1DD5600BAB85F /* UsernameViewController.swift in Sources */,
 				7BB78726245133A40057B4ED /* SettingsHeaderFooterView.swift in Sources */,
 				94D8426C2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift in Sources */,
-				9441E2102E858DE400526B0D /* ReferralCodeAppliedViewController.swift in Sources */,
 				94A1B1DF25BFD7CB0098586D /* LinkLocatingTextView.swift in Sources */,
 				E041065023C6079400A6F08E /* MixinWebViewController.swift in Sources */,
 				7BCEAA7A2350A3A200F07635 /* SharedMediaDataCell.swift in Sources */,
@@ -8257,6 +8252,7 @@
 				7B8BB58A234F28A700991ACB /* SharedMediaGroupedByDateCategorizer.swift in Sources */,
 				941994F62CCC454700F5425C /* ImageTextTableHeaderView.swift in Sources */,
 				94145BB32CD50B3300600AD4 /* ViewRecoveryContactViewController.swift in Sources */,
+				9471007D2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift in Sources */,
 				7B9F810C222EA3690012BFDD /* BackgroundDismissablePopupPresentationManager.swift in Sources */,
 				9414A7882BE78D8700FA35EB /* DecimalAccumulator.swift in Sources */,
 				7C7579D429DC55BF0002DA0B /* TransferToDesktopViewController.swift in Sources */,

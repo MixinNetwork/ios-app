@@ -71,14 +71,14 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
             switch context.operation {
             case .transfer:
                 tableHeaderView.titleLabel.text = R.string.localizable.confirm_transfer()
-                tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+                tableHeaderView.subtitleTextView.text = R.string.localizable.review_transfer_hint()
             case .release:
                 tableHeaderView.titleLabel.text = R.string.localizable.collectible_release_confirmation()
-                tableHeaderView.subtitleLabel.text = R.string.localizable.collectible_release_hint()
+                tableHeaderView.subtitleTextView.text = R.string.localizable.collectible_release_hint()
             }
         case nil:
             tableHeaderView.titleLabel.text = R.string.localizable.confirm_transfer()
-            tableHeaderView.subtitleLabel.text = R.string.localizable.review_transfer_hint()
+            tableHeaderView.subtitleTextView.text = R.string.localizable.review_transfer_hint()
         }
         
         var rows: [Row]

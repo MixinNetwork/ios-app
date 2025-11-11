@@ -111,7 +111,7 @@ final class ReferralIntroductionViewController: UIViewController {
             return
         }
         presentingViewController.dismiss(animated: true) {
-            let input = ApplyReferralCodeViewController(code: nil)
+            let input = InputReferralCodeViewController(code: nil)
             presentingViewController.present(input, animated: true)
         }
     }

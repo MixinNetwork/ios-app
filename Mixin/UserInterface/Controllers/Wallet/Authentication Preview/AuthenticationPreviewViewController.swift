@@ -97,11 +97,11 @@ class AuthenticationPreviewViewController: UIViewController {
     
     func layoutTableHeaderView(title: String, subtitle: String?, style: TableHeaderViewStyle = []) {
         tableHeaderView.titleLabel.text = title
-        tableHeaderView.subtitleLabel.text = subtitle
+        tableHeaderView.subtitleTextView.text = subtitle
         if style.contains(.destructive) {
-            tableHeaderView.subtitleLabel.textColor = R.color.red()
+            tableHeaderView.subtitleTextView.textColor = R.color.red()
         } else {
-            tableHeaderView.subtitleLabel.textColor = R.color.text_secondary()
+            tableHeaderView.subtitleTextView.textColor = R.color.text_secondary()
         }
         layoutTableHeaderView()
     }
@@ -306,6 +306,12 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.captionLabel.text = R.string.localizable.receiver().uppercased()
             cell.addressLabel.text = address
             return cell
+        case let .user(title, user):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.payment_user_group, for: indexPath)!
+            cell.captionLabel.text = title.uppercased()
+            cell.reloadUsers(with: [user], checkmarkCondition: .never)
+            cell.delegate = self
+            return cell
         }
     }
     
@@ -358,6 +364,7 @@ extension AuthenticationPreviewViewController {
         case note
         case balance
         case availableBalance
+        case string(String)
         
         var rawValue: String {
             switch self {
@@ -401,6 +408,8 @@ extension AuthenticationPreviewViewController {
                 R.string.localizable.balance()
             case .availableBalance:
                 R.string.localizable.available_balance()
+            case .string(let value):
+                value
             }
         }
         
@@ -424,6 +433,7 @@ extension AuthenticationPreviewViewController {
         case addressReceivers(MixinTokenItem, [SafeMultisigResponse.Safe.Recipient])
         case wallet(caption: Caption, wallet: Wallet, threshold: Int32?)
         case commonWalletReceiver(user: UserItem, address: String)
+        case user(title: String, user: UserItem)
     }
     
     struct TableHeaderViewStyle: OptionSet {

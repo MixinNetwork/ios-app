@@ -145,7 +145,7 @@ final class MixinSwapViewController: SwapViewController {
     
     @objc private func showOrders(_ sender: Any) {
         showOrdersItem?.showBadge = false
-        let orders = SwapOrderTableViewController()
+        let orders = SwapOrdersViewController(wallet: .privacy)
         navigationController?.pushViewController(orders, animated: true)
     }
     
@@ -216,6 +216,7 @@ final class MixinSwapViewController: SwapViewController {
         }
         reviewButton.isBusy = true
         let request = LimitOrderRequest(
+            walletID: myUserId,
             assetID: sendToken.assetID,
             amount: sendAmount,
             receiveAssetID: receiveToken.assetID,

@@ -1,0 +1,215 @@
+import Foundation
+import MixinServices
+
+struct SwapOrderViewModel {
+    
+    struct AssetChange {
+        let token: SwapOrder.Token?
+        let amount: String
+    }
+    
+    struct Filling {
+        let percentage: String
+        let amount: String
+    }
+    
+    let orderID: String
+    let wallet: Wallet
+    let state: UnknownableEnum<SwapOrder.State>
+    let type: UnknownableEnum<SwapOrder.OrderType>
+    
+    let payAssetID: String
+    let payToken: SwapOrder.Token?
+    let paySymbol: String
+    let paying: AssetChange
+    
+    let receiveAssetID: String
+    let receiveToken: SwapOrder.Token?
+    let receiveSymbol: String
+    let receivings: [AssetChange]
+    
+    let filling: Filling?
+    
+    let receivePrice: String?
+    let sendPrice: String?
+    let expiration: String?
+    let createdAt: String
+    
+    var exchangingSymbolRepresentation: String {
+        paySymbol + " → " + receiveSymbol
+    }
+    
+    init(
+        order: SwapOrder,
+        wallet: Wallet,
+        payToken: SwapOrder.Token?,
+        receiveToken: SwapOrder.Token?,
+    ) {
+        let type = UnknownableEnum<SwapOrder.OrderType>(rawValue: order.orderType)
+        let payAmount = Decimal(string: order.payAmount, locale: .enUSPOSIX) ?? 0
+        let paySymbol = payToken?.symbol ?? "?"
+        let receiveAmount: Decimal? = if let amount = order.receiveAmount {
+            Decimal(string: amount, locale: .enUSPOSIX) ?? 0
+        } else {
+            nil
+        }
+        let receiveSymbol = receiveToken?.symbol ?? "?"
+        
+        self.orderID = order.orderID
+        self.wallet = wallet
+        self.state = .init(rawValue: order.state)
+        self.type = type
+        
+        self.payAssetID = order.payAssetID
+        self.payToken = payToken
+        self.paySymbol = paySymbol
+        self.paying = AssetChange(
+            token: payToken,
+            amount: CurrencyFormatter.localizedString(
+                from: -payAmount,
+                format: .precision,
+                sign: .always,
+                symbol: .custom(paySymbol)
+            )
+        )
+        
+        self.receiveAssetID = order.receiveAssetID
+        self.receiveToken = receiveToken
+        self.receiveSymbol = receiveSymbol
+        
+        switch type.knownCase {
+        case .swap, .none:
+            self.filling = nil
+            if let receiveAmount {
+                self.receivings = [AssetChange(
+                    token: receiveToken,
+                    amount: CurrencyFormatter.localizedString(
+                        from: receiveAmount,
+                        format: .precision,
+                        sign: .always,
+                        symbol: .custom(receiveSymbol)
+                    )
+                )]
+                self.receivePrice = SwapQuote.priceRepresentation(
+                    sendAmount: payAmount,
+                    sendSymbol: paySymbol,
+                    receiveAmount: receiveAmount,
+                    receiveSymbol: receiveSymbol,
+                    unit: .receive
+                )
+                self.sendPrice = SwapQuote.priceRepresentation(
+                    sendAmount: payAmount,
+                    sendSymbol: paySymbol,
+                    receiveAmount: receiveAmount,
+                    receiveSymbol: receiveSymbol,
+                    unit: .send
+                )
+            } else {
+                self.receivings = []
+                self.receivePrice = nil
+                self.sendPrice = nil
+            }
+        case .limit:
+            guard
+                let value = order.expectedReceiveAmount,
+                let expectedReceiveAmount = Decimal(string: value, locale: .enUSPOSIX)
+            else {
+                self.receivings = []
+                self.filling = nil
+                self.receivePrice = nil
+                self.sendPrice = nil
+                break
+            }
+            
+            var receivings = [
+                AssetChange(
+                    token: receiveToken,
+                    amount: CurrencyFormatter.localizedString(
+                        from: expectedReceiveAmount,
+                        format: .precision,
+                        sign: .always,
+                        symbol: .custom(receiveSymbol)
+                    )
+                )
+            ]
+            switch state.knownCase {
+            case .created, .pending, .success:
+                break
+            case .failed, .cancelled, .expired, .none:
+                if let value = order.pendingAmount,
+                   let pendingAmount = Decimal(string: value, locale: .enUSPOSIX),
+                   pendingAmount != 0
+                {
+                    let change = AssetChange(
+                        token: payToken,
+                        amount: CurrencyFormatter.localizedString(
+                            from: pendingAmount,
+                            format: .precision,
+                            sign: .always,
+                            symbol: .custom(paySymbol)
+                        )
+                    )
+                    receivings.append(change)
+                }
+            }
+            self.receivings = receivings
+            
+            if let value = order.filledReceiveAmount,
+               let filledReceiveAmount = Decimal(string: value, locale: .enUSPOSIX)
+            {
+                let percent = NSDecimalNumber(decimal: filledReceiveAmount / expectedReceiveAmount)
+                    .rounding(accordingToBehavior: NSDecimalNumberHandler.extractIntegralPart)
+                    .decimalValue
+                let percentage = NumberFormatter.percentage.string(decimal: percent) ?? ""
+                let amount = CurrencyFormatter.localizedString(
+                    from: filledReceiveAmount,
+                    format: .precision,
+                    sign: .always,
+                    symbol: .custom(receiveSymbol)
+                )
+                self.filling = Filling(percentage: percentage, amount: amount)
+            } else {
+                self.filling = nil
+            }
+            
+            self.receivePrice = SwapQuote.priceRepresentation(
+                sendAmount: payAmount,
+                sendSymbol: paySymbol,
+                receiveAmount: expectedReceiveAmount,
+                receiveSymbol: receiveSymbol,
+                unit: .receive
+            )
+            self.sendPrice = SwapQuote.priceRepresentation(
+                sendAmount: payAmount,
+                sendSymbol: paySymbol,
+                receiveAmount: expectedReceiveAmount,
+                receiveSymbol: receiveSymbol,
+                unit: .send
+            )
+        }
+        
+        if let expiredAt = order.expiredAt, let date = DateFormatter.iso8601Full.date(from: expiredAt) {
+            self.expiration = if date.timeIntervalSinceNow > 365 * .day {
+                R.string.localizable.swap_expiry_never()
+            } else {
+                DateFormatter.dateFull.string(from: date)
+            }
+        } else {
+            self.expiration = nil
+        }
+        self.createdAt = if let date = DateFormatter.iso8601Full.date(from: order.createdAt) {
+            DateFormatter.dateFull.string(from: date)
+        } else {
+            order.createdAt
+        }
+    }
+    
+}
+
+extension SwapOrderViewModel: Equatable {
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.orderID == rhs.orderID
+    }
+    
+}

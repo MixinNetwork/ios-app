@@ -204,7 +204,7 @@ final class ExploreBotsViewController: UITableViewController {
                     
                     self.indexTitles = titles
                     lastSectionIndex = self.numberOfSections(in: self.tableView) - 1
-                    if lastSectionIndex > 2 {
+                    if lastSectionIndex >= 2 {
                         self.tableView.insertSections(IndexSet(integersIn: 2...lastSectionIndex), with: .none)
                     }
                 }

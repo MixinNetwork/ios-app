@@ -1066,6 +1066,7 @@
 "preauthorize_amount" = "預授權額度";
 "preparing" = "正在準備...";
 "preparing_progress" = "備份中...（%@）";
+"preview" = "預覽";
 "price" = "價格";
 "price_alert_notification_permission" = "價格預警需要開啟通知許可權";
 "price_change_24h" = "24 小時價格變化";

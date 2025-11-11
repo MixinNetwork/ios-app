@@ -1066,6 +1066,7 @@
 "preauthorize_amount" = "Pre-authorize Amount";
 "preparing" = "Preparing...";
 "preparing_progress" = "Preparing...(%@)";
+"preview" = "Preview";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
 "price_change_24h" = "24h Price Change";

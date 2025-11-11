@@ -1066,6 +1066,7 @@
 "preauthorize_amount" = "预授权额度";
 "preparing" = "正在准备...";
 "preparing_progress" = "备份中...（%@）";
+"preview" = "预览";
 "price" = "价格";
 "price_alert_notification_permission" = "价格预警需要开启通知权限";
 "price_change_24h" = "24 小时价格变化";

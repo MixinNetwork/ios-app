@@ -742,7 +742,7 @@
 "invite_info" = "Mixin 使用者可以使用此链接加入这个群组，请只跟您信任的人共享链接。";
 "invite_to_group_via_link" = "群邀请链接";
 "invited_by_stranger" = "邀请人不是你的联系人";
-"invitee_commission" = "被邀请人佣金";
+"invitee_commission" = "被邀请人返现";
 "inviter" = "邀请人";
 "invites_you_to_a_voice_call" = "发起了语音通话";
 "invoice" = "账单";

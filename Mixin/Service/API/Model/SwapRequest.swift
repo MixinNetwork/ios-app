@@ -3,6 +3,7 @@ import MixinServices
 
 struct SwapRequest: Encodable {
     
+    let walletId: String?
     let payer: String
     let inputMint: String
     let inputAmount: String
@@ -14,6 +15,7 @@ struct SwapRequest: Encodable {
     let referral: String?
     
     init(
+        walletId: String?,
         sendToken: SwapToken,
         sendAmount: Decimal,
         receiveToken: SwapToken,
@@ -23,6 +25,7 @@ struct SwapRequest: Encodable {
         withdrawalDestination: String?,
         referral: String?,
     ) {
+        self.walletId = walletId
         self.payer = myUserId
         self.inputMint = sendToken.assetID
         self.inputAmount = TokenAmountFormatter.string(from: sendAmount)

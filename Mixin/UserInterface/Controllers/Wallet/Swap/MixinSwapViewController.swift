@@ -103,6 +103,7 @@ class MixinSwapViewController: SwapViewController {
         }
         sender.isBusy = true
         let request = SwapRequest(
+            walletId: nil,
             sendToken: quote.sendToken,
             sendAmount: quote.sendAmount,
             receiveToken: quote.receiveToken,

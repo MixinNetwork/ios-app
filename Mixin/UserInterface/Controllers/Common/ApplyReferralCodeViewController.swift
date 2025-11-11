@@ -104,7 +104,7 @@ final class ApplyReferralCodeViewController: AuthenticationPreviewViewController
                     )
                 } else {
                     self.loadSingleButtonTrayView(
-                        title: R.string.localizable.cancel(),
+                        title: R.string.localizable.got_it(),
                         action: #selector(close(_:))
                     )
                 }

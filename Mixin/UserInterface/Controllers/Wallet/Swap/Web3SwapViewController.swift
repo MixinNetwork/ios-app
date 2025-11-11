@@ -120,6 +120,7 @@ final class Web3SwapViewController: SwapViewController {
         }
         
         let request = SwapRequest(
+            walletId: wallet.walletID,
             sendToken: quote.sendToken,
             sendAmount: quote.sendAmount,
             receiveToken: quote.receiveToken,

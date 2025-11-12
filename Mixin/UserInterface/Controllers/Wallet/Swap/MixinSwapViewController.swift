@@ -5,10 +5,6 @@ import MixinServices
 
 final class MixinSwapViewController: SwapViewController {
     
-    override var advanceModeAvailable: Bool {
-        true
-    }
-    
     override var sendToken: BalancedSwapToken? {
         didSet {
             depositTokenRequest?.cancel()
@@ -17,7 +13,6 @@ final class MixinSwapViewController: SwapViewController {
     
     private let referral: String?
     
-    private weak var showOrdersItem: BadgeBarButtonItem?
     private weak var depositTokenRequest: Request?
     
     init(sendAssetID: String?, receiveAssetID: String?, referral: String?) {
@@ -40,20 +35,6 @@ final class MixinSwapViewController: SwapViewController {
             title: R.string.localizable.swap(),
             wallet: .privacy
         )
-        let showOrdersItem = BadgeBarButtonItem(
-            image: R.image.ic_title_transaction()!,
-            target: self,
-            action: #selector(showOrders(_:))
-        )
-        navigationItem.rightBarButtonItems = [
-            .customerService(
-                target: self,
-                action: #selector(presentCustomerService(_:))
-            ),
-            showOrdersItem,
-        ]
-        self.showOrdersItem = showOrdersItem
-        showOrdersItem.showBadge = !BadgeManager.shared.hasViewed(identifier: .swapOrder)
     }
     
     override func changeSendToken(_ sender: Any) {
@@ -111,6 +92,12 @@ final class MixinSwapViewController: SwapViewController {
         }
     }
     
+    override func showOrders(_ sender: Any) {
+        super.showOrders(sender)
+        let orders = SwapOrdersViewController(wallet: .privacy)
+        navigationController?.pushViewController(orders, animated: true)
+    }
+    
     override func balancedSwapToken(assetID: String) -> BalancedSwapToken? {
         if let item = TokenDAO.shared.tokenItem(assetID: assetID), let token = BalancedSwapToken(tokenItem: item) {
             return token
@@ -141,12 +128,6 @@ final class MixinSwapViewController: SwapViewController {
                 BalancedSwapToken(token: token, balance: 0, usdPrice: 0)
             }
         }
-    }
-    
-    @objc private func showOrders(_ sender: Any) {
-        showOrdersItem?.showBadge = false
-        let orders = SwapOrdersViewController(wallet: .privacy)
-        navigationController?.pushViewController(orders, animated: true)
     }
     
     private func reviewSimpleOrder(reviewButton: RoundedButton) {
@@ -215,7 +196,7 @@ final class MixinSwapViewController: SwapViewController {
             return
         }
         reviewButton.isBusy = true
-        let request = LimitOrderRequest(
+        let request = MixinLimitOrderRequest(
             walletID: myUserId,
             assetID: sendToken.assetID,
             amount: sendAmount,

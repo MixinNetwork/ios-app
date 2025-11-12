@@ -678,8 +678,8 @@
 		94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */; };
 		940A3C112EB33AFA001A458F /* SwapPriceInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A3C0F2EB33AFA001A458F /* SwapPriceInputCell.swift */; };
 		940A3C122EB33AFA001A458F /* SwapPriceInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940A3C102EB33AFA001A458F /* SwapPriceInputCell.xib */; };
-		940A3C442EB60A7E001A458F /* LimitOrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A3C432EB60A7A001A458F /* LimitOrderRequest.swift */; };
-		940A3C4F2EB60CBA001A458F /* LimitOrderResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A3C4E2EB60CB5001A458F /* LimitOrderResponse.swift */; };
+		940A3C442EB60A7E001A458F /* MixinLimitOrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A3C432EB60A7A001A458F /* MixinLimitOrderRequest.swift */; };
+		940A3C4F2EB60CBA001A458F /* MixinLimitOrderResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A3C4E2EB60CB5001A458F /* MixinLimitOrderResponse.swift */; };
 		940A3C752EB61D36001A458F /* SwapOrderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940A3C742EB61D36001A458F /* SwapOrderCell.xib */; };
 		940A3C762EB61D36001A458F /* SwapOrderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940A3C732EB61D36001A458F /* SwapOrderCell.swift */; };
 		940A3CF12EB79244001A458F /* SwapExpirySelectorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940A3CF02EB79244001A458F /* SwapExpirySelectorCell.xib */; };
@@ -1262,6 +1262,8 @@
 		94B1E55D2C49222100A2349F /* MixinSwapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B1E55C2C49222100A2349F /* MixinSwapViewController.swift */; };
 		94B1E56B2C4A05BF00A2349F /* MultipleAssetChangeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B1E56A2C4A05BF00A2349F /* MultipleAssetChangeCell.xib */; };
 		94B1E56C2C4A05BF00A2349F /* MultipleAssetChangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B1E5692C4A05BF00A2349F /* MultipleAssetChangeCell.swift */; };
+		94B2FA4C2EC473BD001DD158 /* Web3LimitOrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2FA4B2EC473B8001DD158 /* Web3LimitOrderRequest.swift */; };
+		94B2FA692EC474C7001DD158 /* Web3LimitOrderResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B2FA682EC474C4001DD158 /* Web3LimitOrderResponse.swift */; };
 		94B5776A2B5E554800AE576E /* ExploreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B577692B5E554800AE576E /* ExploreViewController.swift */; };
 		94B5776F2B5E555B00AE576E /* ExploreView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B5776E2B5E555B00AE576E /* ExploreView.xib */; };
 		94B5777D2B5E755100AE576E /* SeparatorHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B5777C2B5E755100AE576E /* SeparatorHeaderFooterView.swift */; };
@@ -2440,8 +2442,8 @@
 		94095BBB25BE8DCF00F44832 /* TextPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextPreviewView.swift; sourceTree = "<group>"; };
 		940A3C0F2EB33AFA001A458F /* SwapPriceInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapPriceInputCell.swift; sourceTree = "<group>"; };
 		940A3C102EB33AFA001A458F /* SwapPriceInputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapPriceInputCell.xib; sourceTree = "<group>"; };
-		940A3C432EB60A7A001A458F /* LimitOrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitOrderRequest.swift; sourceTree = "<group>"; };
-		940A3C4E2EB60CB5001A458F /* LimitOrderResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitOrderResponse.swift; sourceTree = "<group>"; };
+		940A3C432EB60A7A001A458F /* MixinLimitOrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinLimitOrderRequest.swift; sourceTree = "<group>"; };
+		940A3C4E2EB60CB5001A458F /* MixinLimitOrderResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinLimitOrderResponse.swift; sourceTree = "<group>"; };
 		940A3C732EB61D36001A458F /* SwapOrderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapOrderCell.swift; sourceTree = "<group>"; };
 		940A3C742EB61D36001A458F /* SwapOrderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapOrderCell.xib; sourceTree = "<group>"; };
 		940A3CEF2EB79244001A458F /* SwapExpirySelectorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapExpirySelectorCell.swift; sourceTree = "<group>"; };
@@ -3036,6 +3038,8 @@
 		94B1E55C2C49222100A2349F /* MixinSwapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinSwapViewController.swift; sourceTree = "<group>"; };
 		94B1E5692C4A05BF00A2349F /* MultipleAssetChangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleAssetChangeCell.swift; sourceTree = "<group>"; };
 		94B1E56A2C4A05BF00A2349F /* MultipleAssetChangeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MultipleAssetChangeCell.xib; sourceTree = "<group>"; };
+		94B2FA4B2EC473B8001DD158 /* Web3LimitOrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3LimitOrderRequest.swift; sourceTree = "<group>"; };
+		94B2FA682EC474C4001DD158 /* Web3LimitOrderResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3LimitOrderResponse.swift; sourceTree = "<group>"; };
 		94B577692B5E554800AE576E /* ExploreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreViewController.swift; sourceTree = "<group>"; };
 		94B5776E2B5E555B00AE576E /* ExploreView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreView.xib; sourceTree = "<group>"; };
 		94B5777C2B5E755100AE576E /* SeparatorHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorHeaderFooterView.swift; sourceTree = "<group>"; };
@@ -5915,8 +5919,10 @@
 				94F268022E1586EB00A8A1E0 /* AddressAssets.swift */,
 				9468E0552E30E10000EB79C0 /* CreateWalletRequest.swift */,
 				9468E0602E30E13800EB79C0 /* CreateWalletResponse.swift */,
-				940A3C432EB60A7A001A458F /* LimitOrderRequest.swift */,
-				940A3C4E2EB60CB5001A458F /* LimitOrderResponse.swift */,
+				940A3C432EB60A7A001A458F /* MixinLimitOrderRequest.swift */,
+				940A3C4E2EB60CB5001A458F /* MixinLimitOrderResponse.swift */,
+				94B2FA4B2EC473B8001DD158 /* Web3LimitOrderRequest.swift */,
+				94B2FA682EC474C4001DD158 /* Web3LimitOrderResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -7167,6 +7173,7 @@
 				946E059D2CBFD846004B264E /* ExploreSearchViewController.swift in Sources */,
 				9401A57C2BD960F600679686 /* Web3Chain.swift in Sources */,
 				942FD9712D3A90E4004DCC4C /* SwapOrder+UserInterface.swift in Sources */,
+				94B2FA692EC474C7001DD158 /* Web3LimitOrderResponse.swift in Sources */,
 				7C54078F296BDD7B0082368C /* FontSizeSlider.swift in Sources */,
 				7C8CC5A7280D40E900F7CBDF /* PreviewWallpaperCell.swift in Sources */,
 				941655C425CD7DA7007E76D0 /* AudioSessionClientPriority.swift in Sources */,
@@ -7554,7 +7561,7 @@
 				944F54082E45CD1F0064A9A2 /* WatchWalletAddressesIntroductionCell.swift in Sources */,
 				946FFAD32B6C566800B62B7F /* AuthenticationProgressView.swift in Sources */,
 				7C4C039F28530C9E003DE0C0 /* ContactViewController.swift in Sources */,
-				940A3C442EB60A7E001A458F /* LimitOrderRequest.swift in Sources */,
+				940A3C442EB60A7E001A458F /* MixinLimitOrderRequest.swift in Sources */,
 				941994EC2CCC3FD300F5425C /* RecoveryKitViewController.swift in Sources */,
 				7BB6FD252011AD3400E84C5C /* CardMessageViewModel.swift in Sources */,
 				9465E61A2E6CE18D005974C6 /* DepositLinkView.swift in Sources */,
@@ -7908,6 +7915,7 @@
 				7BB78726245133A40057B4ED /* SettingsHeaderFooterView.swift in Sources */,
 				94D8426C2654D4800011DACD /* TranscriptAudioMessagePlayingManager.swift in Sources */,
 				94A1B1DF25BFD7CB0098586D /* LinkLocatingTextView.swift in Sources */,
+				94B2FA4C2EC473BD001DD158 /* Web3LimitOrderRequest.swift in Sources */,
 				E041065023C6079400A6F08E /* MixinWebViewController.swift in Sources */,
 				7BCEAA7A2350A3A200F07635 /* SharedMediaDataCell.swift in Sources */,
 				DF048CD022433C6E005F1EF5 /* UILabelExtension.swift in Sources */,
@@ -8099,7 +8107,7 @@
 				7CE2DE102858B52000AF00AE /* WallpaperImageView.swift in Sources */,
 				7B8BB586234EE9A200991ACB /* SharedMediaAudioTableViewController.swift in Sources */,
 				7C47352928571CC900ECD293 /* AccessPhoneContactHintWindow.swift in Sources */,
-				940A3C4F2EB60CBA001A458F /* LimitOrderResponse.swift in Sources */,
+				940A3C4F2EB60CBA001A458F /* MixinLimitOrderResponse.swift in Sources */,
 				7BFD345A2285A7F000524EA0 /* TransferReceiverViewController.swift in Sources */,
 				52A056562BE3614700CEC8A3 /* InscriptionMessageCell.swift in Sources */,
 				94FA8FC92644236F006BC715 /* ConversationMessageComposer.swift in Sources */,

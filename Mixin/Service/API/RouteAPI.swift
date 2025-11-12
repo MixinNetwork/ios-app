@@ -73,8 +73,15 @@ extension RouteAPI {
     }
     
     static func createLimitOrder(
-        request: LimitOrderRequest,
-        completion: @escaping (MixinAPI.Result<LimitOrderResponse>) -> Void
+        request: MixinLimitOrderRequest,
+        completion: @escaping (MixinAPI.Result<MixinLimitOrderResponse>) -> Void
+    ) {
+        Self.request(method: .post, path: "/web3/limit_orders", with: request, completion: completion)
+    }
+    
+    static func createLimitOrder(
+        request: Web3LimitOrderRequest,
+        completion: @escaping (MixinAPI.Result<Web3LimitOrderResponse>) -> Void
     ) {
         Self.request(method: .post, path: "/web3/limit_orders", with: request, completion: completion)
     }

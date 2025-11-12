@@ -26,10 +26,6 @@ class SwapViewController: UIViewController {
     
     let pricingModel = SwapPricingModel()
     
-    var advanceModeAvailable: Bool {
-        false
-    }
-    
     var mode: Mode {
         didSet {
             switch mode {
@@ -83,6 +79,7 @@ class SwapViewController: UIViewController {
     private let arbitraryReceiveAssetID: String?
     private let tokenSource: RouteTokenSource
     
+    private weak var showOrdersItem: BadgeBarButtonItem?
     private weak var showReviewButtonConstraint: NSLayoutConstraint!
     private weak var hideReviewButtonConstraint: NSLayoutConstraint!
     
@@ -159,6 +156,21 @@ class SwapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let showOrdersItem = BadgeBarButtonItem(
+            image: R.image.ic_title_transaction()!,
+            target: self,
+            action: #selector(showOrders(_:))
+        )
+        navigationItem.rightBarButtonItems = [
+            .customerService(
+                target: self,
+                action: #selector(presentCustomerService(_:))
+            ),
+            showOrdersItem,
+        ]
+        self.showOrdersItem = showOrdersItem
+        showOrdersItem.showBadge = !BadgeManager.shared.hasViewed(identifier: .swapOrder)
         
         pricingModel.delegate = self
         
@@ -276,6 +288,10 @@ class SwapViewController: UIViewController {
         
     }
     
+    @objc func showOrders(_ sender: Any) {
+        showOrdersItem?.showBadge = false
+    }
+    
     @objc func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
@@ -348,7 +364,7 @@ class SwapViewController: UIViewController {
     }
     
     func reloadSections(mode: Mode, price: Decimal?) {
-        var sections: [Section] = switch mode {
+        let sections: [Section] = switch mode {
         case .simple:
             [.modeSelector, .amountInput, .simpleModePrice]
         case .advanced:
@@ -357,9 +373,6 @@ class SwapViewController: UIViewController {
             } else {
                 [.modeSelector, .amountInput, .priceInput, .openOrders]
             }
-        }
-        if !advanceModeAvailable {
-            sections.removeFirst()
         }
         if sections != self.sections {
             let switchingBetweenModes = sections.count != self.sections.count

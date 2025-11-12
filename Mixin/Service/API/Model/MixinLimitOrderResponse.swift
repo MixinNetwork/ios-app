@@ -1,6 +1,6 @@
 import Foundation
 
-struct LimitOrderResponse: Decodable {
+struct MixinLimitOrderResponse: Decodable {
     
     let tx: String
     

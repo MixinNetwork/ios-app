@@ -11,10 +11,10 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
     private let mode: Payment.SwapContext.Mode
     private let operation: Operation
     
-    private let sendToken: BalancedSwapToken
+    private let sendToken: any Token
     private let sendAmount: Decimal
     
-    private let receiveToken: SwapToken
+    private let receiveToken: any Token
     private let receiveAmount: Decimal
     
     private let receiver: UserItem
@@ -22,8 +22,8 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
     init(
         wallet: Wallet, mode: Payment.SwapContext.Mode,
         operation: Operation,
-        sendToken: BalancedSwapToken, sendAmount: Decimal,
-        receiveToken: SwapToken, receiveAmount: Decimal,
+        sendToken: any Token, sendAmount: Decimal,
+        receiveToken: any Token, receiveAmount: Decimal,
         receiver: UserItem, warnings: [String]
     ) {
         self.mode = mode

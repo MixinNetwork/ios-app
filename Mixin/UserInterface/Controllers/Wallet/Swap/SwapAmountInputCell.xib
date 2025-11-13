@@ -12,20 +12,20 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="swap_amount_input" id="ddF-00-Ryy" customClass="SwapAmountInputCell" customModule="Mixin" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="353" height="252"/>
+            <rect key="frame" x="0.0" y="0.0" width="353" height="258"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Ckz-G1-rGa">
-                <rect key="frame" x="0.0" y="0.0" width="353" height="252"/>
+                <rect key="frame" x="0.0" y="0.0" width="353" height="258"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Gbz-Fd-Syh">
-                        <rect key="frame" x="0.0" y="0.0" width="353" height="252"/>
+                        <rect key="frame" x="0.0" y="0.0" width="353" height="258"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ROO-yD-Bd5">
-                                <rect key="frame" x="0.0" y="0.0" width="353" height="129"/>
+                                <rect key="frame" x="0.0" y="0.0" width="353" height="128"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="uTb-Ct-R19" userLabel="Send StackView">
-                                        <rect key="frame" x="16" y="16" width="321" height="107"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="uTb-Ct-R19" userLabel="Send StackView">
+                                        <rect key="frame" x="16" y="16" width="321" height="108"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V3g-9q-j8x">
                                                 <rect key="frame" x="0.0" y="0.0" width="321" height="17"/>
@@ -92,10 +92,10 @@
                                                 </constraints>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="VsB-rU-dSK">
-                                                <rect key="frame" x="0.0" y="72" width="321" height="35"/>
+                                                <rect key="frame" x="0.0" y="72" width="321" height="36"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7pb-63-kHm" userLabel="Send Balance Button">
-                                                        <rect key="frame" x="0.0" y="0.0" width="40" height="35"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="40" height="36"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <inset key="contentEdgeInsets" minX="12" minY="10" maxX="0.0" maxY="10"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -107,7 +107,7 @@
                                                         </buttonConfiguration>
                                                     </button>
                                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u60-pZ-T5q" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
-                                                        <rect key="frame" x="43" y="0.0" width="0.0" height="35"/>
+                                                        <rect key="frame" x="43" y="0.0" width="0.0" height="36"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="tintColor" name="theme"/>
                                                         <inset key="contentEdgeInsets" minX="12" minY="10" maxX="12" maxY="10"/>
@@ -121,12 +121,15 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="309" placeholderIntrinsicHeight="35" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wl1-nu-b8q">
-                                                        <rect key="frame" x="46" y="0.0" width="275" height="35"/>
+                                                        <rect key="frame" x="46" y="0.0" width="275" height="36"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" name="text_quaternary"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="36" id="dVd-zG-Wfs"/>
+                                                </constraints>
                                             </stackView>
                                         </subviews>
                                     </stackView>
@@ -145,22 +148,22 @@
                                     <constraint firstItem="aHS-DC-yux" firstAttribute="leading" secondItem="r2F-ch-hbC" secondAttribute="trailing" constant="8" id="G1j-Vv-Rnc"/>
                                     <constraint firstItem="uTb-Ct-R19" firstAttribute="top" secondItem="ROO-yD-Bd5" secondAttribute="top" constant="16" id="JOu-hg-gy3"/>
                                     <constraint firstItem="aHS-DC-yux" firstAttribute="centerY" secondItem="AYV-RE-tfq" secondAttribute="centerY" id="Osw-xl-xpl"/>
-                                    <constraint firstAttribute="bottom" secondItem="uTb-Ct-R19" secondAttribute="bottom" constant="6" id="bYA-6L-80F"/>
+                                    <constraint firstAttribute="bottom" secondItem="uTb-Ct-R19" secondAttribute="bottom" constant="4" id="bYA-6L-80F"/>
                                     <constraint firstAttribute="trailing" secondItem="uTb-Ct-R19" secondAttribute="trailing" constant="16" id="yQI-rv-nb5"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dIS-lI-7Pt" userLabel="Swap Button Positioning View">
-                                <rect key="frame" x="0.0" y="129" width="353" height="2"/>
+                                <rect key="frame" x="0.0" y="128" width="353" height="2"/>
                                 <color key="backgroundColor" name="background_secondary"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="2" id="VNc-S5-7Sl"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8RN-yk-7hz">
-                                <rect key="frame" x="0.0" y="131" width="353" height="121"/>
+                                <rect key="frame" x="0.0" y="130" width="353" height="128"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="DPs-QM-d66" userLabel="Receive Stack View">
-                                        <rect key="frame" x="16" y="16" width="321" height="89"/>
+                                        <rect key="frame" x="16" y="16" width="321" height="108"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Oa-JW-VCV">
                                                 <rect key="frame" x="0.0" y="0.0" width="321" height="17"/>
@@ -227,24 +230,27 @@
                                                 </constraints>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Ah0-qi-ihg">
-                                                <rect key="frame" x="0.0" y="72" width="321" height="17"/>
+                                                <rect key="frame" x="0.0" y="72" width="321" height="36"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="token_receiver_wallet" translatesAutoresizingMaskIntoConstraints="NO" id="AEr-Zn-TqR">
-                                                        <rect key="frame" x="0.0" y="0.0" width="16" height="17"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="16" height="36"/>
                                                     </imageView>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zAe-aK-l32" userLabel="Receive Balance Label">
-                                                        <rect key="frame" x="22" y="0.0" width="0.0" height="17"/>
+                                                        <rect key="frame" x="22" y="0.0" width="0.0" height="36"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" name="text_quaternary"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="309" placeholderIntrinsicHeight="35" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HtW-Lv-tPb">
-                                                        <rect key="frame" x="28" y="0.0" width="293" height="17"/>
+                                                        <rect key="frame" x="28" y="0.0" width="293" height="36"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <color key="textColor" name="text_quaternary"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="36" id="C0n-u2-FDQ"/>
+                                                </constraints>
                                             </stackView>
                                         </subviews>
                                     </stackView>
@@ -260,7 +266,7 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="DPs-QM-d66" secondAttribute="trailing" constant="16" id="AYM-I0-fap"/>
                                     <constraint firstItem="mql-nR-Bh6" firstAttribute="leading" secondItem="Vsv-Mj-Jid" secondAttribute="trailing" constant="8" id="Fvo-5S-Ftq"/>
-                                    <constraint firstAttribute="bottom" secondItem="DPs-QM-d66" secondAttribute="bottom" constant="16" id="PVb-w9-wfY"/>
+                                    <constraint firstAttribute="bottom" secondItem="DPs-QM-d66" secondAttribute="bottom" constant="4" id="PVb-w9-wfY"/>
                                     <constraint firstItem="DPs-QM-d66" firstAttribute="top" secondItem="8RN-yk-7hz" secondAttribute="top" constant="16" id="ZUV-Dq-J01"/>
                                     <constraint firstItem="DPs-QM-d66" firstAttribute="leading" secondItem="8RN-yk-7hz" secondAttribute="leading" constant="16" id="c4F-RX-wXo"/>
                                     <constraint firstItem="mql-nR-Bh6" firstAttribute="trailing" secondItem="YOM-E7-whu" secondAttribute="trailing" id="wSk-Sh-Qst"/>
@@ -270,7 +276,7 @@
                         </subviews>
                     </stackView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YaY-3P-tfa">
-                        <rect key="frame" x="163.66666666666666" y="117" width="26" height="26"/>
+                        <rect key="frame" x="163.66666666666666" y="116" width="26" height="26"/>
                         <color key="backgroundColor" name="background_tinted"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="YaY-3P-tfa" secondAttribute="height" id="fCh-D3-YY1"/>
@@ -284,7 +290,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rWI-Ld-4sa">
-                        <rect key="frame" x="154.66666666666666" y="108" width="44" height="44"/>
+                        <rect key="frame" x="154.66666666666666" y="107" width="44" height="44"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="44" id="1lu-BK-IdV"/>
@@ -303,7 +309,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="90n-aq-unN" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="233" y="181.66666666666666" width="20" height="20"/>
+                        <rect key="frame" x="233" y="180.66666666666666" width="20" height="20"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="tintColor" name="chat_pin_count_background"/>
                         <userDefinedRuntimeAttributes>
@@ -331,6 +337,7 @@
             <connections>
                 <outlet property="depositSendTokenButton" destination="u60-pZ-T5q" id="wJ1-EY-jaM"/>
                 <outlet property="receiveAmountTextField" destination="Vsv-Mj-Jid" id="vFn-2Y-jbm"/>
+                <outlet property="receiveBalanceImageView" destination="AEr-Zn-TqR" id="McF-d4-0Qw"/>
                 <outlet property="receiveBalanceLabel" destination="zAe-aK-l32" id="JQT-n4-Nm8"/>
                 <outlet property="receiveIconView" destination="XB3-rN-ll0" id="wgn-yC-01p"/>
                 <outlet property="receiveLoadingIndicator" destination="90n-aq-unN" id="JNB-gU-jFT"/>
@@ -384,7 +391,7 @@
             <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

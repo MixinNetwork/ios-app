@@ -239,6 +239,7 @@
 "cancel_waiting" = "Cancel Waiting";
 "canceled" = "キャンセルしました";
 "canceled_by_caller" = "発信者がキャンセルしました";
+"cancelling" = "Cancelling";
 "cant_receive_the_code" = "コードを受け取れませんか？";
 "caption_send" = "出金";
 "card" = "ロボ";

@@ -206,9 +206,9 @@ class SwapViewController: UIViewController {
                 section.orthogonalScrollingBehavior = .continuous
                 return section
             case .amountInput:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(238))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(252))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(238))
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
@@ -271,7 +271,6 @@ class SwapViewController: UIViewController {
         reloadSections(mode: mode, price: pricingModel.displayPrice?.value)
         
         reloadTokens()
-        ConcurrentJobQueue.shared.addJob(job: RefreshWeb3OrdersJob())
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -534,13 +533,13 @@ extension SwapViewController: UICollectionViewDataSource {
                 )
                 inputAccessoryView.items = [
                     .init(title: R.string.localizable.current_market_price()) { [weak self] in
-                        
+                        self?.inputPrice(multiplier: 1)
                     },
                     .init(title: "-10%") { [weak self] in
-
+                        self?.inputPrice(multiplier: 0.9)
                     },
                     .init(title: "-20%") { [weak self] in
-
+                        self?.inputPrice(multiplier: 0.8)
                     },
                 ]
                 inputAccessoryView.onDone = { [weak textField=cell.textField] in
@@ -910,6 +909,28 @@ extension SwapViewController {
             pricingModel.sendAmount = amount
             swapAmountInputCell?.updateSendAmountTextField(amount: amount)
             scheduleNewRequesterIfAvailable()
+        }
+    }
+    
+    private func inputPrice(multiplier: Decimal) {
+        guard let sendToken, let receiveToken else {
+            return
+        }
+        let price: SwapPricingModel.Price? = .derive(
+            sendToken: sendToken,
+            receiveToken: receiveToken
+        )
+        guard let value = price?.value else {
+            return
+        }
+        let multipliedPrice = NSDecimalNumber(decimal: value * multiplier)
+            .rounding(accordingToBehavior: tokenAmountRoundingHandler)
+            .decimalValue
+        if let textField = priceInputCell?.textField {
+            textField.text = NumberFormatter.userInputAmountSimulation.string(decimal: multipliedPrice)
+            priceEditingChanged(textField)
+        } else {
+            pricingModel.displayPrice = .nonVolatile(multipliedPrice)
         }
     }
     

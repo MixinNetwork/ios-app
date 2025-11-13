@@ -234,6 +234,7 @@ extension Web3TokenViewController: TokenActionView.Delegate {
         case .swap:
             let swap = Web3SwapViewController(
                 wallet: wallet,
+                mode: .simple,
                 sendAssetID: token.assetID,
                 receiveAssetID: AssetID.erc20USDT,
             )

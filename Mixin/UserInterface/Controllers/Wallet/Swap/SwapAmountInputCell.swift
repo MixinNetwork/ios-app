@@ -27,6 +27,7 @@ final class SwapAmountInputCell: UICollectionViewCell {
     @IBOutlet weak var receiveLoadingIndicator: ActivityIndicatorView!
     @IBOutlet weak var receiveIconView: BadgeIconView!
     @IBOutlet weak var receiveSymbolLabel: UILabel!
+    @IBOutlet weak var receiveBalanceImageView: UIImageView!
     @IBOutlet weak var receiveBalanceLabel: UILabel!
     @IBOutlet weak var receiveTokenNameLabel: UILabel!
     @IBOutlet weak var receiveTokenButton: UIButton!
@@ -50,7 +51,7 @@ final class SwapAmountInputCell: UICollectionViewCell {
         }
         receiveView.layer.masksToBounds = true
         receiveView.layer.cornerRadius = 8
-        receiveStackView.setCustomSpacing(10, after: receiveTokenStackView)
+        receiveStackView.setCustomSpacing(0, after: receiveTokenStackView)
         receiveLoadingIndicator.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         for symbolLabel in [sendSymbolLabel, receiveSymbolLabel] {
             symbolLabel!.setFont(
@@ -134,6 +135,7 @@ extension SwapAmountInputCell {
             receiveIconView.isHidden = false
             receiveNetworkLabel.text = "0"
             receiveNetworkLabel.alpha = 0
+            receiveBalanceImageView.alpha = 0
             receiveBalanceLabel.text = "0"
             receiveBalanceLabel.alpha = 0
             receiveTokenNameLabel.text = nil
@@ -145,6 +147,7 @@ extension SwapAmountInputCell {
             receiveSymbolLabel.text = R.string.localizable.select_token()
             receiveNetworkLabel.text = "0"
             receiveNetworkLabel.alpha = 0
+            receiveBalanceImageView.alpha = 0
             receiveBalanceLabel.text = "0"
             receiveBalanceLabel.alpha = 0
             receiveTokenNameLabel.text = nil
@@ -157,6 +160,7 @@ extension SwapAmountInputCell {
             receiveSymbolLabel.text = token.symbol
             receiveNetworkLabel.text = token.chain.name
             receiveNetworkLabel.alpha = 1
+            receiveBalanceImageView.alpha = 1
             receiveBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
             receiveBalanceLabel.alpha = 1
             receiveTokenNameLabel.text = token.name

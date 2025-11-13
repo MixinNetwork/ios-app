@@ -239,6 +239,7 @@
 "cancel_waiting" = "Cancel Waiting";
 "canceled" = "Отменено";
 "canceled_by_caller" = "Отменено звонившим";
+"cancelling" = "Cancelling";
 "cant_receive_the_code" = "Не можете получить код?";
 "caption_send" = "ОТПРАВИТЬ";
 "card" = "карта";

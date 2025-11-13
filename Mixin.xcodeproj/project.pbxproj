@@ -1232,7 +1232,7 @@
 		949B03C32D15922300A34EE3 /* StackedIconWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949B03C22D15921E00A34EE3 /* StackedIconWrapperView.swift */; };
 		949B5DCD2EBCEC5F00D33C97 /* SwapOrdersView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 949B5DCC2EBCEC5F00D33C97 /* SwapOrdersView.xib */; };
 		949B5DCE2EBCEC5F00D33C97 /* SwapOrdersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949B5DCB2EBCEC5F00D33C97 /* SwapOrdersViewController.swift */; };
-		949B5E0C2EBCFB9500D33C97 /* RefreshWeb3OrdersJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949B5E0B2EBCFB8A00D33C97 /* RefreshWeb3OrdersJob.swift */; };
+		949B5E0C2EBCFB9500D33C97 /* SyncWeb3OrdersJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949B5E0B2EBCFB8A00D33C97 /* SyncWeb3OrdersJob.swift */; };
 		949B5E532EBDD31300D33C97 /* SwapOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949B5E522EBDD31000D33C97 /* SwapOrderViewModel.swift */; };
 		94A0C8C22C77259E00BDE672 /* AddressReceiversCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */; };
 		94A0C8C32C77259E00BDE672 /* AddressReceiversCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */; };
@@ -3008,7 +3008,7 @@
 		949B03C22D15921E00A34EE3 /* StackedIconWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedIconWrapperView.swift; sourceTree = "<group>"; };
 		949B5DCB2EBCEC5F00D33C97 /* SwapOrdersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapOrdersViewController.swift; sourceTree = "<group>"; };
 		949B5DCC2EBCEC5F00D33C97 /* SwapOrdersView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapOrdersView.xib; sourceTree = "<group>"; };
-		949B5E0B2EBCFB8A00D33C97 /* RefreshWeb3OrdersJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshWeb3OrdersJob.swift; sourceTree = "<group>"; };
+		949B5E0B2EBCFB8A00D33C97 /* SyncWeb3OrdersJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncWeb3OrdersJob.swift; sourceTree = "<group>"; };
 		949B5E522EBDD31000D33C97 /* SwapOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapOrderViewModel.swift; sourceTree = "<group>"; };
 		94A0C8C02C77259E00BDE672 /* AddressReceiversCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressReceiversCell.swift; sourceTree = "<group>"; };
 		94A0C8C12C77259E00BDE672 /* AddressReceiversCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressReceiversCell.xib; sourceTree = "<group>"; };
@@ -6164,7 +6164,7 @@
 				94509BC02DDDFC5800DC6A43 /* RefreshWeb3TokenJob.swift */,
 				94F2F94F2DEF2C750013B820 /* ReloadMembershipOrderJob.swift */,
 				94051FB12E81306F005B3A16 /* RefreshTokenJob.swift */,
-				949B5E0B2EBCFB8A00D33C97 /* RefreshWeb3OrdersJob.swift */,
+				949B5E0B2EBCFB8A00D33C97 /* SyncWeb3OrdersJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -7358,7 +7358,7 @@
 				944BC2D32C7C71B4008700A8 /* OutlineSegmentedControl.swift in Sources */,
 				7B54F95222B22EA600908A9D /* ChangeNumberPINValidationViewController.swift in Sources */,
 				945AA6582567B18200B39415 /* Country.swift in Sources */,
-				949B5E0C2EBCFB9500D33C97 /* RefreshWeb3OrdersJob.swift in Sources */,
+				949B5E0C2EBCFB9500D33C97 /* SyncWeb3OrdersJob.swift in Sources */,
 				7BD00F222559716C004D8814 /* WalletSearchRecommendationViewController.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
 				7C5304A129014F6800567CF6 /* AuthorizationScopesTableView.swift in Sources */,

@@ -15,10 +15,15 @@ final class MixinSwapViewController: SwapViewController {
     
     private weak var depositTokenRequest: Request?
     
-    init(sendAssetID: String?, receiveAssetID: String?, referral: String?) {
+    init(
+        mode: Mode,
+        sendAssetID: String?,
+        receiveAssetID: String?,
+        referral: String?
+    ) {
         self.referral = referral
         super.init(
-            mode: .simple,
+            mode: mode,
             tokenSource: .mixin,
             sendAssetID: sendAssetID,
             receiveAssetID: receiveAssetID

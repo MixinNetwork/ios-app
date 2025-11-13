@@ -59,20 +59,24 @@ final class SwapOrdersViewController: UIViewController {
             filtersStackView.addArrangedSubview(view)
         }
         
-        collectionView.register(R.nib.swapOrderCell)
-//        collectionView.register(
-//            R.nib.swapOpenOrderHeaderView,
-//            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader
-//        )
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { (_, _) in
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(70))
+            item.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: .fixed(10), trailing: nil, bottom: .fixed(10))
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
             let group: NSCollectionLayoutGroup = .vertical(layoutSize: groupSize, subitems: [item])
             let section = NSCollectionLayoutSection(group: group)
+            section.boundarySupplementaryItems = [
+                NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(44)),
+                    elementKind: UICollectionView.elementKindSectionHeader,
+                    alignment: .top
+                )
+            ]
             return section
         }
         collectionView.delegate = self
+        collectionView.register(R.nib.swapOrderCell)
         dataSource = DiffableDataSource(collectionView: collectionView) { [weak self] (collectionView, indexPath, orderID) in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_order, for: indexPath)!
             if let viewModel = self?.viewModels[orderID] {
@@ -80,8 +84,23 @@ final class SwapOrdersViewController: UIViewController {
             }
             return cell
         }
+        let header = UICollectionView.SupplementaryRegistration<HeaderView>(
+            elementKind: UICollectionView.elementKindSectionHeader
+        ) { [weak self] (view, _, indexPath) in
+            view.label.text = self?.dataSource.sectionIdentifier(for: indexPath.section)
+        }
+        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+            collectionView.dequeueConfiguredReusableSupplementary(using: header, for: indexPath)
+        }
         
         reloadData()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(ordersDidSave(_:)),
+            name: Web3OrderDAO.didSaveNotification,
+            object: nil
+        )
+        ConcurrentJobQueue.shared.addJob(job: SyncWeb3OrdersJob())
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -109,6 +128,43 @@ final class SwapOrdersViewController: UIViewController {
         present(picker, animated: true)
     }
     
+    @objc private func ordersDidSave(_ notification: Notification) {
+        if let orders = notification.userInfo?[Web3OrderDAO.ordersUserInfoKey] as? [SwapOrder], orders.count == 1 {
+            // If there's only 1 item is saved, reduce db access by reloading it in place
+            let order = orders[0]
+            if !filter.isIncluded(order: order) {
+                // The order will never show in this view, no need to load
+                return
+            }
+            if viewModels[order.orderID] != nil {
+                let operation = ReloadSingleItemOperation(viewController: self, orderID: order.orderID)
+                queue.addOperation(operation)
+                return
+            }
+        }
+        let behavior: LoadLocalDataOperation.Behavior
+        if let firstVisibleCell = collectionView.visibleCells.first,
+           let firstVisibleIndexPath = collectionView.indexPath(for: firstVisibleCell),
+           let orderID = dataSource.itemIdentifier(for: firstVisibleIndexPath),
+           let firstItem = viewModels[orderID]
+        {
+            behavior = .reloadVisibleItems(offset: firstItem)
+        } else {
+            behavior = .reload
+        }
+        Logger.general.debug(category: "SwapOrders", message: "Previous canary cleared")
+        loadPreviousPageIndexPath = nil
+        Logger.general.debug(category: "SwapOrders", message: "Next canary cleared")
+        loadNextPageIndexPath = nil
+        let operation = LoadLocalDataOperation(
+            viewController: self,
+            behavior: behavior,
+            filter: filter,
+            sorting: sorting
+        )
+        queue.addOperation(operation)
+    }
+    
     private func reloadRightBarButtonItem(sorting: SwapOrder.Sorting) {
         let rightBarButtonItem: UIBarButtonItem
         if let item = navigationItem.rightBarButtonItem {
@@ -124,7 +180,7 @@ final class SwapOrdersViewController: UIViewController {
     private func updateEmptyIndicator(numberOfItems: Int) {
         collectionView.checkEmpty(
             dataCount: numberOfItems,
-            text: R.string.localizable.no_transactions(),
+            text: R.string.localizable.no_orders(),
             photo: R.image.emptyIndicator.ic_data()!
         )
     }
@@ -187,7 +243,7 @@ final class SwapOrdersViewController: UIViewController {
             viewController: self,
             behavior: .reload,
             filter: filter,
-            ordering: sorting
+            sorting: sorting
         )
         queue.addOperation(operation)
     }
@@ -315,6 +371,37 @@ extension SwapOrdersViewController {
         
     }
     
+    private final class HeaderView: UICollectionReusableView {
+        
+        private(set) weak var label: UILabel!
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            loadLabel()
+        }
+        
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            loadLabel()
+        }
+        
+        private func loadLabel() {
+            backgroundColor = R.color.background()
+            let label = UILabel()
+            addSubview(label)
+            label.snp.makeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().offset(-20)
+                make.centerY.equalToSuperview().multipliedBy(1.2)
+            }
+            label.font = .preferredFont(forTextStyle: .caption1)
+            label.adjustsFontForContentSizeCategory = true
+            label.textColor = R.color.text_quaternary()
+            self.label = label
+        }
+        
+    }
+    
 }
 
 extension SwapOrdersViewController {
@@ -394,7 +481,7 @@ extension SwapOrdersViewController {
         
         private let behavior: Behavior
         private let filter: SwapOrder.Filter
-        private let ordering: SwapOrder.Sorting
+        private let sorting: SwapOrder.Sorting
         
         private let limit = 50
         private let loadMoreThreshold = 5
@@ -406,17 +493,17 @@ extension SwapOrdersViewController {
             viewController: SwapOrdersViewController?,
             behavior: Behavior,
             filter: SwapOrder.Filter,
-            ordering: SwapOrder.Sorting
+            sorting: SwapOrder.Sorting
         ) {
             self.viewController = viewController
             self.behavior = behavior
             self.filter = filter
-            self.ordering = ordering
+            self.sorting = sorting
             assert(limit > loadMoreThreshold)
         }
         
         override func main() {
-            Logger.general.debug(category: "SwapOrders", message: "Load with behavior: \(behavior), filter: \(filter.description), order: \(ordering)")
+            Logger.general.debug(category: "SwapOrders", message: "Load with behavior: \(behavior), filter: \(filter.description), order: \(sorting)")
             let offset: Web3OrderDAO.Offset? = switch behavior {
             case .reload:
                     .none
@@ -431,7 +518,7 @@ extension SwapOrdersViewController {
             let orders = Web3OrderDAO.shared.orders(
                 offset: offset,
                 filter: filter,
-                order: ordering,
+                sorting: sorting,
                 limit: limit
             )
             
@@ -499,12 +586,16 @@ extension SwapOrdersViewController {
                 }
             }
             
-            switch ordering {
+            switch sorting {
             case .newest, .oldest:
                 switch offset {
                 case .before:
                     for viewModel in viewModels.reversed() {
-                        let date = DateFormatter.dateSimple.string(from: viewModel.createdAt.toUTCDate())
+                        let date = if let date = DateFormatter.dateFull.date(from: viewModel.createdAt) {
+                            DateFormatter.dateSimple.string(from: date)
+                        } else {
+                            viewModel.createdAt
+                        }
                         if dataSnapshot.sectionIdentifiers.contains(date) {
                             if let firstItem = dataSnapshot.itemIdentifiers(inSection: date).first {
                                 dataSnapshot.insertItems([viewModel.orderID], beforeItem: firstItem)
@@ -522,7 +613,11 @@ extension SwapOrdersViewController {
                     }
                 case .after, .none:
                     for viewModel in viewModels {
-                        let date = DateFormatter.dateSimple.string(from: viewModel.createdAt.toUTCDate())
+                        let date = if let date = DateFormatter.dateFull.date(from: viewModel.createdAt) {
+                            DateFormatter.dateSimple.string(from: date)
+                        } else {
+                            viewModel.createdAt
+                        }
                         if !dataSnapshot.sectionIdentifiers.reversed().contains(date) {
                             dataSnapshot.appendSections([date])
                         }
@@ -535,7 +630,7 @@ extension SwapOrdersViewController {
                 guard let controller = viewController, !isCancelled else {
                     return
                 }
-                controller.sorting = ordering
+                controller.sorting = sorting
                 switch behavior {
                 case .reload, .reloadVisibleItems:
                     controller.viewModels = viewModels.reduce(into: [:]) { results, item in

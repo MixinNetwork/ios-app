@@ -239,6 +239,7 @@
 "cancel_waiting" = "Cancel Waiting";
 "canceled" = "Cancelled";
 "canceled_by_caller" = "Cancelled by caller";
+"cancelling" = "Cancelling";
 "cant_receive_the_code" = "Can't receive the code?";
 "caption_send" = "Send";
 "card" = "card";

@@ -8,6 +8,7 @@ public struct SwapOrder {
         case pending
         case success
         case failed
+        case cancelling
         case cancelled
         case expired
     }

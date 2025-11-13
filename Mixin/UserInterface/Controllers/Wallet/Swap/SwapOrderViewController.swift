@@ -18,13 +18,15 @@ final class SwapOrderViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = R.color.background_secondary()
+        
         title = R.string.localizable.order_details()
         navigationItem.titleView = WalletIdentifyingNavigationTitleView(
             title: R.string.localizable.order_details(),
             wallet: .privacy
         )
         navigationItem.rightBarButtonItem = .customerService(target: self, action: #selector(presentCustomerService(_:)))
-        view.backgroundColor = R.color.background_secondary()
+        
         tableView.backgroundColor = R.color.background_secondary()
         tableView.register(R.nib.swapOrderHeaderCell)
         tableView.register(R.nib.multipleAssetChangeCell)
@@ -42,6 +44,7 @@ final class SwapOrderViewController: UITableViewController {
             object: nil
         )
         reloadData(viewModel: viewModel)
+        
         reporter.report(event: .tradeDetail)
     }
     
@@ -79,7 +82,7 @@ final class SwapOrderViewController: UITableViewController {
             case .receives:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
                 cell.titleLabel.text = switch viewModel.state.knownCase {
-                case .created, .pending, .none:
+                case .created, .pending, .cancelling, .none:
                     R.string.localizable.estimated_receive()
                 case .success, .failed, .cancelled, .expired:
                     R.string.localizable.swap_order_received()
@@ -232,11 +235,29 @@ extension SwapOrderViewController: PillActionView.Delegate {
                 if let index = viewControllers.lastIndex(where: { $0 is MixinSwapViewController }) {
                     viewControllers.removeLast(viewControllers.count - index)
                 }
-                let swap = MixinSwapViewController(
-                    sendAssetID: viewModel.payAssetID,
-                    receiveAssetID: viewModel.receiveAssetID,
-                    referral: nil
-                )
+                let mode: SwapViewController.Mode
+                switch viewModel.type.knownCase {
+                case .limit:
+                    mode = .advanced
+                case .swap, .none:
+                    mode = .simple
+                }
+                let swap = switch viewModel.wallet {
+                case .privacy:
+                    MixinSwapViewController(
+                        mode: mode,
+                        sendAssetID: viewModel.payAssetID,
+                        receiveAssetID: viewModel.receiveAssetID,
+                        referral: nil
+                    )
+                case .common(let wallet):
+                    Web3SwapViewController(
+                        wallet: wallet,
+                        mode: mode,
+                        sendAssetID: viewModel.payAssetID,
+                        receiveAssetID: viewModel.receiveAssetID
+                    )
+                }
                 viewControllers.append(swap)
                 navigationController.setViewControllers(viewControllers, animated: true)
                 reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "trade_detail"])
@@ -343,7 +364,7 @@ extension SwapOrderViewController {
             switch orderState {
             case .created, .pending:
                 [.cancelOrder, .sharePair]
-            case .none, .success, .failed, .cancelled, .expired:
+            case .none, .success, .failed, .cancelling, .cancelled, .expired:
                 [.swapAgain, .sharePair]
             }
         }

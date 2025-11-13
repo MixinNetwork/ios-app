@@ -693,6 +693,7 @@ extension MarketViewController: PillActionView.Delegate {
             } else {
                 pickSingleToken { token in
                     let swap = MixinSwapViewController(
+                        mode: .simple,
                         sendAssetID: AssetID.erc20USDT,
                         receiveAssetID: token.assetID,
                         referral: nil

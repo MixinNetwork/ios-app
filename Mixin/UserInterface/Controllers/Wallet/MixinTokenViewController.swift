@@ -191,6 +191,7 @@ extension MixinTokenViewController: TokenActionView.Delegate {
             send()
         case .swap:
             let swap = MixinSwapViewController(
+                mode: .simple,
                 sendAssetID: token.assetID,
                 receiveAssetID: AssetID.erc20USDT,
                 referral: nil

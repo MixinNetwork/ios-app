@@ -239,6 +239,7 @@
 "cancel_waiting" = "Cancel Waiting";
 "canceled" = "Cancelado";
 "canceled_by_caller" = "Cancelado por la persona que llama";
+"cancelling" = "Cancelling";
 "cant_receive_the_code" = "¿No puedes recibir el código?";
 "caption_send" = "Enviar";
 "card" = "tarjeta";

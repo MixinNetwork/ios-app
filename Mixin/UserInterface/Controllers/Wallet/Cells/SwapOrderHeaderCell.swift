@@ -28,7 +28,7 @@ final class SwapOrderHeaderCell: UITableViewCell {
         case .created, .pending, .none:
             stateLabel.textColor = R.color.text_secondary()
             stateLabel.backgroundColor = R.color.button_background_disabled()
-        case .failed, .cancelled, .expired:
+        case .failed, .cancelling, .cancelled, .expired:
             stateLabel.textColor = R.color.market_red()
             stateLabel.backgroundColor = R.color.market_red()!.withAlphaComponent(0.2)
         }

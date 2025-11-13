@@ -121,21 +121,52 @@ struct SwapOrderViewModel {
                 break
             }
             
-            var receivings = [
-                AssetChange(
-                    token: receiveToken,
-                    amount: CurrencyFormatter.localizedString(
-                        from: expectedReceiveAmount,
-                        format: .precision,
-                        sign: .always,
-                        symbol: .custom(receiveSymbol)
-                    )
-                )
-            ]
+            let filledReceiveAmount: Decimal
+            if let value = order.filledReceiveAmount {
+                filledReceiveAmount = Decimal(string: value, locale: .enUSPOSIX) ?? 0
+            } else {
+                filledReceiveAmount = 0
+            }
+            
             switch state.knownCase {
-            case .created, .pending, .success:
-                break
-            case .failed, .cancelled, .expired, .none:
+            case .created, .pending:
+                self.receivings = [
+                    AssetChange(
+                        token: receiveToken,
+                        amount: CurrencyFormatter.localizedString(
+                            from: expectedReceiveAmount,
+                            format: .precision,
+                            sign: .always,
+                            symbol: .custom(receiveSymbol)
+                        )
+                    )
+                ]
+            case .success:
+                self.receivings = [
+                    AssetChange(
+                        token: receiveToken,
+                        amount: CurrencyFormatter.localizedString(
+                            from: filledReceiveAmount,
+                            format: .precision,
+                            sign: .always,
+                            symbol: .custom(receiveSymbol)
+                        )
+                    )
+                ]
+            case .failed, .cancelling, .cancelled, .expired, .none:
+                var receivings: [AssetChange] = []
+                if filledReceiveAmount != 0 {
+                    let change = AssetChange(
+                        token: receiveToken,
+                        amount: CurrencyFormatter.localizedString(
+                            from: filledReceiveAmount,
+                            format: .precision,
+                            sign: .always,
+                            symbol: .custom(receiveSymbol)
+                        )
+                    )
+                    receivings.append(change)
+                }
                 if let value = order.pendingAmount,
                    let pendingAmount = Decimal(string: value, locale: .enUSPOSIX),
                    pendingAmount != 0
@@ -151,26 +182,20 @@ struct SwapOrderViewModel {
                     )
                     receivings.append(change)
                 }
+                self.receivings = receivings
             }
-            self.receivings = receivings
             
-            if let value = order.filledReceiveAmount,
-               let filledReceiveAmount = Decimal(string: value, locale: .enUSPOSIX)
-            {
-                let percent = NSDecimalNumber(decimal: filledReceiveAmount / expectedReceiveAmount)
-                    .rounding(accordingToBehavior: NSDecimalNumberHandler.extractIntegralPart)
-                    .decimalValue
-                let percentage = NumberFormatter.percentage.string(decimal: percent) ?? ""
-                let amount = CurrencyFormatter.localizedString(
-                    from: filledReceiveAmount,
-                    format: .precision,
-                    sign: .always,
-                    symbol: .custom(receiveSymbol)
-                )
-                self.filling = Filling(percentage: percentage, amount: amount)
-            } else {
-                self.filling = nil
-            }
+            let percent = NSDecimalNumber(decimal: filledReceiveAmount / expectedReceiveAmount)
+                .rounding(accordingToBehavior: NSDecimalNumberHandler.extractIntegralPart)
+                .decimalValue
+            let percentage = NumberFormatter.percentage.string(decimal: percent) ?? ""
+            let amount = CurrencyFormatter.localizedString(
+                from: filledReceiveAmount,
+                format: .precision,
+                sign: .always,
+                symbol: .custom(receiveSymbol)
+            )
+            self.filling = Filling(percentage: percentage, amount: amount)
             
             self.receivePrice = SwapQuote.priceRepresentation(
                 sendAmount: payAmount,

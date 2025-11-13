@@ -59,17 +59,27 @@ extension RouteAPI {
         Self.request(method: .post, path: "/web3/swap", with: request, completion: completion)
     }
     
-    static func mixinSwapOrders(
-        offset: String?,
+    static func swapOrders(
+        category: SwapOrder.Category,
+        state: SwapOrder.State?,
         limit: Int,
-        queue: DispatchQueue,
-        completion: @escaping (MixinAPI.Result<[SwapOrder]>) -> Void
-    ) {
-        var path = "/web3/swap/orders?limit=\(limit)"
+        offset: String?,
+    ) -> MixinAPI.Result<[SwapOrder]> {
+        var path = "/web3/swap/orders?category=\(category)&limit=\(limit)"
+        if let state {
+            path.append("&state=\(state.rawValue)")
+        }
         if let offset {
             path.append("&offset=\(offset)")
         }
-        request(method: .get, path: path, queue: queue, completion: completion)
+        return request(method: .get, path: path)
+    }
+    
+    static func swapOrder(
+        id: String,
+        completion: @escaping (MixinAPI.Result<SwapOrder>) -> Void
+    ) {
+        request(method: .get, path: "/web3/limit_orders/\(id)", completion: completion)
     }
     
     static func createLimitOrder(
@@ -84,26 +94,6 @@ extension RouteAPI {
         completion: @escaping (MixinAPI.Result<Web3LimitOrderResponse>) -> Void
     ) {
         Self.request(method: .post, path: "/web3/limit_orders", with: request, completion: completion)
-    }
-    
-    static func limitOrders(
-        category: SwapOrder.Category,
-        limit: Int,
-        offset: String?,
-        completion: @escaping (MixinAPI.Result<[SwapOrder]>) -> Void
-    ) {
-        var path = "/web3/swap/orders?category=\(category)&limit=\(limit)"
-        if let offset {
-            path.append("&offset=\(offset)")
-        }
-        request(method: .get, path: path, completion: completion)
-    }
-    
-    static func swapOrder(
-        id: String,
-        completion: @escaping (MixinAPI.Result<SwapOrder>) -> Void
-    ) {
-        request(method: .get, path: "/web3/limit_orders/\(id)", completion: completion)
     }
     
     static func cancelSwapOrder(

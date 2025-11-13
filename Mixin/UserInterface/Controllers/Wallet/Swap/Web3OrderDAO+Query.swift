@@ -26,7 +26,7 @@ extension Web3OrderDAO {
     func orders(
         offset: Offset? = nil,
         filter: SwapOrder.Filter,
-        order: SwapOrder.Sorting,
+        sorting: SwapOrder.Sorting,
         limit: Int
     ) -> [SwapOrder] {
         var query = GRDB.SQL(sql: "SELECT * FROM orders\n")
@@ -48,23 +48,13 @@ extension Web3OrderDAO {
         if let type = filter.type {
             switch type {
             case .swap:
-                conditions.append("order_type = '\(SwapOrder.OrderType.swap.rawValue)'")
+                conditions.append("order_type = \(SwapOrder.OrderType.swap.rawValue)")
             case .limit:
-                conditions.append("order_type = '\(SwapOrder.OrderType.limit.rawValue)'")
+                conditions.append("order_type = \(SwapOrder.OrderType.limit.rawValue)")
             }
         }
         
-        switch filter.status {
-        case .none:
-            break
-        case .pending:
-            let states: [SwapOrder.State] = [.created, .pending]
-            conditions.append("state IN \(states.map(\.rawValue))")
-        case .done:
-            let states: [SwapOrder.State] = [.success]
-            conditions.append("state IN \(states.map(\.rawValue))")
-        case .other:
-            let states: [SwapOrder.State] = [.success]
+        if let states = filter.status?.states {
             conditions.append("state IN \(states.map(\.rawValue))")
         }
         
@@ -76,7 +66,7 @@ extension Web3OrderDAO {
         }
         
         if let offset {
-            switch (order, offset) {
+            switch (sorting, offset) {
             case let (.oldest, .after(offset, includesOffset)), let (.newest, .before(offset, includesOffset)):
                 if includesOffset {
                     conditions.append("created_at >= \(offset.createdAt)")
@@ -96,7 +86,7 @@ extension Web3OrderDAO {
         }
         
         let reverseResults: Bool
-        switch (order, offset) {
+        switch (sorting, offset) {
         case (.newest, .after), (.newest, .none):
             query.append(sql: "ORDER BY created_at DESC")
             reverseResults = false

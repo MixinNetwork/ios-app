@@ -12,8 +12,12 @@ public final class Web3OrderDAO: Web3DAO {
         db.select(with: "SELECT * FROM orders WHERE order_id = ?", arguments: [id])
     }
     
-    public func orderExists(orderID: String) -> Bool {
-        db.recordExists(in: SwapOrder.self, where: SwapOrder.column(of: .orderID) == orderID)
+    public func latestNotPendingCreatedAt() -> String? {
+        db.select(with: "SELECT created_at FROM orders WHERE state != 'pending' ORDER BY created_at DESC")
+    }
+    
+    public func pendingOrderIDs() -> [String] {
+        db.select(with: "SELECT order_id FROM orders WHERE state = 'pending'")
     }
     
     public func save(orders: [SwapOrder]) {

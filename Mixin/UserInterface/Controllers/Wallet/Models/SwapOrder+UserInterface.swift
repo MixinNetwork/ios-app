@@ -65,9 +65,22 @@ extension SwapOrder {
     }
     
     enum Status {
+        
         case pending
         case done
         case other
+        
+        var states: [SwapOrder.State] {
+            switch self {
+            case .pending:
+                [.created, .pending]
+            case .done:
+                [.success, .failed, .cancelled, .expired]
+            case .other:
+                [.cancelling]
+            }
+        }
+        
     }
     
     struct Filter: CustomStringConvertible {
@@ -99,6 +112,33 @@ extension SwapOrder {
             self.endDate = endDate
         }
         
+        func isIncluded(order: SwapOrder) -> Bool {
+            var isIncluded = true
+            if !wallets.isEmpty {
+                isIncluded = isIncluded && wallets.contains(where: { wallet in
+                    switch wallet {
+                    case .privacy:
+                        order.walletID == myUserId
+                    case .common(let wallet):
+                        order.walletID == wallet.walletID
+                    }
+                })
+            }
+            if let type {
+                isIncluded = isIncluded && order.orderType == type.rawValue
+            }
+            if let states = status?.states, let state = SwapOrder.State(rawValue: order.state) {
+                isIncluded = isIncluded && states.contains(state)
+            }
+            if let startDate {
+                isIncluded = isIncluded && order.createdAt.toUTCDate() >= startDate
+            }
+            if let endDate {
+                isIncluded = isIncluded && order.createdAt.toUTCDate() <= endDate
+            }
+            return isIncluded
+        }
+        
     }
     
 }
@@ -115,6 +155,8 @@ extension SwapOrder.State: AnyLocalized {
             R.string.localizable.completed()
         case .failed:
             R.string.localizable.failed()
+        case .cancelling:
+            R.string.localizable.cancelling()
         case .cancelled:
             R.string.localizable.canceled()
         case .expired:

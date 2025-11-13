@@ -48,7 +48,7 @@ final class SwapOrderCell: UICollectionViewCell {
         case .created, .pending, .none:
             receiveAmountLabel.textColor = R.color.text_tertiary()
             stateLabel.textColor = R.color.text_tertiary()
-        case .failed, .cancelled, .expired:
+        case .failed, .cancelling, .cancelled, .expired:
             receiveAmountLabel.textColor = R.color.market_green()
             stateLabel.textColor = R.color.market_red()
         }

@@ -271,14 +271,15 @@ final class TransferWalletSelectorViewController: UIViewController {
     }
     
     @objc private func applySelections(_ sender: Any) {
-        guard let indexPaths = collectionView.indexPathsForSelectedItems, !indexPaths.isEmpty else {
-            return
+        if let indexPaths = collectionView.indexPathsForSelectedItems, !indexPaths.isEmpty {
+            let digests = searchResults ?? walletDigests
+            let wallets = indexPaths.map { indexPath in
+                digests[indexPath.item].wallet
+            }
+            delegate?.transferWalletSelectorViewController(self, didSelectMultipleWallets: wallets)
+        } else {
+            delegate?.transferWalletSelectorViewController(self, didSelectMultipleWallets: [])
         }
-        let digests = searchResults ?? walletDigests
-        let wallets = indexPaths.map { indexPath in
-            digests[indexPath.item].wallet
-        }
-        delegate?.transferWalletSelectorViewController(self, didSelectMultipleWallets: wallets)
     }
     
     @objc private func reloadTips() {

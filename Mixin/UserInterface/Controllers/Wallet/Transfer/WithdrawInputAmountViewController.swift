@@ -134,7 +134,7 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
             || (!inputAmountRequirement.isSufficient && !feeRequirement.isSufficient)
             if bothRequirementsInsufficient {
                 insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
-                addAddFeeButton(symbol: feeRequirement.token.symbol)
+                insertAddFeeButton(symbol: feeRequirement.token.symbol)
             } else if !inputAmountRequirement.isSufficient {
                 insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
                 removeAddFeeButton()
@@ -143,7 +143,7 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
                     feeRequirement.localizedAmountWithSymbol,
                     feeRequirement.token.localizedBalanceWithSymbol
                 )
-                addAddFeeButton(symbol: feeRequirement.token.symbol)
+                insertAddFeeButton(symbol: feeRequirement.token.symbol)
             }
             reviewButton.isEnabled = false
         }
@@ -167,10 +167,7 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
     }
     
     private func updateFeeDisplay(fee: WithdrawFeeItem) {
-        changeFeeButton?.configuration?.attributedTitle = AttributedString(
-            fee.localizedAmountWithSymbol,
-            attributes: feeAttributes
-        )
+        changeFeeButton?.configuration?.title = fee.localizedAmountWithSymbol
         let availableBalance = if feeTokenSameAsWithdrawToken {
             CurrencyFormatter.localizedString(
                 from: max(0, tokenItem.decimalBalance - fee.amount),
@@ -208,12 +205,21 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
                     return
                 }
                 let feeTokenSameAsWithdrawToken = fee.assetID == token.assetID
+                let isFeeWaived = switch destination {
+                case .address:
+                    false
+                case .temporary:
+                    false
+                case let .commonWallet(wallet, _):
+                    CrossWalletTransaction.isFeeWaived && wallet.hasSecret()
+                }
                 await MainActor.run {
                     self.feeTokenSameAsWithdrawToken = feeTokenSameAsWithdrawToken
                     self.selectedFeeItemIndex = 0
                     self.selectableFeeItems = feeItems
                     self.feeActivityIndicator?.stopAnimating()
                     self.reloadViewsWithBalanceRequirements()
+                    self.updateFeeView(style: isFeeWaived ? .waived : .normal)
                     self.updateFeeDisplay(fee: feeToken)
                     if let button = self.changeFeeButton {
                         button.alpha = 1

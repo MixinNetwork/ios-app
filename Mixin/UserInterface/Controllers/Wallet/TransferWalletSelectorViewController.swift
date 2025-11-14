@@ -346,24 +346,7 @@ extension TransferWalletSelectorViewController: UICollectionViewDelegate {
         case .privacy:
             uncontrolledWallet = nil
         case .common(let wallet):
-            switch wallet.category.knownCase {
-            case .classic:
-                uncontrolledWallet = nil
-            case .importedMnemonic:
-                if AppGroupKeychain.importedMnemonics(walletID: wallet.walletID) == nil {
-                    uncontrolledWallet = wallet
-                } else {
-                    uncontrolledWallet = nil
-                }
-            case .importedPrivateKey:
-                if AppGroupKeychain.importedPrivateKey(walletID: wallet.walletID) == nil {
-                    uncontrolledWallet = wallet
-                } else {
-                    uncontrolledWallet = nil
-                }
-            case .watchAddress, .none:
-                uncontrolledWallet = wallet
-            }
+            uncontrolledWallet = wallet.hasSecret() ? nil : wallet
         }
         if let wallet = uncontrolledWallet {
             let warning = UncontrolledWalletWarningViewController(wallet: wallet)

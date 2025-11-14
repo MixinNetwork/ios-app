@@ -28,7 +28,7 @@ final class MobileNumberIntroductionViewController: IntroductionViewController {
             R.string.localizable.change_mobile_number()
         }
         contentLabelTopConstraint.constant = 16
-        contentLabel.attributedText = {
+        contentTextView.attributedText = {
             let attributedString = NSMutableAttributedString(attributedString: .walletIntroduction())
             attributedString.append(.init(string: "\n\n"))
             attributedString.append(.orderedList(items: [

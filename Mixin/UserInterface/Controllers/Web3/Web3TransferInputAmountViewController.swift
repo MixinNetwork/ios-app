@@ -151,7 +151,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
             || (!inputAmountRequirement.isSufficient && !feeRequirement.isSufficient)
             if bothRequirementsInsufficient {
                 insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
-                addAddFeeButton(symbol: feeRequirement.token.symbol)
+                insertAddFeeButton(symbol: feeRequirement.token.symbol)
             } else if !inputAmountRequirement.isSufficient {
                 insufficientBalanceLabel.text = R.string.localizable.insufficient_balance()
                 removeAddFeeButton()
@@ -160,7 +160,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                     feeRequirement.localizedAmountWithSymbol,
                     feeRequirement.token.localizedBalanceWithSymbol
                 )
-                addAddFeeButton(symbol: feeRequirement.token.symbol)
+                insertAddFeeButton(symbol: feeRequirement.token.symbol)
             }
             reviewButton.isEnabled = false
         }
@@ -197,13 +197,15 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                 } else {
                     payment.token.localizedBalanceWithSymbol
                 }
+                let isFeeWaived = payment.toAddressLabel?.isFeeWaived() ?? false
                 await MainActor.run {
                     self.fee = fee
                     self.feeToken = feeToken
                     self.feeActivityIndicator?.stopAnimating()
                     self.tokenBalanceLabel.text = R.string.localizable.available_balance_count(availableBalance)
+                    self.updateFeeView(style: isFeeWaived ? .waived : .normal)
                     if let button = self.changeFeeButton {
-                        button.configuration?.attributedTitle = AttributedString(title, attributes: feeAttributes)
+                        button.configuration?.title = title
                         button.alpha = 1
                         button.configuration?.image = nil
                         button.isUserInteractionEnabled = false

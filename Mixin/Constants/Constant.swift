@@ -60,3 +60,7 @@ let referralIconImage: UIImage? = {
     }
     return SDAnimatedImage(data: data, scale: UIScreen.main.scale)
 }()
+
+enum CrossWalletTransaction {
+    static let isFeeWaived = true
+}

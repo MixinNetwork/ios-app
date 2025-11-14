@@ -41,6 +41,11 @@ struct WithdrawPaymentOperation {
         
     }
     
+    private enum Memo {
+        static let empty = ""
+        static let feeWaived = "mixin free fee"
+    }
+    
     let traceID: String
     
     let withdrawalToken: MixinTokenItem
@@ -81,7 +86,6 @@ struct WithdrawPaymentOperation {
     func start(pin: String) async throws {
         let senderID = myUserId
         let threshold: Int32 = 1
-        let emptyMemo = ""
         let fullAddress = address.fullRepresentation
         let withdrawalAmount = withdrawalTokenAmount
         let withdrawalAmountString = TokenAmountFormatter.string(from: withdrawalAmount)
@@ -132,18 +136,21 @@ struct WithdrawPaymentOperation {
         
         var error: NSError?
         
-        let withdrawalTx = KernelBuildWithdrawalTx(withdrawalToken.kernelAssetID,
-                                                   withdrawalAmountString,
-                                                   address.destination,
-                                                   address.tag,
-                                                   isFeeTokenDifferent ? "" : feeAmountString,
-                                                   isFeeTokenDifferent ? "" : feeOutputKeys,
-                                                   isFeeTokenDifferent ? "" : feeOutputMask,
-                                                   try withdrawalOutputs.encodeAsInputData(),
-                                                   changeKeys,
-                                                   changeMask,
-                                                   emptyMemo,
-                                                   &error)
+        let isFeeWaived = addressLabel?.isFeeWaived() ?? false
+        let withdrawalTx = KernelBuildWithdrawalTx(
+            withdrawalToken.kernelAssetID,
+            withdrawalAmountString,
+            address.destination,
+            address.tag,
+            isFeeTokenDifferent ? "" : feeAmountString,
+            isFeeTokenDifferent ? "" : feeOutputKeys,
+            isFeeTokenDifferent ? "" : feeOutputMask,
+            try withdrawalOutputs.encodeAsInputData(),
+            changeKeys,
+            changeMask,
+            isFeeWaived ? Memo.feeWaived : Memo.empty,
+            &error
+        )
         guard let withdrawalTx, error == nil else {
             throw Error.buildWithdrawalTx(error)
         }
@@ -154,17 +161,19 @@ struct WithdrawPaymentOperation {
         if let feeOutputs {
             let feeChangeKeys = ghostKeys[2].keys.joined(separator: ",")
             let feeChangeMask = ghostKeys[2].mask
-            let tx = KernelBuildTx(feeToken.kernelAssetID,
-                                   feeAmountString,
-                                   threshold,
-                                   feeOutputKeys,
-                                   feeOutputMask,
-                                   try feeOutputs.encodeAsInputData(),
-                                   feeChangeKeys,
-                                   feeChangeMask,
-                                   emptyMemo,
-                                   withdrawalTx.hash,
-                                   &error)
+            let tx = KernelBuildTx(
+                feeToken.kernelAssetID,
+                feeAmountString,
+                threshold,
+                feeOutputKeys,
+                feeOutputMask,
+                try feeOutputs.encodeAsInputData(),
+                feeChangeKeys,
+                feeChangeMask,
+                Memo.empty,
+                withdrawalTx.hash,
+                &error
+            )
             guard let tx, error == nil else {
                 throw Error.buildFeeTx(error)
             }
@@ -197,17 +206,19 @@ struct WithdrawPaymentOperation {
         let now = Date().toUTCString()
         let broadcastRequests: [TransactionRequest]
         let withdrawalSnapshotAmount = isFeeTokenDifferent ? withdrawalAmount : withdrawalAmount + feeAmount
-        let withdrawalSnapshot = SafeSnapshot(type: .withdrawal,
-                                              assetID: withdrawalToken.assetID,
-                                              amount: "-" + TokenAmountFormatter.string(from: withdrawalSnapshotAmount),
-                                              userID: senderID,
-                                              opponentID: "",
-                                              memo: emptyMemo,
-                                              transactionHash: signedWithdrawal.hash,
-                                              createdAt: now,
-                                              traceID: traceID,
-                                              inscriptionHash: nil,
-                                              withdrawal: .init(hash: "", receiver: address.destination))
+        let withdrawalSnapshot = SafeSnapshot(
+            type: .withdrawal,
+            assetID: withdrawalToken.assetID,
+            amount: "-" + TokenAmountFormatter.string(from: withdrawalSnapshotAmount),
+            userID: senderID,
+            opponentID: "",
+            memo: Memo.empty,
+            transactionHash: signedWithdrawal.hash,
+            createdAt: now,
+            traceID: traceID,
+            inscriptionHash: nil,
+            withdrawal: .init(hash: "", receiver: address.destination)
+        )
         if let feeOutputs, let feeTx {
             guard let feeResponse = verifyResponses.first(where: { $0.requestID == feeTraceID }) else {
                 throw Error.missingFeeResponse
@@ -223,16 +234,18 @@ struct WithdrawPaymentOperation {
                 throw Error.signFee(error)
             }
             Logger.general.info(category: "Withdraw", message: "Fee signed")
-            let feeSnapshot = SafeSnapshot(type: .snapshot,
-                                           assetID: feeToken.assetID,
-                                           amount: "-" + feeAmountString,
-                                           userID: senderID,
-                                           opponentID: cashierID,
-                                           memo: emptyMemo,
-                                           transactionHash: signedFee.hash,
-                                           createdAt: now,
-                                           traceID: feeTraceID, 
-                                           inscriptionHash: nil)
+            let feeSnapshot = SafeSnapshot(
+                type: .snapshot,
+                assetID: feeToken.assetID,
+                amount: "-" + feeAmountString,
+                userID: senderID,
+                opponentID: cashierID,
+                memo: Memo.empty,
+                transactionHash: signedFee.hash,
+                createdAt: now,
+                traceID: feeTraceID, 
+                inscriptionHash: nil
+            )
             broadcastRequests = [
                 TransactionRequest(id: traceID, raw: signedWithdrawal.raw),
                 TransactionRequest(id: feeTraceID, raw: signedFee.raw)

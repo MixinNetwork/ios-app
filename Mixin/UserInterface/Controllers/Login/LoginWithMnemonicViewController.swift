@@ -44,9 +44,9 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
         case .signUp:
             titleLabel.text = R.string.localizable.creating_your_account()
         }
-        contentLabel.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
-        contentLabel.adjustsFontForContentSizeCategory = true
-        contentLabel.textAlignment = .center
+        contentTextView.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+        contentTextView.adjustsFontForContentSizeCategory = true
+        contentTextView.textAlignment = .center
         actionButton.addTarget(self, action: #selector(login(_:)), for: .touchUpInside)
         actionButton.setTitle(R.string.localizable.retry(), for: .normal)
         actionButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
@@ -100,17 +100,17 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     private func showLoading() {
         busyIndicator.startAnimating()
         actionButton.isHidden = true
-        contentLabel.textColor = R.color.text_tertiary()
-        contentLabel.text = R.string.localizable.mnemonic_phrase_take_long()
-        contentLabel.isHidden = false
+        contentTextView.textColor = R.color.text_tertiary()
+        contentTextView.text = R.string.localizable.mnemonic_phrase_take_long()
+        contentTextView.isHidden = false
     }
     
     private func showError(_ description: String) {
         busyIndicator.stopAnimating()
         actionButton.isHidden = false
-        contentLabel.textColor = R.color.error_red()
-        contentLabel.text = description
-        contentLabel.isHidden = false
+        contentTextView.textColor = R.color.error_red()
+        contentTextView.text = description
+        contentTextView.isHidden = false
     }
     
 }

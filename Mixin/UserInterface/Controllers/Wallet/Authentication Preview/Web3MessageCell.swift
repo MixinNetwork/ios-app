@@ -1,6 +1,6 @@
 import UIKit
 
-final class Web3MessageCell: UITableViewCell {
+final class Web3MessageCell: ModernSelectedBackgroundCell {
     
     @IBOutlet weak var captionLabel: UILabel!
     @IBOutlet weak var messageTextView: UITextView!

@@ -114,7 +114,7 @@ final class AuthenticationPreviewHeaderView: UIView {
         iconView.setIcon(chain: chain)
     }
     
-    func setIcon(sendToken: Token, receiveToken: SwapToken) {
+    func setIcon(sendToken: any Token, receiveToken: any Token) {
         let iconView: StackedTokenIconView
         if let view = self.multipleTokenIconView, view.isDescendant(of: iconWrapperView) {
             iconView = view

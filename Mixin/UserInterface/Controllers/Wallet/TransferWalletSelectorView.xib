@@ -62,7 +62,7 @@
             <color key="backgroundColor" name="background_secondary"/>
             <constraints>
                 <constraint firstItem="qxH-RT-un8" firstAttribute="top" secondItem="KoJ-N4-Vj3" secondAttribute="bottom" id="6QI-pl-TaK"/>
-                <constraint firstAttribute="bottom" secondItem="qxH-RT-un8" secondAttribute="bottom" id="ETX-ZM-1CA"/>
+                <constraint firstAttribute="bottom" secondItem="qxH-RT-un8" secondAttribute="bottom" placeholder="YES" id="ETX-ZM-1CA"/>
                 <constraint firstItem="KoJ-N4-Vj3" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="EmU-Jo-15Z"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="KoJ-N4-Vj3" secondAttribute="trailing" constant="5" id="Gfq-Qe-sKq"/>
                 <constraint firstItem="qxH-RT-un8" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="cPE-dW-fm2"/>

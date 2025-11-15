@@ -37,7 +37,9 @@ extension Web3TransactionTableHeaderView {
             actionView.layer.cornerRadius = 12
             actionView.layer.masksToBounds = true
             actionView.actions = Web3TransactionTableHeaderViewAction.allCases
-                .map(\.localizedTitle)
+                .map { action in
+                        .init(title: action.localizedTitle)
+                }
             contentStackView.addArrangedSubview(actionView)
             actionView.snp.makeConstraints { make in
                 make.height.equalTo(44)

@@ -55,6 +55,16 @@ public final class Web3TokenDAO: Web3DAO {
         return db.select(with: query)
     }
     
+    public func swapOrderToken(id: String) -> SwapOrder.Token? {
+        let sql = """
+            SELECT t.asset_id, t.symbol, c.name, t.icon_url
+            FROM tokens t
+                LEFT JOIN chains c ON t.chain_id = c.chain_id
+            WHERE t.asset_id = ?
+        """
+        return db.select(with: sql, arguments: [id])
+    }
+    
     public func allTokens() -> [Web3TokenItem] {
         db.select(with: "\(SQL.selector)\n\(SQL.order)")
     }

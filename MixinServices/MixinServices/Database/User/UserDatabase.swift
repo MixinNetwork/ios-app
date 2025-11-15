@@ -910,26 +910,6 @@ public final class UserDatabase: Database {
             try db.execute(sql: sql)
         }
         
-        migrator.registerMigration("swap_orders") { db in
-            let sql = """
-            CREATE TABLE IF NOT EXISTS `swap_orders` (
-                `order_id` TEXT NOT NULL,
-                `user_id` TEXT NOT NULL,
-                `pay_asset_id` TEXT NOT NULL,
-                `receive_asset_id` TEXT NOT NULL,
-                `pay_amount` TEXT NOT NULL,
-                `receive_amount` TEXT NOT NULL,
-                `pay_trace_id` TEXT NOT NULL,
-                `receive_trace_id` TEXT NOT NULL,
-                `state` TEXT NOT NULL,
-                `created_at` TEXT NOT NULL,
-                `order_type` TEXT NOT NULL,
-                PRIMARY KEY(`order_id`)
-            )
-            """
-            try db.execute(sql: sql)
-        }
-        
         migrator.registerMigration("addresses_chain") { db in
             let itemColumns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(addresses)").map(\.name)
             if !itemColumns.contains("chain_id") {
@@ -986,6 +966,10 @@ public final class UserDatabase: Database {
                     try db.execute(sql: "ALTER TABLE `deposit_entries` ADD COLUMN `maximum` TEXT NOT NULL")
                 }
             }
+        }
+        
+        migrator.registerMigration("swap_orders_2") { db in
+            try db.execute(sql: "DROP TABLE IF EXISTS `swap_orders`")
         }
         
         return migrator

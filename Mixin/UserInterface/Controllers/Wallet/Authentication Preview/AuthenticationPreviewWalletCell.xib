@@ -62,6 +62,8 @@
             <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="captionLabel" destination="PPp-U7-jgZ" id="Ios-3m-MmS"/>
+                <outlet property="contentLeadingConstraint" destination="tRs-sX-ouT" id="VuY-fH-adp"/>
+                <outlet property="contentTrailingConstraint" destination="Bw9-ZI-b5L" id="htd-ZZ-Rhb"/>
                 <outlet property="iconImageView" destination="1Zk-Fa-DJS" id="bDs-5Q-cyD"/>
                 <outlet property="nameLabel" destination="Dnb-OG-vnu" id="Wr9-ic-1ED"/>
             </connections>

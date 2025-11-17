@@ -24,6 +24,9 @@ final class MixinSwapViewController: SwapViewController {
         self.referral = referral
         super.init(
             mode: mode,
+            openOrderRequester: PendingSwapOrderLoader(
+                behavior: .watchWallet(id: myUserId)
+            ),
             tokenSource: .mixin,
             sendAssetID: sendAssetID,
             receiveAssetID: receiveAssetID
@@ -40,6 +43,7 @@ final class MixinSwapViewController: SwapViewController {
             title: R.string.localizable.swap(),
             wallet: .privacy
         )
+        openOrderRequester.delegate = self
     }
     
     override func changeSendToken(_ sender: Any) {
@@ -237,6 +241,25 @@ final class MixinSwapViewController: SwapViewController {
             }
         }
         reporter.report(event: .tradePreview)
+    }
+    
+}
+
+extension MixinSwapViewController: PendingSwapOrderLoader.Delegate {
+    
+    func pendingSwapOrder(_ loader: PendingSwapOrderLoader, didLoad orders: [SwapOrder]) {
+        let tokens = Web3OrderDAO.shared.swapOrderTokens(orders: orders)
+        let viewModels = orders.map { order in
+            SwapOrderViewModel(
+                order: order,
+                wallet: .privacy,
+                payToken: tokens[order.payAssetID],
+                receiveToken: tokens[order.receiveAssetID]
+            )
+        }
+        DispatchQueue.main.async {
+            self.reload(openOrders: viewModels)
+        }
     }
     
 }

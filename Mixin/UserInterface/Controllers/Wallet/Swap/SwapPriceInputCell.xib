@@ -142,6 +142,7 @@
                 <outlet property="textField" destination="8eQ-oJ-z3b" id="IXK-5l-4xb"/>
                 <outlet property="titleLabel" destination="ZHF-Ka-aE0" id="8p5-YO-CM4"/>
                 <outlet property="togglePriceUnitButton" destination="ryc-oT-Usi" id="EQ6-vQ-kWc"/>
+                <outlet property="togglePriceUnitImageView" destination="Yw6-V2-vyQ" id="ecC-xl-Nxa"/>
                 <outlet property="tokenIconView" destination="MQp-iC-Zr2" id="zoP-e6-DF5"/>
                 <outlet property="tokenNameLabel" destination="CNe-sG-agT" id="WZX-Ow-Ggi"/>
             </connections>
@@ -163,7 +164,7 @@
             <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

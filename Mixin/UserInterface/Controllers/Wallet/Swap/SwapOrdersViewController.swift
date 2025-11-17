@@ -29,6 +29,8 @@ final class SwapOrdersViewController: UIViewController {
     private var loadNextPageIndexPath: IndexPath?
     private var lastItem: SwapOrderViewModel?
     
+    private var pendingOrdersLoader: PendingSwapOrderLoader?
+    
     init(wallet: Wallet) {
         self.filter = SwapOrder.Filter(wallets: [wallet])
         let nib = R.nib.swapOrdersView
@@ -110,6 +112,16 @@ final class SwapOrdersViewController: UIViewController {
         } else {
             collectionView.contentInset.bottom = 0
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        pendingOrdersLoader?.start()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        pendingOrdersLoader?.pause()
     }
     
     @objc private func pickWallets(_ sender: Any) {
@@ -521,6 +533,14 @@ extension SwapOrdersViewController {
                 sorting: sorting,
                 limit: limit
             )
+            let pendingOrderIDs = orders.compactMap { order in
+                switch SwapOrder.State(rawValue: order.state) {
+                case .created, .pending:
+                    order.orderID
+                default:
+                    nil
+                }
+            }
             
             let wallets: [String: Wallet]
             if filter.wallets.isEmpty {
@@ -540,22 +560,7 @@ extension SwapOrdersViewController {
                 }
             }
             
-            let tokens: [String: SwapOrder.Token] = {
-                var assetIDs: Set<String> = []
-                for order in orders {
-                    assetIDs.insert(order.payAssetID)
-                    assetIDs.insert(order.receiveAssetID)
-                }
-                var tokens: [String: SwapOrder.Token] = [:]
-                for assetID in assetIDs {
-                    if let token = TokenDAO.shared.swapOrderToken(id: assetID) {
-                        tokens[assetID] = token
-                    } else if let token = Web3TokenDAO.shared.swapOrderToken(id: assetID) {
-                        tokens[assetID] = token
-                    }
-                }
-                return tokens
-            }()
+            let tokens = Web3OrderDAO.shared.swapOrderTokens(orders: orders)
             
             let viewModels: [SwapOrderViewModel] = orders.compactMap { order in
                 guard let wallet = wallets[order.walletID] else {
@@ -697,6 +702,14 @@ extension SwapOrdersViewController {
                         controller.loadNextPageIndexPath = nil
                         controller.lastItem = nil
                     }
+                }
+                controller.pendingOrdersLoader?.pause()
+                if !pendingOrderIDs.isEmpty {
+                    let pendingOrdersLoader = PendingSwapOrderLoader(
+                        behavior: .watchOrders(ids: pendingOrderIDs)
+                    )
+                    controller.pendingOrdersLoader = pendingOrdersLoader
+                    pendingOrdersLoader.start()
                 }
             }
         }

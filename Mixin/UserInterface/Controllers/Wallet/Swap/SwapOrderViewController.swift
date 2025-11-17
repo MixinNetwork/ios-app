@@ -6,6 +6,7 @@ final class SwapOrderViewController: UITableViewController {
     private var viewModel: SwapOrderViewModel
     private var actions: [Action] = []
     private var infoRows: [InfoRow] = []
+    private var loader: PendingSwapOrderLoader?
     
     init(viewModel: SwapOrderViewModel) {
         self.viewModel = viewModel
@@ -44,8 +45,26 @@ final class SwapOrderViewController: UITableViewController {
             object: nil
         )
         reloadData(viewModel: viewModel)
+        switch viewModel.state.knownCase {
+        case .created, .pending:
+            loader = PendingSwapOrderLoader(
+                behavior: .watchOrder(id: viewModel.orderID)
+            )
+        default:
+            break
+        }
         
         reporter.report(event: .tradeDetail)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        loader?.start()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        loader?.pause()
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

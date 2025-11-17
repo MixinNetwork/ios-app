@@ -60,26 +60,60 @@ extension RouteAPI {
     }
     
     static func swapOrders(
-        category: SwapOrder.Category,
-        state: SwapOrder.State?,
         limit: Int,
         offset: String?,
-    ) -> MixinAPI.Result<[SwapOrder]> {
-        var path = "/web3/swap/orders?category=\(category)&limit=\(limit)"
+        walletID: String?,
+        state: SwapOrder.State? = nil,
+    ) async throws -> [SwapOrder] {
+        var path = "/web3/swap/orders?limit=\(limit)"
+        if let offset {
+            path.append("&offset=\(offset)")
+        }
+        if let walletID {
+            path.append("&walletId=\(walletID)")
+        }
         if let state {
             path.append("&state=\(state.rawValue)")
         }
+        return try await request(method: .get, path: path)
+    }
+    
+    static func swapOrders(
+        limit: Int,
+        offset: String?,
+        walletID: String?,
+        state: SwapOrder.State? = nil,
+    ) -> MixinAPI.Result<[SwapOrder]> {
+        var path = "/web3/swap/orders?limit=\(limit)"
         if let offset {
             path.append("&offset=\(offset)")
+        }
+        if let walletID {
+            path.append("&walletId=\(walletID)")
+        }
+        if let state {
+            path.append("&state=\(state.rawValue)")
         }
         return request(method: .get, path: path)
     }
     
-    static func swapOrder(
+    static func swapOrders(
+        ids: [String],
+    ) async throws -> [SwapOrder] {
+        try await request(method: .post, path: "/web3/swap/orders", with: ids)
+    }
+    
+    static func limitOrder(
         id: String,
         completion: @escaping (MixinAPI.Result<SwapOrder>) -> Void
     ) {
         request(method: .get, path: "/web3/limit_orders/\(id)", completion: completion)
+    }
+    
+    static func limitOrder(
+        id: String,
+    ) async throws -> SwapOrder {
+        try await request(method: .get, path: "/web3/limit_orders/\(id)")
     }
     
     static func createLimitOrder(

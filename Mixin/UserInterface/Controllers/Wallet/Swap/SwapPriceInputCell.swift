@@ -9,6 +9,7 @@ final class SwapPriceInputCell: UICollectionViewCell {
     @IBOutlet weak var tokenIconView: BadgeIconView!
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var priceRepresentationLabel: UILabel!
+    @IBOutlet weak var togglePriceUnitImageView: UIImageView!
     @IBOutlet weak var tokenNameLabel: UILabel!
     @IBOutlet weak var loadingIndicator: ActivityIndicatorView!
     @IBOutlet weak var togglePriceUnitButton: UIButton!
@@ -57,6 +58,15 @@ final class SwapPriceInputCell: UICollectionViewCell {
                 tokenNameLabel.text = token.name
                 loadingIndicator.stopAnimating()
             }
+        }
+    }
+    
+    func load(priceRepresentation: String?) {
+        priceRepresentationLabel.text = priceRepresentation
+        if priceRepresentation == nil {
+            togglePriceUnitImageView.alpha = 0
+        } else {
+            togglePriceUnitImageView.alpha = 1
         }
     }
     

@@ -25,15 +25,18 @@ class SwapViewController: UIViewController {
     @IBOutlet weak var reviewButtonWrapperAboveSafeAreaBottomConstraint: NSLayoutConstraint!
     
     let pricingModel = SwapPricingModel()
+    let openOrderRequester: PendingSwapOrderLoader
     
     var mode: Mode {
         didSet {
             switch mode {
             case .simple:
+                openOrderRequester.pause()
                 scheduleNewRequesterIfAvailable()
             case .advanced:
-                requester?.stop()
-                requester = nil
+                quoteRequester?.stop()
+                quoteRequester = nil
+                openOrderRequester.start()
             }
             reloadSections(mode: mode, price: pricingModel.displayPrice?.value)
         }
@@ -66,6 +69,11 @@ class SwapViewController: UIViewController {
             if pricingModel.priceUnit == .receive {
                 priceStyle = style
             }
+            isSellingToken = if let assetID = receiveToken?.assetID {
+                AssetID.stablecoins.contains(assetID)
+            } else {
+                false
+            }
             pricingModel.receiveToken = receiveToken
             scheduleNewRequesterIfAvailable()
         }
@@ -94,7 +102,7 @@ class SwapViewController: UIViewController {
     
     private var sections: [Section] = []
     private var contentSizeObservation: NSKeyValueObservation?
-    private var requester: SwapQuotePeriodicRequester?
+    private var quoteRequester: SwapQuotePeriodicRequester?
     private var amountRange: SwapQuotePeriodicRequester.AmountRange?
     private var openOrders: [SwapOrderViewModel] = []
     
@@ -133,19 +141,33 @@ class SwapViewController: UIViewController {
         }
     }
     
+    private var isSellingToken = false {
+        didSet {
+            guard isSellingToken != oldValue else {
+                return
+            }
+            guard let view = priceInputCell?.textField.inputAccessoryView as? SwapInputAccessoryView else {
+                return
+            }
+            updatePriceInputAccessoryView(view: view, sellingToken: isSellingToken)
+        }
+    }
+    
     // SwapExpirySelectorCell
     private(set) var selectedExpiry: SwapOrder.Expiry = .never
     
     init(
         mode: Mode,
+        openOrderRequester: PendingSwapOrderLoader,
         tokenSource: RouteTokenSource,
         sendAssetID: String?,
         receiveAssetID: String?
     ) {
         self.mode = mode
+        self.openOrderRequester = openOrderRequester
+        self.tokenSource = tokenSource
         self.arbitrarySendAssetID = sendAssetID
         self.arbitraryReceiveAssetID = receiveAssetID
-        self.tokenSource = tokenSource
         let nib = R.nib.swapView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -230,14 +252,18 @@ class SwapViewController: UIViewController {
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
                 return section
             case .openOrders:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = if let orders = self?.openOrders, !orders.isEmpty {
-                    NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(1))
+                let group: NSCollectionLayoutGroup
+                if let orders = self?.openOrders, !orders.isEmpty {
+                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
+                    group = .horizontal(layoutSize: groupSize, subitems: [item])
                 } else {
-                    NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(211))
+                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(211))
+                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(211))
+                    group = .horizontal(layoutSize: groupSize, subitems: [item])
                 }
-                let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                 section.boundarySupplementaryItems = [
@@ -275,12 +301,18 @@ class SwapViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        requester?.start(delay: 0)
+        switch mode {
+        case .simple:
+            quoteRequester?.start(delay: 0)
+        case .advanced:
+            openOrderRequester.start()
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        requester?.stop()
+        quoteRequester?.stop()
+        openOrderRequester.pause()
     }
     
     @IBAction func review(_ sender: RoundedButton) {
@@ -468,17 +500,7 @@ extension SwapViewController: UICollectionViewDataSource {
                 let inputAccessoryView = SwapInputAccessoryView(
                     frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 44)
                 )
-                inputAccessoryView.items = [
-                    .init(title: "25%") { [weak self] in
-                        self?.inputSendAmount(multiplier: 0.25)
-                    },
-                    .init(title: "50%") { [weak self] in
-                        self?.inputSendAmount(multiplier: 0.5)
-                    },
-                    .init(title: R.string.localizable.max()) { [weak self] in
-                        self?.inputSendAmount(multiplier: 1)
-                    },
-                ]
+                updatePriceInputAccessoryView(view: inputAccessoryView, sellingToken: isSellingToken)
                 inputAccessoryView.onDone = { [weak textField=cell.sendAmountTextField] in
                     textField?.resignFirstResponder()
                 }
@@ -526,7 +548,7 @@ extension SwapViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_price_input, for: indexPath)!
             cell.textField.text = pricingModel.displayPrice?.localizedValue
             cell.update(style: priceStyle)
-            cell.priceRepresentationLabel.text = pricingModel.priceEquation()
+            cell.load(priceRepresentation: pricingModel.priceEquation())
             if priceInputCell != cell {
                 let inputAccessoryView = SwapInputAccessoryView(
                     frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 44)
@@ -586,6 +608,8 @@ extension SwapViewController: UICollectionViewDataSource {
                 return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_no_open_order, for: indexPath)!
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_order, for: indexPath)!
+                let viewModel = openOrders[indexPath.item]
+                cell.load(viewModel: viewModel)
                 return cell
             }
         case .expiry:
@@ -620,6 +644,10 @@ extension SwapViewController: UICollectionViewDelegate {
         switch sections[indexPath.section] {
         case .modeSelector:
             mode = Mode(rawValue: indexPath.item)!
+        case .openOrders:
+            let viewModel = openOrders[indexPath.item]
+            let viewController = SwapOrderViewController(viewModel: viewModel)
+            navigationController?.pushViewController(viewController, animated: true)
         default:
             break
         }
@@ -668,7 +696,7 @@ extension SwapViewController: SwapPricingModel.Delegate {
                     priceInputCell?.update(style: .selectable)
                 }
             case .priceEquation(let text):
-                priceInputCell?.priceRepresentationLabel.text = text
+                priceInputCell?.load(priceRepresentation: text)
                 if let text {
                     swapPriceContent = .price(text)
                 } else {
@@ -834,6 +862,34 @@ extension SwapViewController {
         self.present(alert, animated: true)
     }
     
+    private func updatePriceInputAccessoryView(view: SwapInputAccessoryView, sellingToken: Bool) {
+        view.items = if isSellingToken {
+            [
+                .init(title: R.string.localizable.current_market_price()) { [weak self] in
+                    self?.inputPrice(multiplier: 1)
+                },
+                .init(title: "+10%") { [weak self] in
+                    self?.inputPrice(multiplier: 1.1)
+                },
+                .init(title: "+20%") { [weak self] in
+                    self?.inputPrice(multiplier: 1.2)
+                },
+            ]
+        } else {
+            [
+                .init(title: R.string.localizable.current_market_price()) { [weak self] in
+                    self?.inputPrice(multiplier: 1)
+                },
+                .init(title: "-10%") { [weak self] in
+                    self?.inputPrice(multiplier: 0.9)
+                },
+                .init(title: "-20%") { [weak self] in
+                    self?.inputPrice(multiplier: 0.8)
+                },
+            ]
+        }
+    }
+    
     private func reloadData(swappableTokens: [SwapToken]) {
         DispatchQueue.global().async { [weak self, arbitrarySendAssetID, arbitraryReceiveAssetID] in
             let lastTokenIDs = Self.loadTokenIDs()
@@ -942,8 +998,8 @@ extension SwapViewController {
         swapAmountInputCell?.updateReceiveAmountTextField(amount: nil)
         quote = nil
         reviewButton.isEnabled = false
-        requester?.stop()
-        requester = nil
+        quoteRequester?.stop()
+        quoteRequester = nil
         guard
             let sendAmount = pricingModel.sendAmount,
             sendAmount > 0,
@@ -968,7 +1024,7 @@ extension SwapViewController {
             source: tokenSource
         )
         requester.delegate = self
-        self.requester = requester
+        self.quoteRequester = requester
         requester.start(delay: 1)
     }
     

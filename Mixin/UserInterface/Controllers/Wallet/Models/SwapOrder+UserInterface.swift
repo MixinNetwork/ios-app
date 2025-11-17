@@ -3,12 +3,6 @@ import MixinServices
 
 extension SwapOrder {
     
-    enum Category: String, Decodable {
-        case active
-        case history
-        case all
-    }
-    
     enum Expiry: CaseIterable {
         
         case never

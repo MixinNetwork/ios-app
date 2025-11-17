@@ -13,10 +13,9 @@ final class SyncWeb3OrdersJob: BaseJob {
         let initialOffset = Web3OrderDAO.shared.latestNotPendingCreatedAt()
         Logger.general.debug(category: "SyncWeb3OrdersJob", message: "Sync from initial offset: \(initialOffset ?? "(null)")")
         var result = RouteAPI.swapOrders(
-            category: .all,
-            state: nil,
             limit: limit,
-            offset: initialOffset
+            offset: initialOffset,
+            walletID: nil,
         )
         while true {
             let orders = try result.get()
@@ -29,10 +28,9 @@ final class SyncWeb3OrdersJob: BaseJob {
             } else {
                 Logger.general.debug(category: "SyncWeb3OrdersJob", message: "Sync from initial offset: \(offset ?? "(null)")")
                 result = RouteAPI.swapOrders(
-                    category: .all,
-                    state: nil,
                     limit: limit,
-                    offset: offset
+                    offset: offset,
+                    walletID: nil,
                 )
             }
         }

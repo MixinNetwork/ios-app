@@ -22,6 +22,9 @@ final class Web3SwapViewController: SwapViewController {
         self.supportedChainIDs = Web3AddressDAO.shared.chainIDs(walletID: wallet.walletID)
         super.init(
             mode: mode,
+            openOrderRequester: PendingSwapOrderLoader(
+                behavior: .watchWallet(id: wallet.walletID)
+            ),
             tokenSource: .web3,
             sendAssetID: sendAssetID,
             receiveAssetID: receiveAssetID
@@ -38,14 +41,17 @@ final class Web3SwapViewController: SwapViewController {
         self.supportedChainIDs = supportedChainIDs
         super.init(
             mode: .simple,
+            openOrderRequester: PendingSwapOrderLoader(
+                behavior: .watchWallet(id: wallet.walletID)
+            ),
             tokenSource: .web3,
             sendAssetID: sendAssetID,
             receiveAssetID: receiveAssetID
         )
     }
     
-    @MainActor required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     override func viewDidLoad() {
@@ -54,6 +60,7 @@ final class Web3SwapViewController: SwapViewController {
             title: R.string.localizable.swap(),
             wallet: .common(wallet)
         )
+        openOrderRequester.delegate = self
     }
     
     override func changeSendToken(_ sender: Any) {
@@ -376,6 +383,25 @@ final class Web3SwapViewController: SwapViewController {
                 showAutoHiddenHud(style: .error, text: "\(error)")
                 self.reviewButton.isBusy = false
             }
+        }
+    }
+    
+}
+
+extension Web3SwapViewController: PendingSwapOrderLoader.Delegate {
+    
+    func pendingSwapOrder(_ loader: PendingSwapOrderLoader, didLoad orders: [SwapOrder]) {
+        let tokens = Web3OrderDAO.shared.swapOrderTokens(orders: orders)
+        let viewModels = orders.map { order in
+            SwapOrderViewModel(
+                order: order,
+                wallet: .common(wallet),
+                payToken: tokens[order.payAssetID],
+                receiveToken: tokens[order.receiveAssetID]
+            )
+        }
+        DispatchQueue.main.async {
+            self.reload(openOrders: viewModels)
         }
     }
     

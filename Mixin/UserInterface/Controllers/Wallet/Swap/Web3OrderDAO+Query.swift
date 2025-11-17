@@ -112,3 +112,24 @@ extension Web3OrderDAO {
     }
     
 }
+
+extension Web3OrderDAO {
+    
+    func swapOrderTokens(orders: [SwapOrder]) -> [String: SwapOrder.Token] {
+        var assetIDs: Set<String> = []
+        for order in orders {
+            assetIDs.insert(order.payAssetID)
+            assetIDs.insert(order.receiveAssetID)
+        }
+        var tokens: [String: SwapOrder.Token] = [:]
+        for assetID in assetIDs {
+            if let token = TokenDAO.shared.swapOrderToken(id: assetID) {
+                tokens[assetID] = token
+            } else if let token = Web3TokenDAO.shared.swapOrderToken(id: assetID) {
+                tokens[assetID] = token
+            }
+        }
+        return tokens
+    }
+    
+}

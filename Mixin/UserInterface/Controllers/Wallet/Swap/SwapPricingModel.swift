@@ -240,7 +240,11 @@ final class SwapPricingModel {
     private var _price: Price? // Always `send / receive`, using `send` as unit
     
     private func calculateReceiveAmount() -> Decimal? {
-        guard let sendAmount = _sendAmount, let price = _price?.value else {
+        guard
+            let sendAmount = _sendAmount,
+            let price = _price?.value,
+            price != 0
+        else {
             return nil
         }
         return sendAmount / price
@@ -250,7 +254,8 @@ final class SwapPricingModel {
         guard
             let sendSymbol = _sendToken?.symbol,
             let receiveSymbol = _receiveToken?.symbol,
-            let price = _price?.value
+            let price = _price?.value,
+            price != 0
         else {
             return nil
         }

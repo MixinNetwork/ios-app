@@ -12,12 +12,37 @@ public final class Web3OrderDAO: Web3DAO {
         db.select(with: "SELECT * FROM orders WHERE order_id = ?", arguments: [id])
     }
     
+    public func orders(ids: [String]) -> [SwapOrder] {
+        let query: GRDB.SQL = "SELECT * FROM orders WHERE order_id IN \(ids)"
+        return db.select(with: query)
+    }
+    
     public func latestNotPendingCreatedAt() -> String? {
-        db.select(with: "SELECT created_at FROM orders WHERE state != 'pending' ORDER BY created_at DESC")
+        db.select(with: """
+        SELECT created_at FROM orders
+        WHERE state NOT IN ('created','pending')
+        ORDER BY created_at DESC
+        """)
     }
     
     public func pendingOrderIDs() -> [String] {
-        db.select(with: "SELECT order_id FROM orders WHERE state = 'pending'")
+        db.select(with: "SELECT order_id FROM orders WHERE state IN ('created','pending')")
+    }
+    
+    public func pendingOrders(walletID: String?) -> [SwapOrder] {
+        if let walletID {
+            db.select(with: """
+            SELECT * FROM orders
+            WHERE wallet_id = ? AND state IN ('created','pending')
+            ORDER BY created_at DESC
+            """, arguments: [walletID])
+        } else {
+            db.select(with: """
+            SELECT * FROM orders
+            WHERE state IN ('created','pending')
+            ORDER BY created_at DESC
+            """)
+        }
     }
     
     public func save(orders: [SwapOrder]) {

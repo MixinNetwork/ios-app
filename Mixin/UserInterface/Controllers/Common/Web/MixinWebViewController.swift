@@ -300,6 +300,8 @@ extension MixinWebViewController: WKNavigationDelegate {
             decisionHandler(.allow)
         } else if ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
             decisionHandler(.allow)
+        } else if ["about:blank", "about:srcdoc"].contains(url.absoluteString.lowercased()) {
+            decisionHandler(.allow)
         } else if parent != nil {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
             decisionHandler(.cancel)

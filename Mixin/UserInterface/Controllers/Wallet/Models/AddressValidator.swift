@@ -286,13 +286,13 @@ extension AddressValidator {
         destination: String,
         tag: String?,
     ) async throws -> Payment.WithdrawalDestination {
-        if let address = AddressDAO.shared.getAddress(chainId: chainID, destination: destination, tag: tag ?? "") {
-            return .address(address)
-        } else if let wallet = Web3WalletDAO.shared.wallet(destination: destination),
-                  let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chainID)
+        if let wallet = Web3WalletDAO.shared.wallet(destination: destination),
+           let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chainID)
         {
             return .commonWallet(wallet, address)
-        } else {
+        } else if let address = AddressDAO.shared.getAddress(chainId: chainID, destination: destination, tag: tag ?? "") {
+            return .address(address)
+        } else  {
             let response = try await ExternalAPI.checkAddress(
                 chainID: chainID,
                 assetID: assetID,

@@ -148,7 +148,7 @@ struct WithdrawPaymentOperation {
             try withdrawalOutputs.encodeAsInputData(),
             changeKeys,
             changeMask,
-            isFeeWaived ? Memo.feeWaived : Memo.empty,
+            (isFeeWaived && feeOutputs == nil) ? Memo.feeWaived : Memo.empty,
             &error
         )
         guard let withdrawalTx, error == nil else {
@@ -170,7 +170,7 @@ struct WithdrawPaymentOperation {
                 try feeOutputs.encodeAsInputData(),
                 feeChangeKeys,
                 feeChangeMask,
-                Memo.empty,
+                isFeeWaived ? Memo.feeWaived : Memo.empty,
                 withdrawalTx.hash,
                 &error
             )

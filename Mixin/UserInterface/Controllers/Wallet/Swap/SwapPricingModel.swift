@@ -272,4 +272,10 @@ final class SwapPricingModel {
         priceUnit = _priceUnit.toggled()
     }
     
+    func clear() {
+        _sendAmount = nil
+        _receiveAmount = nil
+        _price = nil
+    }
+    
 }

@@ -18,11 +18,14 @@ class SwapViewController: UIViewController {
         case expiry
     }
     
+    private enum PriceInputAccessory: Equatable {
+        case available(isSellingToken: Bool)
+        case unavailable
+    }
+    
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var reviewButtonWrapperView: UIView!
     @IBOutlet weak var reviewButton: RoundedButton!
-    
-    @IBOutlet weak var reviewButtonWrapperAboveSafeAreaBottomConstraint: NSLayoutConstraint!
     
     let pricingModel = SwapPricingModel()
     let openOrderRequester: PendingSwapOrderLoader
@@ -69,13 +72,13 @@ class SwapViewController: UIViewController {
             if pricingModel.priceUnit == .receive {
                 priceStyle = style
             }
-            isSellingToken = if let assetID = receiveToken?.assetID {
-                AssetID.stablecoins.contains(assetID)
-            } else {
-                false
-            }
             pricingModel.receiveToken = receiveToken
             scheduleNewRequesterIfAvailable()
+            
+            // Updating the price input accessory requires accessing both sendToken and receiveToken.
+            // When accessing sendToken during swap(&sendToken, &receiveToken), it causes simultaneous accesses.
+            // Dispatch to the next cycle to avoid this
+            DispatchQueue.main.async(execute: updatePriceInputAccessory)
         }
     }
     
@@ -88,8 +91,6 @@ class SwapViewController: UIViewController {
     private let tokenSource: RouteTokenSource
     
     private weak var showOrdersItem: BadgeBarButtonItem?
-    private weak var showReviewButtonConstraint: NSLayoutConstraint!
-    private weak var hideReviewButtonConstraint: NSLayoutConstraint!
     
     private lazy var tokenAmountRoundingHandler = NSDecimalNumberHandler(
         roundingMode: .plain,
@@ -99,6 +100,9 @@ class SwapViewController: UIViewController {
         raiseOnUnderflow: false,
         raiseOnDivideByZero: false
     )
+    
+    private var showReviewWrapperConstraints: [NSLayoutConstraint] = []
+    private var hideReviewWrapperConstraints: [NSLayoutConstraint] = []
     
     private var sections: [Section] = []
     private var contentSizeObservation: NSKeyValueObservation?
@@ -141,15 +145,15 @@ class SwapViewController: UIViewController {
         }
     }
     
-    private var isSellingToken = false {
+    private var priceInputAccessory: PriceInputAccessory = .unavailable {
         didSet {
-            guard isSellingToken != oldValue else {
+            guard priceInputAccessory != oldValue, let priceInputCell else {
                 return
             }
-            guard let view = priceInputCell?.textField.inputAccessoryView as? SwapInputAccessoryView else {
-                return
-            }
-            updatePriceInputAccessoryView(view: view, sellingToken: isSellingToken)
+            updatePriceInputAccessoryView(
+                cell: priceInputCell,
+                accessory: priceInputAccessory
+            )
         }
     }
     
@@ -196,15 +200,30 @@ class SwapViewController: UIViewController {
         
         pricingModel.delegate = self
         
-        showReviewButtonConstraint = reviewButtonWrapperView.bottomAnchor.constraint(
-            equalTo: view.keyboardLayoutGuide.topAnchor
-        )
-        showReviewButtonConstraint.priority = .almostRequired
-        hideReviewButtonConstraint = reviewButtonWrapperView.topAnchor.constraint(
-            equalTo: view.bottomAnchor
-        )
-        hideReviewButtonConstraint.priority = .almostInexist
-        NSLayoutConstraint.activate([showReviewButtonConstraint, hideReviewButtonConstraint])
+        showReviewWrapperConstraints = [
+            reviewButtonWrapperView.bottomAnchor.constraint(
+                equalTo: view.keyboardLayoutGuide.topAnchor
+            ),
+            collectionView.bottomAnchor.constraint(
+                equalTo: reviewButtonWrapperView.topAnchor
+            ),
+        ]
+        hideReviewWrapperConstraints = [
+            collectionView.bottomAnchor.constraint(
+                equalTo: view.keyboardLayoutGuide.topAnchor
+            ),
+            reviewButtonWrapperView.topAnchor.constraint(
+                equalTo: view.bottomAnchor
+            ),
+        ]
+        switch mode {
+        case .simple:
+            showReviewButtonWrapperView()
+        case .advanced:
+            hideReviewButtonWrapperView()
+        }
+        NSLayoutConstraint.activate(showReviewWrapperConstraints)
+        NSLayoutConstraint.activate(hideReviewWrapperConstraints)
         
         collectionView.register(
             R.nib.swapOpenOrderHeaderView,
@@ -421,15 +440,9 @@ class SwapViewController: UIViewController {
                 }
             }
             if sections.contains(.openOrders) {
-                reviewButtonWrapperAboveSafeAreaBottomConstraint.priority = .almostInexist
-                showReviewButtonConstraint.priority = .almostInexist
-                hideReviewButtonConstraint.priority = .almostRequired
-                reviewButtonWrapperView.alpha = 0
+                hideReviewButtonWrapperView()
             } else {
-                reviewButtonWrapperAboveSafeAreaBottomConstraint.priority = .almostRequired
-                showReviewButtonConstraint.priority = .almostRequired
-                hideReviewButtonConstraint.priority = .almostInexist
-                reviewButtonWrapperView.alpha = 1
+                showReviewButtonWrapperView()
             }
             view.layoutSubviews()
         }
@@ -500,7 +513,17 @@ extension SwapViewController: UICollectionViewDataSource {
                 let inputAccessoryView = SwapInputAccessoryView(
                     frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 44)
                 )
-                updatePriceInputAccessoryView(view: inputAccessoryView, sellingToken: isSellingToken)
+                inputAccessoryView.items = [
+                    .init(title: "25%") { [weak self] in
+                        self?.inputSendAmount(multiplier: 0.25)
+                    },
+                    .init(title: "50%") { [weak self] in
+                        self?.inputSendAmount(multiplier: 0.5)
+                    },
+                    .init(title: R.string.localizable.max()) { [weak self] in
+                        self?.inputSendAmount(multiplier: 1)
+                    },
+                ]
                 inputAccessoryView.onDone = { [weak textField=cell.sendAmountTextField] in
                     textField?.resignFirstResponder()
                 }
@@ -550,24 +573,10 @@ extension SwapViewController: UICollectionViewDataSource {
             cell.update(style: priceStyle)
             cell.load(priceRepresentation: pricingModel.priceEquation())
             if priceInputCell != cell {
-                let inputAccessoryView = SwapInputAccessoryView(
-                    frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 44)
+                updatePriceInputAccessoryView(
+                    cell: cell,
+                    accessory: priceInputAccessory
                 )
-                inputAccessoryView.items = [
-                    .init(title: R.string.localizable.current_market_price()) { [weak self] in
-                        self?.inputPrice(multiplier: 1)
-                    },
-                    .init(title: "-10%") { [weak self] in
-                        self?.inputPrice(multiplier: 0.9)
-                    },
-                    .init(title: "-20%") { [weak self] in
-                        self?.inputPrice(multiplier: 0.8)
-                    },
-                ]
-                inputAccessoryView.onDone = { [weak textField=cell.textField] in
-                    textField?.resignFirstResponder()
-                }
-                cell.textField.inputAccessoryView = inputAccessoryView
                 cell.textField.addTarget(
                     self,
                     action: #selector(priceEditingChanged(_:)),
@@ -708,11 +717,17 @@ extension SwapViewController: SwapPricingModel.Delegate {
         case .simple:
             break
         case .advanced:
-            // TODO: Any better way to detect availability?
-            reviewButton.isEnabled = if let sendAmount = model.sendAmount, let sendToken = model.sendToken {
-                sendAmount <= sendToken.decimalBalance && model.receiveAmount != nil
+            if let sendAmount = model.sendAmount, let sendToken = model.sendToken {
+                if sendAmount > sendToken.decimalBalance {
+                    reviewButton.setTitle(R.string.localizable.insufficient_balance(), for: .normal)
+                    reviewButton.isEnabled = false
+                } else {
+                    reviewButton.setTitle(R.string.localizable.review(), for: .normal)
+                    reviewButton.isEnabled = model.receiveAmount != nil
+                }
             } else {
-                false
+                reviewButton.setTitle(R.string.localizable.review(), for: .normal)
+                reviewButton.isEnabled = false
             }
         }
     }
@@ -862,31 +877,86 @@ extension SwapViewController {
         self.present(alert, animated: true)
     }
     
-    private func updatePriceInputAccessoryView(view: SwapInputAccessoryView, sellingToken: Bool) {
-        view.items = if isSellingToken {
-            [
-                .init(title: R.string.localizable.current_market_price()) { [weak self] in
-                    self?.inputPrice(multiplier: 1)
-                },
-                .init(title: "+10%") { [weak self] in
-                    self?.inputPrice(multiplier: 1.1)
-                },
-                .init(title: "+20%") { [weak self] in
-                    self?.inputPrice(multiplier: 1.2)
-                },
-            ]
+    private func showReviewButtonWrapperView() {
+        for constraint in showReviewWrapperConstraints {
+            constraint.priority = .almostRequired
+        }
+        for constraint in hideReviewWrapperConstraints {
+            constraint.priority = .almostInexist
+        }
+    }
+    
+    private func hideReviewButtonWrapperView() {
+        for constraint in showReviewWrapperConstraints {
+            constraint.priority = .almostInexist
+        }
+        for constraint in hideReviewWrapperConstraints {
+            constraint.priority = .almostRequired
+        }
+    }
+    
+    private func updatePriceInputAccessory() {
+        guard let sendToken, let receiveToken else {
+            priceInputAccessory = .unavailable
+            return
+        }
+        let price: SwapPricingModel.Price? = .derive(
+            sendToken: sendToken,
+            receiveToken: receiveToken
+        )
+        guard price != nil else {
+            priceInputAccessory = .unavailable
+            return
+        }
+        let isSellingToken = AssetID.stablecoins.contains(receiveToken.assetID)
+        priceInputAccessory = .available(isSellingToken: isSellingToken)
+    }
+    
+    private func updatePriceInputAccessoryView(
+        cell: SwapPriceInputCell,
+        accessory: PriceInputAccessory
+    ) {
+        let accessoryView: SwapInputAccessoryView
+        if let view = cell.textField.inputAccessoryView as? SwapInputAccessoryView {
+            accessoryView = view
         } else {
-            [
-                .init(title: R.string.localizable.current_market_price()) { [weak self] in
-                    self?.inputPrice(multiplier: 1)
-                },
-                .init(title: "-10%") { [weak self] in
-                    self?.inputPrice(multiplier: 0.9)
-                },
-                .init(title: "-20%") { [weak self] in
-                    self?.inputPrice(multiplier: 0.8)
-                },
-            ]
+            accessoryView = SwapInputAccessoryView(
+                frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 44)
+            )
+            accessoryView.onDone = { [weak textField=cell.textField] in
+                textField?.resignFirstResponder()
+            }
+            cell.textField.inputAccessoryView = accessoryView
+        }
+        switch accessory {
+        case .unavailable:
+            accessoryView.items = []
+        case .available(let isSellingToken):
+            accessoryView.items = if isSellingToken {
+                [
+                    .init(title: R.string.localizable.current_market_price()) { [weak self] in
+                        self?.inputPrice(multiplier: 1)
+                    },
+                    .init(title: "+10%") { [weak self] in
+                        self?.inputPrice(multiplier: 1.1)
+                    },
+                    .init(title: "+20%") { [weak self] in
+                        self?.inputPrice(multiplier: 1.2)
+                    },
+                ]
+            } else {
+                [
+                    .init(title: R.string.localizable.current_market_price()) { [weak self] in
+                        self?.inputPrice(multiplier: 1)
+                    },
+                    .init(title: "-10%") { [weak self] in
+                        self?.inputPrice(multiplier: 0.9)
+                    },
+                    .init(title: "-20%") { [weak self] in
+                        self?.inputPrice(multiplier: 0.8)
+                    },
+                ]
+            }
         }
     }
     

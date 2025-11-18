@@ -41,7 +41,7 @@ class SwapViewController: UIViewController {
                 quoteRequester = nil
                 openOrderRequester.start()
             }
-            reloadSections(mode: mode, price: pricingModel.displayPrice?.value)
+            reloadSections(mode: mode, price: nil)
         }
     }
     
@@ -89,6 +89,7 @@ class SwapViewController: UIViewController {
     private let arbitrarySendAssetID: String?
     private let arbitraryReceiveAssetID: String?
     private let tokenSource: RouteTokenSource
+    private let footerReuseIdentifier = "f"
     
     private weak var showOrdersItem: BadgeBarButtonItem?
     
@@ -229,6 +230,11 @@ class SwapViewController: UIViewController {
             R.nib.swapOpenOrderHeaderView,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader
         )
+        collectionView.register(
+            OpenOrderFooterView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier: footerReuseIdentifier
+        )
         collectionView.register(R.nib.exploreSegmentCell)
         collectionView.register(R.nib.swapAmountInputCell)
         collectionView.register(R.nib.swapPriceInputCell)
@@ -271,28 +277,42 @@ class SwapViewController: UIViewController {
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
                 return section
             case .openOrders:
-                let group: NSCollectionLayoutGroup
                 if let orders = self?.openOrders, !orders.isEmpty {
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
-                    group = .horizontal(layoutSize: groupSize, subitems: [item])
+                    let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
+                    let section = NSCollectionLayoutSection(group: group)
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                    section.boundarySupplementaryItems = [
+                        NSCollectionLayoutBoundarySupplementaryItem(
+                            layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(57)),
+                            elementKind: UICollectionView.elementKindSectionHeader,
+                            alignment: .top
+                        ),
+                        NSCollectionLayoutBoundarySupplementaryItem(
+                            layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(20)),
+                            elementKind: UICollectionView.elementKindSectionFooter,
+                            alignment: .bottom
+                        ),
+                    ]
+                    return section
                 } else {
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(211))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(211))
-                    group = .horizontal(layoutSize: groupSize, subitems: [item])
+                    let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
+                    let section = NSCollectionLayoutSection(group: group)
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                    section.boundarySupplementaryItems = [
+                        NSCollectionLayoutBoundarySupplementaryItem(
+                            layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(57)),
+                            elementKind: UICollectionView.elementKindSectionHeader,
+                            alignment: .top
+                        )
+                    ]
+                    return section
                 }
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-                section.boundarySupplementaryItems = [
-                    NSCollectionLayoutBoundarySupplementaryItem(
-                        layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(57)),
-                        elementKind: UICollectionView.elementKindSectionHeader,
-                        alignment: .top
-                    )
-                ]
-                return section
             case .expiry:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -311,6 +331,7 @@ class SwapViewController: UIViewController {
             let contentViewFrame = collectionView.convert(collectionView.bounds, to: self.view)
             collectionView.alwaysBounceVertical = reviewButtonFrame.intersects(contentViewFrame)
         }
+        collectionView.allowsMultipleSelection = true
         collectionView.dataSource = self
         collectionView.delegate = self
         reloadSections(mode: mode, price: pricingModel.displayPrice?.value)
@@ -408,9 +429,11 @@ class SwapViewController: UIViewController {
     }
     
     func prepareForReuse(sender: Any) {
-//        sendAmountTextField.text = nil
-//        sendAmountTextField.sendActions(for: .editingChanged)
-//        reloadTokens() // Update send token balance
+        pricingModel.sendAmount = nil
+        swapAmountInputCell?.updateSendAmountTextField(amount: nil)
+        pricingModel.displayPrice = nil
+        priceInputCell?.load(priceRepresentation: nil)
+        reloadTokens() // Update send token balance
     }
     
     func reloadSections(mode: Mode, price: Decimal?) {
@@ -428,6 +451,7 @@ class SwapViewController: UIViewController {
             let switchingBetweenModes = sections.count != self.sections.count
             self.sections = sections
             if switchingBetweenModes {
+                pricingModel.clear()
                 collectionView.reloadData()
                 if let section = sections.firstIndex(of: .modeSelector) {
                     let indexPath = IndexPath(item: mode.rawValue, section: section)
@@ -632,9 +656,14 @@ extension SwapViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.swap_open_order_header, for: indexPath)!
-        view.label.text = R.string.localizable.open_orders_count(openOrders.count)
-        return view
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.swap_open_order_header, for: indexPath)!
+            view.label.text = R.string.localizable.open_orders_count(openOrders.count)
+            return view
+        default:
+            return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerReuseIdentifier, for: indexPath)
+        }
     }
     
 }
@@ -642,7 +671,8 @@ extension SwapViewController: UICollectionViewDataSource {
 extension SwapViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        sections[indexPath.section] == .modeSelector
+        let section = sections[indexPath.section]
+        return section == .modeSelector || section == .openOrders
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
@@ -652,8 +682,16 @@ extension SwapViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch sections[indexPath.section] {
         case .modeSelector:
+            collectionView.indexPathsForSelectedItems?.forEach { selectedIndexPath in
+                if selectedIndexPath.section == indexPath.section,
+                   selectedIndexPath.item != indexPath.item
+                {
+                    collectionView.deselectItem(at: selectedIndexPath, animated: false)
+                }
+            }
             mode = Mode(rawValue: indexPath.item)!
         case .openOrders:
+            collectionView.deselectItem(at: indexPath, animated: true)
             let viewModel = openOrders[indexPath.item]
             let viewController = SwapOrderViewController(viewModel: viewModel)
             navigationController?.pushViewController(viewController, animated: true)
@@ -1096,6 +1134,31 @@ extension SwapViewController {
         requester.delegate = self
         self.quoteRequester = requester
         requester.start(delay: 1)
+    }
+    
+}
+
+extension SwapViewController {
+    
+    final class OpenOrderFooterView: UICollectionReusableView {
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            updateStyle()
+        }
+        
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            updateStyle()
+        }
+        
+        private func updateStyle() {
+            backgroundColor = R.color.background()
+            layer.cornerRadius = 8
+            layer.masksToBounds = true
+            layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        }
+        
     }
     
 }

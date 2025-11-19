@@ -34,7 +34,7 @@ final class MixinSwapViewController: SwapViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.titleView = WalletIdentifyingNavigationTitleView(
-            title: R.string.localizable.swap(),
+            title: R.string.localizable.trade(),
             wallet: .privacy
         )
         openOrderRequester.delegate = self

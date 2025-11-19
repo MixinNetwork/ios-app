@@ -340,7 +340,7 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
             view.titleLabel.text = R.string.localizable.swap_usdt_hint()
             view.leftButton.setTitle(R.string.localizable.cancel(), for: .normal)
             view.leftButton.addTarget(self, action: #selector(loadActionsTrayView), for: .touchUpInside)
-            view.rightButton.setTitle(R.string.localizable.swap(), for: .normal)
+            view.rightButton.setTitle(R.string.localizable.trade(), for: .normal)
             view.rightButton.addTarget(self, action: #selector(swap(_:)), for: .touchUpInside)
             view.style = .yellow
         }

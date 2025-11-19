@@ -110,7 +110,7 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
         case .advanced(let expiry):
             rows.append(
                 .info(
-                    caption: .string(R.string.localizable.swap_expiry()),
+                    caption: .string(R.string.localizable.trade_expiry()),
                     content: expiry.localizedName
                 )
             )

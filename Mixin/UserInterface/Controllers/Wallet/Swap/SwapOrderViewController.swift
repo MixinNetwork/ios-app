@@ -102,9 +102,9 @@ final class SwapOrderViewController: UITableViewController {
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
                 cell.titleLabel.text = switch viewModel.state.knownCase {
                 case .created, .pending, .cancelling, .none:
-                    R.string.localizable.estimated_receive()
+                    R.string.localizable.estimated_receive().uppercased()
                 case .success, .failed, .cancelled, .expired:
-                    R.string.localizable.swap_order_received()
+                    R.string.localizable.swap_order_received().uppercased()
                 }
                 cell.reloadData(changes: viewModel.receivings, style: .income)
                 cell.contentTopConstraint.constant = 10
@@ -113,7 +113,7 @@ final class SwapOrderViewController: UITableViewController {
                 return cell
             case let .filling(filling):
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
-                cell.captionLabel.text = R.string.localizable.swap_filled().uppercased()
+                cell.captionLabel.text = R.string.localizable.trade_filled().uppercased()
                 cell.setPrimaryLabel(usesBoldFont: false)
                 cell.primaryLabel.text = filling.percentage
                 cell.secondaryLabel.text = filling.amount
@@ -152,7 +152,7 @@ final class SwapOrderViewController: UITableViewController {
                 return cell
             case let .expiration(expiration):
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
-                cell.captionLabel.text = R.string.localizable.swap_expiry().uppercased()
+                cell.captionLabel.text = R.string.localizable.trade_expiration().uppercased()
                 cell.setContent(expiration)
                 cell.contentLeadingConstraint.constant = 16
                 cell.contentTrailingConstraint.constant = 16
@@ -343,7 +343,7 @@ extension SwapOrderViewController: PillActionView.Delegate {
                 let content = AppCardData.V1Content(
                     appID: BotUserID.mixinRoute,
                     cover: nil,
-                    title: R.string.localizable.swap() + " " + viewModel.exchangingSymbolRepresentation,
+                    title: R.string.localizable.trade() + " " + viewModel.exchangingSymbolRepresentation,
                     description: description,
                     actions: actions,
                     updatedAt: nil,
@@ -391,7 +391,7 @@ extension SwapOrderViewController {
         func asPillAction() -> PillActionView.Action {
             switch self {
             case .swapAgain:
-                    .init(title: R.string.localizable.swap_again())
+                    .init(title: R.string.localizable.trade_again())
             case .cancelOrder:
                     .init(title: R.string.localizable.cancel_order(), style: .destructive)
             case .sharePair:

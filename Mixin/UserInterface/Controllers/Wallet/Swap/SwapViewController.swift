@@ -488,9 +488,9 @@ extension SwapViewController: UICollectionViewDataSource {
             let mode = Mode(rawValue: indexPath.item)!
             cell.label.text = switch mode {
             case .simple:
-                R.string.localizable.swap_simple()
+                R.string.localizable.trade_simple()
             case .advanced:
-                R.string.localizable.swap_advanced()
+                R.string.localizable.trade_advanced()
             }
             return cell
         case .amountInput:

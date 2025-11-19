@@ -72,9 +72,9 @@ final class Web3SwapViewController: SwapViewController {
         )
         selector.onSelected = { token in
             if token.assetID == self.receiveToken?.assetID {
-                self.swapSendingReceiving(sender)
+                self.swapSendingReceiving()
             } else {
-                self.sendToken = token
+                self.setSendToken(token)
                 self.saveTokenIDs()
             }
         }
@@ -103,9 +103,9 @@ final class Web3SwapViewController: SwapViewController {
         )
         selector.onSelected = { token in
             if token.assetID == self.sendToken?.assetID {
-                self.swapSendingReceiving(sender)
+                self.swapSendingReceiving()
             } else {
-                self.receiveToken = token
+                self.setReceiveToken(token)
                 self.saveTokenIDs()
             }
         }
@@ -148,15 +148,21 @@ final class Web3SwapViewController: SwapViewController {
             .reduce(into: [:]) { result, item in
                 result[item.assetID] = item
             }
+        let prices = MarketDAO.shared.currentPrices(assetIDs: ids)
         return swappableTokens.reduce(into: OrderedDictionary()) { result, token in
             guard let chainID = token.chain.chainID, supportedChainIDs.contains(chainID) else {
                 return
+            }
+            let marketPrice: Decimal? = if let value = prices[token.assetID] {
+                Decimal(string: value, locale: .enUSPOSIX)
+            } else {
+                nil
             }
             result[token.assetID] = if let item = availableTokens[token.assetID] {
                 BalancedSwapToken(
                     token: token,
                     balance: item.decimalBalance,
-                    usdPrice: item.decimalUSDPrice
+                    usdPrice: marketPrice ?? item.decimalUSDPrice
                 )
             } else {
                 BalancedSwapToken(token: token, balance: 0, usdPrice: 0)

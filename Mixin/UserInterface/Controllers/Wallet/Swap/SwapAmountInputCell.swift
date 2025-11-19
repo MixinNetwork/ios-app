@@ -119,7 +119,7 @@ extension SwapAmountInputCell {
                 sendNetworkLabel.text = token.chain.name
                 sendNetworkLabel.alpha = 1
                 depositSendTokenButton.isHidden = token.decimalBalance != 0
-                sendBalanceButton.configuration?.title = R.string.localizable.balance_abbreviation(balance)
+                sendBalanceButton.configuration?.title = balance
                 sendBalanceButton.alpha = 1
                 sendBalanceButton.layoutIfNeeded()
                 sendTokenNameLabel.text = token.name
@@ -161,7 +161,7 @@ extension SwapAmountInputCell {
             receiveNetworkLabel.text = token.chain.name
             receiveNetworkLabel.alpha = 1
             receiveBalanceImageView.alpha = 1
-            receiveBalanceLabel.text = R.string.localizable.balance_abbreviation(balance)
+            receiveBalanceLabel.text = balance
             receiveBalanceLabel.alpha = 1
             receiveTokenNameLabel.text = token.name
             receiveLoadingIndicator.stopAnimating()

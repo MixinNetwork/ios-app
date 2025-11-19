@@ -22,15 +22,15 @@ final class SwapOrderHeaderCell: UITableViewCell {
         symbolLabel.text = viewModel.exchangingSymbolRepresentation
         stateLabel.text = viewModel.state.localizedDescription
         switch viewModel.state.knownCase {
-        case .success:
-            stateLabel.textColor = R.color.market_green()
-            stateLabel.backgroundColor = R.color.market_green()!.withAlphaComponent(0.2)
         case .created, .pending, .none:
             stateLabel.textColor = R.color.text_secondary()
             stateLabel.backgroundColor = R.color.button_background_disabled()
         case .failed, .cancelling, .cancelled, .expired:
             stateLabel.textColor = R.color.market_red()
             stateLabel.backgroundColor = R.color.market_red()!.withAlphaComponent(0.2)
+        case .success:
+            stateLabel.textColor = R.color.market_green()
+            stateLabel.backgroundColor = R.color.market_green()!.withAlphaComponent(0.2)
         }
     }
     

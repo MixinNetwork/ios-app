@@ -101,9 +101,9 @@ final class SwapOrderViewController: UITableViewController {
             case .receives:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
                 cell.titleLabel.text = switch viewModel.state.knownCase {
-                case .created, .pending, .cancelling, .none:
+                case .created, .pending, .failed, .cancelling, .cancelled, .expired, .none:
                     R.string.localizable.estimated_receive().uppercased()
-                case .success, .failed, .cancelled, .expired:
+                case .success:
                     R.string.localizable.swap_order_received().uppercased()
                 }
                 cell.reloadData(changes: viewModel.receivings, style: .income)
@@ -248,7 +248,7 @@ extension SwapOrderViewController: PillActionView.Delegate {
     
     func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
         switch actions[index] {
-        case .swapAgain:
+        case .tradeAgain:
             if let navigationController {
                 var viewControllers = navigationController.viewControllers
                 if let index = viewControllers.lastIndex(where: { $0 is MixinSwapViewController }) {
@@ -375,7 +375,7 @@ extension SwapOrderViewController {
     
     private enum Action {
         
-        case swapAgain
+        case tradeAgain
         case cancelOrder
         case sharePair
         
@@ -384,13 +384,13 @@ extension SwapOrderViewController {
             case .created, .pending:
                 [.cancelOrder, .sharePair]
             case .none, .success, .failed, .cancelling, .cancelled, .expired:
-                [.swapAgain, .sharePair]
+                [.tradeAgain, .sharePair]
             }
         }
         
         func asPillAction() -> PillActionView.Action {
             switch self {
-            case .swapAgain:
+            case .tradeAgain:
                     .init(title: R.string.localizable.trade_again())
             case .cancelOrder:
                     .init(title: R.string.localizable.cancel_order(), style: .destructive)

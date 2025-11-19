@@ -129,7 +129,7 @@ struct SwapOrderViewModel {
             }
             
             switch state.knownCase {
-            case .created, .pending:
+            case .created, .pending, .failed, .cancelling, .cancelled, .expired, .none:
                 self.receivings = [
                     AssetChange(
                         token: receiveToken,
@@ -153,42 +153,22 @@ struct SwapOrderViewModel {
                         )
                     )
                 ]
-            case .failed, .cancelling, .cancelled, .expired, .none:
-                var receivings: [AssetChange] = []
-                if filledReceiveAmount != 0 {
-                    let change = AssetChange(
-                        token: receiveToken,
-                        amount: CurrencyFormatter.localizedString(
-                            from: filledReceiveAmount,
-                            format: .precision,
-                            sign: .always,
-                            symbol: .custom(receiveSymbol)
-                        )
-                    )
-                    receivings.append(change)
-                }
-                if let value = order.pendingAmount,
-                   let pendingAmount = Decimal(string: value, locale: .enUSPOSIX),
-                   pendingAmount != 0
-                {
-                    let change = AssetChange(
-                        token: payToken,
-                        amount: CurrencyFormatter.localizedString(
-                            from: pendingAmount,
-                            format: .precision,
-                            sign: .always,
-                            symbol: .custom(paySymbol)
-                        )
-                    )
-                    receivings.append(change)
-                }
-                self.receivings = receivings
             }
             
-            let percent = NSDecimalNumber(decimal: filledReceiveAmount / expectedReceiveAmount)
+            let pendingAmount: Decimal = if let value = order.pendingAmount {
+                Decimal(string: value, locale: .enUSPOSIX) ?? 0
+            } else {
+                0
+            }
+            let percent: Decimal = if payAmount == 0 {
+                0
+            } else {
+                (payAmount - pendingAmount) / payAmount
+            }
+            let roundedPercent = NSDecimalNumber(decimal: percent)
                 .rounding(accordingToBehavior: NSDecimalNumberHandler.extractIntegralPart)
                 .decimalValue
-            let percentage = NumberFormatter.percentage.string(decimal: percent) ?? ""
+            let percentage = NumberFormatter.percentage.string(decimal: roundedPercent) ?? ""
             let amount = CurrencyFormatter.localizedString(
                 from: filledReceiveAmount,
                 format: .precision,

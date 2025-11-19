@@ -35,13 +35,17 @@ class SwapViewController: UIViewController {
             switch mode {
             case .simple:
                 openOrderRequester.pause()
-                scheduleNewRequesterIfAvailable()
             case .advanced:
                 quoteRequester?.stop()
                 quoteRequester = nil
+            }
+            reloadSections(mode: mode)
+            switch mode {
+            case .simple:
+                scheduleNewRequesterIfAvailable()
+            case .advanced:
                 openOrderRequester.start()
             }
-            reloadSections(mode: mode, price: nil)
         }
     }
     
@@ -110,12 +114,6 @@ class SwapViewController: UIViewController {
     
     // SwapPriceInputCell
     private weak var priceInputCell: SwapPriceInputCell?
-    
-    private var priceStyle: SwapTokenSelectorStyle = .loading {
-        didSet {
-            priceInputCell?.update(style: priceStyle)
-        }
-    }
     
     private var priceInputAccessory: PriceInputAccessory = .unavailable {
         didSet {
@@ -305,7 +303,7 @@ class SwapViewController: UIViewController {
         collectionView.allowsMultipleSelection = true
         collectionView.dataSource = self
         collectionView.delegate = self
-        reloadSections(mode: mode, price: pricingModel.displayPrice?.value)
+        reloadSections(mode: mode)
         
         reloadTokens()
     }
@@ -347,6 +345,7 @@ class SwapViewController: UIViewController {
         } else {
             nil
         }
+        reloadSections(mode: mode)
         scheduleNewRequesterIfAvailable()
     }
     
@@ -372,18 +371,10 @@ class SwapViewController: UIViewController {
     
     @objc func priceEditingChanged(_ sender: UITextField) {
         if let text = sender.text, let value = Decimal(string: text, locale: .current) {
-            let priceWasNil = pricingModel.displayPrice == nil
             pricingModel.displayPrice = .nonVolatile(value)
-            if priceWasNil {
-                reloadSections(mode: mode, price: value)
-            }
         } else {
             pricingModel.displayPrice = nil
         }
-    }
-    
-    @objc func priceEditingDidEnd(_ sender: UITextField) {
-        reloadSections(mode: mode, price: pricingModel.displayPrice?.value)
     }
     
     func prepareForReuse(sender: Any) {
@@ -400,12 +391,10 @@ class SwapViewController: UIViewController {
         } else {
             .selectable
         }
-        if pricingModel.priceUnit == .send {
-            priceStyle = sendViewStyle
-        }
         pricingModel.sendToken = sendToken
-        scheduleNewRequesterIfAvailable()
         updatePriceInputAccessory()
+        updatePriceStyle()
+        scheduleNewRequesterIfAvailable()
         saveTokenIDs()
         updateMarkets()
     }
@@ -416,12 +405,10 @@ class SwapViewController: UIViewController {
         } else {
             .selectable
         }
-        if pricingModel.priceUnit == .receive {
-            priceStyle = receiveViewStyle
-        }
         pricingModel.receiveToken = receiveToken
-        scheduleNewRequesterIfAvailable()
         updatePriceInputAccessory()
+        updatePriceStyle()
+        scheduleNewRequesterIfAvailable()
         saveTokenIDs()
         updateMarkets()
     }
@@ -438,16 +425,11 @@ class SwapViewController: UIViewController {
         } else {
             .selectable
         }
-        switch pricingModel.priceUnit {
-        case .send:
-            priceStyle = sendViewStyle
-        case .receive:
-            priceStyle = receiveViewStyle
-        }
         pricingModel.sendToken = sendToken
         pricingModel.receiveToken = receiveToken
-        scheduleNewRequesterIfAvailable()
         updatePriceInputAccessory()
+        updatePriceStyle()
+        scheduleNewRequesterIfAvailable()
         saveTokenIDs()
         updateMarkets()
     }
@@ -573,7 +555,12 @@ extension SwapViewController: UICollectionViewDataSource {
         case .priceInput:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_price_input, for: indexPath)!
             cell.textField.text = pricingModel.displayPrice?.localizedValue
-            cell.update(style: priceStyle)
+            switch pricingModel.priceUnit {
+            case .send:
+                cell.update(style: sendViewStyle)
+            case .receive:
+                cell.update(style: receiveViewStyle)
+            }
             cell.load(priceRepresentation: pricingModel.priceEquation())
             if priceInputCell != cell {
                 updatePriceInputAccessoryView(
@@ -584,11 +571,6 @@ extension SwapViewController: UICollectionViewDataSource {
                     self,
                     action: #selector(priceEditingChanged(_:)),
                     for: .editingChanged
-                )
-                cell.textField.addTarget(
-                    self,
-                    action: #selector(priceEditingDidEnd(_:)),
-                    for: .editingDidEnd
                 )
                 cell.togglePriceUnitButton.addTarget(
                     self,
@@ -890,12 +872,12 @@ extension SwapViewController {
         self.present(alert, animated: true)
     }
     
-    func reloadSections(mode: Mode, price: Decimal?) {
+    func reloadSections(mode: Mode) {
         let sections: [Section] = switch mode {
         case .simple:
             [.modeSelector, .amountInput, .simpleModePrice]
         case .advanced:
-            if let price, price != 0 {
+            if let sendAmount = pricingModel.sendAmount, sendAmount != 0 {
                 [.modeSelector, .amountInput, .priceInput, .expiry]
             } else {
                 [.modeSelector, .amountInput, .priceInput, .openOrders]
@@ -905,7 +887,7 @@ extension SwapViewController {
             let switchingBetweenModes = sections.count != self.sections.count
             self.sections = sections
             if switchingBetweenModes {
-                pricingModel.clear()
+                pricingModel.sendAmount = nil
                 collectionView.reloadData()
                 if let section = sections.firstIndex(of: .modeSelector) {
                     let indexPath = IndexPath(item: mode.rawValue, section: section)
@@ -1178,9 +1160,27 @@ extension SwapViewController {
             case let .success(markets):
                 MarketDAO.shared.save(markets: markets)
                 Logger.general.debug(category: "MarketRequester", message: "Saved")
-            case let .failure(error):
+            case .failure:
                 break
             }
+        }
+    }
+    
+    private func updatePriceStyle() {
+        let isSendingStablecoin = if let sendToken {
+            AssetID.stablecoins.contains(sendToken.assetID)
+        } else {
+            false
+        }
+        let isReceivingStablecoin = if let receiveToken {
+            AssetID.stablecoins.contains(receiveToken.assetID)
+        } else {
+            false
+        }
+        if isSendingStablecoin && !isReceivingStablecoin && pricingModel.priceUnit != .send {
+            pricingModel.priceUnit = .send
+        } else if !isSendingStablecoin && isReceivingStablecoin && pricingModel.priceUnit != .receive {
+            pricingModel.priceUnit = .receive
         }
     }
     

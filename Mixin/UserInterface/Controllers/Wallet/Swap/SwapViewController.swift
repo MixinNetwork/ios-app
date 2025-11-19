@@ -46,40 +46,11 @@ class SwapViewController: UIViewController {
     }
     
     var sendToken: BalancedSwapToken? {
-        didSet {
-            let style: SwapTokenSelectorStyle = if let sendToken {
-                .token(sendToken)
-            } else {
-                .selectable
-            }
-            sendViewStyle = style
-            if pricingModel.priceUnit == .send {
-                priceStyle = style
-            }
-            pricingModel.sendToken = sendToken
-            scheduleNewRequesterIfAvailable()
-        }
+        pricingModel.sendToken
     }
     
     var receiveToken: BalancedSwapToken? {
-        didSet {
-            let style: SwapTokenSelectorStyle = if let receiveToken {
-                .token(receiveToken)
-            } else {
-                .selectable
-            }
-            receiveViewStyle = style
-            if pricingModel.priceUnit == .receive {
-                priceStyle = style
-            }
-            pricingModel.receiveToken = receiveToken
-            scheduleNewRequesterIfAvailable()
-            
-            // Updating the price input accessory requires accessing both sendToken and receiveToken.
-            // When accessing sendToken during swap(&sendToken, &receiveToken), it causes simultaneous accesses.
-            // Dispatch to the next cycle to avoid this
-            DispatchQueue.main.async(execute: updatePriceInputAccessory)
-        }
+        pricingModel.receiveToken
     }
     
     // Key is asset id
@@ -399,19 +370,6 @@ class SwapViewController: UIViewController {
         pricingModel.togglePriceUnit()
     }
     
-    @objc func swapSendingReceiving(_ sender: Any) {
-        if let sender = sender as? UIButton, sender == swapAmountInputCell?.swapButton {
-            let animation = CABasicAnimation(keyPath: "transform.rotation")
-            animation.fromValue = 0
-            animation.toValue = CGFloat.pi
-            animation.duration = 0.35
-            animation.timingFunction = CAMediaTimingFunction(name: .easeOut)
-            sender.layer.add(animation, forKey: nil)
-        }
-        swap(&sendToken, &receiveToken)
-        saveTokenIDs()
-    }
-    
     @objc func priceEditingChanged(_ sender: UITextField) {
         if let text = sender.text, let value = Decimal(string: text, locale: .current) {
             let priceWasNil = pricingModel.displayPrice == nil
@@ -436,40 +394,62 @@ class SwapViewController: UIViewController {
         reloadTokens() // Update send token balance
     }
     
-    func reloadSections(mode: Mode, price: Decimal?) {
-        let sections: [Section] = switch mode {
-        case .simple:
-            [.modeSelector, .amountInput, .simpleModePrice]
-        case .advanced:
-            if let price, price != 0 {
-                [.modeSelector, .amountInput, .priceInput, .expiry]
-            } else {
-                [.modeSelector, .amountInput, .priceInput, .openOrders]
-            }
+    func setSendToken(_ sendToken: BalancedSwapToken?) {
+        sendViewStyle = if let sendToken {
+            .token(sendToken)
+        } else {
+            .selectable
         }
-        if sections != self.sections {
-            let switchingBetweenModes = sections.count != self.sections.count
-            self.sections = sections
-            if switchingBetweenModes {
-                pricingModel.clear()
-                collectionView.reloadData()
-                if let section = sections.firstIndex(of: .modeSelector) {
-                    let indexPath = IndexPath(item: mode.rawValue, section: section)
-                    collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-                }
-            } else {
-                UIView.performWithoutAnimation {
-                    let sections = IndexSet(integer: sections.count - 1)
-                    collectionView.reloadSections(sections)
-                }
-            }
-            if sections.contains(.openOrders) {
-                hideReviewButtonWrapperView()
-            } else {
-                showReviewButtonWrapperView()
-            }
-            view.layoutSubviews()
+        if pricingModel.priceUnit == .send {
+            priceStyle = sendViewStyle
         }
+        pricingModel.sendToken = sendToken
+        scheduleNewRequesterIfAvailable()
+        updatePriceInputAccessory()
+        saveTokenIDs()
+        updateMarkets()
+    }
+    
+    func setReceiveToken(_ receiveToken: BalancedSwapToken?) {
+        receiveViewStyle = if let receiveToken {
+            .token(receiveToken)
+        } else {
+            .selectable
+        }
+        if pricingModel.priceUnit == .receive {
+            priceStyle = receiveViewStyle
+        }
+        pricingModel.receiveToken = receiveToken
+        scheduleNewRequesterIfAvailable()
+        updatePriceInputAccessory()
+        saveTokenIDs()
+        updateMarkets()
+    }
+    
+    func swapSendingReceiving() {
+        let (sendToken, receiveToken) = (pricingModel.receiveToken, pricingModel.sendToken)
+        sendViewStyle = if let sendToken {
+            .token(sendToken)
+        } else {
+            .selectable
+        }
+        receiveViewStyle = if let receiveToken {
+            .token(receiveToken)
+        } else {
+            .selectable
+        }
+        switch pricingModel.priceUnit {
+        case .send:
+            priceStyle = sendViewStyle
+        case .receive:
+            priceStyle = receiveViewStyle
+        }
+        pricingModel.sendToken = sendToken
+        pricingModel.receiveToken = receiveToken
+        scheduleNewRequesterIfAvailable()
+        updatePriceInputAccessory()
+        saveTokenIDs()
+        updateMarkets()
     }
     
     func balancedSwapToken(assetID: String) -> BalancedSwapToken? {
@@ -580,10 +560,9 @@ extension SwapViewController: UICollectionViewDataSource {
                 )
                 cell.swapButton.addTarget(
                     self,
-                    action: #selector(swapSendingReceiving(_:)),
+                    action: #selector(swapSendingReceivingWithAnimation(_:)),
                     for: .touchUpInside
                 )
-                cell.sendAmountTextField.becomeFirstResponder()
                 swapAmountInputCell = cell
             }
             cell.updateSendView(style: sendViewStyle)
@@ -870,6 +849,18 @@ extension SwapViewController {
 
 extension SwapViewController {
     
+    @objc private func swapSendingReceivingWithAnimation(_ sender: Any) {
+        if let sender = sender as? UIButton, sender == swapAmountInputCell?.swapButton {
+            let animation = CABasicAnimation(keyPath: "transform.rotation")
+            animation.fromValue = 0
+            animation.toValue = CGFloat.pi
+            animation.duration = 0.35
+            animation.timingFunction = CAMediaTimingFunction(name: .easeOut)
+            sender.layer.add(animation, forKey: nil)
+        }
+        swapSendingReceiving()
+    }
+    
     @objc private func inputAmountByRange(_ sender: Any) {
         guard let amountRange, let sendAmount = pricingModel.sendAmount else {
             return
@@ -880,22 +871,6 @@ extension SwapViewController {
         } else if let maximum = amountRange.maximum, sendAmount > maximum {
             pricingModel.sendAmount = maximum
             swapAmountInputCell?.updateSendAmountTextField(amount: maximum)
-        }
-    }
-    
-    private func reloadTokens() {
-        RouteAPI.swappableTokens(source: tokenSource) { [weak self] result in
-            switch result {
-            case .success(let tokens):
-                self?.reloadData(swappableTokens: tokens)
-            case .failure(.requiresUpdate):
-                self?.reportClientOutdated()
-            case .failure(let error):
-                Logger.general.debug(category: "Swap", message: "\(error)")
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    self?.reloadTokens()
-                }
-            }
         }
     }
     
@@ -913,6 +888,58 @@ extension SwapViewController {
             self.navigationController?.popViewController(animated: true)
         }))
         self.present(alert, animated: true)
+    }
+    
+    func reloadSections(mode: Mode, price: Decimal?) {
+        let sections: [Section] = switch mode {
+        case .simple:
+            [.modeSelector, .amountInput, .simpleModePrice]
+        case .advanced:
+            if let price, price != 0 {
+                [.modeSelector, .amountInput, .priceInput, .expiry]
+            } else {
+                [.modeSelector, .amountInput, .priceInput, .openOrders]
+            }
+        }
+        if sections != self.sections {
+            let switchingBetweenModes = sections.count != self.sections.count
+            self.sections = sections
+            if switchingBetweenModes {
+                pricingModel.clear()
+                collectionView.reloadData()
+                if let section = sections.firstIndex(of: .modeSelector) {
+                    let indexPath = IndexPath(item: mode.rawValue, section: section)
+                    collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                }
+            } else {
+                UIView.performWithoutAnimation {
+                    let sections = IndexSet(integer: sections.count - 1)
+                    collectionView.reloadSections(sections)
+                }
+            }
+            if sections.contains(.openOrders) {
+                hideReviewButtonWrapperView()
+            } else {
+                showReviewButtonWrapperView()
+            }
+            view.layoutSubviews()
+        }
+    }
+    
+    private func reloadTokens() {
+        RouteAPI.swappableTokens(source: tokenSource) { [weak self] result in
+            switch result {
+            case .success(let tokens):
+                self?.reloadData(swappableTokens: tokens)
+            case .failure(.requiresUpdate):
+                self?.reportClientOutdated()
+            case .failure(let error):
+                Logger.general.debug(category: "Swap", message: "\(error)")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    self?.reloadTokens()
+                }
+            }
+        }
     }
     
     private func showReviewButtonWrapperView() {
@@ -1052,12 +1079,13 @@ extension SwapViewController {
                     return
                 }
                 self.swappableTokens = tokens
-                self.sendToken = sendToken
-                self.receiveToken = receiveToken
+                self.setSendToken(sendToken)
+                self.setReceiveToken(receiveToken)
                 if let missingAssetSymbol {
                     let description = R.string.localizable.swap_not_supported(missingAssetSymbol)
                     self.swapPriceContent = .error(description)
                 }
+                self.updateMarkets()
             }
         }
     }
@@ -1077,6 +1105,7 @@ extension SwapViewController {
     }
     
     private func inputPrice(multiplier: Decimal) {
+        updateMarkets()
         guard let sendToken, let receiveToken else {
             return
         }
@@ -1134,6 +1163,25 @@ extension SwapViewController {
         requester.delegate = self
         self.quoteRequester = requester
         requester.start(delay: 1)
+    }
+    
+    private func updateMarkets() {
+        var ids: [String] = []
+        if let sendToken {
+            ids.append(sendToken.assetID)
+        }
+        if let receiveToken {
+            ids.append(receiveToken.assetID)
+        }
+        RouteAPI.markets(ids: ids, queue: .global()) { result in
+            switch result {
+            case let .success(markets):
+                MarketDAO.shared.save(markets: markets)
+                Logger.general.debug(category: "MarketRequester", message: "Saved")
+            case let .failure(error):
+                break
+            }
+        }
     }
     
 }

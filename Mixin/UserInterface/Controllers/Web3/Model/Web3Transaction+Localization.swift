@@ -12,7 +12,7 @@ extension UnknownableEnum<Web3Transaction.TransactionType> {
             case .transferOut:
                 R.string.localizable.send()
             case .swap:
-                R.string.localizable.swap()
+                R.string.localizable.trade()
             case .approval:
                 R.string.localizable.approval()
             case .unknown:

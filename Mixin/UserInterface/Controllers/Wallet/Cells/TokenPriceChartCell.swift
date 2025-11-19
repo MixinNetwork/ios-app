@@ -16,7 +16,7 @@ final class TokenPriceChartCell: UITableViewCell {
         var title: String {
             switch self {
             case .swap:
-                R.string.localizable.swap()
+                R.string.localizable.trade()
             case .alert:
                 R.string.localizable.alert()
             case .addAlert:

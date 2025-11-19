@@ -16,7 +16,7 @@ extension SwapOrder {
         var localizedName: String {
             switch self {
             case .never:
-                R.string.localizable.swap_expiry_never()
+                R.string.localizable.trade_expiry_never()
             case .tenMinutes:
                 R.string.localizable.minute_count(10)
             case .oneHour:

@@ -215,7 +215,7 @@ struct SwapOrderViewModel {
         
         if let expiredAt = order.expiredAt, let date = DateFormatter.iso8601Full.date(from: expiredAt) {
             self.expiration = if date.timeIntervalSinceNow > 365 * .day {
-                R.string.localizable.swap_expiry_never()
+                R.string.localizable.trade_expiry_never()
             } else {
                 DateFormatter.dateFull.string(from: date)
             }

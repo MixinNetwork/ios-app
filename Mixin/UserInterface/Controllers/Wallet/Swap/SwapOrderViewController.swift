@@ -47,9 +47,11 @@ final class SwapOrderViewController: UITableViewController {
         reloadData(viewModel: viewModel)
         switch viewModel.state.knownCase {
         case .created, .pending:
-            loader = PendingSwapOrderLoader(
-                behavior: .watchOrder(id: viewModel.orderID)
-            )
+            if let type = viewModel.type.knownCase {
+                loader = PendingSwapOrderLoader(
+                    behavior: .watchOrder(id: viewModel.orderID, type: type)
+                )
+            }
         default:
             break
         }

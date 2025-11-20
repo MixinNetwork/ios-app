@@ -75,7 +75,6 @@ final class Web3SwapViewController: SwapViewController {
                 self.swapSendingReceiving()
             } else {
                 self.setSendToken(token)
-                self.saveTokenIDs()
             }
         }
         present(selector, animated: true)
@@ -106,7 +105,6 @@ final class Web3SwapViewController: SwapViewController {
                 self.swapSendingReceiving()
             } else {
                 self.setReceiveToken(token)
-                self.saveTokenIDs()
             }
         }
         present(selector, animated: true)

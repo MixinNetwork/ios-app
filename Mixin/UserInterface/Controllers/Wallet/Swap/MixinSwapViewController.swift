@@ -50,7 +50,6 @@ final class MixinSwapViewController: SwapViewController {
                 self.swapSendingReceiving()
             } else {
                 self.setSendToken(token)
-                self.saveTokenIDs()
             }
         }
         present(selector, animated: true)
@@ -78,7 +77,6 @@ final class MixinSwapViewController: SwapViewController {
                 self.swapSendingReceiving()
             } else {
                 self.setReceiveToken(token)
-                self.saveTokenIDs()
             }
         }
         present(selector, animated: true)

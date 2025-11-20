@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TransferWalletSelectorViewController" customModule="Mixin" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WalletSelectorViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="cancelButton" destination="3kt-WG-hm3" id="lkS-Az-7BA"/>
                 <outlet property="collectionView" destination="qxH-RT-un8" id="Cy9-Pa-TbE"/>

@@ -656,8 +656,8 @@
 		940389CD2E1D546900A7782D /* NewGroupView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940389CC2E1D546900A7782D /* NewGroupView.xib */; };
 		94038B342E1F88E900A7782D /* Wallet+Localizaton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94038B332E1F88E300A7782D /* Wallet+Localizaton.swift */; };
 		94038B752E1FA4A700A7782D /* DeleteWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94038B742E1FA4A700A7782D /* DeleteWalletViewController.swift */; };
-		94038BC62E1FF51200A7782D /* TransferWalletSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94038BC52E1FF51200A7782D /* TransferWalletSelectorView.xib */; };
-		94038BC72E1FF51200A7782D /* TransferWalletSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94038BC42E1FF51200A7782D /* TransferWalletSelectorViewController.swift */; };
+		94038BC62E1FF51200A7782D /* WalletSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94038BC52E1FF51200A7782D /* WalletSelectorView.xib */; };
+		94038BC72E1FF51200A7782D /* WalletSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94038BC42E1FF51200A7782D /* WalletSelectorViewController.swift */; };
 		94046B91272DC265007C1D4A /* GroupCallMembersDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */; };
 		94046B93272DC28B007C1D4A /* GroupCallMembersManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B92272DC28B007C1D4A /* GroupCallMembersManager.swift */; };
 		94046B96272DC2CF007C1D4A /* IncomingPeerCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B94272DC2CF007C1D4A /* IncomingPeerCall.swift */; };
@@ -2421,8 +2421,8 @@
 		940389CC2E1D546900A7782D /* NewGroupView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewGroupView.xib; sourceTree = "<group>"; };
 		94038B332E1F88E300A7782D /* Wallet+Localizaton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Wallet+Localizaton.swift"; sourceTree = "<group>"; };
 		94038B742E1FA4A700A7782D /* DeleteWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteWalletViewController.swift; sourceTree = "<group>"; };
-		94038BC42E1FF51200A7782D /* TransferWalletSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferWalletSelectorViewController.swift; sourceTree = "<group>"; };
-		94038BC52E1FF51200A7782D /* TransferWalletSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransferWalletSelectorView.xib; sourceTree = "<group>"; };
+		94038BC42E1FF51200A7782D /* WalletSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSelectorViewController.swift; sourceTree = "<group>"; };
+		94038BC52E1FF51200A7782D /* WalletSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletSelectorView.xib; sourceTree = "<group>"; };
 		94046B90272DC265007C1D4A /* GroupCallMembersDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCallMembersDataSource.swift; sourceTree = "<group>"; };
 		94046B92272DC28B007C1D4A /* GroupCallMembersManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupCallMembersManager.swift; sourceTree = "<group>"; };
 		94046B94272DC2CF007C1D4A /* IncomingPeerCall.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomingPeerCall.swift; sourceTree = "<group>"; };
@@ -5860,8 +5860,8 @@
 				944F53FD2E45CC4F0064A9A2 /* WatchWalletAddressesViewController.swift */,
 				94038B742E1FA4A700A7782D /* DeleteWalletViewController.swift */,
 				7BFD34592285A7F000524EA0 /* TransferReceiverViewController.swift */,
-				94038BC52E1FF51200A7782D /* TransferWalletSelectorView.xib */,
-				94038BC42E1FF51200A7782D /* TransferWalletSelectorViewController.swift */,
+				94038BC52E1FF51200A7782D /* WalletSelectorView.xib */,
+				94038BC42E1FF51200A7782D /* WalletSelectorViewController.swift */,
 				94A4CCBB2E38A38200C8AFD0 /* UncontrolledWalletWarningView.xib */,
 				94A4CCBA2E38A38200C8AFD0 /* UncontrolledWalletWarningViewController.swift */,
 				948FC56A2D760017000795E4 /* TokenViewController.swift */,
@@ -6594,7 +6594,7 @@
 				7C53049F28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib in Resources */,
 				94FE11F62DA7AC830026AB9A /* Web3TransactionCell.xib in Resources */,
 				DFFDCF8E20ADC8A200B4956E /* RecognizeWindow.xib in Resources */,
-				94038BC62E1FF51200A7782D /* TransferWalletSelectorView.xib in Resources */,
+				94038BC62E1FF51200A7782D /* WalletSelectorView.xib in Resources */,
 				949775782E57733C00B0BB81 /* LoginLogView.xib in Resources */,
 				946CBA072E9F7A950099FFCB /* CommonWalletReceiverCell.xib in Resources */,
 				7B869C74202D8206009930BA /* NumberPadButton.xib in Resources */,
@@ -7789,7 +7789,7 @@
 				9419C1E32E67281100BEAB42 /* DepositTaggingEntryHeaderView.swift in Sources */,
 				7CEB736629DBCD6A006FB5B2 /* DeviceTransferSticker.swift in Sources */,
 				94C6987B2B23257B002377EA /* PaymentPrecondition.swift in Sources */,
-				94038BC72E1FF51200A7782D /* TransferWalletSelectorViewController.swift in Sources */,
+				94038BC72E1FF51200A7782D /* WalletSelectorViewController.swift in Sources */,
 				941995072CCE8C9700F5425C /* RecoveryContactIntroduction1ViewController.swift in Sources */,
 				94046B91272DC265007C1D4A /* GroupCallMembersDataSource.swift in Sources */,
 				947013692E19424500444513 /* AddWalletImportingViewController.swift in Sources */,

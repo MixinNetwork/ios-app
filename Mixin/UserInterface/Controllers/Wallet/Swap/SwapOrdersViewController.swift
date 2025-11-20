@@ -125,7 +125,7 @@ final class SwapOrdersViewController: UIViewController {
     }
     
     @objc private func pickWallets(_ sender: Any) {
-        let selector = TransferWalletSelectorViewController(
+        let selector = WalletSelectorViewController(
             intent: .pickSwapOrderFilter(selectedWallets: filter.wallets),
             excluding: nil,
             supportingChainWith: nil
@@ -275,13 +275,13 @@ extension SwapOrdersViewController: UICollectionViewDelegate {
     
 }
 
-extension SwapOrdersViewController: TransferWalletSelectorViewController.Delegate {
+extension SwapOrdersViewController: WalletSelectorViewController.Delegate {
     
-    func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectWallet wallet: Wallet) {
+    func walletSelectorViewController(_ viewController: WalletSelectorViewController, didSelectWallet wallet: Wallet) {
         
     }
     
-    func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectMultipleWallets wallets: [Wallet]) {
+    func walletSelectorViewController(_ viewController: WalletSelectorViewController, didSelectMultipleWallets wallets: [Wallet]) {
         dismiss(animated: true)
         filter.wallets = wallets
         walletFilterView.reloadData(wallets: wallets)

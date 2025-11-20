@@ -425,8 +425,7 @@ class SwapViewController: UIViewController {
         } else {
             .selectable
         }
-        pricingModel.sendToken = sendToken
-        pricingModel.receiveToken = receiveToken
+        pricingModel.swapSendingReceiving()
         updatePriceInputAccessory()
         updatePriceStyle()
         scheduleNewRequesterIfAvailable()
@@ -1101,12 +1100,7 @@ extension SwapViewController {
         let multipliedPrice = NSDecimalNumber(decimal: value * multiplier)
             .rounding(accordingToBehavior: tokenAmountRoundingHandler)
             .decimalValue
-        if let textField = priceInputCell?.textField {
-            textField.text = NumberFormatter.userInputAmountSimulation.string(decimal: multipliedPrice)
-            priceEditingChanged(textField)
-        } else {
-            pricingModel.displayPrice = .nonVolatile(multipliedPrice)
-        }
+        pricingModel.price = .nonVolatile(multipliedPrice)
     }
     
     private func scheduleNewRequesterIfAvailable() {

@@ -102,7 +102,7 @@ final class SwapOrdersViewController: UIViewController {
             name: Web3OrderDAO.didSaveNotification,
             object: nil
         )
-        ConcurrentJobQueue.shared.addJob(job: SyncWeb3OrdersJob())
+        syncOrders(wallets: filter.wallets)
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -260,6 +260,21 @@ final class SwapOrdersViewController: UIViewController {
         queue.addOperation(operation)
     }
     
+    private func syncOrders(wallets: [Wallet]) {
+        let jobs = wallets.map { wallet in
+            let walletID = switch wallet {
+            case .privacy:
+                myUserId
+            case .common(let wallet):
+                wallet.walletID
+            }
+            return SyncWeb3OrdersJob(walletID: walletID)
+        }
+        for job in jobs {
+            ConcurrentJobQueue.shared.addJob(job: job)
+        }
+    }
+    
 }
 
 extension SwapOrdersViewController: UICollectionViewDelegate {
@@ -286,6 +301,7 @@ extension SwapOrdersViewController: WalletSelectorViewController.Delegate {
         filter.wallets = wallets
         walletFilterView.reloadData(wallets: wallets)
         reloadData()
+        syncOrders(wallets: wallets)
     }
     
 }

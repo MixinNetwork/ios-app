@@ -59,7 +59,7 @@ extension RouteAPI {
         Self.request(method: .post, path: "/web3/swap", with: request, completion: completion)
     }
     
-    static func swapOrders(
+    static func tradeOrders(
         limit: Int,
         offset: String?,
         walletID: String?,
@@ -78,7 +78,7 @@ extension RouteAPI {
         return try await request(method: .get, path: path)
     }
     
-    static func swapOrders(
+    static func tradeOrders(
         limit: Int,
         offset: String?,
         walletID: String?,
@@ -97,17 +97,16 @@ extension RouteAPI {
         return request(method: .get, path: path)
     }
     
-    static func swapOrders(
+    static func tradeOrders(
         ids: [String],
     ) async throws -> [SwapOrder] {
         try await request(method: .post, path: "/web3/swap/orders", with: ids)
     }
     
-    static func limitOrder(
+    static func swapOrder(
         id: String,
-        completion: @escaping (MixinAPI.Result<SwapOrder>) -> Void
-    ) {
-        request(method: .get, path: "/web3/limit_orders/\(id)", completion: completion)
+    ) async throws -> SwapOrder {
+        try await request(method: .get, path: "/web3/swap/orders/\(id)")
     }
     
     static func limitOrder(

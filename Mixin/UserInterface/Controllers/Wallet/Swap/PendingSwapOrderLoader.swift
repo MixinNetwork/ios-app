@@ -11,7 +11,7 @@ final class PendingSwapOrderLoader {
     enum Behavior {
         case watchWallet(id: String)
         case watchOrders(ids: [String])
-        case watchOrder(id: String)
+        case watchOrder(id: String, type: SwapOrder.OrderType)
     }
     
     weak var delegate: Delegate?
@@ -25,6 +25,10 @@ final class PendingSwapOrderLoader {
     
     init(behavior: Behavior) {
         self.behavior = behavior
+    }
+    
+    deinit {
+        timer?.invalidate()
     }
     
     func start() {
@@ -77,11 +81,11 @@ final class PendingSwapOrderLoader {
         Task.detached { [behavior, refreshInterval, weak self] in
             do {
                 switch behavior {
-                case .watchWallet:
-                    let orders = try await RouteAPI.swapOrders(
+                case let .watchWallet(id):
+                    let orders = try await RouteAPI.tradeOrders(
                         limit: 100, // TODO: What if pending orders more than 100?
                         offset: nil,
-                        walletID: nil,
+                        walletID: id,
                         state: .pending,
                     )
                     Logger.general.debug(category: "PendingSwapOrderLoader", message: "Loaded \(orders.count) orders")
@@ -94,10 +98,9 @@ final class PendingSwapOrderLoader {
                             }
                         }
                     }
-                case .watchOrders(let ids):
-                    let orders = try await RouteAPI.swapOrders(ids: ids)
+                case let .watchOrders(ids):
+                    let orders = try await RouteAPI.tradeOrders(ids: ids)
                     Logger.general.debug(category: "PendingSwapOrderLoader", message: "Loaded \(orders.count) orders")
-                    Web3OrderDAO.shared.save(orders: orders)
                     if !orders.isEmpty {
                         Web3OrderDAO.shared.save(orders: orders)
                         if let self {
@@ -107,16 +110,24 @@ final class PendingSwapOrderLoader {
                             }
                         }
                     }
-                case .watchOrder(let id):
-                    let order = try await RouteAPI.limitOrder(id: id)
+                case let .watchOrder(id, type):
+                    let order = switch type {
+                    case .swap:
+                        try await RouteAPI.swapOrder(id: id)
+                    case .limit:
+                        try await RouteAPI.limitOrder(id: id)
+                    }
                     Logger.general.debug(category: "PendingSwapOrderLoader", message: "Loaded order \(order.state)")
                     Web3OrderDAO.shared.save(orders: [order])
                     if let self {
                         self.delegate?.pendingSwapOrder(self, didLoad: [order])
-                        if SwapOrder.State(rawValue: order.state) == .pending {
+                        switch SwapOrder.State(rawValue: order.state) {
+                        case .created, .pending:
                             await MainActor.run {
                                 self.scheduleRemoteDataLoading(timeInterval: refreshInterval)
                             }
+                        default:
+                            break
                         }
                     }
                 }

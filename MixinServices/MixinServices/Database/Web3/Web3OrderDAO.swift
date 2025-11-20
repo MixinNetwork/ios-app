@@ -17,18 +17,6 @@ public final class Web3OrderDAO: Web3DAO {
         return db.select(with: query)
     }
     
-    public func latestNotPendingCreatedAt() -> String? {
-        db.select(with: """
-        SELECT created_at FROM orders
-        WHERE state NOT IN ('created','pending')
-        ORDER BY created_at DESC
-        """)
-    }
-    
-    public func pendingOrderIDs() -> [String] {
-        db.select(with: "SELECT order_id FROM orders WHERE state IN ('created','pending')")
-    }
-    
     public func pendingOrders(walletID: String?) -> [SwapOrder] {
         if let walletID {
             db.select(with: """
@@ -45,13 +33,22 @@ public final class Web3OrderDAO: Web3DAO {
         }
     }
     
-    public func save(orders: [SwapOrder]) {
-        db.save(orders) { _ in
-            NotificationCenter.default.post(
-                onMainThread: Self.didSaveNotification,
-                object: self,
-                userInfo: [Self.ordersUserInfoKey: orders]
-            )
+    public func save(
+        orders: [SwapOrder],
+        alongsideTransaction change: ((GRDB.Database) throws -> Void)? = nil
+    ) {
+        db.write { db in
+            try orders.save(db)
+            try change?(db)
+            db.afterNextTransaction { _ in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(
+                        name: Self.didSaveNotification,
+                        object: self,
+                        userInfo: [Self.ordersUserInfoKey: orders]
+                    )
+                }
+            }
         }
     }
     

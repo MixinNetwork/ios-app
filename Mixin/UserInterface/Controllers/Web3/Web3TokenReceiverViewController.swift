@@ -149,7 +149,7 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
             present(selector, animated: true)
         case .myWallets:
             reporter.report(event: .sendRecipient, tags: ["type": "wallet"])
-            let selector = TransferWalletSelectorViewController(
+            let selector = WalletSelectorViewController(
                 intent: .pickReceiver,
                 excluding: .common(payment.wallet),
                 supportingChainWith: payment.token.chainID
@@ -161,9 +161,9 @@ extension Web3TokenReceiverViewController: UITableViewDelegate {
     
 }
 
-extension Web3TokenReceiverViewController: TransferWalletSelectorViewController.Delegate {
+extension Web3TokenReceiverViewController: WalletSelectorViewController.Delegate {
     
-    func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectWallet wallet: Wallet) {
+    func walletSelectorViewController(_ viewController: WalletSelectorViewController, didSelectWallet wallet: Wallet) {
         switch wallet {
         case .privacy:
             sendToPrivacyWallet()
@@ -172,7 +172,7 @@ extension Web3TokenReceiverViewController: TransferWalletSelectorViewController.
         }
     }
     
-    func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectMultipleWallets wallets: [Wallet]) {
+    func walletSelectorViewController(_ viewController: WalletSelectorViewController, didSelectMultipleWallets wallets: [Wallet]) {
         
     }
     

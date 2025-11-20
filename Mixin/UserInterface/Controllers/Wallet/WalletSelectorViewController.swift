@@ -2,11 +2,11 @@ import UIKit
 import Combine
 import MixinServices
 
-final class TransferWalletSelectorViewController: UIViewController {
+final class WalletSelectorViewController: UIViewController {
     
     protocol Delegate: AnyObject {
-        func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectWallet wallet: Wallet)
-        func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectMultipleWallets wallets: [Wallet])
+        func walletSelectorViewController(_ viewController: WalletSelectorViewController, didSelectWallet wallet: Wallet)
+        func walletSelectorViewController(_ viewController: WalletSelectorViewController, didSelectMultipleWallets wallets: [Wallet])
     }
     
     enum Intent {
@@ -66,7 +66,7 @@ final class TransferWalletSelectorViewController: UIViewController {
         self.intent = intent
         self.excludingWallet = wallet
         self.chainID = chainID
-        let nib = R.nib.transferWalletSelectorView
+        let nib = R.nib.walletSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
     
@@ -167,13 +167,6 @@ final class TransferWalletSelectorViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         DispatchQueue.global().async { [intent, excludingWallet, chainID] in
-            var secretAvailableWalletIDs: Set<String> = Set(
-                AppGroupKeychain.allImportedMnemonics().keys
-            )
-            secretAvailableWalletIDs.formUnion(
-                AppGroupKeychain.allImportedPrivateKey().keys
-            )
-            
             let web3Wallets = Web3WalletDAO.shared.walletDigests()
             
             var digests: [WalletDigest] = switch excludingWallet {
@@ -187,6 +180,12 @@ final class TransferWalletSelectorViewController: UIViewController {
                 }
             }
             
+            var secretAvailableWalletIDs: Set<String> = Set(
+                AppGroupKeychain.allImportedMnemonics().keys
+            )
+            secretAvailableWalletIDs.formUnion(
+                AppGroupKeychain.allImportedPrivateKey().keys
+            )
             switch intent {
             case .pickSender:
                 digests.removeAll { digest in
@@ -204,11 +203,26 @@ final class TransferWalletSelectorViewController: UIViewController {
                         }
                     }
                 }
-            case .pickSwapOrderFilter, .pickReceiver:
-                if let chainID {
-                    digests.removeAll { digest in
-                        !digest.supportedChainIDs.contains(chainID)
+            case .pickSwapOrderFilter:
+                digests.removeAll { digest in
+                    switch digest.wallet {
+                    case .privacy:
+                        false
+                    case .common(let wallet):
+                        switch wallet.category.knownCase {
+                        case .classic, .importedMnemonic, .importedPrivateKey:
+                            false
+                        case .watchAddress, .none:
+                            true
+                        }
                     }
+                }
+            case .pickReceiver:
+                break
+            }
+            if let chainID {
+                digests.removeAll { digest in
+                    !digest.supportedChainIDs.contains(chainID)
                 }
             }
             
@@ -276,9 +290,9 @@ final class TransferWalletSelectorViewController: UIViewController {
             let wallets = indexPaths.map { indexPath in
                 digests[indexPath.item].wallet
             }
-            delegate?.transferWalletSelectorViewController(self, didSelectMultipleWallets: wallets)
+            delegate?.walletSelectorViewController(self, didSelectMultipleWallets: wallets)
         } else {
-            delegate?.transferWalletSelectorViewController(self, didSelectMultipleWallets: [])
+            delegate?.walletSelectorViewController(self, didSelectMultipleWallets: [])
         }
     }
     
@@ -336,7 +350,7 @@ final class TransferWalletSelectorViewController: UIViewController {
     
 }
 
-extension TransferWalletSelectorViewController: WalletTipView.Delegate {
+extension WalletSelectorViewController: WalletTipView.Delegate {
     
     func walletTipViewWantsToClose(_ view: WalletTipView) {
         guard let content = view.content else {
@@ -352,7 +366,7 @@ extension TransferWalletSelectorViewController: WalletTipView.Delegate {
     
 }
 
-extension TransferWalletSelectorViewController: UICollectionViewDataSource {
+extension WalletSelectorViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         var sections: [Section] = [.wallets]
@@ -417,7 +431,7 @@ extension TransferWalletSelectorViewController: UICollectionViewDataSource {
     
 }
 
-extension TransferWalletSelectorViewController: UICollectionViewDelegate {
+extension WalletSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         Section(rawValue: indexPath.section) == .wallets
@@ -449,13 +463,13 @@ extension TransferWalletSelectorViewController: UICollectionViewDelegate {
                     return
                 }
                 self.presentingViewController?.dismiss(animated: true) {
-                    self.delegate?.transferWalletSelectorViewController(self, didSelectWallet: digest.wallet)
+                    self.delegate?.walletSelectorViewController(self, didSelectWallet: digest.wallet)
                 }
             }
             present(warning, animated: true)
         } else {
             presentingViewController?.dismiss(animated: true) {
-                self.delegate?.transferWalletSelectorViewController(self, didSelectWallet: digest.wallet)
+                self.delegate?.walletSelectorViewController(self, didSelectWallet: digest.wallet)
             }
         }
     }

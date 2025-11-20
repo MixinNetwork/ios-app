@@ -190,6 +190,29 @@ final class SwapPricingModel {
         }
     }
     
+    // Always `receive / send`
+    var price: Price? {
+        get {
+            _price
+        }
+        set {
+            _price = newValue
+            
+            var updates: [Update] = [
+                .displayPrice(displayPrice?.localizedValue),
+                .priceEquation(priceEquation()),
+            ]
+            
+            let receiveAmount = calculateReceiveAmount()
+            if _receiveAmount != receiveAmount {
+                _receiveAmount = receiveAmount
+                updates.append(.receiveAmount(receiveAmount))
+            }
+            
+            delegate?.swapPricingModel(self, didUpdate: updates)
+        }
+    }
+    
     // Based on `priceUnit`
     var displayPrice: Price? {
         get {
@@ -237,7 +260,7 @@ final class SwapPricingModel {
     private var _receiveAmount: Decimal?
     private var _receiveToken: BalancedSwapToken?
     private var _priceUnit: SwapQuote.PriceUnit = .send
-    private var _price: Price? // Always `send / receive`, using `send` as unit
+    private var _price: Price? // Always `receive / send`
     
     private func calculateReceiveAmount() -> Decimal? {
         guard
@@ -270,6 +293,40 @@ final class SwapPricingModel {
     
     func togglePriceUnit() {
         priceUnit = _priceUnit.toggled()
+    }
+    
+    func swapSendingReceiving() {
+        swap(&_sendToken, &_receiveToken)
+        var updates: [Update] = []
+        
+        switch _price {
+        case .nonVolatile:
+            break
+        case .volatile, .none:
+            let price: Price? = .derive(sendToken: _sendToken, receiveToken: _receiveToken)
+            if price != _price {
+                _price = price
+                updates.append(.displayPrice(displayPrice?.localizedValue))
+            }
+        }
+        
+        switch priceUnit {
+        case .send:
+            updates.append(.priceToken(_sendToken))
+        case .receive:
+            updates.append(.priceToken(_receiveToken))
+        }
+        
+        let priceEquation = priceEquation()
+        updates.append(.priceEquation(priceEquation))
+        
+        let receiveAmount = calculateReceiveAmount()
+        if _receiveAmount != receiveAmount {
+            _receiveAmount = receiveAmount
+            updates.append(.receiveAmount(receiveAmount))
+        }
+        
+        delegate?.swapPricingModel(self, didUpdate: updates)
     }
     
 }

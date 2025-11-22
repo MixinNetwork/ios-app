@@ -8,6 +8,10 @@ final class Web3SwapViewController: SwapViewController {
     private let supportedChainIDs: Set<String>
     private let slippage: Decimal = 0.01
     
+    override var orderWalletID: String? {
+        wallet.walletID
+    }
+    
     private var walletID: String {
         wallet.walletID
     }

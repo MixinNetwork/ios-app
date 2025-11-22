@@ -34,6 +34,7 @@ struct SwapOrderViewModel {
     let sendPrice: String?
     let expiration: String?
     let createdAt: String
+    let createdAtRepresentation: String
     
     var exchangingSymbolRepresentation: String {
         paySymbol + " → " + receiveSymbol
@@ -202,7 +203,8 @@ struct SwapOrderViewModel {
         } else {
             self.expiration = nil
         }
-        self.createdAt = if let date = DateFormatter.iso8601Full.date(from: order.createdAt) {
+        self.createdAt = order.createdAt
+        self.createdAtRepresentation = if let date = DateFormatter.iso8601Full.date(from: order.createdAt) {
             DateFormatter.dateFull.string(from: date)
         } else {
             order.createdAt

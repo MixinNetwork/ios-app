@@ -42,7 +42,7 @@ public final class Web3RawTransactionDAO: Web3DAO {
     
     public func pendingRawTransactionsCount(hashIn hashes: [String]) -> Int {
         let query: GRDB.SQL = """
-        SELECT COUNT(1)
+        SELECT COUNT(*)
         FROM raw_transactions
         WHERE state = 'pending'
             AND hash IN \(hashes)

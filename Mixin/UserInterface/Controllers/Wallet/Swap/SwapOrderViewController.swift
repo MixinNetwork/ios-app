@@ -169,7 +169,7 @@ final class SwapOrderViewController: UITableViewController {
             case .createdAt:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_compact_info, for: indexPath)!
                 cell.captionLabel.text = R.string.localizable.created().uppercased()
-                cell.setContent(viewModel.createdAt)
+                cell.setContent(viewModel.createdAtRepresentation)
                 cell.contentLeadingConstraint.constant = 16
                 cell.contentTrailingConstraint.constant = 16
                 return cell

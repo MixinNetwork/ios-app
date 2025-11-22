@@ -36,7 +36,7 @@ final class SwapOrderCell: UICollectionViewCell {
             receive: viewModel.receiveToken?.iconURL
         )
         symbolLabel.text = viewModel.exchangingSymbolRepresentation
-        dateLabel.text = viewModel.createdAt
+        dateLabel.text = viewModel.createdAtRepresentation
         payAmountLabel.text = viewModel.paying.amount
         typeLabel.text = viewModel.type.localizedDescription
         receiveAmountLabel.text = viewModel.receivings.map(\.amount).joined(separator: " ")

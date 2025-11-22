@@ -5,65 +5,13 @@ public final class PropertiesDAO: UserDatabaseDAO {
     
     public static let propertyDidUpdateNotification = Notification.Name("one.mixin.services.PropertiesDAO.Update")
     
-    public enum Key: RawRepresentable, Hashable {
-        
+    public enum Key: String {
         case iterator
-        case snapshotOffset
-        case globalMarket
-        case mixinSwapRecentSendIDs
-        case mixinSwapRecentReceiveIDs
-        case transferRecentAssetIDs
-        case orderOffset(walletID: String)
-        
-        public var rawValue: String {
-            switch self {
-            case .iterator:
-                "iterator"
-            case .snapshotOffset:
-                "snapshot_offset"
-            case .globalMarket:
-                "global_market"
-            case .mixinSwapRecentSendIDs:
-                "mixin_swap_recent_send"
-            case .mixinSwapRecentReceiveIDs:
-                "mixin_swap_recent_receive"
-            case .transferRecentAssetIDs:
-                "transfer_recent_assets"
-            case .orderOffset(let walletID):
-                "order_offset_\(walletID)"
-            }
-        }
-        
-        public init?(rawValue: String) {
-            switch rawValue {
-            case "iterator":
-                self = .iterator
-            case "snapshot_offset":
-                self = .snapshotOffset
-            case "global_market":
-                self = .globalMarket
-            case "mixin_swap_recent_send":
-                self = .mixinSwapRecentSendIDs
-            case "mixin_swap_recent_receive":
-                self = .mixinSwapRecentReceiveIDs
-            case "transfer_recent_assets":
-                self = .transferRecentAssetIDs
-            default:
-                if rawValue.hasPrefix("order_offset_") {
-                    let start = rawValue.index(rawValue.startIndex, offsetBy: 13)
-                    let end = rawValue.endIndex
-                    let walletID = String(rawValue[start..<end])
-                    if walletID.isEmpty {
-                        return nil
-                    } else {
-                        self = .orderOffset(walletID: walletID)
-                    }
-                } else {
-                    return nil
-                }
-            }
-        }
-        
+        case snapshotOffset     = "snapshot_offset"
+        case globalMarket       = "global_market"
+        case mixinSwapRecentSendIDs     = "mixin_swap_recent_send"
+        case mixinSwapRecentReceiveIDs  = "mixin_swap_recent_receive"
+        case transferRecentAssetIDs     = "transfer_recent_assets"
     }
     
     public enum Change {

@@ -17,20 +17,22 @@ public final class Web3OrderDAO: Web3DAO {
         return db.select(with: query)
     }
     
-    public func pendingOrders(walletID: String?) -> [SwapOrder] {
-        if let walletID {
-            db.select(with: """
-            SELECT * FROM orders
-            WHERE wallet_id = ? AND state IN ('created','pending')
-            ORDER BY created_at DESC
-            """, arguments: [walletID])
-        } else {
-            db.select(with: """
-            SELECT * FROM orders
-            WHERE state IN ('created','pending')
-            ORDER BY created_at DESC
-            """)
-        }
+    public func pendingOrders(walletID: String) -> [SwapOrder] {
+        db.select(with: """
+        SELECT *
+        FROM orders
+        WHERE wallet_id = ?
+            AND state IN ('created','pending')
+        ORDER BY created_at DESC
+        """, arguments: [walletID])
+    }
+    
+    public func pendingOrdersCount(walletID: String) -> Int {
+        let count: Int? = db.select(
+            with: "SELECT COUNT(*) FROM orders WHERE wallet_id = ? AND state IN ('created','pending')",
+            arguments: [walletID]
+        )
+        return count ?? 0
     }
     
     public func save(
@@ -50,6 +52,10 @@ public final class Web3OrderDAO: Web3DAO {
                 }
             }
         }
+    }
+    
+    public func deleteAll() {
+        db.execute(sql: "DELETE FROM orders")
     }
     
 }

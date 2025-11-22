@@ -20,8 +20,7 @@ final class SyncWeb3OrdersJob: BaseJob {
     }
     
     override func run() throws {
-        let offsetKey: PropertiesDAO.Key = .orderOffset(walletID: walletID)
-        let initialOffset: String? = PropertiesDAO.shared.value(forKey: offsetKey)
+        let initialOffset: String? = Web3PropertiesDAO.shared.orderOffset(walletID: walletID)
         Logger.general.debug(category: "SyncWeb3OrdersJob", message: "Sync from initial offset: \(initialOffset ?? "(null)")")
         var result = RouteAPI.tradeOrders(
             limit: limit,
@@ -32,9 +31,13 @@ final class SyncWeb3OrdersJob: BaseJob {
             let orders = try result.get()
             let offset = orders.last?.createdAt
             Logger.general.debug(category: "SyncWeb3OrdersJob", message: "Write \(orders.count) orders, new offset: \(offset ?? "(null)")")
-            Web3OrderDAO.shared.save(orders: orders) { db in
+            Web3OrderDAO.shared.save(orders: orders) { [walletID] db in
                 if let offset {
-                    try PropertiesDAO.shared.set(offset, forKey: offsetKey, db: db)
+                    try Web3PropertiesDAO.shared.set(
+                        orderOffset: offset,
+                        forWalletWithID: walletID,
+                        db: db
+                    )
                 }
             }
             if orders.count < limit {

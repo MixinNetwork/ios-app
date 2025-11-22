@@ -39,7 +39,7 @@ final class WalletSummaryViewController: UIViewController {
         super.viewDidLoad()
         addWalletView.button.setImage(R.image.ic_title_add(), for: .normal)
         addWalletView.button.addTarget(self, action: #selector(addWallet(_:)), for: .touchUpInside)
-        addWalletView.badgeView.isHidden = BadgeManager.shared.hasViewed(identifier: .addWallet)
+        addWalletView.badge = BadgeManager.shared.hasViewed(identifier: .addWallet) ? nil : .unread
         collectionView.register(R.nib.walletSummaryValueCell)
         collectionView.register(R.nib.walletCell)
         collectionView.register(
@@ -165,7 +165,7 @@ final class WalletSummaryViewController: UIViewController {
     }
     
     @objc private func addWallet(_ sender: Any) {
-        addWalletView.badgeView.isHidden = true
+        addWalletView.badge = nil
         BadgeManager.shared.setHasViewed(identifier: .addWallet)
         let selector = AddWalletMethodSelectorViewController()
         selector.onSelected = { [weak self] method in

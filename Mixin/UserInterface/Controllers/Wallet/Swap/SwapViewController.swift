@@ -57,6 +57,12 @@ class SwapViewController: UIViewController {
         pricingModel.receiveToken
     }
     
+    var orderWalletID: String? {
+        nil
+    }
+    
+    private(set) weak var showOrdersItem: BadgeBarButtonItem?
+    
     // Key is asset id
     private(set) var swappableTokens: OrderedDictionary<String, BalancedSwapToken> = [:]
     private(set) var quote: SwapQuote?
@@ -65,8 +71,6 @@ class SwapViewController: UIViewController {
     private let arbitraryReceiveAssetID: String?
     private let tokenSource: RouteTokenSource
     private let footerReuseIdentifier = "f"
-    
-    private weak var showOrdersItem: BadgeBarButtonItem?
     
     private lazy var tokenAmountRoundingHandler = NSDecimalNumberHandler(
         roundingMode: .plain,
@@ -166,7 +170,6 @@ class SwapViewController: UIViewController {
             showOrdersItem,
         ]
         self.showOrdersItem = showOrdersItem
-        showOrdersItem.showBadge = !BadgeManager.shared.hasViewed(identifier: .swapOrder)
         
         pricingModel.delegate = self
         
@@ -306,6 +309,13 @@ class SwapViewController: UIViewController {
         reloadSections(mode: mode)
         
         reloadTokens()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateOrdersButton),
+            name: Web3OrderDAO.didSaveNotification,
+            object: nil
+        )
+        updateOrdersButton()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -329,7 +339,9 @@ class SwapViewController: UIViewController {
     }
     
     @objc func showOrders(_ sender: Any) {
-        showOrdersItem?.showBadge = false
+        if let showOrdersItem, showOrdersItem.badge == .unread {
+            showOrdersItem.badge = nil
+        }
     }
     
     @objc func presentCustomerService(_ sender: Any) {
@@ -414,17 +426,7 @@ class SwapViewController: UIViewController {
     }
     
     func swapSendingReceiving() {
-        let (sendToken, receiveToken) = (pricingModel.receiveToken, pricingModel.sendToken)
-        sendViewStyle = if let sendToken {
-            .token(sendToken)
-        } else {
-            .selectable
-        }
-        receiveViewStyle = if let receiveToken {
-            .token(receiveToken)
-        } else {
-            .selectable
-        }
+        swap(&sendViewStyle, &receiveViewStyle)
         pricingModel.swapSendingReceiving()
         updatePriceInputAccessory()
         updatePriceStyle()
@@ -829,6 +831,30 @@ extension SwapViewController {
 }
 
 extension SwapViewController {
+    
+    @objc private func updateOrdersButton() {
+        assert(Thread.isMainThread)
+        guard let showOrdersItem, let walletID = orderWalletID else {
+            return
+        }
+        let swapOrdersUnread = !BadgeManager.shared.hasViewed(identifier: .swapOrder)
+        DispatchQueue.global().async { [weak showOrdersItem] in
+            let pendingOrdersCount = min(
+                99,
+                Web3OrderDAO.shared.pendingOrdersCount(walletID: walletID)
+            )
+            let badge: BadgeBarButtonView.Badge? = if pendingOrdersCount != 0 {
+                .count(pendingOrdersCount)
+            } else if swapOrdersUnread {
+                .unread
+            } else {
+                nil
+            }
+            DispatchQueue.main.async {
+                showOrdersItem?.badge = badge
+            }
+        }
+    }
     
     @objc private func swapSendingReceivingWithAnimation(_ sender: Any) {
         if let sender = sender as? UIButton, sender == swapAmountInputCell?.swapButton {

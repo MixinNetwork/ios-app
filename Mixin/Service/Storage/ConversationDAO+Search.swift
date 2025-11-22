@@ -37,7 +37,7 @@ extension ConversationDAO {
                 CASE c.category WHEN 'CONTACT' THEN u.avatar_url ELSE c.icon_url END,
                 CASE c.category WHEN 'CONTACT' THEN u.user_id ELSE NULL END,
                 u.is_verified, u.identity_number, u.membership, count
-            FROM (SELECT ttou(conversation_id) AS cid, COUNT(1) AS count FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH ?)
+            FROM (SELECT ttou(conversation_id) AS cid, COUNT(*) AS count FROM \(Message.ftsTableName) WHERE \(Message.ftsTableName) MATCH ?)
                 LEFT JOIN conversations c ON cid = c.conversation_id
                 LEFT JOIN users u ON c.owner_id = u.user_id
             ORDER BY c.last_message_created_at DESC

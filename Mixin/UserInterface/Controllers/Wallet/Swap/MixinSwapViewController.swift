@@ -9,6 +9,10 @@ final class MixinSwapViewController: SwapViewController {
     
     private weak var depositTokenRequest: Request?
     
+    override var orderWalletID: String? {
+        myUserId
+    }
+    
     init(
         mode: Mode,
         sendAssetID: String?,

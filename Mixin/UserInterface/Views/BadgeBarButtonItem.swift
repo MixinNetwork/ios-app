@@ -4,9 +4,9 @@ final class BadgeBarButtonItem: UIBarButtonItem {
     
     let view: BadgeBarButtonView
     
-    var showBadge = false {
+    var badge: BadgeBarButtonView.Badge? {
         didSet {
-            view.badgeView.isHidden = !showBadge
+            view.badge = badge
         }
     }
     

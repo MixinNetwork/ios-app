@@ -612,7 +612,7 @@ extension SwapOrdersViewController {
                 switch offset {
                 case .before:
                     for viewModel in viewModels.reversed() {
-                        let date = if let date = DateFormatter.dateFull.date(from: viewModel.createdAt) {
+                        let date = if let date = DateFormatter.iso8601Full.date(from: viewModel.createdAt) {
                             DateFormatter.dateSimple.string(from: date)
                         } else {
                             viewModel.createdAt
@@ -634,7 +634,7 @@ extension SwapOrdersViewController {
                     }
                 case .after, .none:
                     for viewModel in viewModels {
-                        let date = if let date = DateFormatter.dateFull.date(from: viewModel.createdAt) {
+                        let date = if let date = DateFormatter.iso8601Full.date(from: viewModel.createdAt) {
                             DateFormatter.dateSimple.string(from: date)
                         } else {
                             viewModel.createdAt

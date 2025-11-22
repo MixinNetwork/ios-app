@@ -48,7 +48,7 @@ enum ExploreAction {
         case .buy:
             R.string.localizable.buy()
         case .swap:
-            R.string.localizable.swap()
+            R.string.localizable.trade()
         case .membership:
             R.string.localizable.mixin_one()
         case .referral:

@@ -278,6 +278,7 @@ extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewContr
         case .swap:
             next = Web3SwapViewController(
                 wallet: payment.wallet,
+                mode: .simple,
                 sendAssetID: nil,
                 receiveAssetID: feeToken.assetID,
             )

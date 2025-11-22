@@ -57,6 +57,27 @@ final class MultipleAssetChangeCell: UITableViewCell {
     }
     
     func reloadData(
+        changes: [SwapOrderViewModel.AssetChange],
+        style: StyledAssetChange.AmountStyle
+    ) {
+        loadRowViews(count: changes.count)
+        for (i, change) in changes.enumerated() {
+            let rowView = rowViews[i]
+            rowView.iconView.setIcon(tokenIconURL: change.token?.iconURL)
+            rowView.amountLabel.text = change.amount
+            rowView.networkLabel.text = change.token?.chainName
+            rowView.amountLabel.textColor = switch style {
+            case .income:
+                R.color.market_green()
+            case .outcome:
+                R.color.market_red()
+            case .plain:
+                R.color.text()
+            }
+        }
+    }
+    
+    func reloadData(
         title: String,
         iconURL: URL?,
         amount: String,

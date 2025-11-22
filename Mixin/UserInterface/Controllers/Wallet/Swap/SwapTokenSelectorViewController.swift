@@ -47,8 +47,10 @@ class SwapTokenSelectorViewController: ChainCategorizedTokenSelectorViewControll
     }
     
     override func saveRecentsToStorage(tokens: any Sequence<BalancedSwapToken>) {
-        let tokens = tokens.map(\.codable)
-        PropertiesDAO.shared.set(jsonObject: tokens, forKey: recentAssetIDsKey)
+        PropertiesDAO.shared.set(
+            jsonObject: tokens.map(\.assetID),
+            forKey: recentAssetIDsKey
+        )
     }
     
     override func clearRecentsStorage() {

@@ -5,6 +5,10 @@ public final class Web3PropertiesDAO: Web3DAO {
     
     public static let shared = Web3PropertiesDAO()
     
+}
+
+extension Web3PropertiesDAO {
+    
     public func transactionOffset(address: String) -> String? {
         try? db.read { db -> String? in
             try value(forKey: address, db: db)
@@ -34,6 +38,38 @@ public final class Web3PropertiesDAO: Web3DAO {
         for address in addresses {
             try removeValue(forKey: address, db: db)
         }
+    }
+    
+}
+
+extension Web3PropertiesDAO {
+    
+    public func orderOffset(walletID: String) -> String? {
+        try? db.read { db -> String? in
+            try value(forKey: orderOffsetKey(walletID: walletID), db: db)
+        }
+    }
+    
+    public func set(
+        orderOffset: String,
+        forWalletWithID walletID: String,
+        db: GRDB.Database
+    ) throws {
+        let property = Property(
+            key: orderOffsetKey(walletID: walletID),
+            value: orderOffset,
+            updatedAt: Date().toUTCString()
+        )
+        try property.save(db)
+    }
+    
+    public func deleteAllOrderOffsets() {
+        let prefix = orderOffsetKey(walletID: "%")
+        db.execute(sql: "DELETE FROM properties WHERE key LIKE ?", arguments: [prefix])
+    }
+    
+    private func orderOffsetKey(walletID: String) -> String {
+        "order_offset_" + walletID
     }
     
 }

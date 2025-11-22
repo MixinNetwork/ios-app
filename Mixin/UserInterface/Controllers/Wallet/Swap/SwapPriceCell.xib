@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="swap_price" id="S64-mk-1Og" customClass="SwapPriceCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="353" height="36"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" id="TJ1-Gc-Ki3">
+                <rect key="frame" x="0.0" y="0.0" width="353" height="36"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="nGk-zF-xIH">
+                        <rect key="frame" x="0.0" y="0.0" width="353" height="290"/>
+                        <subviews>
+                            <button hidden="YES" opaque="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="MYw-ec-hLb" userLabel="Footer Info Button">
+                                <rect key="frame" x="0.0" y="177.66666666666666" width="0.0" height="29"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <state key="normal" title=" "/>
+                            </button>
+                            <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Fq1-TC-3qP" customClass="CircularProgressView" customModule="Mixin" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="186.66666666666666" width="11" height="11"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="11" id="dp2-zx-dZ8"/>
+                                    <constraint firstAttribute="width" secondItem="Fq1-TC-3qP" secondAttribute="height" priority="999" id="hDi-pF-xLo"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="HFb-eQ-FOV">
+                                <rect key="frame" x="16" y="128" width="321" height="128"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HRI-kO-qUo" userLabel="Swap Price Button">
+                                <rect key="frame" x="0.0" y="182" width="0.0" height="20"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="HRI-kO-qUo" secondAttribute="height" priority="999" id="F7p-3r-veI"/>
+                                    <constraint firstAttribute="height" constant="20" id="zQ8-rk-CXs"/>
+                                </constraints>
+                                <color key="tintColor" name="text_tertiary"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="swap_price"/>
+                            </button>
+                        </subviews>
+                        <edgeInsets key="layoutMargins" top="10" left="16" bottom="0.0" right="16"/>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="nGk-zF-xIH" firstAttribute="leading" secondItem="TJ1-Gc-Ki3" secondAttribute="leading" id="4GJ-4N-yFv"/>
+                    <constraint firstItem="nGk-zF-xIH" firstAttribute="top" secondItem="TJ1-Gc-Ki3" secondAttribute="top" id="CbL-Xn-ky9"/>
+                    <constraint firstAttribute="trailing" secondItem="nGk-zF-xIH" secondAttribute="trailing" id="DUy-c6-deH"/>
+                    <constraint firstAttribute="bottom" secondItem="nGk-zF-xIH" secondAttribute="bottom" id="Dhg-3n-n9O"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <connections>
+                <outlet property="footerInfoButton" destination="MYw-ec-hLb" id="5UC-TA-bcl"/>
+                <outlet property="footerInfoProgressView" destination="Fq1-TC-3qP" id="TmA-tk-W7x"/>
+                <outlet property="footerSpacingView" destination="HFb-eQ-FOV" id="Tsh-2L-Pry"/>
+                <outlet property="togglePriceUnitButton" destination="HRI-kO-qUo" id="ZL0-cP-jq8"/>
+            </connections>
+            <point key="canvasLocation" x="-350" y="40"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="swap_price" width="20" height="20"/>
+        <namedColor name="text_tertiary">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

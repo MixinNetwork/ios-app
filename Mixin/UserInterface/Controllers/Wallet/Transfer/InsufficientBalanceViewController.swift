@@ -314,6 +314,7 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
         switch intent {
         case .privacyWalletTransfer, .withdraw:
             swap = MixinSwapViewController(
+                mode: .simple,
                 sendAssetID: from,
                 receiveAssetID: to,
                 referral: nil
@@ -321,6 +322,7 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
         case let .commonWalletTransfer(wallet, _, _), let .externalWeb3Transaction(wallet, _):
             swap = Web3SwapViewController(
                 wallet: wallet,
+                mode: .simple,
                 sendAssetID: from,
                 receiveAssetID: to,
             )
@@ -338,7 +340,7 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
             view.titleLabel.text = R.string.localizable.swap_usdt_hint()
             view.leftButton.setTitle(R.string.localizable.cancel(), for: .normal)
             view.leftButton.addTarget(self, action: #selector(loadActionsTrayView), for: .touchUpInside)
-            view.rightButton.setTitle(R.string.localizable.swap(), for: .normal)
+            view.rightButton.setTitle(R.string.localizable.trade(), for: .normal)
             view.rightButton.addTarget(self, action: #selector(swap(_:)), for: .touchUpInside)
             view.style = .yellow
         }
@@ -358,6 +360,7 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
             next = switch method {
             case .swap:
                 MixinSwapViewController(
+                    mode: .simple,
                     sendAssetID: nil,
                     receiveAssetID: token.assetID,
                     referral: nil
@@ -373,6 +376,7 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
             case .swap:
                 next = Web3SwapViewController(
                     wallet: wallet,
+                    mode: .simple,
                     sendAssetID: nil,
                     receiveAssetID: token.assetID,
                 )

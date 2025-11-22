@@ -16,7 +16,7 @@ final class TokenPriceChartCell: UITableViewCell {
         var title: String {
             switch self {
             case .swap:
-                R.string.localizable.swap()
+                R.string.localizable.trade()
             case .alert:
                 R.string.localizable.alert()
             case .addAlert:
@@ -51,7 +51,9 @@ final class TokenPriceChartCell: UITableViewCell {
                 tokenActionViewBottomConstraint.priority = .defaultLow
             } else {
                 tokenActionView.isHidden = false
-                tokenActionView.actions = tokenActions.map(\.title)
+                tokenActionView.actions = tokenActions.map { action in
+                        .init(title: action.title)
+                }
                 periodSelectorScrollViewBottomConstraint.priority = .defaultLow
                 tokenActionViewBottomConstraint.priority = .defaultHigh
             }

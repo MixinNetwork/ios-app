@@ -84,7 +84,7 @@ extension Web3TokenSenderSelectorViewController: UITableViewDelegate {
         let destination = Sender(rawValue: indexPath.row)!
         switch destination {
         case .myWallets:
-            let selector = TransferWalletSelectorViewController(
+            let selector = WalletSelectorViewController(
                 intent: .pickSender,
                 excluding: .common(receivingWallet),
                 supportingChainWith: receivingToken.chainID
@@ -99,9 +99,9 @@ extension Web3TokenSenderSelectorViewController: UITableViewDelegate {
     
 }
 
-extension Web3TokenSenderSelectorViewController: TransferWalletSelectorViewController.Delegate {
+extension Web3TokenSenderSelectorViewController: WalletSelectorViewController.Delegate {
     
-    func transferWalletSelectorViewController(_ viewController: TransferWalletSelectorViewController, didSelectWallet wallet: Wallet) {
+    func walletSelectorViewController(_ viewController: WalletSelectorViewController, didSelectWallet wallet: Wallet) {
         guard let receivingAddress else {
             return
         }
@@ -169,6 +169,10 @@ extension Web3TokenSenderSelectorViewController: TransferWalletSelectorViewContr
             let input = Web3TransferInputAmountViewController(payment: payment)
             navigationController?.pushViewController(input, animated: true)
         }
+    }
+    
+    func walletSelectorViewController(_ viewController: WalletSelectorViewController, didSelectMultipleWallets wallets: [Wallet]) {
+        
     }
     
 }

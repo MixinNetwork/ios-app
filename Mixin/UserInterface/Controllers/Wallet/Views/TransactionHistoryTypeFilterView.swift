@@ -27,7 +27,7 @@ final class TransactionHistoryTypeFilterView: TransactionHistoryFilterView {
         case .send:
             R.string.localizable.send()
         case .swap:
-            R.string.localizable.swap()
+            R.string.localizable.trade()
         case .approval:
             R.string.localizable.approval()
         case .pending:

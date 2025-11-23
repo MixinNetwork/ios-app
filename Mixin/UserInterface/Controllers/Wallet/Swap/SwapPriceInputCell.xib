@@ -22,16 +22,16 @@
                         <rect key="frame" x="16" y="16" width="303" height="89"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k20-Ym-KOJ">
-                                <rect key="frame" x="0.0" y="0.0" width="303" height="19.666666666666668"/>
+                                <rect key="frame" x="0.0" y="0.0" width="303" height="20"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Price" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZHF-Ka-aE0" userLabel="Title Label">
-                                        <rect key="frame" x="0.0" y="0.0" width="253" height="19.666666666666668"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="253" height="20"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FGy-2Z-1YY" userLabel="Network Label">
-                                        <rect key="frame" x="253" y="0.0" width="50" height="19.666666666666668"/>
+                                        <rect key="frame" x="253" y="0.0" width="50" height="20"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" name="text_tertiary"/>
                                         <nil key="highlightedColor"/>
@@ -39,7 +39,7 @@
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8Pj-kk-c4G">
-                                <rect key="frame" x="0.0" y="29.666666666666664" width="303" height="34.999999999999993"/>
+                                <rect key="frame" x="0.0" y="30" width="303" height="35"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="0" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="8eQ-oJ-z3b" userLabel="Price Input Text Field">
                                         <rect key="frame" x="0.0" y="0.0" width="236" height="35"/>
@@ -48,7 +48,7 @@
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="decimalPad"/>
                                     </textField>
                                     <view contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MQp-iC-Zr2" userLabel="Token Icon View" customClass="BadgeIconView" customModule="Mixin" customModuleProvider="target">
-                                        <rect key="frame" x="244" y="5.6666666666666714" width="24" height="24"/>
+                                        <rect key="frame" x="244" y="5.6666666666666643" width="24" height="24"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="MQp-iC-Zr2" secondAttribute="height" priority="999" id="A9M-ba-KxJ"/>
@@ -64,7 +64,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" placeholderIntrinsicWidth="27" placeholderIntrinsicHeight="20" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Frc-Ad-hLz" userLabel="Symbol Label">
-                                        <rect key="frame" x="276" y="7.6666666666666714" width="27" height="20"/>
+                                        <rect key="frame" x="276" y="7.6666666666666643" width="27" height="20"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
@@ -75,10 +75,10 @@
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="yUl-TU-OCg">
-                                <rect key="frame" x="0.0" y="74.666666666666671" width="303" height="14.333333333333329"/>
+                                <rect key="frame" x="0.0" y="75" width="303" height="14"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="1 USDT = 0.01205135 XIN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BXp-l8-eQJ" userLabel="Price Representation Label">
-                                        <rect key="frame" x="0.0" y="0.0" width="145.66666666666666" height="14.333333333333334"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" placeholderIntrinsicWidth="146" placeholderIntrinsicHeight="14" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BXp-l8-eQJ" userLabel="Price Representation Label">
+                                        <rect key="frame" x="0.0" y="0.0" width="146" height="14"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                         <color key="textColor" name="text_quaternary"/>
                                         <nil key="highlightedColor"/>
@@ -88,11 +88,11 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="swap_price" translatesAutoresizingMaskIntoConstraints="NO" id="Yw6-V2-vyQ">
-                                        <rect key="frame" x="149.66666666666666" y="0.0" width="20" height="14.333333333333334"/>
+                                        <rect key="frame" x="150" y="0.0" width="20" height="14"/>
                                         <color key="tintColor" name="text_quaternary"/>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Mixin" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CNe-sG-agT" userLabel="Token Name Label">
-                                        <rect key="frame" x="173.66666666666663" y="0.0" width="129.33333333333337" height="14.333333333333334"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="130" placeholderIntrinsicHeight="14" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CNe-sG-agT" userLabel="Token Name Label">
+                                        <rect key="frame" x="174" y="0.0" width="129" height="14"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                         <color key="textColor" name="text_tertiary"/>
                                         <nil key="highlightedColor"/>
@@ -102,7 +102,7 @@
                         </subviews>
                     </stackView>
                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" translatesAutoresizingMaskIntoConstraints="NO" id="Vzn-tj-PBU" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                        <rect key="frame" x="262" y="53.333333333333336" width="20" height="20.000000000000007"/>
+                        <rect key="frame" x="262" y="53.666666666666664" width="20" height="19.999999999999993"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="tintColor" name="chat_pin_count_background"/>
                         <userDefinedRuntimeAttributes>
@@ -111,7 +111,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ryc-oT-Usi">
-                        <rect key="frame" x="153.66666666666666" y="80.666666666666671" width="44" height="38.333333333333329"/>
+                        <rect key="frame" x="154" y="81" width="44" height="38"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="44" id="m6h-QO-Rhi"/>
                         </constraints>
@@ -164,7 +164,7 @@
             <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

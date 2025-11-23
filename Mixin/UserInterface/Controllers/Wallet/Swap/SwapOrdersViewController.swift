@@ -513,7 +513,6 @@ extension SwapOrdersViewController {
         
         private let limit = 50
         private let loadMoreThreshold = 5
-        private let amountSortedSection = "" // There must be a section for items to insert
         
         private weak var viewController: SwapOrdersViewController?
         

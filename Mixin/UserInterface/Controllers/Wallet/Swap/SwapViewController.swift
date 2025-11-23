@@ -382,11 +382,7 @@ class SwapViewController: UIViewController {
     }
     
     @objc func priceEditingChanged(_ sender: UITextField) {
-        if let text = sender.text, let value = Decimal(string: text, locale: .current) {
-            pricingModel.displayPrice = .nonVolatile(value)
-        } else {
-            pricingModel.displayPrice = nil
-        }
+        pricingModel.displayPrice = sender.text
     }
     
     func prepareForReuse(sender: Any) {
@@ -405,7 +401,7 @@ class SwapViewController: UIViewController {
         }
         pricingModel.sendToken = sendToken
         updatePriceInputAccessory()
-        updatePriceStyle()
+        setAutoPriceUnit()
         scheduleNewRequesterIfAvailable()
         saveTokenIDs()
         updateMarkets()
@@ -419,7 +415,7 @@ class SwapViewController: UIViewController {
         }
         pricingModel.receiveToken = receiveToken
         updatePriceInputAccessory()
-        updatePriceStyle()
+        setAutoPriceUnit()
         scheduleNewRequesterIfAvailable()
         saveTokenIDs()
         updateMarkets()
@@ -429,7 +425,7 @@ class SwapViewController: UIViewController {
         swap(&sendViewStyle, &receiveViewStyle)
         pricingModel.swapSendingReceiving()
         updatePriceInputAccessory()
-        updatePriceStyle()
+        setAutoPriceUnit()
         scheduleNewRequesterIfAvailable()
         saveTokenIDs()
         updateMarkets()
@@ -555,7 +551,7 @@ extension SwapViewController: UICollectionViewDataSource {
             return cell
         case .priceInput:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_price_input, for: indexPath)!
-            cell.textField.text = pricingModel.displayPrice?.localizedValue
+            cell.textField.text = pricingModel.displayPrice
             switch pricingModel.priceUnit {
             case .send:
                 cell.update(style: sendViewStyle)
@@ -972,7 +968,7 @@ extension SwapViewController {
             priceInputAccessory = .unavailable
             return
         }
-        let price: SwapPricingModel.Price? = .derive(
+        let price = pricingModel.derivePrice(
             sendToken: sendToken,
             receiveToken: receiveToken
         )
@@ -1116,17 +1112,16 @@ extension SwapViewController {
         guard let sendToken, let receiveToken else {
             return
         }
-        let price: SwapPricingModel.Price? = .derive(
+        let price = pricingModel.derivePrice(
             sendToken: sendToken,
             receiveToken: receiveToken
         )
-        guard let value = price?.value else {
+        guard let price else {
             return
         }
-        let multipliedPrice = NSDecimalNumber(decimal: value * multiplier)
+        pricingModel.price = NSDecimalNumber(decimal: price * multiplier)
             .rounding(accordingToBehavior: tokenAmountRoundingHandler)
             .decimalValue
-        pricingModel.price = .nonVolatile(multipliedPrice)
     }
     
     private func scheduleNewRequesterIfAvailable() {
@@ -1186,7 +1181,7 @@ extension SwapViewController {
         }
     }
     
-    private func updatePriceStyle() {
+    private func setAutoPriceUnit() {
         let isSendingStablecoin = if let sendToken {
             AssetID.stablecoins.contains(sendToken.assetID)
         } else {
@@ -1197,10 +1192,14 @@ extension SwapViewController {
         } else {
             false
         }
-        if isSendingStablecoin && !isReceivingStablecoin && pricingModel.priceUnit != .send {
-            pricingModel.priceUnit = .send
-        } else if !isSendingStablecoin && isReceivingStablecoin && pricingModel.priceUnit != .receive {
-            pricingModel.priceUnit = .receive
+        if isSendingStablecoin && !isReceivingStablecoin {
+            if pricingModel.priceUnit != .send {
+                pricingModel.priceUnit = .send
+            }
+        } else {
+            if pricingModel.priceUnit != .receive {
+                pricingModel.priceUnit = .receive
+            }
         }
     }
     

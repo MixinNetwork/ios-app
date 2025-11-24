@@ -4,9 +4,9 @@ final class BadgeBarButtonItem: UIBarButtonItem {
     
     let view: BadgeBarButtonView
     
-    var badge: BadgeBarButtonView.Badge? {
+    var compatibleBadge: BadgeBarButtonView.Badge? {
         didSet {
-            view.badge = badge
+            view.badge = compatibleBadge
         }
     }
     

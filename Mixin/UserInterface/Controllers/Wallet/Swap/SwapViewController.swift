@@ -340,8 +340,8 @@ class SwapViewController: UIViewController {
     
     @objc func showOrders(_ sender: Any) {
         BadgeManager.shared.setHasViewed(identifier: .swapOrder)
-        if let showOrdersItem, showOrdersItem.badge == .unread {
-            showOrdersItem.badge = nil
+        if let showOrdersItem, showOrdersItem.compatibleBadge == .unread {
+            showOrdersItem.compatibleBadge = nil
         }
     }
     
@@ -847,7 +847,7 @@ extension SwapViewController {
                 nil
             }
             DispatchQueue.main.async {
-                showOrdersItem?.badge = badge
+                showOrdersItem?.compatibleBadge = badge
             }
         }
     }

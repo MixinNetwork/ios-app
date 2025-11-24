@@ -44,7 +44,7 @@ class SwapViewController: UIViewController {
             case .simple:
                 scheduleNewRequesterIfAvailable()
             case .advanced:
-                openOrderRequester.start()
+                openOrderRequester.start(after: 0)
             }
         }
     }
@@ -324,7 +324,7 @@ class SwapViewController: UIViewController {
         case .simple:
             quoteRequester?.start(delay: 0)
         case .advanced:
-            openOrderRequester.start()
+            openOrderRequester.start(after: 0)
         }
     }
     
@@ -339,6 +339,7 @@ class SwapViewController: UIViewController {
     }
     
     @objc func showOrders(_ sender: Any) {
+        BadgeManager.shared.setHasViewed(identifier: .swapOrder)
         if let showOrdersItem, showOrdersItem.badge == .unread {
             showOrdersItem.badge = nil
         }
@@ -386,11 +387,10 @@ class SwapViewController: UIViewController {
     }
     
     func prepareForReuse(sender: Any) {
-        pricingModel.sendAmount = nil
+        pricingModel.prepareForReuse()
         swapAmountInputCell?.updateSendAmountTextField(amount: nil)
-        pricingModel.displayPrice = nil
-        priceInputCell?.load(priceRepresentation: nil)
         reloadTokens() // Update send token balance
+        reloadSections(mode: mode)
     }
     
     func setSendToken(_ sendToken: BalancedSwapToken?) {

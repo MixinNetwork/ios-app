@@ -17,12 +17,12 @@ public final class Web3OrderDAO: Web3DAO {
         return db.select(with: query)
     }
     
-    public func pendingOrders(walletID: String) -> [SwapOrder] {
+    public func openOrders(walletID: String) -> [SwapOrder] {
         db.select(with: """
         SELECT *
         FROM orders
         WHERE wallet_id = ?
-            AND state IN ('created','pending')
+            AND state IN ('created','pending','cancelling')
         ORDER BY created_at DESC
         """, arguments: [walletID])
     }

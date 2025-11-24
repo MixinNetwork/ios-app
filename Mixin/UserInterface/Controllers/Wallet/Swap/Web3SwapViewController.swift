@@ -27,7 +27,7 @@ final class Web3SwapViewController: SwapViewController {
         super.init(
             mode: mode,
             openOrderRequester: PendingSwapOrderLoader(
-                behavior: .watchWallet(id: wallet.walletID)
+                behavior: .watchWallet(walletID: wallet.walletID)
             ),
             tokenSource: .web3,
             sendAssetID: sendAssetID,
@@ -46,7 +46,7 @@ final class Web3SwapViewController: SwapViewController {
         super.init(
             mode: .simple,
             openOrderRequester: PendingSwapOrderLoader(
-                behavior: .watchWallet(id: wallet.walletID)
+                behavior: .watchWallet(walletID: wallet.walletID)
             ),
             tokenSource: .web3,
             sendAssetID: sendAssetID,
@@ -115,6 +115,7 @@ final class Web3SwapViewController: SwapViewController {
     }
     
     override func review(_ sender: RoundedButton) {
+        view.endEditing(false)
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
         ConcurrentJobQueue.shared.addJob(job: job)
         switch mode {

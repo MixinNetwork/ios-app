@@ -61,7 +61,7 @@ final class SwapOrderViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        loader?.start()
+        loader?.start(after: 0)
     }
     
     override func viewDidDisappear(_ animated: Bool) {

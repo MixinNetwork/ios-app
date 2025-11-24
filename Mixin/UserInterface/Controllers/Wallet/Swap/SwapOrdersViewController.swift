@@ -116,7 +116,7 @@ final class SwapOrdersViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        pendingOrdersLoader?.start()
+        pendingOrdersLoader?.start(after: 0)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -155,8 +155,7 @@ final class SwapOrdersViewController: UIViewController {
             }
         }
         let behavior: LoadLocalDataOperation.Behavior
-        if let firstVisibleCell = collectionView.visibleCells.first,
-           let firstVisibleIndexPath = collectionView.indexPath(for: firstVisibleCell),
+        if let firstVisibleIndexPath = collectionView.indexPathsForSelectedItems?.sorted(by: <).first,
            let orderID = dataSource.itemIdentifier(for: firstVisibleIndexPath),
            let firstItem = viewModels[orderID]
         {
@@ -548,14 +547,6 @@ extension SwapOrdersViewController {
                 sorting: sorting,
                 limit: limit
             )
-            let pendingOrderIDs = orders.compactMap { order in
-                switch SwapOrder.State(rawValue: order.state) {
-                case .created, .pending:
-                    order.orderID
-                default:
-                    nil
-                }
-            }
             
             let wallets: [String: Wallet]
             if filter.wallets.isEmpty {
@@ -719,12 +710,20 @@ extension SwapOrdersViewController {
                     }
                 }
                 controller.pendingOrdersLoader?.pause()
+                let pendingOrderIDs = controller.viewModels.values.compactMap { viewModel in
+                    switch viewModel.state.knownCase {
+                    case .created, .pending, .cancelling:
+                        viewModel.orderID
+                    default:
+                        nil
+                    }
+                }
                 if !pendingOrderIDs.isEmpty {
                     let pendingOrdersLoader = PendingSwapOrderLoader(
-                        behavior: .watchOrders(ids: pendingOrderIDs)
+                        behavior: .watchOrders(orderIDs: pendingOrderIDs)
                     )
                     controller.pendingOrdersLoader = pendingOrdersLoader
-                    pendingOrdersLoader.start()
+                    pendingOrdersLoader.start(after: pendingOrdersLoader.refreshInterval)
                 }
             }
         }

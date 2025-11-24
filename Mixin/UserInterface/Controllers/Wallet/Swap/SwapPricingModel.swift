@@ -281,6 +281,14 @@ final class SwapPricingModel {
     func prepareForReuse() {
         _sendAmount = nil
         _receiveAmount = nil
+        _price = nil
+        _displayPrice = nil
+        let updates: [Update] = [
+            .receiveAmount(nil),
+            .displayPrice(nil),
+            .priceEquation(nil),
+        ]
+        delegate?.swapPricingModel(self, didUpdate: updates)
     }
     
     private func calculateReceiveAmount() -> Decimal? {

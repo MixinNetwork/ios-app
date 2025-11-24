@@ -12,9 +12,9 @@ extension Web3OrderDAO {
         var debugDescription: String {
             switch self {
             case .before(let offset, let includesOffset):
-                "<Offset before: \(offset), include: \(includesOffset)>"
+                "<Offset before: \(offset.createdAt), include: \(includesOffset)>"
             case .after(let offset, let includesOffset):
-                "<Offset after: \(offset), include: \(includesOffset)>"
+                "<Offset after: \(offset.createdAt), include: \(includesOffset)>"
             }
         }
         

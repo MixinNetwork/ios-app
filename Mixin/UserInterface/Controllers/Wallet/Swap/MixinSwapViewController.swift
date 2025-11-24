@@ -23,7 +23,7 @@ final class MixinSwapViewController: SwapViewController {
         super.init(
             mode: mode,
             openOrderRequester: PendingSwapOrderLoader(
-                behavior: .watchWallet(id: myUserId)
+                behavior: .watchWallet(walletID: myUserId)
             ),
             tokenSource: .mixin,
             sendAssetID: sendAssetID,
@@ -87,6 +87,7 @@ final class MixinSwapViewController: SwapViewController {
     }
     
     override func review(_ sender: RoundedButton) {
+        view.endEditing(false)
         let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
         ConcurrentJobQueue.shared.addJob(job: job)
         switch mode {

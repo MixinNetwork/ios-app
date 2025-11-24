@@ -91,19 +91,19 @@ struct SwapOrderViewModel {
                         symbol: .custom(receiveSymbol)
                     )
                 )]
-                self.receivePrice = SwapQuote.priceRepresentation(
+                self.receivePrice = ExchangeRateQuote.expression(
                     sendAmount: payAmount,
                     sendSymbol: paySymbol,
                     receiveAmount: receiveAmount,
                     receiveSymbol: receiveSymbol,
-                    unit: .receive
+                    numeraire: .send
                 )
-                self.sendPrice = SwapQuote.priceRepresentation(
+                self.sendPrice = ExchangeRateQuote.expression(
                     sendAmount: payAmount,
                     sendSymbol: paySymbol,
                     receiveAmount: receiveAmount,
                     receiveSymbol: receiveSymbol,
-                    unit: .send
+                    numeraire: .receive
                 )
             } else {
                 self.receivings = []
@@ -178,19 +178,19 @@ struct SwapOrderViewModel {
             )
             self.filling = Filling(percentage: percentage, amount: amount)
             
-            self.receivePrice = SwapQuote.priceRepresentation(
+            self.receivePrice = ExchangeRateQuote.expression(
                 sendAmount: payAmount,
                 sendSymbol: paySymbol,
                 receiveAmount: expectedReceiveAmount,
                 receiveSymbol: receiveSymbol,
-                unit: .receive
+                numeraire: .send
             )
-            self.sendPrice = SwapQuote.priceRepresentation(
+            self.sendPrice = ExchangeRateQuote.expression(
                 sendAmount: payAmount,
                 sendSymbol: paySymbol,
                 receiveAmount: expectedReceiveAmount,
                 receiveSymbol: receiveSymbol,
-                unit: .send
+                numeraire: .receive
             )
         }
         

@@ -5,7 +5,7 @@ final class SwapPricingModel {
     
     enum Update {
         case receiveAmount(Decimal?)
-        case displayPrice(String?) // Based on `priceUnit`
+        case displayPrice(String?)
         case priceToken(BalancedSwapToken?)
         case priceEquation(String?)
     }
@@ -41,11 +41,11 @@ final class SwapPricingModel {
             let price = derivePrice(sendToken: _sendToken, receiveToken: _receiveToken)
             if price != _price {
                 _price = price
-                _displayPrice = displayPrice(price: price, unit: _priceUnit)
+                _displayPrice = displayPrice(price: price, numraire: _displayPriceNumeraire)
                 updates.append(.displayPrice(_displayPrice))
             }
             
-            if _priceUnit == .send {
+            if _displayPriceNumeraire == .receive {
                 updates.append(.priceToken(_sendToken))
             }
             
@@ -72,7 +72,7 @@ final class SwapPricingModel {
             
             if let sendAmount, let receiveAmount = newValue {
                 _price = sendAmount / receiveAmount
-                _displayPrice = displayPrice(price: _price, unit: _priceUnit)
+                _displayPrice = displayPrice(price: _price, numraire: _displayPriceNumeraire)
                 updates.append(.displayPrice(_displayPrice))
             }
             
@@ -94,11 +94,11 @@ final class SwapPricingModel {
             let price = derivePrice(sendToken: _sendToken, receiveToken: _receiveToken)
             if price != _price {
                 _price = price
-                _displayPrice = displayPrice(price: price, unit: _priceUnit)
+                _displayPrice = displayPrice(price: price, numraire: _displayPriceNumeraire)
                 updates.append(.displayPrice(_displayPrice))
             }
             
-            if priceUnit == .receive {
+            if displayPriceNumeraire == .send {
                 updates.append(.priceToken(_receiveToken))
             }
             
@@ -115,24 +115,6 @@ final class SwapPricingModel {
         }
     }
     
-    var priceUnit: SwapQuote.PriceUnit {
-        get {
-            _priceUnit
-        }
-        set {
-            _priceUnit = newValue
-            _displayPrice = displayPrice(price: _price, unit: _priceUnit)
-            
-            let priceEquation = priceEquation()
-            let updates: [Update] = [
-                .displayPrice(_displayPrice),
-                .priceToken(priceToken),
-                .priceEquation(priceEquation),
-            ]
-            delegate?.swapPricingModel(self, didUpdate: updates)
-        }
-    }
-    
     // Always `receive / send`
     var price: Decimal? {
         get {
@@ -140,7 +122,7 @@ final class SwapPricingModel {
         }
         set {
             _price = newValue
-            _displayPrice = displayPrice(price: _price, unit: _priceUnit)
+            _displayPrice = displayPrice(price: _price, numraire: _displayPriceNumeraire)
             
             var updates: [Update] = [
                 .displayPrice(_displayPrice),
@@ -157,7 +139,25 @@ final class SwapPricingModel {
         }
     }
     
-    // Based on `priceUnit`
+    var displayPriceNumeraire: ExchangeRateQuote.Numeraire {
+        get {
+            _displayPriceNumeraire
+        }
+        set {
+            _displayPriceNumeraire = newValue
+            _displayPrice = displayPrice(price: _price, numraire: newValue)
+            
+            let priceEquation = priceEquation()
+            let updates: [Update] = [
+                .displayPrice(_displayPrice),
+                .priceToken(priceToken),
+                .priceEquation(priceEquation),
+            ]
+            delegate?.swapPricingModel(self, didUpdate: updates)
+        }
+    }
+    
+    // Based on `displayPriceNumeraire`
     var displayPrice: String? {
         get {
             _displayPrice
@@ -167,7 +167,7 @@ final class SwapPricingModel {
                let price = Decimal(string: newValue, locale: .current),
                price != 0
             {
-                _price = switch _priceUnit {
+                _price = switch _displayPriceNumeraire {
                 case .send:
                     price
                 case .receive:
@@ -193,11 +193,11 @@ final class SwapPricingModel {
     }
     
     var priceToken: BalancedSwapToken? {
-        switch _priceUnit {
+        switch _displayPriceNumeraire {
         case .send:
-            _sendToken
-        case .receive:
             _receiveToken
+        case .receive:
+            _sendToken
         }
     }
     
@@ -205,8 +205,14 @@ final class SwapPricingModel {
     private var _sendToken: BalancedSwapToken?
     private var _receiveAmount: Decimal?
     private var _receiveToken: BalancedSwapToken?
-    private var _priceUnit: SwapQuote.PriceUnit = .send
-    private var _price: Decimal? // Always `receive / send`
+    
+    // sendToken.usdPrice / receiveToken.usdPrice
+    // receiveAmount / sendAmount
+    // 1 SEND = _price RECEIVE
+    // 1 RECEIVE = 1 / _price SEND
+    private var _price: Decimal?
+    
+    private var _displayPriceNumeraire: ExchangeRateQuote.Numeraire = .send
     private var _displayPrice: String?
     
     func derivePrice(
@@ -221,7 +227,7 @@ final class SwapPricingModel {
         else {
             return nil
         }
-        return receivePrice / sendPrice
+        return sendPrice / receivePrice
     }
     
     func priceEquation() -> String? {
@@ -233,17 +239,13 @@ final class SwapPricingModel {
         else {
             return nil
         }
-        return SwapQuote.priceRepresentation(
-            sendAmount: price,
+        return ExchangeRateQuote.expression(
+            sendAmount: 1,
             sendSymbol: sendSymbol,
-            receiveAmount: 1,
+            receiveAmount: price,
             receiveSymbol: receiveSymbol,
-            unit: _priceUnit
+            numeraire: _displayPriceNumeraire
         )
-    }
-    
-    func togglePriceUnit() {
-        priceUnit = _priceUnit.toggled()
     }
     
     func swapSendingReceiving() {
@@ -253,15 +255,15 @@ final class SwapPricingModel {
         let price = derivePrice(sendToken: _sendToken, receiveToken: _receiveToken)
         if price != _price {
             _price = price
-            _displayPrice = displayPrice(price: price, unit: _priceUnit)
+            _displayPrice = displayPrice(price: price, numraire: _displayPriceNumeraire)
             updates.append(.displayPrice(_displayPrice))
         }
         
-        switch priceUnit {
+        switch _displayPriceNumeraire {
         case .send:
-            updates.append(.priceToken(_sendToken))
-        case .receive:
             updates.append(.priceToken(_receiveToken))
+        case .receive:
+            updates.append(.priceToken(_sendToken))
         }
         
         let priceEquation = priceEquation()
@@ -276,6 +278,11 @@ final class SwapPricingModel {
         delegate?.swapPricingModel(self, didUpdate: updates)
     }
     
+    func prepareForReuse() {
+        _sendAmount = nil
+        _receiveAmount = nil
+    }
+    
     private func calculateReceiveAmount() -> Decimal? {
         guard
             let sendAmount = _sendAmount,
@@ -284,15 +291,15 @@ final class SwapPricingModel {
         else {
             return nil
         }
-        return sendAmount / price
+        return sendAmount * price
     }
     
     private func displayPrice(
         price: Decimal?,
-        unit: SwapQuote.PriceUnit
+        numraire: ExchangeRateQuote.Numeraire
     ) -> String? {
         if let price, price != 0 {
-            let value = switch unit {
+            let value = switch numraire {
             case .send:
                 price
             case .receive:

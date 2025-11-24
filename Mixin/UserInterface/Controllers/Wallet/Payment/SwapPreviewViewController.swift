@@ -87,19 +87,19 @@ final class SwapPreviewViewController: WalletIdentifyingAuthenticationPreviewVie
             ),
             .doubleLineInfo(
                 caption: .price,
-                primary: SwapQuote.priceRepresentation(
+                primary: ExchangeRateQuote.expression(
                     sendAmount: sendAmount,
                     sendSymbol: sendToken.symbol,
                     receiveAmount: receiveAmount,
                     receiveSymbol: receiveToken.symbol,
-                    unit: .send
+                    numeraire: .receive
                 ),
-                secondary: SwapQuote.priceRepresentation(
+                secondary: ExchangeRateQuote.expression(
                     sendAmount: sendAmount,
                     sendSymbol: sendToken.symbol,
                     receiveAmount: receiveAmount,
                     receiveSymbol: receiveToken.symbol,
-                    unit: .receive
+                    numeraire: .send
                 )
             ),
         ]

@@ -668,6 +668,7 @@
 		94062C5D2AE8CA7600ADAE87 /* SnapshotColumnCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94062C5C2AE8CA7600ADAE87 /* SnapshotColumnCell.xib */; };
 		94062C622AE8CA9100ADAE87 /* SnapshotColumnCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94062C612AE8CA9100ADAE87 /* SnapshotColumnCell.swift */; };
 		94062C642AE8CB1200ADAE87 /* SafeSnapshotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94062C632AE8CB1200ADAE87 /* SafeSnapshotViewController.swift */; };
+		94066E9C2ED4362E0068659B /* ExchangeRateQuote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94066E9B2ED4362A0068659B /* ExchangeRateQuote.swift */; };
 		9406978725E7F30800E7FDA0 /* PlaylistSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9406978625E7F30800E7FDA0 /* PlaylistSlider.swift */; };
 		9406F58F2C256C7900DDE060 /* OutlineButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9406F58E2C256C7900DDE060 /* OutlineButton.swift */; };
 		940764C129B1E31F00B779A6 /* ExternalEVMTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940764C029B1E31F00B779A6 /* ExternalEVMTransaction.swift */; };
@@ -2433,6 +2434,7 @@
 		94062C5C2AE8CA7600ADAE87 /* SnapshotColumnCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotColumnCell.xib; sourceTree = "<group>"; };
 		94062C612AE8CA9100ADAE87 /* SnapshotColumnCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotColumnCell.swift; sourceTree = "<group>"; };
 		94062C632AE8CB1200ADAE87 /* SafeSnapshotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeSnapshotViewController.swift; sourceTree = "<group>"; };
+		94066E9B2ED4362A0068659B /* ExchangeRateQuote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeRateQuote.swift; sourceTree = "<group>"; };
 		9406978625E7F30800E7FDA0 /* PlaylistSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistSlider.swift; sourceTree = "<group>"; };
 		9406F58E2C256C7900DDE060 /* OutlineButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineButton.swift; sourceTree = "<group>"; };
 		940764C029B1E31F00B779A6 /* ExternalEVMTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalEVMTransaction.swift; sourceTree = "<group>"; };
@@ -4480,6 +4482,7 @@
 		9429C0FE2E059BB700206DAA /* Swap */ = {
 			isa = PBXGroup;
 			children = (
+				94066E9B2ED4362A0068659B /* ExchangeRateQuote.swift */,
 				94F6F4672EBDE69500D15424 /* Web3OrderDAO+Query.swift */,
 				948AF9AA2EB9CB0F0035C9BF /* SwapTokenSelectorStyle.swift */,
 				948AF9D32EB9EDB00035C9BF /* SwapPricingModel.swift */,
@@ -7879,6 +7882,7 @@
 				7B81D91423E93ECA0031E945 /* QuotedMessageView.swift in Sources */,
 				94B61EC32B344A7A00BD39AF /* HomeTabBarController.swift in Sources */,
 				94BE548E25D96932006575E2 /* OggOpusReader.swift in Sources */,
+				94066E9C2ED4362E0068659B /* ExchangeRateQuote.swift in Sources */,
 				94658CA82B34829B00F5EB21 /* OutputCell.swift in Sources */,
 				7CEB736829DBCE44006FB5B2 /* DeviceTransferPinMessage.swift in Sources */,
 				7B35AF74228A948A00E8101D /* UserSearchResult.swift in Sources */,

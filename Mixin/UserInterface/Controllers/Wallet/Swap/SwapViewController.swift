@@ -378,7 +378,7 @@ class SwapViewController: UIViewController {
     }
     
     @objc func togglePriceUnit(_ sender: Any) {
-        pricingModel.togglePriceUnit()
+        pricingModel.displayPriceNumeraire.toggle()
     }
     
     @objc func priceEditingChanged(_ sender: UITextField) {
@@ -552,11 +552,11 @@ extension SwapViewController: UICollectionViewDataSource {
         case .priceInput:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_price_input, for: indexPath)!
             cell.textField.text = pricingModel.displayPrice
-            switch pricingModel.priceUnit {
+            switch pricingModel.displayPriceNumeraire {
             case .send:
-                cell.update(style: sendViewStyle)
-            case .receive:
                 cell.update(style: receiveViewStyle)
+            case .receive:
+                cell.update(style: sendViewStyle)
             }
             cell.load(priceRepresentation: pricingModel.priceEquation())
             if priceInputCell != cell {
@@ -1018,10 +1018,10 @@ extension SwapViewController {
                         self?.inputPrice(multiplier: 1)
                     },
                     .init(title: "-10%") { [weak self] in
-                        self?.inputPrice(multiplier: 0.9)
+                        self?.inputPrice(multiplier: 1 / 0.9)
                     },
                     .init(title: "-20%") { [weak self] in
-                        self?.inputPrice(multiplier: 0.8)
+                        self?.inputPrice(multiplier: 1 / 0.8)
                     },
                 ]
             }
@@ -1193,12 +1193,12 @@ extension SwapViewController {
             false
         }
         if isSendingStablecoin && !isReceivingStablecoin {
-            if pricingModel.priceUnit != .send {
-                pricingModel.priceUnit = .send
+            if pricingModel.displayPriceNumeraire != .receive {
+                pricingModel.displayPriceNumeraire = .receive
             }
         } else {
-            if pricingModel.priceUnit != .receive {
-                pricingModel.priceUnit = .receive
+            if pricingModel.displayPriceNumeraire != .send {
+                pricingModel.displayPriceNumeraire = .send
             }
         }
     }

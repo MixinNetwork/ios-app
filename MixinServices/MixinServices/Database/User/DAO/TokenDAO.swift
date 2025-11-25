@@ -186,7 +186,7 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: query)
     }
     
-    public func swapOrderToken(id: String) -> SwapOrder.Token? {
+    public func swapOrderToken(id: String) -> TradeOrder.Token? {
         let sql = """
             SELECT t.asset_id, t.symbol, c.name, t.icon_url
             FROM tokens t

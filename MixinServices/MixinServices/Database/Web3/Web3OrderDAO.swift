@@ -8,16 +8,16 @@ public final class Web3OrderDAO: Web3DAO {
     public static let didSaveNotification = Notification.Name("one.mixin.service.Web3OrderDAO.Save")
     public static let ordersUserInfoKey = "o"
     
-    public func order(id: String) -> SwapOrder? {
+    public func order(id: String) -> TradeOrder? {
         db.select(with: "SELECT * FROM orders WHERE order_id = ?", arguments: [id])
     }
     
-    public func orders(ids: [String]) -> [SwapOrder] {
+    public func orders(ids: [String]) -> [TradeOrder] {
         let query: GRDB.SQL = "SELECT * FROM orders WHERE order_id IN \(ids)"
         return db.select(with: query)
     }
     
-    public func openOrders(walletID: String) -> [SwapOrder] {
+    public func openOrders(walletID: String) -> [TradeOrder] {
         db.select(with: """
         SELECT *
         FROM orders
@@ -36,7 +36,7 @@ public final class Web3OrderDAO: Web3DAO {
     }
     
     public func save(
-        orders: [SwapOrder],
+        orders: [TradeOrder],
         alongsideTransaction change: ((GRDB.Database) throws -> Void)? = nil
     ) {
         db.write { db in

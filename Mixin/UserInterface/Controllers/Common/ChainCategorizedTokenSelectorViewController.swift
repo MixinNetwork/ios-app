@@ -74,7 +74,7 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
         )
         collectionView.register(R.nib.exploreRecentSearchCell)
         collectionView.register(R.nib.exploreSegmentCell)
-        collectionView.register(R.nib.swapTokenCell)
+        collectionView.register(R.nib.tradeTokenCell)
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { [weak self, recentGroupHorizontalMargin] (sectionIndex, environment) in
             switch Section(rawValue: sectionIndex)! {
             case .recent:
@@ -175,7 +175,7 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
         
     }
     
-    func configureTokenCell(_ cell: SwapTokenCell, withToken token: SelectableToken) {
+    func configureTokenCell(_ cell: TradeTokenCell, withToken token: SelectableToken) {
         
     }
     
@@ -238,7 +238,7 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
             }
             return cell
         case .tokens:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_token, for: indexPath)!
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.trade_token, for: indexPath)!
             let token = token(at: indexPath)
             configureTokenCell(cell, withToken: token)
             return cell

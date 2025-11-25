@@ -67,7 +67,7 @@ class UrlWindow {
                 return true
             case let .swap(input, output, referral):
                 if let navigationController = UIApplication.homeNavigationController {
-                    let swap = MixinSwapViewController(
+                    let swap = MixinTradeViewController(
                         mode: .simple,
                         sendAssetID: input,
                         receiveAssetID: output ?? AssetID.erc20USDT,
@@ -1247,7 +1247,7 @@ extension UrlWindow {
                     guard case let .user(receiver) = destination else {
                         return
                     }
-                    let preview = SwapPreviewViewController(
+                    let preview = TradePreviewViewController(
                         wallet: .privacy,
                         mode: context.mode,
                         operation: .mixin(operation),

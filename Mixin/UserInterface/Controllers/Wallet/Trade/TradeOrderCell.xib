@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="trade_order" id="209-V6-bay" customClass="TradeOrderCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="335" height="70"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="nKR-M8-Azi">
+                <rect key="frame" x="0.0" y="0.0" width="335" height="70"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NVd-sD-G5h" customClass="SwapIconView" customModule="Mixin" customModuleProvider="target">
+                        <rect key="frame" x="20" y="4" width="44" height="44"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="44" id="Hcg-Ad-ocx"/>
+                            <constraint firstAttribute="width" constant="44" id="iNl-th-fwD"/>
+                        </constraints>
+                    </view>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="Bp7-UX-XQ1">
+                        <rect key="frame" x="76" y="2" width="239" height="66"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="6DN-vo-Hee">
+                                <rect key="frame" x="0.0" y="0.0" width="239" height="20"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="19.333333333333329" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qup-Dk-cHQ" userLabel="Symbol Label">
+                                        <rect key="frame" x="0.0" y="0.33333333333333393" width="195.66666666666666" height="19.333333333333329"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                        <color key="textColor" name="text"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="35.333333333333371" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t2q-Su-fUg" userLabel="Date Label">
+                                        <rect key="frame" x="203.66666666666669" y="1.6666666666666661" width="35.333333333333343" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" name="text_tertiary"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="M7P-21-Ogf">
+                                <rect key="frame" x="0.0" y="26" width="239" height="17"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="35.333333333333336" placeholderIntrinsicHeight="17" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sqd-lo-qNa" userLabel="Pay Amount Label">
+                                        <rect key="frame" x="0.0" y="0.0" width="35.333333333333336" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" name="market_red"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="180.66666666666669" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lQU-Ak-gkj" userLabel="Type Label">
+                                        <rect key="frame" x="43.333333333333329" y="0.0" width="195.66666666666669" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" name="text_tertiary"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ut4-Wc-GkD">
+                                <rect key="frame" x="0.0" y="49" width="239" height="17"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" placeholderIntrinsicWidth="35.333333333333336" placeholderIntrinsicHeight="17" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="USH-cw-vU7" userLabel="Receive Amount Label">
+                                        <rect key="frame" x="0.0" y="0.0" width="35.333333333333336" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" placeholderIntrinsicWidth="180.66666666666669" placeholderIntrinsicHeight="17" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cWv-ph-5WV" userLabel="State Label">
+                                        <rect key="frame" x="43.333333333333329" y="0.0" width="195.66666666666669" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstItem="NVd-sD-G5h" firstAttribute="leading" secondItem="nKR-M8-Azi" secondAttribute="leading" constant="20" id="H6u-4H-2Kh"/>
+                    <constraint firstAttribute="trailing" secondItem="Bp7-UX-XQ1" secondAttribute="trailing" constant="20" id="I7B-VM-J6h"/>
+                    <constraint firstItem="NVd-sD-G5h" firstAttribute="top" secondItem="nKR-M8-Azi" secondAttribute="top" constant="4" id="K46-Yb-gG6"/>
+                    <constraint firstAttribute="bottom" secondItem="Bp7-UX-XQ1" secondAttribute="bottom" constant="2" id="SdL-t5-n8I"/>
+                    <constraint firstItem="Bp7-UX-XQ1" firstAttribute="leading" secondItem="NVd-sD-G5h" secondAttribute="trailing" constant="12" id="X0R-BC-wVn"/>
+                    <constraint firstItem="Bp7-UX-XQ1" firstAttribute="top" secondItem="nKR-M8-Azi" secondAttribute="top" constant="2" id="rEg-eI-Hz5"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="dateLabel" destination="t2q-Su-fUg" id="5ev-DF-BMv"/>
+                <outlet property="payAmountLabel" destination="Sqd-lo-qNa" id="OBm-9r-vRa"/>
+                <outlet property="receiveAmountLabel" destination="USH-cw-vU7" id="dEx-Wx-t6I"/>
+                <outlet property="stateLabel" destination="cWv-ph-5WV" id="Z04-M9-1ed"/>
+                <outlet property="swapIconView" destination="NVd-sD-G5h" id="pSw-7L-ysF"/>
+                <outlet property="symbolLabel" destination="qup-Dk-cHQ" id="dnd-57-dKR"/>
+                <outlet property="typeLabel" destination="lQU-Ak-gkj" id="sIx-bn-TQV"/>
+            </connections>
+            <point key="canvasLocation" x="-90" y="42"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="market_red">
+            <color red="0.89803921568627454" green="0.47058823529411764" blue="0.45490196078431372" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

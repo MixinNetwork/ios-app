@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="trade_order_id" id="KGk-i7-Jjw" customClass="TradeOrderIDCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="80"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="80"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="0Hs-ig-skP">
+                        <rect key="frame" x="16" y="10" width="250" height="50"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" text="ORDER ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="skq-BO-6Xo">
+                                <rect key="frame" x="0.0" y="0.0" width="250" height="17"/>
+                                <color key="backgroundColor" name="background"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" name="text_quaternary"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="" textAlignment="natural" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CK5-f2-s3t">
+                                <rect key="frame" x="0.0" y="21" width="250" height="29"/>
+                                <color key="backgroundColor" name="background"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="giC-a6-lVX">
+                        <rect key="frame" x="274" y="-4" width="44" height="44"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="44" id="ROp-fZ-i0a"/>
+                            <constraint firstAttribute="width" constant="44" id="iYP-ry-YXc"/>
+                        </constraints>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" image="Wallet/ic_copy"/>
+                        <connections>
+                            <action selector="requestCopy:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="jVk-6i-7wv"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="giC-a6-lVX" secondAttribute="trailing" constant="2" id="3ML-Ow-ONq"/>
+                    <constraint firstItem="0Hs-ig-skP" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="7EW-x3-DSg"/>
+                    <constraint firstItem="0Hs-ig-skP" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="TZq-lL-hlP"/>
+                    <constraint firstItem="giC-a6-lVX" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="-4" id="Vpy-Wr-u7W"/>
+                    <constraint firstItem="giC-a6-lVX" firstAttribute="leading" secondItem="0Hs-ig-skP" secondAttribute="trailing" constant="8" id="aPy-Og-7Pv"/>
+                    <constraint firstAttribute="bottom" secondItem="0Hs-ig-skP" secondAttribute="bottom" constant="20" id="mYA-lk-9aj"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" name="background"/>
+            <connections>
+                <outlet property="contentLabel" destination="CK5-f2-s3t" id="Qme-fx-gOH"/>
+                <outlet property="titleLabel" destination="skq-BO-6Xo" id="VPR-pF-ccx"/>
+            </connections>
+            <point key="canvasLocation" x="139" y="42"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Wallet/ic_copy" width="24" height="24"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_quaternary">
+            <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

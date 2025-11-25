@@ -63,8 +63,8 @@ extension RouteAPI {
         limit: Int,
         offset: String?,
         walletID: String?,
-        state: SwapOrder.State? = nil,
-    ) async throws -> [SwapOrder] {
+        state: TradeOrder.State? = nil,
+    ) async throws -> [TradeOrder] {
         var path = "/web3/swap/orders?limit=\(limit)"
         if let offset {
             path.append("&offset=\(offset)")
@@ -82,8 +82,8 @@ extension RouteAPI {
         limit: Int,
         offset: String?,
         walletID: String?,
-        state: SwapOrder.State? = nil,
-    ) -> MixinAPI.Result<[SwapOrder]> {
+        state: TradeOrder.State? = nil,
+    ) -> MixinAPI.Result<[TradeOrder]> {
         var path = "/web3/swap/orders?limit=\(limit)"
         if let offset {
             path.append("&offset=\(offset)")
@@ -99,19 +99,19 @@ extension RouteAPI {
     
     static func tradeOrders(
         ids: [String],
-    ) async throws -> [SwapOrder] {
+    ) async throws -> [TradeOrder] {
         try await request(method: .post, path: "/web3/swap/orders", with: ids)
     }
     
     static func swapOrder(
         id: String,
-    ) async throws -> SwapOrder {
+    ) async throws -> TradeOrder {
         try await request(method: .get, path: "/web3/swap/orders/\(id)")
     }
     
     static func limitOrder(
         id: String,
-    ) async throws -> SwapOrder {
+    ) async throws -> TradeOrder {
         try await request(method: .get, path: "/web3/limit_orders/\(id)")
     }
     
@@ -131,7 +131,7 @@ extension RouteAPI {
     
     static func cancelSwapOrder(
         id: String,
-        completion: @escaping (MixinAPI.Result<SwapOrder>) -> Void
+        completion: @escaping (MixinAPI.Result<TradeOrder>) -> Void
     ) {
         request(method: .post, path: "/web3/limit_orders/\(id)/cancel", completion: completion)
     }

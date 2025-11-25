@@ -313,14 +313,14 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
         let swap: UIViewController
         switch intent {
         case .privacyWalletTransfer, .withdraw:
-            swap = MixinSwapViewController(
+            swap = MixinTradeViewController(
                 mode: .simple,
                 sendAssetID: from,
                 receiveAssetID: to,
                 referral: nil
             )
         case let .commonWalletTransfer(wallet, _, _), let .externalWeb3Transaction(wallet, _):
-            swap = Web3SwapViewController(
+            swap = Web3TradeViewController(
                 wallet: wallet,
                 mode: .simple,
                 sendAssetID: from,
@@ -359,7 +359,7 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
         case let token as MixinTokenItem:
             next = switch method {
             case .swap:
-                MixinSwapViewController(
+                MixinTradeViewController(
                     mode: .simple,
                     sendAssetID: nil,
                     receiveAssetID: token.assetID,
@@ -374,7 +374,7 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
             }
             switch method {
             case .swap:
-                next = Web3SwapViewController(
+                next = Web3TradeViewController(
                     wallet: wallet,
                     mode: .simple,
                     sendAssetID: nil,

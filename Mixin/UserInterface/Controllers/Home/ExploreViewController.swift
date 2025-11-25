@@ -124,7 +124,7 @@ final class ExploreViewController: UIViewController {
             BadgeManager.shared.setHasViewed(identifier: .buy)
         case .swap:
             reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "explore"])
-            let swap = MixinSwapViewController(
+            let swap = MixinTradeViewController(
                 mode: .simple,
                 sendAssetID: nil,
                 receiveAssetID: nil,

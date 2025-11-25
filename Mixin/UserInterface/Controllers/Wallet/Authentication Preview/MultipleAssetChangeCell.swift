@@ -57,7 +57,7 @@ final class MultipleAssetChangeCell: UITableViewCell {
     }
     
     func reloadData(
-        changes: [SwapOrderViewModel.AssetChange],
+        changes: [TradeOrderViewModel.AssetChange],
         style: StyledAssetChange.AmountStyle
     ) {
         loadRowViews(count: changes.count)

@@ -262,7 +262,7 @@ extension TransferInputAmountViewController: AddTokenMethodSelectorViewControlle
     ) {
         let next = switch method {
         case .swap:
-            MixinSwapViewController(
+            MixinTradeViewController(
                 mode: .simple,
                 sendAssetID: nil,
                 receiveAssetID: token.assetID,

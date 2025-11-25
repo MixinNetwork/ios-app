@@ -166,7 +166,7 @@ extension Payment {
         
         enum Mode {
             case simple
-            case advanced(SwapOrder.Expiry)
+            case advanced(TradeOrder.Expiry)
         }
         
         let mode: Mode

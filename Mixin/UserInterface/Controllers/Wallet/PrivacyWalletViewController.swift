@@ -329,7 +329,7 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
         case .swap:
             reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "wallet_home"])
             tableHeaderView.actionView.badgeActions.remove(.swap)
-            let swap = MixinSwapViewController(
+            let swap = MixinTradeViewController(
                 mode: .simple,
                 sendAssetID: nil,
                 receiveAssetID: nil,

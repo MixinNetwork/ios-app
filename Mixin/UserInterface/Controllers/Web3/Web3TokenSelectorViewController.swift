@@ -194,7 +194,7 @@ final class Web3TokenSelectorViewController: ChainCategorizedTokenSelectorViewCo
         cell.subtitleLabel.text = token.localizedUSDChange
     }
     
-    override func configureTokenCell(_ cell: SwapTokenCell, withToken token: Web3Token) {
+    override func configureTokenCell(_ cell: TradeTokenCell, withToken token: Web3Token) {
         cell.iconView.setIcon(web3Token: token)
         cell.maliciousWarningImageView.isHidden = !token.isMalicious
         cell.titleLabel.text = token.name

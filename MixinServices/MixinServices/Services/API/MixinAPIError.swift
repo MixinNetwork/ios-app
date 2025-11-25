@@ -47,14 +47,8 @@ public enum MixinAPIError: Error {
     
     public var worthReporting: Bool {
         switch self {
-        case .httpTransport(.explicitlyCancelled):
+        case .httpTransport, .response:
             false
-        case .httpTransport(let error):
-            if let underlyingError = error.underlyingError as? URLError {
-                underlyingError.worthReporting
-            } else {
-                true
-            }
         default:
             true
         }

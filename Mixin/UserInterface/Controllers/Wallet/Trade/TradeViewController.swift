@@ -311,6 +311,12 @@ class TradeViewController: UIViewController {
         reloadTokens()
         NotificationCenter.default.addObserver(
             self,
+            selector: #selector(keyboardDidShow(_:)),
+            name: UIResponder.keyboardDidShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(updateOrdersButton),
             name: Web3OrderDAO.didSaveNotification,
             object: nil
@@ -874,6 +880,16 @@ extension TradeViewController {
         } else if let maximum = amountRange.maximum, sendAmount > maximum {
             pricingModel.sendAmount = maximum
             amountInputCell?.updateSendAmountTextField(amount: maximum)
+        }
+    }
+    
+    @objc private func keyboardDidShow(_ notification: Notification) {
+        if let textField = priceInputCell?.textField,
+           textField.isFirstResponder,
+           let section = sections.lastIndex(of: .expiry)
+        {
+            let indexPath = IndexPath(item: 0, section: section)
+            collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
         }
     }
     

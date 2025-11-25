@@ -102,13 +102,14 @@ final class TradeOrderViewController: UITableViewController {
                 return cell
             case .receives:
                 let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
-                cell.titleLabel.text = switch viewModel.state.knownCase {
+                switch viewModel.state.knownCase {
                 case .created, .pending, .failed, .cancelling, .cancelled, .expired, .none:
-                    R.string.localizable.estimated_receive().uppercased()
+                    cell.titleLabel.text = R.string.localizable.estimated_receive().uppercased()
+                    cell.reloadData(changes: viewModel.receivings, style: .gray)
                 case .success:
-                    R.string.localizable.swap_order_received().uppercased()
+                    cell.titleLabel.text = R.string.localizable.swap_order_received().uppercased()
+                    cell.reloadData(changes: viewModel.receivings, style: .income)
                 }
-                cell.reloadData(changes: viewModel.receivings, style: .income)
                 cell.contentTopConstraint.constant = 10
                 cell.contentLeadingConstraint.constant = 16
                 cell.contentTrailingConstraint.constant = 16

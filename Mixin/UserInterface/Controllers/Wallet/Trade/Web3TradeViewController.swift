@@ -121,7 +121,7 @@ final class Web3TradeViewController: TradeViewController {
     
     override func showOrders(_ sender: Any) {
         super.showOrders(sender)
-        let orders = TradeOrdersViewController(wallet: .common(wallet), type: mode.orderType)
+        let orders = TradeOrdersViewController(wallet: .common(wallet))
         navigationController?.pushViewController(orders, animated: true)
     }
     
@@ -393,17 +393,23 @@ final class Web3TradeViewController: TradeViewController {
 extension Web3TradeViewController: PendingTradeOrderLoader.Delegate {
     
     func pendingSwapOrder(_ loader: PendingTradeOrderLoader, didLoad orders: [TradeOrder]) {
-        let tokens = Web3OrderDAO.shared.tradeOrderTokens(orders: orders)
-        let viewModels = orders.map { order in
-            TradeOrderViewModel(
-                order: order,
-                wallet: .common(wallet),
-                payToken: tokens[order.payAssetID],
-                receiveToken: tokens[order.receiveAssetID]
-            )
-        }
-        DispatchQueue.main.async {
-            self.reload(openOrders: viewModels)
+        switch mode {
+        case .simple:
+            DispatchQueue.main.async(execute: updateOrdersButton)
+        case .advanced:
+            let tokens = Web3OrderDAO.shared.tradeOrderTokens(orders: orders)
+            let viewModels = orders.map { order in
+                TradeOrderViewModel(
+                    order: order,
+                    wallet: .common(wallet),
+                    payToken: tokens[order.payAssetID],
+                    receiveToken: tokens[order.receiveAssetID]
+                )
+            }
+            DispatchQueue.main.async {
+                self.reload(openOrders: viewModels)
+                self.updateOrdersButton()
+            }
         }
     }
     

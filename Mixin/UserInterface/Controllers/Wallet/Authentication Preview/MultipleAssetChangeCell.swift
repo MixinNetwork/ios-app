@@ -52,6 +52,8 @@ final class MultipleAssetChangeCell: UITableViewCell {
                 R.color.market_red()
             case .plain:
                 R.color.text()
+            case .gray:
+                R.color.text_tertiary()
             }
         }
     }
@@ -73,6 +75,8 @@ final class MultipleAssetChangeCell: UITableViewCell {
                 R.color.market_red()
             case .plain:
                 R.color.text()
+            case .gray:
+                R.color.text_tertiary()
             }
         }
     }

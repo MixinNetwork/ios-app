@@ -354,6 +354,30 @@ class TradeViewController: UIViewController {
         
     }
     
+    @objc func updateOrdersButton() {
+        assert(Thread.isMainThread)
+        guard let showOrdersItem else {
+            return
+        }
+        let swapOrdersUnread = !BadgeManager.shared.hasViewed(identifier: .swapOrder)
+        DispatchQueue.global().async { [weak showOrdersItem, walletID=orderWalletID] in
+            let openOrdersCount = min(
+                99,
+                Web3OrderDAO.shared.openOrdersCount(walletID: walletID)
+            )
+            let badge: BadgeBarButtonView.Badge? = if openOrdersCount != 0 {
+                .count(openOrdersCount)
+            } else if swapOrdersUnread {
+                .unread
+            } else {
+                nil
+            }
+            DispatchQueue.main.async {
+                showOrdersItem?.compatibleBadge = badge
+            }
+        }
+    }
+    
     @objc func showOrders(_ sender: Any) {
         BadgeManager.shared.setHasViewed(identifier: .swapOrder)
         if let showOrdersItem, showOrdersItem.compatibleBadge == .unread {
@@ -843,31 +867,6 @@ extension TradeViewController {
 }
 
 extension TradeViewController {
-    
-    @objc private func updateOrdersButton() {
-        assert(Thread.isMainThread)
-        guard let showOrdersItem else {
-            return
-        }
-        let orderType = mode.orderType
-        let swapOrdersUnread = !BadgeManager.shared.hasViewed(identifier: .swapOrder)
-        DispatchQueue.global().async { [weak showOrdersItem, walletID=orderWalletID] in
-            let pendingOrdersCount = min(
-                99,
-                Web3OrderDAO.shared.pendingOrdersCount(walletID: walletID, type: orderType)
-            )
-            let badge: BadgeBarButtonView.Badge? = if pendingOrdersCount != 0 {
-                .count(pendingOrdersCount)
-            } else if swapOrdersUnread {
-                .unread
-            } else {
-                nil
-            }
-            DispatchQueue.main.async {
-                showOrdersItem?.compatibleBadge = badge
-            }
-        }
-    }
     
     @objc private func swapSendingReceivingWithAnimation(_ sender: Any) {
         if let sender = sender as? UIButton, sender == amountInputCell?.swapButton {

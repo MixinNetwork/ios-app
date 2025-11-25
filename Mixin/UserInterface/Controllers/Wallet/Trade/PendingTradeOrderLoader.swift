@@ -11,8 +11,6 @@ final class PendingTradeOrderLoader {
     enum Behavior {
         
         // Load open orders periodically
-        // If `type` is swap, it stops when there's no open orders
-        // If `type` is limit, it keeps requesting forever
         case watchWallet(walletID: String, type: TradeOrder.OrderType)
         
         // Load these orders periodically until all of them are closed
@@ -105,10 +103,8 @@ final class PendingTradeOrderLoader {
                     }
                     if let self {
                         self.delegate?.pendingSwapOrder(self, didLoad: orders)
-                        if type == .limit || !orders.isEmpty {
-                            await MainActor.run {
-                                self.scheduleRemoteDataLoading(timeInterval: refreshInterval)
-                            }
+                        await MainActor.run {
+                            self.scheduleRemoteDataLoading(timeInterval: refreshInterval)
                         }
                     }
                 case let .watchOrders(orderIDs):

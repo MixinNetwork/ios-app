@@ -17,20 +17,30 @@ public final class Web3OrderDAO: Web3DAO {
         return db.select(with: query)
     }
     
-    public func openOrders(walletID: String) -> [TradeOrder] {
-        db.select(with: """
-        SELECT *
-        FROM orders
-        WHERE wallet_id = ?
-            AND state IN ('created','pending','cancelling')
-        ORDER BY created_at DESC
-        """, arguments: [walletID])
+    public func openOrders(walletID: String, type: TradeOrder.OrderType) -> [TradeOrder] {
+        db.select(
+            with: """
+            SELECT *
+            FROM orders
+            WHERE wallet_id = ?
+                AND order_type = ?
+                AND state IN ('created','pending','cancelling')
+            ORDER BY created_at DESC
+            """,
+            arguments: [walletID, type.rawValue]
+        )
     }
     
-    public func pendingOrdersCount(walletID: String) -> Int {
+    public func pendingOrdersCount(walletID: String, type: TradeOrder.OrderType) -> Int {
         let count: Int? = db.select(
-            with: "SELECT COUNT(*) FROM orders WHERE wallet_id = ? AND state IN ('created','pending')",
-            arguments: [walletID]
+            with: """
+            SELECT COUNT(*)
+            FROM orders
+            WHERE wallet_id = ?
+                AND order_type = ?
+                AND state IN ('created','pending')
+            """,
+            arguments: [walletID, type.rawValue]
         )
         return count ?? 0
     }

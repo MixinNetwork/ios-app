@@ -214,7 +214,17 @@ final class TradeOrderViewController: UITableViewController {
     
     private func reloadData(viewModel: TradeOrderViewModel) {
         self.viewModel = viewModel
-        self.actions = Action.actions(orderState: viewModel.state.knownCase)
+        self.actions = switch viewModel.type.knownCase {
+        case .limit:
+            switch viewModel.state.knownCase {
+            case .created, .pending:
+                [.cancelOrder, .sharePair]
+            case .none, .success, .failed, .cancelling, .cancelled, .expired:
+                [.tradeAgain, .sharePair]
+            }
+        case .swap, .none:
+            [.tradeAgain, .sharePair]
+        }
         self.infoRows = InfoRow.rows(viewModel: viewModel)
         self.tableView.reloadData()
     }
@@ -222,7 +232,7 @@ final class TradeOrderViewController: UITableViewController {
     private func cancelOrder() {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        RouteAPI.cancelSwapOrder(id: viewModel.orderID) { result in
+        RouteAPI.cancelLimitOrder(id: viewModel.orderID) { result in
             switch result {
             case .success(let order):
                 hud.hide()
@@ -380,15 +390,6 @@ extension TradeOrderViewController {
         case tradeAgain
         case cancelOrder
         case sharePair
-        
-        static func actions(orderState: TradeOrder.State?) -> [Action] {
-            switch orderState {
-            case .created, .pending:
-                [.cancelOrder, .sharePair]
-            case .none, .success, .failed, .cancelling, .cancelled, .expired:
-                [.tradeAgain, .sharePair]
-            }
-        }
         
         func asPillAction() -> PillActionView.Action {
             switch self {

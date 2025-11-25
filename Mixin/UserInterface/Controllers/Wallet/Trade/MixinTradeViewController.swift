@@ -9,7 +9,7 @@ final class MixinTradeViewController: TradeViewController {
     
     private weak var depositTokenRequest: Request?
     
-    override var orderWalletID: String? {
+    override var orderWalletID: String {
         myUserId
     }
     
@@ -22,9 +22,6 @@ final class MixinTradeViewController: TradeViewController {
         self.referral = referral
         super.init(
             mode: mode,
-            openOrderRequester: PendingTradeOrderLoader(
-                behavior: .watchWallet(walletID: myUserId)
-            ),
             tokenSource: .mixin,
             sendAssetID: sendAssetID,
             receiveAssetID: receiveAssetID
@@ -41,7 +38,6 @@ final class MixinTradeViewController: TradeViewController {
             title: R.string.localizable.trade(),
             wallet: .privacy
         )
-        openOrderRequester.delegate = self
     }
     
     override func changeSendToken(_ sender: Any) {

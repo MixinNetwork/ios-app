@@ -5,8 +5,19 @@ import MixinServices
 class TradeViewController: UIViewController {
     
     enum Mode: Int, CaseIterable {
+        
         case simple
         case advanced
+        
+        var orderType: TradeOrder.OrderType {
+            switch self {
+            case .simple:
+                    .swap
+            case .advanced:
+                    .limit
+            }
+        }
+        
     }
     
     private enum Section: Int, CaseIterable {
@@ -28,23 +39,21 @@ class TradeViewController: UIViewController {
     @IBOutlet weak var reviewButton: RoundedButton!
     
     let pricingModel = TradePricingModel()
-    let openOrderRequester: PendingTradeOrderLoader
     
     var mode: Mode {
         didSet {
-            switch mode {
-            case .simple:
-                openOrderRequester.pause()
-            case .advanced:
-                quoteRequester?.stop()
-                quoteRequester = nil
-            }
+            quoteRequester?.stop()
+            quoteRequester = nil
+            openOrderRequester?.pause()
+            openOrderRequester = nil
             reloadSections(mode: mode)
+            updateOrdersButton()
             switch mode {
             case .simple:
-                scheduleNewRequesterIfAvailable()
+                startQuoteRequesterIfAvailable()
+                startOpenOrderRequester()
             case .advanced:
-                openOrderRequester.start(after: 0)
+                startOpenOrderRequester()
             }
         }
     }
@@ -57,8 +66,8 @@ class TradeViewController: UIViewController {
         pricingModel.receiveToken
     }
     
-    var orderWalletID: String? {
-        nil
+    var orderWalletID: String {
+        fatalError("Must override")
     }
     
     private(set) weak var showOrdersItem: BadgeBarButtonItem?
@@ -88,6 +97,7 @@ class TradeViewController: UIViewController {
     private var contentSizeObservation: NSKeyValueObservation?
     private var quoteRequester: SwapQuotePeriodicRequester?
     private var amountRange: SwapQuotePeriodicRequester.AmountRange?
+    private var openOrderRequester: PendingTradeOrderLoader?
     private var openOrders: [TradeOrderViewModel] = []
     
     // TradeAmountInputCell
@@ -136,13 +146,11 @@ class TradeViewController: UIViewController {
     
     init(
         mode: Mode,
-        openOrderRequester: PendingTradeOrderLoader,
         tokenSource: RouteTokenSource,
         sendAssetID: String?,
         receiveAssetID: String?
     ) {
         self.mode = mode
-        self.openOrderRequester = openOrderRequester
         self.tokenSource = tokenSource
         self.arbitrarySendAssetID = sendAssetID
         self.arbitraryReceiveAssetID = receiveAssetID
@@ -322,6 +330,7 @@ class TradeViewController: UIViewController {
             object: nil
         )
         updateOrdersButton()
+        startOpenOrderRequester()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -330,14 +339,14 @@ class TradeViewController: UIViewController {
         case .simple:
             quoteRequester?.start(delay: 0)
         case .advanced:
-            openOrderRequester.start(after: 0)
+            openOrderRequester?.start(after: 0)
         }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         quoteRequester?.stop()
-        openOrderRequester.pause()
+        openOrderRequester?.pause()
     }
     
     @IBAction func review(_ sender: RoundedButton) {
@@ -365,7 +374,7 @@ class TradeViewController: UIViewController {
             nil
         }
         reloadSections(mode: mode)
-        scheduleNewRequesterIfAvailable()
+        startQuoteRequesterIfAvailable()
     }
     
     @objc func changeSendToken(_ sender: Any) {
@@ -408,7 +417,7 @@ class TradeViewController: UIViewController {
         pricingModel.sendToken = sendToken
         updatePriceInputAccessory()
         setAutoPriceUnit()
-        scheduleNewRequesterIfAvailable()
+        startQuoteRequesterIfAvailable()
         saveTokenIDs()
         updateMarkets()
     }
@@ -422,7 +431,7 @@ class TradeViewController: UIViewController {
         pricingModel.receiveToken = receiveToken
         updatePriceInputAccessory()
         setAutoPriceUnit()
-        scheduleNewRequesterIfAvailable()
+        startQuoteRequesterIfAvailable()
         saveTokenIDs()
         updateMarkets()
     }
@@ -432,7 +441,7 @@ class TradeViewController: UIViewController {
         pricingModel.swapSendingReceiving()
         updatePriceInputAccessory()
         setAutoPriceUnit()
-        scheduleNewRequesterIfAvailable()
+        startQuoteRequesterIfAvailable()
         saveTokenIDs()
         updateMarkets()
     }
@@ -836,14 +845,15 @@ extension TradeViewController {
     
     @objc private func updateOrdersButton() {
         assert(Thread.isMainThread)
-        guard let showOrdersItem, let walletID = orderWalletID else {
+        guard let showOrdersItem else {
             return
         }
+        let orderType = mode.orderType
         let swapOrdersUnread = !BadgeManager.shared.hasViewed(identifier: .swapOrder)
-        DispatchQueue.global().async { [weak showOrdersItem] in
+        DispatchQueue.global().async { [weak showOrdersItem, walletID=orderWalletID] in
             let pendingOrdersCount = min(
                 99,
-                Web3OrderDAO.shared.pendingOrdersCount(walletID: walletID)
+                Web3OrderDAO.shared.pendingOrdersCount(walletID: walletID, type: orderType)
             )
             let badge: BadgeBarButtonView.Badge? = if pendingOrdersCount != 0 {
                 .count(pendingOrdersCount)
@@ -1119,7 +1129,7 @@ extension TradeViewController {
         if amount >= MixinToken.minimalAmount {
             pricingModel.sendAmount = amount
             amountInputCell?.updateSendAmountTextField(amount: amount)
-            scheduleNewRequesterIfAvailable()
+            startQuoteRequesterIfAvailable()
         }
     }
     
@@ -1140,7 +1150,7 @@ extension TradeViewController {
             .decimalValue
     }
     
-    private func scheduleNewRequesterIfAvailable() {
+    private func startQuoteRequesterIfAvailable() {
         guard mode == .simple else {
             return
         }
@@ -1176,6 +1186,15 @@ extension TradeViewController {
         requester.delegate = self
         self.quoteRequester = requester
         requester.start(delay: 1)
+    }
+    
+    private func startOpenOrderRequester() {
+        let openOrderRequester = PendingTradeOrderLoader(
+            behavior: .watchWallet(walletID: orderWalletID, type: mode.orderType)
+        )
+        openOrderRequester.delegate = self as? PendingTradeOrderLoader.Delegate
+        self.openOrderRequester = openOrderRequester
+        openOrderRequester.start(after: 0)
     }
     
     private func updateMarkets() {

@@ -129,7 +129,7 @@ extension RouteAPI {
         Self.request(method: .post, path: "/web3/limit_orders", with: request, completion: completion)
     }
     
-    static func cancelSwapOrder(
+    static func cancelLimitOrder(
         id: String,
         completion: @escaping (MixinAPI.Result<TradeOrder>) -> Void
     ) {

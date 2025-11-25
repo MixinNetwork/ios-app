@@ -45,6 +45,7 @@ final class BadgeBarButtonView: UIView {
         badgeLabel.layer.masksToBounds = true
         badgeLabel.font = .systemFont(ofSize: 12)
         badgeLabel.textAlignment = .center
+        badgeLabel.textColor = .white
         addSubview(badgeLabel)
         badgeLabel.snp.makeConstraints { make in
             make.width.greaterThanOrEqualTo(badgeLabel.snp.height)

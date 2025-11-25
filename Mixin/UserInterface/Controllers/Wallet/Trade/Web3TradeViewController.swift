@@ -8,7 +8,7 @@ final class Web3TradeViewController: TradeViewController {
     private let supportedChainIDs: Set<String>
     private let slippage: Decimal = 0.01
     
-    override var orderWalletID: String? {
+    override var orderWalletID: String {
         wallet.walletID
     }
     
@@ -26,9 +26,6 @@ final class Web3TradeViewController: TradeViewController {
         self.supportedChainIDs = Web3AddressDAO.shared.chainIDs(walletID: wallet.walletID)
         super.init(
             mode: mode,
-            openOrderRequester: PendingTradeOrderLoader(
-                behavior: .watchWallet(walletID: wallet.walletID)
-            ),
             tokenSource: .web3,
             sendAssetID: sendAssetID,
             receiveAssetID: receiveAssetID
@@ -45,9 +42,6 @@ final class Web3TradeViewController: TradeViewController {
         self.supportedChainIDs = supportedChainIDs
         super.init(
             mode: .simple,
-            openOrderRequester: PendingTradeOrderLoader(
-                behavior: .watchWallet(walletID: wallet.walletID)
-            ),
             tokenSource: .web3,
             sendAssetID: sendAssetID,
             receiveAssetID: receiveAssetID
@@ -64,7 +58,6 @@ final class Web3TradeViewController: TradeViewController {
             title: R.string.localizable.trade(),
             wallet: .common(wallet)
         )
-        openOrderRequester.delegate = self
     }
     
     override func changeSendToken(_ sender: Any) {

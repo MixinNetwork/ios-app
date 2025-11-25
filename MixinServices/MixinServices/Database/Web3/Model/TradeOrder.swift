@@ -4,6 +4,7 @@ import GRDB
 public struct TradeOrder {
     
     public enum State: String {
+        
         case created
         case pending
         case success
@@ -11,6 +12,16 @@ public struct TradeOrder {
         case cancelling
         case cancelled
         case expired
+        
+        public var isOpen: Bool {
+            switch self {
+            case .created, .pending, .cancelling:
+                true
+            case .success, .failed, .cancelled, .expired:
+                false
+            }
+        }
+        
     }
     
     public enum OrderType: String {

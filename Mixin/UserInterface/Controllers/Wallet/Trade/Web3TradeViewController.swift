@@ -121,7 +121,7 @@ final class Web3TradeViewController: TradeViewController {
     
     override func showOrders(_ sender: Any) {
         super.showOrders(sender)
-        let orders = TradeOrdersViewController(wallet: .common(wallet))
+        let orders = TradeOrdersViewController(wallet: .common(wallet), type: mode.orderType)
         navigationController?.pushViewController(orders, animated: true)
     }
     

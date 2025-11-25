@@ -338,6 +338,7 @@ class TradeViewController: UIViewController {
         switch mode {
         case .simple:
             quoteRequester?.start(delay: 0)
+            openOrderRequester?.start(after: 0)
         case .advanced:
             openOrderRequester?.start(after: 0)
         }

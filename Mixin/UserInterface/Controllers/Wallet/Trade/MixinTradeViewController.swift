@@ -96,7 +96,7 @@ final class MixinTradeViewController: TradeViewController {
     
     override func showOrders(_ sender: Any) {
         super.showOrders(sender)
-        let orders = TradeOrdersViewController(wallet: .privacy)
+        let orders = TradeOrdersViewController(wallet: .privacy, type: mode.orderType)
         navigationController?.pushViewController(orders, animated: true)
     }
     

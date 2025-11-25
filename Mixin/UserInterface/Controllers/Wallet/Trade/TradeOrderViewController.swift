@@ -311,13 +311,13 @@ extension TradeOrderViewController: PillActionView.Delegate {
             if let pair = oneSideStablecoinPair {
                 focusAssetID = pair.nonStablecoinAssetID
                 focusAssetSymbol = pair.nonStablecoinSymbol
-                buyAction = "mixin://mixin.one/swap?input=\(pair.stablecoinAssetID)&output=\(pair.nonStablecoinAssetID)"
-                sellAction = "mixin://mixin.one/swap?input=\(pair.nonStablecoinAssetID)&output=\(pair.stablecoinAssetID)"
+                buyAction = "mixin://mixin.one/trade?type=\(viewModel.type.rawValue)&input=\(pair.stablecoinAssetID)&output=\(pair.nonStablecoinAssetID)"
+                sellAction = "mixin://mixin.one/trade?type=\(viewModel.type.rawValue)&input=\(pair.nonStablecoinAssetID)&output=\(pair.stablecoinAssetID)"
             } else {
                 focusAssetID = viewModel.receiveAssetID
                 focusAssetSymbol = viewModel.receiveSymbol
-                buyAction = "mixin://mixin.one/swap?input=\(viewModel.payAssetID)&output=\(viewModel.receiveAssetID)"
-                sellAction = "mixin://mixin.one/swap?input=\(viewModel.receiveAssetID)&output=\(viewModel.payAssetID)"
+                buyAction = "mixin://mixin.one/trade?type=\(viewModel.type.rawValue)&input=\(viewModel.payAssetID)&output=\(viewModel.receiveAssetID)"
+                sellAction = "mixin://mixin.one/trade?type=\(viewModel.type.rawValue)&input=\(viewModel.receiveAssetID)&output=\(viewModel.payAssetID)"
             }
             RouteAPI.markets(id: focusAssetID, queue: .main) { [viewModel] result in
                 hud.hide()

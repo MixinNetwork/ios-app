@@ -71,7 +71,7 @@ final class TradePricingModel {
             var updates: [Update] = []
             
             if let sendAmount, let receiveAmount = newValue {
-                _price = sendAmount / receiveAmount
+                _price = receiveAmount / sendAmount
                 _displayPrice = displayPrice(price: _price, numraire: _displayPriceNumeraire)
                 updates.append(.displayPrice(_displayPrice))
             }

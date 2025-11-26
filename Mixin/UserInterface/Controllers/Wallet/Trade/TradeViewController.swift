@@ -632,6 +632,7 @@ extension TradeViewController: UICollectionViewDataSource {
                 )
                 swapPriceCell = cell
             }
+            cell.setContent(swapPriceContent)
             cell.footerInfoProgressView.setProgress(swapPriceProgress, animationDuration: nil)
             return cell
         case .openOrders:
@@ -782,7 +783,7 @@ extension TradeViewController: SwapQuotePeriodicRequesterDelegate {
         case .success(let quote):
             self.quote = quote
             self.amountRange = nil
-            Logger.general.debug(category: "Swap", message: "Got quote: \(quote)")
+            Logger.general.debug(category: "Trade", message: "Got quote: \(quote)")
             pricingModel.receiveAmount = quote.receiveAmount
             amountInputCell?.updateReceiveAmountTextField(amount: quote.receiveAmount)
             swapPriceProgress = 1
@@ -822,7 +823,7 @@ extension TradeViewController: SwapQuotePeriodicRequesterDelegate {
                 amountRange = nil
                 reason = "other"
             }
-            Logger.general.debug(category: "Swap", message: description)
+            Logger.general.debug(category: "Trade", message: description)
             swapPriceContent = .error(description)
             self.amountRange = amountRange
             reporter.report(event: .tradeQuote, tags: ["type": "swap", "result": "failure", "reason": reason])
@@ -831,7 +832,7 @@ extension TradeViewController: SwapQuotePeriodicRequesterDelegate {
     
     func swapQuotePeriodicRequester(_ requester: SwapQuotePeriodicRequester, didCountDown value: Int) {
         let progress = Double(value) / Double(requester.refreshInterval)
-        Logger.general.debug(category: "Swap", message: "Progress: \(progress)")
+        Logger.general.debug(category: "Trade", message: "Progress: \(progress)")
         swapPriceProgress = progress
         swapPriceCell?.footerInfoProgressView.setProgress(progress, animationDuration: 1)
     }
@@ -963,7 +964,7 @@ extension TradeViewController {
             case .failure(.requiresUpdate):
                 self?.reportClientOutdated()
             case .failure(let error):
-                Logger.general.debug(category: "Swap", message: "\(error)")
+                Logger.general.debug(category: "Trade", message: "\(error)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     self?.reloadTokens()
                 }

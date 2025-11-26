@@ -16,7 +16,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
         case .inscription(let context):
                 .inscription(context)
         case .swap(let context):
-                .swap(context)
+                .trade(context)
         }
     }
     
@@ -65,7 +65,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
         }
         
         switch context {
-        case .swap:
+        case .trade:
             break
         case .inscription(let context):
             switch context.operation {
@@ -91,7 +91,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
             case .release:
                 context.outputAmount
             }
-        case .swap, .none:
+        case .trade, .none:
             operation.amount
         }
         let tokenValue = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
@@ -101,7 +101,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
         let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         
         switch context {
-        case .swap:
+        case .trade:
             rows = []
         case .inscription(let context):
             rows = [
@@ -131,7 +131,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
         rows.append(.wallet(caption: .sender, wallet: .privacy, threshold: senderThreshold))
         
         switch context {
-        case .swap:
+        case .trade:
             break
         case .inscription(let context):
             switch context.operation {
@@ -159,7 +159,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
         switch context {
-        case .swap:
+        case .trade:
            break
         case .inscription(let context):
             switch context.operation {
@@ -183,8 +183,21 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
                     switch context {
-                    case .swap:
-                        reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": "swap", "trade_asset_level": operation.amount.reportingAssetLevel])
+                    case .trade(let context):
+                        let type = switch context.mode {
+                        case .simple:
+                            "swap"
+                        case .advanced:
+                            "limit"
+                        }
+                        reporter.report(
+                            event: .tradeEnd,
+                            tags: [
+                                "wallet": "main",
+                                "type": type,
+                                "trade_asset_level": operation.amount.reportingAssetLevel
+                            ]
+                        )
                     case .inscription(let context):
                         switch context.operation {
                         case .transfer:
@@ -225,7 +238,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
                     let title = switch context {
-                    case .swap:
+                    case .trade:
                         R.string.localizable.swap_failed()
                     case .inscription(let context):
                         switch context.operation {
@@ -303,7 +316,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
         }
         
         switch context {
-        case .swap:
+        case .trade:
             break
         case .inscription(let context):
             switch context.operation {

@@ -8,7 +8,7 @@ final class TradePreviewViewController: WalletIdentifyingAuthenticationPreviewVi
         case web3(Web3TransferOperation)
     }
     
-    private let mode: Payment.SwapContext.Mode
+    private let mode: Payment.TradeContext.Mode
     private let operation: Operation
     
     private let sendToken: any Token
@@ -20,7 +20,7 @@ final class TradePreviewViewController: WalletIdentifyingAuthenticationPreviewVi
     private let receiver: UserItem
     
     init(
-        wallet: Wallet, mode: Payment.SwapContext.Mode,
+        wallet: Wallet, mode: Payment.TradeContext.Mode,
         operation: Operation,
         sendToken: any Token, sendAmount: Decimal,
         receiveToken: any Token, receiveAmount: Decimal,
@@ -44,14 +44,15 @@ final class TradePreviewViewController: WalletIdentifyingAuthenticationPreviewVi
         super.viewDidLoad()
         
         tableHeaderView.setIcon(sendToken: sendToken, receiveToken: receiveToken)
-        tableHeaderView.titleLabel.text = R.string.localizable.swap_confirmation()
         tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixinMessenger)
-        
-        let orderType = switch mode {
+        let orderType: String
+        switch mode {
         case .simple:
-            R.string.localizable.order_type_swap()
+            orderType = R.string.localizable.order_type_swap()
+            tableHeaderView.titleLabel.text = R.string.localizable.swap_confirmation()
         case .advanced:
-            R.string.localizable.order_type_limit()
+            orderType = R.string.localizable.order_type_limit()
+            tableHeaderView.titleLabel.text = R.string.localizable.limit_order_confirmation()
         }
         
         var rows: [Row]

@@ -60,7 +60,6 @@
 "address_validity_reminder" = "您已經超過 %3$@ 天沒有使用地址 %1$@（%2$@），請注意檢查地址是否仍然有效。";
 "addresses" = "地址";
 "admin" = "管理員";
-"advanced_swap_confirmation" = "確認掛單";
 "agree_hint" = "繼續使用即表示你同意 %@ 和 %@";
 "albums" = "相簿";
 "alert" = "價格預警";
@@ -780,6 +779,7 @@
 "lightning_address_explain_2" = "可重複使用，無需每次生成新的。";
 "lightning_address_explain_3" = "主流閃電網路錢包都支援。";
 "lightning_address_explain_mao" = "每一個 MAO 域名對應一個閃電網路地址，如果您擁有 MAO 域名，可以按 name@mao.id 格式接收閃電網路轉賬。";
+"limit_order_confirmation" = "確認掛單";
 "limit_price" = "限定價格";
 "limited_time_free" = "限時免費";
 "limited_time_free_condition" = "活動期間，錢包轉賬符合以下任意情況即可獲得手續費全額返現：";

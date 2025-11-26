@@ -311,7 +311,7 @@ final class Web3TradeViewController: TradeViewController {
     }
     
     private func presentPreview(
-        mode: Payment.SwapContext.Mode,
+        mode: Payment.TradeContext.Mode,
         displayReceiverUserID: String,
         payment: Web3SendingTokenToAddressPayment,
         sendAmount: Decimal,

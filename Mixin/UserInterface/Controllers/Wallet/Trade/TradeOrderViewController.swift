@@ -372,7 +372,7 @@ extension TradeOrderViewController: PillActionView.Delegate {
 
 extension TradeOrderViewController: TradeOrderIDCell.Delegate {
     
-    func swapOrderIDCellRequestCopy(_ cell: TradeOrderIDCell) {
+    func tradeOrderIDCellRequestCopy(_ cell: TradeOrderIDCell) {
         UIPasteboard.general.string = viewModel.orderID
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
     }

@@ -3,7 +3,7 @@ import UIKit
 final class TradeOrderIDCell: UITableViewCell {
     
     protocol Delegate: AnyObject {
-        func swapOrderIDCellRequestCopy(_ cell: TradeOrderIDCell)
+        func tradeOrderIDCellRequestCopy(_ cell: TradeOrderIDCell)
     }
     
     @IBOutlet weak var titleLabel: UILabel!
@@ -17,7 +17,7 @@ final class TradeOrderIDCell: UITableViewCell {
     }
     
     @IBAction func requestCopy(_ sender: Any) {
-        delegate?.swapOrderIDCellRequestCopy(self)
+        delegate?.tradeOrderIDCellRequestCopy(self)
     }
     
 }

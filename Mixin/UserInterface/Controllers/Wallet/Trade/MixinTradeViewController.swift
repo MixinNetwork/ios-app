@@ -177,7 +177,7 @@ final class MixinTradeViewController: TradeViewController {
                     reviewButton.isBusy = false
                     return
                 }
-                let context = Payment.SwapContext(
+                let context = Payment.TradeContext(
                     mode: .simple,
                     sendToken: quote.sendToken,
                     sendAmount: sendAmount,
@@ -225,7 +225,7 @@ final class MixinTradeViewController: TradeViewController {
                     reviewButton.isBusy = false
                     return
                 }
-                let context = Payment.SwapContext(
+                let context = Payment.TradeContext(
                     mode: .advanced(selectedExpiry),
                     sendToken: sendToken,
                     sendAmount: sendAmount,

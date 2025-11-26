@@ -60,7 +60,6 @@
 "address_validity_reminder" = "The address %1$@(%2$@) has not been used for over %3$@ days. Please check if the address is still valid.";
 "addresses" = "Addresses";
 "admin" = "Admin";
-"advanced_swap_confirmation" = "Order Confirmation";
 "agree_hint" = "By proceeding, you agree to the %@ and %@.";
 "albums" = "Albums";
 "alert" = "Alert";
@@ -780,6 +779,7 @@
 "lightning_address_explain_2" = "Reusable, no need to generate a new one each time.";
 "lightning_address_explain_3" = "Supported by mainstream Lightning Network wallets.";
 "lightning_address_explain_mao" = "Each MAO domain corresponds to a Lightning Network address. If you own a MAO domain, you can use name@mao.id to receive Lightning Network transfers. ";
+"limit_order_confirmation" = "Order Confirmation";
 "limit_price" = "Limit Price";
 "limited_time_free" = "Limited-Time Free";
 "limited_time_free_condition" = "During the promotion period, you’ll receive a full refund of transaction fees if your transfer meets any of the following conditions:";

@@ -194,11 +194,15 @@ struct TradeOrderViewModel {
             )
         }
         
-        if let expiredAt = order.expiredAt, let date = DateFormatter.iso8601Full.date(from: expiredAt) {
-            self.expiration = if date.timeIntervalSinceNow > 365 * .day {
-                R.string.localizable.trade_expiry_never()
+        if let expiredAt = order.expiredAt {
+            self.expiration = if let date = DateFormatter.iso8601Full.date(from: expiredAt) {
+                if date.timeIntervalSinceNow > 365 * .day {
+                    R.string.localizable.trade_expiry_never()
+                } else {
+                    DateFormatter.dateFull.string(from: date)
+                }
             } else {
-                DateFormatter.dateFull.string(from: date)
+                expiredAt
             }
         } else {
             self.expiration = nil

@@ -13,7 +13,7 @@ class UrlWindow {
         case userActivity
         case webView(MixinWebViewController.Context)
         case conversation(WeakWrapper<ConversationMessageComposer>)
-        case swap(context: Payment.SwapContext, completion: (String?) -> Void)
+        case swap(context: Payment.TradeContext, completion: (String?) -> Void)
         case other
         
         var webContext: MixinWebViewController.Context? {
@@ -1225,7 +1225,7 @@ extension UrlWindow {
                 let fiatMoneyAmount = amount * token.decimalUSDPrice * Currency.current.decimalRate
                 let context: Payment.Context? = switch source {
                 case let .swap(context, _):
-                        .swap(context)
+                        .trade(context)
                 default:
                     nil
                 }

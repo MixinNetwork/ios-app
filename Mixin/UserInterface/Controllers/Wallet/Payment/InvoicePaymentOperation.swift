@@ -14,6 +14,7 @@ protocol InvoicePaymentOperation {
     
     var destination: Payment.TransferDestination { get }
     var transactions: [Transaction] { get }
+    var memo: TransferExtra? { get }
     
     func start(pin: String) async throws
     

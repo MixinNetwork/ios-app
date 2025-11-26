@@ -424,6 +424,18 @@ extension Invoice: PaymentPreconditionChecker {
                     onFailure(reason)
                 }
             case .passed(let issues):
+                let memo: TransferExtra? = {
+                    guard let entry = entries.first else {
+                        return nil
+                    }
+                    return if entry.isStorage {
+                        .hexEncoded(entry.extra.hexEncodedString())
+                    } else if let extra = String(data: entry.extra, encoding: .utf8) {
+                        .plain(extra)
+                    } else {
+                        nil
+                    }
+                }()
                 if sendingSameTokenMultipleTimes {
                     var transactions: [NonAtomicInvoicePaymentOperation.Transaction] = []
                     for entry in entries {
@@ -439,7 +451,8 @@ extension Invoice: PaymentPreconditionChecker {
                     let operation = NonAtomicInvoicePaymentOperation(
                         destination: destination,
                         transactions: transactions,
-                        paidEntriesHash: paidEntriesHash
+                        paidEntriesHash: paidEntriesHash,
+                        memo: memo,
                     )
                     await MainActor.run {
                         onSuccess(operation, issues)
@@ -470,7 +483,11 @@ extension Invoice: PaymentPreconditionChecker {
                             return
                         }
                     }
-                    let operation = AtomicInvoicePaymentOperation(destination: destination, transactions: transactions)
+                    let operation = AtomicInvoicePaymentOperation(
+                        destination: destination,
+                        transactions: transactions,
+                        memo: memo,
+                    )
                     await MainActor.run {
                         onSuccess(operation, issues)
                     }

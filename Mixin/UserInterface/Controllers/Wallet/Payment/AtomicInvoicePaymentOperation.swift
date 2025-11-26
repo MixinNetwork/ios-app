@@ -104,10 +104,16 @@ final class AtomicInvoicePaymentOperation: InvoicePaymentOperation {
     
     let destination: Payment.TransferDestination
     let transactions: [Transaction]
+    let memo: TransferExtra?
     
-    init(destination: Payment.TransferDestination, transactions: [Transaction]) {
+    init(
+        destination: Payment.TransferDestination,
+        transactions: [Transaction],
+        memo: TransferExtra?,
+    ) {
         self.destination = destination
         self.transactions = transactions
+        self.memo = memo
     }
     
     func start(pin: String) async throws {

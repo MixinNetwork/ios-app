@@ -29,20 +29,23 @@ final class NonAtomicInvoicePaymentOperation: InvoicePaymentOperation {
     let destination: Payment.TransferDestination
     let transactions: [Transaction]
     let paidEntriesHash: [String]
+    let memo: TransferExtra?
     
     init(
         destination: Payment.TransferDestination,
         transactions: [Transaction],
-        paidEntriesHash: [String]
+        paidEntriesHash: [String],
+        memo: TransferExtra?,
     ) {
         self.destination = destination
         self.transactions = transactions
         self.paidEntriesHash = paidEntriesHash
+        self.memo = memo
     }
     
     func start(pin: String) async throws {
         // In case of decoding failure, do it earlier to avoid partial success
-        let extras: [TransferPaymentOperation.Extra] = try transactions.map { transaction in
+        let extras: [TransferExtra] = try transactions.map { transaction in
             let entry = transaction.entry
             if entry.isStorage {
                 return .hexEncoded(entry.extra.hexEncodedString())

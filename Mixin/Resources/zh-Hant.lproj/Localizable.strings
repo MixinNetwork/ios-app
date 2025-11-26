@@ -720,6 +720,7 @@
 "insufficient_balance" = "餘額不足";
 "insufficient_balance_symbol" = "%@ 餘額不足";
 "insufficient_fee_description" = "需要 %1$@ 以支付 %2$@ 網路費用";
+"insufficient_sol_for_sending_spl_token" = "SOL 餘額不足，請至少預留 %@ SOL。";
 "insufficient_transaction_fee" = "手續費不足";
 "interface_style" = "外觀";
 "invalid_address" = "無效的地址";
@@ -1176,6 +1177,7 @@
 "request_rejected_reason_another_request_in_process" = "正在處理另一請求，請完成當前請求後重試";
 "resend_code" = "重發驗證碼";
 "resend_code_pending" = "%@ 後重新發送驗證碼";
+"reserve_sol_for_rent" = "請預留至少 %@ SOL 以支付租金";
 "reset" = "重置";
 "reset_link" = "重置邀請連結";
 "restore" = "恢復";
@@ -1273,7 +1275,7 @@
 "send_message" = "發訊息";
 "send_photo" = "傳送 1 張圖片";
 "send_photo_count" = "傳送 %d 張圖片";
-"send_sol_for_rent" = "傳送至少 %@ SOL 以支付租金";
+"send_sol_for_rent" = "請傳送至少 %@ SOL 以支付租金";
 "send_this_location" = "傳送這個位置";
 "send_to" = "傳送給 %@";
 "send_to_address_description" = "轉到我地址薄中的地址，地址受到 PIN 保護，避免地址釣魚攻擊。";

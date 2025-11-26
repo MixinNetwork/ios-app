@@ -720,6 +720,7 @@
 "insufficient_balance" = "Insufficient balance";
 "insufficient_balance_symbol" = "Insufficient %@";
 "insufficient_fee_description" = "You need %1$@ on the %2$@ network to cover the network fee";
+"insufficient_sol_for_sending_spl_token" = "Insufficient SOL balance. Reserve at least %@ SOL.";
 "insufficient_transaction_fee" = "Tarifa de transacción insuficiente";
 "interface_style" = "Estilo de interfaz";
 "invalid_address" = "Invalid Address";
@@ -1176,6 +1177,7 @@
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
 "resend_code" = "Reenviar codigo";
 "resend_code_pending" = "Reenviar código en %@";
+"reserve_sol_for_rent" = "Reserve at least %@ SOL for the rent";
 "reset" = "Reiniciar";
 "reset_link" = "Restablecer enlace";
 "restore" = "Restaurar";

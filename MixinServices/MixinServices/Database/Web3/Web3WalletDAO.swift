@@ -30,6 +30,10 @@ public final class Web3WalletDAO: Web3DAO {
         }
     }
     
+    public func wallets() -> [Web3Wallet] {
+        db.select(with: "SELECT * FROM wallets")
+    }
+    
     public func walletIDs() -> [String] {
         db.select(with: "SELECT wallet_id FROM wallets")
     }
@@ -155,6 +159,7 @@ public final class Web3WalletDAO: Web3DAO {
             try db.execute(literal: "DELETE FROM tokens WHERE wallet_id = \(id)")
             try db.execute(literal: "DELETE FROM tokens_extra WHERE wallet_id = \(id)")
             try db.execute(literal: "DELETE FROM transactions WHERE address IN \(destinations)")
+            try db.execute(literal: "DELETE FROM orders WHERE wallet_id = \(id)")
             db.afterNextTransaction { _ in
                 NotificationCenter.default.post(
                     onMainThread: Self.walletsDidDeleteNotification,

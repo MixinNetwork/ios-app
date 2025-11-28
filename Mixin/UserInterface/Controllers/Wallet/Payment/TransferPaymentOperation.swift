@@ -31,7 +31,7 @@ final class TransferPaymentOperation {
         case transfer
         case consolidation
         case inscription(Payment.InscriptionContext)
-        case swap(Payment.SwapContext)
+        case swap(Payment.TradeContext)
         
         var description: String {
             switch self {
@@ -163,7 +163,7 @@ final class TransferPaymentOperation {
         traceID: String, spendingOutputs: UTXOService.OutputCollection,
         destination: Payment.TransferDestination, token: MixinTokenItem,
         amount: Decimal, memo: String, reference: String?,
-        context: Payment.SwapContext
+        context: Payment.TradeContext
     ) -> TransferPaymentOperation {
         TransferPaymentOperation(
             behavior: .swap(context),

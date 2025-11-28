@@ -13,7 +13,7 @@ class UrlWindow {
         case userActivity
         case webView(MixinWebViewController.Context)
         case conversation(WeakWrapper<ConversationMessageComposer>)
-        case swap(context: Payment.SwapContext, completion: (String?) -> Void)
+        case swap(context: Payment.TradeContext, completion: (String?) -> Void)
         case other
         
         var webContext: MixinWebViewController.Context? {
@@ -65,9 +65,18 @@ class UrlWindow {
             case .inscription(let hash):
                 checkInscription(hash: hash)
                 return true
-            case let .swap(input, output, referral):
+            case let .trade(type, input, output, referral):
                 if let navigationController = UIApplication.homeNavigationController {
-                    let swap = MixinSwapViewController(
+                    let mode: TradeViewController.Mode = switch type {
+                    case "swap":
+                            .simple
+                    case "limit":
+                            .advanced
+                    default:
+                            .simple
+                    }
+                    let swap = MixinTradeViewController(
+                        mode: mode,
                         sendAssetID: input,
                         receiveAssetID: output ?? AssetID.erc20USDT,
                         referral: referral
@@ -1216,7 +1225,7 @@ extension UrlWindow {
                 let fiatMoneyAmount = amount * token.decimalUSDPrice * Currency.current.decimalRate
                 let context: Payment.Context? = switch source {
                 case let .swap(context, _):
-                        .swap(context)
+                        .trade(context)
                 default:
                     nil
                 }
@@ -1246,8 +1255,9 @@ extension UrlWindow {
                     guard case let .user(receiver) = destination else {
                         return
                     }
-                    let preview = SwapPreviewViewController(
+                    let preview = TradePreviewViewController(
                         wallet: .privacy,
+                        mode: context.mode,
                         operation: .mixin(operation),
                         sendToken: context.sendToken,
                         sendAmount: context.sendAmount,

@@ -158,6 +158,25 @@ public final class MarketDAO: UserDatabaseDAO {
         }
     }
     
+    // Key is asset id, value is `current_price`
+    public func currentPrices(assetIDs: [String]) -> [String: String] {
+        try! db.read { (db) -> [String: String] in
+            let query: GRDB.SQL = """
+            SELECT mi.asset_id, m.current_price
+            FROM markets m
+                LEFT JOIN market_ids mi ON m.coin_id = mi.coin_id
+            WHERE mi.asset_id IN \(assetIDs)
+            """
+            let (sql, arguments) = try query.build(db)
+            let rows = try Row.fetchAll(db, sql: sql, arguments: arguments)
+            return rows.reduce(into: [:]) { results, row in
+                if let key: String = row["asset_id"] {
+                    results[key] = row["current_price"]
+                }
+            }
+        }
+    }
+    
     public func priceHistory(coinID: String, period: PriceHistoryPeriod) -> PriceHistoryStorage? {
         let sql = """
         SELECT hp.*

@@ -459,7 +459,7 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
                 self.present(selector, animated: true, completion: nil)
             }
         case .swap:
-            let swap = Web3SwapViewController(
+            let swap = Web3TradeViewController(
                 wallet: wallet,
                 supportedChainIDs: supportedChainIDs,
                 sendAssetID: nil,

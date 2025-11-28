@@ -7,6 +7,7 @@ struct StyledAssetChange {
         case income
         case outcome
         case plain
+        case gray
     }
     
     let token: any Token

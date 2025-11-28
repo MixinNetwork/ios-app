@@ -167,7 +167,7 @@ enum Web3AddressValidator {
                   let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chainID)
         {
             return (address: address.destination, label: .wallet(.common(wallet)))
-        } else if let address = AddressDAO.shared.getAddress(chainId: chainID, destination: destination, tag: "") {
+        } else if let address = AddressDAO.shared.address(chainID: chainID, destination: destination, tag: "") {
             return (address: address.destination, label: .addressBook(address.label))
         } else {
             let response = try await ExternalAPI.checkAddress(

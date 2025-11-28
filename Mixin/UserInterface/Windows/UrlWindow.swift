@@ -656,7 +656,7 @@ class UrlWindow {
                 }
             } else if let label = queries["label"], let destination = queries["destination"], !label.isEmpty, !destination.isEmpty {
                 let tag = queries["tag"] ?? ""
-                let address = AddressDAO.shared.getAddress(chainId: token.chainID, destination: destination, tag: tag)
+                let address = AddressDAO.shared.address(chainID: token.chainID, destination: destination, tag: tag)
                 DispatchQueue.main.async {
                     hud.hide()
                     let preview = EditAddressPreviewViewController(token: token,
@@ -1344,7 +1344,10 @@ extension UrlWindow {
                 }
                 if case let .transaction(transaction) = response.safe?.operation {
                     for recipient in transaction.recipients {
-                        recipient.label = AddressDAO.shared.label(address: recipient.address)
+                        recipient.label = AddressDAO.shared.label(
+                            chainID: token.chainID,
+                            address: recipient.address
+                        )
                     }
                 }
                 DispatchQueue.main.async {

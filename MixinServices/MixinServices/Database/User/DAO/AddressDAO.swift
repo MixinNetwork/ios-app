@@ -18,11 +18,13 @@ public final class AddressDAO: UserDatabaseDAO {
         db.select(where: Address.column(of: .addressId) == addressId)
     }
     
-    public func getAddress(chainId: String, destination: String, tag: String) -> Address? {
-        let condition: SQLSpecificExpressible = Address.column(of: .chainId) == chainId
-            && Address.column(of: .destination) == destination
-            && Address.column(of: .tag) == tag
-        return db.select(where: condition)
+    public func address(chainID: String, destination: String, tag: String) -> Address? {
+        var sql = "SELECT * FROM addresses WHERE chain_id = ? AND destination = ?"
+        if Address.isDestinationCaseInsensitive(chainID: chainID) {
+            sql.append(" COLLATE NOCASE")
+        }
+        sql.append(" AND tag = ?")
+        return db.select(with: sql, arguments: [chainID, destination, tag])
     }
     
     public func getAddresses(chainId: String) -> [Address] {
@@ -38,10 +40,12 @@ public final class AddressDAO: UserDatabaseDAO {
         db.select(with: addressItemSQL + "ORDER BY a.updated_at DESC")
     }
     
-    public func label(address: String) -> String? {
-        db.select(column: Address.column(of: .label),
-                  from: Address.self,
-                  where: Address.column(of: .destination) == address)
+    public func label(chainID: String, address: String) -> String? {
+        var sql = "SELECT label FROM addresses WHERE chain_id = ? AND destination = ?"
+        if Address.isDestinationCaseInsensitive(chainID: chainID) {
+            sql.append(" COLLATE NOCASE")
+        }
+        return db.select(with: sql, arguments: [chainID, address])
     }
     
     public func insertOrUpdateAddress(addresses: [Address]) {

@@ -71,4 +71,16 @@ extension Address {
         || tag.lowercased().contains(keyword)
     }
     
+    public static func isDestinationCaseInsensitive(chainID: String) -> Bool {
+        let caseInsensitiveChainIDs: [String] = [
+            ChainID.ethereum,
+            ChainID.polygon,
+            ChainID.bnbSmartChain,
+            ChainID.base,
+            ChainID.arbitrumOne,
+            ChainID.opMainnet,
+        ]
+        return caseInsensitiveChainIDs.contains(chainID)
+    }
+    
 }

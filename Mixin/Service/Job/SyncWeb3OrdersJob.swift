@@ -4,10 +4,12 @@ import MixinServices
 final class SyncWeb3OrdersJob: BaseJob {
     
     private let walletID: String
+    private let reloadOpeningOrdersOnFinished: Bool
     private let limit = 300
     
-    init(walletID: String) {
+    init(walletID: String, reloadOpeningOrdersOnFinished: Bool) {
         self.walletID = walletID
+        self.reloadOpeningOrdersOnFinished = reloadOpeningOrdersOnFinished
         super.init()
     }
     
@@ -50,6 +52,16 @@ final class SyncWeb3OrdersJob: BaseJob {
                     offset: offset,
                     walletID: walletID,
                 )
+            }
+        }
+        if reloadOpeningOrdersOnFinished {
+            let ids = Web3OrderDAO.shared.openOrderIDs(walletID: walletID)
+            guard !ids.isEmpty else {
+                return
+            }
+            Task.detached {
+                let orders = try await RouteAPI.tradeOrders(ids: ids)
+                Web3OrderDAO.shared.save(orders: orders)
             }
         }
     }

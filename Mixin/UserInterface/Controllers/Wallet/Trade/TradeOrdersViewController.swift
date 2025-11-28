@@ -267,7 +267,7 @@ final class TradeOrdersViewController: UIViewController {
             case .common(let wallet):
                 wallet.walletID
             }
-            return SyncWeb3OrdersJob(walletID: walletID)
+            return SyncWeb3OrdersJob(walletID: walletID, reloadOpeningOrdersOnFinished: false)
         }
         for job in jobs {
             ConcurrentJobQueue.shared.addJob(job: job)

@@ -1191,9 +1191,16 @@ extension TradeViewController {
     }
     
     private func startOpenOrderRequester() {
-        let openOrderRequester = PendingTradeOrderLoader(
-            behavior: .watchWallet(walletID: orderWalletID, type: mode.orderType)
-        )
+        let openOrderRequester = switch mode {
+        case .simple:
+            PendingTradeOrderLoader(
+                behavior: .syncOrders(walletID: orderWalletID)
+            )
+        case .advanced:
+            PendingTradeOrderLoader(
+                behavior: .watchOpeningLimitOrders(walletID: orderWalletID)
+            )
+        }
         openOrderRequester.delegate = self as? PendingTradeOrderLoader.Delegate
         self.openOrderRequester = openOrderRequester
         openOrderRequester.start(after: 0)

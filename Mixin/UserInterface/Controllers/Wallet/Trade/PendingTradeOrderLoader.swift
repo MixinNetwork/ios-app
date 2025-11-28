@@ -10,8 +10,11 @@ final class PendingTradeOrderLoader {
     
     enum Behavior {
         
-        // Load open orders periodically
-        case watchWallet(walletID: String, type: TradeOrder.OrderType)
+        // Sync all orders periodically, including opening ones that updated to closed, until manually paused. Delegate object is not called.
+        case syncOrders(walletID: String)
+        
+        // Load periodically until manually paused
+        case watchOpeningLimitOrders(walletID: String)
         
         // Load these orders periodically until all of them are closed
         case watchOrders(orderIDs: [String])
@@ -46,9 +49,9 @@ final class PendingTradeOrderLoader {
         isRunning = true
         Logger.general.debug(category: "PendingTradeOrderLoader", message: "Started")
         switch behavior {
-        case let .watchWallet(walletID, type):
+        case let .watchOpeningLimitOrders(walletID):
             DispatchQueue.global().async { [weak self] in
-                let orders = Web3OrderDAO.shared.openOrders(walletID: walletID, type: type)
+                let orders = Web3OrderDAO.shared.openOrders(walletID: walletID, type: .limit)
                 if let self {
                     self.delegate?.pendingSwapOrder(self, didLoad: orders)
                     DispatchQueue.main.async {
@@ -66,7 +69,7 @@ final class PendingTradeOrderLoader {
                     }
                 }
             }
-        case .watchOrder:
+        case .syncOrders, .watchOrder:
             scheduleRemoteDataLoading(timeInterval: timeInterval)
         }
     }
@@ -88,16 +91,27 @@ final class PendingTradeOrderLoader {
         Task.detached { [behavior, refreshInterval, weak self] in
             do {
                 switch behavior {
-                case let .watchWallet(walletID, type):
+                case let .syncOrders(walletID):
+                    let job = SyncWeb3OrdersJob(
+                        walletID: walletID,
+                        reloadOpeningOrdersOnFinished: true
+                    )
+                    ConcurrentJobQueue.shared.addJob(job: job)
+                    if let self {
+                        await MainActor.run {
+                            self.scheduleRemoteDataLoading(timeInterval: refreshInterval)
+                        }
+                    }
+                case let .watchOpeningLimitOrders(walletID):
                     let orders = try await RouteAPI.tradeOrders(
                         walletID: walletID,
                         limit: nil,
                         offset: nil,
                         state: .pending,
                     ).filter { order in
-                        TradeOrder.OrderType(rawValue: order.orderType) == type
+                        TradeOrder.OrderType(rawValue: order.orderType) == .limit
                     }
-                    Logger.general.debug(category: "PendingTradeOrderLoader", message: "Loaded \(orders.count) pending \(type.rawValue) orders")
+                    Logger.general.debug(category: "PendingTradeOrderLoader", message: "Loaded \(orders.count) opening limit orders")
                     if !orders.isEmpty {
                         Web3OrderDAO.shared.save(orders: orders)
                     }

@@ -44,6 +44,18 @@ public final class Web3OrderDAO: Web3DAO {
         return count ?? 0
     }
     
+    public func openOrderIDs(walletID: String) -> [String] {
+        db.select(
+            with: """
+               SELECT order_id
+               FROM orders
+               WHERE wallet_id = ?
+                   AND state IN ('created','pending','cancelling')
+               """,
+            arguments: [walletID]
+        )
+    }
+    
     public func save(
         orders: [TradeOrder],
         alongsideTransaction change: ((GRDB.Database) throws -> Void)? = nil

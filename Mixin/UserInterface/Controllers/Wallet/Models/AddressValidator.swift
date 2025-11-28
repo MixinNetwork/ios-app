@@ -290,7 +290,7 @@ extension AddressValidator {
            let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chainID)
         {
             return .commonWallet(wallet, address)
-        } else if let address = AddressDAO.shared.getAddress(chainId: chainID, destination: destination, tag: tag ?? "") {
+        } else if let address = AddressDAO.shared.address(chainID: chainID, destination: destination, tag: tag ?? "") {
             return .address(address)
         } else  {
             let response = try await ExternalAPI.checkAddress(

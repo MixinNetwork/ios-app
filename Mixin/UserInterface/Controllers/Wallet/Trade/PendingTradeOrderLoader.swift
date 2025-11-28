@@ -90,9 +90,9 @@ final class PendingTradeOrderLoader {
                 switch behavior {
                 case let .watchWallet(walletID, type):
                     let orders = try await RouteAPI.tradeOrders(
-                        limit: 100, // TODO: What if pending orders more than 100?
-                        offset: nil,
                         walletID: walletID,
+                        limit: nil,
+                        offset: nil,
                         state: .pending,
                     ).filter { order in
                         TradeOrder.OrderType(rawValue: order.orderType) == type

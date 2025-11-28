@@ -60,17 +60,17 @@ extension RouteAPI {
     }
     
     static func tradeOrders(
-        limit: Int,
+        walletID: String,
+        limit: Int?,
         offset: String?,
-        walletID: String?,
         state: TradeOrder.State? = nil,
     ) async throws -> [TradeOrder] {
-        var path = "/web3/swap/orders?limit=\(limit)"
+        var path = "/web3/swap/orders?walletId=\(walletID)"
+        if let limit {
+            path.append("&limit=\(limit)")
+        }
         if let offset {
             path.append("&offset=\(offset)")
-        }
-        if let walletID {
-            path.append("&walletId=\(walletID)")
         }
         if let state {
             path.append("&state=\(state.rawValue)")

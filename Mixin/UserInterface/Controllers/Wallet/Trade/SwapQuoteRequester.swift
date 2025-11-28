@@ -137,7 +137,7 @@ extension SwapQuotePeriodicRequester {
         delegate?.swapQuotePeriodicRequesterWillUpdate(self)
         Logger.general.debug(category: "SwapQuote", message: "\(opaquePointer) Request quote")
         lastRequest = RouteAPI.quote(request: request) { [weak self, quoteDraft] result in
-            guard let self else {
+            guard let self, self.isRunning else {
                 return
             }
             switch result {
@@ -175,7 +175,7 @@ extension SwapQuotePeriodicRequester {
     private func scheduleCountDownTimer() {
         let lastCountDown = countDownIncludesZero ? -1 : 0
         let timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] (timer) in
-            guard let self else {
+            guard let self, self.isRunning else {
                 timer.invalidate()
                 return
             }

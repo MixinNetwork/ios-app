@@ -1131,6 +1131,7 @@ extension TradeViewController {
             pricingModel.sendAmount = amount
             amountInputCell?.updateSendAmountTextField(amount: amount)
             startQuoteRequesterIfAvailable()
+            reloadSections(mode: mode)
         }
     }
     

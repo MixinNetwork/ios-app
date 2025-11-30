@@ -587,7 +587,11 @@ final class ConversationViewController: UIViewController {
     }
     
     @objc func resizeInputWrapperAction(_ recognizer: ResizeInputWrapperGestureRecognizer) {
-        let location = recognizer.location(in: inputWrapperView)
+        let location = if #available(iOS 26, *) {
+            recognizer.location(in: conversationInputViewController.customInputContainerView)
+        } else {
+            recognizer.location(in: inputWrapperView)
+        }
         let verticalVelocity = recognizer.velocity(in: view).y
         let regularInputWrapperHeight = conversationInputViewController.regularHeight
         var inputWrapperHeight: CGFloat {

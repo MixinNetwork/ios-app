@@ -772,7 +772,7 @@ extension TradeOrdersViewController {
             ),
             UIAction(
                 title: R.string.localizable.order_type_limit(),
-                image: R.image.filter_swap_limit(),
+                image: R.image.filter_limit(),
                 state: .off,
                 handler: { [weak self] _ in self?.reloadData(filterType: .limit) }
             ),

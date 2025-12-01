@@ -25,7 +25,7 @@ enum ExploreAction {
         case .buy:
             R.image.explore.buy()
         case .swap:
-            R.image.explore.swap()
+            R.image.explore.trade()
         case .membership:
             R.image.explore.membership()
         case .referral:

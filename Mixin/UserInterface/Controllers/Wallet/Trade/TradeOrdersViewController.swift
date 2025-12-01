@@ -62,7 +62,7 @@ final class TradeOrdersViewController: UIViewController {
         }
         
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { (_, _) in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             item.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: .fixed(10), trailing: nil, bottom: .fixed(10))
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))

@@ -438,8 +438,9 @@ class TradeViewController: UIViewController {
     func prepareForReuse(sender: Any) {
         pricingModel.prepareForReuse()
         amountInputCell?.updateSendAmountTextField(amount: nil)
-        reloadTokens() // Update send token balance
+        selectedExpiry = .never
         reloadSections(mode: mode)
+        reloadTokens() // Update send token balance
     }
     
     func setSendToken(_ sendToken: BalancedSwapToken?) {

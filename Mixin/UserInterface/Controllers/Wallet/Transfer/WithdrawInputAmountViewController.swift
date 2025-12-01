@@ -289,7 +289,7 @@ extension WithdrawInputAmountViewController: AddTokenMethodSelectorViewControlle
                 referral: nil
             )
         case .deposit:
-            DepositViewController(token: feeToken)
+            DepositViewController(token: feeToken, switchingBetweenNetworks: false)
         }
         navigationController?.pushViewController(next, animated: true)
     }

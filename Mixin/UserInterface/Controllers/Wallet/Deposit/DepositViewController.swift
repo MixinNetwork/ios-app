@@ -17,21 +17,28 @@ final class DepositViewController: UIViewController {
     private weak var addressGeneratingView: UIView!
     private weak var depositSuspendedView: UIView?
     
+    private let sections: [Section]
+    
     private var dataSource: DepositDataSource
     private var viewModel: DepositViewModel?
     
-    convenience init(token: MixinTokenItem) {
+    convenience init(token: MixinTokenItem, switchingBetweenNetworks: Bool) {
         let dataSource = MixinDepositDataSource(token: token)
-        self.init(dataSource: dataSource)
+        self.init(dataSource: dataSource, switchingBetweenNetworks: switchingBetweenNetworks)
     }
     
-    convenience init(wallet: Web3Wallet, token: Web3TokenItem) {
+    convenience init(wallet: Web3Wallet, token: Web3TokenItem, switchingBetweenNetworks: Bool) {
         let dataSource = Web3DepositDataSource(wallet: wallet, token: token)
-        self.init(dataSource: dataSource)
+        self.init(dataSource: dataSource, switchingBetweenNetworks: switchingBetweenNetworks)
     }
     
-    init(dataSource: DepositDataSource) {
+    init(dataSource: DepositDataSource, switchingBetweenNetworks: Bool) {
         self.dataSource = dataSource
+        self.sections = if switchingBetweenNetworks {
+            [.network, .address, .info]
+        } else {
+            [.address, .info]
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -54,7 +61,7 @@ final class DepositViewController: UIViewController {
         view.backgroundColor = R.color.background_secondary()
         
         let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ in
-            switch Section(rawValue: sectionIndex)! {
+            switch self?.sections[sectionIndex] {
             case .network:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .estimated(37))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -91,7 +98,7 @@ final class DepositViewController: UIViewController {
                     section.contentInsets = NSDirectionalEdgeInsets(top: top, leading: 20, bottom: 10, trailing: 20)
                 }
                 return section
-            case .info:
+            case .info, .none:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(60))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(60))
@@ -193,14 +200,14 @@ extension DepositViewController: HomeNavigationController.NavigationBarStyling {
 extension DepositViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        Section.allCases.count
+        sections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let viewModel else {
             return 0
         }
-        return switch Section(rawValue: section)! {
+        return switch sections[section] {
         case .network:
             viewModel.switchableTokens.count
         case .address:
@@ -219,7 +226,7 @@ extension DepositViewController: UICollectionViewDataSource {
         guard let viewModel else {
             return UICollectionViewCell()
         }
-        switch Section(rawValue: indexPath.section)! {
+        switch sections[indexPath.section] {
         case .network:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
             cell.label.text = viewModel.switchableTokens[indexPath.item].chainName
@@ -255,7 +262,7 @@ extension DepositViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        switch Section(rawValue: indexPath.section)! {
+        switch sections[indexPath.section] {
         case .network:
             return UICollectionReusableView()
         case .address:
@@ -308,7 +315,7 @@ extension DepositViewController: UICollectionViewDataSource {
 extension DepositViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        switch Section(rawValue: indexPath.section)! {
+        switch sections[indexPath.section] {
         case .address, .info:
             return false
         case .network:
@@ -322,7 +329,7 @@ extension DepositViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch Section(rawValue: indexPath.section)! {
+        switch sections[indexPath.section] {
         case .address, .info:
             break
         case .network:
@@ -356,7 +363,7 @@ extension DepositViewController: DepositEntryActionDelegate {
                 return
             }
             let copyingContent: String
-            switch Section(rawValue: indexPath.section)! {
+            switch sections[indexPath.section] {
             case .network:
                 return
             case .address:
@@ -440,8 +447,8 @@ extension DepositViewController: DepositDataSource.Delegate {
         self.viewModel = viewModel
         collectionView.isHidden = false
         collectionView.reloadData()
-        if let item = viewModel.selectedTokenIndex {
-            let indexPath = IndexPath(item: item, section: Section.network.rawValue)
+        if let section = sections.firstIndex(of: .network), let item = viewModel.selectedTokenIndex {
+            let indexPath = IndexPath(item: item, section: section)
             collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
         }
         addressGeneratingView.isHidden = true

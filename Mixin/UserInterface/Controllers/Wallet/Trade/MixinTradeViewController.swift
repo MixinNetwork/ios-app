@@ -63,7 +63,10 @@ final class MixinTradeViewController: TradeViewController {
             assetID: sendToken.assetID,
             symbol: sendToken.symbol
         )
-        let deposit = DepositViewController(dataSource: dataSource)
+        let deposit = DepositViewController(
+            dataSource: dataSource,
+            switchingBetweenNetworks: true
+        )
         navigationController?.pushViewController(deposit, animated: true)
     }
     

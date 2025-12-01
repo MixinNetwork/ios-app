@@ -183,7 +183,7 @@ extension MixinTokenViewController: TokenActionView.Delegate {
     func tokenActionView(_ view: TokenActionView, wantsToPerformAction action: TokenAction) {
         switch action {
         case .receive:
-            let deposit = DepositViewController(token: token)
+            let deposit = DepositViewController(token: token, switchingBetweenNetworks: true)
             withMnemonicsBackupChecked {
                 self.navigationController?.pushViewController(deposit, animated: true)
             }

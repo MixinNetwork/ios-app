@@ -269,7 +269,7 @@ extension TransferInputAmountViewController: AddTokenMethodSelectorViewControlle
                 referral: nil
             )
         case .deposit:
-            DepositViewController(token: tokenItem)
+            DepositViewController(token: tokenItem, switchingBetweenNetworks: false)
         }
         navigationController?.pushViewController(next, animated: true)
     }

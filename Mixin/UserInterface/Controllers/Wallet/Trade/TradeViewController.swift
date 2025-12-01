@@ -80,6 +80,7 @@ class TradeViewController: UIViewController {
     private let arbitraryReceiveAssetID: String?
     private let tokenSource: RouteTokenSource
     private let footerReuseIdentifier = "f"
+    private let elementKindSectionBackground = "esb"
     
     private lazy var tokenAmountRoundingHandler = NSDecimalNumberHandler(
         roundingMode: .plain,
@@ -211,7 +212,7 @@ class TradeViewController: UIViewController {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader
         )
         collectionView.register(
-            OpenOrderFooterView.self,
+            UICollectionReusableView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
             withReuseIdentifier: footerReuseIdentifier
         )
@@ -222,7 +223,7 @@ class TradeViewController: UIViewController {
         collectionView.register(R.nib.noOpenTradeOrderCell)
         collectionView.register(R.nib.tradeOrderCell)
         collectionView.register(R.nib.tradeExpirySelectorCell)
-        collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, _) in
+        let layout = UICollectionViewCompositionalLayout { [weak self, elementKindSectionBackground] (sectionIndex, _) in
             switch self?.sections[sectionIndex] {
             case .modeSelector, .none:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .absolute(38))
@@ -258,12 +259,13 @@ class TradeViewController: UIViewController {
                 return section
             case .openOrders:
                 if let orders = self?.openOrders, !orders.isEmpty {
-                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
                     let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
                     let section = NSCollectionLayoutSection(group: group)
                     section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                    section.interGroupSpacing = 20
                     section.boundarySupplementaryItems = [
                         NSCollectionLayoutBoundarySupplementaryItem(
                             layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(57)),
@@ -276,6 +278,11 @@ class TradeViewController: UIViewController {
                             alignment: .bottom
                         ),
                     ]
+                    let background: NSCollectionLayoutDecorationItem = .background(
+                        elementKind: elementKindSectionBackground
+                    )
+                    background.contentInsets = section.contentInsets
+                    section.decorationItems = [background]
                     return section
                 } else {
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(211))
@@ -303,6 +310,8 @@ class TradeViewController: UIViewController {
                 return section
             }
         }
+        layout.register(SectionBackgroundView.self, forDecorationViewOfKind: elementKindSectionBackground)
+        collectionView.collectionViewLayout = layout
         contentSizeObservation = collectionView.observe(\.contentSize) { [weak self] (collectionView, _) in
             guard let self else {
                 return
@@ -661,7 +670,9 @@ extension TradeViewController: UICollectionViewDataSource {
             view.label.text = R.string.localizable.open_orders_count(openOrders.count)
             return view
         default:
-            return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerReuseIdentifier, for: indexPath)
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerReuseIdentifier, for: indexPath)
+            view.backgroundColor = .clear
+            return view
         }
     }
     
@@ -1251,7 +1262,7 @@ extension TradeViewController {
 
 extension TradeViewController {
     
-    final class OpenOrderFooterView: UICollectionReusableView {
+    final class SectionBackgroundView: UICollectionReusableView {
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -1267,7 +1278,6 @@ extension TradeViewController {
             backgroundColor = R.color.background()
             layer.cornerRadius = 8
             layer.masksToBounds = true
-            layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         }
         
     }

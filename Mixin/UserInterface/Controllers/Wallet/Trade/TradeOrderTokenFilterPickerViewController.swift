@@ -14,13 +14,30 @@ final class TradeOrderTokenFilterPickerViewController: TransactionHistoryTokenFi
     
     weak var delegate: TradeOrderTokenFilterPickerViewControllerDelegate?
     
+    private let wallets: [Wallet]
+    
+    init(wallets: [Wallet], selectedTokens: [TradeOrder.Token]) {
+        self.wallets = wallets
+        super.init(selectedTokens: selectedTokens)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
         collectionView.dataSource = self
-        queue.addOperation {
-            let allTokens = TokenDAO.shared.tradeOrderTokens()
-                + Web3TokenDAO.shared.tradeOrderTokens()
+        queue.addOperation { [wallets] in
+            let allTokens = wallets.flatMap { wallet in
+                switch wallet {
+                case .privacy:
+                    TokenDAO.shared.tradeOrderTokens()
+                case .common(let wallet):
+                    Web3TokenDAO.shared.tradeOrderTokens(walletID: wallet.walletID)
+                }
+            }
             var assetIDs: Set<String> = []
             let tokens = allTokens.filter { token in
                 assetIDs.insert(token.assetID).inserted

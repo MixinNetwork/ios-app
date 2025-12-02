@@ -138,7 +138,10 @@ final class TradeOrdersViewController: UIViewController {
     }
     
     @objc private func pickTokens(_ sender: Any) {
-        let picker = TradeOrderTokenFilterPickerViewController(selectedTokens: filter.tokens)
+        let picker = TradeOrderTokenFilterPickerViewController(
+            wallets: filter.wallets,
+            selectedTokens: filter.tokens
+        )
         picker.delegate = self
         present(picker, animated: true)
     }

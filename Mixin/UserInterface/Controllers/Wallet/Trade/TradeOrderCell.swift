@@ -32,8 +32,8 @@ final class TradeOrderCell: UICollectionViewCell {
     
     func load(viewModel: TradeOrderViewModel) {
         swapIconView.setTokenIcon(
-            pay: viewModel.payToken?.iconURL,
-            receive: viewModel.receiveToken?.iconURL
+            payToken: viewModel.payToken,
+            receiveToken: viewModel.receiveToken
         )
         symbolLabel.text = viewModel.exchangingSymbolRepresentation
         dateLabel.text = viewModel.createdAtRepresentation

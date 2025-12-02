@@ -65,9 +65,9 @@ final class MultipleAssetChangeCell: UITableViewCell {
         loadRowViews(count: changes.count)
         for (i, change) in changes.enumerated() {
             let rowView = rowViews[i]
-            rowView.iconView.setIcon(tokenIconURL: change.token?.iconURL)
+            rowView.iconView.setIcon(token: change.token)
             rowView.amountLabel.text = change.amount
-            rowView.networkLabel.text = change.token?.chainName
+            rowView.networkLabel.text = change.token?.chain?.name
             rowView.amountLabel.textColor = switch style {
             case .income:
                 R.color.market_green()

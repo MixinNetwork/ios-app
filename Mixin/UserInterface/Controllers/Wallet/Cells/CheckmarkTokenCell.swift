@@ -59,6 +59,18 @@ final class CheckmarkTokenCell: UITableViewCell {
         subtitleLabel.text = token.localizedBalanceWithSymbol
     }
     
+    func load(token: TradeOrder.Token) {
+        iconView.setIcon(token: token, chain: token.chain)
+        titleLabel.text = token.symbol
+        if let name = token.chain?.name {
+            tagLabel.text = name
+            tagLabel.isHidden = false
+        } else {
+            tagLabel.isHidden = true
+        }
+        subtitleLabel.text = token.name
+    }
+    
     func load(coin: MarketAlertCoin) {
         iconView.setIcon(coin: coin)
         titleLabel.text = coin.symbol

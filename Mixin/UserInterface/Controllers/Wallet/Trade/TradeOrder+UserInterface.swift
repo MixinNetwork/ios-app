@@ -85,23 +85,26 @@ extension TradeOrder {
         var wallets: [Wallet]
         var type: OrderType?
         var status: Status?
+        var tokens: [TradeOrder.Token]
         var startDate: Date?
         var endDate: Date?
         
         var description: String {
-            "<Filter wallets: \(wallets), type: \(String(describing: type)), status: \(String(describing: status)), startDate: \(String(describing: startDate)), endDate: \(String(describing: endDate))>"
+            "<Filter wallets: \(wallets), type: \(String(describing: type)), status: \(String(describing: status)), tokens: \(tokens.count), startDate: \(String(describing: startDate)), endDate: \(String(describing: endDate))>"
         }
         
         init(
             wallets: [Wallet] = [],
             type: OrderType? = nil,
             status: Status? = nil,
+            tokens: [TradeOrder.Token] = [],
             startDate: Date? = nil,
             endDate: Date? = nil
         ) {
             self.wallets = wallets
             self.type = type
             self.status = status
+            self.tokens = tokens
             self.startDate = startDate
             self.endDate = endDate
         }
@@ -123,6 +126,11 @@ extension TradeOrder {
             }
             if let states = status?.states, let state = TradeOrder.State(rawValue: order.state) {
                 isIncluded = isIncluded && states.contains(state)
+            }
+            if !tokens.isEmpty {
+                isIncluded = isIncluded && tokens.contains(where: { token in
+                    order.payAssetID == token.assetID || order.receiveAssetID == token.assetID
+                })
             }
             if let startDate {
                 isIncluded = isIncluded && order.createdAt.toUTCDate() >= startDate

@@ -186,14 +186,28 @@ public final class TokenDAO: UserDatabaseDAO {
         return db.select(with: query)
     }
     
-    public func swapOrderToken(id: String) -> TradeOrder.Token? {
+    public func tradeOrderToken(id: String) -> TradeOrder.Token? {
         let sql = """
-            SELECT t.asset_id, t.symbol, c.name, t.icon_url
-            FROM tokens t
-                LEFT JOIN chains c ON t.chain_id = c.chain_id
-            WHERE t.asset_id = ?
+        SELECT t.asset_id, t.name, t.symbol, t.icon_url, 
+            c.chain_id AS chain_id, c.name AS chain_name, c.symbol AS chain_symbol,
+            c.icon_url AS chain_icon_url, c.threshold AS chain_threshold,
+            c.withdrawal_memo_possibility AS chain_withdrawal_memo_possibility
+        FROM tokens t
+            LEFT JOIN chains c ON t.chain_id = c.chain_id
+        WHERE t.asset_id = ?
         """
         return db.select(with: sql, arguments: [id])
+    }
+    
+    public func tradeOrderTokens() -> [TradeOrder.Token] {
+        db.select(with: """
+        SELECT t.asset_id, t.name, t.symbol, t.icon_url, 
+            c.chain_id AS chain_id, c.name AS chain_name, c.symbol AS chain_symbol,
+            c.icon_url AS chain_icon_url, c.threshold AS chain_threshold,
+            c.withdrawal_memo_possibility AS chain_withdrawal_memo_possibility
+        FROM tokens t
+            LEFT JOIN chains c ON t.chain_id = c.chain_id
+        """)
     }
     
     public func usdBalanceSum() -> Decimal {

@@ -18,7 +18,7 @@ final class TradeOrderHeaderCell: UITableViewCell {
     }
     
     func load(viewModel: TradeOrderViewModel) {
-        iconView.setTokenIcon(pay: viewModel.payToken?.iconURL, receive: viewModel.receiveToken?.iconURL)
+        iconView.setTokenIcon(payToken: viewModel.payToken, receiveToken: viewModel.receiveToken)
         symbolLabel.text = viewModel.exchangingSymbolRepresentation
         stateLabel.text = viewModel.state.localizedDescription
         switch viewModel.state.knownCase {

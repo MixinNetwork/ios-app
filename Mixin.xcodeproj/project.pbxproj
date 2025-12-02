@@ -1359,6 +1359,7 @@
 		94D308802BA73F810017494C /* Web3TransferPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3087F2BA73F810017494C /* Web3TransferPreviewViewController.swift */; };
 		94D3CE302C3EBC7100E1E542 /* AppCardV1MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3CE2F2C3EBC7100E1E542 /* AppCardV1MessageViewModel.swift */; };
 		94D3CEA22C3EFD4B00E1E542 /* AppCardV1MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3CEA12C3EFD4B00E1E542 /* AppCardV1MessageCell.swift */; };
+		94D444922EDEC81B0065FD07 /* TradeOrderTokenFilterPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D444912EDEC81B0065FD07 /* TradeOrderTokenFilterPickerViewController.swift */; };
 		94D4E4F82B1753FE00EE04A3 /* ModernQRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D4E4F72B1753FE00EE04A3 /* ModernQRCodeView.swift */; };
 		94D5C0EE2D5C911D0046C20E /* WalletSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D5C0EC2D5C911D0046C20E /* WalletSummaryViewController.swift */; };
 		94D5C0EF2D5C911D0046C20E /* WalletSummaryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D5C0ED2D5C911D0046C20E /* WalletSummaryView.xib */; };
@@ -3137,6 +3138,7 @@
 		94D3087F2BA73F810017494C /* Web3TransferPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferPreviewViewController.swift; sourceTree = "<group>"; };
 		94D3CE2F2C3EBC7100E1E542 /* AppCardV1MessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardV1MessageViewModel.swift; sourceTree = "<group>"; };
 		94D3CEA12C3EFD4B00E1E542 /* AppCardV1MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCardV1MessageCell.swift; sourceTree = "<group>"; };
+		94D444912EDEC81B0065FD07 /* TradeOrderTokenFilterPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOrderTokenFilterPickerViewController.swift; sourceTree = "<group>"; };
 		94D4E4F72B1753FE00EE04A3 /* ModernQRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModernQRCodeView.swift; sourceTree = "<group>"; };
 		94D5C0EC2D5C911D0046C20E /* WalletSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSummaryViewController.swift; sourceTree = "<group>"; };
 		94D5C0ED2D5C911D0046C20E /* WalletSummaryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletSummaryView.xib; sourceTree = "<group>"; };
@@ -4512,6 +4514,7 @@
 				946E9E332D40C46D00DBC308 /* TradeTokenSelectorViewController.swift */,
 				946C50972E95651800A0EA6A /* TradeMixinTokenSelectorViewController.swift */,
 				52B273562DB225F500F46EC0 /* TradeWeb3TokenSelectorViewController.swift */,
+				94D444912EDEC81B0065FD07 /* TradeOrderTokenFilterPickerViewController.swift */,
 				949B5DCC2EBCEC5F00D33C97 /* TradeOrdersView.xib */,
 				949B5DCB2EBCEC5F00D33C97 /* TradeOrdersViewController.swift */,
 				942FD9322D3A70DB004DCC4C /* TradeOrderHeaderCell.xib */,
@@ -7235,6 +7238,7 @@
 				94A0C8C32C77259E00BDE672 /* AddressReceiversCell.swift in Sources */,
 				7BD5A88A233228D900DD4E9A /* WebViewController.swift in Sources */,
 				7B5E9B40243700CD000AE24E /* ConversationCircleEditorViewController.swift in Sources */,
+				94D444922EDEC81B0065FD07 /* TradeOrderTokenFilterPickerViewController.swift in Sources */,
 				94B89D0B2DE7441D002A0DDC /* MembershipOrdersHeaderView.swift in Sources */,
 				9433C2F42CBCFB530066CEA3 /* AddNonFriendBotJob.swift in Sources */,
 				94E1D44E29E9393C00511267 /* DeviceTransferServer.swift in Sources */,

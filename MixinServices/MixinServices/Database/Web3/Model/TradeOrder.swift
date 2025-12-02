@@ -29,26 +29,28 @@ public struct TradeOrder {
         case limit
     }
     
-    public struct Token: Decodable, MixinFetchableRecord {
+    public struct Token: Decodable, MixinFetchableRecord, MixinServices.Token {
         
         public enum CodingKeys: String, CodingKey {
             case assetID = "asset_id"
+            case name
             case symbol
             case iconURL = "icon_url"
-            case chainName = "chain_name"
         }
         
         public let assetID: String
+        public let name: String
         public let symbol: String
-        public let iconURL: URL?
-        public let chainName: String?
+        public let iconURL: String
+        public let chain: Chain?
         
-        public init(from decoder: any Decoder) throws {
+        public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.assetID = try container.decode(String.self, forKey: .assetID)
+            self.name = try container.decode(String.self, forKey: .name)
             self.symbol = try container.decode(String.self, forKey: .symbol)
-            self.iconURL = URL(string: try container.decode(String.self, forKey: .iconURL))
-            self.chainName = try container.decodeIfPresent(String.self, forKey: .chainName)
+            self.iconURL = try container.decode(String.self, forKey: .iconURL)
+            self.chain = try? Chain(joinedDecoder: decoder)
         }
         
     }

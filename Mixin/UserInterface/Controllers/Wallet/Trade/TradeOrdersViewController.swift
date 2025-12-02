@@ -15,6 +15,7 @@ final class TradeOrdersViewController: UIViewController {
     private let walletFilterView = WalletFilterView()
     private let typeFilterView = TypeFilterView()
     private let statusFilterView = StatusFilterView()
+    private let assetFilterView = TransactionHistoryAssetFilterView()
     private let dateFilterView = TransactionHistoryDateFilterView()
     private let queue = OperationQueue()
     
@@ -54,9 +55,11 @@ final class TradeOrdersViewController: UIViewController {
         typeFilterView.button.menu = UIMenu(children: typeFilterActions(selectedType: filter.type))
         statusFilterView.reloadData(status: filter.status)
         statusFilterView.button.menu = UIMenu(children: statusFilterActions(status: filter.status))
+        assetFilterView.reloadData(tokens: filter.tokens)
+        assetFilterView.button.addTarget(self, action: #selector(pickTokens(_:)), for: .touchUpInside)
         dateFilterView.reloadData(startDate: filter.startDate, endDate: filter.endDate)
         dateFilterView.button.addTarget(self, action: #selector(pickDates(_:)), for: .touchUpInside)
-        for view in [walletFilterView, typeFilterView, statusFilterView, dateFilterView] {
+        for view in [walletFilterView, typeFilterView, statusFilterView, assetFilterView, dateFilterView] {
             view.backgroundColor = R.color.background()
             filtersStackView.addArrangedSubview(view)
         }
@@ -134,6 +137,12 @@ final class TradeOrdersViewController: UIViewController {
         present(selector, animated: true)
     }
     
+    @objc private func pickTokens(_ sender: Any) {
+        let picker = TradeOrderTokenFilterPickerViewController(selectedTokens: filter.tokens)
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+    
     @objc private func pickDates(_ sender: Any) {
         let picker = TransactionHistoryDatePickerViewController(startDate: filter.startDate, endDate: filter.endDate)
         picker.delegate = self
@@ -163,9 +172,9 @@ final class TradeOrdersViewController: UIViewController {
         } else {
             behavior = .reload
         }
-        Logger.general.debug(category: "SwapOrders", message: "Previous canary cleared")
+        Logger.general.debug(category: "TradeOrders", message: "Previous canary cleared")
         loadPreviousPageIndexPath = nil
-        Logger.general.debug(category: "SwapOrders", message: "Next canary cleared")
+        Logger.general.debug(category: "TradeOrders", message: "Next canary cleared")
         loadNextPageIndexPath = nil
         let operation = LoadLocalDataOperation(
             viewController: self,
@@ -208,13 +217,13 @@ final class TradeOrdersViewController: UIViewController {
         collectionView.layoutIfNeeded() // Important, ensures `collectionView.contentSize` is correct
         let contentOffset: CGPoint
         if wasAtTableTop {
-            Logger.general.debug(category: "SwapOrders", message: "Going to table top")
+            Logger.general.debug(category: "TradeOrders", message: "Going to table top")
             contentOffset = .zero
         } else if wasAtTableBottom {
-            Logger.general.debug(category: "SwapOrders", message: "Going to table bottom")
+            Logger.general.debug(category: "TradeOrders", message: "Going to table bottom")
             contentOffset = CGPoint(x: 0, y: tableBottomContentOffsetY)
         } else {
-            Logger.general.debug(category: "SwapOrders", message: "Going to managed offset")
+            Logger.general.debug(category: "TradeOrders", message: "Going to managed offset")
             let contentSizeAfter = collectionView.contentSize
             contentOffset = CGPoint(
                 x: collectionView.contentOffset.x,
@@ -301,6 +310,19 @@ extension TradeOrdersViewController: WalletSelectorViewController.Delegate {
         walletFilterView.reloadData(wallets: wallets)
         reloadData()
         syncOrders(wallets: wallets)
+    }
+    
+}
+
+extension TradeOrdersViewController: TradeOrderTokenFilterPickerViewControllerDelegate {
+    
+    func tradeOrderTokenFilterPickerViewController(
+        _ controller: TradeOrderTokenFilterPickerViewController,
+        didPickTokens tokens: [TradeOrder.Token]
+    ) {
+        filter.tokens = tokens
+        assetFilterView.reloadData(tokens: tokens)
+        reloadData()
     }
     
 }
@@ -456,12 +478,12 @@ extension TradeOrdersViewController {
             } else {
                 return
             }
-            let payToken = TokenDAO.shared.swapOrderToken(id: order.payAssetID)
-            ?? Web3TokenDAO.shared.swapOrderToken(id: order.payAssetID)
-            let receiveToken = TokenDAO.shared.swapOrderToken(id: order.receiveAssetID)
-            ?? Web3TokenDAO.shared.swapOrderToken(id: order.receiveAssetID)
+            let payToken = TokenDAO.shared.tradeOrderToken(id: order.payAssetID)
+            ?? Web3TokenDAO.shared.tradeOrderToken(id: order.payAssetID)
+            let receiveToken = TokenDAO.shared.tradeOrderToken(id: order.receiveAssetID)
+            ?? Web3TokenDAO.shared.tradeOrderToken(id: order.receiveAssetID)
             let viewModel = TradeOrderViewModel(order: order, wallet: wallet, payToken: payToken, receiveToken: receiveToken)
-            Logger.general.debug(category: "SwapOrders", message: "Reload id: \(orderID)")
+            Logger.general.debug(category: "TradeOrders", message: "Reload id: \(orderID)")
             DispatchQueue.main.sync {
                 guard let viewController, !isCancelled else {
                     return
@@ -529,7 +551,7 @@ extension TradeOrdersViewController {
         }
         
         override func main() {
-            Logger.general.debug(category: "SwapOrders", message: "Load with behavior: \(behavior), filter: \(filter.description), order: \(sorting)")
+            Logger.general.debug(category: "TradeOrders", message: "Load with behavior: \(behavior), filter: \(filter.description), order: \(sorting)")
             let offset: Web3OrderDAO.Offset? = switch behavior {
             case .reload:
                     .none
@@ -580,7 +602,7 @@ extension TradeOrdersViewController {
                 )
             }
             
-            Logger.general.debug(category: "SwapOrders", message: "Loaded \(viewModels.count) items:\n\(viewModels.map(\.orderID))")
+            Logger.general.debug(category: "TradeOrders", message: "Loaded \(viewModels.count) items:\n\(viewModels.map(\.orderID))")
             
             var dataSnapshot: DataSourceSnapshot
             switch behavior {
@@ -656,7 +678,7 @@ extension TradeOrdersViewController {
                 case .reload:
                     controller.loadPreviousPageIndexPath = nil
                     controller.firstItem = nil
-                    Logger.general.debug(category: "SwapOrders", message: "Going to table top by reloading")
+                    Logger.general.debug(category: "TradeOrders", message: "Going to table top by reloading")
                     controller.collectionView.setContentOffset(.zero, animated: false)
                     controller.dataSource.applySnapshotUsingReloadData(dataSnapshot)
                 case .reloadVisibleItems:
@@ -664,11 +686,11 @@ extension TradeOrdersViewController {
                         if let item = viewModels.first {
                             controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
                             controller.firstItem = item
-                            Logger.general.debug(category: "SwapOrders", message: "Set previous canary \(item.orderID)")
+                            Logger.general.debug(category: "TradeOrders", message: "Set previous canary \(item.orderID)")
                         } else {
                             controller.loadPreviousPageIndexPath = nil
                             controller.firstItem = nil
-                            Logger.general.debug(category: "SwapOrders", message: "Previous canary cleared")
+                            Logger.general.debug(category: "TradeOrders", message: "Previous canary cleared")
                         }
                         controller.dataSource.applySnapshotUsingReloadData(dataSnapshot)
                     }
@@ -677,11 +699,11 @@ extension TradeOrdersViewController {
                         if let item = viewModels.first {
                             controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
                             controller.firstItem = item
-                            Logger.general.debug(category: "SwapOrders", message: "Set previous canary \(item.orderID)")
+                            Logger.general.debug(category: "TradeOrders", message: "Set previous canary \(item.orderID)")
                         } else {
                             controller.loadPreviousPageIndexPath = nil
                             controller.firstItem = nil
-                            Logger.general.debug(category: "SwapOrders", message: "Previous canary cleared")
+                            Logger.general.debug(category: "TradeOrders", message: "Previous canary cleared")
                         }
                         controller.dataSource.apply(dataSnapshot, animatingDifferences: false)
                     }
@@ -700,11 +722,11 @@ extension TradeOrdersViewController {
                        let canary = viewModels.last,
                        let indexPath = controller.dataSource.indexPath(for: canary.orderID)
                     {
-                        Logger.general.debug(category: "SwapOrders", message: "Set next canary \(canary.orderID)")
+                        Logger.general.debug(category: "TradeOrders", message: "Set next canary \(canary.orderID)")
                         controller.loadNextPageIndexPath = indexPath
                         controller.lastItem = canary
                     } else {
-                        Logger.general.debug(category: "SwapOrders", message: "Next canary cleared")
+                        Logger.general.debug(category: "TradeOrders", message: "Next canary cleared")
                         controller.loadNextPageIndexPath = nil
                         controller.lastItem = nil
                     }

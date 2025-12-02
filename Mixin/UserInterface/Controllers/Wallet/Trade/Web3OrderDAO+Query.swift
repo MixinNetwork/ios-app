@@ -58,6 +58,11 @@ extension Web3OrderDAO {
             conditions.append("state IN \(states.map(\.rawValue))")
         }
         
+        if !filter.tokens.isEmpty {
+            let assetIDs = filter.tokens.map(\.assetID)
+            conditions.append("(pay_asset_id IN \(assetIDs)) OR (receive_asset_id IN \(assetIDs))")
+        }
+        
         if let startDate = filter.startDate?.toUTCString() {
             conditions.append("created_at >= \(startDate)")
         }
@@ -123,9 +128,9 @@ extension Web3OrderDAO {
         }
         var tokens: [String: TradeOrder.Token] = [:]
         for assetID in assetIDs {
-            if let token = TokenDAO.shared.swapOrderToken(id: assetID) {
+            if let token = TokenDAO.shared.tradeOrderToken(id: assetID) {
                 tokens[assetID] = token
-            } else if let token = Web3TokenDAO.shared.swapOrderToken(id: assetID) {
+            } else if let token = Web3TokenDAO.shared.tradeOrderToken(id: assetID) {
                 tokens[assetID] = token
             }
         }

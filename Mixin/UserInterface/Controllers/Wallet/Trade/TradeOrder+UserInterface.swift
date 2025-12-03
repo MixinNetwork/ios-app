@@ -113,12 +113,7 @@ extension TradeOrder {
             var isIncluded = true
             if !wallets.isEmpty {
                 isIncluded = isIncluded && wallets.contains(where: { wallet in
-                    switch wallet {
-                    case .privacy:
-                        order.walletID == myUserId
-                    case .common(let wallet):
-                        order.walletID == wallet.walletID
-                    }
+                    order.walletID == wallet.tradeOrderWalletID
                 })
             }
             if let type {

@@ -273,13 +273,10 @@ final class TradeOrdersViewController: UIViewController {
     
     private func syncOrders(wallets: [Wallet]) {
         let jobs = wallets.map { wallet in
-            let walletID = switch wallet {
-            case .privacy:
-                myUserId
-            case .common(let wallet):
-                wallet.walletID
-            }
-            return SyncWeb3OrdersJob(walletID: walletID, reloadOpeningOrdersOnFinished: false)
+            SyncWeb3OrdersJob(
+                walletID: wallet.tradeOrderWalletID,
+                reloadOpeningOrdersOnFinished: false
+            )
         }
         for job in jobs {
             ConcurrentJobQueue.shared.addJob(job: job)
@@ -582,12 +579,7 @@ extension TradeOrdersViewController {
                 wallets = allWallets
             } else {
                 wallets = filter.wallets.reduce(into: [:]) { results, wallet in
-                    switch wallet {
-                    case .privacy:
-                        results[myUserId] = wallet
-                    case .common(let web3Wallet):
-                        results[web3Wallet.walletID] = wallet
-                    }
+                    results[wallet.tradeOrderWalletID] = wallet
                 }
             }
             

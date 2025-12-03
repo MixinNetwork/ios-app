@@ -17,19 +17,21 @@ public final class Web3OrderDAO: Web3DAO {
         return db.select(with: query)
     }
     
-    public func assetIDs(walletID: String) -> [String] {
-        db.select(
-            with: """
-            SELECT asset_id
+    public func assetIDs(walletIDs: [String]) -> [String] {
+        let query: GRDB.SQL = """
+        SELECT asset_id
+        FROM (
+            SELECT asset_id, MAX(created_at) AS created_at
             FROM (
-                SELECT created_at, pay_asset_id AS asset_id FROM orders WHERE wallet_id = :wid
-                UNION
-                SELECT created_at, receive_asset_id AS asset_id FROM orders WHERE wallet_id = :wid
+                SELECT pay_asset_id AS asset_id, created_at FROM orders WHERE wallet_id IN \(walletIDs)
+                UNION ALL
+                SELECT receive_asset_id AS asset_id, created_at FROM orders WHERE wallet_id IN \(walletIDs)
             )
-            ORDER BY created_at DESC
-            """,
-            arguments: ["wid": walletID]
+            GROUP BY asset_id
         )
+        ORDER BY created_at DESC
+        """
+        return db.select(with: query)
     }
     
     public func openOrders(walletID: String, type: TradeOrder.OrderType) -> [TradeOrder] {

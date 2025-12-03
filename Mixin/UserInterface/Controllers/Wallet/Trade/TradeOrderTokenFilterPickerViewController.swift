@@ -30,16 +30,8 @@ final class TradeOrderTokenFilterPickerViewController: TransactionHistoryTokenFi
         tableView.dataSource = self
         collectionView.dataSource = self
         queue.addOperation { [wallets] in
-            var assetIDs: Set<String> = []
-            for wallet in wallets {
-                let ids = switch wallet {
-                case .privacy:
-                    Web3OrderDAO.shared.assetIDs(walletID: myUserId)
-                case .common(let wallet):
-                    Web3OrderDAO.shared.assetIDs(walletID: wallet.walletID)
-                }
-                assetIDs.formUnion(ids)
-            }
+            let walletIDs = wallets.map(\.tradeOrderWalletID)
+            let assetIDs = Web3OrderDAO.shared.assetIDs(walletIDs: walletIDs)
             let tokens = assetIDs.compactMap { assetID in
                 TokenDAO.shared.tradeOrderToken(id: assetID)
                 ?? Web3TokenDAO.shared.tradeOrderToken(id: assetID)

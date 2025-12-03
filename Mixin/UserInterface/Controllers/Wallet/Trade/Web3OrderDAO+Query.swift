@@ -34,14 +34,7 @@ extension Web3OrderDAO {
         var conditions: [GRDB.SQL] = []
         
         if !filter.wallets.isEmpty {
-            let walletIDs = filter.wallets.map { wallet in
-                switch wallet {
-                case .privacy:
-                    myUserId
-                case .common(let wallet):
-                    wallet.walletID
-                }
-            }
+            let walletIDs = filter.wallets.map(\.tradeOrderWalletID)
             conditions.append("wallet_id IN \(walletIDs)")
         }
         

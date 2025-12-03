@@ -283,7 +283,11 @@ extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewContr
                 receiveAssetID: feeToken.assetID,
             )
         case .deposit:
-            next = DepositViewController(wallet: payment.wallet, token: feeToken)
+            next = DepositViewController(
+                wallet: payment.wallet,
+                token: feeToken,
+                switchingBetweenNetworks: false
+            )
         }
         navigationController?.pushViewController(next, animated: true)
     }

@@ -320,7 +320,7 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
             let selector = MixinTokenSelectorViewController(intent: .receive)
             selector.onSelected = { (token, location) in
                 reporter.report(event: .receiveTokenSelect, tags: ["method": location.asEventMethod])
-                let deposit = DepositViewController(token: token)
+                let deposit = DepositViewController(token: token, switchingBetweenNetworks: true)
                 self.navigationController?.pushViewController(deposit, animated: true)
             }
             withMnemonicsBackupChecked {

@@ -366,7 +366,7 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
                     referral: nil
                 )
             case .deposit:
-                DepositViewController(token: token)
+                DepositViewController(token: token, switchingBetweenNetworks: false)
             }
         case let token as Web3TokenItem:
             guard let wallet = Web3WalletDAO.shared.wallet(id: token.walletID) else {
@@ -381,7 +381,11 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
                     receiveAssetID: token.assetID,
                 )
             case .deposit:
-                next = DepositViewController(wallet: wallet, token: token)
+                next = DepositViewController(
+                    wallet: wallet,
+                    token: token,
+                    switchingBetweenNetworks: false
+                )
             }
         default:
             return

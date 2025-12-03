@@ -126,6 +126,24 @@ public final class Web3TokenDAO: Web3DAO {
         return db.select(with: query)
     }
     
+    public func inexistAssetIDs(walletID: String, in assetIDs: any Collection<String>) -> [String] {
+        guard !assetIDs.isEmpty else {
+            return []
+        }
+        let values = assetIDs.map({ "('\($0)')" }).joined(separator: ",")
+        return db.select(
+            with: """
+            WITH q(id) AS (VALUES \(values))
+            SELECT q.id
+            FROM q
+                LEFT JOIN tokens t ON q.id = t.asset_id
+                    AND t.wallet_id = ?
+            WHERE t.asset_id IS NULL
+            """,
+            arguments: [walletID]
+        )
+    }
+    
     public func search(
         walletID: String,
         keyword: String,

@@ -230,23 +230,6 @@ final class TradeOrderViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    private func cancelOrder() {
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-        RouteAPI.cancelLimitOrder(id: viewModel.orderID) { result in
-            switch result {
-            case .success(let order):
-                hud.hide()
-                DispatchQueue.global().async {
-                    Web3OrderDAO.shared.save(orders: [order])
-                }
-            case .failure(let error):
-                hud.set(style: .error, text: error.localizedDescription)
-                hud.scheduleAutoHidden()
-            }
-        }
-    }
-    
 }
 
 extension TradeOrderViewController: HomeNavigationController.NavigationBarStyling {
@@ -295,12 +278,20 @@ extension TradeOrderViewController: PillActionView.Delegate {
                 reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "trade_detail"])
             }
         case .cancelOrder:
-            let confirmation = UIAlertController(title: "Cancel Order?", message: nil, preferredStyle: .alert)
-            confirmation.addAction(UIAlertAction(title: "Keep Waiting", style: .cancel, handler: nil))
-            confirmation.addAction(UIAlertAction(title: "Cancel Order", style: .destructive, handler: { [weak self] _ in
-                self?.cancelOrder()
-            }))
-            present(confirmation, animated: true)
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            RouteAPI.cancelLimitOrder(id: viewModel.orderID) { result in
+                switch result {
+                case .success(let order):
+                    hud.hide()
+                    DispatchQueue.global().async {
+                        Web3OrderDAO.shared.save(orders: [order])
+                    }
+                case .failure(let error):
+                    hud.set(style: .error, text: error.localizedDescription)
+                    hud.scheduleAutoHidden()
+                }
+            }
         case .sharePair:
             guard let navigationController else {
                 return

@@ -703,9 +703,13 @@ extension TradeViewController: UICollectionViewDelegate {
             mode = Mode(rawValue: indexPath.item)!
         case .openOrders:
             collectionView.deselectItem(at: indexPath, animated: true)
-            let viewModel = openOrders[indexPath.item]
-            let viewController = TradeOrderViewController(viewModel: viewModel)
-            navigationController?.pushViewController(viewController, animated: true)
+            if openOrders.isEmpty {
+                // Selecting the empty indicator cell, do nothing
+            } else {
+                let viewModel = openOrders[indexPath.item]
+                let viewController = TradeOrderViewController(viewModel: viewModel)
+                navigationController?.pushViewController(viewController, animated: true)
+            }
         default:
             break
         }

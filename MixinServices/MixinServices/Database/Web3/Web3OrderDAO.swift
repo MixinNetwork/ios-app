@@ -17,6 +17,21 @@ public final class Web3OrderDAO: Web3DAO {
         return db.select(with: query)
     }
     
+    public func assetIDs(walletID: String) -> [String] {
+        db.select(
+            with: """
+            SELECT asset_id
+            FROM (
+                SELECT created_at, pay_asset_id AS asset_id FROM orders WHERE wallet_id = :wid
+                UNION
+                SELECT created_at, receive_asset_id AS asset_id FROM orders WHERE wallet_id = :wid
+            )
+            ORDER BY created_at DESC
+            """,
+            arguments: ["wid": walletID]
+        )
+    }
+    
     public func openOrders(walletID: String, type: TradeOrder.OrderType) -> [TradeOrder] {
         db.select(
             with: """

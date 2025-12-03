@@ -40,9 +40,12 @@ final class MultipleAssetChangeCell: UITableViewCell {
             let rowView = rowViews[i]
             rowView.iconView.setIcon(token: change.token)
             rowView.amountLabel.text = change.amount
-            if let token = change.token as? OnChainToken {
+            switch change.token {
+            case let token as OnChainToken:
                 rowView.networkLabel.text = token.chain?.name
-            } else {
+            case let token as SwapToken:
+                rowView.networkLabel.text = token.chain.name
+            default:
                 rowView.networkLabel.text = nil
             }
             rowView.amountLabel.textColor = switch change.amountStyle {

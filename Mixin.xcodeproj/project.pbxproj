@@ -1353,6 +1353,7 @@
 		94D0FF382BEB1CA200E3947F /* InscriptionHashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D0FF372BEB1CA200E3947F /* InscriptionHashView.swift */; };
 		94D0FF7E2BEB7F9100E3947F /* InscriptionContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D0FF7C2BEB7F9100E3947F /* InscriptionContentCell.swift */; };
 		94D0FF7F2BEB7F9100E3947F /* InscriptionContentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D0FF7D2BEB7F9100E3947F /* InscriptionContentCell.xib */; };
+		94D175382EE064B70049B23F /* SaveWeb3TokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D175372EE064B20049B23F /* SaveWeb3TokenJob.swift */; };
 		94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */; };
 		94D308772BA72C8F0017494C /* Web3AmountChangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D308752BA72C8F0017494C /* Web3AmountChangeCell.swift */; };
 		94D308782BA72C8F0017494C /* Web3AmountChangeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D308762BA72C8F0017494C /* Web3AmountChangeCell.xib */; };
@@ -3134,6 +3135,7 @@
 		94D0FF372BEB1CA200E3947F /* InscriptionHashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionHashView.swift; sourceTree = "<group>"; };
 		94D0FF7C2BEB7F9100E3947F /* InscriptionContentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionContentCell.swift; sourceTree = "<group>"; };
 		94D0FF7D2BEB7F9100E3947F /* InscriptionContentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionContentCell.xib; sourceTree = "<group>"; };
+		94D175372EE064B20049B23F /* SaveWeb3TokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveWeb3TokenJob.swift; sourceTree = "<group>"; };
 		94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetLoader.swift; sourceTree = "<group>"; };
 		94D308752BA72C8F0017494C /* Web3AmountChangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3AmountChangeCell.swift; sourceTree = "<group>"; };
 		94D308762BA72C8F0017494C /* Web3AmountChangeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3AmountChangeCell.xib; sourceTree = "<group>"; };
@@ -6179,6 +6181,7 @@
 				94509BC02DDDFC5800DC6A43 /* RefreshWeb3TokenJob.swift */,
 				94F2F94F2DEF2C750013B820 /* ReloadMembershipOrderJob.swift */,
 				94051FB12E81306F005B3A16 /* RefreshTokenJob.swift */,
+				94D175372EE064B20049B23F /* SaveWeb3TokenJob.swift */,
 				949B5E0B2EBCFB8A00D33C97 /* SyncWeb3OrdersJob.swift */,
 			);
 			path = Job;
@@ -8151,6 +8154,7 @@
 				94DD693E2C90665700B3D089 /* MarketColor.swift in Sources */,
 				94FE128B2DA80FFC0026AB9A /* Web3Transaction+Localization.swift in Sources */,
 				7B72651C209C5F9300F234BE /* Link.swift in Sources */,
+				94D175382EE064B70049B23F /* SaveWeb3TokenJob.swift in Sources */,
 				94668E2C2CB50C6F00558755 /* MarketAlertParameterCell.swift in Sources */,
 				7BD344072334CD5F005C26E3 /* UserHandleViewController.swift in Sources */,
 				7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */,

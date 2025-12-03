@@ -199,7 +199,12 @@ final class TradePreviewViewController: WalletIdentifyingAuthenticationPreviewVi
                 case .web3(let operation):
                     try await operation.start(pin: pin)
                     reporter.report(event: .tradeEnd, tags: ["wallet": "web3", "type": reportType, "trade_asset_level": sendAmount.reportingAssetLevel])
-                    // TODO: Get missing tokens
+                    let walletID = operation.wallet.walletID
+                    let inexistAssetIDs = Web3TokenDAO.shared.inexistAssetIDs(walletID: walletID, in: assetIDs)
+                    for assetID in inexistAssetIDs {
+                        let job = SaveWeb3TokenJob(walletID: walletID, assetID: assetID)
+                        ConcurrentJobQueue.shared.addJob(job: job)
+                    }
                 }
                 UIDevice.current.playPaymentSuccess()
                 await MainActor.run {

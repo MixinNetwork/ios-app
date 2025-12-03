@@ -1413,6 +1413,7 @@
 		94E34123261D829200E2F9D3 /* code.css in Resources */ = {isa = PBXBuildFile; fileRef = 94E34120261D829200E2F9D3 /* code.css */; };
 		94E34124261D829200E2F9D3 /* highlight.js in Resources */ = {isa = PBXBuildFile; fileRef = 94E34121261D829200E2F9D3 /* highlight.js */; };
 		94E35CA3298B836300ADB40D /* WalletConnectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E35CA2298B836300ADB40D /* WalletConnectService.swift */; };
+		94E41A8B2ED60B1C0019704A /* TransferExtra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E41A8A2ED60B190019704A /* TransferExtra.swift */; };
 		94E531BE2D7F5D750008DC76 /* MixinTransactionHistoryTokenFilterPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E531BD2D7F5D750008DC76 /* MixinTransactionHistoryTokenFilterPickerViewController.swift */; };
 		94E531CF2D7F62410008DC76 /* Web3TransactionHistoryTokenFilterPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E531CE2D7F62410008DC76 /* Web3TransactionHistoryTokenFilterPickerViewController.swift */; };
 		94E533D22D82B52E0008DC76 /* SnapshotTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E533D12D82B5280008DC76 /* SnapshotTableHeaderView.swift */; };
@@ -3192,6 +3193,7 @@
 		94E34120261D829200E2F9D3 /* code.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = code.css; sourceTree = "<group>"; };
 		94E34121261D829200E2F9D3 /* highlight.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = highlight.js; sourceTree = "<group>"; };
 		94E35CA2298B836300ADB40D /* WalletConnectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnectService.swift; sourceTree = "<group>"; };
+		94E41A8A2ED60B190019704A /* TransferExtra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferExtra.swift; sourceTree = "<group>"; };
 		94E531BD2D7F5D750008DC76 /* MixinTransactionHistoryTokenFilterPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinTransactionHistoryTokenFilterPickerViewController.swift; sourceTree = "<group>"; };
 		94E531CE2D7F62410008DC76 /* Web3TransactionHistoryTokenFilterPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionHistoryTokenFilterPickerViewController.swift; sourceTree = "<group>"; };
 		94E533D12D82B5280008DC76 /* SnapshotTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotTableHeaderView.swift; sourceTree = "<group>"; };
@@ -5050,6 +5052,7 @@
 				94F35A5F2D255B5F001BCAE7 /* Invoice.swift */,
 				94C5A8922B2157CE00201CDA /* Payment.swift */,
 				94C6987A2B23257B002377EA /* PaymentPrecondition.swift */,
+				94E41A8A2ED60B190019704A /* TransferExtra.swift */,
 				94A40C462B2781AF0028BC02 /* TransferPaymentOperation.swift */,
 				945ED2B12B28342A00C138BF /* WithdrawPaymentOperation.swift */,
 				947084B32D93F88F007DF965 /* InvoicePaymentOperation.swift */,
@@ -8348,6 +8351,7 @@
 				94735E732E28FED90001C179 /* PrivateKeyViewController.swift in Sources */,
 				94F2F9812DEF50590013B820 /* CancelPendingMembershipOrderViewController.swift in Sources */,
 				7B4E307A22966FF900A03F6E /* MediaPreviewMaskView.swift in Sources */,
+				94E41A8B2ED60B1C0019704A /* TransferExtra.swift in Sources */,
 				94FE11F72DA7AC830026AB9A /* Web3TransactionCell.swift in Sources */,
 				9462A6CB2E2790F3001E4C3E /* ExportImportedSecretValidationViewController.swift in Sources */,
 				94C0D7E929AD348500E372FC /* InPlaceKeyStorage.swift in Sources */,

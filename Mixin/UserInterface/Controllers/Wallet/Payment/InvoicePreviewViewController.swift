@@ -125,6 +125,13 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
             ))
         }
         
+        if let memo = operation.memo,
+           let value = memo.plainValue ?? memo.hexEncodedValue,
+           !value.isEmpty
+        {
+            rows.append(.info(caption: .memo, content: value))
+        }
+        
         reloadData(with: rows)
         reporter.report(event: .sendPreview)
     }

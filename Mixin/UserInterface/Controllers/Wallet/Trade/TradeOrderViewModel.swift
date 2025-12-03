@@ -48,13 +48,13 @@ struct TradeOrderViewModel {
     ) {
         let type = UnknownableEnum<TradeOrder.OrderType>(rawValue: order.orderType)
         let payAmount = Decimal(string: order.payAmount, locale: .enUSPOSIX) ?? 0
-        let paySymbol = payToken?.symbol ?? "?"
+        let paySymbol = payToken?.symbol ?? ""
         let receiveAmount: Decimal? = if let amount = order.receiveAmount {
             Decimal(string: amount, locale: .enUSPOSIX) ?? 0
         } else {
             nil
         }
-        let receiveSymbol = receiveToken?.symbol ?? "?"
+        let receiveSymbol = receiveToken?.symbol ?? ""
         
         self.orderID = order.orderID
         self.wallet = wallet

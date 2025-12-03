@@ -184,15 +184,27 @@ final class TradePreviewViewController: WalletIdentifyingAuthenticationPreviewVi
         case .advanced:
             "limit"
         }
+        let assetIDs = [sendToken.assetID, receiveToken.assetID]
         Task {
             do {
                 switch operation {
                 case .mixin(let operation):
                     try await operation.start(pin: pin)
                     reporter.report(event: .tradeEnd, tags: ["wallet": "main", "type": reportType, "trade_asset_level": sendAmount.reportingAssetLevel])
+                    let inexistAssetIDs = TokenDAO.shared.inexistAssetIDs(in: assetIDs)
+                    for assetID in inexistAssetIDs {
+                        let job = RefreshTokenJob(assetID: assetID)
+                        ConcurrentJobQueue.shared.addJob(job: job)
+                    }
                 case .web3(let operation):
                     try await operation.start(pin: pin)
                     reporter.report(event: .tradeEnd, tags: ["wallet": "web3", "type": reportType, "trade_asset_level": sendAmount.reportingAssetLevel])
+                    let walletID = operation.wallet.walletID
+                    let inexistAssetIDs = Web3TokenDAO.shared.inexistAssetIDs(walletID: walletID, in: assetIDs)
+                    for assetID in inexistAssetIDs {
+                        let job = SaveWeb3TokenJob(walletID: walletID, assetID: assetID)
+                        ConcurrentJobQueue.shared.addJob(job: job)
+                    }
                 }
                 UIDevice.current.playPaymentSuccess()
                 await MainActor.run {

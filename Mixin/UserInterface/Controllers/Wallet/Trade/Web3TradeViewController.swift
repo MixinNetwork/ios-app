@@ -192,8 +192,9 @@ final class Web3TradeViewController: TradeViewController {
             let sendToken = Web3TokenDAO.shared.token(walletID: walletID, assetID: quote.sendToken.assetID),
             let sendChain = Web3Chain.chain(chainID: sendToken.chainID),
             let sendingAddress = Web3AddressDAO.shared.address(walletID: walletID, chainID: sendToken.chainID),
-            let receiveToken = Web3TokenDAO.shared.token(walletID: walletID, assetID: quote.receiveToken.assetID),
-            let receiveAddress = Web3AddressDAO.shared.address(walletID: walletID, chainID: receiveToken.chainID)
+            let receiveToken,
+            let receiveChainID = receiveToken.chain.chainID,
+            let receiveAddress = Web3AddressDAO.shared.address(walletID: walletID, chainID: receiveChainID)
         else {
             return
         }
@@ -263,10 +264,10 @@ final class Web3TradeViewController: TradeViewController {
             let sendChain: Web3Chain = .chain(chainID: sendToken.chainID),
             let sendAmount = pricingModel.sendAmount,
             let sendTokenAddress = Web3AddressDAO.shared.address(walletID: walletID, chainID: sendToken.chainID),
-            let receiveAssetID = receiveToken?.assetID,
-            let receiveToken = Web3TokenDAO.shared.token(walletID: walletID, assetID: receiveAssetID),
+            let receiveToken,
+            let receiveChainID = receiveToken.chain.chainID,
             let receiveAmount = pricingModel.receiveAmount,
-            let receiveTokenAddress = Web3AddressDAO.shared.address(walletID: walletID, chainID: receiveToken.chainID)
+            let receiveTokenAddress = Web3AddressDAO.shared.address(walletID: walletID, chainID: receiveChainID)
         else {
             return
         }
@@ -318,7 +319,7 @@ final class Web3TradeViewController: TradeViewController {
         displayReceiverUserID: String,
         payment: Web3SendingTokenToAddressPayment,
         sendAmount: Decimal,
-        receiveToken: Web3TokenItem,
+        receiveToken: BalancedSwapToken,
         receiveAmount: Decimal,
     ) async {
         do {

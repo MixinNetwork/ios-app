@@ -168,7 +168,9 @@ class ConversationInputViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(saveDraft), name: UIApplication.willTerminateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(participantDidChange(_:)), name: ParticipantDAO.participantDidChangeNotification, object: nil)
         textView.textContainer.lineFragmentPadding = 0
-        textView.inputAccessoryView = interactiveDismissResponder
+        if #unavailable(iOS 26) {
+            textView.inputAccessoryView = interactiveDismissResponder
+        }
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         textView.placeholderLabel.adjustsFontSizeToFitWidth = true
         textView.placeholderPadding = UIEdgeInsets(top: textView.textContainerInset.top,
@@ -542,7 +544,11 @@ extension ConversationInputViewController {
             return
         }
         if !keyboardWillBeInvisible {
-            KeyboardHeight.last = endFrame.height - interactiveDismissResponder.height
+            if #available(iOS 26, *) {
+                KeyboardHeight.last = endFrame.height
+            } else {
+                KeyboardHeight.last = endFrame.height - interactiveDismissResponder.height
+            }
             customInputContainerMinHeightConstraint.constant = customInputHeight
         }
         guard reportHeightChangeWhenKeyboardFrameChanges else {
@@ -555,7 +561,9 @@ extension ConversationInputViewController {
                 + inputBarView.frame.height
                 + screenHeight
                 - endFrame.origin.y
-                - interactiveDismissResponder.height
+            if #unavailable(iOS 26) {
+                height -= interactiveDismissResponder.height
+            }
             height = max(minimizedHeight, height)
             if view.frame.height != height {
                 setPreferredContentHeight(height, animated: true)
@@ -1014,7 +1022,9 @@ extension ConversationInputViewController {
         if abs(diff) > 0.1 {
             textViewHeightConstraint.constant = newHeight
             setPreferredContentHeight(preferredContentHeight + diff, animated: true)
-            interactiveDismissResponder.height += diff
+            if #unavailable(iOS 26) {
+                interactiveDismissResponder.height += diff
+            }
         }
     }
     
@@ -1068,7 +1078,9 @@ extension ConversationInputViewController {
             if oldValue == nil {
                 quotePreviewView.alpha = 1
                 quotePreviewWrapperHeightConstraint.constant = quotePreviewHeight
-                interactiveDismissResponder.height += quotePreviewHeight
+                if #unavailable(iOS 26) {
+                    interactiveDismissResponder.height += quotePreviewHeight
+                }
             }
             if textView.isFirstResponder || customInputViewController != nil {
                 if oldValue == nil {
@@ -1079,7 +1091,9 @@ extension ConversationInputViewController {
             }
         } else if oldValue != nil {
             quotePreviewView.alpha = 0
-            interactiveDismissResponder.height -= quotePreviewHeight
+            if #unavailable(iOS 26) {
+                interactiveDismissResponder.height -= quotePreviewHeight
+            }
             let newHeight = preferredContentHeight - quotePreviewHeight
             quotePreviewWrapperHeightConstraint.constant = 0
             setPreferredContentHeight(newHeight, animated: true)

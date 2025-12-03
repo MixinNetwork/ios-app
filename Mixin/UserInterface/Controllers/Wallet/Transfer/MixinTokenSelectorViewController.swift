@@ -191,7 +191,7 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
         }
     }
     
-    override func configureTokenCell(_ cell: SwapTokenCell, withToken token: MixinTokenItem) {
+    override func configureTokenCell(_ cell: TradeTokenCell, withToken token: MixinTokenItem) {
         cell.iconView.setIcon(token: token)
         cell.maliciousWarningImageView.isHidden = true
         cell.titleLabel.text = token.name

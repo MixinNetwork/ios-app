@@ -180,7 +180,7 @@ extension Web3TransactionHistoryViewController {
                 handler: { [weak self] _ in self?.reloadDataWithFilterType(.send) }
             ),
             UIAction(
-                title: R.string.localizable.swap(),
+                title: R.string.localizable.trade(),
                 image: R.image.filter_swap(),
                 state: .off,
                 handler: { [weak self] _ in self?.reloadDataWithFilterType(.swap) }

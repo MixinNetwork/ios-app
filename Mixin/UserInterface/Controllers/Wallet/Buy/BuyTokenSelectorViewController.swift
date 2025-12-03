@@ -47,7 +47,7 @@ final class BuyTokenSelectorViewController: TokenSelectorViewController {
                 }
                 self.search(keyword: keyword)
             }
-        collectionView.register(R.nib.swapTokenCell)
+        collectionView.register(R.nib.tradeTokenCell)
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { (_, _) in
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -111,7 +111,7 @@ extension BuyTokenSelectorViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.swap_token, for: indexPath)!
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.trade_token, for: indexPath)!
         let token = token(at: indexPath)
         cell.iconView.setIcon(token: token, chain: token.chain)
         cell.maliciousWarningImageView.isHidden = true

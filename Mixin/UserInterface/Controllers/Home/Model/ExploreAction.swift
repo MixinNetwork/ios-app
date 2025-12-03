@@ -25,7 +25,7 @@ enum ExploreAction {
         case .buy:
             R.image.explore.buy()
         case .swap:
-            R.image.explore.swap()
+            R.image.explore.trade()
         case .membership:
             R.image.explore.membership()
         case .referral:
@@ -48,7 +48,7 @@ enum ExploreAction {
         case .buy:
             R.string.localizable.buy()
         case .swap:
-            R.string.localizable.swap()
+            R.string.localizable.trade()
         case .membership:
             R.string.localizable.mixin_one()
         case .referral:

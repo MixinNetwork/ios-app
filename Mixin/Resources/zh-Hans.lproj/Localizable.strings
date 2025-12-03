@@ -232,11 +232,13 @@
 "camera" = "相机";
 "cancel" = "取消";
 "cancel_floating" = "取消浮窗";
+"cancel_order" = "取消订单";
 "cancel_transaction" = "取消交易";
 "cancel_transaction_description" = "如果交易已接近完成，可能无法取消";
 "cancel_waiting" = "取消订单";
 "canceled" = "已取消";
 "canceled_by_caller" = "对方已取消";
+"cancelling" = "正在取消";
 "cant_receive_the_code" = "接收不到验证码？";
 "caption_send" = "转出";
 "card" = "卡片";
@@ -419,6 +421,7 @@
 "currency_code" = "货币代码";
 "current_language" = "中文";
 "current_location" = "当前位置";
+"current_market_price" = "市价";
 "current_plan" = "当前会员";
 "current_price" = "当前价格：%@";
 "current_selected" = "当前选择";
@@ -435,6 +438,7 @@
 "date_format_day" = "ahh:mm";
 "date_format_month" = "MM 月 d 日 E";
 "date_format_week_date" = "yyyy 年 MM 月 d 日 E";
+"days_count" = "%d 天";
 "days_count_short" = "%d天";
 "declined" = "已拒绝";
 "decode_transaction_failed" = "无法估计资产变化，注意只给您信任的应用程序签名。";
@@ -775,6 +779,8 @@
 "lightning_address_explain_2" = "可重复使用，无需每次生成新的。";
 "lightning_address_explain_3" = "主流闪电网络钱包都支持。";
 "lightning_address_explain_mao" = "每一个 MAO 域名对应一个闪电网络地址，如果您拥有 MAO 域名，可以按 name@mao.id 格式接收闪电网络转账。";
+"limit_order_confirmation" = "确认挂单";
+"limit_price" = "限定价格";
 "limited_time_free" = "限时免费";
 "limited_time_free_condition" = "活动期间，钱包转账符合以下任意情况即可获得手续费全额返现：";
 "limited_time_free_condition_1" = "隐私钱包转账到普通钱包。";
@@ -972,7 +978,9 @@
 "oldest" = "最早";
 "onboarding_description" = "带有端对端加密消息功能的开源加密钱包";
 "one_by_one_forward" = "逐条转发";
+"one_day" = "1 天";
 "one_hour" = "1 小时";
+"one_month" = "1 月";
 "one_week" = "1 星期";
 "one_year" = "1 年";
 "open" = "打开";
@@ -983,6 +991,7 @@
 "open_in_google_maps" = "在 Google Maps 中打开";
 "open_in_maps" = "在地图中打开";
 "open_link" = "打开链接：%@";
+"open_orders_count" = "当前委托（%d）";
 "open_source" = "版权所有 Mixin Messenger\n根据 GPL-3.0 授权许可";
 "open_url" = "打开链接";
 "opening_balance" = "期初余额";
@@ -994,6 +1003,7 @@
 "or" = "或者";
 "order_details" = "订单详情";
 "order_id" = "订单 ID";
+"order_type" = "订单类型";
 "order_type_limit" = "限价";
 "order_type_swap" = "闪兑";
 "orders" = "订单";
@@ -1406,8 +1416,6 @@
 "stranger_hint" = "对方不是你的联系人";
 "successful" = "成功";
 "suspicious_link" = "可疑链接";
-"swap" = "交易";
-"swap_again" = "再来一笔";
 "swap_confirmation" = "确认交易";
 "swap_failed" = "交易失败";
 "swap_invalid_amount" = "没有报价。请尝试修改金额。";
@@ -1461,7 +1469,15 @@
 "total_supply" = "总量";
 "touch_id" = "指纹";
 "track_not_found" = "Track 无效";
+"trade" = "交易";
+"trade_advanced" = "挂单";
+"trade_again" = "再来一笔";
+"trade_expiration" = "有效期至";
+"trade_expiry" = "过期";
+"trade_expiry_never" = "永不";
+"trade_filled" = "已成交";
 "trade_native_tokens" = "交易数千种原生代币";
+"trade_simple" = "闪兑";
 "transaction" = "交易详情";
 "transaction_approved" = "批准成功";
 "transaction_failed" = "交易失败";
@@ -1528,6 +1544,7 @@
 "unit_second_count" = "秒";
 "unit_week" = "周";
 "unit_week_count" = "周";
+"unknown" = "未知";
 "unknown_artist" = "未知艺术家";
 "unlimited_authorization_warning" = "这个应用可以提取你 %1$@ 账号（%2$@）里所有的 %3$@ 资产。";
 "unmute" = "取消静音";
@@ -1632,6 +1649,7 @@
 "wallet_withdrawal_changed" = "手续费已从 %1$@ 变更为 %2$@，要更新手续费并继续提现吗？";
 "wallet_withdrawal_recent_tip" = "你已经在 %1$@ 前提现 %3$@ 到 %2$@，确认还要再提一次吗？";
 "wallets" = "钱包";
+"wallets_count" = "%d 个钱包";
 "watch_address" = "观察 %@";
 "watch_wallet" = "观察钱包";
 "watch_wallet_description" = "你无法使用观察钱包中的资产，但可以追踪它们。 ";

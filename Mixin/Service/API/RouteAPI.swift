@@ -59,17 +59,81 @@ extension RouteAPI {
         Self.request(method: .post, path: "/web3/swap", with: request, completion: completion)
     }
     
-    static func mixinSwapOrders(
+    static func tradeOrders(
+        walletID: String,
+        limit: Int?,
         offset: String?,
+        state: TradeOrder.State? = nil,
+    ) async throws -> [TradeOrder] {
+        var path = "/web3/swap/orders?walletId=\(walletID)"
+        if let limit {
+            path.append("&limit=\(limit)")
+        }
+        if let offset {
+            path.append("&offset=\(offset)")
+        }
+        if let state {
+            path.append("&state=\(state.rawValue)")
+        }
+        return try await request(method: .get, path: path)
+    }
+    
+    static func tradeOrders(
         limit: Int,
-        queue: DispatchQueue,
-        completion: @escaping (MixinAPI.Result<[SwapOrder]>) -> Void
-    ) {
+        offset: String?,
+        walletID: String?,
+        state: TradeOrder.State? = nil,
+    ) -> MixinAPI.Result<[TradeOrder]> {
         var path = "/web3/swap/orders?limit=\(limit)"
         if let offset {
             path.append("&offset=\(offset)")
         }
-        request(method: .get, path: path, queue: queue, completion: completion)
+        if let walletID {
+            path.append("&walletId=\(walletID)")
+        }
+        if let state {
+            path.append("&state=\(state.rawValue)")
+        }
+        return request(method: .get, path: path)
+    }
+    
+    static func tradeOrders(
+        ids: [String],
+    ) async throws -> [TradeOrder] {
+        try await request(method: .post, path: "/web3/swap/orders", with: ids)
+    }
+    
+    static func swapOrder(
+        id: String,
+    ) async throws -> TradeOrder {
+        try await request(method: .get, path: "/web3/swap/orders/\(id)")
+    }
+    
+    static func limitOrder(
+        id: String,
+    ) async throws -> TradeOrder {
+        try await request(method: .get, path: "/web3/limit_orders/\(id)")
+    }
+    
+    static func createLimitOrder(
+        request: MixinLimitOrderRequest,
+        completion: @escaping (MixinAPI.Result<MixinLimitOrderResponse>) -> Void
+    ) {
+        Self.request(method: .post, path: "/web3/limit_orders", with: request, completion: completion)
+    }
+    
+    static func createLimitOrder(
+        request: Web3LimitOrderRequest,
+        completion: @escaping (MixinAPI.Result<Web3LimitOrderResponse>) -> Void
+    ) {
+        Self.request(method: .post, path: "/web3/limit_orders", with: request, completion: completion)
+    }
+    
+    static func cancelLimitOrder(
+        id: String,
+        completion: @escaping (MixinAPI.Result<TradeOrder>) -> Void
+    ) {
+        request(method: .post, path: "/web3/limit_orders/\(id)/cancel", completion: completion)
     }
     
 }

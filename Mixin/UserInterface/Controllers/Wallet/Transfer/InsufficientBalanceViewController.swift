@@ -313,14 +313,16 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
         let swap: UIViewController
         switch intent {
         case .privacyWalletTransfer, .withdraw:
-            swap = MixinSwapViewController(
+            swap = MixinTradeViewController(
+                mode: .simple,
                 sendAssetID: from,
                 receiveAssetID: to,
                 referral: nil
             )
         case let .commonWalletTransfer(wallet, _, _), let .externalWeb3Transaction(wallet, _):
-            swap = Web3SwapViewController(
+            swap = Web3TradeViewController(
                 wallet: wallet,
+                mode: .simple,
                 sendAssetID: from,
                 receiveAssetID: to,
             )
@@ -338,7 +340,7 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
             view.titleLabel.text = R.string.localizable.swap_usdt_hint()
             view.leftButton.setTitle(R.string.localizable.cancel(), for: .normal)
             view.leftButton.addTarget(self, action: #selector(loadActionsTrayView), for: .touchUpInside)
-            view.rightButton.setTitle(R.string.localizable.swap(), for: .normal)
+            view.rightButton.setTitle(R.string.localizable.trade(), for: .normal)
             view.rightButton.addTarget(self, action: #selector(swap(_:)), for: .touchUpInside)
             view.style = .yellow
         }
@@ -357,7 +359,8 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
         case let token as MixinTokenItem:
             next = switch method {
             case .swap:
-                MixinSwapViewController(
+                MixinTradeViewController(
+                    mode: .simple,
                     sendAssetID: nil,
                     receiveAssetID: token.assetID,
                     referral: nil
@@ -371,8 +374,9 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
             }
             switch method {
             case .swap:
-                next = Web3SwapViewController(
+                next = Web3TradeViewController(
                     wallet: wallet,
+                    mode: .simple,
                     sendAssetID: nil,
                     receiveAssetID: token.assetID,
                 )

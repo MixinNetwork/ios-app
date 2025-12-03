@@ -91,7 +91,7 @@ final class StackedTokenIconView: UIView {
         }
     }
     
-    func setIcon(sendToken: Token, receiveToken: SwapToken) {
+    func setIcon(sendToken: any Token, receiveToken: any Token) {
         loadIconViews(count: 2) { index, wrapperView in
             let offset = index == 1 ? 0 : -spacing
             wrapperView.snp.makeConstraints { make in

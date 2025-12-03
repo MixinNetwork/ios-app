@@ -11,6 +11,9 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
             SettingsRow(title: "Reset Transactions", accessory: .disclosure),
         ]),
         SettingsSection(rows: [
+            SettingsRow(title: "Reset Trade Orders", accessory: .disclosure),
+        ]),
+        SettingsSection(rows: [
             SettingsRow(
                 title: "Low EVM Fee",
                 accessory: .switch(
@@ -62,8 +65,12 @@ extension Web3DiagnosticViewController: UITableViewDelegate {
                 let destinations = Web3AddressDAO.shared.destinations(walletID: walletID)
                 Web3PropertiesDAO.shared.deleteTransactionOffset(addresses: destinations)
             }
-            showAutoHiddenHud(style: .notification, text: R.string.localizable.done())
-        case (3, 0):
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
+        case (2, 0):
+            Web3OrderDAO.shared.deleteAll()
+            Web3PropertiesDAO.shared.deleteAllOrderOffsets()
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
+        case (4, 0):
             AppGroupKeychain.deleteAllImportedMnemonics()
             AppGroupKeychain.deleteAllImportedPrivateKey()
             showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())

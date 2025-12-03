@@ -232,11 +232,13 @@
 "camera" = "カメラ";
 "cancel" = "キャンセル";
 "cancel_floating" = "フローティングのキャンセル";
+"cancel_order" = "Cancel Order";
 "cancel_transaction" = "Cancel Transaction";
 "cancel_transaction_description" = "If the transaction is too far along cancellation may not be possible";
 "cancel_waiting" = "Cancel Waiting";
 "canceled" = "キャンセルしました";
 "canceled_by_caller" = "発信者がキャンセルしました";
+"cancelling" = "Cancelling";
 "cant_receive_the_code" = "コードを受け取れませんか？";
 "caption_send" = "出金";
 "card" = "ロボ";
@@ -419,6 +421,7 @@
 "currency_code" = "コード";
 "current_language" = "日本語";
 "current_location" = "現在の位置";
+"current_market_price" = "Market";
 "current_plan" = "Current Plan";
 "current_price" = "Current price: %@";
 "current_selected" = "選択";
@@ -435,6 +438,7 @@
 "date_format_day" = "HH:mm a";
 "date_format_month" = "M月d日（E）";
 "date_format_week_date" = "yyyy年MM月d日（E）";
+"days_count" = "%d Days";
 "days_count_short" = "%dD";
 "declined" = "拒否";
 "decode_transaction_failed" = "Unable to estimate balance changes. Be cautious and only sign transactions for apps you trust.";
@@ -775,6 +779,8 @@
 "lightning_address_explain_2" = "Reusable, no need to generate a new one each time.";
 "lightning_address_explain_3" = "Supported by mainstream Lightning Network wallets.";
 "lightning_address_explain_mao" = "Each MAO domain corresponds to a Lightning Network address. If you own a MAO domain, you can use name@mao.id to receive Lightning Network transfers. ";
+"limit_order_confirmation" = "Order Confirmation";
+"limit_price" = "Limit Price";
 "limited_time_free" = "Limited-Time Free";
 "limited_time_free_condition" = "During the promotion period, you’ll receive a full refund of transaction fees if your transfer meets any of the following conditions:";
 "limited_time_free_condition_1" = "Privacy Wallet transfer to a Common Wallet.";
@@ -972,7 +978,9 @@
 "oldest" = "Oldest";
 "onboarding_description" = "An open source crypto wallet with Signal messaging";
 "one_by_one_forward" = "それぞれ転送する";
+"one_day" = "1 Day";
 "one_hour" = "1時間";
+"one_month" = "1 Month";
 "one_week" = "1週間";
 "one_year" = "1年間";
 "open" = "開く";
@@ -983,6 +991,7 @@
 "open_in_google_maps" = "Googleマップで開く";
 "open_in_maps" = "マップで開く";
 "open_link" = "リンクを開く: %@";
+"open_orders_count" = "Open Orders (%d)";
 "open_source" = "Copyright Mixin Messenger\nLicensed under the GPLv3";
 "open_url" = "URLを開く";
 "opening_balance" = "Opening Balance";
@@ -994,6 +1003,7 @@
 "or" = "or";
 "order_details" = "Order Details";
 "order_id" = "Order ID";
+"order_type" = "Order Type";
 "order_type_limit" = "Limit";
 "order_type_swap" = "Swap";
 "orders" = "Orders";
@@ -1406,8 +1416,6 @@
 "stranger_hint" = "連絡先にない相手からのメッセージです";
 "successful" = "成功";
 "suspicious_link" = "不審なリンクです";
-"swap" = "Swap";
-"swap_again" = "Swap Again";
 "swap_confirmation" = "Swap Confirmation";
 "swap_failed" = "Swap Failed";
 "swap_invalid_amount" = "No available quote found. Please try a different amount.";
@@ -1461,7 +1469,15 @@
 "total_supply" = "Total Supply";
 "touch_id" = "指紋認証";
 "track_not_found" = "トラックが見つかりません";
+"trade" = "Trade";
+"trade_advanced" = "Advanced";
+"trade_again" = "Trade Again";
+"trade_expiration" = "Expiration";
+"trade_expiry" = "Expiry";
+"trade_expiry_never" = "Never";
+"trade_filled" = "Filled";
 "trade_native_tokens" = "Trade thousands of native tokens";
+"trade_simple" = "Simple";
 "transaction" = "トランザクション";
 "transaction_approved" = "Transaction Approved";
 "transaction_failed" = "Transaction Failed";
@@ -1528,6 +1544,7 @@
 "unit_second_count" = "秒間";
 "unit_week" = "週";
 "unit_week_count" = "週間";
+"unknown" = "不明";
 "unknown_artist" = "不明なアーティスト";
 "unlimited_authorization_warning" = "This application can access all %3$@ in your %1$@ account (%2$@).";
 "unmute" = "ミュート解除";
@@ -1632,6 +1649,7 @@
 "wallet_withdrawal_changed" = "出金手数料が%1$@から%2$@へ変更されました。このまま出金を行いますか？";
 "wallet_withdrawal_recent_tip" = "あなたは%1$@に同額の出金を%2$@へ送っています。再度%3$@を出金しますか？";
 "wallets" = "ウォレット";
+"wallets_count" = "%d Wallets";
 "watch_address" = "Watch %@";
 "watch_wallet" = "Watch Wallet";
 "watch_wallet_description" = "You are unable to control assets in a watch-only wallet, but you can track them. ";

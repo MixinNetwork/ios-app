@@ -1,4 +1,5 @@
 import UIKit
+import MixinServices
 
 final class SwapIconView: UIView {
     
@@ -37,9 +38,9 @@ final class SwapIconView: UIView {
         receiveTokenIconView.prepareForReuse()
     }
     
-    func setTokenIcon(pay: URL?, receive: URL?) {
-        payTokenIconView.setIcon(tokenIconURL: pay)
-        receiveTokenIconView.setIcon(tokenIconURL: receive)
+    func setTokenIcon(payToken: (any Token)?, receiveToken: (any Token)?) {
+        payTokenIconView.setIcon(token: payToken)
+        receiveTokenIconView.setIcon(token: receiveToken)
     }
     
     private func layout(size: Size) {

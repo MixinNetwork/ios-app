@@ -181,6 +181,32 @@ public final class Web3Database: Database {
             }
         }
         
+        migrator.registerMigration("swap_orders") { db in
+            try db.execute(sql: """
+            CREATE TABLE IF NOT EXISTS `orders` (
+                `order_id` TEXT NOT NULL,
+                `wallet_id` TEXT NOT NULL,
+                `user_id` TEXT NOT NULL,
+                `pay_asset_id` TEXT NOT NULL,
+                `receive_asset_id` TEXT NOT NULL,
+                `pay_amount` TEXT NOT NULL,
+                `receive_amount` TEXT,
+                `pay_trace_id` TEXT,
+                `receive_trace_id` TEXT,
+                `state` TEXT NOT NULL,
+                `created_at` TEXT NOT NULL,
+                `order_type` TEXT NOT NULL,
+                `pending_amount` TEXT,
+                `filled_receive_amount` TEXT,
+                `expected_receive_amount` TEXT,
+                `expired_at` TEXT,
+                PRIMARY KEY(`order_id`)
+            )
+            """)
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS `index_orders_state_created_at` ON `orders` (`state`, `created_at`)")
+            try db.execute(sql: "CREATE INDEX IF NOT EXISTS `index_orders_order_type_created_at` ON `orders` (`order_type`, `created_at`)")
+        }
+        
         return migrator
     }
     

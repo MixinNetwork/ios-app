@@ -80,6 +80,7 @@ extension DeleteWalletViewController: AuthenticationIntent {
                             ReviewPendingWeb3RawTransactionJob.jobID(walletID: walletID),
                             ReviewPendingWeb3TransactionJob.jobID(walletID: walletID),
                             RefreshWeb3WalletTokenJob.jobID(walletID: walletID),
+                            SyncWeb3OrdersJob.jobID(walletID: walletID)
                         ]
                         for id in jobIDs {
                             ConcurrentJobQueue.shared.cancelJob(jobId: id)

@@ -4,7 +4,7 @@ import MixinServices
 struct Payment: PaymentPreconditionChecker {
     
     enum Context {
-        case swap(SwapContext)
+        case trade(TradeContext)
         case inscription(InscriptionContext)
     }
     
@@ -162,11 +162,19 @@ extension Payment {
         
     }
     
-    struct SwapContext {
+    struct TradeContext {
+        
+        enum Mode {
+            case simple
+            case advanced(TradeOrder.Expiry)
+        }
+        
+        let mode: Mode
         let sendToken: BalancedSwapToken
         let sendAmount: Decimal
         let receiveToken: SwapToken
         let receiveAmount: Decimal
+        
     }
     
     enum InscriptionError: Error, LocalizedError {
@@ -198,7 +206,7 @@ extension Payment {
                         KnownOpponentPrecondition(opponent: opponent),
                         ReferenceValidityPrecondition(reference: reference),
                     ]
-                case .swap:
+                case .trade:
                     preconditions = [
                         NoPendingTransactionPrecondition(),
                         AlreadyPaidPrecondition(traceID: traceID),
@@ -241,7 +249,7 @@ extension Payment {
                     } else {
                         .failure(.description("Invalid Amount"))
                     }
-                case .swap, .none:
+                case .trade, .none:
                     await collectOutputs(token: token, amount: tokenAmount, on: parent)
                 }
                 
@@ -258,7 +266,7 @@ extension Payment {
                             reference: reference,
                             context: context
                         )
-                    case let .swap(context):
+                    case let .trade(context):
                         TransferPaymentOperation.swap(
                             traceID: traceID,
                             spendingOutputs: collection,

@@ -51,6 +51,16 @@ public extension NumberFormatter {
         return formatter
     }()
     
+    static let userInputAmountSimulation: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.locale = .current
+        formatter.roundingMode = .floor
+        formatter.maximumFractionDigits = 8
+        formatter.usesGroupingSeparator = false
+        return formatter
+    }()
+    
     convenience init(numberStyle: NumberFormatter.Style, maximumFractionDigits: Int? = nil, roundingMode: NumberFormatter.RoundingMode? = nil, locale: Locale? = nil) {
         self.init()
         self.numberStyle = numberStyle

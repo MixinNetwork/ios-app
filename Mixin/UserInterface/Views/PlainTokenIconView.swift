@@ -30,8 +30,8 @@ final class PlainTokenIconView: UIImageView {
         sd_setImage(with: url, placeholderImage: nil, context: assetIconContext)
     }
     
-    func setIcon(token: any Token) {
-        if let url = URL(string: token.iconURL) {
+    func setIcon(token: (any Token)?) {
+        if let iconURL = token?.iconURL, let url = URL(string: iconURL) {
             setIcon(tokenIconURL: url)
         } else {
             image = R.image.unknown_session()

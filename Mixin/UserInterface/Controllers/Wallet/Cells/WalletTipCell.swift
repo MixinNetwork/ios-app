@@ -1,6 +1,6 @@
 import UIKit
 
-final class WalletTipView: UIView {
+final class WalletTipCell: UICollectionViewCell {
     
     enum Content {
         case privacy
@@ -8,7 +8,7 @@ final class WalletTipView: UIView {
     }
     
     protocol Delegate: AnyObject {
-        func walletTipViewWantsToClose(_ view: WalletTipView)
+        func walletTipCellWantsToClose(_ cell: WalletTipCell)
     }
     
     @IBOutlet weak var imageView: UIImageView!
@@ -60,7 +60,7 @@ final class WalletTipView: UIView {
     }
     
     @IBAction func close(_ sender: Any) {
-        delegate?.walletTipViewWantsToClose(self)
+        delegate?.walletTipCellWantsToClose(self)
     }
     
     @IBAction func learnMore(_ sender: Any) {

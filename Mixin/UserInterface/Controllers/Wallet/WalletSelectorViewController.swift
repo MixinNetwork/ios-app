@@ -29,7 +29,6 @@ final class WalletSelectorViewController: UIViewController {
     }
     
     private enum ReuseIdentifier {
-        static let tip = "t"
         static let pageControl = "p"
     }
     
@@ -51,7 +50,7 @@ final class WalletSelectorViewController: UIViewController {
     private var searchResults: [WalletDigest]?
     private var secretAvailableWalletIDs: Set<String> = []
     
-    private var tips: [WalletTipView.Content] = []
+    private var tips: [WalletTipCell.Content] = []
     private var tipsCurrentPage: Int = 0 {
         didSet {
             tipsPageControl?.currentPage = tipsCurrentPage
@@ -119,10 +118,7 @@ final class WalletSelectorViewController: UIViewController {
             collectionView.allowsMultipleSelection = false
         }
         collectionView.register(R.nib.walletCell)
-        collectionView.register(
-            WalletTipCollectionViewCell.self,
-            forCellWithReuseIdentifier: ReuseIdentifier.tip
-        )
+        collectionView.register(R.nib.walletTipCell)
         collectionView.register(
             WalletTipPageControlCell.self,
             forCellWithReuseIdentifier: ReuseIdentifier.pageControl
@@ -299,7 +295,7 @@ final class WalletSelectorViewController: UIViewController {
     @objc private func reloadTips() {
         let tipsBefore = self.tips
         let tipsAfter = {
-            var tips: [WalletTipView.Content] = []
+            var tips: [WalletTipCell.Content] = []
             if !AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip {
                 tips.append(.privacy)
             }
@@ -350,10 +346,10 @@ final class WalletSelectorViewController: UIViewController {
     
 }
 
-extension WalletSelectorViewController: WalletTipView.Delegate {
+extension WalletSelectorViewController: WalletTipCell.Delegate {
     
-    func walletTipViewWantsToClose(_ view: WalletTipView) {
-        guard let content = view.content else {
+    func walletTipCellWantsToClose(_ cell: WalletTipCell) {
+        guard let content = cell.content else {
             return
         }
         switch content {
@@ -416,9 +412,9 @@ extension WalletSelectorViewController: UICollectionViewDataSource {
             cell.load(digest: digest, hasSecret: hasSecret)
             return cell
         case .tips:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseIdentifier.tip, for: indexPath) as! WalletTipCollectionViewCell
-            cell.tipView.content = tips[indexPath.item]
-            cell.tipView.delegate = self
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_tip_cell, for: indexPath)!
+            cell.content = tips[indexPath.item]
+            cell.delegate = self
             return cell
         case .tipsPageControl:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseIdentifier.pageControl, for: indexPath) as! WalletTipPageControlCell

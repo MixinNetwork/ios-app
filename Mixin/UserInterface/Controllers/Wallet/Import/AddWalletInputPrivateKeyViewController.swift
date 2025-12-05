@@ -5,8 +5,7 @@ import MixinServices
 final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoViewController {
     
     private enum LoadKeyError: Error {
-        case invalidHex
-        case invalidBase58
+        case invalidInput
         case invalidLength
         case mismatchedPublicKey
         case alreadyImported
@@ -85,7 +84,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                     input
                 }
                 guard let privateKey = Data(hexEncodedString: hex) else {
-                    throw LoadKeyError.invalidHex
+                    throw LoadKeyError.invalidInput
                 }
                 let keyStorage = InPlaceKeyStorage(raw: privateKey)
                 let account = try EthereumAccount(keyStorage: keyStorage)
@@ -109,8 +108,20 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                     }
                 )
             case .solana:
-                guard let keyPair = Data(base58EncodedString: input) else {
-                    throw LoadKeyError.invalidBase58
+                let keyPair: Data
+                if let base58Decoded = Data(base58EncodedString: input) {
+                    keyPair = base58Decoded
+                } else {
+                    let hex = if input.hasPrefix("0x") {
+                        String(input.dropFirst(2))
+                    } else {
+                        input
+                    }
+                    if let hexDecoded = Data(hexEncodedString: hex) {
+                        keyPair = hexDecoded
+                    } else {
+                        throw LoadKeyError.invalidInput
+                    }
                 }
                 guard keyPair.count == Solana.keyPairCount else {
                     throw LoadKeyError.invalidLength

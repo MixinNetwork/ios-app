@@ -1003,6 +1003,7 @@
 "or" = "或者";
 "order_details" = "订单详情";
 "order_id" = "订单 ID";
+"order_status" = "状态";
 "order_type" = "订单类型";
 "order_type_limit" = "限价";
 "order_type_swap" = "闪兑";

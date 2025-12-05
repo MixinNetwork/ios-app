@@ -1003,6 +1003,7 @@
 "or" = "or";
 "order_details" = "Order Details";
 "order_id" = "Order ID";
+"order_status" = "Status";
 "order_type" = "Order Type";
 "order_type_limit" = "Limit";
 "order_type_swap" = "Swap";

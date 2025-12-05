@@ -408,7 +408,7 @@ extension TradeOrdersViewController {
         func reloadData(status: TradeOrder.Status?) {
             label.text = switch status {
             case .none:
-                R.string.localizable.all()
+                R.string.localizable.order_status()
             case .pending:
                 R.string.localizable.pending()
             case .done:

@@ -1003,6 +1003,7 @@
 "or" = "或者";
 "order_details" = "訂單詳情";
 "order_id" = "訂單 ID";
+"order_status" = "狀態";
 "order_type" = "訂單型別";
 "order_type_limit" = "限價";
 "order_type_swap" = "閃兌";

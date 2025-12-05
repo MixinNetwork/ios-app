@@ -6,16 +6,24 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        var remoteTokens = self.defaultTokens
         queue.async { [recentAssetIDsKey] in
-            let tokens = TokenDAO.shared
+            var tokens = TokenDAO.shared
                 .notHiddenTokens(includesZeroBalanceItems: true)
                 .compactMap(BalancedSwapToken.init(tokenItem:))
+            var tokensMap = tokens.reduce(into: [:]) { results, token in
+                results[token.assetID] = token
+            }
+            remoteTokens.removeAll { token in
+                tokensMap[token.assetID] != nil
+            }
+            tokens.append(contentsOf: remoteTokens)
+            for token in remoteTokens {
+                tokensMap[token.assetID] = token
+            }
             let chainIDs = Set(tokens.compactMap(\.chain.chainID))
             let chains = Chain.mixinChains(ids: chainIDs)
             
-            let tokensMap = tokens.reduce(into: [:]) { results, token in
-                results[token.assetID] = token
-            }
             let recentAssetIDs = PropertiesDAO.shared.jsonObject(
                 forKey: recentAssetIDsKey,
                 type: [String].self

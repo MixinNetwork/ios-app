@@ -31,6 +31,15 @@ extension RouteAPI {
         request(method: .get, path: path, completion: completion)
     }
     
+    static func stockTokens(
+        source: RouteTokenSource,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[SwapToken.Codable]>) -> Void
+    ) {
+        let path = "/web3/tokens?version=\(Bundle.main.shortVersionString)&source=\(source.rawValue)&category=stock"
+        request(method: .get, path: path, queue: queue, completion: completion)
+    }
+    
     static func search(
         keyword: String,
         source: RouteTokenSource,

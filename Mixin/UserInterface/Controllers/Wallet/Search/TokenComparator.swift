@@ -75,8 +75,9 @@ struct TokenComparator<Token: ComparableToken>: SortComparator {
         }
     }
     
-    func determinant(item: Token) -> (Int, Decimal, Decimal) {
+    func determinant(item: Token) -> (Int, Decimal, Decimal, Int) {
         let lowercasedSymbol = item.symbol.lowercased()
+        let missingIconURL = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
         let symbolPriority = if lowercasedSymbol == lowercasedKeyword {
             3
         } else if lowercasedSymbol.hasPrefix(lowercasedKeyword) {
@@ -86,10 +87,12 @@ struct TokenComparator<Token: ComparableToken>: SortComparator {
         } else {
             0
         }
+        let iconPriority = item.iconURL == missingIconURL ? 0 : 1
         return (
             symbolPriority,
             item.decimalBalance * item.decimalUSDPrice,
             item.decimalBalance,
+            iconPriority,
         )
     }
     

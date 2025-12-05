@@ -65,7 +65,8 @@ final class Web3TradeViewController: TradeViewController {
             wallet: wallet,
             supportedChainIDs: supportedChainIDs,
             intent: .send,
-            selectedAssetID: sendToken?.assetID
+            selectedAssetID: sendToken?.assetID,
+            defaultTokens: Array(swappableTokens.values),
         )
         selector.onSelected = { token in
             if token.assetID == self.receiveToken?.assetID {
@@ -98,7 +99,8 @@ final class Web3TradeViewController: TradeViewController {
             wallet: wallet,
             supportedChainIDs: supportedChainIDs,
             intent: .receive,
-            selectedAssetID: receiveToken?.assetID
+            selectedAssetID: receiveToken?.assetID,
+            defaultTokens: Array(swappableTokens.values),
         )
         selector.onSelected = { token in
             if token.assetID == self.sendToken?.assetID {

@@ -44,6 +44,7 @@ final class MixinTradeViewController: TradeViewController {
         let selector = TradeMixinTokenSelectorViewController(
             intent: .send,
             selectedAssetID: sendToken?.assetID,
+            defaultTokens: Array(swappableTokens.values),
         )
         selector.onSelected = { token in
             if token.assetID == self.receiveToken?.assetID {
@@ -73,7 +74,8 @@ final class MixinTradeViewController: TradeViewController {
     override func changeReceiveToken(_ sender: Any) {
         let selector = TradeMixinTokenSelectorViewController(
             intent: .receive,
-            selectedAssetID: receiveToken?.assetID
+            selectedAssetID: receiveToken?.assetID,
+            defaultTokens: Array(swappableTokens.values),
         )
         selector.onSelected = { token in
             if token.assetID == self.sendToken?.assetID {

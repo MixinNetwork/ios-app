@@ -15,6 +15,7 @@ class TradeTokenSelectorViewController: ChainCategorizedTokenSelectorViewControl
     init(
         intent: TokenSelectorIntent,
         selectedAssetID: String?,
+        defaultTokens: [BalancedSwapToken],
     ) {
         self.intent = intent
         self.recentAssetIDsKey = switch intent {
@@ -24,7 +25,7 @@ class TradeTokenSelectorViewController: ChainCategorizedTokenSelectorViewControl
                 .mixinSwapRecentReceiveIDs
         }
         super.init(
-            defaultTokens: [],
+            defaultTokens: defaultTokens,
             defaultChains: [],
             searchDebounceInterval: 0.5,
             selectedID: selectedAssetID

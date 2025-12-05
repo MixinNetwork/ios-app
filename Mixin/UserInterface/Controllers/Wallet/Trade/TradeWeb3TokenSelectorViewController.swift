@@ -13,10 +13,15 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
         supportedChainIDs: Set<String>,
         intent: TokenSelectorIntent,
         selectedAssetID: String?,
+        defaultTokens: [BalancedSwapToken],
     ) {
         self.wallet = wallet
         self.supportedChainIDs = supportedChainIDs
-        super.init(intent: intent, selectedAssetID: selectedAssetID)
+        super.init(
+            intent: intent,
+            selectedAssetID: selectedAssetID,
+            defaultTokens: defaultTokens,
+        )
     }
     
     required init?(coder: NSCoder) {
@@ -30,18 +35,32 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         let walletID = wallet.walletID
-        queue.async { [recentAssetIDsKey] in
+        var remoteTokens = self.defaultTokens
+        queue.async { [recentAssetIDsKey, supportedChainIDs] in
             // No need to filter with `supportedChainIDs`, the `walletID` will do
             // Unsupported tokens will not exist with the `walletID`
-            let tokens = Web3TokenDAO.shared
+            var tokens = Web3TokenDAO.shared
                 .notHiddenTokens(walletID: walletID, includesZeroBalanceItems: true)
                 .compactMap(BalancedSwapToken.init(tokenItem:))
+            var tokensMap = tokens.reduce(into: [:]) { results, token in
+                results[token.assetID] = token
+            }
+            remoteTokens.removeAll { token in
+                if tokensMap[token.assetID] != nil {
+                    true
+                } else if let chainID = token.chain.chainID {
+                    !supportedChainIDs.contains(chainID)
+                } else {
+                    true
+                }
+            }
+            tokens.append(contentsOf: remoteTokens)
+            for token in remoteTokens {
+                tokensMap[token.assetID] = token
+            }
             let chainIDs = Set(tokens.compactMap(\.chain.chainID))
             let chains = Chain.web3Chains(ids: chainIDs)
             
-            let tokensMap = tokens.reduce(into: [:]) { results, token in
-                results[token.assetID] = token
-            }
             let recentAssetIDs = PropertiesDAO.shared.jsonObject(
                 forKey: recentAssetIDsKey,
                 type: [String].self

@@ -14,13 +14,29 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
         intent: TokenSelectorIntent,
         selectedAssetID: String?,
         defaultTokens: [BalancedSwapToken],
+        stockTokens: [BalancedSwapToken],
     ) {
+        let supportedDefaultTokens = defaultTokens.filter { token in
+            if let chainID = token.chain.chainID {
+                supportedChainIDs.contains(chainID)
+            } else {
+                false
+            }
+        }
+        let supportedStockTokens = stockTokens.filter { token in
+            if let chainID = token.chain.chainID {
+                supportedChainIDs.contains(chainID)
+            } else {
+                false
+            }
+        }
         self.wallet = wallet
         self.supportedChainIDs = supportedChainIDs
         super.init(
             intent: intent,
             selectedAssetID: selectedAssetID,
-            defaultTokens: defaultTokens,
+            defaultTokens: supportedDefaultTokens,
+            stockTokens: supportedStockTokens,
         )
     }
     

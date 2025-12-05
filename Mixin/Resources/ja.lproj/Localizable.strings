@@ -1409,6 +1409,7 @@
 "sticker_add_requirements" = "スタンプのサイズは%@KB以上%@KB未満、 幅と高さは%@ピクセルから%@ピクセルである必要があります";
 "sticker_store" = "スタンプストア";
 "stickers_count" = "%d個のスタンプ";
+"stocks" = "Stocks";
 "stop" = "Stop";
 "stop_playing" = "再生を止める";
 "stop_playing_this_list" = "再生を止めて、プレイリストを閉じますか？";

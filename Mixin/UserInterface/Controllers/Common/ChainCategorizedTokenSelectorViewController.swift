@@ -7,6 +7,7 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
     
     let operationQueue = OperationQueue()
     let queue = DispatchQueue(label: "one.mixin.messenger.ChainCategorizedTokenSelector")
+    let selectedID: String?
     
     var recentTokens: [SelectableToken] = []
     var recentTokenChanges: [String: TokenChange] = [:] // Key is token's id
@@ -25,7 +26,6 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
     private let maxNumberOfRecents = 6
     private let recentGroupHorizontalMargin: CGFloat = 20
     private let searchDebounceInterval: TimeInterval
-    private let selectedID: String?
     
     init(
         defaultTokens: [SelectableToken],
@@ -188,6 +188,64 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
             recentTokens.insert(token, at: 0)
             let topRecentTokens = recentTokens.prefix(maxNumberOfRecents)
             self.saveRecentsToStorage(tokens: topRecentTokens)
+        }
+    }
+    
+    func reloadChainSelection() {
+        let chains = searchResultChains ?? defaultChains
+        let item = if let chain = selectedChain, let index = chains.firstIndex(of: chain) {
+            index + 1 // 1 for the "All"
+        } else {
+            0
+        }
+        let indexPath = IndexPath(item: item, section: Section.chainSelector.rawValue)
+        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+    }
+    
+    func reloadTokenSelection() {
+        guard let id = selectedID else {
+            return
+        }
+        let item: Int
+        if let searchResults {
+            if let index = searchResults.firstIndex(where: { $0.assetID == id }) {
+                if let indices = tokenIndicesForSelectedChain {
+                    if let i = indices.firstIndex(of: index) {
+                        item = i
+                    } else {
+                        // The selected token doesn't match with selected chain
+                        return
+                    }
+                } else {
+                    item = index
+                }
+            } else {
+                // The selected token doesn't exists in search results
+                return
+            }
+        } else if let index = defaultTokens.firstIndex(where: { $0.assetID == id }) {
+            if let indices = tokenIndicesForSelectedChain {
+                if let i = indices.firstIndex(of: index) {
+                    item = i
+                } else {
+                    // The selected token doesn't match with selected chain
+                    return
+                }
+            } else {
+                item = index
+            }
+        } else {
+            // The selected token comes from the search results
+            return
+        }
+        let indexPath = IndexPath(item: item, section: Section.tokens.rawValue)
+        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+    }
+    
+    func reloadWithoutAnimation(section: Section) {
+        let sections = IndexSet(integer: section.rawValue)
+        UIView.performWithoutAnimation {
+            collectionView.reloadSections(sections)
         }
     }
     
@@ -354,6 +412,7 @@ extension ChainCategorizedTokenSelectorViewController {
         case allItems
         case chainFilteredItems
         case searchResults
+        case stock
         
         var asEventMethod: String {
             switch self {
@@ -365,6 +424,8 @@ extension ChainCategorizedTokenSelectorViewController {
                 "chain_item_click"
             case .searchResults:
                 "search_item_click"
+            case .stock:
+                "stock"
             }
         }
         
@@ -430,57 +491,6 @@ extension ChainCategorizedTokenSelectorViewController {
         
     }
     
-    func reloadChainSelection() {
-        let chains = searchResultChains ?? defaultChains
-        let item = if let chain = selectedChain, let index = chains.firstIndex(of: chain) {
-            index + 1 // 1 for the "All"
-        } else {
-            0
-        }
-        let indexPath = IndexPath(item: item, section: Section.chainSelector.rawValue)
-        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-    }
-    
-    func reloadTokenSelection() {
-        guard let id = selectedID else {
-            return
-        }
-        let item: Int
-        if let searchResults {
-            if let index = searchResults.firstIndex(where: { $0.assetID == id }) {
-                if let indices = tokenIndicesForSelectedChain {
-                    if let i = indices.firstIndex(of: index) {
-                        item = i
-                    } else {
-                        // The selected token doesn't match with selected chain
-                        return
-                    }
-                } else {
-                    item = index
-                }
-            } else {
-                // The selected token doesn't exists in search results
-                return
-            }
-        } else if let index = defaultTokens.firstIndex(where: { $0.assetID == id }) {
-            if let indices = tokenIndicesForSelectedChain {
-                if let i = indices.firstIndex(of: index) {
-                    item = i
-                } else {
-                    // The selected token doesn't match with selected chain
-                    return
-                }
-            } else {
-                item = index
-            }
-        } else {
-            // The selected token comes from the search results
-            return
-        }
-        let indexPath = IndexPath(item: item, section: Section.tokens.rawValue)
-        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-    }
-    
     private func token(at indexPath: IndexPath) -> SelectableToken {
         assert(indexPath.section == Section.tokens.rawValue)
         let index = if let indices = tokenIndicesForSelectedChain {
@@ -492,13 +502,6 @@ extension ChainCategorizedTokenSelectorViewController {
             searchResults[index]
         } else {
             defaultTokens[index]
-        }
-    }
-    
-    private func reloadWithoutAnimation(section: Section) {
-        let sections = IndexSet(integer: section.rawValue)
-        UIView.performWithoutAnimation {
-            collectionView.reloadSections(sections)
         }
     }
     

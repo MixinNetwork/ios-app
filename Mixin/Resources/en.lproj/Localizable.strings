@@ -1409,6 +1409,7 @@
 "sticker_add_requirements" = "Requires stickers file size larger than %@KB and less than %@KB, width and height between %@ and %@ pixels.";
 "sticker_store" = "Sticker Store";
 "stickers_count" = "%d stickers";
+"stocks" = "Stocks";
 "stop" = "Stop";
 "stop_playing" = "Stop Playing";
 "stop_playing_this_list" = "Stop playing this list?";

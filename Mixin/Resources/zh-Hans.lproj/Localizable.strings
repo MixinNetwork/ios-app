@@ -1409,6 +1409,7 @@
 "sticker_add_requirements" = "贴纸要求大于 %@KB 且小于 %@KB，宽高大于 %@ 像素且小于 %@ 像素。";
 "sticker_store" = "表情商店";
 "stickers_count" = "%d 个表情";
+"stocks" = "股票";
 "stop" = "暂停";
 "stop_playing" = "停止播放";
 "stop_playing_this_list" = "确定要停止并关闭播放列表？";

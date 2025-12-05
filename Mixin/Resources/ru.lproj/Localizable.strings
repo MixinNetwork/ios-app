@@ -1409,6 +1409,7 @@
 "sticker_add_requirements" = "Требуется размер файла наклеек больше %@KB и меньше %@KB, ширина и высота от %@ до %@ пикселей.";
 "sticker_store" = "Магазин наклеек";
 "stickers_count" = "%d стикеров";
+"stocks" = "Stocks";
 "stop" = "Stop";
 "stop_playing" = "Хватит играть";
 "stop_playing_this_list" = "Прекратить воспроизведение этого списка?";

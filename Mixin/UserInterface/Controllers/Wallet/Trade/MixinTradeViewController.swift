@@ -45,6 +45,7 @@ final class MixinTradeViewController: TradeViewController {
             intent: .send,
             selectedAssetID: sendToken?.assetID,
             defaultTokens: Array(swappableTokens.values),
+            stockTokens: stockTokens,
         )
         selector.onSelected = { token in
             if token.assetID == self.receiveToken?.assetID {
@@ -76,6 +77,7 @@ final class MixinTradeViewController: TradeViewController {
             intent: .receive,
             selectedAssetID: receiveToken?.assetID,
             defaultTokens: Array(swappableTokens.values),
+            stockTokens: stockTokens,
         )
         selector.onSelected = { token in
             if token.assetID == self.sendToken?.assetID {

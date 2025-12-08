@@ -8,6 +8,7 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
         super.viewDidLoad()
         var remoteTokens = self.defaultTokens
         queue.async { [recentAssetIDsKey] in
+            let comparator = TokenComparator<BalancedSwapToken>(keyword: nil)
             var tokens = TokenDAO.shared
                 .notHiddenTokens(includesZeroBalanceItems: true)
                 .compactMap(BalancedSwapToken.init(tokenItem:))
@@ -17,7 +18,7 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
             remoteTokens.removeAll { token in
                 tokensMap[token.assetID] != nil
             }
-            tokens.append(contentsOf: remoteTokens)
+            tokens.append(contentsOf: remoteTokens.sorted(using: comparator))
             for token in remoteTokens {
                 tokensMap[token.assetID] = token
             }

@@ -53,6 +53,7 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
         let walletID = wallet.walletID
         var remoteTokens = self.defaultTokens
         queue.async { [recentAssetIDsKey, supportedChainIDs] in
+            let comparator = TokenComparator<BalancedSwapToken>(keyword: nil)
             // No need to filter with `supportedChainIDs`, the `walletID` will do
             // Unsupported tokens will not exist with the `walletID`
             var tokens = Web3TokenDAO.shared
@@ -70,7 +71,7 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                     true
                 }
             }
-            tokens.append(contentsOf: remoteTokens)
+            tokens.append(contentsOf: remoteTokens.sorted(using: comparator))
             for token in remoteTokens {
                 tokensMap[token.assetID] = token
             }

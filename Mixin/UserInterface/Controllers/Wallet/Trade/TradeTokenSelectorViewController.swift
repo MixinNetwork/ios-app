@@ -7,18 +7,11 @@ class TradeTokenSelectorViewController: ChainCategorizedTokenSelectorViewControl
     
     let intent: TokenSelectorIntent
     let recentAssetIDsKey: PropertiesDAO.Key
+    let stockTokens: [BalancedSwapToken]
     
     weak var searchRequest: Request?
     
     var onSelected: ((BalancedSwapToken) -> Void)?
-    
-    private let stockTokens: [BalancedSwapToken]
-    
-    private var isViewingStockTokens = false
-    
-    private var showStocksCategory: Bool {
-        searchResultChains == nil && !stockTokens.isEmpty
-    }
     
     init(
         intent: TokenSelectorIntent,
@@ -36,7 +29,7 @@ class TradeTokenSelectorViewController: ChainCategorizedTokenSelectorViewControl
         self.stockTokens = stockTokens
         super.init(
             defaultTokens: defaultTokens,
-            defaultChains: [],
+            defaultGroups: [],
             searchDebounceInterval: 0.5,
             selectedID: selectedAssetID
         )
@@ -68,12 +61,15 @@ class TradeTokenSelectorViewController: ChainCategorizedTokenSelectorViewControl
         PropertiesDAO.shared.removeValue(forKey: recentAssetIDsKey)
     }
     
-    override func tokenIndices(tokens: [BalancedSwapToken], chainID: String) -> [Int] {
-        tokens.enumerated().compactMap { (index, token) in
-            if token.chain.chainID == chainID {
-                index
-            } else {
-                nil
+    override func tokens(from allTokens: [BalancedSwapToken], filteredBy group: Group) -> [BalancedSwapToken] {
+        switch group {
+        case .byCategory(let category):
+            allTokens.filter { token in
+                token.category == category
+            }
+        case .byChain(let chain):
+            allTokens.filter { (token) in
+                token.chain.chainID == chain.id
             }
         }
     }
@@ -112,107 +108,25 @@ class TradeTokenSelectorViewController: ChainCategorizedTokenSelectorViewControl
         reporter.report(event: .tradeTokenSelect, tags: ["method": location.asEventMethod])
     }
     
-    override func reloadChainSelection() {
-        if showStocksCategory && isViewingStockTokens {
-            let indexPath = IndexPath(item: 1, section: Section.chainSelector.rawValue)
-            collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-        } else {
-            super.reloadChainSelection()
-        }
-    }
-    
-    override func reloadTokenSelection() {
-        if showStocksCategory && isViewingStockTokens {
-            if let id = selectedID, let item = stockTokens.firstIndex(where: { $0.assetID == id }) {
-                let indexPath = IndexPath(item: item, section: Section.tokens.rawValue)
-                collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-            }
-        } else {
-            super.reloadTokenSelection()
-        }
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch Section(rawValue: section)! {
-        case .recent:
-            super.collectionView(collectionView, numberOfItemsInSection: section)
-        case .chainSelector:
-            1 // 1 for the "All"
-            + (showStocksCategory ? 1 : 0)
-            + (searchResultChains ?? defaultChains).count
-        case .tokens:
-            if showStocksCategory && isViewingStockTokens {
-                stockTokens.count
-            } else {
-                super.collectionView(collectionView, numberOfItemsInSection: section)
-            }
-        }
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch Section(rawValue: indexPath.section)! {
-        case .recent:
-            return super.collectionView(collectionView, cellForItemAt: indexPath)
-        case .chainSelector:
-            if showStocksCategory {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
-                switch indexPath.item {
-                case 0:
-                    cell.label.text = R.string.localizable.all()
-                case 1:
-                    cell.label.text = R.string.localizable.stocks()
-                default:
-                    let chains = searchResultChains ?? defaultChains
-                    cell.label.text = chains[indexPath.item - 2].name
-                }
-                return cell
-            } else {
-                return super.collectionView(collectionView, cellForItemAt: indexPath)
-            }
-        case .tokens:
-            if showStocksCategory && isViewingStockTokens {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.trade_token, for: indexPath)!
-                let token = stockTokens[indexPath.item]
-                configureTokenCell(cell, withToken: token)
-                return cell
-            } else {
-                return super.collectionView(collectionView, cellForItemAt: indexPath)
-            }
-        }
-    }
-    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch Section(rawValue: indexPath.section)! {
-        case .recent:
+        switch Section(rawValue: indexPath.section) {
+        case .groupSelector:
+            guard searchResultGroups == nil || searchResults == nil else {
+                fallthrough
+            }
+            guard indexPath.item != 0 else {
+                fallthrough
+            }
+            if case .byCategory(.stock) = defaultGroups[indexPath.item - 1] {
+                selectedGroup = .byCategory(.stock)
+                tokensForSelectedGroup = stockTokens
+                reloadWithoutAnimation(section: .tokens)
+                reloadTokenSelection()
+            } else {
+                fallthrough
+            }
+        default:
             super.collectionView(collectionView, didSelectItemAt: indexPath)
-        case .chainSelector:
-            if showStocksCategory {
-                switch indexPath.item {
-                case 0:
-                    isViewingStockTokens = false
-                    super.collectionView(collectionView, didSelectItemAt: indexPath)
-                case 1:
-                    isViewingStockTokens = true
-                    selectedChain = nil
-                    tokenIndicesForSelectedChain = nil
-                    reloadWithoutAnimation(section: .tokens)
-                    reloadTokenSelection()
-                default:
-                    isViewingStockTokens = false
-                    let previousIndexPath = IndexPath(item: indexPath.item - 1, section: indexPath.section)
-                    super.collectionView(collectionView, didSelectItemAt: previousIndexPath)
-                }
-            } else {
-                isViewingStockTokens = false
-                super.collectionView(collectionView, didSelectItemAt: indexPath)
-            }
-        case .tokens:
-            if showStocksCategory && isViewingStockTokens {
-                let token = stockTokens[indexPath.item]
-                pickUp(token: token, from: .stock)
-            } else {
-                super.collectionView(collectionView, didSelectItemAt: indexPath)
-            }
         }
     }
     

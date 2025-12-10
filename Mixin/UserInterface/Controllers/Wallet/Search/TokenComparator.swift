@@ -118,7 +118,6 @@ struct TokenComparator<Token: ComparableToken>: SortComparator {
     }
     
     func determinant(item: Token) -> (Decimal, Decimal, Int) {
-        let lowercasedSymbol = item.symbol.lowercased()
         let missingIconURL = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
         let iconPriority = item.iconURL == missingIconURL ? 0 : 1
         return (

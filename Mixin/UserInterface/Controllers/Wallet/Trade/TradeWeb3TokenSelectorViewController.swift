@@ -51,6 +51,7 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         let walletID = wallet.walletID
+        let hasStockTokens = !stockTokens.isEmpty
         var remoteTokens = self.defaultTokens
         queue.async { [recentAssetIDsKey, supportedChainIDs] in
             let comparator = TokenComparator<BalancedSwapToken>(keyword: nil)
@@ -76,7 +77,10 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                 tokensMap[token.assetID] = token
             }
             let chainIDs = Set(tokens.compactMap(\.chain.chainID))
-            let chains = Chain.web3Chains(ids: chainIDs)
+            var groups = Group.web3Chains(ids: chainIDs)
+            if hasStockTokens {
+                groups.insert(.byCategory(.stock), at: 0)
+            }
             
             let recentAssetIDs = PropertiesDAO.shared.jsonObject(
                 forKey: recentAssetIDsKey,
@@ -93,9 +97,9 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                 self.recentTokens = recentTokens
                 self.recentTokenChanges = recentTokenChanges
                 self.defaultTokens = tokens
-                self.defaultChains = chains
+                self.defaultGroups = groups
                 self.collectionView.reloadData()
-                self.reloadChainSelection()
+                self.reloadGroupSelection()
                 self.reloadTokenSelection()
                 self.collectionView.checkEmpty(
                     dataCount: tokens.count,
@@ -124,7 +128,7 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                 .compactMap(BalancedSwapToken.init(tokenItem:))
                 .sorted(using: comparator)
             let chainIDs = Set(localResults.compactMap(\.chain.chainID))
-            let localResultChains = Chain.web3Chains(ids: chainIDs)
+            let localResultGroups = Group.web3Chains(ids: chainIDs)
             
             guard !op.isCancelled else {
                 return
@@ -135,15 +139,15 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                 }
                 self.searchResultsKeyword = keyword
                 self.searchResults = localResults
-                self.searchResultChains = localResultChains
-                if let chain = self.selectedChain, chainIDs.contains(chain.id) {
-                    self.tokenIndicesForSelectedChain = self.tokenIndices(tokens: localResults, chainID: chain.id)
+                self.searchResultGroups = localResultGroups
+                if let group = self.selectedGroup, localResultGroups.contains(group) {
+                    self.tokensForSelectedGroup = self.tokens(from: localResults, filteredBy: group)
                 } else {
-                    self.selectedChain = nil
-                    self.tokenIndicesForSelectedChain = nil
+                    self.selectedGroup = nil
+                    self.tokensForSelectedGroup = nil
                 }
                 self.collectionView.reloadData()
-                self.reloadChainSelection()
+                self.reloadGroupSelection()
                 self.reloadTokenSelection()
                 
                 self.searchRequest = RouteAPI.search(
@@ -182,7 +186,7 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
         comparator: TokenComparator<BalancedSwapToken>,
     ) {
         assert(!Thread.isMainThread)
-        let mixedSearchResults: (items: [BalancedSwapToken], chains: OrderedSet<Chain>, chainIDs: Set<String>)?
+        let mixedSearchResults: (items: [BalancedSwapToken], groups: OrderedSet<Group>)?
         if remoteResults.isEmpty {
             mixedSearchResults = nil
         } else {
@@ -190,6 +194,7 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                 results[token.assetID] = token
             }
             let walletID = wallet.walletID
+            var hasStockTokens = false
             var allItems: [String: BalancedSwapToken] = remoteResults.reduce(into: [:]) { result, token in
                 guard let chainID = token.chain.chainID, supportedChainIDs.contains(chainID) else {
                     return
@@ -202,6 +207,7 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                     }
                     return Decimal(string: amount, locale: .enUSPOSIX)
                 }()
+                hasStockTokens = hasStockTokens || token.category == .stock
                 result[assetID] = BalancedSwapToken(
                     token: token,
                     balance: balance ?? 0,
@@ -213,8 +219,11 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
             }
             let sortedAllItems = allItems.values.sorted(using: comparator)
             let chainIDs = Set(sortedAllItems.compactMap(\.chain.chainID))
-            let chains = Chain.web3Chains(ids: chainIDs)
-            mixedSearchResults = (sortedAllItems, chains, chainIDs)
+            var groups = Group.web3Chains(ids: chainIDs)
+            if hasStockTokens {
+                groups.insert(.byCategory(.stock), at: 0)
+            }
+            mixedSearchResults = (sortedAllItems, groups)
         }
         DispatchQueue.main.async {
             guard self.trimmedKeyword == keyword else {
@@ -223,18 +232,18 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
             if let mixedSearchResults {
                 self.searchResultsKeyword = keyword
                 self.searchResults = mixedSearchResults.items
-                self.searchResultChains = mixedSearchResults.chains
-                if let chain = self.selectedChain, mixedSearchResults.chainIDs.contains(chain.id) {
-                    self.tokenIndicesForSelectedChain = self.tokenIndices(
-                        tokens: mixedSearchResults.items,
-                        chainID: chain.id
+                self.searchResultGroups = mixedSearchResults.groups
+                if let group = self.selectedGroup, mixedSearchResults.groups.contains(group) {
+                    self.tokensForSelectedGroup = self.tokens(
+                        from: mixedSearchResults.items,
+                        filteredBy: group
                     )
                 } else {
-                    self.selectedChain = nil
-                    self.tokenIndicesForSelectedChain = nil
+                    self.selectedGroup = nil
+                    self.tokensForSelectedGroup = nil
                 }
                 self.collectionView.reloadData()
-                self.reloadChainSelection()
+                self.reloadGroupSelection()
                 self.reloadTokenSelection()
             }
             self.searchBoxView.isBusy = false

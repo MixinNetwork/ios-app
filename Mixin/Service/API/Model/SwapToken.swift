@@ -9,6 +9,7 @@ class SwapToken: Token {
     let name: String
     let symbol: String
     let iconURL: String
+    let category: Category?
     let chain: Chain
     
     var codable: Codable {
@@ -19,6 +20,7 @@ class SwapToken: Token {
             name: name,
             symbol: symbol,
             iconURL: iconURL,
+            category: category,
             chain: chain
         )
     }
@@ -26,7 +28,7 @@ class SwapToken: Token {
     init(
         address: String, assetID: String, decimals: Int16,
         name: String, symbol: String, iconURL: String,
-        chain: SwapToken.Chain
+        category: Category?, chain: SwapToken.Chain,
     ) {
         self.address = address
         self.assetID = assetID
@@ -34,6 +36,7 @@ class SwapToken: Token {
         self.name = name
         self.symbol = symbol
         self.iconURL = iconURL
+        self.category = category
         self.chain = chain
     }
     
@@ -91,6 +94,10 @@ extension SwapToken {
 
 extension SwapToken {
     
+    enum Category: String {
+        case stock = "stock"
+    }
+    
     struct Chain: Swift.Codable {
         
         enum CodingKeys: String, CodingKey {
@@ -139,12 +146,14 @@ extension SwapToken {
             case name
             case symbol
             case iconURL = "icon"
+            case category
             case chain
         }
         
         override init(
             address: String, assetID: String, decimals: Int16, name: String,
-            symbol: String, iconURL: String, chain: SwapToken.Chain
+            symbol: String, iconURL: String, category: Category?,
+            chain: SwapToken.Chain,
         ) {
             super.init(
                 address: address,
@@ -153,12 +162,19 @@ extension SwapToken {
                 name: name,
                 symbol: symbol,
                 iconURL: iconURL,
+                category: category,
                 chain: chain
             )
         }
         
         init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
+            let categoryValue = try container.decodeIfPresent(String.self, forKey: .category)
+            let category: Category? = if let categoryValue {
+                Category(rawValue: categoryValue)
+            } else {
+                nil
+            }
             super.init(
                 address: try container.decode(String.self, forKey: .address),
                 assetID: try container.decode(String.self, forKey: .assetID),
@@ -166,6 +182,7 @@ extension SwapToken {
                 name: try container.decode(String.self, forKey: .name),
                 symbol: try container.decode(String.self, forKey: .symbol),
                 iconURL: try container.decode(String.self, forKey: .iconURL),
+                category: category,
                 chain: try container.decode(Chain.self, forKey: .chain)
             )
         }
@@ -178,6 +195,7 @@ extension SwapToken {
             try container.encode(name, forKey: .name)
             try container.encode(symbol, forKey: .symbol)
             try container.encode(iconURL, forKey: .iconURL)
+            try container.encode(category?.rawValue, forKey: .category)
             try container.encode(chain, forKey: .chain)
         }
         

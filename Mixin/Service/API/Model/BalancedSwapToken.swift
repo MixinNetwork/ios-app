@@ -22,6 +22,7 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
             name: token.name,
             symbol: token.symbol,
             iconURL: token.iconURL,
+            category: token.category,
             chain: token.chain
         )
     }
@@ -39,6 +40,7 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
             name: i.name,
             symbol: i.symbol,
             iconURL: i.iconURL,
+            category: nil,
             chain: Chain(
                 chainID: chain.chainId,
                 name: chain.name,

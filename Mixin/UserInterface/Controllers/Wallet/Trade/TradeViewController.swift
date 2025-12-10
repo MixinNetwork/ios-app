@@ -1246,6 +1246,9 @@ extension TradeViewController {
         if let receiveToken {
             ids.append(receiveToken.assetID)
         }
+        guard !ids.isEmpty else {
+            return
+        }
         RouteAPI.markets(ids: ids, queue: .global()) { result in
             switch result {
             case let .success(markets):

@@ -21,7 +21,7 @@ public final class WalletDigest {
                 switch wallet.category.knownCase {
                 case .classic:
                     self = hasLegacyAddress ? .required : .done
-                case .importedMnemonic, .importedPrivateKey, .watchAddress, .none:
+                case .importedMnemonic, .importedPrivateKey, .watchAddress, .mixinSafe, .none:
                     self = .notInvolved
                 }
             }

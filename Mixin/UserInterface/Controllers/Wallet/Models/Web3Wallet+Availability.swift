@@ -18,7 +18,7 @@ extension Web3Wallet {
             AppGroupKeychain.importedMnemonics(walletID: walletID) != nil
         case .importedPrivateKey:
             AppGroupKeychain.importedPrivateKey(walletID: walletID) != nil
-        case .watchAddress, .none:
+        case .watchAddress, .mixinSafe, .none:
             false
         }
     }

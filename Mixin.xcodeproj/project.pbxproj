@@ -1247,6 +1247,8 @@
 		94A72C9A2C2EBE1E001E8782 /* InscriptionTraitsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A72C972C2EBE1E001E8782 /* InscriptionTraitsCell.swift */; };
 		94A72CA52C2EBFF9001E8782 /* InscriptionTraitCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94A72CA42C2EBFF9001E8782 /* InscriptionTraitCell.xib */; };
 		94A72CA62C2EBFF9001E8782 /* InscriptionTraitCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A72CA32C2EBFF9001E8782 /* InscriptionTraitCell.swift */; };
+		94AA26522EE188980047E04B /* WalletSummarySafeIntroductionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94AA26502EE188980047E04B /* WalletSummarySafeIntroductionCell.swift */; };
+		94AA26532EE188980047E04B /* WalletSummarySafeIntroductionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94AA26512EE188980047E04B /* WalletSummarySafeIntroductionCell.xib */; };
 		94AA266D2EE18C2F0047E04B /* WalletTipCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94AA266C2EE18C2F0047E04B /* WalletTipCell.xib */; };
 		94AC15602C3D77CD0029E1AB /* AppButtonGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94AC155F2C3D77CD0029E1AB /* AppButtonGroupView.swift */; };
 		94AC15652C3D7A110029E1AB /* AppButtonsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94AC15642C3D7A110029E1AB /* AppButtonsViewModel.swift */; };
@@ -3027,6 +3029,8 @@
 		94A72C982C2EBE1E001E8782 /* InscriptionTraitsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionTraitsCell.xib; sourceTree = "<group>"; };
 		94A72CA32C2EBFF9001E8782 /* InscriptionTraitCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InscriptionTraitCell.swift; sourceTree = "<group>"; };
 		94A72CA42C2EBFF9001E8782 /* InscriptionTraitCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionTraitCell.xib; sourceTree = "<group>"; };
+		94AA26502EE188980047E04B /* WalletSummarySafeIntroductionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSummarySafeIntroductionCell.swift; sourceTree = "<group>"; };
+		94AA26512EE188980047E04B /* WalletSummarySafeIntroductionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletSummarySafeIntroductionCell.xib; sourceTree = "<group>"; };
 		94AA266C2EE18C2F0047E04B /* WalletTipCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletTipCell.xib; sourceTree = "<group>"; };
 		94AC155F2C3D77CD0029E1AB /* AppButtonGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonGroupView.swift; sourceTree = "<group>"; };
 		94AC15642C3D7A110029E1AB /* AppButtonsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppButtonsViewModel.swift; sourceTree = "<group>"; };
@@ -5861,6 +5865,8 @@
 				94C5BDEB2D687B710012F840 /* WalletContainerViewController.swift */,
 				94D5C0ED2D5C911D0046C20E /* WalletSummaryView.xib */,
 				94D5C0EC2D5C911D0046C20E /* WalletSummaryViewController.swift */,
+				94AA26512EE188980047E04B /* WalletSummarySafeIntroductionCell.xib */,
+				94AA26502EE188980047E04B /* WalletSummarySafeIntroductionCell.swift */,
 				948664FC2CF867DC0032B9BE /* WalletView.xib */,
 				DFA5B5921FB051BB00549728 /* WalletViewController.swift */,
 				9451E86D2D6DFF0A00A6C4FD /* PrivacyWalletViewController.swift */,
@@ -6760,6 +6766,7 @@
 				9459693A28B28FF8006F5421 /* TIPActionView.xib in Resources */,
 				7BB788B4216C5AA900EDE7B4 /* NoResultFooterView.xib in Resources */,
 				94463C51298D627800E63547 /* AuthenticationFailureView.xib in Resources */,
+				94AA26532EE188980047E04B /* WalletSummarySafeIntroductionCell.xib in Resources */,
 				94062C5D2AE8CA7600ADAE87 /* SnapshotColumnCell.xib in Resources */,
 				944C61F82B6BFAA100C7DF06 /* PaymentUserItemView.xib in Resources */,
 				7BB06F45228EA7720048C2D6 /* NotificationView.xib in Resources */,
@@ -7716,6 +7723,7 @@
 				94EE1AB92B48518D00BE9AD1 /* TemporaryAddress.swift in Sources */,
 				948723432C9E0D8D0034BCB0 /* MarketAlertViewModel.swift in Sources */,
 				7B7A243B236A9B86003F1458 /* RoundedInsetLabel.swift in Sources */,
+				94AA26522EE188980047E04B /* WalletSummarySafeIntroductionCell.swift in Sources */,
 				948ACAA52AF3950C0057D76B /* SnapshotMessageContentView.swift in Sources */,
 				7BE5BFA92338A59300516A00 /* InConversationSearchViewController.swift in Sources */,
 				7B5A748F230274E200C6107E /* GroupIconMaker.swift in Sources */,

@@ -10,7 +10,8 @@ public final class Web3WalletDAO: Web3DAO {
     
     public static let shared = Web3WalletDAO()
     
-    public static let walletsDidSaveNotification = Notification.Name("one.mixin.services.Web3WalletDAO.Save")
+    public static let walletsDidSaveNotification = Notification.Name("one.mixin.services.Web3WalletDAO.SaveWallets")
+    public static let safeWalletsDidSaveNotification = Notification.Name("one.mixin.services.Web3WalletDAO.SaveSafeWallets")
     public static let walletsDidDeleteNotification = Notification.Name("one.mixin.services.Web3WalletDAO.Delete")
     
     public func hasClassicWallet() -> Bool {
@@ -78,11 +79,21 @@ public final class Web3WalletDAO: Web3DAO {
                     sql: SQL.tokenDigests,
                     arguments: [wallet.walletID]
                 )
-                let chainIDs = try String.fetchSet(
-                    db,
-                    sql: SQL.chains,
-                    arguments: [wallet.walletID]
-                )
+                let chainIDs: Set<String>
+                switch wallet.category.knownCase {
+                case .mixinSafe:
+                    chainIDs = if let id = wallet.safeChainID {
+                        [id]
+                    } else {
+                        []
+                    }
+                default:
+                    chainIDs = try String.fetchSet(
+                       db,
+                       sql: SQL.chains,
+                       arguments: [wallet.walletID]
+                   )
+                }
                 return WalletDigest(
                     wallet: .common(wallet),
                     tokens: tokenDigests,
@@ -138,6 +149,23 @@ public final class Web3WalletDAO: Web3DAO {
                     onMainThread: Self.walletsDidSaveNotification,
                     object: self,
                     userInfo: [Self.UserInfoKey.wallets: wallets]
+                )
+            }
+        }
+    }
+    
+    public func save(safeWallets: [Web3Wallet], tokens: [Web3Token]) {
+        guard !safeWallets.isEmpty || !tokens.isEmpty else {
+            return
+        }
+        db.write { db in
+            try safeWallets.save(db)
+            try tokens.save(db)
+            db.afterNextTransaction { _ in
+                NotificationCenter.default.post(
+                    onMainThread: Self.safeWalletsDidSaveNotification,
+                    object: self,
+                    userInfo: [Self.UserInfoKey.wallets: safeWallets]
                 )
             }
         }

@@ -194,7 +194,7 @@ final class WalletSelectorViewController: UIViewController {
                             false
                         case .importedMnemonic, .importedPrivateKey:
                             !secretAvailableWalletIDs.contains(wallet.walletID)
-                        case .watchAddress, .none:
+                        case .watchAddress, .mixinSafe, .none:
                             true
                         }
                     }
@@ -208,7 +208,7 @@ final class WalletSelectorViewController: UIViewController {
                         switch wallet.category.knownCase {
                         case .classic, .importedMnemonic, .importedPrivateKey:
                             false
-                        case .watchAddress, .none:
+                        case .watchAddress, .mixinSafe, .none:
                             true
                         }
                     }
@@ -296,6 +296,9 @@ final class WalletSelectorViewController: UIViewController {
         let tipsBefore = self.tips
         let tipsAfter = {
             var tips: [WalletTipCell.Content] = []
+            if !AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip {
+                tips.append(.safe)
+            }
             if !AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip {
                 tips.append(.privacy)
             }
@@ -357,6 +360,8 @@ extension WalletSelectorViewController: WalletTipCell.Delegate {
             AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip = true
         case .classic:
             AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = true
+        case .safe:
+            AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip = true
         }
     }
     
@@ -450,7 +455,12 @@ extension WalletSelectorViewController: UICollectionViewDelegate {
         case .privacy:
             uncontrolledWallet = nil
         case .common(let wallet):
-            uncontrolledWallet = wallet.hasSecret() ? nil : wallet
+            uncontrolledWallet = switch wallet.category.knownCase {
+            case .mixinSafe:
+                nil
+            default:
+                wallet.hasSecret() ? nil : wallet
+            }
         }
         if let wallet = uncontrolledWallet {
             let warning = UncontrolledWalletWarningViewController(wallet: wallet)

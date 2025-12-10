@@ -35,6 +35,17 @@ public final class Web3TokenDAO: Web3DAO {
         db.select(with: "SELECT asset_id FROM tokens WHERE asset_key = ?", arguments: [assetKey])
     }
     
+    public func tokens<C: Collection<String>>(assetIDs: C) -> [String: Web3Token] {
+        guard !assetIDs.isEmpty else {
+            return [:]
+        }
+        let query: GRDB.SQL = "SELECT * FROM tokens WHERE asset_id IN \(assetIDs)"
+        let tokens: [Web3Token] = db.select(with: query)
+        return tokens.reduce(into: [:]) { results, token in
+            results[token.assetID] = token
+        }
+    }
+    
     public func token(walletID: String, assetID: String) -> Web3TokenItem? {
         let sql = "\(SQL.selector)\nWHERE t.wallet_id = ? AND t.asset_id = ?"
         return db.select(with: sql, arguments: [walletID, assetID])

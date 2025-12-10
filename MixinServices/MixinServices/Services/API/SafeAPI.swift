@@ -80,17 +80,16 @@ public final class SafeAPI: MixinAPI {
         request(method: .get, path: "/schemes/" + uuid, completion: completion)
     }
     
+    public static func userAccounts() async throws -> [SafeAccount] {
+        try await request(method: .get, path: "/safe/user_accounts")
+    }
+    
 }
 
 // MARK: - Asset
 extension SafeAPI {
     
-    public static func assets(ids: Set<String>) async throws -> [MixinToken] {
-        let tokens: [DisplayMixinToken] = try await request(method: .post, path: "/safe/assets/fetch", parameters: ids)
-        return tokens.map(\.asToken)
-    }
-    
-    public static func assets(ids: [String]) async throws -> [MixinToken] {
+    public static func assets<C: Collection<String> & Encodable>(ids: C) async throws -> [MixinToken] {
         let tokens: [DisplayMixinToken] = try await request(method: .post, path: "/safe/assets/fetch", parameters: ids)
         return tokens.map(\.asToken)
     }

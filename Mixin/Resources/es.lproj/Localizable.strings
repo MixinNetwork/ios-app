@@ -1003,6 +1003,7 @@
 "or" = "or";
 "order_details" = "Order Details";
 "order_id" = "Order ID";
+"order_status" = "Status";
 "order_type" = "Order Type";
 "order_type_limit" = "Limit";
 "order_type_swap" = "Swap";
@@ -1409,6 +1410,7 @@
 "sticker_add_requirements" = "Requiere un tamaño de archivo de pegatinas superior a %@KB e inferior a %@KB, ancho y alto entre %@ y %@ píxeles.";
 "sticker_store" = "Tienda de pegatinas";
 "stickers_count" = "%d pegatinas";
+"stocks" = "Stocks";
 "stop" = "Stop";
 "stop_playing" = "Dejar de reproducir";
 "stop_playing_this_list" = "¿Dejar de reproducir esta lista?";

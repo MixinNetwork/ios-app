@@ -7,6 +7,7 @@ class TradeTokenSelectorViewController: ChainCategorizedTokenSelectorViewControl
     
     let intent: TokenSelectorIntent
     let recentAssetIDsKey: PropertiesDAO.Key
+    let stockTokens: [BalancedSwapToken]
     
     weak var searchRequest: Request?
     
@@ -15,6 +16,8 @@ class TradeTokenSelectorViewController: ChainCategorizedTokenSelectorViewControl
     init(
         intent: TokenSelectorIntent,
         selectedAssetID: String?,
+        defaultTokens: [BalancedSwapToken],
+        stockTokens: [BalancedSwapToken],
     ) {
         self.intent = intent
         self.recentAssetIDsKey = switch intent {
@@ -23,9 +26,10 @@ class TradeTokenSelectorViewController: ChainCategorizedTokenSelectorViewControl
         case .receive:
                 .mixinSwapRecentReceiveIDs
         }
+        self.stockTokens = stockTokens
         super.init(
-            defaultTokens: [],
-            defaultChains: [],
+            defaultTokens: defaultTokens,
+            defaultGroups: [],
             searchDebounceInterval: 0.5,
             selectedID: selectedAssetID
         )
@@ -57,12 +61,15 @@ class TradeTokenSelectorViewController: ChainCategorizedTokenSelectorViewControl
         PropertiesDAO.shared.removeValue(forKey: recentAssetIDsKey)
     }
     
-    override func tokenIndices(tokens: [BalancedSwapToken], chainID: String) -> [Int] {
-        tokens.enumerated().compactMap { (index, token) in
-            if token.chain.chainID == chainID {
-                index
-            } else {
-                nil
+    override func tokens(from allTokens: [BalancedSwapToken], filteredBy group: Group) -> [BalancedSwapToken] {
+        switch group {
+        case .byCategory(let category):
+            allTokens.filter { token in
+                token.category == category
+            }
+        case .byChain(let chain):
+            allTokens.filter { (token) in
+                token.chain.chainID == chain.id
             }
         }
     }
@@ -99,6 +106,28 @@ class TradeTokenSelectorViewController: ChainCategorizedTokenSelectorViewControl
         presentingViewController?.dismiss(animated: true)
         onSelected?(token)
         reporter.report(event: .tradeTokenSelect, tags: ["method": location.asEventMethod])
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch Section(rawValue: indexPath.section) {
+        case .groupSelector:
+            guard searchResultGroups == nil || searchResults == nil else {
+                fallthrough
+            }
+            guard indexPath.item != 0 else {
+                fallthrough
+            }
+            if case .byCategory(.stock) = defaultGroups[indexPath.item - 1] {
+                selectedGroup = .byCategory(.stock)
+                tokensForSelectedGroup = stockTokens
+                reloadWithoutAnimation(section: .tokens)
+                reloadTokenSelection()
+            } else {
+                fallthrough
+            }
+        default:
+            super.collectionView(collectionView, didSelectItemAt: indexPath)
+        }
     }
     
 }

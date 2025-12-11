@@ -74,6 +74,7 @@ class TradeViewController: UIViewController {
     
     // Key is asset id
     private(set) var swappableTokens: OrderedDictionary<String, BalancedSwapToken> = [:]
+    private(set) var stockTokens: [BalancedSwapToken] = []
     private(set) var quote: SwapQuote?
     
     private let arbitrarySendAssetID: String?
@@ -986,6 +987,21 @@ extension TradeViewController {
                 }
             }
         }
+        RouteAPI.stockTokens(source: tokenSource, queue: .global()) { [weak self] result in
+            switch result {
+            case .success(let tokens):
+                let tokens: [BalancedSwapToken] = if let tokens = self?.balancedSwapTokens(from: tokens) {
+                    Array(tokens.values)
+                } else {
+                    []
+                }
+                DispatchQueue.main.async {
+                    self?.stockTokens = tokens
+                }
+            case .failure(let error):
+                Logger.general.debug(category: "Trade", message: "\(error)")
+            }
+        }
     }
     
     private func showReviewButtonWrapperView() {
@@ -1229,6 +1245,9 @@ extension TradeViewController {
         }
         if let receiveToken {
             ids.append(receiveToken.assetID)
+        }
+        guard !ids.isEmpty else {
+            return
         }
         RouteAPI.markets(ids: ids, queue: .global()) { result in
             switch result {

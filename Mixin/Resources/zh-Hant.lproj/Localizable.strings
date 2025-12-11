@@ -1003,6 +1003,7 @@
 "or" = "或者";
 "order_details" = "訂單詳情";
 "order_id" = "訂單 ID";
+"order_status" = "狀態";
 "order_type" = "訂單型別";
 "order_type_limit" = "限價";
 "order_type_swap" = "閃兌";
@@ -1409,6 +1410,7 @@
 "sticker_add_requirements" = "貼紙要求大於 %@KB 且小於 %@KB，寬高大於 %@ 畫素且小於 %@ 畫素。";
 "sticker_store" = "表情商店";
 "stickers_count" = "%d 個表情";
+"stocks" = "股票";
 "stop" = "暫停";
 "stop_playing" = "停止播放";
 "stop_playing_this_list" = "確定要停止並關閉播放列表？";

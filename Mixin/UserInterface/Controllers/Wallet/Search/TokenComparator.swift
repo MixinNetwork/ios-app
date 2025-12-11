@@ -33,18 +33,44 @@ struct TokenComparator<Token: ComparableToken>: SortComparator {
     
     var order: SortOrder = .forward
     
-    private let lowercasedKeyword: String
+    private let lowercasedKeyword: String?
+    private let missingIconURL = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
     
-    init(keyword: String) {
-        self.lowercasedKeyword = keyword.lowercased()
+    init(keyword: String?) {
+        self.lowercasedKeyword = keyword?.lowercased()
     }
     
     func compare(_ lhs: Token, _ rhs: Token) -> ComparisonResult {
-        let leftDeterminant = determinant(item: lhs)
-        let rightDeterminant = determinant(item: rhs)
+        let firstStepResult: ComparisonResult
+        if let lowercasedKeyword {
+            let leftDeterminant = determinant(item: lhs, lowercasedKeyword: lowercasedKeyword)
+            let rightDeterminant = determinant(item: rhs, lowercasedKeyword: lowercasedKeyword)
+            if leftDeterminant == rightDeterminant {
+                firstStepResult = .orderedSame
+            } else if leftDeterminant < rightDeterminant {
+                firstStepResult = .orderedDescending
+            } else {
+                firstStepResult = .orderedAscending
+            }
+        } else {
+            let leftDeterminant = determinant(item: lhs)
+            let rightDeterminant = determinant(item: rhs)
+            if leftDeterminant == rightDeterminant {
+                firstStepResult = .orderedSame
+            } else if leftDeterminant < rightDeterminant {
+                firstStepResult = .orderedDescending
+            } else {
+                firstStepResult = .orderedAscending
+            }
+        }
         
         let forwardResult: ComparisonResult
-        if leftDeterminant == rightDeterminant {
+        switch firstStepResult {
+        case .orderedAscending:
+            forwardResult = .orderedAscending
+        case .orderedDescending:
+            forwardResult = .orderedDescending
+        case .orderedSame:
             let nameComparisonResult = lhs.name.compare(rhs.name)
             switch nameComparisonResult {
             case .orderedDescending, .orderedAscending:
@@ -54,10 +80,6 @@ struct TokenComparator<Token: ComparableToken>: SortComparator {
                 let right = rhs.chainName ?? ""
                 forwardResult = left.compare(right)
             }
-        } else if leftDeterminant < rightDeterminant {
-            forwardResult = .orderedDescending
-        } else {
-            forwardResult = .orderedAscending
         }
         
         return switch order {
@@ -75,7 +97,8 @@ struct TokenComparator<Token: ComparableToken>: SortComparator {
         }
     }
     
-    func determinant(item: Token) -> (Int, Decimal, Decimal) {
+    func determinant(item: Token, lowercasedKeyword: String) -> (Int, Int, Decimal, Decimal) {
+        let iconPriority = item.iconURL == missingIconURL ? 0 : 1
         let lowercasedSymbol = item.symbol.lowercased()
         let symbolPriority = if lowercasedSymbol == lowercasedKeyword {
             3
@@ -87,7 +110,16 @@ struct TokenComparator<Token: ComparableToken>: SortComparator {
             0
         }
         return (
+            iconPriority,
             symbolPriority,
+            item.decimalBalance * item.decimalUSDPrice,
+            item.decimalBalance,
+        )
+    }
+    
+    func determinant(item: Token) -> (Int, Decimal, Decimal) {
+        (
+            item.iconURL == missingIconURL ? 0 : 1,
             item.decimalBalance * item.decimalUSDPrice,
             item.decimalBalance,
         )

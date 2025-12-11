@@ -22,7 +22,7 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
         }
         super.init(
             defaultTokens: [],
-            defaultChains: [],
+            defaultGroups: [],
             searchDebounceInterval: 0.5,
             selectedID: nil
         )
@@ -54,14 +54,14 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
                 includesZeroBalanceItems: displayZeroBalanceItems
             )
             let chainIDs = Set(tokens.compactMap(\.chainID))
-            let chains = Chain.mixinChains(ids: chainIDs)
+            let groups = Group.mixinChains(ids: chainIDs)
             DispatchQueue.main.async {
                 self.recentTokens = orderedRecentTokens
                 self.recentTokenChanges = recentTokenChanges
                 self.defaultTokens = tokens
-                self.defaultChains = chains
+                self.defaultGroups = groups
                 self.collectionView.reloadData()
-                self.reloadChainSelection()
+                self.reloadGroupSelection()
                 self.collectionView.checkEmpty(
                     dataCount: tokens.count,
                     text: R.string.localizable.dont_have_assets(),
@@ -103,7 +103,7 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
                 )
                 .sorted(using: comparator)
             let chainIDs = Set(localResults.compactMap(\.chainID))
-            let localResultChains = Chain.mixinChains(ids: chainIDs)
+            let localResultGroups = Group.mixinChains(ids: chainIDs)
             
             guard !op.isCancelled else {
                 return
@@ -114,15 +114,15 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
                 }
                 self.searchResultsKeyword = keyword
                 self.searchResults = localResults
-                self.searchResultChains = localResultChains
-                if let chain = self.selectedChain, chainIDs.contains(chain.id) {
-                    self.tokenIndicesForSelectedChain = self.tokenIndices(tokens: localResults, chainID: chain.id)
+                self.searchResultGroups = localResultGroups
+                if let group = self.selectedGroup, localResultGroups.contains(group) {
+                    self.tokensForSelectedGroup = self.tokens(from: localResults, filteredBy: group)
                 } else {
-                    self.selectedChain = nil
-                    self.tokenIndicesForSelectedChain = nil
+                    self.selectedGroup = nil
+                    self.tokensForSelectedGroup = nil
                 }
                 self.collectionView.reloadData()
-                self.reloadChainSelection()
+                self.reloadGroupSelection()
                 self.reloadTokenSelection()
                 
                 guard intent == .receive else {
@@ -167,12 +167,13 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
         operationQueue.addOperation(op)
     }
     
-    override func tokenIndices(tokens: [MixinTokenItem], chainID: String) -> [Int] {
-        tokens.enumerated().compactMap { (index, token) in
-            if token.chainID == chainID {
-                index
-            } else {
-                nil
+    override func tokens(from allTokens: [MixinTokenItem], filteredBy group: Group) -> [MixinTokenItem] {
+        switch group {
+        case .byCategory:
+            allTokens // Category grouping only works for SwapTokens
+        case .byChain(let chain):
+            allTokens.filter { (token) in
+                token.chainID == chain.id
             }
         }
     }
@@ -218,7 +219,7 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
         comparator: TokenComparator<MixinTokenItem>,
     ) {
         assert(!Thread.isMainThread)
-        let mixedSearchResults: (items: [MixinTokenItem], chains: OrderedSet<Chain>, chainIDs: Set<String>)?
+        let mixedSearchResults: (items: [MixinTokenItem], groups: OrderedSet<Group>)?
         if remoteResults.isEmpty {
             mixedSearchResults = nil
         } else {
@@ -237,8 +238,8 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
             }
             let sortedAllItems = allItems.values.sorted(using: comparator)
             let chainIDs = Set(sortedAllItems.map(\.chainID))
-            let chains = Chain.mixinChains(ids: chainIDs)
-            mixedSearchResults = (sortedAllItems, chains, chainIDs)
+            let groups = Group.mixinChains(ids: chainIDs)
+            mixedSearchResults = (sortedAllItems, groups)
         }
         DispatchQueue.main.async {
             guard self.trimmedKeyword == keyword else {
@@ -247,18 +248,15 @@ final class MixinTokenSelectorViewController: ChainCategorizedTokenSelectorViewC
             if let mixedSearchResults {
                 self.searchResultsKeyword = keyword
                 self.searchResults = mixedSearchResults.items
-                self.searchResultChains = mixedSearchResults.chains
-                if let chain = self.selectedChain, mixedSearchResults.chainIDs.contains(chain.id) {
-                    self.tokenIndicesForSelectedChain = self.tokenIndices(
-                        tokens: mixedSearchResults.items,
-                        chainID: chain.id
-                    )
+                self.searchResultGroups = mixedSearchResults.groups
+                if let group = self.selectedGroup, mixedSearchResults.groups.contains(group) {
+                    self.tokensForSelectedGroup = self.tokens(from: mixedSearchResults.items, filteredBy: group)
                 } else {
-                    self.selectedChain = nil
-                    self.tokenIndicesForSelectedChain = nil
+                    self.selectedGroup = nil
+                    self.tokensForSelectedGroup = nil
                 }
                 self.collectionView.reloadData()
-                self.reloadChainSelection()
+                self.reloadGroupSelection()
                 self.reloadTokenSelection()
             }
             self.collectionView.checkEmpty(

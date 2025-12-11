@@ -7,34 +7,35 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
     
     let operationQueue = OperationQueue()
     let queue = DispatchQueue(label: "one.mixin.messenger.ChainCategorizedTokenSelector")
+    let selectedID: String?
     
     var recentTokens: [SelectableToken] = []
     var recentTokenChanges: [String: TokenChange] = [:] // Key is token's id
     
     var defaultTokens: [SelectableToken]
-    var defaultChains: OrderedSet<Chain>
+    var defaultGroups: OrderedSet<Group>
     
-    var selectedChain: Chain?
-    var tokenIndicesForSelectedChain: [Int]?
+    var selectedGroup: Group?
+    var tokensForSelectedGroup: [SelectableToken]?
     
-    private var searchObserver: AnyCancellable?
     var searchResultsKeyword: String?
     var searchResults: [SelectableToken]?
-    var searchResultChains: OrderedSet<Chain>?
+    var searchResultGroups: OrderedSet<Group>?
     
     private let maxNumberOfRecents = 6
     private let recentGroupHorizontalMargin: CGFloat = 20
     private let searchDebounceInterval: TimeInterval
-    private let selectedID: String?
+    
+    private var searchObserver: AnyCancellable?
     
     init(
         defaultTokens: [SelectableToken],
-        defaultChains: OrderedSet<Chain>,
+        defaultGroups: OrderedSet<Group>,
         searchDebounceInterval: TimeInterval,
         selectedID: String?
     ) {
         self.defaultTokens = defaultTokens
-        self.defaultChains = defaultChains
+        self.defaultGroups = defaultGroups
         self.searchDebounceInterval = searchDebounceInterval
         self.selectedID = selectedID
         super.init()
@@ -98,7 +99,7 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
                     ]
                 }
                 return section
-            case .chainSelector:
+            case .groupSelector:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .absolute(38))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
@@ -121,7 +122,7 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
-        reloadChainSelection()
+        reloadGroupSelection()
     }
     
     @objc func prepareForSearch(_ textField: UITextField) {
@@ -129,11 +130,11 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
         if keyword.isEmpty {
             searchResultsKeyword = nil
             searchResults = nil
-            searchResultChains = nil
-            if let chain = selectedChain, defaultChains.contains(chain) {
-                tokenIndicesForSelectedChain = tokenIndices(tokens: defaultTokens, chainID: chain.id)
+            searchResultGroups = nil
+            if let group = selectedGroup, defaultGroups.contains(group) {
+                tokensForSelectedGroup = tokens(from: defaultTokens, filteredBy: group)
             } else {
-                tokenIndicesForSelectedChain = nil
+                tokensForSelectedGroup = nil
             }
             collectionView.reloadData()
             collectionView.checkEmpty(
@@ -141,7 +142,7 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
                 text: R.string.localizable.dont_have_assets(),
                 photo: R.image.emptyIndicator.ic_hidden_assets()!
             )
-            reloadChainSelection()
+            reloadGroupSelection()
             searchBoxView.isBusy = false
         } else if keyword != searchResultsKeyword {
             searchBoxView.isBusy = true
@@ -166,7 +167,7 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
         
     }
     
-    func tokenIndices(tokens: [SelectableToken], chainID: String) -> [Int] {
+    func tokens(from allTokens: [SelectableToken], filteredBy group: Group) -> [SelectableToken] {
         assertionFailure("Override to implement chain filter")
         return []
     }
@@ -191,6 +192,43 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
         }
     }
     
+    func reloadGroupSelection() {
+        let groups = searchResultGroups ?? defaultGroups
+        let item = if let group = selectedGroup, let index = groups.firstIndex(of: group) {
+            index + 1 // 1 for the "All"
+        } else {
+            0
+        }
+        let indexPath = IndexPath(item: item, section: Section.groupSelector.rawValue)
+        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+    }
+    
+    func reloadTokenSelection() {
+        guard let id = selectedID else {
+            return
+        }
+        let item: Int?
+        if let tokens = tokensForSelectedGroup {
+            item = tokens.firstIndex(where: { $0.assetID == id })
+        } else if let tokens = searchResults {
+            item = tokens.firstIndex(where: { $0.assetID == id })
+        } else {
+            item = defaultTokens.firstIndex(where: { $0.assetID == id })
+        }
+        guard let item else {
+            return
+        }
+        let indexPath = IndexPath(item: item, section: Section.tokens.rawValue)
+        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+    }
+    
+    func reloadWithoutAnimation(section: Section) {
+        let sections = IndexSet(integer: section.rawValue)
+        UIView.performWithoutAnimation {
+            collectionView.reloadSections(sections)
+        }
+    }
+    
     // MARK: - UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -210,10 +248,10 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
             } else {
                 0
             }
-        case .chainSelector:
-            return (searchResultChains ?? defaultChains).count + 1 // 1 for the "All"
+        case .groupSelector:
+            return (searchResultGroups ?? defaultGroups).count + 1 // 1 for the "All"
         case .tokens:
-            return tokenIndicesForSelectedChain?.count
+            return tokensForSelectedGroup?.count
             ?? searchResults?.count
             ?? defaultTokens.count
         }
@@ -228,13 +266,13 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
             let token = recentTokens[indexPath.item]
             configureRecentCell(cell, withToken: token)
             return cell
-        case .chainSelector:
+        case .groupSelector:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
             if indexPath.item == 0 {
                 cell.label.text = R.string.localizable.all()
             } else {
-                let chains = searchResultChains ?? defaultChains
-                cell.label.text = chains[indexPath.item - 1].name
+                let groups = searchResultGroups ?? defaultGroups
+                cell.label.text = groups[indexPath.item - 1].displayName
             }
             return cell
         case .tokens:
@@ -261,10 +299,10 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
         switch Section(rawValue: indexPath.section)! {
         case .recent:
             break
-        case .chainSelector:
+        case .groupSelector:
             if let indexPathsForSelectedItems = collectionView.indexPathsForSelectedItems {
                 for selectedIndexPath in indexPathsForSelectedItems {
-                    if selectedIndexPath.section == Section.chainSelector.rawValue && selectedIndexPath.item != indexPath.item {
+                    if selectedIndexPath.section == Section.groupSelector.rawValue && selectedIndexPath.item != indexPath.item {
                         collectionView.deselectItem(at: selectedIndexPath, animated: false)
                     }
                 }
@@ -283,7 +321,7 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
     
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
         switch Section(rawValue: indexPath.section)! {
-        case .recent, .chainSelector:
+        case .recent, .groupSelector:
             break
         case .tokens:
             presentingViewController?.dismiss(animated: true)
@@ -296,20 +334,20 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
         case .recent:
             let token = recentTokens[indexPath.item]
             pickUp(token: token, from: .recent)
-        case .chainSelector:
+        case .groupSelector:
             if indexPath.item == 0 {
-                selectedChain = nil
-                tokenIndicesForSelectedChain = nil
+                selectedGroup = nil
+                tokensForSelectedGroup = nil
             } else {
-                let chainIndex = indexPath.item - 1
-                if let searchResultChains, let searchResults {
-                    let chain = searchResultChains[chainIndex]
-                    selectedChain = chain
-                    tokenIndicesForSelectedChain = tokenIndices(tokens: searchResults, chainID: chain.id)
+                let groupIndex = indexPath.item - 1
+                if let searchResultGroups, let searchResults {
+                    let group = searchResultGroups[groupIndex]
+                    selectedGroup = group
+                    tokensForSelectedGroup = tokens(from: searchResults, filteredBy: group)
                 } else {
-                    let chain = defaultChains[chainIndex]
-                    selectedChain = chain
-                    tokenIndicesForSelectedChain = tokenIndices(tokens: defaultTokens, chainID: chain.id)
+                    let group = defaultGroups[groupIndex]
+                    selectedGroup = group
+                    tokensForSelectedGroup = tokens(from: defaultTokens, filteredBy: group)
                 }
             }
             self.reloadWithoutAnimation(section: .tokens)
@@ -317,7 +355,7 @@ class ChainCategorizedTokenSelectorViewController<SelectableToken: Token>: Token
         case .tokens:
             let token = token(at: indexPath)
             if searchResults == nil {
-                if selectedChain == nil {
+                if selectedGroup == nil {
                     pickUp(token: token, from: .allItems)
                 } else {
                     pickUp(token: token, from: .chainFilteredItems)
@@ -344,7 +382,7 @@ extension ChainCategorizedTokenSelectorViewController {
     
     enum Section: Int, CaseIterable {
         case recent
-        case chainSelector
+        case groupSelector
         case tokens
     }
     
@@ -354,6 +392,7 @@ extension ChainCategorizedTokenSelectorViewController {
         case allItems
         case chainFilteredItems
         case searchResults
+        case stock
         
         var asEventMethod: String {
             switch self {
@@ -365,21 +404,31 @@ extension ChainCategorizedTokenSelectorViewController {
                 "chain_item_click"
             case .searchResults:
                 "search_item_click"
+            case .stock:
+                "stock"
             }
         }
         
     }
     
-    struct Chain: Equatable, Hashable {
+    enum Group: Hashable {
         
-        let id: String
-        let name: String
+        case byCategory(SwapToken.Category)
+        case byChain(Chain)
         
-        static func == (lhs: Self, rhs: Self) -> Bool {
-            lhs.id == rhs.id
+        var displayName: String {
+            switch self {
+            case .byCategory(let category):
+                switch category {
+                case .stock:
+                    R.string.localizable.stocks()
+                }
+            case .byChain(let chain):
+                chain.name
+            }
         }
         
-        static func mixinChains(ids: Set<String>) -> OrderedSet<Chain> {
+        static func mixinChains(ids: Set<String>) -> OrderedSet<Group> {
             let all = [
                 Chain(id: ChainID.ethereum, name: "Ethereum"),
                 Chain(id: ChainID.solana, name: "Solana"),
@@ -391,19 +440,32 @@ extension ChainCategorizedTokenSelectorViewController {
                 Chain(id: ChainID.opMainnet, name: "Optimism"),
                 Chain(id: ChainID.ton, name: "TON"),
             ]
-            let chains = all.filter { chain in
+            let groups: [Group] = all.filter { chain in
                 ids.contains(chain.id)
+            }.map { chain in
+                    .byChain(chain)
             }
-            return OrderedSet(chains)
+            return OrderedSet(groups)
         }
         
-        static func web3Chains(ids: Set<String>) -> OrderedSet<Chain> {
-            let chains = Web3Chain.all.filter { chain in
+        static func web3Chains(ids: Set<String>) -> OrderedSet<Group> {
+            let groups: [Group] = Web3Chain.all.filter { chain in
                 ids.contains(chain.chainID)
             }.map { chain in
-                Chain(id: chain.chainID, name: chain.name)
+                    .byChain(Chain(id: chain.chainID, name: chain.name))
             }
-            return OrderedSet(chains)
+            return OrderedSet(groups)
+        }
+        
+    }
+    
+    struct Chain: Equatable, Hashable {
+        
+        let id: String
+        let name: String
+        
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            lhs.id == rhs.id
         }
         
         func hash(into hasher: inout Hasher) {
@@ -430,75 +492,14 @@ extension ChainCategorizedTokenSelectorViewController {
         
     }
     
-    func reloadChainSelection() {
-        let chains = searchResultChains ?? defaultChains
-        let item = if let chain = selectedChain, let index = chains.firstIndex(of: chain) {
-            index + 1 // 1 for the "All"
-        } else {
-            0
-        }
-        let indexPath = IndexPath(item: item, section: Section.chainSelector.rawValue)
-        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-    }
-    
-    func reloadTokenSelection() {
-        guard let id = selectedID else {
-            return
-        }
-        let item: Int
-        if let searchResults {
-            if let index = searchResults.firstIndex(where: { $0.assetID == id }) {
-                if let indices = tokenIndicesForSelectedChain {
-                    if let i = indices.firstIndex(of: index) {
-                        item = i
-                    } else {
-                        // The selected token doesn't match with selected chain
-                        return
-                    }
-                } else {
-                    item = index
-                }
-            } else {
-                // The selected token doesn't exists in search results
-                return
-            }
-        } else if let index = defaultTokens.firstIndex(where: { $0.assetID == id }) {
-            if let indices = tokenIndicesForSelectedChain {
-                if let i = indices.firstIndex(of: index) {
-                    item = i
-                } else {
-                    // The selected token doesn't match with selected chain
-                    return
-                }
-            } else {
-                item = index
-            }
-        } else {
-            // The selected token comes from the search results
-            return
-        }
-        let indexPath = IndexPath(item: item, section: Section.tokens.rawValue)
-        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-    }
-    
     private func token(at indexPath: IndexPath) -> SelectableToken {
         assert(indexPath.section == Section.tokens.rawValue)
-        let index = if let indices = tokenIndicesForSelectedChain {
-            indices[indexPath.item]
+        return if let tokensForSelectedGroup {
+            tokensForSelectedGroup[indexPath.item]
+        } else if let searchResults {
+            searchResults[indexPath.item]
         } else {
-            indexPath.item
-        }
-        return if let searchResults {
-            searchResults[index]
-        } else {
-            defaultTokens[index]
-        }
-    }
-    
-    private func reloadWithoutAnimation(section: Section) {
-        let sections = IndexSet(integer: section.rawValue)
-        UIView.performWithoutAnimation {
-            collectionView.reloadSections(sections)
+            defaultTokens[indexPath.item]
         }
     }
     

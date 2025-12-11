@@ -34,6 +34,7 @@ struct TokenComparator<Token: ComparableToken>: SortComparator {
     var order: SortOrder = .forward
     
     private let lowercasedKeyword: String?
+    private let missingIconURL = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
     
     init(keyword: String?) {
         self.lowercasedKeyword = keyword?.lowercased()
@@ -96,9 +97,9 @@ struct TokenComparator<Token: ComparableToken>: SortComparator {
         }
     }
     
-    func determinant(item: Token, lowercasedKeyword: String) -> (Int, Decimal, Decimal, Int) {
+    func determinant(item: Token, lowercasedKeyword: String) -> (Int, Int, Decimal, Decimal) {
+        let iconPriority = item.iconURL == missingIconURL ? 0 : 1
         let lowercasedSymbol = item.symbol.lowercased()
-        let missingIconURL = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
         let symbolPriority = if lowercasedSymbol == lowercasedKeyword {
             3
         } else if lowercasedSymbol.hasPrefix(lowercasedKeyword) {
@@ -108,22 +109,19 @@ struct TokenComparator<Token: ComparableToken>: SortComparator {
         } else {
             0
         }
-        let iconPriority = item.iconURL == missingIconURL ? 0 : 1
         return (
+            iconPriority,
             symbolPriority,
             item.decimalBalance * item.decimalUSDPrice,
             item.decimalBalance,
-            iconPriority,
         )
     }
     
-    func determinant(item: Token) -> (Decimal, Decimal, Int) {
-        let missingIconURL = "https://images.mixin.one/yH_I5b0GiV2zDmvrXRyr3bK5xusjfy5q7FX3lw3mM2Ryx4Dfuj6Xcw8SHNRnDKm7ZVE3_LvpKlLdcLrlFQUBhds=s128"
-        let iconPriority = item.iconURL == missingIconURL ? 0 : 1
-        return (
+    func determinant(item: Token) -> (Int, Decimal, Decimal) {
+        (
+            item.iconURL == missingIconURL ? 0 : 1,
             item.decimalBalance * item.decimalUSDPrice,
             item.decimalBalance,
-            iconPriority,
         )
     }
     

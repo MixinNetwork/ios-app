@@ -83,10 +83,11 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
                 guard let self, self.trimmedKeyword == keyword else {
                     return
                 }
+                let groupBeforeSearch = self.selectedGroup
                 self.searchResultsKeyword = keyword
                 self.searchResults = localResults
                 self.searchResultGroups = localResultGroups
-                if let group = self.selectedGroup, localResultGroups.contains(group) {
+                if let group = groupBeforeSearch, localResultGroups.contains(group) {
                     self.tokensForSelectedGroup = self.tokens(from: localResults, filteredBy: group)
                 } else {
                     self.selectedGroup = nil
@@ -105,6 +106,7 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
                     case .success(let remoteResults):
                         self?.reloadSearchResults(
                             keyword: keyword,
+                            groupBeforeSearch: groupBeforeSearch,
                             localResults: localResults,
                             remoteResults: remoteResults,
                             comparator: comparator,
@@ -112,6 +114,7 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
                     case .failure(.emptyResponse):
                         self?.reloadSearchResults(
                             keyword: keyword,
+                            groupBeforeSearch: groupBeforeSearch,
                             localResults: localResults,
                             remoteResults: [],
                             comparator: comparator,
@@ -127,6 +130,7 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
     
     private func reloadSearchResults(
         keyword: String,
+        groupBeforeSearch: Group?,
         localResults: [BalancedSwapToken],
         remoteResults: [SwapToken],
         comparator: TokenComparator<BalancedSwapToken>,
@@ -171,7 +175,10 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
                 self.searchResultsKeyword = keyword
                 self.searchResults = mixedSearchResults.items
                 self.searchResultGroups = mixedSearchResults.groups
-                if let group = self.selectedGroup, mixedSearchResults.groups.contains(group) {
+                if let group = self.selectedGroup ?? groupBeforeSearch,
+                   mixedSearchResults.groups.contains(group)
+                {
+                    self.selectedGroup = group
                     self.tokensForSelectedGroup = self.tokens(
                         from: mixedSearchResults.items,
                         filteredBy: group

@@ -116,8 +116,7 @@ final class PendingTradeOrderLoader {
                         Web3OrderDAO.shared.save(orders: orders)
                     }
                     if let self {
-                        // Remote orders are sorted by created_at ASC, reverse it for display
-                        self.delegate?.pendingSwapOrder(self, didLoad: orders.reversed())
+                        self.delegate?.pendingSwapOrder(self, didLoad: orders)
                         await MainActor.run {
                             self.scheduleRemoteDataLoading(timeInterval: refreshInterval)
                         }

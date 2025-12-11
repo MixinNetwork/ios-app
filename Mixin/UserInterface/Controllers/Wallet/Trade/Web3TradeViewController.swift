@@ -409,6 +409,8 @@ extension Web3TradeViewController: PendingTradeOrderLoader.Delegate {
                     payToken: tokens[order.payAssetID],
                     receiveToken: tokens[order.receiveAssetID]
                 )
+            }.sorted { one, another in
+                one.createdAt > another.createdAt
             }
             DispatchQueue.main.async {
                 self.reload(openOrders: viewModels)

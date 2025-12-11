@@ -167,7 +167,7 @@ final class TradeOrdersViewController: UIViewController {
             }
         }
         let behavior: LoadLocalDataOperation.Behavior
-        if let firstVisibleIndexPath = collectionView.indexPathsForSelectedItems?.sorted(by: <).first,
+        if let firstVisibleIndexPath = collectionView.indexPathsForVisibleItems.sorted(by: <).first,
            let orderID = dataSource.itemIdentifier(for: firstVisibleIndexPath),
            let firstItem = viewModels[orderID]
         {
@@ -208,32 +208,39 @@ final class TradeOrdersViewController: UIViewController {
         )
     }
     
-    private func withTableViewContentOffsetManaged(_ block: () -> Void) {
+    private func withCollectionViewContentOffsetManaged(_ block: () -> Void) {
         var tableBottomContentOffsetY: CGFloat {
             collectionView.adjustedContentInset.vertical + collectionView.contentSize.height - collectionView.frame.height
         }
-        
-        let distanceToBottom = collectionView.contentSize.height - collectionView.contentOffset.y
-        let wasAtTableTop = collectionView.contentOffset.y < 1
-        let wasAtTableBottom = abs(collectionView.contentOffset.y - tableBottomContentOffsetY) < 1
-        block()
-        collectionView.layoutIfNeeded() // Important, ensures `collectionView.contentSize` is correct
-        let contentOffset: CGPoint
-        if wasAtTableTop {
-            Logger.general.debug(category: "TradeOrders", message: "Going to table top")
-            contentOffset = .zero
-        } else if wasAtTableBottom {
-            Logger.general.debug(category: "TradeOrders", message: "Going to table bottom")
-            contentOffset = CGPoint(x: 0, y: tableBottomContentOffsetY)
+        let firstItem: (orderID: OrderID, offset: CGFloat)?
+        if let indexPath = collectionView.indexPathsForVisibleItems.sorted(by: <).first,
+           let orderID = dataSource.itemIdentifier(for: indexPath),
+           let cell = collectionView.cellForItem(at: indexPath)
+        {
+            firstItem = (orderID, collectionView.contentOffset.y - cell.frame.origin.y)
         } else {
-            Logger.general.debug(category: "TradeOrders", message: "Going to managed offset")
-            let contentSizeAfter = collectionView.contentSize
-            contentOffset = CGPoint(
-                x: collectionView.contentOffset.x,
-                y: max(collectionView.contentOffset.y, contentSizeAfter.height - distanceToBottom)
-            )
+            firstItem = nil
         }
-        collectionView.setContentOffset(contentOffset, animated: false)
+        let wasAtTop = collectionView.contentOffset.y < 1
+        let wasAtBottom = abs(collectionView.contentOffset.y - tableBottomContentOffsetY) < 1
+        block()
+        if wasAtTop {
+            Logger.general.debug(category: "TradeOrders", message: "Going to table top")
+            collectionView.setContentOffset(.zero, animated: false)
+        } else if wasAtBottom {
+            Logger.general.debug(category: "TradeOrders", message: "Going to table bottom")
+            let contentOffset = CGPoint(x: 0, y: tableBottomContentOffsetY)
+            collectionView.setContentOffset(contentOffset, animated: false)
+        } else if let firstItem, let indexPath = dataSource.indexPath(for: firstItem.orderID) {
+            if let attributes = collectionView.layoutAttributesForItem(at: indexPath) {
+                let contentOffset = CGPoint(
+                    x: collectionView.contentOffset.x,
+                    y: attributes.frame.origin.y + firstItem.offset
+                )
+                Logger.general.debug(category: "TradeOrders", message: "Going to managed offset: \(firstItem.offset)")
+                collectionView.setContentOffset(contentOffset, animated: false)
+            }
+        }
     }
     
     private func reloadData(sorting: TradeOrder.Sorting) {
@@ -283,6 +290,36 @@ final class TradeOrdersViewController: UIViewController {
         }
     }
     
+    private func loadPreviousPage() {
+        guard let firstItem else {
+            Logger.general.debug(category: "TradeOrders", message: "No firstItem, abort loading")
+            return
+        }
+        Logger.general.debug(category: "TradeOrders", message: "Will load before \(firstItem.createdAt)")
+        let operation = LoadLocalDataOperation(
+            viewController: self,
+            behavior: .prepend(offset: firstItem),
+            filter: filter,
+            sorting: sorting
+        )
+        queue.addOperation(operation)
+    }
+    
+    private func loadNextPage() {
+        guard let lastItem else {
+            Logger.general.debug(category: "TradeOrders", message: "No lastItem, abort loading")
+            return
+        }
+        Logger.general.debug(category: "TradeOrders", message: "Will load after \(lastItem.createdAt)")
+        let operation = LoadLocalDataOperation(
+            viewController: self,
+            behavior: .append(offset: lastItem),
+            filter: filter,
+            sorting: sorting
+        )
+        queue.addOperation(operation)
+    }
+    
 }
 
 extension TradeOrdersViewController: UICollectionViewDelegate {
@@ -294,6 +331,21 @@ extension TradeOrdersViewController: UICollectionViewDelegate {
         }
         let viewController = TradeOrderViewController(viewModel: viewModel)
         navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        switch indexPath {
+        case loadPreviousPageIndexPath:
+            Logger.general.debug(category: "TradeOrders", message: "Previous canary consumed")
+            loadPreviousPageIndexPath = nil
+            loadPreviousPage()
+        case loadNextPageIndexPath:
+            Logger.general.debug(category: "TradeOrders", message: "Next canary consumed")
+            loadNextPageIndexPath = nil
+            loadNextPage()
+        default:
+            break
+        }
     }
     
 }
@@ -483,7 +535,7 @@ extension TradeOrdersViewController {
             let receiveToken = TokenDAO.shared.tradeOrderToken(id: order.receiveAssetID)
             ?? Web3TokenDAO.shared.tradeOrderToken(id: order.receiveAssetID)
             let viewModel = TradeOrderViewModel(order: order, wallet: wallet, payToken: payToken, receiveToken: receiveToken)
-            Logger.general.debug(category: "TradeOrders", message: "Reload id: \(orderID)")
+            Logger.general.debug(category: "TradeOrders", message: "Reload item: \(viewModel.createdAt)")
             DispatchQueue.main.sync {
                 guard let viewController, !isCancelled else {
                     return
@@ -518,11 +570,11 @@ extension TradeOrdersViewController {
                 case .reload:
                     "reload"
                 case .reloadVisibleItems(let offset):
-                    "reloadVisibleItems(\(offset.orderID))"
+                    "reloadVisibleItems(\(offset.createdAt))"
                 case .prepend(let offset):
-                    "prepend(\(offset.orderID))"
+                    "prepend(\(offset.createdAt))"
                 case .append(let offset):
-                    "append(\(offset.orderID))"
+                    "append(\(offset.createdAt))"
                 }
             }
             
@@ -597,7 +649,7 @@ extension TradeOrdersViewController {
                 )
             }
             
-            Logger.general.debug(category: "TradeOrders", message: "Loaded \(viewModels.count) items:\n\(viewModels.map(\.orderID))")
+            Logger.general.debug(category: "TradeOrders", message: "Loaded \(viewModels.count) items:\n\(viewModels.map(\.createdAt))")
             
             var dataSnapshot: DataSourceSnapshot
             switch behavior {
@@ -677,11 +729,11 @@ extension TradeOrdersViewController {
                     controller.collectionView.setContentOffset(.zero, animated: false)
                     controller.dataSource.applySnapshotUsingReloadData(dataSnapshot)
                 case .reloadVisibleItems:
-                    controller.withTableViewContentOffsetManaged {
+                    controller.withCollectionViewContentOffsetManaged {
                         if let item = viewModels.first {
                             controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
                             controller.firstItem = item
-                            Logger.general.debug(category: "TradeOrders", message: "Set previous canary \(item.orderID)")
+                            Logger.general.debug(category: "TradeOrders", message: "Set previous canary \(item.createdAt)")
                         } else {
                             controller.loadPreviousPageIndexPath = nil
                             controller.firstItem = nil
@@ -690,11 +742,11 @@ extension TradeOrdersViewController {
                         controller.dataSource.applySnapshotUsingReloadData(dataSnapshot)
                     }
                 case .prepend:
-                    controller.withTableViewContentOffsetManaged {
+                    controller.withCollectionViewContentOffsetManaged {
                         if let item = viewModels.first {
                             controller.loadPreviousPageIndexPath = IndexPath(row: 0, section: 0)
                             controller.firstItem = item
-                            Logger.general.debug(category: "TradeOrders", message: "Set previous canary \(item.orderID)")
+                            Logger.general.debug(category: "TradeOrders", message: "Set previous canary \(item.createdAt)")
                         } else {
                             controller.loadPreviousPageIndexPath = nil
                             controller.firstItem = nil
@@ -717,7 +769,7 @@ extension TradeOrdersViewController {
                        let canary = viewModels.last,
                        let indexPath = controller.dataSource.indexPath(for: canary.orderID)
                     {
-                        Logger.general.debug(category: "TradeOrders", message: "Set next canary \(canary.orderID)")
+                        Logger.general.debug(category: "TradeOrders", message: "Set next canary \(canary.createdAt)")
                         controller.loadNextPageIndexPath = indexPath
                         controller.lastItem = canary
                     } else {

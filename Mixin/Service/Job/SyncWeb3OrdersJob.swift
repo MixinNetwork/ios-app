@@ -31,7 +31,7 @@ final class SyncWeb3OrdersJob: BaseJob {
         )
         while true {
             let orders = try result.get()
-            let offset = orders.first?.createdAt
+            let offset = orders.last?.createdAt
             Logger.general.debug(category: "SyncWeb3OrdersJob", message: "Write \(orders.count) orders, new offset: \(offset ?? "(null)")")
             Web3OrderDAO.shared.save(orders: orders) { [walletID] db in
                 if let offset {

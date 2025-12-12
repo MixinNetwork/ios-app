@@ -15,7 +15,7 @@ extension App {
             }
             let schemeMatches = rule.scheme?.lowercased() == scheme
             let hostMatches = rule.host?.lowercased() == host
-            let pathMatches = url.path.hasPrefix(rule.path)
+            let pathMatches = url.path.hasPrefix(rule.path) || (url.path == "" && rule.path == "/")
             return schemeMatches && hostMatches && pathMatches
         }
     }

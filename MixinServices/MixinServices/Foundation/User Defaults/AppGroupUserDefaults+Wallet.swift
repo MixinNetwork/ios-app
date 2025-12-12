@@ -28,6 +28,7 @@ extension AppGroupUserDefaults {
             
             case hasViewedPrivacyWalletTip = "has_viewed_privacy_wallet_tip"
             case hasViewedClassicWalletTip = "has_viewed_classic_wallet_tip"
+            case hasViewedSafeWalletTip = "has_viewed_safe_wallet_tip"
             
             case lastBuyingAssetID = "last_buy_asset"
             case lastBuyingCurrencyCode = "last_buy_currency"
@@ -77,6 +78,13 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .wallet, key: Key.hasViewedClassicWalletTip, defaultValue: false)
         public static var hasViewedClassicWalletTip: Bool {
+            didSet {
+                NotificationCenter.default.post(onMainThread: didChangeWalletTipNotification, object: self)
+            }
+        }
+        
+        @Default(namespace: .wallet, key: Key.hasViewedSafeWalletTip, defaultValue: false)
+        public static var hasViewedSafeWalletTip: Bool {
             didSet {
                 NotificationCenter.default.post(onMainThread: didChangeWalletTipNotification, object: self)
             }

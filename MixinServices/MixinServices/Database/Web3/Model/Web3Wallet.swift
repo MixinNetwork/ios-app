@@ -8,6 +8,7 @@ public class Web3Wallet: Codable {
         case importedMnemonic = "imported_mnemonic"
         case importedPrivateKey = "imported_private_key"
         case watchAddress = "watch_address"
+        case mixinSafe = "mixin_safe"
     }
     
     public enum CodingKeys: String, CodingKey {
@@ -16,6 +17,10 @@ public class Web3Wallet: Codable {
         case name = "name"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+        case safeRole = "safe_role"
+        case safeChainID = "safe_chain_id"
+        case safeAddress = "safe_address"
+        case safeURL = "safe_url"
     }
     
     public let walletID: String
@@ -23,6 +28,30 @@ public class Web3Wallet: Codable {
     public let name: String
     public let createdAt: String
     public let updatedAt: String
+    public let safeRole: UnknownableEnum<SafeAccount.Role>?
+    public let safeChainID: String?
+    public let safeAddress: String?
+    public let safeURL: String?
+    
+    init(
+        walletID: String, category: Category, name: String,
+        createdAt: String, updatedAt: String, safeRole: String?,
+        safeChainID: String?, safeAddress: String?, safeURL: String?
+    ) {
+        self.walletID = walletID
+        self.category = .known(category)
+        self.name = name
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.safeRole = if let safeRole {
+            .init(rawValue: safeRole)
+        } else {
+            nil
+        }
+        self.safeChainID = safeChainID
+        self.safeAddress = safeAddress
+        self.safeURL = safeURL
+    }
     
 }
 

@@ -36,7 +36,7 @@ struct WalletSummary {
                 true
             case .common(let wallet):
                 switch wallet.category.knownCase {
-                case .classic, .importedMnemonic, .importedPrivateKey:
+                case .classic, .importedMnemonic, .importedPrivateKey, .mixinSafe:
                     true
                 case .watchAddress, .none:
                     // Watch wallets are excluded from calculation

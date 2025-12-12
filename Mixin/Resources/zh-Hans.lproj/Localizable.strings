@@ -413,6 +413,8 @@
 "create_new_wallet" = "创建新钱包";
 "create_new_wallet_description" = "添加一个新的多链钱包";
 "create_pin" = "创建钱包";
+"create_safe" = "创建 Safe";
+"create_safe_description" = "您尚未拥有 Safe。现在创建即可与家人、朋友或同事安全管理资产。";
 "created" = "创建日期";
 "created_this_group" = "%@创建了这个群组";
 "creating_wallet_terminated_unexpectedly" = "创建钱包意外中止，点继续完成钱包创建";
@@ -682,6 +684,7 @@
 "group_participant_add_limit" = "不能再添加成员，一次最多添加 50 个。";
 "group_qr_code_prompt" = "扫描二维码加入群组";
 "groups_in_common" = "共同群组";
+"guideline" = "使用指南";
 "hash" = "哈希";
 "help" = "帮助";
 "help_center" = "帮助中心";
@@ -1223,7 +1226,12 @@
 "rewards" = "礼遇";
 "room_is_full" = "房间已满";
 "safe" = "金库";
+"safe_create_guideline_url" = "https://support.mixin.one/zh/article/safe-1ljf7ld/";
+"safe_learn_more_url" = "https://support.mixin.one/zh/article/mixin-safe-1bl8w6l/";
 "safe_members" = "金库共管人";
+"safe_vault_member" = "共管人";
+"safe_vault_owner" = "所有者";
+"safe_wallet_description" = "基于比特币、以太坊等网络的多重签名冷钱包。";
 "save" = "保存";
 "save_image" = "保存图片";
 "save_to_camera_roll" = "保存到相册";
@@ -1568,6 +1576,7 @@
 "upgrade_plan" = "升级会员";
 "upgrade_plan_for" = "升级会员仅需 %@";
 "upgrade_safe" = "升级 Safe";
+"upgrade_safe_description" = "升级到 Mixin One 即可解锁 Mixin Safe，与你的家人、朋友或同事一起安全管理资产。";
 "upgrade_tip" = "升级 TIP";
 "upgrade_tip_successfully" = "TIP 升级成功";
 "upgrading" = "升级中...";
@@ -1635,6 +1644,10 @@
 "wallet" = "钱包";
 "wallet_already_added" = "这个钱包已经添加过了";
 "wallet_candidate_imported" = "已导入";
+"wallet_category_created" = "创建的钱包";
+"wallet_category_imported" = "导入的钱包";
+"wallet_category_safe" = "Safe 金库";
+"wallet_category_watching" = "观察钱包";
 "wallet_enable_biometric_pay" = "开启后，转账时可验证%@快速完成付款。";
 "wallet_hide_asset_confirmation" = "您确定要隐藏%@吗？";
 "wallet_imported" = "导入";
@@ -1683,6 +1696,7 @@
 "weeks" = "周";
 "weeks_count_short" = "%d周";
 "what_is_pin" = "什么是 PIN ?";
+"whats_safe_wallet" = "什么是 Safe 金库？";
 "whats_your_name" = "你的名字？";
 "wifi" = "WLAN";
 "wifi_and_cellular" = "WLAN 与蜂窝移动网";

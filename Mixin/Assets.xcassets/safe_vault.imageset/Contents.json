@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "safe_vault.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

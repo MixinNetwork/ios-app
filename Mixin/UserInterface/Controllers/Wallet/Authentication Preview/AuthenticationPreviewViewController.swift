@@ -295,10 +295,17 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             switch wallet {
             case .privacy:
                 cell.nameLabel.text = R.string.localizable.privacy_wallet()
+                cell.iconImageView.image = R.image.privacy_wallet()
                 cell.iconImageView.isHidden = false
             case .common(let wallet):
                 cell.nameLabel.text = wallet.name
-                cell.iconImageView.isHidden = true
+                switch wallet.category.knownCase {
+                case .mixinSafe:
+                    cell.iconImageView.image = R.image.safe_vault()
+                    cell.iconImageView.isHidden = false
+                default:
+                    cell.iconImageView.isHidden = true
+                }
             }
             return cell
         case let .commonWalletReceiver(user, address):

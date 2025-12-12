@@ -221,11 +221,18 @@ extension Web3TokenReceiverViewController {
     }
     
     private func send(to wallet: Web3Wallet) {
-        let address = Web3AddressDAO.shared.address(
-            walletID: wallet.walletID,
-            chainID: payment.chain.chainID
-        )
-        guard let destination = address?.destination else {
+        let destination: String?
+        switch wallet.category.knownCase {
+        case .mixinSafe:
+            destination = wallet.safeAddress
+        default:
+            let address = Web3AddressDAO.shared.address(
+                walletID: wallet.walletID,
+                chainID: payment.chain.chainID
+            )
+            destination = address?.destination
+        }
+        guard let destination else {
             return
         }
         let payment = Web3SendingTokenToAddressPayment(

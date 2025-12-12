@@ -413,6 +413,8 @@
 "create_new_wallet" = "Create New Wallet";
 "create_new_wallet_description" = "Add a new multi-chain wallet";
 "create_pin" = "Create PIN";
+"create_safe" = "Create Safe";
+"create_safe_description" = "You don't have a Safe yet. Create one now and securely manage assets with your family, friends, or colleagues.";
 "created" = "Created";
 "created_this_group" = "%@ created this group";
 "creating_wallet_terminated_unexpectedly" = "Creating wallet terminated unexpectedly, click \"Continue\" to complete the creation";
@@ -682,6 +684,7 @@
 "group_participant_add_limit" = "You can’t add this participant because only add up to 50 at a time.";
 "group_qr_code_prompt" = "Scan the QR Code to join this group";
 "groups_in_common" = "Groups in Common";
+"guideline" = "Guideline";
 "hash" = "HASH";
 "help" = "Help";
 "help_center" = "Help center";
@@ -1223,7 +1226,12 @@
 "rewards" = "Rewards";
 "room_is_full" = "Room is full";
 "safe" = "SAFE";
+"safe_create_guideline_url" = "https://support.mixin.one/en/article/how-to-create-a-safe-on-mixin-1ehi2mf/";
+"safe_learn_more_url" = "https://support.mixin.one/en/article/what-is-mixin-safe-g20z2m/";
 "safe_members" = "Safe Members";
+"safe_vault_member" = "Member";
+"safe_vault_owner" = "Owner";
+"safe_wallet_description" = "A multi-signature cold wallet based on Bitcoin, Ethereum, and other networks.";
 "save" = "Save";
 "save_image" = "Save Image";
 "save_to_camera_roll" = "Save to Camera Roll";
@@ -1568,6 +1576,7 @@
 "upgrade_plan" = "Upgrade Plan";
 "upgrade_plan_for" = "Upgrade for %@";
 "upgrade_safe" = "Upgrade safe";
+"upgrade_safe_description" = "Upgrade to Mixin One to unlock Mixin Safe and securely manage assets with your family, friends, or colleagues.";
 "upgrade_tip" = "Upgrade TIP";
 "upgrade_tip_successfully" = "Upgrade TIP successfully";
 "upgrading" = "Upgrading";
@@ -1635,6 +1644,10 @@
 "wallet" = "Wallet";
 "wallet_already_added" = "This wallet has already been added";
 "wallet_candidate_imported" = "Imported";
+"wallet_category_created" = "Created";
+"wallet_category_imported" = "Imported";
+"wallet_category_safe" = "Safe";
+"wallet_category_watching" = "Watching";
 "wallet_enable_biometric_pay" = "Once enabled, %@ can be used to make quick transfers.";
 "wallet_hide_asset_confirmation" = "Are you sure you want to hide %@?";
 "wallet_imported" = "Imported";
@@ -1683,6 +1696,7 @@
 "weeks" = "weeks";
 "weeks_count_short" = "%dW";
 "what_is_pin" = "What is PIN?";
+"whats_safe_wallet" = "What's the Mixin Safe?";
 "whats_your_name" = "What's your name?";
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fi and Cellular";

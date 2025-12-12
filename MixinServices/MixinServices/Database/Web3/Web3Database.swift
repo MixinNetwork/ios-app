@@ -207,6 +207,23 @@ public final class Web3Database: Database {
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS `index_orders_order_type_created_at` ON `orders` (`order_type`, `created_at`)")
         }
         
+        migrator.registerMigration("safe_vaults") { db in
+            let walletInfos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(wallets)")
+            let walletColumnNames = Set(walletInfos.map(\.name))
+            if !walletColumnNames.contains("safe_role") {
+                try db.execute(sql: "ALTER TABLE wallets ADD COLUMN safe_role TEXT")
+            }
+            if !walletColumnNames.contains("safe_chain_id") {
+                try db.execute(sql: "ALTER TABLE wallets ADD COLUMN safe_chain_id TEXT")
+            }
+            if !walletColumnNames.contains("safe_address") {
+                try db.execute(sql: "ALTER TABLE wallets ADD COLUMN safe_address TEXT")
+            }
+            if !walletColumnNames.contains("safe_url") {
+                try db.execute(sql: "ALTER TABLE wallets ADD COLUMN safe_url TEXT")
+            }
+        }
+        
         return migrator
     }
     

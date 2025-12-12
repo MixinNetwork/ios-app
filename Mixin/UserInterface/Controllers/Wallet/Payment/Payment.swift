@@ -309,7 +309,7 @@ extension Payment {
         
         case address(Address)
         case temporary(TemporaryAddress)
-        case commonWallet(Web3Wallet, Web3Address)
+        case commonWallet(Web3Wallet, any WithdrawableAddress)
         
         var withdrawable: WithdrawableAddress {
             switch self {

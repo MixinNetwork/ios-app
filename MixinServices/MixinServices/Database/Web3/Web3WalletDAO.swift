@@ -78,11 +78,21 @@ public final class Web3WalletDAO: Web3DAO {
                     sql: SQL.tokenDigests,
                     arguments: [wallet.walletID]
                 )
-                let chainIDs = try String.fetchSet(
-                    db,
-                    sql: SQL.chains,
-                    arguments: [wallet.walletID]
-                )
+                let chainIDs: Set<String>
+                switch wallet.category.knownCase {
+                case .mixinSafe:
+                    chainIDs = if let id = wallet.safeChainID {
+                        [id]
+                    } else {
+                        []
+                    }
+                default:
+                    chainIDs = try String.fetchSet(
+                       db,
+                       sql: SQL.chains,
+                       arguments: [wallet.walletID]
+                   )
+                }
                 return WalletDigest(
                     wallet: .common(wallet),
                     tokens: tokenDigests,
@@ -139,6 +149,28 @@ public final class Web3WalletDAO: Web3DAO {
                     object: self,
                     userInfo: [Self.UserInfoKey.wallets: wallets]
                 )
+            }
+        }
+    }
+    
+    public func replaceSafeWallets(
+        wallets: [Web3Wallet],
+        tokens: [Web3Token],
+        completion: @escaping () -> Void
+    ) {
+        db.write { db in
+            let walletIDs = try String.fetchAll(
+                db,
+                sql: "DELETE FROM wallets WHERE category = ? RETURNING wallet_id",
+                arguments: [Web3Wallet.Category.mixinSafe.rawValue]
+            )
+            try db.execute(literal: "DELETE FROM tokens WHERE wallet_id IN \(walletIDs)")
+            
+            try wallets.save(db)
+            try tokens.save(db)
+            
+            db.afterNextTransaction { _ in
+                completion()
             }
         }
     }

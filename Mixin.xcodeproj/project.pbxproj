@@ -1355,6 +1355,7 @@
 		94D0FF7F2BEB7F9100E3947F /* InscriptionContentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D0FF7D2BEB7F9100E3947F /* InscriptionContentCell.xib */; };
 		94D175382EE064B70049B23F /* SaveWeb3TokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D175372EE064B20049B23F /* SaveWeb3TokenJob.swift */; };
 		94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */; };
+		94D23C522EEC06EB00934DC7 /* ReloadSafeWalletsJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D23C512EEC06EB00934DC7 /* ReloadSafeWalletsJob.swift */; };
 		94D308772BA72C8F0017494C /* Web3AmountChangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D308752BA72C8F0017494C /* Web3AmountChangeCell.swift */; };
 		94D308782BA72C8F0017494C /* Web3AmountChangeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D308762BA72C8F0017494C /* Web3AmountChangeCell.xib */; };
 		94D308802BA73F810017494C /* Web3TransferPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3087F2BA73F810017494C /* Web3TransferPreviewViewController.swift */; };
@@ -3137,6 +3138,7 @@
 		94D0FF7D2BEB7F9100E3947F /* InscriptionContentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InscriptionContentCell.xib; sourceTree = "<group>"; };
 		94D175372EE064B20049B23F /* SaveWeb3TokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveWeb3TokenJob.swift; sourceTree = "<group>"; };
 		94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetLoader.swift; sourceTree = "<group>"; };
+		94D23C512EEC06EB00934DC7 /* ReloadSafeWalletsJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadSafeWalletsJob.swift; sourceTree = "<group>"; };
 		94D308752BA72C8F0017494C /* Web3AmountChangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3AmountChangeCell.swift; sourceTree = "<group>"; };
 		94D308762BA72C8F0017494C /* Web3AmountChangeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3AmountChangeCell.xib; sourceTree = "<group>"; };
 		94D3087F2BA73F810017494C /* Web3TransferPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferPreviewViewController.swift; sourceTree = "<group>"; };
@@ -6183,6 +6185,7 @@
 				94051FB12E81306F005B3A16 /* RefreshTokenJob.swift */,
 				94D175372EE064B20049B23F /* SaveWeb3TokenJob.swift */,
 				949B5E0B2EBCFB8A00D33C97 /* SyncWeb3OrdersJob.swift */,
+				94D23C512EEC06EB00934DC7 /* ReloadSafeWalletsJob.swift */,
 			);
 			path = Job;
 			sourceTree = "<group>";
@@ -8116,6 +8119,7 @@
 				94C8C49D2C11A29C00993027 /* PriorityFee.swift in Sources */,
 				94C3E56C2DAE76CF0015AFA4 /* Web3TransactionTableHeaderView.swift in Sources */,
 				7CEB735829DB272F006FB5B2 /* RestoreChatTableViewCell.swift in Sources */,
+				94D23C522EEC06EB00934DC7 /* ReloadSafeWalletsJob.swift in Sources */,
 				E0FAE8D223CDC4F4008B056A /* MainAppReporter.swift in Sources */,
 				7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */,
 				9419951F2CCFC74D00F5425C /* SignUpWithMnemonicIntroductionViewController.swift in Sources */,

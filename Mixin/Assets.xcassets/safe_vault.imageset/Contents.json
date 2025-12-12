@@ -1,18 +1,8 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "safe_vault@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "safe_vault@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "safe_vault.pdf",
+      "idiom" : "universal"
     }
   ],
   "info" : {

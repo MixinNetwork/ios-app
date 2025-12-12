@@ -10,8 +10,7 @@ public final class Web3WalletDAO: Web3DAO {
     
     public static let shared = Web3WalletDAO()
     
-    public static let walletsDidSaveNotification = Notification.Name("one.mixin.services.Web3WalletDAO.SaveWallets")
-    public static let safeWalletsDidSaveNotification = Notification.Name("one.mixin.services.Web3WalletDAO.SaveSafeWallets")
+    public static let walletsDidSaveNotification = Notification.Name("one.mixin.services.Web3WalletDAO.Save")
     public static let walletsDidDeleteNotification = Notification.Name("one.mixin.services.Web3WalletDAO.Delete")
     
     public func hasClassicWallet() -> Bool {
@@ -154,19 +153,24 @@ public final class Web3WalletDAO: Web3DAO {
         }
     }
     
-    public func save(safeWallets: [Web3Wallet], tokens: [Web3Token]) {
-        guard !safeWallets.isEmpty || !tokens.isEmpty else {
-            return
-        }
+    public func replaceSafeWallets(
+        wallets: [Web3Wallet],
+        tokens: [Web3Token],
+        completion: @escaping () -> Void
+    ) {
         db.write { db in
-            try safeWallets.save(db)
+            let walletIDs = try String.fetchAll(
+                db,
+                sql: "DELETE FROM wallets WHERE category = ? RETURNING wallet_id",
+                arguments: [Web3Wallet.Category.mixinSafe.rawValue]
+            )
+            try db.execute(literal: "DELETE FROM tokens WHERE wallet_id IN \(walletIDs)")
+            
+            try wallets.save(db)
             try tokens.save(db)
+            
             db.afterNextTransaction { _ in
-                NotificationCenter.default.post(
-                    onMainThread: Self.safeWalletsDidSaveNotification,
-                    object: self,
-                    userInfo: [Self.UserInfoKey.wallets: safeWallets]
-                )
+                completion()
             }
         }
     }

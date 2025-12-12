@@ -164,12 +164,6 @@ final class WalletSummaryViewController: UIViewController {
         }
         notificationCenter.addObserver(
             self,
-            selector: #selector(reloadSafeWallets(_:)),
-            name: Web3WalletDAO.safeWalletsDidSaveNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
             selector: #selector(reloadTips),
             name: AppGroupUserDefaults.Wallet.didChangeWalletTipNotification,
             object: nil
@@ -177,7 +171,21 @@ final class WalletSummaryViewController: UIViewController {
         
         reloadData()
         reloadTips()
-        requestSafeWallets()
+        
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadSafeWallets(_:)),
+            name: ReloadSafeWalletsJob.safeWalletsDidUpdateNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadSafeWallets(_:)),
+            name: ReloadSafeWalletsJob.safeWalletsFailedToUpdateNotification,
+            object: nil
+        )
+        let reloadSafeWallets = ReloadSafeWalletsJob()
+        ConcurrentJobQueue.shared.addJob(job: reloadSafeWallets)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -243,17 +251,15 @@ final class WalletSummaryViewController: UIViewController {
     }
     
     @objc private func reloadData() {
-        let safeWalletDigests = digests[.safe] ?? []
         DispatchQueue.global().async {
             let privacyWalletDigest = TokenDAO.shared.walletDigest()
             let commonWalletDigests = Web3WalletDAO.shared.walletDigests()
             let summary = WalletSummary(
                 privacyWallet: privacyWalletDigest,
-                otherWallets: commonWalletDigests + safeWalletDigests
+                otherWallets: commonWalletDigests
             )
             var digests: OrderedDictionary<WalletCategory, [WalletDigest]> = [
                 .all: [privacyWalletDigest] + commonWalletDigests,
-                .safe: safeWalletDigests,
             ]
             for commonWalletDigest in commonWalletDigests {
                 let category: WalletCategory? = switch commonWalletDigest.wallet {
@@ -303,75 +309,6 @@ final class WalletSummaryViewController: UIViewController {
     @objc private func reloadSafeWallets(_ notification: Notification) {
         self.isLoadingSafeWallets = false
         self.reloadData()
-    }
-    
-    private func requestSafeWallets() {
-        enum RequestError: Error {
-            case noAccount
-        }
-        
-        Task.detached {
-            do {
-                let accounts = try await SafeAPI.userAccounts()
-                guard !accounts.isEmpty else {
-                    throw RequestError.noAccount
-                }
-                
-                let allAssetIDs = Set(accounts.flatMap(\.assets).map(\.mixinAssetID))
-                var tokens = Web3TokenDAO.shared.tokens(assetIDs: allAssetIDs)
-                let missingAssetIDs = allAssetIDs.subtracting(tokens.keys)
-                if !missingAssetIDs.isEmpty {
-                    let missingTokens = try await SafeAPI.assets(ids: missingAssetIDs)
-                    for token in missingTokens {
-                        tokens[token.assetID] = Web3Token(
-                            walletID: "",
-                            assetID: token.assetID,
-                            chainID: token.chainID,
-                            assetKey: token.assetKey,
-                            kernelAssetID: token.kernelAssetID,
-                            symbol: token.symbol,
-                            name: token.name,
-                            precision: token.precision,
-                            iconURL: token.iconURL,
-                            amount: "0",
-                            usdPrice: token.usdPrice,
-                            usdChange: token.usdChange,
-                            level: Web3Reputation.Level.unknown.rawValue,
-                        )
-                    }
-                }
-                
-                var walletsToSave: [Web3Wallet] = []
-                var tokensToSave: [Web3Token] = []
-                for account in accounts {
-                    guard let wallet = Web3Wallet(account: account) else {
-                        continue
-                    }
-                    let tokens = account.assets.compactMap { asset in
-                        if let token = tokens[asset.mixinAssetID] {
-                            Web3Token(
-                                token: token,
-                                replacingWalletID: account.accountID,
-                                amount: asset.balance
-                            )
-                        } else {
-                            nil
-                        }
-                    }
-                    walletsToSave.append(wallet)
-                    tokensToSave.append(contentsOf: tokens)
-                }
-                Web3WalletDAO.shared.save(safeWallets: walletsToSave, tokens: tokensToSave)
-            } catch {
-                let worthReporting = (error as? MixinAPIError)?.worthReporting ?? true
-                if worthReporting {
-                    reporter.report(error: error)
-                }
-                await MainActor.run {
-                    self.isLoadingSafeWallets = false
-                }
-            }
-        }
     }
     
 }
@@ -528,8 +465,10 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
                 }
             }
             selectedCategory = digests.keys[indexPath.item]
-            let sections = IndexSet(integer: Section.wallets.rawValue)
-            collectionView.reloadSections(sections)
+            UIView.performWithoutAnimation {
+                let sections = IndexSet(integer: Section.wallets.rawValue)
+                collectionView.reloadSections(sections)
+            }
         case .wallets:
             collectionView.deselectItem(at: indexPath, animated: true)
             guard let wallet = digests[selectedCategory]?[indexPath.item].wallet else {

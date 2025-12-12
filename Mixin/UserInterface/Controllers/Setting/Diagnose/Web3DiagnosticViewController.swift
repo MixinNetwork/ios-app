@@ -11,9 +11,6 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
             SettingsRow(title: "Reset Transactions", accessory: .disclosure),
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: "Reset Trade Orders", accessory: .disclosure),
-        ]),
-        SettingsSection(rows: [
             SettingsRow(
                 title: "Low EVM Fee",
                 accessory: .switch(
@@ -24,6 +21,12 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
         ]),
         SettingsSection(rows: [
             SettingsRow(title: "Remove Imported Secrets", accessory: .disclosure),
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Reset Trade Orders"),
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Delete Safe Vaults"),
         ]),
     ])
     
@@ -66,13 +69,16 @@ extension Web3DiagnosticViewController: UITableViewDelegate {
                 Web3PropertiesDAO.shared.deleteTransactionOffset(addresses: destinations)
             }
             showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
-        case (2, 0):
+        case (3, 0):
+            AppGroupKeychain.deleteAllImportedMnemonics()
+            AppGroupKeychain.deleteAllImportedPrivateKey()
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
+        case (4, 0):
             Web3OrderDAO.shared.deleteAll()
             Web3PropertiesDAO.shared.deleteAllOrderOffsets()
             showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
-        case (4, 0):
-            AppGroupKeychain.deleteAllImportedMnemonics()
-            AppGroupKeychain.deleteAllImportedPrivateKey()
+        case (5, 0):
+            Web3WalletDAO.shared.replaceSafeWallets(wallets: [], tokens: []) { }
             showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
         default:
             break

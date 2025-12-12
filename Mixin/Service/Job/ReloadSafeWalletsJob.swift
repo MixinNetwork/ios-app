@@ -78,6 +78,9 @@ final class ReloadSafeWalletsJob: AsynchronousJob {
                     )
                 }
             }
+            await MainActor.run {
+                self.finishJob()
+            }
         }
         return true
     }

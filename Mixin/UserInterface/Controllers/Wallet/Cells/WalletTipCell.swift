@@ -2,10 +2,10 @@ import UIKit
 
 final class WalletTipCell: UICollectionViewCell {
     
-    enum Content {
+    enum Content: CaseIterable {
+        case safe
         case privacy
         case classic
-        case safe
     }
     
     protocol Delegate: AnyObject {

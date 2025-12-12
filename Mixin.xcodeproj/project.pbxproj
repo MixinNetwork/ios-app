@@ -1356,6 +1356,7 @@
 		94D175382EE064B70049B23F /* SaveWeb3TokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D175372EE064B20049B23F /* SaveWeb3TokenJob.swift */; };
 		94D1E28625EA36B100B58B82 /* CacheableAssetLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */; };
 		94D23C522EEC06EB00934DC7 /* ReloadSafeWalletsJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D23C512EEC06EB00934DC7 /* ReloadSafeWalletsJob.swift */; };
+		94D23D6C2EEC198C00934DC7 /* WalletDisplayCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D23D6B2EEC198800934DC7 /* WalletDisplayCategory.swift */; };
 		94D308772BA72C8F0017494C /* Web3AmountChangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D308752BA72C8F0017494C /* Web3AmountChangeCell.swift */; };
 		94D308782BA72C8F0017494C /* Web3AmountChangeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D308762BA72C8F0017494C /* Web3AmountChangeCell.xib */; };
 		94D308802BA73F810017494C /* Web3TransferPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D3087F2BA73F810017494C /* Web3TransferPreviewViewController.swift */; };
@@ -3139,6 +3140,7 @@
 		94D175372EE064B20049B23F /* SaveWeb3TokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveWeb3TokenJob.swift; sourceTree = "<group>"; };
 		94D1E28525EA36B100B58B82 /* CacheableAssetLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableAssetLoader.swift; sourceTree = "<group>"; };
 		94D23C512EEC06EB00934DC7 /* ReloadSafeWalletsJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadSafeWalletsJob.swift; sourceTree = "<group>"; };
+		94D23D6B2EEC198800934DC7 /* WalletDisplayCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletDisplayCategory.swift; sourceTree = "<group>"; };
 		94D308752BA72C8F0017494C /* Web3AmountChangeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3AmountChangeCell.swift; sourceTree = "<group>"; };
 		94D308762BA72C8F0017494C /* Web3AmountChangeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Web3AmountChangeCell.xib; sourceTree = "<group>"; };
 		94D3087F2BA73F810017494C /* Web3TransferPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransferPreviewViewController.swift; sourceTree = "<group>"; };
@@ -5864,6 +5866,7 @@
 				94F268182E15BA2300A8A1E0 /* Import */,
 				9462A6B72E27906D001E4C3E /* Export */,
 				9419C01F2E657EA600BEAB42 /* Deposit */,
+				94D23D6B2EEC198800934DC7 /* WalletDisplayCategory.swift */,
 				94C5BDEB2D687B710012F840 /* WalletContainerViewController.swift */,
 				94D5C0ED2D5C911D0046C20E /* WalletSummaryView.xib */,
 				94D5C0EC2D5C911D0046C20E /* WalletSummaryViewController.swift */,
@@ -8148,6 +8151,7 @@
 				7B4EF79F22D5E55400F19F6A /* RemoveRecoveryContactValidationViewController.swift in Sources */,
 				9489237D2D55FFA900D9BCCB /* Web3TokenReceiverViewController.swift in Sources */,
 				7BF19C24241E0EA200B192D5 /* PinAnnotationView.swift in Sources */,
+				94D23D6C2EEC198C00934DC7 /* WalletDisplayCategory.swift in Sources */,
 				9462A6BD2E279093001E4C3E /* ExportingSecret.swift in Sources */,
 				946E9F0B2D440F7D00DBC308 /* MixinTokenSelectorViewController.swift in Sources */,
 				945D48102D8956040093E30D /* WalletSummary.swift in Sources */,

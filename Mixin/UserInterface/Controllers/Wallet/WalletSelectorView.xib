@@ -47,7 +47,7 @@
                         <constraint firstAttribute="height" constant="70" id="T2W-NF-ZIZ"/>
                     </constraints>
                 </stackView>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="qxH-RT-un8">
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" bouncesZoom="NO" keyboardDismissMode="onDrag" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="qxH-RT-un8">
                     <rect key="frame" x="0.0" y="188" width="393" height="664"/>
                     <color key="backgroundColor" name="background_secondary"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="F6Y-j0-fUv">

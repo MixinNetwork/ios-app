@@ -13,14 +13,6 @@ final class WalletSummaryViewController: UIViewController {
         case tipsPageControl
     }
     
-    private enum WalletCategory {
-        case all
-        case safe
-        case created
-        case imported
-        case watching
-    }
-    
     private enum ReuseIdentifier {
         static let pageControl = "p"
         static let loading = "l"
@@ -30,8 +22,8 @@ final class WalletSummaryViewController: UIViewController {
     @IBOutlet weak var addWalletView: BadgeBarButtonView!
     
     private var summary: WalletSummary?
-    private var digests: OrderedDictionary<WalletCategory, [WalletDigest]> = [:]
-    private var selectedCategory: WalletCategory = .all
+    private var digests: OrderedDictionary<WalletDisplayCategory, [WalletDigest]> = [:]
+    private var selectedCategory: WalletDisplayCategory = .all
     private var tips: [WalletTipCell.Content] = []
     private var secretAvailableWalletIDs: Set<String> = []
     private var unexpiredPlan: User.Membership.Plan?
@@ -82,7 +74,7 @@ final class WalletSummaryViewController: UIViewController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 15, bottom: 16, trailing: 15)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 15, bottom: 2, trailing: 15)
                 section.orthogonalScrollingBehavior = .continuous
                 return section
             case .wallets:
@@ -254,38 +246,9 @@ final class WalletSummaryViewController: UIViewController {
         DispatchQueue.global().async {
             let privacyWalletDigest = TokenDAO.shared.walletDigest()
             let commonWalletDigests = Web3WalletDAO.shared.walletDigests()
-            let summary = WalletSummary(
-                privacyWallet: privacyWalletDigest,
-                otherWallets: commonWalletDigests
-            )
-            var digests: OrderedDictionary<WalletCategory, [WalletDigest]> = [
-                .all: [privacyWalletDigest] + commonWalletDigests,
-            ]
-            for commonWalletDigest in commonWalletDigests {
-                let category: WalletCategory? = switch commonWalletDigest.wallet {
-                case .privacy:
-                    nil
-                case .common(let wallet):
-                    switch wallet.category.knownCase {
-                    case .classic:
-                            .created
-                    case .importedMnemonic, .importedPrivateKey:
-                            .imported
-                    case .watchAddress:
-                            .watching
-                    case .mixinSafe:
-                            .safe
-                    case .none:
-                            .none
-                    }
-                }
-                guard let category else {
-                    continue
-                }
-                var wallets = digests[category] ?? []
-                wallets.append(commonWalletDigest)
-                digests[category] = wallets
-            }
+            let walletDigests = [privacyWalletDigest] + commonWalletDigests
+            let summary = WalletSummary(walletDigests: walletDigests)
+            let categorizedDigests = WalletDisplayCategory.categorize(digests: walletDigests)
             var secretAvailableWalletIDs: Set<String> = Set(
                 AppGroupKeychain.allImportedMnemonics().keys
             )
@@ -294,11 +257,11 @@ final class WalletSummaryViewController: UIViewController {
             )
             DispatchQueue.main.async {
                 self.summary = summary
-                self.digests = digests
+                self.digests = categorizedDigests
                 self.secretAvailableWalletIDs = secretAvailableWalletIDs
                 self.unexpiredPlan = LoginManager.shared.account?.membership?.unexpiredPlan
                 self.collectionView.reloadData()
-                if let item = digests.keys.firstIndex(of: self.selectedCategory) {
+                if let item = categorizedDigests.keys.firstIndex(of: self.selectedCategory) {
                     let indexPath = IndexPath(item: item, section: Section.walletCategories.rawValue)
                     self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
                 }
@@ -373,18 +336,7 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
             return cell
         case .walletCategories:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
-            cell.label.text = switch digests.keys[indexPath.item] {
-            case .all:
-                R.string.localizable.all()
-            case .safe:
-                R.string.localizable.wallet_category_safe()
-            case .created:
-                R.string.localizable.wallet_category_created()
-            case .imported:
-                R.string.localizable.wallet_category_imported()
-            case .watching:
-                R.string.localizable.wallet_category_watching()
-            }
+            cell.label.text = digests.keys[indexPath.item].localizedName
             return cell
         case .wallets:
             if let digests = digests[selectedCategory], !digests.isEmpty {

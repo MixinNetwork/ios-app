@@ -724,6 +724,7 @@
 "insufficient_balance" = "残高が不足しています";
 "insufficient_balance_symbol" = "Insufficient %@";
 "insufficient_fee_description" = "You need %1$@ on the %2$@ network to cover the network fee";
+"insufficient_sol_for_sending_spl_token" = "Insufficient SOL balance. Reserve at least %@ SOL.";
 "insufficient_transaction_fee" = "取引手数料が不足しています";
 "interface_style" = "外観モード";
 "invalid_address" = "Invalid Address";
@@ -1187,6 +1188,7 @@
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
 "resend_code" = "コードを再送する";
 "resend_code_pending" = "%@ 後にコードを再送";
+"reserve_sol_for_rent" = "Reserve at least %@ SOL for the rent";
 "reset" = "リセット";
 "reset_link" = "リンクを取り消す";
 "restore" = "復元";

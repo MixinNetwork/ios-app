@@ -236,6 +236,9 @@ final class SolanaTransferWithCustomRespondingOperation: ArbitraryTransactionSol
 
 final class SolanaTransferToAddressOperation: SolanaTransferOperation {
     
+    @MainActor
+    private(set) var receiverAccountExists: Bool?
+    
     private let payment: Web3SendingTokenToAddressPayment
     private let decimalAmount: Decimal
     private let amount: UInt64
@@ -268,17 +271,24 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
     
     override func loadFee() async throws -> DisplayFee {
         let tokenProgramID = try await RouteAPI.solanaGetAccountInfo(pubkey: payment.token.assetKey).owner
-        let ata = try Solana.tokenAssociatedAccount(
-            walletAddress: payment.toAddress,
-            mint: payment.token.assetKey,
-            tokenProgramID: tokenProgramID
-        )
-        let receiverAccountExists = try await RouteAPI.solanaAccountExists(pubkey: ata)
-        let createAccount = !receiverAccountExists
+        let receiverAccountExists: Bool
+        let createAssociatedTokenAccountForReceiver: Bool
+        if payment.sendingNativeToken {
+            receiverAccountExists = try await RouteAPI.solanaAccountExists(pubkey: payment.toAddress)
+            createAssociatedTokenAccountForReceiver = false
+        } else {
+            let ata = try Solana.tokenAssociatedAccount(
+                walletAddress: payment.toAddress,
+                mint: payment.token.assetKey,
+                tokenProgramID: tokenProgramID
+            )
+            receiverAccountExists = try await RouteAPI.solanaAccountExists(pubkey: ata)
+            createAssociatedTokenAccountForReceiver = !receiverAccountExists
+        }
         let transaction = try Solana.Transaction(
             from: payment.fromAddress.destination,
             to: payment.toAddress,
-            createAssociatedTokenAccountForReceiver: createAccount,
+            createAssociatedTokenAccountForReceiver: createAssociatedTokenAccountForReceiver,
             tokenProgramID: tokenProgramID,
             mint: payment.token.assetKey,
             amount: amount,
@@ -295,7 +305,8 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         let fee = DisplayFee(tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount)
         
         await MainActor.run {
-            self.createAssociatedTokenAccountForReceiver = createAccount
+            self.receiverAccountExists = receiverAccountExists
+            self.createAssociatedTokenAccountForReceiver = createAssociatedTokenAccountForReceiver
             self.tokenProgramID = tokenProgramID
             self.priorityFee = priorityFee
             self.fee = fee

@@ -724,6 +724,7 @@
 "insufficient_balance" = "Insufficient balance";
 "insufficient_balance_symbol" = "Insufficient %@";
 "insufficient_fee_description" = "You need %1$@ on the %2$@ network to cover the network fee";
+"insufficient_sol_for_sending_spl_token" = "Insufficient SOL balance. Reserve at least %@ SOL.";
 "insufficient_transaction_fee" = "Недостаточная комиссия за транзакцию";
 "interface_style" = "Стиль интерфейса";
 "invalid_address" = "Invalid Address";
@@ -1187,6 +1188,7 @@
 "request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
 "resend_code" = "Отправить код еще раз";
 "resend_code_pending" = "Повторно отправить код в %@";
+"reserve_sol_for_rent" = "Reserve at least %@ SOL for the rent";
 "reset" = "Перезагрузить";
 "reset_link" = "Сбросить ссылку";
 "restore" = "Восстановить";

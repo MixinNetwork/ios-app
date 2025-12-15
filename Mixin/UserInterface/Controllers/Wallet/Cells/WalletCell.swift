@@ -133,7 +133,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                 }
                 loadProportions(
                     tokens: digest.tokens,
-                    placeholder: .privacyWalletChains,
+                    placeholder: .safeVault(chainID: wallet.safeChainID),
                     usdBalanceSum: digest.usdBalanceSum
                 )
             }

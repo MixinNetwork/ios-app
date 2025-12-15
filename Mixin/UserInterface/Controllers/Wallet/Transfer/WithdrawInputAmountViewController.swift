@@ -34,19 +34,31 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
         switch destination {
         case let .address(address):
+            let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
             titleView.subtitle = address.label
             titleView.subtitleStyle = .label(backgroundColor: R.color.address_label()!)
+            navigationItem.titleView = titleView
         case let .temporary(address):
+            let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
             titleView.subtitle = address.compactRepresentation
             titleView.subtitleStyle = .plain
+            navigationItem.titleView = titleView
         case let .commonWallet(wallet, _):
-            titleView.subtitle = wallet.name
-            titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
+            switch wallet.category.knownCase {
+            case .mixinSafe:
+                navigationItem.titleView = WalletIdentifyingNavigationTitleView(
+                    title: R.string.localizable.send_to_title(),
+                    wallet: .common(wallet)
+                )
+            default:
+                let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
+                titleView.subtitle = wallet.name
+                titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
+                navigationItem.titleView = titleView
+            }
         }
-        navigationItem.titleView = titleView
         
         tokenIconView.setIcon(token: tokenItem)
         tokenNameLabel.text = tokenItem.name

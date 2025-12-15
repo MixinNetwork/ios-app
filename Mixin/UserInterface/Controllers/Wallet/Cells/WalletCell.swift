@@ -121,14 +121,9 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             case .mixinSafe:
                 iconImageView.isHidden = false
                 iconImageView.image = R.image.safe_vault()
-                tags = switch wallet.safeRole {
-                case .known(.owner):
-                    [.plain(R.string.localizable.safe_vault_owner())]
-                case .known(.member):
-                    [.plain(R.string.localizable.safe_vault_member())]
-                case .unknown(let role):
-                    [.plain(role)]
-                case .none:
+                tags = if let tag = wallet.safeRoleTag {
+                    [.plain(tag)]
+                } else {
                     []
                 }
                 loadProportions(

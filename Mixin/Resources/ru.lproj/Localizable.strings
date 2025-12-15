@@ -786,8 +786,8 @@
 "limit_price" = "Limit Price";
 "limited_time_free" = "Limited-Time Free";
 "limited_time_free_condition" = "During the promotion period, you’ll receive a full refund of transaction fees if your transfer meets any of the following conditions:";
-"limited_time_free_condition_1" = "Privacy Wallet transfer to a Common Wallet.";
-"limited_time_free_condition_2" = "Common Wallet transfer to another Common Wallet, Privacy Wallet, or contact.";
+"limited_time_free_condition_1" = "Privacy Wallet transfer to a Common Wallet, Mixin Safe Vault.";
+"limited_time_free_condition_2" = "Common Wallet transfer to another Common Wallet, Privacy Wallet, Mixin Safe Vault, or contact.";
 "limited_time_free_description" = "Fees will be refunded monthly to your Privacy Wallet, summarized by the actual fee tokens and amounts consumed. Read the documentation to learn more.";
 "line_busy" = "Линия занята";
 "line_busy_remote" = "Линия занята";

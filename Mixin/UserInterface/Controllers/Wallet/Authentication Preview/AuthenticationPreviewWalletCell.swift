@@ -11,13 +11,16 @@ final class AuthenticationPreviewWalletCell: UITableViewCell {
     @IBOutlet weak var contentLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var contentTrailingConstraint: NSLayoutConstraint!
     
-    private weak var tagLabel: UILabel?
+    private weak var tagLabel: InsetLabel?
     
     var walletTag: String? {
         didSet {
             if let walletTag {
-                let label = tagLabel ?? {
-                    let label = InsetLabel()
+                let label: InsetLabel
+                if let tagLabel {
+                    label = tagLabel
+                } else {
+                    label = InsetLabel()
                     label.layer.cornerRadius = 4
                     label.layer.masksToBounds = true
                     label.font = .preferredFont(forTextStyle: .caption1)
@@ -26,14 +29,13 @@ final class AuthenticationPreviewWalletCell: UITableViewCell {
                     label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
                     label.backgroundColor = R.color.background_quaternary()
                     label.textColor = R.color.text_quaternary()
-                    return label
-                }()
-                label.text = walletTag
-                if label.superview == nil {
                     subtitleStackView.addArrangedSubview(label)
+                    self.tagLabel = label
                 }
+                label.text = walletTag
             } else {
                 tagLabel?.removeFromSuperview()
+                tagLabel = nil
             }
         }
     }

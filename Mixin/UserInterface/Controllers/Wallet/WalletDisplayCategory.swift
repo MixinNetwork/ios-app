@@ -64,6 +64,16 @@ extension WalletDisplayCategory {
                 results[category] = wallets
             }
         }
+        for key in results.keys {
+            switch key {
+            case .all:
+                break
+            default:
+                results[key]?.sort { one, another in
+                    one.usdBalanceSum > another.usdBalanceSum
+                }
+            }
+        }
         return results
     }
     

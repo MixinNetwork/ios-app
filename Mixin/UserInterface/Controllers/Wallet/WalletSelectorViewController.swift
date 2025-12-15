@@ -361,18 +361,8 @@ final class WalletSelectorViewController: UIViewController {
         let tipsBefore = self.tips
         let tipsAfter = {
             var tips: [WalletTipCell.Content] = []
-            if !AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip, let allDigests = walletDigests[.all] {
-                let hasSafeVault = allDigests.contains(where: { digest in
-                    switch digest.wallet {
-                    case .privacy:
-                        false
-                    case .common(let wallet):
-                        wallet.category == .known(.mixinSafe)
-                    }
-                })
-                if hasSafeVault {
-                    tips.append(.safe)
-                }
+            if !AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip {
+                tips.append(.safe)
             }
             if !AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip {
                 tips.append(.privacy)

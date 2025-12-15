@@ -361,14 +361,14 @@ final class WalletSelectorViewController: UIViewController {
         let tipsBefore = self.tips
         let tipsAfter = {
             var tips: [WalletTipCell.Content] = []
-            if !AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip {
-                tips.append(.safe)
-            }
             if !AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip {
                 tips.append(.privacy)
             }
             if !AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip {
                 tips.append(.classic)
+            }
+            if !AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip {
+                tips.append(.safe)
             }
             return tips
         }()

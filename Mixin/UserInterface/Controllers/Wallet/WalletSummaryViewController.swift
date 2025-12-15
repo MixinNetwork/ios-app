@@ -339,7 +339,14 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
             return cell
         case .walletCategories:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
-            cell.label.text = digests.keys[indexPath.item].localizedName
+            let category = digests.keys[indexPath.item]
+            cell.label.text = category.localizedName
+            switch category {
+            case .safe:
+                cell.badgeView.isHidden = BadgeManager.shared.hasViewed(identifier: .safeVault)
+            default:
+                cell.badgeView.isHidden = true
+            }
             return cell
         case .wallets:
             if let digests = digests[selectedCategory], !digests.isEmpty {
@@ -420,6 +427,15 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
                 }
             }
             selectedCategory = digests.keys[indexPath.item]
+            switch selectedCategory {
+            case .safe:
+                BadgeManager.shared.setHasViewed(identifier: .safeVault)
+                if let cell = collectionView.cellForItem(at: indexPath) as? ExploreSegmentCell {
+                    cell.badgeView.isHidden = true
+                }
+            default:
+                break
+            }
             UIView.performWithoutAnimation {
                 let sections = IndexSet(integer: Section.wallets.rawValue)
                 collectionView.reloadSections(sections)

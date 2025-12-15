@@ -5,18 +5,16 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
     
     private enum Destination {
         case addressBook
-        case myWallets(Web3Chain)
+        case myWallets
         case contact
     }
     
     private let token: MixinTokenItem
-    private let web3Chain: Web3Chain?
     
     private var destinations: [Destination] = [.addressBook, .contact]
     
     init(token: MixinTokenItem) {
         self.token = token
-        self.web3Chain = .chain(chainID: token.chainID)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -36,8 +34,10 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        if let chain = web3Chain {
-            destinations.append(.myWallets(chain))
+        let hasReceivingWallet = Web3Chain.chain(chainID: token.chainID) != nil
+        || Web3WalletDAO.shared.hasSafeWallet(chainID: token.chainID)
+        if hasReceivingWallet {
+            destinations.append(.myWallets)
         }
         tableView.reloadData()
     }

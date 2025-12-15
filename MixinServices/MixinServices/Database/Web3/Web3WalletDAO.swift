@@ -20,6 +20,14 @@ public final class Web3WalletDAO: Web3DAO {
         )
     }
     
+    public func hasSafeWallet(chainID: String) -> Bool {
+        let value: Int? = db.select(
+            with: "SELECT 1 FROM wallets WHERE safe_chain_id = ?",
+            arguments: [chainID]
+        )
+        return (value ?? 0) != 0
+    }
+    
     public func currentSelectedWallet() -> Web3Wallet? {
         if let id = AppGroupUserDefaults.Wallet.dappConnectionWalletID,
            let wallet: Web3Wallet = db.select(where: Web3Wallet.column(of: .walletID) == id)

@@ -32,7 +32,14 @@ extension WalletDisplayCategory {
     typealias CategorizedWalletDigests = OrderedDictionary<WalletDisplayCategory, [WalletDigest]>
     
     static func categorize(digests: [WalletDigest]) -> CategorizedWalletDigests {
-        var results: CategorizedWalletDigests = [.all: digests]
+        // Empty arrays for the ordering
+        var results: CategorizedWalletDigests = [
+            .all: digests,
+            .safe: [],
+            .created: [],
+            .imported: [],
+            .watching: [],
+        ]
         for digest in digests {
             let category: WalletDisplayCategory? = switch digest.wallet {
             case .privacy:

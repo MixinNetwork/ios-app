@@ -299,6 +299,9 @@ final class WalletSelectorViewController: UIViewController {
                 categorizedDigests = [.all: digests]
             case .pickSender, .pickReceiver:
                 categorizedDigests = WalletDisplayCategory.categorize(digests: digests)
+                    .filter { category, wallets in
+                        !wallets.isEmpty
+                    }
             }
             
             var sections: [Section] = [.wallet]

@@ -249,6 +249,9 @@ final class WalletSummaryViewController: UIViewController {
             let walletDigests = [privacyWalletDigest] + commonWalletDigests
             let summary = WalletSummary(walletDigests: walletDigests)
             let categorizedDigests = WalletDisplayCategory.categorize(digests: walletDigests)
+                .filter { category, wallets in
+                    category == .safe || !wallets.isEmpty
+                }
             var secretAvailableWalletIDs: Set<String> = Set(
                 AppGroupKeychain.allImportedMnemonics().keys
             )

@@ -115,6 +115,10 @@ public final class Web3WalletDAO: Web3DAO {
         """, arguments: [destination])
     }
     
+    public func wallet(safeAddress: String) -> Web3Wallet? {
+        db.select(with: "SELECT * FROM wallets WHERE safe_address = ?", arguments: [safeAddress])
+    }
+    
     public func walletNames(like template: String) -> [String] {
         db.select(with: "SELECT name FROM wallets WHERE name LIKE ?", arguments: [template])
     }

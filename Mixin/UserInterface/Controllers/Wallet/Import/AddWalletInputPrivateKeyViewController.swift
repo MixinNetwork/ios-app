@@ -108,33 +108,42 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                     }
                 )
             case .solana:
-                let keyPair: Data
+                let inputData: Data
                 if let base58Decoded = Data(base58EncodedString: input) {
-                    keyPair = base58Decoded
+                    inputData = base58Decoded
                 } else {
-                    let hex = if input.hasPrefix("0x") {
-                        String(input.dropFirst(2))
+                    let hex: any StringProtocol = if input.hasPrefix("0x") {
+                        input.dropFirst(2)
                     } else {
                         input
                     }
                     if let hexDecoded = Data(hexEncodedString: hex) {
-                        keyPair = hexDecoded
+                        inputData = hexDecoded
                     } else {
                         throw LoadKeyError.invalidInput
                     }
                 }
-                guard keyPair.count == Solana.keyPairCount else {
+                
+                let privateKey: Data
+                let publicKey: String
+                switch inputData.count {
+                case Solana.privateKeyCount:
+                    privateKey = inputData
+                    publicKey = try Solana.publicKey(seed: privateKey)
+                case Solana.keyPairCount:
+                    let publicKeyIndex = inputData.index(inputData.startIndex, offsetBy: 32)
+                    privateKey = inputData[inputData.startIndex..<publicKeyIndex]
+                    publicKey = inputData[publicKeyIndex...].base58EncodedString()
+                    let derivedPublicKey = try Solana.publicKey(seed: privateKey)
+                    guard publicKey == derivedPublicKey else {
+                        throw LoadKeyError.mismatchedPublicKey
+                    }
+                default:
                     throw LoadKeyError.invalidLength
                 }
-                let publicKeyIndex = keyPair.index(keyPair.startIndex, offsetBy: 32)
-                let privateKey = keyPair[keyPair.startIndex..<publicKeyIndex]
-                let publicKey = keyPair[publicKeyIndex...].base58EncodedString()
+                
                 if importedAddresses.contains(publicKey) {
                     throw LoadKeyError.alreadyImported
-                }
-                let derivedPublicKey = try Solana.publicKey(seed: privateKey)
-                guard publicKey == derivedPublicKey else {
-                    throw LoadKeyError.mismatchedPublicKey
                 }
                 let encryptedPrivateKey = try EncryptedPrivateKey(
                     privateKey: privateKey,

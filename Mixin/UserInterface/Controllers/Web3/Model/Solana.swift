@@ -20,6 +20,7 @@ enum Solana {
     static let lamportsPerSOL = Decimal(SOLANA_LAMPORTS_PER_SOL)
     static let microLamportsPerLamport: Decimal = 1_000_000
     static let accountCreationCost: Decimal = 0.002_039_28
+    static let privateKeyCount = 32
     static let keyPairCount = 64
     
     static func publicKey(seed: Data) throws -> String {

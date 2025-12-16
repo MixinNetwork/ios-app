@@ -37,7 +37,7 @@ final class CommonWalletViewController: WalletViewController {
             } else {
                 .always
             }
-        case .watchAddress, .mixinSafe, .none:
+        case .watchAddress, .none:
                 .never
         }
     }
@@ -60,7 +60,7 @@ final class CommonWalletViewController: WalletViewController {
         switch wallet.category.knownCase {
         case .classic:
             tableHeaderView.actionView.isHidden = false
-        case .importedMnemonic, .importedPrivateKey, .mixinSafe, .none:
+        case .importedMnemonic, .importedPrivateKey, .none:
             tableHeaderView.actionView.isHidden = true
         case .watchAddress:
             addIconIntoTitleView(image: R.image.watching_wallet())
@@ -142,8 +142,6 @@ final class CommonWalletViewController: WalletViewController {
             }))
         }
         switch wallet.category.knownCase {
-        case .mixinSafe:
-            return
         case .classic, .none:
             break
         case .importedMnemonic:
@@ -235,8 +233,6 @@ final class CommonWalletViewController: WalletViewController {
             )
             let watchingAddresses: WatchingAddresses?
             switch wallet.category.knownCase {
-            case .mixinSafe:
-                return
             case .classic:
                 secret = nil
                 watchingAddresses = nil

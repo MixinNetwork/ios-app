@@ -9,6 +9,8 @@ extension Wallet {
             myUserId
         case .common(let wallet):
             wallet.walletID
+        case .safe(let wallet):
+            wallet.walletID
         }
     }
     

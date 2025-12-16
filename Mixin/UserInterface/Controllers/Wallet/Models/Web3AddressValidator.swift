@@ -167,8 +167,8 @@ enum Web3AddressValidator {
                   let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chainID)
         {
             return (address: address.destination, label: .wallet(.common(wallet)))
-        } else if let wallet = Web3WalletDAO.shared.wallet(safeAddress: destination) {
-            return (address: destination, label: .wallet(.common(wallet)))
+        } else if let wallet = SafeWalletDAO.shared.wallet(safeAddress: destination) {
+            return (address: destination, label: .wallet(.safe(wallet)))
         } else if let address = AddressDAO.shared.getAddress(chainId: chainID, destination: destination, tag: "") {
             return (address: address.destination, label: .addressBook(address.label))
         } else {

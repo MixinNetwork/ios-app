@@ -169,6 +169,8 @@ extension Web3TokenReceiverViewController: WalletSelectorViewController.Delegate
             sendToPrivacyWallet()
         case .common(let wallet):
             send(to: wallet)
+        case .safe(let wallet):
+            send(to: wallet)
         }
     }
     
@@ -221,24 +223,27 @@ extension Web3TokenReceiverViewController {
     }
     
     private func send(to wallet: Web3Wallet) {
-        let destination: String?
-        switch wallet.category.knownCase {
-        case .mixinSafe:
-            destination = wallet.safeAddress
-        default:
-            let address = Web3AddressDAO.shared.address(
-                walletID: wallet.walletID,
-                chainID: payment.chain.chainID
-            )
-            destination = address?.destination
-        }
-        guard let destination else {
+        let address = Web3AddressDAO.shared.address(
+            walletID: wallet.walletID,
+            chainID: payment.chain.chainID
+        )
+        guard let destination = address?.destination else {
             return
         }
         let payment = Web3SendingTokenToAddressPayment(
             payment: payment,
             toAddress: destination,
             toAddressLabel: .wallet(.common(wallet))
+        )
+        let input = Web3TransferInputAmountViewController(payment: payment)
+        navigationController?.pushViewController(input, animated: true)
+    }
+    
+    private func send(to wallet: SafeWallet) {
+        let payment = Web3SendingTokenToAddressPayment(
+            payment: payment,
+            toAddress: wallet.address,
+            toAddressLabel: .wallet(.safe(wallet))
         )
         let input = Web3TransferInputAmountViewController(payment: payment)
         navigationController?.pushViewController(input, animated: true)

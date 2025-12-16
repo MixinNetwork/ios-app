@@ -3,7 +3,7 @@ import GRDB
 
 public final class Web3TokenDAO: Web3DAO {
     
-    private enum SQL {
+    enum SQL {
         
         static let selector = """
             SELECT t.*, 
@@ -22,6 +22,16 @@ public final class Web3TokenDAO: Web3DAO {
                 cast(t.price_usd AS REAL) DESC,
                 t.name ASC,
                 c.name ASC
+        """
+        
+        static let tokenDigests = """
+            SELECT t.asset_id, t.symbol, t.name, t.icon_url, t.price_usd, t.amount AS balance
+            FROM tokens t
+                LEFT JOIN tokens_extra te ON t.wallet_id = te.wallet_id AND t.asset_id = te.asset_id
+            WHERE t.wallet_id = ?
+                AND ifnull(te.hidden,FALSE) IS FALSE
+                AND CAST(t.price_usd * t.amount AS REAL) > 0
+            ORDER BY t.price_usd * t.amount DESC
         """
         
     }

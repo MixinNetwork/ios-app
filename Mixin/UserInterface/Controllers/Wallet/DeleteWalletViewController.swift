@@ -25,7 +25,7 @@ final class DeleteWalletViewController: UIViewController {
         label.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
         label.adjustsFontForContentSizeCategory = true
         label.text = switch wallet.category.knownCase {
-        case .classic, .importedMnemonic, .importedPrivateKey, .mixinSafe, .none:
+        case .classic, .importedMnemonic, .importedPrivateKey, .none:
             R.string.localizable.delete_common_wallet_description()
         case .watchAddress:
             R.string.localizable.delete_watch_wallet_description()
@@ -91,7 +91,7 @@ extension DeleteWalletViewController: AuthenticationIntent {
                             AppGroupKeychain.deleteImportedMnemonics(walletID: walletID)
                         case .importedPrivateKey:
                             AppGroupKeychain.deleteImportedPrivateKey(walletID: walletID)
-                        case .classic, .watchAddress, .mixinSafe, .none:
+                        case .classic, .watchAddress, .none:
                             break
                         }
                         completion(.success)

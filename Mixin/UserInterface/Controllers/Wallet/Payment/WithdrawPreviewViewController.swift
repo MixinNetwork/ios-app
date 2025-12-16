@@ -48,10 +48,10 @@ final class WithdrawPreviewViewController: WalletIdentifyingAuthenticationPrevie
             .amount(caption: .amount, token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),
         ]
         switch operation.addressLabel {
-        case .wallet(.common(let wallet)) where wallet.category.knownCase == .mixinSafe:
+        case .wallet(.safe(let wallet)):
             rows.append(.wallet(
                 caption: .receiver,
-                wallet: .common(wallet),
+                wallet: .safe(wallet),
                 threshold: nil
             ))
         case .addressBook, .wallet, .contact, .none:

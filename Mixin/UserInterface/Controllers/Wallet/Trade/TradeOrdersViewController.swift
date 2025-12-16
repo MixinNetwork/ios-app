@@ -427,7 +427,8 @@ extension TradeOrdersViewController {
                         }
                         self.imageView = imageView
                     }
-                case .common:
+                case .common, .safe:
+                    // No trade orders for safe wallet, just exhaust the switch
                     imageView?.removeFromSuperview()
                     imageView = nil
                 }

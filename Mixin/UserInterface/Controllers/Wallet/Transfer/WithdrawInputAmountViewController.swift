@@ -46,18 +46,15 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
             titleView.subtitleStyle = .plain
             navigationItem.titleView = titleView
         case let .commonWallet(wallet, _):
-            switch wallet.category.knownCase {
-            case .mixinSafe:
-                navigationItem.titleView = WalletIdentifyingNavigationTitleView(
-                    title: R.string.localizable.send_to_title(),
-                    wallet: .common(wallet)
-                )
-            default:
-                let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
-                titleView.subtitle = wallet.name
-                titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
-                navigationItem.titleView = titleView
-            }
+            let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
+            titleView.subtitle = wallet.name
+            titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
+            navigationItem.titleView = titleView
+        case let .safeWallet(wallet):
+            navigationItem.titleView = WalletIdentifyingNavigationTitleView(
+                title: R.string.localizable.send_to_title(),
+                wallet: .safe(wallet)
+            )
         }
         
         tokenIconView.setIcon(token: tokenItem)
@@ -218,12 +215,12 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
                 }
                 let feeTokenSameAsWithdrawToken = fee.assetID == token.assetID
                 let isFeeWaived = switch destination {
-                case .address:
-                    false
-                case .temporary:
+                case .address, .temporary:
                     false
                 case let .commonWallet(wallet, _):
                     CrossWalletTransaction.isFeeWaived && wallet.hasSecret()
+                case .safeWallet:
+                    CrossWalletTransaction.isFeeWaived
                 }
                 await MainActor.run {
                     self.feeTokenSameAsWithdrawToken = feeTokenSameAsWithdrawToken

@@ -78,7 +78,7 @@ extension Web3DiagnosticViewController: UITableViewDelegate {
             Web3PropertiesDAO.shared.deleteAllOrderOffsets()
             showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
         case (5, 0):
-            Web3WalletDAO.shared.replaceSafeWallets(wallets: [], tokens: []) { }
+            SafeWalletDAO.shared.replace(wallets: [], tokens: []) { }
             showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
         default:
             break

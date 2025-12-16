@@ -15,13 +15,13 @@ public final class WalletDigest {
         // A Legacy Address refers to an address with a nil path
         public init(wallet: Wallet, hasLegacyAddress: Bool) {
             switch wallet {
-            case .privacy:
+            case .privacy, .safe:
                 self = .notInvolved
             case .common(let wallet):
                 switch wallet.category.knownCase {
                 case .classic:
                     self = hasLegacyAddress ? .required : .done
-                case .importedMnemonic, .importedPrivateKey, .watchAddress, .mixinSafe, .none:
+                case .importedMnemonic, .importedPrivateKey, .watchAddress, .none:
                     self = .notInvolved
                 }
             }

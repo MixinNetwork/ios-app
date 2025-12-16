@@ -44,34 +44,3 @@ extension SafeAccount {
     }
     
 }
-
-extension Web3Wallet {
-    
-    public convenience init?(account: SafeAccount) {
-        let chainID: String
-        switch account.chainID {
-        case 1:
-            chainID = ChainID.bitcoin
-        case 2:
-            chainID = ChainID.ethereum
-        case 5:
-            chainID = ChainID.litecoin
-        case 6:
-            chainID = ChainID.polygon
-        default:
-            return nil
-        }
-        self.init(
-            walletID: account.accountID,
-            category: .mixinSafe,
-            name: account.name,
-            createdAt: account.createdAt,
-            updatedAt: Date().toUTCString(),
-            safeRole: account.role,
-            safeChainID: chainID,
-            safeAddress: account.address,
-            safeURL: account.uri
-        )
-    }
-    
-}

@@ -300,14 +300,13 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
                 cell.walletTag = nil
             case .common(let wallet):
                 cell.nameLabel.text = wallet.name
-                switch wallet.category.knownCase {
-                case .mixinSafe:
-                    cell.iconImageView.image = R.image.safe_vault()
-                    cell.iconImageView.isHidden = false
-                default:
-                    cell.iconImageView.isHidden = true
-                }
-                cell.walletTag = wallet.safeRoleTag
+                cell.iconImageView.isHidden = true
+                cell.walletTag = nil
+            case .safe(let wallet):
+                cell.nameLabel.text = wallet.name
+                cell.iconImageView.image = R.image.safe_vault()
+                cell.iconImageView.isHidden = false
+                cell.walletTag = wallet.localizedRole
             }
             return cell
         case let .commonWalletReceiver(user, address):

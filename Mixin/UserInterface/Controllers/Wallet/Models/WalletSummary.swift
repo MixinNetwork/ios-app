@@ -32,11 +32,11 @@ struct WalletSummary {
         
         let wallets = walletDigests.filter { digest in
             switch digest.wallet {
-            case .privacy:
+            case .privacy, .safe:
                 true
             case .common(let wallet):
                 switch wallet.category.knownCase {
-                case .classic, .importedMnemonic, .importedPrivateKey, .mixinSafe:
+                case .classic, .importedMnemonic, .importedPrivateKey:
                     true
                 case .watchAddress, .none:
                     // Watch wallets are excluded from calculation

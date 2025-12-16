@@ -40,7 +40,7 @@ extension Web3Wallet {
             }
             let key = try await TIP.importedWalletEncryptionKey(pin: pin)
             privateKey = try encryptedPrivateKey.decrypt(with: key)
-        case .watchAddress, .mixinSafe:
+        case .watchAddress:
             throw DerivationError.invalidCategory
         case .none:
             throw DerivationError.unknownCategory
@@ -77,7 +77,7 @@ extension Web3Wallet {
             }
             let key = try await TIP.importedWalletEncryptionKey(pin: pin)
             return try encryptedPrivateKey.decrypt(with: key)
-        case .watchAddress, .mixinSafe:
+        case .watchAddress:
             throw DerivationError.invalidCategory
         case .none:
             throw DerivationError.unknownCategory

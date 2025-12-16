@@ -36,16 +36,16 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                     title: R.string.localizable.send_to_title(),
                     wallet: .privacy
                 )
-            case .common(let wallet) where wallet.category == .known(.mixinSafe):
-                navigationItem.titleView = WalletIdentifyingNavigationTitleView(
-                    title: R.string.localizable.send_to_title(),
-                    wallet: .common(wallet)
-                )
             case .common(let wallet):
                 let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
                 titleView.subtitle = wallet.name
                 titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
                 navigationItem.titleView = titleView
+            case .safe(let wallet):
+                navigationItem.titleView = WalletIdentifyingNavigationTitleView(
+                    title: R.string.localizable.send_to_title(),
+                    wallet: .safe(wallet)
+                )
             }
         case let .contact(user):
             navigationItem.titleView = UserNavigationTitleView(

@@ -52,11 +52,11 @@ extension WalletDisplayCategory {
                         .imported
                 case .watchAddress:
                         .watching
-                case .mixinSafe:
-                        .safe
                 case .none:
                         .none
                 }
+            case .safe:
+                    .safe
             }
             if let category {
                 var wallets = results[category] ?? []
@@ -67,10 +67,34 @@ extension WalletDisplayCategory {
         for key in results.keys {
             switch key {
             case .all:
-                break
+                results[key]?.sort { one, another in
+                    switch one.wallet.compare(another.wallet) {
+                    case .orderedAscending, .orderedSame:
+                        true
+                    case .orderedDescending:
+                        false
+                    }
+                }
             default:
                 results[key]?.sort { one, another in
-                    one.usdBalanceSum > another.usdBalanceSum
+                    let value = withUnsafePointer(to: one.usdBalanceSum) { one in
+                        withUnsafePointer(to: another.usdBalanceSum) { another in
+                            NSDecimalCompare(one, another)
+                        }
+                    }
+                    return switch value {
+                    case .orderedAscending:
+                        false
+                    case .orderedDescending:
+                        true
+                    case .orderedSame:
+                        switch one.wallet.compare(another.wallet) {
+                        case .orderedAscending, .orderedSame:
+                            true
+                        case .orderedDescending:
+                            false
+                        }
+                    }
                 }
             }
         }

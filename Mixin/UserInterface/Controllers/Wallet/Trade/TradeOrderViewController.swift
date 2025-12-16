@@ -149,6 +149,9 @@ final class TradeOrderViewController: UITableViewController {
                 case .common(let wallet):
                     cell.nameLabel.text = wallet.name
                     cell.iconImageView.isHidden = true
+                case .safe(let wallet):
+                    cell.nameLabel.text = wallet.name
+                    cell.iconImageView.isHidden = true
                 }
                 cell.contentLeadingConstraint.constant = 16
                 cell.contentTrailingConstraint.constant = 16
@@ -257,23 +260,26 @@ extension TradeOrderViewController: PillActionView.Delegate {
                 case .swap, .none:
                     mode = .simple
                 }
-                let swap = switch viewModel.wallet {
+                let trade: TradeViewController
+                switch viewModel.wallet {
                 case .privacy:
-                    MixinTradeViewController(
+                    trade = MixinTradeViewController(
                         mode: mode,
                         sendAssetID: viewModel.payAssetID,
                         receiveAssetID: viewModel.receiveAssetID,
                         referral: nil
                     )
                 case .common(let wallet):
-                    Web3TradeViewController(
+                    trade = Web3TradeViewController(
                         wallet: wallet,
                         mode: mode,
                         sendAssetID: viewModel.payAssetID,
                         receiveAssetID: viewModel.receiveAssetID
                     )
+                case .safe:
+                    return
                 }
-                viewControllers.append(swap)
+                viewControllers.append(trade)
                 navigationController.setViewControllers(viewControllers, animated: true)
                 reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "trade_detail"])
             }

@@ -172,6 +172,9 @@ extension Web3TokenSenderSelectorViewController: WalletSelectorViewController.De
             )
             let input = Web3TransferInputAmountViewController(payment: payment)
             navigationController?.pushViewController(input, animated: true)
+        case .safe:
+            // Cannot send tokens from safe wallets
+            return
         }
     }
     

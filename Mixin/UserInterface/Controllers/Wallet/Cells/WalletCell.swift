@@ -118,20 +118,21 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                     placeholder: .singleKindWallet(kind: kind),
                     usdBalanceSum: digest.usdBalanceSum
                 )
-            case .mixinSafe:
-                iconImageView.isHidden = false
-                iconImageView.image = R.image.safe_vault()
-                tags = if let tag = wallet.safeRoleTag {
-                    [.plain(tag)]
-                } else {
-                    []
-                }
-                loadProportions(
-                    tokens: digest.tokens,
-                    placeholder: .safeVault(chainID: wallet.safeChainID),
-                    usdBalanceSum: digest.usdBalanceSum
-                )
             }
+        case let .safe(wallet):
+            titleLabel.text = wallet.name
+            iconImageView.isHidden = false
+            iconImageView.image = R.image.safe_vault()
+            tags = if let tag = wallet.localizedRole {
+                [.plain(tag)]
+            } else {
+                []
+            }
+            loadProportions(
+                tokens: digest.tokens,
+                placeholder: .safeVault(chainID: wallet.chainID),
+                usdBalanceSum: digest.usdBalanceSum
+            )
         }
         load(tags: tags)
         valueLabel.attributedText = FiatMoneyValueAttributedStringBuilder.attributedString(

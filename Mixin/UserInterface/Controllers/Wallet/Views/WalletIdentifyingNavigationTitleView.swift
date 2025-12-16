@@ -52,15 +52,15 @@ final class WalletIdentifyingNavigationTitleView: UIStackView {
                 privacyShieldView.snp.makeConstraints { make in
                     make.width.height.equalTo(16)
                 }
-            case .common(let wallet) where wallet.category == .known(.mixinSafe):
+            case .common:
+                break
+            case .safe:
                 let vaultView = UIImageView(image: R.image.safe_vault())
                 stackView.addArrangedSubview(vaultView)
                 vaultView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
                 vaultView.snp.makeConstraints { make in
                     make.width.height.equalTo(16)
                 }
-            default:
-                break
             }
             
             return stackView

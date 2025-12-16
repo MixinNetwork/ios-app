@@ -38,10 +38,10 @@ final class ReloadSafeWalletsJob: AsynchronousJob {
                     }
                 }
                 
-                var wallets: [Web3Wallet] = []
+                var wallets: [SafeWallet] = []
                 var tokens: [Web3Token] = []
                 for account in accounts {
-                    guard let wallet = Web3Wallet(account: account) else {
+                    guard let wallet = SafeWallet(account: account) else {
                         continue
                     }
                     let accountTokens = account.assets.compactMap { asset in
@@ -58,7 +58,7 @@ final class ReloadSafeWalletsJob: AsynchronousJob {
                     wallets.append(wallet)
                     tokens.append(contentsOf: accountTokens)
                 }
-                Web3WalletDAO.shared.replaceSafeWallets(wallets: wallets, tokens: tokens) {
+                SafeWalletDAO.shared.replace(wallets: wallets, tokens: tokens) {
                     NotificationCenter.default.post(
                         onMainThread: Self.safeWalletsDidUpdateNotification,
                         object: self,

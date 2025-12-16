@@ -290,9 +290,8 @@ extension AddressValidator {
            let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chainID)
         {
             return .commonWallet(wallet, address)
-        } else if let wallet = Web3WalletDAO.shared.wallet(safeAddress: destination) {
-            let address = TemporaryAddress(destination: destination, tag: "")
-            return .commonWallet(wallet, address)
+        } else if let wallet = SafeWalletDAO.shared.wallet(safeAddress: destination) {
+            return .safeWallet(wallet)
         } else if let address = AddressDAO.shared.getAddress(chainId: chainID, destination: destination, tag: tag ?? "") {
             return .address(address)
         } else  {

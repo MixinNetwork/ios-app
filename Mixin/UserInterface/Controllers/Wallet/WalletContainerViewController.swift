@@ -15,7 +15,7 @@ final class WalletContainerViewController: UIViewController {
             } else {
                 fallthrough
             }
-        case .privacy:
+        case .privacy, .safe:
             load(child: PrivacyWalletViewController())
         }
         
@@ -58,7 +58,7 @@ final class WalletContainerViewController: UIViewController {
         self.viewController = nil
         let viewController: WalletViewController
         switch wallet {
-        case .privacy:
+        case .privacy, .safe:
             viewController = PrivacyWalletViewController()
         case .common(let wallet):
             viewController = CommonWalletViewController(wallet: wallet)

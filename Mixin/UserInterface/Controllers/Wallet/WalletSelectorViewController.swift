@@ -242,14 +242,23 @@ final class WalletSelectorViewController: UIViewController {
                 AppGroupKeychain.allImportedPrivateKey().keys
             )
             
-            let web3Wallets = Web3WalletDAO.shared.walletDigests()
+            let commonWallets = Web3WalletDAO.shared.walletDigests()
+            let safeWallets = SafeWalletDAO.shared.walletDigests()
             var digests: [WalletDigest] = switch excludingWallet {
             case .none:
-                [TokenDAO.shared.walletDigest()] + web3Wallets
+                [TokenDAO.shared.walletDigest()] + commonWallets + safeWallets
             case .privacy:
-                web3Wallets
+                commonWallets + safeWallets
             case .common:
-                [TokenDAO.shared.walletDigest()] + web3Wallets.filter { digest in
+                [TokenDAO.shared.walletDigest()]
+                + commonWallets.filter { digest in
+                    digest.wallet != excludingWallet
+                }
+                + safeWallets
+            case .safe:
+                [TokenDAO.shared.walletDigest()]
+                + commonWallets
+                + safeWallets.filter { digest in
                     digest.wallet != excludingWallet
                 }
             }
@@ -265,9 +274,11 @@ final class WalletSelectorViewController: UIViewController {
                             false
                         case .importedMnemonic, .importedPrivateKey:
                             !secretAvailableWalletIDs.contains(wallet.walletID)
-                        case .watchAddress, .mixinSafe, .none:
+                        case .watchAddress, .none:
                             true
                         }
+                    case .safe:
+                        true
                     }
                 }
             case .pickSwapOrderFilter:
@@ -279,9 +290,11 @@ final class WalletSelectorViewController: UIViewController {
                         switch wallet.category.knownCase {
                         case .classic, .importedMnemonic, .importedPrivateKey:
                             false
-                        case .watchAddress, .mixinSafe, .none:
+                        case .watchAddress, .none:
                             true
                         }
+                    case .safe:
+                        true
                     }
                 }
             case .pickReceiver:
@@ -504,7 +517,7 @@ extension WalletSelectorViewController: UICollectionViewDataSource {
             }
             if let digest {
                 let hasSecret = switch digest.wallet {
-                case .privacy:
+                case .privacy, .safe:
                     false
                 case .common(let wallet):
                     secretAvailableWalletIDs.contains(wallet.walletID)
@@ -573,15 +586,10 @@ extension WalletSelectorViewController: UICollectionViewDelegate {
             case .pickReceiver, .pickSender:
                 let uncontrolledWallet: Web3Wallet?
                 switch digest.wallet {
-                case .privacy:
+                case .privacy, .safe:
                     uncontrolledWallet = nil
                 case .common(let wallet):
-                    uncontrolledWallet = switch wallet.category.knownCase {
-                    case .mixinSafe:
-                        nil
-                    default:
-                        wallet.hasSecret() ? nil : wallet
-                    }
+                    uncontrolledWallet = wallet.hasSecret() ? nil : wallet
                 }
                 if let wallet = uncontrolledWallet {
                     let warning = UncontrolledWalletWarningViewController(wallet: wallet)

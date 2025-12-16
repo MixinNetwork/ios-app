@@ -246,7 +246,8 @@ final class WalletSummaryViewController: UIViewController {
         DispatchQueue.global().async {
             let privacyWalletDigest = TokenDAO.shared.walletDigest()
             let commonWalletDigests = Web3WalletDAO.shared.walletDigests()
-            let walletDigests = [privacyWalletDigest] + commonWalletDigests
+            let safeWalletDigests = SafeWalletDAO.shared.walletDigests()
+            let walletDigests = [privacyWalletDigest] + commonWalletDigests + safeWalletDigests
             let summary = WalletSummary(walletDigests: walletDigests)
             let categorizedDigests = WalletDisplayCategory.categorize(digests: walletDigests)
                 .filter { category, wallets in
@@ -358,13 +359,11 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
                     cell.accessory = .disclosure
                     hasSecret = false
                 case .common(let wallet):
-                    switch wallet.category.knownCase {
-                    case .mixinSafe:
-                        cell.accessory = .external
-                    default:
-                        cell.accessory = .disclosure
-                    }
+                    cell.accessory = .disclosure
                     hasSecret = secretAvailableWalletIDs.contains(wallet.walletID)
+                case .safe:
+                    cell.accessory = .external
+                    hasSecret = false
                 }
                 cell.load(digest: digest, hasSecret: hasSecret)
                 return cell
@@ -446,8 +445,11 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
                 return
             }
             switch wallet {
-            case .common(let wallet) where wallet.category == .known(.mixinSafe):
-                guard let safeURL = wallet.safeURL, let url = URL(string: safeURL) else {
+            case .privacy, .common:
+                let container = parent as? WalletContainerViewController
+                container?.switchToWallet(wallet)
+            case .safe(let wallet):
+                guard let url = URL(string: wallet.uri) else {
                     return
                 }
                 let container = UIApplication.homeContainerViewController
@@ -457,9 +459,6 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
                     saveAsRecentSearch: false
                 )
                 container?.presentWebViewController(context: context)
-            case .privacy, .common:
-                let container = parent as? WalletContainerViewController
-                container?.switchToWallet(wallet)
             }
         }
     }

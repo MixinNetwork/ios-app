@@ -35,7 +35,7 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
         tableView.delegate = self
         
         let hasReceivingWallet = Web3Chain.chain(chainID: token.chainID) != nil
-        || Web3WalletDAO.shared.hasSafeWallet(chainID: token.chainID)
+        || SafeWalletDAO.shared.hasSafeWallet(chainID: token.chainID)
         if hasReceivingWallet {
             destinations.append(.myWallets)
         }
@@ -176,25 +176,22 @@ extension MixinTokenReceiverViewController: WalletSelectorViewController.Delegat
         case .privacy:
             assertionFailure("Never transfer between Mixin Wallets through crypto network")
         case .common(let wallet):
-            let address: (any WithdrawableAddress)? = switch wallet.category.knownCase {
-            case .mixinSafe:
-                if let destination = wallet.safeAddress {
-                    TemporaryAddress(destination: destination, tag: "")
-                } else {
-                    nil
-                }
-            default:
-                Web3AddressDAO.shared.address(
-                    walletID: wallet.walletID,
-                    chainID: token.chainID
-                )
-            }
+            let address = Web3AddressDAO.shared.address(
+                walletID: wallet.walletID,
+                chainID: token.chainID
+            )
             guard let address else {
                 return
             }
             let inputAmount = WithdrawInputAmountViewController(
                 tokenItem: token,
                 destination: .commonWallet(wallet, address)
+            )
+            navigationController?.pushViewController(inputAmount, animated: true)
+        case .safe(let wallet):
+            let inputAmount = WithdrawInputAmountViewController(
+                tokenItem: token,
+                destination: .safeWallet(wallet),
             )
             navigationController?.pushViewController(inputAmount, animated: true)
         }

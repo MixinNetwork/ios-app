@@ -32,7 +32,7 @@ extension WalletDisplayCategory {
     typealias CategorizedWalletDigests = OrderedDictionary<WalletDisplayCategory, [WalletDigest]>
     
     static func categorize(digests: [WalletDigest]) -> CategorizedWalletDigests {
-        // Empty arrays for the ordering
+        // Empty arrays for category ordering
         var results: CategorizedWalletDigests = [
             .all: digests,
             .safe: [],
@@ -65,37 +65,8 @@ extension WalletDisplayCategory {
             }
         }
         for key in results.keys {
-            switch key {
-            case .all:
-                results[key]?.sort { one, another in
-                    switch one.wallet.compare(another.wallet) {
-                    case .orderedAscending, .orderedSame:
-                        true
-                    case .orderedDescending:
-                        false
-                    }
-                }
-            default:
-                results[key]?.sort { one, another in
-                    let value = withUnsafePointer(to: one.usdBalanceSum) { one in
-                        withUnsafePointer(to: another.usdBalanceSum) { another in
-                            NSDecimalCompare(one, another)
-                        }
-                    }
-                    return switch value {
-                    case .orderedAscending:
-                        false
-                    case .orderedDescending:
-                        true
-                    case .orderedSame:
-                        switch one.wallet.compare(another.wallet) {
-                        case .orderedAscending, .orderedSame:
-                            true
-                        case .orderedDescending:
-                            false
-                        }
-                    }
-                }
+            results[key]?.sort { one, another in
+                one.wallet.compare(another.wallet) != .orderedDescending
             }
         }
         return results

@@ -40,7 +40,7 @@ extension Wallet {
         case (.some, .none):
                 .orderedDescending
         case let (.some(one), .some(another)):
-            another.compare(one)
+            one.compare(another)
         }
     }
     

@@ -11,6 +11,7 @@ public final class BadgeManager {
         case membership = "membership"
         case referral = "referral"
         case safeVault = "safe_vault"
+        case advancedTrade = "advanced_trade"
     }
     
     public static let shared = BadgeManager()

@@ -534,11 +534,13 @@ extension TradeViewController: UICollectionViewDataSource {
         case .modeSelector:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
             let mode = Mode(rawValue: indexPath.item)!
-            cell.label.text = switch mode {
+            switch mode {
             case .simple:
-                R.string.localizable.trade_simple()
+                cell.label.text = R.string.localizable.trade_simple()
+                cell.badgeView.isHidden = true
             case .advanced:
-                R.string.localizable.trade_advanced()
+                cell.label.text = R.string.localizable.trade_advanced()
+                cell.badgeView.isHidden = BadgeManager.shared.hasViewed(identifier: .advancedTrade)
             }
             return cell
         case .amountInput:
@@ -702,6 +704,12 @@ extension TradeViewController: UICollectionViewDelegate {
                 }
             }
             mode = Mode(rawValue: indexPath.item)!
+            if mode == .advanced {
+                BadgeManager.shared.setHasViewed(identifier: .advancedTrade)
+                if let cell = collectionView.cellForItem(at: indexPath) as? ExploreSegmentCell {
+                    cell.badgeView.isHidden = true
+                }
+            }
         case .openOrders:
             collectionView.deselectItem(at: indexPath, animated: true)
             if openOrders.isEmpty {

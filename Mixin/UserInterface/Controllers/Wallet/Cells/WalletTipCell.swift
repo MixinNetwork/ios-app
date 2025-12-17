@@ -31,7 +31,7 @@ final class WalletTipCell: UICollectionViewCell {
                 titleLabel.text = R.string.localizable.classic_wallet_tip_title()
                 descriptionLabel.text = R.string.localizable.classic_wallet_tip_description()
             case .safe:
-                imageView.image = R.image.privacy_wallet_tip()
+                imageView.image = R.image.safe_wallet_introduction()
                 titleLabel.text = R.string.localizable.whats_safe_wallet()
                 descriptionLabel.text = R.string.localizable.safe_wallet_description()
             case nil:

@@ -6,8 +6,8 @@ public final class BadgeManager {
         case walletSwitch = "wallet_switch"
         case addWallet = "add_wallet"
         case buy = "buying"
-        case swap
-        case swapOrder = "swap_order"
+        case trade = "swap"
+        case tradeOrder = "swap_order"
         case membership = "membership"
         case referral = "referral"
         case safeVault = "safe_vault"

@@ -69,7 +69,7 @@ final class TokenActionView: UIView {
                     (R.image.token_action_receive(), R.string.localizable.receive())
                 case .send:
                     (R.image.token_action_send(), R.string.localizable.caption_send())
-                case .swap:
+                case .trade:
                     (R.image.token_action_trade(), R.string.localizable.trade())
                 case .buy:
                     (R.image.token_action_buy(), R.string.localizable.buy())

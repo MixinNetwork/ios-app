@@ -147,12 +147,14 @@ class TradeViewController: UIViewController {
     private(set) var selectedExpiry: TradeOrder.Expiry = .never
     
     init(
-        mode: Mode,
+        mode: Mode?,
         tokenSource: RouteTokenSource,
         sendAssetID: String?,
         receiveAssetID: String?
     ) {
         self.mode = mode
+        ?? Mode(rawValue: AppGroupUserDefaults.Wallet.tradeMode)
+        ?? .simple
         self.tokenSource = tokenSource
         self.arbitrarySendAssetID = sendAssetID
         self.arbitraryReceiveAssetID = receiveAssetID
@@ -369,7 +371,7 @@ class TradeViewController: UIViewController {
         guard let showOrdersItem else {
             return
         }
-        let swapOrdersUnread = !BadgeManager.shared.hasViewed(identifier: .swapOrder)
+        let swapOrdersUnread = !BadgeManager.shared.hasViewed(identifier: .tradeOrder)
         DispatchQueue.global().async { [weak showOrdersItem, walletID=orderWalletID] in
             let openOrdersCount = min(
                 99,
@@ -389,7 +391,7 @@ class TradeViewController: UIViewController {
     }
     
     @objc func showOrders(_ sender: Any) {
-        BadgeManager.shared.setHasViewed(identifier: .swapOrder)
+        BadgeManager.shared.setHasViewed(identifier: .tradeOrder)
         if let showOrdersItem, showOrdersItem.compatibleBadge == .unread {
             showOrdersItem.compatibleBadge = nil
         }
@@ -710,6 +712,7 @@ extension TradeViewController: UICollectionViewDelegate {
                     cell.badgeView.isHidden = true
                 }
             }
+            AppGroupUserDefaults.Wallet.tradeMode = mode.rawValue
         case .openOrders:
             collectionView.deselectItem(at: indexPath, animated: true)
             if openOrders.isEmpty {

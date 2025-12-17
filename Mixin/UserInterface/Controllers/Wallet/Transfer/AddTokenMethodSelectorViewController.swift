@@ -4,7 +4,7 @@ import MixinServices
 final class AddTokenMethodSelectorViewController: PopupSelectorViewController {
     
     enum Method: CaseIterable {
-        case swap
+        case trade
         case deposit
     }
     
@@ -56,7 +56,7 @@ extension AddTokenMethodSelectorViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.add_token_method, for: indexPath)!
         switch Method.allCases[indexPath.row] {
-        case .swap:
+        case .trade:
             cell.iconImageView.image = R.image.filter_swap()
             cell.titleLabel.text = R.string.localizable.swap_token(token.symbol)
             cell.subtitleLabel.text = R.string.localizable.swap_token_description(token.symbol)

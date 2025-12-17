@@ -18,7 +18,7 @@ final class Web3TradeViewController: TradeViewController {
     
     init(
         wallet: Web3Wallet,
-        mode: Mode,
+        mode: Mode? = nil,
         sendAssetID: String?,
         receiveAssetID: String?
     ) {
@@ -41,7 +41,7 @@ final class Web3TradeViewController: TradeViewController {
         self.wallet = wallet
         self.supportedChainIDs = supportedChainIDs
         super.init(
-            mode: .simple,
+            mode: nil,
             tokenSource: .web3,
             sendAssetID: sendAssetID,
             receiveAssetID: receiveAssetID

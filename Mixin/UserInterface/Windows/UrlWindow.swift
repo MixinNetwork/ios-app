@@ -67,21 +67,21 @@ class UrlWindow {
                 return true
             case let .trade(type, input, output, referral):
                 if let navigationController = UIApplication.homeNavigationController {
-                    let mode: TradeViewController.Mode = switch type {
+                    let mode: TradeViewController.Mode? = switch type {
                     case "swap":
                             .simple
                     case "limit":
                             .advanced
                     default:
-                            .simple
+                            .none
                     }
-                    let swap = MixinTradeViewController(
+                    let trade = MixinTradeViewController(
                         mode: mode,
                         sendAssetID: input,
                         receiveAssetID: output ?? AssetID.erc20USDT,
                         referral: referral
                     )
-                    navigationController.pushViewController(swap, animated: true)
+                    navigationController.pushViewController(trade, animated: true)
                     reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "schema"])
                 }
                 return true

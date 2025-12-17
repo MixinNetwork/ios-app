@@ -280,10 +280,9 @@ extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewContr
         }
         let next: UIViewController
         switch method {
-        case .swap:
+        case .trade:
             next = Web3TradeViewController(
                 wallet: payment.wallet,
-                mode: .simple,
                 sendAssetID: nil,
                 receiveAssetID: feeToken.assetID,
             )

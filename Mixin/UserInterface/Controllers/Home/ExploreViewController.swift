@@ -122,16 +122,15 @@ final class ExploreViewController: UIViewController {
             let buy = BuyTokenInputAmountViewController(wallet: .privacy)
             navigationController?.pushViewController(buy, animated: true)
             BadgeManager.shared.setHasViewed(identifier: .buy)
-        case .swap:
+        case .trade:
             reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "explore"])
-            let swap = MixinTradeViewController(
-                mode: .simple,
+            let trade = MixinTradeViewController(
                 sendAssetID: nil,
                 receiveAssetID: nil,
                 referral: nil
             )
-            navigationController?.pushViewController(swap, animated: true)
-            BadgeManager.shared.setHasViewed(identifier: .swap)
+            navigationController?.pushViewController(trade, animated: true)
+            BadgeManager.shared.setHasViewed(identifier: .trade)
         case .membership:
             if let membership = LoginManager.shared.account?.membership, let plan = membership.plan {
                 let membership = MembershipViewController(plan: plan, expiredAt: membership.expiredAt)
@@ -261,7 +260,7 @@ extension ExploreViewController {
         guard let identifier = notification.userInfo?[BadgeManager.identifierUserInfoKey] as? BadgeManager.Identifier else {
             return
         }
-        if [.swap, .buy, .membership].contains(identifier) {
+        if [.trade, .buy, .membership].contains(identifier) {
             let explore = IndexPath(item: Segment.explore.rawValue, section: 0)
             reloadItemKeepingSelection(at: explore)
         }

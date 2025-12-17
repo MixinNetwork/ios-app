@@ -309,6 +309,14 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
                 cell.walletTag = wallet.localizedRole
             }
             return cell
+        case let .safe(name):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_wallet, for: indexPath)!
+            cell.captionLabel.text = R.string.localizable.safe().uppercased()
+            cell.nameLabel.text = name
+            cell.iconImageView.image = R.image.safe_vault()
+            cell.iconImageView.isHidden = false
+            cell.walletTag = nil
+            return cell
         case let .commonWalletReceiver(user, address):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.common_wallet_receiver, for: indexPath)!
             cell.userItemView.load(user: user)
@@ -452,6 +460,7 @@ extension AuthenticationPreviewViewController {
         case safeMultisigAmount(token: MixinTokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case addressReceivers(MixinTokenItem, [SafeMultisigResponse.Safe.Recipient])
         case wallet(caption: Caption, wallet: Wallet, threshold: Int32?)
+        case safe(name: String)
         case commonWalletReceiver(user: UserItem, address: String)
         case user(title: String, user: UserItem)
         case waivedFee(token: String, fiatMoney: String, display: AmountIntent)

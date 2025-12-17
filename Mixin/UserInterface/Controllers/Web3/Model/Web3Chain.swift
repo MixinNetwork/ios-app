@@ -14,7 +14,7 @@ final class Web3Chain {
         var chains: [Web3Chain] {
             switch self {
             case .evm:
-                [.ethereum, .polygon, .bnbSmartChain, .base, .arbitrumOne, .opMainnet]
+                [.ethereum, .polygon, .bnbSmartChain, .base, .arbitrumOne, .opMainnet, .avalancheCChain]
             case .solana:
                 [.solana]
             }
@@ -171,7 +171,7 @@ extension Web3Chain {
     
     static let all: [Web3Chain] = {
         let chains: [Web3Chain] = [
-            .ethereum, .solana, .bnbSmartChain, .base, .polygon, .arbitrumOne, .opMainnet
+            .ethereum, .solana, .bnbSmartChain, .base, .polygon, .arbitrumOne, .opMainnet, .avalancheCChain,
         ]
         // Make sure all chains are included
         let allChains = Kind.allCases.reduce(into: []) { results, kind in
@@ -213,6 +213,30 @@ extension Web3Chain {
         failsafeRPCServerURL: URL(string: "https://base.llamarpc.com")!
     )
     
+    static let arbitrumOne = Web3Chain.evm(
+        chainID: 42161,
+        mixinChainID: ChainID.arbitrumOne,
+        feeTokenAssetID: AssetID.arbitrumOneETH,
+        name: "Arbitrum One",
+        failsafeRPCServerURL: URL(string: "https://arbitrum.llamarpc.com")!
+    )
+    
+    static let opMainnet = Web3Chain.evm(
+        chainID: 10,
+        mixinChainID: ChainID.opMainnet,
+        feeTokenAssetID: AssetID.opMainnetETH,
+        name: "OP Mainnet",
+        failsafeRPCServerURL: URL(string: "https://optimism.llamarpc.com")!
+    )
+    
+    static let avalancheCChain = Web3Chain.evm(
+        chainID: 43114,
+        mixinChainID: ChainID.avalancheCChain,
+        feeTokenAssetID: AssetID.avalancheCAVAX,
+        name: "Avalanche",
+        failsafeRPCServerURL: URL(string: "https://api.avax.network/ext/bc/C/rpc")!
+    )
+    
     static let solana = Web3Chain.solana(
         reference: "4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ",
         mixinChainID: ChainID.solana,
@@ -230,22 +254,6 @@ extension Web3Chain {
         failsafeRPCServerURL: URL(string: "https://api.devnet.solana.com")!
     )
 #endif
-    
-    static let arbitrumOne = Web3Chain.evm(
-        chainID: 42161,
-        mixinChainID: ChainID.arbitrumOne,
-        feeTokenAssetID: AssetID.arbitrumOneETH,
-        name: "Arbitrum One",
-        failsafeRPCServerURL: URL(string: "https://arbitrum.llamarpc.com")!
-    )
-    
-    static let opMainnet = Web3Chain.evm(
-        chainID: 10,
-        mixinChainID: ChainID.opMainnet,
-        feeTokenAssetID: AssetID.opMainnetETH,
-        name: "OP Mainnet",
-        failsafeRPCServerURL: URL(string: "https://optimism.llamarpc.com")!
-    )
     
 }
 

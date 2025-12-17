@@ -2,7 +2,8 @@ import UIKit
 
 final class WalletTipCell: UICollectionViewCell {
     
-    enum Content {
+    enum Content: CaseIterable {
+        case safe
         case privacy
         case classic
     }
@@ -29,6 +30,10 @@ final class WalletTipCell: UICollectionViewCell {
                 imageView.image = R.image.classic_wallet_tip()
                 titleLabel.text = R.string.localizable.classic_wallet_tip_title()
                 descriptionLabel.text = R.string.localizable.classic_wallet_tip_description()
+            case .safe:
+                imageView.image = R.image.privacy_wallet_tip()
+                titleLabel.text = R.string.localizable.whats_safe_wallet()
+                descriptionLabel.text = R.string.localizable.safe_wallet_description()
             case nil:
                 break
             }
@@ -72,6 +77,8 @@ final class WalletTipCell: UICollectionViewCell {
             R.string.localizable.url_privacy_wallet()
         case .classic:
             R.string.localizable.url_classic_wallet()
+        case .safe:
+            R.string.localizable.safe_learn_more_url()
         }
         guard let url = URL(string: string) else {
             return

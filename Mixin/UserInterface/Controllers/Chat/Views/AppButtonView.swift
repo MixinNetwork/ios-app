@@ -53,7 +53,7 @@ final class AppButtonView: UIView {
                 view.isHidden = false
                 indicator = view
             } else {
-                indicator = UIImageView(image: R.image.app_button_disclosure())
+                indicator = UIImageView(image: R.image.external_indicator_arrow())
                 indicator.tintColor = R.color.text_tertiary()
                 addSubview(indicator)
                 indicator.snp.makeConstraints { make in

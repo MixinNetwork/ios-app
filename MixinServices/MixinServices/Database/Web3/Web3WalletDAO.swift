@@ -39,48 +39,21 @@ public final class Web3WalletDAO: Web3DAO {
     }
     
     public func walletDigests() -> [WalletDigest] {
-        
-        enum SQL {
-            
-            static let wallets = """
-            SELECT * FROM wallets ORDER BY created_at ASC
-            """
-            
-            static let hasLegacyAddresses = """
-            SELECT TRUE FROM addresses WHERE wallet_id = ? AND path IS NULL
-            """
-            
-            static let tokenDigests = """
-            SELECT t.asset_id, t.symbol, t.name, t.icon_url, t.price_usd, t.amount AS balance
-            FROM tokens t
-                LEFT JOIN tokens_extra te ON t.wallet_id = te.wallet_id AND t.asset_id = te.asset_id
-            WHERE t.wallet_id = ?
-                AND ifnull(te.hidden,FALSE) IS FALSE
-                AND CAST(t.price_usd * t.amount AS REAL) > 0
-            ORDER BY t.price_usd * t.amount DESC
-            """
-            
-            static let chains = """
-            SELECT DISTINCT chain_id FROM addresses WHERE wallet_id = ?
-            """
-            
-        }
-        
-        return try! db.read { db in
-            try Web3Wallet.fetchAll(db, sql: SQL.wallets).compactMap { wallet in
+        try! db.read { db in
+            try Web3Wallet.fetchAll(db, sql: "SELECT * FROM wallets").compactMap { wallet in
                 let hasLegacyAddress = try Bool.fetchOne(
                     db,
-                    sql: SQL.hasLegacyAddresses,
+                    sql: "SELECT TRUE FROM addresses WHERE wallet_id = ? AND path IS NULL",
                     arguments: [wallet.walletID]
                 ) ?? false
                 let tokenDigests = try TokenDigest.fetchAll(
                     db,
-                    sql: SQL.tokenDigests,
+                    sql: Web3TokenDAO.SQL.tokenDigests,
                     arguments: [wallet.walletID]
                 )
                 let chainIDs = try String.fetchSet(
                     db,
-                    sql: SQL.chains,
+                    sql: "SELECT DISTINCT chain_id FROM addresses WHERE wallet_id = ?",
                     arguments: [wallet.walletID]
                 )
                 return WalletDigest(

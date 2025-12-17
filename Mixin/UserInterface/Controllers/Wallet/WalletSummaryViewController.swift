@@ -1,10 +1,13 @@
 import UIKit
+import SafariServices
+import OrderedCollections
 import MixinServices
 
 final class WalletSummaryViewController: UIViewController {
     
     enum Section: Int, CaseIterable {
         case summary
+        case walletCategories
         case wallets
         case tips
         case tipsPageControl
@@ -12,23 +15,27 @@ final class WalletSummaryViewController: UIViewController {
     
     private enum ReuseIdentifier {
         static let pageControl = "p"
+        static let loading = "l"
     }
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var addWalletView: BadgeBarButtonView!
     
     private var summary: WalletSummary?
-    private var privacyWalletDigest: WalletDigest?
-    private var commonWalletDigests: [WalletDigest] = []
+    private var digests: OrderedDictionary<WalletDisplayCategory, [WalletDigest]> = [:]
+    private var selectedCategory: WalletDisplayCategory = .all
     private var tips: [WalletTipCell.Content] = []
     private var secretAvailableWalletIDs: Set<String> = []
+    private var unexpiredPlan: User.Membership.Plan?
+    private var isLoadingSafeWallets = true
     
-    private weak var tipsPageControl: UIPageControl?
     private var tipsCurrentPage: Int = 0 {
         didSet {
             tipsPageControl?.currentPage = tipsCurrentPage
         }
     }
+    
+    private weak var tipsPageControl: UIPageControl?
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -40,11 +47,17 @@ final class WalletSummaryViewController: UIViewController {
         addWalletView.button.addTarget(self, action: #selector(addWallet(_:)), for: .touchUpInside)
         addWalletView.badge = BadgeManager.shared.hasViewed(identifier: .addWallet) ? nil : .unread
         collectionView.register(R.nib.walletSummaryValueCell)
+        collectionView.register(R.nib.exploreSegmentCell)
         collectionView.register(R.nib.walletCell)
+        collectionView.register(R.nib.walletSummarySafeIntroductionCell)
         collectionView.register(R.nib.walletTipCell)
         collectionView.register(
             WalletTipPageControlCell.self,
             forCellWithReuseIdentifier: ReuseIdentifier.pageControl
+        )
+        collectionView.register(
+            SyncWalletInProgressCell.self,
+            forCellWithReuseIdentifier: ReuseIdentifier.loading
         )
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, environment) in
             switch Section(rawValue: sectionIndex)! {
@@ -56,15 +69,41 @@ final class WalletSummaryViewController: UIViewController {
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)
                 return section
-            case .wallets:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
+            case .walletCategories:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .absolute(38))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
-                let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
-                group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: .fixed(5), trailing: nil, bottom: nil)
+                let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 15, bottom: 2, trailing: 15)
+                section.orthogonalScrollingBehavior = .continuous
                 return section
+            case .wallets:
+                if let self, let digests = self.digests[self.selectedCategory], !digests.isEmpty {
+                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
+                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
+                    let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
+                    group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: .fixed(5), trailing: nil, bottom: nil)
+                    let section = NSCollectionLayoutSection(group: group)
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20)
+                    return section
+                } else if self?.isLoadingSafeWallets ?? false {
+                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.3))
+                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.3))
+                    let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
+                    let section = NSCollectionLayoutSection(group: group)
+                    return section
+                } else {
+                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
+                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
+                    let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
+                    group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: .fixed(5), trailing: nil, bottom: nil)
+                    let section = NSCollectionLayoutSection(group: group)
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20)
+                    return section
+                }
             case .tips:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(144))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -96,54 +135,25 @@ final class WalletSummaryViewController: UIViewController {
         collectionView.delegate = self
         
         let notificationCenter: NotificationCenter = .default
-        notificationCenter.addObserver(
-            collectionView!,
-            selector: #selector(collectionView.reloadData),
-            name: Currency.currentCurrencyDidChangeNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: TokenDAO.tokensDidChangeNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: TokenExtraDAO.tokenVisibilityDidChangeNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: UTXOService.balanceDidUpdateNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: Web3WalletDAO.walletsDidSaveNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: Web3WalletDAO.walletsDidDeleteNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: Web3TokenDAO.tokensDidChangeNotification,
-            object: nil
-        )
-        notificationCenter.addObserver(
-            self,
-            selector: #selector(reloadData),
-            name: Web3TokenExtraDAO.tokenVisibilityDidChangeNotification,
-            object: nil
-        )
+        let reloadDataNotifications = [
+            Currency.currentCurrencyDidChangeNotification,
+            TokenDAO.tokensDidChangeNotification,
+            TokenExtraDAO.tokenVisibilityDidChangeNotification,
+            UTXOService.balanceDidUpdateNotification,
+            Web3WalletDAO.walletsDidSaveNotification,
+            Web3WalletDAO.walletsDidDeleteNotification,
+            Web3TokenDAO.tokensDidChangeNotification,
+            Web3TokenExtraDAO.tokenVisibilityDidChangeNotification,
+            LoginManager.accountDidChangeNotification,
+        ]
+        for notification in reloadDataNotifications {
+            notificationCenter.addObserver(
+                self,
+                selector: #selector(reloadData),
+                name: notification,
+                object: nil
+            )
+        }
         notificationCenter.addObserver(
             self,
             selector: #selector(reloadTips),
@@ -153,6 +163,21 @@ final class WalletSummaryViewController: UIViewController {
         
         reloadData()
         reloadTips()
+        
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadSafeWallets(_:)),
+            name: ReloadSafeWalletsJob.safeWalletsDidUpdateNotification,
+            object: nil
+        )
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(reloadSafeWallets(_:)),
+            name: ReloadSafeWalletsJob.safeWalletsFailedToUpdateNotification,
+            object: nil
+        )
+        let reloadSafeWallets = ReloadSafeWalletsJob()
+        ConcurrentJobQueue.shared.addJob(job: reloadSafeWallets)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -180,6 +205,9 @@ final class WalletSummaryViewController: UIViewController {
             }
             if !AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip {
                 tips.append(.classic)
+            }
+            if !AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip {
+                tips.append(.safe)
             }
             return tips
         }()
@@ -218,10 +246,13 @@ final class WalletSummaryViewController: UIViewController {
         DispatchQueue.global().async {
             let privacyWalletDigest = TokenDAO.shared.walletDigest()
             let commonWalletDigests = Web3WalletDAO.shared.walletDigests()
-            let summary = WalletSummary(
-                privacyWallet: privacyWalletDigest,
-                otherWallets: commonWalletDigests
-            )
+            let safeWalletDigests = SafeWalletDAO.shared.walletDigests()
+            let walletDigests = [privacyWalletDigest] + commonWalletDigests + safeWalletDigests
+            let summary = WalletSummary(walletDigests: walletDigests)
+            let categorizedDigests = WalletDisplayCategory.categorize(digests: walletDigests)
+                .filter { category, wallets in
+                    category == .safe || !wallets.isEmpty
+                }
             var secretAvailableWalletIDs: Set<String> = Set(
                 AppGroupKeychain.allImportedMnemonics().keys
             )
@@ -230,12 +261,21 @@ final class WalletSummaryViewController: UIViewController {
             )
             DispatchQueue.main.async {
                 self.summary = summary
-                self.privacyWalletDigest = privacyWalletDigest
-                self.commonWalletDigests = commonWalletDigests
+                self.digests = categorizedDigests
                 self.secretAvailableWalletIDs = secretAvailableWalletIDs
+                self.unexpiredPlan = LoginManager.shared.account?.membership?.unexpiredPlan
                 self.collectionView.reloadData()
+                if let item = categorizedDigests.keys.firstIndex(of: self.selectedCategory) {
+                    let indexPath = IndexPath(item: item, section: Section.walletCategories.rawValue)
+                    self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                }
             }
         }
+    }
+    
+    @objc private func reloadSafeWallets(_ notification: Notification) {
+        self.isLoadingSafeWallets = false
+        self.reloadData()
     }
     
 }
@@ -251,6 +291,8 @@ extension WalletSummaryViewController: WalletTipCell.Delegate {
             AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip = true
         case .classic:
             AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = true
+        case .safe:
+            AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip = true
         }
     }
     
@@ -259,7 +301,7 @@ extension WalletSummaryViewController: WalletTipCell.Delegate {
 extension WalletSummaryViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        var sections: [Section] = [.summary, .wallets]
+        var sections: [Section] = [.summary, .walletCategories, .wallets]
         if !tips.isEmpty {
             sections.append(.tips)
             sections.append(.tipsPageControl)
@@ -270,13 +312,20 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
         case .summary:
-            1
+            return 1
+        case .walletCategories:
+            return digests.count
         case .wallets:
-            1 + commonWalletDigests.count
+            let count = digests[selectedCategory]?.count ?? 0
+            if selectedCategory == .safe && count == 0 {
+                return 1
+            } else {
+                return count
+            }
         case .tips:
-            tips.count
+            return tips.count
         case .tipsPageControl:
-            1
+            return 1
         }
     }
     
@@ -289,25 +338,50 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
             }
             cell.delegate = self
             return cell
-        case .wallets:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet, for: indexPath)!
-            cell.accessory = .disclosure
-            switch indexPath.item {
-            case 0:
-                if let digest = privacyWalletDigest {
-                    cell.load(digest: digest, hasSecret: false)
-                }
+        case .walletCategories:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
+            let category = digests.keys[indexPath.item]
+            cell.label.text = category.localizedName
+            switch category {
+            case .safe:
+                cell.badgeView.isHidden = BadgeManager.shared.hasViewed(identifier: .safeVault)
             default:
-                let digest = commonWalletDigests[indexPath.row - 1]
-                let hasSecret = switch digest.wallet {
-                case .privacy:
-                    false
-                case .common(let wallet):
-                    secretAvailableWalletIDs.contains(wallet.walletID)
-                }
-                cell.load(digest: digest, hasSecret: hasSecret)
+                cell.badgeView.isHidden = true
             }
             return cell
+        case .wallets:
+            if let digests = digests[selectedCategory], !digests.isEmpty {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet, for: indexPath)!
+                let digest = digests[indexPath.item]
+                let hasSecret: Bool
+                switch digest.wallet {
+                case .privacy:
+                    cell.accessory = .disclosure
+                    hasSecret = false
+                case .common(let wallet):
+                    cell.accessory = .disclosure
+                    hasSecret = secretAvailableWalletIDs.contains(wallet.walletID)
+                case .safe:
+                    cell.accessory = .external
+                    hasSecret = false
+                }
+                cell.load(digest: digest, hasSecret: hasSecret)
+                return cell
+            } else {
+                if isLoadingSafeWallets {
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseIdentifier.loading, for: indexPath)
+                    return cell
+                } else {
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_summary_safe_introduction, for: indexPath)!
+                    if unexpiredPlan == nil {
+                        cell.load(content: .upgradePlan)
+                    } else {
+                        cell.load(content: .createSafe)
+                    }
+                    cell.actionView.delegate = self
+                    return cell
+                }
+            }
         case .tips:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_tip_cell, for: indexPath)!
             cell.content = tips[indexPath.item]
@@ -326,19 +400,85 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
 
 extension WalletSummaryViewController: UICollectionViewDelegate {
     
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        switch Section(rawValue: indexPath.section)! {
+        case .summary, .tips, .tipsPageControl:
+            false
+        case .walletCategories, .wallets:
+            true
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        false
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section)! {
         case .summary, .tips, .tipsPageControl:
             break
-        case .wallets:
-            let container = parent as? WalletContainerViewController
-            switch indexPath.row {
-            case 0:
-                container?.switchToWallet(.privacy)
-            default:
-                let digest = commonWalletDigests[indexPath.row - 1]
-                container?.switchToWallet(digest.wallet)
+        case .walletCategories:
+            collectionView.indexPathsForSelectedItems?.forEach { selectedIndexPath in
+                if selectedIndexPath.section == indexPath.section,
+                   selectedIndexPath.item != indexPath.item
+                {
+                    collectionView.deselectItem(at: selectedIndexPath, animated: false)
+                }
             }
+            selectedCategory = digests.keys[indexPath.item]
+            switch selectedCategory {
+            case .safe:
+                BadgeManager.shared.setHasViewed(identifier: .safeVault)
+                if let cell = collectionView.cellForItem(at: indexPath) as? ExploreSegmentCell {
+                    cell.badgeView.isHidden = true
+                }
+            default:
+                break
+            }
+            UIView.performWithoutAnimation {
+                let sections = IndexSet(integer: Section.wallets.rawValue)
+                collectionView.reloadSections(sections)
+            }
+        case .wallets:
+            collectionView.deselectItem(at: indexPath, animated: true)
+            guard let wallet = digests[selectedCategory]?[indexPath.item].wallet else {
+                return
+            }
+            switch wallet {
+            case .privacy, .common:
+                let container = parent as? WalletContainerViewController
+                container?.switchToWallet(wallet)
+            case .safe(let wallet):
+                guard let url = URL(string: wallet.uri) else {
+                    return
+                }
+                let container = UIApplication.homeContainerViewController
+                let context = MixinWebViewController.Context(
+                    conversationId: "",
+                    initialUrl: url,
+                    saveAsRecentSearch: false
+                )
+                container?.presentWebViewController(context: context)
+            }
+        }
+    }
+    
+}
+
+extension WalletSummaryViewController: PillActionView.Delegate {
+    
+    func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
+        if unexpiredPlan == nil {
+            if index == 0 {
+                let buy = MembershipPlansViewController(selectedPlan: nil)
+                present(buy, animated: true)
+            } else {
+                let safari = SFSafariViewController(url: .learnAboutSafe)
+                present(safari, animated: true)
+            }
+        } else {
+            let safari = SFSafariViewController(url: .createSafeGuide)
+            present(safari, animated: true)
         }
     }
     
@@ -354,6 +494,35 @@ extension WalletSummaryViewController: WalletSummaryValueCell.Delegate {
         view.layoutIfNeeded()
         let center = cell.convert(cell.infoButton.center, to: tipView)
         tipView.placeTip(at: center)
+    }
+    
+}
+
+extension WalletSummaryViewController {
+    
+    private final class SyncWalletInProgressCell: UICollectionViewCell {
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            loadSubviews()
+        }
+        
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            loadSubviews()
+        }
+        
+        private func loadSubviews() {
+            let indicator = ActivityIndicatorView()
+            contentView.addSubview(indicator)
+            indicator.snp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.centerY.equalToSuperview().multipliedBy(2)
+            }
+            indicator.tintColor = R.color.icon_tint_tertiary()
+            indicator.startAnimating()
+        }
+        
     }
     
 }

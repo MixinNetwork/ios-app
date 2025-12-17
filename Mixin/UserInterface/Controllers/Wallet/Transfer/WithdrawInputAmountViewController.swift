@@ -34,19 +34,28 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
         switch destination {
         case let .address(address):
+            let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
             titleView.subtitle = address.label
             titleView.subtitleStyle = .label(backgroundColor: R.color.address_label()!)
+            navigationItem.titleView = titleView
         case let .temporary(address):
+            let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
             titleView.subtitle = address.compactRepresentation
             titleView.subtitleStyle = .plain
+            navigationItem.titleView = titleView
         case let .commonWallet(wallet, _):
+            let titleView = NavigationTitleView(title: R.string.localizable.send_to_title())
             titleView.subtitle = wallet.name
             titleView.subtitleStyle = .label(backgroundColor: R.color.wallet_label()!)
+            navigationItem.titleView = titleView
+        case let .safeWallet(wallet):
+            navigationItem.titleView = WalletIdentifyingNavigationTitleView(
+                title: R.string.localizable.send_to_title(),
+                wallet: .safe(wallet)
+            )
         }
-        navigationItem.titleView = titleView
         
         tokenIconView.setIcon(token: tokenItem)
         tokenNameLabel.text = tokenItem.name
@@ -206,12 +215,12 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
                 }
                 let feeTokenSameAsWithdrawToken = fee.assetID == token.assetID
                 let isFeeWaived = switch destination {
-                case .address:
-                    false
-                case .temporary:
+                case .address, .temporary:
                     false
                 case let .commonWallet(wallet, _):
                     CrossWalletTransaction.isFeeWaived && wallet.hasSecret()
+                case .safeWallet:
+                    CrossWalletTransaction.isFeeWaived
                 }
                 await MainActor.run {
                     self.feeTokenSameAsWithdrawToken = feeTokenSameAsWithdrawToken

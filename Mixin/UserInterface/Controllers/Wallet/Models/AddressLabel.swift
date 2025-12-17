@@ -15,7 +15,7 @@ enum AddressLabel {
             CrossWalletTransaction.isFeeWaived
         case .wallet(let wallet):
             switch wallet {
-            case .privacy:
+            case .privacy, .safe:
                 CrossWalletTransaction.isFeeWaived
             case .common(let wallet):
                 CrossWalletTransaction.isFeeWaived && wallet.hasSecret()

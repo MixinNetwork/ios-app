@@ -3,6 +3,7 @@ import Foundation
 public enum Wallet {
     case privacy
     case common(Web3Wallet)
+    case safe(SafeWallet)
 }
 
 extension Wallet: Equatable {
@@ -28,6 +29,8 @@ extension Wallet: CustomDebugStringConvertible {
             "PrivacyWallet"
         case .common(let wallet):
             "CommonWallet \(wallet.name)"
+        case .safe(let wallet):
+            "SafeWallet \(wallet.name)"
         }
     }
     
@@ -39,6 +42,7 @@ extension Wallet {
         
         case privacy
         case common(id: String)
+        case safe(id: String)
         
         public init?(rawValue: String) {
             switch rawValue.first {
@@ -58,6 +62,8 @@ extension Wallet {
                 "p"
             case .common(let id):
                 "c" + id
+            case .safe(let id):
+                "s" + id
             }
         }
         
@@ -69,6 +75,8 @@ extension Wallet {
                 .privacy
         case .common(let wallet):
                 .common(id: wallet.walletID)
+        case .safe(let wallet):
+                .safe(id: wallet.walletID)
         }
     }
     

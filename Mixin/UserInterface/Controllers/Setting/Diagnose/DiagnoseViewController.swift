@@ -110,6 +110,7 @@ extension DiagnoseViewController: UITableViewDelegate {
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
         case (9, 0):
             BadgeManager.shared.resetAll()
+            AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip = false
             AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip = false
             AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = false
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())

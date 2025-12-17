@@ -207,6 +207,22 @@ public final class Web3Database: Database {
             try db.execute(sql: "CREATE INDEX IF NOT EXISTS `index_orders_order_type_created_at` ON `orders` (`order_type`, `created_at`)")
         }
         
+        migrator.registerMigration("safe_wallets") { db in
+            try db.execute(sql: """
+            CREATE TABLE IF NOT EXISTS safe_wallets (
+                wallet_id       TEXT NOT NULL,
+                name            TEXT NOT NULL,
+                created_at      TEXT NOT NULL,
+                updated_at      TEXT NOT NULL,
+                role            TEXT NOT NULL,
+                chain_id        TEXT NOT NULL,
+                address         TEXT NOT NULL,
+                uri             TEXT NOT NULL,
+                PRIMARY KEY(wallet_id)
+            )
+            """)
+        }
+        
         return migrator
     }
     

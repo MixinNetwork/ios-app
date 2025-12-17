@@ -7,18 +7,41 @@ protocol TokenProportionRepresentableCell {
 
 enum TokenProportionPlaceholder {
     
+    enum Chain {
+        case bitcoin
+        case ethereum
+        case litecoin
+        case polygon
+        case solana
+    }
+    
     case privacyWalletChains
     case commonWalletChains
     case evmChains
-    case solanaChain
+    case chain(Chain)
     
     static func singleKindWallet(kind: Web3Chain.Kind?) -> TokenProportionPlaceholder? {
         switch kind {
         case .evm:
                 .evmChains
         case .solana:
-                .solanaChain
+                .chain(.solana)
         case .none:
+                .none
+        }
+    }
+    
+    static func safeVault(chainID: String?) -> TokenProportionPlaceholder? {
+        switch chainID {
+        case ChainID.bitcoin:
+                .chain(.bitcoin)
+        case ChainID.ethereum:
+                .chain(.ethereum)
+        case ChainID.litecoin:
+                .chain(.litecoin)
+        case ChainID.polygon:
+                .chain(.polygon)
+        default:
                 .none
         }
     }
@@ -42,7 +65,15 @@ extension TokenProportionRepresentableCell {
                     R.image.classic_wallet_chains()
                 case .evmChains:
                     R.image.evm_chains()
-                case .solanaChain:
+                case .chain(.bitcoin):
+                    R.image.bitcoin_chain()
+                case .chain(.ethereum):
+                    R.image.ethereum_chain()
+                case .chain(.litecoin):
+                    R.image.litecoin_chain()
+                case .chain(.polygon):
+                    R.image.polygon_chain()
+                case .chain(.solana):
                     R.image.solana_chain()
                 }
                 let imageView = UIImageView(image: image)

@@ -11,6 +11,8 @@ final class PillActionView: UIView {
         enum Style {
             case normal
             case destructive
+            case vibrant
+            case filled
         }
         
         let title: String
@@ -67,16 +69,24 @@ final class PillActionView: UIView {
             button.tag = i
             button.addTarget(self, action: #selector(invokeAction(_:)), for: .touchUpInside)
             var configuration: UIButton.Configuration = .plain()
+            switch action.style {
+            case .normal:
+                configuration.baseBackgroundColor = R.color.background_quaternary()
+                configuration.baseForegroundColor = R.color.text()
+            case .destructive:
+                configuration.baseBackgroundColor = R.color.background_quaternary()
+                configuration.baseForegroundColor = R.color.error_red()
+            case .vibrant:
+                configuration.baseBackgroundColor = R.color.background_quaternary()
+                configuration.baseForegroundColor = R.color.theme()
+            case .filled:
+                configuration.baseBackgroundColor = R.color.theme()
+                configuration.baseForegroundColor = .white
+            }
             var attributes = AttributeContainer()
             attributes.font = UIFontMetrics.default.scaledFont(
                 for: .systemFont(ofSize: 16, weight: .semibold)
             )
-            attributes.foregroundColor = switch action.style {
-            case .normal:
-                R.color.text()
-            case .destructive:
-                R.color.error_red()
-            }
             configuration.attributedTitle = AttributedString(action.title, attributes: attributes)
             button.configuration = configuration
             stackView.addArrangedSubview(button)

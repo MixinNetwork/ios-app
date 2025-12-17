@@ -1,5 +1,6 @@
 import UIKit
 import Combine
+import OrderedCollections
 import MixinServices
 
 final class WalletSelectorViewController: UIViewController {
@@ -23,7 +24,8 @@ final class WalletSelectorViewController: UIViewController {
     }
     
     private enum Section: Int, CaseIterable {
-        case wallets
+        case walletCategory
+        case wallet
         case tips
         case tipsPageControl
     }
@@ -42,13 +44,18 @@ final class WalletSelectorViewController: UIViewController {
     
     private let intent: Intent
     private let excludingWallet: Wallet?
-    private let chainID: String?
+    private let supportingChainID: String? // nil for all chains
     
-    private var walletDigests: [WalletDigest] = []
+    private var selections: [Wallet] // Works with Intent.pickSwapOrderFilter
+    
+    private var sections: [Section] = []
+    private var walletDigests: OrderedDictionary<WalletDisplayCategory, [WalletDigest]> = [:]
+    private var selectedCategory: WalletDisplayCategory = .all
+    private var secretAvailableWalletIDs: Set<String> = []
+    
     private var searchObserver: AnyCancellable?
     private var searchingKeyword: String?
     private var searchResults: [WalletDigest]?
-    private var secretAvailableWalletIDs: Set<String> = []
     
     private var tips: [WalletTipCell.Content] = []
     private var tipsCurrentPage: Int = 0 {
@@ -64,7 +71,13 @@ final class WalletSelectorViewController: UIViewController {
     ) {
         self.intent = intent
         self.excludingWallet = wallet
-        self.chainID = chainID
+        self.supportingChainID = chainID
+        self.selections = switch intent {
+        case .pickSwapOrderFilter(let wallets):
+            wallets
+        case .pickSender, .pickReceiver:
+            []
+        }
         let nib = R.nib.walletSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -110,13 +123,13 @@ final class WalletSelectorViewController: UIViewController {
             }
             trayView.leftButton.addTarget(self, action: #selector(resetSelections(_:)), for: .touchUpInside)
             trayView.rightButton.addTarget(self, action: #selector(applySelections(_:)), for: .touchUpInside)
-            collectionView.allowsMultipleSelection = true
         case .pickSender, .pickReceiver:
             collectionView.snp.makeConstraints { make in
                 make.bottom.equalToSuperview()
             }
-            collectionView.allowsMultipleSelection = false
         }
+        collectionView.allowsMultipleSelection = true
+        collectionView.register(R.nib.exploreSegmentCell)
         collectionView.register(R.nib.walletCell)
         collectionView.register(R.nib.walletTipCell)
         collectionView.register(
@@ -124,8 +137,16 @@ final class WalletSelectorViewController: UIViewController {
             forCellWithReuseIdentifier: ReuseIdentifier.pageControl
         )
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, _) in
-            switch Section(rawValue: sectionIndex)! {
-            case .wallets:
+            switch self?.section(at: sectionIndex) {
+            case .walletCategory:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .absolute(38))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 15, bottom: 5, trailing: 15)
+                section.orthogonalScrollingBehavior = .continuous
+                return section
+            case .wallet:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
@@ -151,7 +172,7 @@ final class WalletSelectorViewController: UIViewController {
                     }
                 }
                 return section
-            case .tipsPageControl:
+            case .tipsPageControl, .none:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(28))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(28))
@@ -162,89 +183,16 @@ final class WalletSelectorViewController: UIViewController {
         }
         collectionView.dataSource = self
         collectionView.delegate = self
-        DispatchQueue.global().async { [intent, excludingWallet, chainID] in
-            let web3Wallets = Web3WalletDAO.shared.walletDigests()
-            
-            var digests: [WalletDigest] = switch excludingWallet {
-            case .none:
-                [TokenDAO.shared.walletDigest()] + web3Wallets
-            case .privacy:
-                web3Wallets
-            case .common:
-                [TokenDAO.shared.walletDigest()] + web3Wallets.filter { digest in
-                    digest.wallet != excludingWallet
-                }
-            }
-            
-            var secretAvailableWalletIDs: Set<String> = Set(
-                AppGroupKeychain.allImportedMnemonics().keys
-            )
-            secretAvailableWalletIDs.formUnion(
-                AppGroupKeychain.allImportedPrivateKey().keys
-            )
-            switch intent {
-            case .pickSender:
-                digests.removeAll { digest in
-                    switch digest.wallet {
-                    case .privacy:
-                        false
-                    case .common(let wallet):
-                        switch wallet.category.knownCase {
-                        case .classic:
-                            false
-                        case .importedMnemonic, .importedPrivateKey:
-                            !secretAvailableWalletIDs.contains(wallet.walletID)
-                        case .watchAddress, .none:
-                            true
-                        }
-                    }
-                }
-            case .pickSwapOrderFilter:
-                digests.removeAll { digest in
-                    switch digest.wallet {
-                    case .privacy:
-                        false
-                    case .common(let wallet):
-                        switch wallet.category.knownCase {
-                        case .classic, .importedMnemonic, .importedPrivateKey:
-                            false
-                        case .watchAddress, .none:
-                            true
-                        }
-                    }
-                }
-            case .pickReceiver:
-                break
-            }
-            if let chainID {
-                digests.removeAll { digest in
-                    !digest.supportedChainIDs.contains(chainID)
-                }
-            }
-            
-            let selectedIndices: [Int]? = switch intent {
-            case .pickSwapOrderFilter(let selectedWallets):
-                digests.indices.filter { index in
-                    selectedWallets.contains(digests[index].wallet)
-                }
-            case .pickSender, .pickReceiver:
-                nil
-            }
-            
-            DispatchQueue.main.async {
-                self.walletDigests = digests
-                self.secretAvailableWalletIDs = secretAvailableWalletIDs
-                self.collectionView.reloadData()
-                if let selectedIndices {
-                    let indexPaths = selectedIndices.map { item in
-                        IndexPath(item: item, section: Section.wallets.rawValue)
-                    }
-                    for indexPath in indexPaths {
-                        self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
-                    }
-                }
-            }
-        }
+        reloadData()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadData),
+            name: ReloadSafeWalletsJob.safeWalletsDidUpdateNotification,
+            object: nil
+        )
+        let reloadSafeWallets = ReloadSafeWalletsJob()
+        ConcurrentJobQueue.shared.addJob(job: reloadSafeWallets)
         
         NotificationCenter.default.addObserver(
             self,
@@ -265,6 +213,7 @@ final class WalletSelectorViewController: UIViewController {
             searchingKeyword = nil
             searchResults = nil
             collectionView.reloadData()
+            reloadSelections()
             searchBoxView.isBusy = false
         } else if keyword != searchingKeyword {
             searchBoxView.isBusy = true
@@ -272,23 +221,152 @@ final class WalletSelectorViewController: UIViewController {
     }
     
     @objc private func resetSelections(_ sender: Any) {
-        guard let indexPaths = collectionView.indexPathsForSelectedItems else {
-            return
-        }
-        for indexPath in indexPaths {
-            collectionView.deselectItem(at: indexPath, animated: false)
-        }
+        searchingKeyword = nil
+        searchResults = nil
+        selections = []
+        collectionView.reloadData()
+        reloadSelections()
+        searchBoxView.isBusy = false
     }
     
     @objc private func applySelections(_ sender: Any) {
-        if let indexPaths = collectionView.indexPathsForSelectedItems, !indexPaths.isEmpty {
-            let digests = searchResults ?? walletDigests
-            let wallets = indexPaths.map { indexPath in
-                digests[indexPath.item].wallet
+        delegate?.walletSelectorViewController(self, didSelectMultipleWallets: selections)
+    }
+    
+    @objc private func reloadData() {
+        DispatchQueue.global().async { [intent, excludingWallet, supportingChainID] in
+            var secretAvailableWalletIDs: Set<String> = Set(
+                AppGroupKeychain.allImportedMnemonics().keys
+            )
+            secretAvailableWalletIDs.formUnion(
+                AppGroupKeychain.allImportedPrivateKey().keys
+            )
+            
+            let commonWallets = Web3WalletDAO.shared.walletDigests()
+            let safeWallets = SafeWalletDAO.shared.walletDigests()
+            var digests: [WalletDigest] = switch excludingWallet {
+            case .none:
+                [TokenDAO.shared.walletDigest()] + commonWallets + safeWallets
+            case .privacy:
+                commonWallets + safeWallets
+            case .common:
+                [TokenDAO.shared.walletDigest()]
+                + commonWallets.filter { digest in
+                    digest.wallet != excludingWallet
+                }
+                + safeWallets
+            case .safe:
+                [TokenDAO.shared.walletDigest()]
+                + commonWallets
+                + safeWallets.filter { digest in
+                    digest.wallet != excludingWallet
+                }
             }
-            delegate?.walletSelectorViewController(self, didSelectMultipleWallets: wallets)
-        } else {
-            delegate?.walletSelectorViewController(self, didSelectMultipleWallets: [])
+            switch intent {
+            case .pickSender:
+                digests.removeAll { digest in
+                    switch digest.wallet {
+                    case .privacy:
+                        false
+                    case .common(let wallet):
+                        switch wallet.category.knownCase {
+                        case .classic:
+                            false
+                        case .importedMnemonic, .importedPrivateKey:
+                            !secretAvailableWalletIDs.contains(wallet.walletID)
+                        case .watchAddress, .none:
+                            true
+                        }
+                    case .safe:
+                        true
+                    }
+                }
+            case .pickSwapOrderFilter:
+                digests.removeAll { digest in
+                    switch digest.wallet {
+                    case .privacy:
+                        false
+                    case .common(let wallet):
+                        switch wallet.category.knownCase {
+                        case .classic, .importedMnemonic, .importedPrivateKey:
+                            false
+                        case .watchAddress, .none:
+                            true
+                        }
+                    case .safe:
+                        true
+                    }
+                }
+            case .pickReceiver:
+                break
+            }
+            if let supportingChainID {
+                digests.removeAll { digest in
+                    !digest.supportedChainIDs.contains(supportingChainID)
+                }
+            }
+            
+            let categorizedDigests: OrderedDictionary<WalletDisplayCategory, [WalletDigest]>
+            switch intent {
+            case .pickSwapOrderFilter:
+                categorizedDigests = [.all: digests]
+            case .pickSender, .pickReceiver:
+                categorizedDigests = WalletDisplayCategory.categorize(digests: digests)
+                    .filter { category, wallets in
+                        !wallets.isEmpty
+                    }
+            }
+            
+            var sections: [Section] = [.wallet]
+            if categorizedDigests.keys.count > 1 {
+                sections.insert(.walletCategory, at: 0)
+            }
+            
+            DispatchQueue.main.async {
+                if !self.tips.isEmpty {
+                    sections.append(.tips)
+                    sections.append(.tipsPageControl)
+                }
+                self.sections = sections
+                self.walletDigests = categorizedDigests
+                self.secretAvailableWalletIDs = secretAvailableWalletIDs
+                if let keyword = self.searchingKeyword {
+                    self.search(keyword: keyword)
+                } else {
+                    self.collectionView.reloadData()
+                    self.reloadSelections()
+                }
+            }
+        }
+    }
+    
+    private func reloadSelections() {
+        if searchResults == nil, let section = sections.firstIndex(of: .walletCategory) {
+            let indexPath: IndexPath
+            if let item = walletDigests.index(forKey: selectedCategory) {
+                indexPath = IndexPath(item: item, section: section)
+            } else {
+                self.selectedCategory = .all
+                indexPath = IndexPath(item: 0, section: section)
+            }
+            self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+        }
+        switch intent {
+        case .pickSwapOrderFilter:
+            let digests = searchResults ?? walletDigests[selectedCategory] ?? []
+            let selectedWalletIndices = digests.indices.filter { index in
+                selections.contains(digests[index].wallet)
+            }
+            if let section = sections.firstIndex(of: .wallet) {
+                let indexPaths = selectedWalletIndices.map { item in
+                    IndexPath(item: item, section: section)
+                }
+                for indexPath in indexPaths {
+                    collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                }
+            }
+        case .pickSender, .pickReceiver:
+            break
         }
     }
     
@@ -302,6 +380,9 @@ final class WalletSelectorViewController: UIViewController {
             if !AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip {
                 tips.append(.classic)
             }
+            if !AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip {
+                tips.append(.safe)
+            }
             return tips
         }()
         guard tipsBefore != tipsAfter else {
@@ -309,13 +390,25 @@ final class WalletSelectorViewController: UIViewController {
         }
         self.tips = tipsAfter
         if tipsBefore.isEmpty && !tipsAfter.isEmpty {
+            sections.append(contentsOf: [.tips, .tipsPageControl])
             collectionView.reloadData()
+            reloadSelections()
         } else if !tipsBefore.isEmpty && tipsAfter.isEmpty {
+            var deleteSections = IndexSet()
+            if let index = sections.lastIndex(of: .tipsPageControl) {
+                deleteSections.insert(index)
+            }
+            if let index = sections.lastIndex(of: .tips) {
+                deleteSections.insert(index)
+            }
+            for index in deleteSections.sorted(by: >) {
+                sections.remove(at: index)
+            }
             if collectionView.window == nil {
                 collectionView.reloadData()
+                reloadSelections()
             } else {
-                let sections = IndexSet(arrayLiteral: Section.tips.rawValue, Section.tipsPageControl.rawValue)
-                collectionView.deleteSections(sections)
+                collectionView.deleteSections(deleteSections)
             }
         } else {
             let deletedItem: Int
@@ -326,10 +419,13 @@ final class WalletSelectorViewController: UIViewController {
             } else {
                 // Adding items, must be diagnose
                 collectionView.reloadData()
+                reloadSelections()
                 return
             }
-            let indexPath = IndexPath(item: deletedItem, section: Section.tips.rawValue)
-            collectionView.deleteItems(at: [indexPath])
+            if let section = sections.firstIndex(of: .tips) {
+                let indexPath = IndexPath(item: deletedItem, section: section)
+                collectionView.deleteItems(at: [indexPath])
+            }
             tipsPageControl?.numberOfPages = tips.count
             tipsCurrentPage = 0
         }
@@ -337,11 +433,20 @@ final class WalletSelectorViewController: UIViewController {
     
     private func search(keyword: String) {
         searchingKeyword = keyword
-        searchResults = walletDigests.filter { digest in
+        searchResults = (walletDigests[.all] ?? []).filter { digest in
             digest.wallet.localizedName.lowercased().contains(keyword)
         }
         collectionView.reloadData()
+        reloadSelections()
         searchBoxView.isBusy = false
+    }
+    
+    private func section(at sectionIndex: Int) -> Section {
+        if searchResults == nil {
+            sections[sectionIndex]
+        } else {
+            .wallet
+        }
     }
     
 }
@@ -357,6 +462,8 @@ extension WalletSelectorViewController: WalletTipCell.Delegate {
             AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip = true
         case .classic:
             AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = true
+        case .safe:
+            AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip = true
         }
     }
     
@@ -365,32 +472,37 @@ extension WalletSelectorViewController: WalletTipCell.Delegate {
 extension WalletSelectorViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        var sections: [Section] = [.wallets]
-        if !tips.isEmpty {
-            sections.append(.tips)
-            sections.append(.tipsPageControl)
-        }
-        return sections.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch Section(rawValue: section)! {
-        case .wallets:
-            if let searchResults {
-                searchResults.count
-            } else {
-                walletDigests.count
-            }
-        case .tips:
-            tips.count
-        case .tipsPageControl:
+        if searchResults == nil {
+            sections.count
+        } else {
             1
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let searchResults {
+            searchResults.count
+        } else {
+            switch sections[section] {
+            case .walletCategory:
+                walletDigests.count
+            case .wallet:
+                walletDigests[selectedCategory]?.count ?? 0
+            case .tips:
+                tips.count
+            case .tipsPageControl:
+                1
+            }
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch Section(rawValue: indexPath.section)! {
-        case .wallets:
+        switch section(at: indexPath.section) {
+        case .walletCategory:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
+            cell.label.text = walletDigests.keys[indexPath.item].localizedName
+            return cell
+        case .wallet:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet, for: indexPath)!
             switch intent {
             case .pickSwapOrderFilter:
@@ -401,15 +513,17 @@ extension WalletSelectorViewController: UICollectionViewDataSource {
             let digest = if let searchResults {
                 searchResults[indexPath.row]
             } else {
-                walletDigests[indexPath.row]
+                walletDigests[selectedCategory]?[indexPath.row]
             }
-            let hasSecret = switch digest.wallet {
-            case .privacy:
-                false
-            case .common(let wallet):
-                secretAvailableWalletIDs.contains(wallet.walletID)
+            if let digest {
+                let hasSecret = switch digest.wallet {
+                case .privacy, .safe:
+                    false
+                case .common(let wallet):
+                    secretAvailableWalletIDs.contains(wallet.walletID)
+                }
+                cell.load(digest: digest, hasSecret: hasSecret)
             }
-            cell.load(digest: digest, hasSecret: hasSecret)
             return cell
         case .tips:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_tip_cell, for: indexPath)!
@@ -430,43 +544,86 @@ extension WalletSelectorViewController: UICollectionViewDataSource {
 extension WalletSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        Section(rawValue: indexPath.section) == .wallets
+        switch section(at: indexPath.section) {
+        case .walletCategory, .wallet:
+            true
+        default:
+            false
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch section(at: indexPath.section) {
+        case .tips, .tipsPageControl:
+            break
+        case .walletCategory:
+            collectionView.indexPathsForSelectedItems?.forEach { selectedIndexPath in
+                if selectedIndexPath.section == indexPath.section,
+                   selectedIndexPath.item != indexPath.item
+                {
+                    collectionView.deselectItem(at: selectedIndexPath, animated: false)
+                }
+            }
+            selectedCategory = walletDigests.keys[indexPath.item]
+            if let section = sections.firstIndex(of: .wallet) {
+                UIView.performWithoutAnimation {
+                    let sections = IndexSet(integer: section)
+                    collectionView.reloadSections(sections)
+                }
+            }
+        case .wallet:
+            let digest = if let searchResults {
+                searchResults[indexPath.row]
+            } else {
+                walletDigests[selectedCategory]?[indexPath.row]
+            }
+            guard let digest else {
+                return
+            }
+            switch intent {
+            case .pickSwapOrderFilter:
+                selections.append(digest.wallet)
+            case .pickReceiver, .pickSender:
+                let uncontrolledWallet: Web3Wallet?
+                switch digest.wallet {
+                case .privacy, .safe:
+                    uncontrolledWallet = nil
+                case .common(let wallet):
+                    uncontrolledWallet = wallet.hasSecret() ? nil : wallet
+                }
+                if let wallet = uncontrolledWallet {
+                    let warning = UncontrolledWalletWarningViewController(wallet: wallet)
+                    warning.onConfirm = { [weak self] in
+                        guard let self else {
+                            return
+                        }
+                        self.presentingViewController?.dismiss(animated: true) {
+                            self.delegate?.walletSelectorViewController(self, didSelectWallet: digest.wallet)
+                        }
+                    }
+                    present(warning, animated: true)
+                } else {
+                    presentingViewController?.dismiss(animated: true) {
+                        self.delegate?.walletSelectorViewController(self, didSelectWallet: digest.wallet)
+                    }
+                }
+            }
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         switch intent {
         case .pickSwapOrderFilter:
-            return
+            let digest = if let searchResults {
+                searchResults[indexPath.row]
+            } else {
+                walletDigests[selectedCategory]?[indexPath.row]
+            }
+            if let digest, let index = selections.firstIndex(of: digest.wallet) {
+                selections.remove(at: index)
+            }
         case .pickReceiver, .pickSender:
             break
-        }
-        let digest = if let searchResults {
-            searchResults[indexPath.row]
-        } else {
-            walletDigests[indexPath.row]
-        }
-        let uncontrolledWallet: Web3Wallet?
-        switch digest.wallet {
-        case .privacy:
-            uncontrolledWallet = nil
-        case .common(let wallet):
-            uncontrolledWallet = wallet.hasSecret() ? nil : wallet
-        }
-        if let wallet = uncontrolledWallet {
-            let warning = UncontrolledWalletWarningViewController(wallet: wallet)
-            warning.onConfirm = { [weak self] in
-                guard let self else {
-                    return
-                }
-                self.presentingViewController?.dismiss(animated: true) {
-                    self.delegate?.walletSelectorViewController(self, didSelectWallet: digest.wallet)
-                }
-            }
-            present(warning, animated: true)
-        } else {
-            presentingViewController?.dismiss(animated: true) {
-                self.delegate?.walletSelectorViewController(self, didSelectWallet: digest.wallet)
-            }
         }
     }
     

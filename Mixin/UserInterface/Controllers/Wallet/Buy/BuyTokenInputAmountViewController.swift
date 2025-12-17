@@ -449,6 +449,8 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                     allTokens[item.assetID] = item
                 }
             }
+        case .safe:
+            allTokens = [:]
         }
         return allTokens
     }

@@ -5,6 +5,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
     
     enum Accessory {
         case disclosure
+        case external
         case selection
     }
     
@@ -31,6 +32,8 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             accessoryImageView.image = switch accessory {
             case .disclosure:
                 R.image.ic_accessory_disclosure()
+            case .external:
+                R.image.external_indicator_arrow_bold()
             case .selection:
                 isSelected ? R.image.ic_selected() : R.image.ic_deselected()
             }
@@ -80,9 +83,9 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                 )
             case .importedMnemonic:
                 iconImageView.isHidden = true
-                tags = [.imported]
+                tags = [.plain(R.string.localizable.wallet_imported())]
                 if !hasSecret {
-                    tags.append(.noKey)
+                    tags.append(.warning(R.string.localizable.no_key()))
                 }
                 loadProportions(
                     tokens: digest.tokens,
@@ -91,9 +94,9 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                 )
             case .importedPrivateKey:
                 iconImageView.isHidden = true
-                tags = [.imported]
+                tags = [.plain(R.string.localizable.wallet_imported())]
                 if !hasSecret {
-                    tags.append(.noKey)
+                    tags.append(.warning(R.string.localizable.no_key()))
                 }
                 let kind: Web3Chain.Kind? = .singleKindWallet(
                     chainIDs: digest.supportedChainIDs
@@ -106,7 +109,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             case .watchAddress, .none:
                 iconImageView.isHidden = false
                 iconImageView.image = R.image.watching_wallet()
-                tags = [.watching]
+                tags = [.plain(R.string.localizable.watching())]
                 let kind: Web3Chain.Kind? = .singleKindWallet(
                     chainIDs: digest.supportedChainIDs
                 )
@@ -116,6 +119,20 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
                     usdBalanceSum: digest.usdBalanceSum
                 )
             }
+        case let .safe(wallet):
+            titleLabel.text = wallet.name
+            iconImageView.isHidden = false
+            iconImageView.image = R.image.safe_vault()
+            tags = if let tag = wallet.localizedRole {
+                [.plain(tag)]
+            } else {
+                []
+            }
+            loadProportions(
+                tokens: digest.tokens,
+                placeholder: .safeVault(chainID: wallet.chainID),
+                usdBalanceSum: digest.usdBalanceSum
+            )
         }
         load(tags: tags)
         valueLabel.attributedText = FiatMoneyValueAttributedStringBuilder.attributedString(
@@ -129,9 +146,8 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
 extension WalletCell {
     
     private enum Tag {
-        case watching
-        case imported
-        case noKey
+        case plain(String)
+        case warning(String)
     }
     
     private func load(tags: [Tag]) {
@@ -157,18 +173,14 @@ extension WalletCell {
         for (index, tag) in tags.enumerated() {
             let label = tagLabels[index]
             switch tag {
-            case .watching:
+            case .plain(let text):
                 label.backgroundColor = R.color.background_quaternary()
                 label.textColor = R.color.text_quaternary()
-                label.text = R.string.localizable.watching()
-            case .imported:
-                label.backgroundColor = R.color.background_quaternary()
-                label.textColor = R.color.text_quaternary()
-                label.text = R.string.localizable.wallet_imported()
-            case .noKey:
+                label.text = text
+            case .warning(let text):
                 label.backgroundColor = R.color.market_red()!.withAlphaComponent(0.2)
                 label.textColor = R.color.market_red()
-                label.text = R.string.localizable.no_key()
+                label.text = text
             }
         }
     }

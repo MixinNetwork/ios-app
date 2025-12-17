@@ -34,6 +34,8 @@ class DepositDataSource {
             MixinDepositDataSource(assetID: token.assetID, symbol: token.symbol)
         case .common(let wallet):
             Web3DepositDataSource(wallet: wallet, assetID: token.assetID, symbol: token.symbol)
+        case .safe:
+            fatalError("Never deposit to safe wallets")
         }
     }
     

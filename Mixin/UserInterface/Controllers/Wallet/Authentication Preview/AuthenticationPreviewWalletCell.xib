@@ -21,7 +21,7 @@
                         <rect key="frame" x="28" y="10" width="264" height="63"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="500" text="SENDER" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PPp-U7-jgZ">
-                                <rect key="frame" x="0.0" y="0.0" width="54.666666666666664" height="33"/>
+                                <rect key="frame" x="0.0" y="0.0" width="54.666666666666664" height="17"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" name="text_quaternary"/>
@@ -30,17 +30,17 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="zsG-jn-gKP">
-                                <rect key="frame" x="0.0" y="41" width="130" height="22"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="zsG-jn-gKP">
+                                <rect key="frame" x="0.0" y="25" width="130" height="38"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Privacy Wallet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dnb-OG-vnu">
-                                        <rect key="frame" x="0.0" y="0.0" width="102" height="22"/>
+                                        <rect key="frame" x="0.0" y="9.3333333333333339" width="102" height="19.333333333333329"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="privacy_wallet" translatesAutoresizingMaskIntoConstraints="NO" id="1Zk-Fa-DJS">
-                                        <rect key="frame" x="108" y="0.0" width="22" height="22"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" image="privacy_wallet" translatesAutoresizingMaskIntoConstraints="NO" id="1Zk-Fa-DJS">
+                                        <rect key="frame" x="108" y="8" width="22" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="1Zk-Fa-DJS" secondAttribute="height" priority="999" id="4xY-Zb-pYi"/>
                                             <constraint firstAttribute="height" constant="22" id="ayl-ja-A1x"/>
@@ -66,6 +66,7 @@
                 <outlet property="contentTrailingConstraint" destination="Bw9-ZI-b5L" id="htd-ZZ-Rhb"/>
                 <outlet property="iconImageView" destination="1Zk-Fa-DJS" id="bDs-5Q-cyD"/>
                 <outlet property="nameLabel" destination="Dnb-OG-vnu" id="Wr9-ic-1ED"/>
+                <outlet property="subtitleStackView" destination="zsG-jn-gKP" id="Wqu-fK-x6L"/>
             </connections>
             <point key="canvasLocation" x="19.847328244274809" y="48.239436619718312"/>
         </tableViewCell>

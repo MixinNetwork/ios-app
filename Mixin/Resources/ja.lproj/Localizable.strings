@@ -413,6 +413,8 @@
 "create_new_wallet" = "Create New Wallet";
 "create_new_wallet_description" = "Add a new multi-chain wallet";
 "create_pin" = "Create PIN";
+"create_safe" = "Create Safe";
+"create_safe_description" = "You don't have a Safe yet. Create one now and securely manage assets with your family, friends, or colleagues.";
 "created" = "Created";
 "created_this_group" = "%@がグループを作成しました";
 "creating_wallet_terminated_unexpectedly" = "Creating wallet terminated unexpectedly, click \"Continue\" to complete the creation";
@@ -682,6 +684,7 @@
 "group_participant_add_limit" = "一度に追加できるメンバーは最大50人です";
 "group_qr_code_prompt" = "QRコードをスキャンしてこのグループに参加";
 "groups_in_common" = "共通のグループ";
+"guideline" = "Guideline";
 "hash" = "HASH";
 "help" = "ヘルプ";
 "help_center" = "ヘルプセンター";
@@ -783,8 +786,8 @@
 "limit_price" = "Limit Price";
 "limited_time_free" = "Limited-Time Free";
 "limited_time_free_condition" = "During the promotion period, you’ll receive a full refund of transaction fees if your transfer meets any of the following conditions:";
-"limited_time_free_condition_1" = "Privacy Wallet transfer to a Common Wallet.";
-"limited_time_free_condition_2" = "Common Wallet transfer to another Common Wallet, Privacy Wallet, or contact.";
+"limited_time_free_condition_1" = "Privacy Wallet transfer to a Common Wallet, Mixin Safe Vault.";
+"limited_time_free_condition_2" = "Common Wallet transfer to another Common Wallet, Privacy Wallet, Mixin Safe Vault, or contact.";
 "limited_time_free_description" = "Fees will be refunded monthly to your Privacy Wallet, summarized by the actual fee tokens and amounts consumed. Read the documentation to learn more.";
 "line_busy" = "お話中です";
 "line_busy_remote" = "お話中です";
@@ -1223,7 +1226,12 @@
 "rewards" = "Rewards";
 "room_is_full" = "ルームが満員です";
 "safe" = "SAFE";
+"safe_create_guideline_url" = "https://support.mixin.one/en/article/how-to-create-a-safe-on-mixin-1ehi2mf/";
+"safe_learn_more_url" = "https://support.mixin.one/en/article/what-is-mixin-safe-g20z2m/";
 "safe_members" = "Safe Members";
+"safe_vault_member" = "Member";
+"safe_vault_owner" = "Owner";
+"safe_wallet_description" = "A multi-signature cold wallet based on Bitcoin, Ethereum, and other networks.";
 "save" = "保存";
 "save_image" = "画像を保存する";
 "save_to_camera_roll" = "カメラロールに保存する";
@@ -1568,6 +1576,7 @@
 "upgrade_plan" = "Upgrade Plan";
 "upgrade_plan_for" = "Upgrade for %@";
 "upgrade_safe" = "Upgrade safe";
+"upgrade_safe_description" = "Upgrade to Mixin One to unlock Mixin Safe and securely manage assets with your family, friends, or colleagues.";
 "upgrade_tip" = "Upgrade TIP";
 "upgrade_tip_successfully" = "Upgrade TIP successfully";
 "upgrading" = "アップデート中";
@@ -1635,6 +1644,10 @@
 "wallet" = "ウォレット";
 "wallet_already_added" = "This wallet has already been added";
 "wallet_candidate_imported" = "Imported";
+"wallet_category_created" = "Created";
+"wallet_category_imported" = "Imported";
+"wallet_category_safe" = "Safe";
+"wallet_category_watching" = "Watching";
 "wallet_enable_biometric_pay" = "一度有効にすると%@を使ってスムーズに送金できます";
 "wallet_hide_asset_confirmation" = "%@を非表示にしますか?";
 "wallet_imported" = "Imported";
@@ -1683,6 +1696,7 @@
 "weeks" = "週間";
 "weeks_count_short" = "%dW";
 "what_is_pin" = "What is PIN?";
+"whats_safe_wallet" = "What's the Mixin Safe?";
 "whats_your_name" = "お名前は何ですか？";
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fiとデータ通信";

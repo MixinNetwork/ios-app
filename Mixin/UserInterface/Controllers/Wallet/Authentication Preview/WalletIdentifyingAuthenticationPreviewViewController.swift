@@ -49,8 +49,10 @@ class WalletIdentifyingAuthenticationPreviewViewController: AuthenticationPrevie
         case .common(let wallet):
             walletIdentifyingView.backgroundColor = R.color.theme()
             walletNameLabel.text = wallet.name
+        case .safe:
+            assertionFailure("No auth preview for safe wallets")
+            break
         }
-        
     }
     
     override func loadTableView() {

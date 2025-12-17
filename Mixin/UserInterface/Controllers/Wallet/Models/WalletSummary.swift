@@ -27,12 +27,12 @@ struct WalletSummary {
     let usdValue: Decimal
     let components: [Component]
     
-    init(privacyWallet: WalletDigest, otherWallets: [WalletDigest]) {
+    init(walletDigests: [WalletDigest]) {
         let maxNumberOfComponents = 3
         
-        let wallets = [privacyWallet] + otherWallets.filter { digest in
+        let wallets = walletDigests.filter { digest in
             switch digest.wallet {
-            case .privacy:
+            case .privacy, .safe:
                 true
             case .common(let wallet):
                 switch wallet.category.knownCase {

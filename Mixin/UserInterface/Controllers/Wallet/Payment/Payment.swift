@@ -310,6 +310,7 @@ extension Payment {
         case address(Address)
         case temporary(TemporaryAddress)
         case commonWallet(Web3Wallet, Web3Address)
+        case safeWallet(SafeWallet)
         
         var withdrawable: WithdrawableAddress {
             switch self {
@@ -319,6 +320,8 @@ extension Payment {
                 address
             case let .commonWallet(_, address):
                 address
+            case let .safeWallet(wallet):
+                TemporaryAddress(destination: wallet.address, tag: "")
             }
         }
         
@@ -334,6 +337,8 @@ extension Payment {
                 "address"
             case .commonWallet:
                 "wallet"
+            case .safeWallet:
+                "safe"
             }
         }
         
@@ -345,6 +350,8 @@ extension Payment {
                 return "<WithdrawalDestination.temporary \(address.destination)>"
             case let .commonWallet(wallet, _):
                 return "<WithdrawalDestination.commonWallet \(wallet.name)>"
+            case let .safeWallet(wallet):
+                return "<WithdrawalDestination.safeWallet \(wallet.name)>"
             }
         }
         
@@ -373,7 +380,7 @@ extension Payment {
                                             memo: memo),
                     InactiveAddressPrecondition(address: address),
                 ]
-            case .temporary, .commonWallet:
+            case .temporary, .commonWallet, .safeWallet:
                 preconditions = [
                     NoPendingTransactionPrecondition(),
                     DuplicationPrecondition(operation: .withdraw(destination.withdrawable),
@@ -410,6 +417,9 @@ extension Payment {
                         addressID = nil
                     case let .commonWallet(wallet, _):
                         addressLabel = .wallet(.common(wallet))
+                        addressID = nil
+                    case let .safeWallet(wallet):
+                        addressLabel = .wallet(.safe(wallet))
                         addressID = nil
                     }
                     let operation = WithdrawPaymentOperation(

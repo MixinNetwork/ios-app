@@ -47,7 +47,20 @@ final class WithdrawPreviewViewController: WalletIdentifyingAuthenticationPrevie
         var rows: [Row] = [
             .amount(caption: .amount, token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),
         ]
-        rows.append(.address(caption: .receiver, address: operation.address.fullRepresentation, label: operation.addressLabel))
+        switch operation.addressLabel {
+        case .wallet(.safe(let wallet)):
+            rows.append(.wallet(
+                caption: .receiver,
+                wallet: .safe(wallet),
+                threshold: nil
+            ))
+        case .addressBook, .wallet, .contact, .none:
+            rows.append(.address(
+                caption: .receiver,
+                address: operation.address.fullRepresentation,
+                label: operation.addressLabel
+            ))
+        }
         rows.append(.wallet(caption: .sender, wallet: .privacy, threshold: nil))
         let isFeeWaived = operation.addressLabel?.isFeeWaived() ?? false
         let feeRow: Row = if isFeeWaived {

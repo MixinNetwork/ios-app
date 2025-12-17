@@ -413,6 +413,8 @@
 "create_new_wallet" = "建立新錢包";
 "create_new_wallet_description" = "新增一個新的多鏈錢包";
 "create_pin" = "建立錢包";
+"create_safe" = "建立 Safe";
+"create_safe_description" = "您尚未擁有 Safe。現在建立即可與家人、朋友或同事安全管理資產。";
 "created" = "建立日期";
 "created_this_group" = "%@建立了這個群組";
 "creating_wallet_terminated_unexpectedly" = "建立錢包意外中止，點繼續完成錢包建立";
@@ -682,6 +684,7 @@
 "group_participant_add_limit" = "不能再新增成員，一次最多新增 50 個。";
 "group_qr_code_prompt" = "掃描二維碼加入群組";
 "groups_in_common" = "共同群組";
+"guideline" = "使用指南";
 "hash" = "雜湊";
 "help" = "幫助";
 "help_center" = "幫助中心";
@@ -783,8 +786,8 @@
 "limit_price" = "限定價格";
 "limited_time_free" = "限時免費";
 "limited_time_free_condition" = "活動期間，錢包轉賬符合以下任意情況即可獲得手續費全額返現：";
-"limited_time_free_condition_1" = "隱私錢包轉賬到普通錢包。";
-"limited_time_free_condition_2" = "普通錢包轉賬到其他普通錢包、隱私錢包或聯絡人。";
+"limited_time_free_condition_1" = "隱私錢包轉賬到普通錢包、Mixin Safe 金庫。";
+"limited_time_free_condition_2" = "普通錢包轉賬到其他普通錢包、隱私錢包、Mixin Safe 金庫或聯絡人。";
 "limited_time_free_description" = "手續費按月、按實際消耗的手續費幣種和金額彙總返還到您的隱私錢包，閱讀檔案瞭解更多。";
 "line_busy" = "忙線未接聽";
 "line_busy_remote" = "對方忙";
@@ -1223,7 +1226,12 @@
 "rewards" = "禮遇";
 "room_is_full" = "房間已滿";
 "safe" = "金庫";
+"safe_create_guideline_url" = "https://support.mixin.one/zh/article/safe-1ljf7ld/";
+"safe_learn_more_url" = "https://support.mixin.one/zh/article/mixin-safe-1bl8w6l/";
 "safe_members" = "金庫共管人";
+"safe_vault_member" = "共管人";
+"safe_vault_owner" = "所有者";
+"safe_wallet_description" = "基於比特幣、以太坊等網路的多重簽名冷錢包。";
 "save" = "儲存";
 "save_image" = "儲存圖片";
 "save_to_camera_roll" = "儲存到相簿";
@@ -1568,6 +1576,7 @@
 "upgrade_plan" = "升級會員";
 "upgrade_plan_for" = "升級會員僅需 %@";
 "upgrade_safe" = "升級 Safe";
+"upgrade_safe_description" = "升級到 Mixin One 即可解鎖 Mixin Safe，與你的家人、朋友或同事一起安全管理資產。";
 "upgrade_tip" = "升級 TIP";
 "upgrade_tip_successfully" = "TIP 升級成功";
 "upgrading" = "升級中...";
@@ -1635,6 +1644,10 @@
 "wallet" = "錢包";
 "wallet_already_added" = "這個錢包已經新增過了";
 "wallet_candidate_imported" = "已匯入";
+"wallet_category_created" = "建立的錢包";
+"wallet_category_imported" = "匯入的錢包";
+"wallet_category_safe" = "Safe 金庫";
+"wallet_category_watching" = "觀察錢包";
 "wallet_enable_biometric_pay" = "開啟後，轉賬時可驗證%@快速完成付款。";
 "wallet_hide_asset_confirmation" = "您確定要隱藏%@嗎？";
 "wallet_imported" = "匯入";
@@ -1683,6 +1696,7 @@
 "weeks" = "週";
 "weeks_count_short" = "%d周";
 "what_is_pin" = "什麼是 PIN ?";
+"whats_safe_wallet" = "什麼是 Safe 金庫？";
 "whats_your_name" = "你的名字？";
 "wifi" = "WLAN";
 "wifi_and_cellular" = "WLAN 與行動數據";

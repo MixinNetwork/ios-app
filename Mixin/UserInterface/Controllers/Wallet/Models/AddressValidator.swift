@@ -286,28 +286,28 @@ extension AddressValidator {
         destination: String,
         tag: String?,
     ) async throws -> Payment.WithdrawalDestination {
-        if let wallet = Web3WalletDAO.shared.wallet(destination: destination),
+        let response = try await ExternalAPI.checkAddress(
+            chainID: chainID,
+            assetID: assetID,
+            destination: destination,
+            tag: tag
+        )
+        guard destination.lowercased() == response.destination.lowercased() else {
+            throw ValidationError.mismatchedDestination
+        }
+        guard (tag.isNilOrEmpty && response.tag.isNilOrEmpty) || tag == response.tag else {
+            throw ValidationError.mismatchedTag
+        }
+        if let wallet = Web3WalletDAO.shared.wallet(destination: response.destination),
            let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chainID)
         {
             return .commonWallet(wallet, address)
-        } else if let wallet = SafeWalletDAO.shared.wallet(safeAddress: destination) {
+        } else if let wallet = SafeWalletDAO.shared.wallet(safeAddress: response.destination) {
             return .safeWallet(wallet)
-        } else if let address = AddressDAO.shared.getAddress(chainId: chainID, destination: destination, tag: tag ?? "") {
+        } else if let address = AddressDAO.shared.address(chainID: chainID, destination: response.destination, tag: response.tag ?? "") {
             return .address(address)
         } else  {
-            let response = try await ExternalAPI.checkAddress(
-                chainID: chainID,
-                assetID: assetID,
-                destination: destination,
-                tag: tag
-            )
-            guard destination.lowercased() == response.destination.lowercased() else {
-                throw ValidationError.mismatchedDestination
-            }
-            guard (tag.isNilOrEmpty && response.tag.isNilOrEmpty) || tag == response.tag else {
-                throw ValidationError.mismatchedTag
-            }
-            let address = TemporaryAddress(destination: destination, tag: tag ?? "")
+            let address = TemporaryAddress(destination: response.destination, tag: response.tag ?? "")
             return .temporary(address)
         }
     }

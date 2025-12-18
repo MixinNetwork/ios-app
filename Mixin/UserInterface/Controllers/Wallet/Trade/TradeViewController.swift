@@ -82,6 +82,7 @@ class TradeViewController: UIViewController {
     private let tokenSource: RouteTokenSource
     private let footerReuseIdentifier = "f"
     private let elementKindSectionBackground = "esb"
+    private let maxOpenOrderCount = 10
     
     private lazy var tokenAmountRoundingHandler = NSDecimalNumberHandler(
         roundingMode: .plain,
@@ -101,6 +102,7 @@ class TradeViewController: UIViewController {
     private var amountRange: SwapQuotePeriodicRequester.AmountRange?
     private var openOrderRequester: PendingTradeOrderLoader?
     private var openOrders: [TradeOrderViewModel] = []
+    private var allOpenOrdersCount: Int?
     
     // TradeAmountInputCell
     private weak var amountInputCell: TradeAmountInputCell?
@@ -215,7 +217,7 @@ class TradeViewController: UIViewController {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader
         )
         collectionView.register(
-            UICollectionReusableView.self,
+            OpenOrdersFooterView.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
             withReuseIdentifier: footerReuseIdentifier
         )
@@ -261,11 +263,12 @@ class TradeViewController: UIViewController {
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
                 return section
             case .openOrders:
-                if let orders = self?.openOrders, !orders.isEmpty {
+                if let self, !self.openOrders.isEmpty {
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
                     let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
+                    let footerHeight: CGFloat = self.allOpenOrdersCount == nil ? 20 : 76
                     let section = NSCollectionLayoutSection(group: group)
                     section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                     section.interGroupSpacing = 20
@@ -276,7 +279,7 @@ class TradeViewController: UIViewController {
                             alignment: .top
                         ),
                         NSCollectionLayoutBoundarySupplementaryItem(
-                            layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(20)),
+                            layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(footerHeight)),
                             elementKind: UICollectionView.elementKindSectionFooter,
                             alignment: .bottom
                         ),
@@ -495,7 +498,8 @@ class TradeViewController: UIViewController {
     }
     
     func reload(openOrders: [TradeOrderViewModel]) {
-        self.openOrders = openOrders
+        self.openOrders = Array(openOrders.prefix(maxOpenOrderCount))
+        self.allOpenOrdersCount = openOrders.count > maxOpenOrderCount ? openOrders.count : nil
         if let section = sections.firstIndex(of: .openOrders) {
             UIView.performWithoutAnimation {
                 let sections = IndexSet(integer: section)
@@ -673,11 +677,18 @@ extension TradeViewController: UICollectionViewDataSource {
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.open_trade_order_header, for: indexPath)!
-            view.label.text = R.string.localizable.open_orders_count(openOrders.count)
+            let count = allOpenOrdersCount ?? openOrders.count
+            view.label.text = R.string.localizable.open_orders_count(count)
+            view.onShowOrders = { [weak self] (sender) in
+                self?.showOrders(sender)
+            }
             return view
         default:
-            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerReuseIdentifier, for: indexPath)
-            view.backgroundColor = .clear
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerReuseIdentifier, for: indexPath) as! OpenOrdersFooterView
+            view.viewAllButton.isHidden = allOpenOrdersCount == nil
+            view.onViewAll = { [weak self] (sender) in
+                self?.showOrders(sender)
+            }
             return view
         }
     }
@@ -1313,6 +1324,50 @@ extension TradeViewController {
             backgroundColor = R.color.background()
             layer.cornerRadius = 8
             layer.masksToBounds = true
+        }
+        
+    }
+    
+    final class OpenOrdersFooterView: UICollectionReusableView {
+        
+        var onViewAll: ((UIButton) -> Void)?
+        
+        private(set) weak var viewAllButton: UIButton!
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            addSubviews()
+        }
+        
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
+            addSubviews()
+        }
+        
+        @objc private func viewAll(_ sender: UIButton) {
+            onViewAll?(sender)
+        }
+        
+        private func addSubviews() {
+            backgroundColor = R.color.background()
+            layer.cornerRadius = 8
+            layer.masksToBounds = true
+            
+            var config: UIButton.Configuration = .plain()
+            config.titleAlignment = .center
+            var attributes = AttributeContainer()
+            attributes.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
+            attributes.foregroundColor = R.color.theme()
+            config.attributedTitle = AttributedString(R.string.localizable.view_all(), attributes: attributes)
+            let viewAllButton = UIButton(configuration: config)
+            addSubview(viewAllButton)
+            viewAllButton.snp.makeConstraints { make in
+                make.height.width.greaterThanOrEqualTo(44)
+                make.centerX.equalToSuperview()
+                make.top.equalToSuperview().offset(10)
+            }
+            viewAllButton.addTarget(self, action: #selector(viewAll(_:)), for: .touchUpInside)
+            self.viewAllButton = viewAllButton
         }
         
     }

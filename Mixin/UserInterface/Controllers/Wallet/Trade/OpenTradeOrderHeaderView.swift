@@ -5,6 +5,8 @@ final class OpenTradeOrderHeaderView: UICollectionReusableView {
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var label: UILabel!
     
+    var onShowOrders: ((UIButton) -> Void)?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 8
@@ -14,6 +16,10 @@ final class OpenTradeOrderHeaderView: UICollectionReusableView {
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )
+    }
+    
+    @IBAction func showOrders(_ sender: UIButton) {
+        onShowOrders?(sender)
     }
     
 }

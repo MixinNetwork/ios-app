@@ -18,17 +18,38 @@
                     <rect key="frame" x="0.0" y="0.0" width="320" height="57"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="17" text="Open Orders (1)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W39-13-jBf">
-                            <rect key="frame" x="16" y="20" width="288" height="17"/>
+                            <rect key="frame" x="16" y="20" width="264" height="17"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_accessory_disclosure" translatesAutoresizingMaskIntoConstraints="NO" id="G9m-0r-4ZS">
+                            <rect key="frame" x="288" y="20.666666666666668" width="16" height="16.000000000000004"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="16" id="8OY-Fg-URd"/>
+                                <constraint firstAttribute="width" constant="16" id="UMJ-Wj-qZ9"/>
+                            </constraints>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hEy-es-UNT">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="57"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain"/>
+                            <connections>
+                                <action selector="showOrders:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="Txz-3t-Hjw"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
-                        <constraint firstAttribute="trailing" secondItem="W39-13-jBf" secondAttribute="trailing" constant="16" id="5cD-1k-OU5"/>
                         <constraint firstItem="W39-13-jBf" firstAttribute="leading" secondItem="pe0-D5-8Qy" secondAttribute="leading" constant="16" id="8sk-8w-yP7"/>
+                        <constraint firstAttribute="trailing" secondItem="G9m-0r-4ZS" secondAttribute="trailing" constant="16" id="JG2-qP-Chp"/>
+                        <constraint firstItem="hEy-es-UNT" firstAttribute="top" secondItem="pe0-D5-8Qy" secondAttribute="top" id="L6N-dU-XAz"/>
+                        <constraint firstAttribute="bottom" secondItem="hEy-es-UNT" secondAttribute="bottom" id="XNX-hY-eMh"/>
+                        <constraint firstItem="hEy-es-UNT" firstAttribute="leading" secondItem="pe0-D5-8Qy" secondAttribute="leading" id="bKN-HY-kio"/>
+                        <constraint firstAttribute="trailing" secondItem="hEy-es-UNT" secondAttribute="trailing" id="dOk-03-fXn"/>
                         <constraint firstItem="W39-13-jBf" firstAttribute="centerY" secondItem="pe0-D5-8Qy" secondAttribute="centerY" id="egd-Te-HHa"/>
+                        <constraint firstItem="G9m-0r-4ZS" firstAttribute="leading" secondItem="W39-13-jBf" secondAttribute="trailing" constant="8" id="g3P-z7-U5L"/>
+                        <constraint firstItem="G9m-0r-4ZS" firstAttribute="centerY" secondItem="pe0-D5-8Qy" secondAttribute="centerY" id="lDJ-h9-Dja"/>
                     </constraints>
                 </view>
             </subviews>
@@ -46,6 +67,7 @@
         </collectionReusableView>
     </objects>
     <resources>
+        <image name="ic_accessory_disclosure" width="6" height="10"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

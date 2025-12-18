@@ -290,9 +290,8 @@ extension WithdrawInputAmountViewController: AddTokenMethodSelectorViewControlle
             return
         }
         let next = switch method {
-        case .swap:
+        case .trade:
             MixinTradeViewController(
-                mode: .simple,
                 sendAssetID: nil,
                 receiveAssetID: feeToken.assetID,
                 referral: nil

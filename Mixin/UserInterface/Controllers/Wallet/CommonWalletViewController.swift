@@ -56,7 +56,7 @@ final class CommonWalletViewController: WalletViewController {
         titleLabel.text = ""
         tableView.dataSource = self
         tableView.delegate = self
-        tableHeaderView.actionView.actions = [.buy, .receive, .send, .swap]
+        tableHeaderView.actionView.actions = [.buy, .receive, .send, .trade]
         switch wallet.category.knownCase {
         case .classic:
             tableHeaderView.actionView.isHidden = false
@@ -458,14 +458,14 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
             withMnemonicsBackupChecked {
                 self.present(selector, animated: true, completion: nil)
             }
-        case .swap:
-            let swap = Web3TradeViewController(
+        case .trade:
+            let trade = Web3TradeViewController(
                 wallet: wallet,
                 supportedChainIDs: supportedChainIDs,
                 sendAssetID: nil,
                 receiveAssetID: nil
             )
-            navigationController?.pushViewController(swap, animated: true)
+            navigationController?.pushViewController(trade, animated: true)
             reporter.report(event: .tradeStart, tags: ["wallet": "web3", "source": "wallet_home"])
         }
     }

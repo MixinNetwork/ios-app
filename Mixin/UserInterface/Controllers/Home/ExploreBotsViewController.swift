@@ -10,7 +10,7 @@ final class ExploreBotsViewController: UITableViewController {
     
     private let headerReuseID = "h"
     private let actions: [ExploreAction] = [
-        .buy, .swap, .membership, .referral, .linkDesktop, .customerService,
+        .buy, .trade, .membership, .referral, .linkDesktop, .customerService,
     ]
     
     private(set) var allUsers: [User]? = nil
@@ -83,8 +83,8 @@ final class ExploreBotsViewController: UITableViewController {
             cell.badgeView.isHidden = switch action {
             case .buy:
                 BadgeManager.shared.hasViewed(identifier: .buy)
-            case .swap:
-                BadgeManager.shared.hasViewed(identifier: .swap)
+            case .trade:
+                BadgeManager.shared.hasViewed(identifier: .trade)
             case .membership:
                 BadgeManager.shared.hasViewed(identifier: .membership)
             case .referral:
@@ -264,8 +264,8 @@ final class ExploreBotsViewController: UITableViewController {
             return
         }
         let row: Int? = switch identifier {
-        case .swap:
-            actions.firstIndex(of: .swap)
+        case .trade:
+            actions.firstIndex(of: .trade)
         case .buy:
             actions.firstIndex(of: .buy)
         case .membership:

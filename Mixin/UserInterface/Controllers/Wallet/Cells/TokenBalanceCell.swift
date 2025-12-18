@@ -25,7 +25,7 @@ final class TokenBalanceCell: UITableViewCell {
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(revealOutputs(_:)))
         recognizer.numberOfTapsRequired = 5
         iconView.addGestureRecognizer(recognizer)
-        actionView.actions = [.receive, .send, .swap]
+        actionView.actions = [.receive, .send, .trade]
     }
     
     func reloadData(token: MixinTokenItem) {

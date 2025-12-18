@@ -4,7 +4,7 @@ import MixinServices
 enum ExploreAction {
     
     case buy
-    case swap
+    case trade
     case membership
     case referral
     case linkDesktop
@@ -13,7 +13,7 @@ enum ExploreAction {
     
     var trayImage: UIImage? {
         switch self {
-        case .buy, .swap, .membership, .referral, .linkDesktop, .customerService:
+        case .buy, .trade, .membership, .referral, .linkDesktop, .customerService:
             R.image.explore.action_tray()
         case .editFavoriteApps:
             R.image.explore.edit_favorite_app()
@@ -24,7 +24,7 @@ enum ExploreAction {
         switch self {
         case .buy:
             R.image.explore.buy()
-        case .swap:
+        case .trade:
             R.image.explore.trade()
         case .membership:
             R.image.explore.membership()
@@ -47,7 +47,7 @@ enum ExploreAction {
         switch self {
         case .buy:
             R.string.localizable.buy()
-        case .swap:
+        case .trade:
             R.string.localizable.trade()
         case .membership:
             R.string.localizable.mixin_one()
@@ -66,7 +66,7 @@ enum ExploreAction {
         switch self {
         case .buy:
             R.string.localizable.buy_crypto_with_cash()
-        case .swap:
+        case .trade:
             R.string.localizable.trade_native_tokens()
         case .membership:
             R.string.localizable.mixin_one_desc()

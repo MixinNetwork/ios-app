@@ -14,7 +14,7 @@ final class MixinTradeViewController: TradeViewController {
     }
     
     init(
-        mode: Mode,
+        mode: Mode? = nil,
         sendAssetID: String?,
         receiveAssetID: String?,
         referral: String?

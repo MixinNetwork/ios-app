@@ -15,7 +15,7 @@ final class PrivacyWalletViewController: WalletViewController {
         titleInfoStackView.setCustomSpacing(6, after: titleLabel)
         addIconIntoTitleView(image: R.image.privacy_wallet())
         
-        tableHeaderView.actionView.actions = [.buy, .receive, .send, .swap]
+        tableHeaderView.actionView.actions = [.buy, .receive, .send, .trade]
         tableHeaderView.delegate = self
         tableView.dataSource = self
         tableView.delegate = self
@@ -66,8 +66,8 @@ final class PrivacyWalletViewController: WalletViewController {
         if !BadgeManager.shared.hasViewed(identifier: .buy) {
             tableHeaderView.actionView.badgeActions.insert(.buy)
         }
-        if !BadgeManager.shared.hasViewed(identifier: .swap) {
-            tableHeaderView.actionView.badgeActions.insert(.swap)
+        if !BadgeManager.shared.hasViewed(identifier: .trade) {
+            tableHeaderView.actionView.badgeActions.insert(.trade)
         }
         notificationCenter.addObserver(
             self,
@@ -176,8 +176,8 @@ final class PrivacyWalletViewController: WalletViewController {
             return
         }
         switch identifier {
-        case .swap:
-            tableHeaderView.actionView.badgeActions.remove(.swap)
+        case .trade:
+            tableHeaderView.actionView.badgeActions.remove(.trade)
         case .walletSwitch:
             walletSwitchBadgeView?.removeFromSuperview()
         case .buy:
@@ -326,17 +326,16 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
             withMnemonicsBackupChecked {
                 self.present(selector, animated: true, completion: nil)
             }
-        case .swap:
+        case .trade:
             reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "wallet_home"])
-            tableHeaderView.actionView.badgeActions.remove(.swap)
-            let swap = MixinTradeViewController(
-                mode: .simple,
+            tableHeaderView.actionView.badgeActions.remove(.trade)
+            let trade = MixinTradeViewController(
                 sendAssetID: nil,
                 receiveAssetID: nil,
                 referral: nil
             )
-            navigationController?.pushViewController(swap, animated: true)
-            BadgeManager.shared.setHasViewed(identifier: .swap)
+            navigationController?.pushViewController(trade, animated: true)
+            BadgeManager.shared.setHasViewed(identifier: .trade)
         }
     }
     

@@ -9,13 +9,13 @@ final class TokenPriceChartCell: UITableViewCell {
     
     enum TokenAction: Int, CaseIterable {
         
-        case swap
+        case trade
         case alert
         case addAlert
         
         var title: String {
             switch self {
-            case .swap:
+            case .trade:
                 R.string.localizable.trade()
             case .alert:
                 R.string.localizable.alert()

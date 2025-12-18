@@ -305,31 +305,29 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
         present(selector, animated: true, completion: onDismiss)
     }
     
-    @objc private func swap(_ sender: Any) {
+    @objc private func trade(_ sender: Any) {
         guard let from = swappingFromAssetID else {
             return
         }
         let to = insufficientToken.assetID
-        let swap: UIViewController
+        let trade: UIViewController
         switch intent {
         case .privacyWalletTransfer, .withdraw:
-            swap = MixinTradeViewController(
-                mode: .simple,
+            trade = MixinTradeViewController(
                 sendAssetID: from,
                 receiveAssetID: to,
                 referral: nil
             )
         case let .commonWalletTransfer(wallet, _, _), let .externalWeb3Transaction(wallet, _):
-            swap = Web3TradeViewController(
+            trade = Web3TradeViewController(
                 wallet: wallet,
-                mode: .simple,
                 sendAssetID: from,
                 receiveAssetID: to,
             )
         }
         presentingViewController?.dismiss(animated: true) { [onDismiss] in
             onDismiss?()
-            UIApplication.homeNavigationController?.pushViewController(swap, animated: true)
+            UIApplication.homeNavigationController?.pushViewController(trade, animated: true)
         }
     }
     
@@ -341,7 +339,7 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
             view.leftButton.setTitle(R.string.localizable.cancel(), for: .normal)
             view.leftButton.addTarget(self, action: #selector(loadActionsTrayView), for: .touchUpInside)
             view.rightButton.setTitle(R.string.localizable.trade(), for: .normal)
-            view.rightButton.addTarget(self, action: #selector(swap(_:)), for: .touchUpInside)
+            view.rightButton.addTarget(self, action: #selector(trade(_:)), for: .touchUpInside)
             view.style = .yellow
         }
     }
@@ -358,9 +356,8 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
         switch insufficientToken {
         case let token as MixinTokenItem:
             next = switch method {
-            case .swap:
+            case .trade:
                 MixinTradeViewController(
-                    mode: .simple,
                     sendAssetID: nil,
                     receiveAssetID: token.assetID,
                     referral: nil
@@ -373,10 +370,9 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
                 return
             }
             switch method {
-            case .swap:
+            case .trade:
                 next = Web3TradeViewController(
                     wallet: wallet,
-                    mode: .simple,
                     sendAssetID: nil,
                     receiveAssetID: token.assetID,
                 )

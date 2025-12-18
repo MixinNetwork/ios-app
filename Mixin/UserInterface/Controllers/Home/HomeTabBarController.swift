@@ -119,11 +119,11 @@ final class HomeTabBarController: UIViewController {
     }
     
     @objc private func reloadItemBadges() {
-        let hasUnviewedWalletItem = [.walletSwitch, .swap, .buy, .addWallet]
+        let hasUnviewedWalletItem = [.walletSwitch, .trade, .buy, .addWallet]
             .lazy
             .map(BadgeManager.shared.hasViewed(identifier:))
             .contains(false)
-        let hasUnviewedMoreItem = [.buy, .swap, .membership]
+        let hasUnviewedMoreItem = [.buy, .trade, .membership]
             .lazy
             .map(BadgeManager.shared.hasViewed(identifier:))
             .contains(false)

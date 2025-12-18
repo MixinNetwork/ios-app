@@ -443,9 +443,9 @@ extension MarketViewController: UITableViewDataSource {
                 cell.tokenActions = []
             } else {
                 if hasAlert {
-                    cell.tokenActions = [.swap, .alert]
+                    cell.tokenActions = [.trade, .alert]
                 } else {
-                    cell.tokenActions = [.swap, .addAlert]
+                    cell.tokenActions = [.trade, .addAlert]
                 }
             }
             cell.delegate = self
@@ -687,18 +687,17 @@ extension MarketViewController: PillActionView.Delegate {
             return
         }
         switch actions[index] {
-        case .swap:
+        case .trade:
             if tokens == nil {
                 alert(R.string.localizable.swap_not_supported(market.symbol))
             } else {
                 pickSingleToken { token in
-                    let swap = MixinTradeViewController(
-                        mode: .simple,
+                    let trade = MixinTradeViewController(
                         sendAssetID: AssetID.erc20USDT,
                         receiveAssetID: token.assetID,
                         referral: nil
                     )
-                    self.navigationController?.pushViewController(swap, animated: true)
+                    self.navigationController?.pushViewController(trade, animated: true)
                     reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "market_detail"])
                 }
             }

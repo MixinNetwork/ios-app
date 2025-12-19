@@ -128,7 +128,11 @@ final class Web3TradeViewController: TradeViewController {
     
     override func showOrders(_ sender: Any) {
         super.showOrders(sender)
-        let orders = TradeOrdersViewController(wallet: .common(wallet))
+        let showPendingOrdersOnly = sender is OpenTradeOrderHeaderView || sender is OpenOrdersFooterView
+        let orders = TradeOrdersViewController(
+            wallet: .common(wallet),
+            status: showPendingOrdersOnly ? .pending : nil
+        )
         navigationController?.pushViewController(orders, animated: true)
     }
     

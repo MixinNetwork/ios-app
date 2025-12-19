@@ -1330,7 +1330,7 @@ extension TradeViewController {
     
     final class OpenOrdersFooterView: UICollectionReusableView {
         
-        var onViewAll: ((UIButton) -> Void)?
+        var onViewAll: ((UIView) -> Void)?
         
         private(set) weak var viewAllButton: UIButton!
         
@@ -1345,7 +1345,7 @@ extension TradeViewController {
         }
         
         @objc private func viewAll(_ sender: UIButton) {
-            onViewAll?(sender)
+            onViewAll?(self)
         }
         
         private func addSubviews() {

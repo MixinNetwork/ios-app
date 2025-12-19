@@ -23,7 +23,7 @@ final class WalletContainerViewController: UIViewController {
         ConcurrentJobQueue.shared.addJob(job: job)
     }
     
-    func switchToWalletSummary() {
+    func switchToWalletSummary(animated: Bool) {
         guard let wallet = viewController as? WalletViewController else {
             return
         }
@@ -41,11 +41,24 @@ final class WalletContainerViewController: UIViewController {
         view.addSubview(summary.view)
         summary.didMove(toParent: self)
         
-        UIView.animate(withDuration: 0.5, delay: 0, options: .overdampedCurve) {
+        let animation = {
             summary.view.frame = self.view.bounds
-        } completion: { _ in
+        }
+        let completion = { (finished: Bool) in
             self.remove(child: wallet)
             self.viewController = summary
+        }
+        if animated {
+            UIView.animate(
+                withDuration: 0.5,
+                delay: 0,
+                options: .overdampedCurve,
+                animations: animation,
+                completion: completion
+            )
+        } else {
+            animation()
+            completion(true)
         }
     }
     

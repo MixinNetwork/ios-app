@@ -76,6 +76,7 @@ extension DeleteWalletViewController: AuthenticationIntent {
                     switch result {
                     case .success:
                         let jobIDs = [
+                            SyncWeb3AddressJob.jobID(walletID: walletID),
                             SyncWeb3TransactionJob.jobID(walletID: walletID),
                             ReviewPendingWeb3RawTransactionJob.jobID(walletID: walletID),
                             ReviewPendingWeb3TransactionJob.jobID(walletID: walletID),

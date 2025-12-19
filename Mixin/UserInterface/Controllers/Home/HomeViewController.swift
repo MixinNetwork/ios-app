@@ -111,6 +111,7 @@ final class HomeViewController: UIViewController {
             let walletIDs = Web3WalletDAO.shared.walletIDs()
             for id in walletIDs {
                 let jobs = [
+                    SyncWeb3AddressJob(walletID: id),
                     RefreshWeb3WalletTokenJob(walletID: id),
                     SyncWeb3TransactionJob(walletID: id),
                 ]

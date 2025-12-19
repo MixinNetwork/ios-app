@@ -1,18 +1,8 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "classic_wallet_chains@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "classic_wallet_chains@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "classic_wallet_chains.pdf",
+      "idiom" : "universal"
     }
   ],
   "info" : {

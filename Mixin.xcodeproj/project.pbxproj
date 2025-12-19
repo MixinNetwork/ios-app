@@ -1093,6 +1093,7 @@
 		946CB9DC2E9F73320099FFCB /* UserNavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946CB9DB2E9F73310099FFCB /* UserNavigationTitleView.swift */; };
 		946CBA062E9F7A950099FFCB /* CommonWalletReceiverCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946CBA042E9F7A950099FFCB /* CommonWalletReceiverCell.swift */; };
 		946CBA072E9F7A950099FFCB /* CommonWalletReceiverCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946CBA052E9F7A950099FFCB /* CommonWalletReceiverCell.xib */; };
+		946D1B362EF29FA600E572F2 /* SyncWeb3AddressJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946D1B352EF29FA600E572F2 /* SyncWeb3AddressJob.swift */; };
 		946E055A2CBE52FF004B264E /* ExploreRecentSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05582CBE52FF004B264E /* ExploreRecentSearchCell.swift */; };
 		946E055B2CBE52FF004B264E /* ExploreRecentSearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 946E05592CBE52FF004B264E /* ExploreRecentSearchCell.xib */; };
 		946E05732CBE7CFB004B264E /* MarketCoinCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946E05712CBE7CFB004B264E /* MarketCoinCell.swift */; };
@@ -2883,6 +2884,7 @@
 		946CB9DB2E9F73310099FFCB /* UserNavigationTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNavigationTitleView.swift; sourceTree = "<group>"; };
 		946CBA042E9F7A950099FFCB /* CommonWalletReceiverCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonWalletReceiverCell.swift; sourceTree = "<group>"; };
 		946CBA052E9F7A950099FFCB /* CommonWalletReceiverCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CommonWalletReceiverCell.xib; sourceTree = "<group>"; };
+		946D1B352EF29FA600E572F2 /* SyncWeb3AddressJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncWeb3AddressJob.swift; sourceTree = "<group>"; };
 		946E05582CBE52FF004B264E /* ExploreRecentSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreRecentSearchCell.swift; sourceTree = "<group>"; };
 		946E05592CBE52FF004B264E /* ExploreRecentSearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreRecentSearchCell.xib; sourceTree = "<group>"; };
 		946E05712CBE7CFB004B264E /* MarketCoinCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketCoinCell.swift; sourceTree = "<group>"; };
@@ -6175,6 +6177,7 @@
 				946E9F192AEF88DF0077CD7A /* RecoverRawTransactionJob.swift */,
 				7C104A8027D83A51004D0530 /* RefreshExternalSchemeJob.swift */,
 				94BFA9892B98546000200FC4 /* SyncSafeSnapshotJob.swift */,
+				946D1B352EF29FA600E572F2 /* SyncWeb3AddressJob.swift */,
 				942C647A2D7A0C38003B3A5F /* SyncWeb3TransactionJob.swift */,
 				94F7E8682D9C0BF6006AA6CD /* ReviewPendingWeb3RawTransactionJob.swift */,
 				947BE3E82DBA957100A98677 /* ReviewPendingWeb3TransactionJob.swift */,
@@ -7389,6 +7392,7 @@
 				945AA6582567B18200B39415 /* Country.swift in Sources */,
 				949B5E0C2EBCFB9500D33C97 /* SyncWeb3OrdersJob.swift in Sources */,
 				7BD00F222559716C004D8814 /* WalletSearchRecommendationViewController.swift in Sources */,
+				946D1B362EF29FA600E572F2 /* SyncWeb3AddressJob.swift in Sources */,
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
 				7C5304A129014F6800567CF6 /* AuthorizationScopesTableView.swift in Sources */,
 				94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */,

@@ -54,7 +54,7 @@ class WalletViewController: UIViewController, MnemonicsBackupChecking {
     
     @IBAction func switchFromWallets(_ sender: Any) {
         if let parent = parent as? WalletContainerViewController {
-            parent.switchToWalletSummary()
+            parent.switchToWalletSummary(animated: true)
         }
     }
     

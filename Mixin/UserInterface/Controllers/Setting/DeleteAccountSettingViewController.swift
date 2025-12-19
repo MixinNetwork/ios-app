@@ -129,15 +129,24 @@ extension DeleteAccountSettingViewController {
     
     private func presentDeleteAccountHintWindow(assets: [MixinTokenItem]) {
         let window = DeleteAccountHintWindow.instance()
-        window.onViewWallet = presentWallet
-        window.onContinue = presentVerificationConfirmation
+        window.onViewWallet = { [weak self] in
+            self?.presentWallet()
+        }
+        window.onContinue = { [weak self] in
+            self?.presentVerificationConfirmation()
+        }
         window.render(assets: assets)
         window.presentPopupControllerAnimated()
     }
     
     private func presentWallet() {
-        let wallet = WalletViewController()
-        navigationController?.pushViewController(wallet, animated: true)
+        UIApplication.homeNavigationController?.popToRootViewController(animated: false)
+        if let tabBarController = UIApplication.homeContainerViewController?.homeTabBarController {
+            tabBarController.switchTo(child: .wallet)
+            if let container = tabBarController.selectedViewController as? WalletContainerViewController {
+                container.switchToWalletSummary(animated: false)
+            }
+        }
     }
     
     private func requestVerificationCode(for phone: String, captchaToken token: CaptchaToken?) {

@@ -103,7 +103,11 @@ final class MixinTradeViewController: TradeViewController {
     
     override func showOrders(_ sender: Any) {
         super.showOrders(sender)
-        let orders = TradeOrdersViewController(wallet: .privacy)
+        let showPendingOrdersOnly = sender is OpenTradeOrderHeaderView || sender is OpenOrdersFooterView
+        let orders = TradeOrdersViewController(
+            wallet: .privacy,
+            status: showPendingOrdersOnly ? .pending : nil
+        )
         navigationController?.pushViewController(orders, animated: true)
     }
     

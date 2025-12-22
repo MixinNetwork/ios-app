@@ -36,8 +36,9 @@ final class HiddenWeb3TokensViewController: HiddenTokensViewController {
     }
     
     @objc private func reloadData() {
+        let walletID = wallet.walletID
         DispatchQueue.global().async { [weak self] in
-            let tokens = Web3TokenDAO.shared.hiddenTokens()
+            let tokens = Web3TokenDAO.shared.hiddenTokens(walletID: walletID)
             DispatchQueue.main.async {
                 guard let self else {
                     return

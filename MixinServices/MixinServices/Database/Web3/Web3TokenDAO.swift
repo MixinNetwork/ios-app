@@ -121,13 +121,13 @@ public final class Web3TokenDAO: Web3DAO {
         return db.select(with: sql, arguments: [walletID])
     }
     
-    public func hiddenTokens() -> [Web3TokenItem] {
+    public func hiddenTokens(walletID: String) -> [Web3TokenItem] {
         let sql = """
         \(SQL.selector)
-        WHERE ifnull(te.hidden,FALSE) IS TRUE
+        WHERE t.wallet_id = ? AND (ifnull(te.hidden,FALSE) IS TRUE)
         \(SQL.order)
         """
-        return db.select(with: sql)
+        return db.select(with: sql, arguments: [walletID])
     }
     
     public func tokens(walletID: String, ids: any Collection<String>) -> [Web3Token] {

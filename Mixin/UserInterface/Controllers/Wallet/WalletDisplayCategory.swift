@@ -2,13 +2,13 @@ import Foundation
 import OrderedCollections
 import MixinServices
 
-enum WalletDisplayCategory {
+enum WalletDisplayCategory: Int {
     
-    case all
-    case safe
-    case created
-    case imported
-    case watching
+    case all        = 0
+    case safe       = 1
+    case created    = 2
+    case imported   = 3
+    case watching   = 4
     
     var localizedName: String {
         switch self {

@@ -13,7 +13,7 @@ final class AuthenticationPreviewWalletCell: UITableViewCell {
     
     private weak var tagLabel: InsetLabel?
     
-    var walletTag: String? {
+    var walletTag: Wallet.Tag? {
         didSet {
             if let walletTag {
                 let label: InsetLabel
@@ -27,12 +27,23 @@ final class AuthenticationPreviewWalletCell: UITableViewCell {
                     label.adjustsFontForContentSizeCategory = true
                     label.contentInset = UIEdgeInsets(top: 2, left: 4, bottom: 2, right: 4)
                     label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-                    label.backgroundColor = R.color.background_quaternary()
-                    label.textColor = R.color.text_quaternary()
                     subtitleStackView.addArrangedSubview(label)
                     self.tagLabel = label
                 }
-                label.text = walletTag
+                switch walletTag {
+                case .plain(let text):
+                    label.backgroundColor = R.color.background_quaternary()
+                    label.textColor = R.color.text_quaternary()
+                    label.text = text
+                case .warning(let text):
+                    label.backgroundColor = R.color.market_red()!.withAlphaComponent(0.2)
+                    label.textColor = R.color.market_red()
+                    label.text = text
+                case .role(let text):
+                    label.backgroundColor = UIColor(displayP3RgbValue: 0xFFAA00).withAlphaComponent(0.6)
+                    label.textColor = .white
+                    label.text = text
+                }
             } else {
                 tagLabel?.removeFromSuperview()
                 tagLabel = nil

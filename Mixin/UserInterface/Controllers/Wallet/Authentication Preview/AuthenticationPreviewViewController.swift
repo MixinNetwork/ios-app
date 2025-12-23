@@ -306,7 +306,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
                 cell.nameLabel.text = wallet.name
                 cell.iconImageView.image = R.image.safe_vault()
                 cell.iconImageView.isHidden = false
-                cell.walletTag = wallet.role.localizedDescription
+                cell.walletTag = .role(wallet.role.localizedDescription)
             }
             return cell
         case let .safe(name, role):
@@ -315,7 +315,7 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.nameLabel.text = name
             cell.iconImageView.image = R.image.safe_vault()
             cell.iconImageView.isHidden = false
-            cell.walletTag = role
+            cell.walletTag = .role(role)
             return cell
         case let .commonWalletReceiver(user, address):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.common_wallet_receiver, for: indexPath)!

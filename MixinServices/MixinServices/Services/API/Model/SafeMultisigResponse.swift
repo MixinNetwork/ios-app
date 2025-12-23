@@ -148,6 +148,7 @@ extension SafeMultisigResponse {
         public let id: String
         public let name: String
         public let address: String
+        public let role: UnknownableEnum<SafeRole>
         public let operation: Operation
         
     }

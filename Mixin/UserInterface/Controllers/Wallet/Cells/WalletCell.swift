@@ -123,11 +123,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             titleLabel.text = wallet.name
             iconImageView.isHidden = false
             iconImageView.image = R.image.safe_vault()
-            tags = if let tag = wallet.localizedRole {
-                [.plain(tag)]
-            } else {
-                []
-            }
+            tags = [.plain(wallet.role.localizedDescription)]
             loadProportions(
                 tokens: digest.tokens,
                 placeholder: .safeVault(chainID: wallet.chainID),

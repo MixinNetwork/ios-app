@@ -1,117 +1,118 @@
 PODS:
-  - Alamofire (5.10.2)
-  - AppsFlyerFramework (6.17.0):
-    - AppsFlyerFramework/Main (= 6.17.0)
-  - AppsFlyerFramework/Main (6.17.0)
-  - Bugsnag (6.33.0)
-  - CocoaLumberjack (3.8.5):
-    - CocoaLumberjack/Core (= 3.8.5)
-  - CocoaLumberjack/Core (3.8.5)
-  - Firebase/Analytics (11.14.0):
+  - Alamofire (5.11.0)
+  - AppsFlyerFramework (6.17.8):
+    - AppsFlyerFramework/Main (= 6.17.8)
+  - AppsFlyerFramework/Main (6.17.8)
+  - Bugsnag (6.34.1)
+  - CocoaLumberjack (3.9.0):
+    - CocoaLumberjack/Core (= 3.9.0)
+  - CocoaLumberjack/Core (3.9.0)
+  - Firebase/Analytics (12.7.0):
     - Firebase/Core
-  - Firebase/Core (11.14.0):
+  - Firebase/Core (12.7.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (~> 11.14.0)
-  - Firebase/CoreOnly (11.14.0):
-    - FirebaseCore (~> 11.14.0)
-  - Firebase/Crashlytics (11.14.0):
+    - FirebaseAnalytics (~> 12.7.0)
+  - Firebase/CoreOnly (12.7.0):
+    - FirebaseCore (~> 12.7.0)
+  - Firebase/Crashlytics (12.7.0):
     - Firebase/CoreOnly
-    - FirebaseCrashlytics (~> 11.14.0)
-  - Firebase/Performance (11.14.0):
+    - FirebaseCrashlytics (~> 12.7.0)
+  - Firebase/Performance (12.7.0):
     - Firebase/CoreOnly
-    - FirebasePerformance (~> 11.14.0)
-  - FirebaseABTesting (11.14.0):
-    - FirebaseCore (~> 11.14.0)
-  - FirebaseAnalytics (11.14.0):
-    - FirebaseAnalytics/Default (= 11.14.0)
-    - FirebaseCore (~> 11.14.0)
-    - FirebaseInstallations (~> 11.0)
+    - FirebasePerformance (~> 12.7.0)
+  - FirebaseABTesting (12.7.0):
+    - FirebaseCore (~> 12.7.0)
+  - FirebaseAnalytics (12.7.0):
+    - FirebaseAnalytics/Default (= 12.7.0)
+    - FirebaseCore (~> 12.7.0)
+    - FirebaseInstallations (~> 12.7.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.1)
     - GoogleUtilities/MethodSwizzler (~> 8.1)
     - GoogleUtilities/Network (~> 8.1)
     - "GoogleUtilities/NSData+zlib (~> 8.1)"
     - nanopb (~> 3.30910.0)
-  - FirebaseAnalytics/Default (11.14.0):
-    - FirebaseCore (~> 11.14.0)
-    - FirebaseInstallations (~> 11.0)
-    - GoogleAppMeasurement/Default (= 11.14.0)
+  - FirebaseAnalytics/Default (12.7.0):
+    - FirebaseCore (~> 12.7.0)
+    - FirebaseInstallations (~> 12.7.0)
+    - GoogleAppMeasurement/Default (= 12.7.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.1)
     - GoogleUtilities/MethodSwizzler (~> 8.1)
     - GoogleUtilities/Network (~> 8.1)
     - "GoogleUtilities/NSData+zlib (~> 8.1)"
     - nanopb (~> 3.30910.0)
-  - FirebaseCore (11.14.0):
-    - FirebaseCoreInternal (~> 11.14.0)
+  - FirebaseCore (12.7.0):
+    - FirebaseCoreInternal (~> 12.7.0)
     - GoogleUtilities/Environment (~> 8.1)
     - GoogleUtilities/Logger (~> 8.1)
-  - FirebaseCoreExtension (11.14.0):
-    - FirebaseCore (~> 11.14.0)
-  - FirebaseCoreInternal (11.14.0):
+  - FirebaseCoreExtension (12.7.0):
+    - FirebaseCore (~> 12.7.0)
+  - FirebaseCoreInternal (12.7.0):
     - "GoogleUtilities/NSData+zlib (~> 8.1)"
-  - FirebaseCrashlytics (11.14.0):
-    - FirebaseCore (~> 11.14.0)
-    - FirebaseInstallations (~> 11.0)
-    - FirebaseRemoteConfigInterop (~> 11.0)
-    - FirebaseSessions (~> 11.0)
-    - GoogleDataTransport (~> 10.0)
+  - FirebaseCrashlytics (12.7.0):
+    - FirebaseCore (~> 12.7.0)
+    - FirebaseInstallations (~> 12.7.0)
+    - FirebaseRemoteConfigInterop (~> 12.7.0)
+    - FirebaseSessions (~> 12.7.0)
+    - GoogleDataTransport (~> 10.1)
     - GoogleUtilities/Environment (~> 8.1)
     - nanopb (~> 3.30910.0)
     - PromisesObjC (~> 2.4)
-  - FirebaseInstallations (11.14.0):
-    - FirebaseCore (~> 11.14.0)
+  - FirebaseInstallations (12.7.0):
+    - FirebaseCore (~> 12.7.0)
     - GoogleUtilities/Environment (~> 8.1)
     - GoogleUtilities/UserDefaults (~> 8.1)
     - PromisesObjC (~> 2.4)
-  - FirebasePerformance (11.14.0):
-    - FirebaseCore (~> 11.14.0)
-    - FirebaseInstallations (~> 11.0)
-    - FirebaseRemoteConfig (~> 11.0)
-    - FirebaseSessions (~> 11.0)
-    - GoogleDataTransport (~> 10.0)
+  - FirebasePerformance (12.7.0):
+    - FirebaseCore (~> 12.7.0)
+    - FirebaseInstallations (~> 12.7.0)
+    - FirebaseRemoteConfig (~> 12.7.0)
+    - FirebaseSessions (~> 12.7.0)
+    - GoogleDataTransport (~> 10.1)
     - GoogleUtilities/Environment (~> 8.1)
     - GoogleUtilities/MethodSwizzler (~> 8.1)
     - GoogleUtilities/UserDefaults (~> 8.1)
     - nanopb (~> 3.30910.0)
-  - FirebaseRemoteConfig (11.14.0):
-    - FirebaseABTesting (~> 11.0)
-    - FirebaseCore (~> 11.14.0)
-    - FirebaseInstallations (~> 11.0)
-    - FirebaseRemoteConfigInterop (~> 11.0)
-    - FirebaseSharedSwift (~> 11.0)
+  - FirebaseRemoteConfig (12.7.0):
+    - FirebaseABTesting (~> 12.7.0)
+    - FirebaseCore (~> 12.7.0)
+    - FirebaseInstallations (~> 12.7.0)
+    - FirebaseRemoteConfigInterop (~> 12.7.0)
+    - FirebaseSharedSwift (~> 12.7.0)
     - GoogleUtilities/Environment (~> 8.1)
     - "GoogleUtilities/NSData+zlib (~> 8.1)"
-  - FirebaseRemoteConfigInterop (11.14.0)
-  - FirebaseSessions (11.14.0):
-    - FirebaseCore (~> 11.14.0)
-    - FirebaseCoreExtension (~> 11.14.0)
-    - FirebaseInstallations (~> 11.0)
-    - GoogleDataTransport (~> 10.0)
+  - FirebaseRemoteConfigInterop (12.7.0)
+  - FirebaseSessions (12.7.0):
+    - FirebaseCore (~> 12.7.0)
+    - FirebaseCoreExtension (~> 12.7.0)
+    - FirebaseInstallations (~> 12.7.0)
+    - GoogleDataTransport (~> 10.1)
     - GoogleUtilities/Environment (~> 8.1)
     - GoogleUtilities/UserDefaults (~> 8.1)
     - nanopb (~> 3.30910.0)
     - PromisesSwift (~> 2.1)
-  - FirebaseSharedSwift (11.14.0)
-  - GoogleAdsOnDeviceConversion (2.0.0):
+  - FirebaseSharedSwift (12.7.0)
+  - GoogleAdsOnDeviceConversion (3.2.0):
+    - GoogleUtilities/Environment (~> 8.1)
     - GoogleUtilities/Logger (~> 8.1)
     - GoogleUtilities/Network (~> 8.1)
     - nanopb (~> 3.30910.0)
-  - GoogleAppMeasurement/Core (11.14.0):
+  - GoogleAppMeasurement/Core (12.7.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 8.1)
     - GoogleUtilities/MethodSwizzler (~> 8.1)
     - GoogleUtilities/Network (~> 8.1)
     - "GoogleUtilities/NSData+zlib (~> 8.1)"
     - nanopb (~> 3.30910.0)
-  - GoogleAppMeasurement/Default (11.14.0):
-    - GoogleAdsOnDeviceConversion (= 2.0.0)
-    - GoogleAppMeasurement/Core (= 11.14.0)
-    - GoogleAppMeasurement/IdentitySupport (= 11.14.0)
+  - GoogleAppMeasurement/Default (12.7.0):
+    - GoogleAdsOnDeviceConversion (~> 3.2.0)
+    - GoogleAppMeasurement/Core (= 12.7.0)
+    - GoogleAppMeasurement/IdentitySupport (= 12.7.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.1)
     - GoogleUtilities/MethodSwizzler (~> 8.1)
     - GoogleUtilities/Network (~> 8.1)
     - "GoogleUtilities/NSData+zlib (~> 8.1)"
     - nanopb (~> 3.30910.0)
-  - GoogleAppMeasurement/IdentitySupport (11.14.0):
-    - GoogleAppMeasurement/Core (= 11.14.0)
+  - GoogleAppMeasurement/IdentitySupport (12.7.0):
+    - GoogleAppMeasurement/Core (= 12.7.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.1)
     - GoogleUtilities/MethodSwizzler (~> 8.1)
     - GoogleUtilities/Network (~> 8.1)
@@ -187,18 +188,18 @@ PODS:
     - nanopb/encode (= 3.30910.0)
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
-  - PhoneNumberKit (4.0.2):
-    - PhoneNumberKit/PhoneNumberKitCore (= 4.0.2)
-    - PhoneNumberKit/UIKit (= 4.0.2)
-  - PhoneNumberKit/PhoneNumberKitCore (4.0.2)
-  - PhoneNumberKit/UIKit (4.0.2):
+  - PhoneNumberKit (4.2.2):
+    - PhoneNumberKit/PhoneNumberKitCore (= 4.2.2)
+    - PhoneNumberKit/UIKit (= 4.2.2)
+  - PhoneNumberKit/PhoneNumberKitCore (4.2.2)
+  - PhoneNumberKit/UIKit (4.2.2):
     - PhoneNumberKit/PhoneNumberKitCore
   - PromisesObjC (2.4.0)
   - PromisesSwift (2.4.0):
     - PromisesObjC (= 2.4.0)
-  - SDWebImage (5.21.1):
-    - SDWebImage/Core (= 5.21.1)
-  - SDWebImage/Core (5.21.1)
+  - SDWebImage (5.21.5):
+    - SDWebImage/Core (= 5.21.5)
+  - SDWebImage/Core (5.21.5)
   - SDWebImageLottieCoder (0.2.0):
     - librlottie (~> 0.2)
     - SDWebImage (~> 5.10)
@@ -280,32 +281,32 @@ CHECKOUT OPTIONS:
     :commit: 53e446e27b55283f026e14606e21b112349e4c75
     :git: https://github.com/MixinNetwork/libsignal-protocol-c.git
   PhoneNumberKit:
-    :commit: 05b8ab8ae7dc3eed5c794d402cda6bd8c5a75df3
+    :commit: 16bb5d46b82540280c5aab8976a94d8a9cda8135
     :git: https://github.com/marmelroy/PhoneNumberKit
   SVGKit:
-    :commit: 026d2168d07b621e4701a8b2aac6c1eaf05c1df5
+    :commit: 6137e27e6a0b24587967d97aeb25a6706f8eb036
     :git: https://github.com/SVGKit/SVGKit
 
 SPEC CHECKSUMS:
-  Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
-  AppsFlyerFramework: 34cef9f9653f4fd01c27d4d87784425b9271f82f
-  Bugsnag: e957c79ccb0cccc84794ba616c2e18a8a48ad38d
-  CocoaLumberjack: 6a459bc897d6d80bd1b8c78482ec7ad05dffc3f0
-  Firebase: 38f818b36ca01648fa78ec7402b4ee3076086c2b
-  FirebaseABTesting: 13de5629e6d92a6a6c06429a6ddd9b19362de827
-  FirebaseAnalytics: d604dc875290f0213b9ead8a4692cf1e91e024d9
-  FirebaseCore: 8fb12caed934c900218ce66a419107db74214ade
-  FirebaseCoreExtension: 6af88594f639c1abb127bc096da32cf2c0dd69ff
-  FirebaseCoreInternal: 6a3b668197644aa858fc4127578637c6767ba123
-  FirebaseCrashlytics: 7f50df2871a788468825db11a6d845c363c2ad58
-  FirebaseInstallations: 863f2846bb124331b501d29c0f17f95caa2ef6bb
-  FirebasePerformance: f84beecea8dc5421ff9926816e754323682f2981
-  FirebaseRemoteConfig: ded3fce28a1ba2bd339ff179e726211a06f05a0b
-  FirebaseRemoteConfigInterop: 7b74ceaa54e28863ed17fa39da8951692725eced
-  FirebaseSessions: e9a23024853074e56c9eca62be0e5ee243efd9c9
-  FirebaseSharedSwift: bdd5c8674c4712a98e70287c936bc5cca5d640f6
-  GoogleAdsOnDeviceConversion: 5c3c8de58786e7d0a4bdecbd32c16f87d815cc9f
-  GoogleAppMeasurement: 078fe9bfeed8e398253772ce81ef8690b0413b45
+  Alamofire: bd5e7b23a1a750975288482c1831d71e74415f86
+  AppsFlyerFramework: 63577b60d6b9fcdab60135289979e7d1c9ec79b9
+  Bugsnag: ad30e517250fe288f740c3e4913e64ac73a44440
+  CocoaLumberjack: 5644158777912b7de7469fa881f8a3f259c2512a
+  Firebase: 2d19a10c9a2e48ac532a4303115d3fc9b2798396
+  FirebaseABTesting: 72e4636929660d40844f2a4db15be9d551fc27d6
+  FirebaseAnalytics: e423129866107aeacf6010a280b9c9829f9ea50d
+  FirebaseCore: c7b57863ce0859281a66d16ca36d665c45d332b5
+  FirebaseCoreExtension: 731a5744970bcd73ad95ab2a2b8a1f46353e86dd
+  FirebaseCoreInternal: 571a2dd8c975410966199623351db3a3265c874d
+  FirebaseCrashlytics: 9ce9ce4bb179e31ab91a937d0a73d302a9752d1b
+  FirebaseInstallations: 6d05424a046b68ca146b4de4376f05b4e9262fc3
+  FirebasePerformance: 1e9dee39624d5b7eabbea63a65594a464198a908
+  FirebaseRemoteConfig: 555e7aea9d097d9eaa5b761522f607c353964988
+  FirebaseRemoteConfigInterop: 0bae7d21510b3a0a79af727961c4973aac585add
+  FirebaseSessions: bc59e7d0ba90f96f40325fd1defbdec86ba26f20
+  FirebaseSharedSwift: a652f2174ce29ce333d1f67df955499d2db009f6
+  GoogleAdsOnDeviceConversion: d68c69dd9581a0f5da02617b6f377e5be483970f
+  GoogleAppMeasurement: 8f59e08efecfa1bcd57f0a56fab07d079366268c
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   GRDB.swift: 136dcb5d8dddca50aae3ba7d77475f79e7232cd8
@@ -314,16 +315,16 @@ SPEC CHECKSUMS:
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   MixinServices: 876e624081b77b32768b995a931555e7105722a4
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
-  PhoneNumberKit: 99c7dddc07c36e76507c37a1e63f475a6faa40b2
+  PhoneNumberKit: 78c10bb3b0963524ce58d498cae9ddb8181ed813
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
-  SDWebImage: f29024626962457f3470184232766516dee8dfea
+  SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
   SDWebImageLottieCoder: 827c9c82bbaae89627391b4d6fdf39bb89be3336
   SDWebImageSVGKitPlugin: 7542dd07c344ec3415ded0461a1161a6f087e0c9
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Sodium: 23d11554ecd556196d313cf6130d406dfe7ac6da
-  SVGKit: 3f02ad9c8227831e508e2e37ecc4005d2f0496a5
+  SVGKit: 24cad5f1d451c3d546768d79c5061e01fd7421ea
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
 PODFILE CHECKSUM: c31dfe8b8bc965abc120c5da9f2fa74f8cd49002

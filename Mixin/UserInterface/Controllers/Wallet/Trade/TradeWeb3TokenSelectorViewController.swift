@@ -215,7 +215,8 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                 result[assetID] = BalancedSwapToken(
                     token: token,
                     balance: balance ?? 0,
-                    usdPrice: localResult?.decimalUSDPrice ?? 0
+                    usdPrice: localResult?.decimalUSDPrice ?? 0,
+                    isMalicious: localResult?.isMalicious ?? false,
                 )
             }
             for item in localResults where allItems[item.assetID] == nil {

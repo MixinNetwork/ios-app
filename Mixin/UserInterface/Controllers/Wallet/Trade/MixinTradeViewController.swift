@@ -146,10 +146,16 @@ final class MixinTradeViewController: TradeViewController {
                 BalancedSwapToken(
                     token: token,
                     balance: item.decimalBalance,
-                    usdPrice: marketPrice ?? item.decimalUSDPrice
+                    usdPrice: marketPrice ?? item.decimalUSDPrice,
+                    isMalicious: false,
                 )
             } else {
-                BalancedSwapToken(token: token, balance: 0, usdPrice: 0)
+                BalancedSwapToken(
+                    token: token,
+                    balance: 0,
+                    usdPrice: 0,
+                    isMalicious: false,
+                )
             }
         }
     }

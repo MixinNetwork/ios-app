@@ -153,7 +153,8 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
                 result[assetID] = BalancedSwapToken(
                     token: token,
                     balance: balance ?? 0,
-                    usdPrice: localResult?.decimalUSDPrice ?? 0
+                    usdPrice: localResult?.decimalUSDPrice ?? 0,
+                    isMalicious: false,
                 )
             }
             for item in localResults where allItems[item.assetID] == nil {

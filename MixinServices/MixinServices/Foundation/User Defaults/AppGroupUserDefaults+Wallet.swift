@@ -24,6 +24,7 @@ extension AppGroupUserDefaults {
             
             case swapTokens = "swap_tokens"
             case tradeMode = "trade_mode"
+            case lastSelectedCategory = "last_selected_category"
             case lastSelectedWallet = "last_selected_wallet"
             case dappConnectionWalletID = "dapp_connection_wallet_id"
             
@@ -66,6 +67,9 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .wallet, key: Key.tradeMode, defaultValue: 0)
         public static var tradeMode: Int
+        
+        @Default(namespace: .wallet, key: Key.lastSelectedCategory, defaultValue: 0)
+        public static var lastSelectedCategory: Int
         
         @RawRepresentableDefault(namespace: .wallet, key: Key.lastSelectedWallet, defaultValue: .privacy)
         public static var lastSelectedWallet: MixinServices.Wallet.Identifier

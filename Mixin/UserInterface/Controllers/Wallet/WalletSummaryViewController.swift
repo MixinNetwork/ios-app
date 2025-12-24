@@ -23,11 +23,16 @@ final class WalletSummaryViewController: UIViewController {
     
     private var summary: WalletSummary?
     private var digests: OrderedDictionary<WalletDisplayCategory, [WalletDigest]> = [:]
-    private var selectedCategory: WalletDisplayCategory = .all
     private var tips: [WalletTipCell.Content] = []
     private var secretAvailableWalletIDs: Set<String> = []
     private var unexpiredPlan: User.Membership.Plan?
     private var isLoadingSafeWallets = true
+    
+    private var selectedCategory = WalletDisplayCategory(rawValue: AppGroupUserDefaults.Wallet.lastSelectedCategory) ?? .all {
+        didSet {
+            AppGroupUserDefaults.Wallet.lastSelectedCategory = selectedCategory.rawValue
+        }
+    }
     
     private var tipsCurrentPage: Int = 0 {
         didSet {

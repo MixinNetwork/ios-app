@@ -334,7 +334,9 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                     throw BuyingError.noAvailableCurrency
                 }
                 
-                let allTokens = try await self?.tokens(assetIDs: profile.assetIDs) ?? [:]
+                guard let allTokens = try await self?.tokens(assetIDs: profile.assetIDs) else {
+                    return
+                }
                 let tokens = profile.assetIDs.compactMap { id in
                     allTokens[id]
                 }
@@ -396,19 +398,19 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
     // Key is asset id
     private func tokens(assetIDs: [String]) async throws -> [String: any Token]  {
         var allTokens: [String: any Token]
-        var assetIDs = Set(assetIDs)
+        var missingAssetIDs = Set(assetIDs)
         switch wallet {
         case .privacy:
             let localItems = TokenDAO.shared.tokenItems(with: assetIDs)
             for item in localItems {
-                assetIDs.remove(item.assetID)
+                missingAssetIDs.remove(item.assetID)
             }
             allTokens = localItems.reduce(into: [:]) { result, item in
                 result[item.assetID] = item
             }
             
-            if !assetIDs.isEmpty {
-                let remoteTokens = try await SafeAPI.assets(ids: assetIDs)
+            if !missingAssetIDs.isEmpty {
+                let remoteTokens = try await SafeAPI.assets(ids: missingAssetIDs)
                 for token in remoteTokens {
                     let chain = ChainDAO.shared.chain(chainId: token.chainID)
                     let item = MixinTokenItem(token: token, balance: "0", isHidden: false, chain: chain)
@@ -419,15 +421,15 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
             let walletID = wallet.walletID
             let localItems = Web3TokenDAO.shared.tokenItems(walletID: walletID, ids: assetIDs)
             for item in localItems {
-                assetIDs.remove(item.assetID)
+                missingAssetIDs.remove(item.assetID)
             }
             allTokens = localItems.reduce(into: [:]) { result, item in
                 result[item.assetID] = item
             }
             
-            if !assetIDs.isEmpty {
-                let availableChainIDs = Set(Web3Chain.all.map(\.chainID))
-                let remoteTokens = try await SafeAPI.assets(ids: assetIDs)
+            if !missingAssetIDs.isEmpty {
+                let availableChainIDs = Web3AddressDAO.shared.chainIDs(walletID: walletID)
+                let remoteTokens = try await SafeAPI.assets(ids: missingAssetIDs)
                 for token in remoteTokens where availableChainIDs.contains(token.chainID) {
                     let web3Token = Web3Token(
                         walletID: walletID,

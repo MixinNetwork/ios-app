@@ -53,7 +53,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
     }
     
     func load(digest: WalletDigest, hasSecret: Bool) {
-        var tags: [Tag]
+        var tags: [Wallet.Tag]
         switch digest.wallet {
         case .privacy:
             titleLabel.text = R.string.localizable.privacy_wallet()
@@ -123,11 +123,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             titleLabel.text = wallet.name
             iconImageView.isHidden = false
             iconImageView.image = R.image.safe_vault()
-            tags = if let tag = wallet.localizedRole {
-                [.plain(tag)]
-            } else {
-                []
-            }
+            tags = [.role(wallet.role.localizedDescription)]
             loadProportions(
                 tokens: digest.tokens,
                 placeholder: .safeVault(chainID: wallet.chainID),
@@ -145,12 +141,7 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
 
 extension WalletCell {
     
-    private enum Tag {
-        case plain(String)
-        case warning(String)
-    }
-    
-    private func load(tags: [Tag]) {
+    private func load(tags: [Wallet.Tag]) {
         if tagLabels.count > tags.count {
             for label in tagLabels.suffix(tagLabels.count - tags.count) {
                 label.removeFromSuperview()
@@ -180,6 +171,10 @@ extension WalletCell {
             case .warning(let text):
                 label.backgroundColor = R.color.market_red()!.withAlphaComponent(0.2)
                 label.textColor = R.color.market_red()
+                label.text = text
+            case .role(let text):
+                label.backgroundColor = UIColor(displayP3RgbValue: 0xFFAA00).withAlphaComponent(0.6)
+                label.textColor = .white
                 label.text = text
             }
         }

@@ -45,3 +45,13 @@ extension Wallet {
     }
     
 }
+
+extension Wallet {
+    
+    enum Tag {
+        case plain(String)
+        case warning(String)
+        case role(String)
+    }
+    
+}

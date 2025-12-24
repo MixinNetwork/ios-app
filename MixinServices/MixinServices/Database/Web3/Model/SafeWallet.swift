@@ -18,7 +18,7 @@ public struct SafeWallet: Codable {
     public let name: String
     public let createdAt: String
     public let updatedAt: String
-    public let role: UnknownableEnum<SafeAccount.Role>
+    public let role: UnknownableEnum<SafeRole>
     public let chainID: String
     public let address: String
     public let uri: String

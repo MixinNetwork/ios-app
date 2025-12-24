@@ -38,9 +38,4 @@ extension SafeAccount {
         
     }
     
-    public enum Role: String, Codable {
-        case owner = "owner"
-        case member = "accountant"
-    }
-    
 }

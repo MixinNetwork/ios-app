@@ -161,30 +161,32 @@ enum Web3AddressValidator {
         assetID: String,
         destination: String,
     ) async throws -> (address: String, label: AddressLabel?) {
-        if let entry = DepositEntryDAO.shared.primaryEntry(ofChainWith: chainID), entry.destination == destination {
+        let response = try await ExternalAPI.checkAddress(
+            chainID: chainID,
+            assetID: assetID,
+            destination: destination,
+            tag: nil
+        )
+        guard destination.lowercased() == response.destination.lowercased() else {
+            throw ValidationError.mismatchedDestination
+        }
+        guard response.tag.isNilOrEmpty else {
+            throw ValidationError.mismatchedTag
+        }
+        if let entry = DepositEntryDAO.shared.primaryEntry(ofChainWith: chainID),
+           entry.destination == response.destination
+        {
             return (address: entry.destination, label: .wallet(.privacy))
-        } else if let wallet = Web3WalletDAO.shared.wallet(destination: destination),
+        } else if let wallet = Web3WalletDAO.shared.wallet(destination: response.destination),
                   let address = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chainID)
         {
             return (address: address.destination, label: .wallet(.common(wallet)))
-        } else if let wallet = SafeWalletDAO.shared.wallet(safeAddress: destination) {
-            return (address: destination, label: .wallet(.safe(wallet)))
-        } else if let address = AddressDAO.shared.getAddress(chainId: chainID, destination: destination, tag: "") {
+        } else if let wallet = SafeWalletDAO.shared.wallet(safeAddress: response.destination) {
+            return (address: response.destination, label: .wallet(.safe(wallet)))
+        } else if let address = AddressDAO.shared.address(chainID: chainID, destination: response.destination, tag: "") {
             return (address: address.destination, label: .addressBook(address.label))
         } else {
-            let response = try await ExternalAPI.checkAddress(
-                chainID: chainID,
-                assetID: assetID,
-                destination: destination,
-                tag: nil
-            )
-            guard destination.lowercased() == response.destination.lowercased() else {
-                throw ValidationError.mismatchedDestination
-            }
-            guard response.tag.isNilOrEmpty else {
-                throw ValidationError.mismatchedTag
-            }
-            return (address: destination, label: nil)
+            return (address: response.destination, label: nil)
         }
     }
     

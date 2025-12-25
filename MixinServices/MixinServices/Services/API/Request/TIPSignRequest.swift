@@ -8,8 +8,8 @@ struct TIPSignRequest: Encodable {
         case userPublicKey
         case signerIdentity
         case esum
-        case userPkBytes
-        case cryptoEncrypt
+        case userPkString(NSError)
+        case cryptoEncrypt(NSError?)
     }
     
     enum CodingKeys: CodingKey {
@@ -53,9 +53,7 @@ struct TIPSignRequest: Encodable {
         guard let esum = SHA3_256.hash(data: ephemeral + signerIdentity) else {
             throw InitError.esum
         }
-        guard let userPkBytes = userPk.publicKeyBytes() else {
-            throw InitError.userPkBytes
-        }
+        let userPkBytes = try userPk.publicKeyBytes()
         
         var msg = userPkBytes + esum + nonce.data(endianness: .big) + grace.data(endianness: .big)
         if let assignee = assignee {
@@ -63,7 +61,10 @@ struct TIPSignRequest: Encodable {
         }
         let sig = try userSk.sign(msg).hexEncodedString()
         
-        let userPkString = userPk.publicKeyString()
+        let userPkString = userPk.publicKeyString(&error)
+        if let error {
+            throw InitError.userPkString(error)
+        }
         let watcherString = watcher.hexEncodedString()
         let signData = SignData(identity: userPkString,
                                 assignee: assignee?.hexEncodedString(),
@@ -73,8 +74,8 @@ struct TIPSignRequest: Encodable {
                                 grace: grace,
                                 rotate: nil)
         let signJSON = try JSONEncoder.default.encode(signData)
-        guard let cipher = TipEncrypt(signerPk, userSk, signJSON) else {
-            throw InitError.cryptoEncrypt
+        guard let cipher = TipEncrypt(signerPk, userSk, signJSON, &error), error == nil else {
+            throw InitError.cryptoEncrypt(error)
         }
         
         self.id = id

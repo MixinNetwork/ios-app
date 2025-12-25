@@ -251,11 +251,14 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                     destination = primaryEntry.destination
                 }
                 Logger.general.info(category: "Buy", message: "Buy \(amount) \(token.symbol) with \(currency), dst: \(destination)")
+                let account = LoginManager.shared.account
                 let url = try await RouteAPI.rampURL(
                     amount: amount,
                     assetID: token.assetID,
                     currency: currency,
-                    destination: destination
+                    destination: destination,
+                    phoneVerifiedAt: account?.phoneVerifiedAt,
+                    phone: account?.phone,
                 )
                 Logger.general.info(category: "Buy", message: "Redirect to \(url)")
                 await MainActor.run {

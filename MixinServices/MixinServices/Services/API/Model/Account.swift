@@ -26,6 +26,7 @@ public struct Account {
     public let biography: String
     public let avatarURL: String
     public let phone: String?
+    public let phoneVerifiedAt: String?
     public let authenticationToken: String
     public let codeID: String
     public let codeURL: String
@@ -78,6 +79,7 @@ extension Account: Codable {
         case biography
         case avatarURL = "avatar_url"
         case phone
+        case phoneVerifiedAt = "phone_verified_at"
         case authenticationToken = "authentication_token"
         case codeID = "code_id"
         case codeURL = "code_url"
@@ -112,6 +114,7 @@ extension Account: Codable {
         biography = try container.decodeIfPresent(String.self, forKey: .biography) ?? ""
         avatarURL = try container.decodeIfPresent(String.self, forKey: .avatarURL) ?? ""
         phone = try container.decodeIfPresent(String.self, forKey: .phone)
+        phoneVerifiedAt = try container.decodeIfPresent(String.self, forKey: .phoneVerifiedAt)
         authenticationToken = try container.decodeIfPresent(String.self, forKey: .authenticationToken) ?? ""
         codeID = try container.decodeIfPresent(String.self, forKey: .codeID) ?? ""
         codeURL = try container.decodeIfPresent(String.self, forKey: .codeURL) ?? ""

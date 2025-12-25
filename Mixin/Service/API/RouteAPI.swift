@@ -663,20 +663,29 @@ extension RouteAPI {
         amount: String,
         assetID: String,
         currency: String,
-        destination: String
+        destination: String,
+        phoneVerifiedAt: String?,
+        phone: String?,
     ) async throws -> URL {
         struct Response: Decodable {
             let url: URL
         }
+        var parameters = [
+            "amount": amount,
+            "asset_id": assetID,
+            "currency": currency,
+            "destination": destination,
+        ]
+        if let phoneVerifiedAt {
+            parameters["phone_verified_at"] = phoneVerifiedAt
+        }
+        if let phone {
+            parameters["phone"] = phone
+        }
         let response: Response = try await request(
             method: .post,
             path: "/ramp/weburl",
-            with: [
-                "amount": amount,
-                "asset_id": assetID,
-                "currency": currency,
-                "destination": destination,
-            ]
+            with: parameters
         )
         return response.url
     }

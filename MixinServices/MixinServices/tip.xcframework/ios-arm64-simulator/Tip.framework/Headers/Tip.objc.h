@@ -22,8 +22,8 @@
 
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
-- (NSData* _Nullable)publicKeyBytes;
-- (NSString* _Nonnull)publicKeyString;
+- (NSData* _Nullable)publicKeyBytes:(NSError* _Nullable* _Nullable)error;
+- (NSString* _Nonnull)publicKeyString:(NSError* _Nullable* _Nullable)error;
 - (BOOL)verify:(NSData* _Nullable)msg sig:(NSData* _Nullable)sig error:(NSError* _Nullable* _Nullable)error;
 @end
 
@@ -33,7 +33,8 @@
 
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
-- (NSData* _Nullable)privateKeyBytes;
+- (TipScalar* _Nullable)clone;
+- (NSData* _Nullable)privateKeyBytes:(NSError* _Nullable* _Nullable)error;
 - (TipPoint* _Nullable)publicKey;
 - (void)setBytes:(NSData* _Nullable)b;
 - (NSData* _Nullable)sign:(NSData* _Nullable)msg error:(NSError* _Nullable* _Nullable)error;
@@ -57,11 +58,11 @@
 - (TipScalar* _Nullable)scalar;
 @end
 
-FOUNDATION_EXPORT NSData* _Nullable TipDecrypt(TipPoint* _Nullable pub, TipScalar* _Nullable priv, NSData* _Nullable b);
+FOUNDATION_EXPORT NSData* _Nullable TipDecrypt(TipPoint* _Nullable pub, TipScalar* _Nullable priv, NSData* _Nullable b, NSError* _Nullable* _Nullable error);
 
-FOUNDATION_EXPORT NSData* _Nullable TipEcdh(TipPoint* _Nullable point, TipScalar* _Nullable scalar);
+FOUNDATION_EXPORT NSData* _Nullable TipEcdh(TipPoint* _Nullable point, TipScalar* _Nullable scalar, NSError* _Nullable* _Nullable error);
 
-FOUNDATION_EXPORT NSData* _Nullable TipEncrypt(TipPoint* _Nullable pub, TipScalar* _Nullable priv, NSData* _Nullable b);
+FOUNDATION_EXPORT NSData* _Nullable TipEncrypt(TipPoint* _Nullable pub, TipScalar* _Nullable priv, NSData* _Nullable b, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT TipSuiteBn256* _Nullable TipNewSuiteBn256(void);
 

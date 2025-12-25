@@ -51,9 +51,11 @@ FOUNDATION_EXPORT NSString* _Nonnull BlockchainExportEvmPrivateKey(NSString* _Nu
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainExportSolanaPrivateKey(NSString* _Nullable mnemonic, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 
-FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateBitcoinSegwitAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateBitcoinSegwitAddress(NSString* _Nullable seed, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateBitcoinTaprootAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
+
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateDogecoinAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEthereumAddress(NSString* _Nullable seed, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 
@@ -61,11 +63,15 @@ FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEvmAddressFromMnemonic(NS
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateEvmAddressFromPrivateKey(NSString* _Nullable privateKey, NSError* _Nullable* _Nullable error);
 
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateLitecoinAddress(NSString* _Nullable seed, NSError* _Nullable* _Nullable error);
+
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddress(NSString* _Nullable seed, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddressFromMnemonic(NSString* _Nullable mnemonic, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateSolanaAddressFromPrivateKey(NSString* _Nullable privateKey, NSError* _Nullable* _Nullable error);
+
+FOUNDATION_EXPORT NSString* _Nonnull BlockchainGenerateTronAddress(NSString* _Nullable seed, NSString* _Nullable path, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT BOOL BlockchainIsMnemonicValid(NSString* _Nullable mnemonic);
 

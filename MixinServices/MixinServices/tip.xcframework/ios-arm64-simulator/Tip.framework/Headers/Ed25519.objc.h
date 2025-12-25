@@ -11,9 +11,9 @@
 #include "Universe.objc.h"
 
 
-FOUNDATION_EXPORT NSData* _Nullable Ed25519GenerateKey(void);
+FOUNDATION_EXPORT NSData* _Nullable Ed25519GenerateKey(NSError* _Nullable* _Nullable error);
 
-FOUNDATION_EXPORT NSData* _Nullable Ed25519NewKeyFromSeed(NSData* _Nullable seed);
+FOUNDATION_EXPORT NSData* _Nullable Ed25519NewKeyFromSeed(NSData* _Nullable seed, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSData* _Nullable Ed25519PublicKeyToCurve25519(NSData* _Nullable pub, NSError* _Nullable* _Nullable error);
 

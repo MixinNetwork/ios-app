@@ -5,6 +5,7 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
     
     let decimalBalance: Decimal
     let decimalUSDPrice: Decimal
+    let isMalicious: Bool
     
     private(set) lazy var decimalUSDBalance = decimalBalance * decimalUSDPrice
     private(set) lazy var localizedFiatMoneyPrice = localizeFiatMoneyPrice()
@@ -12,9 +13,10 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
     private(set) lazy var localizedFiatMoneyBalance = localizeFiatMoneyBalance()
     private(set) lazy var estimatedFiatMoneyBalance = estimateFiatMoneyBalance()
     
-    init(token: SwapToken, balance: Decimal, usdPrice: Decimal) {
+    init(token: SwapToken, balance: Decimal, usdPrice: Decimal, isMalicious: Bool) {
         self.decimalBalance = balance
         self.decimalUSDPrice = usdPrice
+        self.isMalicious = isMalicious
         super.init(
             address: token.address,
             assetID: token.assetID,
@@ -33,6 +35,7 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
         }
         self.decimalBalance = i.decimalBalance
         self.decimalUSDPrice = i.decimalUSDPrice
+        self.isMalicious = (i as? MaliciousDistinguishable)?.isMalicious ?? false
         super.init(
             address: i.assetKey,
             assetID: i.assetID,

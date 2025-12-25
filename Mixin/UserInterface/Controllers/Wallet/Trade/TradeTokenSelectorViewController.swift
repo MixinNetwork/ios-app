@@ -90,7 +90,7 @@ class TradeTokenSelectorViewController: ChainCategorizedTokenSelectorViewControl
     
     override func configureTokenCell(_ cell: TradeTokenCell, withToken token: BalancedSwapToken) {
         cell.iconView.setIcon(swappableToken: token)
-        cell.maliciousWarningImageView.isHidden = true
+        cell.maliciousWarningImageView.isHidden = !token.isMalicious
         cell.titleLabel.text = token.name
         cell.subtitleLabel.text = token.localizedBalanceWithSymbol
         if let tag = token.chainTag {

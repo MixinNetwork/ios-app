@@ -169,10 +169,16 @@ final class Web3TradeViewController: TradeViewController {
                 BalancedSwapToken(
                     token: token,
                     balance: item.decimalBalance,
-                    usdPrice: marketPrice ?? item.decimalUSDPrice
+                    usdPrice: marketPrice ?? item.decimalUSDPrice,
+                    isMalicious: item.isMalicious,
                 )
             } else {
-                BalancedSwapToken(token: token, balance: 0, usdPrice: 0)
+                BalancedSwapToken(
+                    token: token,
+                    balance: 0,
+                    usdPrice: 0,
+                    isMalicious: false,
+                )
             }
         }
     }

@@ -63,6 +63,7 @@ final class WalletSummaryValueCell: UICollectionViewCell {
             middleAssetWrapperView.alpha = 0
             rightAssetWrapperView.alpha = 0
         case 2:
+            leftAssetSampleImageView.image = R.image.wallet.token_sample_primary()
             leftAssetSymbolLabel.text = components[0].symbol.localized
             leftAssetPercentLabel.text = NumberFormatter.simplePercentage.string(decimal: components[0].percentage)
             middleAssetWrapperView.alpha = 1
@@ -70,6 +71,7 @@ final class WalletSummaryValueCell: UICollectionViewCell {
             middleAssetPercentLabel.text = NumberFormatter.simplePercentage.string(decimal: components[1].percentage)
             rightAssetWrapperView.alpha = 0
         default:
+            leftAssetSampleImageView.image = R.image.wallet.token_sample_primary()
             leftAssetSymbolLabel.text = components[0].symbol.localized
             leftAssetPercentLabel.text = NumberFormatter.simplePercentage.string(decimal: components[0].percentage)
             middleAssetWrapperView.alpha = 1

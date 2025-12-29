@@ -34,7 +34,16 @@ extension WalletDisplayCategory {
     static func categorize(digests: [WalletDigest]) -> CategorizedWalletDigests {
         // Empty arrays for category ordering
         var results: CategorizedWalletDigests = [
-            .all: digests,
+            .all: digests.filter { digest in
+                switch digest.wallet {
+                case .privacy:
+                    true
+                case .common(let wallet):
+                    wallet.category.knownCase != .watchAddress
+                case .safe(let vault):
+                    false
+                }
+            },
             .safe: [],
             .created: [],
             .imported: [],
@@ -66,7 +75,14 @@ extension WalletDisplayCategory {
         }
         for key in results.keys {
             results[key]?.sort { one, another in
-                one.wallet.compare(another.wallet) != .orderedDescending
+                switch (one.wallet, another.wallet) {
+                case (.privacy, _):
+                    true
+                case (_, .privacy):
+                    false
+                default:
+                    one.usdBalanceSum > another.usdBalanceSum
+                }
             }
         }
         return results

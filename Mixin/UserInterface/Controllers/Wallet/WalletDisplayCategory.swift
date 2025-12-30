@@ -31,9 +31,9 @@ enum WalletDisplayCategory: Int {
             R.string.localizable.wallet_summary_tip_all()
         case .safe:
             R.string.localizable.wallet_summary_tip_safe()
-        case .created:
+        case .created, .imported:
             R.string.localizable.wallet_summary_tip_created()
-        case .imported, .watching:
+        case .watching:
             nil
         }
     }

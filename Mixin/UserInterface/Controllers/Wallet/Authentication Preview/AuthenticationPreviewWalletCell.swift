@@ -39,7 +39,7 @@ final class AuthenticationPreviewWalletCell: UITableViewCell {
                     label.backgroundColor = R.color.market_red()!.withAlphaComponent(0.2)
                     label.textColor = R.color.market_red()
                     label.text = text
-                case .role(let text):
+                case .safeOwner(let text):
                     label.backgroundColor = UIColor(displayP3RgbValue: 0xFFAA00).withAlphaComponent(0.6)
                     label.textColor = .white
                     label.text = text

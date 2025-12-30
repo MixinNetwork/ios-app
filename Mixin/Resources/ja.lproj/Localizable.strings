@@ -60,6 +60,7 @@
 "address_validity_reminder" = "The address %1$@(%2$@) has not been used for over %3$@ days. Please check if the address is still valid.";
 "addresses" = "Addresses";
 "admin" = "管理者";
+"advanced_trade" = "Advanced Trade";
 "agree_hint" = "%@と%@に同意し次へ進む";
 "albums" = "アルバム";
 "alert" = "Alert";

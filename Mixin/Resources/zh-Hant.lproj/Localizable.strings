@@ -60,6 +60,7 @@
 "address_validity_reminder" = "您已經超過 %3$@ 天沒有使用地址 %1$@（%2$@），請注意檢查地址是否仍然有效。";
 "addresses" = "地址";
 "admin" = "管理員";
+"advanced_trade" = "掛單交易";
 "agree_hint" = "繼續使用即表示你同意 %@ 和 %@";
 "albums" = "相簿";
 "alert" = "價格預警";

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,49 +18,72 @@
                 <rect key="frame" x="0.0" y="0.0" width="353" height="36"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="nGk-zF-xIH">
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="RRI-zq-bIF">
                         <rect key="frame" x="0.0" y="0.0" width="353" height="290"/>
                         <subviews>
-                            <button hidden="YES" opaque="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="MYw-ec-hLb" userLabel="Footer Info Button">
-                                <rect key="frame" x="0.0" y="177.66666666666666" width="0.0" height="29"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <state key="normal" title=" "/>
-                            </button>
-                            <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Fq1-TC-3qP" customClass="CircularProgressView" customModule="Mixin" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="186.66666666666666" width="11" height="11"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="11" id="dp2-zx-dZ8"/>
-                                    <constraint firstAttribute="width" secondItem="Fq1-TC-3qP" secondAttribute="height" priority="999" id="hDi-pF-xLo"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="HFb-eQ-FOV">
-                                <rect key="frame" x="16" y="128" width="321" height="128"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HRI-kO-qUo" userLabel="Swap Price Button">
-                                <rect key="frame" x="0.0" y="182" width="0.0" height="20"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="HRI-kO-qUo" secondAttribute="height" priority="999" id="F7p-3r-veI"/>
-                                    <constraint firstAttribute="height" constant="20" id="zQ8-rk-CXs"/>
-                                </constraints>
-                                <color key="tintColor" name="text_tertiary"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" image="swap_price"/>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="nGk-zF-xIH">
+                                <rect key="frame" x="0.0" y="0.0" width="353" height="290"/>
+                                <subviews>
+                                    <button hidden="YES" opaque="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="MYw-ec-hLb" userLabel="Footer Info Button">
+                                        <rect key="frame" x="0.0" y="177.66666666666666" width="0.0" height="29"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <state key="normal" title=" "/>
+                                    </button>
+                                    <view hidden="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Fq1-TC-3qP" customClass="CircularProgressView" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="186.66666666666666" width="11" height="11"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="11" id="dp2-zx-dZ8"/>
+                                            <constraint firstAttribute="width" secondItem="Fq1-TC-3qP" secondAttribute="height" priority="999" id="hDi-pF-xLo"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="HFb-eQ-FOV">
+                                        <rect key="frame" x="16" y="128" width="321" height="128"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HRI-kO-qUo" userLabel="Swap Price Button">
+                                        <rect key="frame" x="0.0" y="182" width="0.0" height="20"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="HRI-kO-qUo" secondAttribute="height" priority="999" id="F7p-3r-veI"/>
+                                            <constraint firstAttribute="height" constant="20" id="zQ8-rk-CXs"/>
+                                        </constraints>
+                                        <color key="tintColor" name="text_tertiary"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" image="swap_price"/>
+                                    </button>
+                                </subviews>
+                                <edgeInsets key="layoutMargins" top="10" left="16" bottom="0.0" right="16"/>
+                            </stackView>
+                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LUH-yI-aBO">
+                                <rect key="frame" x="0.0" y="0.0" width="353" height="0.0"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M9a-kq-ane">
+                                        <rect key="frame" x="0.0" y="0.0" width="131.33333333333334" height="0.0"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Advanced Trade">
+                                            <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="14"/>
+                                        </buttonConfiguration>
+                                    </button>
+                                    <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="mP7-IV-npt">
+                                        <rect key="frame" x="131.33333333333337" y="0.0" width="221.66666666666663" height="0.0"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                </subviews>
+                            </stackView>
                         </subviews>
-                        <edgeInsets key="layoutMargins" top="10" left="16" bottom="0.0" right="16"/>
                     </stackView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="nGk-zF-xIH" firstAttribute="leading" secondItem="TJ1-Gc-Ki3" secondAttribute="leading" id="4GJ-4N-yFv"/>
-                    <constraint firstItem="nGk-zF-xIH" firstAttribute="top" secondItem="TJ1-Gc-Ki3" secondAttribute="top" id="CbL-Xn-ky9"/>
-                    <constraint firstAttribute="trailing" secondItem="nGk-zF-xIH" secondAttribute="trailing" id="DUy-c6-deH"/>
-                    <constraint firstAttribute="bottom" secondItem="nGk-zF-xIH" secondAttribute="bottom" id="Dhg-3n-n9O"/>
+                    <constraint firstItem="RRI-zq-bIF" firstAttribute="top" secondItem="TJ1-Gc-Ki3" secondAttribute="top" id="Rg8-iy-Nff"/>
+                    <constraint firstAttribute="bottom" secondItem="RRI-zq-bIF" secondAttribute="bottom" id="ben-jJ-RS6"/>
+                    <constraint firstAttribute="trailing" secondItem="RRI-zq-bIF" secondAttribute="trailing" id="j0G-b8-79K"/>
+                    <constraint firstItem="RRI-zq-bIF" firstAttribute="leading" secondItem="TJ1-Gc-Ki3" secondAttribute="leading" id="zcz-Ac-5IN"/>
                 </constraints>
             </collectionViewCellContentView>
             <connections>
+                <outlet property="advancedTradingHintButton" destination="M9a-kq-ane" id="s1Y-Xh-mtF"/>
+                <outlet property="advancedTradingHintStackView" destination="LUH-yI-aBO" id="uab-63-rFu"/>
                 <outlet property="footerInfoButton" destination="MYw-ec-hLb" id="5UC-TA-bcl"/>
                 <outlet property="footerInfoProgressView" destination="Fq1-TC-3qP" id="TmA-tk-W7x"/>
                 <outlet property="footerSpacingView" destination="HFb-eQ-FOV" id="Tsh-2L-Pry"/>
@@ -72,7 +95,7 @@
     <resources>
         <image name="swap_price" width="20" height="20"/>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

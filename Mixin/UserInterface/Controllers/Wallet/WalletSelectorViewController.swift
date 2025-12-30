@@ -306,20 +306,18 @@ final class WalletSelectorViewController: UIViewController {
                 }
             }
             
+            var sections: [Section]
             let categorizedDigests: OrderedDictionary<WalletDisplayCategory, [WalletDigest]>
             switch intent {
             case .pickSwapOrderFilter:
+                sections = [.wallet]
                 categorizedDigests = [.all: digests]
             case .pickSender, .pickReceiver:
+                sections = [.walletCategory, .wallet]
                 categorizedDigests = WalletDisplayCategory.categorize(digests: digests)
                     .filter { category, wallets in
                         !wallets.isEmpty
                     }
-            }
-            
-            var sections: [Section] = [.wallet]
-            if categorizedDigests.keys.count > 1 {
-                sections.insert(.walletCategory, at: 0)
             }
             
             DispatchQueue.main.async {

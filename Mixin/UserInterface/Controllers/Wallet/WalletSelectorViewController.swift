@@ -329,6 +329,11 @@ final class WalletSelectorViewController: UIViewController {
                 }
                 self.sections = sections
                 self.walletDigests = categorizedDigests
+                if categorizedDigests[self.selectedCategory] == nil,
+                   let firstCategory = categorizedDigests.keys.first
+                {
+                    self.selectedCategory = firstCategory
+                }
                 self.secretAvailableWalletIDs = secretAvailableWalletIDs
                 if let keyword = self.searchingKeyword {
                     self.search(keyword: keyword)

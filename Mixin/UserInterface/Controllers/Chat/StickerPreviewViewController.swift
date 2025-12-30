@@ -49,15 +49,42 @@ final class StickerPreviewViewController: UIViewController {
         updatePreferredContentSizeHeight()
         stickerView.load(message: message)
         stickerView.startAnimating()
-        
-        let category: AlbumCategory?
-        if let assetCategory = message.assetCategory {
-            category = AlbumCategory(rawValue: assetCategory)
-        } else {
-            category = nil
-        }
-        if category != AlbumCategory.PERSONAL, let stickerId = message.stickerId {
-            loadAlbum(stickerId: stickerId)
+        if let stickerId = message.stickerId {
+            DispatchQueue.global().async { [weak self] in
+                if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId, category: .SYSTEM) {
+                    let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
+                    let albumItem = AlbumItem(album: album, stickers: stickers)
+                    DispatchQueue.main.async {
+                        self?.reloadData(albumItem: albumItem)
+                    }
+                }
+                if case let .success(response) = StickerAPI.sticker(stickerId: stickerId) {
+                    if let sticker = StickerDAO.shared.insertOrUpdateSticker(sticker: response) {
+                        DispatchQueue.main.async {
+                            self?.stickerView.load(sticker: sticker)
+                        }
+                    }
+                    if let albumID = response.albumId, !albumID.isEmpty {
+                        DispatchQueue.main.async {
+                            self?.activityIndicatorView.startAnimating()
+                        }
+                        if case let .success(album) = StickerAPI.album(albumId: albumID),
+                           album.category != AlbumCategory.PERSONAL.rawValue,
+                           case let .success(stickers) = StickerAPI.stickers(albumId: albumID)
+                        {
+                            AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                            let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumID)
+                            let albumItem = AlbumItem(album: album, stickers: stickers)
+                            DispatchQueue.main.async {
+                                self?.reloadData(albumItem: albumItem)
+                            }
+                        }
+                        DispatchQueue.main.async {
+                            self?.activityIndicatorView.stopAnimating()
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -115,54 +142,24 @@ extension StickerPreviewViewController {
         return min(maxHeight, contentHeight)
     }
     
-    private func loadAlbum(stickerId: String) {
-        DispatchQueue.global().async { [weak self] in
-            var albumItem: AlbumItem?
-            if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId, category: .SYSTEM) {
-                albumItem = AlbumItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))
-            } else {
-                let albumId: String?
-                if let id = StickerDAO.shared.getSticker(stickerId: stickerId)?.albumId, !id.isEmpty {
-                    albumId = id
-                } else if case let .success(sticker) = StickerAPI.sticker(stickerId: stickerId) {
-                    albumId = sticker.albumId
-                } else {
-                    albumId = nil
-                }
-                if let albumId = albumId, !albumId.isEmpty {
-                    DispatchQueue.main.async {
-                        self?.activityIndicatorView.startAnimating()
-                    }
-                    if case let .success(album) = StickerAPI.album(albumId: albumId),
-                       album.category != AlbumCategory.PERSONAL.rawValue,
-                       case let .success(stickers) = StickerAPI.stickers(albumId: albumId) {
-                        AlbumDAO.shared.insertOrUpdateAblum(album: album)
-                        let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
-                        albumItem = AlbumItem(album: album, stickers: stickers)
-                    }
-                }
+    private func reloadData(albumItem: AlbumItem?) {
+        if let albumItem = albumItem, !albumItem.stickers.isEmpty {
+            self.albumItem = albumItem
+            titleLabel.text = albumItem.album.name
+            updateStickerActionButton()
+            stickersContentView.isHidden = false
+            collectionView.isHidden = false
+            collectionView.reloadData()
+            updatePreferredContentSizeHeight()
+            if let stickerID = message.stickerId,
+               let index = albumItem.stickers.firstIndex(where: { $0.stickerId == stickerID })
+            {
+                let indexPath = IndexPath(item: index, section: 0)
+                collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
             }
-            DispatchQueue.main.async {
-                guard let self = self else {
-                    return
-                }
-                self.activityIndicatorView.stopAnimating()
-                if let albumItem = albumItem, !albumItem.stickers.isEmpty {
-                    self.albumItem = albumItem
-                    self.titleLabel.text = albumItem.album.name
-                    self.updateStickerActionButton()
-                    self.stickersContentView.isHidden = false
-                    self.collectionView.isHidden = false
-                    self.collectionView.reloadData()
-                    self.updatePreferredContentSizeHeight()
-                    if let index = albumItem.stickers.firstIndex(where: { $0.stickerId == stickerId }) {
-                        self.collectionView.selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: .centeredHorizontally)
-                    }
-                } else {
-                    self.stickersContentView.isHidden = true
-                    self.collectionView.isHidden = true
-                }
-            }
+        } else {
+            stickersContentView.isHidden = true
+            collectionView.isHidden = true
         }
     }
     

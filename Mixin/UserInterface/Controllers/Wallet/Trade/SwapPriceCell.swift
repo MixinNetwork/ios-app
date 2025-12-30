@@ -32,6 +32,7 @@ final class SwapPriceCell: UICollectionViewCell {
             config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
             return config
         }()
+        advancedTradingHintButton.tintColor = R.color.theme()
     }
     
 }

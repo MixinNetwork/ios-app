@@ -1657,6 +1657,7 @@
 "wallet_pin_tops_desc" = "Пожалуйста, помните, что PIN-код невозможно восстановить, если он утерян. PIN-код основан на протоколе Throttled Identity Protocol, который представляет собой децентрализованный протокол получения ключей. Прочтите документ, чтобы узнать больше.";
 "wallet_refresh_address_failed" = "Комиссия за снятие была изменена, и обновление не удалось, попробуйте еще раз.";
 "wallet_summary_tip_all" = "Safes, watch wallets, and hidden assets are excluded from the total";
+"wallet_summary_tip_created" = "Hidden assets are excluded from the total";
 "wallet_summary_tip_safe" = "Co-managed Safes are excluded from the total";
 "wallet_transaction_continue_count_down" = "Продолжить (%d)";
 "wallet_transaction_tip" = "Вы уверены, что хотите перевести %3$@ на сумму %2$@ на %1$@?";

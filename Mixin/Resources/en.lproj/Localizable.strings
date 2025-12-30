@@ -1657,6 +1657,7 @@
 "wallet_pin_tops_desc" = "Please remember the PIN is unrecoverable if lost. The PIN is based on the Throttled Identity Protocol, which is the decentralized key derivation protocol, read the document to learn more.";
 "wallet_refresh_address_failed" = "The withdrawal fee has been changed and the refresh fails, please try again.";
 "wallet_summary_tip_all" = "Safes, watch wallets, and hidden assets are excluded from the total";
+"wallet_summary_tip_created" = "Hidden assets are excluded from the total";
 "wallet_summary_tip_safe" = "Co-managed Safes are excluded from the total";
 "wallet_transaction_continue_count_down" = "Continue (%d)";
 "wallet_transaction_tip" = "Are you sure you want to transfer %3$@ worth %2$@ to %1$@?";

@@ -33,9 +33,11 @@ final class WalletSummaryViewController: UIViewController {
     private var secretAvailableWalletIDs: Set<String> = []
     private var unexpiredPlan: User.Membership.Plan?
     private var isLoadingSafeWallets = true
+    private var summaryTip: String?
     
-    private var selectedCategory = WalletDisplayCategory(rawValue: AppGroupUserDefaults.Wallet.lastSelectedCategory) ?? .all {
+    private var selectedCategory: WalletDisplayCategory {
         didSet {
+            summaryTip = selectedCategory.summaryTip
             AppGroupUserDefaults.Wallet.lastSelectedCategory = selectedCategory.rawValue
         }
     }
@@ -47,6 +49,18 @@ final class WalletSummaryViewController: UIViewController {
     }
     
     private weak var tipsPageControl: UIPageControl?
+    
+    init() {
+        let category = WalletDisplayCategory(rawValue: AppGroupUserDefaults.Wallet.lastSelectedCategory) ?? .all
+        self.summaryTip = category.summaryTip
+        self.selectedCategory = category
+        let nib = R.nib.walletSummaryView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -374,12 +388,7 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
             if let summary = pages[selectedCategory]?.summary {
                 cell.load(summary: summary)
             }
-            switch selectedCategory {
-            case .all, .safe:
-                cell.infoButton.isHidden = false
-            case .created, .imported, .watching:
-                cell.infoButton.isHidden = true
-            }
+            cell.infoButton.isHidden = summaryTip == nil
             cell.delegate = self
             return cell
         case .wallets:
@@ -523,14 +532,7 @@ extension WalletSummaryViewController: WalletSummaryValueCell.Delegate {
         let tipView = R.nib.overlayTipView(withOwner: nil)!
         view.addSubview(tipView)
         tipView.snp.makeEdgesEqualToSuperview()
-        tipView.label.text = switch selectedCategory {
-        case .all:
-            R.string.localizable.wallet_summary_tip_all()
-        case .safe:
-            R.string.localizable.wallet_summary_tip_safe()
-        case .created, .imported, .watching:
-            nil
-        }
+        tipView.label.text = summaryTip
         view.layoutIfNeeded()
         let center = cell.convert(cell.infoButton.center, to: tipView)
         tipView.placeTip(at: center)

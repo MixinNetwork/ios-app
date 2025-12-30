@@ -1258,6 +1258,7 @@
 		94ADE11A2CD809280040A426 /* RecoveryContactView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94ADE1192CD809280040A426 /* RecoveryContactView.xib */; };
 		94ADE11F2CD80AC70040A426 /* ChangeMobileNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ADE11E2CD80AC70040A426 /* ChangeMobileNumberViewController.swift */; };
 		94ADE1242CD80C0B0040A426 /* MobileNumberIntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94ADE1232CD80C0B0040A426 /* MobileNumberIntroductionViewController.swift */; };
+		94B095462F040A1E0093E880 /* StickerPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B095452F040A1E0093E880 /* StickerPreviewView.xib */; };
 		94B0B7462BECD4DE00346AF4 /* CollectibleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B0B7442BECD4DE00346AF4 /* CollectibleCell.swift */; };
 		94B0B7472BECD4DE00346AF4 /* CollectibleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B0B7452BECD4DE00346AF4 /* CollectibleCell.xib */; };
 		94B13FC22B5ED5F9001333BE /* ExploreAggregatedSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B13FC02B5ED5F9001333BE /* ExploreAggregatedSearchViewController.swift */; };
@@ -3044,6 +3045,7 @@
 		94ADE1192CD809280040A426 /* RecoveryContactView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecoveryContactView.xib; sourceTree = "<group>"; };
 		94ADE11E2CD80AC70040A426 /* ChangeMobileNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeMobileNumberViewController.swift; sourceTree = "<group>"; };
 		94ADE1232CD80C0B0040A426 /* MobileNumberIntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileNumberIntroductionViewController.swift; sourceTree = "<group>"; };
+		94B095452F040A1E0093E880 /* StickerPreviewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StickerPreviewView.xib; sourceTree = "<group>"; };
 		94B0B7442BECD4DE00346AF4 /* CollectibleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectibleCell.swift; sourceTree = "<group>"; };
 		94B0B7452BECD4DE00346AF4 /* CollectibleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectibleCell.xib; sourceTree = "<group>"; };
 		94B13FC02B5ED5F9001333BE /* ExploreAggregatedSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreAggregatedSearchViewController.swift; sourceTree = "<group>"; };
@@ -5114,6 +5116,7 @@
 				7C6AD1F426A6794F00E6C41D /* StickersStoreViewController.swift */,
 				7C4E2B0326A9BDAC008190F5 /* StickersEditingViewController.swift */,
 				7CF2FEA526AA89BA00D3A5B3 /* StickersAlbumPreviewViewController.swift */,
+				94B095452F040A1E0093E880 /* StickerPreviewView.xib */,
 				7C4FF5A926AE614C003E39AC /* StickerPreviewViewController.swift */,
 				7B8ED47B21197F220039946B /* RecentStickersViewController.swift */,
 				7B8ED47D21197FF40039946B /* FavoriteStickersViewController.swift */,
@@ -6742,6 +6745,7 @@
 				940389CD2E1D546900A7782D /* NewGroupView.xib in Resources */,
 				7B9A08FD25481A7600E8568D /* MinimizedClipIconView.xib in Resources */,
 				94D07AFF2DF1883D00FDF38E /* MaliciousWarningView.xib in Resources */,
+				94B095462F040A1E0093E880 /* StickerPreviewView.xib in Resources */,
 				94CD47202BECB6F100A3DE10 /* InscriptionView.xib in Resources */,
 				7C53049728FE6F4400567CF6 /* AuthorizationScopePreviewView.xib in Resources */,
 				94CB85D02C6B43A900135641 /* TokenMyBalanceCell.xib in Resources */,

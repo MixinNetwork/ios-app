@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class StickerPreviewViewController: UIViewController {
+final class StickerPreviewViewController: UIViewController {
     
     @IBOutlet weak var stickersContentView: UIView!
     @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
@@ -14,7 +14,9 @@ class StickerPreviewViewController: UIViewController {
     @IBOutlet weak var stickerPreviewViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var stickerPreviewViewTrailingConstraint: NSLayoutConstraint!
     
-    private var message: MessageItem!
+    private let message: MessageItem
+    private let cellReuseIdentifier = "c"
+    
     private var albumItem: AlbumItem?
     
     private lazy var backgroundButton: UIButton = {
@@ -24,16 +26,26 @@ class StickerPreviewViewController: UIViewController {
         return button
     }()
     
-    class func instance(message: MessageItem) -> StickerPreviewViewController {
-        let vc = R.storyboard.chat.sticker_preview()!
-        vc.message = message
-        return vc
+    init(message: MessageItem) {
+        self.message = message
+        let nib = R.nib.stickerPreviewView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.cornerRadius = 13
+        collectionView.register(
+            StickerPreviewItemCell.self,
+            forCellWithReuseIdentifier: cellReuseIdentifier
+        )
+        collectionView.dataSource = self
+        collectionView.delegate = self
         updatePreferredContentSizeHeight()
         stickerView.load(message: message)
         stickerView.startAnimating()
@@ -181,7 +193,7 @@ extension StickerPreviewViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_item_preview, for: indexPath)!
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as! StickerPreviewItemCell
         if let albumItem = albumItem, indexPath.row < albumItem.stickers.count {
             cell.stickerView.load(sticker: albumItem.stickers[indexPath.item])
         }

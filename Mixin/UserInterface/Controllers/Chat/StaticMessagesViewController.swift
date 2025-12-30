@@ -298,7 +298,7 @@ extension StaticMessagesViewController {
                 let vc = TranscriptPreviewViewController(transcriptMessage: message)
                 vc.presentAsChild(of: parent)
             } else if message.category.hasSuffix("_STICKER") {
-                let vc = StickerPreviewViewController.instance(message: message)
+                let vc = StickerPreviewViewController(message: message)
                 vc.presentAsChild(of: self)
             }
         }

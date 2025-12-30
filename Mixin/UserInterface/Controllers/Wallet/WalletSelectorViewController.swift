@@ -49,7 +49,8 @@ final class WalletSelectorViewController: UIViewController {
     private var selections: [Wallet] // Works with Intent.pickSwapOrderFilter
     
     private var sections: [Section] = []
-    private var walletDigests: OrderedDictionary<WalletDisplayCategory, [WalletDigest]> = [:]
+    private var allDigests: [WalletDigest] = []
+    private var categorizedDigests: OrderedDictionary<WalletDisplayCategory, [WalletDigest]> = [:]
     private var selectedCategory: WalletDisplayCategory = .all
     private var secretAvailableWalletIDs: Set<String> = []
     
@@ -306,20 +307,18 @@ final class WalletSelectorViewController: UIViewController {
                 }
             }
             
+            var sections: [Section]
             let categorizedDigests: OrderedDictionary<WalletDisplayCategory, [WalletDigest]>
             switch intent {
             case .pickSwapOrderFilter:
+                sections = [.wallet]
                 categorizedDigests = [.all: digests]
             case .pickSender, .pickReceiver:
+                sections = [.walletCategory, .wallet]
                 categorizedDigests = WalletDisplayCategory.categorize(digests: digests)
                     .filter { category, wallets in
                         !wallets.isEmpty
                     }
-            }
-            
-            var sections: [Section] = [.wallet]
-            if categorizedDigests.keys.count > 1 {
-                sections.insert(.walletCategory, at: 0)
             }
             
             DispatchQueue.main.async {
@@ -328,7 +327,13 @@ final class WalletSelectorViewController: UIViewController {
                     sections.append(.tipsPageControl)
                 }
                 self.sections = sections
-                self.walletDigests = categorizedDigests
+                self.allDigests = digests
+                self.categorizedDigests = categorizedDigests
+                if categorizedDigests[self.selectedCategory] == nil,
+                   let firstCategory = categorizedDigests.keys.first
+                {
+                    self.selectedCategory = firstCategory
+                }
                 self.secretAvailableWalletIDs = secretAvailableWalletIDs
                 if let keyword = self.searchingKeyword {
                     self.search(keyword: keyword)
@@ -343,7 +348,7 @@ final class WalletSelectorViewController: UIViewController {
     private func reloadSelections() {
         if searchResults == nil, let section = sections.firstIndex(of: .walletCategory) {
             let indexPath: IndexPath
-            if let item = walletDigests.index(forKey: selectedCategory) {
+            if let item = categorizedDigests.index(forKey: selectedCategory) {
                 indexPath = IndexPath(item: item, section: section)
             } else {
                 self.selectedCategory = .all
@@ -353,7 +358,7 @@ final class WalletSelectorViewController: UIViewController {
         }
         switch intent {
         case .pickSwapOrderFilter:
-            let digests = searchResults ?? walletDigests[selectedCategory] ?? []
+            let digests = searchResults ?? categorizedDigests[selectedCategory] ?? []
             let selectedWalletIndices = digests.indices.filter { index in
                 selections.contains(digests[index].wallet)
             }
@@ -433,7 +438,7 @@ final class WalletSelectorViewController: UIViewController {
     
     private func search(keyword: String) {
         searchingKeyword = keyword
-        searchResults = (walletDigests[.all] ?? []).filter { digest in
+        searchResults = allDigests.filter { digest in
             digest.wallet.localizedName.lowercased().contains(keyword)
         }
         collectionView.reloadData()
@@ -485,9 +490,9 @@ extension WalletSelectorViewController: UICollectionViewDataSource {
         } else {
             switch sections[section] {
             case .walletCategory:
-                walletDigests.count
+                categorizedDigests.count
             case .wallet:
-                walletDigests[selectedCategory]?.count ?? 0
+                categorizedDigests[selectedCategory]?.count ?? 0
             case .tips:
                 tips.count
             case .tipsPageControl:
@@ -500,7 +505,7 @@ extension WalletSelectorViewController: UICollectionViewDataSource {
         switch section(at: indexPath.section) {
         case .walletCategory:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
-            cell.label.text = walletDigests.keys[indexPath.item].localizedName
+            cell.label.text = categorizedDigests.keys[indexPath.item].localizedName
             return cell
         case .wallet:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet, for: indexPath)!
@@ -513,7 +518,7 @@ extension WalletSelectorViewController: UICollectionViewDataSource {
             let digest = if let searchResults {
                 searchResults[indexPath.row]
             } else {
-                walletDigests[selectedCategory]?[indexPath.row]
+                categorizedDigests[selectedCategory]?[indexPath.row]
             }
             if let digest {
                 let hasSecret = switch digest.wallet {
@@ -564,7 +569,7 @@ extension WalletSelectorViewController: UICollectionViewDelegate {
                     collectionView.deselectItem(at: selectedIndexPath, animated: false)
                 }
             }
-            selectedCategory = walletDigests.keys[indexPath.item]
+            selectedCategory = categorizedDigests.keys[indexPath.item]
             if let section = sections.firstIndex(of: .wallet) {
                 UIView.performWithoutAnimation {
                     let sections = IndexSet(integer: section)
@@ -575,7 +580,7 @@ extension WalletSelectorViewController: UICollectionViewDelegate {
             let digest = if let searchResults {
                 searchResults[indexPath.row]
             } else {
-                walletDigests[selectedCategory]?[indexPath.row]
+                categorizedDigests[selectedCategory]?[indexPath.row]
             }
             guard let digest else {
                 return
@@ -617,7 +622,7 @@ extension WalletSelectorViewController: UICollectionViewDelegate {
             let digest = if let searchResults {
                 searchResults[indexPath.row]
             } else {
-                walletDigests[selectedCategory]?[indexPath.row]
+                categorizedDigests[selectedCategory]?[indexPath.row]
             }
             if let digest, let index = selections.firstIndex(of: digest.wallet) {
                 selections.remove(at: index)

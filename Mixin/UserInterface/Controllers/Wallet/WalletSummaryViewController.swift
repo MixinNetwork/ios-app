@@ -6,11 +6,16 @@ import MixinServices
 final class WalletSummaryViewController: UIViewController {
     
     enum Section: Int, CaseIterable {
-        case summary
         case walletCategories
+        case summary
         case wallets
         case tips
         case tipsPageControl
+    }
+    
+    private struct CategoryPage {
+        let summary: WalletSummary
+        let digests: [WalletDigest]
     }
     
     private enum ReuseIdentifier {
@@ -18,18 +23,21 @@ final class WalletSummaryViewController: UIViewController {
         static let loading = "l"
     }
     
+    private typealias CategorizedPages = OrderedDictionary<WalletDisplayCategory, CategoryPage>
+    
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var addWalletView: BadgeBarButtonView!
     
-    private var summary: WalletSummary?
-    private var digests: OrderedDictionary<WalletDisplayCategory, [WalletDigest]> = [:]
+    private var pages: CategorizedPages = [:]
     private var tips: [WalletTipCell.Content] = []
     private var secretAvailableWalletIDs: Set<String> = []
     private var unexpiredPlan: User.Membership.Plan?
     private var isLoadingSafeWallets = true
+    private var summaryTip: String?
     
-    private var selectedCategory = WalletDisplayCategory(rawValue: AppGroupUserDefaults.Wallet.lastSelectedCategory) ?? .all {
+    private var selectedCategory: WalletDisplayCategory {
         didSet {
+            summaryTip = selectedCategory.summaryTip
             AppGroupUserDefaults.Wallet.lastSelectedCategory = selectedCategory.rawValue
         }
     }
@@ -41,6 +49,18 @@ final class WalletSummaryViewController: UIViewController {
     }
     
     private weak var tipsPageControl: UIPageControl?
+    
+    init() {
+        let category = WalletDisplayCategory(rawValue: AppGroupUserDefaults.Wallet.lastSelectedCategory) ?? .all
+        self.summaryTip = category.summaryTip
+        self.selectedCategory = category
+        let nib = R.nib.walletSummaryView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -66,6 +86,14 @@ final class WalletSummaryViewController: UIViewController {
         )
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { [weak self] (sectionIndex, environment) in
             switch Section(rawValue: sectionIndex)! {
+            case .walletCategories:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .absolute(38))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 15, bottom: 10, trailing: 15)
+                section.orthogonalScrollingBehavior = .continuous
+                return section
             case .summary:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(152))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -74,23 +102,15 @@ final class WalletSummaryViewController: UIViewController {
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20)
                 return section
-            case .walletCategories:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .absolute(38))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 15, bottom: 2, trailing: 15)
-                section.orthogonalScrollingBehavior = .continuous
-                return section
             case .wallets:
-                if let self, let digests = self.digests[self.selectedCategory], !digests.isEmpty {
+                if let self, let digests = self.pages[self.selectedCategory]?.digests, !digests.isEmpty {
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
                     let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
-                    group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: .fixed(5), trailing: nil, bottom: nil)
                     let section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20)
+                    section.interGroupSpacing = 10
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                     return section
                 } else if self?.isLoadingSafeWallets ?? false {
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.3))
@@ -104,9 +124,9 @@ final class WalletSummaryViewController: UIViewController {
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(122))
                     let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
-                    group.edgeSpacing = NSCollectionLayoutEdgeSpacing(leading: nil, top: .fixed(5), trailing: nil, bottom: nil)
                     let section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20)
+                    section.interGroupSpacing = 10
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                     return section
                 }
             case .tips:
@@ -252,12 +272,29 @@ final class WalletSummaryViewController: UIViewController {
             let privacyWalletDigest = TokenDAO.shared.walletDigest()
             let commonWalletDigests = Web3WalletDAO.shared.walletDigests()
             let safeWalletDigests = SafeWalletDAO.shared.walletDigests()
-            let walletDigests = [privacyWalletDigest] + commonWalletDigests + safeWalletDigests
-            let summary = WalletSummary(walletDigests: walletDigests)
-            let categorizedDigests = WalletDisplayCategory.categorize(digests: walletDigests)
-                .filter { category, wallets in
-                    category == .safe || !wallets.isEmpty
+            let pages: CategorizedPages = WalletDisplayCategory.categorize(
+                digests: [privacyWalletDigest] + commonWalletDigests + safeWalletDigests
+            ).reduce(into: [:]) { (results, element) in
+                let (category, allDigests) = element
+                guard category == .safe || !allDigests.isEmpty else {
+                    return
                 }
+                let summarizingDigests = switch category {
+                case .all, .created, .imported, .watching:
+                    allDigests
+                case .safe:
+                    allDigests.filter { digest in
+                        switch digest.wallet {
+                        case .privacy, .common:
+                            false
+                        case .safe(let wallet):
+                            wallet.role == .known(.owner)
+                        }
+                    }
+                }
+                let summary = WalletSummary(digests: summarizingDigests)
+                results[category] = CategoryPage(summary: summary, digests: allDigests)
+            }
             var secretAvailableWalletIDs: Set<String> = Set(
                 AppGroupKeychain.allImportedMnemonics().keys
             )
@@ -265,12 +302,11 @@ final class WalletSummaryViewController: UIViewController {
                 AppGroupKeychain.allImportedPrivateKey().keys
             )
             DispatchQueue.main.async {
-                self.summary = summary
-                self.digests = categorizedDigests
+                self.pages = pages
                 self.secretAvailableWalletIDs = secretAvailableWalletIDs
                 self.unexpiredPlan = LoginManager.shared.account?.membership?.unexpiredPlan
                 self.collectionView.reloadData()
-                if let item = categorizedDigests.keys.firstIndex(of: self.selectedCategory) {
+                if let item = pages.keys.firstIndex(of: self.selectedCategory) {
                     let indexPath = IndexPath(item: item, section: Section.walletCategories.rawValue)
                     self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
                 }
@@ -316,12 +352,12 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
+        case .walletCategories:
+            return pages.count
         case .summary:
             return 1
-        case .walletCategories:
-            return digests.count
         case .wallets:
-            let count = digests[selectedCategory]?.count ?? 0
+            let count = pages[selectedCategory]?.digests.count ?? 0
             if selectedCategory == .safe && count == 0 {
                 return 1
             } else {
@@ -336,16 +372,9 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch Section(rawValue: indexPath.section)! {
-        case .summary:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_summary_value, for: indexPath)!
-            if let summary {
-                cell.load(summary: summary)
-            }
-            cell.delegate = self
-            return cell
         case .walletCategories:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
-            let category = digests.keys[indexPath.item]
+            let category = pages.keys[indexPath.item]
             cell.label.text = category.localizedName
             switch category {
             case .safe:
@@ -354,8 +383,16 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
                 cell.badgeView.isHidden = true
             }
             return cell
+        case .summary:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_summary_value, for: indexPath)!
+            if let summary = pages[selectedCategory]?.summary {
+                cell.load(summary: summary)
+            }
+            cell.infoButton.isHidden = summaryTip == nil
+            cell.delegate = self
+            return cell
         case .wallets:
-            if let digests = digests[selectedCategory], !digests.isEmpty {
+            if let digests = pages[selectedCategory]?.digests, !digests.isEmpty {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet, for: indexPath)!
                 let digest = digests[indexPath.item]
                 let hasSecret: Bool
@@ -430,7 +467,7 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
                     collectionView.deselectItem(at: selectedIndexPath, animated: false)
                 }
             }
-            selectedCategory = digests.keys[indexPath.item]
+            selectedCategory = pages.keys[indexPath.item]
             switch selectedCategory {
             case .safe:
                 BadgeManager.shared.setHasViewed(identifier: .safeVault)
@@ -441,12 +478,12 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
                 break
             }
             UIView.performWithoutAnimation {
-                let sections = IndexSet(integer: Section.wallets.rawValue)
+                let sections = IndexSet(arrayLiteral: Section.summary.rawValue, Section.wallets.rawValue)
                 collectionView.reloadSections(sections)
             }
         case .wallets:
             collectionView.deselectItem(at: indexPath, animated: true)
-            guard let wallet = digests[selectedCategory]?[indexPath.item].wallet else {
+            guard let wallet = pages[selectedCategory]?.digests[indexPath.item].wallet else {
                 return
             }
             switch wallet {
@@ -495,7 +532,7 @@ extension WalletSummaryViewController: WalletSummaryValueCell.Delegate {
         let tipView = R.nib.overlayTipView(withOwner: nil)!
         view.addSubview(tipView)
         tipView.snp.makeEdgesEqualToSuperview()
-        tipView.label.text = R.string.localizable.wallet_summary_tip()
+        tipView.label.text = summaryTip
         view.layoutIfNeeded()
         let center = cell.convert(cell.infoButton.center, to: tipView)
         tipView.placeTip(at: center)

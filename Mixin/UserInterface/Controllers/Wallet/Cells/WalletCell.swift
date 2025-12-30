@@ -123,7 +123,12 @@ final class WalletCell: UICollectionViewCell, TokenProportionRepresentableCell {
             titleLabel.text = wallet.name
             iconImageView.isHidden = false
             iconImageView.image = R.image.safe_vault()
-            tags = [.role(wallet.role.localizedDescription)]
+            switch wallet.role.knownCase {
+            case .owner:
+                tags = [.safeOwner(wallet.role.localizedDescription)]
+            case .member, .none:
+                tags = [.plain(wallet.role.localizedDescription)]
+            }
             loadProportions(
                 tokens: digest.tokens,
                 placeholder: .safeVault(chainID: wallet.chainID),
@@ -172,7 +177,7 @@ extension WalletCell {
                 label.backgroundColor = R.color.market_red()!.withAlphaComponent(0.2)
                 label.textColor = R.color.market_red()
                 label.text = text
-            case .role(let text):
+            case .safeOwner(let text):
                 label.backgroundColor = UIColor(displayP3RgbValue: 0xFFAA00).withAlphaComponent(0.6)
                 label.textColor = .white
                 label.text = text

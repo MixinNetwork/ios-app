@@ -306,7 +306,12 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
                 cell.nameLabel.text = wallet.name
                 cell.iconImageView.image = R.image.safe_vault()
                 cell.iconImageView.isHidden = false
-                cell.walletTag = .role(wallet.role.localizedDescription)
+                switch wallet.role.knownCase {
+                case .owner:
+                    cell.walletTag = .safeOwner(wallet.role.localizedDescription)
+                case .member, .none:
+                    cell.walletTag = .plain(wallet.role.localizedDescription)
+                }
             }
             return cell
         case let .safe(name, role):
@@ -315,7 +320,12 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             cell.nameLabel.text = name
             cell.iconImageView.image = R.image.safe_vault()
             cell.iconImageView.isHidden = false
-            cell.walletTag = .role(role)
+            switch role.knownCase {
+            case .owner:
+                cell.walletTag = .safeOwner(role.localizedDescription)
+            case .member, .none:
+                cell.walletTag = .plain(role.localizedDescription)
+            }
             return cell
         case let .commonWalletReceiver(user, address):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.common_wallet_receiver, for: indexPath)!
@@ -460,7 +470,7 @@ extension AuthenticationPreviewViewController {
         case safeMultisigAmount(token: MixinTokenItem, tokenAmount: String, fiatMoneyAmount: String)
         case addressReceivers(MixinTokenItem, [SafeMultisigResponse.Safe.Recipient])
         case wallet(caption: Caption, wallet: Wallet, threshold: Int32?)
-        case safe(name: String, role: String)
+        case safe(name: String, role: UnknownableEnum<SafeRole>)
         case commonWalletReceiver(user: UserItem, address: String)
         case user(title: String, user: UserItem)
         case waivedFee(token: String, fiatMoney: String, display: AmountIntent)

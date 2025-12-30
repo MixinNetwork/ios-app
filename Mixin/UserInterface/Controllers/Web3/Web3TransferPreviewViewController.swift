@@ -140,6 +140,8 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
             switch toAddressLabel {
             case .wallet(.privacy):
                 rows.append(.wallet(caption: .receiver, wallet: .privacy, threshold: nil))
+            case .wallet(.safe(let vault)):
+                rows.append(.safe(name: vault.name, role: vault.role))
             case .contact(let user):
                 if let toAddress = operation.toAddress {
                     rows.append(.commonWalletReceiver(user: user, address: toAddress))

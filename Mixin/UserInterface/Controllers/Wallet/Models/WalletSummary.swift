@@ -27,24 +27,9 @@ struct WalletSummary {
     let usdValue: Decimal
     let components: [Component]
     
-    init(walletDigests: [WalletDigest]) {
+    init(digests: [WalletDigest]) {
         let maxNumberOfComponents = 3
-        
-        let wallets = walletDigests.filter { digest in
-            switch digest.wallet {
-            case .privacy, .safe:
-                true
-            case .common(let wallet):
-                switch wallet.category.knownCase {
-                case .classic, .importedMnemonic, .importedPrivateKey:
-                    true
-                case .watchAddress, .none:
-                    // Watch wallets are excluded from calculation
-                    false
-                }
-            }
-        }
-        let usdValues: [Token: Decimal] = wallets
+        let usdValues: [Token: Decimal] = digests
             .flatMap(\.tokens)
             .reduce(into: [:]) { result, digest in
                 let token = Token(digest: digest)

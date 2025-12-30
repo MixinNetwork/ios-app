@@ -145,7 +145,7 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
             rows = [
                 .safeMultisigAmount(token: token, tokenAmount: tokenValue, fiatMoneyAmount: fiatMoneyValue),
                 .info(caption: .sender, content: safe.address),
-                .safe(name: safe.name, role: safe.role.localizedDescription),
+                .safe(name: safe.name, role: safe.role),
             ]
             switch safe.operation {
             case let .transaction(transaction):

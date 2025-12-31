@@ -1431,7 +1431,7 @@
 "swap_failed" = "交易失败";
 "swap_invalid_amount" = "没有报价。请尝试修改金额。";
 "swap_message_success" = "您的交易已发送至网络，将很快被处理。";
-"swap_no_available_quote" = "没有报价。请尝试切换币种。试试挂单？不受金额和币种限制。";
+"swap_no_available_quote" = "暂无报价，请尝试切换币种。试试挂单？不受金额和币种限制。";
 "swap_not_supported" = "不支持 %@ 交易。";
 "swap_order_paid" = "已支付";
 "swap_order_received" = "已收到";

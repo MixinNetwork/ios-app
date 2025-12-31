@@ -124,7 +124,15 @@ class TradeViewController: UIViewController {
     
     private var swapPriceContent: SwapPriceCell.Content? = nil {
         didSet {
-            swapPriceCell?.setContent(swapPriceContent)
+            guard let swapPriceCell else {
+                return
+            }
+            swapPriceCell.setContent(swapPriceContent)
+            if let indexPath = collectionView.indexPath(for: swapPriceCell) {
+                let context = UICollectionViewLayoutInvalidationContext()
+                context.invalidateItems(at: [indexPath])
+                collectionView.collectionViewLayout.invalidateLayout(with: context)
+            }
         }
     }
     
@@ -255,12 +263,12 @@ class TradeViewController: UIViewController {
                 section.contentInsets = NSDirectionalEdgeInsets(top: 2, leading: 20, bottom: 8, trailing: 20)
                 return section
             case .simpleModePrice:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(45))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(36))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(45))
                 let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                 return section
             case .openOrders:
                 if let self, !self.openOrders.isEmpty {
@@ -439,6 +447,10 @@ class TradeViewController: UIViewController {
     
     @objc func priceEditingChanged(_ sender: UITextField) {
         pricingModel.displayPrice = sender.text
+    }
+    
+    @objc private func switchToAdvancedTrade(_ sender: Any) {
+        mode = .advanced
     }
     
     func prepareForReuse(sender: Any) {
@@ -649,6 +661,11 @@ extension TradeViewController: UICollectionViewDataSource {
                     action: #selector(togglePriceUnit(_:)),
                     for: .touchUpInside
                 )
+                cell.advancedTradingHintButton.addTarget(
+                    self,
+                    action: #selector(switchToAdvancedTrade(_:)),
+                    for: .touchUpInside
+                )
                 swapPriceCell = cell
             }
             cell.setContent(swapPriceContent)
@@ -834,19 +851,28 @@ extension TradeViewController: SwapQuotePeriodicRequesterDelegate {
             let description: String
             let amountRange: SwapQuotePeriodicRequester.AmountRange?
             let reason: String
+            let advancedTradingHint: Bool
             switch error {
             case let SwapQuotePeriodicRequester.ResponseError.invalidAmount(range):
                 description = range.description
                 amountRange = range
                 reason = "invalid_amount"
+                advancedTradingHint = false
             case MixinAPIResponseError.invalidQuoteAmount:
                 description = R.string.localizable.swap_invalid_amount()
                 amountRange = nil
                 reason = "invalid_amount"
+                advancedTradingHint = false
+            case MixinAPIResponseError.invalidSwap:
+                description = R.string.localizable.swap_no_available_quote()
+                amountRange = nil
+                reason = "invalid_swap"
+                advancedTradingHint = true
             case MixinAPIResponseError.noAvailableQuote:
                 description = R.string.localizable.swap_no_available_quote()
                 amountRange = nil
                 reason = "no_available_quote"
+                advancedTradingHint = true
             case let error as MixinAPIError:
                 description = error.localizedDescription
                 amountRange = nil
@@ -857,13 +883,15 @@ extension TradeViewController: SwapQuotePeriodicRequesterDelegate {
                 } else {
                     "other"
                 }
+                advancedTradingHint = false
             default:
                 description = "\(error)"
                 amountRange = nil
                 reason = "other"
+                advancedTradingHint = false
             }
             Logger.general.debug(category: "Trade", message: description)
-            swapPriceContent = .error(description)
+            swapPriceContent = .error(description: description, advancedTradingHint: advancedTradingHint)
             self.amountRange = amountRange
             reporter.report(event: .tradeQuote, tags: ["type": "swap", "result": "failure", "reason": reason])
         }
@@ -927,9 +955,11 @@ extension TradeViewController {
         if let minimum = amountRange.minimum, sendAmount < minimum {
             pricingModel.sendAmount = minimum
             amountInputCell?.updateSendAmountTextField(amount: minimum)
+            startQuoteRequesterIfAvailable()
         } else if let maximum = amountRange.maximum, sendAmount > maximum {
             pricingModel.sendAmount = maximum
             amountInputCell?.updateSendAmountTextField(amount: maximum)
+            startQuoteRequesterIfAvailable()
         }
     }
     
@@ -1167,7 +1197,7 @@ extension TradeViewController {
                 self.setReceiveToken(receiveToken)
                 if let missingAssetSymbol {
                     let description = R.string.localizable.swap_not_supported(missingAssetSymbol)
-                    self.swapPriceContent = .error(description)
+                    self.swapPriceContent = .error(description: description, advancedTradingHint: false)
                 }
                 self.updateMarkets()
             }

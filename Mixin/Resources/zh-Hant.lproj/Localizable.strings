@@ -60,6 +60,7 @@
 "address_validity_reminder" = "您已經超過 %3$@ 天沒有使用地址 %1$@（%2$@），請注意檢查地址是否仍然有效。";
 "addresses" = "地址";
 "admin" = "管理員";
+"advanced_trade" = "掛單交易";
 "agree_hint" = "繼續使用即表示你同意 %@ 和 %@";
 "albums" = "相簿";
 "alert" = "價格預警";
@@ -1430,7 +1431,7 @@
 "swap_failed" = "交易失敗";
 "swap_invalid_amount" = "沒有報價。請嘗試修改金額。";
 "swap_message_success" = "您的交易已傳送至網路，將很快被處理。";
-"swap_no_available_quote" = "沒有報價。請嘗試切換幣種。";
+"swap_no_available_quote" = "沒有報價。請嘗試切換幣種。試試掛單？不受金額和幣種限制。";
 "swap_not_supported" = "不支援 %@ 交易。";
 "swap_order_paid" = "已支付";
 "swap_order_received" = "已收到";

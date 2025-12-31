@@ -60,6 +60,7 @@
 "address_validity_reminder" = "The address %1$@(%2$@) has not been used for over %3$@ days. Please check if the address is still valid.";
 "addresses" = "Addresses";
 "admin" = "Администратор";
+"advanced_trade" = "Advanced Trade";
 "agree_hint" = "Продолжая, вы соглашаетесь с %@ и %@.";
 "albums" = "Альбомы";
 "alert" = "Alert";
@@ -1430,7 +1431,7 @@
 "swap_failed" = "Swap Failed";
 "swap_invalid_amount" = "No available quote found. Please try a different amount.";
 "swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
-"swap_no_available_quote" = "No available quote found. Please try a different token.";
+"swap_no_available_quote" = "No available quote found. Please try a different token. Try placing a limit order? No restrictions on amount or token.";
 "swap_not_supported" = "%@ swapping is not supported.";
 "swap_order_paid" = "Paid";
 "swap_order_received" = "Received";

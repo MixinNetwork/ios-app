@@ -862,6 +862,11 @@ extension TradeViewController: SwapQuotePeriodicRequesterDelegate {
                 description = R.string.localizable.swap_invalid_amount()
                 amountRange = nil
                 reason = "invalid_amount"
+                advancedTradingHint = false
+            case MixinAPIResponseError.invalidSwap:
+                description = R.string.localizable.swap_no_available_quote()
+                amountRange = nil
+                reason = "invalid_swap"
                 advancedTradingHint = true
             case MixinAPIResponseError.noAvailableQuote:
                 description = R.string.localizable.swap_no_available_quote()

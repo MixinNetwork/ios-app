@@ -334,6 +334,7 @@
 "combine_and_forward" = "合併轉發";
 "common_wallet" = "普通錢包";
 "common_wallet_index" = "普通錢包 %@";
+"common_wallet_now_supports_btc" = "普通錢包現已支援比特幣";
 "complete" = "完成";
 "completed" = "已完成";
 "compress_database" = "壓縮資料庫";
@@ -645,6 +646,12 @@
 "failed_to_send_video" = "傳送影片失敗，請稍後重試";
 "fast" = "快速";
 "favorite" = "收藏";
+"feature_compatibility" = "相容性";
+"feature_compatibility_description" = "支援從其他錢包匯入私鑰與觀察地址。";
+"feature_decentralized" = "去中心化";
+"feature_decentralized_description" = "完全去中心化的錢包，你掌控私鑰。";
+"feature_seamless" = "無縫體驗";
+"feature_seamless_description" = "閃電般的互動體驗，頁面載入與響應更迅速。";
 "fee" = "手續費";
 "fee_selection" = "手續費（%@）";
 "feedback" = "反饋";
@@ -1558,6 +1565,7 @@
 "unknown" = "未知";
 "unknown_artist" = "未知藝術家";
 "unlimited_authorization_warning" = "這個應用可以提取你 %1$@ 賬號（%2$@）裡所有的 %3$@ 資產。";
+"unlock_by_pin" = "使用 PIN 解鎖";
 "unmute" = "取消靜音";
 "unmuted" = "已取消靜音";
 "unnamed_location" = "未命名地點";

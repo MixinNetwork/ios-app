@@ -334,6 +334,7 @@
 "combine_and_forward" = "Объединить и вперед";
 "common_wallet" = "Common Wallet";
 "common_wallet_index" = "Common Wallet %@";
+"common_wallet_now_supports_btc" = "Common Wallet now supports Bitcoin";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Сжать базу данных";
@@ -645,6 +646,12 @@
 "failed_to_send_video" = "Не удалось отправить видео";
 "fast" = "Fast";
 "favorite" = "Favorite";
+"feature_compatibility" = "Compatibility";
+"feature_compatibility_description" = "Supports importing private keys and watch-only addresses from other wallets.";
+"feature_decentralized" = "Decentralized";
+"feature_decentralized_description" = "A fully decentralized wallet where you control the private key.";
+"feature_seamless" = "Seamless";
+"feature_seamless_description" = "Lightning-fast interface with instant page loading and rapid response.";
 "fee" = "Комиссия";
 "fee_selection" = "Fee (%@)";
 "feedback" = "Обратная связь";
@@ -1558,6 +1565,7 @@
 "unknown" = "Неизвестный";
 "unknown_artist" = "Неизвестный артист";
 "unlimited_authorization_warning" = "This application can access all %3$@ in your %1$@ account (%2$@).";
+"unlock_by_pin" = "Unlock by PIN";
 "unmute" = "Включить звук";
 "unmuted" = "Включено";
 "unnamed_location" = "Безымянное местоположение";

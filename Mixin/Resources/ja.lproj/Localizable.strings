@@ -334,6 +334,7 @@
 "combine_and_forward" = "まとめて転送";
 "common_wallet" = "Common Wallet";
 "common_wallet_index" = "Common Wallet %@";
+"common_wallet_now_supports_btc" = "Common Wallet now supports Bitcoin";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "データの圧縮";
@@ -645,6 +646,12 @@
 "failed_to_send_video" = "動画を送信できませんでした";
 "fast" = "高速";
 "favorite" = "Favorite";
+"feature_compatibility" = "Compatibility";
+"feature_compatibility_description" = "Supports importing private keys and watch-only addresses from other wallets.";
+"feature_decentralized" = "Decentralized";
+"feature_decentralized_description" = "A fully decentralized wallet where you control the private key.";
+"feature_seamless" = "Seamless";
+"feature_seamless_description" = "Lightning-fast interface with instant page loading and rapid response.";
 "fee" = "手数料";
 "fee_selection" = "Fee (%@)";
 "feedback" = "フィードバック";
@@ -1558,6 +1565,7 @@
 "unknown" = "不明";
 "unknown_artist" = "不明なアーティスト";
 "unlimited_authorization_warning" = "This application can access all %3$@ in your %1$@ account (%2$@).";
+"unlock_by_pin" = "Unlock by PIN";
 "unmute" = "ミュート解除";
 "unmuted" = "ミュートを解除";
 "unnamed_location" = "名称未設定箇所";

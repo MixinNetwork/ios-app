@@ -878,6 +878,7 @@
 		943CAA3B2CC8CBB900346677 /* SignUpView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943CAA392CC8CBB900346677 /* SignUpView.xib */; };
 		943CAA412CC8CD7F00346677 /* SignUpMethodCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943CAA3F2CC8CD7F00346677 /* SignUpMethodCell.swift */; };
 		943CAA422CC8CD7F00346677 /* SignUpMethodCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943CAA402CC8CD7F00346677 /* SignUpMethodCell.xib */; };
+		943D18022EFDB163009A1139 /* bitcoin_rust_sdk.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 943D18012EFDB163009A1139 /* bitcoin_rust_sdk.xcframework */; };
 		943EDC482C833B55007E160B /* Market+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943EDC472C833B55007E160B /* Market+Localization.swift */; };
 		943FEB3E2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943FEB3C2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift */; };
 		943FEB3F2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943FEB3D2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib */; };
@@ -2651,6 +2652,7 @@
 		943CAA392CC8CBB900346677 /* SignUpView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SignUpView.xib; sourceTree = "<group>"; };
 		943CAA3F2CC8CD7F00346677 /* SignUpMethodCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpMethodCell.swift; sourceTree = "<group>"; };
 		943CAA402CC8CD7F00346677 /* SignUpMethodCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SignUpMethodCell.xib; sourceTree = "<group>"; };
+		943D18012EFDB163009A1139 /* bitcoin_rust_sdk.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = bitcoin_rust_sdk.xcframework; sourceTree = "<group>"; };
 		943EDC472C833B55007E160B /* Market+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Market+Localization.swift"; sourceTree = "<group>"; };
 		943FEB3C2C9D79A3001A0BD2 /* MarketAlertTokenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertTokenCell.swift; sourceTree = "<group>"; };
 		943FEB3D2C9D79A3001A0BD2 /* MarketAlertTokenCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketAlertTokenCell.xib; sourceTree = "<group>"; };
@@ -3518,6 +3520,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				94341C002863530B009C9147 /* libogg.xcframework in Frameworks */,
+				943D18022EFDB163009A1139 /* bitcoin_rust_sdk.xcframework in Frameworks */,
 				DFAA0DEF237823DA003E26B2 /* DeviceCheck.framework in Frameworks */,
 				9416231A29BEEFB800E540B9 /* OrderedCollections in Frameworks */,
 				DFCC4342206B668A006F50BE /* Security.framework in Frameworks */,
@@ -3581,6 +3584,7 @@
 			isa = PBXGroup;
 			children = (
 				94F209E02C070DAB00550060 /* solana_rust_sdk.xcframework */,
+				943D18012EFDB163009A1139 /* bitcoin_rust_sdk.xcframework */,
 				94DA83722588E58B006B0F16 /* WebRTC.xcframework */,
 				94E3411E261D827300E2F9D3 /* highlight */,
 				DF5D9F2F1F9C95270036D5FD /* CountryCode */,

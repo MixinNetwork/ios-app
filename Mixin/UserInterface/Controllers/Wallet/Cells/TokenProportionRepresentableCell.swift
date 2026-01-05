@@ -62,7 +62,7 @@ extension TokenProportionRepresentableCell {
                 case .privacyWalletChains:
                     R.image.privacy_wallet_chains()
                 case .commonWalletChains:
-                    R.image.classic_wallet_chains()
+                    R.image.common_wallet_chains()
                 case .evmChains:
                     R.image.evm_chains()
                 case .chain(.bitcoin):

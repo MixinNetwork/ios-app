@@ -1309,6 +1309,7 @@
 "send_to_developer" = "把日志发给开发者";
 "send_to_other_wallet_description" = "使用区块链网络发送到我的另一个钱包";
 "send_to_title" = "转给";
+"send_token_minimum_amount" = "请发送至少 %@";
 "send_video" = "发送 1 个视频";
 "send_video_count" = "发送 %d 个视频";
 "send_without_sound" = "静音发送";

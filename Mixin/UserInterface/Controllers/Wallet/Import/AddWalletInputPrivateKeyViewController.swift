@@ -77,6 +77,27 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
         }
         do {
             switch selectedChain.kind {
+            case .bitcoin:
+                let privateKey = try Bitcoin.privateKey(wif: input)
+                let encryptedPrivateKey = try EncryptedPrivateKey(
+                    privateKey: privateKey,
+                    key: encryptionKey
+                )
+                let address = try Bitcoin.segwitAddress(privateKey: privateKey)
+                if importedAddresses.contains(address) {
+                    throw LoadKeyError.alreadyImported
+                }
+                wallet = try Wallet(
+                    privateKey: encryptedPrivateKey,
+                    address: .init(
+                        destination: address,
+                        chainID: ChainID.bitcoin,
+                        path: nil,
+                        userID: userID
+                    ) { message in
+                        try Bitcoin.sign(message: message, with: privateKey)
+                    }
+                )
             case .evm:
                 let hex = if input.hasPrefix("0x") {
                     String(input.dropFirst(2))

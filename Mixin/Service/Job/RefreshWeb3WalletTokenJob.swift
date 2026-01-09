@@ -26,7 +26,11 @@ public final class RefreshWeb3WalletTokenJob: AsynchronousJob {
                 guard !self.isCancelled else {
                     return
                 }
-                Web3TokenDAO.shared.save(tokens: tokens, zeroOutOthers: true)
+                Web3TokenDAO.shared.save(
+                    tokens: tokens,
+                    outputBasedAssetIDs: [AssetID.btc],
+                    zeroOutOthers: true
+                )
             case let .failure(error):
                 Logger.general.debug(category: "RefreshWeb3WalletToken", message: "\(error)")
                 if error.worthReporting {

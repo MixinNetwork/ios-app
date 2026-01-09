@@ -1309,6 +1309,7 @@
 "send_to_developer" = "把日誌發給開發者";
 "send_to_other_wallet_description" = "使用區塊鏈網路傳送到我的另一個錢包";
 "send_to_title" = "轉給";
+"send_token_minimum_amount" = "請傳送至少 %@";
 "send_video" = "傳送 1 個影片";
 "send_video_count" = "傳送 %d 個影片";
 "send_without_sound" = "靜音傳送";

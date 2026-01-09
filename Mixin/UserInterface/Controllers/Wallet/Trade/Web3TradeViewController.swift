@@ -347,6 +347,11 @@ final class Web3TradeViewController: TradeViewController {
             }
             
             let operation = switch payment.chain.specification {
+            case .bitcoin:
+                try BitcoinTransferToAddressOperation(
+                    payment: payment,
+                    decimalAmount: sendAmount
+                )
             case .evm(let id):
                 try EVMTransferToAddressOperation(
                     evmChainID: id,

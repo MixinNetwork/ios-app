@@ -21,6 +21,7 @@ struct BIP39Mnemonics {
     let phrases: [String]
     let joinedPhrases: String
     
+    private let btcMasterKey: ExtendedKey
     private let evmMasterKey: ExtendedKey
     private let solMasterKey: ExtendedKey
     
@@ -56,6 +57,7 @@ struct BIP39Mnemonics {
         self.entropy = entropy
         self.phrases = phrases
         self.joinedPhrases = joinedPhrases
+        self.btcMasterKey = ExtendedKey(seed: seed, curve: .secp256k1)
         self.evmMasterKey = ExtendedKey(seed: seed, curve: .secp256k1)
         self.solMasterKey = ExtendedKey(seed: seed, curve: .ed25519)
     }
@@ -71,13 +73,33 @@ extension BIP39Mnemonics {
     }
     
     struct DerivedWallet {
+        let bitcoin: Derivation
         let evm: Derivation
         let solana: Derivation
     }
     
     enum DerivationError: Error {
+        case mismatchedBitcoinAddress
         case mismatchedEVMAddress
         case mismatchedSolanaAddress
+    }
+    
+    func deriveForBitcoin(path: DerivationPath) throws -> Derivation {
+        var error: NSError?
+        let privateKey = try Bitcoin.privateKey(mnemonics: joinedPhrases, path: path.string)
+        let address = try Bitcoin.segwitAddress(privateKey: privateKey)
+        let redundantAddress = BlockchainGenerateBitcoinSegwitAddress(
+            joinedPhrases,
+            path.string,
+            &error
+        )
+        if let error {
+            throw error
+        } else if address != redundantAddress {
+            throw DerivationError.mismatchedBitcoinAddress
+        } else {
+            return Derivation(privateKey: privateKey, address: address, path: path)
+        }
     }
     
     func deriveForEVM(path: DerivationPath) throws -> Derivation {
@@ -118,13 +140,20 @@ extension BIP39Mnemonics {
     
     func deriveWallets(indices: ClosedRange<UInt32>) throws -> [DerivedWallet] {
         try indices.map { (index: UInt32) in
-            let evmPath = try DerivationPath(string: "m/44'/60'/0'/0/\(index)")
+            let bitcoinPath = try DerivationPath.bitcoin(index: index)
+            let bitcoinDerivation = try deriveForBitcoin(path: bitcoinPath)
+            
+            let evmPath = try DerivationPath.evm(index: index)
             let evmDerivation = try deriveForEVM(path: evmPath)
             
-            let solanaPath = try DerivationPath(string: "m/44'/501'/\(index)'/0'")
+            let solanaPath = try DerivationPath.solana(index: index)
             let solanaDerivation = try deriveForSolana(path: solanaPath)
             
-            return DerivedWallet(evm: evmDerivation, solana: solanaDerivation)
+            return DerivedWallet(
+                bitcoin: bitcoinDerivation,
+                evm: evmDerivation,
+                solana: solanaDerivation
+            )
         }
     }
     

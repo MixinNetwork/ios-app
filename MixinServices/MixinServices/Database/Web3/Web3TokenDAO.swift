@@ -216,13 +216,33 @@ public final class Web3TokenDAO: Web3DAO {
         )
     }
     
-    public func save(tokens: [Web3Token], zeroOutOthers: Bool) {
+    public func save(
+        tokens: [Web3Token],
+        outputBasedAssetIDs: Set<String>,
+        zeroOutOthers: Bool
+    ) {
         guard let walletID = tokens.first?.walletID else {
             return
         }
         db.write { db in
             for token in tokens {
                 try token.save(db)
+                if outputBasedAssetIDs.contains(token.assetID) {
+                    let address = try Web3AddressDAO.shared.destination(
+                        walletID: token.walletID,
+                        chainID: token.chainID,
+                        db: db
+                    )
+                    if let address {
+                        try updateAmountByOutputs(
+                            walletID: token.walletID,
+                            address: address,
+                            assetID: token.assetID,
+                            db: db,
+                            postTokenChangeNofication: false,
+                        )
+                    }
+                }
                 if token.level < Web3Reputation.Level.unknown.rawValue {
                     let extra = Web3TokenExtra(
                         walletID: token.walletID,
@@ -255,6 +275,35 @@ public final class Web3TokenDAO: Web3DAO {
                     object: self,
                     userInfo: [Self.walletIDUserInfoKey: walletID]
                 )
+            }
+        }
+    }
+    
+    public func updateAmountByOutputs(
+        walletID: String,
+        address: String,
+        assetID: String,
+        db: GRDB.Database,
+        postTokenChangeNofication: Bool,
+    ) throws {
+        let balance = try Web3OutputDAO.shared.availableBalance(
+            address: address,
+            assetID: assetID,
+            db: db
+        )
+        try db.execute(
+            sql: "UPDATE tokens SET amount = ? WHERE wallet_id = ? AND asset_id = ?",
+            arguments: [balance, walletID, assetID]
+        )
+        if postTokenChangeNofication {
+            db.afterNextTransaction { _ in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(
+                        name: Self.tokensDidChangeNotification,
+                        object: self,
+                        userInfo: [Self.walletIDUserInfoKey: walletID]
+                    )
+                }
             }
         }
     }

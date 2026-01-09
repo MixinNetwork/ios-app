@@ -3,18 +3,6 @@ import MixinServices
 
 class Web3TransferOperation {
     
-    class DisplayFee {
-        
-        let tokenAmount: Decimal
-        let fiatMoneyAmount: Decimal
-        
-        init(tokenAmount: Decimal, fiatMoneyAmount: Decimal) {
-            self.tokenAmount = tokenAmount
-            self.fiatMoneyAmount = fiatMoneyAmount
-        }
-        
-    }
-    
     enum State {
         case loading
         case ready
@@ -44,7 +32,7 @@ class Web3TransferOperation {
     var state: State = .loading
     
     @MainActor
-    var fee: DisplayFee?
+    var fee: Web3DisplayFee?
     
     var hasTransactionSent = false
     
@@ -64,7 +52,7 @@ class Web3TransferOperation {
         self.isFeeWaived = isFeeWaived
     }
     
-    func loadFee() async throws -> DisplayFee {
+    func loadFee() async throws -> Web3DisplayFee {
         fatalError("Must override")
     }
     

@@ -38,11 +38,15 @@ class SolanaTransferOperation: Web3TransferOperation {
         assertionFailure("Must override")
     }
     
-    func baseFee(for transaction: Solana.Transaction) throws -> DisplayFee {
+    func baseFee(for transaction: Solana.Transaction) throws -> Web3DisplayFee {
         let lamportsPerSignature: UInt64 = 5000
         let tokenCount = try transaction.fee(lamportsPerSignature: lamportsPerSignature)
         let fiatMoneyAmount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-        let fee = DisplayFee(tokenAmount: tokenCount, fiatMoneyAmount: fiatMoneyAmount)
+        let fee = Web3DisplayFee(
+            token: feeToken,
+            tokenAmount: tokenCount,
+            fiatMoneyAmount: fiatMoneyAmount
+        )
         return fee
     }
     
@@ -124,7 +128,7 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
         self.state = .ready
     }
     
-    override func loadFee() async throws -> DisplayFee {
+    override func loadFee() async throws -> Web3DisplayFee {
         // TODO: This could be wrong. Needs to add up the priority fee if the txn includes
         try baseFee(for: transaction)
     }
@@ -266,7 +270,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         )
     }
     
-    override func loadFee() async throws -> DisplayFee {
+    override func loadFee() async throws -> Web3DisplayFee {
         let tokenProgramID = try await RouteAPI.solanaGetAccountInfo(pubkey: payment.token.assetKey).owner
         let ata = try Solana.tokenAssociatedAccount(
             walletAddress: payment.toAddress,
@@ -292,7 +296,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         
         let tokenAmount = baseFee.tokenAmount + priorityFee.decimalCount
         let fiatMoneyAmount = tokenAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-        let fee = DisplayFee(tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount)
+        let fee = Web3DisplayFee(token: feeToken, tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount)
         
         await MainActor.run {
             self.createAssociatedTokenAccountForReceiver = createAccount

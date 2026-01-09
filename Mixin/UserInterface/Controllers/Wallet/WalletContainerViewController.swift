@@ -5,6 +5,8 @@ final class WalletContainerViewController: UIViewController {
     
     private weak var viewController: UIViewController?
     
+    private var needsUnlockBitcoin = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -21,6 +23,22 @@ final class WalletContainerViewController: UIViewController {
         
         let job = ReloadMarketAlertsJob()
         ConcurrentJobQueue.shared.addJob(job: job)
+        
+        let bitcoinUnlockableWallets = Web3WalletDAO.shared
+            .chainUnavailableWallets(chainID: ChainID.bitcoin)
+            .filter { wallet in
+                wallet.hasSecret()
+            }
+        needsUnlockBitcoin = !bitcoinUnlockableWallets.isEmpty
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if needsUnlockBitcoin {
+            let unlock = UnlockBitcoinNavigationController()
+            present(unlock, animated: true)
+            needsUnlockBitcoin = false
+        }
     }
     
     func switchToWalletSummary(animated: Bool) {
@@ -114,6 +132,29 @@ extension WalletContainerViewController: HomeTabBarControllerChild {
         if let viewController = viewController as? HomeTabBarControllerChild {
             viewController.viewControllerDidSwitchToFront()
         }
+    }
+    
+}
+
+extension WalletContainerViewController {
+    
+    private final class UnlockBitcoinNavigationController: UINavigationController, UIAdaptivePresentationControllerDelegate {
+        
+        init() {
+            let unlock = UnlockBitcoinViewController()
+            super.init(rootViewController: unlock)
+            presentationController?.delegate = self
+            setNavigationBarHidden(true, animated: false)
+        }
+        
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+        func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+            false
+        }
+        
     }
     
 }

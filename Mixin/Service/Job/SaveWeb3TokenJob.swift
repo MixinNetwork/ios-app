@@ -36,7 +36,11 @@ public final class SaveWeb3TokenJob: AsynchronousJob {
                     level: Web3Reputation.Level.unknown.rawValue,
                 )
                 if !MixinService.isStopProcessMessages {
-                    Web3TokenDAO.shared.save(tokens: [web3Token], zeroOutOthers: false)
+                    Web3TokenDAO.shared.save(
+                        tokens: [web3Token],
+                        outputBasedAssetIDs: [AssetID.btc],
+                        zeroOutOthers: false
+                    )
                 }
             } catch {
                 let worthReporting = (error as? MixinAPIError)?.worthReporting ?? true

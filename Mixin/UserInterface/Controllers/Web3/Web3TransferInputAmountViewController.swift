@@ -6,9 +6,11 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
     
     private let payment: Web3SendingTokenToAddressPayment
     
-    private var fee: Web3TransferOperation.DisplayFee?
-    private var feeToken: Web3TokenItem?
+    private var fee: Web3DisplayFee?
     private var minimumTransferAmount: Decimal?
+    
+    private var feeCalculatingTask: Task<Void, Error>?
+    private var bitcoinFeeCalculator: Bitcoin.P2WPKHFeeCalculator?
     
     init(payment: Web3SendingTokenToAddressPayment) {
         self.payment = payment
@@ -62,8 +64,24 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
         tokenNameLabel.text = payment.token.name
         tokenBalanceLabel.text = payment.token.localizedBalanceWithSymbol
         addFeeView()
-        reloadFee(payment: payment)
+        reloadFee(payment: payment, transferAmount: 0)
         reloadMinimumTransferAmount(payment: payment)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        feeCalculatingTask?.cancel()
+    }
+    
+    override func reloadViews(inputAmount: Decimal) {
+        super.reloadViews(inputAmount: inputAmount)
+        switch payment.chain.specification {
+        case .bitcoin:
+            feeCalculatingTask?.cancel()
+            reloadFee(payment: payment, transferAmount: inputAmount)
+        case .evm, .solana:
+            break
+        }
     }
     
     override func review(_ sender: Any) {
@@ -74,6 +92,8 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
             let initError: Error?
             do {
                 let operation = switch payment.chain.specification {
+                case .bitcoin:
+                    try BitcoinTransferToAddressOperation(payment: payment, decimalAmount: amount)
                 case .evm(let chainID):
                     try EVMTransferToAddressOperation(
                         evmChainID: chainID,
@@ -106,7 +126,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
     }
     
     override func addFee(_ sender: Any) {
-        guard let feeToken else {
+        guard let feeToken = fee?.token else {
             return
         }
         let selector = AddTokenMethodSelectorViewController(token: feeToken)
@@ -128,24 +148,36 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
     }
     
     override func reloadViewsWithBalanceRequirements() {
-        guard let fee, let feeToken, let minimumTransferAmount else {
+        guard let fee, let minimumTransferAmount else {
             insufficientBalanceLabel.text = nil
             reviewButton.isEnabled = false
             return
         }
         guard tokenAmount.isZero || tokenAmount >= minimumTransferAmount else {
-            insufficientBalanceLabel.text = R.string.localizable.send_sol_for_rent(
-                CurrencyFormatter.localizedString(
-                    from: minimumTransferAmount,
-                    format: .precision,
-                    sign: .never
+            insufficientBalanceLabel.text = switch payment.chain.specification {
+            case .bitcoin, .evm:
+                R.string.localizable.send_token_minimum_amount(
+                    CurrencyFormatter.localizedString(
+                        from: minimumTransferAmount,
+                        format: .precision,
+                        sign: .never,
+                        symbol: .custom(payment.token.symbol)
+                    )
                 )
-            )
+            case .solana:
+                R.string.localizable.send_sol_for_rent(
+                    CurrencyFormatter.localizedString(
+                        from: minimumTransferAmount,
+                        format: .precision,
+                        sign: .never
+                    )
+                )
+            }
             removeAddFeeButton()
             reviewButton.isEnabled = false
             return
         }
-        let feeRequirement = BalanceRequirement(token: feeToken, amount: fee.tokenAmount)
+        let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.tokenAmount)
         let requirements = inputAmountRequirement.merging(with: feeRequirement)
         if requirements.allSatisfy(\.isSufficient) {
             insufficientBalanceLabel.text = nil
@@ -171,33 +203,108 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
         }
     }
     
-    private func reloadFee(payment: Web3SendingTokenToAddressPayment) {
-        Task {
+}
+
+extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewController.Delegate {
+    
+    func addTokenMethodSelectorViewController(
+        _ viewController: AddTokenMethodSelectorViewController,
+        didPickMethod method: AddTokenMethodSelectorViewController.Method
+    ) {
+        guard let feeToken = fee?.token else {
+            return
+        }
+        let next: UIViewController
+        switch method {
+        case .trade:
+            next = Web3TradeViewController(
+                wallet: payment.wallet,
+                sendAssetID: nil,
+                receiveAssetID: feeToken.assetID,
+            )
+        case .deposit:
+            next = DepositViewController(
+                wallet: payment.wallet,
+                token: feeToken,
+                switchingBetweenNetworks: false
+            )
+        }
+        navigationController?.pushViewController(next, animated: true)
+    }
+    
+}
+
+extension Web3TransferInputAmountViewController {
+    
+    private enum FeeEstimationError: Error {
+        case missingFeeToken(String)
+    }
+    
+    @MainActor
+    private func reloadFee(
+        payment: Web3SendingTokenToAddressPayment,
+        transferAmount: Decimal,
+    ) {
+        let bitcoinFeeCalculator = self.bitcoinFeeCalculator
+        feeCalculatingTask = Task {
             do {
-                let operation = switch payment.chain.specification {
+                let fee: Web3DisplayFee
+                switch payment.chain.specification {
+                case .bitcoin:
+                    let feeToken = try payment.chain.feeToken(
+                        walletID: payment.wallet.walletID
+                    )
+                    guard let feeToken else {
+                        throw FeeEstimationError.missingFeeToken(payment.chain.feeTokenAssetID)
+                    }
+                    let outputs = Web3OutputDAO.shared.unspentOutputs(
+                        address: payment.fromAddress.destination,
+                        assetID: payment.token.assetID
+                    )
+                    let calculator: Bitcoin.P2WPKHFeeCalculator
+                    if let bitcoinFeeCalculator {
+                        calculator = bitcoinFeeCalculator
+                    } else {
+                        let rate = try await RouteAPI.bitcoinFeeRate()
+                        calculator = Bitcoin.P2WPKHFeeCalculator(outputs: outputs, rate: rate)
+                        await MainActor.run {
+                            self.bitcoinFeeCalculator = calculator
+                        }
+                    }
+                    let feeResult = try calculator.calculate(
+                        transferAmount: transferAmount == 0 ? 1 * .satoshi : transferAmount
+                    )
+                    fee = Web3DisplayFee(
+                        token: feeToken,
+                        tokenAmount: feeResult.feeAmount,
+                        fiatMoneyAmount: feeResult.feeAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
+                    )
                 case .evm(let chainID):
-                    try EVMTransferToAddressOperation(
+                    let operation = try EVMTransferToAddressOperation(
                         evmChainID: chainID,
                         payment: payment,
                         decimalAmount: 0
                     )
+                    fee = try await operation.loadFee()
                 case .solana:
-                    try SolanaTransferToAddressOperation(payment: payment, decimalAmount: 0)
+                    let operation = try SolanaTransferToAddressOperation(
+                        payment: payment,
+                        decimalAmount: 0
+                    )
+                    fee = try await operation.loadFee()
                 }
-                let fee = try await operation.loadFee()
-                let feeToken = operation.feeToken
                 let title = CurrencyFormatter.localizedString(
                     from: fee.tokenAmount,
                     format: .precision,
                     sign: .never,
-                    symbol: .custom(feeToken.symbol)
+                    symbol: .custom(fee.token.symbol)
                 )
                 let availableBalance = if payment.sendingNativeToken {
                     CurrencyFormatter.localizedString(
                         from: max(0, payment.token.decimalBalance - fee.tokenAmount),
                         format: .precision,
                         sign: .never,
-                        symbol: .custom(feeToken.symbol)
+                        symbol: .custom(fee.token.symbol)
                     )
                 } else {
                     payment.token.localizedBalanceWithSymbol
@@ -205,7 +312,6 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                 let isFeeWaived = payment.toAddressLabel?.isFeeWaived() ?? false
                 await MainActor.run {
                     self.fee = fee
-                    self.feeToken = feeToken
                     self.feeActivityIndicator?.stopAnimating()
                     self.tokenBalanceLabel.text = R.string.localizable.available_balance_count(availableBalance)
                     self.updateFeeView(style: isFeeWaived ? .waived : .normal)
@@ -224,9 +330,9 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                 return
             } catch {
                 Logger.general.debug(category: "Web3InputAmount", message: "\(error)")
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-                    // Check token and address
-                    self?.reloadFee(payment: payment)
+                try await Task.sleep(nanoseconds: 3 * NSEC_PER_SEC)
+                DispatchQueue.main.async { [weak self] in
+                    self?.reloadFee(payment: payment, transferAmount: transferAmount)
                 }
             }
         }
@@ -239,6 +345,8 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
             do {
                 let amount: Decimal
                 switch payment.chain.kind {
+                case .bitcoin:
+                    amount = 350 * .satoshi // TODO: Exhaust the receiver address for dust
                 case .evm:
                     amount = 0
                 case .solana:
@@ -265,35 +373,6 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                 }
             }
         }
-    }
-    
-}
-
-extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewController.Delegate {
-    
-    func addTokenMethodSelectorViewController(
-        _ viewController: AddTokenMethodSelectorViewController,
-        didPickMethod method: AddTokenMethodSelectorViewController.Method
-    ) {
-        guard let feeToken else {
-            return
-        }
-        let next: UIViewController
-        switch method {
-        case .trade:
-            next = Web3TradeViewController(
-                wallet: payment.wallet,
-                sendAssetID: nil,
-                receiveAssetID: feeToken.assetID,
-            )
-        case .deposit:
-            next = DepositViewController(
-                wallet: payment.wallet,
-                token: feeToken,
-                switchingBetweenNetworks: false
-            )
-        }
-        navigationController?.pushViewController(next, animated: true)
     }
     
 }

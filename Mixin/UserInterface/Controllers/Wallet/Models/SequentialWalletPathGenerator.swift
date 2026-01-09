@@ -9,14 +9,9 @@ enum SequentialWalletPathGenerator {
         case mismatchIndex
     }
     
-    static func nextPathIndex(walletCategory category: Web3Wallet.Category) throws -> Int {
-        let paths = Web3AddressDAO.shared.paths(walletCategory: category)
-        if paths.isEmpty {
-            throw GenerationError.missingDefaultWallet
-        }
-        
-        let evmPathRegex = try TIP.ClassicWalletDerivation.evmPathRegex()
-        let solanaPathRegex = try TIP.ClassicWalletDerivation.solanaPathRegex()
+    static func maxIndex(paths: [String]) throws -> Int {
+        let evmPathRegex = try DerivationPath.evmPathRegex()
+        let solanaPathRegex = try DerivationPath.solanaPathRegex()
         
         var maxEVMIndex: Int = 0
         var maxSolanaIndex: Int = 0
@@ -46,7 +41,16 @@ enum SequentialWalletPathGenerator {
         guard maxEVMIndex == maxSolanaIndex else {
             throw GenerationError.mismatchIndex
         }
-        return maxEVMIndex + 1
+        return maxEVMIndex
+    }
+    
+    static func nextPathIndex(walletCategory category: Web3Wallet.Category) throws -> Int {
+        let paths = Web3AddressDAO.shared.paths(walletCategory: category)
+        if paths.isEmpty {
+            throw GenerationError.missingDefaultWallet
+        }
+        let index = try maxIndex(paths: paths)
+        return index + 1
     }
     
 }

@@ -1309,6 +1309,7 @@
 "send_to_developer" = "Отправить разработчику";
 "send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Отправить в";
+"send_token_minimum_amount" = "Send at least %@";
 "send_video" = "Отправить 1 видео";
 "send_video_count" = "Отправить %d видео";
 "send_without_sound" = "Отправить без звука";

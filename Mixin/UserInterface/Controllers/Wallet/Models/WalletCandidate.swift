@@ -3,6 +3,7 @@ import MixinServices
 
 struct WalletCandidate {
     
+    let bitcoinWallet: BIP39Mnemonics.Derivation
     let evmWallet: BIP39Mnemonics.Derivation
     let solanaWallet: BIP39Mnemonics.Derivation
     let usdBalanceSum: Decimal
@@ -15,6 +16,7 @@ struct WalletCandidate {
     }
     
     init(
+        bitcoinWallet: BIP39Mnemonics.Derivation,
         evmWallet: BIP39Mnemonics.Derivation,
         solanaWallet: BIP39Mnemonics.Derivation,
         tokens: [Web3Token],
@@ -29,6 +31,7 @@ struct WalletCandidate {
         )
         let tokenDigests = tokens.map(TokenDigest.init(token:))
         self.init(
+            bitcoinWallet: bitcoinWallet,
             evmWallet: evmWallet,
             solanaWallet: solanaWallet,
             usdBalanceSum: usdBalanceSum,
@@ -39,10 +42,15 @@ struct WalletCandidate {
     }
     
     private init(
-        evmWallet: BIP39Mnemonics.Derivation, solanaWallet: BIP39Mnemonics.Derivation,
-        usdBalanceSum: Decimal, value: NSAttributedString, tokens: [TokenDigest],
+        bitcoinWallet: BIP39Mnemonics.Derivation,
+        evmWallet: BIP39Mnemonics.Derivation,
+        solanaWallet: BIP39Mnemonics.Derivation,
+        usdBalanceSum: Decimal,
+        value: NSAttributedString,
+        tokens: [TokenDigest],
         importedAsName: String?
     ) {
+        self.bitcoinWallet = bitcoinWallet
         self.evmWallet = evmWallet
         self.solanaWallet = solanaWallet
         self.usdBalanceSum = usdBalanceSum
@@ -52,6 +60,7 @@ struct WalletCandidate {
     }
     
     static func empty(
+        bitcoinWallet: BIP39Mnemonics.Derivation,
         evmWallet: BIP39Mnemonics.Derivation,
         solanaWallet: BIP39Mnemonics.Derivation,
         importedAsName: String?,
@@ -61,6 +70,7 @@ struct WalletCandidate {
             fontSize: 22
         )
         return WalletCandidate(
+            bitcoinWallet: bitcoinWallet,
             evmWallet: evmWallet,
             solanaWallet: solanaWallet,
             usdBalanceSum: 0,

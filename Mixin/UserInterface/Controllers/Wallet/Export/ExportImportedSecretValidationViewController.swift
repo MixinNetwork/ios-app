@@ -42,6 +42,15 @@ final class ExportImportedSecretValidationViewController: ErrorReportingPINValid
                     var error: NSError?
                     let privateKey: String
                     switch kind {
+                    case .bitcoin:
+                        let derivation = try mnemonics.deriveForBitcoin(path: path)
+                        privateKey = try Bitcoin.wif(privateKey: derivation.privateKey)
+                        let redundantPrivateKey = BlockchainExportBitcoinPrivateKey(mnemonics.joinedPhrases, path.string, &error)
+                        if let error {
+                            throw error
+                        } else if privateKey != redundantPrivateKey {
+                            throw ExportError.mismatch
+                        }
                     case .evm:
                         let data = try mnemonics.deriveForEVM(path: path).privateKey
                         privateKey = "0x" + data.hexEncodedString()
@@ -68,6 +77,8 @@ final class ExportImportedSecretValidationViewController: ErrorReportingPINValid
                 case let .privateKey(encryptedPrivateKey, kind):
                     let privateKey = try encryptedPrivateKey.decrypt(with: key)
                     let displayPrivateKey = switch kind {
+                    case .bitcoin:
+                        try Bitcoin.wif(privateKey: privateKey)
                     case .evm:
                         "0x" + privateKey.hexEncodedString()
                     case .solana:

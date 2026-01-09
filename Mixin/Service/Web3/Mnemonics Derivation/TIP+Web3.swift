@@ -11,28 +11,17 @@ extension TIP {
     
     enum GenerationError: Swift.Error {
         case noAccount
+        case bitcoinMismatched
         case evmMismatched
         case solanaMismatched
     }
     
-    enum ClassicWalletDerivation {
-        
-        static func evmPath(index: Int) throws -> DerivationPath {
-            try DerivationPath(string: "m/44'/60'/0'/0/\(index)")
-        }
-        
-        static func evmPathRegex() throws -> NSRegularExpression {
-            try NSRegularExpression(pattern: #"^m\/44'\/60'\/0'\/0\/(\d+)$"#, options: [])
-        }
-        
-        static func solanaPath(index: Int) throws -> DerivationPath {
-            try DerivationPath(string: "m/44'/501'/\(index)'/0'")
-        }
-        
-        static func solanaPathRegex() throws -> NSRegularExpression {
-            try NSRegularExpression(pattern: #"^m\/44'\/501'\/(\d+)'\/0'$"#, options: [])
-        }
-        
+    static func deriveBitcoinPrivateKey(
+        pin: String,
+        path: DerivationPath
+    ) async throws -> Data {
+        let spendKey = try await TIP.spendPriv(pin: pin)
+        return try deriveBitcoinPrivateKey(spendKey: spendKey, path: path)
     }
     
     static func deriveEthereumPrivateKey(
@@ -61,8 +50,34 @@ extension TIP {
         let spendKey = try await TIP.spendPriv(pin: pin)
         let hexSpendKey = spendKey.hexEncodedString()
         
+        let bitcoinAddress = try {
+            let path = try DerivationPath.bitcoin(index: index)
+            let privateKey = try TIP.deriveBitcoinPrivateKey(spendKey: spendKey, path: path)
+            let destination = try Bitcoin.segwitAddress(privateKey: privateKey)
+            let validationDestination = try {
+                var error: NSError?
+                let address = BlockchainGenerateBitcoinSegwitAddressFromPrivateKey(hexSpendKey, &error)
+                if let error {
+                    throw error
+                }
+                return address
+            }()
+            guard destination == validationDestination else {
+                Logger.web3.error(category: "TIP+Web3", message: "Derive Bitcoin Address: \(destination), \(validationDestination)")
+                throw GenerationError.bitcoinMismatched
+            }
+            return try CreateSigningWalletRequest.SignedAddress(
+                destination: destination,
+                chainID: ChainID.bitcoin,
+                path: path.string,
+                userID: userID
+            ) { message in
+                try Bitcoin.sign(message: message, with: privateKey)
+            }
+        }()
+        
         let evmAddress = try {
-            let path = try ClassicWalletDerivation.evmPath(index: index)
+            let path = try DerivationPath.evm(index: index)
             let account = try {
                 let priv = try TIP.deriveEthereumPrivateKey(spendKey: spendKey, path: path)
                 let keyStorage = InPlaceKeyStorage(raw: priv)
@@ -92,7 +107,7 @@ extension TIP {
         }()
         
         let solanaAddress = try {
-            let path = try ClassicWalletDerivation.solanaPath(index: index)
+            let path = try DerivationPath.solana(index: index)
             let privateKey = try TIP.deriveSolanaPrivateKey(spendKey: spendKey, path: path)
             let destination = try Solana.publicKey(seed: privateKey)
             let validationDestination = try {
@@ -121,7 +136,7 @@ extension TIP {
             }
         }()
         
-        return [evmAddress, solanaAddress]
+        return [bitcoinAddress, evmAddress, solanaAddress]
     }
     
     static func registerDefaultCommonWalletIfNeeded(pin: String) async throws {
@@ -130,25 +145,120 @@ extension TIP {
             wallets: remoteWallets.map(\.wallet),
             addresses: remoteWallets.flatMap(\.addresses)
         )
-        if remoteWallets.contains(where: { $0.wallet.category.knownCase == .classic }) {
-            // Already registered
-            Logger.login.info(category: "TIP+Web3", message: "Skip classic wallet register")
-            return
+        let hasCommonWalletRegistered = remoteWallets.contains { response in
+            response.wallet.category.knownCase == .classic
         }
-        
-        Logger.login.info(category: "TIP+Web3", message: "Register default commmon wallet")
-        let addresses = try await deriveAddresses(pin: pin, index: 0)
-        let request = CreateSigningWalletRequest(
-            name: R.string.localizable.common_wallet(),
-            category: .classic,
-            addresses: addresses
-        )
-        let defaultWallet = try await RouteAPI.createWallet(request)
-        Web3WalletDAO.shared.save(
-            wallets: [defaultWallet.wallet],
-            addresses: defaultWallet.addresses
-        )
-        Logger.login.info(category: "TIP+Web3", message: "Registered")
+        let hasBitcoinAddressUpdated = remoteWallets.allSatisfy { response in
+            switch response.bitcoinAvailability {
+            case .available, .notInvolved:
+                true
+            case .unavailable:
+                false
+            }
+        }
+        if hasCommonWalletRegistered {
+            if hasBitcoinAddressUpdated {
+                Logger.login.info(category: "TIP+Web3", message: "All common wallets set up")
+            } else {
+                Logger.login.info(category: "TIP+Web3", message: "Update Bitcoin address")
+                struct BitcoinUpdate {
+                    let walletID: String
+                    let address: CreateSigningWalletRequest.SignedAddress
+                }
+                var updates: [BitcoinUpdate] = []
+                for response in remoteWallets {
+                    let wallet = response.wallet
+                    let paths = response.addresses.compactMap(\.path)
+                    let index = try SequentialWalletPathGenerator.maxIndex(paths: paths)
+                    let path = try DerivationPath.bitcoin(index: index)
+                    
+                    let privateKey: Data
+                    let destination: String
+                    switch wallet.category.knownCase {
+                    case .classic:
+                        privateKey = try await deriveBitcoinPrivateKey(pin: pin, path: path)
+                        destination = try Bitcoin.segwitAddress(privateKey: privateKey)
+                        let validationDestination = try {
+                            let hexPrivateKey = privateKey.hexEncodedString()
+                            var error: NSError?
+                            let address = BlockchainGenerateBitcoinSegwitAddressFromPrivateKey(hexPrivateKey, &error)
+                            if let error {
+                                throw error
+                            }
+                            return address
+                        }()
+                        guard destination == validationDestination else {
+                            Logger.web3.error(category: "TIP+Web3", message: "Update Bitcoin Address: \(destination), \(validationDestination)")
+                            throw GenerationError.bitcoinMismatched
+                        }
+                    case .importedMnemonic:
+                        let encryptedMnemonics = AppGroupKeychain.importedMnemonics(
+                            walletID: wallet.walletID
+                        )
+                        if let encryptedMnemonics {
+                            let key = try await TIP.importedWalletEncryptionKey(pin: pin)
+                            let mnemonics = try encryptedMnemonics.decrypt(with: key)
+                            let derivation = try mnemonics.deriveForBitcoin(path: path)
+                            privateKey = derivation.privateKey
+                            destination = derivation.address
+                        } else {
+                            // Skipped. Could be updated when re-importing the mnemonics
+                            continue
+                        }
+                    case .importedPrivateKey, .watchAddress, .none:
+                        continue
+                    }
+                    
+                    let address = try CreateSigningWalletRequest.SignedAddress(
+                        destination: destination,
+                        chainID: ChainID.bitcoin,
+                        path: path.string,
+                        userID: myUserId
+                    ) { message in
+                        try Bitcoin.sign(message: message, with: privateKey)
+                    }
+                    let update = BitcoinUpdate(walletID: wallet.walletID, address: address)
+                    updates.append(update)
+                }
+                Logger.login.info(category: "TIP+Web3", message: "Update Bitcoin for: \(updates.map(\.walletID))")
+                try await withThrowingTaskGroup(of: Void.self) { group in
+                    for update in updates {
+                        group.addTask {
+                            let addresses = try await RouteAPI.updateWallet(
+                                id: update.walletID,
+                                appendingAddresses: [update.address]
+                            )
+                            Web3AddressDAO.shared.save(addresses: addresses)
+                            Logger.login.info(category: "TIP+Web3", message: "\(update.walletID) bitcoin updated")
+                        }
+                    }
+                    try await group.waitForAll()
+                }
+            }
+        } else {
+            Logger.login.info(category: "TIP+Web3", message: "Register default commmon wallet")
+            let addresses = try await deriveAddresses(pin: pin, index: 0)
+            let request = CreateSigningWalletRequest(
+                name: R.string.localizable.common_wallet(),
+                category: .classic,
+                addresses: addresses
+            )
+            let defaultWallet = try await RouteAPI.createWallet(request)
+            Web3WalletDAO.shared.save(
+                wallets: [defaultWallet.wallet],
+                addresses: defaultWallet.addresses
+            )
+            Logger.login.info(category: "TIP+Web3", message: "Registered")
+        }
+    }
+    
+    private static func deriveBitcoinPrivateKey(
+        spendKey: Data,
+        path: DerivationPath
+    ) throws -> Data {
+        let masterKey = ExtendedKey(seed: spendKey, curve: .secp256k1)
+        let derivation = try masterKey.deriveUsingSecp256k1(path: path)
+        return derivation.key
     }
     
     private static func deriveEthereumPrivateKey(

@@ -69,7 +69,7 @@ extension Web3Output: TableRecord, PersistableRecord {
 extension Web3Output {
     
     public static func bitcoinOutputID<Interger: FixedWidthInteger>(txid: String, vout: Interger) -> String {
-        "\(txid):\(1)".uuidDigest()
+        "\(txid)\(vout)".uuidDigest()
     }
     
 }

@@ -298,7 +298,7 @@ extension Bitcoin {
         ) -> Decimal {
             let inputSize = Decimal(numberOfInputs) * 68
             let outputSize = Decimal(numberOfOutputs) * 31
-            let overhead: Decimal = 10
+            let overhead: Decimal = 11
             return inputSize + outputSize + overhead
         }
         

@@ -64,7 +64,13 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
         tokenNameLabel.text = payment.token.name
         tokenBalanceLabel.text = payment.token.localizedBalanceWithSymbol
         addFeeView()
-        reloadFee(payment: payment, transferAmount: 0)
+        switch payment.chain.specification {
+        case .bitcoin:
+            // Will reload later in `reloadviews(inputAmount:)`
+            break
+        case .evm, .solana:
+            reloadFee(payment: payment, transferAmount: 0)
+        }
         reloadMinimumTransferAmount(payment: payment)
     }
     

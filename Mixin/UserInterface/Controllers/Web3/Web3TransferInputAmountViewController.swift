@@ -271,14 +271,24 @@ extension Web3TransferInputAmountViewController {
                             self.bitcoinFeeCalculator = calculator
                         }
                     }
-                    let feeResult = try calculator.calculate(
-                        transferAmount: transferAmount == 0 ? 1 * .satoshi : transferAmount
-                    )
-                    fee = Web3DisplayFee(
-                        token: feeToken,
-                        tokenAmount: feeResult.feeAmount,
-                        fiatMoneyAmount: feeResult.feeAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-                    )
+                    do {
+                        let feeResult = try calculator.calculate(
+                            transferAmount: transferAmount == 0 ? 1 * .satoshi : transferAmount
+                        )
+                        fee = Web3DisplayFee(
+                            token: feeToken,
+                            tokenAmount: feeResult.feeAmount,
+                            fiatMoneyAmount: feeResult.feeAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
+                        )
+                    } catch Bitcoin.P2WPKHFeeCalculator.CalculateError.insufficientOutputs(let feeAmount) {
+                        fee = Web3DisplayFee(
+                            token: feeToken,
+                            tokenAmount: feeAmount,
+                            fiatMoneyAmount: feeAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
+                        )
+                    } catch {
+                        throw error
+                    }
                 case .evm(let chainID):
                     let operation = try EVMTransferToAddressOperation(
                         evmChainID: chainID,

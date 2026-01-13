@@ -245,7 +245,7 @@ extension Bitcoin {
         
         enum CalculateError: Error {
             case invalidOutputAmount(String)
-            case insufficientOutputs
+            case insufficientOutputs(feeAmount: Decimal)
         }
         
         struct Result {
@@ -264,6 +264,7 @@ extension Bitcoin {
         func calculate(transferAmount: Decimal) throws -> Result {
             var spendingOutputs: [Web3Output] = []
             var utxoAmount: Decimal = 0
+            var feeWithChange: Decimal = 0
             for output in allOutputs {
                 guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
                     throw CalculateError.invalidOutputAmount(output.amount)
@@ -274,7 +275,7 @@ extension Bitcoin {
                     numberOfInputs: spendingOutputs.count,
                     numberOfOutputs: 2
                 )
-                let feeWithChange = vsizeWithChange * rate * .satoshi
+                feeWithChange = vsizeWithChange * rate * .satoshi
                 if utxoAmount < transferAmount + feeWithChange {
                     continue
                 } else if utxoAmount > transferAmount + feeWithChange {
@@ -288,7 +289,7 @@ extension Bitcoin {
                     return Result(feeAmount: feeAmount, spendingOutputs: spendingOutputs)
                 }
             }
-            throw CalculateError.insufficientOutputs
+            throw CalculateError.insufficientOutputs(feeAmount: feeWithChange)
         }
         
         private func vSize(

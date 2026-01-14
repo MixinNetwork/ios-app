@@ -91,11 +91,11 @@ final class ReimportMnemonicsViewController: InputBIP39MnemonicsViewController {
                 let path = try DerivationPath(string: pathString)
                 let derivedAddress = switch kind {
                 case .bitcoin:
-                    try mnemonics.deriveForBitcoin(path: path).address
+                    try mnemonics.checkedDerivationForBitcoin(path: path).address
                 case .evm:
-                    try mnemonics.deriveForEVM(path: path).address
+                    try mnemonics.checkedDerivationForEVM(path: path).address
                 case .solana:
-                    try mnemonics.deriveForSolana(path: path).address
+                    try mnemonics.checkedDerivationForSolana(path: path).address
                 }
                 if derivedAddress != address.destination {
                     throw ReimportError.mismatched
@@ -112,7 +112,7 @@ final class ReimportMnemonicsViewController: InputBIP39MnemonicsViewController {
                     paths: addresses.compactMap(\.path)
                 )
                 let path = try DerivationPath.bitcoin(index: index)
-                let derivation = try mnemonics.deriveForBitcoin(path: path)
+                let derivation = try mnemonics.checkedDerivationForBitcoin(path: path)
                 let bitcoinAddress = try CreateSigningWalletRequest.SignedAddress(
                     destination: derivation.address,
                     chainID: ChainID.bitcoin,

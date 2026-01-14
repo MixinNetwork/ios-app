@@ -56,7 +56,7 @@ extension TIP {
             let destination = try Bitcoin.segwitAddress(privateKey: privateKey)
             let validationDestination = try {
                 var error: NSError?
-                let address = BlockchainGenerateBitcoinSegwitAddressFromPrivateKey(hexSpendKey, &error)
+                let address = BlockchainGenerateBitcoinSegwitAddress(hexSpendKey, path.string, &error)
                 if let error {
                     throw error
                 }
@@ -185,10 +185,10 @@ extension TIP {
                     case .classic:
                         privateKey = try await deriveBitcoinPrivateKey(pin: pin, path: path)
                         destination = try Bitcoin.segwitAddress(privateKey: privateKey)
-                        let validationDestination = try {
-                            let hexPrivateKey = privateKey.hexEncodedString()
+                        let validationDestination = try await {
+                            let spendKey = try await TIP.spendPriv(pin: pin).hexEncodedString()
                             var error: NSError?
-                            let address = BlockchainGenerateBitcoinSegwitAddressFromPrivateKey(hexPrivateKey, &error)
+                            let address = BlockchainGenerateBitcoinSegwitAddress(spendKey, path.string, &error)
                             if let error {
                                 throw error
                             }
@@ -205,7 +205,7 @@ extension TIP {
                         if let encryptedMnemonics {
                             let key = try await TIP.importedWalletEncryptionKey(pin: pin)
                             let mnemonics = try encryptedMnemonics.decrypt(with: key)
-                            let derivation = try mnemonics.deriveForBitcoin(path: path)
+                            let derivation = try mnemonics.checkedDerivationForBitcoin(path: path)
                             privateKey = derivation.privateKey
                             destination = derivation.address
                         } else {

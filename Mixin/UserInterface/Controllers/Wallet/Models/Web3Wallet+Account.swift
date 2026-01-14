@@ -31,7 +31,7 @@ extension Web3Wallet {
             }
             let key = try await TIP.importedWalletEncryptionKey(pin: pin)
             let mnemonics = try encryptedMnemonics.decrypt(with: key)
-            return try mnemonics.deriveForBitcoin(path: path).privateKey
+            return try mnemonics.checkedDerivationForBitcoin(path: path).privateKey
         case .importedPrivateKey:
             let encryptedPrivateKey = AppGroupKeychain.importedPrivateKey(walletID: walletID)
             guard let encryptedPrivateKey else {
@@ -67,7 +67,7 @@ extension Web3Wallet {
             }
             let key = try await TIP.importedWalletEncryptionKey(pin: pin)
             let mnemonics = try encryptedMnemonics.decrypt(with: key)
-            privateKey = try mnemonics.deriveForEVM(path: path).privateKey
+            privateKey = try mnemonics.checkedDerivationForEVM(path: path).privateKey
         case .importedPrivateKey:
             let encryptedPrivateKey = AppGroupKeychain.importedPrivateKey(walletID: walletID)
             guard let encryptedPrivateKey else {
@@ -104,7 +104,7 @@ extension Web3Wallet {
             }
             let key = try await TIP.importedWalletEncryptionKey(pin: pin)
             let mnemonics = try encryptedMnemonics.decrypt(with: key)
-            return try mnemonics.deriveForSolana(path: path).privateKey
+            return try mnemonics.checkedDerivationForSolana(path: path).privateKey
         case .importedPrivateKey:
             let encryptedPrivateKey = AppGroupKeychain.importedPrivateKey(walletID: walletID)
             guard let encryptedPrivateKey else {

@@ -43,7 +43,7 @@ final class ExportImportedSecretValidationViewController: ErrorReportingPINValid
                     let privateKey: String
                     switch kind {
                     case .bitcoin:
-                        let derivation = try mnemonics.deriveForBitcoin(path: path)
+                        let derivation = try mnemonics.checkedDerivationForBitcoin(path: path)
                         privateKey = try Bitcoin.wif(privateKey: derivation.privateKey)
                         let redundantPrivateKey = BlockchainExportBitcoinPrivateKey(mnemonics.joinedPhrases, path.string, &error)
                         if let error {
@@ -52,7 +52,7 @@ final class ExportImportedSecretValidationViewController: ErrorReportingPINValid
                             throw ExportError.mismatch
                         }
                     case .evm:
-                        let data = try mnemonics.deriveForEVM(path: path).privateKey
+                        let data = try mnemonics.checkedDerivationForEVM(path: path).privateKey
                         privateKey = "0x" + data.hexEncodedString()
                         let redundantPrivateKey = BlockchainExportEvmPrivateKey(mnemonics.joinedPhrases, path.string, &error)
                         if let error {
@@ -61,7 +61,7 @@ final class ExportImportedSecretValidationViewController: ErrorReportingPINValid
                             throw ExportError.mismatch
                         }
                     case .solana:
-                        let derivation = try mnemonics.deriveForSolana(path: path)
+                        let derivation = try mnemonics.checkedDerivationForSolana(path: path)
                         privateKey = try Solana.keyPair(derivation: derivation)
                         let redundantPrivateKey = BlockchainExportSolanaPrivateKey(mnemonics.joinedPhrases, path.string, &error)
                         if let error {

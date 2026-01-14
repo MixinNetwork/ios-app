@@ -84,11 +84,11 @@ struct MixinTests {
         let phrases = "legal winner thank year wave sausage worth useful legal winner thank yellow"
             .components(separatedBy: " ")
         let mnemonics = try BIP39Mnemonics(phrases: phrases)
-        let solAddress = try mnemonics.deriveForSolana(path: DerivationPath(string: "m/44'/501'/1'/0'")).address
+        let solAddress = try mnemonics.checkedDerivationForSolana(path: DerivationPath(string: "m/44'/501'/1'/0'")).address
         #expect(solAddress == "EdjcxP8MmXP4yRHguEVoH75kbXVfZNFXPgNfL9NqcXXK")
         for i in 0..<10 {
             let path = try DerivationPath(string: "m/44'/501'/\(i)'/0'")
-            let solAddress = try mnemonics.deriveForSolana(path: path).address
+            let solAddress = try mnemonics.checkedDerivationForSolana(path: path).address
             let output = "\(path.string) => \(solAddress)"
             switch i {
             case 0:
@@ -137,12 +137,12 @@ struct MixinTests {
         let mnemonics = try BIP39Mnemonics(phrases: phrases)
         
         let evmPath = try DerivationPath(string: "m/44'/60'/0'/0/0")
-        let evmPrivateKey = try mnemonics.deriveForEVM(path: evmPath).privateKey
+        let evmPrivateKey = try mnemonics.checkedDerivationForEVM(path: evmPath).privateKey
         let evmKey = "0x" + evmPrivateKey.hexEncodedString()
         #expect(evmKey == "0x33fa40f84e854b941c2b0436dd4a256e1df1cb41b9c1c0ccc8446408c19b8bf9")
         
         let solanaPath = try DerivationPath(string: "m/44'/501'/0'/0'")
-        let solanaDerivation = try mnemonics.deriveForSolana(path: solanaPath)
+        let solanaDerivation = try mnemonics.checkedDerivationForSolana(path: solanaPath)
         let solanaKey = try Solana.keyPair(derivation: solanaDerivation)
         #expect(solanaKey == "37NfN7eam3KCwdC6jAc7nFeuDNYCV1K2AgNWmT4Xo6ogQPMnJ1ZoWA7AKN6jzEoQi3FNTEkkXiwu7VjqXdu8FGUs")
     }

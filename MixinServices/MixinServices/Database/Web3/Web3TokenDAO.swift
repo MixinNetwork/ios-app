@@ -216,14 +216,11 @@ public final class Web3TokenDAO: Web3DAO {
         )
     }
     
-    public func save(
-        tokens: [Web3Token],
-        outputBasedAssetIDs: Set<String>,
-        zeroOutOthers: Bool
-    ) {
+    public func save(tokens: [Web3Token], zeroOutOthers: Bool) {
         guard let walletID = tokens.first?.walletID else {
             return
         }
+        let outputBasedAssetIDs: Set<String> = [AssetID.btc]
         db.write { db in
             for token in tokens {
                 try token.save(db)

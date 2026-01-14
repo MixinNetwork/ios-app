@@ -58,11 +58,7 @@ enum Web3AddressValidator {
                             throw ValidationError.invalidFormat
                         }
                         let remoteToken = try await RouteAPI.asset(assetID: id, address: address.destination)
-                        Web3TokenDAO.shared.save(
-                            tokens: [remoteToken], 
-                            outputBasedAssetIDs: [AssetID.btc],
-                            zeroOutOthers: false
-                        )
+                        Web3TokenDAO.shared.save(tokens: [remoteToken], zeroOutOthers: false)
                         let chain = ChainDAO.shared.chain(chainId: remoteToken.chainID)
                         linkToken = Web3TokenItem(token: remoteToken, hidden: false, chain: chain)
                     }

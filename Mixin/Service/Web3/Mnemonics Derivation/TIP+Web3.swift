@@ -167,6 +167,13 @@ extension TIP {
                 }
                 var updates: [BitcoinUpdate] = []
                 for response in remoteWallets {
+                    let hasBitcoinAddress = response.addresses.contains { address in
+                        address.chainID == ChainID.bitcoin
+                    }
+                    if hasBitcoinAddress {
+                        continue
+                    }
+                    
                     let wallet = response.wallet
                     let paths = response.addresses.compactMap(\.path)
                     let index = try SequentialWalletPathGenerator.maxIndex(paths: paths)

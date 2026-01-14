@@ -21,9 +21,8 @@ struct BIP39Mnemonics {
     let phrases: [String]
     let joinedPhrases: String
     
-    private let btcMasterKey: ExtendedKey
-    private let evmMasterKey: ExtendedKey
-    private let solMasterKey: ExtendedKey
+    private let secp256k1MasterKey: ExtendedKey
+    private let ed25519MasterKey: ExtendedKey
     
     init(phrases: [String]) throws {
         guard PhrasesCount(rawValue: phrases.count) != nil else {
@@ -57,9 +56,8 @@ struct BIP39Mnemonics {
         self.entropy = entropy
         self.phrases = phrases
         self.joinedPhrases = joinedPhrases
-        self.btcMasterKey = ExtendedKey(seed: seed, curve: .secp256k1)
-        self.evmMasterKey = ExtendedKey(seed: seed, curve: .secp256k1)
-        self.solMasterKey = ExtendedKey(seed: seed, curve: .ed25519)
+        self.secp256k1MasterKey = ExtendedKey(seed: seed, curve: .secp256k1)
+        self.ed25519MasterKey = ExtendedKey(seed: seed, curve: .ed25519)
     }
     
 }
@@ -104,7 +102,7 @@ extension BIP39Mnemonics {
     
     func deriveForEVM(path: DerivationPath) throws -> Derivation {
         var error: NSError?
-        let privateKey = try evmMasterKey.deriveUsingSecp256k1(path: path)
+        let privateKey = try secp256k1MasterKey.deriveUsingSecp256k1(path: path)
         let keyStorage = InPlaceKeyStorage(raw: privateKey.key)
         let account = try EthereumAccount(keyStorage: keyStorage)
         let evmAddress = account.address.toChecksumAddress()
@@ -123,7 +121,7 @@ extension BIP39Mnemonics {
     
     func deriveForSolana(path: DerivationPath) throws -> Derivation {
         var error: NSError?
-        let solanaKey = solMasterKey.deriveUsingEd25519(path: path)
+        let solanaKey = ed25519MasterKey.deriveUsingEd25519(path: path)
         let solanaAddress = try Solana.publicKey(seed: solanaKey.key)
         let redundantSolanaAddress = BlockchainGenerateSolanaAddressFromMnemonic(
             joinedPhrases,

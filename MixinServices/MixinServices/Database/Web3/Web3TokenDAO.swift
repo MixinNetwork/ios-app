@@ -222,23 +222,41 @@ public final class Web3TokenDAO: Web3DAO {
         }
         let outputBasedAssetIDs: Set<String> = [AssetID.btc]
         db.write { db in
+            let walletCategory: Web3Wallet.Category? = try {
+                let value = try String.fetchOne(
+                    db,
+                    sql: "SELECT category FROM wallets WHERE wallet_id = ?",
+                    arguments: [walletID]
+                )
+                return if let value {
+                    Web3Wallet.Category(rawValue: value)
+                } else {
+                    nil
+                }
+            }()
             for token in tokens {
                 try token.save(db)
-                if outputBasedAssetIDs.contains(token.assetID) {
-                    let address = try Web3AddressDAO.shared.destination(
-                        walletID: token.walletID,
-                        chainID: token.chainID,
-                        db: db
-                    )
-                    if let address {
-                        try updateAmountByOutputs(
+                switch walletCategory {
+                case .classic, .importedMnemonic, .importedPrivateKey:
+                    if outputBasedAssetIDs.contains(token.assetID) {
+                        let address = try Web3AddressDAO.shared.destination(
                             walletID: token.walletID,
-                            address: address,
-                            assetID: token.assetID,
-                            db: db,
-                            postTokenChangeNofication: false,
+                            chainID: token.chainID,
+                            db: db
                         )
+                        if let address {
+                            try updateAmountByOutputs(
+                                walletID: token.walletID,
+                                address: address,
+                                assetID: token.assetID,
+                                db: db,
+                                postTokenChangeNofication: false,
+                            )
+                        }
                     }
+                case .watchAddress, .none:
+                    // Use `token.amount` instead of calculating outputs for watch wallets
+                    break
                 }
                 if token.level < Web3Reputation.Level.unknown.rawValue {
                     let extra = Web3TokenExtra(

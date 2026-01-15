@@ -46,6 +46,10 @@ extension DerivationPath {
         try DerivationPath(string: "m/84'/0'/0'/0/\(index)")
     }
     
+    static func bitcoinPathRegex() throws -> NSRegularExpression {
+        try NSRegularExpression(pattern: #"^m\/84'\/0'\/0'\/0\/(\d+)$"#, options: [])
+    }
+    
     static func evm<Integer: FixedWidthInteger>(index: Integer) throws -> DerivationPath {
         try DerivationPath(string: "m/44'/60'/0'/0/\(index)")
     }

@@ -21,7 +21,11 @@ final class SyncWeb3OutputJob: AsynchronousJob {
             return false
         }
         Logger.general.debug(category: "SyncWeb3Output", message: "wid: \(walletID), addr: \(address.destination)")
-        RouteAPI.walletOutputs(assetID: assetID, address: address.destination) { [walletID, assetID] result in
+        RouteAPI.walletOutputs(
+            assetID: assetID,
+            address: address.destination,
+            queue: .global(),
+        ) { [walletID, assetID] result in
             switch result {
             case let .success(outputs):
                 Logger.general.debug(category: "SyncWeb3Output", message: "Got \(outputs.count) outputs")

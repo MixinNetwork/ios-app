@@ -522,11 +522,13 @@ extension RouteAPI {
     static func walletOutputs(
         assetID: String,
         address: String,
+        queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<[Web3Output]>) -> Void
     ) {
         request(
             method: .get,
             path: "/wallets/outputs?asset_id=\(assetID)&address=\(address)",
+            queue: queue,
             completion: completion
         )
     }

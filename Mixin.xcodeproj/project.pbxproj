@@ -1198,6 +1198,7 @@
 		948ACAA52AF3950C0057D76B /* SnapshotMessageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */; };
 		948AF9AB2EB9CB140035C9BF /* TradeTokenSelectorStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AF9AA2EB9CB0F0035C9BF /* TradeTokenSelectorStyle.swift */; };
 		948AF9D42EB9EDB10035C9BF /* TradePricingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AF9D32EB9EDB00035C9BF /* TradePricingModel.swift */; };
+		948DFCEE2F192E4600200EFA /* Web3OutputsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948DFCED2F192E4000200EFA /* Web3OutputsViewController.swift */; };
 		948E276B29D2A521002BFCE1 /* NetworkFeeOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */; };
 		948E6CB528AF95CC00DFF5DF /* TIPIntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948E6CB328AF95CC00DFF5DF /* TIPIntroViewController.swift */; };
 		948E6CB628AF95CC00DFF5DF /* TIPIntroView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948E6CB428AF95CC00DFF5DF /* TIPIntroView.xib */; };
@@ -2993,6 +2994,7 @@
 		948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMessageContentView.swift; sourceTree = "<group>"; };
 		948AF9AA2EB9CB0F0035C9BF /* TradeTokenSelectorStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeTokenSelectorStyle.swift; sourceTree = "<group>"; };
 		948AF9D32EB9EDB00035C9BF /* TradePricingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradePricingModel.swift; sourceTree = "<group>"; };
+		948DFCED2F192E4000200EFA /* Web3OutputsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3OutputsViewController.swift; sourceTree = "<group>"; };
 		948E276A29D2A521002BFCE1 /* NetworkFeeOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkFeeOption.swift; sourceTree = "<group>"; };
 		948E6CB328AF95CC00DFF5DF /* TIPIntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPIntroViewController.swift; sourceTree = "<group>"; };
 		948E6CB428AF95CC00DFF5DF /* TIPIntroView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPIntroView.xib; sourceTree = "<group>"; };
@@ -4868,6 +4870,7 @@
 				94658CA62B34829B00F5EB21 /* OutputCell.swift */,
 				94658CA72B34829B00F5EB21 /* OutputCell.xib */,
 				94658CA12B34824E00F5EB21 /* OutputsViewController.swift */,
+				948DFCED2F192E4000200EFA /* Web3OutputsViewController.swift */,
 			);
 			path = Diagnose;
 			sourceTree = "<group>";
@@ -7595,6 +7598,7 @@
 				7B369208233A43C1007321A7 /* SegmentedControl.swift in Sources */,
 				9427D51A25E0D42E00B1EF0E /* MusicInfoView.swift in Sources */,
 				7C2AC42928F2B384005F369A /* DepositSuspendedView.swift in Sources */,
+				948DFCEE2F192E4600200EFA /* Web3OutputsViewController.swift in Sources */,
 				7B082D1A242CACA000C5E163 /* MultipleSelectionActionView.swift in Sources */,
 				7BFE47DB228421D100FC4379 /* UserItemPeerViewController.swift in Sources */,
 				7C4C03A128532575003DE0C0 /* AddContactViewController.swift in Sources */,

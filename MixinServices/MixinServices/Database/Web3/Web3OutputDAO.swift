@@ -5,6 +5,22 @@ public final class Web3OutputDAO: Web3DAO {
     
     public static let shared = Web3OutputDAO()
     
+    public func outputs(token: Web3Token?) -> [Web3Output] {
+        if let token {
+            db.select(
+                with: """
+                SELECT * FROM outputs o
+                    INNER JOIN addresses a ON o.address = a.destination
+                WHERE a.wallet_id = ? AND a.chain_id = ? AND asset_id = ?
+                ORDER BY created_at ASC
+                """,
+                arguments: [token.walletID, token.chainID, token.assetID]
+            )
+        } else {
+            db.select(with: "SELECT * FROM outputs")
+        }
+    }
+    
     public func unspentOutputs(address: String, assetID: String) -> [Web3Output] {
         db.select(
             with: """

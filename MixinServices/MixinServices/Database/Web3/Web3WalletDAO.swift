@@ -20,6 +20,17 @@ public final class Web3WalletDAO: Web3DAO {
         )
     }
     
+    public func hasWallet(chainID: String) -> Bool {
+        let sql = """
+        SELECT 1
+        FROM wallets w
+        INNER JOIN addresses a ON w.wallet_id = a.wallet_id
+        WHERE a.chain_id = ?
+        """
+        let value: Int? = db.select(with: sql, arguments: [chainID])
+        return value == 1
+    }
+    
     public func chainUnavailableWallets(chainID: String) -> [Web3Wallet] {
         let sql = """
         SELECT w.*

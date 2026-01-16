@@ -60,27 +60,45 @@ struct CreateSigningWalletRequest: CreateWalletRequest {
             chainID: String,
             path: String?,
             userID: String,
-            sign: (Data) throws -> String,
+            sign: (String) throws -> String,
         ) throws {
             let timestampInSeconds = floor(Date().timeIntervalSince1970)
             let timestamp = DateFormatter.iso8601Full.string(
                 from: Date(timeIntervalSince1970: timestampInSeconds)
             )
-            let signingContent = """
+            let message = """
             \(destination)
             \(userID)
             \(Int(timestampInSeconds))
             """
-            guard let data = signingContent.data(using: .utf8) else {
-                throw SigningError.makeContent
-            }
-            let signature = try sign(data)
+            let signature = try sign(message)
             
             self.destination = destination
             self.chainID = chainID
             self.path = path
             self.signature = signature
             self.timestamp = timestamp
+        }
+        
+        init(
+            destination: String,
+            chainID: String,
+            path: String?,
+            userID: String,
+            sign: (Data) throws -> String,
+        ) throws {
+            try self.init(
+                destination: destination,
+                chainID: chainID,
+                path: path,
+                userID: userID
+            ) { message in
+                if let data = message.data(using: .utf8) {
+                    return try sign(data)
+                } else {
+                    throw SigningError.makeContent
+                }
+            }
         }
         
     }

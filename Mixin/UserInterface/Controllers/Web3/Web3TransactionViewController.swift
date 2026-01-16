@@ -501,26 +501,34 @@ extension Web3TransactionViewController {
                     guard
                         let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash),
                         let chain = Web3Chain.chain(chainID: rawTransaction.chainID),
-                        chain.kind == .evm,
-                        let transaction = EIP1559Transaction(rawTransaction: rawTransaction.raw),
                         let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID)
                     else {
                         return nil
                     }
                     do {
-                        let speedUp = try EVMSpeedUpOperation(
-                            wallet: wallet,
-                            fromAddress: fromAddress,
-                            transaction: transaction,
-                            chain: chain
-                        )
-                        let cancel = try EVMCancelOperation(
-                            wallet: wallet,
-                            fromAddress: fromAddress,
-                            transaction: transaction,
-                            chain: chain
-                        )
-                        return (speedUp: speedUp, cancel: cancel)
+                        switch chain.kind {
+                        case .bitcoin:
+                            return nil
+                        case .evm:
+                            guard let transaction = EIP1559Transaction(rawTransaction: rawTransaction.raw) else {
+                                return nil
+                            }
+                            let speedUp = try EVMSpeedUpOperation(
+                                wallet: wallet,
+                                fromAddress: fromAddress,
+                                transaction: transaction,
+                                chain: chain
+                            )
+                            let cancel = try EVMCancelOperation(
+                                wallet: wallet,
+                                fromAddress: fromAddress,
+                                transaction: transaction,
+                                chain: chain
+                            )
+                            return (speedUp: speedUp, cancel: cancel)
+                        case .solana:
+                            return nil
+                        }
                     } catch {
                         Logger.general.debug(category: "Web3Txn", message: "Create op failed: \(error)")
                         return nil

@@ -39,3 +39,31 @@ struct DerivationPath {
     }
     
 }
+
+extension DerivationPath {
+    
+    static func bitcoin<Integer: FixedWidthInteger>(index: Integer) throws -> DerivationPath {
+        try DerivationPath(string: "m/84'/0'/0'/0/\(index)")
+    }
+    
+    static func bitcoinPathRegex() throws -> NSRegularExpression {
+        try NSRegularExpression(pattern: #"^m\/84'\/0'\/0'\/0\/(\d+)$"#, options: [])
+    }
+    
+    static func evm<Integer: FixedWidthInteger>(index: Integer) throws -> DerivationPath {
+        try DerivationPath(string: "m/44'/60'/0'/0/\(index)")
+    }
+    
+    static func evmPathRegex() throws -> NSRegularExpression {
+        try NSRegularExpression(pattern: #"^m\/44'\/60'\/0'\/0\/(\d+)$"#, options: [])
+    }
+    
+    static func solana<Integer: FixedWidthInteger>(index: Integer) throws -> DerivationPath {
+        try DerivationPath(string: "m/44'/501'/\(index)'/0'")
+    }
+    
+    static func solanaPathRegex() throws -> NSRegularExpression {
+        try NSRegularExpression(pattern: #"^m\/44'\/501'\/(\d+)'\/0'$"#, options: [])
+    }
+    
+}

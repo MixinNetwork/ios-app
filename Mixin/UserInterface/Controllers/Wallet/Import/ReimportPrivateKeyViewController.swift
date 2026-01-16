@@ -76,6 +76,16 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
         }
         do {
             switch selectedChain.kind {
+            case .bitcoin:
+                let privateKey = try Bitcoin.privateKey(wif: input)
+                let address = try Bitcoin.segwitAddress(privateKey: privateKey)
+                guard addresses.allSatisfy({ $0.destination == address }) else {
+                    throw LoadKeyError.mismatchedWallet
+                }
+                encryptedPrivateKey = try EncryptedPrivateKey(
+                    privateKey: privateKey,
+                    key: encryptionKey
+                )
             case .evm:
                 let hex = if input.hasPrefix("0x") {
                     String(input.dropFirst(2))

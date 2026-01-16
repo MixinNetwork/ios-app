@@ -11,20 +11,22 @@ public class Ed25519PrivateKey {
     private let key: Curve25519.Signing.PrivateKey
     
     public convenience init() {
+        var error: NSError?
         var key = Curve25519.Signing.PrivateKey()
-        var goImpl = Ed25519NewKeyFromSeed(key.rawRepresentation)
-        while goImpl == nil {
+        var goImpl = Ed25519NewKeyFromSeed(key.rawRepresentation, &error)
+        while goImpl == nil || error != nil {
             key = Curve25519.Signing.PrivateKey()
-            goImpl = Ed25519NewKeyFromSeed(key.rawRepresentation)
+            goImpl = Ed25519NewKeyFromSeed(key.rawRepresentation, &error)
         }
         self.init(key: key)
     }
     
     public convenience init(rawRepresentation: Data) throws {
+        var error: NSError?
         let key = try Curve25519.Signing.PrivateKey(rawRepresentation: rawRepresentation)
-        let goImpl = Ed25519NewKeyFromSeed(key.rawRepresentation)
-        guard goImpl != nil else {
-            throw ValidationError.invalidSeed
+        let goImpl = Ed25519NewKeyFromSeed(key.rawRepresentation, &error)
+        guard goImpl != nil && error == nil else {
+            throw ValidationError.invalidSeed(error)
         }
         self.init(key: key)
     }
@@ -46,7 +48,7 @@ public class Ed25519PrivateKey {
 extension Ed25519PrivateKey {
     
     enum ValidationError: Error {
-        case invalidSeed
+        case invalidSeed(NSError?)
     }
     
     private static func x25519(from ed25519: Data) -> Data {

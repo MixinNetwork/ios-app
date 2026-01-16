@@ -28,6 +28,9 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: "Delete Safe Vaults"),
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Reveal Outputs", accessory: .disclosure),
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -80,6 +83,9 @@ extension Web3DiagnosticViewController: UITableViewDelegate {
         case (5, 0):
             SafeWalletDAO.shared.replace(wallets: [], tokens: []) { }
             showAutoHiddenHud(style: .notification, text: R.string.localizable.deleted())
+        case (6, 0):
+            let outputs = Web3OutputsViewController(token: nil)
+            navigationController?.pushViewController(outputs, animated: true)
         default:
             break
         }

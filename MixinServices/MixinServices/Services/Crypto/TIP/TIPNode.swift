@@ -81,7 +81,7 @@ public enum TIPNode {
                 throw Error.assigneeSkNotAvailable
             }
             sk.setBytes(priv)
-            guard let assigneePub = sk.publicKey()?.publicKeyBytes() else {
+            guard let assigneePub = try sk.publicKey()?.publicKeyBytes() else {
                 throw Error.assigneePubNotAvailable
             }
             let assigneeSig = try sk.sign(assigneePub)
@@ -360,7 +360,7 @@ public enum TIPNode {
             guard let responseCipher = Data(hexEncodedString: response.data.cipher) else {
                 throw Error.decodeResponseCipher
             }
-            guard let plain = TipDecrypt(signerPk, userSk, responseCipher) else {
+            guard let plain = TipDecrypt(signerPk, userSk, responseCipher, &error), error == nil else {
                 throw Error.decryptResponseCipher
             }
             guard plain.count == 218 else {

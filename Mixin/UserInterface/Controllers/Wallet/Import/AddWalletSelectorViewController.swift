@@ -218,14 +218,19 @@ final class AddWalletSelectorViewController: UIViewController {
                         result[addressAssets.address] = addressAssets.assets
                     }
                     let newCandidates: [WalletCandidate] = wallets.compactMap { wallet in
+                        let bitcoinTokens = tokens[wallet.bitcoin.address] ?? []
                         let evmTokens = tokens[wallet.evm.address] ?? []
                         let solanaTokens = tokens[wallet.solana.address] ?? []
-                        let tokens = evmTokens + solanaTokens
-                        let name = walletNames[wallet.evm.address] ?? walletNames[wallet.solana.address]
+                        
+                        let name = walletNames[wallet.bitcoin.address]
+                        ?? walletNames[wallet.evm.address]
+                        ?? walletNames[wallet.solana.address]
+                        
                         return tokens.isEmpty ? nil : WalletCandidate(
+                            bitcoinWallet: wallet.bitcoin,
                             evmWallet: wallet.evm,
                             solanaWallet: wallet.solana,
-                            tokens: tokens,
+                            tokens: bitcoinTokens + evmTokens + solanaTokens,
                             importedAsName: name
                         )
                     }

@@ -111,6 +111,8 @@ extension WatchWalletAddressesViewController: UICollectionViewDataSource {
             let (kind, address) = addresses.elements[indexPath.item]
             cell.addressLabel.text = address
             cell.chainImageView.image = switch kind {
+            case .bitcoin:
+                R.image.bitcoin_chain()
             case .evm:
                 R.image.evm_chains()
             case .solana:

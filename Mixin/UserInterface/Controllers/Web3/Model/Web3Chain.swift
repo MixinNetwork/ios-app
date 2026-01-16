@@ -8,11 +8,14 @@ final class Web3Chain {
     
     enum Kind: CaseIterable {
         
+        case bitcoin
         case evm
         case solana
         
         var chains: [Web3Chain] {
             switch self {
+            case .bitcoin:
+                [.bitcoin]
             case .evm:
                 [.ethereum, .polygon, .bnbSmartChain, .base, .arbitrumOne, .opMainnet, .avalancheCChain]
             case .solana:
@@ -21,7 +24,9 @@ final class Web3Chain {
         }
         
         static func singleKindWallet(chainIDs: Set<String>) -> Kind? {
-            if chainIDs.contains(ChainID.ethereum) {
+            if chainIDs.contains(ChainID.bitcoin) {
+                .bitcoin
+            } else if chainIDs.contains(ChainID.ethereum) {
                 .evm
             } else if chainIDs.contains(ChainID.solana) {
                 .solana
@@ -33,6 +38,7 @@ final class Web3Chain {
     }
     
     enum KindSpecification {
+        case bitcoin
         case evm(chainID: Int)
         case solana
     }
@@ -63,6 +69,8 @@ final class Web3Chain {
         failsafeRPCServerURL: URL, caip2: Blockchain
     ) {
         let kind: Kind = switch specification {
+        case .bitcoin:
+                .bitcoin
         case .evm:
                 .evm
         case .solana:
@@ -171,7 +179,8 @@ extension Web3Chain {
     
     static let all: [Web3Chain] = {
         let chains: [Web3Chain] = [
-            .ethereum, .solana, .bnbSmartChain, .base, .polygon, .arbitrumOne, .opMainnet, .avalancheCChain,
+            .bitcoin, .ethereum, .solana, .bnbSmartChain, .base,
+            .polygon, .arbitrumOne, .opMainnet, .avalancheCChain,
         ]
         // Make sure all chains are included
         let allChains = Kind.allCases.reduce(into: []) { results, kind in
@@ -180,6 +189,16 @@ extension Web3Chain {
         assert(chains.count == allChains.count, "New chains added? Put it into `chains` with ordering.")
         return chains
     }()
+    
+    // https://github.com/bitcoin/bips/blob/master/bip-0122.mediawiki#definition-of-chain-id
+    static let bitcoin = Web3Chain(
+        specification: .bitcoin,
+        mixinChainID: ChainID.bitcoin,
+        feeTokenAssetID: AssetID.btc,
+        name: "Bitcoin",
+        failsafeRPCServerURL: URL(string: "https://bitcoin-rpc.publicnode.com")!,
+        caip2: Blockchain("bip122:000000000019d6689c085ae165831e93")!
+    )
     
     static let ethereum = Web3Chain.evm(
         chainID: 1,

@@ -28,7 +28,8 @@ class Web3SendingTokenPayment {
             (ChainID.polygon,           "0x0000000000000000000000000000000000000000"),
             (ChainID.polygon,           "0x0000000000000000000000000000000000001010"),
             (ChainID.bnbSmartChain,     "0x0000000000000000000000000000000000000000"),
-            (ChainID.avalancheCChain,   "0x0000000000000000000000000000000000000000"):
+            (ChainID.avalancheCChain,   "0x0000000000000000000000000000000000000000"),
+            (ChainID.bitcoin,           "c6d0c728-2624-429b-8e0d-d9d19b6592fa"):
             true
         default:
             false

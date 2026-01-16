@@ -34,7 +34,7 @@ final class MixinTokenReceiverViewController: TokenReceiverViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
-        let hasReceivingWallet = Web3Chain.chain(chainID: token.chainID) != nil
+        let hasReceivingWallet = Web3WalletDAO.shared.hasWallet(chainID: token.chainID)
         || SafeWalletDAO.shared.hasSafeWallet(chainID: token.chainID)
         if hasReceivingWallet {
             destinations.append(.myWallets)

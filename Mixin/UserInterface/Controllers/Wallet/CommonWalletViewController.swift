@@ -108,6 +108,7 @@ final class CommonWalletViewController: WalletViewController {
         let jobs = [
             ReviewPendingWeb3RawTransactionJob(walletID: walletID),
             ReviewPendingWeb3TransactionJob(walletID: walletID),
+            SyncWeb3OutputJob(assetID: AssetID.btc, walletID: walletID),
         ]
         reviewPendingTransactionJobID = jobs[1].getJobId()
         for job in jobs {
@@ -247,6 +248,8 @@ final class CommonWalletViewController: WalletViewController {
                 if let privateKey = AppGroupKeychain.importedPrivateKey(walletID: walletID) {
                     let kind: Web3Chain.Kind? = .singleKindWallet(chainIDs: chainIDs)
                     switch kind {
+                    case .bitcoin:
+                        secret = .privateKey(privateKey, .bitcoin)
                     case .evm:
                         secret = .privateKey(privateKey, .evm)
                     case .solana:

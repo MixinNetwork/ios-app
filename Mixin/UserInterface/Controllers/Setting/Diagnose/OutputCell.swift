@@ -50,4 +50,34 @@ final class OutputCell: UITableViewCell {
         amountLabel.text = output.amount
     }
     
+    func load(output: Web3Output, showAddress: Bool) {
+        idLabel.text = output.id
+        hashLabel.text = "\(output.transactionHash):\(output.outputIndex)"
+        descriptionLabel.attributedText = {
+            let description = NSMutableAttributedString(string: output.createdAt, attributes: descriptionAttributes)
+            
+            let stateColor: UIColor
+            switch output.status.knownCase {
+            case .signed:
+                stateColor = R.color.market_red()!
+            case .unspent:
+                stateColor = R.color.market_green()!
+            default:
+                stateColor = R.color.text_tertiary()!
+            }
+            var stateAttributes = descriptionAttributes
+            stateAttributes[.foregroundColor] = stateColor
+            let state = NSMutableAttributedString(string: "\n" + output.status.rawValue, attributes: stateAttributes)
+            description.append(state)
+            
+            if showAddress {
+                let address = NSAttributedString(string: "\n" + output.address, attributes: descriptionAttributes)
+                description.append(address)
+            }
+            
+            return description
+        }()
+        amountLabel.text = output.amount
+    }
+    
 }

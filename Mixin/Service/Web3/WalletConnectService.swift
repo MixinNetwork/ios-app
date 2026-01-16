@@ -2,7 +2,6 @@ import Foundation
 import Combine
 import OrderedCollections
 import BigInt
-import web3
 import ReownWalletKit
 import MixinServices
 

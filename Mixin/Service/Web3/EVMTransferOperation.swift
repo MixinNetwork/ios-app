@@ -6,13 +6,22 @@ import MixinServices
 
 class EVMTransferOperation: Web3TransferOperation {
     
-    class EVMDisplayFee: DisplayFee {
+    class EVMDisplayFee: Web3DisplayFee {
         
         let feePerGas: Decimal // In Gwei
         
-        init(feePerGas: Decimal, tokenAmount: Decimal, fiatMoneyAmount: Decimal) {
+        init(
+            token: Web3TokenItem,
+            feePerGas: Decimal,
+            tokenAmount: Decimal,
+            fiatMoneyAmount: Decimal
+        ) {
             self.feePerGas = feePerGas
-            super.init(tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount)
+            super.init(
+                token: token,
+                tokenAmount: tokenAmount,
+                fiatMoneyAmount: fiatMoneyAmount
+            )
         }
         
     }
@@ -131,7 +140,7 @@ class EVMTransferOperation: Web3TransferOperation {
         )
     }
     
-    override func loadFee() async throws -> DisplayFee {
+    override func loadFee() async throws -> Web3DisplayFee {
         let rawFee = try await RouteAPI.estimatedEthereumFee(
             mixinChainID: mixinChainID,
             from: fromAddress.destination,
@@ -170,6 +179,7 @@ class EVMTransferOperation: Web3TransferOperation {
             tokenAmount = weiCount * .wei
         }
         let fee = EVMDisplayFee(
+            token: feeToken,
             feePerGas: NSDecimalNumber(decimal: feePerGas)
                 .rounding(accordingToBehavior: gweiRoundingHandler)
                 .decimalValue,
@@ -298,7 +308,11 @@ class EVMTransferOperation: Web3TransferOperation {
         return nonce
     }
     
-    private func send(transaction: EIP1559Transaction, with account: EthereumAccount, fee: DisplayFee) async {
+    private func send(
+        transaction: EIP1559Transaction,
+        with account: EthereumAccount,
+        fee: Web3DisplayFee
+    ) async {
         do {
             let transactionDescription = transaction.raw?.hexEncodedString()
                 ?? transaction.jsonRepresentation

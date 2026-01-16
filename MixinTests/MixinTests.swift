@@ -13,8 +13,8 @@ import CryptoKit
 @testable import MixinServices
 
 struct MixinTests {
-
-    @Test func testBIP32() {
+    
+    @Test func testP2PKHDerivation() {
         let seed = Data(hexEncodedString: "67f93560761e20617de26e0cb84f7234aaf373ed2e66295c3d7397e6d7ebe882ea396d5d293808b0defd7edd2babd4c091ad942e6a9351e6d075a29d4df872af")!
         let key = ExtendedKey(seed: seed, curve: .secp256k1)
         let addresses = try! (0..<20).map { (index: UInt32) in
@@ -47,7 +47,7 @@ struct MixinTests {
         #expect(addresses == expectation)
     }
     
-    @Test func testTIPEthereumKey() {
+    @Test func testEthereumDerivation() {
         let seed = Data(hexEncodedString: "67f93560761e20617de26e0cb84f7234aaf373ed2e66295c3d7397e6d7ebe882ea396d5d293808b0defd7edd2babd4c091ad942e6a9351e6d075a29d4df872af")!
         let key = ExtendedKey(seed: seed, curve: .secp256k1)
         let addresses = try! (0..<20).map { (index: UInt32) in
@@ -80,17 +80,15 @@ struct MixinTests {
         #expect(addresses == expectation)
     }
     
-    @Test func testDerivation() throws {
-        let solanaBip44Change1 = try DerivationPath(string: "m/44'/501'/1'/0")
-        
+    @Test func testSolanaDerivation() throws {
         let phrases = "legal winner thank year wave sausage worth useful legal winner thank yellow"
             .components(separatedBy: " ")
         let mnemonics = try BIP39Mnemonics(phrases: phrases)
-        let solAddress = try mnemonics.deriveForSolana(path: solanaBip44Change1).address
+        let solAddress = try mnemonics.checkedDerivationForSolana(path: DerivationPath(string: "m/44'/501'/1'/0'")).address
         #expect(solAddress == "EdjcxP8MmXP4yRHguEVoH75kbXVfZNFXPgNfL9NqcXXK")
         for i in 0..<10 {
             let path = try DerivationPath(string: "m/44'/501'/\(i)'/0'")
-            let solAddress = try mnemonics.deriveForSolana(path: path)
+            let solAddress = try mnemonics.checkedDerivationForSolana(path: path).address
             let output = "\(path.string) => \(solAddress)"
             switch i {
             case 0:
@@ -139,12 +137,12 @@ struct MixinTests {
         let mnemonics = try BIP39Mnemonics(phrases: phrases)
         
         let evmPath = try DerivationPath(string: "m/44'/60'/0'/0/0")
-        let evmPrivateKey = try mnemonics.deriveForEVM(path: evmPath).privateKey
+        let evmPrivateKey = try mnemonics.checkedDerivationForEVM(path: evmPath).privateKey
         let evmKey = "0x" + evmPrivateKey.hexEncodedString()
         #expect(evmKey == "0x33fa40f84e854b941c2b0436dd4a256e1df1cb41b9c1c0ccc8446408c19b8bf9")
         
         let solanaPath = try DerivationPath(string: "m/44'/501'/0'/0'")
-        let solanaDerivation = try mnemonics.deriveForSolana(path: solanaPath)
+        let solanaDerivation = try mnemonics.checkedDerivationForSolana(path: solanaPath)
         let solanaKey = try Solana.keyPair(derivation: solanaDerivation)
         #expect(solanaKey == "37NfN7eam3KCwdC6jAc7nFeuDNYCV1K2AgNWmT4Xo6ogQPMnJ1ZoWA7AKN6jzEoQi3FNTEkkXiwu7VjqXdu8FGUs")
     }

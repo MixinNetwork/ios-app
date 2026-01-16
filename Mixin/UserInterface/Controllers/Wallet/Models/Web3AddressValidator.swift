@@ -99,6 +99,11 @@ enum Web3AddressValidator {
                         toAddressLabel: label
                     )
                     let operation: Web3TransferOperation = switch chain.specification {
+                    case .bitcoin:
+                        try BitcoinTransferToAddressOperation(
+                            payment: addressPayment,
+                            decimalAmount: amount
+                        )
                     case let .evm(chainID):
                         try EVMTransferToAddressOperation(
                             evmChainID: chainID,

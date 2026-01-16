@@ -1,4 +1,5 @@
 import Foundation
+import GRDB
 
 public final class Web3AddressDAO: Web3DAO {
     
@@ -28,6 +29,18 @@ public final class Web3AddressDAO: Web3DAO {
     
     public func addresses(walletID: String) -> [Web3Address] {
         db.select(with: "SELECT * FROM addresses WHERE wallet_id = ?", arguments: [walletID])
+    }
+    
+    public func destination(
+        walletID: String,
+        chainID: String,
+        db: GRDB.Database
+    ) throws -> String? {
+        try String.fetchOne(
+            db,
+            sql: "SELECT destination FROM addresses WHERE wallet_id = ? AND chain_id = ?",
+            arguments: [walletID, chainID]
+        )
     }
     
     public func allDestinations() -> Set<String> {

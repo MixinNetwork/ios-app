@@ -84,7 +84,7 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                 return
             }
             let addresses = wallets.flatMap { wallet in
-                [wallet.evm.address, wallet.solana.address]
+                [wallet.bitcoin.address, wallet.evm.address, wallet.solana.address]
             }
             let firstNameIndex = SequentialWalletNameGenerator.nextNameIndex(category: .common)
             let walletNames = Web3WalletDAO.shared.walletNames()
@@ -94,9 +94,12 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                     let candidates: [WalletCandidate]
                     if assets.isEmpty {
                         let wallet = wallets[0]
-                        let name = walletNames[wallet.evm.address] ?? walletNames[wallet.solana.address]
+                        let name = walletNames[wallet.bitcoin.address]
+                        ?? walletNames[wallet.evm.address]
+                        ?? walletNames[wallet.solana.address]
                         candidates = [
                             .empty(
+                                bitcoinWallet: wallet.bitcoin,
                                 evmWallet: wallet.evm,
                                 solanaWallet: wallet.solana,
                                 importedAsName: name
@@ -107,14 +110,19 @@ final class AddWalletFetchAddressViewController: IntroductionViewController {
                             result[addressAssets.address] = addressAssets.assets
                         }
                         candidates = wallets.compactMap { wallet in
+                            let bitcoinTokens = tokens[wallet.bitcoin.address] ?? []
                             let evmTokens = tokens[wallet.evm.address] ?? []
                             let solanaTokens = tokens[wallet.solana.address] ?? []
-                            let tokens = evmTokens + solanaTokens
-                            let name = walletNames[wallet.evm.address] ?? walletNames[wallet.solana.address]
+                            
+                            let name = walletNames[wallet.bitcoin.address]
+                            ?? walletNames[wallet.evm.address]
+                            ?? walletNames[wallet.solana.address]
+                            
                             return tokens.isEmpty ? nil : WalletCandidate(
+                                bitcoinWallet: wallet.bitcoin,
                                 evmWallet: wallet.evm,
                                 solanaWallet: wallet.solana,
-                                tokens: tokens,
+                                tokens: bitcoinTokens + evmTokens + solanaTokens,
                                 importedAsName: name
                             )
                         }

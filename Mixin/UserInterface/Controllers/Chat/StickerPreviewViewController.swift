@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class StickerPreviewViewController: UIViewController {
+final class StickerPreviewViewController: UIViewController {
     
     @IBOutlet weak var stickersContentView: UIView!
     @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
@@ -14,7 +14,9 @@ class StickerPreviewViewController: UIViewController {
     @IBOutlet weak var stickerPreviewViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var stickerPreviewViewTrailingConstraint: NSLayoutConstraint!
     
-    private var message: MessageItem!
+    private let message: MessageItem
+    private let cellReuseIdentifier = "c"
+    
     private var albumItem: AlbumItem?
     
     private lazy var backgroundButton: UIButton = {
@@ -24,28 +26,65 @@ class StickerPreviewViewController: UIViewController {
         return button
     }()
     
-    class func instance(message: MessageItem) -> StickerPreviewViewController {
-        let vc = R.storyboard.chat.sticker_preview()!
-        vc.message = message
-        return vc
+    init(message: MessageItem) {
+        self.message = message
+        let nib = R.nib.stickerPreviewView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.cornerRadius = 13
+        collectionView.register(
+            StickerPreviewItemCell.self,
+            forCellWithReuseIdentifier: cellReuseIdentifier
+        )
+        collectionView.dataSource = self
+        collectionView.delegate = self
         updatePreferredContentSizeHeight()
         stickerView.load(message: message)
         stickerView.startAnimating()
-        
-        let category: AlbumCategory?
-        if let assetCategory = message.assetCategory {
-            category = AlbumCategory(rawValue: assetCategory)
-        } else {
-            category = nil
-        }
-        if category != AlbumCategory.PERSONAL, let stickerId = message.stickerId {
-            loadAlbum(stickerId: stickerId)
+        if let stickerId = message.stickerId {
+            DispatchQueue.global().async { [weak self] in
+                if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId, category: .SYSTEM) {
+                    let stickers = StickerDAO.shared.getStickers(albumId: album.albumId)
+                    let albumItem = AlbumItem(album: album, stickers: stickers)
+                    DispatchQueue.main.async {
+                        self?.reloadData(albumItem: albumItem)
+                    }
+                }
+                if case let .success(response) = StickerAPI.sticker(stickerId: stickerId) {
+                    if let sticker = StickerDAO.shared.insertOrUpdateSticker(sticker: response) {
+                        DispatchQueue.main.async {
+                            self?.stickerView.load(sticker: sticker)
+                        }
+                    }
+                    if let albumID = response.albumId, !albumID.isEmpty {
+                        DispatchQueue.main.async {
+                            self?.activityIndicatorView.startAnimating()
+                        }
+                        if case let .success(album) = StickerAPI.album(albumId: albumID),
+                           album.category != AlbumCategory.PERSONAL.rawValue,
+                           case let .success(stickers) = StickerAPI.stickers(albumId: albumID)
+                        {
+                            AlbumDAO.shared.insertOrUpdateAblum(album: album)
+                            let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumID)
+                            let albumItem = AlbumItem(album: album, stickers: stickers)
+                            DispatchQueue.main.async {
+                                self?.reloadData(albumItem: albumItem)
+                            }
+                        }
+                        DispatchQueue.main.async {
+                            self?.activityIndicatorView.stopAnimating()
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -103,54 +142,24 @@ extension StickerPreviewViewController {
         return min(maxHeight, contentHeight)
     }
     
-    private func loadAlbum(stickerId: String) {
-        DispatchQueue.global().async { [weak self] in
-            var albumItem: AlbumItem?
-            if let album = AlbumDAO.shared.getAlbum(stickerId: stickerId, category: .SYSTEM) {
-                albumItem = AlbumItem(album: album, stickers: StickerDAO.shared.getStickers(albumId: album.albumId))
-            } else {
-                let albumId: String?
-                if let id = StickerDAO.shared.getSticker(stickerId: stickerId)?.albumId, !id.isEmpty {
-                    albumId = id
-                } else if case let .success(sticker) = StickerAPI.sticker(stickerId: stickerId) {
-                    albumId = sticker.albumId
-                } else {
-                    albumId = nil
-                }
-                if let albumId = albumId, !albumId.isEmpty {
-                    DispatchQueue.main.async {
-                        self?.activityIndicatorView.startAnimating()
-                    }
-                    if case let .success(album) = StickerAPI.album(albumId: albumId),
-                       album.category != AlbumCategory.PERSONAL.rawValue,
-                       case let .success(stickers) = StickerAPI.stickers(albumId: albumId) {
-                        AlbumDAO.shared.insertOrUpdateAblum(album: album)
-                        let stickers = StickerDAO.shared.insertOrUpdateStickers(stickers: stickers, albumId: albumId)
-                        albumItem = AlbumItem(album: album, stickers: stickers)
-                    }
-                }
+    private func reloadData(albumItem: AlbumItem?) {
+        if let albumItem = albumItem, !albumItem.stickers.isEmpty {
+            self.albumItem = albumItem
+            titleLabel.text = albumItem.album.name
+            updateStickerActionButton()
+            stickersContentView.isHidden = false
+            collectionView.isHidden = false
+            collectionView.reloadData()
+            updatePreferredContentSizeHeight()
+            if let stickerID = message.stickerId,
+               let index = albumItem.stickers.firstIndex(where: { $0.stickerId == stickerID })
+            {
+                let indexPath = IndexPath(item: index, section: 0)
+                collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
             }
-            DispatchQueue.main.async {
-                guard let self = self else {
-                    return
-                }
-                self.activityIndicatorView.stopAnimating()
-                if let albumItem = albumItem, !albumItem.stickers.isEmpty {
-                    self.albumItem = albumItem
-                    self.titleLabel.text = albumItem.album.name
-                    self.updateStickerActionButton()
-                    self.stickersContentView.isHidden = false
-                    self.collectionView.isHidden = false
-                    self.collectionView.reloadData()
-                    self.updatePreferredContentSizeHeight()
-                    if let index = albumItem.stickers.firstIndex(where: { $0.stickerId == stickerId }) {
-                        self.collectionView.selectItem(at: IndexPath(item: index, section: 0), animated: false, scrollPosition: .centeredHorizontally)
-                    }
-                } else {
-                    self.stickersContentView.isHidden = true
-                    self.collectionView.isHidden = true
-                }
-            }
+        } else {
+            stickersContentView.isHidden = true
+            collectionView.isHidden = true
         }
     }
     
@@ -181,7 +190,7 @@ extension StickerPreviewViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.sticker_item_preview, for: indexPath)!
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as! StickerPreviewItemCell
         if let albumItem = albumItem, indexPath.row < albumItem.stickers.count {
             cell.stickerView.load(sticker: albumItem.stickers[indexPath.item])
         }

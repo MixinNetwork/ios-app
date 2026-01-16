@@ -22,26 +22,9 @@ final class MixinWebViewController: WebViewController {
         "mixwallet.app",
     ]
     
-    private enum HandlerName: String, CaseIterable {
-        case mixinContext = "MixinContext"
-        case reloadTheme = "reloadTheme"
-        case playlist = "playlist"
-        case close = "close"
-        case getTIPAddress = "getTipAddress"
-        case tipSign = "tipSign"
-        case getAssets = "getAssets"
-        case web3Bridge = "_mw_"
-        case signBotSignature = "signBotSignature"
-    }
-    
     private enum FradulentWarningBehavior {
         case byWhitelist // See `fraudulentWarningDisabledHosts`
         case disabled
-    }
-    
-    private enum AppSigningError: Error {
-        case noSuchApp
-        case unauthorizedResource
     }
     
     @IBOutlet weak var loadFailLabel: UILabel!
@@ -61,8 +44,8 @@ final class MixinWebViewController: WebViewController {
         if let scripts = web3ProviderScripts {
             scripts.forEach(config.userContentController.addUserScript(_:))
         }
-        for name in HandlerName.allCases.map(\.rawValue) {
-            config.userContentController.add(scriptMessageProxy, name: name)
+        for name in WebViewMessageHandler.Name.allCases.map(\.rawValue) {
+            config.userContentController.add(messageHandler, name: name)
         }
         config.applicationNameForUserAgent = "Mixin/\(Bundle.main.shortVersionString)"
         return config
@@ -73,7 +56,7 @@ final class MixinWebViewController: WebViewController {
     
     private(set) var context: Context!
     
-    private lazy var scriptMessageProxy = ScriptMessageProxy(target: self)
+    private lazy var messageHandler = WebViewMessageHandler(delegate: self)
     private lazy var suspicousLinkView = R.nib.suspiciousLinkView(withOwner: self)!
     private lazy var loadingFailureView: UIView = {
         let view = R.nib.webLoadingFailureView(withOwner: self)!
@@ -149,8 +132,8 @@ final class MixinWebViewController: WebViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if !isMessageHandlerAdded {
-            for name in HandlerName.allCases.map(\.rawValue) {
-                webView.configuration.userContentController.add(scriptMessageProxy, name: name)
+            for name in WebViewMessageHandler.Name.allCases.map(\.rawValue) {
+                webView.configuration.userContentController.add(messageHandler, name: name)
             }
             isMessageHandlerAdded = true
         }
@@ -243,7 +226,7 @@ final class MixinWebViewController: WebViewController {
             return
         }
         let controller = webView.configuration.userContentController
-        HandlerName.allCases.map(\.rawValue)
+        WebViewMessageHandler.Name.allCases.map(\.rawValue)
             .forEach(controller.removeScriptMessageHandler(forName:))
         isMessageHandlerAdded = false
     }
@@ -370,7 +353,7 @@ extension MixinWebViewController: WKNavigationDelegate {
 extension MixinWebViewController: WKUIDelegate {
     
     func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
-        if prompt == HandlerName.mixinContext.rawValue + ".getContext()" {
+        if prompt == WebViewMessageHandler.Name.mixinContext.rawValue + ".getContext()" {
             completionHandler(context.appContextString)
         } else {
             completionHandler("")
@@ -386,116 +369,29 @@ extension MixinWebViewController: WKUIDelegate {
     
 }
 
-extension MixinWebViewController: WKScriptMessageHandler {
+extension MixinWebViewController: WebViewMessageHandler.Delegate {
     
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        guard let handlerName = HandlerName(rawValue: message.name) else {
-            return
-        }
-        switch handlerName {
-        case .mixinContext:
-            break
+    func webViewMessageHander(_ handler: WebViewMessageHandler, didReceiveMessage message: WebViewMessageHandler.Message) {
+        switch message {
         case .reloadTheme:
             reloadTheme(webView: webView)
-        case .playlist:
-            if let body = message.body as? [String] {
-                let playlist = body.compactMap(PlaylistItem.init)
-                if !playlist.isEmpty {
-                    PlaylistManager.shared.play(index: 0, in: playlist, source: .remote)
-                }
-            }
         case .close:
             dismissAsChild(animated: true, completion: nil)
-        case .getTIPAddress:
-            if let body = message.body as? [String], body.count == 2 {
-                // let chainId = body[0]
-                let callback = body[1]
-                let address = "" // Empty address as rejection
-                webView.evaluateJavaScript("\(callback)('\(address)');")
-            }
-        case .tipSign:
-            if let body = message.body as? [String], body.count == 3 {
-                // let chainId = body[0]
-                // let message = body[1]
-                let callback = body[2]
-                let signature = "" // Empty signature as rejection
-                webView.evaluateJavaScript("\(callback)('\(signature)');")
-            }
-        case .getAssets:
-            if let body = message.body as? [Any],
-               body.count == 2,
-               let assetIDs = body[0] as? [String],
-               let callback = body[1] as? String
-            {
-                reportAssets(ids: assetIDs, callback: callback)
-            }
-        case .web3Bridge:
-            let body: [String: Any]
-            if let string = message.body as? String,
-               let data = string.data(using: .utf8),
-               let object = try? JSONSerialization.jsonObject(with: data, options: []),
-               let dict = object as? [String: Any]
-            {
-                body = dict
-            } else if let object = message.body as? [String: Any] {
-                body = object
-            } else {
-                return
-            }
-            web3Worker.handleRequest(json: body)
-        case .signBotSignature:
-            guard
-                let url = webView.url,
-                let messageBody = message.body as? [Any],
-                messageBody.count >= 6,
-                let appID = messageBody[0] as? String,
-                let reloadPublicKey = messageBody[1] as? Bool,
-                let method = messageBody[2] as? String,
-                let path = messageBody[3] as? String,
-                let body = messageBody[4] as? String,
-                let callback = messageBody[5] as? String
-            else {
-                return
-            }
-            DispatchQueue.global().async { [weak webView] in
-                do {
-                    let app: App?
-                    if let localApp = AppDAO.shared.getApp(appId: appID),
-                       localApp.resourcePatterns(accepts: url)
-                    {
-                        app = localApp
-                    } else {
-                        switch UserAPI.showUser(userId: appID) {
-                        case .success(let response):
-                            UserDAO.shared.updateUsers(users: [response])
-                            app = response.app
-                        case .failure:
-                            app = nil
-                        }
-                    }
-                    guard let app else {
-                        throw AppSigningError.noSuchApp
-                    }
-                    guard app.resourcePatterns(accepts: url) else {
-                        throw AppSigningError.unauthorizedResource
-                    }
-                    let signature = try RouteAPI.sign(
-                        appID: appID,
-                        reloadPublicKey: reloadPublicKey,
-                        method: method,
-                        path: path,
-                        body: body.data(using: .utf8)
-                    )
-                    DispatchQueue.main.async {
-                        webView?.evaluateJavaScript("\(callback)('\(signature.timestamp)', '\(signature.signature)');")
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        webView?.evaluateJavaScript("\(callback)(null);")
-                    }
-                }
-            }
+        case .getTIPAddress(let callback):
+            webView.evaluateJavaScript(callback)
+        case .tipSign(let callback):
+            webView.evaluateJavaScript(callback)
+        case .getAssets(let assetIDs, let callback):
+            reportAssets(ids: assetIDs, callback: callback)
+        case .web3Bridge(let json):
+            web3Worker.handleRequest(json: json)
+        case .signBotSignature(let callback):
+            webView.evaluateJavaScript(callback)
         }
+    }
+    
+    func webViewMessageHanderGetCurrentURL(_ handler: WebViewMessageHandler) -> URL? {
+        webView.url
     }
     
 }

@@ -16,7 +16,7 @@ enum SequentialWalletPathGenerator {
         
         var maxEVMIndex: Int = 0
         var maxSolanaIndex: Int = 0
-        var maxBitcoinIndex: Int = 0
+        var maxBitcoinIndex: Int?
         for path in paths {
             let full = NSRange(path.startIndex..<path.endIndex, in: path)
             if let match = evmPathRegex.firstMatch(in: path, range: full) {
@@ -42,13 +42,17 @@ enum SequentialWalletPathGenerator {
                 guard let index = Int(path[indexRange]) else {
                     throw GenerationError.invalidPath
                 }
-                maxBitcoinIndex = max(maxSolanaIndex, index)
+                maxBitcoinIndex = if let maxBitcoinIndex {
+                    max(maxBitcoinIndex, index)
+                } else {
+                    index
+                }
             } else {
                 throw GenerationError.invalidPath
             }
         }
         
-        guard maxEVMIndex == maxSolanaIndex, maxSolanaIndex == maxBitcoinIndex else {
+        guard maxEVMIndex == maxSolanaIndex && (maxBitcoinIndex == nil || maxEVMIndex == maxBitcoinIndex) else {
             throw GenerationError.mismatchIndex
         }
         return maxEVMIndex

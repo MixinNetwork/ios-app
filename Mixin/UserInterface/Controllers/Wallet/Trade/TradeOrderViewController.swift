@@ -24,7 +24,7 @@ final class TradeOrderViewController: UITableViewController {
         title = R.string.localizable.order_details()
         navigationItem.titleView = WalletIdentifyingNavigationTitleView(
             title: R.string.localizable.order_details(),
-            wallet: .privacy
+            wallet: viewModel.wallet
         )
         navigationItem.rightBarButtonItem = .customerService(target: self, action: #selector(presentCustomerService(_:)))
         

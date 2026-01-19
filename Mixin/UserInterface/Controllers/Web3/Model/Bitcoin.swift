@@ -255,10 +255,12 @@ extension Bitcoin {
         
         private let allOutputs: [Web3Output]
         private let rate: Decimal
+        private let minimum: Decimal
         
-        init(outputs: [Web3Output], rate: Decimal) {
+        init(outputs: [Web3Output], rate: Decimal, minimum: Decimal) {
             self.allOutputs = outputs
             self.rate = rate
+            self.minimum = minimum
         }
         
         func calculate(transferAmount: Decimal) throws -> Result {
@@ -275,7 +277,7 @@ extension Bitcoin {
                     numberOfInputs: spendingOutputs.count,
                     numberOfOutputs: 2
                 )
-                feeWithChange = vsizeWithChange * rate * .satoshi
+                feeWithChange = max(minimum, vsizeWithChange * rate * .satoshi)
                 if utxoAmount < transferAmount + feeWithChange {
                     continue
                 } else if utxoAmount > transferAmount + feeWithChange {
@@ -285,7 +287,7 @@ extension Bitcoin {
                         numberOfInputs: spendingOutputs.count,
                         numberOfOutputs: 1
                     )
-                    let feeAmount = vsizeNoChange * rate * .satoshi
+                    let feeAmount = max(minimum, vsizeNoChange * rate * .satoshi)
                     return Result(feeAmount: feeAmount, spendingOutputs: spendingOutputs)
                 }
             }

@@ -271,8 +271,12 @@ extension Web3TransferInputAmountViewController {
                     if let bitcoinFeeCalculator {
                         calculator = bitcoinFeeCalculator
                     } else {
-                        let rate = try await RouteAPI.bitcoinFeeRate()
-                        calculator = Bitcoin.P2WPKHFeeCalculator(outputs: outputs, rate: rate)
+                        let fee = try await RouteAPI.bitcoinFee()
+                        calculator = Bitcoin.P2WPKHFeeCalculator(
+                            outputs: outputs,
+                            rate: fee.rate,
+                            minimum: fee.minimum,
+                        )
                         await MainActor.run {
                             self.bitcoinFeeCalculator = calculator
                         }

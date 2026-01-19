@@ -552,41 +552,52 @@ extension RouteAPI {
         
     }
     
+    struct BitcoinFee: Decodable {
+        
+        enum CodingKeys: String, CodingKey {
+            case feeRate = "fee_rate"
+            case minFee = "min_fee"
+        }
+        
+        let rate: Decimal
+        let minimum: Decimal
+        
+        init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let feeRate = try container.decode(String.self, forKey: .feeRate)
+            let minFee = try container.decode(String.self, forKey: .minFee)
+            guard let decimalRate = Decimal(string: feeRate, locale: .enUSPOSIX) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: CodingKeys.feeRate,
+                    in: container,
+                    debugDescription: "Invalid number"
+                )
+            }
+            guard let decimalMinimum = Decimal(string: minFee, locale: .enUSPOSIX) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: CodingKeys.minFee,
+                    in: container,
+                    debugDescription: "Invalid number"
+                )
+            }
+            self.rate = decimalRate
+            self.minimum = decimalMinimum
+        }
+        
+    }
+    
     struct SolanaAccountInfo: Decodable {
         let owner: String
     }
     
-    static func bitcoinFeeRate() async throws -> Decimal {
-        struct Response: Decodable {
-            
-            enum CodingKeys: String, CodingKey {
-                case feeRate = "fee_rate"
-            }
-            
-            let feeRate: Decimal
-            
-            init(from decoder: any Decoder) throws {
-                let container = try decoder.container(keyedBy: CodingKeys.self)
-                let rate = try container.decode(String.self, forKey: .feeRate)
-                guard let decimalRate = Decimal(string: rate, locale: .enUSPOSIX) else {
-                    throw DecodingError.dataCorruptedError(
-                        forKey: CodingKeys.feeRate,
-                        in: container,
-                        debugDescription: "Invalid number"
-                    )
-                }
-                self.feeRate = decimalRate
-            }
-            
-        }
-        let response: Response = try await request(
+    static func bitcoinFee() async throws -> BitcoinFee {
+        try await request(
             method: .post,
             path: "/web3/estimate-fee",
             with: [
                 "chain_id": ChainID.bitcoin,
             ]
         )
-        return response.feeRate
     }
     
     static func estimatedEthereumFee(

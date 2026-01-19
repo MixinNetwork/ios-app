@@ -81,21 +81,25 @@ final class BitcoinTransferToAddressOperation: BitcoinTransferOperation {
     }
     
     override func loadFee() async throws -> Web3DisplayFee {
-        let rate = try await RouteAPI.bitcoinFeeRate()
-        let calculator = Bitcoin.P2WPKHFeeCalculator(outputs: allOutputs, rate: rate)
+        let fee = try await RouteAPI.bitcoinFee()
+        let calculator = Bitcoin.P2WPKHFeeCalculator(
+            outputs: allOutputs,
+            rate: fee.rate,
+            minimum: fee.minimum,
+        )
         let result = try calculator.calculate(transferAmount: decimalAmount)
         let fiatMoneyAmount = result.feeAmount * payment.token.decimalUSDPrice * Currency.current.decimalRate
-        let fee = Web3DisplayFee(
+        let displayFee = Web3DisplayFee(
             token: payment.token,
             tokenAmount: result.feeAmount,
             fiatMoneyAmount: fiatMoneyAmount
         )
         await MainActor.run {
-            self.fee = fee
+            self.fee = displayFee
             self.spendingOutputs = result.spendingOutputs
             self.state = .ready
         }
-        return fee
+        return displayFee
     }
     
     override func start(pin: String) async throws {

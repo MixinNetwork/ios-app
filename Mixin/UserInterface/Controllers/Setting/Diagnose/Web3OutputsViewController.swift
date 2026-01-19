@@ -7,7 +7,6 @@ final class Web3OutputsViewController: UITableViewController {
     private let pageCount = 50
     
     private var outputs: [Web3Output] = []
-    private var hud: Hud?
     
     init(token: Web3Token?) {
         self.token = token
@@ -21,15 +20,21 @@ final class Web3OutputsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Web3 Outputs"
+        navigationItem.rightBarButtonItems = [
+            .tintedIcon(
+                image: UIImage(systemName: "trash"),
+                target: self,
+                action: #selector(deleteAll(_:))
+            ),
+            .tintedIcon(
+                image: UIImage(systemName: "tray.and.arrow.up"),
+                target: self,
+                action: #selector(copyAsJSON(_:))
+            ),
+        ]
         tableView.backgroundColor = .background
         tableView.register(R.nib.outputCell)
-        DispatchQueue.global().async { [token] in
-            let outputs = Web3OutputDAO.shared.outputs(token: token)
-            DispatchQueue.main.async {
-                self.outputs = outputs
-                self.tableView.reloadData()
-            }
-        }
+        reloadData()
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -62,6 +67,36 @@ final class Web3OutputsViewController: UITableViewController {
         })
         copyAction.backgroundColor = .theme
         return UISwipeActionsConfiguration(actions: [copyAction])
+    }
+    
+    private func reloadData() {
+        DispatchQueue.global().async { [token] in
+            let outputs = Web3OutputDAO.shared.outputs(token: token)
+            DispatchQueue.main.async {
+                self.outputs = outputs
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    @objc private func copyAsJSON(_ sender: Any) {
+        let json: String?
+        if let data = try? JSONEncoder.default.encode(outputs) {
+            json = String(data: data, encoding: .utf8)
+        } else {
+            json = nil
+        }
+        if let json {
+            UIPasteboard.general.string = json
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
+        } else {
+            showAutoHiddenHud(style: .error, text: "Failed")
+        }
+    }
+    
+    @objc private func deleteAll(_ sender: Any) {
+        Web3OutputDAO.shared.deleteAll()
+        reloadData()
     }
     
 }

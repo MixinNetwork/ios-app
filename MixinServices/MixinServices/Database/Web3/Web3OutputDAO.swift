@@ -9,7 +9,8 @@ public final class Web3OutputDAO: Web3DAO {
         if let token {
             db.select(
                 with: """
-                SELECT * FROM outputs o
+                SELECT *
+                FROM outputs o
                     INNER JOIN addresses a ON o.address = a.destination
                 WHERE a.wallet_id = ? AND a.chain_id = ? AND asset_id = ?
                 ORDER BY created_at ASC
@@ -17,14 +18,15 @@ public final class Web3OutputDAO: Web3DAO {
                 arguments: [token.walletID, token.chainID, token.assetID]
             )
         } else {
-            db.select(with: "SELECT * FROM outputs")
+            db.select(with: "SELECT * FROM outputs ORDER BY created_at ASC")
         }
     }
     
     public func unspentOutputs(address: String, assetID: String) -> [Web3Output] {
         db.select(
             with: """
-            SELECT * FROM outputs
+            SELECT *
+            FROM outputs
             WHERE address = ? AND asset_id = ? AND status = ?
             ORDER BY created_at ASC
             """,
@@ -86,6 +88,10 @@ public final class Web3OutputDAO: Web3DAO {
     
     public func delete(id: String, db: GRDB.Database) throws {
         try db.execute(sql: "DELETE FROM outputs WHERE output_id = ?", arguments: [id])
+    }
+    
+    public func deleteAll() {
+        db.execute(sql: "DELETE FROM outputs")
     }
     
 }

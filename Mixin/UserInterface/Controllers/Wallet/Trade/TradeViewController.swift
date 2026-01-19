@@ -857,7 +857,11 @@ extension TradeViewController: SwapQuotePeriodicRequesterDelegate {
                 description = range.description
                 amountRange = range
                 reason = "invalid_amount"
-                advancedTradingHint = false
+                if let sendAmount = pricingModel.sendAmount, let maximum = range.maximum {
+                    advancedTradingHint = sendAmount > maximum
+                } else {
+                    advancedTradingHint = false
+                }
             case MixinAPIResponseError.invalidQuoteAmount:
                 description = R.string.localizable.swap_invalid_amount()
                 amountRange = nil

@@ -154,7 +154,7 @@ class TradeViewController: UIViewController {
     }
     
     // TradeExpirySelectorCell
-    private(set) var selectedExpiry: TradeOrder.Expiry = .never
+    private(set) var selectedExpiry: TradeOrder.Expiry = .oneYear
     
     init(
         mode: Mode?,

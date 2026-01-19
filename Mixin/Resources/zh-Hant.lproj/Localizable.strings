@@ -1481,14 +1481,14 @@
 "touch_id" = "指紋";
 "track_not_found" = "Track 無效";
 "trade" = "交易";
-"trade_advanced" = "掛單";
+"trade_advanced" = "專業模式";
 "trade_again" = "再來一筆";
 "trade_expiration" = "有效期至";
 "trade_expiry" = "過期";
 "trade_expiry_never" = "永不";
 "trade_filled" = "已成交";
 "trade_native_tokens" = "交易數千種原生代幣";
-"trade_simple" = "閃兌";
+"trade_simple" = "簡單兌換";
 "transaction" = "交易詳情";
 "transaction_approved" = "批准成功";
 "transaction_failed" = "交易失敗";

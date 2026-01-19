@@ -239,7 +239,7 @@ class TradeViewController: UIViewController {
         let layout = UICollectionViewCompositionalLayout { [weak self, elementKindSectionBackground] (sectionIndex, _) in
             switch self?.sections[sectionIndex] {
             case .modeSelector, .none:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .absolute(38))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(94), heightDimension: .absolute(38))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)

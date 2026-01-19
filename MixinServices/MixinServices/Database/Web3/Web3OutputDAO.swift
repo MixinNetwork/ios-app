@@ -48,7 +48,7 @@ public final class Web3OutputDAO: Web3DAO {
         return TokenAmountFormatter.string(from: total)
     }
     
-    public func replaceOutputsSkippingSignedOnes(
+    public func saveUnspentOutputs(
         walletID: String,
         address: String,
         assetID: String,
@@ -61,11 +61,9 @@ public final class Web3OutputDAO: Web3DAO {
                 let ids = try String.fetchAll(db, sql: sql, arguments: arguments)
                 return Set(ids)
             }()
-            try db.execute(
-                sql: "DELETE FROM outputs WHERE address = ? AND asset_id = ? AND status != ?",
-                arguments: [address, assetID, Web3Output.Status.unspent.rawValue]
-            )
             let outputsToSave = outputs.filter { output in
+                // Do not override signed local outputs with unspent remote ones
+                // They're already spent but not confirmed yet
                 !signedOutputIDs.contains(output.id)
             }
             try outputsToSave.save(db)

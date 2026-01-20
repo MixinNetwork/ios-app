@@ -63,7 +63,7 @@ final class WebViewMessageHandler: NSObject, WKScriptMessageHandler {
                 }
             }
         case .close:
-            delegate?.webViewMessageHander(self, didReceiveMessage: .reloadTheme)
+            delegate?.webViewMessageHander(self, didReceiveMessage: .close)
         case .getTIPAddress:
             if let body = message.body as? [String], body.count == 2 {
                 // let chainId = body[0]

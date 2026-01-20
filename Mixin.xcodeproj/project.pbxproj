@@ -1336,6 +1336,7 @@
 		94CA5C512CE5F5390086C484 /* PaymentCollectibleSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CA5C502CE5F5390086C484 /* PaymentCollectibleSelectorViewController.swift */; };
 		94CA5C572CE5F5F80086C484 /* PaymentCollectibleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CA5C562CE5F5F80086C484 /* PaymentCollectibleCell.xib */; };
 		94CA5C582CE5F5F80086C484 /* PaymentCollectibleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CA5C552CE5F5F80086C484 /* PaymentCollectibleCell.swift */; };
+		94CAAAB42F1F71B50022D29F /* MultilineTextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CAAAB32F1F71B50022D29F /* MultilineTextButton.swift */; };
 		94CB84D62C6A65C200135641 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CB84D52C6A65C200135641 /* ChartView.swift */; };
 		94CB85CF2C6B43A900135641 /* TokenMyBalanceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CB85CD2C6B43A900135641 /* TokenMyBalanceCell.swift */; };
 		94CB85D02C6B43A900135641 /* TokenMyBalanceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94CB85CE2C6B43A900135641 /* TokenMyBalanceCell.xib */; };
@@ -3132,6 +3133,7 @@
 		94CA5C502CE5F5390086C484 /* PaymentCollectibleSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCollectibleSelectorViewController.swift; sourceTree = "<group>"; };
 		94CA5C552CE5F5F80086C484 /* PaymentCollectibleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCollectibleCell.swift; sourceTree = "<group>"; };
 		94CA5C562CE5F5F80086C484 /* PaymentCollectibleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PaymentCollectibleCell.xib; sourceTree = "<group>"; };
+		94CAAAB32F1F71B50022D29F /* MultilineTextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineTextButton.swift; sourceTree = "<group>"; };
 		94CB84D52C6A65C200135641 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		94CB85CD2C6B43A900135641 /* TokenMyBalanceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenMyBalanceCell.swift; sourceTree = "<group>"; };
 		94CB85CE2C6B43A900135641 /* TokenMyBalanceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenMyBalanceCell.xib; sourceTree = "<group>"; };
@@ -5532,6 +5534,7 @@
 				94F64FB22D64C79200234D7D /* BadgeBarButtonView.swift */,
 				94F64FB42D64CD1E00234D7D /* BadgeBarButtonItem.swift */,
 				94F268382E15BF9300A8A1E0 /* StackedTokenIconView.swift */,
+				94CAAAB32F1F71B50022D29F /* MultilineTextButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -8095,6 +8098,7 @@
 				7B8261D124D9548E00A39635 /* PINVerificationFailureHandler.swift in Sources */,
 				9449775F2F0A8E0100472465 /* BitcoinTransferOperation.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,
+				94CAAAB42F1F71B50022D29F /* MultilineTextButton.swift in Sources */,
 				7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */,
 				7BC14671230D235C0060FE19 /* SelectedCellBackgroundView.swift in Sources */,
 				94CDA7FD2A5DBC2A00F1CDEE /* ComboBoxView.swift in Sources */,

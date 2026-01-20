@@ -31,12 +31,12 @@ extension MixinAPIResponseError: LocalizedError {
             return R.string.localizable.app_update_short_hint(Bundle.main.shortVersionString)
         case .notRegisteredToSafe:
             return R.string.localizable.error_opponent_not_registered_to_safe()
-        case .invalidSwap:
-            return R.string.localizable.error_invalid_swap()
+        case .noAvailableQuote:
+            return R.string.localizable.error_no_quote()
         case .invalidQuoteAmount:
             return R.string.localizable.error_invalid_quote_amount()
-        case .noAvailableQuote:
-            return R.string.localizable.error_no_available_quote()
+        case .tokenPairNotSupported:
+            return R.string.localizable.error_trading_pair_not_supported()
         case .tooManyAlerts:
             return R.string.localizable.alert_limit_exceeded(100)
         case .tooManyAlertsForAsset:

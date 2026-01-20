@@ -154,7 +154,7 @@ class TradeViewController: UIViewController {
     }
     
     // TradeExpirySelectorCell
-    private(set) var selectedExpiry: TradeOrder.Expiry = .never
+    private(set) var selectedExpiry: TradeOrder.Expiry = .oneYear
     
     init(
         mode: Mode?,
@@ -239,7 +239,7 @@ class TradeViewController: UIViewController {
         let layout = UICollectionViewCompositionalLayout { [weak self, elementKindSectionBackground] (sectionIndex, _) in
             switch self?.sections[sectionIndex] {
             case .modeSelector, .none:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(100), heightDimension: .absolute(38))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(94), heightDimension: .absolute(38))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let group: NSCollectionLayoutGroup = .vertical(layoutSize: itemSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
@@ -265,8 +265,7 @@ class TradeViewController: UIViewController {
             case .simpleModePrice:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(45))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(45))
-                let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
+                let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                 return section
@@ -854,24 +853,39 @@ extension TradeViewController: SwapQuotePeriodicRequesterDelegate {
             let advancedTradingHint: Bool
             switch error {
             case let SwapQuotePeriodicRequester.ResponseError.invalidAmount(range):
-                description = range.description
+                if let sendAmount = pricingModel.sendAmount,
+                   let maximum = range.maximum,
+                   let symbol = sendToken?.symbol,
+                   sendAmount > maximum
+                {
+                    let maxValue = CurrencyFormatter.localizedString(
+                        from: maximum,
+                        format: .precision,
+                        sign: .never,
+                        symbol: .custom(symbol)
+                    )
+                    description = R.string.localizable.error_invalid_quote_amount_detailed(maxValue)
+                    advancedTradingHint = true
+                } else {
+                    description = R.string.localizable.error_invalid_quote_amount()
+                    advancedTradingHint = false
+                }
                 amountRange = range
                 reason = "invalid_amount"
-                advancedTradingHint = false
             case MixinAPIResponseError.invalidQuoteAmount:
-                description = R.string.localizable.swap_invalid_amount()
+                description = R.string.localizable.error_invalid_quote_amount()
                 amountRange = nil
                 reason = "invalid_amount"
                 advancedTradingHint = false
-            case MixinAPIResponseError.invalidSwap:
-                description = R.string.localizable.swap_no_available_quote()
-                amountRange = nil
-                reason = "invalid_swap"
-                advancedTradingHint = true
             case MixinAPIResponseError.noAvailableQuote:
-                description = R.string.localizable.swap_no_available_quote()
+                description = R.string.localizable.error_no_quote_detailed()
                 amountRange = nil
                 reason = "no_available_quote"
+                advancedTradingHint = true
+            case MixinAPIResponseError.tokenPairNotSupported:
+                description = R.string.localizable.error_trading_pair_not_supported_detailed()
+                amountRange = nil
+                reason = "pair_not_supported"
                 advancedTradingHint = true
             case let error as MixinAPIError:
                 description = error.localizedDescription

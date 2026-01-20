@@ -85,48 +85,22 @@ extension SwapQuotePeriodicRequester {
         
         let minimum: Decimal?
         let maximum: Decimal?
-        let description: String
         
         init?(extra: MixinAPIResponseError.JSON, symbol: String) {
-            let min: String?
             if case let .string(string) = extra.value(at: ["data", "min"]),
                let decimal = Decimal(string: string, locale: .enUSPOSIX)
             {
                 self.minimum = decimal
-                min = CurrencyFormatter.localizedString(
-                    from: decimal,
-                    format: .precision,
-                    sign: .never
-                )
             } else {
                 self.minimum = nil
-                min = nil
             }
             
-            let max: String?
             if case let .string(string) = extra.value(at: ["data", "max"]),
                let decimal = Decimal(string: string, locale: .enUSPOSIX)
             {
                 self.maximum = decimal
-                max = CurrencyFormatter.localizedString(
-                    from: decimal,
-                    format: .precision,
-                    sign: .never
-                )
             } else {
                 self.maximum = nil
-                max = nil
-            }
-            
-            switch (min, max) {
-            case let (.some(min), .none):
-                self.description = R.string.localizable.single_transaction_should_be_greater_than(min, symbol)
-            case let (.none, .some(max)):
-                self.description = R.string.localizable.single_transaction_should_be_less_than(max, symbol)
-            case let (.some(min), .some(max)):
-                self.description = R.string.localizable.single_transaction_should_be_between(min, symbol, max, symbol)
-            default:
-                return nil
             }
         }
         

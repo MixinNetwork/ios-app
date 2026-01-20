@@ -579,13 +579,14 @@
 "error_invalid_code_too_frequent" = "ОШИБКА 20129: Код подтверждения отправляется слишком часто. Повторите попытку позже.";
 "error_invalid_emergency_contact" = "ERROR 20130: Invalid recovery contact";
 "error_invalid_pin_format" = "ОШИБКА 20118: Неверный формат PIN-кода. ";
-"error_invalid_quote_amount" = "ERROR 10614: The input amount is either too small or too large, please adjust the amount.";
+"error_invalid_quote_amount" = "ERROR 10614: The input amount is either too small or too large";
+"error_invalid_quote_amount_detailed" = "ERROR 10614: The amount exceeds the maximum allowable value of %@. Please re-enter the amount. Try placing a limit order? No restrictions on amount or token.";
 "error_invalid_referral_code" = "ERROR 10730: Invalid Referral Code";
-"error_invalid_swap" = "ERROR 10611: No quotes available at the moment, please try again later.";
 "error_inviter_plan_expired" = "ERROR 10737: The inviter has no valid plan";
 "error_legacy_pin" = "ERROR 20118: To enhance the security of the Mixin network, Mixin API has temporarily suspended the upgrading from D3M-PIN to TIP. Please refer to the documentation for details and register for processing.";
 "error_network_task_failed" = "Не удалось подключиться к сети. Проверьте или переключите сеть и повторите попытку.";
-"error_no_available_quote" = "ERROR 10615: This trading pair is currently not supported, please try switching to a different token.";
+"error_no_quote" = "ERROR 10611: No quotes available at the moment";
+"error_no_quote_detailed" = "ERROR 10611: No quotes available at the moment, please try again later. Try placing a limit order? No restrictions on amount or token.";
 "error_not_found" = "Ошибка 404: Не найдено";
 "error_number_reached_limit" = "ОШИБКА 20132: число достигло предела.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
@@ -607,6 +608,8 @@
 "error_too_many_wallets_upgrade" = "ERROR 10632: You have reached the maximum number of imported wallets. Please upgrade your membership to add more.";
 "error_too_small_transfer_amount" = "ОШИБКА 20120: Сумма перевода слишком мала";
 "error_too_small_withdraw_amount" = "ОШИБКА 20127: Слишком маленькая сумма вывода";
+"error_trading_pair_not_supported" = "ERROR 10615: This trading pair is currently not supported";
+"error_trading_pair_not_supported_detailed" = "ERROR 10615: This trading pair is not supported yet. Please try switching tokens. Try placing a limit order? No restrictions on amount or token.";
 "error_transfer_is_already_paid" = "ОШИБКА 20125: Перевод уже оплачен.";
 "error_two_parts" = "ОШИБКА %@: %@";
 "error_used_phone" = "ОШИБКА 20122: этот номер телефона уже связан с другой учетной записью.";
@@ -1429,9 +1432,7 @@
 "suspicious_link" = "Подозрительная ссылка";
 "swap_confirmation" = "Swap Confirmation";
 "swap_failed" = "Swap Failed";
-"swap_invalid_amount" = "No available quote found. Please try a different amount.";
 "swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
-"swap_no_available_quote" = "No available quote found. Please try a different token. Try placing a limit order? No restrictions on amount or token.";
 "swap_not_supported" = "%@ swapping is not supported.";
 "swap_order_paid" = "Paid";
 "swap_order_received" = "Received";

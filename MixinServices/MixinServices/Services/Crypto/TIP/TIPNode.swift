@@ -26,7 +26,6 @@ public enum TIPNode {
         case recoverSignature(NSError?)
         case invalidSignatureSize(Int)
         case watchRetryLimited
-        case invalidSignResponse(Int)
         case differentIdentity
         case invalidAssignorData
         case retryLimitExceeded
@@ -363,15 +362,12 @@ public enum TIPNode {
             guard let plain = TipDecrypt(signerPk, userSk, responseCipher) else {
                 throw Error.decryptResponseCipher
             }
-            guard plain.count == 218 else {
-                throw Error.invalidSignResponse(plain.count)
-            }
             let partial = plain[8...8+65]
             let assignor = plain[8+66...8+66+127]
             let counter: UInt64 = {
                 var raw: UInt64 = 0
                 withUnsafeMutableBytes(of: &raw) { counter in
-                    plain[211...].withUnsafeBytes { plain in
+                    plain[210...].withUnsafeBytes { plain in
                         plain.copyBytes(to: counter) // Copy bytes to avoid unaligned access
                     }
                 }

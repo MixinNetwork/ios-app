@@ -855,7 +855,8 @@ extension TradeViewController: SwapQuotePeriodicRequesterDelegate {
             case let SwapQuotePeriodicRequester.ResponseError.invalidAmount(range):
                 if let sendAmount = pricingModel.sendAmount,
                    let maximum = range.maximum,
-                   let symbol = sendToken?.symbol
+                   let symbol = sendToken?.symbol,
+                   sendAmount > maximum
                 {
                     let maxValue = CurrencyFormatter.localizedString(
                         from: maximum,
@@ -864,7 +865,7 @@ extension TradeViewController: SwapQuotePeriodicRequesterDelegate {
                         symbol: .custom(symbol)
                     )
                     description = R.string.localizable.error_invalid_quote_amount_detailed(maxValue)
-                    advancedTradingHint = sendAmount > maximum
+                    advancedTradingHint = true
                 } else {
                     description = R.string.localizable.error_invalid_quote_amount()
                     advancedTradingHint = false

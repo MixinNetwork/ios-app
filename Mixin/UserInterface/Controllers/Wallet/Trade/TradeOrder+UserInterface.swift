@@ -5,18 +5,25 @@ extension TradeOrder {
     
     enum Expiry: CaseIterable {
         
-        case never
         case tenMinutes
         case oneHour
         case oneDay
         case threeDays
         case oneWeek
         case oneMonth
+        case oneYear
+        case never // No longer available, only to display history orders
+        
+        static let availableCases: [Expiry] = {
+            var cases = allCases
+            if let index = cases.firstIndex(of: .never) {
+                cases.remove(at: index)
+            }
+            return cases
+        }()
         
         var localizedName: String {
             switch self {
-            case .never:
-                R.string.localizable.trade_expiry_never()
             case .tenMinutes:
                 R.string.localizable.minute_count(10)
             case .oneHour:
@@ -29,13 +36,15 @@ extension TradeOrder {
                 R.string.localizable.one_week()
             case .oneMonth:
                 R.string.localizable.one_month()
+            case .oneYear:
+                R.string.localizable.one_year()
+            case .never:
+                R.string.localizable.trade_expiry_never()
             }
         }
         
         var date: Date {
             switch self {
-            case .never:
-                    .distantFuture
             case .tenMinutes:
                     .now.addingTimeInterval(10 * .minute)
             case .oneHour:
@@ -43,11 +52,15 @@ extension TradeOrder {
             case .oneDay:
                     .now.addingTimeInterval(.day)
             case .threeDays:
-                    .now.addingTimeInterval(.day)
+                    .now.addingTimeInterval(3 * .day)
             case .oneWeek:
                     .now.addingTimeInterval(.week)
             case .oneMonth:
-                    .now.addingTimeInterval(.month)
+                    .now.addingTimeInterval(30 * .day)
+            case .oneYear:
+                    .now.addingTimeInterval(365 * .day)
+            case .never:
+                    .distantFuture
             }
         }
         

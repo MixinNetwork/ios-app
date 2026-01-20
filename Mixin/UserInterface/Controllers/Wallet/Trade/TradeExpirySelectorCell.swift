@@ -15,13 +15,13 @@ final class TradeExpirySelectorCell: UICollectionViewCell {
         return container
     }()
     
-    var selectedExpiry: TradeOrder.Expiry = .never {
+    var selectedExpiry: TradeOrder.Expiry = .oneYear {
         didSet {
             button.configuration?.attributedTitle = AttributedString(
                 selectedExpiry.localizedName,
                 attributes: buttonAttributes
             )
-            button.menu = UIMenu(children: TradeOrder.Expiry.allCases.map { expiry in
+            button.menu = UIMenu(children: TradeOrder.Expiry.availableCases.map { expiry in
                 UIAction(
                     title: expiry.localizedName,
                     state: selectedExpiry == expiry ? .on : .off,

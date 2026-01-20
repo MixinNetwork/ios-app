@@ -24,7 +24,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="nGk-zF-xIH">
                                 <rect key="frame" x="0.0" y="0.0" width="353" height="264"/>
                                 <subviews>
-                                    <button hidden="YES" opaque="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="MYw-ec-hLb" userLabel="Footer Info Button">
+                                    <button hidden="YES" opaque="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="MYw-ec-hLb" userLabel="Footer Info Button" customClass="MultilineTextButton" customModule="Mixin" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="151.66666666666666" width="0.0" height="29"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <state key="normal" title=" "/>

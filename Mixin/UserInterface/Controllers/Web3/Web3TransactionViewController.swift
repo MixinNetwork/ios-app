@@ -373,24 +373,28 @@ extension Web3TransactionViewController {
         layoutTableHeaderView()
         
         let feeToken = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: transaction.chainID)
-        let feeRow: Row
-        if let feeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
-            feeRow = .fee(
-                token: CurrencyFormatter.localizedString(
-                    from: amount,
-                    format: .precision,
-                    sign: .never,
-                    symbol: .custom(feeToken.symbol)
-                ),
-                fiatMoney: CurrencyFormatter.localizedString(
-                    from: amount * feeToken.decimalUSDPrice * Currency.current.decimalRate,
-                    format: .precision,
-                    sign: .never,
-                    symbol: .currencySymbol
+        let feeRow: Row? = switch transaction.transactionType.knownCase {
+        case .transferIn:
+            nil
+        default:
+            if let feeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
+                .fee(
+                    token: CurrencyFormatter.localizedString(
+                        from: amount,
+                        format: .precision,
+                        sign: .never,
+                        symbol: .custom(feeToken.symbol)
+                    ),
+                    fiatMoney: CurrencyFormatter.localizedString(
+                        from: amount * feeToken.decimalUSDPrice * Currency.current.decimalRate,
+                        format: .precision,
+                        sign: .never,
+                        symbol: .currencySymbol
+                    )
                 )
-            )
-        } else {
-            feeRow = .plain(key: .fee, value: transaction.fee)
+            } else {
+                .plain(key: .fee, value: transaction.fee)
+            }
         }
         
         if let transfer = transaction.simpleTransfer {
@@ -402,7 +406,9 @@ extension Web3TransactionViewController {
             } else if let toAddress = transfer.toAddress {
                 rows.append(.plain(key: .to, value: toAddress))
             }
-            rows.append(feeRow)
+            if let feeRow {
+                rows.append(feeRow)
+            }
         } else {
             switch transaction.transactionType.knownCase {
             case .transferIn, .transferOut, .swap, .none, .unknown:
@@ -452,10 +458,10 @@ extension Web3TransactionViewController {
                 } else {
                     rows = [.assetChanges(changes)]
                 }
-                rows.append(contentsOf: [
-                    .plain(key: .transactionHash, value: transaction.transactionHash),
-                    feeRow,
-                ])
+                rows.append(.plain(key: .transactionHash, value: transaction.transactionHash))
+                if let feeRow {
+                    rows.append(feeRow)
+                }
             case .approval:
                 if let approval = transaction.approvals?.first,
                    let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: approval.assetID)

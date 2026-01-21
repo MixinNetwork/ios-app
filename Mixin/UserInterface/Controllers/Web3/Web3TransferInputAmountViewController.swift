@@ -366,7 +366,7 @@ extension Web3TransferInputAmountViewController {
                 let amount: Decimal
                 switch payment.chain.kind {
                 case .bitcoin:
-                    amount = 350 * .satoshi // TODO: Exhaust the receiver address for dust
+                    amount = Bitcoin.dust
                 case .evm:
                     amount = 0
                 case .solana:

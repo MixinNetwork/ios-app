@@ -27,6 +27,8 @@ enum Bitcoin {
         
     }
     
+    static let dust: Decimal = 1000 * .satoshi
+    
     static func isValidAddress(address: String) -> Bool {
         address.withCString { address in
             bitcoin_is_valid_address(address)

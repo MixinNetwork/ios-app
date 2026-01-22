@@ -611,6 +611,7 @@
 "error_trading_pair_not_supported" = "错误 10615: 暂不支持该交易对，请尝试切换币种。";
 "error_trading_pair_not_supported_detailed" = "错误 10615: 暂不支持该交易对，请尝试切换币种。试试挂单？不受金额和币种限制。";
 "error_transfer_is_already_paid" = "错误 20125：转账已被支付";
+"error_transfer_to_deactivated_user" = "错误 20160：无法给已经删除的账号转账";
 "error_two_parts" = "错误 %@：%@";
 "error_used_phone" = "错误 20122：电话号码已经被占用。";
 "error_watch_address_not_supported" = "错误 10633：地址不可用";

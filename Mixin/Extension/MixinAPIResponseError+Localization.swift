@@ -95,7 +95,9 @@ extension MixinAPIResponseError: LocalizedError {
             return R.string.localizable.error_number_reached_limit()
         case .circleConversationReachLimit:
             return R.string.localizable.conversation_has_too_many_circles()
-
+        case .transferToDeactivatedUser:
+            return R.string.localizable.error_transfer_to_deactivated_user()
+            
         case .chainNotInSync:
             return R.string.localizable.error_blockchain()
         case .malformedAddress:

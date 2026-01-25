@@ -3,7 +3,8 @@ import GRDB
 
 public struct Web3Output {
     
-    public enum Status: String {
+    public enum Status: String, SQLExpressible {
+        case pending
         case unspent
         case signed
     }

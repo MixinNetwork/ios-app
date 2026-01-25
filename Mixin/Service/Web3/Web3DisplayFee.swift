@@ -7,10 +7,10 @@ class Web3DisplayFee {
     let tokenAmount: Decimal
     let fiatMoneyAmount: Decimal
     
-    init(token: Web3TokenItem, tokenAmount: Decimal, fiatMoneyAmount: Decimal) {
+    init(token: Web3TokenItem, amount: Decimal) {
         self.token = token
-        self.tokenAmount = tokenAmount
-        self.fiatMoneyAmount = fiatMoneyAmount
+        self.tokenAmount = amount
+        self.fiatMoneyAmount = amount * token.decimalUSDPrice * Currency.current.decimalRate
     }
     
 }

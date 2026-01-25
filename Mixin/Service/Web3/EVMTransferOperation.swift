@@ -12,16 +12,11 @@ class EVMTransferOperation: Web3TransferOperation {
         
         init(
             token: Web3TokenItem,
+            amount: Decimal,
             feePerGas: Decimal,
-            tokenAmount: Decimal,
-            fiatMoneyAmount: Decimal
         ) {
             self.feePerGas = feePerGas
-            super.init(
-                token: token,
-                tokenAmount: tokenAmount,
-                fiatMoneyAmount: fiatMoneyAmount
-            )
+            super.init(token: token, amount: amount)
         }
         
     }
@@ -180,11 +175,10 @@ class EVMTransferOperation: Web3TransferOperation {
         }
         let fee = EVMDisplayFee(
             token: feeToken,
+            amount: tokenAmount,
             feePerGas: NSDecimalNumber(decimal: feePerGas)
                 .rounding(accordingToBehavior: gweiRoundingHandler)
                 .decimalValue,
-            tokenAmount: tokenAmount,
-            fiatMoneyAmount: tokenAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
         )
         await MainActor.run {
             self.evmFee = evmFee

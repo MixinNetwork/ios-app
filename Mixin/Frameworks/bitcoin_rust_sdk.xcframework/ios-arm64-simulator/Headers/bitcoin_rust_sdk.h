@@ -36,13 +36,22 @@ typedef struct BitcoinUTXO {
   uint64_t value;
 } BitcoinUTXO;
 
+typedef struct BitcoinTransactionOutput {
+  char *address;
+  uint64_t value;
+} BitcoinTransactionOutput;
+
 extern const size_t BITCOIN_PRIVATE_KEY_LENGTH;
+
+extern const uint64_t BITCOIN_P2WPKH_DUST;
 
 void bitcoin_free_string(const char *ptr);
 
 void bitcoin_free_bytes(unsigned char *ptr, size_t len);
 
 void bitcoin_free_utxos(struct BitcoinUTXO *ptr, size_t len);
+
+void bitcoin_free_transaction_outputs(struct BitcoinTransactionOutput *outputs, size_t len);
 
 bool bitcoin_is_valid_address(const char *input);
 
@@ -76,9 +85,12 @@ enum BitcoinErrorCode bitcoin_sign_p2wpkh_transaction(const struct BitcoinUTXO *
                                                       const uint8_t *privkey_bytes,
                                                       size_t privkey_len,
                                                       const char **out_tx_hex,
-                                                      const char **out_txid);
+                                                      size_t *out_tx_vsize,
+                                                      const char **out_txid,
+                                                      uint64_t *out_change_amount);
 
 enum BitcoinErrorCode bitcoin_decode_p2wpkh_transaction(const char *tx,
-                                                        struct BitcoinUTXO **inputs_out,
-                                                        size_t *inputs_len_out,
-                                                        size_t *outputs_count_out);
+                                                        struct BitcoinUTXO **out_inputs,
+                                                        size_t *out_inputs_len,
+                                                        struct BitcoinTransactionOutput **out_outputs,
+                                                        size_t *out_outputs_len);

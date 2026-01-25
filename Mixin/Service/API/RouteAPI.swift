@@ -552,21 +552,23 @@ extension RouteAPI {
         
     }
     
-    struct BitcoinFee: Decodable {
+    struct BitcoinNetworkInfo: Decodable {
         
         enum CodingKeys: String, CodingKey {
             case feeRate = "fee_rate"
             case minFee = "min_fee"
         }
         
-        let rate: Decimal
-        let minimum: Decimal
+        let feeRate: String
+        let decimalFeeRate: Decimal
+        let minimalFee: Decimal
+        let incrementalFee: Decimal = 1
         
         init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             let feeRate = try container.decode(String.self, forKey: .feeRate)
             let minFee = try container.decode(String.self, forKey: .minFee)
-            guard let decimalRate = Decimal(string: feeRate, locale: .enUSPOSIX) else {
+            guard let decimalFeeRate = Decimal(string: feeRate, locale: .enUSPOSIX) else {
                 throw DecodingError.dataCorruptedError(
                     forKey: CodingKeys.feeRate,
                     in: container,
@@ -580,8 +582,9 @@ extension RouteAPI {
                     debugDescription: "Invalid number"
                 )
             }
-            self.rate = decimalRate
-            self.minimum = decimalMinimum
+            self.feeRate = feeRate
+            self.decimalFeeRate = decimalFeeRate
+            self.minimalFee = decimalMinimum
         }
         
     }
@@ -590,13 +593,18 @@ extension RouteAPI {
         let owner: String
     }
     
-    static func bitcoinFee() async throws -> BitcoinFee {
-        try await request(
+    static func bitcoinNetworkInfo(feeRate: String?) async throws -> BitcoinNetworkInfo {
+        var parameters = [
+            "chain_id": ChainID.bitcoin,
+        ]
+        if let feeRate {
+            // Used in RBF transactions
+            parameters["fee_rate"] = feeRate
+        }
+        return try await request(
             method: .post,
             path: "/web3/estimate-fee",
-            with: [
-                "chain_id": ChainID.bitcoin,
-            ]
+            with: parameters
         )
     }
     

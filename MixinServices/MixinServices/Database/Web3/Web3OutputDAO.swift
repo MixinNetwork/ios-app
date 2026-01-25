@@ -12,8 +12,8 @@ public final class Web3OutputDAO: Web3DAO {
                 SELECT *
                 FROM outputs o
                     INNER JOIN addresses a ON o.address = a.destination
-                WHERE a.wallet_id = ? AND a.chain_id = ? AND asset_id = ?
-                ORDER BY created_at ASC
+                WHERE a.wallet_id = ? AND a.chain_id = ? AND o.asset_id = ?
+                ORDER BY o.created_at ASC
                 """,
                 arguments: [token.walletID, token.chainID, token.assetID]
             )
@@ -22,23 +22,35 @@ public final class Web3OutputDAO: Web3DAO {
         }
     }
     
-    public func unspentOutputs(address: String, assetID: String) -> [Web3Output] {
-        db.select(
-            with: """
-            SELECT *
-            FROM outputs
-            WHERE address = ? AND asset_id = ? AND status = ?
-            ORDER BY created_at ASC
-            """,
-            arguments: [address, assetID, Web3Output.Status.unspent.rawValue]
-        )
+    public func outputs(ids: [String]) -> [Web3Output] {
+        let query: GRDB.SQL = """
+        SELECT *
+        FROM outputs
+        WHERE output_id IN \(ids)
+        ORDER BY created_at ASC
+        """
+        return db.select(with: query)
+    }
+    
+    public func outputs(
+        address: String,
+        assetID: String,
+        status: Set<Web3Output.Status>
+    ) -> [Web3Output] {
+        let query: GRDB.SQL = """
+        SELECT *
+        FROM outputs
+        WHERE address = \(address) AND asset_id = \(assetID) AND status IN \(status)
+        ORDER BY created_at ASC
+        """
+        return db.select(with: query)
     }
     
     public func availableBalance(address: String, assetID: String, db: GRDB.Database) throws -> String {
         let unspentAmounts = try String.fetchAll(
             db,
-            sql: "SELECT amount FROM outputs WHERE address = ? AND asset_id = ? AND status = ?",
-            arguments: [address, assetID, Web3Output.Status.unspent.rawValue]
+            sql: "SELECT amount FROM outputs WHERE address = ? AND asset_id = ? AND status IN (?,?)",
+            arguments: [address, assetID, Web3Output.Status.unspent.rawValue, Web3Output.Status.pending.rawValue]
         )
         let total: Decimal = unspentAmounts
             .compactMap { amount in

@@ -211,6 +211,7 @@
 "bots" = "機器人";
 "bots_title" = "機器人";
 "browser" = "瀏覽器";
+"btc_tx_already_speedy" = "當前費率已經足夠，無需加速。";
 "buy" = "購買";
 "buy_asset" = "購買 %@";
 "buy_crypto_with_cash" = "用現金購買加密貨幣";
@@ -1415,6 +1416,7 @@
 "sort_by_recent" = "按最近排序";
 "sort_by_value" = "按價值排序";
 "speed_up" = "加速";
+"speed_up_failed" = "加速失敗";
 "speed_up_transaction" = "加速交易";
 "speed_up_transaction_description" = "如果交易已接近完成，可能無法加速";
 "star" = "Star";

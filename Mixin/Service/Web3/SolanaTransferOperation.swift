@@ -40,13 +40,8 @@ class SolanaTransferOperation: Web3TransferOperation {
     
     func baseFee(for transaction: Solana.Transaction) throws -> Web3DisplayFee {
         let lamportsPerSignature: UInt64 = 5000
-        let tokenCount = try transaction.fee(lamportsPerSignature: lamportsPerSignature)
-        let fiatMoneyAmount = tokenCount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-        let fee = Web3DisplayFee(
-            token: feeToken,
-            tokenAmount: tokenCount,
-            fiatMoneyAmount: fiatMoneyAmount
-        )
+        let amount = try transaction.fee(lamportsPerSignature: lamportsPerSignature)
+        let fee = Web3DisplayFee(token: feeToken, amount: amount)
         return fee
     }
     
@@ -295,8 +290,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         let priorityFee = try await RouteAPI.solanaPriorityFee(base64Transaction: transaction.rawTransaction)
         
         let tokenAmount = baseFee.tokenAmount + priorityFee.decimalCount
-        let fiatMoneyAmount = tokenAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-        let fee = Web3DisplayFee(token: feeToken, tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount)
+        let fee = Web3DisplayFee(token: feeToken, amount: tokenAmount)
         
         await MainActor.run {
             self.createAssociatedTokenAccountForReceiver = createAccount

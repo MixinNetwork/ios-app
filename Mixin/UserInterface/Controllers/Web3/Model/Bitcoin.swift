@@ -12,18 +12,33 @@ enum Bitcoin {
     
     struct SignedTransaction {
         let transaction: String
+        let vsize: Int
         let changeOutput: Web3Output?
     }
     
     struct DecodedTransaction {
         
         struct Input {
+            
             let txid: String
             let vout: UInt32
+            let outputID: String
+            
+            fileprivate init(txid: String, vout: UInt32) {
+                self.txid = txid
+                self.vout = vout
+                self.outputID = Web3Output.bitcoinOutputID(txid: txid, vout: vout)
+            }
+            
+        }
+        
+        struct Output {
+            let address: String
+            let value: UInt64
         }
         
         let inputs: [Input]
-        let numberOfOutputs: Int
+        let outputs: [Output]
         
     }
     
@@ -117,10 +132,12 @@ enum Bitcoin {
         }
         let sendAmountInSatoshi = NSDecimalNumber(decimal: sendAmount / .satoshi).uint64Value
         let feeInSatoshi = NSDecimalNumber(decimal: fee / .satoshi).uint64Value
-        let (transaction, txid) = try utxos.withUnsafeBufferPointer { utxos in
+        let (transaction, vsize, txid, change) = try utxos.withUnsafeBufferPointer { utxos in
             try receiveAddress.withCString { receiveAddress in
                 try privateKey.withUnsafeBytes { privateKey in
                     var txidPointer: UnsafePointer<CChar>?
+                    var vsize: Int = 0
+                    var change: UInt64 = 0
                     let signedTransaction = try withBitcoinStringPointer { signedTransaction in
                         bitcoin_sign_p2wpkh_transaction(
                             utxos.baseAddress,
@@ -131,7 +148,9 @@ enum Bitcoin {
                             privateKey.baseAddress,
                             privateKey.count,
                             &signedTransaction,
+                            &vsize,
                             &txidPointer,
+                            &change,
                         )
                     }
                     guard let txidPointer else {
@@ -139,49 +158,52 @@ enum Bitcoin {
                     }
                     let txid = String(cString: txidPointer)
                     bitcoin_free_string(txidPointer)
-                    return (signedTransaction, txid)
+                    return (signedTransaction, vsize, txid, change)
                 }
             }
         }
         let changeOutput: Web3Output?
-        let changeAmount = utxoAmount - sendAmount - fee
-        if changeAmount > 0 {
+        if change > 0 {
+            let amount = Decimal(change) * .satoshi
             let now = Date().toUTCString()
             changeOutput = Web3Output(
                 id: Web3Output.bitcoinOutputID(txid: txid, vout: 1),
                 assetID: AssetID.btc,
                 transactionHash: txid,
                 outputIndex: 1,
-                amount: TokenAmountFormatter.string(from: changeAmount),
+                amount: TokenAmountFormatter.string(from: amount),
                 address: sendAddress,
                 pubkeyHex: "",
                 pubkeyType: "",
-                status: .unspent,
+                status: .pending,
                 createdAt: now,
                 updatedAt: now
             )
         } else {
             changeOutput = nil
         }
-        return SignedTransaction(transaction: transaction, changeOutput: changeOutput)
+        return SignedTransaction(transaction: transaction, vsize: vsize, changeOutput: changeOutput)
     }
     
     static func decode(transaction: String) throws -> DecodedTransaction {
         try transaction.withCString { transaction in
             var inputsPtr: UnsafeMutablePointer<BitcoinUTXO>? = nil
             var inputsLen: Int = 0
-            var outputsCount: Int = 0
+            var outputsPtr: UnsafeMutablePointer<BitcoinTransactionOutput>? = nil
+            var outputsLen: Int = 0
             let result: BitcoinErrorCode = bitcoin_decode_p2wpkh_transaction(
                 transaction,
                 &inputsPtr,
                 &inputsLen,
-                &outputsCount
+                &outputsPtr,
+                &outputsLen,
             )
-            guard result == BitcoinErrorCodeSuccess, let inputsPtr else {
+            guard result == BitcoinErrorCodeSuccess, let inputsPtr, let outputsPtr else {
                 throw BitcoinError.code(result)
             }
-            let buffer = UnsafeBufferPointer(start: inputsPtr, count: inputsLen)
-            let inputs = [BitcoinUTXO](buffer).map { utxo in
+            
+            let inputsBuffer = UnsafeBufferPointer(start: inputsPtr, count: inputsLen)
+            let inputs = [BitcoinUTXO](inputsBuffer).map { utxo in
                 let txidData = Data([
                     utxo.txid.31, utxo.txid.30, utxo.txid.29, utxo.txid.28,
                     utxo.txid.27, utxo.txid.26, utxo.txid.25, utxo.txid.24,
@@ -196,7 +218,17 @@ enum Bitcoin {
                 return DecodedTransaction.Input(txid: txid, vout: utxo.vout)
             }
             bitcoin_free_utxos(inputsPtr, inputsLen)
-            return DecodedTransaction(inputs: inputs, numberOfOutputs: outputsCount)
+            
+            let outputsBuffer = UnsafeBufferPointer(start: outputsPtr, count: outputsLen)
+            let outputs = [BitcoinTransactionOutput](outputsBuffer).map { output in
+                DecodedTransaction.Output(
+                    address: String(cString: output.address),
+                    value: output.value
+                )
+            }
+            bitcoin_free_transaction_outputs(outputsPtr, outputsLen)
+            
+            return DecodedTransaction(inputs: inputs, outputs: outputs)
         }
     }
     
@@ -250,9 +282,16 @@ extension Bitcoin {
             case insufficientOutputs(feeAmount: Decimal)
         }
         
-        struct Result {
+        struct Result: CustomDebugStringConvertible {
+            
+            let transferAmount: Decimal
             let feeAmount: Decimal
             let spendingOutputs: [Web3Output]
+            
+            var debugDescription: String {
+                "<BTCFee transfer: \(transferAmount), fee: \(feeAmount), outputs: \(spendingOutputs.count)>"
+            }
+            
         }
         
         private let allOutputs: [Web3Output]
@@ -283,17 +322,71 @@ extension Bitcoin {
                 if utxoAmount < transferAmount + feeWithChange {
                     continue
                 } else if utxoAmount > transferAmount + feeWithChange {
-                    return Result(feeAmount: feeWithChange, spendingOutputs: spendingOutputs)
+                    return Result(
+                        transferAmount: transferAmount,
+                        feeAmount: feeWithChange,
+                        spendingOutputs: spendingOutputs
+                    )
                 } else {
                     let vsizeNoChange = vSize(
                         numberOfInputs: spendingOutputs.count,
                         numberOfOutputs: 1
                     )
                     let feeAmount = max(minimum, vsizeNoChange * rate * .satoshi)
-                    return Result(feeAmount: feeAmount, spendingOutputs: spendingOutputs)
+                    return Result(
+                        transferAmount: transferAmount,
+                        feeAmount: feeAmount,
+                        spendingOutputs: spendingOutputs
+                    )
                 }
             }
             throw CalculateError.insufficientOutputs(feeAmount: feeWithChange)
+        }
+        
+        func calculateCancellation(
+            requiredOutputIDs: Set<String>,
+            originalFee: Decimal,
+            incrementalFee: Decimal
+        ) throws -> Result {
+            var spendingOutputs: [Web3Output] = []
+            var additionalOutputs: [Web3Output] = []
+            var spendingAmount: Decimal = 0
+            for output in allOutputs {
+                if requiredOutputIDs.contains(output.id) {
+                    guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
+                        throw CalculateError.invalidOutputAmount(output.amount)
+                    }
+                    spendingOutputs.append(output)
+                    spendingAmount += amount
+                } else {
+                    additionalOutputs.append(output)
+                }
+            }
+            
+            while true {
+                let size = vSize(numberOfInputs: spendingOutputs.count, numberOfOutputs: 1)
+                let requiredFee = max(
+                    size * rate * .satoshi,
+                    originalFee + size * incrementalFee * .satoshi,
+                    minimum
+                )
+                if spendingAmount > requiredFee {
+                    return Result(
+                        transferAmount: spendingAmount - requiredFee,
+                        feeAmount: requiredFee,
+                        spendingOutputs: spendingOutputs
+                    )
+                } else if !additionalOutputs.isEmpty {
+                    let output = additionalOutputs.removeFirst()
+                    guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
+                        throw CalculateError.invalidOutputAmount(output.amount)
+                    }
+                    spendingOutputs.append(output)
+                    spendingAmount += amount
+                } else {
+                    throw CalculateError.insufficientOutputs(feeAmount: requiredFee)
+                }
+            }
         }
         
         private func vSize(

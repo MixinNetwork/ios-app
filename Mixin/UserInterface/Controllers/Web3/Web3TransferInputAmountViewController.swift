@@ -263,19 +263,20 @@ extension Web3TransferInputAmountViewController {
                     guard let feeToken else {
                         throw FeeEstimationError.missingFeeToken(payment.chain.feeTokenAssetID)
                     }
-                    let outputs = Web3OutputDAO.shared.unspentOutputs(
+                    let outputs = Web3OutputDAO.shared.outputs(
                         address: payment.fromAddress.destination,
-                        assetID: payment.token.assetID
+                        assetID: payment.token.assetID,
+                        status: [.unspent, .pending]
                     )
                     let calculator: Bitcoin.P2WPKHFeeCalculator
                     if let bitcoinFeeCalculator {
                         calculator = bitcoinFeeCalculator
                     } else {
-                        let fee = try await RouteAPI.bitcoinFee()
+                        let info = try await RouteAPI.bitcoinNetworkInfo(feeRate: nil)
                         calculator = Bitcoin.P2WPKHFeeCalculator(
                             outputs: outputs,
-                            rate: fee.rate,
-                            minimum: fee.minimum,
+                            rate: info.decimalFeeRate,
+                            minimum: info.minimalFee,
                         )
                         await MainActor.run {
                             self.bitcoinFeeCalculator = calculator
@@ -285,17 +286,9 @@ extension Web3TransferInputAmountViewController {
                         let feeResult = try calculator.calculate(
                             transferAmount: transferAmount == 0 ? 1 * .satoshi : transferAmount
                         )
-                        fee = Web3DisplayFee(
-                            token: feeToken,
-                            tokenAmount: feeResult.feeAmount,
-                            fiatMoneyAmount: feeResult.feeAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-                        )
+                        fee = Web3DisplayFee(token: feeToken, amount: feeResult.feeAmount)
                     } catch Bitcoin.P2WPKHFeeCalculator.CalculateError.insufficientOutputs(let feeAmount) {
-                        fee = Web3DisplayFee(
-                            token: feeToken,
-                            tokenAmount: feeAmount,
-                            fiatMoneyAmount: feeAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
-                        )
+                        fee = Web3DisplayFee(token: feeToken, amount: feeAmount)
                     } catch {
                         throw error
                     }

@@ -36,15 +36,32 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
                     Logger.general.debug(category: "ReviewPendingWeb3RawTxn", message: "Txn \(i) still pending")
                 case let .success(transaction) where transaction.chainID == ChainID.bitcoin && transaction.state.knownCase == .notFound:
                     Logger.general.info(category: "ReviewPendingWeb3RawTxn", message: "BTC Txn \(i) not found")
+                    let outputIDsOccupiedByOtherTransactions: Set<String> = Set(
+                        transactions.compactMap { (tx) -> Bitcoin.DecodedTransaction? in
+                            guard tx.chainID == ChainID.bitcoin && tx.hash != transaction.hash else {
+                                return nil
+                            }
+                            do {
+                                return try Bitcoin.decode(transaction: tx.raw)
+                            } catch {
+                                Logger.general.error(category: "ReviewPendingWeb3RawTxn", message: "Decode txn: \(error)")
+                                return nil
+                            }
+                        }.flatMap { tx in
+                            tx.inputs.map(\.outputID)
+                        }
+                    )
                     try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
                         let txn = try Bitcoin.decode(transaction: transaction.raw)
-                        for input in txn.inputs {
-                            let id = Web3Output.bitcoinOutputID(txid: input.txid, vout: input.vout)
-                            try Web3OutputDAO.shared.delete(id: id, db: db)
-                            Logger.general.info(category: "ReviewPendingWeb3RawTxn", message: "Delete BTC Input: <id: \(id), Txid: \(input.txid), vout: \(input.vout)>")
+                        
+                        // Do not delete the output if it's also used in other transactions, which possibly be RBF ones.
+                        // Otherwise, when `SyncWeb3OutputJob` is executed, there could be an unspent output gets inserted,
+                        // which should be blocked by a local record with status of 'signed'
+                        for input in txn.inputs where !outputIDsOccupiedByOtherTransactions.contains(input.outputID) {
+                            try Web3OutputDAO.shared.delete(id: input.outputID, db: db)
+                            Logger.general.info(category: "ReviewPendingWeb3RawTxn", message: "Delete BTC Input: <id: \(input.outputID), Txid: \(input.txid), vout: \(input.vout)>")
                         }
-                        if txn.numberOfOutputs > 1 {
-                            let vout: Int = 1
+                        for (vout, output) in txn.outputs.enumerated() where output.address == transaction.account {
                             let id = Web3Output.bitcoinOutputID(txid: transaction.hash, vout: vout)
                             try Web3OutputDAO.shared.delete(id: id, db: db)
                             Logger.general.info(category: "ReviewPendingWeb3RawTxn", message: "Delete BTC Change: <id: \(id), Txid: \(transaction.hash), vout: \(vout)>")

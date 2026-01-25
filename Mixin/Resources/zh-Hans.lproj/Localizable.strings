@@ -211,6 +211,7 @@
 "bots" = "机器人";
 "bots_title" = "机器人";
 "browser" = "浏览器";
+"btc_tx_already_speedy" = "当前费率已经足够，无需加速。";
 "buy" = "购买";
 "buy_asset" = "购买 %@";
 "buy_crypto_with_cash" = "用现金购买加密货币";
@@ -1415,6 +1416,7 @@
 "sort_by_recent" = "按最近排序";
 "sort_by_value" = "按价值排序";
 "speed_up" = "加速";
+"speed_up_failed" = "加速失败";
 "speed_up_transaction" = "加速交易";
 "speed_up_transaction_description" = "如果交易已接近完成，可能无法加速";
 "star" = "Star";

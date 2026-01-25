@@ -246,6 +246,18 @@ extension Web3TransferPreviewViewController {
         switch state {
         case .loading:
             confirmButton?.isEnabled = false
+        case .unavailable(let reason):
+            canDismissInteractively = true
+            tableHeaderView.setIcon(progress: .failure)
+            layoutTableHeaderView(
+                title: R.string.localizable.speed_up_failed(),
+                subtitle: reason
+            )
+            tableView.setContentOffset(.zero, animated: true)
+            loadSingleButtonTrayView(
+                title: R.string.localizable.done(),
+                action: #selector(close(_:))
+            )
         case .ready:
             confirmButton?.isEnabled = true
         case .signing:

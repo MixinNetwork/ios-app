@@ -211,6 +211,7 @@
 "bots" = "ミニアプリ";
 "bots_title" = "Myミニアプリ一覧";
 "browser" = "Browser";
+"btc_tx_already_speedy" = "Current fee rate is already sufficient; acceleration is meaningless.";
 "buy" = "Buy";
 "buy_asset" = "Buy %@";
 "buy_crypto_with_cash" = "Purchase crypto with cash";
@@ -1415,6 +1416,7 @@
 "sort_by_recent" = "Sort by Recent";
 "sort_by_value" = "Sort by Value";
 "speed_up" = "Speed Up";
+"speed_up_failed" = "Speed up failed";
 "speed_up_transaction" = "Speed Up Transaction";
 "speed_up_transaction_description" = "If the transaction is too far along this may not be possible";
 "star" = "Star";

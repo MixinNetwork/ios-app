@@ -5,6 +5,7 @@ class Web3TransferOperation {
     
     enum State {
         case loading
+        case unavailable(reason: String)
         case ready
         case signing
         case signingFailed(Error)

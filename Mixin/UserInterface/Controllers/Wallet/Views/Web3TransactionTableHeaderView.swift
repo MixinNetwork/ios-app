@@ -29,17 +29,16 @@ enum Web3TransactionTableHeaderViewAction: Int, CaseIterable {
 
 extension Web3TransactionTableHeaderView {
     
-    func showActionView() {
+    func showActionView(actions: [Web3TransactionTableHeaderViewAction]) {
         contentStackViewBottomConstraint.constant = 12
         if actionView == nil {
             let actionView = PillActionView()
             actionView.backgroundColor = R.color.background_quaternary()
             actionView.layer.cornerRadius = 12
             actionView.layer.masksToBounds = true
-            actionView.actions = Web3TransactionTableHeaderViewAction.allCases
-                .map { action in
-                        .init(title: action.localizedTitle)
-                }
+            actionView.actions = actions.map { action in
+                    .init(title: action.localizedTitle)
+            }
             contentStackView.addArrangedSubview(actionView)
             actionView.snp.makeConstraints { make in
                 make.height.equalTo(44)

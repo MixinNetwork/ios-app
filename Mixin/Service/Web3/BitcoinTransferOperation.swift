@@ -203,6 +203,7 @@ class BitcoinRBFOperation: BitcoinTransferOperation {
         case missingTransferOutput
         case invalidOutputAmount
         case invalidCancellation
+        case spentChangeOutput
     }
     
     fileprivate let previousInputsAmount: Decimal
@@ -277,12 +278,24 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
         guard tx.outputs.count == 1 || tx.outputs.count == 2 else {
             throw InitError.invalidOutputsCount
         }
-        let transferOutput = tx.outputs.first { output in
-            output.address != fromAddress.destination
+        
+        var changeOutputID: String?
+        var transferOutput: Bitcoin.DecodedTransaction.Output?
+        for (i, output) in tx.outputs.enumerated() {
+            if output.address == fromAddress.destination {
+                changeOutputID = Web3Output.bitcoinOutputID(txid: transaction.hash, vout: i)
+            } else {
+                transferOutput = output
+            }
         }
+        
         guard let transferOutput else {
             throw InitError.missingTransferOutput
         }
+        if let id = changeOutputID, !Web3OutputDAO.shared.isOutputAvailable(id: id) {
+            throw InitError.spentChangeOutput
+        }
+        
         try super.init(
             wallet: wallet,
             fromAddress: fromAddress,
@@ -346,19 +359,25 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
         guard tx.outputs.count == 1 || tx.outputs.count == 2 else {
             throw InitError.invalidOutputsCount
         }
-        var previousChangeOutputID: String?
+        
+        var changeOutputID: String?
         var hasOutputToOthers = false
         for (i, output) in tx.outputs.enumerated() {
             if output.address == fromAddress.destination {
-                previousChangeOutputID = Web3Output.bitcoinOutputID(txid: transaction.hash, vout: i)
+                changeOutputID = Web3Output.bitcoinOutputID(txid: transaction.hash, vout: i)
             } else {
                 hasOutputToOthers = true
             }
         }
+        
         guard hasOutputToOthers else {
             throw InitError.invalidCancellation
         }
-        self.previousChangeOutputID = previousChangeOutputID
+        if let id = changeOutputID, !Web3OutputDAO.shared.isOutputAvailable(id: id) {
+            throw InitError.spentChangeOutput
+        }
+        
+        self.previousChangeOutputID = changeOutputID
         try super.init(
             wallet: wallet,
             fromAddress: fromAddress,

@@ -46,6 +46,22 @@ public final class Web3OutputDAO: Web3DAO {
         return db.select(with: query)
     }
     
+    public func isOutputAvailable(id: String) -> Bool {
+        let status: String? = db.select(
+            with: "SELECT status FROM outputs WHERE output_id = ?",
+            arguments: [id]
+        )
+        guard let value = status, let status = Web3Output.Status(rawValue: value) else {
+            return false
+        }
+        switch status {
+        case .pending, .unspent:
+            return true
+        case .signed:
+            return false
+        }
+    }
+    
     public func availableBalance(address: String, assetID: String, db: GRDB.Database) throws -> String {
         let unspentAmounts = try String.fetchAll(
             db,

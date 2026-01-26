@@ -317,6 +317,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
     fileprivate let previousFeeRate: String
     fileprivate let decimalPreviousFeeRate: Decimal
     fileprivate let spentOutputs: [Web3Output]
+    fileprivate let previousChangeOutputID: String?
     fileprivate let availableOutputs: [Web3Output]
     
     init(
@@ -334,8 +335,14 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
         guard tx.outputs.count == 1 || tx.outputs.count == 2 else {
             throw InitError.invalidOutputsCount
         }
-        let hasOutputToOthers = tx.outputs.contains { output in
-            output.address != fromAddress.destination
+        var previousChangeOutputID: String?
+        var hasOutputToOthers = false
+        for (i, output) in tx.outputs.enumerated() {
+            if output.address == fromAddress.destination {
+                previousChangeOutputID = Web3Output.bitcoinOutputID(txid: transaction.hash, vout: i)
+            } else {
+                hasOutputToOthers = true
+            }
         }
         guard hasOutputToOthers else {
             throw InitError.invalidCancellation
@@ -366,6 +373,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
         self.previousFeeRate = previousFeeRate
         self.decimalPreviousFeeRate = decimalPreviousFeeRate
         self.spentOutputs = spentOutputs
+        self.previousChangeOutputID = previousChangeOutputID
         self.availableOutputs = availableOutputs
         try super.init(
             wallet: wallet,
@@ -409,6 +417,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
         await MainActor.run {
             state = .signing
         }
+        let sendAmount = inputsAmount - fee.tokenAmount
         let signedTransaction: Bitcoin.SignedTransaction
         do {
             Logger.web3.info(category: "BTCCancel", message: "Start")
@@ -417,7 +426,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
             signedTransaction = try Bitcoin.signedTransaction(
                 outputs: spendingOutputs,
                 sendAddress: fromAddress.destination,
-                sendAmount: inputsAmount - fee.tokenAmount,
+                sendAmount: sendAmount,
                 fee: fee.tokenAmount,
                 receiveAddress: fromAddress.destination,
                 privateKey: privateKey
@@ -448,14 +457,30 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
                     feeType: isFeeWaived ? .free : nil,
                 )
                 .replacingNonce(with: feeRate)
-            let hash = rawTransaction.hash
-            Logger.web3.info(category: "BTCCancel", message: "Tx sent, hash: \(hash)")
+            Logger.web3.info(category: "BTCCancel", message: "Tx sent, hash: \(rawTransaction.hash)")
             let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.tokenAmount)
+            let now = Date().toUTCString()
+            let receivingOutput = Web3Output(
+                id: Web3Output.bitcoinOutputID(txid: rawTransaction.hash, vout: 0),
+                assetID: token.assetID,
+                transactionHash: rawTransaction.hash,
+                outputIndex: 0,
+                amount: TokenAmountFormatter.string(from: sendAmount),
+                address: fromAddress.destination,
+                pubkeyHex: "",
+                pubkeyType: "",
+                status: .pending,
+                createdAt: now,
+                updatedAt: now
+            )
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
                 try rawTransaction.save(db)
+                if let id = previousChangeOutputID {
+                    try Web3OutputDAO.shared.delete(id: id, db: db)
+                }
                 try Web3OutputDAO.shared.sign(
                     outputIDs: spendingOutputs.map(\.id),
-                    save: signedTransaction.changeOutput,
+                    save: receivingOutput,
                     db: db
                 )
                 try Web3TokenDAO.shared.updateAmountByOutputs(

@@ -205,35 +205,25 @@ class BitcoinRBFOperation: BitcoinTransferOperation {
         case invalidCancellation
     }
     
-}
-
-final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
-    
+    fileprivate let previousInputsAmount: Decimal
     fileprivate let previousFeeAmount: Decimal
     fileprivate let previousFeeRate: String
     fileprivate let decimalPreviousFeeRate: Decimal
+    fileprivate let previousSpentOutputs: [Web3Output]
     fileprivate let availableOutputs: [Web3Output]
     
     init(
         wallet: Web3Wallet,
         fromAddress: Web3Address,
-        transaction: Web3RawTransaction,
+        rawTransaction: Web3RawTransaction,
+        decodedTransaction: Bitcoin.DecodedTransaction,
+        newToAddress: String,
+        newSendAmount: Decimal
     ) throws {
-        let previousFeeRate = transaction.nonce
+        let previousFeeRate = rawTransaction.nonce
         let decimalPreviousFeeRate = Decimal(string: previousFeeRate, locale: .enUSPOSIX)
         guard let decimalPreviousFeeRate else {
             throw InitError.invalidFeeRate(previousFeeRate)
-        }
-        
-        let tx = try Bitcoin.decode(transaction: transaction.raw)
-        guard tx.outputs.count == 1 || tx.outputs.count == 2 else {
-            throw InitError.invalidOutputsCount
-        }
-        let transferOutput = tx.outputs.first { output in
-            output.address != fromAddress.destination
-        }
-        guard let transferOutput else {
-            throw InitError.missingTransferOutput
         }
         
         var availableOutputs = Web3OutputDAO.shared.outputs(
@@ -241,8 +231,10 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
             assetID: Self.assetID,
             status: [.unspent]
         )
-        let spentOutputs = Web3OutputDAO.shared.outputs(ids: tx.inputs.map(\.outputID))
-        guard spentOutputs.count == tx.inputs.count else {
+        let spentOutputs = Web3OutputDAO.shared.outputs(
+            ids: decodedTransaction.inputs.map(\.outputID)
+        )
+        guard spentOutputs.count == decodedTransaction.inputs.count else {
             throw InitError.missingSpentOutputs
         }
         availableOutputs.insert(contentsOf: spentOutputs, at: 0)
@@ -253,20 +245,51 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
             }
             return result + amount
         }
-        let outputsAmount = Decimal(tx.outputs.map(\.value).reduce(0, +)) * .satoshi
+        let outputsAmount = Decimal(decodedTransaction.outputs.map(\.value).reduce(0, +)) * .satoshi
         let previousFeeAmount = inputsAmount - outputsAmount
         
+        self.previousInputsAmount = inputsAmount
         self.previousFeeAmount = previousFeeAmount
         self.previousFeeRate = previousFeeRate
         self.decimalPreviousFeeRate = decimalPreviousFeeRate
+        self.previousSpentOutputs = spentOutputs
         self.availableOutputs = availableOutputs
         try super.init(
             wallet: wallet,
             fromAddress: fromAddress,
-            toAddress: transferOutput.address,
+            toAddress: newToAddress,
             hardcodedSimulation: .empty,
             isFeeWaived: false,
-            sendAmount: Decimal(transferOutput.value) * .satoshi,
+            sendAmount: newSendAmount,
+        )
+    }
+    
+}
+
+final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
+    
+    init(
+        wallet: Web3Wallet,
+        fromAddress: Web3Address,
+        transaction: Web3RawTransaction,
+    ) throws {
+        let tx = try Bitcoin.decode(transaction: transaction.raw)
+        guard tx.outputs.count == 1 || tx.outputs.count == 2 else {
+            throw InitError.invalidOutputsCount
+        }
+        let transferOutput = tx.outputs.first { output in
+            output.address != fromAddress.destination
+        }
+        guard let transferOutput else {
+            throw InitError.missingTransferOutput
+        }
+        try super.init(
+            wallet: wallet,
+            fromAddress: fromAddress,
+            rawTransaction: transaction,
+            decodedTransaction: tx,
+            newToAddress: transferOutput.address,
+            newSendAmount: Decimal(transferOutput.value) * .satoshi,
         )
     }
     
@@ -312,25 +335,13 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
         case unexpectedChange
     }
     
-    fileprivate let inputsAmount: Decimal
-    fileprivate let previousFeeAmount: Decimal
-    fileprivate let previousFeeRate: String
-    fileprivate let decimalPreviousFeeRate: Decimal
-    fileprivate let spentOutputs: [Web3Output]
-    fileprivate let previousChangeOutputID: String?
-    fileprivate let availableOutputs: [Web3Output]
+    private let previousChangeOutputID: String?
     
     init(
         wallet: Web3Wallet,
         fromAddress: Web3Address,
         transaction: Web3RawTransaction,
     ) throws {
-        let previousFeeRate = transaction.nonce
-        let decimalPreviousFeeRate = Decimal(string: previousFeeRate, locale: .enUSPOSIX)
-        guard let decimalPreviousFeeRate else {
-            throw InitError.invalidFeeRate(previousFeeRate)
-        }
-        
         let tx = try Bitcoin.decode(transaction: transaction.raw)
         guard tx.outputs.count == 1 || tx.outputs.count == 2 else {
             throw InitError.invalidOutputsCount
@@ -347,41 +358,14 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
         guard hasOutputToOthers else {
             throw InitError.invalidCancellation
         }
-        
-        var availableOutputs = Web3OutputDAO.shared.outputs(
-            address: fromAddress.destination,
-            assetID: Self.assetID,
-            status: [.unspent]
-        )
-        let spentOutputs = Web3OutputDAO.shared.outputs(ids: tx.inputs.map(\.outputID))
-        guard spentOutputs.count == tx.inputs.count else {
-            throw InitError.missingSpentOutputs
-        }
-        availableOutputs.insert(contentsOf: spentOutputs, at: 0)
-        
-        let inputsAmount: Decimal = try spentOutputs.reduce(0) { result, output in
-            guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
-                throw InitError.invalidOutputAmount
-            }
-            return result + amount
-        }
-        let outputsAmount = Decimal(tx.outputs.map(\.value).reduce(0, +)) * .satoshi
-        let previousFeeAmount = inputsAmount - outputsAmount
-        
-        self.inputsAmount = inputsAmount
-        self.previousFeeAmount = previousFeeAmount
-        self.previousFeeRate = previousFeeRate
-        self.decimalPreviousFeeRate = decimalPreviousFeeRate
-        self.spentOutputs = spentOutputs
         self.previousChangeOutputID = previousChangeOutputID
-        self.availableOutputs = availableOutputs
         try super.init(
             wallet: wallet,
             fromAddress: fromAddress,
-            toAddress: fromAddress.destination,
-            hardcodedSimulation: .empty,
-            isFeeWaived: false,
-            sendAmount: -1,
+            rawTransaction: transaction,
+            decodedTransaction: tx,
+            newToAddress: fromAddress.destination,
+            newSendAmount: -1
         )
     }
     
@@ -393,7 +377,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
             minimum: info.minimalFee,
         )
         let result = try calculator.calculateCancellation(
-            requiredOutputIDs: Set(spentOutputs.map(\.id)),
+            requiredOutputIDs: Set(previousSpentOutputs.map(\.id)),
             originalFee: previousFeeAmount,
             incrementalFee: info.incrementalFee
         )
@@ -417,7 +401,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
         await MainActor.run {
             state = .signing
         }
-        let sendAmount = inputsAmount - fee.tokenAmount
+        let sendAmount = previousInputsAmount - fee.tokenAmount
         let signedTransaction: Bitcoin.SignedTransaction
         do {
             Logger.web3.info(category: "BTCCancel", message: "Start")

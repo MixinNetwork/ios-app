@@ -60,14 +60,14 @@ public class Web3Transaction: Codable, Identifiable {
     public lazy var simpleTransfer: SimpleTransfer? = {
         switch transactionType.knownCase {
         case .transferIn:
-            if let receivers, receivers.count == 1 {
-                SimpleTransfer(receiver: receivers[0])
+            if let senders, senders.count == 1 {
+                SimpleTransfer(sender: senders[0])
             } else {
                 nil
             }
         case .transferOut:
-            if let senders, senders.count == 1 {
-                SimpleTransfer(sender: senders[0])
+            if let receivers, receivers.count == 1 {
+                SimpleTransfer(receiver: receivers[0])
             } else {
                 nil
             }

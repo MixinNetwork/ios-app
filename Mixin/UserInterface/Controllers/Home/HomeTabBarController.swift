@@ -39,6 +39,8 @@ final class HomeTabBarController: UIViewController {
     private lazy var marketDashboardViewController = MarketDashboardViewController()
     private lazy var exploreViewController = ExploreViewController()
     
+    private var needsUnlockBitcoin = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -91,6 +93,13 @@ final class HomeTabBarController: UIViewController {
         tabBar.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalToSuperview()
         }
+        
+        let bitcoinUnlockableWallets = Web3WalletDAO.shared
+            .chainUnavailableWallets(chainID: ChainID.bitcoin)
+            .filter { wallet in
+                wallet.hasSecret()
+            }
+        needsUnlockBitcoin = !bitcoinUnlockableWallets.isEmpty
         
         switchToChildAfterValidated(with: .chat)
         
@@ -196,20 +205,29 @@ final class HomeTabBarController: UIViewController {
         case .chat, .market, .more:
             switchToChild(with: id)
         case .wallet:
-            let shouldValidatePIN: Bool
-            if let date = AppGroupUserDefaults.Wallet.lastPINVerifiedDate {
-                shouldValidatePIN = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
+            if needsUnlockBitcoin {
+                let unlock = UnlockBitcoinNavigationController()
+                unlock.onSuccess = { [weak self] in
+                    self?.switchTo(child: .wallet)
+                }
+                present(unlock, animated: true)
+                needsUnlockBitcoin = false
             } else {
-                AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
-                shouldValidatePIN = true
-            }
-            if shouldValidatePIN {
-                let validator = PinValidationViewController(onSuccess: { (_) in
-                    self.switchToChild(with: .wallet)
-                })
-                present(validator, animated: true, completion: nil)
-            } else {
-                switchToChild(with: .wallet)
+                let shouldValidatePIN: Bool
+                if let date = AppGroupUserDefaults.Wallet.lastPINVerifiedDate {
+                    shouldValidatePIN = -date.timeIntervalSinceNow > AppGroupUserDefaults.Wallet.periodicPinVerificationInterval
+                } else {
+                    AppGroupUserDefaults.Wallet.periodicPinVerificationInterval = PeriodicPinVerificationInterval.min
+                    shouldValidatePIN = true
+                }
+                if shouldValidatePIN {
+                    let validator = PinValidationViewController(onSuccess: { (_) in
+                        self.switchToChild(with: .wallet)
+                    })
+                    present(validator, animated: true, completion: nil)
+                } else {
+                    switchToChild(with: .wallet)
+                }
             }
         }
     }

@@ -719,6 +719,7 @@
 		940EF8B12C8AE573000AD1C6 /* ShareMarketAsPictureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */; };
 		940EF8B32C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EF8B22C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift */; };
 		940EF8B52C8AE74D000AD1C6 /* ShareMarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EF8B42C8AE74D000AD1C6 /* ShareMarketViewController.swift */; };
+		940F93D82F291E6500C631F9 /* UnlockBitcoinNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940F93D72F291E6400C631F9 /* UnlockBitcoinNavigationController.swift */; };
 		940FC5E02CDBC30D0056BFF2 /* ExportMnemonicPhrasesIntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FC5DF2CDBC3080056BFF2 /* ExportMnemonicPhrasesIntroductionViewController.swift */; };
 		940FC5E52CDBC4330056BFF2 /* ExportMnemonicPhrasesValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FC5E42CDBC42A0056BFF2 /* ExportMnemonicPhrasesValidationViewController.swift */; };
 		940FC5EB2CDBC4F10056BFF2 /* ViewMnemonicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FC5EA2CDBC4B30056BFF2 /* ViewMnemonicsViewController.swift */; };
@@ -2503,6 +2504,7 @@
 		940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareMarketAsPictureView.xib; sourceTree = "<group>"; };
 		940EF8B22C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMarketAsPictureView.swift; sourceTree = "<group>"; };
 		940EF8B42C8AE74D000AD1C6 /* ShareMarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMarketViewController.swift; sourceTree = "<group>"; };
+		940F93D72F291E6400C631F9 /* UnlockBitcoinNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockBitcoinNavigationController.swift; sourceTree = "<group>"; };
 		940FC5DF2CDBC3080056BFF2 /* ExportMnemonicPhrasesIntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportMnemonicPhrasesIntroductionViewController.swift; sourceTree = "<group>"; };
 		940FC5E42CDBC42A0056BFF2 /* ExportMnemonicPhrasesValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportMnemonicPhrasesValidationViewController.swift; sourceTree = "<group>"; };
 		940FC5EA2CDBC4B30056BFF2 /* ViewMnemonicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewMnemonicsViewController.swift; sourceTree = "<group>"; };
@@ -3912,6 +3914,7 @@
 				94DC18A82D018D46006501B3 /* LoginLoadingView.xib */,
 				94E979222D0B407B00FFCC12 /* LoginLoadingViewController.swift */,
 				7BDB4724215A666B008B21F9 /* SignalLoadingViewController.swift */,
+				940F93D72F291E6400C631F9 /* UnlockBitcoinNavigationController.swift */,
 				944535CD2EFBDD7300E056D1 /* UnlockBitcoinView.xib */,
 				944535CC2EFBDD7300E056D1 /* UnlockBitcoinViewController.swift */,
 				94C578012F0D5BA30000561B /* UnlockBitcoinInputPINViewController.swift */,
@@ -7159,6 +7162,7 @@
 				DF768563200647CC0055F3FF /* BouncingButton.swift in Sources */,
 				7BEED0DB244DC1F300F3A2B9 /* SettingsTableViewController.swift in Sources */,
 				945FFC8A2C3832230013DC51 /* SwapResponse.swift in Sources */,
+				940F93D82F291E6500C631F9 /* UnlockBitcoinNavigationController.swift in Sources */,
 				7BF5374920076BB500257D6C /* ShutterAnimationView.swift in Sources */,
 				7B3936D120C1722C0075A97A /* CaptchaViewController.swift in Sources */,
 				7B98638F1FA313D300D4B16C /* BottomWrapperView.swift in Sources */,

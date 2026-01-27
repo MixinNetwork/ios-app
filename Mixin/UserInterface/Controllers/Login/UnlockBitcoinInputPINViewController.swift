@@ -19,6 +19,7 @@ final class UnlockBitcoinInputPINViewController: FullscreenPINValidationViewCont
                 try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                 await MainActor.run {
                     Logger.web3.info(category: "UnlockBitcoinInputPIN", message: "Finished")
+                    (navigationController as? UnlockBitcoinNavigationController)?.onSuccess?()
                     navigationController?.presentingViewController?.dismiss(animated: true)
                 }
             } catch {

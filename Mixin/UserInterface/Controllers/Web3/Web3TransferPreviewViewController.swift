@@ -251,7 +251,8 @@ extension Web3TransferPreviewViewController {
             tableHeaderView.setIcon(progress: .failure)
             layoutTableHeaderView(
                 title: R.string.localizable.speed_up_failed(),
-                subtitle: reason
+                subtitle: reason,
+                style: .destructive,
             )
             tableView.setContentOffset(.zero, animated: true)
             loadSingleButtonTrayView(
@@ -284,8 +285,11 @@ extension Web3TransferPreviewViewController {
         case .sendingFailed(let error):
             canDismissInteractively = true
             tableHeaderView.setIcon(progress: .failure)
-            layoutTableHeaderView(title: R.string.localizable.sending_failed(),
-                                  subtitle: "\(error)")
+            layoutTableHeaderView(
+                title: R.string.localizable.sending_failed(),
+                subtitle: "\(error)",
+                style: .destructive,
+            )
             tableView.setContentOffset(.zero, animated: true)
             loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                      leftAction: #selector(close(_:)),

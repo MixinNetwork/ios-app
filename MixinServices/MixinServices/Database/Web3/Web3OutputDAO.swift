@@ -76,13 +76,17 @@ public final class Web3OutputDAO: Web3DAO {
         return TokenAmountFormatter.string(from: total)
     }
     
-    public func saveUnspentOutputs(
+    public func replaceUnspentOutputs(
         walletID: String,
         address: String,
         assetID: String,
         outputs: [Web3Output],
     ) {
         db.write { db in
+            try db.execute(
+                sql: "DELETE FROM outputs WHERE address = ? AND asset_id = ? AND status = ?",
+                arguments: [address, assetID, Web3Output.Status.unspent.rawValue]
+            )
             let signedOutputIDs: Set<String> = try {
                 let query: GRDB.SQL = "SELECT output_id FROM outputs WHERE output_id IN \(outputs.map(\.id)) AND status = 'signed'"
                 let (sql, arguments) = try query.build(db)

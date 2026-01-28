@@ -29,7 +29,7 @@ final class SyncWeb3OutputJob: AsynchronousJob {
             switch result {
             case let .success(outputs):
                 Logger.general.debug(category: "SyncWeb3Output", message: "Got \(outputs.count) outputs")
-                Web3OutputDAO.shared.saveUnspentOutputs(
+                Web3OutputDAO.shared.replaceUnspentOutputs(
                     walletID: walletID,
                     address: address.destination,
                     assetID: assetID,

@@ -28,12 +28,16 @@ final class SyncWeb3OutputJob: AsynchronousJob {
         ) { [walletID, assetID] result in
             switch result {
             case let .success(outputs):
-                Logger.general.debug(category: "SyncWeb3Output", message: "Got \(outputs.count) outputs")
+                // Simplfy all upcoming calculations by saving outputs only with valid amount
+                let amountValidOutputs = outputs.filter { output in
+                    output.decimalAmount > 0
+                }
+                Logger.general.debug(category: "SyncWeb3Output", message: "Got \(outputs.count) outputs, \(amountValidOutputs) valid")
                 Web3OutputDAO.shared.replaceUnspentOutputs(
                     walletID: walletID,
                     address: address.destination,
                     assetID: assetID,
-                    outputs: outputs
+                    outputs: amountValidOutputs
                 )
             case let .failure(error):
                 Logger.general.debug(category: "SyncWeb3Output", message: "\(error)")

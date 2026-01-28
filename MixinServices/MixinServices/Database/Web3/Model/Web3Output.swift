@@ -21,6 +21,8 @@ public struct Web3Output {
     public let createdAt: String
     public let updatedAt: String
     
+    public let decimalAmount: Decimal
+    
     public init(
         id: String, assetID: String, transactionHash: String,
         outputIndex: Int, amount: String, address: String,
@@ -39,6 +41,7 @@ public struct Web3Output {
         self.status = .known(status)
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
     }
     
 }
@@ -57,6 +60,23 @@ extension Web3Output: Codable, DatabaseColumnConvertible, MixinFetchableRecord, 
         case status = "status"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let amount = try container.decode(String.self, forKey: .amount)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.assetID = try container.decode(String.self, forKey: .assetID)
+        self.transactionHash = try container.decode(String.self, forKey: .transactionHash)
+        self.outputIndex = try container.decode(Int.self, forKey: .outputIndex)
+        self.amount = amount
+        self.address = try container.decode(String.self, forKey: .address)
+        self.pubkeyHex = try container.decode(String.self, forKey: .pubkeyHex)
+        self.pubkeyType = try container.decode(String.self, forKey: .pubkeyType)
+        self.status = try container.decode(UnknownableEnum<Status>.self, forKey: .status)
+        self.createdAt = try container.decode(String.self, forKey: .createdAt)
+        self.updatedAt = try container.decode(String.self, forKey: .updatedAt)
+        self.decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
     }
     
 }

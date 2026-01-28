@@ -201,7 +201,6 @@ class BitcoinRBFOperation: BitcoinTransferOperation {
         case missingSpentOutputs
         case invalidOutputsCount
         case missingTransferOutput
-        case invalidOutputAmount
         case invalidCancellation
         case spentChangeOutput
     }
@@ -240,11 +239,8 @@ class BitcoinRBFOperation: BitcoinTransferOperation {
         }
         availableOutputs.insert(contentsOf: spentOutputs, at: 0)
         
-        let inputsAmount: Decimal = try spentOutputs.reduce(0) { result, output in
-            guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
-                throw InitError.invalidOutputAmount
-            }
-            return result + amount
+        let inputsAmount: Decimal = spentOutputs.reduce(0) { result, output in
+            result + output.decimalAmount
         }
         let outputsAmount = Decimal(decodedTransaction.outputs.map(\.value).reduce(0, +)) * .satoshi
         let previousFeeAmount = inputsAmount - outputsAmount

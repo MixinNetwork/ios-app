@@ -145,7 +145,10 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
             return
         }
         let multiplier = self.multiplier(tag: sender.tag)
-        if payment.sendingNativeToken {
+        if let bitcoinFeeCalculator, multiplier == 1 {
+            let maxAmount = bitcoinFeeCalculator.exhaustingOutputsTransferAmount()
+            replaceAmount(maxAmount)
+        } else if payment.sendingNativeToken {
             let availableBalance = max(0, token.decimalBalance - fee.tokenAmount)
             replaceAmount(availableBalance * multiplier)
         } else {
@@ -359,7 +362,7 @@ extension Web3TransferInputAmountViewController {
                 let amount: Decimal
                 switch payment.chain.kind {
                 case .bitcoin:
-                    amount = Bitcoin.dust
+                    amount = Bitcoin.spendingDust
                 case .evm:
                     amount = 0
                 case .solana:

@@ -42,7 +42,8 @@ enum Bitcoin {
         
     }
     
-    static let dust: Decimal = 1000 * .satoshi
+    static let spendingDust: Decimal = 1000 * .satoshi
+    static let changeDust = Decimal(BITCOIN_P2WPKH_DUST) * .satoshi
     static let privateKeyLength = BITCOIN_PRIVATE_KEY_LENGTH
     
     static func isValidAddress(address: String) -> Bool {
@@ -114,11 +115,11 @@ enum Bitcoin {
                 let hash = Data(hexEncodedString: output.transactionHash),
                 hash.count == 32,
                 let vout = UInt32(exactly: output.outputIndex),
-                let amount = Decimal(string: output.amount, locale: .enUSPOSIX)
+                output.decimalAmount > 0
             else {
                 throw BitcoinError.convertTxID
             }
-            utxoAmount += amount
+            utxoAmount += output.decimalAmount
             let txid = (
                 hash[31], hash[30], hash[29], hash[28], hash[27],
                 hash[26], hash[25], hash[24], hash[23], hash[22],
@@ -128,7 +129,7 @@ enum Bitcoin {
                 hash[6], hash[5], hash[4], hash[3], hash[2],
                 hash[1], hash[0],
             )
-            let value = NSDecimalNumber(decimal: amount / .satoshi).uint64Value
+            let value = NSDecimalNumber(decimal: output.decimalAmount / .satoshi).uint64Value
             return BitcoinUTXO(txid: txid, vout: vout, value: value)
         }
         let sendAmountInSatoshi = NSDecimalNumber(decimal: sendAmount / .satoshi).uint64Value
@@ -279,7 +280,6 @@ extension Bitcoin {
     struct P2WPKHFeeCalculator {
         
         enum CalculateError: Error {
-            case invalidOutputAmount(String)
             case insufficientOutputs(feeAmount: Decimal)
         }
         
@@ -310,33 +310,42 @@ extension Bitcoin {
             var utxoAmount: Decimal = 0
             var feeWithChange: Decimal = 0
             for output in allOutputs {
-                guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
-                    throw CalculateError.invalidOutputAmount(output.amount)
-                }
                 spendingOutputs.append(output)
-                utxoAmount += amount
-                let vsizeWithChange = vSize(
-                    numberOfInputs: spendingOutputs.count,
-                    numberOfOutputs: 2
-                )
-                feeWithChange = max(minimum, vsizeWithChange * rate * .satoshi)
-                if utxoAmount < transferAmount + feeWithChange {
-                    continue
-                } else if utxoAmount > transferAmount + feeWithChange {
-                    return Result(
-                        transferAmount: transferAmount,
-                        feeAmount: feeWithChange,
-                        spendingOutputs: spendingOutputs
+                utxoAmount += output.decimalAmount
+                feeWithChange = {
+                    let size = vSize(
+                        numberOfInputs: spendingOutputs.count,
+                        numberOfOutputs: 2
                     )
-                } else {
-                    let vsizeNoChange = vSize(
+                    return max(minimum, size * rate * .satoshi)
+                }()
+                let feeWithoutChange = {
+                    let size = vSize(
                         numberOfInputs: spendingOutputs.count,
                         numberOfOutputs: 1
                     )
-                    let feeAmount = max(minimum, vsizeNoChange * rate * .satoshi)
+                    return max(minimum, size * rate * .satoshi)
+                }()
+                // utxoAmount could be between 0 and ∞
+                // 0 - (transferAmount + feeWithoutChange) - (transferAmount + feeWithChange + changeDust) - ∞
+                if utxoAmount < transferAmount + feeWithoutChange {
+                    continue
+                } else if utxoAmount == transferAmount + feeWithoutChange {
                     return Result(
                         transferAmount: transferAmount,
-                        feeAmount: feeAmount,
+                        feeAmount: feeWithoutChange,
+                        spendingOutputs: spendingOutputs
+                    )
+                } else if utxoAmount < transferAmount + feeWithChange + Bitcoin.changeDust {
+                    return Result(
+                        transferAmount: transferAmount,
+                        feeAmount: utxoAmount - transferAmount,
+                        spendingOutputs: spendingOutputs
+                    )
+                } else {
+                    return Result(
+                        transferAmount: transferAmount,
+                        feeAmount: feeWithChange,
                         spendingOutputs: spendingOutputs
                     )
                 }
@@ -354,11 +363,8 @@ extension Bitcoin {
             var spendingAmount: Decimal = 0
             for output in allOutputs {
                 if requiredOutputIDs.contains(output.id) {
-                    guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
-                        throw CalculateError.invalidOutputAmount(output.amount)
-                    }
                     spendingOutputs.append(output)
-                    spendingAmount += amount
+                    spendingAmount += output.decimalAmount
                 } else {
                     additionalOutputs.append(output)
                 }
@@ -379,15 +385,21 @@ extension Bitcoin {
                     )
                 } else if !additionalOutputs.isEmpty {
                     let output = additionalOutputs.removeFirst()
-                    guard let amount = Decimal(string: output.amount, locale: .enUSPOSIX) else {
-                        throw CalculateError.invalidOutputAmount(output.amount)
-                    }
                     spendingOutputs.append(output)
-                    spendingAmount += amount
+                    spendingAmount += output.decimalAmount
                 } else {
                     throw CalculateError.insufficientOutputs(feeAmount: requiredFee)
                 }
             }
+        }
+        
+        func exhaustingOutputsTransferAmount() -> Decimal {
+            let totalAmount = allOutputs.reduce(0) { result, output in
+                result + output.decimalAmount
+            }
+            let size = vSize(numberOfInputs: allOutputs.count, numberOfOutputs: 1)
+            let fee = max(minimum, size * rate * .satoshi)
+            return totalAmount - fee
         }
         
         private func vSize(

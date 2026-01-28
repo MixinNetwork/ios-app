@@ -28,6 +28,7 @@ typedef enum BitcoinErrorCode {
   BitcoinErrorCodeSecpError = -26,
   BitcoinErrorCodeEncodeTransaction = -27,
   BitcoinErrorCodeDecodeTransaction = -28,
+  BitcoinErrorCodeHexDecoding = -29,
 } BitcoinErrorCode;
 
 typedef struct BitcoinUTXO {
@@ -47,7 +48,7 @@ extern const uint64_t BITCOIN_P2WPKH_DUST;
 
 void bitcoin_free_string(const char *ptr);
 
-void bitcoin_free_bytes(unsigned char *ptr, size_t len);
+void bitcoin_free_bytes(uint8_t *ptr, size_t len);
 
 void bitcoin_free_utxos(struct BitcoinUTXO *ptr, size_t len);
 
@@ -60,12 +61,12 @@ enum BitcoinErrorCode bitcoin_wif_string(const unsigned char *private_key_bytes,
                                          const char **out);
 
 enum BitcoinErrorCode bitcoin_private_key_bytes_from_wif(const char *wif,
-                                                         const unsigned char **out_ptr,
+                                                         uint8_t **out_ptr,
                                                          size_t *out_len);
 
 enum BitcoinErrorCode bitcoin_private_key_bytes_from_mnemonics(const char *mnemonic,
                                                                const char *derivation_path,
-                                                               const unsigned char **out_ptr,
+                                                               uint8_t **out_ptr,
                                                                size_t *out_len);
 
 enum BitcoinErrorCode bitcoin_segwit_address(const unsigned char *key_bytes,

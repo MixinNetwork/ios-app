@@ -43,6 +43,7 @@ enum Bitcoin {
     }
     
     static let dust: Decimal = 1000 * .satoshi
+    static let privateKeyLength = BITCOIN_PRIVATE_KEY_LENGTH
     
     static func isValidAddress(address: String) -> Bool {
         address.withCString { address in
@@ -250,11 +251,11 @@ enum Bitcoin {
     
     fileprivate static func withBitcoinDataPointer(
         _ assignment: (
-            inout UnsafePointer<UInt8>?,
+            inout UnsafeMutablePointer<UInt8>?,
             inout Int
         ) -> BitcoinErrorCode
     ) throws -> Data {
-        var pointer: UnsafePointer<UInt8>?
+        var pointer: UnsafeMutablePointer<UInt8>?
         var count: Int = -1
         let result = assignment(&pointer, &count)
         guard result == BitcoinErrorCodeSuccess else {
@@ -267,7 +268,7 @@ enum Bitcoin {
             throw BitcoinError.invalidResult
         }
         let data = Data(bytes: pointer, count: count)
-        bitcoin_free_bytes(UnsafeMutablePointer(mutating: pointer), count)
+        bitcoin_free_bytes(pointer, count)
         return data
     }
     

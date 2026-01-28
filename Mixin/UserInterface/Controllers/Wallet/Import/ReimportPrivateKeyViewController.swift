@@ -1,14 +1,15 @@
 import UIKit
 import web3
 import MixinServices
+import TIP
 
 final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
     
     private enum LoadKeyError: Error {
-        case invalidHex
-        case invalidBase58
+        case invalidInput
         case invalidLength
-        case mismatchedPublicKey
+        case mismatchedKeyPair
+        case mismatchedAddress
         case mismatchedWallet
     }
     
@@ -77,8 +78,38 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
         do {
             switch selectedChain.kind {
             case .bitcoin:
-                let privateKey = try Bitcoin.privateKey(wif: input)
+                let privateKey: Data
+                do {
+                    privateKey = try Bitcoin.privateKey(wif: input)
+                } catch {
+                    let key = if input.hasPrefix("0x") {
+                        Data(hexEncodedString: input.dropFirst(2))
+                    } else {
+                        Data(hexEncodedString: input)
+                    }
+                    if let key, key.count == Bitcoin.privateKeyLength {
+                        privateKey = key
+                    } else {
+                        throw LoadKeyError.invalidInput
+                    }
+                }
                 let address = try Bitcoin.segwitAddress(privateKey: privateKey)
+                let validationAddress = try {
+                    let key = if input.hasPrefix("0x") {
+                        String(input.dropFirst(2))
+                    } else {
+                        input
+                    }
+                    var error: NSError?
+                    let address = BlockchainGenerateBitcoinSegwitAddressFromPrivateKey(key, &error)
+                    if let error {
+                        throw error
+                    }
+                    return address
+                }()
+                guard address == validationAddress else {
+                    throw LoadKeyError.mismatchedAddress
+                }
                 guard addresses.allSatisfy({ $0.destination == address }) else {
                     throw LoadKeyError.mismatchedWallet
                 }
@@ -87,17 +118,33 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
                     key: encryptionKey
                 )
             case .evm:
-                let hex = if input.hasPrefix("0x") {
-                    String(input.dropFirst(2))
+                let privateKey = if input.hasPrefix("0x") {
+                    Data(hexEncodedString: input.dropFirst(2))
                 } else {
-                    input
+                    Data(hexEncodedString: input)
                 }
-                guard let privateKey = Data(hexEncodedString: hex) else {
-                    throw LoadKeyError.invalidHex
+                guard let privateKey else {
+                    throw LoadKeyError.invalidInput
                 }
                 let keyStorage = InPlaceKeyStorage(raw: privateKey)
                 let account = try EthereumAccount(keyStorage: keyStorage)
                 let address = account.address.toChecksumAddress()
+                let validationAddress = try {
+                    let key = if input.hasPrefix("0x") {
+                        String(input.dropFirst(2))
+                    } else {
+                        input
+                    }
+                    var error: NSError?
+                    let address = BlockchainGenerateEvmAddressFromPrivateKey(key, &error)
+                    if let error {
+                        throw error
+                    }
+                    return address
+                }()
+                guard address == validationAddress else {
+                    throw LoadKeyError.mismatchedAddress
+                }
                 guard addresses.allSatisfy({ $0.destination == address }) else {
                     throw LoadKeyError.mismatchedWallet
                 }
@@ -106,19 +153,40 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
                     key: encryptionKey
                 )
             case .solana:
-                guard let keyPair = Data(base58EncodedString: input) else {
-                    throw LoadKeyError.invalidBase58
+                let inputData: Data
+                if let base58Decoded = Data(base58EncodedString: input) {
+                    inputData = base58Decoded
+                } else {
+                    let hexDecoded = if input.hasPrefix("0x") {
+                        Data(hexEncodedString: input.dropFirst(2))
+                    } else {
+                        Data(hexEncodedString: input)
+                    }
+                    if let hexDecoded {
+                        inputData = hexDecoded
+                    } else {
+                        throw LoadKeyError.invalidInput
+                    }
                 }
-                guard keyPair.count == Solana.keyPairCount else {
+                
+                let privateKey: Data
+                let publicKey: String
+                switch inputData.count {
+                case Solana.privateKeyCount:
+                    privateKey = inputData
+                    publicKey = try Solana.publicKey(seed: privateKey)
+                case Solana.keyPairCount:
+                    let publicKeyIndex = inputData.index(inputData.startIndex, offsetBy: 32)
+                    privateKey = inputData[inputData.startIndex..<publicKeyIndex]
+                    publicKey = inputData[publicKeyIndex...].base58EncodedString()
+                    let derivedPublicKey = try Solana.publicKey(seed: privateKey)
+                    guard publicKey == derivedPublicKey else {
+                        throw LoadKeyError.mismatchedKeyPair
+                    }
+                default:
                     throw LoadKeyError.invalidLength
                 }
-                let publicKeyIndex = keyPair.index(keyPair.startIndex, offsetBy: 32)
-                let privateKey = keyPair[keyPair.startIndex..<publicKeyIndex]
-                let publicKey = keyPair[publicKeyIndex...].base58EncodedString()
-                let derivedPublicKey = try Solana.publicKey(seed: privateKey)
-                guard publicKey == derivedPublicKey else {
-                    throw LoadKeyError.mismatchedPublicKey
-                }
+                
                 guard addresses.allSatisfy({ $0.destination == publicKey }) else {
                     throw LoadKeyError.mismatchedWallet
                 }
@@ -132,7 +200,7 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
             encryptedPrivateKey = nil
             errorDescriptionLabel.text = R.string.localizable.invalid_secret_for_wallet(R.string.localizable.private_key())
         } catch {
-            Logger.general.debug(category: "ReimportPrivateKey", message: "\(error)")
+            Logger.web3.error(category: "ReimportPrivateKey", message: "\(error)")
             encryptedPrivateKey = nil
             errorDescriptionLabel.text = R.string.localizable.invalid_format()
         }

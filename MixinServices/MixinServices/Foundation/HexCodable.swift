@@ -4,7 +4,7 @@ import CryptoKit
 // - MARK: Decode
 extension Data {
     
-    public init?(hexEncodedString: any StringProtocol) {
+    public init?<String: StringProtocol>(hexEncodedString: String) {
         let (numberOfBytes, remainder) = hexEncodedString.count.quotientAndRemainder(dividingBy: 2)
         guard numberOfBytes > 0, remainder == 0 else {
             return nil
@@ -13,8 +13,8 @@ extension Data {
         var index = hexEncodedString.startIndex
         while index < hexEncodedString.endIndex {
             let endIndex = hexEncodedString.index(index, offsetBy: 2)
-            let string = hexEncodedString[index..<endIndex]
-            if let byte = UInt8(string, radix: 16) {
+            let number = hexEncodedString[index..<endIndex]
+            if let byte = UInt8(number, radix: 16) {
                 append(byte)
             } else {
                 return nil

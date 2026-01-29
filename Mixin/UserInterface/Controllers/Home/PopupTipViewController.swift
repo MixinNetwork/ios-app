@@ -32,7 +32,7 @@ final class PopupTipViewController: UIViewController {
         view.layer.cornerRadius = 13
         imageBackgroundView.lightColors = [
             UIColor(displayP3RgbValue: 0xFFFFFF),
-            UIColor(displayP3RgbValue: 0xE7EFFF),
+            UIColor(displayP3RgbValue: 0xF7F7F7),
         ]
         imageBackgroundView.darkColors = [
             UIColor(displayP3RgbValue: 0x2C3136),

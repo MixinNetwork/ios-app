@@ -200,7 +200,7 @@ final class ReimportPrivateKeyViewController: InputOnChainInfoViewController {
             encryptedPrivateKey = nil
             errorDescriptionLabel.text = R.string.localizable.invalid_secret_for_wallet(R.string.localizable.private_key())
         } catch {
-            Logger.web3.error(category: "ReimportPrivateKey", message: "\(error)")
+            Logger.web3.debug(category: "ReimportPrivateKey", message: "\(error)")
             encryptedPrivateKey = nil
             errorDescriptionLabel.text = R.string.localizable.invalid_format()
         }

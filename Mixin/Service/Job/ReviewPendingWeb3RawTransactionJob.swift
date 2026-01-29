@@ -64,7 +64,7 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
                         for (vout, output) in txn.outputs.enumerated() where output.address == transaction.account {
                             let id = Web3Output.bitcoinOutputID(txid: transaction.hash, vout: vout)
                             try Web3OutputDAO.shared.delete(id: id, db: db)
-                            Logger.general.info(category: "ReviewPendingWeb3RawTxn", message: "Delete BTC Change: <id: \(id), Txid: \(transaction.hash), vout: \(vout)>")
+                            Logger.general.info(category: "ReviewPendingWeb3RawTxn", message: "Delete BTC Output: <id: \(id), Txid: \(transaction.hash), vout: \(vout)>")
                         }
                         try Web3TransactionDAO.shared.setTransactionStatusNotFound(
                             hash: transaction.hash,

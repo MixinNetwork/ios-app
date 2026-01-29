@@ -239,7 +239,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
             wallet = nil
             errorDescriptionLabel.text = R.string.localizable.wallet_already_added()
         } catch {
-            Logger.web3.error(category: "InputPrivateKey", message: "\(error)")
+            Logger.web3.debug(category: "InputPrivateKey", message: "\(error)")
             wallet = nil
             errorDescriptionLabel.text = R.string.localizable.invalid_format()
         }

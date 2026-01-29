@@ -120,12 +120,24 @@ final class AddWalletImportingViewController: IntroductionViewController {
             var hasPartialSuccess = false
             do {
                 for wallet in wallets {
+                    let bitcoinWallet = wallet.candidate.bitcoinWallet
                     let evmWallet = wallet.candidate.evmWallet
                     let solanaWallet = wallet.candidate.solanaWallet
                     let request = try CreateSigningWalletRequest(
                         name: wallet.name,
                         category: .importedMnemonic,
                         addresses: [
+                            .init(
+                                destination: bitcoinWallet.address,
+                                chainID: ChainID.bitcoin,
+                                path: bitcoinWallet.path.string,
+                                userID: userID
+                            ) { message in
+                                try Bitcoin.sign(
+                                    message: message,
+                                    with: bitcoinWallet.privateKey
+                                )
+                            },
                             .init(
                                 destination: evmWallet.address,
                                 chainID: ChainID.ethereum,

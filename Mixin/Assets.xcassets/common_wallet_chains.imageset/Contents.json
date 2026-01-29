@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "common_wallet_chains.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

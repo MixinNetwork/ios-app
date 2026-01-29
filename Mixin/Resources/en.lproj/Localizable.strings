@@ -211,6 +211,7 @@
 "bots" = "BOTS";
 "bots_title" = "Bots";
 "browser" = "Browser";
+"btc_tx_already_speedy" = "Current fee rate is already sufficient; acceleration is meaningless.";
 "buy" = "Buy";
 "buy_asset" = "Buy %@";
 "buy_crypto_with_cash" = "Purchase crypto with cash";
@@ -334,6 +335,7 @@
 "combine_and_forward" = "Combine and forward";
 "common_wallet" = "Common Wallet";
 "common_wallet_index" = "Common Wallet %@";
+"common_wallet_now_supports_btc" = "Common Wallet now supports Bitcoin";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Compress Database";
@@ -648,6 +650,12 @@
 "failed_to_send_video" = "Failed to send video";
 "fast" = "Fast";
 "favorite" = "Favorite";
+"feature_compatibility" = "Compatibility";
+"feature_compatibility_description" = "Supports importing private keys and watch-only addresses from other wallets.";
+"feature_decentralized" = "Decentralized";
+"feature_decentralized_description" = "A fully decentralized wallet where you control the private key.";
+"feature_seamless" = "Seamless";
+"feature_seamless_description" = "Lightning-fast interface with instant page loading and rapid response.";
 "fee" = "Fee";
 "fee_selection" = "Fee (%@)";
 "feedback" = "Feedback";
@@ -1305,6 +1313,7 @@
 "send_to_developer" = "Send to Developer";
 "send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Send To";
+"send_token_minimum_amount" = "Send at least %@";
 "send_video" = "Send 1 Video";
 "send_video_count" = "Send %d Videos";
 "send_without_sound" = "Send Without Sound";
@@ -1407,6 +1416,7 @@
 "sort_by_recent" = "Sort by Recent";
 "sort_by_value" = "Sort by Value";
 "speed_up" = "Speed Up";
+"speed_up_failed" = "Speed up failed";
 "speed_up_transaction" = "Speed Up Transaction";
 "speed_up_transaction_description" = "If the transaction is too far along this may not be possible";
 "star" = "Star";
@@ -1559,6 +1569,7 @@
 "unknown" = "Unknown";
 "unknown_artist" = "Unknown Artist";
 "unlimited_authorization_warning" = "This application can access all %3$@ in your %1$@ account (%2$@).";
+"unlock_by_pin" = "Unlock by PIN";
 "unmute" = "Unmute";
 "unmuted" = "Unmuted";
 "unnamed_location" = "Unnamed location";

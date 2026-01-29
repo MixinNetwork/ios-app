@@ -1,13 +1,15 @@
 import UIKit
 import web3
 import MixinServices
+import TIP
 
 final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoViewController {
     
     private enum LoadKeyError: Error {
         case invalidInput
         case invalidLength
-        case mismatchedPublicKey
+        case mismatchedKeyPair
+        case mismatchedAddress
         case alreadyImported
     }
     
@@ -77,18 +79,85 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
         }
         do {
             switch selectedChain.kind {
-            case .evm:
-                let hex = if input.hasPrefix("0x") {
-                    String(input.dropFirst(2))
-                } else {
-                    input
+            case .bitcoin:
+                let privateKey: Data
+                do {
+                    privateKey = try Bitcoin.privateKey(wif: input)
+                } catch {
+                    let key = if input.hasPrefix("0x") {
+                        Data(hexEncodedString: input.dropFirst(2))
+                    } else {
+                        Data(hexEncodedString: input)
+                    }
+                    if let key, key.count == Bitcoin.privateKeyLength {
+                        privateKey = key
+                    } else {
+                        throw LoadKeyError.invalidInput
+                    }
                 }
-                guard let privateKey = Data(hexEncodedString: hex) else {
+                let address = try Bitcoin.segwitAddress(privateKey: privateKey)
+                let validationAddress = try {
+                    let key = if input.hasPrefix("0x") {
+                        String(input.dropFirst(2))
+                    } else {
+                        input
+                    }
+                    var error: NSError?
+                    let address = BlockchainGenerateBitcoinSegwitAddressFromPrivateKey(key, &error)
+                    if let error {
+                        throw error
+                    }
+                    return address
+                }()
+                guard address == validationAddress else {
+                    throw LoadKeyError.mismatchedAddress
+                }
+                if importedAddresses.contains(address) {
+                    throw LoadKeyError.alreadyImported
+                }
+                let encryptedPrivateKey = try EncryptedPrivateKey(
+                    privateKey: privateKey,
+                    key: encryptionKey
+                )
+                wallet = try Wallet(
+                    privateKey: encryptedPrivateKey,
+                    address: .init(
+                        destination: address,
+                        chainID: ChainID.bitcoin,
+                        path: nil,
+                        userID: userID
+                    ) { message in
+                        try Bitcoin.sign(message: message, with: privateKey)
+                    }
+                )
+            case .evm:
+                let privateKey = if input.hasPrefix("0x") {
+                    Data(hexEncodedString: input.dropFirst(2))
+                } else {
+                    Data(hexEncodedString: input)
+                }
+                guard let privateKey else {
                     throw LoadKeyError.invalidInput
                 }
                 let keyStorage = InPlaceKeyStorage(raw: privateKey)
                 let account = try EthereumAccount(keyStorage: keyStorage)
                 let address = account.address.toChecksumAddress()
+                let validationAddress = try {
+                    let key = if input.hasPrefix("0x") {
+                        String(input.dropFirst(2))
+                    } else {
+                        input
+                    }
+                    var error: NSError?
+                    let address = BlockchainGenerateEvmAddressFromPrivateKey(key, &error)
+                    if let error {
+                        throw error
+                    }
+                    return address
+                }()
+                guard address == validationAddress else {
+                    throw LoadKeyError.mismatchedAddress
+                }
                 if importedAddresses.contains(address) {
                     throw LoadKeyError.alreadyImported
                 }
@@ -112,12 +181,12 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                 if let base58Decoded = Data(base58EncodedString: input) {
                     inputData = base58Decoded
                 } else {
-                    let hex: any StringProtocol = if input.hasPrefix("0x") {
-                        input.dropFirst(2)
+                    let hexDecoded = if input.hasPrefix("0x") {
+                        Data(hexEncodedString: input.dropFirst(2))
                     } else {
-                        input
+                        Data(hexEncodedString: input)
                     }
-                    if let hexDecoded = Data(hexEncodedString: hex) {
+                    if let hexDecoded {
                         inputData = hexDecoded
                     } else {
                         throw LoadKeyError.invalidInput
@@ -136,7 +205,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
                     publicKey = inputData[publicKeyIndex...].base58EncodedString()
                     let derivedPublicKey = try Solana.publicKey(seed: privateKey)
                     guard publicKey == derivedPublicKey else {
-                        throw LoadKeyError.mismatchedPublicKey
+                        throw LoadKeyError.mismatchedKeyPair
                     }
                 default:
                     throw LoadKeyError.invalidLength
@@ -170,7 +239,7 @@ final class AddWalletInputPrivateKeyViewController: AddWalletInputOnChainInfoVie
             wallet = nil
             errorDescriptionLabel.text = R.string.localizable.wallet_already_added()
         } catch {
-            Logger.general.debug(category: "InputPrivateKey", message: "\(error)")
+            Logger.web3.debug(category: "InputPrivateKey", message: "\(error)")
             wallet = nil
             errorDescriptionLabel.text = R.string.localizable.invalid_format()
         }

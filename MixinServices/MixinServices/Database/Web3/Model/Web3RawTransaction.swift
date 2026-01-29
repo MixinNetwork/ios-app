@@ -30,6 +30,22 @@ open class Web3RawTransaction: Codable {
     public let createdAt: String
     public let updatedAt: String
     
+    public init(
+        hash: String, chainID: String, account: String,
+        nonce: String, raw: String,
+        state: UnknownableEnum<Web3RawTransaction.State>,
+        createdAt: String, updatedAt: String
+    ) {
+        self.hash = hash
+        self.chainID = chainID
+        self.account = account
+        self.nonce = nonce
+        self.raw = raw
+        self.state = state
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+    }
+    
 }
 
 extension Web3RawTransaction: TableRecord, DatabaseColumnConvertible, PersistableRecord, MixinFetchableRecord, MixinEncodableRecord {

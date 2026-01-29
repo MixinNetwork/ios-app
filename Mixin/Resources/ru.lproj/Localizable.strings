@@ -211,6 +211,7 @@
 "bots" = "БОТЫ";
 "bots_title" = "Боты";
 "browser" = "Browser";
+"btc_tx_already_speedy" = "Current fee rate is already sufficient; acceleration is meaningless.";
 "buy" = "Buy";
 "buy_asset" = "Buy %@";
 "buy_crypto_with_cash" = "Purchase crypto with cash";
@@ -334,6 +335,7 @@
 "combine_and_forward" = "Объединить и вперед";
 "common_wallet" = "Common Wallet";
 "common_wallet_index" = "Common Wallet %@";
+"common_wallet_now_supports_btc" = "Common Wallet now supports Bitcoin";
 "complete" = "Complete";
 "completed" = "Completed";
 "compress_database" = "Сжать базу данных";
@@ -648,6 +650,12 @@
 "failed_to_send_video" = "Не удалось отправить видео";
 "fast" = "Fast";
 "favorite" = "Favorite";
+"feature_compatibility" = "Compatibility";
+"feature_compatibility_description" = "Supports importing private keys and watch-only addresses from other wallets.";
+"feature_decentralized" = "Decentralized";
+"feature_decentralized_description" = "A fully decentralized wallet where you control the private key.";
+"feature_seamless" = "Seamless";
+"feature_seamless_description" = "Lightning-fast interface with instant page loading and rapid response.";
 "fee" = "Комиссия";
 "fee_selection" = "Fee (%@)";
 "feedback" = "Обратная связь";
@@ -1305,6 +1313,7 @@
 "send_to_developer" = "Отправить разработчику";
 "send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
 "send_to_title" = "Отправить в";
+"send_token_minimum_amount" = "Send at least %@";
 "send_video" = "Отправить 1 видео";
 "send_video_count" = "Отправить %d видео";
 "send_without_sound" = "Отправить без звука";
@@ -1407,6 +1416,7 @@
 "sort_by_recent" = "Sort by Recent";
 "sort_by_value" = "Sort by Value";
 "speed_up" = "Speed Up";
+"speed_up_failed" = "Speed up failed";
 "speed_up_transaction" = "Speed Up Transaction";
 "speed_up_transaction_description" = "If the transaction is too far along this may not be possible";
 "star" = "Star";
@@ -1559,6 +1569,7 @@
 "unknown" = "Неизвестный";
 "unknown_artist" = "Неизвестный артист";
 "unlimited_authorization_warning" = "This application can access all %3$@ in your %1$@ account (%2$@).";
+"unlock_by_pin" = "Unlock by PIN";
 "unmute" = "Включить звук";
 "unmuted" = "Включено";
 "unnamed_location" = "Безымянное местоположение";

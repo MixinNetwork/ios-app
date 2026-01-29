@@ -338,6 +338,21 @@ extension RouteAPI {
         )
     }
     
+    static func updateWallet(
+        id: String,
+        appendingAddresses addresses: [CreateSigningWalletRequest.SignedAddress]
+    ) async throws -> [Web3Address] {
+        struct Response: Decodable {
+            let addresses: [Web3Address]
+        }
+        let response: Response = try await request(
+            method: .post,
+            path: "/wallets/\(id)",
+            with: ["addresses": addresses],
+        )
+        return response.addresses
+    }
+    
     static func deleteWallet(
         id: String,
         completion: @escaping (MixinAPI.Result<Empty>) -> Void
@@ -504,6 +519,20 @@ extension RouteAPI {
         }
     }
     
+    static func walletOutputs(
+        assetID: String,
+        address: String,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[Web3Output]>) -> Void
+    ) {
+        request(
+            method: .get,
+            path: "/wallets/outputs?asset_id=\(assetID)&address=\(address)",
+            queue: queue,
+            completion: completion
+        )
+    }
+    
 }
 
 // MARK: - RPC
@@ -523,8 +552,60 @@ extension RouteAPI {
         
     }
     
-    struct AccountInfo: Decodable {
+    struct BitcoinNetworkInfo: Decodable {
+        
+        enum CodingKeys: String, CodingKey {
+            case feeRate = "fee_rate"
+            case minFee = "min_fee"
+        }
+        
+        let feeRate: String
+        let decimalFeeRate: Decimal
+        let minimalFee: Decimal
+        let incrementalFee: Decimal = 1
+        
+        init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let feeRate = try container.decode(String.self, forKey: .feeRate)
+            let minFee = try container.decode(String.self, forKey: .minFee)
+            guard let decimalFeeRate = Decimal(string: feeRate, locale: .enUSPOSIX) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: CodingKeys.feeRate,
+                    in: container,
+                    debugDescription: "Invalid number"
+                )
+            }
+            guard let decimalMinimum = Decimal(string: minFee, locale: .enUSPOSIX) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: CodingKeys.minFee,
+                    in: container,
+                    debugDescription: "Invalid number"
+                )
+            }
+            self.feeRate = feeRate
+            self.decimalFeeRate = decimalFeeRate
+            self.minimalFee = decimalMinimum
+        }
+        
+    }
+    
+    struct SolanaAccountInfo: Decodable {
         let owner: String
+    }
+    
+    static func bitcoinNetworkInfo(feeRate: String?) async throws -> BitcoinNetworkInfo {
+        var parameters = [
+            "chain_id": ChainID.bitcoin,
+        ]
+        if let feeRate {
+            // Used in RBF transactions
+            parameters["fee_rate"] = feeRate
+        }
+        return try await request(
+            method: .post,
+            path: "/web3/estimate-fee",
+            with: parameters
+        )
     }
     
     static func estimatedEthereumFee(
@@ -609,7 +690,7 @@ extension RouteAPI {
         return result != "null"
     }
     
-    static func solanaGetAccountInfo(pubkey: String) async throws -> AccountInfo {
+    static func solanaGetAccountInfo(pubkey: String) async throws -> SolanaAccountInfo {
         let result: String = try await request(
             method: .post,
             path: "/web3/rpc?chain_id=\(ChainID.solana)",
@@ -627,7 +708,7 @@ extension RouteAPI {
         guard let data = result.data(using: .utf8) else {
             throw RPCError.invalidResponse
         }
-        return try JSONDecoder.default.decode(AccountInfo.self, from: data)
+        return try JSONDecoder.default.decode(SolanaAccountInfo.self, from: data)
     }
     
 }

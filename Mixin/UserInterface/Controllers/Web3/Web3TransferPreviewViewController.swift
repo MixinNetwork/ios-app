@@ -100,26 +100,23 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
             balanceChangeIndex = nil
             feeIndex = nil
         } else {
-            switch proposer {
-            case .cancel:
-                // No balance change for cancellation
+            switch operation.simulationDisplay {
+            case .byLocal(let simulation):
+                rows = makeRows(simulation: simulation)
+                balanceChangeIndex = nil
+                feeIndex = rows.count
+            case .byRemote:
+                rows.append(
+                    .web3Message(
+                        caption: R.string.localizable.estimated_balance_change(),
+                        message: R.string.localizable.loading()
+                    )
+                )
+                balanceChangeIndex = 0
+                feeIndex = 1
+            case .hidden:
                 balanceChangeIndex = nil
                 feeIndex = 0
-            default:
-                if let simulation = operation.hardcodedSimulation {
-                    rows = makeRows(simulation: simulation)
-                    balanceChangeIndex = nil
-                    feeIndex = rows.count
-                } else {
-                    rows.append(
-                        .web3Message(
-                            caption: R.string.localizable.estimated_balance_change(),
-                            message: R.string.localizable.loading()
-                        )
-                    )
-                    balanceChangeIndex = 0
-                    feeIndex = 1
-                }
             }
             rows.append(
                 .amount(
@@ -181,7 +178,7 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
                     Logger.web3.error(category: "Web3TransferView", message: "Load fee: \(error)")
                 }
             }
-            if operation.hardcodedSimulation == nil, let index = balanceChangeIndex {
+            if case .byRemote = operation.simulationDisplay, let index = balanceChangeIndex {
                 await self.loadBalanceChange(replacingRowAt: index)
             }
         }
@@ -246,6 +243,21 @@ extension Web3TransferPreviewViewController {
         switch state {
         case .loading:
             confirmButton?.isEnabled = false
+        case .unavailable(let reason):
+            canDismissInteractively = true
+            CATransaction.performWithoutAnimation {
+                tableHeaderView.setIcon(progress: .failure)
+                layoutTableHeaderView(
+                    title: R.string.localizable.speed_up_failed(),
+                    subtitle: reason,
+                    style: .destructive,
+                )
+            }
+            tableView.setContentOffset(.zero, animated: true)
+            loadSingleButtonTrayView(
+                title: R.string.localizable.done(),
+                action: #selector(close(_:))
+            )
         case .ready:
             confirmButton?.isEnabled = true
         case .signing:
@@ -272,8 +284,11 @@ extension Web3TransferPreviewViewController {
         case .sendingFailed(let error):
             canDismissInteractively = true
             tableHeaderView.setIcon(progress: .failure)
-            layoutTableHeaderView(title: R.string.localizable.sending_failed(),
-                                  subtitle: "\(error)")
+            layoutTableHeaderView(
+                title: R.string.localizable.sending_failed(),
+                subtitle: "\(error)",
+                style: .destructive,
+            )
             tableView.setContentOffset(.zero, animated: true)
             loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
                                      leftAction: #selector(close(_:)),

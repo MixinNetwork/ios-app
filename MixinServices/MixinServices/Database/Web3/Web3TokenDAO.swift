@@ -220,9 +220,44 @@ public final class Web3TokenDAO: Web3DAO {
         guard let walletID = tokens.first?.walletID else {
             return
         }
+        let outputBasedAssetIDs: Set<String> = [AssetID.btc]
         db.write { db in
+            let walletCategory: Web3Wallet.Category? = try {
+                let value = try String.fetchOne(
+                    db,
+                    sql: "SELECT category FROM wallets WHERE wallet_id = ?",
+                    arguments: [walletID]
+                )
+                return if let value {
+                    Web3Wallet.Category(rawValue: value)
+                } else {
+                    nil
+                }
+            }()
             for token in tokens {
                 try token.save(db)
+                switch walletCategory {
+                case .classic, .importedMnemonic, .importedPrivateKey:
+                    if outputBasedAssetIDs.contains(token.assetID) {
+                        let address = try Web3AddressDAO.shared.destination(
+                            walletID: token.walletID,
+                            chainID: token.chainID,
+                            db: db
+                        )
+                        if let address {
+                            try updateAmountByOutputs(
+                                walletID: token.walletID,
+                                address: address,
+                                assetID: token.assetID,
+                                db: db,
+                                postTokenChangeNofication: false,
+                            )
+                        }
+                    }
+                case .watchAddress, .none:
+                    // Use `token.amount` instead of calculating outputs for watch wallets
+                    break
+                }
                 if token.level < Web3Reputation.Level.unknown.rawValue {
                     let extra = Web3TokenExtra(
                         walletID: token.walletID,
@@ -255,6 +290,35 @@ public final class Web3TokenDAO: Web3DAO {
                     object: self,
                     userInfo: [Self.walletIDUserInfoKey: walletID]
                 )
+            }
+        }
+    }
+    
+    public func updateAmountByOutputs(
+        walletID: String,
+        address: String,
+        assetID: String,
+        db: GRDB.Database,
+        postTokenChangeNofication: Bool,
+    ) throws {
+        let balance = try Web3OutputDAO.shared.availableBalance(
+            address: address,
+            assetID: assetID,
+            db: db
+        )
+        try db.execute(
+            sql: "UPDATE tokens SET amount = ? WHERE wallet_id = ? AND asset_id = ?",
+            arguments: [balance, walletID, assetID]
+        )
+        if postTokenChangeNofication {
+            db.afterNextTransaction { _ in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(
+                        name: Self.tokensDidChangeNotification,
+                        object: self,
+                        userInfo: [Self.walletIDUserInfoKey: walletID]
+                    )
+                }
             }
         }
     }

@@ -91,6 +91,15 @@ final class AddWalletInputAddressViewController: AddWalletInputOnChainInfoViewCo
         }
         do {
             switch selectedChain.kind {
+            case .bitcoin:
+                if importedAddresses.contains(input) {
+                    throw LoadAddressError.alreadyImported
+                } else if Bitcoin.isValidAddress(address: input)  {
+                    address = .init(destination: input, chainID: ChainID.bitcoin, path: nil)
+                    errorDescriptionLabel.text = nil
+                } else {
+                    throw LoadAddressError.invalidAddress
+                }
             case .evm:
                 guard input.hasPrefix("0x"), input.count == 42 else {
                     throw LoadAddressError.invalidAddress

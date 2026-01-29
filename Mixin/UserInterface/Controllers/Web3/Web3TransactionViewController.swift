@@ -113,6 +113,9 @@ extension Web3TransactionViewController: PillActionView.Delegate {
             preview.manipulateNavigationStackOnFinished = true
             present(preview, animated: true)
         }
+        // Once operation is previewed, the fee will be loaded and never update again
+        // Make new operations to keep the fee untouched
+        reloadOverridingOperations()
     }
     
 }
@@ -373,24 +376,28 @@ extension Web3TransactionViewController {
         layoutTableHeaderView()
         
         let feeToken = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: transaction.chainID)
-        let feeRow: Row
-        if let feeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
-            feeRow = .fee(
-                token: CurrencyFormatter.localizedString(
-                    from: amount,
-                    format: .precision,
-                    sign: .never,
-                    symbol: .custom(feeToken.symbol)
-                ),
-                fiatMoney: CurrencyFormatter.localizedString(
-                    from: amount * feeToken.decimalUSDPrice * Currency.current.decimalRate,
-                    format: .precision,
-                    sign: .never,
-                    symbol: .currencySymbol
+        let feeRow: Row? = switch transaction.transactionType.knownCase {
+        case .transferIn:
+            nil
+        default:
+            if let feeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
+                .fee(
+                    token: CurrencyFormatter.localizedString(
+                        from: amount,
+                        format: .precision,
+                        sign: .never,
+                        symbol: .custom(feeToken.symbol)
+                    ),
+                    fiatMoney: CurrencyFormatter.localizedString(
+                        from: amount * feeToken.decimalUSDPrice * Currency.current.decimalRate,
+                        format: .precision,
+                        sign: .never,
+                        symbol: .currencySymbol
+                    )
                 )
-            )
-        } else {
-            feeRow = .plain(key: .fee, value: transaction.fee)
+            } else {
+                .plain(key: .fee, value: transaction.fee)
+            }
         }
         
         if let transfer = transaction.simpleTransfer {
@@ -402,7 +409,9 @@ extension Web3TransactionViewController {
             } else if let toAddress = transfer.toAddress {
                 rows.append(.plain(key: .to, value: toAddress))
             }
-            rows.append(feeRow)
+            if let feeRow {
+                rows.append(feeRow)
+            }
         } else {
             switch transaction.transactionType.knownCase {
             case .transferIn, .transferOut, .swap, .none, .unknown:
@@ -452,10 +461,10 @@ extension Web3TransactionViewController {
                 } else {
                     rows = [.assetChanges(changes)]
                 }
-                rows.append(contentsOf: [
-                    .plain(key: .transactionHash, value: transaction.transactionHash),
-                    feeRow,
-                ])
+                rows.append(.plain(key: .transactionHash, value: transaction.transactionHash))
+                if let feeRow {
+                    rows.append(feeRow)
+                }
             case .approval:
                 if let approval = transaction.approvals?.first,
                    let token = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: approval.assetID)
@@ -493,66 +502,127 @@ extension Web3TransactionViewController {
         rows.append(.plain(key: .date, value: transactionAt))
         
         tableView.reloadData()
-        
-        if transaction.status == .pending {
-            let hash = transaction.transactionHash
+        reloadOverridingOperations()
+    }
+    
+    private func reloadOverridingOperations() {
+        guard
+            transaction.status == .pending,
+            let chain = Web3Chain.chain(chainID: transaction.chainID)
+        else {
+            reloadHeaderView(speedUpOperation: nil, cancelOperation: nil)
+            return
+        }
+        let hash = transaction.transactionHash
+        switch chain.kind {
+        case .solana:
+            break
+        case .bitcoin:
             DispatchQueue.global().async { [wallet, weak self] in
-                let operations: (speedUp: Web3TransferOperation, cancel: Web3TransferOperation)? = {
-                    guard
-                        let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash),
-                        let chain = Web3Chain.chain(chainID: rawTransaction.chainID),
-                        chain.kind == .evm,
-                        let transaction = EIP1559Transaction(rawTransaction: rawTransaction.raw),
-                        let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID)
-                    else {
-                        return nil
+                let speedUpOperation: Web3TransferOperation?
+                let cancelOperation: Web3TransferOperation?
+                if let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID),
+                   let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash)
+                {
+                    do {
+                        speedUpOperation = try BitcoinSpeedUpOperation(
+                            wallet: wallet,
+                            fromAddress: fromAddress,
+                            transaction: rawTransaction,
+                        )
+                    } catch {
+                        Logger.general.debug(category: "Web3Txn", message: "Speed up failed: \(error)")
+                        speedUpOperation = nil
                     }
                     do {
-                        let speedUp = try EVMSpeedUpOperation(
+                        cancelOperation = try BitcoinCancelOperation(
                             wallet: wallet,
                             fromAddress: fromAddress,
-                            transaction: transaction,
-                            chain: chain
+                            transaction: rawTransaction,
                         )
-                        let cancel = try EVMCancelOperation(
-                            wallet: wallet,
-                            fromAddress: fromAddress,
-                            transaction: transaction,
-                            chain: chain
-                        )
-                        return (speedUp: speedUp, cancel: cancel)
                     } catch {
-                        Logger.general.debug(category: "Web3Txn", message: "Create op failed: \(error)")
-                        return nil
+                        Logger.general.debug(category: "Web3Txn", message: "Cancel failed: \(error)")
+                        cancelOperation = nil
                     }
-                }()
+                } else {
+                    speedUpOperation = nil
+                    cancelOperation = nil
+                }
                 DispatchQueue.main.async {
-                    guard let self, let headerView = self.tableView.tableHeaderView as? Web3TransactionTableHeaderView else {
-                        return
-                    }
-                    if let operations {
-                        self.speedUpOperation = operations.speedUp
-                        self.cancelOperation = operations.cancel
-                        headerView.showActionView()
-                        headerView.actionView?.delegate = self
-                    } else {
-                        self.speedUpOperation = nil
-                        self.cancelOperation = nil
-                        headerView.hideActionView()
-                    }
-                    self.layoutTableHeaderView()
-                    self.tableView.tableHeaderView = headerView
+                    self?.reloadHeaderView(
+                        speedUpOperation: speedUpOperation,
+                        cancelOperation: cancelOperation
+                    )
                 }
             }
-        } else {
-            self.speedUpOperation = nil
-            self.cancelOperation = nil
-            if let headerView = tableView.tableHeaderView as? Web3TransactionTableHeaderView {
-                headerView.hideActionView()
-                self.layoutTableHeaderView()
-                self.tableView.tableHeaderView = headerView
+        case .evm:
+            DispatchQueue.global().async { [wallet, weak self] in
+                let speedUpOperation: Web3TransferOperation?
+                let cancelOperation: Web3TransferOperation?
+                if let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID),
+                   let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash),
+                   let transaction = EIP1559Transaction(rawTransaction: rawTransaction.raw)
+                {
+                    do {
+                        speedUpOperation = try EVMSpeedUpOperation(
+                            wallet: wallet,
+                            fromAddress: fromAddress,
+                            transaction: transaction,
+                            chain: chain
+                        )
+                    } catch {
+                        Logger.general.debug(category: "Web3Txn", message: "Speed up failed: \(error)")
+                        speedUpOperation = nil
+                    }
+                    do {
+                        cancelOperation = try EVMCancelOperation(
+                            wallet: wallet,
+                            fromAddress: fromAddress,
+                            transaction: transaction,
+                            chain: chain
+                        )
+                    } catch {
+                        Logger.general.debug(category: "Web3Txn", message: "Cancel failed: \(error)")
+                        cancelOperation = nil
+                    }
+                } else {
+                    speedUpOperation = nil
+                    cancelOperation = nil
+                }
+                DispatchQueue.main.async {
+                    self?.reloadHeaderView(
+                        speedUpOperation: speedUpOperation,
+                        cancelOperation: cancelOperation
+                    )
+                }
             }
         }
+    }
+    
+    private func reloadHeaderView(
+        speedUpOperation: Web3TransferOperation?,
+        cancelOperation: Web3TransferOperation?
+    ) {
+        self.speedUpOperation = speedUpOperation
+        self.cancelOperation = cancelOperation
+        guard let headerView = self.tableView.tableHeaderView as? Web3TransactionTableHeaderView else {
+            return
+        }
+        var actions: [Web3TransactionTableHeaderViewAction] = []
+        if speedUpOperation != nil {
+            actions.append(.speedUp)
+        }
+        if cancelOperation != nil {
+            actions.append(.cancel)
+        }
+        if actions.isEmpty {
+            headerView.hideActionView()
+        } else {
+            headerView.showActionView(actions: actions)
+            headerView.actionView?.delegate = self
+        }
+        self.layoutTableHeaderView()
+        self.tableView.tableHeaderView = headerView
     }
     
 }

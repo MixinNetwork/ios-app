@@ -211,6 +211,7 @@
 "bots" = "機器人";
 "bots_title" = "機器人";
 "browser" = "瀏覽器";
+"btc_tx_already_speedy" = "當前費率已經足夠，無需加速。";
 "buy" = "購買";
 "buy_asset" = "購買 %@";
 "buy_crypto_with_cash" = "用現金購買加密貨幣";
@@ -334,6 +335,7 @@
 "combine_and_forward" = "合併轉發";
 "common_wallet" = "普通錢包";
 "common_wallet_index" = "普通錢包 %@";
+"common_wallet_now_supports_btc" = "普通錢包現已支援比特幣";
 "complete" = "完成";
 "completed" = "已完成";
 "compress_database" = "壓縮資料庫";
@@ -648,6 +650,12 @@
 "failed_to_send_video" = "傳送影片失敗，請稍後重試";
 "fast" = "快速";
 "favorite" = "收藏";
+"feature_compatibility" = "相容性";
+"feature_compatibility_description" = "支援從其他錢包匯入私鑰與觀察地址。";
+"feature_decentralized" = "去中心化";
+"feature_decentralized_description" = "完全去中心化的錢包，你掌控私鑰。";
+"feature_seamless" = "無縫體驗";
+"feature_seamless_description" = "閃電般的互動體驗，頁面載入與響應更迅速。";
 "fee" = "手續費";
 "fee_selection" = "手續費（%@）";
 "feedback" = "反饋";
@@ -1305,6 +1313,7 @@
 "send_to_developer" = "把日誌發給開發者";
 "send_to_other_wallet_description" = "使用區塊鏈網路傳送到我的另一個錢包";
 "send_to_title" = "轉給";
+"send_token_minimum_amount" = "請傳送至少 %@";
 "send_video" = "傳送 1 個影片";
 "send_video_count" = "傳送 %d 個影片";
 "send_without_sound" = "靜音傳送";
@@ -1407,6 +1416,7 @@
 "sort_by_recent" = "按最近排序";
 "sort_by_value" = "按價值排序";
 "speed_up" = "加速";
+"speed_up_failed" = "加速失敗";
 "speed_up_transaction" = "加速交易";
 "speed_up_transaction_description" = "如果交易已接近完成，可能無法加速";
 "star" = "Star";
@@ -1559,6 +1569,7 @@
 "unknown" = "未知";
 "unknown_artist" = "未知藝術家";
 "unlimited_authorization_warning" = "這個應用可以提取你 %1$@ 賬號（%2$@）裡所有的 %3$@ 資產。";
+"unlock_by_pin" = "使用 PIN 解鎖";
 "unmute" = "取消靜音";
 "unmuted" = "已取消靜音";
 "unnamed_location" = "未命名地點";

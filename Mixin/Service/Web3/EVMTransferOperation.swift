@@ -6,13 +6,17 @@ import MixinServices
 
 class EVMTransferOperation: Web3TransferOperation {
     
-    class EVMDisplayFee: DisplayFee {
+    class EVMDisplayFee: Web3DisplayFee {
         
         let feePerGas: Decimal // In Gwei
         
-        init(feePerGas: Decimal, tokenAmount: Decimal, fiatMoneyAmount: Decimal) {
+        init(
+            token: Web3TokenItem,
+            amount: Decimal,
+            feePerGas: Decimal,
+        ) {
             self.feePerGas = feePerGas
-            super.init(tokenAmount: tokenAmount, fiatMoneyAmount: fiatMoneyAmount)
+            super.init(token: token, amount: amount)
         }
         
     }
@@ -60,7 +64,7 @@ class EVMTransferOperation: Web3TransferOperation {
         toAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
-        hardcodedSimulation: TransactionSimulation?,
+        simulationDisplay: SimulationDisplay,
         isFeeWaived: Bool,
     ) throws {
         switch chain.specification {
@@ -83,7 +87,7 @@ class EVMTransferOperation: Web3TransferOperation {
             chain: chain,
             feeToken: feeToken,
             isResendingTransactionAvailable: true,
-            hardcodedSimulation: hardcodedSimulation,
+            simulationDisplay: simulationDisplay,
             isFeeWaived: isFeeWaived,
         )
     }
@@ -93,7 +97,7 @@ class EVMTransferOperation: Web3TransferOperation {
         fromAddress: Web3Address,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
-        hardcodedSimulation: TransactionSimulation?,
+        simulationDisplay: SimulationDisplay,
         isFeeWaived: Bool,
     ) throws {
         let chainID: Int
@@ -126,12 +130,12 @@ class EVMTransferOperation: Web3TransferOperation {
             chain: chain,
             feeToken: feeToken,
             isResendingTransactionAvailable: true,
-            hardcodedSimulation: hardcodedSimulation,
+            simulationDisplay: simulationDisplay,
             isFeeWaived: isFeeWaived,
         )
     }
     
-    override func loadFee() async throws -> DisplayFee {
+    override func loadFee() async throws -> Web3DisplayFee {
         let rawFee = try await RouteAPI.estimatedEthereumFee(
             mixinChainID: mixinChainID,
             from: fromAddress.destination,
@@ -170,11 +174,11 @@ class EVMTransferOperation: Web3TransferOperation {
             tokenAmount = weiCount * .wei
         }
         let fee = EVMDisplayFee(
+            token: feeToken,
+            amount: tokenAmount,
             feePerGas: NSDecimalNumber(decimal: feePerGas)
                 .rounding(accordingToBehavior: gweiRoundingHandler)
                 .decimalValue,
-            tokenAmount: tokenAmount,
-            fiatMoneyAmount: tokenAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate
         )
         await MainActor.run {
             self.evmFee = evmFee
@@ -298,7 +302,11 @@ class EVMTransferOperation: Web3TransferOperation {
         return nonce
     }
     
-    private func send(transaction: EIP1559Transaction, with account: EthereumAccount, fee: DisplayFee) async {
+    private func send(
+        transaction: EIP1559Transaction,
+        with account: EthereumAccount,
+        fee: Web3DisplayFee
+    ) async {
         do {
             let transactionDescription = transaction.raw?.hexEncodedString()
                 ?? transaction.jsonRepresentation
@@ -361,7 +369,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
             fromAddress: fromAddress,
             transaction: transaction,
             chain: chain,
-            hardcodedSimulation: nil,
+            simulationDisplay: .byRemote,
             isFeeWaived: false,
         )
     }
@@ -408,7 +416,7 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
             fromAddress: fromAddress,
             transaction: transaction,
             chain: chain,
-            hardcodedSimulation: nil,
+            simulationDisplay: .byRemote,
             isFeeWaived: false,
         )
     }
@@ -488,7 +496,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             toAddress: payment.toAddress,
             transaction: transaction,
             chain: payment.chain,
-            hardcodedSimulation: simulation,
+            simulationDisplay: .byLocal(simulation),
             isFeeWaived: isFeeWaived,
         )
     }
@@ -518,7 +526,7 @@ class EVMOverrideOperation: EVMTransferOperation {
         toAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
-        hardcodedSimulation: TransactionSimulation?,
+        simulationDisplay: SimulationDisplay,
     ) throws {
         guard let nonce = transaction.nonce else {
             throw InitError.missingNonce
@@ -530,7 +538,7 @@ class EVMOverrideOperation: EVMTransferOperation {
             toAddress: toAddress,
             transaction: transaction,
             chain: chain,
-            hardcodedSimulation: hardcodedSimulation,
+            simulationDisplay: simulationDisplay,
             isFeeWaived: false,
         )
     }
@@ -563,7 +571,7 @@ final class EVMSpeedUpOperation: EVMOverrideOperation {
             toAddress: "",
             transaction: transaction,
             chain: chain,
-            hardcodedSimulation: nil
+            simulationDisplay: .byRemote
         )
     }
     
@@ -593,7 +601,7 @@ final class EVMCancelOperation: EVMOverrideOperation {
             toAddress: "",
             transaction: emptyTransaction,
             chain: chain,
-            hardcodedSimulation: .empty
+            simulationDisplay: .hidden
         )
     }
     

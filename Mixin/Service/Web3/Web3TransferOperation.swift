@@ -3,20 +3,9 @@ import MixinServices
 
 class Web3TransferOperation {
     
-    class DisplayFee {
-        
-        let tokenAmount: Decimal
-        let fiatMoneyAmount: Decimal
-        
-        init(tokenAmount: Decimal, fiatMoneyAmount: Decimal) {
-            self.tokenAmount = tokenAmount
-            self.fiatMoneyAmount = fiatMoneyAmount
-        }
-        
-    }
-    
     enum State {
         case loading
+        case unavailable(reason: String)
         case ready
         case signing
         case signingFailed(Error)
@@ -31,20 +20,32 @@ class Web3TransferOperation {
         case noFeeToken(String)
     }
     
+    enum SimulationDisplay {
+        
+        case byLocal(TransactionSimulation)
+        
+        // Can't decode tx locally, typically when signing external tx
+        case byRemote
+        
+        // Hide the simulation row, like when speed up / cancelling another tx
+        case hidden
+        
+    }
+    
     let wallet: Web3Wallet
     let fromAddress: Web3Address
     let toAddress: String? // Always the receiver, not the contract address
     let chain: Web3Chain
     let feeToken: Web3TokenItem
     let isResendingTransactionAvailable: Bool
-    let hardcodedSimulation: TransactionSimulation?
+    let simulationDisplay: SimulationDisplay
     let isFeeWaived: Bool
     
     @MainActor @Published
     var state: State = .loading
     
     @MainActor
-    var fee: DisplayFee?
+    var fee: Web3DisplayFee?
     
     var hasTransactionSent = false
     
@@ -52,7 +53,7 @@ class Web3TransferOperation {
         wallet: Web3Wallet, fromAddress: Web3Address, toAddress: String?,
         chain: Web3Chain, feeToken: Web3TokenItem,
         isResendingTransactionAvailable: Bool,
-        hardcodedSimulation: TransactionSimulation?, isFeeWaived: Bool
+        simulationDisplay: SimulationDisplay, isFeeWaived: Bool
     ) {
         self.wallet = wallet
         self.fromAddress = fromAddress
@@ -60,19 +61,22 @@ class Web3TransferOperation {
         self.chain = chain
         self.feeToken = feeToken
         self.isResendingTransactionAvailable = isResendingTransactionAvailable
-        self.hardcodedSimulation = hardcodedSimulation
+        self.simulationDisplay = simulationDisplay
         self.isFeeWaived = isFeeWaived
     }
     
-    func loadFee() async throws -> DisplayFee {
+    func loadFee() async throws -> Web3DisplayFee {
         fatalError("Must override")
     }
     
     func simulateTransaction() async throws -> TransactionSimulation {
-        if let hardcodedSimulation {
-            return hardcodedSimulation
-        } else {
-            fatalError("Simulate txn if not hardcoded")
+        switch simulationDisplay {
+        case .byLocal(let simulation):
+            return simulation
+        case .byRemote:
+            fatalError("Override to request a simulation")
+        case .hidden:
+            fatalError("Check value for `hidden` before calling this")
         }
     }
     

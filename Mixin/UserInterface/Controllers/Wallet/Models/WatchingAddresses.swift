@@ -8,6 +8,7 @@ struct WatchingAddresses {
     let prettyFormatted: String
     
     init(addresses: [Web3Address]) {
+        var bitcoinAddress: String?
         var evmAddress: String?
         var solanaAddress: String?
         for address in addresses {
@@ -15,6 +16,10 @@ struct WatchingAddresses {
                 continue
             }
             switch chain.kind {
+            case .bitcoin:
+                if bitcoinAddress == nil {
+                    bitcoinAddress = address.destination
+                }
             case .evm:
                 if evmAddress == nil {
                     evmAddress = address.destination
@@ -30,6 +35,9 @@ struct WatchingAddresses {
         }
         
         var orderedAddresses: OrderedDictionary<Web3Chain.Kind, String> = [:]
+        if let bitcoinAddress {
+            orderedAddresses[.bitcoin] = bitcoinAddress
+        }
         if let evmAddress {
             orderedAddresses[.evm] = evmAddress
         }

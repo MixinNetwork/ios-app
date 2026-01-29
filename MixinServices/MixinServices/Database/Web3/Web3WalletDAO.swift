@@ -20,6 +20,37 @@ public final class Web3WalletDAO: Web3DAO {
         )
     }
     
+    public func hasWallet(chainID: String) -> Bool {
+        let sql = """
+        SELECT 1
+        FROM wallets w
+        INNER JOIN addresses a ON w.wallet_id = a.wallet_id
+        WHERE a.chain_id = ?
+        """
+        let value: Int? = db.select(with: sql, arguments: [chainID])
+        return value == 1
+    }
+    
+    public func chainUnavailableWallets(chainID: String) -> [Web3Wallet] {
+        let sql = """
+        SELECT w.*
+        FROM wallets w
+        WHERE w.category IN (?,?)
+          AND NOT EXISTS (
+            SELECT 1
+            FROM addresses a
+            WHERE a.wallet_id = w.wallet_id
+              AND a.chain_id = ?
+          );
+        """
+        let arguments = StatementArguments([
+            Web3Wallet.Category.classic.rawValue,
+            Web3Wallet.Category.importedMnemonic.rawValue,
+            chainID,
+        ])
+        return db.select(with: sql, arguments: arguments)
+    }
+    
     public func currentSelectedWallet() -> Web3Wallet? {
         if let id = AppGroupUserDefaults.Wallet.dappConnectionWalletID,
            let wallet: Web3Wallet = db.select(where: Web3Wallet.column(of: .walletID) == id)

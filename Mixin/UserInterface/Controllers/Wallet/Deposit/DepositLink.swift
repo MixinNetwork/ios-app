@@ -93,6 +93,8 @@ extension DepositLink {
         var value: String
         if let chain = Web3Chain.chain(chainID: token.chainID) {
             switch chain.specification {
+            case .bitcoin:
+                value = "bitcoin:\(address)?amount=\(amount)"
             case .evm(let id):
                 if token.assetID == token.chainID {
                     value = "ethereum:\(address)"

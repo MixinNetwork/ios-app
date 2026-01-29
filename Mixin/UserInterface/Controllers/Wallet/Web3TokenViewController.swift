@@ -117,6 +117,7 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         case .never:
             cell.hideActionView()
         }
+        cell.delegate = self
     }
     
     override func tableView(_ tableView: UITableView, cellForTransaction transaction: Web3Transaction) -> UITableViewCell {
@@ -242,6 +243,15 @@ extension Web3TokenViewController: TokenActionView.Delegate {
         case .buy:
             break
         }
+    }
+    
+}
+
+extension Web3TokenViewController: TokenBalanceCellDelegate {
+    
+    func tokenBalanceCellWantsToRevealOutputs(_ cell: TokenBalanceCell) {
+        let outputs = Web3OutputsViewController(token: token)
+        navigationController?.pushViewController(outputs, animated: true)
     }
     
 }

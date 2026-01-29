@@ -21,8 +21,8 @@ struct BIP39Mnemonics {
     let phrases: [String]
     let joinedPhrases: String
     
-    private let evmMasterKey: ExtendedKey
-    private let solMasterKey: ExtendedKey
+    private let secp256k1MasterKey: ExtendedKey
+    private let ed25519MasterKey: ExtendedKey
     
     init(phrases: [String]) throws {
         guard PhrasesCount(rawValue: phrases.count) != nil else {
@@ -56,8 +56,8 @@ struct BIP39Mnemonics {
         self.entropy = entropy
         self.phrases = phrases
         self.joinedPhrases = joinedPhrases
-        self.evmMasterKey = ExtendedKey(seed: seed, curve: .secp256k1)
-        self.solMasterKey = ExtendedKey(seed: seed, curve: .ed25519)
+        self.secp256k1MasterKey = ExtendedKey(seed: seed, curve: .secp256k1)
+        self.ed25519MasterKey = ExtendedKey(seed: seed, curve: .ed25519)
     }
     
 }
@@ -71,18 +71,38 @@ extension BIP39Mnemonics {
     }
     
     struct DerivedWallet {
+        let bitcoin: Derivation
         let evm: Derivation
         let solana: Derivation
     }
     
     enum DerivationError: Error {
+        case mismatchedBitcoinAddress
         case mismatchedEVMAddress
         case mismatchedSolanaAddress
     }
     
-    func deriveForEVM(path: DerivationPath) throws -> Derivation {
+    func checkedDerivationForBitcoin(path: DerivationPath) throws -> Derivation {
         var error: NSError?
-        let privateKey = try evmMasterKey.deriveUsingSecp256k1(path: path)
+        let privateKey = try Bitcoin.privateKey(mnemonics: joinedPhrases, path: path.string)
+        let address = try Bitcoin.segwitAddress(privateKey: privateKey)
+        let redundantAddress = BlockchainGenerateBitcoinSegwitAddressFromMnemonic(
+            joinedPhrases,
+            path.string,
+            &error
+        )
+        if let error {
+            throw error
+        } else if address != redundantAddress {
+            throw DerivationError.mismatchedBitcoinAddress
+        } else {
+            return Derivation(privateKey: privateKey, address: address, path: path)
+        }
+    }
+    
+    func checkedDerivationForEVM(path: DerivationPath) throws -> Derivation {
+        var error: NSError?
+        let privateKey = try secp256k1MasterKey.deriveUsingSecp256k1(path: path)
         let keyStorage = InPlaceKeyStorage(raw: privateKey.key)
         let account = try EthereumAccount(keyStorage: keyStorage)
         let evmAddress = account.address.toChecksumAddress()
@@ -99,9 +119,9 @@ extension BIP39Mnemonics {
         return Derivation(privateKey: privateKey.key, address: evmAddress, path: path)
     }
     
-    func deriveForSolana(path: DerivationPath) throws -> Derivation {
+    func checkedDerivationForSolana(path: DerivationPath) throws -> Derivation {
         var error: NSError?
-        let solanaKey = solMasterKey.deriveUsingEd25519(path: path)
+        let solanaKey = ed25519MasterKey.deriveUsingEd25519(path: path)
         let solanaAddress = try Solana.publicKey(seed: solanaKey.key)
         let redundantSolanaAddress = BlockchainGenerateSolanaAddressFromMnemonic(
             joinedPhrases,
@@ -118,13 +138,20 @@ extension BIP39Mnemonics {
     
     func deriveWallets(indices: ClosedRange<UInt32>) throws -> [DerivedWallet] {
         try indices.map { (index: UInt32) in
-            let evmPath = try DerivationPath(string: "m/44'/60'/0'/0/\(index)")
-            let evmDerivation = try deriveForEVM(path: evmPath)
+            let bitcoinPath = try DerivationPath.bitcoin(index: index)
+            let bitcoinDerivation = try checkedDerivationForBitcoin(path: bitcoinPath)
             
-            let solanaPath = try DerivationPath(string: "m/44'/501'/\(index)'/0'")
-            let solanaDerivation = try deriveForSolana(path: solanaPath)
+            let evmPath = try DerivationPath.evm(index: index)
+            let evmDerivation = try checkedDerivationForEVM(path: evmPath)
             
-            return DerivedWallet(evm: evmDerivation, solana: solanaDerivation)
+            let solanaPath = try DerivationPath.solana(index: index)
+            let solanaDerivation = try checkedDerivationForSolana(path: solanaPath)
+            
+            return DerivedWallet(
+                bitcoin: bitcoinDerivation,
+                evm: evmDerivation,
+                solana: solanaDerivation
+            )
         }
     }
     

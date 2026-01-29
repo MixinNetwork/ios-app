@@ -211,6 +211,7 @@
 "bots" = "机器人";
 "bots_title" = "机器人";
 "browser" = "浏览器";
+"btc_tx_already_speedy" = "当前费率已经足够，无需加速。";
 "buy" = "购买";
 "buy_asset" = "购买 %@";
 "buy_crypto_with_cash" = "用现金购买加密货币";
@@ -334,6 +335,7 @@
 "combine_and_forward" = "合并转发";
 "common_wallet" = "普通钱包";
 "common_wallet_index" = "普通钱包 %@";
+"common_wallet_now_supports_btc" = "普通钱包现已支持比特币";
 "complete" = "完成";
 "completed" = "已完成";
 "compress_database" = "压缩数据库";
@@ -648,6 +650,12 @@
 "failed_to_send_video" = "发送视频失败，请稍后重试";
 "fast" = "快速";
 "favorite" = "收藏";
+"feature_compatibility" = "兼容性";
+"feature_compatibility_description" = "支持从其他钱包导入私钥与观察地址。";
+"feature_decentralized" = "去中心化";
+"feature_decentralized_description" = "完全去中心化的钱包，你掌控私钥。";
+"feature_seamless" = "无缝体验";
+"feature_seamless_description" = "闪电般的交互体验，页面加载与响应更迅速。";
 "fee" = "手续费";
 "fee_selection" = "手续费（%@）";
 "feedback" = "反馈";
@@ -1305,6 +1313,7 @@
 "send_to_developer" = "把日志发给开发者";
 "send_to_other_wallet_description" = "使用区块链网络发送到我的另一个钱包";
 "send_to_title" = "转给";
+"send_token_minimum_amount" = "请发送至少 %@";
 "send_video" = "发送 1 个视频";
 "send_video_count" = "发送 %d 个视频";
 "send_without_sound" = "静音发送";
@@ -1407,6 +1416,7 @@
 "sort_by_recent" = "按最近排序";
 "sort_by_value" = "按价值排序";
 "speed_up" = "加速";
+"speed_up_failed" = "加速失败";
 "speed_up_transaction" = "加速交易";
 "speed_up_transaction_description" = "如果交易已接近完成，可能无法加速";
 "star" = "Star";
@@ -1559,6 +1569,7 @@
 "unknown" = "未知";
 "unknown_artist" = "未知艺术家";
 "unlimited_authorization_warning" = "这个应用可以提取你 %1$@ 账号（%2$@）里所有的 %3$@ 资产。";
+"unlock_by_pin" = "使用 PIN 解锁";
 "unmute" = "取消静音";
 "unmuted" = "已取消静音";
 "unnamed_location" = "未命名地点";

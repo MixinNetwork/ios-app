@@ -333,9 +333,9 @@ extension Web3Transaction {
             self.assetID = receiver.assetID
             self.fromAddress = nil
             self.toAddress = receiver.to
-            self.directionalAmount = decimalAmount
+            self.directionalAmount = -decimalAmount
             self.localizedAmountString = CurrencyFormatter.localizedString(
-                from: decimalAmount,
+                from: -decimalAmount,
                 format: .precision,
                 sign: .whenNotZero
             )
@@ -351,9 +351,9 @@ extension Web3Transaction {
             self.assetID = sender.assetID
             self.fromAddress = sender.from
             self.toAddress = nil
-            self.directionalAmount = -decimalAmount
+            self.directionalAmount = decimalAmount
             self.localizedAmountString = CurrencyFormatter.localizedString(
-                from: -decimalAmount,
+                from: decimalAmount,
                 format: .precision,
                 sign: .whenNotZero
             )

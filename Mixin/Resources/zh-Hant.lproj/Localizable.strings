@@ -613,6 +613,7 @@
 "error_trading_pair_not_supported" = "錯誤 10615: 暫不支援該交易對，請嘗試切換幣種。";
 "error_trading_pair_not_supported_detailed" = "錯誤 10615: 暫不支援該交易對，請嘗試切換幣種。試試掛單？不受金額和幣種限制。";
 "error_transfer_is_already_paid" = "錯誤 20125：轉賬已被支付";
+"error_transfer_to_deactivated_user" = "錯誤 20160：無法給已經刪除的賬號轉賬";
 "error_two_parts" = "錯誤 %@：%@";
 "error_used_phone" = "錯誤 20122：電話號碼已經被佔用。";
 "error_watch_address_not_supported" = "錯誤 10633：地址不可用";

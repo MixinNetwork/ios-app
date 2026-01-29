@@ -91,6 +91,7 @@ extension MixinAPIResponseError {
     public static let withdrawFeeTooSmall                  = MixinAPIResponseError(status: 202, code: 20135)
     public static let withdrawSuspended                    = MixinAPIResponseError(status: 202, code: 20137)
     public static let invalidConversationChecksum          = MixinAPIResponseError(status: 202, code: 20140)
+    public static let transferToDeactivatedUser            = MixinAPIResponseError(status: 202, code: 20160)
     
     public static let chainNotInSync                       = MixinAPIResponseError(status: 202, code: 30100)
     public static let malformedAddress                     = MixinAPIResponseError(status: 202, code: 30102)

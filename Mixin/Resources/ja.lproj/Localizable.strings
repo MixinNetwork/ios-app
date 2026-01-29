@@ -613,6 +613,7 @@
 "error_trading_pair_not_supported" = "ERROR 10615: This trading pair is currently not supported, please try switching to a different token.";
 "error_trading_pair_not_supported_detailed" = "ERROR 10615: This trading pair is not supported yet. Please try switching to a different token. Try placing a limit order? No restrictions on amount or token.";
 "error_transfer_is_already_paid" = "エラー 20125：すでに支払われています";
+"error_transfer_to_deactivated_user" = "ERROR 20160: Transfers cannot be made to a deactivated user";
 "error_two_parts" = "エラー %@：%@";
 "error_used_phone" = "エラー20122：この電話番号はすでに他のアカウントと紐づけられています";
 "error_watch_address_not_supported" = "ERROR 10633: Invalid Address";

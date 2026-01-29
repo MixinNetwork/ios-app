@@ -29,7 +29,7 @@ class BitcoinTransferOperation: Web3TransferOperation {
         wallet: Web3Wallet,
         fromAddress: Web3Address,
         toAddress: String,
-        hardcodedSimulation: TransactionSimulation?,
+        simulationDisplay: SimulationDisplay,
         isFeeWaived: Bool,
         sendAmount: Decimal,
     ) throws {
@@ -49,7 +49,7 @@ class BitcoinTransferOperation: Web3TransferOperation {
             chain: .bitcoin,
             feeToken: token,
             isResendingTransactionAvailable: true,
-            hardcodedSimulation: hardcodedSimulation,
+            simulationDisplay: simulationDisplay,
             isFeeWaived: isFeeWaived,
         )
     }
@@ -168,7 +168,7 @@ final class BitcoinTransferToAddressOperation: BitcoinTransferOperation {
             wallet: payment.wallet,
             fromAddress: payment.fromAddress,
             toAddress: payment.toAddress,
-            hardcodedSimulation: simulation,
+            simulationDisplay: .byLocal(simulation),
             isFeeWaived: isFeeWaived,
             sendAmount: decimalAmount,
         )
@@ -255,7 +255,7 @@ class BitcoinRBFOperation: BitcoinTransferOperation {
             wallet: wallet,
             fromAddress: fromAddress,
             toAddress: newToAddress,
-            hardcodedSimulation: .empty,
+            simulationDisplay: .hidden,
             isFeeWaived: false,
             sendAmount: newSendAmount,
         )
@@ -305,32 +305,40 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
     override func loadFee() async throws -> Web3DisplayFee {
         let displayFee: Web3DisplayFee
         let info = try await RouteAPI.bitcoinNetworkInfo(feeRate: previousFeeRate)
-        if info.decimalFeeRate <= decimalPreviousFeeRate {
-            let calculator = Bitcoin.P2WPKHFeeCalculator(
-                outputs: availableOutputs,
-                rate: decimalPreviousFeeRate,
-                minimum: info.minimalFee,
-            )
-            let result = try calculator.calculate(transferAmount: sendAmount)
-            Logger.web3.info(category: "BTCSpeedUp", message: "Already speedy")
-            displayFee = Web3DisplayFee(token: token, amount: result.feeAmount)
-            await MainActor.run {
-                self.fee = displayFee // Really?
-                self.state = .unavailable(reason: R.string.localizable.btc_tx_already_speedy())
+        do {
+            if info.decimalFeeRate <= decimalPreviousFeeRate {
+                let calculator = Bitcoin.P2WPKHFeeCalculator(
+                    outputs: availableOutputs,
+                    rate: decimalPreviousFeeRate,
+                    minimum: info.minimalFee,
+                )
+                let result = try calculator.calculate(transferAmount: sendAmount)
+                Logger.web3.info(category: "BTCSpeedUp", message: "Already speedy")
+                displayFee = Web3DisplayFee(token: token, amount: result.feeAmount)
+                await MainActor.run {
+                    self.fee = displayFee
+                    self.state = .unavailable(reason: R.string.localizable.btc_tx_already_speedy())
+                }
+            } else {
+                let calculator = Bitcoin.P2WPKHFeeCalculator(
+                    outputs: availableOutputs,
+                    rate: info.decimalFeeRate,
+                    minimum: max(info.minimalFee, previousFeeAmount),
+                )
+                let result = try calculator.calculate(transferAmount: sendAmount)
+                Logger.web3.info(category: "BTCSpeedUp", message: "Using \(result)")
+                displayFee = Web3DisplayFee(token: token, amount: result.feeAmount)
+                await MainActor.run {
+                    self.spendingOutputs = result.spendingOutputs
+                    self.fee = displayFee
+                    self.state = .ready
+                }
             }
-        } else {
-            let calculator = Bitcoin.P2WPKHFeeCalculator(
-                outputs: availableOutputs,
-                rate: info.decimalFeeRate,
-                minimum: max(info.minimalFee, previousFeeAmount),
-            )
-            let result = try calculator.calculate(transferAmount: sendAmount)
-            Logger.web3.info(category: "BTCSpeedUp", message: "Using \(result)")
-            displayFee = Web3DisplayFee(token: token, amount: result.feeAmount)
+        } catch let .insufficientOutputs(feeAmount) {
+            displayFee = Web3DisplayFee(token: token, amount: feeAmount)
             await MainActor.run {
-                self.spendingOutputs = result.spendingOutputs
                 self.fee = displayFee
-                self.state = .ready
+                self.state = .unavailable(reason: R.string.localizable.insufficient_balance())
             }
         }
         return displayFee

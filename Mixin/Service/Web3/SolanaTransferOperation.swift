@@ -16,7 +16,7 @@ class SolanaTransferOperation: Web3TransferOperation {
         fromAddress: Web3Address,
         toAddress: String,
         chain: Web3Chain,
-        hardcodedSimulation: TransactionSimulation?,
+        simulationDisplay: SimulationDisplay,
         isFeeWaived: Bool,
     ) throws {
         guard let feeToken = try chain.feeToken(walletID: wallet.walletID) else {
@@ -29,7 +29,7 @@ class SolanaTransferOperation: Web3TransferOperation {
             chain: chain,
             feeToken: feeToken,
             isResendingTransactionAvailable: false,
-            hardcodedSimulation: hardcodedSimulation,
+            simulationDisplay: simulationDisplay,
             isFeeWaived: isFeeWaived,
         )
     }
@@ -117,7 +117,7 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
             fromAddress: fromAddress,
             toAddress: toAddress,
             chain: chain,
-            hardcodedSimulation: nil,
+            simulationDisplay: .byRemote,
             isFeeWaived: false
         )
         self.state = .ready
@@ -260,7 +260,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             fromAddress: payment.fromAddress,
             toAddress: payment.toAddress,
             chain: payment.chain,
-            hardcodedSimulation: simulation,
+            simulationDisplay: .byLocal(simulation),
             isFeeWaived: isFeeWaived,
         )
     }

@@ -305,7 +305,7 @@ extension Bitcoin {
             self.minimum = minimum
         }
         
-        func calculate(transferAmount: Decimal) throws -> Result {
+        func calculate(transferAmount: Decimal) throws(CalculateError) -> Result {
             var spendingOutputs: [Web3Output] = []
             var utxoAmount: Decimal = 0
             var feeWithChange: Decimal = 0

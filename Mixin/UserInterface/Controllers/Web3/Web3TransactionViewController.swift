@@ -113,6 +113,9 @@ extension Web3TransactionViewController: PillActionView.Delegate {
             preview.manipulateNavigationStackOnFinished = true
             present(preview, animated: true)
         }
+        // Once operation is previewed, the fee will be loaded and never update again
+        // Make new operations to keep the fee untouched
+        reloadOverridingOperations()
     }
     
 }
@@ -499,94 +502,100 @@ extension Web3TransactionViewController {
         rows.append(.plain(key: .date, value: transactionAt))
         
         tableView.reloadData()
-        
-        if transaction.status == .pending, let chain = Web3Chain.chain(chainID: transaction.chainID) {
-            let hash = transaction.transactionHash
-            switch chain.kind {
-            case .solana:
-                break
-            case .bitcoin:
-                DispatchQueue.global().async { [wallet, weak self] in
-                    let speedUpOperation: Web3TransferOperation?
-                    let cancelOperation: Web3TransferOperation?
-                    if let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID),
-                       let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash)
-                    {
-                        do {
-                            speedUpOperation = try BitcoinSpeedUpOperation(
-                                wallet: wallet,
-                                fromAddress: fromAddress,
-                                transaction: rawTransaction,
-                            )
-                        } catch {
-                            Logger.general.debug(category: "Web3Txn", message: "Speed up failed: \(error)")
-                            speedUpOperation = nil
-                        }
-                        do {
-                            cancelOperation = try BitcoinCancelOperation(
-                                wallet: wallet,
-                                fromAddress: fromAddress,
-                                transaction: rawTransaction,
-                            )
-                        } catch {
-                            Logger.general.debug(category: "Web3Txn", message: "Cancel failed: \(error)")
-                            cancelOperation = nil
-                        }
-                    } else {
+        reloadOverridingOperations()
+    }
+    
+    private func reloadOverridingOperations() {
+        guard
+            transaction.status == .pending,
+            let chain = Web3Chain.chain(chainID: transaction.chainID)
+        else {
+            reloadHeaderView(speedUpOperation: nil, cancelOperation: nil)
+            return
+        }
+        let hash = transaction.transactionHash
+        switch chain.kind {
+        case .solana:
+            break
+        case .bitcoin:
+            DispatchQueue.global().async { [wallet, weak self] in
+                let speedUpOperation: Web3TransferOperation?
+                let cancelOperation: Web3TransferOperation?
+                if let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID),
+                   let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash)
+                {
+                    do {
+                        speedUpOperation = try BitcoinSpeedUpOperation(
+                            wallet: wallet,
+                            fromAddress: fromAddress,
+                            transaction: rawTransaction,
+                        )
+                    } catch {
+                        Logger.general.debug(category: "Web3Txn", message: "Speed up failed: \(error)")
                         speedUpOperation = nil
+                    }
+                    do {
+                        cancelOperation = try BitcoinCancelOperation(
+                            wallet: wallet,
+                            fromAddress: fromAddress,
+                            transaction: rawTransaction,
+                        )
+                    } catch {
+                        Logger.general.debug(category: "Web3Txn", message: "Cancel failed: \(error)")
                         cancelOperation = nil
                     }
-                    DispatchQueue.main.async {
-                        self?.reloadHeaderView(
-                            speedUpOperation: speedUpOperation,
-                            cancelOperation: cancelOperation
-                        )
-                    }
+                } else {
+                    speedUpOperation = nil
+                    cancelOperation = nil
                 }
-            case .evm:
-                DispatchQueue.global().async { [wallet, weak self] in
-                    let speedUpOperation: Web3TransferOperation?
-                    let cancelOperation: Web3TransferOperation?
-                    if let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID),
-                       let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash),
-                       let transaction = EIP1559Transaction(rawTransaction: rawTransaction.raw)
-                    {
-                        do {
-                            speedUpOperation = try EVMSpeedUpOperation(
-                                wallet: wallet,
-                                fromAddress: fromAddress,
-                                transaction: transaction,
-                                chain: chain
-                            )
-                        } catch {
-                            Logger.general.debug(category: "Web3Txn", message: "Speed up failed: \(error)")
-                            speedUpOperation = nil
-                        }
-                        do {
-                            cancelOperation = try EVMCancelOperation(
-                                wallet: wallet,
-                                fromAddress: fromAddress,
-                                transaction: transaction,
-                                chain: chain
-                            )
-                        } catch {
-                            Logger.general.debug(category: "Web3Txn", message: "Cancel failed: \(error)")
-                            cancelOperation = nil
-                        }
-                    } else {
-                        speedUpOperation = nil
-                        cancelOperation = nil
-                    }
-                    DispatchQueue.main.async {
-                        self?.reloadHeaderView(
-                            speedUpOperation: speedUpOperation,
-                            cancelOperation: cancelOperation
-                        )
-                    }
+                DispatchQueue.main.async {
+                    self?.reloadHeaderView(
+                        speedUpOperation: speedUpOperation,
+                        cancelOperation: cancelOperation
+                    )
                 }
             }
-        } else {
-            reloadHeaderView(speedUpOperation: nil, cancelOperation: nil)
+        case .evm:
+            DispatchQueue.global().async { [wallet, weak self] in
+                let speedUpOperation: Web3TransferOperation?
+                let cancelOperation: Web3TransferOperation?
+                if let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID),
+                   let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash),
+                   let transaction = EIP1559Transaction(rawTransaction: rawTransaction.raw)
+                {
+                    do {
+                        speedUpOperation = try EVMSpeedUpOperation(
+                            wallet: wallet,
+                            fromAddress: fromAddress,
+                            transaction: transaction,
+                            chain: chain
+                        )
+                    } catch {
+                        Logger.general.debug(category: "Web3Txn", message: "Speed up failed: \(error)")
+                        speedUpOperation = nil
+                    }
+                    do {
+                        cancelOperation = try EVMCancelOperation(
+                            wallet: wallet,
+                            fromAddress: fromAddress,
+                            transaction: transaction,
+                            chain: chain
+                        )
+                    } catch {
+                        Logger.general.debug(category: "Web3Txn", message: "Cancel failed: \(error)")
+                        cancelOperation = nil
+                    }
+                } else {
+                    speedUpOperation = nil
+                    cancelOperation = nil
+                }
+                DispatchQueue.main.async {
+                    self?.reloadHeaderView(
+                        speedUpOperation: speedUpOperation,
+                        cancelOperation: cancelOperation
+                    )
+                }
+            }
         }
     }
     

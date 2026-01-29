@@ -64,7 +64,7 @@ class EVMTransferOperation: Web3TransferOperation {
         toAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
-        hardcodedSimulation: TransactionSimulation?,
+        simulationDisplay: SimulationDisplay,
         isFeeWaived: Bool,
     ) throws {
         switch chain.specification {
@@ -87,7 +87,7 @@ class EVMTransferOperation: Web3TransferOperation {
             chain: chain,
             feeToken: feeToken,
             isResendingTransactionAvailable: true,
-            hardcodedSimulation: hardcodedSimulation,
+            simulationDisplay: simulationDisplay,
             isFeeWaived: isFeeWaived,
         )
     }
@@ -97,7 +97,7 @@ class EVMTransferOperation: Web3TransferOperation {
         fromAddress: Web3Address,
         transaction: ExternalEVMTransaction,
         chain: Web3Chain,
-        hardcodedSimulation: TransactionSimulation?,
+        simulationDisplay: SimulationDisplay,
         isFeeWaived: Bool,
     ) throws {
         let chainID: Int
@@ -130,7 +130,7 @@ class EVMTransferOperation: Web3TransferOperation {
             chain: chain,
             feeToken: feeToken,
             isResendingTransactionAvailable: true,
-            hardcodedSimulation: hardcodedSimulation,
+            simulationDisplay: simulationDisplay,
             isFeeWaived: isFeeWaived,
         )
     }
@@ -369,7 +369,7 @@ final class Web3TransferWithWalletConnectOperation: EVMTransferOperation {
             fromAddress: fromAddress,
             transaction: transaction,
             chain: chain,
-            hardcodedSimulation: nil,
+            simulationDisplay: .byRemote,
             isFeeWaived: false,
         )
     }
@@ -416,7 +416,7 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
             fromAddress: fromAddress,
             transaction: transaction,
             chain: chain,
-            hardcodedSimulation: nil,
+            simulationDisplay: .byRemote,
             isFeeWaived: false,
         )
     }
@@ -496,7 +496,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             toAddress: payment.toAddress,
             transaction: transaction,
             chain: payment.chain,
-            hardcodedSimulation: simulation,
+            simulationDisplay: .byLocal(simulation),
             isFeeWaived: isFeeWaived,
         )
     }
@@ -526,7 +526,7 @@ class EVMOverrideOperation: EVMTransferOperation {
         toAddress: String,
         transaction: EIP1559Transaction,
         chain: Web3Chain,
-        hardcodedSimulation: TransactionSimulation?,
+        simulationDisplay: SimulationDisplay,
     ) throws {
         guard let nonce = transaction.nonce else {
             throw InitError.missingNonce
@@ -538,7 +538,7 @@ class EVMOverrideOperation: EVMTransferOperation {
             toAddress: toAddress,
             transaction: transaction,
             chain: chain,
-            hardcodedSimulation: hardcodedSimulation,
+            simulationDisplay: simulationDisplay,
             isFeeWaived: false,
         )
     }
@@ -571,7 +571,7 @@ final class EVMSpeedUpOperation: EVMOverrideOperation {
             toAddress: "",
             transaction: transaction,
             chain: chain,
-            hardcodedSimulation: nil
+            simulationDisplay: .byRemote
         )
     }
     
@@ -601,7 +601,7 @@ final class EVMCancelOperation: EVMOverrideOperation {
             toAddress: "",
             transaction: emptyTransaction,
             chain: chain,
-            hardcodedSimulation: .empty
+            simulationDisplay: .hidden
         )
     }
     

@@ -18,12 +18,6 @@ enum StatusBarHeight {
 let iTunesAppUrlRegex = try? NSRegularExpression(pattern: "^https://(itunes|apps)\\.apple\\.com/.*app.*id[0-9]", options: .caseInsensitive)
 let appStoreAppID = "1322324266"
 
-let qrCodeDetector: CIDetector? = {
-    let context = CIContext()
-    let options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
-    return CIDetector(ofType: CIDetectorTypeQRCode, context: context, options: options)
-}()
-
 enum PeriodicPinVerificationInterval {
     static let min: TimeInterval = 60 * 10
     static let max: TimeInterval = 60 * 60 * 24

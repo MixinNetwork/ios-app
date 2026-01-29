@@ -75,7 +75,7 @@ final class ExploreViewController: UIViewController {
     }
     
     @IBAction func scanQRCode(_ sender: Any) {
-        UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
+        UIApplication.homeNavigationController?.pushQRCodeScannerViewController()
     }
     
     @IBAction func openSettings(_ sender: Any) {

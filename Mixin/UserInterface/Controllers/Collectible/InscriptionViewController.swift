@@ -1,5 +1,4 @@
 import UIKit
-import Photos
 import SafariServices
 import MixinServices
 
@@ -164,10 +163,8 @@ final class InscriptionViewController: UIViewController {
         guard let image = backgroundImageView.image else {
             return
         }
-        PHPhotoLibrary.checkAuthorization { (authorized) in
-            if authorized {
-                PHPhotoLibrary.saveImageToLibrary(image: image)
-            }
+        PhotoLibrary.saveImage(source: .image(image)) { alert in
+            self.present(alert, animated: true)
         }
     }
     

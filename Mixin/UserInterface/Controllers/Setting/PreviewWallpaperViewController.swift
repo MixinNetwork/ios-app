@@ -1,4 +1,5 @@
 import UIKit
+import PhotosUI
 import MixinServices
 
 class PreviewWallpaperViewController: UIViewController {
@@ -27,11 +28,6 @@ class PreviewWallpaperViewController: UIViewController {
     
     private var scope: Wallpaper.Scope = .global
     private var wallpapers = Wallpaper.official
-    
-    private lazy var imagePicker = ImagePickerController(initialCameraPosition: .front,
-                                                         cropImageAfterPicked: false,
-                                                         parent: self,
-                                                         delegate: self)
     
     class func instance(scope: Wallpaper.Scope) -> UIViewController {
         let vc = R.storyboard.setting.preview_wallpaper()!
@@ -141,7 +137,12 @@ extension PreviewWallpaperViewController: UICollectionViewDelegate, UICollection
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if indexPath.item == 0 {
-            imagePicker.presentPhoto()
+            var config = PHPickerConfiguration(photoLibrary: .shared())
+            config.selectionLimit = 1
+            config.filter = .images
+            let picker = PHPickerViewController(configuration: config)
+            picker.delegate = self
+            present(picker, animated: true, completion: nil)
             return false
         } else {
             return true
@@ -154,19 +155,22 @@ extension PreviewWallpaperViewController: UICollectionViewDelegate, UICollection
     
 }
 
-extension PreviewWallpaperViewController: ImagePickerControllerDelegate {
+extension PreviewWallpaperViewController: PHPickerViewControllerDelegate {
     
-    func imagePickerController(_ controller: ImagePickerController, didPickImage image: UIImage) {
-        let new: Wallpaper = .custom(image)
-        if wallpapers.first?.matches(new) ?? false {
-            wallpapers[0] = new
-        } else {
-            wallpapers.insert(new, at: 0)
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.presentingViewController?.dismiss(animated: true)
+        guard let provider = results.first?.itemProvider, provider.canLoadObject(ofClass: UIImage.self) else {
+            return
         }
-        collectionView.reloadData()
-        let indexPath = indexPath(for: 0)
-        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
-        loadImage(for: indexPath)
+        provider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
+            DispatchQueue.main.async {
+                if let image = image as? UIImage {
+                    self?.loadCustomWallpaper(image: image)
+                } else {
+                    showAutoHiddenHud(style: .error, text: R.string.localizable.failed())
+                }
+            }
+        }
     }
     
 }
@@ -196,6 +200,19 @@ extension PreviewWallpaperViewController {
         UIView.transition(with: wallpaperImageView, duration: 0.3, options: .transitionCrossDissolve, animations: {
             self.wallpaperImageView.wallpaper = wallpaper
         }, completion: nil)
+    }
+    
+    private func loadCustomWallpaper(image: UIImage) {
+        let new: Wallpaper = .custom(image)
+        if wallpapers.first?.matches(new) ?? false {
+            wallpapers[0] = new
+        } else {
+            wallpapers.insert(new, at: 0)
+        }
+        collectionView.reloadData()
+        let indexPath = indexPath(for: 0)
+        collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
+        loadImage(for: indexPath)
     }
     
 }

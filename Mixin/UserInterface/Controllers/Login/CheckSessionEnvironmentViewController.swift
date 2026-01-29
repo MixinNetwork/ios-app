@@ -155,9 +155,9 @@ extension CheckSessionEnvironmentViewController {
         private lazy var presentFromBottomAnimator = PresentFromBottomAnimator()
         
         func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-            if viewController is CameraViewController && !navigationController.isNavigationBarHidden {
+            if viewController is QRCodeScannerViewController && !navigationController.isNavigationBarHidden {
                 navigationController.setNavigationBarHidden(true, animated: animated)
-            } else if !(viewController is CameraViewController) && navigationController.isNavigationBarHidden {
+            } else if !(viewController is QRCodeScannerViewController) && navigationController.isNavigationBarHidden {
                 navigationController.setNavigationBarHidden(false, animated: animated)
             }
         }

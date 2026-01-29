@@ -50,25 +50,12 @@ class HomeNavigationController: GeneralAppearanceNavigationController {
         }
     }
     
-    func pushCameraViewController(asQRCodeScanner: Bool) {
-        let camera = CameraViewController.instance()
-        camera.asQrCodeScanner = asQRCodeScanner
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            pushViewController(camera, animated: true)
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self] (granted) in
-                guard granted else {
-                    return
-                }
-                DispatchQueue.main.async {
-                    self?.pushViewController(camera, animated: true)
-                }
-            })
-        case .denied, .restricted:
-            alertSettings(R.string.localizable.permission_denied_camera_hint())
-        @unknown default:
-            alertSettings(R.string.localizable.permission_denied_camera_hint())
+    func pushQRCodeScannerViewController() {
+        VideoCaptureDevice.checkAuthorization {
+            let scanner = QRCodeScannerViewController()
+            self.pushViewController(scanner, animated: true)
+        } onDenied: { alert in
+            self.present(alert, animated: true)
         }
     }
     
@@ -155,7 +142,7 @@ extension HomeNavigationController: UIGestureRecognizerDelegate {
             return false
         }
         if let vc = viewControllers.last {
-            return !(vc is CameraViewController)
+            return !(vc is QRCodeScannerViewController)
         } else {
             return true
         }

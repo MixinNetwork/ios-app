@@ -1,5 +1,4 @@
 import UIKit
-import Photos
 import PhotosUI
 import CoreServices
 import SDWebImage
@@ -79,9 +78,6 @@ class StickerManagerViewController: UICollectionViewController {
         }
         
         StickerAPI.removeSticker(stickerIds: stickerIds, completion: { [weak self] (result) in
-            guard let weakSelf = self else {
-                return
-            }
             sender.isBusy = false
             switch result {
             case .success:
@@ -146,18 +142,13 @@ extension StickerManagerViewController: UICollectionViewDelegateFlowLayout {
         guard !isDeleteStickers, indexPath.row == 0 else {
             return
         }
-        handleAddStickerAction()
-    }
-    
-}
-
-// MARK: - PhotoAssetPickerDelegate
-extension StickerManagerViewController: PhotoAssetPickerDelegate {
-    
-    func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
-        pickerContentOffset = contentOffset
-        let vc = StickerAddViewController.instance(source: .asset(asset))
-        navigationController?.pushViewController(vc, animated: true)
+        var config = PHPickerConfiguration(photoLibrary: .shared())
+        config.preferredAssetRepresentationMode = .current
+        config.selectionLimit = 1
+        config.filter = .images
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = self
+        self.present(picker, animated: true, completion: nil)
     }
     
 }
@@ -166,7 +157,7 @@ extension StickerManagerViewController: PhotoAssetPickerDelegate {
 extension StickerManagerViewController: PHPickerViewControllerDelegate {
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        picker.dismiss(animated: true) {
+        picker.presentingViewController?.dismiss(animated: true) {
             guard let provider = results.first?.itemProvider else {
                 return
             }
@@ -178,51 +169,6 @@ extension StickerManagerViewController: PHPickerViewControllerDelegate {
 
 // MARK: - Private works
 extension StickerManagerViewController {
-    
-    private func handleAddStickerAction() {
-        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-        handlePhotoAuthorizationStatus(status)
-    }
-    
-    private func handlePhotoAuthorizationStatus(_ status: PHAuthorizationStatus) {
-        switch status {
-        case .limited:
-            DispatchQueue.main.async(execute: showAuthorizationLimitedAlert)
-        case .authorized:
-            DispatchQueue.main.async {
-                let picker = PhotoAssetPickerNavigationController.instance(pickerDelegate: self, showImageOnly: true, scrollToOffset: self.pickerContentOffset)
-                self.present(picker, animated: true, completion: nil)
-            }
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization(handlePhotoAuthorizationStatus)
-        case .denied, .restricted:
-            DispatchQueue.main.async {
-                self.alertSettings(R.string.localizable.permission_denied_photo_library())
-            }
-        @unknown default:
-            DispatchQueue.main.async {
-                self.alertSettings(R.string.localizable.permission_denied_photo_library())
-            }
-        }
-    }
-    
-    private func showAuthorizationLimitedAlert() {
-        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: R.string.localizable.pick_from_library(), style: .default, handler: { _ in
-            var config = PHPickerConfiguration(photoLibrary: .shared())
-            config.preferredAssetRepresentationMode = .current
-            config.selectionLimit = 1
-            config.filter = .images
-            let picker = PHPickerViewController(configuration: config)
-            picker.delegate = self
-            self.present(picker, animated: true, completion: nil)
-        }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.change_settings(), style: .default, handler: { _ in
-            UIApplication.openAppSettings()
-        }))
-        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
-        present(sheet, animated: true, completion: nil)
-    }
     
     private func load(itemProvider: NSItemProvider) {
         let hud = Hud()
@@ -254,7 +200,7 @@ extension StickerManagerViewController {
                     guard let self = self else {
                         return
                     }
-                    let vc = StickerAddViewController.instance(source: .image(image))
+                    let vc = StickerAddViewController(source: .image(image))
                     self.navigationController?.pushViewController(vc, animated: true)
                 }
             }
@@ -269,7 +215,7 @@ extension StickerManagerViewController {
                     guard let self = self else {
                         return
                     }
-                    let vc = StickerAddViewController.instance(source: .image(image))
+                    let vc = StickerAddViewController(source: .image(image))
                     self.navigationController?.pushViewController(vc, animated: true)
                 }
             }

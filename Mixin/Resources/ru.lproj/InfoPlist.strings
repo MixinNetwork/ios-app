@@ -1,7 +1,7 @@
 "CFBundleDisplayName" = "Mixin";
 "NSContactsUsageDescription" = "Mixin синхронизирует вашу адресную книгу с серверами Mixin, чтобы помочь вам связаться с другими пользователями Mixin.";
 "NSCameraUsageDescription" = "Mixin использует камеру для установки фотографии профиля и отправки фотографии контакту в чате.";
-"NSPhotoLibraryUsageDescription" = "Mixin использует библиотеку фотографий для установки фотографии профиля и отправки фотографии контакту в чате.";
+"NSPhotoLibraryAddUsageDescription" = "Mixin будет сохранять изображения, видео, QR-коды и изображения inscription из чатов в вашу фотобиблиотеку только по вашему выбору.";
 "NSMicrophoneUsageDescription" = "Mixin использует ваш микрофон для записи голосовых сообщений, которыми можно поделиться с вашими контактами.";
 "NSFaceIDUsageDescription" = "Mixin использует Face ID для авторизации платежа";
 "NSLocationWhenInUseUsageDescription" = "Включите службы определения местоположения, чтобы передавать в разговоре ваше текущее местоположение или близлежащие места.";

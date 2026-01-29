@@ -62,7 +62,6 @@
 "admin" = "Admin";
 "advanced_trade" = "Advanced Trade";
 "agree_hint" = "By proceeding, you agree to the %@ and %@.";
-"albums" = "Albums";
 "alert" = "Alert";
 "alert_frequency" = "Frequency";
 "alert_frequency_daily" = "Once a day";
@@ -1049,10 +1048,12 @@
 "pending_confirmations" = "%d/%d Confirmations";
 "pending_transaction_one" = "1 Pending Transaction";
 "pending_transactions_count" = "%d Pending Transactions";
-"permission_denied_camera_hint" = "Mixin doesn't have permission to use your camera. Please tap Setting to open system settings.";
+"permission_denied_camera" = "Camera Access Denied";
+"permission_denied_camera_hint" = "Mixin doesn't have permission to use your camera. Tap Settings to authorize.";
 "permission_denied_microphone_hint" = "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.";
 "permission_denied_network_hint" = "Mixin doesn't have permission to use wireless data. Please tap Setting to open system settings.";
-"permission_denied_photo_library" = "Mixin doesn't have permission to use your photo library. Please tap Setting to open system settings.";
+"permission_denied_photos" = "Adding Photo Denied";
+"permission_denied_photos_hint" = "Mixin doesn't have permission to add photo to your library. Tap Settings to authorize.";
 "permissions" = "Permissions";
 "phone_as_key_shard" = "Your mobile number will be associated with a key shard of the MPC wallet managed by you";
 "phone_call" = "Phone call";
@@ -1065,7 +1066,6 @@
 "photo_saved" = "Photo saved.";
 "photo_count" = "%d Photos";
 "photos" = "Photos";
-"pick_from_library" = "Pick from Library";
 "pin" = "PIN";
 "pin_change" = "PIN change";
 "pin_check_tip" = "You'll be asked for it periodically to help you remember it.";

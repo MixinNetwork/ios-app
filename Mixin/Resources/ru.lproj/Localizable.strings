@@ -62,7 +62,6 @@
 "admin" = "Администратор";
 "advanced_trade" = "Advanced Trade";
 "agree_hint" = "Продолжая, вы соглашаетесь с %@ и %@.";
-"albums" = "Альбомы";
 "alert" = "Alert";
 "alert_frequency" = "Frequency";
 "alert_frequency_daily" = "Once a day";
@@ -1049,10 +1048,12 @@
 "pending_confirmations" = "%d/%d Подтверждения";
 "pending_transaction_one" = "1 Pending Transaction";
 "pending_transactions_count" = "%d Pending Transactions";
-"permission_denied_camera_hint" = "У Mixin нет разрешения на использование вашей камеры. Пожалуйста, нажмите Настройки, чтобы открыть системные настройки";
+"permission_denied_camera" = "Camera Access Denied";
+"permission_denied_camera_hint" = "Mixin doesn't have permission to use your camera. Tap Settings to authorize.";
 "permission_denied_microphone_hint" = "У Mixin нет разрешения на использование вашего микрофона. Пожалуйста, нажмите Настройки, чтобы открыть системные настройки.";
 "permission_denied_network_hint" = "У Mixin нет разрешения на использование беспроводных данных. Пожалуйста, нажмите Настройки, чтобы открыть системные настройки";
-"permission_denied_photo_library" = "У Mixin нет разрешения на использование вашей библиотеки фотографий. Пожалуйста, нажмите Настройки, чтобы открыть системные настройки";
+"permission_denied_photos" = "Adding Photo Denied";
+"permission_denied_photos_hint" = "Mixin doesn't have permission to add photo to your library. Tap Settings to authorize.";
 "permissions" = "Разрешения";
 "phone_as_key_shard" = "Your mobile number will be associated with a key shard of the MPC wallet managed by you";
 "phone_call" = "Телефонный звонок";
@@ -1065,7 +1066,6 @@
 "photo_saved" = "Фото сохранено.";
 "photo_count" = "%d фото";
 "photos" = "Фото";
-"pick_from_library" = "Выбрать из библиотеки";
 "pin" = "PIN";
 "pin_change" = "изменение PIN-кода";
 "pin_check_tip" = "Вас будут периодически спрашивать об этом, чтобы помочь вам запомнить его.";

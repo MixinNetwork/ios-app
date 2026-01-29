@@ -1,5 +1,4 @@
 import UIKit
-import Photos
 import AVKit
 import MixinServices
 
@@ -385,11 +384,7 @@ final class GalleryViewController: UIViewController, GalleryAnimatable {
         }
         if itemViewController.supportedActions.contains(.saveToLibrary) {
             alert.addAction(UIAlertAction(title: R.string.localizable.save_to_camera_roll(), style: .default, handler: { (_) in
-                PHPhotoLibrary.checkAuthorization { (authorized) in
-                    if authorized {
-                        itemViewController.saveToLibrary()
-                    }
-                }
+                itemViewController.saveToLibrary()
             }))
         }
         if let url = (itemViewController as? GalleryImageItemViewController)?.detectedUrl {

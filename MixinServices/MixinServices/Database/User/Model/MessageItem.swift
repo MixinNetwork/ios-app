@@ -234,7 +234,6 @@ extension MessageItem: Codable, MixinFetchableRecord {
         case mediaDigest = "media_digest"
         case mediaStatus = "media_status"
         case mediaWaveform = "media_waveform"
-        case mediaLocalIdentifier = "media_local_id"
         case thumbImage = "thumb_image"
         case thumbUrl = "thumb_url"
         case status

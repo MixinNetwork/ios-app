@@ -163,7 +163,7 @@ final class HomeViewController: UIViewController {
     }
     
     @IBAction func scanQRCode() {
-        UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
+        UIApplication.homeNavigationController?.pushQRCodeScannerViewController()
     }
     
     @IBAction func showSearchAction() {

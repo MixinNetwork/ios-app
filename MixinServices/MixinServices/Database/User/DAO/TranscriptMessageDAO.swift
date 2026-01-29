@@ -15,7 +15,7 @@ public final class TranscriptMessageDAO: UserDatabaseDAO {
     private static let messageItemQuery = """
         SELECT m.message_id AS id, '' AS conversation_id, m.user_id, m.category, m.content, m.media_url,
             m.media_mime_type, m.media_size, m.media_duration, m.media_width, m.media_height, NULL AS media_hash,
-            m.media_key, m.media_digest, m.media_status, m.media_waveform, NULL AS media_local_id, m.thumb_image,
+            m.media_key, m.media_digest, m.media_status, m.media_waveform, m.thumb_image,
             m.thumb_url, 'READ' AS status, NULL AS participant_id, NULL AS snapshot_id, m.media_name AS name,
             m.sticker_id, m.created_at, IFNULL(u.full_name, m.user_full_name) as userFullName,
             u.identity_number as userIdentityNumber, u.avatar_url as userAvatarUrl, u.app_id as appId,

@@ -270,17 +270,16 @@ extension AddressInfoInputViewController: AddressInfoInputHeaderView.Delegate {
     }
     
     func addressInfoInputHeaderViewWantsToScanContent(_ headerView: AddressInfoInputHeaderView) {
-        let scanner = CameraViewController.instance()
-        scanner.asQrCodeScanner = true
+        let scanner = QRCodeScannerViewController()
         scanner.delegate = self
         navigationController?.pushViewController(scanner, animated: true)
     }
     
 }
 
-extension AddressInfoInputViewController: CameraViewControllerDelegate {
+extension AddressInfoInputViewController: QRCodeScannerViewControllerDelegate {
     
-    func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
+    func qrCodeScannerViewController(_ controller: QRCodeScannerViewController, shouldRecognizeString string: String) -> Bool {
         switch inputContent {
         case .destination:
             let destination = IBANAddress(string: string)?.standarizedAddress ?? string

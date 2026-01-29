@@ -38,7 +38,7 @@ public final class MessageDAO: UserDatabaseDAO {
     static let sqlQueryFullMessage = """
     SELECT m.id, m.conversation_id, m.user_id, m.category, m.content, m.media_url, m.media_mime_type,
             m.media_size, m.media_duration, m.media_width, m.media_height, m.media_hash, m.media_key,
-            m.media_digest, m.media_status, m.media_waveform, m.media_local_id, m.thumb_image, m.thumb_url, m.status, m.participant_id, m.snapshot_id, m.name,
+            m.media_digest, m.media_status, m.media_waveform, m.thumb_image, m.thumb_url, m.status, m.participant_id, m.snapshot_id, m.name,
             m.sticker_id, m.created_at,
         u.full_name as userFullName, u.identity_number as userIdentityNumber, u.avatar_url as userAvatarUrl,
         u.app_id as appId, u.membership as userMembership,

@@ -615,18 +615,14 @@ extension MixinWebViewController {
         config.rect = webView.frame
         config.snapshotWidth = NSNumber(value: Int(webView.frame.width))
         webView.takeSnapshot(with: config) { image, error in
-            if let image, let cgImage = image.cgImage, let detector = qrCodeDetector {
-                let ciImage = CIImage(cgImage: cgImage)
-                for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
-                    guard let string = feature.messageString else {
-                        continue
-                    }
+            if let image {
+                if let string = QRCodeDetector.detectString(image: image) {
                     hud.hide()
                     UrlWindow.checkQrCodeDetection(string: string, clearNavigationStack: false)
-                    return
+                } else {
+                    hud.set(style: .warning, text: R.string.localizable.qr_code_not_found())
+                    hud.scheduleAutoHidden()
                 }
-                hud.set(style: .warning, text: R.string.localizable.qr_code_not_found())
-                hud.scheduleAutoHidden()
             } else if let error {
                 hud.set(style: .error, text: error.localizedDescription)
                 hud.scheduleAutoHidden()

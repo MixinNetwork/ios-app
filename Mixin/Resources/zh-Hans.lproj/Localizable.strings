@@ -62,7 +62,6 @@
 "admin" = "管理员";
 "advanced_trade" = "挂单交易";
 "agree_hint" = "继续使用即表示你同意 %@ 和 %@";
-"albums" = "相册";
 "alert" = "价格预警";
 "alert_frequency" = "预警频率";
 "alert_frequency_daily" = "每日一次";
@@ -1049,10 +1048,12 @@
 "pending_confirmations" = "%d/%d 区块确认数";
 "pending_transaction_one" = "有 1 笔交易处理中";
 "pending_transactions_count" = "有 %d 笔交易处理中";
-"permission_denied_camera_hint" = "Mixin 需要摄像头权限，请点击'设置'打开系统授权。";
+"permission_denied_camera" = "授权使用相机";
+"permission_denied_camera_hint" = "Mixin 需要相机权限，请点击'设置'并调整授权。";
 "permission_denied_microphone_hint" = "Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
 "permission_denied_network_hint" = "Mixin 需要无线数据权限，请点击'设置'打开系统授权。";
-"permission_denied_photo_library" = "Mixin 需要相册权限，请点击'设置'打开系统授权。";
+"permission_denied_photos" = "授权写入相册";
+"permission_denied_photos_hint" = "Mixin 需要写入相册权限，请点击'设置'并调整授权。";
 "permissions" = "权限列表";
 "phone_as_key_shard" = "手机号将关联到由您管理的 MPC 钱包的一个密钥分片";
 "phone_call" = "电话呼叫";
@@ -1065,7 +1066,6 @@
 "photo_saved" = "图片已成功保存在相册";
 "photo_count" = "%d 张图片";
 "photos" = "照片";
-"pick_from_library" = "打开相册";
 "pin" = "PIN";
 "pin_change" = "修改 PIN";
 "pin_check_tip" = "定期输入 PIN 有助于记住该 PIN";

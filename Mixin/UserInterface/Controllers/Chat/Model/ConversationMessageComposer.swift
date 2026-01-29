@@ -1,5 +1,5 @@
 import Foundation
-import Photos
+import AVFoundation
 import MixinServices
 
 final class ConversationMessageComposer {
@@ -11,15 +11,6 @@ final class ConversationMessageComposer {
     var expireIn: Int64
     
     private(set) var opponentApp: App?
-    
-    private lazy var thumbnailRequestOptions: PHImageRequestOptions = {
-        let options = PHImageRequestOptions()
-        options.deliveryMode = .fastFormat
-        options.resizeMode = .fast
-        options.isNetworkAccessAllowed = false
-        options.isSynchronous = true
-        return options
-    }()
     
     init(queue: DispatchQueue, conversationId: String, isGroup: Bool, ownerUser: UserItem?, expireIn: Int64) {
         self.queue = queue
@@ -293,40 +284,6 @@ final class ConversationMessageComposer {
             } catch {
                 showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
             }
-        }
-    }
-    
-    func send(asset: PHAsset, quoteMessageId: String?) {
-        let conversationId = self.conversationId
-        let ownerUser = self.ownerUser
-        let app = self.opponentApp
-        let isGroupMessage = self.isGroup
-        let options = self.thumbnailRequestOptions
-        let expireIn = self.expireIn
-        queue.async {
-            assert(asset.mediaType == .image || asset.mediaType == .video)
-            let assetMediaTypeIsImage = asset.mediaType == .image
-            let category: MessageCategory = assetMediaTypeIsImage ? .SIGNAL_IMAGE : .SIGNAL_VIDEO
-            var message = Message.createMessage(category: category.rawValue,
-                                                conversationId: conversationId,
-                                                userId: myUserId)
-            message.mediaStatus = MediaStatus.PENDING.rawValue
-            message.mediaLocalIdentifier = asset.localIdentifier
-            message.mediaWidth = asset.pixelWidth
-            message.mediaHeight = asset.pixelHeight
-            message.quoteMessageId = quoteMessageId
-            if assetMediaTypeIsImage {
-                message.mediaMimeType = asset.isGif ? "image/gif" : "image/jpeg"
-            } else {
-                message.mediaMimeType = "video/mp4"
-            }
-            let thumbnailSize = CGSize(width: 48, height: 48)
-            PHImageManager.default().requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: options) { (image, info) in
-                if let image = image {
-                    message.thumbImage = image.blurHash()
-                }
-            }
-            SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage, expireIn: expireIn)
         }
     }
     

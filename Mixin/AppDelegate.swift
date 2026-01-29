@@ -1,5 +1,4 @@
 import UIKit
-import AVFoundation
 import WebKit
 import StoreKit
 import FirebaseCore
@@ -132,7 +131,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let item = pendingShortcutItem, let itemType = UIApplicationShortcutItem.ItemType(rawValue: item.type) {
             switch itemType {
             case .scanQrCode:
-                pushCameraViewController()
+                pushQRCodeScannerViewController()
             case .wallet:
                 showWalletViewController()
             case .myQrCode:
@@ -381,36 +380,18 @@ extension AppDelegate {
 
 extension AppDelegate {
     
-    private func pushCameraViewController() {
+    private func pushQRCodeScannerViewController() {
         guard let navigationController = UIApplication.homeNavigationController else {
             return
         }
-        
-        func push() {
-            if navigationController.viewControllers.last is CameraViewController {
-               return
-            }
-            let vc = CameraViewController.instance()
-            vc.asQrCodeScanner = true
-            navigationController.pushViewController(withBackRoot: vc)
+        if navigationController.viewControllers.last is QRCodeScannerViewController {
+            return
         }
-        
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            push()
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted) in
-                guard granted else {
-                    return
-                }
-                DispatchQueue.main.async {
-                    push()
-                }
-            })
-        case .denied, .restricted:
-            navigationController.alertSettings(R.string.localizable.permission_denied_camera_hint())
-        @unknown default:
-            navigationController.alertSettings(R.string.localizable.permission_denied_camera_hint())
+        VideoCaptureDevice.checkAuthorization {
+            let scanner = QRCodeScannerViewController()
+            navigationController.pushViewController(withBackRoot: scanner)
+        } onDenied: { alert in
+            navigationController.present(alert, animated: true)
         }
     }
     

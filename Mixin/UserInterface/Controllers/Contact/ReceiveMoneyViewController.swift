@@ -60,7 +60,7 @@ final class ReceiveMoneyViewController: UIViewController {
     }
     
     @IBAction func scan(_ sender: Any) {
-        UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
+        UIApplication.homeNavigationController?.pushQRCodeScannerViewController()
     }
     
     @IBAction func setAmount(_ sender: Any) {

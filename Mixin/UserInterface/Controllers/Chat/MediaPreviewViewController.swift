@@ -1,10 +1,15 @@
+import AVFoundation
 import UIKit
-import Photos
+import UniformTypeIdentifiers
 import SDWebImage
-import CoreServices
 import MixinServices
 
 final class MediaPreviewViewController: UIViewController {
+    
+    enum Resource {
+        case provider(NSItemProvider)
+        case image(UIImage)
+    }
     
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var contentView: UIView!
@@ -19,7 +24,8 @@ final class MediaPreviewViewController: UIViewController {
     
     weak var conversationInputViewController: ConversationInputViewController?
     
-    private var lastRequestId: PHImageRequestID?
+    private let resource: Resource
+    
     private var asset: Asset?
     private var playerView: PlayerView?
     private var playerObservation: NSKeyValueObservation?
@@ -30,45 +36,54 @@ final class MediaPreviewViewController: UIViewController {
         layer.backgroundColor = UIColor.white.cgColor
         return layer
     }()
-    private lazy var imageRequestOptions: PHImageRequestOptions = {
-        let options = PHImageRequestOptions()
-        options.version = .current
-        options.deliveryMode = .opportunistic
-        options.isNetworkAccessAllowed = true
-        return options
-    }()
-    private lazy var offlineVideoRequestOptions: PHVideoRequestOptions = {
-        let options = PHVideoRequestOptions()
-        options.isNetworkAccessAllowed = false
-        options.version = .current
-        options.deliveryMode = .mediumQualityFormat
-        options.progressHandler = nil
-        return options
-    }()
-    private lazy var onlineVideoRequestOptions: PHVideoRequestOptions = {
-        let options = PHVideoRequestOptions()
-        options.isNetworkAccessAllowed = true
-        options.version = .current
-        options.deliveryMode = .mediumQualityFormat
-        options.progressHandler = nil
-        return options
-    }()
+    
+    init(resource: Resource) {
+        self.resource = resource
+        let nib = R.nib.mediaPreviewView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+        transitioningDelegate = BackgroundDismissablePopupPresentationManager.shared
+        modalPresentationStyle = .custom
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
+    }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    static func canLoad(itemProvider: NSItemProvider) -> Bool {
+        itemProvider.hasItemConformingToTypeIdentifier(UTType.gif.identifier)
+            || itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier)
+            || itemProvider.canLoadObject(ofClass: UIImage.self)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.autoPlayAnimatedImage = true
         activityIndicator.style = .large
+        activityIndicator.startAnimating()
+        switch resource {
+        case .provider(let provider):
+            load(itemProvider: provider)
+        case .image(let rawImage):
+            DispatchQueue.global().async { [weak self] in
+                let image = ImageUploadSanitizer.sanitizedImage(from: rawImage).image
+                DispatchQueue.main.async {
+                    if let image {
+                        self?.load(image: image)
+                    } else {
+                        showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_share_content())
+                        self?.presentingViewController?.dismiss(animated: true, completion: nil)
+                    }
+                }
+            }
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let id = lastRequestId {
-            PHImageManager.default().cancelImageRequest(id)
-        }
         playerView?.layer.player?.rate = 0
         playerObservation?.invalidate()
     }
@@ -100,8 +115,6 @@ final class MediaPreviewViewController: UIViewController {
             mute = false
         }
         switch asset {
-        case .phAsset(let asset):
-            requestAndPlay(asset: asset, mute: mute)
         case .video(let url):
             playVideo(at: url, mute: mute)
         default:
@@ -116,8 +129,6 @@ final class MediaPreviewViewController: UIViewController {
     @IBAction func sendAction(_ sender: Any) {
         dismiss(animated: true, completion: nil)
         switch asset {
-        case let .phAsset(asset):
-            conversationInputViewController?.send(asset: asset)
         case let .image(image):
             conversationInputViewController?.send(image: image)
         case let .video(url):
@@ -140,44 +151,51 @@ final class MediaPreviewViewController: UIViewController {
         }
     }
     
-    func load(asset: PHAsset) {
-        self.asset = .phAsset(asset)
-        loadViewIfNeeded()
-        activityIndicator.startAnimating()
-        let targetSize = imageView.bounds.size * UIScreen.main.scale
-        lastRequestId = PHImageManager.default().requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: imageRequestOptions) { [weak self] (image, info) in
-            guard let weakSelf = self, let image = image else {
-                return
-            }
-            if asset.mediaType == .image {
-                let assetPixelSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
-                weakSelf.updateImageViewSizeForImages(with: assetPixelSize)
-            } else {
-                weakSelf.updateImageViewSizeForVideos()
-            }
-            weakSelf.imageView.image = image
-            weakSelf.lastRequestId = nil
-            weakSelf.activityIndicator.stopAnimating()
-            weakSelf.playButton.isHidden = asset.mediaType != .video
-            weakSelf.view.layoutIfNeeded()
-            if asset.isGif {
-                if let id = weakSelf.lastRequestId {
-                    PHImageManager.default().cancelImageRequest(id)
-                }
-                weakSelf.loadAnimatedImage(asset: asset)
-            }
+    @objc private func playerItemDidPlayToEndTime() {
+        AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: true)
+        DispatchQueue.main.async {
+            self.seekToZeroBeforePlay = true
         }
     }
     
-    func canLoad(itemProvider: NSItemProvider) -> Bool {
-        itemProvider.hasItemConformingToTypeIdentifier(UTType.gif.identifier)
-            || itemProvider.hasItemConformingToTypeIdentifier(UTType.movie.identifier)
-            || itemProvider.canLoadObject(ofClass: UIImage.self)
+}
+
+extension MediaPreviewViewController: AudioSessionClient {
+    
+    var priority: AudioSessionClientPriority {
+        .playback
     }
     
-    func load(itemProvider: NSItemProvider) {
-        loadViewIfNeeded()
-        activityIndicator.startAnimating()
+    func audioSessionDidBeganInterruption(_ audioSession: AudioSession, reason: AudioSession.InterruptionReason) {
+        pauseAction(audioSession)
+    }
+    
+}
+
+extension MediaPreviewViewController {
+    
+    private enum Asset {
+        case gif(URL, UIImage)
+        case video(URL)
+        case image(UIImage)
+    }
+    
+    enum Error: Swift.Error {
+        case loadFileRepresentation(Swift.Error?)
+        case copyItem(Swift.Error)
+    }
+    
+    private func load(image: UIImage) {
+        asset = .image(image)
+        let assetPixelSize = image.size * image.scale
+        updateImageViewSizeForImages(with: assetPixelSize)
+        imageView.image = image
+        activityIndicator.stopAnimating()
+        playButton.isHidden = true
+        view.layoutIfNeeded()
+    }
+    
+    private func load(itemProvider: NSItemProvider) {
         if itemProvider.hasItemConformingToTypeIdentifier(UTType.gif.identifier) {
             copyFile(from: itemProvider, identifier: UTType.gif.identifier) { _ in
                 FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ExtensionName.gif.withDot)
@@ -221,71 +239,21 @@ final class MediaPreviewViewController: UIViewController {
             }
         } else if itemProvider.canLoadObject(ofClass: UIImage.self) {
             itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (rawImage, error) in
-                guard
-                    let rawImage = rawImage as? UIImage,
-                    let image = ImageUploadSanitizer.sanitizedImage(from: rawImage).image
-                else {
-                    if let error = error {
-                        reporter.report(error: error)
-                    }
-                    DispatchQueue.main.async {
-                        guard let self = self else {
-                            return
-                        }
-                        showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_share_content())
-                        self.dismiss(animated: true, completion: nil)
-                    }
-                    return
+                let sanitizedImage: UIImage? = if let rawImage = rawImage as? UIImage {
+                    ImageUploadSanitizer.sanitizedImage(from: rawImage).image
+                } else {
+                    nil
                 }
                 DispatchQueue.main.async {
-                    guard let self = self else {
-                        return
+                    if let sanitizedImage {
+                        self?.load(image: sanitizedImage)
+                    } else {
+                        showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_share_content())
+                        self?.presentingViewController?.dismiss(animated: true, completion: nil)
                     }
-                    self.asset = .image(image)
-                    let assetPixelSize = image.size * image.scale
-                    self.updateImageViewSizeForImages(with: assetPixelSize)
-                    self.imageView.image = image
-                    self.activityIndicator.stopAnimating()
-                    self.playButton.isHidden = true
-                    self.view.layoutIfNeeded()
                 }
             }
         }
-    }
-    
-    @objc private func playerItemDidPlayToEndTime() {
-        AudioSession.shared.deactivateAsynchronously(client: self, notifyOthersOnDeactivation: true)
-        DispatchQueue.main.async {
-            self.seekToZeroBeforePlay = true
-        }
-    }
-    
-}
-
-extension MediaPreviewViewController: AudioSessionClient {
-    
-    var priority: AudioSessionClientPriority {
-        .playback
-    }
-    
-    func audioSessionDidBeganInterruption(_ audioSession: AudioSession, reason: AudioSession.InterruptionReason) {
-        pauseAction(audioSession)
-    }
-    
-}
-
-extension MediaPreviewViewController {
-    
-    private enum Asset {
-        case phAsset(PHAsset)
-        case gif(URL, UIImage)
-        case video(URL)
-        case image(UIImage)
-    }
-    
-    enum Error: Swift.Error {
-        case loadFileRepresentation(Swift.Error?)
-        case copyItem(Swift.Error)
     }
     
     // The completion is only called on success
@@ -343,45 +311,6 @@ extension MediaPreviewViewController {
         }
     }
     
-    private func requestAndPlay(asset: PHAsset, mute: Bool) {
-        playButton.isHidden = true
-        if let player = playerView?.layer.player {
-            if seekToZeroBeforePlay {
-                player.seek(to: .zero)
-                seekToZeroBeforePlay = false
-            }
-            player.isMuted = mute
-            player.rate = 1
-        } else {
-            lastRequestId = PHImageManager.default().requestPlayerItem(forVideo: asset, options: offlineVideoRequestOptions) { [weak self] (item, info) in
-                let isCancelled = info?[PHImageCancelledKey] as? Bool ?? false
-                guard !isCancelled else {
-                    return
-                }
-                DispatchQueue.main.async {
-                    if let item = item {
-                        self?.play(item: item, mute: mute)
-                    } else {
-                        self?.requestRemoteVideoAssetAndPlay(asset: asset, mute: mute)
-                    }
-                }
-            }
-        }
-    }
-    
-    private func requestRemoteVideoAssetAndPlay(asset: PHAsset, mute: Bool) {
-        activityIndicator.startAnimating()
-        lastRequestId = PHImageManager.default().requestPlayerItem(forVideo: asset, options: onlineVideoRequestOptions) { [weak self] (item, info) in
-            let isCancelled = info?[PHImageCancelledKey] as? Bool ?? false
-            guard !isCancelled, let item = item else {
-                return
-            }
-            DispatchQueue.main.async {
-                self?.play(item: item, mute: mute)
-            }
-        }
-    }
-    
     private func play(item: AVPlayerItem, mute: Bool) {
         let playerView = PlayerView(frame: contentView.bounds)
         playerView.backgroundColor = .clear
@@ -419,18 +348,6 @@ extension MediaPreviewViewController {
                            object: item)
         
         player.play()
-    }
-    
-    private func loadAnimatedImage(asset: PHAsset) {
-        lastRequestId = PHImageManager.default().requestImageDataAndOrientation(for: asset, options: imageRequestOptions, resultHandler: { [weak self] (data, uti, orientation, info) in
-            guard let uti, let type = UTType(uti), type.conforms(to: .gif) else {
-                return
-            }
-            guard let data = data, let image = SDAnimatedImage(data: data) else {
-                return
-            }
-            self?.imageView.image = image
-        })
     }
     
     private func updateVideoThumbnailMaskLayer() {

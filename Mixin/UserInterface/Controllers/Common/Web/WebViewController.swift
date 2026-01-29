@@ -1,6 +1,5 @@
 import UIKit
 import WebKit
-import Photos
 import Alamofire
 import MixinServices
 
@@ -130,27 +129,28 @@ class WebViewController: FullscreenPopupViewController {
     
     private func presentAlertController(for image: UIImage) {
         let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        controller.addAction(UIAlertAction(title: R.string.localizable.save_to_camera_roll(), style: .default, handler: { (_) in
-            PHPhotoLibrary.checkAuthorization { (authorized) in
-                if authorized {
-                    PHPhotoLibrary.saveImageToLibrary(image: image)
+        controller.addAction(
+            UIAlertAction(
+                title: R.string.localizable.save_to_camera_roll(),
+                style: .default,
+                handler: { [weak self] (_) in
+                    PhotoLibrary.saveImage(source: .image(image)) { alert in
+                        self?.present(alert, animated: true)
+                    }
                 }
-            }
-        }))
-        
-        if let detector = qrCodeDetector, let cgImage = image.cgImage {
-            let ciImage = CIImage(cgImage: cgImage)
-            for case let feature as CIQRCodeFeature in detector.features(in: ciImage) {
-                guard let string = feature.messageString else {
-                    continue
-                }
-                controller.addAction(UIAlertAction(title: R.string.localizable.scan_qr_code(), style: .default, handler: { (_) in
-                    UrlWindow.checkQrCodeDetection(string: string, clearNavigationStack: false)
-                }))
-                break
-            }
+            )
+        )
+        if let string = QRCodeDetector.detectString(image: image) {
+            controller.addAction(
+                UIAlertAction(
+                    title: R.string.localizable.scan_qr_code(),
+                    style: .default,
+                    handler: { (_) in
+                        UrlWindow.checkQrCodeDetection(string: string, clearNavigationStack: false)
+                    }
+                )
+            )
         }
-        
         controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         self.present(controller, animated: true, completion: nil)
     }

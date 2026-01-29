@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="QRCodeScannerViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="gridMaskView" destination="PhC-oB-RgX" id="zHE-6t-B4l"/>
+                <outlet property="gridView" destination="Vfp-rY-NsO" id="j3h-xh-ihV"/>
+                <outlet property="hideScanningLineConstraint" destination="KWG-cH-J1F" id="pv1-wb-oR0"/>
+                <outlet property="navigationOverridesStatusBarConstraint" destination="Hdf-0H-xfF" id="5Lo-NV-iSL"/>
+                <outlet property="previewView" destination="Q1V-P2-Rzp" id="vPo-vI-sYX"/>
+                <outlet property="scanningLineView" destination="PfX-Oy-cuq" id="KbD-xg-MRD"/>
+                <outlet property="showScanningLineConstraint" destination="h9C-Ws-EDf" id="IP1-jh-y8l"/>
+                <outlet property="toolbarView" destination="Ljd-4a-vKe" id="gyj-Nn-xAW"/>
+                <outlet property="view" destination="olP-R2-vli" id="lpZ-XC-eTc"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="olP-R2-vli">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q1V-P2-Rzp" customClass="CaptureVideoPreviewView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SmV-hs-kdc" customClass="MediaPreviewMaskView" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.10000000000000001" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jvw-pQ-tAH" userLabel="Navigation View">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tZo-yM-SxV" customClass="BouncingButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
+                            <state key="normal" image="ic_camera_close"/>
+                            <connections>
+                                <action selector="backAction:" destination="-1" eventType="touchUpInside" id="L3K-iw-NNr"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="tZo-yM-SxV" firstAttribute="top" secondItem="jvw-pQ-tAH" secondAttribute="top" id="4zs-NI-jSJ"/>
+                        <constraint firstAttribute="height" constant="56" id="61l-nr-Lj8"/>
+                        <constraint firstItem="tZo-yM-SxV" firstAttribute="width" secondItem="jvw-pQ-tAH" secondAttribute="height" multiplier="1:1" id="Ner-BY-tBp"/>
+                        <constraint firstAttribute="bottom" secondItem="tZo-yM-SxV" secondAttribute="bottom" id="pbo-Zx-Yue"/>
+                        <constraint firstItem="tZo-yM-SxV" firstAttribute="leading" secondItem="jvw-pQ-tAH" secondAttribute="leading" id="yDi-dw-FP6"/>
+                    </constraints>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" spacing="54" translatesAutoresizingMaskIntoConstraints="NO" id="Ljd-4a-vKe">
+                    <rect key="frame" x="97.666666666666686" y="682" width="198" height="72"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JUh-TC-zzv">
+                            <rect key="frame" x="0.0" y="0.0" width="72" height="72"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="JUh-TC-zzv" secondAttribute="height" id="nnE-oe-Y2c"/>
+                            </constraints>
+                            <state key="normal" image="ic_camera_album"/>
+                            <connections>
+                                <action selector="albumAction:" destination="-1" eventType="touchUpInside" id="v8g-eV-oLQ"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t7k-wl-ZjQ">
+                            <rect key="frame" x="126" y="0.0" width="72" height="72"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="t7k-wl-ZjQ" secondAttribute="height" id="Rbs-0G-zVI"/>
+                            </constraints>
+                            <state key="normal" image="ic_scan_qr_code_torch"/>
+                            <connections>
+                                <action selector="changeFlashAction:" destination="-1" eventType="touchUpInside" id="iCJ-6o-94t"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="72" id="JAh-62-RWn"/>
+                    </constraints>
+                </stackView>
+                <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TSu-dz-67C" userLabel="QR Code Scanning View">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scan QR Code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y0Y-np-M9Y">
+                            <rect key="frame" x="20" y="136" width="353" height="21.666666666666657"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular18"/>
+                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="scan_qr_code"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wbl-pf-8By">
+                            <rect key="frame" x="74" y="303.66666666666669" width="245" height="245.00000000000006"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_scan_grid" translatesAutoresizingMaskIntoConstraints="NO" id="Vfp-rY-NsO" userLabel="Grid View">
+                                    <rect key="frame" x="0.0" y="0.0" width="245" height="242"/>
+                                </imageView>
+                                <view alpha="0.10000000149011612" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PhC-oB-RgX" userLabel="Grid Mask View">
+                                    <rect key="frame" x="0.0" y="-242.00000000000003" width="245" height="242"/>
+                                    <color key="backgroundColor" white="1" alpha="0.98999999999999999" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PfX-Oy-cuq" userLabel="Scanning Line View">
+                                    <rect key="frame" x="2" y="-58.000000000000028" width="241" height="58"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="58" id="0oV-H7-fEs"/>
+                                    </constraints>
+                                </view>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="PfX-Oy-cuq" firstAttribute="leading" secondItem="PhC-oB-RgX" secondAttribute="leading" constant="2" id="3dt-VD-8U4"/>
+                                <constraint firstItem="Vfp-rY-NsO" firstAttribute="top" secondItem="wbl-pf-8By" secondAttribute="top" id="4IA-hD-NqD"/>
+                                <constraint firstItem="PhC-oB-RgX" firstAttribute="centerX" secondItem="Vfp-rY-NsO" secondAttribute="centerX" id="CZO-hV-vGg"/>
+                                <constraint firstItem="PhC-oB-RgX" firstAttribute="bottom" secondItem="Vfp-rY-NsO" secondAttribute="top" priority="750" id="KWG-cH-J1F" userLabel="Hide Scanning Line View Constraint"/>
+                                <constraint firstItem="PfX-Oy-cuq" firstAttribute="bottom" secondItem="PhC-oB-RgX" secondAttribute="bottom" id="Lg3-UU-b3H"/>
+                                <constraint firstAttribute="bottom" secondItem="Vfp-rY-NsO" secondAttribute="bottom" constant="3" id="OSG-uq-SnM"/>
+                                <constraint firstAttribute="trailing" secondItem="Vfp-rY-NsO" secondAttribute="trailing" id="Uh7-l6-WXr"/>
+                                <constraint firstItem="Vfp-rY-NsO" firstAttribute="leading" secondItem="wbl-pf-8By" secondAttribute="leading" id="agK-rk-GcB"/>
+                                <constraint firstItem="PhC-oB-RgX" firstAttribute="width" secondItem="Vfp-rY-NsO" secondAttribute="width" id="btt-38-0Nt"/>
+                                <constraint firstItem="PhC-oB-RgX" firstAttribute="bottom" secondItem="Vfp-rY-NsO" secondAttribute="bottom" priority="250" constant="58" id="h9C-Ws-EDf" userLabel="Show Scanning Line View Constraint"/>
+                                <constraint firstItem="PfX-Oy-cuq" firstAttribute="trailing" secondItem="PhC-oB-RgX" secondAttribute="trailing" constant="-2" id="wzj-SG-lJ2"/>
+                                <constraint firstItem="PhC-oB-RgX" firstAttribute="height" secondItem="Vfp-rY-NsO" secondAttribute="height" id="z0Z-Gi-ddS"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="32"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_qr_code_border" translatesAutoresizingMaskIntoConstraints="NO" id="Mly-YF-nVD">
+                            <rect key="frame" x="72" y="301.66666666666669" width="249" height="249.00000000000006"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="Mly-YF-nVD" secondAttribute="height" id="SAf-pL-X5N"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.10000000000000001" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="y0Y-np-M9Y" secondAttribute="trailing" constant="20" id="671-1r-qET"/>
+                        <constraint firstItem="wbl-pf-8By" firstAttribute="top" secondItem="Mly-YF-nVD" secondAttribute="top" constant="2" id="8wp-U6-rHX"/>
+                        <constraint firstItem="Mly-YF-nVD" firstAttribute="leading" secondItem="TSu-dz-67C" secondAttribute="leading" constant="72" id="DhR-gw-m5a"/>
+                        <constraint firstAttribute="trailing" secondItem="Mly-YF-nVD" secondAttribute="trailing" constant="72" id="HeH-Pi-02D"/>
+                        <constraint firstItem="wbl-pf-8By" firstAttribute="bottom" secondItem="Mly-YF-nVD" secondAttribute="bottom" constant="-2" id="Jyb-o0-QPd"/>
+                        <constraint firstItem="y0Y-np-M9Y" firstAttribute="leading" secondItem="TSu-dz-67C" secondAttribute="leading" constant="20" id="PHf-Ff-pRB"/>
+                        <constraint firstItem="Mly-YF-nVD" firstAttribute="centerY" secondItem="TSu-dz-67C" secondAttribute="centerY" id="QNI-vG-1ED"/>
+                        <constraint firstItem="wbl-pf-8By" firstAttribute="trailing" secondItem="Mly-YF-nVD" secondAttribute="trailing" constant="-2" id="fjR-27-Nse"/>
+                        <constraint firstItem="wbl-pf-8By" firstAttribute="leading" secondItem="Mly-YF-nVD" secondAttribute="leading" constant="2" id="oRS-Eo-FRW"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="pIG-5x-HYF"/>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="pIG-5x-HYF" firstAttribute="bottom" secondItem="Ljd-4a-vKe" secondAttribute="bottom" constant="30" id="0dA-Jr-Jqu"/>
+                <constraint firstAttribute="top" secondItem="TSu-dz-67C" secondAttribute="top" id="5J2-Lv-AQd"/>
+                <constraint firstItem="Ljd-4a-vKe" firstAttribute="centerX" secondItem="pIG-5x-HYF" secondAttribute="centerX" id="6DT-lP-8PZ"/>
+                <constraint firstAttribute="bottom" secondItem="Q1V-P2-Rzp" secondAttribute="bottom" id="7fm-aA-Gfi"/>
+                <constraint firstItem="Q1V-P2-Rzp" firstAttribute="top" secondItem="olP-R2-vli" secondAttribute="top" id="85O-YC-pNx"/>
+                <constraint firstItem="pIG-5x-HYF" firstAttribute="trailing" secondItem="jvw-pQ-tAH" secondAttribute="trailing" id="9va-Yc-EeA"/>
+                <constraint firstItem="TSu-dz-67C" firstAttribute="leading" secondItem="pIG-5x-HYF" secondAttribute="leading" id="DpS-aR-e1s"/>
+                <constraint firstAttribute="bottom" secondItem="TSu-dz-67C" secondAttribute="bottom" id="Gz5-jo-xno"/>
+                <constraint firstItem="jvw-pQ-tAH" firstAttribute="top" secondItem="olP-R2-vli" secondAttribute="top" priority="750" id="Hdf-0H-xfF" userLabel="Navigation Overrides Status Bar Constraint"/>
+                <constraint firstAttribute="trailing" secondItem="SmV-hs-kdc" secondAttribute="trailing" id="SkG-2e-YT6"/>
+                <constraint firstAttribute="bottom" secondItem="SmV-hs-kdc" secondAttribute="bottom" id="TdO-WG-7kJ"/>
+                <constraint firstItem="Q1V-P2-Rzp" firstAttribute="leading" secondItem="pIG-5x-HYF" secondAttribute="leading" id="UEv-RZ-T4Z"/>
+                <constraint firstItem="pIG-5x-HYF" firstAttribute="trailing" secondItem="TSu-dz-67C" secondAttribute="trailing" id="aH6-CE-hRZ"/>
+                <constraint firstItem="jvw-pQ-tAH" firstAttribute="leading" secondItem="pIG-5x-HYF" secondAttribute="leading" id="cLg-df-m89"/>
+                <constraint firstItem="jvw-pQ-tAH" firstAttribute="top" secondItem="pIG-5x-HYF" secondAttribute="top" priority="500" id="dCu-bg-ZgW"/>
+                <constraint firstItem="SmV-hs-kdc" firstAttribute="leading" secondItem="olP-R2-vli" secondAttribute="leading" id="dLT-Ez-UFZ"/>
+                <constraint firstItem="y0Y-np-M9Y" firstAttribute="top" secondItem="pIG-5x-HYF" secondAttribute="top" constant="18" id="khA-Fq-zbv"/>
+                <constraint firstItem="SmV-hs-kdc" firstAttribute="top" secondItem="olP-R2-vli" secondAttribute="top" id="sMx-Xk-mBo"/>
+                <constraint firstItem="pIG-5x-HYF" firstAttribute="trailing" secondItem="Q1V-P2-Rzp" secondAttribute="trailing" id="tA3-PV-280"/>
+            </constraints>
+            <point key="canvasLocation" x="-581" y="154"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_camera_album" width="26" height="23"/>
+        <image name="ic_camera_close" width="20" height="20"/>
+        <image name="ic_qr_code_border" width="93" height="92.333335876464844"/>
+        <image name="ic_scan_grid" width="230" height="230"/>
+        <image name="ic_scan_qr_code_torch" width="30.333333969116211" height="32"/>
+    </resources>
+</document>

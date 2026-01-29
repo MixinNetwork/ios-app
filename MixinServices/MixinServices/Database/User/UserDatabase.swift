@@ -155,7 +155,6 @@ public final class UserDatabase: Database {
             .init(key: .mediaDigest, constraints: "BLOB"),
             .init(key: .mediaStatus, constraints: "TEXT"),
             .init(key: .mediaWaveform, constraints: "BLOB"),
-            .init(key: .mediaLocalIdentifier, constraints: "TEXT"),
             .init(key: .thumbImage, constraints: "TEXT"),
             .init(key: .thumbUrl, constraints: "TEXT"),
             .init(key: .status, constraints: "TEXT NOT NULL"),
@@ -970,6 +969,13 @@ public final class UserDatabase: Database {
         
         migrator.registerMigration("swap_orders_2") { db in
             try db.execute(sql: "DROP TABLE IF EXISTS `swap_orders`")
+        }
+        
+        migrator.registerMigration("photos") { db in
+            let columns = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(messages)").map(\.name)
+            if columns.contains("media_local_id") {
+                try db.execute(sql: "ALTER TABLE messages DROP COLUMN media_local_id")
+            }
         }
         
         return migrator

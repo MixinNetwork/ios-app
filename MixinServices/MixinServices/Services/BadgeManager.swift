@@ -3,6 +3,8 @@ import Foundation
 public final class BadgeManager {
     
     public enum Identifier: String, CaseIterable {
+        case walletTab = "wallet_tab"
+        case moreTab = "more_tab"
         case walletSwitch = "wallet_switch"
         case addWallet = "add_wallet"
         case buy = "buying"

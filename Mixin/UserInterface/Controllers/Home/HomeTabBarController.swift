@@ -128,18 +128,9 @@ final class HomeTabBarController: UIViewController {
     }
     
     @objc private func reloadItemBadges() {
-        let hasUnviewedWalletItem = [.walletSwitch, .trade, .buy, .addWallet]
-            .lazy
-            .map(BadgeManager.shared.hasViewed(identifier:))
-            .contains(false)
-        let hasUnviewedMoreItem = [.buy, .trade, .membership]
-            .lazy
-            .map(BadgeManager.shared.hasViewed(identifier:))
-            .contains(false)
-        
         var items = tabBar.items
-        items[ChildID.wallet.rawValue].badge = hasUnviewedWalletItem
-        items[ChildID.more.rawValue].badge = hasUnviewedMoreItem
+        items[ChildID.wallet.rawValue].badge = !BadgeManager.shared.hasViewed(identifier: .walletTab)
+        items[ChildID.more.rawValue].badge = !BadgeManager.shared.hasViewed(identifier: .moreTab)
         tabBar.items = items
     }
     
@@ -161,10 +152,12 @@ final class HomeTabBarController: UIViewController {
             newChild = homeViewController
         case .wallet:
             newChild = walletContainerViewController
+            BadgeManager.shared.setHasViewed(identifier: .walletTab)
         case .market:
             newChild = marketDashboardViewController
         case .more:
             newChild = exploreViewController
+            BadgeManager.shared.setHasViewed(identifier: .moreTab)
         }
         
         if let currentChild = selectedViewController {

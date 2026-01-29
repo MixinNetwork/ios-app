@@ -64,10 +64,11 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
                 let senders = transaction.filteredSenders
                 let receivers = transaction.filteredReceivers
                 let count = min(3, senders.count + receivers.count)
+                let rowStyle: RowStackView.Style = count == 1 ? .singleTransfer : .multipleTransfer
                 loadRowViews(count: count)
                 for i in 0..<count {
                     let row = rowViews[i]
-                    row.style = .multipleTransfer
+                    row.style = rowStyle
                     if i < receivers.count {
                         let receiver = receivers[i]
                         row.amountLabel.text = receiver.localizedAmount

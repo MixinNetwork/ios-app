@@ -71,7 +71,6 @@
 		7B1D7BA51FBE944E00FDA52C /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */; };
 		7B1F5371219D3B90006D6983 /* RoundCornerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1F5370219D3B90006D6983 /* RoundCornerSelectionView.swift */; };
 		7B21782122C4E70B00C08106 /* OggOpusPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B21782022C4E70B00C08106 /* OggOpusPlayer.swift */; };
-		7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B23FEA42229538B00F912EC /* PhotoInputAlbumCell.swift */; };
 		7B2636D5224E2A7E0057116D /* InfiniteTopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2636D4224E2A7E0057116D /* InfiniteTopView.swift */; };
 		7B280DEE22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B280DED22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift */; };
 		7B28FA12201195A10023B28D /* StickerMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FA11201195A10023B28D /* StickerMessageCell.swift */; };
@@ -1838,7 +1837,6 @@
 		7B1D7BA41FBE944E00FDA52C /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
 		7B1F5370219D3B90006D6983 /* RoundCornerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundCornerSelectionView.swift; sourceTree = "<group>"; };
 		7B21782022C4E70B00C08106 /* OggOpusPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OggOpusPlayer.swift; sourceTree = "<group>"; };
-		7B23FEA42229538B00F912EC /* PhotoInputAlbumCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInputAlbumCell.swift; sourceTree = "<group>"; };
 		7B2636D4224E2A7E0057116D /* InfiniteTopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteTopView.swift; sourceTree = "<group>"; };
 		7B280DED22B120A90084E49E /* PhoneNumberLoginVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberLoginVerificationCodeViewController.swift; sourceTree = "<group>"; };
 		7B28FA11201195A10023B28D /* StickerMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickerMessageCell.swift; sourceTree = "<group>"; };
@@ -6020,7 +6018,6 @@
 				7BD7534D2182CDCE00BAC172 /* IconPrefixedTextMessageCell.swift */,
 				949569A5263B12FE00E043FE /* TranscriptMessageCell.swift */,
 				7BEE5350222D0E5C008D3911 /* ConversationExtensionCell.swift */,
-				7B23FEA42229538B00F912EC /* PhotoInputAlbumCell.swift */,
 				7BD344082334CE12005C26E3 /* UserHandleCell.swift */,
 				7B369211233B5153007321A7 /* SharedMediaCell.swift */,
 				7B8BB58D234F34FE00991ACB /* SharedMediaAudioCell.xib */,
@@ -8316,7 +8313,6 @@
 				94735E282E28EBF80001C179 /* ImportedWalletNetworkCell.swift in Sources */,
 				946CB9B62E9F69650099FFCB /* LoadContactCommonWalletAddressViewController.swift in Sources */,
 				943A28082B878FCE0050929A /* TIPNodeResponseError+Localization.swift in Sources */,
-				7B23FEA52229538B00F912EC /* PhotoInputAlbumCell.swift in Sources */,
 				94F35B872D2818B2001BCAE7 /* InvoicePreviewViewController.swift in Sources */,
 				94B7B6DE26B43581000B0AC5 /* SilentNotificationMessagePreviewViewController.swift in Sources */,
 				7B37B16323ED483D00590215 /* GalleryTransitionFromNonQuotingMessageCellView.swift in Sources */,

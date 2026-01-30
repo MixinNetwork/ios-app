@@ -64,18 +64,6 @@ extension URL {
 }
 
 extension URL {
-
-    func getMimeType() -> String? {
-        guard let extUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as CFString, nil) else {
-            return nil
-        }
-
-        guard let mimeUTI = UTTypeCopyPreferredTagWithClass(extUTI.takeUnretainedValue(), kUTTagClassMIMEType) else {
-            return nil
-        }
-
-        return String(mimeUTI.takeUnretainedValue())
-    }
     
     func suffix(base: URL) -> String {
         return String(path.suffix(path.count - base.path.count))

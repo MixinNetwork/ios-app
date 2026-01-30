@@ -272,7 +272,7 @@ extension StaticMessagesViewController {
                 guard let appId = appCard.appID, !appId.isEmpty, case let .v0(content) = appCard else {
                     return
                 }
-                DispatchQueue.global().async { [weak self] in
+                DispatchQueue.global().async {
                     var app = AppDAO.shared.getApp(appId: appId)
                     if app == nil {
                         if case let .success(response) = UserAPI.showUser(userId: appId) {
@@ -280,7 +280,7 @@ extension StaticMessagesViewController {
                             app = response.app
                         }
                     }
-                    guard let self = self, let app = app else {
+                    guard let app else {
                         return
                     }
                     DispatchQueue.main.async {

@@ -53,7 +53,7 @@ extension WalletDisplayCategory {
                     true
                 case .common(let wallet):
                     wallet.category.knownCase != .watchAddress
-                case .safe(let vault):
+                case .safe:
                     false
                 }
             },

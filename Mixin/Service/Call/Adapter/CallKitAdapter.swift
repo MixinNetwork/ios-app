@@ -178,7 +178,7 @@ extension CallKitAdapter: CXProviderDelegate {
                         let session = RTCAudioSession.sharedInstance()
                         session.lockForConfiguration()
                         let config: RTCAudioSessionConfiguration = .webRTC()
-                        config.categoryOptions = [.allowBluetoothA2DP, .allowBluetooth, .allowAirPlay]
+                        config.categoryOptions = [.allowBluetoothA2DP, .allowBluetoothHFP, .allowAirPlay]
                         try? session.setConfiguration(config)
                         session.unlockForConfiguration()
                         semaphore.signal()

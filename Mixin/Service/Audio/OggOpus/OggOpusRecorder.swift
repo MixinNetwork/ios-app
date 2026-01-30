@@ -101,9 +101,11 @@ final class OggOpusRecorder {
             }
             do {
                 try AudioSession.shared.activate(client: self) { (session) in
-                    try session.setCategory(.playAndRecord,
-                                            mode: .default,
-                                            options: [.allowBluetooth])
+                    try session.setCategory(
+                        .playAndRecord,
+                        mode: .default,
+                        options: [.allowBluetoothHFP]
+                    )
                     try session.setAllowHapticsAndSystemSoundsDuringRecording(true)
                     try session.setPreferredIOBufferDuration(0.005)
                 }

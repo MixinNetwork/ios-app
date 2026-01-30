@@ -36,7 +36,7 @@ class RingtonePlayer {
         stop()
         let audioSession = AudioSession.shared.avAudioSession
         let options: AVAudioSession.CategoryOptions = [
-            .duckOthers, .allowBluetooth, .allowBluetoothA2DP, .allowAirPlay
+            .duckOthers, .allowBluetoothHFP, .allowBluetoothA2DP, .allowAirPlay
         ]
         let player: AVAudioPlayer?
         switch ringtone {

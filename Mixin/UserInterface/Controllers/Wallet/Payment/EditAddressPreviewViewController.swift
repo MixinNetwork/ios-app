@@ -113,7 +113,7 @@ final class EditAddressPreviewViewController: AuthenticationPreviewViewControlle
                 }
             }
         case .delete(let id):
-            AddressAPI.delete(addressID: id, pin: pin) { [assetID=token.assetID] result in
+            AddressAPI.delete(addressID: id, pin: pin) { result in
                 self.canDismissInteractively = true
                 self.savedAddress = nil
                 switch result {

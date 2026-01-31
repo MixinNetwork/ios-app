@@ -7,7 +7,7 @@ protocol ConversationInputInteractiveResizableViewController {
     var interactiveResizableScrollView: UIScrollView { get }
 }
 
-class ConversationInputViewController: UIViewController {
+final class ConversationInputViewController: UIViewController {
     
     typealias Quote = (message: MessageItem, thumbnail: UIImage?)
     
@@ -157,6 +157,7 @@ class ConversationInputViewController: UIViewController {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        textView.imagePasteDelegate = self
         updateTextViewFonts()
         lastSelectedRange = textView.selectedRange
         lastTextCountWhenMentionRangeChanges = textView.text.count
@@ -834,6 +835,17 @@ extension ConversationInputViewController: UITextViewDelegate {
             // Ignore any selection change caused by text input
             detectAndReportMentionCandidateIfNeeded()
         }
+    }
+    
+}
+
+// MARK: - PHPickerViewControllerDelegate
+extension ConversationInputViewController: ConversationInputTextView.ImagePasteDelegate {
+    
+    func conversationInputTextView(_ view: ConversationInputTextView, didReceiveImage image: UIImage) {
+        let preview = MediaPreviewViewController(resource: .image(image))
+        preview.conversationInputViewController = self
+        present(preview, animated: true, completion: nil)
     }
     
 }

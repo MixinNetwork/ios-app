@@ -1,21 +1,17 @@
 import UIKit
 import MixinServices
 
-class ConversationInputTextView: PlaceholderTextView {
+final class ConversationInputTextView: PlaceholderTextView {
     
-    weak var overrideNext: UIResponder?
+    protocol ImagePasteDelegate: AnyObject {
+        func conversationInputTextView(_ view: ConversationInputTextView, didReceiveImage image: UIImage)
+    }
+    
+    weak var imagePasteDelegate: ImagePasteDelegate?
     
     private(set) var isFloatingCursor = false
     private(set) var isFloatingCursorGoingForward = false
     private(set) var isFloatingCursorGoingBackward = false
-    
-    override var next: UIResponder? {
-        if let responder = overrideNext {
-            return responder
-        } else {
-            return super.next
-        }
-    }
     
     // Return the token from Mention.prefix to the caret
     // token is separated with space
@@ -52,11 +48,11 @@ class ConversationInputTextView: PlaceholderTextView {
         }
     }
     
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        if overrideNext != nil {
-            return false
+    override func paste(_ sender: Any?) {
+        if let image = UIPasteboard.general.image, let imagePasteDelegate {
+            imagePasteDelegate.conversationInputTextView(self, didReceiveImage: image)
         } else {
-            return super.canPerformAction(action, withSender: sender)
+            super.paste(sender)
         }
     }
     

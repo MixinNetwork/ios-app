@@ -30,18 +30,23 @@ enum GroupIconMaker {
         for participant in participants {
             var isSucceed = false
             if !participant.userAvatarUrl.isEmpty, let url = URL(string: participant.userAvatarUrl) {
-                SDWebImageManager.shared.loadImage(with: url, options: [], progress: nil, completed: { (image, _, error, _, _, _) in
-                    if error == nil, let image = image {
-                        avatars.append(.image(image))
-                        isSucceed = true
-                    } else {
-                        let worthReporting = (error as? URLError)?.worthReporting ?? true
-                        if worthReporting {
-                            reporter.report(error: MixinError.loadAvatar(url: url, error: error))
+                SDWebImageManager.shared.loadImage(
+                    with: url,
+                    options: [.retryFailed], // `retryFailed` disabled the blacklisting behavior which produces many reports
+                    progress: nil,
+                    completed: { (image, _, error, _, _, _) in
+                        if error == nil, let image = image {
+                            avatars.append(.image(image))
+                            isSucceed = true
+                        } else {
+                            let worthReporting = (error as? URLError)?.worthReporting ?? true
+                            if worthReporting {
+                                reporter.report(error: MixinError.loadAvatar(url: url, error: error))
+                            }
                         }
+                        semaphore.signal()
                     }
-                    semaphore.signal()
-                })
+                )
                 semaphore.wait()
             } else {
                 let index = participant.userId.positiveHashCode() % UIColor.avatarBackgroundColors.count

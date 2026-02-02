@@ -305,6 +305,9 @@ final class WalletSummaryViewController: UIViewController {
                 self.pages = pages
                 self.secretAvailableWalletIDs = secretAvailableWalletIDs
                 self.unexpiredPlan = LoginManager.shared.account?.membership?.unexpiredPlan
+                if pages[self.selectedCategory] == nil {
+                    self.selectedCategory = .all
+                }
                 self.collectionView.reloadData()
                 if let item = pages.keys.firstIndex(of: self.selectedCategory) {
                     let indexPath = IndexPath(item: item, section: Section.walletCategories.rawValue)

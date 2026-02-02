@@ -278,6 +278,14 @@ public final class AccountAPI: MixinAPI {
         }
     }
     
+    public static func verify(pin: String) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            verify(pin: pin) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+    
     static func updatePIN(request pinRequest: PINRequest) async throws -> Account {
         try await withCheckedThrowingContinuation { continuation in
             request(method: .post, path: Path.updatePin, parameters: pinRequest, options: .disableRetryOnRequestSigningTimeout) { result in

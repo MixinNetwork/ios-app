@@ -68,6 +68,7 @@ final class AddWalletPINValidationViewController: ErrorReportingPINValidationVie
                             self.navigationController?.pushViewController(replacingCurrent: input, animated: true)
                         }
                     case .watch:
+                        try await AccountAPI.verify(pin: pin)
                         await MainActor.run {
                             let input = AddWalletInputAddressViewController()
                             self.navigationController?.pushViewController(replacingCurrent: input, animated: true)

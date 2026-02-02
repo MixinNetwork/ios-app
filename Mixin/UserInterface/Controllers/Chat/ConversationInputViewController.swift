@@ -839,7 +839,7 @@ extension ConversationInputViewController: UITextViewDelegate {
     
 }
 
-// MARK: - PHPickerViewControllerDelegate
+// MARK: - ConversationInputTextView.ImagePasteDelegate
 extension ConversationInputViewController: ConversationInputTextView.ImagePasteDelegate {
     
     func conversationInputTextView(_ view: ConversationInputTextView, didReceiveImage image: UIImage) {

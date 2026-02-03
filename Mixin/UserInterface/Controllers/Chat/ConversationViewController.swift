@@ -892,7 +892,7 @@ final class ConversationViewController: UIViewController {
                 vc.presentAsChild(of: self)
             } else if message.category.hasSuffix("_STICKER") {
                 conversationInputViewController.dismiss()
-                let vc = StickerPreviewViewController.instance(message: message)
+                let vc = StickerPreviewViewController(message: message)
                 vc.presentAsChild(of: self)
             } else {
                 conversationInputViewController.dismiss()

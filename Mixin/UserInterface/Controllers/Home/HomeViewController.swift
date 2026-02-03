@@ -137,7 +137,7 @@ final class HomeViewController: UIViewController {
             let alert = UIAlertController(title: R.string.localizable.setting_emergency_change_mobile(), message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: R.string.localizable.later(), style: .cancel, handler: nil))
             alert.addAction(UIAlertAction(title: R.string.localizable.change(), style: .default, handler: { (_) in
-                let verify = ChangeNumberPINValidationViewController()
+                let verify = VerifyMobileNumberPINValidationViewController(intent: .changeMobileNumber)
                 self.navigationController?.pushViewController(verify, animated: true)
             }))
             present(alert, animated: true, completion: nil)

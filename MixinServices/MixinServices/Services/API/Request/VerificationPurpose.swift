@@ -5,4 +5,5 @@ public enum VerificationPurpose: String {
     case anonymousSession = "ANONYMOUS_SESSION"
     case phone = "PHONE"
     case deactivate = "DEACTIVATED"
+    case none = "NONE"
 }

@@ -302,10 +302,14 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
     func walletHeaderView(_ view: WalletHeaderView, didSelectAction action: TokenAction) {
         switch action {
         case .buy:
-            let buy = BuyTokenInputAmountViewController(wallet: .privacy)
             tableHeaderView.actionView.badgeActions.remove(.buy)
-            navigationController?.pushViewController(buy, animated: true)
             BadgeManager.shared.setHasViewed(identifier: .buy)
+            LoginManager.shared.account?.checkBuyTokenEligibility {
+                let buy = BuyTokenInputAmountViewController(wallet: .privacy)
+                navigationController?.pushViewController(buy, animated: true)
+            } onVerificationNeeded: { popup in
+                present(popup, animated: true)
+            }
         case .send:
             reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "wallet_home"])
             let selector = MixinTokenSelectorViewController(intent: .send)

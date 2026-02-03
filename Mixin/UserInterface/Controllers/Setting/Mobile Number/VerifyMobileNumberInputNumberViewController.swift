@@ -1,17 +1,17 @@
 import UIKit
 import MixinServices
 
-final class ChangeNumberNewNumberViewController: MobileNumberViewController {
+final class VerifyMobileNumberInputNumberViewController: MobileNumberViewController {
     
     private enum AccountError: Error {
         case invalidAnonymousSalt
     }
     
-    private var context: ChangeNumberContext
+    private var context: MobileNumberVerificationContext
     
     private lazy var captcha = Captcha(viewController: self)
     
-    init(context: ChangeNumberContext) {
+    init(context: MobileNumberVerificationContext) {
         self.context = context
         super.init()
     }
@@ -22,7 +22,21 @@ final class ChangeNumberNewNumberViewController: MobileNumberViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        textField.becomeFirstResponder()
+        switch context.intent {
+        case .periodicVerification:
+            callingCodeButton.isUserInteractionEnabled = false
+            textField.isUserInteractionEnabled = false
+            if let account = LoginManager.shared.account {
+                assert(!account.isAnonymous, "No periodic verification for anonymous numbers")
+                if let number = account.phone {
+                    let text = (textField.text ?? "") as NSString
+                    let range = NSRange(location: 0, length: text.length)
+                    _ = textField(textField, shouldChangeCharactersIn: range, replacementString: number)
+                }
+            }
+        case .changeMobileNumber:
+            textField.becomeFirstResponder()
+        }
     }
     
     override func continueToNext(_ sender: Any) {
@@ -66,10 +80,15 @@ final class ChangeNumberNewNumberViewController: MobileNumberViewController {
     
     override func updateViews(with country: Country) {
         super.updateViews(with: country)
-        if country == .anonymous {
-            titleLabel.text = R.string.localizable.enter_new_anonymous_number()
-        } else {
-            titleLabel.text = R.string.localizable.enter_new_phone_number()
+        switch context.intent {
+        case .periodicVerification:
+            titleLabel.text = R.string.localizable.confirm_your_mobile_number()
+        case .changeMobileNumber:
+            if country == .anonymous {
+                titleLabel.text = R.string.localizable.enter_new_anonymous_number()
+            } else {
+                titleLabel.text = R.string.localizable.enter_new_phone_number()
+            }
         }
     }
     
@@ -77,6 +96,7 @@ final class ChangeNumberNewNumberViewController: MobileNumberViewController {
         var context = self.context
         AccountAPI.phoneVerifications(
             phoneNumber: context.newNumber,
+            purpose: context.intent.verificationPurpose,
             base64Salt: base64Salt,
             captchaToken: token
         ) { [weak self] (result) in
@@ -87,8 +107,8 @@ final class ChangeNumberNewNumberViewController: MobileNumberViewController {
             case .success(let verification):
                 context.verificationID = verification.id
                 context.base64Salt = base64Salt
-                let vc = ChangeNumberVerificationCodeViewController(context: context)
-                self.navigationController?.pushViewController(vc, animated: true)
+                let oneTimeCode = VerifyMobileNumberOneTimeCodeViewController(context: context)
+                self.navigationController?.pushViewController(oneTimeCode, animated: true)
                 self.continueButton.isBusy = false
             case let .failure(.response(error)) where .requiresCaptcha ~= error:
                 self.captcha.validate(errorDescription: error.description) { [weak self] (result) in

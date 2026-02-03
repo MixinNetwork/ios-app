@@ -119,9 +119,13 @@ final class ExploreViewController: UIViewController {
     func perform(action: ExploreAction) {
         switch action {
         case .buy:
-            let buy = BuyTokenInputAmountViewController(wallet: .privacy)
-            navigationController?.pushViewController(buy, animated: true)
             BadgeManager.shared.setHasViewed(identifier: .buy)
+            LoginManager.shared.account?.checkBuyTokenEligibility {
+                let buy = BuyTokenInputAmountViewController(wallet: .privacy)
+                navigationController?.pushViewController(buy, animated: true)
+            } onVerificationNeeded: { popup in
+                present(popup, animated: true)
+            }
         case .trade:
             reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "explore"])
             let trade = MixinTradeViewController(

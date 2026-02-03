@@ -29,10 +29,13 @@ class DiagnoseViewController: SettingsTableViewController {
             SettingsRow(title: "Web3", accessory: .disclosure),
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: R.string.localizable.clear_cache(), accessory: .disclosure),
+            SettingsRow(title: R.string.localizable.clear_cache()),
         ]),
         SettingsSection(rows: [
-            SettingsRow(title: "Reset View Badges", accessory: .disclosure),
+            SettingsRow(title: "Reset View Badges"),
+        ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Reset Tips"),
         ]),
     ])
     
@@ -114,8 +117,16 @@ extension DiagnoseViewController: UITableViewDelegate {
             AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip = false
             AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = false
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
-#if DEBUG
         case (10, 0):
+            AppGroupUserDefaults.appUpdateTipDismissalDate = nil
+            AppGroupUserDefaults.User.backupMnemonicsTipDismissalDate = nil
+            AppGroupUserDefaults.notificationTipDismissalDate = nil
+            AppGroupUserDefaults.User.recoveryContactTipDismissalDate = nil
+            AppGroupUserDefaults.appRatingRequestDate = nil
+            AppGroupUserDefaults.User.verifyPhoneTipDismissalDate = nil
+            showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
+#if DEBUG
+        case (11, 0):
             navigationController?.pushViewController(TIPDiagnosticViewController(), animated: true)
 #endif
         default:

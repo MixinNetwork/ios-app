@@ -77,13 +77,14 @@ extension VerificationRequest {
 
 extension VerificationRequest {
     
-    public static func changePhoneNumber(
+    public static func verifyPhoneNumber(
         phone: String,
+        purpose: VerificationPurpose,
         base64Salt: String,
         captchaToken: CaptchaToken?
     ) -> [String: Any] {
         var values: [String: Any] = generalValues
-        values["purpose"] = VerificationPurpose.phone.rawValue
+        values["purpose"] = purpose.rawValue
         values["phone"] = phone
         values["salt_base64"] = base64Salt
         if let pairs = captchaToken?.asVerificationParameters() {

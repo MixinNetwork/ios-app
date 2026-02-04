@@ -1,14 +1,8 @@
 import Foundation
 import MixinServices
 
-struct PhoneNumberVerificationContext {
+struct MobileNumberLoginContext {
     
-    enum Intent {
-        case signIn
-        case signUp
-    }
-    
-    let intent: Intent
     let phoneNumber: String
     let displayPhoneNumber: String
     let deactivation: Deactivation?

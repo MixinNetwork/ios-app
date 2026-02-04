@@ -1,13 +1,12 @@
 import UIKit
 
-class LoginInfoInputViewController: KeyboardBasedLayoutViewController {
+class LoginInfoInputViewController: UIViewController {
     
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var continueButton: StyledButton!
-    
-    @IBOutlet weak var continueButtonBottomConstraint: NSLayoutConstraint!
     
     var trimmedText: String {
         textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -19,17 +18,16 @@ class LoginInfoInputViewController: KeyboardBasedLayoutViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        textField.becomeFirstResponder()
+        contentStackView.setCustomSpacing(18, after: titleLabel)
         continueButton.setTitle(R.string.localizable.continue(), for: .normal)
         continueButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
         continueButton.style = .filled
         continueButton.applyDefaultContentInsets()
-        editingChangedAction(self)
-    }
-    
-    override func layout(for keyboardFrame: CGRect) {
-        continueButtonBottomConstraint.constant = keyboardFrame.height + 20
-        view.layoutIfNeeded()
+        continueButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
+                .offset(-20)
+                .priority(.high)
+        }
     }
     
     @IBAction func editingChangedAction(_ sender: Any) {

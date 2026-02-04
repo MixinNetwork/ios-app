@@ -59,7 +59,7 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
     @IBOutlet weak var subtitleLabel: UILabel!
     
     private let action: Action
-    private let confirmationSteps = 3
+    private let confirmationStepCount = 2
     
     private var isBusy = false {
         didSet {
@@ -109,12 +109,9 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
             case 0:
                 titleLabel.text = R.string.localizable.pin_confirm_hint()
                 subtitleLabel.text = R.string.localizable.pin_lost_hint()
-            case 1:
-                titleLabel.text = R.string.localizable.pin_confirm_again_hint()
-                subtitleLabel.text = R.string.localizable.third_pin_confirm_hint()
             default:
                 titleLabel.text = R.string.localizable.pin_confirm_again_hint()
-                subtitleLabel.text = R.string.localizable.fourth_pin_confirm_hint()
+                subtitleLabel.text = R.string.localizable.third_pin_confirm_hint()
             }
         }
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -161,7 +158,7 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
                 })
                 return
             }
-            if step == confirmationSteps - 1 {
+            if step == confirmationStepCount - 1 {
                 let action = TIPActionViewController(action: .create(pin: pin))
                 navigationController?.setViewControllers([action], animated: true)
             } else {
@@ -196,7 +193,7 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
                 })
                 return
             }
-            if step == confirmationSteps - 1 {
+            if step == confirmationStepCount - 1 {
                 let action: TIPActionViewController.Action
                 if fromLegacy {
                     action = .change(old: .legacy(old), new: new)

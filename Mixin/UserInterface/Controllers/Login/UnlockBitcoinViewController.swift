@@ -4,16 +4,7 @@ import MixinServices
 final class UnlockBitcoinViewController: UIViewController {
     
     @IBOutlet weak var mainTitleLabel: UILabel!
-    
-    @IBOutlet weak var featureTitleLabel0: UILabel!
-    @IBOutlet weak var featureDescriptionLabel0: UILabel!
-    
-    @IBOutlet weak var featureTitleLabel1: UILabel!
-    @IBOutlet weak var featureDescriptionLabel1: UILabel!
-    
-    @IBOutlet weak var featureTitleLabel2: UILabel!
-    @IBOutlet weak var featureDescriptionLabel2: UILabel!
-    
+    @IBOutlet weak var featureStackView: UIStackView!
     @IBOutlet weak var unlockButton: UIButton!
     
     init() {
@@ -28,38 +19,26 @@ final class UnlockBitcoinViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         mainTitleLabel.text = R.string.localizable.common_wallet_now_supports_btc()
-        let featureTitleLabels: [UILabel] = [
-            featureTitleLabel0,
-            featureTitleLabel1,
-            featureTitleLabel2,
+        
+        let featureItemViews = [
+            FeatureItemView(
+                image: R.image.feature_decentralize()!,
+                title: R.string.localizable.feature_decentralized(),
+                description: R.string.localizable.feature_decentralized_description()
+            ),
+            FeatureItemView(
+                image: R.image.feature_seamless()!,
+                title: R.string.localizable.feature_seamless(),
+                description: R.string.localizable.feature_seamless_description()
+            ),
+            FeatureItemView(
+                image: R.image.feature_compatibility()!,
+                title: R.string.localizable.feature_compatibility(),
+                description: R.string.localizable.feature_compatibility_description()
+            ),
         ]
-        let featureDescriptionLabels: [UILabel] = [
-            featureDescriptionLabel0,
-            featureDescriptionLabel1,
-            featureDescriptionLabel2,
-        ]
-        let featureTitles = [
-            R.string.localizable.feature_decentralized(),
-            R.string.localizable.feature_seamless(),
-            R.string.localizable.feature_compatibility(),
-        ]
-        let featureDescriptions = [
-            R.string.localizable.feature_decentralized_description(),
-            R.string.localizable.feature_seamless_description(),
-            R.string.localizable.feature_compatibility_description(),
-        ]
-        for i in 0..<3 {
-            featureTitleLabels[i].text = featureTitles[i]
-            featureTitleLabels[i].setFont(
-                scaledFor: .systemFont(ofSize: 16, weight: .medium),
-                adjustForContentSize: true
-            )
-            featureDescriptionLabels[i].text = featureDescriptions[i]
-            featureDescriptionLabels[i].setFont(
-                scaledFor: .systemFont(ofSize: 14),
-                adjustForContentSize: true
-            )
-        }
+        featureItemViews.forEach(featureStackView.addArrangedSubview(_:))
+        
         unlockButton.configuration?.attributedTitle = {
             var attributes = AttributeContainer()
             attributes.font = UIFontMetrics.default.scaledFont(

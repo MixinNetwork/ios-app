@@ -3,14 +3,50 @@ import MixinServices
 
 final class OnboardingViewController: UIViewController {
     
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var signUpButton: StyledButton!
     @IBOutlet weak var signInButton: StyledButton!
     @IBOutlet weak var versionLabel: UILabel!
     
-    @IBOutlet weak var imageViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var actionsBottomConstraint: NSLayoutConstraint!
+    
+    private let banners: [Banner] = [
+        Banner(
+            image: R.image.onboarding_mixin()!,
+            title: "Mixin",
+            description: R.string.localizable.onboarding_mixin_description(),
+        ),
+        Banner(
+            image: R.image.onboarding_decentralized()!,
+            title: R.string.localizable.onboarding_decentralized_title(),
+            description: R.string.localizable.onboarding_decentralized_description(),
+        ),
+        Banner(
+            image: R.image.onboarding_trade()!,
+            title: R.string.localizable.onboarding_trade_title(),
+            description: R.string.localizable.onboarding_trade_description(),
+        ),
+        Banner(
+            image: R.image.onboarding_privacy()!,
+            title: R.string.localizable.onboarding_privacy_title(),
+            description: R.string.localizable.onboarding_privacy_description(),
+        ),
+        Banner(
+            image: R.image.onboarding_recover()!,
+            title: R.string.localizable.onboarding_recover_title(),
+            description: R.string.localizable.onboarding_recover_description(),
+        ),
+        Banner(
+            image: R.image.onboarding_rewards()!,
+            title: R.string.localizable.onboarding_reward_title(),
+            description: R.string.localizable.onboarding_reward_description(),
+        ),
+    ]
+    
+    private let infiniteIllusionMultiplier = 7
+    
+    private var hasBannerScrolledToInitialPosition = false
     
     init() {
         Logger.redirectLogsToLogin = true
@@ -24,19 +60,31 @@ final class OnboardingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView.contentInsetAdjustmentBehavior = .never
+        collectionView.collectionViewLayout = { [banners, weak pageControl] in
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            let group = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
+            let section = NSCollectionLayoutSection(group: group)
+            section.visibleItemsInvalidationHandler = { visibleItems, scrollOffset, environment in
+                let location = Int(round(scrollOffset.x / environment.container.contentSize.width))
+                let page = ((location % banners.count) + banners.count) % banners.count
+                pageControl?.currentPage = page
+            }
+            let config = UICollectionViewCompositionalLayoutConfiguration()
+            config.scrollDirection = .horizontal
+            return UICollectionViewCompositionalLayout(section: section, configuration: config)
+        }()
+        collectionView.register(R.nib.onboardingBannerCell)
+        pageControl.numberOfPages = banners.count
         switch ScreenHeight.current {
         case .short:
-            imageViewTopConstraint.constant = 0
             actionsBottomConstraint.constant = 8
         case .medium:
-            imageViewTopConstraint.constant = 20
             actionsBottomConstraint.constant = 16
         case .long, .extraLong:
-            imageViewTopConstraint.constant = 40
             actionsBottomConstraint.constant = 38
         }
-        titleLabel.setFont(scaledFor: .systemFont(ofSize: 24, weight: .semibold), adjustForContentSize: true)
-        descriptionLabel.text = R.string.localizable.onboarding_description()
         signUpButton.setTitle(R.string.localizable.create_account(), for: .normal)
         signUpButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
         signUpButton.style = .filled
@@ -44,6 +92,10 @@ final class OnboardingViewController: UIViewController {
         signInButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
         signInButton.style = .tinted
         versionLabel.text = R.string.localizable.current_version(Bundle.main.fullVersion)
+        
+        collectionView.dataSource = self
+        collectionView.reloadData()
+        
         Logger.login.info(category: "Onboarding", message: "App \(Bundle.main.fullVersion) onboards, device: \(Device.current.machineName) \(ProcessInfo.processInfo.operatingSystemVersionString), id: \(Device.current.id)")
     }
     
@@ -52,14 +104,26 @@ final class OnboardingViewController: UIViewController {
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if !hasBannerScrolledToInitialPosition {
+            collectionView.scrollToItem(
+                at: IndexPath(item: infiniteIllusionMultiplier / 2 * banners.count, section: 0),
+                at: .centeredHorizontally,
+                animated: false
+            )
+            hasBannerScrolledToInitialPosition = true
+        }
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     @IBAction func signUp(_ sender: Any) {
-        let signup = SignUpViewController()
-        navigationController?.pushViewController(signup, animated: true)
+        let intro = CreateAccountIntroductionViewController()
+        present(intro, animated: true)
         Logger.login.info(category: "Onboarding", message: "Sign up")
     }
     
@@ -68,6 +132,33 @@ final class OnboardingViewController: UIViewController {
         navigationController?.pushViewController(mobileNumber, animated: true)
         Logger.login.info(category: "Onboarding", message: "Sign in")
         reporter.report(event: .loginStart)
+    }
+    
+}
+
+extension OnboardingViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        infiniteIllusionMultiplier * banners.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.onboarding_banner, for: indexPath)!
+        let banner = banners[indexPath.item % banners.count]
+        cell.imageView.image = banner.image
+        cell.titleLabel.text = banner.title
+        cell.descriptionLabel.text = banner.description
+        return cell
+    }
+    
+}
+
+extension OnboardingViewController {
+    
+    private struct Banner {
+        let image: UIImage
+        let title: String
+        let description: String
     }
     
 }

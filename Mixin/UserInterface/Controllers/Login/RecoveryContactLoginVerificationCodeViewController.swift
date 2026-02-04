@@ -5,7 +5,7 @@ final class RecoveryContactLoginVerificationCodeViewController: LoginVerificatio
     
     private let identityNumber: String
     
-    init(context: PhoneNumberVerificationContext, identityNumber: String) {
+    init(context: MobileNumberLoginContext, identityNumber: String) {
         self.identityNumber = identityNumber
         super.init(context: context)
     }

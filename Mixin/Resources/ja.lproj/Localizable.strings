@@ -62,7 +62,6 @@
 "admin" = "管理者";
 "advanced_trade" = "Advanced Trade";
 "agree_hint" = "%@と%@に同意し次へ進む";
-"albums" = "アルバム";
 "alert" = "Alert";
 "alert_frequency" = "Frequency";
 "alert_frequency_daily" = "Once a day";
@@ -1049,10 +1048,12 @@
 "pending_confirmations" = "%d/%d 承認";
 "pending_transaction_one" = "1 Pending Transaction";
 "pending_transactions_count" = "%d Pending Transactions";
-"permission_denied_camera_hint" = "設定からカメラの使用をMixinに許可してください";
+"permission_denied_camera" = "Camera Access Denied";
+"permission_denied_camera_hint" = "Mixin doesn't have permission to use your camera. Tap Settings to authorize.";
 "permission_denied_microphone_hint" = "設定からマイクの使用をMixinに許可してください";
 "permission_denied_network_hint" = "設定からワイヤレスデータの使用をMixinに許可してください";
-"permission_denied_photo_library" = "設定から画像ライブラリの使用をMixinに許可してください";
+"permission_denied_photos" = "Adding Photo Denied";
+"permission_denied_photos_hint" = "Mixin doesn't have permission to add photo to your library. Tap Settings to authorize.";
 "permissions" = "許可";
 "phone_as_key_shard" = "Your mobile number will be associated with a key shard of the MPC wallet managed by you";
 "phone_call" = "通話";
@@ -1065,7 +1066,6 @@
 "photo_saved" = "保存しました";
 "photo_count" = "%d写真";
 "photos" = "写真";
-"pick_from_library" = "ライブラリーから選択する";
 "pin" = "PINコード";
 "pin_change" = "PINコード変更";
 "pin_check_tip" = "安全のため、定期的にPINコードを確認します。";

@@ -155,7 +155,6 @@ public final class UserDatabase: Database {
             .init(key: .mediaDigest, constraints: "BLOB"),
             .init(key: .mediaStatus, constraints: "TEXT"),
             .init(key: .mediaWaveform, constraints: "BLOB"),
-            .init(key: .mediaLocalIdentifier, constraints: "TEXT"),
             .init(key: .thumbImage, constraints: "TEXT"),
             .init(key: .thumbUrl, constraints: "TEXT"),
             .init(key: .status, constraints: "TEXT NOT NULL"),

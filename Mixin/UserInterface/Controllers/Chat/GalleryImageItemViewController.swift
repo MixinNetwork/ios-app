@@ -1,6 +1,5 @@
 import UIKit
 import SDWebImage
-import Photos
 import MixinServices
 
 final class GalleryImageItemViewController: GalleryItemViewController {
@@ -172,7 +171,7 @@ final class GalleryImageItemViewController: GalleryItemViewController {
                 guard let self = self, self.item == item, let image = image else {
                     return
                 }
-                self.detectQRCode(for: item, image: image)
+                self.detectedUrl = QRCodeDetector.detectURL(image: image)
                 self.keepDisplayWakingUpIfNeeded(image: image)
                 self.imageView.startImageLiveTextAnalysisIfNeeded()
             }
@@ -203,17 +202,9 @@ final class GalleryImageItemViewController: GalleryItemViewController {
             showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_save_photo())
             return
         }
-        PHPhotoLibrary.shared().performChanges({
-            PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: url)
-        }, completionHandler: { (success, error) in
-            DispatchQueue.main.async {
-                if success {
-                    showAutoHiddenHud(style: .notification, text: R.string.localizable.photo_saved())
-                } else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_save_photo())
-                }
-            }
-        })
+        PhotoLibrary.saveImage(source: .url(url)) { alert in
+            self.present(alert, animated: true)
+        }
     }
     
     override func share() {
@@ -275,28 +266,6 @@ extension GalleryImageItemViewController: UIScrollViewDelegate {
 }
 
 extension GalleryImageItemViewController {
-    
-    private func detectQRCode(for item: GalleryItem, image: UIImage) {
-        guard let detector = qrCodeDetector, let cgImage = image.cgImage else {
-            return
-        }
-        DispatchQueue.global().async { [weak self] in
-            let ciImage = CIImage(cgImage: cgImage)
-            let features = detector.features(in: ciImage)
-            for case let feature as CIQRCodeFeature in features {
-                guard let string = feature.messageString, let url = URL(string: string) else {
-                    continue
-                }
-                DispatchQueue.main.async {
-                    guard let self = self, self.item == item else {
-                        return
-                    }
-                    self.detectedUrl = url
-                }
-                return
-            }
-        }
-    }
     
     private func keepDisplayWakingUpIfNeeded(image: UIImage) {
         guard isFocused else {

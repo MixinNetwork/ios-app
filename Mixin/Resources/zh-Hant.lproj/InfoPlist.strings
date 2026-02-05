@@ -1,7 +1,7 @@
 "CFBundleDisplayName" = "Mixin";
 "NSContactsUsageDescription" = "將您的聯絡人上傳至 Mixin 的伺服器，以便您更快速地與朋友們聯絡";
 "NSCameraUsageDescription" = "Mixin 需要訪問攝像頭的許可權來設定頭像或在聊天室裡給你的聯絡人傳送照片";
-"NSPhotoLibraryUsageDescription" = "Mixin 需要訪問相簿的許可權來設定頭像或在聊天室裡給你的聯絡人傳送照片";
+"NSPhotoLibraryAddUsageDescription" = "僅在您主動儲存時，Mixin 才會將聊天中的圖片、影片、二維碼及藏品圖片儲存到系統相簿";
 "NSMicrophoneUsageDescription" = "Mixin 使用你的麥克風錄製語音訊息發給你的聯絡人";
 "NSFaceIDUsageDescription" = "Mixin 使用面容識別來驗證支付";
 "NSLocationWhenInUseUsageDescription" = "允許獲取位置讓您可以在對話中傳送當前的位置或附近的地點";

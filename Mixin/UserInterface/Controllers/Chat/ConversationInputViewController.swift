@@ -1,5 +1,5 @@
 import UIKit
-import Photos
+import PhotosUI
 import MixinServices
 import QuickLook
 
@@ -7,7 +7,7 @@ protocol ConversationInputInteractiveResizableViewController {
     var interactiveResizableScrollView: UIScrollView { get }
 }
 
-class ConversationInputViewController: UIViewController {
+final class ConversationInputViewController: UIViewController {
     
     typealias Quote = (message: MessageItem, thumbnail: UIImage?)
     
@@ -41,7 +41,6 @@ class ConversationInputViewController: UIViewController {
     
     lazy var extensionViewController = R.storyboard.chat.extension()!
     lazy var stickersViewController = R.storyboard.chat.stickerInput()!
-    lazy var photoViewController = R.storyboard.chat.photoInput()!
     lazy var audioViewController = R.storyboard.chat.audioInput()!
     
     var detectsMentionToken = false
@@ -158,6 +157,7 @@ class ConversationInputViewController: UIViewController {
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        textView.imagePasteDelegate = self
         updateTextViewFonts()
         lastSelectedRange = textView.selectedRange
         lastTextCountWhenMentionRangeChanges = textView.text.count
@@ -324,7 +324,6 @@ class ConversationInputViewController: UIViewController {
         setRightAccessoryButton(stickersButton)
     }
     
-    // TODO: use view controller based web view and present it right here
     @IBAction func openOpponentAppAction(_ sender: Any) {
         guard let app = composer.opponentApp else {
             return
@@ -334,8 +333,12 @@ class ConversationInputViewController: UIViewController {
     }
     
     @IBAction func showPhotosAction(_ sender: Any) {
-        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-        handlePhotoAuthorizationStatus(status)
+        var config = PHPickerConfiguration(photoLibrary: .shared())
+        config.selectionLimit = 1
+        config.filter = nil
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = self
+        present(picker, animated: true, completion: nil)
     }
     
     @IBAction func sendTextMessageAction(_ sender: Any) {
@@ -440,11 +443,6 @@ class ConversationInputViewController: UIViewController {
         } else if height != .minimized {
             dismissCustomInput(minimize: true)
         }
-    }
-    
-    func send(asset: PHAsset) {
-        composer.send(asset: asset, quoteMessageId: quote?.message.messageId)
-        quote = nil
     }
     
     func send(image: UIImage) {
@@ -841,6 +839,37 @@ extension ConversationInputViewController: UITextViewDelegate {
     
 }
 
+// MARK: - ConversationInputTextView.ImagePasteDelegate
+extension ConversationInputViewController: ConversationInputTextView.ImagePasteDelegate {
+    
+    func conversationInputTextView(_ view: ConversationInputTextView, didReceiveImage image: UIImage) {
+        let preview = MediaPreviewViewController(resource: .image(image))
+        preview.conversationInputViewController = self
+        present(preview, animated: true, completion: nil)
+    }
+    
+}
+
+// MARK: - PHPickerViewControllerDelegate
+extension ConversationInputViewController: PHPickerViewControllerDelegate {
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.presentingViewController?.dismiss(animated: true) {
+            guard let provider = results.first?.itemProvider else {
+                return
+            }
+            guard MediaPreviewViewController.canLoad(itemProvider: provider) else {
+                showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_share_content())
+                return
+            }
+            let preview = MediaPreviewViewController(resource: .provider(provider))
+            preview.conversationInputViewController = self
+            self.present(preview, animated: true, completion: nil)
+        }
+    }
+    
+}
+
 // MARK: - SilentNotificationMessagePreviewViewControllerDelegate
 extension ConversationInputViewController: SilentNotificationMessagePreviewViewControllerDelegate {
     
@@ -1097,43 +1126,6 @@ extension ConversationInputViewController {
             let newHeight = preferredContentHeight - quotePreviewHeight
             quotePreviewWrapperHeightConstraint.constant = 0
             setPreferredContentHeight(newHeight, animated: true)
-        }
-    }
-    
-    private func loadPhotoInput() {
-        resignTextViewFirstResponderWithoutReportingContentHeightChange()
-        setPhotosButtonSelected(!photosButton.isSelected)
-        extensionsSwitch.isOn = false
-        setRightAccessoryButton(stickersButton)
-        if photosButton.isSelected {
-            loadCustomInputViewController(photoViewController)
-        } else {
-            dismissCustomInput(minimize: true)
-        }
-    }
-    
-    private func handlePhotoAuthorizationStatus(_ status: PHAuthorizationStatus) {
-        switch status {
-        case .limited:
-            DispatchQueue.main.async {
-                self.photoViewController.isAuthorizationLimited = true
-                self.loadPhotoInput()
-            }
-        case .authorized:
-            DispatchQueue.main.async {
-                self.photoViewController.isAuthorizationLimited = false
-                self.loadPhotoInput()
-            }
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization(handlePhotoAuthorizationStatus)
-        case .denied, .restricted:
-            DispatchQueue.main.async {
-                self.alertSettings(R.string.localizable.permission_denied_photo_library())
-            }
-        @unknown default:
-            DispatchQueue.main.async {
-                self.alertSettings(R.string.localizable.permission_denied_photo_library())
-            }
         }
     }
     

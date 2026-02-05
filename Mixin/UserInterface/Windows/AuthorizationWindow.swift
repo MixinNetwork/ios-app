@@ -108,7 +108,7 @@ extension AuthorizationWindow: AuthorizationScopeConfirmationViewDelegate {
                 self.loginSuccess = true
                 showAutoHiddenHud(style: .notification, text: R.string.localizable.authorized())
                 self.dismissPopupController(animated: true)
-                if UIApplication.homeNavigationController?.viewControllers.last is CameraViewController {
+                if UIApplication.homeNavigationController?.viewControllers.last is QRCodeScannerViewController {
                     UIApplication.homeNavigationController?.popViewController(animated: true)
                 }
                 UIApplication.shared.tryOpenThirdApp(response: response)

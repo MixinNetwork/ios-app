@@ -1,6 +1,6 @@
+import AVFoundation
 import UIKit
-import Photos
-import MobileCoreServices
+import UniformTypeIdentifiers
 import Intents
 import SDWebImage
 import SDWebImageLottieCoder

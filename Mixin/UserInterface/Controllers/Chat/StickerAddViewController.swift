@@ -1,38 +1,40 @@
 import CoreServices
 import UIKit
-import Photos
 import SDWebImage
 import MixinServices
 
-class StickerAddViewController: UIViewController {
+final class StickerAddViewController: UIViewController {
     
     enum Source {
         case message(MessageItem)
-        case asset(PHAsset)
         case image(UIImage)
     }
     
     @IBOutlet weak var previewImageView: SDAnimatedImageView!
     
+    private let source: Source
     private let minStickerLength: CGFloat = 128
     private let maxStickerLength: CGFloat = 1024
     private let minDataCount = bytesPerKiloByte
     private let maxDataCount = bytesPerMegaByte
     
-    private var source: Source?
     private var uploadPNGData = false
     
     private weak var rightBarButton: BusyButton?
     
-    class func instance(source: Source) -> UIViewController {
-        let vc = R.storyboard.chat.sticker_add()!
-        vc.source = source
-        vc.title = R.string.localizable.add_sticker()
-        return vc
+    init(source: Source) {
+        self.source = source
+        let nib = R.nib.stickerAddView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = R.string.localizable.add_sticker()
         navigationItem.rightBarButtonItem = .busyButton(
             title: R.string.localizable.save(),
             target: self,
@@ -62,42 +64,10 @@ class StickerAddViewController: UIViewController {
             } else {
                 // container's right button will keep disabled if no image is loaded
             }
-        case .asset(let asset):
-            let manager = PHImageManager.default()
-            let options = PHImageRequestOptions()
-            options.version = .current
-            options.deliveryMode = .opportunistic
-            options.isNetworkAccessAllowed = true
-            if asset.playbackStyle == .imageAnimated {
-                uploadPNGData = false
-                manager.requestImageDataAndOrientation(for: asset, options: options) { [weak self] (data, _, _, _) in
-                    guard let self = self, let data = data, let image = SDAnimatedImage(data: data) else {
-                        return
-                    }
-                    self.previewImageView.image = image
-                    self.rightBarButton?.isEnabled = true
-                }
-            } else {
-                if let type = asset.uniformType {
-                    uploadPNGData = type.conforms(to: .png)
-                } else {
-                    uploadPNGData = false
-                }
-                manager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: options) { [weak self] (image, _) in
-                    guard let self = self, let image = image else {
-                        return
-                    }
-                    self.previewImageView.image = image
-                    self.rightBarButton?.isEnabled = true
-                }
-            }
         case .image(let image):
             uploadPNGData = false
             previewImageView.image = image
             rightBarButton?.isEnabled = true
-        case .none:
-            assertionFailure("No image is loaded")
-            break
         }
     }
     

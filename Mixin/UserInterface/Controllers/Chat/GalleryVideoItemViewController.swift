@@ -1,6 +1,5 @@
 import UIKit
 import AVKit
-import Photos
 import MixinServices
 
 final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAnimatable {
@@ -259,21 +258,9 @@ final class GalleryVideoItemViewController: GalleryItemViewController, GalleryAn
             showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_save_video())
             return
         }
-        PHPhotoLibrary.shared().performChanges({
-            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
-        }, completionHandler: { (success, error) in
-            DispatchQueue.main.async {
-                if success {
-                    showAutoHiddenHud(style: .notification, text: R.string.localizable.saved())
-                } else {
-                    let alert = UIAlertController(title: R.string.localizable.unable_to_save_video(),
-                                                  message: error?.localizedDescription ?? "No description",
-                                                  preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: R.string.localizable.ok(), style: .cancel))
-                    self.present(alert, animated: true)
-                }
-            }
-        })
+        PhotoLibrary.saveVideo(url: url) { alert in
+            self.present(alert, animated: true)
+        }
     }
     
     override func willBeginInteractiveDismissal() {

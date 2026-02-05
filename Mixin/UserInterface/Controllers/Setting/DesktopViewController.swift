@@ -62,9 +62,8 @@ extension DesktopViewController: UITableViewDelegate {
             let authentication = AuthenticationViewController(intent: desktopSession)
             present(authentication, animated: true)
         } else {
-            let vc = CameraViewController.instance()
-            vc.asQrCodeScanner = true
-            navigationController?.pushViewController(vc, animated: true)
+            let scanner = QRCodeScannerViewController()
+            navigationController?.pushViewController(scanner, animated: true)
         }
     }
     

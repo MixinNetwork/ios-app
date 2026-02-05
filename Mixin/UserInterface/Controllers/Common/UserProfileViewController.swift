@@ -30,7 +30,7 @@ final class UserProfileViewController: ProfileViewController {
     }
     
     private lazy var deactivatedHintView = R.nib.accountDeactivatedHintView(withOwner: nil)!
-    private lazy var imagePicker = ImagePickerController(initialCameraPosition: .front, cropImageAfterPicked: true, parent: self, delegate: self)
+    private lazy var imagePicker = AvatarPickerController(parent: self, delegate: self)
     private lazy var footerLabel = FooterLabel()
     private lazy var expiredMessageItemView: ProfileMenuItemView  = {
         let view = ProfileMenuItemView()
@@ -239,10 +239,10 @@ extension UserProfileViewController: UIGestureRecognizerDelegate {
     
 }
 
-// MARK: - ImagePickerControllerDelegate
-extension UserProfileViewController: ImagePickerControllerDelegate {
+// MARK: - AvatarPickerControllerDelegate
+extension UserProfileViewController: AvatarPickerControllerDelegate {
     
-    func imagePickerController(_ controller: ImagePickerController, didPickImage image: UIImage) {
+    func avatarPickerController(_ controller: AvatarPickerController, didPickImage image: UIImage) {
         guard let avatarBase64 = image.imageByScaling(to: .avatar)?.asBase64Avatar() else {
             alert(R.string.localizable.failed_to_compose_avatar())
             return

@@ -84,7 +84,7 @@ class WalletViewController: UIViewController, MnemonicsBackupChecking {
     }
     
     @IBAction func scanQRCode() {
-        UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
+        UIApplication.homeNavigationController?.pushQRCodeScannerViewController()
     }
     
     @IBAction func moreAction(_ sender: Any) {

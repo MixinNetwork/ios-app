@@ -186,7 +186,7 @@ final class MarketDashboardViewController: UIViewController {
     }
     
     @objc private func scanQRCode(_ sender: Any) {
-        UIApplication.homeNavigationController?.pushCameraViewController(asQRCodeScanner: true)
+        UIApplication.homeNavigationController?.pushQRCodeScannerViewController()
     }
     
     @objc private func openSettings(_ sender: Any) {

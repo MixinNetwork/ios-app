@@ -1,7 +1,6 @@
 import UIKit
 import MobileCoreServices
 import AVKit
-import Photos
 import SDWebImage
 import MixinServices
 
@@ -105,8 +104,6 @@ final class ConversationViewController: UIViewController {
     private weak var pinMessageBannerViewIfLoaded: PinMessageBannerView?
     private weak var groupCallIndicatorViewIfLoaded: GroupCallIndicatorView?
     private weak var membershipButton: UIButton?
-    
-    private(set) lazy var imagePickerController = ImagePickerController(initialCameraPosition: .rear, cropImageAfterPicked: false, parent: self, delegate: self)
     
     private lazy var userHandleViewController = R.storyboard.chat.user_handle()!
     private lazy var multipleSelectionActionView = R.nib.multipleSelectionActionView(withOwner: self)!
@@ -1301,6 +1298,19 @@ final class ConversationViewController: UIViewController {
         conversationInputViewController.textView.replaceInputingMentionToken(with: user)
     }
     
+    func presentCamera() {
+        VideoCaptureDevice.checkAuthorization {
+            let picker = UIImagePickerController()
+            picker.mediaTypes = [UTType.image.identifier]
+            picker.delegate = self
+            picker.modalPresentationStyle = .overFullScreen
+            picker.sourceType = .camera
+            self.present(picker, animated: true)
+        } onDenied: { alert in
+            self.present(alert, animated: true)
+        }
+    }
+    
     func presentDocumentPicker() {
         let vc = UIDocumentPickerViewController(documentTypes: ["public.item", "public.content"], in: .import)
         vc.delegate = self
@@ -1341,16 +1351,6 @@ final class ConversationViewController: UIViewController {
             return
         }
         CallService.shared.makePeerCall(with: ownerUser)
-    }
-    
-    func pickPhotoOrVideoAction() {
-        PHPhotoLibrary.checkAuthorization { [weak self](authorized) in
-            guard authorized, let weakSelf = self else {
-                return
-            }
-            let picker = PhotoAssetPickerNavigationController.instance(pickerDelegate: weakSelf)
-            weakSelf.present(picker, animated: true, completion: nil)
-        }
     }
     
     func openOpponentApp(_ app: App) {
@@ -1816,14 +1816,28 @@ extension ConversationViewController: CoreTextLabelDelegate {
     
 }
 
-// MARK: - ImagePickerControllerDelegate
-extension ConversationViewController: ImagePickerControllerDelegate {
+// MARK: - UIImagePickerControllerDelegate
+extension ConversationViewController: UIImagePickerControllerDelegate {
     
-    func imagePickerController(_ controller: ImagePickerController, didPickImage image: UIImage) {
-        let previewViewController = AssetSendViewController.instance(image: image, composer: composer)
-        navigationController?.pushViewController(previewViewController, animated: true)
+    func imagePickerController(
+        _ picker: UIImagePickerController,
+        didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]
+    ) {
+        picker.presentingViewController?.dismiss(animated: true) {
+            guard let image = info[.originalImage] as? UIImage else {
+                return
+            }
+            let preview = MediaPreviewViewController(resource: .image(image))
+            preview.conversationInputViewController = self.conversationInputViewController
+            self.present(preview, animated: true)
+        }
     }
     
+}
+
+// MARK: - UINavigationControllerDelegate
+extension ConversationViewController: UINavigationControllerDelegate {
+    // Required by UIImagePickerController for no reason
 }
 
 // MARK: - UIDocumentPickerDelegate
@@ -1890,15 +1904,6 @@ extension ConversationViewController: GalleryViewControllerDelegate {
             cell.contentImageWrapperView.layoutIfNeeded()
         }
         setCell(ofMessageId: item.messageId, contentViewHidden: false)
-    }
-    
-}
-
-// MARK: - PhotoAssetPickerDelegate
-extension ConversationViewController: PhotoAssetPickerDelegate {
-    
-    func pickerController(_ picker: PickerViewController, contentOffset: CGPoint, didFinishPickingMediaWithAsset asset: PHAsset) {
-        navigationController?.pushViewController(AssetSendViewController.instance(asset: asset, composer: composer), animated: true)
     }
     
 }
@@ -2054,7 +2059,7 @@ extension ConversationViewController {
                     }
                 })
             } else {
-                let vc = StickerAddViewController.instance(source: .message(message))
+                let vc = StickerAddViewController(source: .message(message))
                 navigationController?.pushViewController(vc, animated: true)
             }
         case .report:

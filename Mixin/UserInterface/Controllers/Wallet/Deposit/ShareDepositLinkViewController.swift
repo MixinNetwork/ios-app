@@ -1,5 +1,4 @@
 import UIKit
-import Photos
 import MixinServices
 
 final class ShareDepositLinkViewController: ShareViewAsPictureViewController {
@@ -78,22 +77,8 @@ final class ShareDepositLinkViewController: ShareViewAsPictureViewController {
     
     override func savePhoto(_ sender: Any) {
         let image = makeImage()
-        PHPhotoLibrary.checkAuthorization { (isAuthorized) in
-            guard isAuthorized else {
-                return
-            }
-            PHPhotoLibrary.shared().performChanges {
-                PHAssetChangeRequest.creationRequestForAsset(from: image)
-            } completionHandler: { success, error in
-                DispatchQueue.main.async {
-                    self.close(sender)
-                    if success {
-                        showAutoHiddenHud(style: .notification, text: R.string.localizable.photo_saved())
-                    } else {
-                        showAutoHiddenHud(style: .error, text: R.string.localizable.unable_to_save_photo())
-                    }
-                }
-            }
+        PhotoLibrary.saveImage(source: .image(image)) { alert in
+            self.present(alert, animated: true)
         }
     }
     

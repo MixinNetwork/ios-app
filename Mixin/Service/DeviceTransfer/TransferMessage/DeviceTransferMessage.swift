@@ -125,7 +125,6 @@ struct DeviceTransferMessage {
                        mediaDigest: mediaDigest,
                        mediaStatus: mediaStatus,
                        mediaWaveform: mediaWaveform,
-                       mediaLocalIdentifier: nil,
                        thumbImage: thumbImage,
                        thumbUrl: thumbUrl,
                        status: MessageStatus.READ.rawValue,

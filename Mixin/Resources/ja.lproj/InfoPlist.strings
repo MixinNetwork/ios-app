@@ -1,7 +1,7 @@
 "CFBundleDisplayName" = "Mixin";
 "NSContactsUsageDescription" = "連絡先をMixinにアップロードすることで、友だちと簡単に繋がる事ができます。";
 "NSCameraUsageDescription" = "カメラは、プロフィール画像の設定、写真の共有に使用されます。";
-"NSPhotoLibraryUsageDescription" = "アルバムは、プロフィール画像の設定、画像の共有に使用されます。";
+"NSPhotoLibraryAddUsageDescription" = "Mixinは、あなたが保存を選択した場合にのみ、チャット内の画像‧動画‧QRコードおよびInscription画像をフォトライブラリに保存します。";
 "NSMicrophoneUsageDescription" = "マイクは、通話やボイスメッセージに使用されます。";
 "NSFaceIDUsageDescription" = "Face IDでの支払いを許可";
 "NSLocationWhenInUseUsageDescription" = "位置情報へのアクセスは、位置情報の共有に使用されます。";

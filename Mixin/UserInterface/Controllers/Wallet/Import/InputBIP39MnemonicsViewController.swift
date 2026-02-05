@@ -91,8 +91,7 @@ class InputBIP39MnemonicsViewController: InputMnemonicsViewController {
     }
     
     @objc private func scanQRCode(_ sender: Any) {
-        let scanner = CameraViewController.instance()
-        scanner.asQrCodeScanner = true
+        let scanner = QRCodeScannerViewController()
         scanner.delegate = self
         navigationController?.pushViewController(scanner, animated: true)
     }
@@ -208,9 +207,9 @@ class InputBIP39MnemonicsViewController: InputMnemonicsViewController {
     
 }
 
-extension InputBIP39MnemonicsViewController: CameraViewControllerDelegate {
+extension InputBIP39MnemonicsViewController: QRCodeScannerViewControllerDelegate {
     
-    func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
+    func qrCodeScannerViewController(_ controller: QRCodeScannerViewController, shouldRecognizeString string: String) -> Bool {
         let phrases = string.components(separatedBy: " ")
         input(phrases: phrases)
         return false

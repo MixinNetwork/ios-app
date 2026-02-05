@@ -90,8 +90,8 @@
 	<string>Turn on location services to send your current location or nearby places in conversation.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Mixin uses your microphone to record voice messages to share with your contacts.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Mixin uses the photo library to set profile photo, and send photo to your contact in chat.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Mixin will save chat images, videos, QR codes, and inscription images to your photo library only when you choose to do so</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Mixin uses the local network to transfer or restore your chat history.</string>
 	<key>NSUserActivityTypes</key>

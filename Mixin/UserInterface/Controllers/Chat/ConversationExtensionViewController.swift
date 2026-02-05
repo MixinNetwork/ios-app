@@ -101,7 +101,7 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
             switch ext {
             case .camera:
                 UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
-                conversationViewController?.imagePickerController.presentCamera()
+                conversationViewController?.presentCamera()
             case .file:
                 UIApplication.homeContainerViewController?.pipController?.pauseAction(self)
                 conversationViewController?.presentDocumentPicker()
@@ -123,7 +123,7 @@ extension ConversationExtensionViewController: UICollectionViewDelegate {
             }
         } else {
             let app = apps[indexPath.row - fixedExtensions.count].app
-            if let conversationId = composer?.conversationId, let parent = conversationViewController {
+            if let conversationId = composer?.conversationId {
                 UIApplication.homeContainerViewController?.presentWebViewController(context: .init(conversationId: conversationId, app: app))
             }
         }

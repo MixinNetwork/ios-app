@@ -36,8 +36,7 @@ extension RestoreFromPhoneViewController: UITableViewDelegate {
             }
             self.tableView.isUserInteractionEnabled = true
             if isAuthorized {
-                let controller = CameraViewController.instance()
-                controller.asQrCodeScanner = true
+                let controller = QRCodeScannerViewController()
                 self.navigationController?.pushViewController(controller, animated: true)
             } else {
                 Logger.general.info(category: "RestoreFromPhone", message: "LocalNetwork is not authorized")

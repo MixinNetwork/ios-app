@@ -115,8 +115,7 @@ class InputOnChainInfoViewController: UIViewController {
     }
     
     @IBAction func scanInput(_ sender: Any) {
-        let scanner = CameraViewController.instance()
-        scanner.asQrCodeScanner = true
+        let scanner = QRCodeScannerViewController()
         scanner.delegate = self
         navigationController?.pushViewController(scanner, animated: true)
     }
@@ -203,9 +202,9 @@ extension InputOnChainInfoViewController: UITextViewDelegate {
     
 }
 
-extension InputOnChainInfoViewController: CameraViewControllerDelegate {
+extension InputOnChainInfoViewController: QRCodeScannerViewControllerDelegate {
     
-    func cameraViewController(_ controller: CameraViewController, shouldRecognizeString string: String) -> Bool {
+    func qrCodeScannerViewController(_ controller: QRCodeScannerViewController, shouldRecognizeString string: String) -> Bool {
         inputTextView.text = string
         rearrangeInputButtons(controller)
         detectInput()

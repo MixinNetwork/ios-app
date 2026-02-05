@@ -494,8 +494,17 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
                 let container = parent as? WalletContainerViewController
                 container?.switchToWallet(wallet)
             case .safe(let wallet):
-                if let url = URL(string: wallet.uri) {
-                    _ = UrlWindow.checkUrl(url: url)
+                guard let url = URL(string: wallet.uri) else {
+                    return
+                }
+                let isOpened = UrlWindow.checkUrl(url: url)
+                if !isOpened, let container = UIApplication.homeContainerViewController {
+                    let context = MixinWebViewController.Context(
+                        conversationId: "",
+                        initialUrl: url,
+                        saveAsRecentSearch: false
+                    )
+                    container.presentWebViewController(context: context)
                 }
             }
         }

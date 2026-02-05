@@ -85,8 +85,13 @@ final class QuickAccessSearchResult {
                 self?.searchNumberRequest = nil
             }
         case let .link(url, _):
-            if let container = UIApplication.homeContainerViewController {
-                let context = MixinWebViewController.Context(conversationId: "", initialUrl: url, saveAsRecentSearch: true)
+            let isOpened = UrlWindow.checkUrl(url: url)
+            if !isOpened, let container = UIApplication.homeContainerViewController {
+                let context = MixinWebViewController.Context(
+                    conversationId: "",
+                    initialUrl: url,
+                    saveAsRecentSearch: true
+                )
                 container.presentWebViewController(context: context)
             }
             completion(nil)

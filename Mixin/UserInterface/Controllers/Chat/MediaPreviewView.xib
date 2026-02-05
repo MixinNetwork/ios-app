@@ -12,12 +12,14 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MediaPreviewViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="activityIndicator" destination="HVY-My-095" id="dFg-1S-cOB"/>
+                <outlet property="cancelButton" destination="ErO-9y-Msl" id="U2y-d7-htJ"/>
                 <outlet property="contentView" destination="tmp-u6-Pi8" id="u7g-JE-wP0"/>
                 <outlet property="imageView" destination="sOc-Vy-7M8" id="2rh-vm-faK"/>
                 <outlet property="minimalImageViewWidthConstraint" destination="OwH-x7-thC" id="M8z-dJ-rzX"/>
                 <outlet property="normalImageViewWidthConstraint" destination="4Gg-Bc-CoX" id="NEX-p4-nWa"/>
                 <outlet property="pauseButton" destination="EZt-YK-2ql" id="rcq-Bi-I1S"/>
                 <outlet property="playButton" destination="hqA-ai-PM9" id="cMP-uT-7ly"/>
+                <outlet property="sendButton" destination="Vg0-0H-ntI" id="cNC-4L-NPO"/>
                 <outlet property="stackView" destination="jXA-lC-KG3" id="AiX-Ht-q0a"/>
                 <outlet property="stackViewBottomConstraint" destination="ZlW-bs-GBi" id="hwz-Ge-o3s"/>
                 <outlet property="view" destination="bro-sj-jo6" id="2VM-Bl-xnk"/>
@@ -96,20 +98,21 @@
                                         <constraint firstAttribute="height" constant="1" id="hV5-gw-ksq"/>
                                     </constraints>
                                 </view>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vg0-0H-ntI">
+                                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vg0-0H-ntI">
                                     <rect key="frame" x="0.0" y="373" width="373" height="58"/>
                                     <color key="backgroundColor" name="background"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="58" id="m2T-cD-Hs7"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                    <color key="tintColor" name="theme"/>
                                     <state key="normal" title="Send">
                                         <color key="titleColor" red="0.23921568630000001" green="0.45882352939999999" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                     </state>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                        <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="send"/>
-                                    </userDefinedRuntimeAttributes>
+                                    <buttonConfiguration key="configuration" style="plain" title="Send">
+                                        <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="18"/>
+                                        <color key="baseForegroundColor" name="theme"/>
+                                    </buttonConfiguration>
                                     <connections>
                                         <action selector="sendAction:" destination="-1" eventType="touchUpInside" id="dp2-wI-UA1"/>
                                     </connections>
@@ -134,21 +137,25 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
-                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ErO-9y-Msl">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ErO-9y-Msl">
                             <rect key="frame" x="0.0" y="447" width="373" height="58"/>
-                            <color key="backgroundColor" name="background"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="58" id="Nu8-ng-9QC"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                            <state key="normal" title="Cancel"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                    <integer key="value" value="13"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="cancel"/>
-                            </userDefinedRuntimeAttributes>
+                            <color key="tintColor" name="theme"/>
+                            <state key="normal" title="Cancel">
+                                <color key="titleColor" name="theme"/>
+                            </state>
+                            <buttonConfiguration key="configuration" style="plain" title="Cancel" cornerStyle="fixed">
+                                <backgroundConfiguration key="background" cornerRadius="13">
+                                    <color key="backgroundColor" name="background"/>
+                                    <color key="strokeColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </backgroundConfiguration>
+                                <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="18"/>
+                                <color key="baseForegroundColor" name="theme"/>
+                            </buttonConfiguration>
                             <connections>
                                 <action selector="dismissAction:" destination="-1" eventType="touchUpInside" id="TZw-gH-kjP"/>
                             </connections>
@@ -174,6 +181,9 @@
         </namedColor>
         <namedColor name="line">
             <color red="0.89803921568627454" green="0.90588235294117647" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

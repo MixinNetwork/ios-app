@@ -17,6 +17,8 @@ final class MediaPreviewViewController: UIViewController {
     @IBOutlet weak var activityIndicator: ActivityIndicatorView!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var pauseButton: UIButton!
+    @IBOutlet weak var sendButton: UIButton!
+    @IBOutlet weak var cancelButton: UIButton!
     
     @IBOutlet weak var stackViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var minimalImageViewWidthConstraint: NSLayoutConstraint!
@@ -64,6 +66,21 @@ final class MediaPreviewViewController: UIViewController {
         imageView.autoPlayAnimatedImage = true
         activityIndicator.style = .large
         activityIndicator.startAnimating()
+        let buttonAttributes = {
+            var attributes = AttributeContainer()
+            attributes.font = UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 18, weight: .semibold)
+            )
+            return attributes
+        }()
+        sendButton.configuration?.attributedTitle = AttributedString(
+            R.string.localizable.send(),
+            attributes: buttonAttributes
+        )
+        cancelButton.configuration?.attributedTitle = AttributedString(
+            R.string.localizable.cancel(),
+            attributes: buttonAttributes
+        )
         switch resource {
         case .provider(let provider):
             load(itemProvider: provider)
@@ -127,6 +144,9 @@ final class MediaPreviewViewController: UIViewController {
     }
     
     @IBAction func sendAction(_ sender: Any) {
+        guard let asset else {
+            return
+        }
         dismiss(animated: true, completion: nil)
         switch asset {
         case let .image(image):
@@ -135,8 +155,6 @@ final class MediaPreviewViewController: UIViewController {
             conversationInputViewController?.moveAndSendVideo(at: url)
         case let .gif(url, image):
             conversationInputViewController?.moveAndSendGifImage(at: url, image: image)
-        case .none:
-            break
         }
     }
     
@@ -192,6 +210,7 @@ extension MediaPreviewViewController {
         imageView.image = image
         activityIndicator.stopAnimating()
         playButton.isHidden = true
+        sendButton.isEnabled = true
         view.layoutIfNeeded()
     }
     
@@ -213,6 +232,7 @@ extension MediaPreviewViewController {
                     self.imageView.image = image
                     self.activityIndicator.stopAnimating()
                     self.playButton.isHidden = true
+                    self.sendButton.isEnabled = true
                     self.view.layoutIfNeeded()
                 }
             }
@@ -234,6 +254,7 @@ extension MediaPreviewViewController {
                     self.imageView.image = thumbnail
                     self.activityIndicator.stopAnimating()
                     self.playButton.isHidden = false
+                    self.sendButton.isEnabled = true
                     self.view.layoutIfNeeded()
                 }
             }

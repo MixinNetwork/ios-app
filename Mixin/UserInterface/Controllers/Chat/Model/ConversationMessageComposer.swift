@@ -207,12 +207,13 @@ final class ConversationMessageComposer {
             guard image.saveToFile(path: url) else {
                 return
             }
+            let thumbnail = image.imageByScaling(to: .blurHashThumbnail) ?? image
             message.mediaStatus = MediaStatus.PENDING.rawValue
             message.mediaUrl = url.lastPathComponent
             message.mediaWidth = Int(image.size.width)
             message.mediaHeight = Int(image.size.height)
             message.quoteMessageId = quoteMessageId
-            message.thumbImage = image.blurHash()
+            message.thumbImage = thumbnail.blurHash()
             message.mediaMimeType = "image/jpeg"
             SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage, expireIn: expireIn)
         }
@@ -239,7 +240,8 @@ final class ConversationMessageComposer {
                 if let thumbnail = UIImage(withFirstFrameOfVideoAtURL: url) {
                     let thumbnailURL = AttachmentContainer.videoThumbnailURL(videoFilename: url.lastPathComponent)
                     thumbnail.saveToFile(path: thumbnailURL)
-                    message.thumbImage = thumbnail.blurHash()
+                    let blurHashThumbnail = thumbnail.imageByScaling(to: .blurHashThumbnail) ?? thumbnail
+                    message.thumbImage = blurHashThumbnail.blurHash()
                 } else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
                     return
@@ -274,11 +276,12 @@ final class ConversationMessageComposer {
             let url = AttachmentContainer.url(for: .photos, filename: filename)
             do {
                 try FileManager.default.moveItem(at: source, to: url)
+                let thumbnail = image.imageByScaling(to: .blurHashThumbnail) ?? image
                 message.mediaStatus = MediaStatus.PENDING.rawValue
                 message.mediaUrl = filename
                 message.mediaWidth = Int(image.size.width * image.scale)
                 message.mediaHeight = Int(image.size.height * image.scale)
-                message.thumbImage = image.blurHash()
+                message.thumbImage = thumbnail.blurHash()
                 message.mediaMimeType = "image/gif"
                 SendMessageService.shared.sendMessage(message: message, ownerUser: ownerUser, opponentApp: app, isGroupMessage: isGroupMessage, expireIn: expireIn)
             } catch {

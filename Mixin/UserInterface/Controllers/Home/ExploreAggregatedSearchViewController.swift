@@ -101,7 +101,7 @@ final class ExploreAggregatedSearchViewController: UIViewController, ExploreSear
     }
     
     @objc private func searchKeyword(_ sender: Any) {
-        guard let keyword = trimmedKeyword?.lowercased() else {
+        guard let keyword = trimmedKeyword else {
             queue.cancelAllOperations()
             quickAccess = nil
             lastKeyword = nil

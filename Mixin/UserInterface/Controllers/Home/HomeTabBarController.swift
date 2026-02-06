@@ -31,6 +31,7 @@ final class HomeTabBarController: UIViewController {
     
     private(set) weak var selectedViewController: UIViewController?
     
+    private let initialChild: ChildID
     private let tabBar = TabBar()
     
     private let homeViewController = R.storyboard.home.home()!
@@ -40,6 +41,15 @@ final class HomeTabBarController: UIViewController {
     private lazy var exploreViewController = ExploreViewController()
     
     private var needsUnlockBitcoin = false
+    
+    init(initialChild: ChildID) {
+        self.initialChild = initialChild
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,7 +111,7 @@ final class HomeTabBarController: UIViewController {
             }
         needsUnlockBitcoin = !bitcoinUnlockableWallets.isEmpty
         
-        switchToChildAfterValidated(with: .chat)
+        switchToChildAfterValidated(with: initialChild)
         
         NotificationCenter.default.addObserver(
             self,

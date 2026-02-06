@@ -562,6 +562,7 @@
 "enter_your_emergency_contact_mixin_id" = "請輸入恢復聯絡人的 Mixin ID";
 "enter_your_new_pin" = "輸入你的新 PIN";
 "enter_your_old_pin" = "輸入你的舊 PIN";
+"enter_your_phone_number" = "輸入你的手機號碼";
 "enter_your_pin" = "輸入你的 PIN";
 "enter_your_pin_to_continue" = "輸入你的 PIN 以繼續";
 "error_access_limited" = "錯誤 403：訪問受限";

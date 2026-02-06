@@ -83,7 +83,9 @@ final class VerifyMobileNumberInputNumberViewController: MobileNumberViewControl
         switch context.intent {
         case .periodicVerification:
             titleLabel.text = R.string.localizable.confirm_your_mobile_number()
-        case .addMobileNumber, .changeMobileNumber:
+        case .addMobileNumber:
+            titleLabel.text = R.string.localizable.enter_your_phone_number()
+        case .changeMobileNumber:
             if country == .anonymous {
                 titleLabel.text = R.string.localizable.enter_new_anonymous_number()
             } else {

@@ -26,15 +26,15 @@ class VerifyMobileNumberOneTimeCodeViewController: VerificationCodeViewControlle
         let codeCountMeetsRequirement = code.count == verificationCodeField.numberOfDigits
         continueButton.isHidden = !codeCountMeetsRequirement
         if !isBusy && codeCountMeetsRequirement {
-            changePhoneNumber()
+            verifyPhoneNumber()
         }
     }
     
     override func continueAction(_ sender: Any) {
-        changePhoneNumber()
+        verifyPhoneNumber()
     }
     
-    private func changePhoneNumber() {
+    private func verifyPhoneNumber() {
         let code = verificationCodeField.text
         let context = self.context
         let popBackAction = UIAlertAction(

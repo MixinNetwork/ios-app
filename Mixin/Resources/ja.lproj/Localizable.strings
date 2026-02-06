@@ -562,6 +562,7 @@
 "enter_your_emergency_contact_mixin_id" = "Enter your recovery contact Mixin ID";
 "enter_your_new_pin" = "Enter your new PIN";
 "enter_your_old_pin" = "Enter your old PIN";
+"enter_your_phone_number" = "電話番号を入力してください";
 "enter_your_pin" = "PINコードを入力してください";
 "enter_your_pin_to_continue" = "PINコードを入力して、続けてください";
 "error_access_limited" = "ERROR 403: Access Limited";
@@ -1053,7 +1054,7 @@
 "pending_confirmations" = "%d/%d 承認";
 "pending_transaction_one" = "1 Pending Transaction";
 "pending_transactions_count" = "%d Pending Transactions";
-"periodic_sms_verification_benefits" = "Periodic SMS verification helps improve account security. If your current phone number is no longer valid, please update it as soon as possible.";
+"periodic_sms_verification_benefits" = "Periodic SMS verification helps improve account security. If your current mobile number is no longer valid, please update it as soon as possible.";
 "permission_denied_camera" = "Camera Access Denied";
 "permission_denied_camera_hint" = "Mixin doesn't have permission to use your camera. Tap Settings to authorize.";
 "permission_denied_microphone_hint" = "設定からマイクの使用をMixinに許可してください";
@@ -1158,7 +1159,7 @@
 "recovery_contact" = "Recovery Contact";
 "recovery_kit" = "Recovery Kit";
 "recovery_kit_attention" = "Attention: The Recovery Kit cannot help you recover your PIN";
-"recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your phone number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
+"recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your mobile number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "red_up_green_down" = "Red Up / Green Down";
 "referral" = "Referral";
 "referral_banner" = "Invite friends and earn up to 60%% of their trading fees!";

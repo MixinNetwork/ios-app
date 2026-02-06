@@ -420,12 +420,8 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
         }
         switch action {
         case .buy:
-            LoginManager.shared.account?.checkBuyTokenEligibility {
-                let buy = BuyTokenInputAmountViewController(wallet: .common(wallet))
-                navigationController?.pushViewController(buy, animated: true)
-            } onVerificationNeeded: { popup in
-                present(popup, animated: true)
-            }
+            let buy = BuyTokenInputAmountViewController(wallet: .common(wallet))
+            navigationController?.pushViewController(buy, animated: true)
         case .send:
             let selector = Web3TokenSelectorViewController(
                 wallet: wallet,

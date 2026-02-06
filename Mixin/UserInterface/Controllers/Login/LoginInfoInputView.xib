@@ -38,10 +38,10 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="su9-vn-eaz">
-                            <rect key="frame" x="10" y="32" width="355" height="54"/>
+                            <rect key="frame" x="20" y="32" width="335" height="54"/>
                             <subviews>
                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gLK-0J-a7x">
-                                    <rect key="frame" x="16" y="0.0" width="323" height="54"/>
+                                    <rect key="frame" x="16" y="0.0" width="303" height="54"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                     <textInputTraits key="textInputTraits" returnKeyType="done" textContentType="name"/>
                                     <userDefinedRuntimeAttributes>
@@ -74,7 +74,7 @@
                         </label>
                     </subviews>
                     <constraints>
-                        <constraint firstItem="su9-vn-eaz" firstAttribute="width" secondItem="LMt-YL-8xb" secondAttribute="width" constant="-20" id="Puc-LA-2Ns"/>
+                        <constraint firstItem="su9-vn-eaz" firstAttribute="width" secondItem="LMt-YL-8xb" secondAttribute="width" constant="-40" id="Puc-LA-2Ns"/>
                         <constraint firstItem="dfP-M8-p02" firstAttribute="width" secondItem="LMt-YL-8xb" secondAttribute="width" constant="-72" id="V2T-Ya-pjg"/>
                         <constraint firstItem="Wqh-dr-T6I" firstAttribute="width" secondItem="LMt-YL-8xb" secondAttribute="width" constant="-72" id="fqK-ZU-UAE"/>
                     </constraints>

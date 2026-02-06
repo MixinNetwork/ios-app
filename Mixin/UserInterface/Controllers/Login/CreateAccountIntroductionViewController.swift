@@ -57,16 +57,14 @@ final class CreateAccountIntroductionViewController: UIViewController {
             return
         }
         presentingViewController.dismiss(animated: true) {
+            let mnemonics: MixinMnemonics? = if let entropy = AppGroupKeychain.mnemonics {
+                try? MixinMnemonics(entropy: entropy)
+            } else {
+                nil
+            }
+            let next = LoginWithMnemonicViewController(action: .signUp(mnemonics))
             var viewControllers = navigationController.viewControllers.filter { controller in
                 controller is OnboardingViewController
-            }
-            let next: UIViewController
-            if let entropy = AppGroupKeychain.mnemonics,
-               let mnemonics = try? MixinMnemonics(entropy: entropy)
-            {
-                next = LoginWithMnemonicViewController(action: .signIn(mnemonics))
-            } else {
-                next = LoginWithMnemonicViewController(action: .signUp)
             }
             viewControllers.append(next)
             navigationController.setViewControllers(viewControllers, animated: true)

@@ -18,6 +18,8 @@
 "add_emergency_contact" = "添加恢复联系人";
 "add_failed" = "添加失败";
 "add_mobile_number" = "添加手机号码";
+"add_mobile_number_reason" = "基于合规与安全原因，我们需要验证你的手机号码。";
+"add_now" = "立即添加";
 "add_or_remove_favorite_bots" = "添加或删除收藏的机器人";
 "add_participants" = "添加成员";
 "add_phone_desc" = "您可以通过手机号码登录您的帐户。手机号码将与您 MPC 钱包的密钥片段关联。完整的密钥仅存在于当前设备的 TEE 安全环境中。阅读文档以了解%@。";
@@ -124,7 +126,6 @@
 "all_conversations" = "所有会话";
 "all_dates" = "所有日期";
 "all_invoices" = "全部账单";
-"all_photos" = "所有照片";
 "all_signer_failure" = "所有节点失败";
 "all_time_high" = "历史最高";
 "all_time_low" = "历史最低";
@@ -346,6 +347,7 @@
 "confirm_signing_multisig" = "多签交易确认";
 "confirm_transfer" = "转账确认";
 "confirm_withdrawal" = "提现确认";
+"confirm_your_mobile_number" = "确认手机号码";
 "connect" = "连接";
 "connect_to_tip_network_failed" = "连接 TIP 网络失败，请尝试切换网络后重试";
 "connect_web3_wallet_description" = "授权应用查看你的钱包地址，或者向你发送交易请求。";
@@ -560,6 +562,7 @@
 "enter_your_emergency_contact_mixin_id" = "请输入恢复联系人的 Mixin ID";
 "enter_your_new_pin" = "输入你的新 PIN";
 "enter_your_old_pin" = "输入你的旧 PIN";
+"enter_your_phone_number" = "输入你的手机号码";
 "enter_your_pin" = "输入你的 PIN";
 "enter_your_pin_to_continue" = "输入你的 PIN 以继续";
 "error_access_limited" = "错误 403：访问受限";
@@ -895,6 +898,9 @@
 "mnemonics_mismatched" = "助记词不符";
 "mobile_contacts" = "通讯录";
 "mobile_number" = "手机号码";
+"mobile_number_added" = "添加成功";
+"mobile_number_added_description" = "添加手机号码有助于提升账号安全";
+"mobile_number_changed" = "已更改手机号码";
 "mobile_phone" = "手机";
 "monthly" = "每月";
 "months_count_short" = "%d月";
@@ -1048,6 +1054,7 @@
 "pending_confirmations" = "%d/%d 区块确认数";
 "pending_transaction_one" = "有 1 笔交易处理中";
 "pending_transactions_count" = "有 %d 笔交易处理中";
+"periodic_sms_verification_benefits" = "定期进行短信验证有助于提升账号安全，如果当前手机号已失效请尽快更换手机号。";
 "permission_denied_camera" = "授权使用相机";
 "permission_denied_camera_hint" = "Mixin 需要相机权限，请点击'设置'并调整授权。";
 "permission_denied_microphone_hint" = "Mixin 需要麦克风权限，请点击'设置'打开系统授权。";
@@ -1284,7 +1291,6 @@
 "select_all" = "选择所有";
 "select_date" = "选择日期";
 "select_emergency_contact" = "选择恢复联系人";
-"select_more_photos" = "选择更多照片";
 "select_token" = "选择代币";
 "selected_count" = "选择了 %@ 个消息";
 "selected_item" = "已选择 1 项";
@@ -1409,6 +1415,7 @@
 "slide_to_cancel" = "滑动取消";
 "slippage" = "滑点";
 "slow" = "缓慢";
+"sms_verified_description" = "定期进行短信验证有助于提升账号安全";
 "snapshot_hash" = "快照哈希";
 "snapshot_not_found" = "找不到该转账记录。";
 "sort_by" = "顺序";
@@ -1629,7 +1636,10 @@
 "value" = "价值";
 "value_now" = "价值 %@";
 "value_then" = "当时价值 %@";
+"verification_successful" = "验证成功";
 "verify" = "验证";
+"verify_mobile_number" = "验证手机号码";
+"verify_now" = "立即验证";
 "verify_pin" = "验证 PIN";
 "verifying_payment" = "支付检测中...";
 "verifying_payment_description" = "支付检测中，请耐心等待";

@@ -154,7 +154,7 @@
 		7B51DDBB223A52A0008ACDBB /* LoginVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */; };
 		7B5281742265D7E30023616D /* RecentAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5281732265D7E30023616D /* RecentAppsViewController.swift */; };
 		7B54F95022B22E2900908A9D /* FullscreenPINValidationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B54F94F22B22E2900908A9D /* FullscreenPINValidationView.xib */; };
-		7B54F95222B22EA600908A9D /* ChangeNumberPINValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B54F95122B22EA600908A9D /* ChangeNumberPINValidationViewController.swift */; };
+		7B54F95222B22EA600908A9D /* VerifyMobileNumberPINValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B54F95122B22EA600908A9D /* VerifyMobileNumberPINValidationViewController.swift */; };
 		7B54F95422B23A5600908A9D /* RecoveryContactSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B54F95322B23A5600908A9D /* RecoveryContactSelectorViewController.swift */; };
 		7B54F95922B243EA00908A9D /* RecoveryContactVerifyPINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B54F95822B243EA00908A9D /* RecoveryContactVerifyPINViewController.swift */; };
 		7B54F95B22B24A5600908A9D /* CreateRecoveryContactVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B54F95A22B24A5600908A9D /* CreateRecoveryContactVerificationCodeViewController.swift */; };
@@ -347,9 +347,9 @@
 		7BAD333A216E1DFA006C0309 /* RTCIceCandidate+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAD3338216E1DF9006C0309 /* RTCIceCandidate+JSON.swift */; };
 		7BAD3A8E21A6D10400BAEE0B /* BusyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAD3A8D21A6D10400BAEE0B /* BusyButton.swift */; };
 		7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAD50801FA0C8C1009B59FB /* VerificationCodeField.swift */; };
-		7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BADC83F204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift */; };
-		7BADC842204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BADC841204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift */; };
-		7BAE1B44223B51F3004F2D16 /* ChangeNumberContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAE1B43223B51E9004F2D16 /* ChangeNumberContext.swift */; };
+		7BADC840204BFD040016B0FC /* VerifyMobileNumberInputNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BADC83F204BFD040016B0FC /* VerifyMobileNumberInputNumberViewController.swift */; };
+		7BADC842204C20820016B0FC /* VerifyMobileNumberOneTimeCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BADC841204C20820016B0FC /* VerifyMobileNumberOneTimeCodeViewController.swift */; };
+		7BAE1B44223B51F3004F2D16 /* MobileNumberVerificationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAE1B43223B51E9004F2D16 /* MobileNumberVerificationContext.swift */; };
 		7BAECA3A20401DE500AEA42F /* AttachmentLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BAECA3920401DE500AEA42F /* AttachmentLoadingViewModel.swift */; };
 		7BB0F9102434821000BEDA97 /* CircleEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */; };
 		7BB0F9152434B03300BEDA97 /* SelectedPeerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB0F9132434B03300BEDA97 /* SelectedPeerCell.swift */; };
@@ -775,6 +775,7 @@
 		941E360B2D78B813000E7093 /* RefreshWeb3WalletTokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941E360A2D78B80E000E7093 /* RefreshWeb3WalletTokenJob.swift */; };
 		9420F2EE2DAF8A8300434E0D /* BalanceChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9420F2ED2DAF8A7F00434E0D /* BalanceChange.swift */; };
 		9420F3052DAF993500434E0D /* RichWeb3RawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9420F2E62DAF895D00434E0D /* RichWeb3RawTransaction.swift */; };
+		94211FE52F31DB9000768DC3 /* Account+BuyToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94211FE42F31DB8A00768DC3 /* Account+BuyToken.swift */; };
 		9421DA492E05A3B300B9E815 /* TokenConsumingInputAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9421DA482E05A3A800B9E815 /* TokenConsumingInputAmountViewController.swift */; };
 		9421DA512E05A47800B9E815 /* BalanceReportingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9421DA502E05A47800B9E815 /* BalanceReportingView.xib */; };
 		94227D6E2BEF242200430CAE /* SearchCollectibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94227D6C2BEF242200430CAE /* SearchCollectibleViewController.swift */; };
@@ -1919,7 +1920,7 @@
 		7B51DDBA223A52A0008ACDBB /* LoginVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVerificationCodeViewController.swift; sourceTree = "<group>"; };
 		7B5281732265D7E30023616D /* RecentAppsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentAppsViewController.swift; sourceTree = "<group>"; };
 		7B54F94F22B22E2900908A9D /* FullscreenPINValidationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullscreenPINValidationView.xib; sourceTree = "<group>"; };
-		7B54F95122B22EA600908A9D /* ChangeNumberPINValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberPINValidationViewController.swift; sourceTree = "<group>"; };
+		7B54F95122B22EA600908A9D /* VerifyMobileNumberPINValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyMobileNumberPINValidationViewController.swift; sourceTree = "<group>"; };
 		7B54F95322B23A5600908A9D /* RecoveryContactSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryContactSelectorViewController.swift; sourceTree = "<group>"; };
 		7B54F95822B243EA00908A9D /* RecoveryContactVerifyPINViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryContactVerifyPINViewController.swift; sourceTree = "<group>"; };
 		7B54F95A22B24A5600908A9D /* CreateRecoveryContactVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRecoveryContactVerificationCodeViewController.swift; sourceTree = "<group>"; };
@@ -2109,9 +2110,9 @@
 		7BAD3338216E1DF9006C0309 /* RTCIceCandidate+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RTCIceCandidate+JSON.swift"; sourceTree = "<group>"; };
 		7BAD3A8D21A6D10400BAEE0B /* BusyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusyButton.swift; sourceTree = "<group>"; };
 		7BAD50801FA0C8C1009B59FB /* VerificationCodeField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCodeField.swift; sourceTree = "<group>"; };
-		7BADC83F204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberNewNumberViewController.swift; sourceTree = "<group>"; };
-		7BADC841204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeNumberVerificationCodeViewController.swift; sourceTree = "<group>"; };
-		7BAE1B43223B51E9004F2D16 /* ChangeNumberContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeNumberContext.swift; sourceTree = "<group>"; };
+		7BADC83F204BFD040016B0FC /* VerifyMobileNumberInputNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyMobileNumberInputNumberViewController.swift; sourceTree = "<group>"; };
+		7BADC841204C20820016B0FC /* VerifyMobileNumberOneTimeCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyMobileNumberOneTimeCodeViewController.swift; sourceTree = "<group>"; };
+		7BAE1B43223B51E9004F2D16 /* MobileNumberVerificationContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileNumberVerificationContext.swift; sourceTree = "<group>"; };
 		7BAECA3920401DE500AEA42F /* AttachmentLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentLoadingViewModel.swift; sourceTree = "<group>"; };
 		7BB0F90F2434821000BEDA97 /* CircleEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleEditorViewController.swift; sourceTree = "<group>"; };
 		7BB0F9132434B03300BEDA97 /* SelectedPeerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedPeerCell.swift; sourceTree = "<group>"; };
@@ -2545,6 +2546,7 @@
 		941E360A2D78B80E000E7093 /* RefreshWeb3WalletTokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshWeb3WalletTokenJob.swift; sourceTree = "<group>"; };
 		9420F2E62DAF895D00434E0D /* RichWeb3RawTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichWeb3RawTransaction.swift; sourceTree = "<group>"; };
 		9420F2ED2DAF8A7F00434E0D /* BalanceChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceChange.swift; sourceTree = "<group>"; };
+		94211FE42F31DB8A00768DC3 /* Account+BuyToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+BuyToken.swift"; sourceTree = "<group>"; };
 		9421DA482E05A3A800B9E815 /* TokenConsumingInputAmountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenConsumingInputAmountViewController.swift; sourceTree = "<group>"; };
 		9421DA502E05A47800B9E815 /* BalanceReportingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BalanceReportingView.xib; sourceTree = "<group>"; };
 		94227D6C2BEF242200430CAE /* SearchCollectibleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectibleViewController.swift; sourceTree = "<group>"; };
@@ -4144,7 +4146,6 @@
 		7BAE1B42223B51E9004F2D16 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7BAE1B43223B51E9004F2D16 /* ChangeNumberContext.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4371,12 +4372,13 @@
 		94145A902CD4FCD700600AD4 /* Mobile Number */ = {
 			isa = PBXGroup;
 			children = (
+				7BAE1B43223B51E9004F2D16 /* MobileNumberVerificationContext.swift */,
 				94145A912CD4FCDF00600AD4 /* AddMobileNumberViewController.swift */,
 				94ADE11E2CD80AC70040A426 /* ChangeMobileNumberViewController.swift */,
 				94ADE1232CD80C0B0040A426 /* MobileNumberIntroductionViewController.swift */,
-				7B54F95122B22EA600908A9D /* ChangeNumberPINValidationViewController.swift */,
-				7BADC83F204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift */,
-				7BADC841204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift */,
+				7B54F95122B22EA600908A9D /* VerifyMobileNumberPINValidationViewController.swift */,
+				7BADC83F204BFD040016B0FC /* VerifyMobileNumberInputNumberViewController.swift */,
+				7BADC841204C20820016B0FC /* VerifyMobileNumberOneTimeCodeViewController.swift */,
 			);
 			path = "Mobile Number";
 			sourceTree = "<group>";
@@ -4752,6 +4754,7 @@
 		94682F212E029B2700B1C6D3 /* Buy */ = {
 			isa = PBXGroup;
 			children = (
+				94211FE42F31DB8A00768DC3 /* Account+BuyToken.swift */,
 				94682F142E029B2700B1C6D3 /* CompactComboBoxView.swift */,
 				94682F0B2E029B2700B1C6D3 /* BuyingPairView.xib */,
 				9414D3A52E069ACD00F38028 /* BuyTokenInputAmountViewController.swift */,
@@ -6069,6 +6072,10 @@
 				ABE865BC23F2453D00C0167D /* Model */,
 				7B2E56AE244EA6A20073102C /* View */,
 				DF8CECF01FC4255700E40064 /* Cells */,
+				940FC5E92CDBC45D0056BFF2 /* Mnemonics */,
+				94145A902CD4FCD700600AD4 /* Mobile Number */,
+				7BB78729245149040057B4ED /* Recovery Contact */,
+				94B8D186266E412B00F43CBB /* Diagnose */,
 				DFBADC111FD1211E00722929 /* AboutViewController.swift */,
 				7C8FA8F32768909300855AFD /* AccountSettingViewController.swift */,
 				9489E39F25C5B150000319F8 /* AcknowledgementListViewController.swift */,
@@ -6113,10 +6120,6 @@
 				9495E0AC2CEF684E00124CC7 /* LogoutHandler.swift */,
 				9495E07F2CEF5CCF00124CC7 /* LogoutValidationView.xib */,
 				9495E07E2CEF5CCF00124CC7 /* LogoutValidationViewController.swift */,
-				940FC5E92CDBC45D0056BFF2 /* Mnemonics */,
-				94145A902CD4FCD700600AD4 /* Mobile Number */,
-				7BB78729245149040057B4ED /* Recovery Contact */,
-				94B8D186266E412B00F43CBB /* Diagnose */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -7145,6 +7148,7 @@
 				9412AF4E2C1AEAE00083ABB3 /* ShareViewAsPictureViewController.swift in Sources */,
 				DFFDCF8420AD8A7A00B4956E /* FileSendViewController.swift in Sources */,
 				944263CE2DD6CB98003F46DF /* Web3ReputationOptionCell.swift in Sources */,
+				94211FE52F31DB9000768DC3 /* Account+BuyToken.swift in Sources */,
 				94D7E8532CC025420020BC24 /* RecentSearchHeaderView.swift in Sources */,
 				7B09E55A1FD157EB002E45D3 /* MessageViewModel.swift in Sources */,
 				9458A08D2CC943E900A51154 /* SignUpWithMobileNumberViewController.swift in Sources */,
@@ -7373,7 +7377,7 @@
 				7B35AF7C228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift in Sources */,
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
 				944BC2D32C7C71B4008700A8 /* OutlineSegmentedControl.swift in Sources */,
-				7B54F95222B22EA600908A9D /* ChangeNumberPINValidationViewController.swift in Sources */,
+				7B54F95222B22EA600908A9D /* VerifyMobileNumberPINValidationViewController.swift in Sources */,
 				945AA6582567B18200B39415 /* Country.swift in Sources */,
 				949B5E0C2EBCFB9500D33C97 /* SyncWeb3OrdersJob.swift in Sources */,
 				7BD00F222559716C004D8814 /* WalletSearchRecommendationViewController.swift in Sources */,
@@ -7600,7 +7604,7 @@
 				94F36AC626CA59B300AC30A5 /* PhoneNumberValidator.swift in Sources */,
 				7BEEC0121FDEA19300514A48 /* EncryptionHintViewModel.swift in Sources */,
 				E0D4F5F523A9D803008F0189 /* NotificationManager.swift in Sources */,
-				7BADC842204C20820016B0FC /* ChangeNumberVerificationCodeViewController.swift in Sources */,
+				7BADC842204C20820016B0FC /* VerifyMobileNumberOneTimeCodeViewController.swift in Sources */,
 				94F0A1A82E3BB0AD001732B8 /* AuthenticationPreviewWalletCell.swift in Sources */,
 				7CB2A57F27C386F0007D9DEE /* GroupsInCommonViewController.swift in Sources */,
 				7B2A116122C20F5F00AD029C /* PlayerView.swift in Sources */,
@@ -7644,7 +7648,7 @@
 				7B95533A224380B200CE95E6 /* PinValidationViewController.swift in Sources */,
 				7B09E5581FD1264C002E45D3 /* TextMessageLabel.swift in Sources */,
 				7C8CC5A4280D347A00F7CBDF /* PreviewWallpaperViewController.swift in Sources */,
-				7BAE1B44223B51F3004F2D16 /* ChangeNumberContext.swift in Sources */,
+				7BAE1B44223B51F3004F2D16 /* MobileNumberVerificationContext.swift in Sources */,
 				940D10B62C5CC3380071E36D /* NoTransactionIndicatorCell.swift in Sources */,
 				947402BF2DA69B890085C183 /* ComplexWeb3TransactionTableHeaderView.swift in Sources */,
 				7B63A8632431C9EE00D0F7C7 /* CirclesViewController.swift in Sources */,
@@ -8171,7 +8175,7 @@
 				94B81FFE2DFFD96F00D580C9 /* BalanceRequirement.swift in Sources */,
 				9492285F25DFB7D60000A19F /* MinimizedPlaylistViewController.swift in Sources */,
 				6001E88C2B0B7140006A053A /* DeviceTransferToken.swift in Sources */,
-				7BADC840204BFD040016B0FC /* ChangeNumberNewNumberViewController.swift in Sources */,
+				7BADC840204BFD040016B0FC /* VerifyMobileNumberInputNumberViewController.swift in Sources */,
 				94C93C902C94880600A31591 /* TIP+Web3.swift in Sources */,
 				7BEED06F244D457000F3A2B9 /* SettingsDataSource.swift in Sources */,
 				94D5C0EE2D5C911D0046C20E /* WalletSummaryViewController.swift in Sources */,

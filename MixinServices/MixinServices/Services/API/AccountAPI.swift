@@ -119,12 +119,14 @@ public final class AccountAPI: MixinAPI {
     @discardableResult
     public static func phoneVerifications(
         phoneNumber: String,
+        purpose: VerificationPurpose,
         base64Salt: String,
         captchaToken: CaptchaToken?,
         completion: @escaping (MixinAPI.Result<VerificationResponse>) -> Void
     ) -> Request? {
-        var parameters = VerificationRequest.changePhoneNumber(
+        var parameters = VerificationRequest.verifyPhoneNumber(
             phone: phoneNumber,
+            purpose: purpose,
             base64Salt: base64Salt,
             captchaToken: captchaToken
         )
@@ -196,8 +198,9 @@ public final class AccountAPI: MixinAPI {
         )
     }
     
-    public static func changePhoneNumber(
+    public static func verifyPhoneNumber(
         verificationID: String,
+        purpose: VerificationPurpose,
         code: String,
         pin: String,
         salt: String,
@@ -207,7 +210,7 @@ public final class AccountAPI: MixinAPI {
             try TIPBody.updatePhoneNumber(verificationID: verificationID, code: code)
         }, onFailure: completion) { pin in
             let parameters = [
-                "purpose": VerificationPurpose.phone.rawValue,
+                "purpose": purpose.rawValue,
                 "code": code,
                 "pin": pin,
                 "salt_base64": salt,

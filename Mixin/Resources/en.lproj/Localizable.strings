@@ -18,6 +18,8 @@
 "add_emergency_contact" = "Add recovery contact";
 "add_failed" = "Add Failed";
 "add_mobile_number" = "Add Mobile Number";
+"add_mobile_number_reason" = "For compliance and security reasons, we need to verify your mobile number.";
+"add_now" = "Add Now";
 "add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "Add Participants";
 "add_phone_desc" = "You can log in to your account using your mobile number. The mobile number will be associated with a key shard of your MPC wallet. The complete key exists only in the TEE security environment on the current device. Read the documentation to learn more about %@.";
@@ -124,7 +126,6 @@
 "all_conversations" = "All Conversations";
 "all_dates" = "All Dates";
 "all_invoices" = "All Invoices";
-"all_photos" = "All Photos";
 "all_signer_failure" = "All node failure";
 "all_time_high" = "All Time High";
 "all_time_low" = "All Time Low";
@@ -255,7 +256,7 @@
 "change_percent_period_day" = "%dD %%";
 "change_percent_period_hour" = "%dh %%";
 "change_phone_desc" = "You can log in to your account using your mobile number. The current mobile number (%1$@) is associated with a key shard of your MPC wallet. The complete key exists only in the TEE security environment on the current device. Read the documentation to learn more about %2$@.";
-"change_phone_number" = "Change Phone Number";
+"change_phone_number" = "Change Mobile Number";
 "change_pin" = "Change PIN";
 "change_pin_interval_hint" = "Confirm PIN to change interval";
 "change_pin_successfully" = "Change PIN successfully";
@@ -346,6 +347,7 @@
 "confirm_signing_multisig" = "Confirm Signing Multisig";
 "confirm_transfer" = "Confirm Transfer";
 "confirm_withdrawal" = "Confirm Withdrawal";
+"confirm_your_mobile_number" = "Confirm your mobile number";
 "connect" = "Connect";
 "connect_to_tip_network_failed" = "Unable to connect to TIP network. Check your connection and try again.";
 "connect_web3_wallet_description" = "Allow the app to view your wallet address and ask for your approval to make a transaction.";
@@ -553,13 +555,14 @@
 "enter_amount" = "Enter Amount";
 "enter_mnemonic_phrase" = "Enter or paste your %d mnemonic words.";
 "enter_new_anonymous_number" = "Enter your new anonymous number";
-"enter_new_phone_number" = "Enter your new phone number";
+"enter_new_phone_number" = "Enter your new mobile number";
 "enter_pin_create_wallet" = "Enter your PIN to create a new wallet";
 "enter_pin_to_delete_account" = "Enter your PIN to delete your account";
 "enter_your_anonymous_number" = "Enter your anonymous number";
 "enter_your_emergency_contact_mixin_id" = "Enter your recovery contact Mixin ID";
 "enter_your_new_pin" = "Enter your new PIN";
 "enter_your_old_pin" = "Enter your old PIN";
+"enter_your_phone_number" = "Enter your mobile number";
 "enter_your_pin" = "Enter your PIN";
 "enter_your_pin_to_continue" = "Enter your PIN to continue";
 "error_access_limited" = "ERROR 403: Access Limited";
@@ -592,10 +595,10 @@
 "error_number_reached_limit" = "ERROR 20132: The number has reached the limit.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
 "error_payment_capture_failed" = "ERROR 10603: Payment capture failed";
-"error_phone_invalid_format" = "ERROR 20110: Invalid phone number";
+"error_phone_invalid_format" = "ERROR 20110: Invalid mobile number";
 "error_phone_sms_delivery" = "ERROR 10003: Failed to deliver SMS";
-"error_phone_verification_code_expired" = "ERROR 20114: Expired phone verification code";
-"error_phone_verification_code_invalid" = "ERROR 20113: Invalid phone verification code";
+"error_phone_verification_code_expired" = "ERROR 20114: Expired verification code";
+"error_phone_verification_code_invalid" = "ERROR 20113: Invalid verification code";
 "error_pin_check_too_many_request" = "You have tried more than 5 times, please wait at least 24 hours to try again.";
 "error_pin_incorrect" = "ERROR 20119: PIN incorrect";
 "error_pin_incorrect_with_times" = "ERROR 20119: PIN incorrect. You still have %d chance. Please wait for 24 hours to retry later.";
@@ -614,7 +617,7 @@
 "error_transfer_is_already_paid" = "ERROR 20125: Transfer is already paid.";
 "error_transfer_to_deactivated_user" = "ERROR 20160: Transfers cannot be made to a deactivated user";
 "error_two_parts" = "ERROR %@: %@";
-"error_used_phone" = "ERROR 20122: This phone number is already associated with another account.";
+"error_used_phone" = "ERROR 20122: This mobile number is already associated with another account.";
 "error_watch_address_not_supported" = "ERROR 10633: Invalid Address";
 "error_withdrawal_memo_format_incorrect" = "ERROR 20131: Withdrawal memo format incorrect.";
 "error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
@@ -895,6 +898,9 @@
 "mnemonics_mismatched" = "Mnemonics Mismatched";
 "mobile_contacts" = "Mobile Contacts";
 "mobile_number" = "Mobile Number";
+"mobile_number_added" = "Mobile Number Added";
+"mobile_number_added_description" = "Adding mobile number helps improve account security";
+"mobile_number_changed" = "Mobile Number Changed";
 "mobile_phone" = "Mobile Phone";
 "monthly" = "Monthly";
 "months_count_short" = "%dM";
@@ -1048,6 +1054,7 @@
 "pending_confirmations" = "%d/%d Confirmations";
 "pending_transaction_one" = "1 Pending Transaction";
 "pending_transactions_count" = "%d Pending Transactions";
+"periodic_sms_verification_benefits" = "Periodic SMS verification helps improve account security. If your current mobile number is no longer valid, please update it as soon as possible.";
 "permission_denied_camera" = "Camera Access Denied";
 "permission_denied_camera_hint" = "Mixin doesn't have permission to use your camera. Tap Settings to authorize.";
 "permission_denied_microphone_hint" = "Mixin doesn't have permission to use your microphone. Please tap Setting to open system settings.";
@@ -1059,8 +1066,8 @@
 "phone_call" = "Phone call";
 "phone_contact" = "Phone Contacts";
 "phone_contacts" = "Phone Contacts";
-"phone_number" = "Phone Number";
-"phone_number_change" = "Phone number change";
+"phone_number" = "Mobile Number";
+"phone_number_change" = "Mobile number change";
 "phone_number_privacy" = "Who can find me by my number";
 "photo" = "Photo";
 "photo_saved" = "Photo saved.";
@@ -1152,7 +1159,7 @@
 "recovery_contact" = "Recovery Contact";
 "recovery_kit" = "Recovery Kit";
 "recovery_kit_attention" = "Attention: The Recovery Kit cannot help you recover your PIN";
-"recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your phone number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
+"recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your mobile number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "red_up_green_down" = "Red Up / Green Down";
 "referral" = "Referral";
 "referral_banner" = "Invite friends and earn up to 60%% of their trading fees!";
@@ -1284,7 +1291,6 @@
 "select_all" = "Select All";
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
-"select_more_photos" = "Select More Photos";
 "select_token" = "Select Token";
 "selected_count" = "%@ Selected";
 "selected_item" = "Selected 1 Item";
@@ -1409,6 +1415,7 @@
 "slide_to_cancel" = "Slide to Cancel";
 "slippage" = "Slippage";
 "slow" = "Slow";
+"sms_verified_description" = "Periodic SMS verification helps improve account security";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Snapshot not found.";
 "sort_by" = "Sort by";
@@ -1465,7 +1472,7 @@
 "tap_to_join" = "Tap to join";
 "terms_of_service" = "Terms of Service";
 "text" = "text";
-"text_confirm_send_code" = "Please confirm the phone number %@";
+"text_confirm_send_code" = "Please confirm the mobile number %@";
 "text_qr_code" = "TEXT QR CODE";
 "the_code_is_incorrect" = "The code is incorrect.";
 "third_pin_confirm_hint" = "It's rare to see a third confirmation somewhere else, so please remember the PIN is unrecoverable if lost.";
@@ -1629,7 +1636,10 @@
 "value" = "Value";
 "value_now" = "value now %@";
 "value_then" = "value then %@";
+"verification_successful" = "Verification Successful";
 "verify" = "Verify";
+"verify_mobile_number" = "Verify Mobile Number";
+"verify_now" = "Verify Now";
 "verify_pin" = "Verify PIN";
 "verifying_payment" = "Verifying payment...";
 "verifying_payment_description" = "Your payment is being verified. Thank you for your patience.";
@@ -1752,7 +1762,7 @@
 "you_have_left_the_group" = "You have left the group";
 "your_emergency_contact_has_been_changed" = "Your recovery contact has been changed";
 "your_mnemonic_phrase" = "Your Mnemonic Phrase";
-"your_phone_number_has_been_changed" = "Your phone number has been changed";
+"your_phone_number_has_been_changed" = "Your mobile number has been changed";
 "your_pin_has_been_changed" = "Your PIN has been changed";
 "your_pin_has_been_created" = "Your PIN has been created";
 "your_private_key" = "Your Private Key";

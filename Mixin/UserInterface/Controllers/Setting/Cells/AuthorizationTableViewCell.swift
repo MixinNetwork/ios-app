@@ -9,7 +9,7 @@ class AuthorizationTableViewCell: ModernSelectedBackgroundCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        iconImageView.sd_cancelCurrentImageLoad()
+        iconImageView.prepareForReuse()
     }
     
 }

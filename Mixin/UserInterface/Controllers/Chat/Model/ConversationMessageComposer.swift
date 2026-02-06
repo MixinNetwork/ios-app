@@ -86,7 +86,7 @@ final class ConversationMessageComposer {
                 let fileExtension = url.pathExtension.lowercased()
                 let targetUrl = AttachmentContainer.url(for: .files, filename: "\(message.messageId).\(fileExtension)")
                 do {
-                    try FileManager.default.copyItem(at: url, to: targetUrl)
+                    try FileManager.default.moveItem(at: url, to: targetUrl)
                 } catch {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.operation_failed())
                     return

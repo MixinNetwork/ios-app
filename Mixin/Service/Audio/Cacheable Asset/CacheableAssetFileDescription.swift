@@ -88,8 +88,7 @@ extension CacheableAssetFileDescription {
                 return nil
             }
             if let mime = response.mimeType {
-                let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mime as CFString, nil)
-                self.contentType = uti?.takeRetainedValue() as String?
+                self.contentType = UTType(mimeType: mime)?.identifier
             } else {
                 self.contentType = nil
             }

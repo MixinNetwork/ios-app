@@ -34,8 +34,7 @@ final class BarChartView: UIView {
         let barsCount = max(1, proportions.count)
         let numberOfLayersToBeAdded = barsCount - barLayers.count
         if numberOfLayersToBeAdded > 0 {
-            for i in 0..<numberOfLayersToBeAdded {
-                let index = barLayers.count + 1
+            for _ in 0..<numberOfLayersToBeAdded {
                 let layer = CAGradientLayer()
                 layer.startPoint = CGPoint(x: 0, y: 0)
                 layer.endPoint = CGPoint(x: 1, y: 1)

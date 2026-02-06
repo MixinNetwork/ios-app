@@ -5,8 +5,7 @@ final class SelectedPeerCell: SelectedItemCell<AvatarImageView> {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        iconView.sd_cancelCurrentImageLoad()
-        iconView.image = nil
+        iconView.prepareForReuse()
     }
     
     func render(member: CircleMember) {

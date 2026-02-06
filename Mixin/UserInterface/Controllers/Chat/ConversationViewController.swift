@@ -1312,10 +1312,13 @@ final class ConversationViewController: UIViewController {
     }
     
     func presentDocumentPicker() {
-        let vc = UIDocumentPickerViewController(documentTypes: ["public.item", "public.content"], in: .import)
-        vc.delegate = self
-        vc.modalPresentationStyle = .formSheet
-        present(vc, animated: true, completion: nil)
+        let picker = UIDocumentPickerViewController(
+            forOpeningContentTypes: [.item, .content],
+            asCopy: true
+        )
+        picker.delegate = self
+        picker.modalPresentationStyle = .formSheet
+        present(picker, animated: true, completion: nil)
     }
     
     func showTransfer() {

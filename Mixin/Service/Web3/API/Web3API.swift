@@ -33,7 +33,7 @@ extension Web3API {
     
     private static var botPublicKey: Data?
     
-    private class Web3SigningInterceptor: RequestInterceptor {
+    private final class Web3SigningInterceptor: RequestInterceptor {
         
         private let method: HTTPMethod
         private let path: String

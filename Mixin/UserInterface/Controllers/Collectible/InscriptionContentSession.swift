@@ -5,7 +5,7 @@ import MixinServices
 fileprivate let inscriptionContentCache = URLCache(memoryCapacity: 1 * Int(bytesPerMegaByte),
                                                    diskCapacity: 10 * Int(bytesPerMegaByte))
 
-fileprivate class Cacher: CachedResponseHandler {
+fileprivate final class Cacher: CachedResponseHandler {
     
     func dataTask(
         _ task: URLSessionDataTask,

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class TIPFullscreenInputViewController: ContinueButtonViewController {
+final class TIPFullscreenInputViewController: UIViewController {
     
     enum Action: CustomDebugStringConvertible {
         
@@ -57,6 +57,7 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
     @IBOutlet weak var pinField: PinField!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var continueButton: ConfigurationBasedBusyButton!
     
     private let action: Action
     private let confirmationStepCount = 2
@@ -64,7 +65,6 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
     private var isBusy = false {
         didSet {
             continueButton.isBusy = isBusy
-            continueButton.isHidden = !isBusy
             pinField.receivesInput = !isBusy
         }
     }
@@ -89,10 +89,6 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        subtitleLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(keyboardLayoutGuide.snp.top).offset(-16)
-        }
-        pinField.becomeFirstResponder()
         switch action {
         case .create(.input):
             reporter.report(event: .signUpPINSet)
@@ -114,6 +110,21 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
                 subtitleLabel.text = R.string.localizable.third_pin_confirm_hint()
             }
         }
+        continueButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
+                .offset(-26)
+        }
+        continueButton.configuration?.attributedTitle = {
+            var attributes = AttributeContainer()
+            attributes.font = UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 16, weight: .medium)
+            )
+            return AttributedString(
+                R.string.localizable.continue(),
+                attributes: attributes
+            )
+        }()
+        pinField.becomeFirstResponder()
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     

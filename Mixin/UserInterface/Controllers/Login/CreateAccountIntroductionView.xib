@@ -64,7 +64,7 @@
                                         </button>
                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="By proceeding, you agree to the Privacy Policy and Terms of Service." textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Il3-1C-98l" customClass="IntroTextView" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="54" width="353" height="44.666666666666657"/>
-                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                            <color key="backgroundColor" name="background"/>
                                             <color key="textColor" systemColor="labelColor"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -114,7 +114,7 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" name="background"/>
             <constraints>
-                <constraint firstItem="Oc3-od-6LT" firstAttribute="height" secondItem="vUN-kp-3ea" secondAttribute="height" priority="750" id="Fvi-MC-vMo"/>
+                <constraint firstItem="Oc3-od-6LT" firstAttribute="height" secondItem="vUN-kp-3ea" secondAttribute="height" priority="250" id="Fvi-MC-vMo"/>
                 <constraint firstItem="49c-kg-OHK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="IKq-jo-Vau"/>
                 <constraint firstItem="49c-kg-OHK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Nfr-sB-1dd"/>
                 <constraint firstItem="hzi-p0-4vJ" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="13" id="beR-gk-JaB"/>
@@ -140,9 +140,6 @@
         </namedColor>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>
 </document>

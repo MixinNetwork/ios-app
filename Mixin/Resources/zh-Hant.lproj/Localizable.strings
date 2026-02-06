@@ -3,6 +3,7 @@
 "access_dapps_defi_projects" = "訪問 apps 或 DeFi 專案";
 "access_to_contacts" = "訪問通訊錄";
 "account" = "賬號";
+"account_creation_failed" = "建立賬號失敗";
 "acknowledgements" = "許可證";
 "add" = "新增";
 "add_a_note" = "新增轉賬備註";

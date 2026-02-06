@@ -3,6 +3,7 @@
 "access_dapps_defi_projects" = "访问 apps 或 DeFi 项目";
 "access_to_contacts" = "访问通讯录";
 "account" = "账号";
+"account_creation_failed" = "创建账号失败";
 "acknowledgements" = "许可证";
 "add" = "添加";
 "add_a_note" = "添加转账备注";

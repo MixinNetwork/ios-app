@@ -119,7 +119,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                 if isReady {
                     Logger.login.info(category: "CheckSessionEnvironment", message: "Everything ready")
                     Logger.redirectLogsToLogin = false
-                    root = HomeContainerViewController()
+                    root = HomeContainerViewController(initialTab: .chat)
                 } else {
                     Logger.login.info(category: "CheckSessionEnvironment", message: "Load TIP")
                     let freshAccount = isAccountFresh ? account : nil
@@ -127,7 +127,9 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                 }
             } else {
                 Logger.login.info(category: "CheckSessionEnvironment", message: "Create PIN")
-                root = TIPNavigationController(intent: .create)
+                let tip = TIPNavigationController(intent: .create)
+                tip.redirectsToWalletTabOnFinished = isUsernameJustInitialized
+                root = tip
             }
             AppDelegate.current.mainWindow.rootViewController = root
         }

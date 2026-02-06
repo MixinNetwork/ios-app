@@ -70,24 +70,28 @@ class VerifyMobileNumberOneTimeCodeViewController: VerificationCodeViewControlle
             case .success(let account):
                 LoginManager.shared.setAccount(account)
                 self.verificationCodeField.resignFirstResponder()
-                switch self.context.intent {
+                let alert = switch self.context.intent {
                 case .periodicVerification:
-                    let alert = UIAlertController(
+                    UIAlertController(
                         title: R.string.localizable.verification_successful(),
                         message: R.string.localizable.sms_verified_description(),
                         preferredStyle: .alert
                     )
-                    alert.addAction(popBackAction)
-                    self.present(alert, animated: true)
-                case .changeMobileNumber:
-                    let alert = UIAlertController(
-                        title: R.string.localizable.changed(),
-                        message: nil,
+                case .addMobileNumber:
+                    UIAlertController(
+                        title: R.string.localizable.mobile_number_added(),
+                        message: R.string.localizable.mobile_number_added_description(),
                         preferredStyle: .alert
                     )
-                    alert.addAction(popBackAction)
-                    self.present(alert, animated: true)
+                case .changeMobileNumber:
+                    UIAlertController(
+                        title: R.string.localizable.mobile_number_changed(),
+                        message: R.string.localizable.sms_verified_description(),
+                        preferredStyle: .alert
+                    )
                 }
+                alert.addAction(popBackAction)
+                self.present(alert, animated: true)
             case let .failure(error):
                 self.isBusy = false
                 self.verificationCodeField.clear()

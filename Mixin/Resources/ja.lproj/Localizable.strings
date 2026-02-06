@@ -899,6 +899,7 @@
 "mobile_number" = "Mobile Number";
 "mobile_number_added" = "Mobile Number Added";
 "mobile_number_added_description" = "Adding mobile number helps improve account security";
+"mobile_number_changed" = "Mobile Number Changed";
 "mobile_phone" = "Mobile Phone";
 "monthly" = "月";
 "months_count_short" = "%dM";

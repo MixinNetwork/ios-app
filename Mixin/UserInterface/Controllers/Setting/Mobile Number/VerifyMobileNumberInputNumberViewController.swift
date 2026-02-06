@@ -34,7 +34,7 @@ final class VerifyMobileNumberInputNumberViewController: MobileNumberViewControl
                     _ = textField(textField, shouldChangeCharactersIn: range, replacementString: number)
                 }
             }
-        case .changeMobileNumber:
+        case .addMobileNumber, .changeMobileNumber:
             textField.becomeFirstResponder()
         }
     }
@@ -83,7 +83,7 @@ final class VerifyMobileNumberInputNumberViewController: MobileNumberViewControl
         switch context.intent {
         case .periodicVerification:
             titleLabel.text = R.string.localizable.confirm_your_mobile_number()
-        case .changeMobileNumber:
+        case .addMobileNumber, .changeMobileNumber:
             if country == .anonymous {
                 titleLabel.text = R.string.localizable.enter_new_anonymous_number()
             } else {

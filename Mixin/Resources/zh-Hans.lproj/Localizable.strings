@@ -899,6 +899,7 @@
 "mobile_number" = "手机号码";
 "mobile_number_added" = "添加成功";
 "mobile_number_added_description" = "添加手机号码有助于提升账号安全";
+"mobile_number_changed" = "已更改手机号码";
 "mobile_phone" = "手机";
 "monthly" = "每月";
 "months_count_short" = "%d月";

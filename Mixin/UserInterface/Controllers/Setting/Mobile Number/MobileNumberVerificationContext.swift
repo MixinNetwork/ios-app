@@ -6,13 +6,14 @@ struct MobileNumberVerificationContext {
     enum Intent {
         
         case periodicVerification
+        case addMobileNumber
         case changeMobileNumber
         
         var verificationPurpose: VerificationPurpose {
             switch self {
             case .periodicVerification:
                     .none
-            case .changeMobileNumber:
+            case .addMobileNumber, .changeMobileNumber:
                     .phone
             }
         }

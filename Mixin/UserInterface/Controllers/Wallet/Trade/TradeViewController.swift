@@ -1018,11 +1018,15 @@ extension TradeViewController {
             let switchingBetweenModes = sections.count != self.sections.count
             self.sections = sections
             if switchingBetweenModes {
-                pricingModel.sendAmount = nil
                 collectionView.reloadData()
                 if let section = sections.firstIndex(of: .modeSelector) {
                     let indexPath = IndexPath(item: mode.rawValue, section: section)
                     collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                }
+                if let amount = pricingModel.sendAmount, amount != 0 {
+                    amountRange = nil
+                    pricingModel.sendAmount = amount
+                    startQuoteRequesterIfAvailable()
                 }
             } else {
                 UIView.performWithoutAnimation {

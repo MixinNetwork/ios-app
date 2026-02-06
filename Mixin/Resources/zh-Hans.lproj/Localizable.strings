@@ -60,7 +60,7 @@
 "address_validity_reminder" = "您已经超过 %3$@ 天没有使用地址 %1$@（%2$@），请注意检查地址是否仍然有效。";
 "addresses" = "地址";
 "admin" = "管理员";
-"advanced_trade" = "挂单交易";
+"advanced_trade" = "专业模式";
 "agree_hint" = "继续使用即表示你同意 %@ 和 %@";
 "alert" = "价格预警";
 "alert_frequency" = "预警频率";
@@ -581,13 +581,13 @@
 "error_invalid_emergency_contact" = "错误 20130：恢复联系人不正确";
 "error_invalid_pin_format" = "错误 20118：PIN 格式不正确";
 "error_invalid_quote_amount" = "错误 10614: 输入金额太小或太大，请重新输入。";
-"error_invalid_quote_amount_detailed" = "错误 10614: 金额超出最大下单金额 %@，请重新输入。试试挂单？不受金额和币种限制。";
+"error_invalid_quote_amount_detailed" = "错误 10614: 金额超出最大下单金额 %@，请重新输入。试试专业模式？不受金额和币种限制。";
 "error_invalid_referral_code" = "错误 10730：无效的邀请码";
 "error_inviter_plan_expired" = "错误 10737：邀请人的会员已过期";
 "error_legacy_pin" = "错误 20118：为了加强 Mixin 网络的安全，Mixin API 现已暂停 D3M-PIN 升级到 TIP，详情请查看文档并登记等待处理。";
 "error_network_task_failed" = "网络连接失败。检查或切换网络并重试";
 "error_no_quote" = "错误 10611: 暂无报价，请稍后重试。";
-"error_no_quote_detailed" = "错误 10611: 暂无报价，请稍后重试。试试挂单？不受金额和币种限制。";
+"error_no_quote_detailed" = "错误 10611: 暂无报价，请稍后重试。试试专业模式？不受金额和币种限制。";
 "error_not_found" = "错误 404：没有找到相应的信息";
 "error_number_reached_limit" = "错误 20132： 已达到上限";
 "error_opponent_not_registered_to_safe" = "错误 10404: 对方客户端版本过低，请提醒对方更新客户端到最新版本";
@@ -610,7 +610,7 @@
 "error_too_small_transfer_amount" = "错误 20120：转账金额太小";
 "error_too_small_withdraw_amount" = "错误 20127：提现金额太小";
 "error_trading_pair_not_supported" = "错误 10615: 暂不支持该交易对，请尝试切换币种。";
-"error_trading_pair_not_supported_detailed" = "错误 10615: 暂不支持该交易对，请尝试切换币种。试试挂单？不受金额和币种限制。";
+"error_trading_pair_not_supported_detailed" = "错误 10615: 暂不支持该交易对，请尝试切换币种。试试专业模式？不受金额和币种限制。";
 "error_transfer_is_already_paid" = "错误 20125：转账已被支付";
 "error_transfer_to_deactivated_user" = "错误 20160：无法给已经删除的账号转账";
 "error_two_parts" = "错误 %@：%@";

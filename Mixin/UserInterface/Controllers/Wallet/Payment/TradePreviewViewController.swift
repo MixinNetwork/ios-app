@@ -44,7 +44,7 @@ final class TradePreviewViewController: WalletIdentifyingAuthenticationPreviewVi
         super.viewDidLoad()
         
         tableHeaderView.setIcon(sendToken: sendToken, receiveToken: receiveToken)
-        tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixinMessenger)
+        tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixin)
         let orderType: String
         switch mode {
         case .simple:
@@ -175,7 +175,7 @@ final class TradePreviewViewController: WalletIdentifyingAuthenticationPreviewVi
         tableHeaderView.setIcon(progress: .busy)
         layoutTableHeaderView(
             title: R.string.localizable.sending(),
-            subtitle: R.string.localizable.signature_request_from(.mixinMessenger)
+            subtitle: R.string.localizable.signature_request_from(.mixin)
         )
         replaceTrayView(with: nil, animation: .vertical)
         let reportType = switch mode {

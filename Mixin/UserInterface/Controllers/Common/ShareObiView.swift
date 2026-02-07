@@ -29,7 +29,7 @@ final class ShareObiView: UIView, XibDesignable {
         ]
         contentView.gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
         contentView.gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
-        titleLabel.text = .mixinMessenger
+        titleLabel.text = .mixin
         descriptionLabel.text = R.string.localizable.install_messenger_desc()
         qrCodeView.layer.cornerCurve = .continuous
         qrCodeView.layer.cornerRadius = 6

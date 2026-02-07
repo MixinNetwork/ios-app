@@ -20,8 +20,8 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
     }
     
     @IBOutlet weak var segmentedControl: OutlineSegmentedControl!
-    @IBOutlet weak var limitButton: OutlineButton!
-    @IBOutlet weak var changePeriodButton: OutlineButton!
+    @IBOutlet weak var limitButton: ConfigurationBasedOutlineButton!
+    @IBOutlet weak var changePeriodButton: ConfigurationBasedOutlineButton!
     @IBOutlet weak var marketCapButton: UIButton!
     @IBOutlet weak var priceButton: UIButton!
     @IBOutlet weak var periodButton: UIButton!
@@ -34,9 +34,11 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         didSet {
             UIView.performWithoutAnimation {
                 if let limit {
-                    limitButton.setTitle(limit.displayTitle, for: .normal)
+                    limitButton.configuration?.attributedTitle = AttributedString(
+                        limit.displayTitle,
+                        attributes: filterButtonAttributes
+                    )
                     limitButton.menu = UIMenu(children: limitActions(selectedLimit: limit))
-                    limitButton.isHidden = false
                     limitButton.layoutIfNeeded()
                     limitButton.isHidden = false
                 } else {
@@ -50,7 +52,10 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         didSet {
             UIView.performWithoutAnimation {
                 let title = changePeriod.displayTitle
-                changePeriodButton.setTitle(title, for: .normal)
+                changePeriodButton.configuration?.attributedTitle = AttributedString(
+                    title,
+                    attributes: filterButtonAttributes
+                )
                 changePeriodButton.menu = UIMenu(children: changePeriodActions(selectedPeriod: changePeriod))
                 changePeriodButton.layoutIfNeeded()
                 periodButton.setTitle(title, for: .normal)
@@ -92,23 +97,28 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         }
     }
     
+    private let filterButtonAttributes = {
+        var container = AttributeContainer()
+        container.font = UIFontMetrics.default.scaledFont(
+            for: .systemFont(ofSize: 14)
+        )
+        return container
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         segmentedControl.items = [
             R.image.market_favorite_hollow()!,
             R.image.market_rank()!,
         ]
-        limitButton.imageView?.contentMode = .center
-        limitButton.semanticContentAttribute = .forceRightToLeft
         limitButton.menu = UIMenu(children: limitActions(selectedLimit: .top100))
         limitButton.showsMenuAsPrimaryAction = true
-        limitButton.layer.masksToBounds = true        
-        changePeriodButton.imageView?.contentMode = .center
-        changePeriodButton.setTitle(changePeriod.displayTitle, for: .normal)
-        changePeriodButton.semanticContentAttribute = .forceRightToLeft
+        changePeriodButton.configuration?.attributedTitle = AttributedString(
+            changePeriod.displayTitle,
+            attributes: filterButtonAttributes
+        )
         changePeriodButton.menu = UIMenu(children: changePeriodActions(selectedPeriod: changePeriod))
         changePeriodButton.showsMenuAsPrimaryAction = true
-        changePeriodButton.layer.masksToBounds = true
         marketCapButton.semanticContentAttribute = .forceRightToLeft
         priceButton.semanticContentAttribute = .forceRightToLeft
         let priceButtonMargin: CGFloat = switch ScreenWidth.current {
@@ -119,7 +129,7 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         case .short:
             10
         }
-        priceButtonTrailingConstraint.constant = 20 + 60 + priceButtonMargin - priceButton.contentEdgeInsets.right
+        priceButtonTrailingConstraint.constant = 20 + 60 + priceButtonMargin - (priceButton.configuration?.contentInsets.trailing ?? 0)
         periodButton.setTitle(changePeriod.displayTitle, for: .normal)
         periodButton.semanticContentAttribute = .forceRightToLeft
         
@@ -128,12 +138,6 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         for button: UIButton in [limitButton, changePeriodButton, marketCapButton] {
             button.titleLabel?.lineBreakMode = .byClipping
         }
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        limitButton.layer.cornerRadius = limitButton.bounds.height / 2
-        changePeriodButton.layer.cornerRadius = limitButton.bounds.height / 2
     }
     
     @IBAction func segmentValueChanged(_ sender: OutlineSegmentedControl) {

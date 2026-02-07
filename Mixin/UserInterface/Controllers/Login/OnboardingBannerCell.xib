@@ -26,7 +26,7 @@
                                 <rect key="frame" x="0.0" y="44" width="375" height="310"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="aHm-Ve-Ug3" secondAttribute="height" multiplier="375:310" id="iLk-kx-fZf"/>
+                                    <constraint firstAttribute="width" secondItem="aHm-Ve-Ug3" secondAttribute="height" multiplier="375:310" placeholder="YES" id="iLk-kx-fZf"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -47,9 +47,9 @@
                                 <color key="textColor" name="text"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="303" placeholderIntrinsicHeight="38.333333333333343" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nzI-az-2iB">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="303" placeholderIntrinsicHeight="38.333333333333343" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nzI-az-2iB">
                                 <rect key="frame" x="0.0" y="44.666666666666686" width="303" height="38.333333333333343"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                 <color key="textColor" name="text_secondary"/>
                                 <nil key="highlightedColor"/>
                             </label>

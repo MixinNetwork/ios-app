@@ -8,6 +8,7 @@ final class TIPQuizAnswerViewController: UIViewController {
     @IBOutlet weak var finishButton: UIButton!
     
     var onTryAgain: (() -> Void)?
+    var onFinish: (() -> Void)?
     
     private let answer: TIPQuizAnswer
     private let popupManager = PopupPresentationManager()
@@ -31,12 +32,22 @@ final class TIPQuizAnswerViewController: UIViewController {
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.layer.masksToBounds = true
         
+        titleLabel.font = UIFontMetrics.default.scaledFont(
+            for: .systemFont(ofSize: 18, weight: .semibold)
+        )
+        titleLabel.adjustsFontForContentSizeCategory = true
+        descriptionLabel.font = UIFontMetrics.default.scaledFont(
+            for: .systemFont(ofSize: 14)
+        )
+        descriptionLabel.adjustsFontForContentSizeCategory = true
+        descriptionLabel.text = R.string.localizable.tip_quiz_answer()
+        
         var finishButtonAttributes = AttributeContainer()
         finishButtonAttributes.font = UIFontMetrics.default.scaledFont(
             for: .systemFont(ofSize: 16, weight: .medium)
         )
         finishButtonAttributes.foregroundColor = .white
-
+        
         switch answer {
         case .wrong:
             imageView.image = R.image.tip_quiz_wrong()
@@ -53,7 +64,7 @@ final class TIPQuizAnswerViewController: UIViewController {
                 attributes: finishButtonAttributes
             )
         }
-        descriptionLabel.text = R.string.localizable.tip_quiz_answer()
+        finishButton.titleLabel?.adjustsFontForContentSizeCategory = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,8 +83,8 @@ final class TIPQuizAnswerViewController: UIViewController {
             onTryAgain?()
             presentingViewController?.dismiss(animated: true)
         case .correct:
-            if let navigationController = presentingViewController as? TIPNavigationController {
-                navigationController.finish()
+            presentingViewController?.dismiss(animated: true) { [onFinish] in
+                onFinish?()
             }
         }
     }

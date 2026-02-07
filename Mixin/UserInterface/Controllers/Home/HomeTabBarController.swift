@@ -92,7 +92,9 @@ final class HomeTabBarController: UIViewController {
                 )
             }
         }
-        tabBar.selectedIndex = 0
+        tabBar.selectedIndex = tabBar.items.firstIndex(where: { item in
+            item.id == initialChild.rawValue
+        }) ?? 0
         tabBar.delegate = self
         updateTabBarShadow(resolveColorUsing: traitCollection)
         tabBar.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05).cgColor

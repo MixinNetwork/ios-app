@@ -128,7 +128,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
             } else {
                 Logger.login.info(category: "CheckSessionEnvironment", message: "Create PIN")
                 let tip = TIPNavigationController(intent: .create)
-                tip.redirectsToWalletTabOnFinished = isUsernameJustInitialized
+                tip.redirectsToWalletTabOnFinished = true
                 root = tip
             }
             AppDelegate.current.mainWindow.rootViewController = root

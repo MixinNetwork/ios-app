@@ -38,8 +38,8 @@
                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                     </collectionViewFlowLayout>
                 </collectionView>
-                <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="qhK-QG-aq3">
-                    <rect key="frame" x="160" y="550.66666666666663" width="73" height="44"/>
+                <pageControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="6" translatesAutoresizingMaskIntoConstraints="NO" id="qhK-QG-aq3">
+                    <rect key="frame" x="133.66666666666666" y="550.66666666666663" width="125.99999999999997" height="44"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="Sz4-Nc-0PL"/>
                     </constraints>

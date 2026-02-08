@@ -38,6 +38,7 @@ final class TIPActionViewController: UIViewController {
         
     }
     
+    @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
@@ -67,6 +68,18 @@ final class TIPActionViewController: UIViewController {
             target: self,
             action: #selector(presentCustomerService(_:))
         )
+        contentStackView.setCustomSpacing(24, after: iconImageView)
+        let descriptionParagraphStyle = NSMutableParagraphStyle()
+        descriptionParagraphStyle.lineHeightMultiple = 1.7
+        descriptionParagraphStyle.alignment = .center
+        descriptionLabel.attributedText = NSAttributedString(
+            string: R.string.localizable.syncing_and_verifying_tip(),
+            attributes: [
+                .font: UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14)),
+                .foregroundColor: R.color.text_tertiary()!,
+                .paragraphStyle: descriptionParagraphStyle,
+            ]
+        )
         progressLabel.font = UIFontMetrics.default.scaledFont(for: .monospacedDigitSystemFont(ofSize: 14, weight: .regular))
         progressLabel.adjustsFontForContentSizeCategory = true
         performAction()
@@ -89,7 +102,7 @@ final class TIPActionViewController: UIViewController {
         }
         switch action {
         case let .create(pin):
-            titleLabel.text = R.string.localizable.create_pin()
+            titleLabel.text = R.string.localizable.set_up_pin()
 #if DEBUG
             if TIPDiagnostic.uiTestOnly {
                 emulateProgress()
@@ -196,10 +209,7 @@ final class TIPActionViewController: UIViewController {
         Logger.tip.info(category: "TIPAction", message: "Finished successfully")
         switch action {
         case .create:
-            alert(R.string.localizable.set_pin_successfully()) { (_) in
-                let quiz = TIPQuizViewController()
-                self.tipNavigationController?.setViewControllers([quiz], animated: true)
-            }
+            tipNavigationController?.finish()
         case .change:
             alert(R.string.localizable.change_pin_successfully()) { (_) in
                 self.tipNavigationController?.finish()

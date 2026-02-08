@@ -52,12 +52,15 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 }
                 try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
+                let isNewLogin = !AppGroupUserDefaults.User.loginPINValidated
                 AppGroupUserDefaults.User.loginPINValidated = true
                 reporter.report(event: .loginEnd)
                 await MainActor.run {
                     Logger.login.info(category: "LoginPINValidation", message: "Validated")
                     Logger.redirectLogsToLogin = false
-                    AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController()
+                    AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController(
+                        initialTab: isNewLogin ? .wallet : .chat
+                    )
                 }
             } catch MixinAPIResponseError.malformedPin {
                 Logger.login.error(category: "LoginPINValidation", message: "malformedPin...hasPIN:\(account.hasPIN)...hasSafe:\(account.hasSafe)")

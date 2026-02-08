@@ -47,7 +47,12 @@ final class MobileNumberIntroductionViewController: IntroductionViewController {
     }
     
     @objc private func continueToNext(_ sender: Any) {
-        let next = ChangeNumberPINValidationViewController()
+        let next = switch action {
+        case .add:
+            VerifyMobileNumberPINValidationViewController(intent: .addMobileNumber)
+        case .change:
+            VerifyMobileNumberPINValidationViewController(intent: .changeMobileNumber)
+        }
         navigationController?.pushViewController(replacingCurrent: next, animated: true)
     }
     

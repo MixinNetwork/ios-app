@@ -103,4 +103,60 @@ extension NSAttributedString {
         return attributedString
     }
     
+    static func importWalletGuide() -> NSAttributedString {
+        let content = NSMutableAttributedString(
+            string: R.string.localizable.import_wallet_guide_header() + "\n\n",
+            attributes: [
+                .font: UIFontMetrics.default.scaledFont(
+                    for: .systemFont(ofSize: 14, weight: .medium)
+                ),
+                .foregroundColor: R.color.text_secondary()!
+            ]
+        )
+        
+        content.append(
+            NSAttributedString(
+                string: [
+                    R.string.localizable.import_wallet_guide_1(),
+                    R.string.localizable.import_wallet_guide_2(),
+                    R.string.localizable.import_wallet_guide_3(),
+                    R.string.localizable.import_wallet_guide_4(),
+                ].joined(separator: "\n"),
+                attributes: [
+                    .font: UIFontMetrics.default.scaledFont(
+                        for: .systemFont(ofSize: 14)
+                    ),
+                    .foregroundColor: R.color.text_secondary()!,
+                    .paragraphStyle: {
+                        let style = NSMutableParagraphStyle()
+                        style.lineSpacing = 10
+                        return style
+                    }(),
+                ]
+            )
+        )
+        
+        content.append(
+            NSAttributedString(
+                string: "\n\n" + R.string.localizable.import_wallet_guide_footer(),
+                attributes: [
+                    .font: UIFontMetrics.default.scaledFont(
+                        for: .systemFont(ofSize: 14)
+                    ),
+                    .foregroundColor: R.color.text_secondary()!
+                ]
+            )
+        )
+        
+        let linkRange = content.mutableString.range(
+            of: R.string.localizable.learn_more(),
+            options: [.backwards, .caseInsensitive]
+        )
+        if linkRange.location != NSNotFound && linkRange.length != 0 {
+            content.addAttribute(.link, value: URL.privacyWallet, range: linkRange)
+        }
+        
+        return content
+    }
+    
 }

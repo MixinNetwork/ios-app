@@ -59,6 +59,11 @@ final class PopupTipViewController: UIViewController {
             titleLabel.text = R.string.localizable.emergency_contact()
             descriptionLabel.text = R.string.localizable.setting_emergency_content()
             continueButton.setTitle(R.string.localizable.continue(), for: .normal)
+        case .verifyMobileNumber:
+            imageView.image = R.image.tips_verify_phone()
+            titleLabel.text = R.string.localizable.verify_mobile_number()
+            descriptionLabel.text = R.string.localizable.periodic_sms_verification_benefits()
+            continueButton.setTitle(R.string.localizable.verify_now(), for: .normal)
         case .appRating:
             assertionFailure("No preview for app rating. Call `AppStore.requestReview(in:)` instead.")
         case .importPrivateKey:
@@ -71,6 +76,11 @@ final class PopupTipViewController: UIViewController {
             titleLabel.text = R.string.localizable.import_mnemonic_phrase()
             descriptionLabel.text = R.string.localizable.import_secret_description(R.string.localizable.mnemonic_phrase())
             continueButton.setTitle(R.string.localizable.import_now(), for: .normal)
+        case .addMobileNumber:
+            imageView.image = R.image.tips_verify_phone()
+            titleLabel.text = R.string.localizable.add_mobile_number()
+            descriptionLabel.text = R.string.localizable.add_mobile_number_reason()
+            continueButton.setTitle(R.string.localizable.add_now(), for: .normal)
         }
         continueButton.style = .filled
         continueButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
@@ -121,6 +131,11 @@ final class PopupTipViewController: UIViewController {
                 let add = AddRecoveryContactViewController()
                 UIApplication.homeNavigationController?.pushViewController(add, animated: true)
             }
+        case .verifyMobileNumber:
+            presentingViewController?.dismiss(animated: true) {
+                let pin = VerifyMobileNumberPINValidationViewController(intent: .periodicVerification)
+                UIApplication.homeNavigationController?.pushViewController(pin, animated: true)
+            }
         case .appRating:
             break
         case .importPrivateKey(let wallet):
@@ -132,6 +147,11 @@ final class PopupTipViewController: UIViewController {
             presentingViewController?.dismiss(animated: true) {
                 let validation = AddWalletPINValidationViewController(action: .reimportMnemonics(wallet))
                 UIApplication.homeNavigationController?.pushViewController(validation, animated: true)
+            }
+        case .addMobileNumber:
+            presentingViewController?.dismiss(animated: true) {
+                let introduction = MobileNumberIntroductionViewController(action: .add)
+                UIApplication.homeNavigationController?.pushViewController(introduction, animated: true)
             }
         }
     }
@@ -146,7 +166,9 @@ final class PopupTipViewController: UIViewController {
             AppGroupUserDefaults.notificationTipDismissalDate = Date()
         case .recoveryContact:
             AppGroupUserDefaults.User.recoveryContactTipDismissalDate = Date()
-        case .appRating, .importPrivateKey, .importMnemonics:
+        case .verifyMobileNumber:
+            AppGroupUserDefaults.User.verifyPhoneTipDismissalDate = Date()
+        case .appRating, .importPrivateKey, .importMnemonics, .addMobileNumber:
             break
         }
         presentingViewController?.dismiss(animated: true)

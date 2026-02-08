@@ -213,76 +213,10 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
     }
     
     override func review(_ sender: Any) {
-        guard let token = selectedToken else {
-            return
-        }
-        guard let amount = NumberFormatter.enUSPOSIXLocalizedDecimal.string(decimal: fiatMoneyAmount) else {
-            return
-        }
-        let currency = selectedCurrency.code
-        reviewButton.isBusy = true
-        Task { [weak self] in
-            do {
-                let destination: String
-                if let token = token as? Web3TokenItem {
-                    let address = Web3AddressDAO.shared.address(
-                        walletID: token.walletID,
-                        chainID: token.chainID
-                    )
-                    guard let address else {
-                        throw BuyingError.unsupportedChain
-                    }
-                    destination = address.destination
-                } else {
-                    let entries = try await SafeAPI.depositEntries(
-                        assetID: token.assetID,
-                        chainID: token.chainID
-                    )
-                    DepositEntryDAO.shared.replace(
-                        entries: entries,
-                        forChainWith: token.chainID
-                    )
-                    let primaryEntry = entries.first { entry in
-                        entry.chainID == token.chainID && entry.isPrimary
-                    }
-                    guard let primaryEntry else {
-                        throw BuyingError.unsupportedChain
-                    }
-                    destination = primaryEntry.destination
-                }
-                Logger.general.info(category: "Buy", message: "Buy \(amount) \(token.symbol) with \(currency), dst: \(destination)")
-                let account = LoginManager.shared.account
-                let url = try await RouteAPI.rampURL(
-                    amount: amount,
-                    assetID: token.assetID,
-                    currency: currency,
-                    destination: destination,
-                    phoneVerifiedAt: account?.phoneVerifiedAt,
-                    phone: account?.phone,
-                )
-                Logger.general.info(category: "Buy", message: "Redirect to \(url)")
-                await MainActor.run {
-                    guard let self else {
-                        return
-                    }
-                    self.reviewButton.isBusy = false
-                    let onramp = BuyTokenWebViewController(
-                        title: R.string.localizable.buy_asset(token.symbol),
-                        subtitle: nil,
-                        url: url
-                    )
-                    self.present(onramp, animated: true)
-                }
-            } catch {
-                Logger.general.info(category: "Buy", message: "\(error)")
-                await MainActor.run {
-                    guard let self else {
-                        return
-                    }
-                    self.reviewButton.isBusy = false
-                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                }
-            }
+        LoginManager.shared.account?.checkBuyTokenEligibility {
+            reviewOrder()
+        } onVerificationNeeded: { popup in
+            present(popup, animated: true)
         }
     }
     
@@ -565,6 +499,80 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         )
         minimalAmountLabel.text = R.string.localizable.buying_limitation(limitation)
         minimalAmountLabel.alpha = 1
+    }
+    
+    private func reviewOrder() {
+        guard let token = selectedToken else {
+            return
+        }
+        guard let amount = NumberFormatter.enUSPOSIXLocalizedDecimal.string(decimal: fiatMoneyAmount) else {
+            return
+        }
+        let currency = selectedCurrency.code
+        reviewButton.isBusy = true
+        Task { [weak self] in
+            do {
+                let destination: String
+                if let token = token as? Web3TokenItem {
+                    let address = Web3AddressDAO.shared.address(
+                        walletID: token.walletID,
+                        chainID: token.chainID
+                    )
+                    guard let address else {
+                        throw BuyingError.unsupportedChain
+                    }
+                    destination = address.destination
+                } else {
+                    let entries = try await SafeAPI.depositEntries(
+                        assetID: token.assetID,
+                        chainID: token.chainID
+                    )
+                    DepositEntryDAO.shared.replace(
+                        entries: entries,
+                        forChainWith: token.chainID
+                    )
+                    let primaryEntry = entries.first { entry in
+                        entry.chainID == token.chainID && entry.isPrimary
+                    }
+                    guard let primaryEntry else {
+                        throw BuyingError.unsupportedChain
+                    }
+                    destination = primaryEntry.destination
+                }
+                Logger.general.info(category: "Buy", message: "Buy \(amount) \(token.symbol) with \(currency), dst: \(destination)")
+                let account = LoginManager.shared.account
+                let url = try await RouteAPI.rampURL(
+                    amount: amount,
+                    assetID: token.assetID,
+                    currency: currency,
+                    destination: destination,
+                    phoneVerifiedAt: account?.phoneVerifiedAt,
+                    phone: account?.phone,
+                )
+                Logger.general.info(category: "Buy", message: "Redirect to \(url)")
+                await MainActor.run {
+                    guard let self else {
+                        return
+                    }
+                    self.reviewButton.isBusy = false
+                    let onramp = BuyTokenWebViewController(
+                        title: R.string.localizable.buy_asset(token.symbol),
+                        subtitle: nil,
+                        url: url
+                    )
+                    self.present(onramp, animated: true)
+                }
+            } catch {
+                Logger.general.info(category: "Buy", message: "\(error)")
+                await MainActor.run {
+                    guard let self else {
+                        return
+                    }
+                    self.reviewButton.isBusy = false
+                    showAutoHiddenHud(style: .error, text: error.localizedDescription)
+                }
+            }
+        }
     }
     
 }

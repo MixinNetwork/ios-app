@@ -1,11 +1,11 @@
 import UIKit
 import MixinServices
 
-class RecoveryContactIDVerificationViewController: LoginInfoInputViewController {
+final class RecoveryContactIDVerificationViewController: LoginInfoInputViewController {
     
-    var context: PhoneNumberVerificationContext
+    var context: MobileNumberLoginContext
     
-    init(context: PhoneNumberVerificationContext) {
+    init(context: MobileNumberLoginContext) {
         self.context = context
         let nib = R.nib.loginInfoInputView
         super.init(nibName: nib.name, bundle: nib.bundle)
@@ -21,12 +21,8 @@ class RecoveryContactIDVerificationViewController: LoginInfoInputViewController 
         textField.textAlignment = .center
         textField.keyboardType = .numberPad
         textField.delegate = self
-        AppDelegate.current.mainWindow.endEditing(true)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         textField.becomeFirstResponder()
+        editingChangedAction(self)
     }
     
     override func continueToNext(_ sender: Any) {

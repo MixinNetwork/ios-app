@@ -4,11 +4,11 @@ import MixinServices
 
 class LoginVerificationCodeViewController: VerificationCodeViewController, LoginAccountHandler {
     
-    var context: PhoneNumberVerificationContext
+    var context: MobileNumberLoginContext
     
     private lazy var captcha = Captcha(viewController: self)
     
-    init(context: PhoneNumberVerificationContext) {
+    init(context: MobileNumberLoginContext) {
         self.context = context
         super.init()
     }

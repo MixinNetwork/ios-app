@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TIPFullscreenInputViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="continueButton" destination="q2h-7P-Kzr" id="PHh-IT-Wfe"/>
                 <outlet property="pinField" destination="f5n-Dp-KKY" id="hsp-pn-bfq"/>
                 <outlet property="subtitleLabel" destination="HbC-Vc-s1k" id="K8H-f7-H2y"/>
                 <outlet property="titleLabel" destination="0Wd-P2-eyq" id="gHp-xv-04L"/>
@@ -23,19 +24,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create PIN" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Wd-P2-eyq">
-                    <rect key="frame" x="27" y="92" width="360" height="186"/>
-                    <constraints>
-                        <constraint firstAttribute="height" priority="750" constant="186" id="iu9-1E-VmH" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
-                                    <real key="value" value="160"/>
-                                </userDefinedRuntimeAttribute>
-                                <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
-                                    <real key="value" value="140"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </constraint>
-                    </constraints>
+                    <rect key="frame" x="27" y="146" width="360" height="21.5"/>
                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                     <color key="textColor" name="text"/>
                     <nil key="highlightedColor"/>
@@ -44,10 +33,10 @@
                     </userDefinedRuntimeAttributes>
                 </label>
                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f5n-Dp-KKY" customClass="PinField" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="121" y="278" width="172" height="24"/>
+                    <rect key="frame" x="121" y="192.5" width="172" height="44"/>
                     <color key="tintColor" name="text_tertiary"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="24" id="GP0-j0-5h3"/>
+                        <constraint firstAttribute="height" constant="44" id="GP0-j0-5h3"/>
                         <constraint firstAttribute="width" constant="172" id="SeL-Zu-kMk"/>
                     </constraints>
                     <connections>
@@ -55,7 +44,7 @@
                     </connections>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="The PIN is too simple and insecure." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HbC-Vc-s1k">
-                    <rect key="frame" x="30" y="342" width="354" height="17"/>
+                    <rect key="frame" x="30" y="251.5" width="354" height="17"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" name="red"/>
                     <nil key="highlightedColor"/>
@@ -64,17 +53,29 @@
                         <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
                     </userDefinedRuntimeAttributes>
                 </label>
+                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q2h-7P-Kzr" customClass="ConfigurationBasedBusyButton" customModule="Mixin" customModuleProvider="target">
+                    <rect key="frame" x="36" y="738.5" width="342" height="43.5"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="filled" title="Continue" cornerStyle="capsule">
+                        <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="11" trailing="0.0"/>
+                        <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="baseBackgroundColor" name="theme"/>
+                    </buttonConfiguration>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" name="background"/>
             <constraints>
-                <constraint firstItem="0Wd-P2-eyq" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="44" id="3bc-if-CUy"/>
+                <constraint firstItem="0Wd-P2-eyq" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="50" id="3bc-if-CUy"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="q2h-7P-Kzr" secondAttribute="trailing" constant="36" id="5bp-ia-VOv"/>
                 <constraint firstItem="f5n-Dp-KKY" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="Ft3-ZM-Z8z"/>
                 <constraint firstItem="HbC-Vc-s1k" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="LRZ-hM-Ugo"/>
+                <constraint firstItem="q2h-7P-Kzr" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="36" id="QX6-M2-Sxp"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="q2h-7P-Kzr" secondAttribute="bottom" constant="46" placeholder="YES" id="dTR-cn-w1A"/>
                 <constraint firstItem="0Wd-P2-eyq" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="27" id="di3-M7-QLg"/>
                 <constraint firstAttribute="trailing" secondItem="HbC-Vc-s1k" secondAttribute="trailing" constant="30" id="dmf-fn-SLH"/>
-                <constraint firstItem="f5n-Dp-KKY" firstAttribute="top" secondItem="0Wd-P2-eyq" secondAttribute="bottom" id="lc6-cr-rbb"/>
-                <constraint firstItem="HbC-Vc-s1k" firstAttribute="top" secondItem="f5n-Dp-KKY" secondAttribute="bottom" constant="40" id="uEi-1h-Jd5"/>
+                <constraint firstItem="f5n-Dp-KKY" firstAttribute="top" secondItem="0Wd-P2-eyq" secondAttribute="bottom" constant="25" id="lc6-cr-rbb"/>
+                <constraint firstItem="HbC-Vc-s1k" firstAttribute="top" secondItem="f5n-Dp-KKY" secondAttribute="bottom" constant="15" id="uEi-1h-Jd5"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="0Wd-P2-eyq" secondAttribute="trailing" constant="27" id="zD5-KV-nsH"/>
             </constraints>
             <point key="canvasLocation" x="139" y="153"/>
@@ -91,7 +92,10 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

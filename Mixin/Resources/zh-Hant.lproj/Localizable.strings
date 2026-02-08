@@ -153,7 +153,7 @@
 "appearance" = "外觀";
 "apply" = "應用";
 "apply_referral_code" = "繫結邀請碼";
-"apply_referral_code_benefit" = "將邀請碼繫結到你的賬戶，解鎖 Mixin 專屬福利。";
+"apply_referral_code_benefit" = "將邀請碼繫結到你的賬號，解鎖 Mixin 專屬福利。";
 "approval" = "授權";
 "approval_count" = "已授權 %@";
 "approval_unlimited" = "無限量";
@@ -413,7 +413,7 @@
 "copy_user_id" = "複製使用者 ID";
 "create" = "建立";
 "create_account" = "建立帳戶";
-"create_an_account" = "建立賬戶";
+"create_an_account" = "建立賬號";
 "create_introduction" = "MPC 錢包，2FA，%@，自我保管，社交恢復";
 "create_mnemonic_phrase" = "建立助記詞";
 "create_new_wallet" = "建立新錢包";
@@ -421,11 +421,11 @@
 "create_pin" = "建立錢包";
 "create_safe" = "建立 Safe 金庫";
 "create_safe_description" = "您尚未擁有 Safe 金庫。現在建立即可與家人、朋友或同事安全管理資產。";
-"create_your_account" = "建立你的賬戶";
+"create_your_account" = "建立你的賬號";
 "created" = "建立日期";
 "created_this_group" = "%@建立了這個群組";
 "creating_wallet_terminated_unexpectedly" = "建立錢包意外中止，點繼續完成錢包建立";
-"creating_your_account" = "正在建立賬戶...";
+"creating_your_account" = "正在建立賬號...";
 "currency" = "貨幣";
 "currency_code" = "貨幣代碼";
 "current_language" = "繁體中文";
@@ -453,7 +453,7 @@
 "decode_transaction_failed" = "無法估計資產變化，注意只給您信任的應用程式簽名。";
 "delete" = "刪除";
 "delete_account_detail_hint" = "本地訊息和 iCloud 備份不會被自動刪除";
-"delete_account_hint" = "刪除你的賬戶和個人照片";
+"delete_account_hint" = "刪除你的賬號和個人照片";
 "delete_address" = "刪除地址";
 "delete_address_description" = "確認刪除該地址嗎？";
 "delete_chat" = "刪除聊天";
@@ -560,7 +560,7 @@
 "enter_new_anonymous_number" = "輸入你的新匿名號碼";
 "enter_new_phone_number" = "輸入你的新手機號碼";
 "enter_pin_create_wallet" = "輸入你的 PIN 以建立新錢包";
-"enter_pin_to_delete_account" = "輸入你的 PIN 以登出你的賬戶";
+"enter_pin_to_delete_account" = "輸入你的 PIN 以登出你的賬號";
 "enter_your_anonymous_number" = "輸入你的匿名號碼";
 "enter_your_emergency_contact_mixin_id" = "請輸入恢復聯絡人的 Mixin ID";
 "enter_your_new_pin" = "輸入你的新 PIN";
@@ -569,7 +569,7 @@
 "enter_your_pin" = "輸入你的 PIN";
 "enter_your_pin_to_continue" = "輸入你的 PIN 以繼續";
 "error_access_limited" = "錯誤 403：訪問受限";
-"error_already_bonded_referral_code" = "錯誤 10731：當前賬戶已繫結邀請碼，無法修改繫結。";
+"error_already_bonded_referral_code" = "錯誤 10731：當前賬號已繫結邀請碼，無法修改繫結。";
 "error_bad_data" = "錯誤 10002：請求資料不合法";
 "error_blockchain" = "錯誤 30100：區塊鏈同步異常，請稍後重試";
 "error_cannot_apply_your_own_referral_code" = "錯誤 10732：不可繫結自己的邀請碼";
@@ -791,7 +791,7 @@
 "keep_running_foreground" = "不要關閉螢幕並保持 Mixin 在前臺執行";
 "keep_waiting" = "繼續等待";
 "label" = "標題";
-"landing_delete_content" = "您在 %1$@ 申請了刪除賬號，賬號將於 %2$@ 被刪除，如果您繼續登入，刪除您賬戶的請求將被取消。";
+"landing_delete_content" = "您在 %1$@ 申請了刪除賬號，賬號將於 %2$@ 被刪除，如果您繼續登入，刪除您賬號的請求將被取消。";
 "landing_have_account" = "已有帳戶";
 "landing_validation_title" = "請輸入傳送至以下號碼的 4 位驗證碼：%@";
 "language" = "語言";
@@ -842,7 +842,7 @@
 "log_out" = "退出登入";
 "log_out_from_desktop" = "從桌面版退出";
 "log_out_instead" = "僅退出登入";
-"login_and_abort_account_deletion" = "繼續登入並放棄刪除賬戶";
+"login_and_abort_account_deletion" = "繼續登入並放棄刪除賬號";
 "login_desktop_first" = "請先登入桌面端";
 "logined" = "已登入";
 "logout_confirmation" = "你確定要退出登入？";
@@ -1391,9 +1391,9 @@
 "setting_chats" = "聊天記錄";
 "setting_conversation_group_tip" = "誰能加我進入群組";
 "setting_conversation_tip" = "誰可以給我發訊息";
-"setting_delete_account_pin_content" = "如果您繼續，您的個人資料和賬戶資訊將在%@被刪除。閱讀我們的檔案以瞭解更多。";
+"setting_delete_account_pin_content" = "如果您繼續，您的個人資料和賬號資訊將在%@被刪除。閱讀我們的檔案以瞭解更多。";
 "setting_delete_account_send" = "我們將傳送 4 位驗證碼到手機 %@";
-"setting_delete_account_tip" = "你的 Mixin 錢包還有一些資產，可以提現至其他錢包或交易所，賬戶一旦登出，這些資產將和錢包一起被棄用無法找回。";
+"setting_delete_account_tip" = "你的 Mixin 錢包還有一些資產，可以提現至其他錢包或交易所，賬號一旦登出，這些資產將和錢包一起被棄用無法找回。";
 "setting_duplicate_transfer_desc" = "當你在 6 個小時內給相同的人轉相同的金額時顯示確認彈窗。";
 "setting_emergency_change_mobile" = "立即修改手機號？";
 "setting_emergency_content" = "恢復聯絡人旨在幫助你在丟失且無法找回手機號的情況下登入你的賬號。";
@@ -1426,7 +1426,7 @@
 "show_mnemonic_phrase" = "檢視助記詞";
 "show_private_key" = "檢視私鑰";
 "sign_in" = "登入";
-"sign_in_no_account" = "還沒有賬戶？";
+"sign_in_no_account" = "還沒有賬號？";
 "sign_in_with_mnemonic_phrase" = "助記詞登入";
 "sign_up_15_secs" = "15 秒完成註冊";
 "sign_up_have_account" = "已有帳戶?";
@@ -1435,7 +1435,7 @@
 "signature_request" = "簽名確認";
 "signature_request_from" = "該簽名請求來自 %@。";
 "signed_message" = "簽名";
-"signing_in_to_your_account" = "正在登入賬戶...";
+"signing_in_to_your_account" = "正在登入賬號...";
 "single_transaction_should_be_between" = "金額範圍 %1$@ %2$@ ~ %3$@ %4$@";
 "single_transaction_should_be_greater_than" = "最低金額 %1$@ %2$@";
 "single_transaction_should_be_less_than" = "最高金額 %1$@ %2$@";
@@ -1510,11 +1510,11 @@
 "tip_creation_introduction" = "設定 6 位數字 PIN 建立你的第一個加密貨幣錢包，PIN 基於去中心化金鑰派生協議 Throttled Identity Protocol，閱讀檔案以瞭解更多。";
 "tip_introduction" = "6 位數字 PIN 基於去中心化金鑰派生協議 Throttled Identity Protocol，閱讀檔案以瞭解更多。";
 "tip_quiz_answer" = "PIN 是你錢包的鑰匙，丟失後無法找回。";
-"tip_quiz_correct_answer" = "我將無法訪問賬戶和資金。";
+"tip_quiz_correct_answer" = "我將無法訪問賬號和資金。";
 "tip_quiz_question" = "如果我丟失了 PIN，會發生什麼？";
 "tip_quiz_title_correct" = "正確！";
 "tip_quiz_title_wrong" = "哎呀，答錯了";
-"tip_quiz_wrong_answer" = "我可以恢復我的賬戶。";
+"tip_quiz_wrong_answer" = "我可以恢復我的賬號。";
 "title_participants" = "%d 成員";
 "title_participants_count" = "%d 成員";
 "to" = "至";
@@ -1583,7 +1583,7 @@
 "type_your_private_key" = "請輸入你的私鑰";
 "type_your_wallet_address" = "請輸入錢包地址";
 "unable_connect_to_desktop" = "無法連線到桌面，請稍後重試";
-"unable_synced_between_different_account" = "不同賬戶之間無法同步聊天記錄";
+"unable_synced_between_different_account" = "不同賬號之間無法同步聊天記錄";
 "unable_to_decode_the_request" = "無法解析請求: %@";
 "unable_to_estimate_balance_changes" = "無法估計資產變化";
 "unable_to_save_photo" = "儲存圖片失敗";
@@ -1692,7 +1692,7 @@
 "volume_24h" = "24 小時交易量";
 "waiting" = "等待中";
 "waiting_for_other_device" = "等待其他裝置...";
-"waiting_for_other_device_login" = "在新裝置上登入當前賬戶並選擇從其他手機恢復";
+"waiting_for_other_device_login" = "在新裝置上登入當前賬號並選擇從其他手機恢復";
 "waiting_for_other_device_scan" = "新裝置掃上面的二維碼建立連線";
 "waiting_transaction" = "正在等待交易";
 "waiting_transaction_description" = "您有一筆轉賬或提現未完成，請稍後再試";

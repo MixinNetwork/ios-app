@@ -89,6 +89,10 @@ final class TIPFullscreenInputViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         let title: String
         switch action {
         case .create(.input):
@@ -238,6 +242,12 @@ final class TIPFullscreenInputViewController: UIViewController {
         if !pinField.isFirstResponder {
             pinField.becomeFirstResponder()
         }
+    }
+    
+    @objc func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "tip_\(action.debugDescription)"])
     }
     
 }

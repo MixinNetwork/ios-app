@@ -486,9 +486,10 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
             }
         case .wallets:
             collectionView.deselectItem(at: indexPath, animated: true)
-            guard let wallet = pages[selectedCategory]?.digests[indexPath.item].wallet else {
+            guard let digests = pages[selectedCategory]?.digests, !digests.isEmpty else {
                 return
             }
+            let wallet = digests[indexPath.item].wallet
             switch wallet {
             case .privacy, .common:
                 let container = parent as? WalletContainerViewController

@@ -21,31 +21,25 @@ final class OnboardingBannerCell: UICollectionViewCell {
             UIColor(displayP3RgbValue: 0x2C3136),
             UIColor(displayP3RgbValue: 0x1C2029),
         ]
-        titleLabel.setFont(
-            scaledFor: .systemFont(ofSize: 24, weight: .semibold),
-            adjustForContentSize: true
-        )
-        resizeImageView(size: traitCollection.preferredContentSizeCategory)
+        resizeContent(size: traitCollection.preferredContentSizeCategory)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if traitCollection.preferredContentSizeCategory != previousTraitCollection?.preferredContentSizeCategory {
-            resizeImageView(size: traitCollection.preferredContentSizeCategory)
+            resizeContent(size: traitCollection.preferredContentSizeCategory)
         }
     }
     
-    private func resizeImageView(size: UIContentSizeCategory) {
+    private func resizeContent(size: UIContentSizeCategory) {
         switch ScreenHeight.current {
         case .short:
-            fallthrough
-        case .medium where size > .large:
             imageView.snp.remakeConstraints { make in
                 make.width.equalTo(imageView.snp.height).multipliedBy(375.0 / 310.0 * 1.5)
             }
         case .medium:
             imageView.snp.remakeConstraints { make in
-                make.width.equalTo(imageView.snp.height).multipliedBy(375.0 / 310.0)
+                make.width.equalTo(imageView.snp.height).multipliedBy(375.0 / 310.0 * 1.2)
             }
         case .long, .extraLong:
             imageView.snp.remakeConstraints { make in

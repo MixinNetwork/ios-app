@@ -67,6 +67,7 @@ final class OnboardingViewController: UIViewController {
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             let group = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
             let section = NSCollectionLayoutSection(group: group)
+            section.contentInsetsReference = .none
             section.visibleItemsInvalidationHandler = { visibleItems, scrollOffset, environment in
                 guard let firsItem = visibleItems.first else {
                     return

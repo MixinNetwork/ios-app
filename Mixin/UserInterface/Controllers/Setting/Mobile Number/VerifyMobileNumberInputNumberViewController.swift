@@ -40,6 +40,37 @@ final class VerifyMobileNumberInputNumberViewController: MobileNumberViewControl
     }
     
     override func continueToNext(_ sender: Any) {
+        switch context.intent {
+        case .periodicVerification:
+            performVerification()
+        case .addMobileNumber, .changeMobileNumber:
+            let message = R.string.localizable.text_confirm_send_code(fullNumber(withSpacing: true))
+            let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: R.string.localizable.change(), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: R.string.localizable.confirm(), style: .default, handler: { _ in
+                self.performVerification()
+            }))
+            present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    override func updateViews(with country: Country) {
+        super.updateViews(with: country)
+        switch context.intent {
+        case .periodicVerification:
+            titleLabel.text = R.string.localizable.confirm_your_mobile_number()
+        case .addMobileNumber:
+            titleLabel.text = R.string.localizable.enter_your_phone_number()
+        case .changeMobileNumber:
+            if country == .anonymous {
+                titleLabel.text = R.string.localizable.enter_new_anonymous_number()
+            } else {
+                titleLabel.text = R.string.localizable.enter_new_phone_number()
+            }
+        }
+    }
+    
+    private func performVerification() {
         continueButton.isBusy = true
         context.newNumber = fullNumber(withSpacing: false)
         context.newNumberRepresentation = fullNumber(withSpacing: true)
@@ -74,22 +105,6 @@ final class VerifyMobileNumberInputNumberViewController: MobileNumberViewControl
                     self.alert(error.localizedDescription)
                     self.continueButton.isBusy = false
                 }
-            }
-        }
-    }
-    
-    override func updateViews(with country: Country) {
-        super.updateViews(with: country)
-        switch context.intent {
-        case .periodicVerification:
-            titleLabel.text = R.string.localizable.confirm_your_mobile_number()
-        case .addMobileNumber:
-            titleLabel.text = R.string.localizable.enter_your_phone_number()
-        case .changeMobileNumber:
-            if country == .anonymous {
-                titleLabel.text = R.string.localizable.enter_new_anonymous_number()
-            } else {
-                titleLabel.text = R.string.localizable.enter_new_phone_number()
             }
         }
     }

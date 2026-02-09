@@ -4,8 +4,10 @@ import MixinServices
 extension Account {
     
     var isPhoneVerificationValid: Bool {
-        if let verifiedAt = phoneVerifiedAt?.toUTCDate() {
-            -verifiedAt.timeIntervalSinceNow <= 60 * .day
+        if let verifiedAt = phoneVerifiedAt,
+           let date = DateFormatter.iso8601Full.date(from: verifiedAt)
+        {
+            -date.timeIntervalSinceNow <= 60 * .day
         } else {
             false
         }

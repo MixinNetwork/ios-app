@@ -18,6 +18,8 @@
 "add_emergency_contact" = "Add recovery contact";
 "add_failed" = "Add Failed";
 "add_mobile_number" = "Add Mobile Number";
+"add_mobile_number_reason" = "For compliance and security reasons, we need to verify your mobile number.";
+"add_now" = "Add Now";
 "add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "Añadir participantes";
 "add_phone_desc" = "You can log in to your account using your mobile number. The mobile number will be associated with a key shard of your MPC wallet. The complete key exists only in the TEE security environment on the current device. Read the documentation to learn more about %@.";
@@ -124,7 +126,6 @@
 "all_conversations" = "Todas las conversaciones";
 "all_dates" = "All Dates";
 "all_invoices" = "All Invoices";
-"all_photos" = "Todas las fotos";
 "all_signer_failure" = "Falla de todos los nodos";
 "all_time_high" = "All Time High";
 "all_time_low" = "All Time Low";
@@ -346,6 +347,7 @@
 "confirm_signing_multisig" = "Confirm Signing Multisig";
 "confirm_transfer" = "Confirm Transfer";
 "confirm_withdrawal" = "Confirm Withdrawal";
+"confirm_your_mobile_number" = "Confirm your mobile number";
 "connect" = "Connect";
 "connect_to_tip_network_failed" = "No se puede conectar a la red TIP. Comprueba tu conexión e inténtalo de nuevo.";
 "connect_web3_wallet_description" = "Allow the app to view your wallet address and ask for your approval to make a transaction.";
@@ -560,6 +562,7 @@
 "enter_your_emergency_contact_mixin_id" = "Enter your recovery contact Mixin ID";
 "enter_your_new_pin" = "Introduce tu nuevo PIN";
 "enter_your_old_pin" = "Introduce tu antiguo PIN";
+"enter_your_phone_number" = "Introduce tu número telefónico";
 "enter_your_pin" = "Introduce tu PIN";
 "enter_your_pin_to_continue" = "Introduce tu PIN para continuar";
 "error_access_limited" = "ERROR 403: Access Limited";
@@ -895,6 +898,9 @@
 "mnemonics_mismatched" = "Mnemonics Mismatched";
 "mobile_contacts" = "Contactos móviles";
 "mobile_number" = "Mobile Number";
+"mobile_number_added" = "Mobile Number Added";
+"mobile_number_added_description" = "Adding mobile number helps improve account security";
+"mobile_number_changed" = "Mobile Number Changed";
 "mobile_phone" = "Mobile Phone";
 "monthly" = "Mensual";
 "months_count_short" = "%dM";
@@ -1048,6 +1054,7 @@
 "pending_confirmations" = "%d/%d confirmaciones";
 "pending_transaction_one" = "1 Pending Transaction";
 "pending_transactions_count" = "%d Pending Transactions";
+"periodic_sms_verification_benefits" = "Periodic SMS verification helps improve account security. If your current mobile number is no longer valid, please update it as soon as possible.";
 "permission_denied_camera" = "Camera Access Denied";
 "permission_denied_camera_hint" = "Mixin doesn't have permission to use your camera. Tap Settings to authorize.";
 "permission_denied_microphone_hint" = "Mixin no tiene permiso para usar tu micrófono. Toca Configuración para abrir la configuración del sistema.";
@@ -1152,7 +1159,7 @@
 "recovery_contact" = "Recovery Contact";
 "recovery_kit" = "Recovery Kit";
 "recovery_kit_attention" = "Attention: The Recovery Kit cannot help you recover your PIN";
-"recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your phone number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
+"recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your mobile number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "red_up_green_down" = "Red Up / Green Down";
 "referral" = "Referral";
 "referral_banner" = "Invite friends and earn up to 60%% of their trading fees!";
@@ -1284,7 +1291,6 @@
 "select_all" = "Select All";
 "select_date" = "Select Date";
 "select_emergency_contact" = "Select Recovery Contact";
-"select_more_photos" = "Seleccionar más fotos";
 "select_token" = "Select Token";
 "selected_count" = "%@ Seleccionado";
 "selected_item" = "1 artículo seleccionado";
@@ -1409,6 +1415,7 @@
 "slide_to_cancel" = "Deslizar para cancelar";
 "slippage" = "Slippage";
 "slow" = "Slow";
+"sms_verified_description" = "Periodic SMS verification helps improve account security";
 "snapshot_hash" = "Snapshot Hash";
 "snapshot_not_found" = "Instantánea no encontrada.";
 "sort_by" = "Ordenar por";
@@ -1629,7 +1636,10 @@
 "value" = "Value";
 "value_now" = "valor ahora %@";
 "value_then" = "valor entonces %@";
+"verification_successful" = "Verification Successful";
 "verify" = "Verificar";
+"verify_mobile_number" = "Verify Mobile Number";
+"verify_now" = "Verify Now";
 "verify_pin" = "Verificar PIN";
 "verifying_payment" = "Verifying payment...";
 "verifying_payment_description" = "Your payment is being verified. Thank you for your patience.";

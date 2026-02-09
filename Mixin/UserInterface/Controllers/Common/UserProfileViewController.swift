@@ -350,7 +350,7 @@ extension UserProfileViewController {
     }
     
     @objc func changeNumber() {
-        let verify = ChangeNumberPINValidationViewController()
+        let verify = VerifyMobileNumberPINValidationViewController(intent: .changeMobileNumber)
         if let navigationController {
             navigationController.pushViewController(verify, animated: true)
         } else {

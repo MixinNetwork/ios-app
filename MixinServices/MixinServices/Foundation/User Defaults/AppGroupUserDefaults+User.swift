@@ -47,6 +47,7 @@ extension AppGroupUserDefaults {
             
             case recoveryContactTipDismissalDate = "emergency_contact_bulletin_dismissal_date"
             case backupMnemonicsTipDismissalDate = "backup_mnemonics_tip_dismissal_date"
+            case verifyPhoneTipDismissalDate = "verify_phone_tip_dismissal_date"
             
             case lockScreenTimeout = "lock_screen_timeout_interval"
             case lockScreenWithBiometricAuthentication = "lock_screen_with_biometric_authentication"
@@ -210,6 +211,9 @@ extension AppGroupUserDefaults {
         
         @Default(namespace: .user, key: Key.backupMnemonicsTipDismissalDate, defaultValue: nil)
         public static var backupMnemonicsTipDismissalDate: Date?
+        
+        @Default(namespace: .user, key: Key.verifyPhoneTipDismissalDate, defaultValue: nil)
+        public static var verifyPhoneTipDismissalDate: Date?
         
         @Default(namespace: .user, key: Key.lockScreenWithBiometricAuthentication, defaultValue: false)
         public static var lockScreenWithBiometricAuthentication: Bool

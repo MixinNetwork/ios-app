@@ -18,6 +18,8 @@
 "add_emergency_contact" = "新增恢復聯絡人";
 "add_failed" = "新增失敗";
 "add_mobile_number" = "新增手機號碼";
+"add_mobile_number_reason" = "基於合規與安全原因，我們需要驗證你的手機號碼。";
+"add_now" = "立即新增";
 "add_or_remove_favorite_bots" = "新增或刪除收藏的機器人";
 "add_participants" = "新增成員";
 "add_phone_desc" = "您可以透過手機號碼登入您的帳戶。手機號碼將與您 MPC 錢包的金鑰片段關聯。完整的金鑰僅存在於當前裝置的 TEE 安全環境中。閱讀檔案以瞭解%@。";
@@ -124,7 +126,6 @@
 "all_conversations" = "所有會話";
 "all_dates" = "所有日期";
 "all_invoices" = "全部賬單";
-"all_photos" = "所有照片";
 "all_signer_failure" = "所有節點失敗";
 "all_time_high" = "歷史最高";
 "all_time_low" = "歷史最低";
@@ -346,6 +347,7 @@
 "confirm_signing_multisig" = "多簽交易確認";
 "confirm_transfer" = "轉賬確認";
 "confirm_withdrawal" = "提現確認";
+"confirm_your_mobile_number" = "確認手機號碼";
 "connect" = "連線";
 "connect_to_tip_network_failed" = "連線 TIP 網路失敗，請嘗試切換網路後重試";
 "connect_web3_wallet_description" = "授權應用檢視你的錢包地址，或者向你傳送交易請求。";
@@ -560,6 +562,7 @@
 "enter_your_emergency_contact_mixin_id" = "請輸入恢復聯絡人的 Mixin ID";
 "enter_your_new_pin" = "輸入你的新 PIN";
 "enter_your_old_pin" = "輸入你的舊 PIN";
+"enter_your_phone_number" = "輸入你的手機號碼";
 "enter_your_pin" = "輸入你的 PIN";
 "enter_your_pin_to_continue" = "輸入你的 PIN 以繼續";
 "error_access_limited" = "錯誤 403：訪問受限";
@@ -895,6 +898,9 @@
 "mnemonics_mismatched" = "助記詞不符";
 "mobile_contacts" = "通訊錄";
 "mobile_number" = "手機號碼";
+"mobile_number_added" = "新增成功";
+"mobile_number_added_description" = "新增手機號碼有助於提升賬號安全";
+"mobile_number_changed" = "已更改手機號碼";
 "mobile_phone" = "手機";
 "monthly" = "每月";
 "months_count_short" = "%d月";
@@ -1048,6 +1054,7 @@
 "pending_confirmations" = "%d/%d 區塊確認數";
 "pending_transaction_one" = "有 1 筆交易處理中";
 "pending_transactions_count" = "有 %d 筆交易處理中";
+"periodic_sms_verification_benefits" = "定期進行簡訊驗證有助於提升賬號安全，如果當前手機號已失效請儘快更換手機號。";
 "permission_denied_camera" = "授權使用相機";
 "permission_denied_camera_hint" = "Mixin 需要相機許可權，請點選'設定'並調整授權。";
 "permission_denied_microphone_hint" = "Mixin 需要麥克風許可權，請點選'設定'開啟系統授權。";
@@ -1284,7 +1291,6 @@
 "select_all" = "選擇所有";
 "select_date" = "選擇日期";
 "select_emergency_contact" = "選擇恢復聯絡人";
-"select_more_photos" = "選擇更多照片";
 "select_token" = "選擇代幣";
 "selected_count" = "選擇了 %@ 個訊息";
 "selected_item" = "已選擇 1 項";
@@ -1409,6 +1415,7 @@
 "slide_to_cancel" = "滑動取消";
 "slippage" = "滑點";
 "slow" = "緩慢";
+"sms_verified_description" = "定期進行簡訊驗證有助於提升賬號安全";
 "snapshot_hash" = "快照雜湊";
 "snapshot_not_found" = "找不到該轉賬記錄。";
 "sort_by" = "順序";
@@ -1629,7 +1636,10 @@
 "value" = "價值";
 "value_now" = "價值 %@";
 "value_then" = "當時價值 %@";
+"verification_successful" = "驗證成功";
 "verify" = "驗證";
+"verify_mobile_number" = "驗證手機號碼";
+"verify_now" = "立即驗證";
 "verify_pin" = "驗證 PIN";
 "verifying_payment" = "支付檢測中...";
 "verifying_payment_description" = "支付檢測中，請耐心等待";

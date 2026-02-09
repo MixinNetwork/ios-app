@@ -1,13 +1,13 @@
 import UIKit
 import MixinServices
 
-class ChangeNumberVerificationCodeViewController: VerificationCodeViewController {
+class VerifyMobileNumberOneTimeCodeViewController: VerificationCodeViewController {
     
-    private var context: ChangeNumberContext
+    private var context: MobileNumberVerificationContext
     
     private lazy var captcha = Captcha(viewController: self)
     
-    init(context: ChangeNumberContext) {
+    init(context: MobileNumberVerificationContext) {
         self.context = context
         super.init()
     }
@@ -26,20 +26,39 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
         let codeCountMeetsRequirement = code.count == verificationCodeField.numberOfDigits
         continueButton.isHidden = !codeCountMeetsRequirement
         if !isBusy && codeCountMeetsRequirement {
-            changePhoneNumber()
+            verifyPhoneNumber()
         }
     }
     
     override func continueAction(_ sender: Any) {
-        changePhoneNumber()
+        verifyPhoneNumber()
     }
     
-    private func changePhoneNumber() {
+    private func verifyPhoneNumber() {
         let code = verificationCodeField.text
         let context = self.context
+        let popBackAction = UIAlertAction(
+            title: R.string.localizable.ok(),
+            style: .default
+        ) { _ in
+            guard let navigationController = self.navigationController else {
+                return
+            }
+            var viewControllers = navigationController.viewControllers
+            let index = viewControllers.firstIndex(where: { controller in
+                controller is VerifyMobileNumberInputNumberViewController
+            })
+            if let index {
+                viewControllers.removeLast(viewControllers.count - index)
+                navigationController.setViewControllers(viewControllers, animated: true)
+            } else {
+                navigationController.popToRootViewController(animated: true)
+            }
+        }
         isBusy = true
-        AccountAPI.changePhoneNumber(
+        AccountAPI.verifyPhoneNumber(
             verificationID: context.verificationID,
+            purpose: context.intent.verificationPurpose,
             code: code,
             pin: context.pin,
             salt: context.base64Salt
@@ -51,14 +70,28 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
             case .success(let account):
                 LoginManager.shared.setAccount(account)
                 self.verificationCodeField.resignFirstResponder()
-                self.alert(nil, message: R.string.localizable.changed(), handler: { (_) in
-                    guard let navigationController = self.navigationController else {
-                        return
-                    }
-                    var viewControllers = navigationController.viewControllers
-                    viewControllers.removeLast(4)
-                    navigationController.setViewControllers(viewControllers, animated: true)
-                })
+                let alert = switch self.context.intent {
+                case .periodicVerification:
+                    UIAlertController(
+                        title: R.string.localizable.verification_successful(),
+                        message: R.string.localizable.sms_verified_description(),
+                        preferredStyle: .alert
+                    )
+                case .addMobileNumber:
+                    UIAlertController(
+                        title: R.string.localizable.mobile_number_added(),
+                        message: R.string.localizable.mobile_number_added_description(),
+                        preferredStyle: .alert
+                    )
+                case .changeMobileNumber:
+                    UIAlertController(
+                        title: R.string.localizable.mobile_number_changed(),
+                        message: R.string.localizable.sms_verified_description(),
+                        preferredStyle: .alert
+                    )
+                }
+                alert.addAction(popBackAction)
+                self.present(alert, animated: true)
             case let .failure(error):
                 self.isBusy = false
                 self.verificationCodeField.clear()
@@ -72,6 +105,7 @@ class ChangeNumberVerificationCodeViewController: VerificationCodeViewController
     override func requestVerificationCode(captchaToken token: CaptchaToken?) {
         AccountAPI.phoneVerifications(
             phoneNumber: context.newNumber,
+            purpose: context.intent.verificationPurpose,
             base64Salt: context.base64Salt,
             captchaToken: token
         ) { [weak self] (result) in

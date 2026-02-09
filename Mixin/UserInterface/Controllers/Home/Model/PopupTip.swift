@@ -7,9 +7,11 @@ enum PopupTip {
     case backupMnemonics
     case notification
     case recoveryContact
+    case verifyMobileNumber
     case appRating
     case importPrivateKey(Web3Wallet)
     case importMnemonics(Web3Wallet)
+    case addMobileNumber
     
     private var detectInterval: TimeInterval {
         switch self {
@@ -21,9 +23,11 @@ enum PopupTip {
             2 * .day
         case .recoveryContact:
             7 * .day
+        case .verifyMobileNumber:
+            7 * .day
         case .appRating:
             2 * .week
-        case .importPrivateKey, .importMnemonics:
+        case .importPrivateKey, .importMnemonics, .addMobileNumber:
                 .greatestFiniteMagnitude
         }
     }
@@ -73,6 +77,15 @@ extension PopupTip {
            -firstLaunchDate.timeIntervalSinceNow > 7 * .day
         {
             return .appRating
+        }
+        
+        if !account.isAnonymous,
+           let number = account.phone,
+           !number.isEmpty,
+           !account.isPhoneVerificationValid,
+           userDismissalOutdates(tip: .verifyMobileNumber, dismissalDate: AppGroupUserDefaults.User.verifyPhoneTipDismissalDate)
+        {
+            return .verifyMobileNumber
         }
         
         return nil

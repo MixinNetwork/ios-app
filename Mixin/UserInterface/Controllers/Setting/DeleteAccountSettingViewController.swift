@@ -88,7 +88,7 @@ extension DeleteAccountSettingViewController {
     }
     
     private func changeNumber() {
-        let verify = ChangeNumberPINValidationViewController()
+        let verify = VerifyMobileNumberPINValidationViewController(intent: .changeMobileNumber)
         navigationController?.pushViewController(verify, animated: true)
     }
     

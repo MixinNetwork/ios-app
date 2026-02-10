@@ -11,6 +11,7 @@ final class UsernameViewController: LoginInfoInputViewController, CheckSessionEn
         )
         titleLabel.text = R.string.localizable.what_should_friends_call_you()
         textField.placeholder = R.string.localizable.username_placeholder()
+        textField.delegate = self
         descriptionLabel.text = R.string.localizable.username_description()
         editingChangedAction(self)
         textField.becomeFirstResponder()
@@ -76,6 +77,15 @@ final class UsernameViewController: LoginInfoInputViewController, CheckSessionEn
             }
         }
         return nil
+    }
+    
+}
+
+extension UsernameViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        continueToNext(textField)
+        return false
     }
     
 }

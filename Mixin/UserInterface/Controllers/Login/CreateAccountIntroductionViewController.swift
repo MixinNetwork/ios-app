@@ -68,6 +68,7 @@ final class CreateAccountIntroductionViewController: UIViewController {
             }
             viewControllers.append(next)
             navigationController.setViewControllers(viewControllers, animated: true)
+            Logger.login.info(category: "CreateAccountIntro", message: "Sign up start")
             reporter.report(event: .signUpStart, tags: ["type": "mnemonic_phrase"])
         }
     }

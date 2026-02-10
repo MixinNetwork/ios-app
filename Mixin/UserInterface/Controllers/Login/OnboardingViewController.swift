@@ -134,7 +134,6 @@ final class OnboardingViewController: UIViewController {
     @IBAction func signUp(_ sender: Any) {
         let intro = CreateAccountIntroductionViewController()
         present(intro, animated: true)
-        Logger.login.info(category: "Onboarding", message: "Sign up")
     }
     
     @IBAction func signIn(_ sender: Any) {

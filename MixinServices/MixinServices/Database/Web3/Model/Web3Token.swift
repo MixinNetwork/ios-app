@@ -108,7 +108,8 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
     public init(
         token: Web3Token,
         replacingWalletID walletID: String,
-        amount: String
+        amount: String,
+        usdPrice: String,
     ) {
         self.walletID = walletID
         self.assetID = token.assetID
@@ -120,7 +121,7 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
         self.precision = token.precision
         self.iconURL = token.iconURL
         self.amount = amount
-        self.usdPrice = token.usdPrice
+        self.usdPrice = usdPrice
         self.usdChange = token.usdChange
         self.level = token.level
     }

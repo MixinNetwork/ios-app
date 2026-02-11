@@ -49,7 +49,8 @@ final class ReloadSafeWalletsJob: AsynchronousJob {
                             Web3Token(
                                 token: template,
                                 replacingWalletID: account.accountID,
-                                amount: asset.balance
+                                amount: asset.balance,
+                                usdPrice: asset.usdPrice,
                             )
                         } else {
                             nil

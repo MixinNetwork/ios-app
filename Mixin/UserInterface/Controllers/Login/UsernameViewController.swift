@@ -9,10 +9,17 @@ final class UsernameViewController: LoginInfoInputViewController, CheckSessionEn
             target: self,
             action: #selector(presentCustomerService(_:))
         )
-        titleLabel.text = R.string.localizable.whats_your_name()
-        textField.text = makeDefaultUsername()
+        titleLabel.text = R.string.localizable.what_should_friends_call_you()
+        textField.placeholder = R.string.localizable.username_placeholder()
+        textField.delegate = self
+        descriptionLabel.text = R.string.localizable.username_description()
         editingChangedAction(self)
+        textField.becomeFirstResponder()
         reporter.report(event: .signUpFullname)
+        if let name = makeDefaultUsername() {
+            textField.text = name
+            textField.selectAll(nil)
+        }
     }
     
     override func continueToNext(_ sender: Any) {
@@ -70,6 +77,15 @@ final class UsernameViewController: LoginInfoInputViewController, CheckSessionEn
             }
         }
         return nil
+    }
+    
+}
+
+extension UsernameViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        continueToNext(textField)
+        return false
     }
     
 }

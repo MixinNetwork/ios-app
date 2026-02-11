@@ -52,12 +52,24 @@ final class LoginPINValidationViewController: FullscreenPINValidationViewControl
                 }
                 try await TIP.registerDefaultCommonWalletIfNeeded(pin: pin)
                 AppGroupUserDefaults.Wallet.lastPINVerifiedDate = Date()
+                
+                // This view appears in the following two scenarios:
+                // 1. The user is already signed in, but has not registered Safe or Common Wallet.
+                // 2. The user has just signed up or just signed in.
+                //
+                // Use the value of `loginPINValidated` to determine which scenario is being handled:
+                // - For scenario 1, the default tab should be Chat.
+                // - For scenario 2, the default tab should be Wallet.
+                let isNewLogin = !AppGroupUserDefaults.User.loginPINValidated
+                
                 AppGroupUserDefaults.User.loginPINValidated = true
                 reporter.report(event: .loginEnd)
                 await MainActor.run {
                     Logger.login.info(category: "LoginPINValidation", message: "Validated")
                     Logger.redirectLogsToLogin = false
-                    AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController()
+                    AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController(
+                        initialTab: isNewLogin ? .wallet : .chat
+                    )
                 }
             } catch MixinAPIResponseError.malformedPin {
                 Logger.login.error(category: "LoginPINValidation", message: "malformedPin...hasPIN:\(account.hasPIN)...hasSafe:\(account.hasSafe)")

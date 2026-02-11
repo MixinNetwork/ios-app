@@ -3,6 +3,7 @@
 "access_dapps_defi_projects" = "訪問 apps 或 DeFi 專案";
 "access_to_contacts" = "訪問通訊錄";
 "account" = "賬號";
+"account_creation_failed" = "建立賬號失敗";
 "acknowledgements" = "許可證";
 "add" = "新增";
 "add_a_note" = "新增轉賬備註";
@@ -412,6 +413,7 @@
 "copy_user_id" = "複製使用者 ID";
 "create" = "建立";
 "create_account" = "建立帳戶";
+"create_an_account" = "建立賬戶";
 "create_introduction" = "MPC 錢包，2FA，%@，自我保管，社交恢復";
 "create_mnemonic_phrase" = "建立助記詞";
 "create_new_wallet" = "建立新錢包";
@@ -419,6 +421,7 @@
 "create_pin" = "建立錢包";
 "create_safe" = "建立 Safe 金庫";
 "create_safe_description" = "您尚未擁有 Safe 金庫。現在建立即可與家人、朋友或同事安全管理資產。";
+"create_your_account" = "建立你的賬戶";
 "created" = "建立日期";
 "created_this_group" = "%@建立了這個群組";
 "creating_wallet_terminated_unexpectedly" = "建立錢包意外中止，點繼續完成錢包建立";
@@ -653,12 +656,18 @@
 "failed_to_send_video" = "傳送影片失敗，請稍後重試";
 "fast" = "快速";
 "favorite" = "收藏";
+"feature_all_in_one" = "一站式加密資產管理";
+"feature_all_in_one_description" = "交易、兌換、管理數千種原生代幣";
 "feature_compatibility" = "相容性";
 "feature_compatibility_description" = "支援從其他錢包匯入私鑰與觀察地址。";
 "feature_decentralized" = "去中心化";
 "feature_decentralized_description" = "完全去中心化的錢包，你掌控私鑰。";
+"feature_privacy_by_default" = "預設隱私保護";
+"feature_privacy_by_default_description" = "聊天、通話、轉賬、資產，全程加密守護";
 "feature_seamless" = "無縫體驗";
 "feature_seamless_description" = "閃電般的互動體驗，頁面載入與響應更迅速。";
+"feature_truly_decentralized" = "真正的去中心化";
+"feature_truly_decentralized_description" = "你的私鑰，你的資產。經審計驗證的開源架構。";
 "fee" = "手續費";
 "fee_selection" = "手續費（%@）";
 "feedback" = "反饋";
@@ -728,6 +737,12 @@
 "import_single_chain_wallet" = "匯入單鏈錢包";
 "import_wallet_count" = "匯入 %d 個錢包";
 "import_wallet_count_one" = "匯入 1 個錢包";
+"import_wallet_guide_1" = "· 建立一個 Mixin 賬號。";
+"import_wallet_guide_2" = "· 前往錢包列表 → 新增錢包 > 選擇匯入助記詞。";
+"import_wallet_guide_3" = "· 輸入您的 12 或 24 位助記詞或私鑰完成匯入。";
+"import_wallet_guide_4" = "· 開始使用。";
+"import_wallet_guide_footer" = "建立 Mixin 賬號後，將預設生成一個隱私錢包，您的餘額、轉賬、交易等功能都會預設受到隱私保護，檢視檔案瞭解更多。";
+"import_wallet_guide_header" = "如需使用 12 或 24 位助記詞錢包，請按以下步驟操作：";
 "import_wallets" = "匯入錢包";
 "import_wallets_from_another_wallet" = "從其他錢包匯入錢包";
 "importing_into_your_wallet" = "正在匯入你的錢包...";
@@ -896,6 +911,7 @@
 "mnemonic_phrase_tip_2" = "·不要在網路上傳送";
 "mnemonic_phrases" = "助記詞";
 "mnemonics_mismatched" = "助記詞不符";
+"mnemonics_policy" = "你的助記詞僅用於本地處理，不會進行儲存。";
 "mobile_contacts" = "通訊錄";
 "mobile_number" = "手機號碼";
 "mobile_number_added" = "新增成功";
@@ -997,7 +1013,18 @@
 "ok" = "好的";
 "old_device_is_waiting" = "確保舊的裝置已停留在同步等待掃碼的介面";
 "oldest" = "最早";
+"onboarding_decentralized_description" = "去中心化、開源、經審計的非託管錢包";
+"onboarding_decentralized_title" = "你的私鑰，你的資產";
 "onboarding_description" = "帶有端對端加密訊息功能的開源加密錢包";
+"onboarding_mixin_description" = "一個帶有端對端加密聊天功能的開源加密貨幣錢包";
+"onboarding_privacy_description" = "支援端到端加密聊天、群組通話，可直接向聯絡人傳送加密貨幣";
+"onboarding_privacy_title" = "私密聊天與轉賬";
+"onboarding_recover_description" = "使用助記詞、恢復聯絡人或手機號碼恢復去中心化錢包";
+"onboarding_recover_title" = "賬號永不丟失";
+"onboarding_reward_description" = "邀請好友可獲得高達 60%% 的交易返利和會員佣金";
+"onboarding_reward_title" = "邀請返佣";
+"onboarding_trade_description" = "支援兌換原生代幣、法幣入金和免費轉賬";
+"onboarding_trade_title" = "兌換數千種原生加密貨幣";
 "one_by_one_forward" = "逐條轉發";
 "one_day" = "1 天";
 "one_hour" = "1 小時";
@@ -1401,6 +1428,7 @@
 "sign_in" = "登入";
 "sign_in_no_account" = "還沒有賬戶？";
 "sign_in_with_mnemonic_phrase" = "助記詞登入";
+"sign_up_15_secs" = "15 秒完成註冊";
 "sign_up_have_account" = "已有帳戶?";
 "sign_with_emergency_contact" = "透過恢復聯絡人登入";
 "sign_with_mobile_number" = "透過手機號登入";
@@ -1562,6 +1590,7 @@
 "unable_to_save_video" = "儲存影片失敗";
 "unable_to_share_content" = "無法分享此內容";
 "unauthorized" = "未授權";
+"unavailable_mnemonics_word_count" = "12 個詞或 24 個詞";
 "unblock" = "解除封鎖";
 "unfamiliar_person_reminder" = "%1$@（%2$@）不是你的聯絡人，請注意收款人是否正確。";
 "unit_day" = "天";
@@ -1631,6 +1660,8 @@
 "user_delete_hint" = "該使用者已經刪除了賬號。";
 "user_is_reported" = "已舉報";
 "user_not_found" = "找不到這個使用者";
+"username_description" = "好友在與你聊天或轉賬時會看到此暱稱";
+"username_placeholder" = "輸入暱稱";
 "utxo_count_exceeded" = "該交易使用的 UTXO 數量過多，請嘗試首先歸集 UTXO 或者分批轉賬。";
 "validation_timed_out" = "驗證超時";
 "value" = "價值";
@@ -1722,8 +1753,8 @@
 "weeks" = "週";
 "weeks_count_short" = "%d周";
 "what_is_pin" = "什麼是 PIN ?";
+"what_should_friends_call_you" = "你的朋友該如何稱呼你？";
 "whats_safe_wallet" = "什麼是 Safe 金庫？";
-"whats_your_name" = "你的名字？";
 "wifi" = "WLAN";
 "wifi_and_cellular" = "WLAN 與行動數據";
 "withdraw_address" = "提現地址";

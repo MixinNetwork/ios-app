@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class TIPFullscreenInputViewController: ContinueButtonViewController {
+final class TIPFullscreenInputViewController: UIViewController {
     
     enum Action: CustomDebugStringConvertible {
         
@@ -57,14 +57,14 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
     @IBOutlet weak var pinField: PinField!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var continueButton: ConfigurationBasedBusyButton!
     
     private let action: Action
-    private let confirmationSteps = 3
+    private let confirmationStepCount = 2
     
     private var isBusy = false {
         didSet {
             continueButton.isBusy = isBusy
-            continueButton.isHidden = !isBusy
             pinField.receivesInput = !isBusy
         }
     }
@@ -89,34 +89,58 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        subtitleLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(keyboardLayoutGuide.snp.top).offset(-16)
-        }
-        pinField.becomeFirstResponder()
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
+        let title: String
         switch action {
         case .create(.input):
             reporter.report(event: .signUpPINSet)
-            titleLabel.text = R.string.localizable.tip_create_pin_title()
+            title = R.string.localizable.tip_create_pin_title()
             subtitleLabel.text = ""
         case .change(_, .verify):
-            titleLabel.text = R.string.localizable.enter_your_old_pin()
+            title = R.string.localizable.enter_your_old_pin()
             subtitleLabel.text = ""
         case .change(_, .input):
-            titleLabel.text = R.string.localizable.set_new_pin()
+            title = R.string.localizable.set_new_pin()
             subtitleLabel.text = ""
         case let .create(.confirmation(step, _)), let .change(_, .confirmation(step, _, _)):
             switch step {
             case 0:
-                titleLabel.text = R.string.localizable.pin_confirm_hint()
+                title = R.string.localizable.pin_confirm_hint()
                 subtitleLabel.text = R.string.localizable.pin_lost_hint()
-            case 1:
-                titleLabel.text = R.string.localizable.pin_confirm_again_hint()
-                subtitleLabel.text = R.string.localizable.third_pin_confirm_hint()
             default:
-                titleLabel.text = R.string.localizable.pin_confirm_again_hint()
-                subtitleLabel.text = R.string.localizable.fourth_pin_confirm_hint()
+                title = R.string.localizable.pin_confirm_again_hint()
+                subtitleLabel.text = R.string.localizable.third_pin_confirm_hint()
             }
         }
+        titleLabel.attributedText = {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineHeightMultiple = 1.5
+            paragraphStyle.alignment = .center
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 18, weight: .semibold),
+                .foregroundColor: R.color.text()!,
+                .paragraphStyle: paragraphStyle,
+            ]
+            return NSAttributedString(string: title, attributes: attributes)
+        }()
+        continueButton.configuration?.attributedTitle = {
+            var attributes = AttributeContainer()
+            attributes.font = UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 16, weight: .medium)
+            )
+            return AttributedString(
+                R.string.localizable.continue(),
+                attributes: attributes
+            )
+        }()
+        continueButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
+                .offset(-26)
+        }
+        pinField.becomeFirstResponder()
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
@@ -156,17 +180,19 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
             navigationController?.pushViewController(next, animated: true)
         case let .create(.confirmation(step, previous)):
             guard pin == previous else {
-                alert(R.string.localizable.wallet_password_not_equal(), cancelHandler: { _ in
-                    self.tipNavigationController?.popToFirstFullscreenInput()
-                })
+                alert(R.string.localizable.wallet_password_not_equal()) { _ in
+                    self.navigationController?.popViewController(animated: true)
+                }
                 return
             }
-            if step == confirmationSteps - 1 {
-                let action = TIPActionViewController(action: .create(pin: pin))
-                navigationController?.setViewControllers([action], animated: true)
+            if step == confirmationStepCount - 1 {
+                let quiz = TIPQuizViewController(pin: pin)
+                navigationController?.pushViewController(replacingCurrent: quiz, animated: true)
             } else {
-                let next = TIPFullscreenInputViewController(action: .create(.confirmation(step: step + 1, previous: pin)))
-                navigationController?.pushViewController(next, animated: true)
+                let next = TIPFullscreenInputViewController(
+                    action: .create(.confirmation(step: step + 1, previous: pin))
+                )
+                navigationController?.pushViewController(replacingCurrent: next, animated: true)
             }
         case let .change(fromLegacy, .verify):
             isBusy = true
@@ -196,7 +222,7 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
                 })
                 return
             }
-            if step == confirmationSteps - 1 {
+            if step == confirmationStepCount - 1 {
                 let action: TIPActionViewController.Action
                 if fromLegacy {
                     action = .change(old: .legacy(old), new: new)
@@ -216,6 +242,12 @@ final class TIPFullscreenInputViewController: ContinueButtonViewController {
         if !pinField.isFirstResponder {
             pinField.becomeFirstResponder()
         }
+    }
+    
+    @objc func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "tip_\(action.debugDescription)"])
     }
     
 }

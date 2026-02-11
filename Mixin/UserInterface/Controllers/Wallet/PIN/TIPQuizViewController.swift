@@ -12,6 +12,18 @@ final class TIPQuizViewController: UIViewController {
     @IBOutlet weak var checkAnswerButton: UIButton!
     @IBOutlet weak var explainPINButton: UIButton!
     
+    private let pin: String
+    
+    init(pin: String) {
+        self.pin = pin
+        let nib = R.nib.tipQuizView
+        super.init(nibName: nib.name, bundle: nib.bundle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard is not supported")
+    }
+    
     private var selectedAnswer: TIPQuizAnswer? {
         didSet {
             checkAnswerButton.isEnabled = selectedAnswer != nil
@@ -102,6 +114,9 @@ final class TIPQuizViewController: UIViewController {
             }
             self.selectedAnswer = nil
         }
+        answer.onFinish = { [weak self] in
+            self?.continueCreatePIN()
+        }
         present(answer, animated: true)
     }
     
@@ -113,6 +128,11 @@ final class TIPQuizViewController: UIViewController {
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
+    }
+    
+    private func continueCreatePIN() {
+        let action = TIPActionViewController(action: .create(pin: pin))
+        navigationController?.setViewControllers([action], animated: true)
     }
     
 }

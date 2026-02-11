@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,11 +11,12 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MnemonicsViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="actionStackView" destination="MLO-OV-O9C" id="XmV-EZ-nIQ"/>
                 <outlet property="confirmButton" destination="5LI-do-zfN" id="8HP-XL-cKf"/>
                 <outlet property="contentViewHeightConstraint" destination="0Dn-GX-pFL" id="nWo-OB-Dpj"/>
                 <outlet property="descriptionLabel" destination="jht-Ts-f1m" id="e6g-jF-CpW"/>
                 <outlet property="footerStackView" destination="oeT-of-Ux9" id="V7B-kk-F3O"/>
-                <outlet property="footerStackViewBottomConstraint" destination="HrP-Jr-PT5" id="8hj-ex-K9w"/>
+                <outlet property="footerStackViewBottomConstraint" destination="e48-Oa-V9Z" id="6ld-BA-FFF"/>
                 <outlet property="inputStackView" destination="Xcc-Jk-NaY" id="6tq-83-qXI"/>
                 <outlet property="inputStackViewTopConstraint" destination="uQW-57-lmF" id="dgr-Eg-iRG"/>
                 <outlet property="scrollView" destination="r8a-QO-4SP" id="xca-en-Zkt"/>
@@ -33,7 +34,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bJV-RG-GkT" userLabel="Content View">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="759"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="666"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="999" image="mnemonic_phrase" translatesAutoresizingMaskIntoConstraints="NO" id="z1U-Vr-8X1">
                                     <rect key="frame" x="158.66666666666666" y="14" width="76" height="72"/>
@@ -58,37 +59,41 @@
                                 <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="240" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Xcc-Jk-NaY">
                                     <rect key="frame" x="20" y="210" width="353" height="240"/>
                                 </stackView>
-                                <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="24" axis="vertical" spacing="9" translatesAutoresizingMaskIntoConstraints="NO" id="oeT-of-Ux9">
+                                <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="24" axis="vertical" spacing="9" translatesAutoresizingMaskIntoConstraints="NO" id="oeT-of-Ux9" userLabel="Footer Stack View">
                                     <rect key="frame" x="32" y="480" width="329" height="24"/>
                                 </stackView>
-                                <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="999" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5LI-do-zfN" customClass="StyledButton" customModule="Mixin" customModuleProvider="target">
-                                    <rect key="frame" x="36" y="682" width="321" height="47"/>
-                                    <inset key="contentEdgeInsets" minX="0.0" minY="14" maxX="0.0" maxY="15"/>
-                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                    <state key="normal" title="Button"/>
-                                    <connections>
-                                        <action selector="confirm:" destination="-1" eventType="touchUpInside" id="qx2-im-ZJ4"/>
-                                    </connections>
-                                </button>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="MLO-OV-O9C">
+                                    <rect key="frame" x="36" y="589" width="321" height="47"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="999" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5LI-do-zfN" customClass="StyledButton" customModule="Mixin" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="321" height="47"/>
+                                            <inset key="contentEdgeInsets" minX="0.0" minY="14" maxX="0.0" maxY="15"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <connections>
+                                                <action selector="confirm:" destination="-1" eventType="touchUpInside" id="qx2-im-ZJ4"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                </stackView>
                             </subviews>
                             <color key="backgroundColor" name="background"/>
                             <constraints>
                                 <constraint firstAttribute="height" priority="250" constant="759" id="0Dn-GX-pFL"/>
                                 <constraint firstItem="z1U-Vr-8X1" firstAttribute="centerX" secondItem="bJV-RG-GkT" secondAttribute="centerX" id="4gG-ml-fM0"/>
+                                <constraint firstItem="MLO-OV-O9C" firstAttribute="leading" secondItem="bJV-RG-GkT" secondAttribute="leading" constant="36" id="6Dv-u5-BSy"/>
                                 <constraint firstItem="oeT-of-Ux9" firstAttribute="top" secondItem="Xcc-Jk-NaY" secondAttribute="bottom" constant="30" id="8Uz-EF-YBd"/>
                                 <constraint firstAttribute="trailing" secondItem="oeT-of-Ux9" secondAttribute="trailing" constant="32" id="ASO-Cn-VgD"/>
-                                <constraint firstAttribute="bottom" secondItem="5LI-do-zfN" secondAttribute="bottom" constant="30" id="C6b-qr-GyR"/>
                                 <constraint firstItem="ls4-VZ-udn" firstAttribute="top" secondItem="z1U-Vr-8X1" secondAttribute="bottom" constant="30" id="HfV-ar-bkO"/>
-                                <constraint firstItem="5LI-do-zfN" firstAttribute="top" relation="greaterThanOrEqual" secondItem="oeT-of-Ux9" secondAttribute="bottom" constant="20" id="HrP-Jr-PT5"/>
                                 <constraint firstItem="oeT-of-Ux9" firstAttribute="leading" secondItem="bJV-RG-GkT" secondAttribute="leading" constant="32" id="OPa-oa-sch"/>
-                                <constraint firstAttribute="trailing" secondItem="5LI-do-zfN" secondAttribute="trailing" constant="36" id="Zdv-PR-JUf"/>
-                                <constraint firstItem="5LI-do-zfN" firstAttribute="leading" secondItem="bJV-RG-GkT" secondAttribute="leading" constant="36" id="dcQ-oB-LFC"/>
+                                <constraint firstItem="MLO-OV-O9C" firstAttribute="top" relation="greaterThanOrEqual" secondItem="oeT-of-Ux9" secondAttribute="bottom" constant="20" id="e48-Oa-V9Z"/>
                                 <constraint firstItem="z1U-Vr-8X1" firstAttribute="top" secondItem="bJV-RG-GkT" secondAttribute="top" constant="14" id="evO-Jr-ILW"/>
                                 <constraint firstAttribute="trailing" secondItem="Xcc-Jk-NaY" secondAttribute="trailing" constant="20" id="keG-VB-afa"/>
                                 <constraint firstItem="Xcc-Jk-NaY" firstAttribute="leading" secondItem="bJV-RG-GkT" secondAttribute="leading" constant="20" id="ojO-Tp-eZz"/>
                                 <constraint firstItem="ls4-VZ-udn" firstAttribute="leading" secondItem="bJV-RG-GkT" secondAttribute="leading" constant="20" id="pMr-Hb-EjJ"/>
+                                <constraint firstAttribute="bottom" secondItem="MLO-OV-O9C" secondAttribute="bottom" constant="30" id="rBS-Z8-qzK"/>
                                 <constraint firstAttribute="trailing" secondItem="ls4-VZ-udn" secondAttribute="trailing" constant="20" id="sHt-46-2Rf"/>
                                 <constraint firstItem="Xcc-Jk-NaY" firstAttribute="top" secondItem="ls4-VZ-udn" secondAttribute="bottom" constant="32" id="uQW-57-lmF"/>
+                                <constraint firstAttribute="trailing" secondItem="MLO-OV-O9C" secondAttribute="trailing" constant="36" id="wi9-ov-Ac5"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -125,7 +130,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

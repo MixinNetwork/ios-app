@@ -737,7 +737,7 @@
 "import_single_chain_wallet" = "匯入單鏈錢包";
 "import_wallet_count" = "匯入 %d 個錢包";
 "import_wallet_count_one" = "匯入 1 個錢包";
-"import_wallet_guide_1" = "· 註冊一個 Mixin 賬號。";
+"import_wallet_guide_1" = "· 建立一個 Mixin 賬號。";
 "import_wallet_guide_2" = "· 前往錢包列表 → 新增錢包 > 選擇匯入助記詞。";
 "import_wallet_guide_3" = "· 輸入您的 12 或 24 位助記詞或私鑰完成匯入。";
 "import_wallet_guide_4" = "· 開始使用。";

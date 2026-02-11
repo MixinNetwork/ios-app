@@ -26,10 +26,10 @@
 "add_phone_desc" = "您可以通过手机号码登录您的帐户。手机号码将与您 MPC 钱包的密钥片段关联。完整的密钥仅存在于当前设备的 TEE 安全环境中。阅读文档以了解%@。";
 "add_phone_instruction_1" = "手机号和助记词将链接到同一个密钥分片。";
 "add_phone_instruction_2" = "手机号和助记词登录的是同一个账号。";
-"add_phone_instruction_3" = "无法添加一个已注册为 Mixin Messenger 账号的手机号。";
+"add_phone_instruction_3" = "无法添加一个已注册为 Mixin 账号的手机号。";
 "add_phone_instruction_4" = "手机号绑定后无法删除。";
-"add_recovery_contact_before_instruction_1" = "要添加的恢复联系人已下载并登录了 Mixin Messenger。";
-"add_recovery_contact_before_instruction_2" = "要添加的恢复联系人保持 Mixin Messenger 在线或者正在与您面对面。";
+"add_recovery_contact_before_instruction_1" = "要添加的恢复联系人已下载并登录了 Mixin。";
+"add_recovery_contact_before_instruction_2" = "要添加的恢复联系人保持 Mixin 在线或者正在与您面对面。";
 "add_recovery_contact_before_instruction_3" = "要添加的恢复联系人已添加当前账号（%@）为联系人，否则对方可能无法收到验证码。";
 "add_recovery_contact_desc" = "恢复联系人旨在帮助您在丢失手机号码或助记词时登录您的帐户。";
 "add_recovery_contact_instruction_1" = "添加您信任的人为恢复联系人，例如你的家人、朋友或同事。";
@@ -153,7 +153,7 @@
 "appearance" = "外观";
 "apply" = "应用";
 "apply_referral_code" = "绑定邀请码";
-"apply_referral_code_benefit" = "将邀请码绑定到你的账户，解锁 Mixin 专属福利。";
+"apply_referral_code_benefit" = "将邀请码绑定到你的账号，解锁 Mixin 专属福利。";
 "approval" = "授权";
 "approval_count" = "已授权 %@";
 "approval_unlimited" = "无限量";
@@ -287,7 +287,7 @@
 "chat_not_support" = "不支持此类型消息。请升级 Mixin 查看。 %@。";
 "chat_on_mixin_content" = "快来 Mixin 与我聊天！简单、安全好用还支持比特币、以太坊等加密货币，下载 https://mixin.one/messenger 后搜索 @%@ 加我好友。";
 "chat_pin_message" = "%1$@置顶了%2$@";
-"chat_recall_delete_alert" = "所有使用最新版本 Mixin Messenger 的设备都将删除被选中的消息";
+"chat_recall_delete_alert" = "所有使用最新版本 Mixin 的设备都将删除被选中的消息";
 "chat_restore_subtitle" = "如果现在不恢复，未来将无法恢复这些记录。媒体文件将在信息恢复完成后在后台继续运行。";
 "chat_text_size" = "聊天字体大小";
 "chat_waiting" = "等待%1$@上线后建立加密会话。%2$@。";
@@ -413,7 +413,7 @@
 "copy_user_id" = "复制用户 ID";
 "create" = "创建";
 "create_account" = "创建帐户";
-"create_an_account" = "创建账户";
+"create_an_account" = "创建账号";
 "create_introduction" = "MPC 钱包，2FA，%@，自我保管，社交恢复";
 "create_mnemonic_phrase" = "创建助记词";
 "create_new_wallet" = "创建新钱包";
@@ -421,11 +421,11 @@
 "create_pin" = "创建钱包";
 "create_safe" = "创建 Safe 金库";
 "create_safe_description" = "您尚未拥有 Safe 金库。现在创建即可与家人、朋友或同事安全管理资产。";
-"create_your_account" = "创建你的账户";
+"create_your_account" = "创建你的账号";
 "created" = "创建日期";
 "created_this_group" = "%@创建了这个群组";
 "creating_wallet_terminated_unexpectedly" = "创建钱包意外中止，点继续完成钱包创建";
-"creating_your_account" = "正在创建账户...";
+"creating_your_account" = "正在创建账号...";
 "currency" = "货币";
 "currency_code" = "货币代码";
 "current_language" = "中文";
@@ -453,7 +453,7 @@
 "decode_transaction_failed" = "无法估计资产变化，注意只给您信任的应用程序签名。";
 "delete" = "删除";
 "delete_account_detail_hint" = "本地消息和 iCloud 备份不会被自动删除";
-"delete_account_hint" = "删除你的账户和个人照片";
+"delete_account_hint" = "删除你的账号和个人照片";
 "delete_address" = "删除地址";
 "delete_address_description" = "确认删除该地址吗？";
 "delete_chat" = "删除聊天";
@@ -475,7 +475,7 @@
 "deleting_address" = "正在删除地址";
 "deleting_address_failed" = "删除地址失败";
 "deposit" = "充值";
-"deposit_account_attention" = "注意：首次充值建议小额尝试！地址和 Memo（备注）同时使用才能充值 %@ 到 Mixin Messenger。";
+"deposit_account_attention" = "注意：首次充值建议小额尝试！地址和 Memo（备注）同时使用才能充值 %@ 到 Mixin。";
 "deposit_attention" = "首次充值建议小额尝试！";
 "deposit_confirmation" = "充值到账需要 %d 个区块确认。";
 "deposit_confirmation_count" = "充值到账需要 %d 个区块确认。";
@@ -500,10 +500,10 @@
 "depost_address_updated" = "%@ 充值地址已更新";
 "depost_address_updated_description" = "您的 %@ 充值地址已更新，充值地址将随着系统或网络升级而自动更新，旧的地址仍可充值并会自动入账，但是不推荐使用。";
 "deselect_all" = "取消所有选择";
-"desktop_login" = "登录 Mixin Messenger 桌面端";
-"desktop_logout" = "退出 Mixin Messenger 桌面端";
+"desktop_login" = "登录 Mixin 桌面端";
+"desktop_logout" = "退出 Mixin 桌面端";
 "desktop_on_hint" = "桌面版已登入。";
-"desktop_upgrade" = "请升级 Mixin Messenger 桌面端至最新版！";
+"desktop_upgrade" = "请升级 Mixin 桌面端至最新版！";
 "detect_qr_tip" = "检测到一个 Mixin 二维码，点击识别";
 "developer" = "开发者";
 "device_transfer_failed" = "同步失败";
@@ -560,7 +560,7 @@
 "enter_new_anonymous_number" = "输入你的新匿名号码";
 "enter_new_phone_number" = "输入你的新手机号码";
 "enter_pin_create_wallet" = "输入你的 PIN 以创建新钱包";
-"enter_pin_to_delete_account" = "输入你的 PIN 以注销你的账户";
+"enter_pin_to_delete_account" = "输入你的 PIN 以注销你的账号";
 "enter_your_anonymous_number" = "输入你的匿名号码";
 "enter_your_emergency_contact_mixin_id" = "请输入恢复联系人的 Mixin ID";
 "enter_your_new_pin" = "输入你的新 PIN";
@@ -569,7 +569,7 @@
 "enter_your_pin" = "输入你的 PIN";
 "enter_your_pin_to_continue" = "输入你的 PIN 以继续";
 "error_access_limited" = "错误 403：访问受限";
-"error_already_bonded_referral_code" = "错误 10731：当前账户已绑定邀请码，无法修改绑定。";
+"error_already_bonded_referral_code" = "错误 10731：当前账号已绑定邀请码，无法修改绑定。";
 "error_bad_data" = "错误 10002：请求数据不合法";
 "error_blockchain" = "错误 30100：区块链同步异常，请稍后重试";
 "error_cannot_apply_your_own_referral_code" = "错误 10732：不可绑定自己的邀请码";
@@ -645,7 +645,7 @@
 "export_mnemonics_instruction_2" = "助记词无法帮助您恢复您的 PIN。";
 "export_mnemonics_instruction_3" = "确保没有人或监控摄像头正在看您的屏幕。";
 "export_secret_warning_1" = "任何拥有此%@的人都可以转移该钱包中所有的资金。";
-"export_secret_warning_2" = "Mixin Messenger 服务器不会保存您的%@。";
+"export_secret_warning_2" = "Mixin 服务器不会保存您的%@。";
 "export_secret_warning_3" = "请勿与任何第三方、个人、网站或应用程序分享您的%@。";
 "export_secret_warning_4" = "确保没有人或监控摄像头正在看你的屏幕。";
 "face_id" = "面容";
@@ -791,7 +791,7 @@
 "keep_running_foreground" = "不要关闭屏幕并保持 Mixin 在前台运行";
 "keep_waiting" = "继续等待";
 "label" = "标题";
-"landing_delete_content" = "您在 %1$@ 申请了删除账号，账号将于 %2$@ 被删除，如果您继续登录，删除您账户的请求将被取消。";
+"landing_delete_content" = "您在 %1$@ 申请了删除账号，账号将于 %2$@ 被删除，如果您继续登录，删除您账号的请求将被取消。";
 "landing_have_account" = "已有帐户";
 "landing_validation_title" = "请输入发送至以下号码的 4 位验证码：%@";
 "language" = "语言";
@@ -842,7 +842,7 @@
 "log_out" = "退出登录";
 "log_out_from_desktop" = "从桌面版退出";
 "log_out_instead" = "仅退出登录";
-"login_and_abort_account_deletion" = "继续登录并放弃删除账户";
+"login_and_abort_account_deletion" = "继续登录并放弃删除账号";
 "login_desktop_first" = "请先登录桌面端";
 "logined" = "已登录";
 "logout_confirmation" = "你确定要退出登录？";
@@ -894,7 +894,7 @@
 "mixin_id_or_phone" = "Mixin ID 或手机号";
 "mixin_locked" = "Mixin 已锁定";
 "mixin_logs" = "Mixin 日志";
-"mixin_messenger_desktop" = "Mixin Messenger 桌面";
+"mixin_messenger_desktop" = "Mixin 桌面端";
 "mixin_one" = "Mixin 大会员";
 "mixin_one_desc" = "开启您的 Mixin 会员之旅";
 "mixin_payment_content" = "💰 金额：%1$@\n🌐 网络：%2$@\n🤝 收款人：%3$@";
@@ -1032,7 +1032,7 @@
 "one_week" = "1 星期";
 "one_year" = "1 年";
 "open" = "打开";
-"open_desktop_to_confirm" = "请打开您的 Mixin Messenger 桌面端来确认此操作。";
+"open_desktop_to_confirm" = "请打开您的 Mixin 桌面端来确认此操作。";
 "open_home_page" = "打开主页";
 "open_in_browser" = "在浏览器中打开";
 "open_in_gaode_maps" = "在高德地图中打开";
@@ -1040,7 +1040,7 @@
 "open_in_maps" = "在地图中打开";
 "open_link" = "打开链接：%@";
 "open_orders_count" = "当前委托（%d）";
-"open_source" = "版权所有 Mixin Messenger\n根据 GPL-3.0 授权许可";
+"open_source" = "版权所有 Mixin\n根据 GPL-3.0 授权许可";
 "open_url" = "打开链接";
 "opening_balance" = "期初余额";
 "operation_failed" = "操作失败，请稍后重试";
@@ -1186,7 +1186,7 @@
 "recovery_contact" = "恢复联系人";
 "recovery_kit" = "账号恢复";
 "recovery_kit_attention" = "注意：账号恢复无法帮助您恢复 PIN";
-"recovery_kit_instruction" = "Mixin Messenger 的 MPC 钱包基于去中心化密钥协议 TIP 构建，您可以通过手机号、助记词或可信联系人登录恢复你的账号，钱包完整的密钥只存在当前设备的 TEE 安全环境中，阅读文档以了解%@。";
+"recovery_kit_instruction" = "Mixin 的 MPC 钱包基于去中心化密钥协议 TIP 构建，您可以通过手机号、助记词或可信联系人登录恢复你的账号，钱包完整的密钥只存在当前设备的 TEE 安全环境中，阅读文档以了解%@。";
 "red_up_green_down" = "红涨绿跌";
 "referral" = "邀请";
 "referral_banner" = "邀请好友赢取最高 60%% 手续费分佣！";
@@ -1251,7 +1251,7 @@
 "restore_from_icloud_confirmation" = "已经有 %1$d 条本地聊天记录，最后一条消息的时间是 %2$@，确定用 iCloud 上的聊天数据覆盖本地数据吗？";
 "restore_from_pc" = "从桌面恢复";
 "restore_from_pc_hint" = "从桌面端恢复你的聊天记录";
-"restore_from_pc_tip" = "从 Mixin Messenger 桌面端同步你的聊天记录，同步不会覆盖本地记录只会增量同步，请确保两台设备接入同一个 Wi-Fi 或热点。";
+"restore_from_pc_tip" = "从 Mixin 桌面端同步你的聊天记录，同步不会覆盖本地记录只会增量同步，请确保两台设备接入同一个 Wi-Fi 或热点。";
 "restore_now" = "开始恢复";
 "restore_your_chat_history" = "恢复你的聊天记录";
 "restoring" = "正在恢复...";
@@ -1374,7 +1374,7 @@
 "set_up_pin" = "设置 PIN";
 "set_up_pin_answer_1" = "我可以稍后恢复我的帐户。";
 "set_up_pin_answer_2" = "我将无法访问我的帐户和资金。";
-"set_up_pin_desc" = "Mixin Messenger 的 MPC 钱包基于去中心化密钥协议 TIP 构建，PIN 是密钥分片之一。钱包完整的密钥只存在当前设备的 TEE 安全环境中。阅读文档以了解%@。";
+"set_up_pin_desc" = "Mixin 的 MPC 钱包基于去中心化密钥协议 TIP 构建，PIN 是密钥分片之一。钱包完整的密钥只存在当前设备的 TEE 安全环境中。阅读文档以了解%@。";
 "set_up_pin_desc_1" = "为您的钱包设置 6 位数的 PIN";
 "set_up_pin_desc_2" = "请再次确认您的 6 位数的 PIN";
 "set_up_pin_instruction_1" = "请在稳定的网络环境下完成操作。";
@@ -1387,13 +1387,13 @@
 "setting_appearance_language_alert_description" = "前往系统设置修改语言偏好";
 "setting_auth_access" = "授权时间：%1$@, 上次访问：%2$@";
 "setting_auth_search_hint" = "Mixin ID, 昵称";
-"setting_backup_tips" = "备份你的聊天记录到 iCloud。如果你丢失或者更换手机，你可以在重新安装 Mixin Messenger 时恢复你的聊天记录。注意备份到 iCloud 中的聊天记录不受端对端加密保护！";
+"setting_backup_tips" = "备份你的聊天记录到 iCloud。如果你丢失或者更换手机，你可以在重新安装 Mixin 时恢复你的聊天记录。注意备份到 iCloud 中的聊天记录不受端对端加密保护！";
 "setting_chats" = "聊天记录";
 "setting_conversation_group_tip" = "谁能加我进入群组";
 "setting_conversation_tip" = "谁可以给我发消息";
-"setting_delete_account_pin_content" = "如果您继续，您的个人资料和账户信息将在%@被删除。阅读我们的文档以了解更多。";
+"setting_delete_account_pin_content" = "如果您继续，您的个人资料和账号信息将在%@被删除。阅读我们的文档以了解更多。";
 "setting_delete_account_send" = "我们将发送 4 位验证码到手机 %@";
-"setting_delete_account_tip" = "你的 Mixin 钱包还有一些资产，可以提现至其他钱包或交易所，账户一旦注销，这些资产将和钱包一起被弃用无法找回。";
+"setting_delete_account_tip" = "你的 Mixin 钱包还有一些资产，可以提现至其他钱包或交易所，账号一旦注销，这些资产将和钱包一起被弃用无法找回。";
 "setting_duplicate_transfer_desc" = "当你在 6 个小时内给相同的人转相同的金额时显示确认弹窗。";
 "setting_emergency_change_mobile" = "立即修改手机号？";
 "setting_emergency_content" = "恢复联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";
@@ -1426,7 +1426,7 @@
 "show_mnemonic_phrase" = "查看助记词";
 "show_private_key" = "查看私钥";
 "sign_in" = "登录";
-"sign_in_no_account" = "还没有账户？";
+"sign_in_no_account" = "还没有账号？";
 "sign_in_with_mnemonic_phrase" = "助记词登录";
 "sign_up_15_secs" = "15 秒完成注册";
 "sign_up_have_account" = "已有帐户?";
@@ -1435,7 +1435,7 @@
 "signature_request" = "签名确认";
 "signature_request_from" = "该签名请求来自 %@。";
 "signed_message" = "签名";
-"signing_in_to_your_account" = "正在登录账户...";
+"signing_in_to_your_account" = "正在登录账号...";
 "single_transaction_should_be_between" = "金额范围 %1$@ %2$@ ~ %3$@ %4$@";
 "single_transaction_should_be_greater_than" = "最低金额 %1$@ %2$@";
 "single_transaction_should_be_less_than" = "最高金额 %1$@ %2$@";
@@ -1510,11 +1510,11 @@
 "tip_creation_introduction" = "设置 6 位数字 PIN 创建你的第一个加密货币钱包，PIN 基于去中心化密钥派生协议 Throttled Identity Protocol，阅读文档以了解更多。";
 "tip_introduction" = "6 位数字 PIN 基于去中心化密钥派生协议 Throttled Identity Protocol，阅读文档以了解更多。";
 "tip_quiz_answer" = "PIN 是你钱包的钥匙，丢失后无法找回。";
-"tip_quiz_correct_answer" = "我将无法访问账户和资金。";
+"tip_quiz_correct_answer" = "我将无法访问账号和资金。";
 "tip_quiz_question" = "如果我丢失了 PIN，会发生什么？";
 "tip_quiz_title_correct" = "正确！";
 "tip_quiz_title_wrong" = "哎呀，答错了";
-"tip_quiz_wrong_answer" = "我可以恢复我的账户。";
+"tip_quiz_wrong_answer" = "我可以恢复我的账号。";
 "title_participants" = "%d 成员";
 "title_participants_count" = "%d 成员";
 "to" = "至";
@@ -1571,7 +1571,7 @@
 "transfer_to_mixin_address" = "给主网地址转账";
 "transfer_to_no_key_wallet_warning" = "该钱包在此设备上没有私钥。你确定要使用它来接收资产吗？";
 "transfer_to_pc" = "备份到桌面端";
-"transfer_to_pc_hint" = "同步你的聊天记录到 Mixin Messenger 桌面端，请确保两台设备接入同一个 Wi-Fi 或热点。";
+"transfer_to_pc_hint" = "同步你的聊天记录到 Mixin 桌面端，请确保两台设备接入同一个 Wi-Fi 或热点。";
 "transfer_to_user_or_bot" = "给用户或机器人转账";
 "transfer_to_watch_wallet_warning" = "这是一个观察钱包。你确定要使用它来接收资产吗？";
 "transferring_chat_progress" = "传输聊天记录（%@%%）";
@@ -1583,7 +1583,7 @@
 "type_your_private_key" = "请输入你的私钥";
 "type_your_wallet_address" = "请输入钱包地址";
 "unable_connect_to_desktop" = "无法连接到桌面，请稍后重试";
-"unable_synced_between_different_account" = "不同账户之间无法同步聊天记录";
+"unable_synced_between_different_account" = "不同账号之间无法同步聊天记录";
 "unable_to_decode_the_request" = "无法解析请求: %@";
 "unable_to_estimate_balance_changes" = "无法估计资产变化";
 "unable_to_save_photo" = "保存图片失败";
@@ -1692,7 +1692,7 @@
 "volume_24h" = "24 小时交易量";
 "waiting" = "等待中";
 "waiting_for_other_device" = "等待其他设备...";
-"waiting_for_other_device_login" = "在新设备上登录当前账户并选择从其他手机恢复";
+"waiting_for_other_device_login" = "在新设备上登录当前账号并选择从其他手机恢复";
 "waiting_for_other_device_scan" = "新设备扫上面的二维码建立连接";
 "waiting_transaction" = "正在等待交易";
 "waiting_transaction_description" = "您有一笔转账或提现未完成，请稍后再试";

@@ -30,7 +30,7 @@ class LocationPreviewViewController: LocationViewController {
             return nil
         }
         components.queryItems = [
-            URLQueryItem(name: "sourceApplication", value: String.mixinMessenger),
+            URLQueryItem(name: "sourceApplication", value: String.mixin),
             URLQueryItem(name: "poiname", value: location.name ?? R.string.localizable.unnamed_location()),
             URLQueryItem(name: "lat", value: location.prettyLatitude),
             URLQueryItem(name: "lon", value: location.prettyLongitude),

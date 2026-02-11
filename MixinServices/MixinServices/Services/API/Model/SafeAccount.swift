@@ -31,10 +31,12 @@ extension SafeAccount {
         public enum CodingKeys: String, CodingKey {
             case mixinAssetID = "mixin_asset_id"
             case balance = "balance"
+            case usdPrice = "price_usd"
         }
         
         public let mixinAssetID: String
         public let balance: String
+        public let usdPrice: String
         
     }
     

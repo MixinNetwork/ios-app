@@ -1,6 +1,5 @@
 import Foundation
 import MixinServices
-import TIP
 
 final class RecoverRawTransactionJob: AsynchronousJob {
     

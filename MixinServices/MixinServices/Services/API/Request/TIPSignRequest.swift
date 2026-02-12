@@ -4,8 +4,6 @@ import TIP
 struct TIPSignRequest: Encodable {
     
     enum InitError: Error {
-        case signerPk(NSError?)
-        case userPublicKey
         case signerIdentity
         case esum
         case userPkString(NSError)
@@ -39,29 +37,24 @@ struct TIPSignRequest: Encodable {
     let action = "SIGN"
     
     @MainActor
-    init(id: String, userSk: TipScalar, signer: TIPSigner, ephemeral: Data, watcher: Data, nonce: UInt64, grace: UInt64, assignee: Data?) throws {
+    init(id: String, userSk: TIPScalar, signer: TIPSigner, ephemeral: Data, watcher: Data, nonce: UInt64, grace: UInt64, assignee: Data?) throws {
         var error: NSError?
-        guard let signerPk = TipPubKeyFromBase58(signer.identity, &error), error == nil else {
-            throw InitError.signerPk(error)
-        }
-        guard let userPk = userSk.publicKey() else {
-            throw InitError.userPublicKey
-        }
+        let signerPk = TIPPoint(base58EncodedString: signer.identity)
+        let userPk = try userSk.publicKey()
         guard let signerIdentity = signer.identity.data(using: .utf8) else {
             throw InitError.signerIdentity
         }
         guard let esum = SHA3_256.hash(data: ephemeral + signerIdentity) else {
             throw InitError.esum
         }
-        let userPkBytes = try userPk.publicKeyBytes()
         
-        var msg = userPkBytes + esum + nonce.data(endianness: .big) + grace.data(endianness: .big)
+        var msg = userPk + esum + nonce.data(endianness: .big) + grace.data(endianness: .big)
         if let assignee = assignee {
             msg.append(assignee)
         }
-        let sig = try userSk.sign(msg).hexEncodedString()
+        let sig = try userSk.sign(message: msg).hexEncodedString()
         
-        let userPkString = userPk.publicKeyString(&error)
+        let userPkString = TIPPoint.publicKeyString(publicKey: userPk)
         if let error {
             throw InitError.userPkString(error)
         }
@@ -74,7 +67,13 @@ struct TIPSignRequest: Encodable {
                                 grace: grace,
                                 rotate: nil)
         let signJSON = try JSONEncoder.default.encode(signData)
-        guard let cipher = TipEncrypt(signerPk, userSk, signJSON, &error), error == nil else {
+        let cipher = TipEncrypt(
+            signer.identity,
+            userSk.bytes.hexEncodedString(),
+            signJSON,
+            &error
+        )
+        guard let cipher, error == nil else {
             throw InitError.cryptoEncrypt(error)
         }
         

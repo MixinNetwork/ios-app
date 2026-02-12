@@ -11,69 +11,20 @@
 #include "Universe.objc.h"
 
 
-@class TipPoint;
-@class TipScalar;
-@class TipSuite;
-@class TipSuiteBn256;
+FOUNDATION_EXPORT NSData* _Nullable TipDecrypt(NSString* _Nullable pb, NSString* _Nullable private, NSData* _Nullable b, NSError* _Nullable* _Nullable error);
 
-@interface TipPoint : NSObject <goSeqRefInterface> {
-}
-@property(strong, readonly) _Nonnull id _ref;
+FOUNDATION_EXPORT NSData* _Nullable TipEncrypt(NSString* _Nullable pb, NSString* _Nullable private, NSData* _Nullable b, NSError* _Nullable* _Nullable error);
 
-- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
-- (nonnull instancetype)init;
-- (NSData* _Nullable)publicKeyBytes:(NSError* _Nullable* _Nullable)error;
-- (NSString* _Nonnull)publicKeyString:(NSError* _Nullable* _Nullable)error;
-- (BOOL)verify:(NSData* _Nullable)msg sig:(NSData* _Nullable)sig error:(NSError* _Nullable* _Nullable)error;
-@end
+FOUNDATION_EXPORT NSData* _Nullable TipNewPrivateKeyFromBytes(NSData* _Nullable b, NSError* _Nullable* _Nullable error);
 
-@interface TipScalar : NSObject <goSeqRefInterface> {
-}
-@property(strong, readonly) _Nonnull id _ref;
+FOUNDATION_EXPORT NSString* _Nonnull TipPointPublicKeyString(NSData* _Nullable b);
 
-- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
-- (nonnull instancetype)init;
-- (TipScalar* _Nullable)clone;
-- (NSData* _Nullable)privateKeyBytes:(NSError* _Nullable* _Nullable)error;
-- (TipPoint* _Nullable)publicKey;
-- (void)setBytes:(NSData* _Nullable)b;
-- (NSData* _Nullable)sign:(NSData* _Nullable)msg error:(NSError* _Nullable* _Nullable)error;
-@end
+FOUNDATION_EXPORT BOOL TipPointVerify(NSString* _Nullable pt, NSData* _Nullable msg, NSData* _Nullable sig, NSError* _Nullable* _Nullable error);
 
-@interface TipSuite : NSObject <goSeqRefInterface> {
-}
-@property(strong, readonly) _Nonnull id _ref;
-
-- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
-- (nullable instancetype)initG2;
-- (TipScalar* _Nullable)scalar;
-@end
-
-@interface TipSuiteBn256 : NSObject <goSeqRefInterface> {
-}
-@property(strong, readonly) _Nonnull id _ref;
-
-- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
-- (nullable instancetype)init;
-- (TipScalar* _Nullable)scalar;
-@end
-
-FOUNDATION_EXPORT NSData* _Nullable TipDecrypt(TipPoint* _Nullable pub, TipScalar* _Nullable priv, NSData* _Nullable b, NSError* _Nullable* _Nullable error);
-
-FOUNDATION_EXPORT NSData* _Nullable TipEcdh(TipPoint* _Nullable point, TipScalar* _Nullable scalar, NSError* _Nullable* _Nullable error);
-
-FOUNDATION_EXPORT NSData* _Nullable TipEncrypt(TipPoint* _Nullable pub, TipScalar* _Nullable priv, NSData* _Nullable b, NSError* _Nullable* _Nullable error);
-
-FOUNDATION_EXPORT TipSuiteBn256* _Nullable TipNewSuiteBn256(void);
-
-FOUNDATION_EXPORT TipSuite* _Nullable TipNewSuiteG2(void);
-
-FOUNDATION_EXPORT TipScalar* _Nullable TipPrivateKeyFromHex(NSString* _Nullable s, NSError* _Nullable* _Nullable error);
-
-FOUNDATION_EXPORT TipPoint* _Nullable TipPubKeyFromBase58(NSString* _Nullable s, NSError* _Nullable* _Nullable error);
-
-FOUNDATION_EXPORT TipPoint* _Nullable TipPubKeyFromBytes(NSData* _Nullable b, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT NSData* _Nullable TipPublicKeyFromBytes(NSData* _Nullable rawScalar, NSError* _Nullable* _Nullable error);
 
 FOUNDATION_EXPORT NSData* _Nullable TipRecoverSignature(NSString* _Nullable partialStrings, NSString* _Nullable commitmentStrings, NSData* _Nullable assignor, long signersLen, NSError* _Nullable* _Nullable error);
+
+FOUNDATION_EXPORT NSData* _Nullable TipSignFromBytes(NSData* _Nullable rawScalar, NSData* _Nullable msg, NSError* _Nullable* _Nullable error);
 
 #endif

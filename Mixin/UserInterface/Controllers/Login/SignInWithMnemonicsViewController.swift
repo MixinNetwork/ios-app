@@ -1,6 +1,5 @@
 import UIKit
 import MixinServices
-import TIP
 
 final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
     

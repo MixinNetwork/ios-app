@@ -543,6 +543,8 @@ public class SendMessageService: MixinService {
                     break
                 case WebSocketService.SendingError.timedOut:
                     break
+                case MixinAPIResponseError.invalidConversationChecksum:
+                    break
                 default:
                     var blazeMessage = ""
                     var conversationId = job.conversationId ?? ""

@@ -38,11 +38,6 @@ enum GroupIconMaker {
                         if error == nil, let image = image {
                             avatars.append(.image(image))
                             isSucceed = true
-                        } else {
-                            let worthReporting = (error as? URLError)?.worthReporting ?? true
-                            if worthReporting {
-                                reporter.report(error: MixinError.loadAvatar(url: url, error: error))
-                            }
                         }
                         semaphore.signal()
                     }

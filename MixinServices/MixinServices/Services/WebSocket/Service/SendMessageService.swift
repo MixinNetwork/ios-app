@@ -576,7 +576,11 @@ public class SendMessageService: MixinService {
                         }
                     }
                     Logger.general.error(category: "SendMessageService", message: "Job execution failed: \(error)", userInfo: userInfo)
-                    reporter.report(error: MixinServicesError.sendMessage(userInfo))
+                    if case MixinAPIResponseError.invalidConversationChecksum = error {
+                        // Reduce non-emergency reporting
+                    } else {
+                        reporter.report(error: MixinServicesError.sendMessage(userInfo))
+                    }
                 }
                 
                 if case MixinAPIResponseError.invalidRequestData = error {

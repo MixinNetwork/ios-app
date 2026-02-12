@@ -543,8 +543,6 @@ public class SendMessageService: MixinService {
                     break
                 case WebSocketService.SendingError.timedOut:
                     break
-                case MixinAPIResponseError.invalidConversationChecksum:
-                    break
                 default:
                     var blazeMessage = ""
                     var conversationId = job.conversationId ?? ""
@@ -578,7 +576,11 @@ public class SendMessageService: MixinService {
                         }
                     }
                     Logger.general.error(category: "SendMessageService", message: "Job execution failed: \(error)", userInfo: userInfo)
-                    reporter.report(error: MixinServicesError.sendMessage(userInfo))
+                    if case MixinAPIResponseError.invalidConversationChecksum = error {
+                        // Reduce non-emergency reporting
+                    } else {
+                        reporter.report(error: MixinServicesError.sendMessage(userInfo))
+                    }
                 }
                 
                 if case MixinAPIResponseError.invalidRequestData = error {

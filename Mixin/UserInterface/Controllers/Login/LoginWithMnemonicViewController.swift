@@ -6,13 +6,15 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     
     enum Action {
         case signIn(MixinMnemonics)
-        case signUp
+        case signUp(MixinMnemonics?)
     }
     
     private let action: Action
     private let busyIndicator = ActivityIndicatorView()
     
     private lazy var captcha = Captcha(viewController: self)
+    
+    private weak var loginButtonIfLoaded: UIButton?
     
     private var loginContext: LoginContext?
     
@@ -27,7 +29,10 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.rightBarButtonItem = .customerService(target: self, action: #selector(presentCustomerService(_:)))
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         imageViewTopConstraint.constant = switch ScreenHeight.current {
         case .short:
             40
@@ -38,19 +43,34 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
         }
         contentLabelTopConstraint.constant = 16
         imageView.image = R.image.mnemonic_login()
-        switch action {
-        case .signIn:
-            titleLabel.text = R.string.localizable.signing_in_to_your_account()
-        case .signUp:
-            titleLabel.text = R.string.localizable.creating_your_account()
-        }
         contentTextView.font = UIFontMetrics.default.scaledFont(for: .systemFont(ofSize: 14))
         contentTextView.adjustsFontForContentSizeCategory = true
         contentTextView.textAlignment = .center
+        actionStackView.spacing = 10
         actionButton.addTarget(self, action: #selector(login(_:)), for: .touchUpInside)
         actionButton.setTitle(R.string.localizable.retry(), for: .normal)
         actionButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
-        
+        switch action {
+        case .signIn:
+            break
+        case .signUp:
+            var config: UIButton.Configuration = .plain()
+            config.titleAlignment = .center
+            var attributes = AttributeContainer()
+            attributes.font = UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 16, weight: .medium)
+            )
+            attributes.foregroundColor = R.color.theme()
+            config.attributedTitle = AttributedString(
+                R.string.localizable.sign_up_have_account(),
+                attributes: attributes
+            )
+            config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 0, bottom: 11, trailing: 0)
+            let loginButton = UIButton(configuration: config)
+            actionStackView.addArrangedSubview(loginButton)
+            loginButton.addTarget(self, action: #selector(goToSignIn(_:)), for: .touchUpInside)
+            loginButtonIfLoaded = loginButton
+        }
         busyIndicator.tintColor = R.color.outline_primary()
         actionStackView.addArrangedSubview(busyIndicator)
         busyIndicator.snp.makeConstraints { make in
@@ -78,12 +98,17 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
                     switch action {
                     case .signIn(let m):
                         mnemonics = m
-                        Logger.login.info(category: "MnemonicLogin", message: "Using arbitrary mnemonics")
-                    case .signUp:
-                        mnemonics = try .random()
-                        // Save generated random mnemonics
-                        AppGroupKeychain.mnemonics = mnemonics.entropy
-                        Logger.login.info(category: "MnemonicLogin", message: "New random mnemonics")
+                        Logger.login.info(category: "MnemonicLogin", message: "Sign in with arbitrary mnemonics")
+                    case .signUp(let m):
+                        if let m {
+                            mnemonics = m
+                            Logger.login.info(category: "MnemonicLogin", message: "Sign up with arbitrary mnemonics")
+                        } else {
+                            mnemonics = try .random()
+                            // Save generated random mnemonics
+                            AppGroupKeychain.mnemonics = mnemonics.entropy
+                            Logger.login.info(category: "MnemonicLogin", message: "Sign up with random mnemonics")
+                        }
                     }
                     let context = try SessionVerificationContext(mnemonics: mnemonics)
                     self?.verifySession(context: context, captchaToken: nil)
@@ -97,17 +122,36 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
         }
     }
     
+    @objc private func goToSignIn(_ sender: Any) {
+        let signIn = SignInWithMobileNumberViewController()
+        navigationController?.pushViewController(replacingCurrent: signIn, animated: true)
+    }
+    
     private func showLoading() {
+        titleLabel.text = switch action {
+        case .signIn:
+            R.string.localizable.signing_in_to_your_account()
+        case .signUp:
+            R.string.localizable.creating_your_account()
+        }
         busyIndicator.startAnimating()
         actionButton.isHidden = true
+        loginButtonIfLoaded?.isHidden = true
         contentTextView.textColor = R.color.text_tertiary()
         contentTextView.text = R.string.localizable.mnemonic_phrase_take_long()
         contentTextView.isHidden = false
     }
     
     private func showError(_ description: String) {
+        switch action {
+        case .signIn:
+            titleLabel.text = R.string.localizable.signing_in_to_your_account()
+        case .signUp:
+            titleLabel.text = R.string.localizable.account_creation_failed()
+        }
         busyIndicator.stopAnimating()
         actionButton.isHidden = false
+        loginButtonIfLoaded?.isHidden = false
         contentTextView.textColor = R.color.error_red()
         contentTextView.text = description
         contentTextView.isHidden = false

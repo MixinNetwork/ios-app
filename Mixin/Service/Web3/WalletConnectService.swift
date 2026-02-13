@@ -16,7 +16,6 @@ final class WalletConnectService {
     @Published
     private(set) var sessions: [WalletConnectSession] = []
     
-    private let walletName = "Mixin Messenger"
     private let walletDescription = "An open source cryptocurrency wallet with Signal messaging. Fully non-custodial and recoverable with phone number and TIP."
     
     private weak var connectionHud: Hud?
@@ -30,7 +29,7 @@ final class WalletConnectService {
             socketFactory: StarscreamFactory()
         )
         let metadata = AppMetadata(
-            name: walletName,
+            name: .mixin,
             description: walletDescription,
             url: URL.mixinMessenger.absoluteString,
             icons: [],

@@ -62,8 +62,8 @@ final class HomeContainerViewController: UIViewController {
         isShowingGallery && galleryViewController.parent != nil
     }
     
-    init() {
-        let homeTabBarController = HomeTabBarController()
+    init(initialTab: HomeTabBarController.ChildID) {
+        let homeTabBarController = HomeTabBarController(initialChild: initialTab)
         self.homeTabBarController = homeTabBarController
         self.homeNavigationController = HomeNavigationController(rootViewController: homeTabBarController)
         super.init(nibName: nil, bundle: nil)

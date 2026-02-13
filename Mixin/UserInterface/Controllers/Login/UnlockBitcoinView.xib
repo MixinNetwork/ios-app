@@ -11,12 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UnlockBitcoinViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
-                <outlet property="featureDescriptionLabel0" destination="KrF-a1-1rD" id="KK4-pg-4tJ"/>
-                <outlet property="featureDescriptionLabel1" destination="e5M-Rk-UTT" id="eeX-IK-6Bq"/>
-                <outlet property="featureDescriptionLabel2" destination="Shd-k7-QZR" id="3xX-Yy-U0x"/>
-                <outlet property="featureTitleLabel0" destination="iKN-8V-fdL" id="ZX0-1A-alh"/>
-                <outlet property="featureTitleLabel1" destination="oWa-41-fO7" id="8wL-i8-N0i"/>
-                <outlet property="featureTitleLabel2" destination="Ae1-We-hCo" id="Lce-yz-Qf3"/>
+                <outlet property="featureStackView" destination="sw6-v6-bIk" id="F0V-nS-wWH"/>
                 <outlet property="mainTitleLabel" destination="SHN-qe-GDs" id="vzI-ZB-5Ob"/>
                 <outlet property="unlockButton" destination="b5p-cn-5QM" id="Q3h-5Y-J8R"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -36,85 +31,8 @@
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bitcoin_unlock_intro" translatesAutoresizingMaskIntoConstraints="NO" id="ImT-WM-kQJ">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="251"/>
                                 </imageView>
-                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="sw6-v6-bIk">
+                                <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="345" placeholderIntrinsicHeight="223.00000000000006" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="sw6-v6-bIk">
                                     <rect key="frame" x="24" y="333.66666666666669" width="345" height="223.00000000000006"/>
-                                    <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="3VF-SU-3vf">
-                                            <rect key="frame" x="0.0" y="0.0" width="345" height="61"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="feature_decentralize" translatesAutoresizingMaskIntoConstraints="NO" id="qAN-ex-bGZ">
-                                                    <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
-                                                </imageView>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="XiB-lD-yZU">
-                                                    <rect key="frame" x="64" y="0.0" width="281" height="61"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Decentralized" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iKN-8V-fdL">
-                                                            <rect key="frame" x="0.0" y="0.0" width="281" height="19.333333333333332"/>
-                                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
-                                                            <color key="textColor" name="text_secondary"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A fully decentralized wallet where you control the private key." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KrF-a1-1rD">
-                                                            <rect key="frame" x="0.0" y="27.333333333333311" width="281" height="33.666666666666657"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <color key="textColor" name="text_tertiary"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                        </stackView>
-                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="4x9-WE-Bl2">
-                                            <rect key="frame" x="0.0" y="81" width="345" height="61"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="feature_seamless" translatesAutoresizingMaskIntoConstraints="NO" id="1oz-zW-fDZ">
-                                                    <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
-                                                </imageView>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="CqL-Um-KiH">
-                                                    <rect key="frame" x="64" y="0.0" width="281" height="61"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Seamless" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oWa-41-fO7">
-                                                            <rect key="frame" x="0.0" y="0.0" width="281" height="19.333333333333332"/>
-                                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
-                                                            <color key="textColor" name="text_secondary"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lightning-fast interface with instant page loading and rapid response." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e5M-Rk-UTT">
-                                                            <rect key="frame" x="0.0" y="27.333333333333311" width="281" height="33.666666666666657"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <color key="textColor" name="text_tertiary"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                        </stackView>
-                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="X3O-EV-wQy">
-                                            <rect key="frame" x="0.0" y="162" width="345" height="61"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="251" image="feature_compatibility" translatesAutoresizingMaskIntoConstraints="NO" id="45Q-AA-Bng">
-                                                    <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
-                                                </imageView>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="CJu-Ms-cuK">
-                                                    <rect key="frame" x="64" y="0.0" width="281" height="61"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" text="Compatibility" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ae1-We-hCo">
-                                                            <rect key="frame" x="0.0" y="0.0" width="281" height="19.333333333333332"/>
-                                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
-                                                            <color key="textColor" name="text_secondary"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Supports importing private keys and watch-only addresses from other wallets." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Shd-k7-QZR">
-                                                            <rect key="frame" x="0.0" y="27.333333333333311" width="281" height="33.666666666666657"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <color key="textColor" name="text_tertiary"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                        </stackView>
-                                    </subviews>
                                 </stackView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Common Wallet now supports Bitcoin" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SHN-qe-GDs" userLabel="Title Label">
                                     <rect key="frame" x="36" y="250.99999999999997" width="321" height="52.666666666666657"/>
@@ -181,20 +99,11 @@
     </objects>
     <resources>
         <image name="bitcoin_unlock_intro" width="375" height="251"/>
-        <image name="feature_compatibility" width="48" height="48"/>
-        <image name="feature_decentralize" width="48" height="48"/>
-        <image name="feature_seamless" width="48" height="48"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="text_secondary">
-            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
-        <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

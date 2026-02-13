@@ -3,6 +3,7 @@
 "access_dapps_defi_projects" = "Access apps and DeFi projects.";
 "access_to_contacts" = "Access to Contacts";
 "account" = "Account";
+"account_creation_failed" = "Account Creation Failed";
 "acknowledgements" = "Acknowledgements";
 "add" = "Add";
 "add_a_note" = "Add a note";
@@ -25,10 +26,10 @@
 "add_phone_desc" = "You can log in to your account using your mobile number. The mobile number will be associated with a key shard of your MPC wallet. The complete key exists only in the TEE security environment on the current device. Read the documentation to learn more about %@.";
 "add_phone_instruction_1" = "The mobile number and mnemonic phrase will link to the same key shard.";
 "add_phone_instruction_2" = "The mobile number and mnemonic phrase log into the same account.";
-"add_phone_instruction_3" = "You cannot add a mobile number registered to a Mixin Messenger account.";
+"add_phone_instruction_3" = "You cannot add a mobile number registered to a Mixin account.";
 "add_phone_instruction_4" = "Once bound, the mobile number cannot be removed.";
-"add_recovery_contact_before_instruction_1" = "The recovery contact you want to add has downloaded and logged in to Mixin Messenger.";
-"add_recovery_contact_before_instruction_2" = "The recovery contact you want to add keeps Mixin Messenger online or is meeting with you face-to-face.";
+"add_recovery_contact_before_instruction_1" = "The recovery contact you want to add has downloaded and logged in to Mixin.";
+"add_recovery_contact_before_instruction_2" = "The recovery contact you want to add keeps Mixin online or is meeting with you face-to-face.";
 "add_recovery_contact_before_instruction_3" = "The recovery contact you want to add has added the current account (%@) as a contact; otherwise, they may not receive the verification code.";
 "add_recovery_contact_desc" = "The recovery contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number or mnemonic phrase.";
 "add_recovery_contact_instruction_1" = "Add someone you trust as a recovery contact, such as your family, friends, or colleagues.";
@@ -284,7 +285,7 @@
 "chat_group_remove" = "%1$@ removed %2$@";
 "chat_list_empty_info" = "You can chat with contacts who have Mixin installed on their phone.";
 "chat_not_support" = "This type of message is not supported, please upgrade Mixin to the latest version. %@.";
-"chat_on_mixin_content" = "Let's chat on Mixin Messenger! Simple, safe, and easy to use. It also supports Bitcoin, Ethereum, and other cryptocurrencies, download https://mixin.one/messenger and search @%@ to add me as a friend.";
+"chat_on_mixin_content" = "Let's chat on Mixin! Simple, safe, and easy to use. It also supports Bitcoin, Ethereum, and other cryptocurrencies, download https://mixin.one/messenger and search @%@ to add me as a friend.";
 "chat_pin_message" = "%1$@ pinned %2$@";
 "chat_recall_delete_alert" = "Messages you selected will be deleted for everyone on the latest version of Mixin in this chat.";
 "chat_restore_subtitle" = "You will not be able to restore later if you decline to restore now. Media files will continue restore in background after messages is restored.";
@@ -365,7 +366,7 @@
 "contact_count_count" = "%d contacts";
 "contact_developer" = "Contact Developer";
 "contact_favorite_bots_title" = "%@'s Favorite Bots";
-"contact_invite_content" = "Hey, I'm using Mixin Messenger to chat. Download it here: https://mixin.one/messenger";
+"contact_invite_content" = "Hey, I'm using Mixin to chat. Download it here: https://mixin.one/messenger";
 "contact_mixin_id" = "Mixin ID: %@";
 "contact_mobile" = "Mobile: %@";
 "contact_phone_contact_hint" = "Upload mobile contacts to find other Mixin friends.";
@@ -412,6 +413,7 @@
 "copy_user_id" = "Copy User ID";
 "create" = "Create";
 "create_account" = "Create Account";
+"create_an_account" = "Create an account";
 "create_introduction" = "MPC Wallet, 2FA, %@, Self-custody, Social Recovery";
 "create_mnemonic_phrase" = "Create Mnemonic Phrase";
 "create_new_wallet" = "Create New Wallet";
@@ -419,6 +421,7 @@
 "create_pin" = "Create PIN";
 "create_safe" = "Create Safe";
 "create_safe_description" = "You don't have a Safe yet. Create one now and securely manage assets with your family, friends, or colleagues.";
+"create_your_account" = "Create your account";
 "created" = "Created";
 "created_this_group" = "%@ created this group";
 "creating_wallet_terminated_unexpectedly" = "Creating wallet terminated unexpectedly, click \"Continue\" to complete the creation";
@@ -472,7 +475,7 @@
 "deleting_address" = "Delete Address";
 "deleting_address_failed" = "Delete Address Failed";
 "deposit" = "Deposit";
-"deposit_account_attention" = "Attention: Please try a small amount for the first deposit. Both a Memo and an Address are required to successfully deposit your %@ to Mixin Messenger.";
+"deposit_account_attention" = "Attention: Please try a small amount for the first deposit. Both a Memo and an Address are required to successfully deposit your %@ to Mixin.";
 "deposit_attention" = "Please try a small amount for the first deposit.";
 "deposit_confirmation" = "Deposit will arrive %d block confirmation";
 "deposit_confirmation_count" = "Deposit will arrive %d block confirmations";
@@ -497,10 +500,10 @@
 "depost_address_updated" = "%@ Deposit Address Updated";
 "depost_address_updated_description" = "Your %@ deposit address has been updated. The deposit address will automatically update with system or network upgrades. Old addresses are still valid for deposits, but it is not recommended for further use.";
 "deselect_all" = "Deselect All";
-"desktop_login" = "Login to Mixin Messenger Desktop";
-"desktop_logout" = "Logout Mixin Messenger Desktop";
+"desktop_login" = "Login to Mixin Desktop";
+"desktop_logout" = "Logout Mixin Desktop";
 "desktop_on_hint" = "You have your desktop logged in";
-"desktop_upgrade" = "Please upgrade Mixin Messenger Desktop to the latest version.";
+"desktop_upgrade" = "Please upgrade Mixin Desktop to the latest version.";
 "detect_qr_tip" = "Detected a Mixin QR code, tap to recognize";
 "developer" = "Developer";
 "device_transfer_failed" = "Transfer failed";
@@ -642,7 +645,7 @@
 "export_mnemonics_instruction_2" = "The mnemonic phrase cannot help you recover your PIN.";
 "export_mnemonics_instruction_3" = "Ensure that no one or surveillance cameras are watching your screen.";
 "export_secret_warning_1" = "Anyone who gains access to this %@ can transfer all assets from your wallet.";
-"export_secret_warning_2" = "Mixin Messenger does not store your %@ on its servers.";
+"export_secret_warning_2" = "Mixin does not store your %@ on its servers.";
 "export_secret_warning_3" = "Never share your %@ with any third party, individual, website, or application.";
 "export_secret_warning_4" = "Ensure that no one — including surveillance cameras — can see your screen.";
 "face_id" = "Face ID";
@@ -653,12 +656,18 @@
 "failed_to_send_video" = "Failed to send video";
 "fast" = "Fast";
 "favorite" = "Favorite";
+"feature_all_in_one" = "All-in-one";
+"feature_all_in_one_description" = "Trade, swap, and manage thousands of native tokens.";
 "feature_compatibility" = "Compatibility";
 "feature_compatibility_description" = "Supports importing private keys and watch-only addresses from other wallets.";
 "feature_decentralized" = "Decentralized";
 "feature_decentralized_description" = "A fully decentralized wallet where you control the private key.";
+"feature_privacy_by_default" = "Privacy by default";
+"feature_privacy_by_default_description" = "Chats, calls, transfers, and assets are protected.";
 "feature_seamless" = "Seamless";
 "feature_seamless_description" = "Lightning-fast interface with instant page loading and rapid response.";
+"feature_truly_decentralized" = "Truly decentralized";
+"feature_truly_decentralized_description" = "Your keys, your crypto. Open-source and audited.";
 "fee" = "Fee";
 "fee_selection" = "Fee (%@)";
 "feedback" = "Feedback";
@@ -728,6 +737,12 @@
 "import_single_chain_wallet" = "Import a single-chain wallet";
 "import_wallet_count" = "Import %d Wallets";
 "import_wallet_count_one" = "Import 1 Wallet";
+"import_wallet_guide_1" = "· Create a Mixin account.";
+"import_wallet_guide_2" = "· Go to Wallets → Add Wallet > Import Recovery Phrase.";
+"import_wallet_guide_3" = "· Enter your 12- or 24-word recovery phrase (or private key) to complete the import.";
+"import_wallet_guide_4" = "· Start using your wallet.";
+"import_wallet_guide_footer" = "After creating a Mixin account, a Privacy Wallet will be generated by default. Your assets, transactions, and trades are protected by privacy features. See the documentation to learn more.";
+"import_wallet_guide_header" = "To use a wallet with a 12- or 24-word recovery phrase, follow these steps:";
 "import_wallets" = "Import Wallets";
 "import_wallets_from_another_wallet" = "Import wallets from another wallet";
 "importing_into_your_wallet" = "Importing into your wallet...";
@@ -808,7 +823,7 @@
 "line_busy_remote" = "Line busy";
 "link" = "Link";
 "link_desktop" = "Link Desktop";
-"link_desktop_description" = "Link Mixin Messenger Desktop by QR code";
+"link_desktop_description" = "Link Mixin Desktop by QR code";
 "link_recognition_failure" = "Link recognition failure";
 "link_shareable_false" = "The link has been set to not allow sharing";
 "live" = "Live";
@@ -879,7 +894,7 @@
 "mixin_id_or_phone" = "Mixin ID, Phone number";
 "mixin_locked" = "Mixin Locked";
 "mixin_logs" = "Mixin Logs";
-"mixin_messenger_desktop" = "Mixin Messenger Desktop";
+"mixin_messenger_desktop" = "Mixin Desktop";
 "mixin_one" = "Mixin One";
 "mixin_one_desc" = "Start your Mixin premium journey";
 "mixin_payment_content" = "💰 Amount: %1$@\n🌐 Network: %2$@\n🤝 Receiver: %3$@";
@@ -896,6 +911,7 @@
 "mnemonic_phrase_tip_2" = "· Do not share it over the internet";
 "mnemonic_phrases" = "mnemonic phrases";
 "mnemonics_mismatched" = "Mnemonics Mismatched";
+"mnemonics_policy" = "Your mnemonic phrase is processed locally and never stored";
 "mobile_contacts" = "Mobile Contacts";
 "mobile_number" = "Mobile Number";
 "mobile_number_added" = "Mobile Number Added";
@@ -997,7 +1013,18 @@
 "ok" = "OK";
 "old_device_is_waiting" = "Make sure that the old device is still on the screen that says \"Waiting for Other Device...\" to ensure synchronization.";
 "oldest" = "Oldest";
+"onboarding_decentralized_description" = "A decentralized, open-source, audited non-custodial wallet";
+"onboarding_decentralized_title" = "Your keys, your crypto";
 "onboarding_description" = "An open source crypto wallet with Signal messaging";
+"onboarding_mixin_description" = "An open source crypto wallet with Signal messaging";
+"onboarding_privacy_description" = "End-to-end encrypted chats, group calls, contact transfers";
+"onboarding_privacy_title" = "Chat and transfer privately with friends";
+"onboarding_recover_description" = "Recover via mobile number, mnemonic phrase or trusted contacts";
+"onboarding_recover_title" = "Never lose your account";
+"onboarding_reward_description" = "Earn commissions from trading and memberships";
+"onboarding_reward_title" = "Invite friends, earn rewards";
+"onboarding_trade_description" = "Native swaps, fiat onramps, free transfers";
+"onboarding_trade_title" = "Buy, sell, trade thousands of tokens";
 "one_by_one_forward" = "One-by-One Forward";
 "one_day" = "1 Day";
 "one_hour" = "1 Hour";
@@ -1005,7 +1032,7 @@
 "one_week" = "1 Week";
 "one_year" = "1 Year";
 "open" = "Open";
-"open_desktop_to_confirm" = "Please open your Mixin Messenger desktop to confirm the operation.";
+"open_desktop_to_confirm" = "Please open your Mixin desktop to confirm the operation.";
 "open_home_page" = "Open Home page";
 "open_in_browser" = "Open in browser";
 "open_in_gaode_maps" = "Open in 高德地图";
@@ -1013,7 +1040,7 @@
 "open_in_maps" = "Open in Maps";
 "open_link" = "Open Link: %@";
 "open_orders_count" = "Open Orders (%d)";
-"open_source" = "Copyright Mixin Messenger\nLicensed under the GPLv3";
+"open_source" = "Copyright Mixin\nLicensed under the GPLv3";
 "open_url" = "Open URL";
 "opening_balance" = "Opening Balance";
 "operation_failed" = "The operation failed, please try again later";
@@ -1159,7 +1186,7 @@
 "recovery_contact" = "Recovery Contact";
 "recovery_kit" = "Recovery Kit";
 "recovery_kit_attention" = "Attention: The Recovery Kit cannot help you recover your PIN";
-"recovery_kit_instruction" = "The MPC wallet in Mixin Messenger is built on the decentralized key protocol TIP. You can recover your account through your mobile number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
+"recovery_kit_instruction" = "The MPC wallet in Mixin is built on the decentralized key protocol TIP. You can recover your account through your mobile number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "red_up_green_down" = "Red Up / Green Down";
 "referral" = "Referral";
 "referral_banner" = "Invite friends and earn up to 60%% of their trading fees!";
@@ -1224,7 +1251,7 @@
 "restore_from_icloud_confirmation" = "There are already %1$d local chat records, and the last message was created at %2$@. Are you sure you want to overwrite the local data with the chat data on iCloud?";
 "restore_from_pc" = "Restore from PC";
 "restore_from_pc_hint" = "Restore your chat history from PC";
-"restore_from_pc_tip" = "Synchronize your chat history from the Mixin Messenger desktop client. The synchronization will not overwrite the local records but only incrementally synchronize them. Please make sure that both devices are connected to the same Wi-Fi or hotspot.";
+"restore_from_pc_tip" = "Synchronize your chat history from the Mixin desktop client. The synchronization will not overwrite the local records but only incrementally synchronize them. Please make sure that both devices are connected to the same Wi-Fi or hotspot.";
 "restore_now" = "Restore Now";
 "restore_your_chat_history" = "Restore Your Chat History";
 "restoring" = "Restoring...";
@@ -1347,7 +1374,7 @@
 "set_up_pin" = "Set up PIN";
 "set_up_pin_answer_1" = "I can recover my account later.";
 "set_up_pin_answer_2" = "I will lose access to my account and funds.";
-"set_up_pin_desc" = "The MPC Wallet in Mixin Messenger is built on a decentralized key protocol (TIP). The PIN is one of the key shards. The full wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
+"set_up_pin_desc" = "The MPC Wallet in Mixin is built on a decentralized key protocol (TIP). The PIN is one of the key shards. The full wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "set_up_pin_desc_1" = "Set a 6-digit PIN for your wallet";
 "set_up_pin_desc_2" = "Please confirm your 6-digit PIN again";
 "set_up_pin_instruction_1" = "Please complete the process in a stable network environment.";
@@ -1360,7 +1387,7 @@
 "setting_appearance_language_alert_description" = "You can pick a preferred language in settings";
 "setting_auth_access" = "Approved: %1$@, Last Accessed: %2$@";
 "setting_auth_search_hint" = "Mixin ID, Name";
-"setting_backup_tips" = "Back up your chat history to iCloud. if you lose your iPhone or switch to a new one, you can restore your chat history when you reinstall Mixin Messenger. Messages you back up are not protected by Mixin Messenger end-to-end encryption while in iCloud.";
+"setting_backup_tips" = "Back up your chat history to iCloud. if you lose your iPhone or switch to a new one, you can restore your chat history when you reinstall Mixin. Messages you back up are not protected by Mixin end-to-end encryption while in iCloud.";
 "setting_chats" = "Chats";
 "setting_conversation_group_tip" = "Who can add me to groups";
 "setting_conversation_tip" = "Who can send message to me";
@@ -1401,6 +1428,7 @@
 "sign_in" = "Sign in";
 "sign_in_no_account" = "Don’t have an account yet?";
 "sign_in_with_mnemonic_phrase" = "Sign in with Mnemonic Phrase";
+"sign_up_15_secs" = "Sign up in just 15 seconds";
 "sign_up_have_account" = "Already have an account?";
 "sign_with_emergency_contact" = "Sign in with recovery contact";
 "sign_with_mobile_number" = "Sign in with mobile number";
@@ -1543,7 +1571,7 @@
 "transfer_to_mixin_address" = "Transfer to Mixin address";
 "transfer_to_no_key_wallet_warning" = "This wallet has no private key on this device. Are you sure you want to use it to receive assets?";
 "transfer_to_pc" = "Transfer to PC";
-"transfer_to_pc_hint" = "Synchronize your chat history to the Mixin Messenger desktop version. Please make sure both devices are connected to the same Wi-Fi or hotspot.";
+"transfer_to_pc_hint" = "Synchronize your chat history to the Mixin desktop version. Please make sure both devices are connected to the same Wi-Fi or hotspot.";
 "transfer_to_user_or_bot" = "Transfer to user or bot";
 "transfer_to_watch_wallet_warning" = "This is a watch-only wallet. Are you sure you want to use it to receive assets?";
 "transferring_chat_progress" = "Transferring Chat (%@%%)";
@@ -1562,6 +1590,7 @@
 "unable_to_save_video" = "Unable to save video.";
 "unable_to_share_content" = "Unable to share this content";
 "unauthorized" = "Unauthorized";
+"unavailable_mnemonics_word_count" = "12 or 24 words";
 "unblock" = "Unblock";
 "unfamiliar_person_reminder" = "%1$@ (%2$@) is not in your contacts. Please verify if the recipient is correct.";
 "unit_day" = "day";
@@ -1631,6 +1660,8 @@
 "user_delete_hint" = "The user has deleted his own account.";
 "user_is_reported" = "User has been reported";
 "user_not_found" = "User not found";
+"username_description" = "This is the name your friends will see when you chat or send them tokens";
+"username_placeholder" = "Enter a display name";
 "utxo_count_exceeded" = "This transaction consumes too many UTXOs, please try to combine UTXOs or split the transaction.";
 "validation_timed_out" = "Validation timed out";
 "value" = "Value";
@@ -1722,8 +1753,8 @@
 "weeks" = "weeks";
 "weeks_count_short" = "%dW";
 "what_is_pin" = "What is PIN?";
+"what_should_friends_call_you" = "What should your friends call you?";
 "whats_safe_wallet" = "What's the Mixin Safe?";
-"whats_your_name" = "What's your name?";
 "wifi" = "Wi-Fi";
 "wifi_and_cellular" = "Wi-Fi and Cellular";
 "withdraw_address" = "Address";

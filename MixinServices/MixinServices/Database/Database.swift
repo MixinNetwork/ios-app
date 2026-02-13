@@ -145,7 +145,15 @@ open class Database {
     }
     
     private func handleDatabaseError(_ error: Error) {
-        reporter.report(error: error)
+        let isDatabaseLockedInExtension = switch error {
+        case GRDB.DatabaseError.SQLITE_BUSY:
+            isAppExtension
+        default:
+            false
+        }
+        if !isDatabaseLockedInExtension {
+            reporter.report(error: error)
+        }
         Logger.database.error(category: "Database", message: "\(error)")
         guard let error = error as? GRDB.DatabaseError else {
             return

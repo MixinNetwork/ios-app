@@ -13,11 +13,6 @@ public enum TIPNode {
     }
     
     public enum Error: Swift.Error {
-        case bn256SuiteNotAvailable
-        case userSkNotAvailable
-        case assigneeSkNotAvailable
-        case assigneePubNotAvailable
-        case decodePublicKey(NSError?)
         case decodeResponseSignature
         case decodeResponseCipher
         case decryptResponseCipher
@@ -66,26 +61,14 @@ public enum TIPNode {
         progressHandler: (@MainActor (TIP.Progress) -> Void)?
     ) async throws -> (Data, UInt64) {
         Logger.tip.info(category: "TIPNode", message: "Sign with assigneePriv: \(assigneePriv != nil), failedSigners: \(failedSigners.map(\.index)), forRecover: \(forRecover)")
-        guard let suite = TipNewSuiteBn256() else {
-            throw Error.bn256SuiteNotAvailable
-        }
-        guard let userSk = suite.scalar() else {
-            throw Error.userSkNotAvailable
-        }
-        userSk.setBytes(identityPriv)
         
-        let assigneeSk: TipScalar?
+        let userSk = try TIPScalar(seed: identityPriv)
+        let assigneeSk: TIPScalar?
         let assignee: Data?
-        if let priv = assigneePriv {
-            guard let sk = suite.scalar() else {
-                throw Error.assigneeSkNotAvailable
-            }
-            sk.setBytes(priv)
-            guard let assigneePub = try sk.publicKey()?.publicKeyBytes() else {
-                throw Error.assigneePubNotAvailable
-            }
-            let assigneeSig = try sk.sign(assigneePub)
-            
+        if let assigneePriv {
+            let sk = try TIPScalar(seed: assigneePriv)
+            let assigneePub = try sk.publicKey()
+            let assigneeSig = try sk.sign(message: assigneePub)
             assigneeSk = sk
             assignee = assigneePub + assigneeSig
         } else {
@@ -238,7 +221,7 @@ public enum TIPNode {
     }
     
     private static func nodeSigs(
-        userSk: TipScalar,
+        userSk: TIPScalar,
         signers: [TIPSigner],
         ephemeral: Data,
         watcher: Data,
@@ -324,7 +307,7 @@ public enum TIPNode {
     
     private static func signTIPNode(
         requestID: String,
-        userSk: TipScalar,
+        userSk: TIPScalar,
         signer: TIPSigner,
         ephemeral: Data,
         watcher: Data,
@@ -348,19 +331,23 @@ public enum TIPNode {
             throw response.error
         case .success(let response):
             var error: NSError?
-            guard let signerPk = TipPubKeyFromBase58(signer.identity, &error), error == nil else {
-                throw Error.decodePublicKey(error)
-            }
+            let signerPk = TIPPoint(base58EncodedString: signer.identity)
             let msg = try JSONEncoder.default.encode(response.data)
             guard let responseSignature = Data(hexEncodedString: response.signature) else {
                 throw Error.decodeResponseSignature
             }
-            try signerPk.verify(msg, sig: responseSignature)
+            try signerPk.verify(message: msg, signature: responseSignature)
             
             guard let responseCipher = Data(hexEncodedString: response.data.cipher) else {
                 throw Error.decodeResponseCipher
             }
-            guard let plain = TipDecrypt(signerPk, userSk, responseCipher, &error), error == nil else {
+            let plain = TipDecrypt(
+                signer.identity,
+                userSk.bytes.hexEncodedString(),
+                responseCipher,
+                &error
+            )
+            guard let plain, error == nil else {
                 throw Error.decryptResponseCipher
             }
             guard plain.count == 218 else {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TIPActionViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="activityIndicatorView" destination="CtW-PJ-GQX" id="peb-fa-LmK"/>
+                <outlet property="contentStackView" destination="EOR-Ok-HU0" id="VcT-7T-GaQ"/>
                 <outlet property="descriptionLabel" destination="Lte-MD-U0O" id="MMH-c6-DAg"/>
                 <outlet property="iconImageView" destination="MAr-uB-KWa" id="ASa-y7-PjB"/>
                 <outlet property="progressLabel" destination="AH0-xI-fqJ" id="5wD-mr-gJB"/>
@@ -26,13 +27,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="EOR-Ok-HU0">
-                    <rect key="frame" x="38" y="155" width="338" height="163"/>
+                    <rect key="frame" x="38" y="160.5" width="338" height="159"/>
                     <subviews>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_tip" translatesAutoresizingMaskIntoConstraints="NO" id="MAr-uB-KWa">
-                            <rect key="frame" x="0.0" y="0.0" width="338" height="76"/>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tip_wallet" translatesAutoresizingMaskIntoConstraints="NO" id="MAr-uB-KWa">
+                            <rect key="frame" x="0.0" y="0.0" width="338" height="72"/>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Create PIN" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RAW-6c-WHj">
-                            <rect key="frame" x="0.0" y="92" width="338" height="21.5"/>
+                            <rect key="frame" x="0.0" y="88" width="338" height="21.5"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                             <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
@@ -41,22 +42,18 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="正在验证并同步密钥分片到 TIP 网络，请保持应用在前台，设置过程中不要强制关闭应用" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lte-MD-U0O">
-                            <rect key="frame" x="0.0" y="129.5" width="338" height="33.5"/>
+                            <rect key="frame" x="0.0" y="125.5" width="338" height="33.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" name="text_tertiary"/>
                             <nil key="highlightedColor"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="regular14"/>
-                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="syncing_and_verifying_tip"/>
-                            </userDefinedRuntimeAttributes>
                         </label>
                     </subviews>
                 </stackView>
                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="UbE-PQ-ehO">
-                    <rect key="frame" x="40" y="789" width="334" height="4"/>
+                    <rect key="frame" x="40" y="755" width="334" height="4"/>
                 </progressView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CtW-PJ-GQX" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="192" y="777" width="30" height="30"/>
+                    <rect key="frame" x="192" y="743" width="30" height="30"/>
                     <color key="backgroundColor" name="background"/>
                     <color key="tintColor" name="text_tertiary"/>
                     <constraints>
@@ -65,7 +62,7 @@
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AH0-xI-fqJ">
-                    <rect key="frame" x="20" y="813" width="374" height="17"/>
+                    <rect key="frame" x="20" y="779" width="374" height="17"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" name="text_tertiary"/>
                     <nil key="highlightedColor"/>
@@ -92,7 +89,7 @@
         </view>
     </objects>
     <resources>
-        <image name="ic_tip" width="80" height="76"/>
+        <image name="tip_wallet" width="76" height="72"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
@@ -100,7 +97,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

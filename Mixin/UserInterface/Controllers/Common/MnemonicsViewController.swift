@@ -9,6 +9,7 @@ class MnemonicsViewController: UIViewController {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var inputStackView: UIStackView!
     @IBOutlet weak var footerStackView: UIStackView!
+    @IBOutlet weak var actionStackView: UIStackView!
     @IBOutlet weak var confirmButton: StyledButton!
     
     @IBOutlet weak var contentViewHeightConstraint: NSLayoutConstraint!

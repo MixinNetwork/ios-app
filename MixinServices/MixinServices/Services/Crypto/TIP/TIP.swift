@@ -217,19 +217,23 @@ extension TIP {
         await progressHandler?(.creating)
         let ephemeralSeed = try await ephemeralSeed(pinToken: pinToken)
         Logger.tip.info(category: "TIP", message: "Ephemeral seed ready")
+        
+        // 1. Change PIN, requires assignee
+        // 2. Change PIN interrupted, failure in some of the nodes, requires assignee
+        // 3. Change PIN interrupted, all node succeed, does not requires assignee
         let identityPriv: Data
         let watcher: Data
         let assigneePriv: Data?
-        if isCounterBalanced {
-            (identityPriv, watcher) = try await TIPIdentityManager.identityPair(pinData: oldPINData, pinToken: pinToken)
-            Logger.tip.info(category: "TIP", message: "Identity pair ready")
-            assigneePriv = try await TIPIdentityManager.identityPair(pinData: newPINData, pinToken: pinToken).priv
-            Logger.tip.info(category: "TIP", message: "assigneePriv ready")
-        } else {
+        if !isCounterBalanced && failedSigners.isEmpty {
             (identityPriv, watcher) = try await TIPIdentityManager.identityPair(pinData: newPINData, pinToken: pinToken)
             Logger.tip.info(category: "TIP", message: "Identity pair ready")
             assigneePriv = nil
             Logger.tip.info(category: "TIP", message: "No assigneePriv needed")
+        } else {
+            (identityPriv, watcher) = try await TIPIdentityManager.identityPair(pinData: oldPINData, pinToken: pinToken)
+            Logger.tip.info(category: "TIP", message: "Identity pair ready")
+            assigneePriv = try await TIPIdentityManager.identityPair(pinData: newPINData, pinToken: pinToken).priv
+            Logger.tip.info(category: "TIP", message: "assigneePriv ready")
         }
         
         await progressHandler?(.connecting)

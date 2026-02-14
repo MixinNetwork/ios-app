@@ -165,7 +165,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (GCDWebServerResponse*)overrideResponse:(GCDWebServerResponse*)response forRequest:(GCDWebServerRequest*)request;
 
 /**
- *  This method is called if any error happens while validing or processing
+ *  This method is called if any error happens while validating or processing
  *  the request or if no GCDWebServerResponse was generated during processing.
  *
  *  @warning If the request was invalid (e.g. the HTTP headers were malformed),

@@ -32,6 +32,15 @@ extension TokenExtra: Codable, DatabaseColumnConvertible, MixinFetchableRecord, 
         case updatedAt = "updated_at"
     }
     
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.assetID = try container.decode(String.self, forKey: .assetID)
+        self.kernelAssetID = try container.decode(String.self, forKey: .kernelAssetID)
+        self.isHidden = try container.decodeIfPresent(Bool.self, forKey: .isHidden) ?? false
+        self.balance = try container.decodeIfPresent(String.self, forKey: .balance)
+        self.updatedAt = try container.decode(String.self, forKey: .updatedAt)
+    }
+    
 }
 
 extension TokenExtra: TableRecord, PersistableRecord {

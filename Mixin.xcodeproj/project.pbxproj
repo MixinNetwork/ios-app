@@ -1208,6 +1208,7 @@
 		9493708C2A1B64CC00C0A21E /* LocalNetworkAuthorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9AABC329E924B400EBAAF3 /* LocalNetworkAuthorization.swift */; };
 		949569A6263B12FE00E043FE /* TranscriptMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949569A5263B12FE00E043FE /* TranscriptMessageCell.swift */; };
 		949569A8263B13BF00E043FE /* TranscriptMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949569A7263B13BF00E043FE /* TranscriptMessageViewModel.swift */; };
+		9495BB052F4F29D700ABA294 /* DiagnoseSwitches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9495BB012F4F29B700ABA294 /* DiagnoseSwitches.swift */; };
 		9495E0492CEF2ACD00124CC7 /* BackupMnemonicsWarningView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9495E0482CEF2ACD00124CC7 /* BackupMnemonicsWarningView.xib */; };
 		9495E04A2CEF2ACD00124CC7 /* BackupMnemonicsWarningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9495E0472CEF2ACD00124CC7 /* BackupMnemonicsWarningViewController.swift */; };
 		9495E0802CEF5CCF00124CC7 /* LogoutValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9495E07E2CEF5CCF00124CC7 /* LogoutValidationViewController.swift */; };
@@ -2992,6 +2993,7 @@
 		9492286325DFB7EF0000A19F /* MinimizedPlaylistView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MinimizedPlaylistView.xib; sourceTree = "<group>"; };
 		949569A5263B12FE00E043FE /* TranscriptMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptMessageCell.swift; sourceTree = "<group>"; };
 		949569A7263B13BF00E043FE /* TranscriptMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptMessageViewModel.swift; sourceTree = "<group>"; };
+		9495BB012F4F29B700ABA294 /* DiagnoseSwitches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnoseSwitches.swift; sourceTree = "<group>"; };
 		9495E0472CEF2ACD00124CC7 /* BackupMnemonicsWarningViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupMnemonicsWarningViewController.swift; sourceTree = "<group>"; };
 		9495E0482CEF2ACD00124CC7 /* BackupMnemonicsWarningView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BackupMnemonicsWarningView.xib; sourceTree = "<group>"; };
 		9495E07E2CEF5CCF00124CC7 /* LogoutValidationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutValidationViewController.swift; sourceTree = "<group>"; };
@@ -4837,6 +4839,7 @@
 			isa = PBXGroup;
 			children = (
 				94668E3E2CB68C1700558755 /* PushNotificationDiagnostic.swift */,
+				9495BB012F4F29B700ABA294 /* DiagnoseSwitches.swift */,
 				94B8D184266E37ED00F43CBB /* DiagnoseViewController.swift */,
 				94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */,
 				94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */,
@@ -7686,6 +7689,7 @@
 				94C93C8D2C94880600A31591 /* ExtendedKey.swift in Sources */,
 				DF44B0CC20C6897000A099B6 /* EmptyView.swift in Sources */,
 				7BB78724245132570057B4ED /* SettingsHeaderView.swift in Sources */,
+				9495BB052F4F29D700ABA294 /* DiagnoseSwitches.swift in Sources */,
 				7BEA4F872223D8C400AF3650 /* ConversationInputViewController.swift in Sources */,
 				94145A922CD4FCE900600AD4 /* AddMobileNumberViewController.swift in Sources */,
 				94317D072AFBE57200FDC9C9 /* MemoCell.swift in Sources */,

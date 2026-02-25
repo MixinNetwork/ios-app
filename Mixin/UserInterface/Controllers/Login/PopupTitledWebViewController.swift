@@ -46,11 +46,9 @@ class PopupTitledWebViewController: UIViewController {
             make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(titleView.snp.bottom)
         }
-#if DEBUG
         if #available(iOS 16.4, *) {
-            webView.isInspectable = true
+            webView.isInspectable = DiagnoseSwitches.isWebViewInspectable
         }
-#endif
         
         self.webView = webView
     }

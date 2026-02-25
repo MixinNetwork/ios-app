@@ -121,11 +121,9 @@ final class MixinWebViewController: WebViewController {
         showPageTitleConstraint.priority = context.isImmersive ? .defaultLow : .defaultHigh
         webView.navigationDelegate = self
         webView.uiDelegate = self
-#if DEBUG
         if #available(iOS 16.4, *) {
-            webView.isInspectable = true
+            webView.isInspectable = DiagnoseSwitches.isWebViewInspectable
         }
-#endif
         loadWebView()
     }
     

@@ -52,11 +52,9 @@ final class Captcha: NSObject {
             let webView = WKWebView(frame: view.bounds, configuration: config)
             webView.frame.origin.y = view.bounds.height
             webView.navigationDelegate = self
-#if DEBUG
             if #available(iOS 16.4, *) {
-                webView.isInspectable = true
+                webView.isInspectable = DiagnoseSwitches.isWebViewInspectable
             }
-#endif
             view.addSubview(webView)
             self.webView = webView
         }

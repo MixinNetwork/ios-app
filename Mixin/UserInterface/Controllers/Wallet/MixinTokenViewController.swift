@@ -190,13 +190,20 @@ extension MixinTokenViewController: TokenActionView.Delegate {
         case .send:
             send()
         case .trade:
-            let trade = MixinTradeViewController(
+            let trade = TradeViewController(
+                wallet: .privacy,
+                trading: nil,
                 sendAssetID: token.assetID,
                 receiveAssetID: AssetID.erc20USDT,
                 referral: nil
             )
-            navigationController?.pushViewController(trade, animated: true)
-            reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "asset_detail"])
+            if let trade {
+                navigationController?.pushViewController(trade, animated: true)
+                reporter.report(
+                    event: .tradeStart,
+                    tags: ["wallet": "main", "source": "asset_detail"]
+                )
+            }
         case .buy:
             break
         }

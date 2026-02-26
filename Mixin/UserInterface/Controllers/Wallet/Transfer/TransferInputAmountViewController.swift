@@ -262,7 +262,9 @@ extension TransferInputAmountViewController: AddTokenMethodSelectorViewControlle
     ) {
         let next = switch method {
         case .trade:
-            MixinTradeViewController(
+            TradeViewController(
+                wallet: .privacy,
+                trading: .simpleSpot,
                 sendAssetID: nil,
                 receiveAssetID: token.assetID,
                 referral: nil
@@ -270,7 +272,9 @@ extension TransferInputAmountViewController: AddTokenMethodSelectorViewControlle
         case .deposit:
             DepositViewController(token: tokenItem, switchingBetweenNetworks: false)
         }
-        navigationController?.pushViewController(next, animated: true)
+        if let next {
+            navigationController?.pushViewController(next, animated: true)
+        }
     }
     
 }

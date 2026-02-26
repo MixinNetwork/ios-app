@@ -27,8 +27,10 @@ final class DatabaseDiagnosticViewController: UIViewController {
             "SELECT * FROM users LIMIT 10"
         case 2:
             "SELECT * FROM messages_blaze LIMIT 10"
-        default:
+        case 3:
             "SELECT * FROM tokens LIMIT 5"
+        default:
+            "SELECT * FROM positions LIMIT 5"
         }
     }
     
@@ -45,8 +47,10 @@ final class DatabaseDiagnosticViewController: UIViewController {
             UserDatabase.current
         case 2:
             TaskDatabase.current
-        default:
+        case 3:
             Web3Database.current
+        default:
+            PerpsDatabase.current
         }
         
         func execute(_ db: GRDB.Database) throws -> String {

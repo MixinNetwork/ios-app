@@ -1,11 +1,11 @@
 import UIKit
 
-final class OpenTradeOrderHeaderView: UICollectionReusableView {
+final class TradeSectionHeaderView: UICollectionReusableView {
     
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var label: UILabel!
     
-    var onShowOrders: ((UIView) -> Void)?
+    var onShowAll: ((UIView) -> Void)?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -18,8 +18,8 @@ final class OpenTradeOrderHeaderView: UICollectionReusableView {
         )
     }
     
-    @IBAction func showOrders(_ sender: UIButton) {
-        onShowOrders?(self)
+    @IBAction func showAll(_ sender: UIButton) {
+        onShowAll?(self)
     }
     
 }

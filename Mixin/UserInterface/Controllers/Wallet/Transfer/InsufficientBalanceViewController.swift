@@ -310,20 +310,26 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
             return
         }
         let to = insufficientToken.assetID
-        let trade: UIViewController
-        switch intent {
+        let trade = switch intent {
         case .privacyWalletTransfer, .withdraw:
-            trade = MixinTradeViewController(
+            TradeViewController(
+                wallet: .privacy,
+                trading: .simpleSpot,
                 sendAssetID: from,
                 receiveAssetID: to,
                 referral: nil
             )
         case let .commonWalletTransfer(wallet, _, _), let .externalWeb3Transaction(wallet, _):
-            trade = Web3TradeViewController(
-                wallet: wallet,
+            TradeViewController(
+                wallet: .common(wallet),
+                trading: .simpleSpot,
                 sendAssetID: from,
                 receiveAssetID: to,
+                referral: nil
             )
+        }
+        guard let trade else {
+            return
         }
         presentingViewController?.dismiss(animated: true) { [onDismiss] in
             onDismiss?()
@@ -352,12 +358,14 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
         _ viewController: AddTokenMethodSelectorViewController,
         didPickMethod method: AddTokenMethodSelectorViewController.Method
     ) {
-        let next: UIViewController
+        let next: UIViewController?
         switch insufficientToken {
         case let token as MixinTokenItem:
             next = switch method {
             case .trade:
-                MixinTradeViewController(
+                TradeViewController(
+                    wallet: .privacy,
+                    trading: .simpleSpot,
                     sendAssetID: nil,
                     receiveAssetID: token.assetID,
                     referral: nil
@@ -371,10 +379,12 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
             }
             switch method {
             case .trade:
-                next = Web3TradeViewController(
-                    wallet: wallet,
+                next = TradeViewController(
+                    wallet: .common(wallet),
+                    trading: .simpleSpot,
                     sendAssetID: nil,
                     receiveAssetID: token.assetID,
+                    referral: nil
                 )
             case .deposit:
                 next = DepositViewController(
@@ -384,6 +394,9 @@ extension InsufficientBalanceViewController: AddTokenMethodSelectorViewControlle
                 )
             }
         default:
+            return
+        }
+        guard let next else {
             return
         }
         presentingViewController?.dismiss(animated: true) {

@@ -3,7 +3,7 @@ import OrderedCollections
 import Alamofire
 import MixinServices
 
-final class MixinTradeViewController: TradeViewController {
+final class TradeMixinSpotViewController: SpotTradeViewController {
     
     private let referral: String?
     
@@ -266,7 +266,7 @@ final class MixinTradeViewController: TradeViewController {
     
 }
 
-extension MixinTradeViewController: PendingTradeOrderLoader.Delegate {
+extension TradeMixinSpotViewController: PendingTradeOrderLoader.Delegate {
     
     func pendingSwapOrder(_ loader: PendingTradeOrderLoader, didLoad orders: [TradeOrder]) {
         switch mode {

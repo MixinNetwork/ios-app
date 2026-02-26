@@ -1,23 +1,18 @@
 import UIKit
 import Combine
-import MixinServices
 
-final class BuyTokenSelectorViewController: TokenSelectorViewController {
+final class PerpetualMarketSelectorViewController: TokenSelectorViewController {
     
-    typealias Token = ValuableToken & OnChainToken
+    var onSelected: ((PerpetualMarketViewModel) -> Void)?
     
-    var onSelected: ((Token) -> Void)?
-    
-    private let tokens: [any Token]
-    private let selectedAssetID: String?
+    private let markets: [PerpetualMarketViewModel]
     
     private var searchObserver: AnyCancellable?
     private var searchResultsKeyword: String?
-    private var searchResults: [any Token]?
+    private var searchResults: [PerpetualMarketViewModel]?
     
-    init(tokens: [any Token], selectedAssetID: String?) {
-        self.tokens = tokens
-        self.selectedAssetID = selectedAssetID
+    init(markets: [PerpetualMarketViewModel]) {
+        self.markets = markets
         super.init()
     }
     
@@ -47,7 +42,7 @@ final class BuyTokenSelectorViewController: TokenSelectorViewController {
                 }
                 self.search(keyword: keyword)
             }
-        collectionView.register(R.nib.tradeTokenCell)
+        collectionView.register(R.nib.perpetualMarketCell)
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { (_, _) in
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -71,7 +66,7 @@ final class BuyTokenSelectorViewController: TokenSelectorViewController {
             searchResults = nil
             collectionView.reloadData()
             collectionView.checkEmpty(
-                dataCount: tokens.count,
+                dataCount: markets.count,
                 text: R.string.localizable.dont_have_assets(),
                 photo: R.image.emptyIndicator.ic_hidden_assets()!
             )
@@ -85,17 +80,17 @@ final class BuyTokenSelectorViewController: TokenSelectorViewController {
         
     }
     
-    private func token(at indexPath: IndexPath) -> any Token {
+    private func viewModel(at indexPath: IndexPath) -> PerpetualMarketViewModel {
         if let searchResults {
             searchResults[indexPath.item]
         } else {
-            tokens[indexPath.item]
+            markets[indexPath.item]
         }
     }
     
 }
 
-extension BuyTokenSelectorViewController: UITextFieldDelegate {
+extension PerpetualMarketSelectorViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -104,34 +99,25 @@ extension BuyTokenSelectorViewController: UITextFieldDelegate {
     
 }
 
-extension BuyTokenSelectorViewController: UICollectionViewDataSource {
+extension PerpetualMarketSelectorViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        searchResults?.count ?? tokens.count
+        searchResults?.count ?? markets.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.trade_token, for: indexPath)!
-        let token = token(at: indexPath)
-        cell.iconView.setIcon(token: token, chain: token.chain)
-        cell.maliciousWarningImageView.isHidden = true
-        cell.titleLabel.text = token.name
-        cell.subtitleLabel.text = token.localizedBalanceWithSymbol
-        if let tag = token.chainTag {
-            cell.chainLabel.text = tag
-            cell.chainLabel.isHidden = false
-        } else {
-            cell.chainLabel.isHidden = true
-        }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
+        let viewModel = viewModel(at: indexPath)
+        cell.load(viewModel: viewModel)
         return cell
     }
     
 }
 
-extension BuyTokenSelectorViewController: UICollectionViewDelegate {
+extension PerpetualMarketSelectorViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let token = token(at: indexPath)
+        let token = viewModel(at: indexPath)
         onSelected?(token)
     }
     

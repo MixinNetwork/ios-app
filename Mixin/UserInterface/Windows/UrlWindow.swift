@@ -14,6 +14,7 @@ class UrlWindow {
         case webView(MixinWebViewController.Context)
         case conversation(WeakWrapper<ConversationMessageComposer>)
         case swap(context: Payment.TradeContext, completion: (String?) -> Void)
+        case perps(context: Payment.PerpsContext, completion: (String?) -> Void)
         case other
         
         var webContext: MixinWebViewController.Context? {
@@ -27,7 +28,7 @@ class UrlWindow {
         
         var isExternal: Bool {
             switch self {
-            case .openURL, .userActivity, .conversation, .swap:
+            case .openURL, .userActivity, .conversation, .swap, .perps:
                 return true
             case .webView, .other:
                 return false
@@ -67,22 +68,25 @@ class UrlWindow {
                 return true
             case let .trade(type, input, output, referral):
                 if let navigationController = UIApplication.homeNavigationController {
-                    let mode: TradeViewController.Mode? = switch type {
+                    let trading: TradeViewController.Trading? = switch type {
                     case "swap":
-                            .simple
+                            .simpleSpot
                     case "limit":
-                            .advanced
+                            .advancedSpot
                     default:
                             .none
                     }
-                    let trade = MixinTradeViewController(
-                        mode: mode,
+                    let trade = TradeViewController(
+                        wallet: .privacy,
+                        trading: trading,
                         sendAssetID: input,
                         receiveAssetID: output ?? AssetID.erc20USDT,
                         referral: referral
                     )
-                    navigationController.pushViewController(trade, animated: true)
-                    reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "schema"])
+                    if let trade {
+                        navigationController.pushViewController(trade, animated: true)
+                        reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "schema"])
+                    }
                 }
                 return true
             case let .send(context):
@@ -990,7 +994,7 @@ extension UrlWindow {
         }
         let completion: (String?) -> Void
         switch source {
-        case let .swap(_, externalCompletion):
+        case let .swap(_, externalCompletion), let .perps(_, externalCompletion):
             completion = externalCompletion
         default:
             let hud = Hud()
@@ -1226,6 +1230,8 @@ extension UrlWindow {
                 let context: Payment.Context? = switch source {
                 case let .swap(context, _):
                         .trade(context)
+                case let .perps(context, _):
+                        .perps(context)
                 default:
                     nil
                 }
@@ -1255,7 +1261,7 @@ extension UrlWindow {
                     guard case let .user(receiver) = destination else {
                         return
                     }
-                    let preview = TradePreviewViewController(
+                    let preview = TradeSpotPreviewViewController(
                         wallet: .privacy,
                         mode: context.mode,
                         operation: .mixin(operation),
@@ -1264,6 +1270,13 @@ extension UrlWindow {
                         receiveToken: context.receiveToken,
                         receiveAmount: context.receiveAmount,
                         receiver: receiver,
+                        warnings: issues.map(\.description)
+                    )
+                    homeContainer.present(preview, animated: true)
+                case let .perps(context, _):
+                    let preview = OpenPerpetualPositionPreviewViewController(
+                        context: context,
+                        operation: operation,
                         warnings: issues.map(\.description)
                     )
                     homeContainer.present(preview, animated: true)

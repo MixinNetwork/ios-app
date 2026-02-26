@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="perps_position_product" id="Kpn-wP-TKF" customClass="PerpetualPositionProductCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="343" height="48"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="bnh-nq-Hwf">
+                <rect key="frame" x="0.0" y="0.0" width="343" height="48"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="cY9-AS-9yX">
+                        <rect key="frame" x="16" y="0.0" width="311" height="48"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PERPETUAL" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PPa-Ks-eE5">
+                                <rect key="frame" x="0.0" y="0.0" width="311" height="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" name="text_quaternary"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="T2p-Cn-ksb">
+                                <rect key="frame" x="0.0" y="24" width="311" height="24"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tk3-6V-s5B" customClass="PlainTokenIconView" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
+                                        <color key="backgroundColor" name="background"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="24" id="N4c-gz-MEI"/>
+                                            <constraint firstAttribute="width" secondItem="tk3-6V-s5B" secondAttribute="height" id="aia-4g-z7S"/>
+                                        </constraints>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH - USD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FkE-A6-1YC">
+                                        <rect key="frame" x="27" y="2.3333333333333321" width="284" height="19.333333333333332"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                        <color key="textColor" name="text"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstItem="cY9-AS-9yX" firstAttribute="leading" secondItem="bnh-nq-Hwf" secondAttribute="leading" constant="16" id="3wS-M4-Ciq"/>
+                    <constraint firstAttribute="bottom" secondItem="cY9-AS-9yX" secondAttribute="bottom" id="GJt-7W-NHy"/>
+                    <constraint firstAttribute="trailing" secondItem="cY9-AS-9yX" secondAttribute="trailing" constant="16" id="xDd-iO-D6o"/>
+                    <constraint firstItem="cY9-AS-9yX" firstAttribute="top" secondItem="bnh-nq-Hwf" secondAttribute="top" id="zQZ-gM-ty7"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <color key="backgroundColor" name="background"/>
+            <connections>
+                <outlet property="iconView" destination="tk3-6V-s5B" id="LBI-Ea-NwT"/>
+                <outlet property="productLabel" destination="FkE-A6-1YC" id="sMA-YO-EWR"/>
+                <outlet property="titleLabel" destination="PPa-Ks-eE5" id="bn0-Kp-CeQ"/>
+            </connections>
+            <point key="canvasLocation" x="-821" y="152"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_quaternary">
+            <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

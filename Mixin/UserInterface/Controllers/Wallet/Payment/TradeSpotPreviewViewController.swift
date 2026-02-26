@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class TradePreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {
+final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPreviewViewController {
     
     enum Operation {
         case mixin(TransferPaymentOperation)
@@ -219,8 +219,8 @@ final class TradePreviewViewController: WalletIdentifyingAuthenticationPreviewVi
                     guard let navigation = UIApplication.homeNavigationController else {
                         return
                     }
-                    if let swap = navigation.viewControllers.last as? TradeViewController {
-                        swap.prepareForReuse(sender: self)
+                    if let trade = navigation.viewControllers.last as? TradeViewController {
+                        trade.prepareForReuse()
                     }
                 }
             } catch {

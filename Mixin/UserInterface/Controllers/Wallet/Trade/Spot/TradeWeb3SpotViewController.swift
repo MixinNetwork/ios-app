@@ -2,7 +2,7 @@ import UIKit
 import OrderedCollections
 import MixinServices
 
-final class Web3TradeViewController: TradeViewController {
+final class TradeWeb3SpotViewController: TradeSpotViewController {
     
     private let wallet: Web3Wallet
     private let supportedChainIDs: Set<String>
@@ -18,12 +18,14 @@ final class Web3TradeViewController: TradeViewController {
     
     init(
         wallet: Web3Wallet,
-        mode: Mode? = nil,
+        mode: TradeSpotViewController.Mode,
+        supportedChainIDs: Set<String>?,
         sendAssetID: String?,
         receiveAssetID: String?
     ) {
         self.wallet = wallet
-        self.supportedChainIDs = Web3AddressDAO.shared.chainIDs(walletID: wallet.walletID)
+        self.supportedChainIDs = supportedChainIDs
+        ?? Web3AddressDAO.shared.chainIDs(walletID: wallet.walletID)
         super.init(
             mode: mode,
             tokenSource: .web3,
@@ -32,32 +34,8 @@ final class Web3TradeViewController: TradeViewController {
         )
     }
     
-    init(
-        wallet: Web3Wallet,
-        supportedChainIDs: Set<String>,
-        sendAssetID: String?,
-        receiveAssetID: String?
-    ) {
-        self.wallet = wallet
-        self.supportedChainIDs = supportedChainIDs
-        super.init(
-            mode: nil,
-            tokenSource: .web3,
-            sendAssetID: sendAssetID,
-            receiveAssetID: receiveAssetID
-        )
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("Storyboard not supported")
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        navigationItem.titleView = WalletIdentifyingNavigationTitleView(
-            title: R.string.localizable.trade(),
-            wallet: .common(wallet)
-        )
     }
     
     override func changeSendToken(_ sender: Any) {
@@ -124,16 +102,6 @@ final class Web3TradeViewController: TradeViewController {
         case .advanced:
             reviewAdvancedOrder()
         }
-    }
-    
-    override func showOrders(_ sender: Any) {
-        super.showOrders(sender)
-        let showPendingOrdersOnly = sender is OpenTradeOrderHeaderView || sender is OpenOrdersFooterView
-        let orders = TradeOrdersViewController(
-            wallet: .common(wallet),
-            status: showPendingOrdersOnly ? .pending : nil
-        )
-        navigationController?.pushViewController(orders, animated: true)
     }
     
     override func balancedSwapToken(assetID: String) -> BalancedSwapToken? {
@@ -387,7 +355,7 @@ final class Web3TradeViewController: TradeViewController {
                     homeContainer.present(insufficient, animated: true)
                     return
                 }
-                let preview = TradePreviewViewController(
+                let preview = TradeSpotPreviewViewController(
                     wallet: .common(wallet),
                     mode: mode,
                     operation: .web3(operation),
@@ -413,12 +381,14 @@ final class Web3TradeViewController: TradeViewController {
     
 }
 
-extension Web3TradeViewController: PendingTradeOrderLoader.Delegate {
+extension TradeWeb3SpotViewController: PendingTradeOrderLoader.Delegate {
     
     func pendingSwapOrder(_ loader: PendingTradeOrderLoader, didLoad orders: [TradeOrder]) {
         switch mode {
         case .simple:
-            DispatchQueue.main.async(execute: updateOrdersButton)
+            DispatchQueue.main.async {
+                self.tradeViewController?.updateOrdersButton()
+            }
         case .advanced:
             let tokens = Web3OrderDAO.shared.tradeOrderTokens(orders: orders)
             let viewModels = orders.map { order in
@@ -433,7 +403,7 @@ extension Web3TradeViewController: PendingTradeOrderLoader.Delegate {
             }
             DispatchQueue.main.async {
                 self.reload(openOrders: viewModels)
-                self.updateOrdersButton()
+                self.tradeViewController?.updateOrdersButton()
             }
         }
     }

@@ -253,35 +253,28 @@ extension TradeOrderViewController: PillActionView.Delegate {
                 if let index = viewControllers.lastIndex(where: { $0 is TradeViewController }) {
                     viewControllers.removeLast(viewControllers.count - index)
                 }
-                let mode: TradeViewController.Mode
+                let trading: TradeViewController.Trading
                 switch viewModel.type.knownCase {
                 case .limit:
-                    mode = .advanced
+                    trading = .advancedSpot
                 case .swap, .none:
-                    mode = .simple
+                    trading = .simpleSpot
                 }
-                let trade: TradeViewController
-                switch viewModel.wallet {
-                case .privacy:
-                    trade = MixinTradeViewController(
-                        mode: mode,
-                        sendAssetID: viewModel.payAssetID,
-                        receiveAssetID: viewModel.receiveAssetID,
-                        referral: nil
+                let trade = TradeViewController(
+                    wallet: viewModel.wallet,
+                    trading: trading,
+                    sendAssetID: viewModel.payAssetID,
+                    receiveAssetID: viewModel.receiveAssetID,
+                    referral: nil
+                )
+                if let trade {
+                    viewControllers.append(trade)
+                    navigationController.setViewControllers(viewControllers, animated: true)
+                    reporter.report(
+                        event: .tradeStart,
+                        tags: ["wallet": "main", "source": "trade_detail"]
                     )
-                case .common(let wallet):
-                    trade = Web3TradeViewController(
-                        wallet: wallet,
-                        mode: mode,
-                        sendAssetID: viewModel.payAssetID,
-                        receiveAssetID: viewModel.receiveAssetID
-                    )
-                case .safe:
-                    return
                 }
-                viewControllers.append(trade)
-                navigationController.setViewControllers(viewControllers, animated: true)
-                reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "trade_detail"])
             }
         case .cancelOrder:
             let hud = Hud()

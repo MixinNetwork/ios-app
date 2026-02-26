@@ -272,6 +272,10 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             }
             cell.reloadData(changes: changes)
             return cell
+        case let .perpsProduct(iconURL, name):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
+            cell.reloadPerpsProduct(iconURL: iconURL, name: name)
+            return cell
         case let .safeMultisigAmount(token, tokenAmount, fiatMoneyAmount):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
             cell.captionLabel.text = R.string.localizable.total_amount().uppercased()
@@ -474,6 +478,7 @@ extension AuthenticationPreviewViewController {
         case commonWalletReceiver(user: UserItem, address: String)
         case user(title: String, user: UserItem)
         case waivedFee(token: String, fiatMoney: String, display: AmountIntent)
+        case perpsProduct(iconURL: URL?, name: String)
     }
     
     struct TableHeaderViewStyle: OptionSet {

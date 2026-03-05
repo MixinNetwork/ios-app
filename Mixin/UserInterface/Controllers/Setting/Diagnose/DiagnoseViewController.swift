@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class DiagnoseViewController: SettingsTableViewController {
+final class DiagnoseViewController: SettingsTableViewController {
     
     private let dataSource = SettingsDataSource(sections: [
         SettingsSection(header: R.string.localizable.diagnose_warning_hint(), rows: [
@@ -37,6 +37,9 @@ class DiagnoseViewController: SettingsTableViewController {
         SettingsSection(rows: [
             SettingsRow(title: "Reset Tips"),
         ]),
+        SettingsSection(rows: [
+            SettingsRow(title: "Inspect WebView", accessory: .switch(isOn: DiagnoseSwitches.isWebViewInspectable)),
+        ]),
     ])
     
     override func viewDidLoad() {
@@ -58,6 +61,12 @@ class DiagnoseViewController: SettingsTableViewController {
         )
         NotificationCenter.default.addObserver(
             self,
+            selector: #selector(webViewInspectableDidSwitch(_:)),
+            name: SettingsRow.accessoryDidChangeNotification,
+            object: dataSource.sections[11].rows[0]
+        )
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(reloadPushNotificationStatus(_:)),
             name: PushNotificationDiagnostic.statusDidUpdateNotification,
             object: nil
@@ -72,6 +81,16 @@ class DiagnoseViewController: SettingsTableViewController {
             return
         }
         CallService.shared.isWebRTCLogEnabled = isOn
+    }
+    
+    @objc private func webViewInspectableDidSwitch(_ notification: Notification) {
+        guard let row = notification.object as? SettingsRow else {
+            return
+        }
+        guard case let .switch(isOn, _) = row.accessory else {
+            return
+        }
+        DiagnoseSwitches.isWebViewInspectable = isOn
     }
     
     @objc private func reloadPushNotificationStatus(_ notification: Notification) {
@@ -125,8 +144,10 @@ extension DiagnoseViewController: UITableViewDelegate {
             AppGroupUserDefaults.appRatingRequestDate = nil
             AppGroupUserDefaults.User.verifyPhoneTipDismissalDate = nil
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
-#if DEBUG
         case (11, 0):
+            // Inspect WebView
+#if DEBUG
+        case (12, 0):
             navigationController?.pushViewController(TIPDiagnosticViewController(), animated: true)
 #endif
         default:

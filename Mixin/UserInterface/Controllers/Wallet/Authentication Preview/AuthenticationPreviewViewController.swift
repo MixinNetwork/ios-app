@@ -100,7 +100,7 @@ class AuthenticationPreviewViewController: UIViewController {
         tableHeaderView.titleLabel.text = title
         tableHeaderView.subtitleTextView.text = subtitle
         if style.contains(.destructive) {
-            tableHeaderView.subtitleTextView.textColor = R.color.red()
+            tableHeaderView.subtitleTextView.textColor = R.color.mixin_red()
         } else {
             tableHeaderView.subtitleTextView.textColor = R.color.text_secondary()
         }

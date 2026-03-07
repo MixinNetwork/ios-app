@@ -3,16 +3,29 @@ import SwiftUI
 
 final class ManualViewController: UIViewController {
     
+    struct Page {
+        
+        let title: String
+        let view: AnyView
+        
+        init<Content: View>(title: String, view: Content) {
+            self.title = title
+            self.view = AnyView(view)
+        }
+        
+    }
+    
     private let pages: [Page]
     
-    private var reusablePageContentViewControllers: Set<PageContentViewController> = []
+    private var reusableContentViewControllers: Set<ManualPageContentViewController> = []
     
     private weak var titleView: PopupTitleView!
+    private weak var pageSelectorCollectionView: UICollectionView!
     private weak var pageViewController: UIPageViewController!
     
     init(pages: [Page]) {
         self.pages = pages
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -29,6 +42,7 @@ final class ManualViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = R.color.background_secondary()
         
         let titleView = PopupTitleView()
         view.addSubview(titleView)
@@ -38,6 +52,7 @@ final class ManualViewController: UIViewController {
         }
         titleView.titleLabel.text = title
         self.titleView = titleView
+        titleView.closeButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
         
         let layout = {
             let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(56), heightDimension: .absolute(38))
@@ -45,7 +60,9 @@ final class ManualViewController: UIViewController {
             let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
             let section = NSCollectionLayoutSection(group: group)
             section.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 20, bottom: 3, trailing: 20)
-            return UICollectionViewCompositionalLayout(section: section)
+            let config = UICollectionViewCompositionalLayoutConfiguration()
+            config.scrollDirection = .horizontal
+            return UICollectionViewCompositionalLayout(section: section, configuration: config)
         }()
         let collectionView = UICollectionView(
             frame: CGRect(x: 0, y: 70, width: view.bounds.width, height: 44),
@@ -55,7 +72,14 @@ final class ManualViewController: UIViewController {
         collectionView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(titleView.snp.bottom).offset(-3)
+            make.height.equalTo(44)
         }
+        collectionView.backgroundColor = R.color.background_secondary()
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.register(R.nib.exploreSegmentCell)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        pageSelectorCollectionView = collectionView
         
         let pageViewController = UIPageViewController(
             transitionStyle: .scroll,
@@ -70,49 +94,87 @@ final class ManualViewController: UIViewController {
         pageViewController.didMove(toParent: self)
         pageViewController.dataSource = self
         pageViewController.delegate = self
+        self.pageViewController = pageViewController
         
+        if let firstPage = dequeueReusableViewController(of: 0) {
+            pageSelectorCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .left)
+            pageViewController.setViewControllers([firstPage], direction: .forward, animated: false)
+        }
     }
     
-    private func dequeueReusableViewController(of index: Int) -> PageContentViewController? {
+    @objc private func close(_ sender: Any) {
+        presentingViewController?.dismiss(animated: true)
+    }
+    
+    private func dequeueReusableViewController(of index: Int) -> ManualPageContentViewController? {
         guard index >= 0 && index < pages.count else {
             return nil
         }
         let page = pages[index]
-        let viewController: PageContentViewController
-        if let vc = reusablePageContentViewControllers.first(where: \.isReusable) {
-            viewController = vc
+        let previousTitle: String? = if index > 0 {
+            pages[index - 1].title
         } else {
-            let vc = PageContentViewController()
-            reusablePageContentViewControllers.insert(vc)
-            viewController = vc
+            nil
         }
-        
+        let nextTitle: String? = if index < pages.count - 1 {
+            pages[index + 1].title
+        } else {
+            nil
+        }
+        let viewController: ManualPageContentViewController
+        if let controller = reusableContentViewControllers.first(where: \.isReusable) {
+            viewController = controller
+            viewController.load(
+                index: index,
+                page: page,
+                previousTitle: previousTitle,
+                nextTitle: nextTitle
+            )
+        } else {
+            let controller = ManualPageContentViewController(
+                index: index,
+                page: page,
+                previousTitle: previousTitle,
+                nextTitle: nextTitle
+            )
+            controller.delegate = self
+            reusableContentViewControllers.insert(controller)
+            viewController = controller
+        }
         return viewController
     }
     
 }
 
-extension ManualViewController {
+extension ManualViewController: UICollectionViewDataSource {
     
-    struct Page {
-        let title: String
-        let view: any View
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        pages.count
     }
     
-    private final class PageContentViewController: UIViewController {
-        
-        var isReusable: Bool {
-            parent == nil
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
+        cell.label.text = pages[indexPath.item].title
+        return cell
+    }
+    
+}
+
+extension ManualViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let page = dequeueReusableViewController(of: indexPath.item) else {
+            return
         }
-        
-        override func viewDidLoad() {
-            super.viewDidLoad()
+        if let focus = pageViewController.viewControllers?.first as? ManualPageContentViewController {
+            pageViewController.setViewControllers(
+                [page],
+                direction: page.index > focus.index ? .forward : .reverse,
+                animated: true
+            )
+        } else {
+            pageViewController.setViewControllers([page], direction: .forward, animated: false)
         }
-        
-        func load(index: Int, previousTitle: String?, nextTitle: String?, page: Page) {
-            
-        }
-        
     }
     
 }
@@ -120,11 +182,17 @@ extension ManualViewController {
 extension ManualViewController: UIPageViewControllerDataSource {
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        nil
+        guard let viewController = viewController as? ManualPageContentViewController else {
+            return nil
+        }
+        return dequeueReusableViewController(of: viewController.index - 1)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        nil
+        guard let viewController = viewController as? ManualPageContentViewController else {
+            return nil
+        }
+        return dequeueReusableViewController(of: viewController.index + 1)
     }
     
 }
@@ -132,7 +200,30 @@ extension ManualViewController: UIPageViewControllerDataSource {
 extension ManualViewController: UIPageViewControllerDelegate {
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        let focus = pageViewController.viewControllers?.first as? PageContentViewController
+        guard let focus = pageViewController.viewControllers?.first as? ManualPageContentViewController else {
+            return
+        }
+        let indexPath = IndexPath(item: focus.index, section: 0)
+        pageSelectorCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+    }
+    
+}
+
+extension ManualViewController: ManualPageContentViewController.Delegate {
+    
+    func manualPageContentViewController(_ controller: ManualPageContentViewController, didNavigateTo index: Int) {
+        pageSelectorCollectionView.selectItem(
+            at: IndexPath(item: index, section: 0),
+            animated: false,
+            scrollPosition: .left
+        )
+        if let page = dequeueReusableViewController(of: index) {
+            pageViewController.setViewControllers(
+                [page],
+                direction: page.index > controller.index ? .forward : .reverse,
+                animated: true
+            )
+        }
     }
     
 }

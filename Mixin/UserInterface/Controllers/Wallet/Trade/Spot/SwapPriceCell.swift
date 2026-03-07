@@ -56,7 +56,7 @@ extension SwapPriceCell {
             togglePriceUnitButton.isHidden = true
             advancedTradingHintStackView.isHidden = true
         case let .error(description, advancedTradingHint):
-            footerInfoButton.setTitleColor(R.color.red(), for: .normal)
+            footerInfoButton.setTitleColor(R.color.mixin_red(), for: .normal)
             footerInfoButton.setTitle(description, for: .normal)
             footerInfoButton.isHidden = false
             footerInfoProgressView.isHidden = true

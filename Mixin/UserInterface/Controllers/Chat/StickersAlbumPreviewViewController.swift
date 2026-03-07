@@ -152,7 +152,7 @@ extension StickersAlbumPreviewViewController {
     
     private func updateStickerActionButton() {
         if albumItem.isAdded {
-            stickerActionButton.backgroundColor = R.color.red()
+            stickerActionButton.backgroundColor = R.color.mixin_red()
             stickerActionButton.setTitle(R.string.localizable.remove_stickers(), for: .normal)
         } else {
             stickerActionButton.backgroundColor = R.color.theme()

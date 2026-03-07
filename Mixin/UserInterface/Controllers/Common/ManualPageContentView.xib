@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ManualPageContentViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="eI0-Ht-njj" id="WpD-o6-0gT"/>
+                <outlet property="nextButton" destination="goC-We-Btg" id="TSf-nm-5l4"/>
+                <outlet property="pageSwitchingView" destination="J9T-rU-ibY" id="vO0-dW-JS2"/>
+                <outlet property="previousButton" destination="lae-6Z-pe5" id="Uzx-UW-31n"/>
+                <outlet property="scrollView" destination="zPj-u7-iOe" id="LFD-tm-z9w"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zPj-u7-iOe">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="852" translatesAutoresizingMaskIntoConstraints="NO" id="eI0-Ht-njj">
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J9T-rU-ibY">
+                                    <rect key="frame" x="0.0" y="770" width="393" height="82"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="3NZ-ob-cbG">
+                                            <rect key="frame" x="52.333333333333343" y="20" width="288.33333333333326" height="42"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="134.33333333333334" placeholderIntrinsicHeight="42" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lae-6Z-pe5">
+                                                    <rect key="frame" x="0.0" y="0.0" width="134.33333333333334" height="42"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="filled" image="page_previous" imagePlacement="leading" imagePadding="4" cornerStyle="capsule">
+                                                        <color key="baseBackgroundColor" name="theme"/>
+                                                    </buttonConfiguration>
+                                                    <connections>
+                                                        <action selector="goPrevious:" destination="-1" eventType="touchUpInside" id="emX-JY-ZJk"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="134" placeholderIntrinsicHeight="42" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="goC-We-Btg">
+                                                    <rect key="frame" x="154.33333333333331" y="0.0" width="134" height="42"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="filled" image="page_next" imagePlacement="trailing" imagePadding="4" cornerStyle="capsule">
+                                                        <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="baseBackgroundColor" name="theme"/>
+                                                    </buttonConfiguration>
+                                                    <connections>
+                                                        <action selector="goNext:" destination="-1" eventType="touchUpInside" id="sTv-6t-7bW"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="42" id="p1f-k8-Idc"/>
+                                            </constraints>
+                                        </stackView>
+                                    </subviews>
+                                    <color key="backgroundColor" name="background_secondary"/>
+                                    <constraints>
+                                        <constraint firstItem="3NZ-ob-cbG" firstAttribute="centerY" secondItem="J9T-rU-ibY" secondAttribute="centerY" id="SWV-ZQ-QgJ"/>
+                                        <constraint firstItem="lae-6Z-pe5" firstAttribute="width" secondItem="J9T-rU-ibY" secondAttribute="width" multiplier="128/375" priority="500" id="jZZ-A4-XpP"/>
+                                        <constraint firstAttribute="height" constant="82" id="wpm-io-3hK"/>
+                                        <constraint firstItem="3NZ-ob-cbG" firstAttribute="centerX" secondItem="J9T-rU-ibY" secondAttribute="centerX" id="z8a-hH-kuk"/>
+                                    </constraints>
+                                </view>
+                            </subviews>
+                            <color key="backgroundColor" name="background_secondary"/>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="J9T-rU-ibY" secondAttribute="trailing" id="ad5-hj-LFM"/>
+                                <constraint firstItem="J9T-rU-ibY" firstAttribute="leading" secondItem="eI0-Ht-njj" secondAttribute="leading" id="gn7-Zk-I3l"/>
+                                <constraint firstAttribute="bottom" secondItem="J9T-rU-ibY" secondAttribute="bottom" id="lgx-w7-Sld"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" name="background_secondary"/>
+                    <constraints>
+                        <constraint firstItem="eI0-Ht-njj" firstAttribute="top" secondItem="klP-cp-lCR" secondAttribute="top" id="8E5-AK-l1e"/>
+                        <constraint firstItem="eI0-Ht-njj" firstAttribute="width" secondItem="44U-cb-SJE" secondAttribute="width" id="Ibv-Dm-nbd"/>
+                        <constraint firstItem="eI0-Ht-njj" firstAttribute="trailing" secondItem="klP-cp-lCR" secondAttribute="trailing" id="cMZ-rO-DdC"/>
+                        <constraint firstItem="eI0-Ht-njj" firstAttribute="leading" secondItem="klP-cp-lCR" secondAttribute="leading" id="hcw-MQ-Dsp"/>
+                        <constraint firstItem="eI0-Ht-njj" firstAttribute="bottom" secondItem="klP-cp-lCR" secondAttribute="bottom" id="jRm-OX-d0A"/>
+                    </constraints>
+                    <viewLayoutGuide key="contentLayoutGuide" id="klP-cp-lCR"/>
+                    <viewLayoutGuide key="frameLayoutGuide" id="44U-cb-SJE"/>
+                </scrollView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="JdX-fl-UtZ"/>
+            <color key="backgroundColor" name="background_secondary"/>
+            <constraints>
+                <constraint firstItem="zPj-u7-iOe" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="9e3-VU-Fkp"/>
+                <constraint firstItem="goC-We-Btg" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="128/375" priority="500" id="D7o-Xs-BjE"/>
+                <constraint firstAttribute="bottom" secondItem="zPj-u7-iOe" secondAttribute="bottom" id="YPs-Ii-dTH"/>
+                <constraint firstItem="zPj-u7-iOe" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="bKs-O0-jwc"/>
+                <constraint firstItem="eI0-Ht-njj" firstAttribute="height" secondItem="JdX-fl-UtZ" secondAttribute="height" priority="250" id="fPt-Kc-wgC"/>
+                <constraint firstAttribute="trailing" secondItem="zPj-u7-iOe" secondAttribute="trailing" id="lyW-zW-XT4"/>
+            </constraints>
+            <point key="canvasLocation" x="138" y="154"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="page_next" width="8" height="13"/>
+        <image name="page_previous" width="8" height="13"/>
+        <namedColor name="background_secondary">
+            <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

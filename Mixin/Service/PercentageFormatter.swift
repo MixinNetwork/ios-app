@@ -2,6 +2,11 @@ import Foundation
 
 enum PercentageFormatter {
     
+    enum Format {
+        case precision
+        case pretty
+    }
+    
     enum SignBehavior {
         case always
         case never
@@ -18,7 +23,17 @@ enum PercentageFormatter {
         return formatter
     }()
     
-    static func string(from decimal: Decimal, sign: SignBehavior) -> String {
+    static func string(
+        from decimal: Decimal,
+        format: Format,
+        sign: SignBehavior
+    ) -> String {
+        switch format {
+        case .precision:
+            formatter.maximumFractionDigits = 8
+        case .pretty:
+            formatter.maximumFractionDigits = 2
+        }
         switch sign {
         case .always:
             formatter.positivePrefix = formatter.plusSign

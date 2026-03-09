@@ -33,7 +33,7 @@ struct PerpsManualLongPositionPnLView: View {
                         .modifier(ManualText(.caption2))
                 }
                 Spacer()
-                Text(PercentageFormatter.string(from: change, sign: .never))
+                Text(PercentageFormatter.string(from: change, format: .pretty, sign: .never))
                     .modifier(ManualText(.subheading(R.color.text()!)))
             }
             HStack {
@@ -41,7 +41,7 @@ struct PerpsManualLongPositionPnLView: View {
                     .modifier(ManualText(.caption2))
                 Spacer()
                 if change >= 0 {
-                    Text(pnl + " (" + PercentageFormatter.string(from: change, sign: .always) + ")")
+                    Text(pnl + " (" + PercentageFormatter.string(from: change, format: .pretty, sign: .always) + ")")
                         .modifier(ManualText(.subheading(MarketColor.rising.uiColor), monospacedDigit: true))
                 } else {
                     Text(pnl)

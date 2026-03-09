@@ -71,7 +71,7 @@ struct PerpsManualCalculatingPnLView: View {
     }
     
     private var localizedPnLPercentage: String {
-        PercentageFormatter.string(from: pnlPercentage, sign: .always)
+        PercentageFormatter.string(from: pnlPercentage, format: .pretty, sign: .always)
     }
     
     var body: some View {
@@ -102,7 +102,7 @@ struct PerpsManualCalculatingPnLView: View {
                     }
                     .disabled(!canDecrease)
                     
-                    Text(PercentageFormatter.string(from: change, sign: .never))
+                    Text(PercentageFormatter.string(from: change, format: .pretty, sign: .never))
                         .modifier(ManualText(.subheading(R.color.text()!), monospacedDigit: true))
                     
                     Button {

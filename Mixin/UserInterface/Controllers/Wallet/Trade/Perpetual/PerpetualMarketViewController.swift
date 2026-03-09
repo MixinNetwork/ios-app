@@ -109,6 +109,12 @@ final class PerpetualMarketViewController: UIViewController {
                             alignment: .bottom
                         ),
                     ]
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                    let background: NSCollectionLayoutDecorationItem = .background(
+                        elementKind: TradeSectionBackgroundView.elementKind
+                    )
+                    background.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                    section.decorationItems = [background]
                     return section
                 case .introduction:
                     return oneCell(estimatedHeight: 90)
@@ -152,6 +158,7 @@ final class PerpetualMarketViewController: UIViewController {
         collectionView.register(R.nib.perpetualMarketInfoCell)
         collectionView.register(R.nib.perpetualIntroductionCell)
         collectionView.register(R.nib.perpetualMarketOpenPositionCell)
+        collectionView.register(R.nib.perpetualClosedPositionCell)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
@@ -210,9 +217,11 @@ final class PerpetualMarketViewController: UIViewController {
                 .price,
                 .openPosition(openPosition),
                 .info,
-                .closedPositions(closedPositions),
-                .introduction,
             ]
+            if !closedPositions.isEmpty {
+                sections.append(.closedPositions(closedPositions))
+            }
+            sections.append(.introduction)
             if !(self.actionView is AuthenticationPreviewSingleButtonTrayView) {
                 let view = AuthenticationPreviewSingleButtonTrayView()
                 view.button.setTitle("Close Position", for: .normal)
@@ -224,8 +233,10 @@ final class PerpetualMarketViewController: UIViewController {
                 .price,
                 .introduction,
                 .info,
-                .closedPositions(closedPositions),
             ]
+            if !closedPositions.isEmpty {
+                sections.append(.closedPositions(closedPositions))
+            }
             if !(self.actionView is OpenPerpetualActionView) {
                 let view = R.nib.openPerpetualActionView(withOwner: nil)!
                 view.longButton.addTarget(self, action: #selector(openPosition(_:)), for: .touchUpInside)
@@ -314,6 +325,11 @@ final class PerpetualMarketViewController: UIViewController {
         }
     }
     
+    private func viewClosedPositions() {
+        let positions = AllPerpetualPositionsViewController(wallet: wallet, content: .closed)
+        navigationController?.pushViewController(positions, animated: true)
+    }
+    
 }
 
 extension PerpetualMarketViewController: HomeNavigationController.NavigationBarStyling {
@@ -364,13 +380,13 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             switch indexPath.item {
             case 0:
                 cell.titleLabel.text = R.string.localizable.volume_24h().uppercased()
-                cell.contentLabel.text = viewModel.market.volume
+                cell.contentLabel.text = viewModel.volume
             case 1:
                 cell.titleLabel.text = "未平仓合约"
                 cell.contentLabel.text = "Under Construction"
             default:
                 cell.titleLabel.text = "资金利率"
-                cell.contentLabel.text = "Under Construction"
+                cell.contentLabel.text = viewModel.fundingRate
             }
             return cell
         case .closedPositions(let viewModels):
@@ -380,6 +396,35 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             return cell
         case .introduction:
             return collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_introduction, for: indexPath)!
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
+            switch sections[indexPath.section] {
+            case .closedPositions:
+                view.label.text = "Closed Positions"
+                view.onShowAll = { [weak self] (sender) in
+                    self?.viewClosedPositions()
+                }
+            default:
+                break
+            }
+            return view
+        default:
+            let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TradeViewAllFooterView.reuseIdentifier, for: indexPath) as! TradeViewAllFooterView
+            switch sections[indexPath.section] {
+            case .closedPositions(let positions):
+                view.viewAllButton.isHidden = positions.count <= maxItemCount
+                view.onViewAll = { [weak self] (sender) in
+                    self?.viewClosedPositions()
+                }
+            default:
+                break
+            }
+            return view
         }
     }
     

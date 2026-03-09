@@ -27,11 +27,14 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         tableHeaderView.titleLabel.text = "确认开仓"
         tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixin)
         
+        let multiplier = PerpetualLeverage.stringRepresentation(
+            multiplier: context.leverageMultiplier
+        )
         let direction = switch context.side {
         case .long:
-            "Long \(context.leverageMultiplier)x"
+            "Long \(multiplier)"
         case .short:
-            "Short \(context.leverageMultiplier)x"
+            "Short \(multiplier)"
         }
         let profit = PerpetualChangeSimulation.profit(
             side: context.side,

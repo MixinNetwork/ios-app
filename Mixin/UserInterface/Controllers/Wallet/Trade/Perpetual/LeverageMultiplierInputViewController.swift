@@ -51,18 +51,18 @@ final class LeverageMultiplierInputViewController: UIViewController {
         multiplierInputView.layer.masksToBounds = true
         
         valueLabel.font = .monospacedDigitSystemFont(ofSize: 48, weight: .semibold)
-        valueLabel.text = "\(multiplier)x"
+        valueLabel.text = PerpetualLeverage.stringRepresentation(multiplier: multiplier)
         let maxMultiplierNumber = maxMultiplier as NSDecimalNumber
         slider.minimumValue = 1
         slider.maximumValue = maxMultiplierNumber.floatValue
         slider.value = (multiplier as NSDecimalNumber).floatValue
         let markingLabels = markingStackView.arrangedSubviews.map({ $0 as! UILabel })
         assert(markingLabels.count > 2)
-        markingLabels[0].text = "1x"
-        markingLabels[markingLabels.count - 1].text = "\(maxMultiplier)x"
+        markingLabels[0].text = PerpetualLeverage.stringRepresentation(multiplier: 1)
+        markingLabels[markingLabels.count - 1].text = PerpetualLeverage.stringRepresentation(multiplier: maxMultiplier)
         let scale = maxMultiplierNumber.intValue / (markingLabels.count - 1)
         for i in 1..<markingLabels.count - 1 {
-            markingLabels[i].text = "\(scale * i)x"
+            markingLabels[i].text = PerpetualLeverage.stringRepresentation(multiplier: scale * i)
         }
         for label: UILabel in [profitSimulationLabel, liquidationSimulationLabel] {
             label.font = UIFontMetrics.default.scaledFont(
@@ -96,7 +96,7 @@ final class LeverageMultiplierInputViewController: UIViewController {
     
     @IBAction func sliderValueChanged(_ sender: UISlider) {
         multiplier = Decimal(round(Double(sender.value)))
-        valueLabel.text = "\(multiplier)x"
+        valueLabel.text = PerpetualLeverage.stringRepresentation(multiplier: multiplier)
         updateSimulations(multiplier: multiplier)
     }
     

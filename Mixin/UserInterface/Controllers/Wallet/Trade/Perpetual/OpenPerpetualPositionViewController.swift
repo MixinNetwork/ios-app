@@ -287,7 +287,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
         }
         self.multiplier = value
         marginAmountTextField.resignFirstResponder()
-        leverageMultiplierTextField.text = "\(value)x"
+        leverageMultiplierTextField.text = PerpetualLeverage.stringRepresentation(multiplier: value)
         leverageMultipliersCollectionView.selectItem(
             at: IndexPath(item: item, section: 0),
             animated: false,
@@ -356,7 +356,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDataSource {
         let leverage = multipliers[indexPath.item]
         cell.label.text = switch leverage {
         case .fixed(let leverage):
-            "\(leverage)x"
+            PerpetualLeverage.stringRepresentation(multiplier: leverage)
         case .max:
             R.string.localizable.max()
         case .custom:

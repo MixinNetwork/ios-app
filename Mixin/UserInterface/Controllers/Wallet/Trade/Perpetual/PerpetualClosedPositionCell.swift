@@ -4,6 +4,7 @@ final class PerpetualClosedPositionCell: UICollectionViewCell {
     
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var leverageLabel: LeverageLabel!
     @IBOutlet weak var valueLabel: UILabel!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
     
@@ -25,7 +26,16 @@ final class PerpetualClosedPositionCell: UICollectionViewCell {
     }
     
     func load(viewModel: PerpetualPositionViewModel) {
+        iconView.setIcon(tokenIconURL: viewModel.iconURL)
         titleLabel.text = viewModel.directionWithSymbol
+        switch viewModel.leverage {
+        case .long(let value):
+            leverageLabel.text = value
+            leverageLabel.color = .long
+        case .short(let value):
+            leverageLabel.text = value
+            leverageLabel.color = .short
+        }
         valueLabel.text = viewModel.orderValueInToken
         changeLabel.text = "Under Construction"
     }

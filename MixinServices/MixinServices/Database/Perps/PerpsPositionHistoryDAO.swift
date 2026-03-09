@@ -24,8 +24,19 @@ public final class PerpsPositionHistoryDAO: PerpsDAO {
         )
     }
     
-    public func historyItems() -> [PerpetualPositionHistoryItem] {
-        db.select(with: Self.itemSQL + "ORDER BY closed_at DESC")
+    public func historyItems(
+        offsetClosedAt: String?,
+        limit: Int?
+    ) -> [PerpetualPositionHistoryItem] {
+        var query = GRDB.SQL(sql: Self.itemSQL)
+        if let offsetClosedAt {
+            query.append(literal: "WHERE closed_at < \(offsetClosedAt)\n")
+        }
+        query.append(literal: "ORDER BY closed_at DESC\n")
+        if let limit {
+            query.append(sql: "LIMIT \(limit)")
+        }
+        return db.select(with: query)
     }
     
     public func offset() -> String? {

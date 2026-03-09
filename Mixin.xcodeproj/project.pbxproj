@@ -780,6 +780,9 @@
 		9419C23C2E6741D900BEAB42 /* ExplainLightningAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419C2392E6741D900BEAB42 /* ExplainLightningAddressViewController.swift */; };
 		9419C2E32E6779B900BEAB42 /* DepositAddressGeneratingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9419C2E22E6779B800BEAB42 /* DepositAddressGeneratingView.swift */; };
 		941B89522CE4EA9F0039997A /* CheckMnemonicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941B89512CE4EA9F0039997A /* CheckMnemonicsViewController.swift */; };
+		941C75CA2F5E9FC8005B70A9 /* AllPerpetualPositionsContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C75C92F5E9FC8005B70A9 /* AllPerpetualPositionsContentViewController.swift */; };
+		941C75DE2F5EA417005B70A9 /* PerpetualPositionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C75DD2F5EA413005B70A9 /* PerpetualPositionType.swift */; };
+		941C762B2F5ECEFD005B70A9 /* LeverageLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C762A2F5ECEFA005B70A9 /* LeverageLabel.swift */; };
 		941C9CE8298E57BD00CB760E /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C9CE6298E57BD00CB760E /* AuthenticationViewController.swift */; };
 		941C9CE9298E57BD00CB760E /* AuthenticationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 941C9CE7298E57BD00CB760E /* AuthenticationView.xib */; };
 		941CAE00276A3F17008F42D6 /* WebPImageDecoderInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */; };
@@ -1428,7 +1431,7 @@
 		94D9DDB12F59DC0200B3B990 /* PerpetualPositionCompactInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D9DDAF2F59DC0200B3B990 /* PerpetualPositionCompactInfoCell.xib */; };
 		94D9DE012F5AA79700B3B990 /* ClosePerpetualPositionPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DE002F5AA79700B3B990 /* ClosePerpetualPositionPreviewViewController.swift */; };
 		94D9DE222F5AAF1400B3B990 /* AllPerpetualPositionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DE202F5AAF1400B3B990 /* AllPerpetualPositionsViewController.swift */; };
-		94D9DE232F5AAF1400B3B990 /* AllPerpetualPositionsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D9DE212F5AAF1400B3B990 /* AllPerpetualPositionsViewController.xib */; };
+		94D9DE232F5AAF1400B3B990 /* AllPerpetualPositionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D9DE212F5AAF1400B3B990 /* AllPerpetualPositionsView.xib */; };
 		94D9DE442F5AB3C600B3B990 /* PerpetualMarketOpenPositionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DE422F5AB3C600B3B990 /* PerpetualMarketOpenPositionCell.swift */; };
 		94D9DE452F5AB3C600B3B990 /* PerpetualMarketOpenPositionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D9DE432F5AB3C600B3B990 /* PerpetualMarketOpenPositionCell.xib */; };
 		94D9DF6125F89D6E00FC2F28 /* PopupTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D9DF6025F89D6E00FC2F28 /* PopupTip.swift */; };
@@ -2623,6 +2626,9 @@
 		9419C23A2E6741D900BEAB42 /* ExplainLightningAddressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExplainLightningAddressView.xib; sourceTree = "<group>"; };
 		9419C2E22E6779B800BEAB42 /* DepositAddressGeneratingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositAddressGeneratingView.swift; sourceTree = "<group>"; };
 		941B89512CE4EA9F0039997A /* CheckMnemonicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckMnemonicsViewController.swift; sourceTree = "<group>"; };
+		941C75C92F5E9FC8005B70A9 /* AllPerpetualPositionsContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllPerpetualPositionsContentViewController.swift; sourceTree = "<group>"; };
+		941C75DD2F5EA413005B70A9 /* PerpetualPositionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualPositionType.swift; sourceTree = "<group>"; };
+		941C762A2F5ECEFA005B70A9 /* LeverageLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeverageLabel.swift; sourceTree = "<group>"; };
 		941C9CE6298E57BD00CB760E /* AuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		941C9CE7298E57BD00CB760E /* AuthenticationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AuthenticationView.xib; sourceTree = "<group>"; };
 		941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPImageDecoderInternal.swift; sourceTree = "<group>"; };
@@ -3285,7 +3291,7 @@
 		94D9DDAF2F59DC0200B3B990 /* PerpetualPositionCompactInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpetualPositionCompactInfoCell.xib; sourceTree = "<group>"; };
 		94D9DE002F5AA79700B3B990 /* ClosePerpetualPositionPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosePerpetualPositionPreviewViewController.swift; sourceTree = "<group>"; };
 		94D9DE202F5AAF1400B3B990 /* AllPerpetualPositionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllPerpetualPositionsViewController.swift; sourceTree = "<group>"; };
-		94D9DE212F5AAF1400B3B990 /* AllPerpetualPositionsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllPerpetualPositionsViewController.xib; sourceTree = "<group>"; };
+		94D9DE212F5AAF1400B3B990 /* AllPerpetualPositionsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllPerpetualPositionsView.xib; sourceTree = "<group>"; };
 		94D9DE422F5AB3C600B3B990 /* PerpetualMarketOpenPositionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualMarketOpenPositionCell.swift; sourceTree = "<group>"; };
 		94D9DE432F5AB3C600B3B990 /* PerpetualMarketOpenPositionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpetualMarketOpenPositionCell.xib; sourceTree = "<group>"; };
 		94D9DF6025F89D6E00FC2F28 /* PopupTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTip.swift; sourceTree = "<group>"; };
@@ -4564,6 +4570,7 @@
 				943B5F732F5C09F60043078A /* Manual */,
 				94FB2E6A2F50A50900F85AB4 /* Model */,
 				94E206D92F4E9FD600D65D98 /* TradePerpetualViewController.swift */,
+				941C762A2F5ECEFA005B70A9 /* LeverageLabel.swift */,
 				94FB2E1E2F5050BD00F85AB4 /* PerpetualIntroductionCell.xib */,
 				94FB2E1D2F5050BD00F85AB4 /* PerpetualIntroductionCell.swift */,
 				940FC5072F502C01000C4260 /* OpenPerpetualActionView.xib */,
@@ -4589,8 +4596,9 @@
 				94FB2ED22F51516E00F85AB4 /* OpenPerpetualPositionViewController.swift */,
 				94FB2EE92F51672200F85AB4 /* LeverageMultiplierInputView.xib */,
 				94FB2EE82F51672200F85AB4 /* LeverageMultiplierInputViewController.swift */,
-				94D9DE212F5AAF1400B3B990 /* AllPerpetualPositionsViewController.xib */,
+				94D9DE212F5AAF1400B3B990 /* AllPerpetualPositionsView.xib */,
 				94D9DE202F5AAF1400B3B990 /* AllPerpetualPositionsViewController.swift */,
+				941C75C92F5E9FC8005B70A9 /* AllPerpetualPositionsContentViewController.swift */,
 				94D9DD3A2F59CF1A00B3B990 /* PerpetualPositionViewController.swift */,
 				94D9DD602F59D26D00B3B990 /* PerpetualPositionHeaderCell.xib */,
 				94D9DD5F2F59D26D00B3B990 /* PerpetualPositionHeaderCell.swift */,
@@ -5338,6 +5346,7 @@
 				94973DCF2F55E84100C350C7 /* PerpetualChangeSimulation.swift */,
 				94D9DD512F59CFEF00B3B990 /* PerpetualPositionViewModel.swift */,
 				94E066B12F5B15690090F1BA /* PerpetualLeverage.swift */,
+				941C75DD2F5EA413005B70A9 /* PerpetualPositionType.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -6848,7 +6857,7 @@
 				94A72CA52C2EBFF9001E8782 /* InscriptionTraitCell.xib in Resources */,
 				9464B2762C81DFBB00588EE6 /* WatchlistEmptyCell.xib in Resources */,
 				7B70D8532457F4F800E01239 /* AnnouncementBadgeContentView.xib in Resources */,
-				94D9DE232F5AAF1400B3B990 /* AllPerpetualPositionsViewController.xib in Resources */,
+				94D9DE232F5AAF1400B3B990 /* AllPerpetualPositionsView.xib in Resources */,
 				9455EA082AFE598E00C3FD3C /* WithdrawFeeView.xib in Resources */,
 				94C5BDD62D685FCD0012F840 /* WalletCell.xib in Resources */,
 				7C14CFC226CA35CF0094AF4A /* StaticMessagesView.xib in Resources */,
@@ -8130,6 +8139,7 @@
 				940FC5F52CDBDD260056BFF2 /* SessionVerificationContext.swift in Sources */,
 				946983B029D1A36400E73428 /* NetworkFeeSelectorViewController.swift in Sources */,
 				946331E72C638B9800C54B76 /* TransactionHistoryTokenFilterPickerViewController.swift in Sources */,
+				941C75CA2F5E9FC8005B70A9 /* AllPerpetualPositionsContentViewController.swift in Sources */,
 				7B86B1F523F6AB0B00C80AD9 /* TitledCardContentWidthCalculable.swift in Sources */,
 				7BF7837B2179D1AF00BECB4B /* Call.swift in Sources */,
 				946575AF2BC9672800C4C4F4 /* QuickAccessSearchResult.swift in Sources */,
@@ -8510,6 +8520,7 @@
 				7B3FD4EA24192D0C00B58006 /* RenderingModeSwitchableImageView.swift in Sources */,
 				94095BBC25BE8DCF00F44832 /* TextPreviewView.swift in Sources */,
 				94E206EE2F4EB61100D65D98 /* PerpetualPositionValueCell.swift in Sources */,
+				941C762B2F5ECEFD005B70A9 /* LeverageLabel.swift in Sources */,
 				7CEB736229DBC894006FB5B2 /* DeviceTransferAsset.swift in Sources */,
 				947BE3EF2DBA95B100A98677 /* ReviewPendingWeb3TransactionJob.swift in Sources */,
 				E08F4DDC2395345500C0D021 /* SharedAppCell.swift in Sources */,
@@ -8641,6 +8652,7 @@
 				E08F4DDA2395326D00C0D021 /* SharedAppsViewController.swift in Sources */,
 				94C56D392C53C954009F3AB8 /* SwapQuoteDraft.swift in Sources */,
 				7B7B5DB2230EBA5E00D0F463 /* PopupSearchableTableViewController.swift in Sources */,
+				941C75DE2F5EA417005B70A9 /* PerpetualPositionType.swift in Sources */,
 				ABE865C223F260FE00C0167D /* PermissionsActionCell.swift in Sources */,
 				7B9A090525481ADB00E8568D /* MinimizedClipIconView.swift in Sources */,
 				94735E282E28EBF80001C179 /* ImportedWalletNetworkCell.swift in Sources */,

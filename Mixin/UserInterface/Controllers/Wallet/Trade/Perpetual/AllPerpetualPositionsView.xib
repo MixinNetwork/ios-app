@@ -6,13 +6,12 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AllPerpetualPositionsViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
-                <outlet property="statesCollectionView" destination="Yut-XY-L4A" id="xek-0C-kMl"/>
+                <outlet property="collectionView" destination="Yut-XY-L4A" id="xek-0C-kMl"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -21,31 +20,24 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Yut-XY-L4A">
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Yut-XY-L4A">
                     <rect key="frame" x="0.0" y="131" width="393" height="44"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" name="background_secondary"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="Tjw-u1-gny"/>
                     </constraints>
-                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="GFG-z6-SwW">
+                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="GFG-z6-SwW">
                         <size key="itemSize" width="128" height="128"/>
+                        <size key="estimatedItemSize" width="124" height="38"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <inset key="sectionInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                     </collectionViewFlowLayout>
                 </collectionView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Under Construction" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l7L-D9-x7e">
-                    <rect key="frame" x="121.66666666666667" y="440.66666666666669" width="149.66666666666663" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <nil key="textColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" name="background_secondary"/>
             <constraints>
-                <constraint firstItem="l7L-D9-x7e" firstAttribute="centerY" secondItem="fnl-2z-Ty3" secondAttribute="centerY" id="23D-VT-nXA"/>
-                <constraint firstItem="l7L-D9-x7e" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="GsX-AG-LmY"/>
                 <constraint firstItem="Yut-XY-L4A" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="K57-2e-Buc"/>
                 <constraint firstItem="Yut-XY-L4A" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="13" id="fg2-hh-9Xz"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Yut-XY-L4A" secondAttribute="trailing" id="hvH-Sn-8Nr"/>
@@ -57,8 +49,5 @@
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

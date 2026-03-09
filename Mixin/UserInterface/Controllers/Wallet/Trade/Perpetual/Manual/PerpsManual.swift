@@ -5,8 +5,8 @@ enum PerpsManual {
     
     static let cardInsets = EdgeInsets(top: 20, leading: 16, bottom: 20, trailing: 16)
     
-    static func pages() -> [ManualViewController.Page] {
-        [
+    static func viewController() -> ManualViewController {
+        let pages = [
             ManualViewController.Page(
                 title: R.string.localizable.brief_introduction(),
                 view: PerpsManualIntroductionPageView()
@@ -28,6 +28,9 @@ enum PerpsManual {
                 view: PerpsManualPositionPageView()
             ),
         ]
+        let manual = ManualViewController(pages: pages)
+        manual.title = R.string.localizable.perpetual_futures()
+        return manual
     }
     
 }

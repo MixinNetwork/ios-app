@@ -159,6 +159,7 @@ final class TradePerpetualViewController: UIViewController {
         collectionView.delegate = self
         collectionView.reloadData()
         
+        let limit = maxItemCount + 1
         DispatchQueue.global().async { [weak self, wallet] in
             let openPositions = PerpsPositionDAO.shared.positionItems()
                 .map { item in
@@ -166,10 +167,12 @@ final class TradePerpetualViewController: UIViewController {
                 }
             let markets = PerpsMarketDAO.shared.markets()
             let marketViewModels = markets.compactMap(PerpetualMarketViewModel.init(market:))
-            let closedPositions = PerpsPositionHistoryDAO.shared.historyItems()
-                .map { history in
-                    PerpetualPositionViewModel(wallet: wallet, history: history)
-                }
+            let closedPositions = PerpsPositionHistoryDAO.shared.historyItems(
+                offsetClosedAt: nil,
+                limit: limit
+            ).map { history in
+                PerpetualPositionViewModel(wallet: wallet, history: history)
+            }
             DispatchQueue.main.async {
                 guard let self else {
                     return
@@ -424,7 +427,8 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
 extension TradePerpetualViewController {
     
     private func viewOpenPositions() {
-        
+        let positions = AllPerpetualPositionsViewController(wallet: wallet, content: .open)
+        navigationController?.pushViewController(positions, animated: true)
     }
     
     private func viewAllMarkets() {
@@ -436,11 +440,13 @@ extension TradePerpetualViewController {
     }
     
     private func viewClosedPositions() {
-        
+        let positions = AllPerpetualPositionsViewController(wallet: wallet, content: .closed)
+        navigationController?.pushViewController(positions, animated: true)
     }
     
     private func presentPerpsManual() {
-        
+        let manual = PerpsManual.viewController()
+        present(manual, animated: true)
     }
     
     @objc private func reloadOpenPositions(_ notification: Notification) {
@@ -462,11 +468,14 @@ extension TradePerpetualViewController {
     }
     
     @objc private func reloadClosedPositions(_ notification: Notification) {
+        let limit = maxItemCount + 1
         DispatchQueue.global().async { [weak self, wallet] in
-            let closedPositions = PerpsPositionHistoryDAO.shared.historyItems()
-                .map { history in
-                    PerpetualPositionViewModel(wallet: wallet, history: history)
-                }
+            let closedPositions = PerpsPositionHistoryDAO.shared.historyItems(
+                offsetClosedAt: nil,
+                limit: limit
+            ).map { history in
+                PerpetualPositionViewModel(wallet: wallet, history: history)
+            }
             DispatchQueue.main.async {
                 guard let self else {
                     return

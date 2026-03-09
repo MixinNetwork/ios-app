@@ -47,6 +47,7 @@ struct PerpetualPositionViewModel {
     let entryPrice: String
     let closePrice: String?
     let date: String
+    let closedAt: String?
     
     init(wallet: Wallet, position: PerpetualPositionItem) {
         let decimalEntryPrice = Decimal(string: position.entryPrice, locale: .enUSPOSIX)
@@ -61,6 +62,7 @@ struct PerpetualPositionViewModel {
         } else {
             nil
         }
+        let multiplier = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
         
         self.title = "Opened Position"
         self.wallet = wallet
@@ -69,13 +71,13 @@ struct PerpetualPositionViewModel {
         switch PerpetualOrderSide(rawValue: position.side) {
         case .long:
             self.directionWithSymbol = "Long \(position.symbol)"
-            self.leverage = .long("\(position.leverage)x")
+            self.leverage = .long(multiplier)
         case .short:
             self.directionWithSymbol = "Short \(position.symbol)"
-            self.leverage = .short("\(position.leverage)x")
+            self.leverage = .short(multiplier)
         default:
             self.directionWithSymbol = "\(position.side) \(position.symbol)"
-            self.leverage = .short("\(position.leverage)x")
+            self.leverage = .short(multiplier)
         }
         self.pnl = nil
         self.actions = [.close, .share]
@@ -100,13 +102,30 @@ struct PerpetualPositionViewModel {
         } else {
             ""
         }
-        self.entryPrice = position.entryPrice
+        self.entryPrice = if let decimalEntryPrice {
+            CurrencyFormatter.localizedString(
+                from: decimalEntryPrice * Currency.current.decimalRate,
+                format: .precision,
+                sign: .never,
+                symbol: .currencySymbol
+            )
+        } else {
+            position.entryPrice
+        }
         self.closePrice = nil
-        self.date = position.createdAt
+        self.date = if let date = DateFormatter.iso8601Full.date(from: position.createdAt) {
+            DateFormatter.dateFull.string(from: date)
+        } else {
+            position.createdAt
+        }
+        self.closedAt = nil
     }
     
     init(wallet: Wallet, history: PerpetualPositionHistoryItem) {
         let pnl = Decimal(string: history.realizedPnL, locale: .enUSPOSIX) ?? 0
+        let multiplier = PerpetualLeverage.stringRepresentation(multiplier: history.leverage)
+        let decimalEntryPrice = Decimal(string: history.entryPrice, locale: .enUSPOSIX)
+        let decimalClosePrice = Decimal(string: history.closePrice, locale: .enUSPOSIX)
         
         self.title = "Closed Position"
         self.wallet = wallet
@@ -115,26 +134,53 @@ struct PerpetualPositionViewModel {
         switch PerpetualOrderSide(rawValue: history.side) {
         case .long:
             self.directionWithSymbol = "Long \(history.symbol)"
-            self.leverage = .long("\(history.leverage)x")
+            self.leverage = .long(multiplier)
         case .short:
             self.directionWithSymbol = "Short \(history.symbol)"
-            self.leverage = .short("\(history.leverage)x")
+            self.leverage = .short(multiplier)
         default:
             self.directionWithSymbol = "\(history.side) \(history.symbol)"
-            self.leverage = .short("\(history.leverage)x")
+            self.leverage = .short(multiplier)
         }
         self.pnl = PnL(
-            count: history.realizedPnL,
-            symbol: history.symbol,
+            count: CurrencyFormatter.localizedString(
+                from: pnl,
+                format: .precision,
+                sign: .always
+            ),
+            symbol: "USDT",
             isEarning: pnl >= 0
         )
         self.actions = [.tradeAgain, .share]
         self.product = history.product
         self.orderValueInToken = "Under Construction"
         self.orderValueInFiatMoney = "Under Construction"
-        self.entryPrice = history.entryPrice
-        self.closePrice = history.closePrice
-        self.date = history.closedAt
+        self.entryPrice = if let decimalEntryPrice {
+            CurrencyFormatter.localizedString(
+                from: decimalEntryPrice * Currency.current.decimalRate,
+                format: .precision,
+                sign: .never,
+                symbol: .currencySymbol
+            )
+        } else {
+            history.entryPrice
+        }
+        self.closePrice = if let decimalClosePrice {
+            CurrencyFormatter.localizedString(
+                from: decimalClosePrice * Currency.current.decimalRate,
+                format: .precision,
+                sign: .never,
+                symbol: .currencySymbol
+            )
+        } else {
+            history.closePrice
+        }
+        self.date = if let date = DateFormatter.iso8601Full.date(from: history.closedAt) {
+            DateFormatter.dateFull.string(from: date)
+        } else {
+            history.closedAt
+        }
+        self.closedAt = history.closedAt
     }
     
 }

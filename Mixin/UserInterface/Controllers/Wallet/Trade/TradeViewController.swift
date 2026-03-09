@@ -9,15 +9,19 @@ final class TradeViewController: UIViewController {
         case perpetualFutures
     }
     
+    struct Context {
+        let sendAssetID: String?
+        let receiveAssetID: String?
+        let referral: String?
+    }
+    
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var containerView: UIView!
     
     private let allTradings: [Trading] = [.simpleSpot, .advancedSpot, .perpetualFutures]
     private let wallet: Wallet
     private let supportedChainIDs: Set<String>? // nil for all
-    private let arbitrarySendAssetID: String?
-    private let arbitraryReceiveAssetID: String?
-    private let referral: String?
+    private let initialContext: Context
     
     private var trading: Trading
     private var tradingViewController: UIViewController?
@@ -45,9 +49,11 @@ final class TradeViewController: UIViewController {
         self.trading = trading
         ?? Trading(rawValue: AppGroupUserDefaults.Wallet.tradeMode)
         ?? .simpleSpot
-        self.arbitrarySendAssetID = sendAssetID
-        self.arbitraryReceiveAssetID = receiveAssetID
-        self.referral = referral
+        self.initialContext = Context(
+            sendAssetID: sendAssetID,
+            receiveAssetID: receiveAssetID,
+            referral: referral
+        )
         let nib = R.nib.tradeView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -166,10 +172,18 @@ final class TradeViewController: UIViewController {
     }
     
     private func replaceChildViewController(trading: Trading) {
+        var context: Context?
         if let tradingViewController {
             tradingViewController.willMove(toParent: nil)
             tradingViewController.view.removeFromSuperview()
             tradingViewController.removeFromParent()
+            if let trading = tradingViewController as? TradeSpotViewController {
+                context = Context(
+                    sendAssetID: trading.sendToken?.assetID,
+                    receiveAssetID: trading.receiveToken?.assetID,
+                    referral: initialContext.referral
+                )
+            }
         }
         
         let tradingViewController: UIViewController
@@ -182,16 +196,16 @@ final class TradeViewController: UIViewController {
             case .simpleSpot:
                 tradingViewController = TradeMixinSpotViewController(
                     mode: .simple,
-                    sendAssetID: arbitrarySendAssetID,
-                    receiveAssetID: arbitraryReceiveAssetID,
-                    referral: referral
+                    sendAssetID: context?.sendAssetID,
+                    receiveAssetID: context?.receiveAssetID,
+                    referral: context?.referral
                 )
             case .advancedSpot:
                 tradingViewController = TradeMixinSpotViewController(
                     mode: .advanced,
-                    sendAssetID: arbitrarySendAssetID,
-                    receiveAssetID: arbitraryReceiveAssetID,
-                    referral: referral
+                    sendAssetID: context?.sendAssetID,
+                    receiveAssetID: context?.receiveAssetID,
+                    referral: context?.referral
                 )
             case .perpetualFutures:
                 tradingViewController = TradePerpetualViewController(
@@ -205,16 +219,16 @@ final class TradeViewController: UIViewController {
                     wallet: wallet,
                     mode: .simple,
                     supportedChainIDs: supportedChainIDs,
-                    sendAssetID: arbitrarySendAssetID,
-                    receiveAssetID: arbitraryReceiveAssetID
+                    sendAssetID: context?.sendAssetID,
+                    receiveAssetID: context?.receiveAssetID,
                 )
             case .advancedSpot:
                 tradingViewController = TradeWeb3SpotViewController(
                     wallet: wallet,
                     mode: .advanced,
                     supportedChainIDs: supportedChainIDs,
-                    sendAssetID: arbitrarySendAssetID,
-                    receiveAssetID: arbitraryReceiveAssetID,
+                    sendAssetID: context?.sendAssetID,
+                    receiveAssetID: context?.receiveAssetID,
                 )
             case .perpetualFutures:
                 assertionFailure("Unsupported combination")

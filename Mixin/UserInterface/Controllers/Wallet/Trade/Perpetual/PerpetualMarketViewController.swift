@@ -43,6 +43,7 @@ final class PerpetualMarketViewController: UIViewController {
             title: viewModel.market.displaySymbol,
             subtitle: "Perpetual"
         )
+        view.backgroundColor = R.color.background_secondary()
         
         let config = UICollectionViewCompositionalLayoutConfiguration()
         config.interSectionSpacing = 10
@@ -402,7 +403,8 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
         case .closedPositions:
             break
         case .introduction:
-            break
+            let manual = PerpsManual.viewController()
+            present(manual, animated: true)
         }
     }
     

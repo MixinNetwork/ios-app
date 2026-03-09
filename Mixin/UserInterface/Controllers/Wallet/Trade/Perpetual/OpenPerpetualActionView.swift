@@ -25,7 +25,7 @@ final class OpenPerpetualActionView: UIView {
         if var config = longButton.configuration {
             config.baseBackgroundColor = MarketColor.rising.uiColor
             config.attributedTitle = AttributedString(
-                "Long",
+                R.string.localizable.long(),
                 attributes: actionAttributes
             )
             longButton.configuration = config
@@ -33,7 +33,7 @@ final class OpenPerpetualActionView: UIView {
         if var config = shortButton.configuration {
             config.baseBackgroundColor = MarketColor.falling.uiColor
             config.attributedTitle = AttributedString(
-                "Short",
+                R.string.localizable.short(),
                 attributes: actionAttributes
             )
             shortButton.configuration = config

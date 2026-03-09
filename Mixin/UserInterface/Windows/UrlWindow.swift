@@ -66,26 +66,51 @@ class UrlWindow {
             case .inscription(let hash):
                 checkInscription(hash: hash)
                 return true
-            case let .trade(type, input, output, referral):
-                if let navigationController = UIApplication.homeNavigationController {
-                    let trading: TradeViewController.Trading? = switch type {
-                    case "swap":
-                            .simpleSpot
-                    case "limit":
-                            .advancedSpot
-                    default:
-                            .none
+            case .trade(let context):
+                switch context.type {
+                case let .perps(product):
+                    let hud = Hud()
+                    hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+                    RouteAPI.perpsMarkets(queue: .main) { result in
+                        switch result {
+                        case .success(let markets):
+                            DispatchQueue.global().async {
+                                PerpsMarketDAO.shared.replace(markets: markets)
+                            }
+                            hud.hide()
+                            let market = markets.first { market in
+                                market.marketID == product
+                            }
+                            if let navigationController = UIApplication.homeNavigationController,
+                               let market,
+                               let viewModel = PerpetualMarketViewModel(market: market)
+                            {
+                                let market = PerpetualMarketViewController(wallet: .privacy, viewModel: viewModel)
+                                navigationController.pushViewController(market, animated: true)
+                                reporter.report(
+                                    event: .tradeStart,
+                                    tags: ["wallet": "main", "source": "schema"]
+                                )
+                            }
+                        case .failure(let error):
+                            hud.set(style: .error, text: error.localizedDescription)
+                            hud.scheduleAutoHidden()
+                        }
                     }
+                case let .spot(trading, input, output):
                     let trade = TradeViewController(
                         wallet: .privacy,
                         trading: trading,
                         sendAssetID: input,
                         receiveAssetID: output ?? AssetID.erc20USDT,
-                        referral: referral
+                        referral: context.referral
                     )
-                    if let trade {
+                    if let navigationController = UIApplication.homeNavigationController, let trade {
                         navigationController.pushViewController(trade, animated: true)
-                        reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "schema"])
+                        reporter.report(
+                            event: .tradeStart,
+                            tags: ["wallet": "main", "source": "schema"]
+                        )
                     }
                 }
                 return true

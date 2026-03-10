@@ -48,11 +48,11 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     }
     
     func load(viewModel: PerpetualPositionViewModel) {
-        titleLabel.text = "Open Position"
-        pnlTitleLabel.text = "PNL"
+        titleLabel.text = R.string.localizable.open_position()
+        pnlTitleLabel.text = R.string.localizable.pnl().uppercased()
         pnlContentLabel.text = viewModel.pnl
         pnlContentLabel.marketColor = viewModel.pnlColor
-        directionTitleLabel.text = "DIRECTION"
+        directionTitleLabel.text = R.string.localizable.direction().uppercased()
         switch viewModel.leverage {
         case .long(let value):
             directionSideLabel.text = R.string.localizable.long()
@@ -63,13 +63,13 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             directionSideLabel.backgroundColor = MarketColor.falling.uiColor
             directionLeverageLabel.text = value
         }
-        orderValueTitleLabel.text = "ORDER VALUE"
+        orderValueTitleLabel.text = R.string.localizable.order_value().uppercased()
         orderValueContentLabel.text = viewModel.orderValueInToken
         amountTitleLabel.text = R.string.localizable.amount().uppercased()
         amountContentLabel.text = viewModel.orderValueInFiatMoney
-        entryPriceTitleLabel.text = "ENTRY PRICE"
+        entryPriceTitleLabel.text = R.string.localizable.entry_price().uppercased()
         entryPriceContentLabel.text = viewModel.entryPrice
-        liquidationPriceTitleLabel.text = "LIQUIDATION PRICE"
+        liquidationPriceTitleLabel.text = R.string.localizable.liquidation_price().uppercased()
         liquidationPriceContentLabel.text = viewModel.liquidationPrice
     }
     

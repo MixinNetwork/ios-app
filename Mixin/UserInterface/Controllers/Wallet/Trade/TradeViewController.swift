@@ -269,7 +269,7 @@ extension TradeViewController: UICollectionViewDataSource {
             cell.label.text = R.string.localizable.trade_advanced()
             cell.badgeView.isHidden = BadgeManager.shared.hasViewed(identifier: .advancedTrade)
         case .perpetualFutures:
-            cell.label.text = "Perpetual"
+            cell.label.text = R.string.localizable.perpetual()
             cell.badgeView.isHidden = BadgeManager.shared.hasViewed(identifier: .perps)
         }
         return cell

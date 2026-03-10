@@ -9,34 +9,37 @@ enum PerpetualChangeSimulation {
         leverageMultiplier: Decimal,
         priceChangePercent: Decimal,
     ) -> String {
-        let priceChange = NumberFormatter.percentage.string(
-            from: priceChangePercent as NSDecimalNumber
-        ) ?? "\(priceChangePercent * 100)%"
-        
+        let priceChange = PercentageFormatter.string(
+            from: priceChangePercent,
+            format: .pretty,
+            sign: .never
+        )
         let exposure = priceChangePercent * leverageMultiplier
-        let profit = NumberFormatter.percentage.string(
-            from: exposure as NSDecimalNumber
-        ) ?? "\(exposure * 100)%"
+        let profit = PercentageFormatter.string(
+            from: exposure,
+            format: .pretty,
+            sign: .never
+        )
         
         if margin > 0 {
             let profitValue = CurrencyFormatter.localizedString(
                 from: margin * exposure * Currency.current.decimalRate,
                 format: .precision,
-                sign: .never,
+                sign: .always,
                 symbol: .currencySymbol
             )
             return switch side {
             case .long:
-                "价格上涨 \(priceChange) → 盈利 \(profit)（+\(profitValue)）"
+                R.string.localizable.price_rise_profit_value(priceChange, profit, profitValue)
             case .short:
-                "价格下跌 \(priceChange) → 盈利 \(profit)（+\(profitValue)）"
+                R.string.localizable.price_fall_profit_value(priceChange, profit, profitValue)
             }
         } else {
             return switch side {
             case .long:
-                "价格上涨 \(priceChange) → 盈利 \(profit)"
+                R.string.localizable.price_rise_profit(priceChange, profit)
             case .short:
-                "价格下跌 \(priceChange) → 盈利 \(profit)"
+                R.string.localizable.price_fall_profit(priceChange, profit)
             }
         }
     }
@@ -67,20 +70,22 @@ enum PerpetualChangeSimulation {
         leverageMultiplier: Decimal,
     ) -> String {
         let liquidationChangePercentage = 1 / leverageMultiplier
-        let percentage = NumberFormatter.percentage.string(
-            from: liquidationChangePercentage as NSDecimalNumber
-        ) ?? "\(liquidationChangePercentage * 100)%"
+        let percentage = PercentageFormatter.string(
+            from: 1 / leverageMultiplier,
+            format: .pretty,
+            sign: .never
+        )
         let marginValue = CurrencyFormatter.localizedString(
-            from: margin * Currency.current.decimalRate,
+            from: -margin * Currency.current.decimalRate,
             format: .precision,
-            sign: .never,
+            sign: .always,
             symbol: .currencySymbol
         )
         return switch side {
         case .long:
-            "价格下跌 \(percentage) → 亏损 -\(marginValue)"
+            R.string.localizable.price_fall_loss(percentage, marginValue)
         case .short:
-            "价格上涨 \(percentage) → 亏损 -\(marginValue)"
+            R.string.localizable.price_rise_loss(percentage, marginValue)
         }
     }
     

@@ -114,16 +114,16 @@ final class OpenPerpetualPositionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = "Open Position"
+        navigationItem.title = R.string.localizable.open_position()
         
         tokenIconView.setIcon(tokenIconURL: viewModel.iconURL)
         switch side {
         case .long:
-            titleLabel.text = "Long \(viewModel.symbol)"
+            titleLabel.text = R.string.localizable.long_asset(viewModel.symbol)
         case .short:
-            titleLabel.text = "Short \(viewModel.symbol)"
+            titleLabel.text = R.string.localizable.short_asset(viewModel.symbol)
         }
-        priceLabel.text = "Current price: \(viewModel.price)"
+        priceLabel.text = R.string.localizable.current_price(viewModel.price)
         
         marginView.layer.cornerRadius = 8
         marginView.layer.masksToBounds = true
@@ -134,6 +134,10 @@ final class OpenPerpetualPositionViewController: UIViewController {
         
         leverageView.layer.cornerRadius = 8
         leverageView.layer.masksToBounds = true
+        
+        orderValueTitleLabel.text = R.string.localizable.order_value()
+        liquidationPriceTitleLabel.text = R.string.localizable.liquidation_price()
+        
         leverageMultipliersCollectionViewLayout.itemSize = UICollectionViewFlowLayout.automaticSize
         leverageMultipliersCollectionView.register(LeverageCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
         leverageMultipliersCollectionView.contentInset = UIEdgeInsets(top: 7, left: 16, bottom: 7, right: 16)
@@ -360,7 +364,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDataSource {
         case .max:
             R.string.localizable.max()
         case .custom:
-            "Custom"
+            R.string.localizable.custom()
         }
         return cell
     }

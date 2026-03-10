@@ -23,7 +23,7 @@ final class AllPerpetualPositionsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "All Positions"
+        title = R.string.localizable.all_positions()
         collectionView.register(R.nib.exploreSegmentCell)
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -83,9 +83,9 @@ extension AllPerpetualPositionsViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.explore_segment, for: indexPath)!
         cell.label.text = switch PerpetualPositionType(rawValue: indexPath.item)! {
         case .open:
-            "Open Positions"
+            R.string.localizable.open_positions()
         case .closed:
-            "Closed Positions"
+            R.string.localizable.closed_positions()
         }
         return cell
     }

@@ -31,7 +31,7 @@ final class PerpetualPositionLoader {
                 case .success(let positions):
                     PerpsPositionDAO.shared.replace(positions: positions)
                 case .failure(let error):
-                    Logger.general.debug(category: "PerpetualPositionLoader", message: "\(error)")
+                    Logger.general.debug(category: "PerpPositionLoader", message: "\(error)")
                 }
             }
         }

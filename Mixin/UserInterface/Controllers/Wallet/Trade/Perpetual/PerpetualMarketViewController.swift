@@ -40,7 +40,7 @@ final class PerpetualMarketViewController: UIViewController {
         
         navigationItem.titleView = NavigationTitleView(
             title: viewModel.market.displaySymbol,
-            subtitle: "Perpetual"
+            subtitle: R.string.localizable.perpetual()
         )
         view.backgroundColor = R.color.background_secondary()
         
@@ -187,7 +187,7 @@ final class PerpetualMarketViewController: UIViewController {
             side: side,
             viewModel: viewModel
         )
-        present(open, animated: true)
+        navigationController?.pushViewController(open, animated: true)
     }
     
     @objc private func closePosition(_ sender: UIButton) {
@@ -223,7 +223,7 @@ final class PerpetualMarketViewController: UIViewController {
             sections.append(.introduction)
             if !(self.actionView is AuthenticationPreviewSingleButtonTrayView) {
                 let view = AuthenticationPreviewSingleButtonTrayView()
-                view.button.setTitle("Close Position", for: .normal)
+                view.button.setTitle(R.string.localizable.close_position(), for: .normal)
                 view.button.addTarget(self, action: #selector(closePosition(_:)), for: .touchUpInside)
                 actionView = view
             }
@@ -381,10 +381,10 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
                 cell.titleLabel.text = R.string.localizable.volume_24h().uppercased()
                 cell.contentLabel.text = viewModel.volume
             case 1:
-                cell.titleLabel.text = "未平仓合约"
+                cell.titleLabel.text = R.string.localizable.open_interest()
                 cell.contentLabel.text = viewModel.amount
             default:
-                cell.titleLabel.text = "资金利率"
+                cell.titleLabel.text = R.string.localizable.funding_rate()
                 cell.contentLabel.text = viewModel.fundingRate
             }
             return cell
@@ -404,7 +404,7 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
             switch sections[indexPath.section] {
             case .closedPositions:
-                view.label.text = "Closed Positions"
+                view.label.text = R.string.localizable.closed_positions()
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewClosedPositions()
                 }

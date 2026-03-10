@@ -20,7 +20,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         super.viewDidLoad()
         
         tableHeaderView.setTokenIcon(url: viewModel.iconURL)
-        tableHeaderView.titleLabel.text = "确认平仓"
+        tableHeaderView.titleLabel.text = R.string.localizable.confirm_closing_position()
         tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixin)
         
         var rows: [Row] = []
@@ -44,13 +44,14 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         let positionID = viewModel.positionID
         Task {
             do {
+                try await AccountAPI.verify(pin: pin)
                 try await RouteAPI.closePerpsOrder(positionID: positionID)
                 UIDevice.current.playPaymentSuccess()
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
                     layoutTableHeaderView(
-                        title: "Position Closed",
+                        title: R.string.localizable.position_closed(),
                         subtitle: "Under Construction"
                     )
                     tableView.setContentOffset(.zero, animated: true)
@@ -76,20 +77,26 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
                     let title = R.string.localizable.swap_failed()
-                    layoutTableHeaderView(title: title,
-                                          subtitle: errorDescription,
-                                          style: .destructive)
+                    layoutTableHeaderView(
+                        title: title,
+                        subtitle: errorDescription,
+                        style: .destructive
+                    )
                     tableView.setContentOffset(.zero, animated: true)
                     switch error {
                     case MixinAPIResponseError.malformedPin, MixinAPIResponseError.incorrectPin, TIPNode.Error.response(.incorrectPIN), TIPNode.Error.response(.internalServer):
-                        loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
-                                                 leftAction: #selector(close(_:)),
-                                                 rightTitle: R.string.localizable.retry(),
-                                                 rightAction: #selector(confirm(_:)),
-                                                 animation: .vertical)
+                        loadDoubleButtonTrayView(
+                            leftTitle: R.string.localizable.cancel(),
+                            leftAction: #selector(close(_:)),
+                            rightTitle: R.string.localizable.retry(),
+                            rightAction: #selector(confirm(_:)),
+                            animation: .vertical
+                        )
                     default:
-                        loadSingleButtonTrayView(title: R.string.localizable.got_it(),
-                                                 action: #selector(close(_:)))
+                        loadSingleButtonTrayView(
+                            title: R.string.localizable.got_it(),
+                            action: #selector(close(_:))
+                        )
                     }
                 }
             }

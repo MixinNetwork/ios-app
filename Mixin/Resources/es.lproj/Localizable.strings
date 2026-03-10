@@ -127,6 +127,8 @@
 "all_conversations" = "Todas las conversaciones";
 "all_dates" = "All Dates";
 "all_invoices" = "All Invoices";
+"all_markets" = "All Markets";
+"all_positions" = "All Positions";
 "all_signer_failure" = "Falla de todos los nodos";
 "all_time_high" = "All Time High";
 "all_time_low" = "All Time Low";
@@ -318,6 +320,11 @@
 "cleared" = "Borrado";
 "clock_skew_hint" = "Continúa usándolo nuevamente después de la corrección. Configuración > General > Fecha y hora > Activar Establecer automáticamente";
 "close" = "Cerrar";
+"close_position" = "Close Position";
+"close_price" = "Close Price";
+"closed_long" = "Closed Long";
+"closed_positions" = "Closed Positions";
+"closed_short" = "Closed Short";
 "closing_balance" = "Closing Balance";
 "collectible" = "Collectible";
 "collectible_hash" = "Collectible Hash";
@@ -344,6 +351,7 @@
 "compressed" = "Comprimido";
 "confirm" = "Confirmar";
 "confirm_adding_address" = "Confirm Address";
+"confirm_closing_position" = "Confirm Closing";
 "confirm_deleting_address" = "Delete Address";
 "confirm_editing_address" = "Confirm Editing Address";
 "confirm_signing_multisig" = "Confirm Signing Multisig";
@@ -436,6 +444,7 @@
 "current_price" = "Current price: %@";
 "current_selected" = "Seleccionado actual";
 "current_version" = "Version: %@";
+"custom" = "Custom";
 "custom_time" = "Hora personalizada";
 "daily" = "Diario";
 "dark" = "Oscuro";
@@ -511,6 +520,7 @@
 "devices_on_same_network" = "Please make sure both devices are connected to the same Wi-Fi or hotspot";
 "diagnose" = "Diagnosticar";
 "diagnose_warning_hint" = "⚠️Usa estas funciones solo bajo las instrucciones del equipo de Mixin";
+"direction" = "Direction";
 "disable" = "Desactivar";
 "disable_biometric_pay_confirmation" = "¿Desactivar %@ Pagar?";
 "disable_disappearing_message" = "%@ mensaje de desaparición inhabilitado";
@@ -569,6 +579,7 @@
 "enter_your_phone_number" = "Introduce tu número telefónico";
 "enter_your_pin" = "Introduce tu PIN";
 "enter_your_pin_to_continue" = "Introduce tu PIN para continuar";
+"entry_price" = "Entry Price";
 "error_access_limited" = "ERROR 403: Access Limited";
 "error_already_bonded_referral_code" = "ERROR 10731: This account has already applied a referral code";
 "error_bad_data" = "ERROR 10002: Los datos de la solicitud tienen un campo no válido";
@@ -704,6 +715,7 @@
 "from_address" = "From address";
 "from_date" = "From %@";
 "from_mixin_wallet" = "From Mixin Wallet";
+"funding_rate" = "Funding Rate";
 "generating" = "Generando...";
 "generating_keys" = "Generando claves...";
 "global_market_cap" = "Market Cap";
@@ -843,6 +855,7 @@
 "link_recognition_failure" = "Error de reconocimiento de enlace";
 "link_shareable_false" = "El enlace se ha configurado para no permitir compartir";
 "liquidation" = "Liquidation";
+"liquidation_price" = "Liquidation Price";
 "live" = "En vivo";
 "live_shareable_false" = "El directo se ha configurado para no permitir compartir";
 "live_stream" = "transmisión en vivo";
@@ -867,6 +880,7 @@
 "logout_title" = "Enter your PIN to log out";
 "logs" = "Registros";
 "long" = "Long";
+"long_asset" = "Long %@";
 "lost_your_mobile_number" = "¿Has perdido tu número de móvil?";
 "low_24h" = "24H LOW";
 "make_group_admin" = "Hacer administrador de grupo";
@@ -999,6 +1013,7 @@
 "no_memo" = "Sin memorando";
 "no_network_connection" = "No hay conexion de red";
 "no_orders" = "NO ORDERS";
+"no_position" = "No Position";
 "no_posts" = "SIN PUBLICACIONES";
 "no_results" = "SIN RESULTADOS";
 "no_stickers" = "SIN PEGATINAS";
@@ -1056,10 +1071,16 @@
 "open_in_gaode_maps" = "Abrir en 高德地图";
 "open_in_google_maps" = "Abrir en Google Maps";
 "open_in_maps" = "Abrir en Mapas";
+"open_interest" = "Open Interest";
 "open_link" = "Abrir enlace: %@";
 "open_orders_count" = "Open Orders (%d)";
+"open_position" = "Open Position";
+"open_positions" = "Open Positions";
+"open_positions_count" = "Open Positions(%d)";
 "open_source" = "Copyright Mixin\nLicensed under the GPLv3";
 "open_url" = "Abrir URL";
+"opened_long" = "Opened Long";
+"opened_short" = "Opened Short";
 "opening_balance" = "Opening Balance";
 "operation_failed" = "La operación ha fallado, intenta nuevamente más tarde";
 "opponents" = "Opponents";
@@ -1073,6 +1094,7 @@
 "order_type" = "Order Type";
 "order_type_limit" = "Limit";
 "order_type_swap" = "Swap";
+"order_value" = "Order Value";
 "orders" = "Orders";
 "other" = "Otro";
 "overview" = "Overview";
@@ -1108,6 +1130,7 @@
 "permission_denied_photos" = "Adding Photo Denied";
 "permission_denied_photos_hint" = "Mixin doesn't have permission to add photo to your library. Tap Settings to authorize.";
 "permissions" = "Permisos";
+"perpetual" = "Perpetual";
 "perpetual_futures" = "Perpetual Futures";
 "perps_intro_overview" = "Mixin Perpetual Futures are a type of derivatives trading settled in digital assets. They allow traders to go long or short with no expiration date. Through leverage, traders can amplify their position size and capture opportunities from both rising and falling market prices.";
 "perps_intro_risk_notice_1" = "Leveraged trading amplifies both profits and losses";
@@ -1167,6 +1190,7 @@
 "pnl_rule_price_rise_profit" = "Price rises: Profit";
 "pnl_rules" = "PnL Rules:";
 "position" = "Position";
+"position_closed" = "Position Closed";
 "position_value" = "Position Value";
 "post" = "Publicar";
 "post_sharing" = "publicar";
@@ -1179,10 +1203,16 @@
 "price_change_24h" = "24h Price Change";
 "price_data_unavailable" = "Price data unavailable";
 "price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";
+"price_fall_loss" = "Price decrease %@ → Loss %@";
+"price_fall_profit" = "Price decrease %@ → Gain %@";
+"price_fall_profit_value" = "Price decrease %@ → Gain %@ (%@)";
 "price_in_currency" = "Price (%@)";
 "price_increase_invalid" = "The price increase must be greater than %1$@ and less than %2$@";
 "price_must_greater_than_current" = "The set price must be greater than the current price";
 "price_must_less_than_current" = "The set price must be less than the current price";
+"price_rise_loss" = "Price increase %@ → Loss %@";
+"price_rise_profit" = "Price increase %@ → Gain %@";
+"price_rise_profit_value" = "Price increase %@ → Gain %@ (%@)";
 "price_too_large" = "The set price must be less than %@ times the current price";
 "price_too_less" = "The set price must be greater than %@ of the current price";
 "privacy" = "Privacidad";
@@ -1470,6 +1500,7 @@
 "share_to" = "Compartir a";
 "shared_media" = "Medios compartidos";
 "short" = "Short";
+"short_asset" = "Short %@";
 "show" = "Espectáculo";
 "show_asset" = "Mostrar activo";
 "show_in_chat" = "Mostrar en el chat";

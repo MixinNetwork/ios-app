@@ -30,14 +30,17 @@ final class PerpetualPositionViewController: UIViewController {
                     token: viewModel.orderValueInToken,
                     fiatMoney: viewModel.orderValueInFiatMoney
                 ),
-                .general(title: "ENTRY PRICE", content: viewModel.entryPrice),
+                .general(
+                    title: R.string.localizable.entry_price().uppercased(),
+                    content: viewModel.entryPrice
+                ),
             ])
             if let closePrice = viewModel.closePrice {
-                infos.append(.general(title: "CLOSE PRICE", content: closePrice))
+                infos.append(.general(title: R.string.localizable.close_price().uppercased(), content: closePrice))
             }
             infos.append(contentsOf: [
                 .wallet(.privacy),
-                .general(title: "DATE", content: viewModel.date),
+                .general(title: R.string.localizable.date().uppercased(), content: viewModel.date),
             ])
             return infos
         }()
@@ -52,13 +55,13 @@ final class PerpetualPositionViewController: UIViewController {
         super.viewDidLoad()
         title = switch (viewModel.state, viewModel.side) {
         case (.open, .long):
-            "Opened Long"
+            R.string.localizable.opened_long()
         case (.open, .short):
-            "Opened Short"
+            R.string.localizable.opened_short()
         case (.closed, .long):
-            "Closed Long"
+            R.string.localizable.closed_long()
         case (.closed, .short):
-            "Closed Short"
+            R.string.localizable.closed_short()
         }
         navigationItem.rightBarButtonItem = .customerService(
             target: self,
@@ -164,7 +167,7 @@ extension PerpetualPositionViewController: UICollectionViewDataSource {
                 return cell
             case let .orderValue(token, fiatMoney):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_info, for: indexPath)!
-                cell.titleLabel.text = "ORDER VALUE"
+                cell.titleLabel.text = R.string.localizable.order_value().uppercased()
                 cell.primaryLabel.text = token
                 cell.secondaryLabel.text = fiatMoney
                 return cell

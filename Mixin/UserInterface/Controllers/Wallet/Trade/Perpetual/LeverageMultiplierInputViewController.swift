@@ -45,7 +45,7 @@ final class LeverageMultiplierInputViewController: UIViewController {
         view.layer.cornerRadius = 13
         view.layer.masksToBounds = true
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        titleView.titleLabel.text = "Leverage"
+        titleView.titleLabel.text = R.string.localizable.leverage()
         titleView.closeButton.isHidden = true
         multiplierInputView.layer.cornerRadius = 8
         multiplierInputView.layer.masksToBounds = true

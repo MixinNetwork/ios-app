@@ -12,7 +12,7 @@ final class PerpetualPositionProductCell: UICollectionViewCell {
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )
-        titleLabel.text = "PERPETUAL"
+        titleLabel.text = R.string.localizable.perpetual().uppercased()
         nameLabel.setFont(
             scaledFor: .systemFont(ofSize: 16, weight: .medium),
             adjustForContentSize: true

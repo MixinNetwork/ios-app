@@ -50,12 +50,12 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
         switch viewModel.leverage {
         case .long(let value):
             let color = MarketColor.rising.uiColor
-            directionLabel.text = "Long \(value)"
+            directionLabel.text = R.string.localizable.long_asset(value)
             directionLabel.backgroundColor = color.withAlphaComponent(0.2)
             directionLabel.textColor = color
         case .short(let value):
             let color = MarketColor.falling.uiColor
-            directionLabel.text = "Short \(value)"
+            directionLabel.text = R.string.localizable.short_asset(value)
             directionLabel.backgroundColor = color.withAlphaComponent(0.2)
             directionLabel.textColor = color
         }

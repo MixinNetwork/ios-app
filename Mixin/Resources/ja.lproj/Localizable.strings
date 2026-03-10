@@ -127,6 +127,8 @@
 "all_conversations" = "すべてのチャットルーム";
 "all_dates" = "All Dates";
 "all_invoices" = "All Invoices";
+"all_markets" = "All Markets";
+"all_positions" = "All Positions";
 "all_signer_failure" = "All node failure";
 "all_time_high" = "All Time High";
 "all_time_low" = "All Time Low";
@@ -318,6 +320,11 @@
 "cleared" = "クリアずみ";
 "clock_skew_hint" = "設定を変更してください。 設定 > 一般 > 日付と時刻 > 自動設定をオン";
 "close" = "閉じる";
+"close_position" = "Close Position";
+"close_price" = "Close Price";
+"closed_long" = "Closed Long";
+"closed_positions" = "Closed Positions";
+"closed_short" = "Closed Short";
 "closing_balance" = "Closing Balance";
 "collectible" = "Collectible";
 "collectible_hash" = "Collectible Hash";
@@ -344,6 +351,7 @@
 "compressed" = "圧縮しました";
 "confirm" = "確認する";
 "confirm_adding_address" = "Confirm Address";
+"confirm_closing_position" = "Confirm Closing";
 "confirm_deleting_address" = "Delete Address";
 "confirm_editing_address" = "Confirm Editing Address";
 "confirm_signing_multisig" = "Confirm Signing Multisig";
@@ -436,6 +444,7 @@
 "current_price" = "Current price: %@";
 "current_selected" = "選択";
 "current_version" = "Version: %@";
+"custom" = "Custom";
 "custom_time" = "日時";
 "daily" = "日";
 "dark" = "ライト";
@@ -511,6 +520,7 @@
 "devices_on_same_network" = "Please make sure both devices are connected to the same Wi-Fi or hotspot";
 "diagnose" = "診断";
 "diagnose_warning_hint" = "⚠️Mixinチームの指示がない場合、この機能を使用しないでください";
+"direction" = "Direction";
 "disable" = "無効にする";
 "disable_biometric_pay_confirmation" = "%@の支払いを無効にしますか?";
 "disable_disappearing_message" = "%@が表示されないメッセージを無効にしました";
@@ -569,6 +579,7 @@
 "enter_your_phone_number" = "電話番号を入力してください";
 "enter_your_pin" = "PINコードを入力してください";
 "enter_your_pin_to_continue" = "PINコードを入力して、続けてください";
+"entry_price" = "Entry Price";
 "error_access_limited" = "ERROR 403: Access Limited";
 "error_already_bonded_referral_code" = "ERROR 10731: This account has already applied a referral code";
 "error_bad_data" = "エラー 10002：リクエストデータが無効です";
@@ -704,6 +715,7 @@
 "from_address" = "From address";
 "from_date" = "From %@";
 "from_mixin_wallet" = "From Mixin Wallet";
+"funding_rate" = "Funding Rate";
 "generating" = "Generating...";
 "generating_keys" = "Generating keys...";
 "global_market_cap" = "Market Cap";
@@ -843,6 +855,7 @@
 "link_recognition_failure" = "リンクの認識に失敗しました";
 "link_shareable_false" = "このリンクを共有することはできません";
 "liquidation" = "Liquidation";
+"liquidation_price" = "Liquidation Price";
 "live" = "配信";
 "live_shareable_false" = "この配信を共有することはできません";
 "live_stream" = "配信";
@@ -867,6 +880,7 @@
 "logout_title" = "Enter your PIN to log out";
 "logs" = "ログ";
 "long" = "Long";
+"long_asset" = "Long %@";
 "lost_your_mobile_number" = "電話番号をお忘れですか？";
 "low_24h" = "24H LOW";
 "make_group_admin" = "管理者権限を付与";
@@ -999,6 +1013,7 @@
 "no_memo" = "メモなし";
 "no_network_connection" = "ネットワーク接続がありません";
 "no_orders" = "NO ORDERS";
+"no_position" = "No Position";
 "no_posts" = "投稿がありません";
 "no_results" = "結果なし";
 "no_stickers" = "スタンプはありません";
@@ -1056,10 +1071,16 @@
 "open_in_gaode_maps" = "Gaodeマップで開く";
 "open_in_google_maps" = "Googleマップで開く";
 "open_in_maps" = "マップで開く";
+"open_interest" = "Open Interest";
 "open_link" = "リンクを開く: %@";
 "open_orders_count" = "Open Orders (%d)";
+"open_position" = "Open Position";
+"open_positions" = "Open Positions";
+"open_positions_count" = "Open Positions(%d)";
 "open_source" = "Copyright Mixin\nLicensed under the GPLv3";
 "open_url" = "URLを開く";
+"opened_long" = "Opened Long";
+"opened_short" = "Opened Short";
 "opening_balance" = "Opening Balance";
 "operation_failed" = "操作が失敗しました。しばらくしてからもう一度お試しください";
 "opponents" = "Opponents";
@@ -1073,6 +1094,7 @@
 "order_type" = "Order Type";
 "order_type_limit" = "Limit";
 "order_type_swap" = "Swap";
+"order_value" = "Order Value";
 "orders" = "Orders";
 "other" = "その他";
 "overview" = "Overview";
@@ -1108,6 +1130,7 @@
 "permission_denied_photos" = "Adding Photo Denied";
 "permission_denied_photos_hint" = "Mixin doesn't have permission to add photo to your library. Tap Settings to authorize.";
 "permissions" = "許可";
+"perpetual" = "Perpetual";
 "perpetual_futures" = "Perpetual Futures";
 "perps_intro_overview" = "Mixin Perpetual Futures are a type of derivatives trading settled in digital assets. They allow traders to go long or short with no expiration date. Through leverage, traders can amplify their position size and capture opportunities from both rising and falling market prices.";
 "perps_intro_risk_notice_1" = "Leveraged trading amplifies both profits and losses";
@@ -1167,6 +1190,7 @@
 "pnl_rule_price_rise_profit" = "Price rises: Profit";
 "pnl_rules" = "PnL Rules:";
 "position" = "Position";
+"position_closed" = "Position Closed";
 "position_value" = "Position Value";
 "post" = "投稿";
 "post_sharing" = "投稿";
@@ -1179,10 +1203,16 @@
 "price_change_24h" = "24h Price Change";
 "price_data_unavailable" = "Price data unavailable";
 "price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";
+"price_fall_loss" = "Price decrease %@ → Loss %@";
+"price_fall_profit" = "Price decrease %@ → Gain %@";
+"price_fall_profit_value" = "Price decrease %@ → Gain %@ (%@)";
 "price_in_currency" = "Price (%@)";
 "price_increase_invalid" = "The price increase must be greater than %1$@ and less than %2$@";
 "price_must_greater_than_current" = "The set price must be greater than the current price";
 "price_must_less_than_current" = "The set price must be less than the current price";
+"price_rise_loss" = "Price increase %@ → Loss %@";
+"price_rise_profit" = "Price increase %@ → Gain %@";
+"price_rise_profit_value" = "Price increase %@ → Gain %@ (%@)";
 "price_too_large" = "The set price must be less than %@ times the current price";
 "price_too_less" = "The set price must be greater than %@ of the current price";
 "privacy" = "プライバシー";
@@ -1470,6 +1500,7 @@
 "share_to" = "共有する";
 "shared_media" = "共有されたメディア";
 "short" = "Short";
+"short_asset" = "Short %@";
 "show" = "表示";
 "show_asset" = "資産を表示する";
 "show_in_chat" = "チャット内で表示";

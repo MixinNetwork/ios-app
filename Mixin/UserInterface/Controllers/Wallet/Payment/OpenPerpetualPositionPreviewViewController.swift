@@ -32,9 +32,9 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         )
         let direction = switch context.side {
         case .long:
-            "Long \(multiplier)"
+            R.string.localizable.long_asset(multiplier)
         case .short:
-            "Short \(multiplier)"
+            R.string.localizable.short_asset(multiplier)
         }
         let profit = PerpetualChangeSimulation.profit(
             side: context.side,

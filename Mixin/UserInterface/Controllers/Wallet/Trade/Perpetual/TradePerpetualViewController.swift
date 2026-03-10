@@ -287,7 +287,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 } else {
                     cell.activityIndicatorView.stopAnimating()
                     cell.emptyIndicatorStackView.isHidden = false
-                    cell.titleLabel.text = "NO POSITION"
+                    cell.titleLabel.text = R.string.localizable.no_position().uppercased()
                     cell.onHelp = { [weak self] in
                         self?.presentPerpsManual()
                     }
@@ -308,7 +308,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 } else {
                     cell.activityIndicatorView.stopAnimating()
                     cell.emptyIndicatorStackView.isHidden = false
-                    cell.titleLabel.text = "NO DATA"
+                    cell.titleLabel.text = R.string.localizable.no_results().uppercased()
                     cell.onHelp = { [weak self] in
                         self?.presentPerpsManual()
                     }
@@ -329,7 +329,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 } else {
                     cell.activityIndicatorView.stopAnimating()
                     cell.emptyIndicatorStackView.isHidden = false
-                    cell.titleLabel.text = "NO POSITION"
+                    cell.titleLabel.text = R.string.localizable.no_position().uppercased()
                     cell.onHelp = { [weak self] in
                         self?.presentPerpsManual()
                     }
@@ -350,9 +350,9 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 break
             case .openPositions:
                 view.label.text = if let count = openPositions?.count {
-                    "Open Positions(\(count))"
+                    R.string.localizable.open_positions_count(count)
                 } else {
-                    "Open Positions"
+                    R.string.localizable.open_positions()
                 }
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewOpenPositions()
@@ -363,7 +363,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     self?.viewAllMarkets()
                 }
             case .closedPositions:
-                view.label.text = "Closed Positions"
+                view.label.text = R.string.localizable.closed_positions()
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewClosedPositions()
                 }

@@ -14,7 +14,7 @@ struct PerpetualPositionViewModel {
             case .tradeAgain:
                     .init(title: R.string.localizable.trade_again())
             case .close:
-                    .init(title: "Close Position", style: .vibrant)
+                    .init(title: R.string.localizable.close_position(), style: .vibrant)
             case .share:
                     .init(title: R.string.localizable.share())
             }
@@ -27,14 +27,9 @@ struct PerpetualPositionViewModel {
         case short(String)
     }
     
-    enum State {
-        case open
-        case closed
-    }
-    
     let wallet: Wallet
     let positionID: String
-    let state: State
+    let state: PerpetualPositionType
     let side: PerpetualOrderSide
     let iconURL: URL?
     let directionWithSymbol: String
@@ -80,10 +75,10 @@ struct PerpetualPositionViewModel {
         self.iconURL = position.iconURL
         switch side {
         case .long:
-            self.directionWithSymbol = "Long \(position.tokenSymbol)"
+            self.directionWithSymbol = R.string.localizable.long_asset(position.tokenSymbol)
             self.leverage = .long(multiplier)
         case .short:
-            self.directionWithSymbol = "Short \(position.tokenSymbol)"
+            self.directionWithSymbol = R.string.localizable.short_asset(position.tokenSymbol)
             self.leverage = .short(multiplier)
         }
         self.pnl = CurrencyFormatter.localizedString(
@@ -164,10 +159,10 @@ struct PerpetualPositionViewModel {
         self.iconURL = history.iconURL
         switch PerpetualOrderSide(rawValue: history.side) {
         case .long:
-            self.directionWithSymbol = "Long \(history.tokenSymbol)"
+            self.directionWithSymbol = R.string.localizable.long_asset(history.tokenSymbol)
             self.leverage = .long(multiplier)
         case .short:
-            self.directionWithSymbol = "Short \(history.tokenSymbol)"
+            self.directionWithSymbol = R.string.localizable.short_asset(history.tokenSymbol)
             self.leverage = .short(multiplier)
         default:
             self.directionWithSymbol = "\(history.side) \(history.tokenSymbol)"

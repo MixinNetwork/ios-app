@@ -4,7 +4,7 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
     
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var titleStackView: UIStackView!
-    @IBOutlet weak var titleLabel: MarketColoredLabel!
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var symbolLabel: InsetLabel!
     @IBOutlet weak var directionLabel: InsetLabel!
     @IBOutlet weak var actionView: PillActionView!
@@ -35,16 +35,14 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
             directionTopConstraint.constant = 16
             titleLabel.text = viewModel.directionWithSymbol
             titleLabel.font = .systemFont(ofSize: 24, weight: .medium)
-            titleLabel.textColor = R.color.text()
             symbolLabel.text = nil
             symbolLabel.isHidden = true
         case .closed:
             titleTopConstraint.constant = 7
             directionTopConstraint.constant = 10
-            titleLabel.text = viewModel.pnlAmount
+            titleLabel.text = viewModel.quantity
             titleLabel.font = .condensed(size: 34)
-            titleLabel.marketColor = viewModel.pnlColor
-            symbolLabel.text = "USDT"
+            symbolLabel.text = viewModel.tokenSymbol
             symbolLabel.isHidden = false
         }
         switch viewModel.leverage {
@@ -59,6 +57,7 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
             directionLabel.backgroundColor = color.withAlphaComponent(0.2)
             directionLabel.textColor = color
         }
+        actionView.actions = viewModel.actions.map { $0.asPillAction() }
     }
     
 }

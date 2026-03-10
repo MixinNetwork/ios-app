@@ -12,6 +12,7 @@ final class PerpetualPositionViewController: UIViewController {
         case product(iconURL: URL?, name: String)
         case orderValue(token: String, fiatMoney: String)
         case general(title: String, content: String)
+        case pnl(value: String, color: MarketColor)
         case wallet(Wallet)
     }
     
@@ -22,30 +23,29 @@ final class PerpetualPositionViewController: UIViewController {
     init(wallet: Wallet, viewModel: PerpetualPositionViewModel) {
         self.wallet = wallet
         self.viewModel = viewModel
-        self.infos = {
-            var infos: [Info] = []
-            if let displaySymbol = viewModel.displaySymbol {
-                infos.append(.product(iconURL: viewModel.iconURL, name: displaySymbol))
-            }
-            infos.append(contentsOf: [
-                .orderValue(
-                    token: viewModel.orderValueInToken,
-                    fiatMoney: viewModel.orderValueInFiatMoney
-                ),
-                .general(
-                    title: R.string.localizable.entry_price().uppercased(),
-                    content: viewModel.entryPrice
-                ),
-            ])
-            if let closePrice = viewModel.closePrice {
-                infos.append(.general(title: R.string.localizable.close_price().uppercased(), content: closePrice))
-            }
-            infos.append(contentsOf: [
-                .wallet(.privacy),
-                .general(title: R.string.localizable.date().uppercased(), content: viewModel.date),
-            ])
-            return infos
-        }()
+        
+        var infos: [Info] = []
+        if let displaySymbol = viewModel.displaySymbol {
+            infos.append(.product(iconURL: viewModel.iconURL, name: displaySymbol))
+        }
+        infos.append(contentsOf: [
+            .pnl(value: viewModel.pnl, color: viewModel.pnlColor),
+            .general(
+                title: R.string.localizable.entry_price().uppercased(),
+                content: viewModel.entryPrice
+            ),
+        ])
+        if let closePrice = viewModel.closePrice {
+            infos.append(.general(
+                title: R.string.localizable.close_price().uppercased(),
+                content: closePrice
+            ))
+        }
+        infos.append(contentsOf: [
+            .wallet(.privacy),
+            .general(title: R.string.localizable.date().uppercased(), content: viewModel.date),
+        ])
+        self.infos = infos
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -158,7 +158,6 @@ extension PerpetualPositionViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_header, for: indexPath)!
             cell.load(viewModel: viewModel)
             cell.actionView.delegate = self
-            cell.actionView.actions = viewModel.actions.map { $0.asPillAction() }
             return cell
         case .info:
             switch infos[indexPath.item] {
@@ -177,6 +176,13 @@ extension PerpetualPositionViewController: UICollectionViewDataSource {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_compact_info, for: indexPath)!
                 cell.titleLabel.text = title
                 cell.contentLabel.text = content
+                cell.contentLabel.textColor = R.color.text()
+                return cell
+            case let .pnl(value, color):
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_compact_info, for: indexPath)!
+                cell.titleLabel.text = R.string.localizable.pnl()
+                cell.contentLabel.text = value
+                cell.contentLabel.marketColor = color
                 return cell
             case let .wallet(wallet):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_wallet, for: indexPath)!
@@ -205,10 +211,18 @@ extension PerpetualPositionViewController: PillActionView.Delegate {
         switch viewModel.actions[index] {
         case .tradeAgain:
             if let market = PerpsMarketDAO.shared.market(marketID: viewModel.marketID),
-               let viewModel = PerpetualMarketViewModel(market: market)
+               let viewModel = PerpetualMarketViewModel(market: market),
+               let navigationController
             {
                 let market = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
-                navigationController?.pushViewController(market, animated: true)
+                var viewControllers = navigationController.viewControllers
+                viewControllers.removeAll { controller in
+                    controller is PerpetualMarketViewController
+                    || controller is PerpetualPositionViewController
+                    || controller is AllPerpetualPositionsViewController
+                }
+                viewControllers.append(market)
+                navigationController.setViewControllers(viewControllers, animated: true)
             }
         case .close:
             let preview = ClosePerpetualPositionPreviewViewController(viewModel: viewModel)

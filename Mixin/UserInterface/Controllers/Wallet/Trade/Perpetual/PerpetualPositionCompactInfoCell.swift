@@ -3,7 +3,7 @@ import UIKit
 final class PerpetualPositionCompactInfoCell: UICollectionViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var contentLabel: UILabel!
+    @IBOutlet weak var contentLabel: MarketColoredLabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -7,14 +7,14 @@ public final class PerpsMarketCandlesDAO: PerpsDAO {
     public static let perpsMarketCandleDidSaveNotification = Notification.Name(rawValue: "one.mixin.services.PerpsMarketCandlesDAO.Save")
     public static let candleUserInfoKey = "c"
     
-    public func candle(product: String, timeFrame: String) -> PerpetualMarketCandle? {
-        Self.candles[product]?[timeFrame]
+    public func candle(marketID: String, timeFrame: String) -> PerpetualMarketCandle? {
+        Self.candles[marketID]?[timeFrame]
     }
     
     public func save(candle: PerpetualMarketCandle) {
-        var candles = Self.candles[candle.product] ?? [:]
+        var candles = Self.candles[candle.marketID] ?? [:]
         candles[candle.timeFrame] = candle
-        Self.candles[candle.product] = candles
+        Self.candles[candle.marketID] = candles
         NotificationCenter.default.post(
             onMainThread: Self.perpsMarketCandleDidSaveNotification,
             object: self,

@@ -4,9 +4,7 @@ import MixinServices
 struct PerpetualMarketViewModel {
     
     let market: PerpetualMarket
-    let product: String
     let iconURL: URL?
-    let symbol: String
     let maxLeverageMultiplier: Decimal
     let leverage: String
     let decimalPrice: Decimal
@@ -29,9 +27,7 @@ struct PerpetualMarketViewModel {
             return nil
         }
         self.market = m
-        self.product = market.symbol
         self.iconURL = URL(string: m.iconURL)
-        self.symbol = m.tokenSymbol
         self.maxLeverageMultiplier = Decimal(m.leverage)
         self.leverage = PerpetualLeverage.stringRepresentation(multiplier: m.leverage)
         self.decimalPrice = decimalPrice

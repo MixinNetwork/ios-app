@@ -14,12 +14,12 @@ public final class PerpsPositionDAO: PerpsDAO {
         m.display_symbol AS \(PerpetualPositionItem.JoinedQueryCodingKeys.displaySymbol.rawValue),
         m.icon_url AS \(PerpetualPositionItem.JoinedQueryCodingKeys.iconURL.rawValue)
     FROM positions p
-        LEFT JOIN markets m ON p.product_id = m.market_id
+        LEFT JOIN markets m ON p.market_id = m.market_id
     
     """
     
-    public func position(productID: String) -> PerpetualPositionItem? {
-        db.select(with: Self.itemSQL + "WHERE p.product_id = ?", arguments: [productID])
+    public func position(marketID: String) -> PerpetualPositionItem? {
+        db.select(with: Self.itemSQL + "WHERE p.market_id = ?", arguments: [marketID])
     }
     
     public func positionItems() -> [PerpetualPositionItem] {

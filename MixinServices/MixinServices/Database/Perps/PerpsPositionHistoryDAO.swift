@@ -13,14 +13,14 @@ public final class PerpsPositionHistoryDAO: PerpsDAO {
         m.display_symbol AS \(PerpetualPositionHistoryItem.JoinedQueryCodingKeys.displaySymbol.rawValue),
         m.icon_url AS \(PerpetualPositionHistoryItem.JoinedQueryCodingKeys.iconURL.rawValue)
     FROM position_histories h
-        LEFT JOIN markets m ON h.product_id = m.market_id
+        LEFT JOIN markets m ON h.market_id = m.market_id
     
     """
     
-    public func historyItems(productID: String) -> [PerpetualPositionHistoryItem] {
+    public func historyItems(marketID: String) -> [PerpetualPositionHistoryItem] {
         db.select(
-            with: Self.itemSQL + "WHERE h.product_id = ? ORDER BY closed_at DESC",
-            arguments: [productID]
+            with: Self.itemSQL + "WHERE h.market_id = ? ORDER BY closed_at DESC",
+            arguments: [marketID]
         )
     }
     

@@ -28,7 +28,7 @@ final class PerpetualMarketCell: UICollectionViewCell {
     
     func load(viewModel: PerpetualMarketViewModel) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        symbolLabel.text = viewModel.symbol
+        symbolLabel.text = viewModel.market.tokenSymbol
         leverageLabel.text = viewModel.leverage
         leverageLabel.color = .neutral
         priceLabel.text = viewModel.price

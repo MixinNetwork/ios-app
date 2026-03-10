@@ -185,7 +185,7 @@ final class TradePerpetualViewController: UIViewController {
                 self.closedPositions = closedPositions
                 self.collectionView.reloadData()
                 self.openPositionsLoader.start()
-                self.reloadMarketsFromRemote()
+                self.reloadMarketsAndHistoryFromRemote()
             }
         }
         
@@ -201,8 +201,6 @@ final class TradePerpetualViewController: UIViewController {
             name: PerpsPositionHistoryDAO.perpsPositionHistoryDidSaveNotification,
             object: nil
         )
-        let history = SyncPerpsPositionHistoryJob(walletID: wallet.tradeOrderWalletID)
-        ConcurrentJobQueue.shared.addJob(job: history)
     }
     
     @objc private func openPosition(_ sender: UIButton) {
@@ -403,9 +401,12 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
         case .value:
             break
         case .openPositions:
-            if let viewModel = openPositions?[indexPath.item] {
-                let position = PerpetualPositionViewController(viewModel: viewModel)
-                navigationController?.pushViewController(position, animated: true)
+            if let position = openPositions?[indexPath.item],
+               let market = PerpsMarketDAO.shared.market(marketID: position.marketID),
+               let viewModel = PerpetualMarketViewModel(market: market)
+            {
+                let market = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
+                navigationController?.pushViewController(market, animated: true)
             }
         case .markets:
             if let viewModel = markets?[indexPath.item] {
@@ -413,9 +414,12 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
                 navigationController?.pushViewController(market, animated: true)
             }
         case .closedPositions:
-            if let viewModel = closedPositions?[indexPath.item] {
-                let position = PerpetualPositionViewController(viewModel: viewModel)
-                navigationController?.pushViewController(position, animated: true)
+            if let position = closedPositions?[indexPath.item],
+               let market = PerpsMarketDAO.shared.market(marketID: position.marketID),
+               let viewModel = PerpetualMarketViewModel(market: market)
+            {
+                let market = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
+                navigationController?.pushViewController(market, animated: true)
             }
         case .introduction:
             presentPerpsManual()
@@ -488,7 +492,9 @@ extension TradePerpetualViewController {
         }
     }
     
-    private func reloadMarketsFromRemote() {
+    // Reload history after markets loading succeed, to avoid missing symbols in history
+    private func reloadMarketsAndHistoryFromRemote() {
+        let walletID = wallet.tradeOrderWalletID
         RouteAPI.perpsMarkets(queue: .global()) { [weak self] result in
             switch result {
             case .success(let markets):
@@ -506,8 +512,10 @@ extension TradePerpetualViewController {
                         self.actionView.isEnabled = true
                     }
                 }
-            case .failure:
-                break
+                let history = SyncPerpsPositionHistoryJob(walletID: walletID)
+                ConcurrentJobQueue.shared.addJob(job: history)
+            case .failure(let error):
+                Logger.general.debug(category: "TradePerp", message: "\(error)")
             }
         }
     }

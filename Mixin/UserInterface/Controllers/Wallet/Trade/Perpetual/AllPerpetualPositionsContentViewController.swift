@@ -198,8 +198,18 @@ extension AllPerpetualPositionsContentViewController: UICollectionViewDelegate {
             break
         case .positions:
             let viewModel = viewModels[indexPath.item]
-            let controller = PerpetualPositionViewController(viewModel: viewModel)
-            navigationController?.pushViewController(controller, animated: true)
+            switch content {
+            case .open:
+                if let market = PerpsMarketDAO.shared.market(marketID: viewModel.marketID),
+                   let viewModel = PerpetualMarketViewModel(market: market)
+                {
+                    let controller = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
+                    navigationController?.pushViewController(controller, animated: true)
+                }
+            case .closed:
+                let controller = PerpetualPositionViewController(wallet: wallet, viewModel: viewModel)
+                navigationController?.pushViewController(controller, animated: true)
+            }
         }
     }
     

@@ -136,7 +136,8 @@ final class TradeViewController: UIViewController {
             )
             navigationController?.pushViewController(orders, animated: true)
         case .perpetualFutures:
-            break
+            let positions = AllPerpetualPositionsViewController(wallet: wallet, content: .open)
+            navigationController?.pushViewController(positions, animated: true)
         }
     }
     

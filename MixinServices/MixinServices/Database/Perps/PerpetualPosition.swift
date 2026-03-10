@@ -5,7 +5,7 @@ public class PerpetualPosition: Codable, DatabaseColumnConvertible, MixinFetchab
     
     public enum CodingKeys: String, CodingKey {
         case positionID = "position_id"
-        case productID = "product_id"
+        case marketID = "market_id"
         case side = "side"
         case quantity = "quantity"
         case entryPrice = "entry_price"
@@ -23,7 +23,7 @@ public class PerpetualPosition: Codable, DatabaseColumnConvertible, MixinFetchab
     }
     
     public let positionID: String
-    public let productID: String
+    public let marketID: String
     public let side: String
     public let quantity: String
     public let entryPrice: String
@@ -38,42 +38,6 @@ public class PerpetualPosition: Codable, DatabaseColumnConvertible, MixinFetchab
     public let walletID: String
     public let createdAt: String
     public let updatedAt: String
-    
-    private init(
-        positionID: String,
-        productID: String,
-        side: String,
-        quantity: String,
-        entryPrice: String,
-        margin: String,
-        leverage: Int,
-        state: String,
-        markPrice: String,
-        unrealizedPnL: String,
-        roe: String,
-        settleAssetID: String,
-        botID: String,
-        walletID: String,
-        createdAt: String,
-        updatedAt: String
-    ) {
-        self.positionID = positionID
-        self.productID = productID
-        self.side = side
-        self.quantity = quantity
-        self.entryPrice = entryPrice
-        self.margin = margin
-        self.leverage = leverage
-        self.state = state
-        self.markPrice = markPrice
-        self.unrealizedPnL = unrealizedPnL
-        self.roe = roe
-        self.settleAssetID = settleAssetID
-        self.botID = botID
-        self.walletID = walletID
-        self.createdAt = createdAt
-        self.updatedAt = updatedAt
-    }
     
 }
 

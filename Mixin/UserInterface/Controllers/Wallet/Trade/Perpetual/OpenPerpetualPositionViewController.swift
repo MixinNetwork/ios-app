@@ -117,11 +117,11 @@ final class OpenPerpetualPositionViewController: UIViewController {
         navigationItem.title = R.string.localizable.open_position()
         
         tokenIconView.setIcon(tokenIconURL: viewModel.iconURL)
-        switch side {
+        titleLabel.text = switch side {
         case .long:
-            titleLabel.text = R.string.localizable.long_asset(viewModel.symbol)
+            R.string.localizable.long_asset(viewModel.market.tokenSymbol)
         case .short:
-            titleLabel.text = R.string.localizable.short_asset(viewModel.symbol)
+            R.string.localizable.short_asset(viewModel.market.tokenSymbol)
         }
         priceLabel.text = R.string.localizable.current_price(viewModel.price)
         
@@ -213,7 +213,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
         }
         let request = OpenPerpetualOrderRequest(
             assetID: marginToken.assetID,
-            productID: viewModel.market.marketID,
+            marketID: viewModel.market.marketID,
             side: side,
             amount: TokenAmountFormatter.string(from: marginAmount * multiplier),
             leverage: (multiplier as NSDecimalNumber).intValue,
@@ -226,8 +226,9 @@ final class OpenPerpetualPositionViewController: UIViewController {
         ) { [weak sender, wallet, viewModel, multiplier] result in
             switch result {
             case .success(let response):
-                guard let payURL = response.payURL, let url = URL(string: payURL) else {
+                guard let url = URL(string: response.paymentURL) else {
                     showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
+                    sender?.isBusy = false
                     return
                 }
                 let context = Payment.PerpsContext(

@@ -254,15 +254,15 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     private func reloadPositions() {
-        let productID = viewModel.market.marketID
+        let marketID = viewModel.market.marketID
         DispatchQueue.global().async { [weak self, wallet] in
-            let openPosition = PerpsPositionDAO.shared.position(productID: productID)
+            let openPosition = PerpsPositionDAO.shared.position(marketID: marketID)
             let openPositionViewModel: PerpetualPositionViewModel? = if let openPosition {
                 PerpetualPositionViewModel(wallet: wallet, position: openPosition)
             } else {
                 nil
             }
-            let closedPositions = PerpsPositionHistoryDAO.shared.historyItems(productID: productID)
+            let closedPositions = PerpsPositionHistoryDAO.shared.historyItems(marketID: marketID)
                 .map { history in
                     PerpetualPositionViewModel(wallet: wallet, history: history)
                 }
@@ -278,7 +278,7 @@ final class PerpetualMarketViewController: UIViewController {
     ) {
         DispatchQueue.global().async { [weak self, viewModel] in
             let candle = PerpsMarketCandlesDAO.shared.candle(
-                product: viewModel.product,
+                marketID: viewModel.market.marketID,
                 timeFrame: timeFrame.rawValue
             )
             let chart = candle?.asChartData()
@@ -298,7 +298,7 @@ final class PerpetualMarketViewController: UIViewController {
     
     private func reloadPriceChartFromRemote(timeFrame: PerpetualTimeFrame) {
         RouteAPI.perpsMarketCandles(
-            product: viewModel.product,
+            marketID: viewModel.market.marketID,
             timeFrame: timeFrame,
             queue: .global(),
         ) { [weak self] result in
@@ -312,7 +312,7 @@ final class PerpetualMarketViewController: UIViewController {
                     self?.load(chart: chart, for: timeFrame)
                 }
             case .failure(let error):
-                Logger.general.debug(category: "PerpetualMarket", message: "\(error)")
+                Logger.general.debug(category: "PerpMarket", message: "\(error)")
             }
         }
     }
@@ -446,7 +446,7 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
             break
         case .closedPositions(let viewModels):
             let viewModel = viewModels[indexPath.item]
-            let position = PerpetualPositionViewController(viewModel: viewModel)
+            let position = PerpetualPositionViewController(wallet: wallet, viewModel: viewModel)
             navigationController?.pushViewController(position, animated: true)
         case .introduction:
             let manual = PerpsManual.viewController()

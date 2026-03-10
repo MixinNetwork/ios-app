@@ -80,7 +80,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     }
     
     func load(viewModel: PerpetualMarketViewModel) {
-        symbolLabel.text = viewModel.symbol
+        symbolLabel.text = viewModel.market.tokenSymbol
         priceLabel.text = viewModel.price
         changeLabel.text = viewModel.change
         changeLabel.marketColor = viewModel.changeColor

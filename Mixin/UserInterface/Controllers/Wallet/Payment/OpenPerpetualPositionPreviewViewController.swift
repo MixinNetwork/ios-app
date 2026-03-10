@@ -62,15 +62,15 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         rows = [
             .perpsProduct(
                 iconURL: context.viewModel.iconURL,
-                name: context.viewModel.product
+                name: context.viewModel.market.displaySymbol
             ),
             .doubleLineInfo(
-                caption: .string("Direction"),
+                caption: .string(R.string.localizable.direction()),
                 primary: direction,
                 secondary: profit,
             ),
             .info(caption: .string("Amount (Isolated)"), content: amount),
-            .info(caption: .string("Entry Price"), content: context.viewModel.price),
+            .info(caption: .string(R.string.localizable.entry_price()), content: context.viewModel.price),
             .doubleLineInfo(
                 caption: .string("Estimated Liquidation Price"),
                 primary: liquidationPrice,
@@ -132,20 +132,26 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
                     let title = R.string.localizable.swap_failed()
-                    layoutTableHeaderView(title: title,
-                                          subtitle: errorDescription,
-                                          style: .destructive)
+                    layoutTableHeaderView(
+                        title: title,
+                        subtitle: errorDescription,
+                        style: .destructive
+                    )
                     tableView.setContentOffset(.zero, animated: true)
                     switch error {
                     case MixinAPIResponseError.malformedPin, MixinAPIResponseError.incorrectPin, TIPNode.Error.response(.incorrectPIN), TIPNode.Error.response(.internalServer):
-                        loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
-                                                 leftAction: #selector(close(_:)),
-                                                 rightTitle: R.string.localizable.retry(),
-                                                 rightAction: #selector(confirm(_:)),
-                                                 animation: .vertical)
+                        loadDoubleButtonTrayView(
+                            leftTitle: R.string.localizable.cancel(),
+                            leftAction: #selector(close(_:)),
+                            rightTitle: R.string.localizable.retry(),
+                            rightAction: #selector(confirm(_:)),
+                            animation: .vertical
+                        )
                     default:
-                        loadSingleButtonTrayView(title: R.string.localizable.got_it(),
-                                                 action: #selector(close(_:)))
+                        loadSingleButtonTrayView(
+                            title: R.string.localizable.got_it(),
+                            action: #selector(close(_:))
+                        )
                     }
                 }
             }

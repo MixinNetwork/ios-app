@@ -6,7 +6,7 @@ public class PerpetualPositionHistory: Codable, DatabaseColumnConvertible, Mixin
     public enum CodingKeys: String, CodingKey {
         case historyID = "history_id"
         case positionID = "position_id"
-        case productID = "product_id"
+        case marketID = "market_id"
         case side = "side"
         case quantity = "quantity"
         case entryPrice = "entry_price"
@@ -20,7 +20,7 @@ public class PerpetualPositionHistory: Codable, DatabaseColumnConvertible, Mixin
     
     public let historyID: String
     public let positionID: String
-    public let productID: String
+    public let marketID: String
     public let side: String
     public let quantity: String
     public let entryPrice: String

@@ -4,7 +4,7 @@ struct OpenPerpetualOrderRequest: Encodable {
     
     enum CodingKeys: String, CodingKey {
         case assetID = "asset_id"
-        case productID = "product_id"
+        case marketID = "market_id"
         case side = "side"
         case amount = "amount"
         case leverage = "leverage"
@@ -13,7 +13,7 @@ struct OpenPerpetualOrderRequest: Encodable {
     }
     
     let assetID: String
-    let productID: String
+    let marketID: String
     let side: PerpetualOrderSide
     let amount: String
     let leverage: Int

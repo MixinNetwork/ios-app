@@ -172,14 +172,14 @@ extension RouteAPI {
     }
     
     static func perpsMarketCandles(
-        product: String,
+        marketID: String,
         timeFrame: PerpetualTimeFrame,
         queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<PerpetualMarketCandle>) -> Void
     ) {
         request(
             method: .get,
-            path: "/perps/markets/candles?product=\(product)&time_frame=\(timeFrame.rawValue)",
+            path: "/perps/markets/candles?market_id=\(marketID)&time_frame=\(timeFrame.rawValue)",
             queue: queue,
             completion: completion
         )

@@ -69,7 +69,6 @@ enum PerpetualChangeSimulation {
         margin: Decimal,
         leverageMultiplier: Decimal,
     ) -> String {
-        let liquidationChangePercentage = 1 / leverageMultiplier
         let percentage = PercentageFormatter.string(
             from: 1 / leverageMultiplier,
             format: .pretty,

@@ -2,15 +2,13 @@ import Foundation
 
 public struct PerpetualMarketCandle: Codable {
     
-    public let market: String
-    public let product: String
+    public let marketID: String
     public let timeFrame: String
     public let items: [Item]
     public let updatedAt: String
     
     enum CodingKeys: String, CodingKey {
-        case market = "market"
-        case product = "product"
+        case marketID = "market_id"
         case timeFrame = "time_frame"
         case items = "items"
         case updatedAt = "updated_at"

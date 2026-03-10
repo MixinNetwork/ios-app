@@ -28,6 +28,7 @@ struct PerpetualPositionViewModel {
     }
     
     let wallet: Wallet
+    let marketID: String
     let positionID: String
     let state: PerpetualPositionType
     let side: PerpetualOrderSide
@@ -69,6 +70,7 @@ struct PerpetualPositionViewModel {
         let side = PerpetualOrderSide(rawValue: position.side) ?? .short
         
         self.wallet = wallet
+        self.marketID = position.marketID
         self.positionID = position.positionID
         self.state = .open
         self.side = side
@@ -153,6 +155,7 @@ struct PerpetualPositionViewModel {
         let multiplier = PerpetualLeverage.stringRepresentation(multiplier: history.leverage)
         
         self.wallet = wallet
+        self.marketID = history.marketID
         self.positionID = history.positionID
         self.state = .closed
         self.side = side

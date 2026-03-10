@@ -15,10 +15,12 @@ final class PerpetualPositionViewController: UIViewController {
         case wallet(Wallet)
     }
     
+    private let wallet: Wallet
     private let viewModel: PerpetualPositionViewModel
     private let infos: [Info]
     
-    init(viewModel: PerpetualPositionViewModel) {
+    init(wallet: Wallet, viewModel: PerpetualPositionViewModel) {
+        self.wallet = wallet
         self.viewModel = viewModel
         self.infos = {
             var infos: [Info] = []
@@ -202,7 +204,12 @@ extension PerpetualPositionViewController: PillActionView.Delegate {
     func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
         switch viewModel.actions[index] {
         case .tradeAgain:
-            showAutoHiddenHud(style: .error, text: "Under Construction")
+            if let market = PerpsMarketDAO.shared.market(marketID: viewModel.marketID),
+               let viewModel = PerpetualMarketViewModel(market: market)
+            {
+                let market = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
+                navigationController?.pushViewController(market, animated: true)
+            }
         case .close:
             let preview = ClosePerpetualPositionPreviewViewController(viewModel: viewModel)
             present(preview, animated: true)

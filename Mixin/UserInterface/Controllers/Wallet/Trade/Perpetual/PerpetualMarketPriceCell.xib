@@ -51,7 +51,7 @@
                             <constraint firstAttribute="width" constant="48" id="lZJ-Mw-6FS"/>
                         </constraints>
                     </view>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BPV-hX-IIc" customClass="CandleStickChartView" customModule="DGCharts">
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BPV-hX-IIc" customClass="CandlestickChartView" customModule="Mixin" customModuleProvider="target">
                         <rect key="frame" x="16" y="119" width="303" height="193"/>
                         <color key="backgroundColor" name="background"/>
                         <constraints>

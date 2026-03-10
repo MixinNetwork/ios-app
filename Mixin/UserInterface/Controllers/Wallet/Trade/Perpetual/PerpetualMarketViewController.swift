@@ -1,5 +1,4 @@
 import UIKit
-import DGCharts
 import MixinServices
 
 final class PerpetualMarketViewController: UIViewController {
@@ -18,7 +17,7 @@ final class PerpetualMarketViewController: UIViewController {
     
     private var sections: [Section] = [.price, .info]
     private var selectedTimeFrame: PerpetualTimeFrame = .day
-    private var charts: [PerpetualTimeFrame: CandleChartData] = [:]
+    private var charts: [PerpetualTimeFrame: [CandlestickChartView.Candle]] = [:]
     
     private weak var collectionView: UICollectionView!
     private weak var actionWrapperView: UIView!
@@ -318,7 +317,7 @@ final class PerpetualMarketViewController: UIViewController {
         }
     }
     
-    private func load(chart: CandleChartData, for timeFrame: PerpetualTimeFrame) {
+    private func load(chart: [CandlestickChartView.Candle], for timeFrame: PerpetualTimeFrame) {
         charts[timeFrame] = chart
         if selectedTimeFrame == timeFrame {
             priceCell?.load(chart: chart)
@@ -474,10 +473,12 @@ extension PerpetualMarketViewController: PerpetualMarketPriceCell.Delegate {
 
 fileprivate extension PerpetualMarketCandle {
     
-    func asChartData() -> CandleChartData? {
-        var entries: [CandleChartDataEntry] = []
-        entries.reserveCapacity(items.count)
-        for item in items {
+    func asChartData() -> [CandlestickChartView.Candle]? {
+        let drawingItems = items.suffix(50)
+        var entries: [CandlestickChartView.Candle] = []
+        entries.reserveCapacity(drawingItems.count)
+        for item in drawingItems {
+            let date = Date(timeIntervalSince1970: TimeInterval(item.timestamp))
             let open = NumberFormatter.enUSPOSIXLocalizedDecimal.number(from: item.open)?.doubleValue
             let close = NumberFormatter.enUSPOSIXLocalizedDecimal.number(from: item.close)?.doubleValue
             let high = NumberFormatter.enUSPOSIXLocalizedDecimal.number(from: item.high)?.doubleValue
@@ -485,24 +486,16 @@ fileprivate extension PerpetualMarketCandle {
             guard let open, let close, let high, let low else {
                 return nil
             }
-            let entry = CandleChartDataEntry(
-                x: Double(item.timestamp),
-                shadowH: high,
-                shadowL: low,
+            let entry = CandlestickChartView.Candle(
+                time: date,
                 open: open,
+                high: high,
+                low: low,
                 close: close
             )
             entries.append(entry)
         }
-        let dataSet = CandleChartDataSet(entries: entries, label: "")
-        dataSet.increasingColor = MarketColor.rising.uiColor
-        dataSet.increasingFilled = true
-        dataSet.decreasingColor = MarketColor.falling.uiColor
-        dataSet.decreasingFilled = true
-        dataSet.shadowColorSameAsCandle = true
-        dataSet.barSpace = 0.3
-        dataSet.drawValuesEnabled = false
-        return CandleChartData(dataSet: dataSet)
+        return entries
     }
     
 }

@@ -1,5 +1,4 @@
 import UIKit
-import DGCharts
 import MixinServices
 
 final class PerpetualMarketPriceCell: UICollectionViewCell {
@@ -12,7 +11,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
     @IBOutlet weak var iconView: PlainTokenIconView!
-    @IBOutlet weak var chartView: CandleStickChartView!
+    @IBOutlet weak var chartView: CandlestickChartView!
     @IBOutlet weak var loadingIndicatorView: ActivityIndicatorView!
     @IBOutlet weak var timeFrameStackView: UIStackView!
     
@@ -88,12 +87,12 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
     }
     
-    func load(chart: CandleChartData?) {
+    func load(chart: [CandlestickChartView.Candle]?) {
         if let chart {
-            if let dataSet = chart.dataSets.first, dataSet.entryCount < 2 {
+            if chart.count < 2 {
                 showUnavailableView()
             } else {
-                chartView.data = chart
+                chartView.candles = chart
                 hideUnavailableView()
             }
             loadingIndicatorView.stopAnimating()

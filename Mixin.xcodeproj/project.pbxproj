@@ -723,7 +723,6 @@
 		940FC50D2F502C49000C4260 /* OpenPerpetualActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FC50C2F502C48000C4260 /* OpenPerpetualActionView.swift */; };
 		940FC5222F5031D7000C4260 /* PerpetualMarketPriceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940FC5212F5031D7000C4260 /* PerpetualMarketPriceCell.xib */; };
 		940FC5232F5031D7000C4260 /* PerpetualMarketPriceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FC5202F5031D7000C4260 /* PerpetualMarketPriceCell.swift */; };
-		940FC5382F50388E000C4260 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = 940FC5372F50388E000C4260 /* DGCharts */; };
 		940FC5E02CDBC30D0056BFF2 /* ExportMnemonicPhrasesIntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FC5DF2CDBC3080056BFF2 /* ExportMnemonicPhrasesIntroductionViewController.swift */; };
 		940FC5E52CDBC4330056BFF2 /* ExportMnemonicPhrasesValidationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FC5E42CDBC42A0056BFF2 /* ExportMnemonicPhrasesValidationViewController.swift */; };
 		940FC5EB2CDBC4F10056BFF2 /* ViewMnemonicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FC5EA2CDBC4B30056BFF2 /* ViewMnemonicsViewController.swift */; };
@@ -784,6 +783,7 @@
 		941C75DE2F5EA417005B70A9 /* PerpetualPositionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C75DD2F5EA413005B70A9 /* PerpetualPositionType.swift */; };
 		941C762B2F5ECEFD005B70A9 /* LeverageLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C762A2F5ECEFA005B70A9 /* LeverageLabel.swift */; };
 		941C764B2F5EFB10005B70A9 /* TradeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C764A2F5EFB0A005B70A9 /* TradeURL.swift */; };
+		941C768C2F5F1FA5005B70A9 /* CandlestickChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C768B2F5F1FA0005B70A9 /* CandlestickChartView.swift */; };
 		941C9CE8298E57BD00CB760E /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941C9CE6298E57BD00CB760E /* AuthenticationViewController.swift */; };
 		941C9CE9298E57BD00CB760E /* AuthenticationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 941C9CE7298E57BD00CB760E /* AuthenticationView.xib */; };
 		941CAE00276A3F17008F42D6 /* WebPImageDecoderInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */; };
@@ -2631,6 +2631,7 @@
 		941C75DD2F5EA413005B70A9 /* PerpetualPositionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualPositionType.swift; sourceTree = "<group>"; };
 		941C762A2F5ECEFA005B70A9 /* LeverageLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeverageLabel.swift; sourceTree = "<group>"; };
 		941C764A2F5EFB0A005B70A9 /* TradeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeURL.swift; sourceTree = "<group>"; };
+		941C768B2F5F1FA0005B70A9 /* CandlestickChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandlestickChartView.swift; sourceTree = "<group>"; };
 		941C9CE6298E57BD00CB760E /* AuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		941C9CE7298E57BD00CB760E /* AuthenticationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AuthenticationView.xib; sourceTree = "<group>"; };
 		941CADFF276A3F17008F42D6 /* WebPImageDecoderInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPImageDecoderInternal.swift; sourceTree = "<group>"; };
@@ -3691,7 +3692,6 @@
 				273A5E0C1F95EA5100AE802F /* Contacts.framework in Frameworks */,
 				F8E633655B9F4AE705C65155 /* Pods_Mixin.framework in Frameworks */,
 				94341BFA2862F302009C9147 /* libopus.xcframework in Frameworks */,
-				940FC5382F50388E000C4260 /* DGCharts in Frameworks */,
 				9481C03C2A49A9AA0009DAF8 /* Starscream in Frameworks */,
 				94ED938A2E37592700A3E337 /* ReownWalletKit in Frameworks */,
 				94D916EF2DC0C45E009B8A7F /* StoreKit.framework in Frameworks */,
@@ -4588,6 +4588,7 @@
 				94E065B02F5AC9BF0090F1BA /* PerpetualClosedPositionCell.swift */,
 				94F303382F5816E400FFF858 /* AllPerpetualMarketsViewController.swift */,
 				940FC4F72F502BA2000C4260 /* PerpetualMarketViewController.swift */,
+				941C768B2F5F1FA0005B70A9 /* CandlestickChartView.swift */,
 				940FC5212F5031D7000C4260 /* PerpetualMarketPriceCell.xib */,
 				940FC5202F5031D7000C4260 /* PerpetualMarketPriceCell.swift */,
 				940CA18F2F59593500914435 /* PerpetualMarketInfoCell.xib */,
@@ -6562,7 +6563,6 @@
 				94881FAB2AD035ED00CA7A29 /* RswiftLibrary */,
 				9479B7842BBBE589002A2C4F /* web3.swift */,
 				94ED93892E37592700A3E337 /* ReownWalletKit */,
-				940FC5372F50388E000C4260 /* DGCharts */,
 			);
 			productName = mixin;
 			productReference = 277FF6FF1F909A1200DBB2EB /* Mixin.app */;
@@ -6715,7 +6715,6 @@
 				94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
 				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */,
 				94ED93882E37592700A3E337 /* XCRemoteSwiftPackageReference "reown-swift" */,
-				940FC5362F50388E000C4260 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			productRefGroup = 277FF7001F909A1200DBB2EB /* Products */;
 			projectDirPath = "";
@@ -8309,6 +8308,7 @@
 				7B7264F0209C56E500F234BE /* TextLabel.swift in Sources */,
 				7B04142B240FA09F00BE8D73 /* LocationCell.swift in Sources */,
 				949114BF2F0B9C7300B16A16 /* SyncWeb3OutputJob.swift in Sources */,
+				941C768C2F5F1FA5005B70A9 /* CandlestickChartView.swift in Sources */,
 				7B869C72202D7FC8009930BA /* NumberPadButton.swift in Sources */,
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
 				944731682E71A17A00ACC49B /* SearchMarketViewController.swift in Sources */,
@@ -9477,14 +9477,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		940FC5362F50388E000C4260 /* XCRemoteSwiftPackageReference "Charts" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/danielgindi/Charts.git";
-			requirement = {
-				kind = exactVersion;
-				version = 5.1.0;
-			};
-		};
 		9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
@@ -9544,11 +9536,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		940FC5372F50388E000C4260 /* DGCharts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 940FC5362F50388E000C4260 /* XCRemoteSwiftPackageReference "Charts" */;
-			productName = DGCharts;
-		};
 		9416231929BEEFB800E540B9 /* OrderedCollections */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */;

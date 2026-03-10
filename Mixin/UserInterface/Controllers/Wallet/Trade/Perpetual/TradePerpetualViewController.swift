@@ -5,9 +5,9 @@ final class TradePerpetualViewController: UIViewController {
     
     private enum Section: Int, CaseIterable {
         case value
-        case openPositions
+        case positions
         case markets
-        case closedPositions
+        case activity
         case introduction
     }
     
@@ -106,11 +106,11 @@ final class TradePerpetualViewController: UIViewController {
                 return switch Section(rawValue: sectionIndex)! {
                 case .value:
                     oneCell(estimatedHeight: 94)
-                case .openPositions:
+                case .positions:
                     multipleCells(itemCount: self?.openPositions?.count)
                 case .markets:
                     multipleCells(itemCount: self?.markets?.count)
-                case .closedPositions:
+                case .activity:
                     multipleCells(itemCount: self?.closedPositions?.count)
                 case .introduction:
                     oneCell(estimatedHeight: 90)
@@ -245,7 +245,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
         switch Section(rawValue: section)! {
         case .value, .introduction:
             1
-        case .openPositions:
+        case .positions:
             if let count = openPositions?.count, count != 0 {
                 min(maxItemCount, count)
             } else {
@@ -257,7 +257,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             } else {
                 1
             }
-        case .closedPositions:
+        case .activity:
             if let count = closedPositions?.count, count != 0 {
                 min(maxItemCount, count)
             } else {
@@ -271,7 +271,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
         case .value:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_positions_value, for: indexPath)!
             return cell
-        case .openPositions:
+        case .positions:
             if let openPositions, !openPositions.isEmpty {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
                 let position = openPositions[indexPath.item]
@@ -285,7 +285,6 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 } else {
                     cell.activityIndicatorView.stopAnimating()
                     cell.emptyIndicatorStackView.isHidden = false
-                    cell.titleLabel.text = R.string.localizable.no_position().uppercased()
                     cell.onHelp = { [weak self] in
                         self?.presentPerpsManual()
                     }
@@ -313,7 +312,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 }
                 return cell
             }
-        case .closedPositions:
+        case .activity:
             if let closedPositions, !closedPositions.isEmpty {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
                 let viewModel = closedPositions[indexPath.item]
@@ -346,11 +345,11 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             switch Section(rawValue: indexPath.section)! {
             case .value, .introduction:
                 break
-            case .openPositions:
+            case .positions:
                 view.label.text = if let count = openPositions?.count {
-                    R.string.localizable.open_positions_count(count)
+                    R.string.localizable.positions_count(count)
                 } else {
-                    R.string.localizable.open_positions()
+                    R.string.localizable.positions()
                 }
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewOpenPositions()
@@ -360,8 +359,8 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewAllMarkets()
                 }
-            case .closedPositions:
-                view.label.text = R.string.localizable.closed_positions()
+            case .activity:
+                view.label.text = R.string.localizable.perps_activity()
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewClosedPositions()
                 }
@@ -372,7 +371,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             switch Section(rawValue: indexPath.section)! {
             case .value, .introduction:
                 break
-            case .openPositions:
+            case .positions:
                 view.viewAllButton.isHidden = (openPositions?.count ?? 0) <= maxItemCount
                 view.onViewAll = { [weak self] (sender) in
                     self?.viewOpenPositions()
@@ -382,7 +381,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 view.onViewAll = { [weak self] (sender) in
                     self?.viewAllMarkets()
                 }
-            case .closedPositions:
+            case .activity:
                 view.viewAllButton.isHidden = (closedPositions?.count ?? 0) <= maxItemCount
                 view.onViewAll = { [weak self] (sender) in
                     self?.viewClosedPositions()
@@ -400,7 +399,7 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
         switch Section(rawValue: indexPath.section)! {
         case .value:
             break
-        case .openPositions:
+        case .positions:
             if let position = openPositions?[indexPath.item],
                let market = PerpsMarketDAO.shared.market(marketID: position.marketID),
                let viewModel = PerpetualMarketViewModel(market: market)
@@ -413,7 +412,7 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
                 let market = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
                 navigationController?.pushViewController(market, animated: true)
             }
-        case .closedPositions:
+        case .activity:
             if let position = closedPositions?[indexPath.item],
                let market = PerpsMarketDAO.shared.market(marketID: position.marketID),
                let viewModel = PerpetualMarketViewModel(market: market)
@@ -465,7 +464,7 @@ extension TradePerpetualViewController {
                 }
                 self.openPositions = openPositions
                 self.collectionView.reloadSections(
-                    IndexSet(integer: Section.openPositions.rawValue)
+                    IndexSet(integer: Section.positions.rawValue)
                 )
             }
         }
@@ -486,7 +485,7 @@ extension TradePerpetualViewController {
                 }
                 self.closedPositions = closedPositions
                 self.collectionView.reloadSections(
-                    IndexSet(integer: Section.closedPositions.rawValue)
+                    IndexSet(integer: Section.activity.rawValue)
                 )
             }
         }

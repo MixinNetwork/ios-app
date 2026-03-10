@@ -13,6 +13,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var chartView: CandlestickChartView!
     @IBOutlet weak var loadingIndicatorView: ActivityIndicatorView!
+    @IBOutlet weak var timeFrameScrollView: UIScrollView!
     @IBOutlet weak var timeFrameStackView: UIStackView!
     
     weak var delegate: Delegate?
@@ -35,17 +36,22 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )
+        timeFrameScrollView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         for (i, timeFrame) in PerpetualTimeFrame.allCases.enumerated() {
             var config: UIButton.Configuration = .filled()
             let title = switch timeFrame {
-            case .hour:
-                "1H"
-            case .day:
+            case .oneMinute:
+                R.string.localizable.minutes_count_short(1)
+            case .fiveMinutes:
+                R.string.localizable.minutes_count_short(5)
+            case .oneHour:
+                R.string.localizable.hours_count_short(1)
+            case .fourHours:
+                R.string.localizable.hours_count_short(4)
+            case .oneDay:
                 R.string.localizable.days_count_short(1)
-            case .week:
+            case .oneWeek:
                 R.string.localizable.weeks_count_short(1)
-            case .month:
-                R.string.localizable.months_count_short(1)
             }
             var attributes = AttributeContainer()
             attributes.font = UIFontMetrics.default.scaledFont(
@@ -69,6 +75,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
                 button.configuration = config
             }
             button.tag = i
+            button.setContentCompressionResistancePriority(.required, for: .horizontal)
             timeFrameStackView.addArrangedSubview(button)
             button.addTarget(self, action: #selector(changeTimeFrame(_:)), for: .touchUpInside)
         }

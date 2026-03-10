@@ -37,7 +37,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
         layoutTableHeaderView(
-            title: "Closing Position",
+            title: R.string.localizable.closing_position(),
             subtitle: R.string.localizable.signature_request_from(.mixin)
         )
         replaceTrayView(with: nil, animation: .vertical)

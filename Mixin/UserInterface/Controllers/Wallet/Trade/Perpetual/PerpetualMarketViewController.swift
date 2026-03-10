@@ -16,7 +16,7 @@ final class PerpetualMarketViewController: UIViewController {
     private let maxItemCount = 3
     
     private var sections: [Section] = [.price, .info]
-    private var selectedTimeFrame: PerpetualTimeFrame = .day
+    private var selectedTimeFrame: PerpetualTimeFrame = .oneDay
     private var charts: [PerpetualTimeFrame: [CandlestickChartView.Candle]] = [:]
     
     private weak var collectionView: UICollectionView!
@@ -404,7 +404,7 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
             switch sections[indexPath.section] {
             case .closedPositions:
-                view.label.text = R.string.localizable.closed_positions()
+                view.label.text = R.string.localizable.perps_activity()
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewClosedPositions()
                 }

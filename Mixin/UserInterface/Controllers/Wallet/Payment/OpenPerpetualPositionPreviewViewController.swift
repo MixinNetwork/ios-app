@@ -24,7 +24,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         super.viewDidLoad()
         
         tableHeaderView.setTokenIcon(url: context.viewModel.iconURL)
-        tableHeaderView.titleLabel.text = "确认开仓"
+        tableHeaderView.titleLabel.text = R.string.localizable.confirm_opening_position()
         tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixin)
         
         let multiplier = PerpetualLeverage.stringRepresentation(
@@ -69,10 +69,10 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 primary: direction,
                 secondary: profit,
             ),
-            .info(caption: .string("Amount (Isolated)"), content: amount),
+            .info(caption: .string(R.string.localizable.amount_isolated()), content: amount),
             .info(caption: .string(R.string.localizable.entry_price()), content: context.viewModel.price),
             .doubleLineInfo(
-                caption: .string("Estimated Liquidation Price"),
+                caption: .string(R.string.localizable.estimated_liquidation_price()),
                 primary: liquidationPrice,
                 secondary: liquidation
             ),
@@ -94,7 +94,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
         layoutTableHeaderView(
-            title: "Opening Position",
+            title: R.string.localizable.opening_position(),
             subtitle: R.string.localizable.signature_request_from(.mixin)
         )
         replaceTrayView(with: nil, animation: .vertical)
@@ -106,7 +106,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
                     layoutTableHeaderView(
-                        title: "Position Opened",
+                        title: R.string.localizable.position_opened(),
                         subtitle: "您的开仓已成功。"
                     )
                     tableView.setContentOffset(.zero, animated: true)

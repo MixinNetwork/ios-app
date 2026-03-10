@@ -128,7 +128,6 @@
 "all_dates" = "All Dates";
 "all_invoices" = "All Invoices";
 "all_markets" = "All Markets";
-"all_positions" = "All Positions";
 "all_signer_failure" = "All node failure";
 "all_time_high" = "All Time High";
 "all_time_low" = "All Time Low";
@@ -148,6 +147,7 @@
 "allow_manual_report_message" = "メッセージ単位の報告を許可";
 "alphabetical" = "Alphabetical";
 "amount" = "数量";
+"amount_isolated" = "Amount (Isolated)";
 "anonymous_number" = "匿名番号";
 "app_card_shareable_false" = "このカードを共有することはできません";
 "app_update_short_hint" = "Please update Mixin from App Store to continue use the service. Current version %@";
@@ -323,9 +323,9 @@
 "close_position" = "Close Position";
 "close_price" = "Close Price";
 "closed_long" = "Closed Long";
-"closed_positions" = "Closed Positions";
 "closed_short" = "Closed Short";
 "closing_balance" = "Closing Balance";
+"closing_position" = "Closing Position";
 "collectible" = "Collectible";
 "collectible_hash" = "Collectible Hash";
 "collectible_owner" = "Owner";
@@ -354,6 +354,7 @@
 "confirm_closing_position" = "Confirm Closing";
 "confirm_deleting_address" = "Delete Address";
 "confirm_editing_address" = "Confirm Editing Address";
+"confirm_opening_position" = "Confirm Opening";
 "confirm_signing_multisig" = "Confirm Signing Multisig";
 "confirm_transfer" = "Confirm Transfer";
 "confirm_withdrawal" = "Confirm Withdrawal";
@@ -637,6 +638,7 @@
 "error_withdrawal_memo_format_incorrect" = "エラー20131：出金メモのフォーマットが不正確です";
 "error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
 "estimated_balance_change" = "Balance Change (estimate)";
+"estimated_liquidation_price" = "Estimated Liquidation Price";
 "estimated_price" = "Estimated Price";
 "estimated_receive" = "Estimated Receive";
 "everybody" = "全員";
@@ -745,6 +747,7 @@
 "hour_count" = "%d時間";
 "hours_count_short" = "%dH";
 "how_are_you" = "こんにちは、調子はどうですか";
+"how_perps_works" = "How perps works?";
 "i_am_good" = "いい気分";
 "id" = "ID";
 "im_ready" = "I'm Ready";
@@ -827,6 +830,7 @@
 "last_active_time" = "直近のアクティビティ%@";
 "last_backup_hint" = "最後に行ったバックアップ %@, 合計サイズ %@.";
 "later" = "後で";
+"learn_how_to_trade_perps" = "Learn how to trade perps";
 "learn_more" = "こちら";
 "leave_message_to_team_mixin" = "Leave a message to Team Mixin";
 "legacy_network" = "Legacy Network";
@@ -921,6 +925,7 @@
 "minimum_withdrawal" = "Minimum Withdrawal";
 "minute" = "%d 分";
 "minute_count" = "%d分間";
+"minutes_count_short" = "%dm";
 "mixin" = "Mixin";
 "mixin_contact" = "Mixin Contact";
 "mixin_id_or_phone" = "Mixin ID, 電話番号";
@@ -1075,13 +1080,12 @@
 "open_link" = "リンクを開く: %@";
 "open_orders_count" = "Open Orders (%d)";
 "open_position" = "Open Position";
-"open_positions" = "Open Positions";
-"open_positions_count" = "Open Positions(%d)";
 "open_source" = "Copyright Mixin\nLicensed under the GPLv3";
 "open_url" = "URLを開く";
 "opened_long" = "Opened Long";
 "opened_short" = "Opened Short";
 "opening_balance" = "Opening Balance";
+"opening_position" = "Opening Position";
 "operation_failed" = "操作が失敗しました。しばらくしてからもう一度お試しください";
 "opponents" = "Opponents";
 "optimize_database" = "データベースの最適化";
@@ -1132,6 +1136,7 @@
 "permissions" = "許可";
 "perpetual" = "Perpetual";
 "perpetual_futures" = "Perpetual Futures";
+"perps_activity" = "Activity";
 "perps_intro_overview" = "Mixin Perpetual Futures are a type of derivatives trading settled in digital assets. They allow traders to go long or short with no expiration date. Through leverage, traders can amplify their position size and capture opportunities from both rising and falling market prices.";
 "perps_intro_risk_notice_1" = "Leveraged trading amplifies both profits and losses";
 "perps_intro_risk_notice_2" = "Positions may be forcibly liquidated if margin becomes insufficient";
@@ -1191,7 +1196,10 @@
 "pnl_rules" = "PnL Rules:";
 "position" = "Position";
 "position_closed" = "Position Closed";
+"position_opened" = "Position Opened";
 "position_value" = "Position Value";
+"positions" = "Positions";
+"positions_count" = "Positions(%d)";
 "post" = "投稿";
 "post_sharing" = "投稿";
 "preauthorize_amount" = "Pre-authorize Amount";

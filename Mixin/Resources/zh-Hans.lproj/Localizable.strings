@@ -128,7 +128,6 @@
 "all_dates" = "所有日期";
 "all_invoices" = "全部账单";
 "all_markets" = "全部合约";
-"all_positions" = "全部仓位";
 "all_signer_failure" = "所有节点失败";
 "all_time_high" = "历史最高";
 "all_time_low" = "历史最低";
@@ -148,6 +147,7 @@
 "allow_manual_report_message" = "允许手动上报消息";
 "alphabetical" = "按字母顺序";
 "amount" = "金额";
+"amount_isolated" = "保证金（逐仓）";
 "anonymous_number" = "匿名号码";
 "app_card_shareable_false" = "该卡片已被设置为不允许转发";
 "app_update_short_hint" = "请从 App Store 更新 Mixin 至最新版，当前版本号 %@";
@@ -323,9 +323,9 @@
 "close_position" = "关仓";
 "close_price" = "关仓价格";
 "closed_long" = "历史多单";
-"closed_positions" = "仓位历史";
 "closed_short" = "历史空单";
 "closing_balance" = "期末余额";
+"closing_position" = "正在关仓";
 "collectible" = "藏品";
 "collectible_hash" = "藏品哈希";
 "collectible_owner" = "拥有者";
@@ -354,6 +354,7 @@
 "confirm_closing_position" = "确认关仓";
 "confirm_deleting_address" = "删除地址确认";
 "confirm_editing_address" = "修改地址确认";
+"confirm_opening_position" = "确认开仓";
 "confirm_signing_multisig" = "多签交易确认";
 "confirm_transfer" = "转账确认";
 "confirm_withdrawal" = "提现确认";
@@ -637,6 +638,7 @@
 "error_withdrawal_memo_format_incorrect" = "错误 20131：提现备注格式不正确";
 "error_withdrawal_suspend" = "错误 20137：提现暂停";
 "estimated_balance_change" = "余额变动（预估）";
+"estimated_liquidation_price" = "预估清算价格";
 "estimated_price" = "预计价格";
 "estimated_receive" = "预计收到";
 "everybody" = "任何人";
@@ -745,6 +747,7 @@
 "hour_count" = "%d 小时";
 "hours_count_short" = "%d小时";
 "how_are_you" = "嗨，你好吗？";
+"how_perps_works" = "永续合约是什么？";
 "i_am_good" = "我很好。";
 "id" = "ID";
 "im_ready" = "准备好了";
@@ -827,6 +830,7 @@
 "last_active_time" = "最后登入于 %@";
 "last_backup_hint" = "上次备份是 %@，占用空间 %@。";
 "later" = "稍后";
+"learn_how_to_trade_perps" = "了解如何交易永续合约";
 "learn_more" = "了解更多";
 "leave_message_to_team_mixin" = "给 Mixin 客服留言";
 "legacy_network" = "旧网络";
@@ -921,6 +925,7 @@
 "minimum_withdrawal" = "最小提现数量";
 "minute" = "%d 分钟";
 "minute_count" = "%d 分钟";
+"minutes_count_short" = "%d分钟";
 "mixin" = "Mixin";
 "mixin_contact" = "Mixin 联系人";
 "mixin_id_or_phone" = "Mixin ID 或手机号";
@@ -1075,13 +1080,12 @@
 "open_link" = "打开链接：%@";
 "open_orders_count" = "当前委托（%d）";
 "open_position" = "开仓";
-"open_positions" = "持有仓位";
-"open_positions_count" = "持有仓位(%d)";
 "open_source" = "版权所有 Mixin\n根据 GPL-3.0 授权许可";
 "open_url" = "打开链接";
 "opened_long" = "持有多单";
 "opened_short" = "持有空单";
 "opening_balance" = "期初余额";
+"opening_position" = "正在开仓";
 "operation_failed" = "操作失败，请稍后重试";
 "opponents" = "收发人";
 "optimize_database" = "优化查询索引";
@@ -1132,6 +1136,7 @@
 "permissions" = "权限列表";
 "perpetual" = "永续合约";
 "perpetual_futures" = "永续合约";
+"perps_activity" = "历史记录";
 "perps_intro_overview" = "Mixin 永续合约是一种以数字资产结算的衍生品交易方式，支持做多和做空，无到期日。通过杠杆机制，交易者可以放大仓位，把握价格上涨或下跌带来的交易机会。";
 "perps_intro_risk_notice_1" = "杠杆交易可能放大收益，同时也会放大亏损";
 "perps_intro_risk_notice_2" = "当保证金不足时，仓位可能被强制平仓";
@@ -1191,7 +1196,10 @@
 "pnl_rules" = "盈亏规则：";
 "position" = "仓位";
 "position_closed" = "仓位已关闭";
+"position_opened" = "仓位已打开";
 "position_value" = "仓位价值";
+"positions" = "仓位";
+"positions_count" = "仓位(%d)";
 "post" = "文章";
 "post_sharing" = "文章";
 "preauthorize_amount" = "预授权额度";

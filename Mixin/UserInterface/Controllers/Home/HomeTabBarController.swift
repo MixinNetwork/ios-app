@@ -141,7 +141,6 @@ final class HomeTabBarController: UIViewController {
     
     @objc private func reloadItemBadges() {
         var items = tabBar.items
-        items[ChildID.wallet.rawValue].badge = !BadgeManager.shared.hasViewed(identifier: .walletTab)
         items[ChildID.more.rawValue].badge = !BadgeManager.shared.hasViewed(identifier: .moreTab)
         tabBar.items = items
     }
@@ -164,7 +163,6 @@ final class HomeTabBarController: UIViewController {
             newChild = homeViewController
         case .wallet:
             newChild = walletContainerViewController
-            BadgeManager.shared.setHasViewed(identifier: .walletTab)
         case .market:
             newChild = marketDashboardViewController
         case .more:

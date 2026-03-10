@@ -22,8 +22,8 @@ final class PerpetualPositionViewController: UIViewController {
         self.viewModel = viewModel
         self.infos = {
             var infos: [Info] = []
-            if let product = viewModel.product {
-                infos.append(.product(iconURL: viewModel.iconURL, name: product))
+            if let displaySymbol = viewModel.displaySymbol {
+                infos.append(.product(iconURL: viewModel.iconURL, name: displaySymbol))
             }
             infos.append(contentsOf: [
                 .orderValue(
@@ -50,7 +50,16 @@ final class PerpetualPositionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = viewModel.title
+        title = switch (viewModel.state, viewModel.side) {
+        case (.open, .long):
+            "Opened Long"
+        case (.open, .short):
+            "Opened Short"
+        case (.closed, .long):
+            "Closed Long"
+        case (.closed, .short):
+            "Closed Short"
+        }
         navigationItem.rightBarButtonItem = .customerService(
             target: self,
             action: #selector(presentCustomerService(_:))
@@ -151,7 +160,7 @@ extension PerpetualPositionViewController: UICollectionViewDataSource {
             case let .product(iconURL, name):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_product, for: indexPath)!
                 cell.iconView.setIcon(tokenIconURL: iconURL)
-                cell.productLabel.text = name
+                cell.nameLabel.text = name
                 return cell
             case let .orderValue(token, fiatMoney):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_info, for: indexPath)!

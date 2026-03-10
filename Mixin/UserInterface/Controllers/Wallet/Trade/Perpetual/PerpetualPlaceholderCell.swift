@@ -5,6 +5,7 @@ final class PerpetualPlaceholderCell: UICollectionViewCell {
     @IBOutlet weak var emptyIndicatorStackView: UIStackView!
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var helpButton: UIButton!
     @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
     
     var onHelp: (() -> Void)?

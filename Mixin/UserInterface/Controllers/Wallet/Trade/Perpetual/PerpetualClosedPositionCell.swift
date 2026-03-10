@@ -37,7 +37,8 @@ final class PerpetualClosedPositionCell: UICollectionViewCell {
             leverageLabel.color = .short
         }
         valueLabel.text = viewModel.orderValueInToken
-        changeLabel.text = "Under Construction"
+        changeLabel.text = viewModel.pnl
+        changeLabel.marketColor = viewModel.pnlColor
     }
     
 }

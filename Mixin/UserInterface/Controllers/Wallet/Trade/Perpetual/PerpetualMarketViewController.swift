@@ -382,7 +382,7 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
                 cell.contentLabel.text = viewModel.volume
             case 1:
                 cell.titleLabel.text = "未平仓合约"
-                cell.contentLabel.text = "Under Construction"
+                cell.contentLabel.text = viewModel.amount
             default:
                 cell.titleLabel.text = "资金利率"
                 cell.contentLabel.text = viewModel.fundingRate
@@ -444,8 +444,10 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
         switch sections[indexPath.section] {
         case .price, .openPosition, .info:
             break
-        case .closedPositions:
-            break
+        case .closedPositions(let viewModels):
+            let viewModel = viewModels[indexPath.item]
+            let position = PerpetualPositionViewController(viewModel: viewModel)
+            navigationController?.pushViewController(position, animated: true)
         case .introduction:
             let manual = PerpsManual.viewController()
             present(manual, animated: true)

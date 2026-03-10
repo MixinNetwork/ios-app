@@ -4,7 +4,7 @@ final class PerpetualPositionProductCell: UICollectionViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var iconView: PlainTokenIconView!
-    @IBOutlet weak var productLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -13,7 +13,7 @@ final class PerpetualPositionProductCell: UICollectionViewCell {
             adjustForContentSize: true
         )
         titleLabel.text = "PERPETUAL"
-        productLabel.setFont(
+        nameLabel.setFont(
             scaledFor: .systemFont(ofSize: 16, weight: .medium),
             adjustForContentSize: true
         )

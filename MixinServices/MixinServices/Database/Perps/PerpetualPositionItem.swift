@@ -3,23 +3,23 @@ import Foundation
 public final class PerpetualPositionItem: PerpetualPosition {
     
     enum JoinedQueryCodingKeys: String, CodingKey {
-        case symbol = "symbol"
-        case product = "product"
+        case tokenSymbol = "token_symbol"
+        case displaySymbol = "display_symbol"
         case iconURL = "icon_url"
     }
     
-    public let symbol: String
-    public let product: String?
+    public let tokenSymbol: String
+    public let displaySymbol: String?
     public let iconURL: URL?
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: JoinedQueryCodingKeys.self)
-        let symbol = try container.decodeIfPresent(String.self, forKey: .symbol)
-        let product = try container.decodeIfPresent(String.self, forKey: .product)
+        let tokenSymbol = try container.decodeIfPresent(String.self, forKey: .tokenSymbol)
+        let displaySymbol = try container.decodeIfPresent(String.self, forKey: .displaySymbol)
         let iconURL = try container.decodeIfPresent(String.self, forKey: .iconURL)
         
-        self.symbol = symbol ?? ""
-        self.product = product
+        self.tokenSymbol = tokenSymbol ?? "⍰"
+        self.displaySymbol = displaySymbol
         self.iconURL = if let iconURL {
             URL(string: iconURL)
         } else {

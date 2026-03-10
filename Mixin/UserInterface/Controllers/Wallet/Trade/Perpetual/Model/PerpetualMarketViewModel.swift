@@ -12,6 +12,7 @@ struct PerpetualMarketViewModel {
     let decimalPrice: Decimal
     let price: String
     let volume: String
+    let amount: String
     let fundingRate: String
     let change: String
     let changeColor: MarketColor
@@ -22,6 +23,7 @@ struct PerpetualMarketViewModel {
             let change = Decimal(string: m.change, locale: .enUSPOSIX),
             let changePercentage = NumberFormatter.percentage.string(decimal: change / 100),
             let decimalVolume = Decimal(string: m.volume, locale: .enUSPOSIX),
+            let decimalAmount = Decimal(string: m.amount, locale: .enUSPOSIX),
             let decimalFundingRate = Decimal(string: m.fundingRate, locale: .enUSPOSIX)
         else {
             return nil
@@ -43,6 +45,10 @@ struct PerpetualMarketViewModel {
             number: decimalVolume,
             currencyPrefix: true
         ) ?? m.volume
+        self.amount = NamedLargeNumberFormatter.string(
+            number: decimalAmount,
+            currencyPrefix: true
+        ) ?? m.amount
         self.fundingRate = PercentageFormatter.string(
             from: decimalFundingRate,
             format: .precision,

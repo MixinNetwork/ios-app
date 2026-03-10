@@ -67,6 +67,7 @@
             <connections>
                 <outlet property="activityIndicatorView" destination="8za-5G-VrX" id="YKZ-jK-5Y1"/>
                 <outlet property="emptyIndicatorStackView" destination="6Hs-Zb-Lcj" id="RPc-c0-nWV"/>
+                <outlet property="helpButton" destination="W10-cJ-1wn" id="0PO-q2-5Z8"/>
                 <outlet property="iconImageView" destination="ogg-Ky-rjG" id="X7R-jp-Fz7"/>
                 <outlet property="titleLabel" destination="ZV4-q9-rU1" id="bgD-to-aS5"/>
             </connections>

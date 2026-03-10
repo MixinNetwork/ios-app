@@ -50,8 +50,8 @@ final class PerpetualMarketCell: UICollectionViewCell {
         }
         priceLabel.text = viewModel.orderValueInFiatMoney
         volumeLabel.text = viewModel.orderValueInToken
-        changeLabel.text = "Under Construction"
-        changeLabel.marketColor = .falling
+        changeLabel.text = viewModel.pnl
+        changeLabel.marketColor = viewModel.pnlColor
     }
     
 }

@@ -24,8 +24,8 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         tableHeaderView.subtitleTextView.text = R.string.localizable.signature_request_from(.mixin)
         
         var rows: [Row] = []
-        if let product = viewModel.product {
-            rows.append(.perpsProduct(iconURL: viewModel.iconURL, name: product))
+        if let name = viewModel.displaySymbol {
+            rows.append(.perpsProduct(iconURL: viewModel.iconURL, name: name))
         }
         rows.append(contentsOf: [
             .wallet(caption: .sender, wallet: viewModel.wallet, threshold: nil),

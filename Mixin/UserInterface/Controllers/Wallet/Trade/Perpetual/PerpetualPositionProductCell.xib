@@ -27,7 +27,7 @@
                                 <color key="textColor" name="text_quaternary"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="T2p-Cn-ksb">
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="T2p-Cn-ksb">
                                 <rect key="frame" x="0.0" y="24" width="311" height="24"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tk3-6V-s5B" customClass="PlainTokenIconView" customModule="Mixin" customModuleProvider="target">
@@ -39,7 +39,7 @@
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH - USD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FkE-A6-1YC">
-                                        <rect key="frame" x="27" y="2.3333333333333321" width="284" height="19.333333333333332"/>
+                                        <rect key="frame" x="32" y="2.3333333333333321" width="279" height="19.333333333333332"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
@@ -60,7 +60,7 @@
             <color key="backgroundColor" name="background"/>
             <connections>
                 <outlet property="iconView" destination="tk3-6V-s5B" id="LBI-Ea-NwT"/>
-                <outlet property="productLabel" destination="FkE-A6-1YC" id="sMA-YO-EWR"/>
+                <outlet property="nameLabel" destination="FkE-A6-1YC" id="sMA-YO-EWR"/>
                 <outlet property="titleLabel" destination="PPa-Ks-eE5" id="bn0-Kp-CeQ"/>
             </connections>
             <point key="canvasLocation" x="-821" y="152"/>

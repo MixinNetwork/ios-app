@@ -5,10 +5,10 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     
     @IBOutlet weak var pnlTitleLabel: UILabel!
-    @IBOutlet weak var pnlContentLabel: UILabel!
+    @IBOutlet weak var pnlContentLabel: MarketColoredLabel!
     
     @IBOutlet weak var directionTitleLabel: UILabel!
-    @IBOutlet weak var directionSideLabel: MarketColoredLabel!
+    @IBOutlet weak var directionSideLabel: UILabel!
     @IBOutlet weak var directionLeverageLabel: UILabel!
     
     @IBOutlet weak var orderValueTitleLabel: UILabel!
@@ -50,24 +50,27 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     func load(viewModel: PerpetualPositionViewModel) {
         titleLabel.text = "Open Position"
         pnlTitleLabel.text = "PNL"
-        pnlContentLabel.text = viewModel.pnl?.count
+        pnlContentLabel.text = viewModel.pnl
+        pnlContentLabel.marketColor = viewModel.pnlColor
         directionTitleLabel.text = "DIRECTION"
         switch viewModel.leverage {
         case .long(let value):
-            directionSideLabel.text = "Long"
+            directionSideLabel.text = R.string.localizable.long()
+            directionSideLabel.backgroundColor = MarketColor.rising.uiColor
             directionLeverageLabel.text = value
         case .short(let value):
-            directionSideLabel.text = "Short"
+            directionSideLabel.text = R.string.localizable.short()
+            directionSideLabel.backgroundColor = MarketColor.falling.uiColor
             directionLeverageLabel.text = value
         }
         orderValueTitleLabel.text = "ORDER VALUE"
-        orderValueContentLabel.text = "Under Construction"
-        amountTitleLabel.text = "AMOUNT"
-        amountContentLabel.text = "Under Construction"
+        orderValueContentLabel.text = viewModel.orderValueInToken
+        amountTitleLabel.text = R.string.localizable.amount().uppercased()
+        amountContentLabel.text = viewModel.orderValueInFiatMoney
         entryPriceTitleLabel.text = "ENTRY PRICE"
         entryPriceContentLabel.text = viewModel.entryPrice
         liquidationPriceTitleLabel.text = "LIQUIDATION PRICE"
-        entryPriceContentLabel.text = "Under Construction"
+        liquidationPriceContentLabel.text = viewModel.liquidationPrice
     }
     
 }

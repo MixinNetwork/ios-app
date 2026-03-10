@@ -32,7 +32,7 @@ final class AllPerpetualPositionsContentViewController: UIViewController {
         let config = UICollectionViewCompositionalLayoutConfiguration()
         config.interSectionSpacing = 10
         let layout = UICollectionViewCompositionalLayout(
-            sectionProvider: { (sectionIndex, _) in
+            sectionProvider: { [weak self] (sectionIndex, _) in
                 switch Section.allCases[sectionIndex] {
                 case .summary:
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(38))
@@ -42,7 +42,11 @@ final class AllPerpetualPositionsContentViewController: UIViewController {
                     section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                     return section
                 case .positions:
-                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
+                    let itemSize = if let self, !self.viewModels.isEmpty {
+                        NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
+                    } else {
+                        NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(150))
+                    }
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
                     let section = NSCollectionLayoutSection(group: group)
@@ -70,6 +74,7 @@ final class AllPerpetualPositionsContentViewController: UIViewController {
         collectionView.register(R.nib.perpetualPositionValueCell)
         collectionView.register(R.nib.perpetualMarketCell)
         collectionView.register(R.nib.perpetualClosedPositionCell)
+        collectionView.register(R.nib.perpetualPlaceholderCell)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
@@ -85,11 +90,6 @@ final class AllPerpetualPositionsContentViewController: UIViewController {
                     }
                     self.viewModels = viewModels
                     self.collectionView.reloadData()
-                    self.collectionView.checkEmpty(
-                        dataCount: viewModels.count,
-                        text: "NO POSITION",
-                        photo: R.image.emptyIndicator.ic_data()!
-                    )
                 }
             }
         case .closed:
@@ -126,11 +126,6 @@ final class AllPerpetualPositionsContentViewController: UIViewController {
                         self.collectionView.insertItems(at: items)
                     }
                 }
-                self.collectionView.checkEmpty(
-                    dataCount: self.viewModels.count,
-                    text: "NO POSITION",
-                    photo: R.image.emptyIndicator.ic_data()!
-                )
                 if hasMore {
                     self.loadNextPageIndexPath = IndexPath(
                         item: self.viewModels.count - 3,
@@ -153,7 +148,7 @@ extension AllPerpetualPositionsContentViewController: UICollectionViewDataSource
         if section == 0 {
             1
         } else {
-            viewModels.count
+            max(1, viewModels.count)
         }
     }
     
@@ -163,16 +158,23 @@ extension AllPerpetualPositionsContentViewController: UICollectionViewDataSource
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_positions_value, for: indexPath)!
             return cell
         case .positions:
-            let viewModel = viewModels[indexPath.item]
-            switch content {
-            case .open:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
-                cell.load(viewModel: viewModel)
+            if viewModels.isEmpty {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_placeholder, for: indexPath)!
+                cell.activityIndicatorView.stopAnimating()
+                cell.helpButton.isHidden = true
                 return cell
-            case .closed:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_closed_position, for: indexPath)!
-                cell.load(viewModel: viewModel)
-                return cell
+            } else {
+                let viewModel = viewModels[indexPath.item]
+                switch content {
+                case .open:
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
+                    cell.load(viewModel: viewModel)
+                    return cell
+                case .closed:
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_closed_position, for: indexPath)!
+                    cell.load(viewModel: viewModel)
+                    return cell
+                }
             }
         }
     }

@@ -10,8 +10,8 @@ public final class PerpsPositionDAO: PerpsDAO {
     
     private static let itemSQL = """
     SELECT p.*,
-        m.token_symbol AS \(PerpetualPositionItem.JoinedQueryCodingKeys.symbol.rawValue),
-        m.symbol AS \(PerpetualPositionItem.JoinedQueryCodingKeys.product.rawValue),
+        m.token_symbol AS \(PerpetualPositionItem.JoinedQueryCodingKeys.tokenSymbol.rawValue),
+        m.display_symbol AS \(PerpetualPositionItem.JoinedQueryCodingKeys.displaySymbol.rawValue),
         m.icon_url AS \(PerpetualPositionItem.JoinedQueryCodingKeys.iconURL.rawValue)
     FROM positions p
         LEFT JOIN markets m ON p.product_id = m.market_id

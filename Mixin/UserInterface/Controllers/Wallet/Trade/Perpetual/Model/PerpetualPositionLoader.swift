@@ -20,7 +20,7 @@ final class PerpetualPositionLoader {
             return
         }
         let timer: Timer = .scheduledTimer(
-            withTimeInterval: 10,
+            withTimeInterval: 3,
             repeats: true
         ) { [walletID] (timer) in
             RouteAPI.positions(

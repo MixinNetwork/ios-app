@@ -66,7 +66,7 @@
                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pf5-pn-AFm">
                         <rect key="frame" x="0.0" y="322" width="335" height="26"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="288" placeholderIntrinsicHeight="26" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="QXD-3f-oO9">
+                            <stackView opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="288" placeholderIntrinsicHeight="26" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="QXD-3f-oO9">
                                 <rect key="frame" x="0.0" y="0.0" width="335" height="26"/>
                             </stackView>
                         </subviews>
@@ -75,7 +75,7 @@
                             <constraint firstItem="QXD-3f-oO9" firstAttribute="height" secondItem="p0g-ns-VGd" secondAttribute="height" id="BY7-x0-7lS"/>
                             <constraint firstAttribute="height" constant="26" id="TKX-va-HYc"/>
                             <constraint firstItem="QXD-3f-oO9" firstAttribute="bottom" secondItem="im3-4d-agR" secondAttribute="bottom" id="TWT-zR-d29"/>
-                            <constraint firstItem="QXD-3f-oO9" firstAttribute="width" secondItem="p0g-ns-VGd" secondAttribute="width" priority="500" id="UGg-Um-QQj"/>
+                            <constraint firstItem="QXD-3f-oO9" firstAttribute="width" secondItem="p0g-ns-VGd" secondAttribute="width" priority="999" id="UGg-Um-QQj"/>
                             <constraint firstItem="im3-4d-agR" firstAttribute="leading" secondItem="QXD-3f-oO9" secondAttribute="leading" id="kyY-wS-wwM"/>
                             <constraint firstItem="QXD-3f-oO9" firstAttribute="trailing" secondItem="im3-4d-agR" secondAttribute="trailing" id="pO4-df-33G"/>
                         </constraints>

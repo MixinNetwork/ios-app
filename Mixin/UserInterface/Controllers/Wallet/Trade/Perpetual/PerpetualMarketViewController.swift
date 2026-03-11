@@ -162,10 +162,7 @@ final class PerpetualMarketViewController: UIViewController {
         collectionView.delegate = self
         collectionView.reloadData()
         
-        reloadPriceChartFromLocal(
-            timeFrame: selectedTimeFrame,
-            reloadFromRemoteAfterFinished: true
-        )
+        reloadPriceChartFromRemote(timeFrame: selectedTimeFrame)
         reloadPositions()
     }
     
@@ -273,30 +270,6 @@ final class PerpetualMarketViewController: UIViewController {
         }
     }
     
-    private func reloadPriceChartFromLocal(
-        timeFrame: PerpetualTimeFrame,
-        reloadFromRemoteAfterFinished: Bool
-    ) {
-        DispatchQueue.global().async { [weak self, viewModel] in
-            let candle = PerpsMarketCandlesDAO.shared.candle(
-                marketID: viewModel.market.marketID,
-                timeFrame: timeFrame.rawValue
-            )
-            let chart = candle?.asChartData()
-            DispatchQueue.main.async {
-                guard let self else {
-                    return
-                }
-                if let chart {
-                    self.load(chart: chart, for: timeFrame)
-                }
-                if reloadFromRemoteAfterFinished {
-                    self.reloadPriceChartFromRemote(timeFrame: timeFrame)
-                }
-            }
-        }
-    }
-    
     private func reloadPriceChartFromRemote(timeFrame: PerpetualTimeFrame) {
         RouteAPI.perpsMarketCandles(
             marketID: viewModel.market.marketID,
@@ -305,7 +278,6 @@ final class PerpetualMarketViewController: UIViewController {
         ) { [weak self] result in
             switch result {
             case .success(let candle):
-                PerpsMarketCandlesDAO.shared.save(candle: candle)
                 guard let chart = candle.asChartData() else {
                     return
                 }
@@ -463,13 +435,8 @@ extension PerpetualMarketViewController: PerpetualMarketPriceCell.Delegate {
         self.selectedTimeFrame = timeFrame
         if let chart = charts[timeFrame] {
             cell.load(chart: chart)
-            reloadPriceChartFromRemote(timeFrame: timeFrame)
-        } else {
-            reloadPriceChartFromLocal(
-                timeFrame: timeFrame,
-                reloadFromRemoteAfterFinished: true
-            )
         }
+        reloadPriceChartFromRemote(timeFrame: timeFrame)
     }
     
 }

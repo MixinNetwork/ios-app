@@ -27,6 +27,44 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         if let name = viewModel.displaySymbol {
             rows.append(.perpsProduct(iconURL: viewModel.iconURL, name: name))
         }
+        if let id = viewModel.openPayAssetID,
+           let payAmount = viewModel.openPayAmount,
+           let pnlPercentage = viewModel.pnlPercentage,
+           let token = TokenDAO.shared.tokenItem(assetID: id)
+        {
+            let count = CurrencyFormatter.localizedString(
+                from: payAmount * (1 + pnlPercentage),
+                format: .precision,
+                sign: .always,
+                symbol: .custom(token.symbol)
+            )
+            let pnl = NSMutableAttributedString(
+                string: R.string.localizable.pnl() + ": ",
+                attributes: [
+                    .font: UIFont.preferredFont(forTextStyle: .caption1),
+                    .foregroundColor: R.color.text_tertiary()!
+                ]
+            )
+            let pnlValue = CurrencyFormatter.localizedString(
+                from: payAmount * pnlPercentage,
+                format: .precision,
+                sign: .always,
+                symbol: .custom(token.symbol)
+            ) + "(" + PercentageFormatter.string(
+                from: pnlPercentage,
+                format: .pretty,
+                sign: .always,
+                options: .keepOneFractionDigitForZero
+            ) + ")"
+            pnl.append(NSAttributedString(
+                string: pnlValue,
+                attributes: [
+                    .font: UIFont.preferredFont(forTextStyle: .caption1),
+                    .foregroundColor: viewModel.pnlColor.uiColor
+                ]
+            ))
+            rows.append(.estimatedReceive(token: token, count: count, pnl: pnl))
+        }
         rows.append(contentsOf: [
             .wallet(caption: .sender, wallet: viewModel.wallet, threshold: nil),
         ])
@@ -42,6 +80,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         )
         replaceTrayView(with: nil, animation: .vertical)
         let positionID = viewModel.positionID
+        let walletID = viewModel.wallet.tradeOrderWalletID
         Task {
             do {
                 try await AccountAPI.verify(pin: pin)
@@ -66,6 +105,10 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                         }
                         navigationController.setViewControllers(viewControllers, animated: false)
                     }
+                }
+                DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
+                    let history = SyncPerpsPositionHistoryJob(walletID: walletID)
+                    ConcurrentJobQueue.shared.addJob(job: history)
                 }
             } catch {
                 let errorDescription = if let error = error as? MixinAPIError, PINVerificationFailureHandler.canHandle(error: error) {

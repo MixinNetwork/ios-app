@@ -54,6 +54,7 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.register(R.nib.authenticationPreviewWalletCell)
         tableView.register(R.nib.commonWalletReceiverCell)
         tableView.register(R.nib.waivedFeeCell)
+        tableView.register(R.nib.closePerpsReceiveCell)
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -272,10 +273,6 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
             }
             cell.reloadData(changes: changes)
             return cell
-        case let .perpsProduct(iconURL, name):
-            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
-            cell.reloadPerpsProduct(iconURL: iconURL, name: name)
-            return cell
         case let .safeMultisigAmount(token, tokenAmount, fiatMoneyAmount):
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.auth_preview_info, for: indexPath)!
             cell.captionLabel.text = R.string.localizable.total_amount().uppercased()
@@ -353,6 +350,18 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
                 cell.updatePrimaryLabel(text: fiatMoney)
                 cell.secondaryLabel.text = token
             }
+            return cell
+        case let .perpsProduct(iconURL, name):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
+            cell.reloadPerpsProduct(iconURL: iconURL, name: name)
+            return cell
+        case let .estimatedReceive(token, count, pnl):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.close_perps_receiving, for: indexPath)!
+            cell.titleLabel.text = R.string.localizable.estimated_receive().uppercased()
+            cell.iconView.setIcon(token: token)
+            cell.valueLabel.text = count
+            cell.networkLabel.text = token.chainName
+            cell.pnlLabel.attributedText = pnl
             return cell
         }
     }
@@ -479,6 +488,7 @@ extension AuthenticationPreviewViewController {
         case user(title: String, user: UserItem)
         case waivedFee(token: String, fiatMoney: String, display: AmountIntent)
         case perpsProduct(iconURL: URL?, name: String)
+        case estimatedReceive(token: MixinTokenItem, count: String, pnl: NSAttributedString)
     }
     
     struct TableHeaderViewStyle: OptionSet {

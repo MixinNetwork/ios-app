@@ -28,14 +28,13 @@ final class PerpetualClosedPositionCell: UICollectionViewCell {
     func load(viewModel: PerpetualPositionViewModel) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
         titleLabel.text = viewModel.directionWithSymbol
-        switch viewModel.leverage {
-        case .long(let value):
-            leverageLabel.text = value
+        switch viewModel.side {
+        case .long:
             leverageLabel.color = .long
-        case .short(let value):
-            leverageLabel.text = value
+        case .short:
             leverageLabel.color = .short
         }
+        leverageLabel.text = viewModel.leverageMultiplier
         valueLabel.text = viewModel.orderValueInToken
         changeLabel.text = viewModel.pnl
         changeLabel.marketColor = viewModel.pnlColor

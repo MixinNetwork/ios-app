@@ -18,7 +18,7 @@ public final class PerpetualPositionHistoryItem: PerpetualPositionHistory {
         let displaySymbol = try container.decodeIfPresent(String.self, forKey: .displaySymbol)
         let iconURL = try container.decodeIfPresent(String.self, forKey: .iconURL)
         
-        self.tokenSymbol = tokenSymbol ?? "⍰"
+        self.tokenSymbol = tokenSymbol ?? ""
         self.displaySymbol = displaySymbol
         self.iconURL = if let iconURL {
             URL(string: iconURL)

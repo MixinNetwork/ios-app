@@ -228,7 +228,8 @@ extension PerpetualPositionViewController: PillActionView.Delegate {
             let preview = ClosePerpetualPositionPreviewViewController(viewModel: viewModel)
             present(preview, animated: true)
         case .share:
-            showAutoHiddenHud(style: .error, text: "Under Construction")
+            let share = SharePerpetualPositionViewController(viewModel: viewModel)
+            present(share, animated: true)
         }
     }
     

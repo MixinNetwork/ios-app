@@ -16,6 +16,8 @@ public class PerpetualPosition: Codable, DatabaseColumnConvertible, MixinFetchab
         case unrealizedPnL = "unrealized_pnl"
         case roe = "roe"
         case settleAssetID = "settle_asset_id"
+        case openPayAmount = "open_pay_amount"
+        case openPayAssetID = "open_pay_asset_id"
         case botID = "bot_id"
         case walletID = "wallet_id"
         case createdAt = "created_at"
@@ -34,6 +36,8 @@ public class PerpetualPosition: Codable, DatabaseColumnConvertible, MixinFetchab
     public let unrealizedPnL: String
     public let roe: String
     public let settleAssetID: String
+    public let openPayAmount: String
+    public let openPayAssetID: String
     public let botID: String
     public let walletID: String
     public let createdAt: String

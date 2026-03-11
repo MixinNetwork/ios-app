@@ -22,11 +22,6 @@ struct PerpetualPositionViewModel {
         
     }
     
-    enum Leverage {
-        case long(String)
-        case short(String)
-    }
-    
     let wallet: Wallet
     let marketID: String
     let positionID: String
@@ -34,8 +29,9 @@ struct PerpetualPositionViewModel {
     let side: PerpetualOrderSide
     let iconURL: URL?
     let directionWithSymbol: String
-    let leverage: Leverage
+    let leverageMultiplier: String
     let pnl: String
+    let pnlPercentage: Decimal?
     let pnlColor: MarketColor
     let actions: [Action]
     let displaySymbol: String?
@@ -47,6 +43,8 @@ struct PerpetualPositionViewModel {
     let date: String
     
     // Only available for open positions
+    let openPayAssetID: String?
+    let openPayAmount: Decimal?
     let liquidationPrice: String?
     
     // Only available for closed positions
@@ -56,7 +54,7 @@ struct PerpetualPositionViewModel {
     init(wallet: Wallet, position: PerpetualPositionItem) {
         let pnl = Decimal(string: position.unrealizedPnL, locale: .enUSPOSIX) ?? 0
         let decimalEntryPrice = Decimal(string: position.entryPrice, locale: .enUSPOSIX)
-        let decimalQuantity = Decimal(string: position.quantity, locale: .enUSPOSIX)
+        let decimalQuantity = abs(Decimal(string: position.quantity, locale: .enUSPOSIX) ?? 0)
         let multiplier = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
         let side = PerpetualOrderSide(rawValue: position.side) ?? .short
         
@@ -69,41 +67,39 @@ struct PerpetualPositionViewModel {
         switch side {
         case .long:
             self.directionWithSymbol = R.string.localizable.long_asset(position.tokenSymbol)
-            self.leverage = .long(multiplier)
         case .short:
             self.directionWithSymbol = R.string.localizable.short_asset(position.tokenSymbol)
-            self.leverage = .short(multiplier)
         }
+        self.leverageMultiplier = multiplier
         self.pnl = CurrencyFormatter.localizedString(
             from: pnl * Currency.current.decimalRate,
             format: .precision,
             sign: .always,
             symbol: .currencySymbol
         )
+        if let decimalEntryPrice {
+            let entryValue = decimalQuantity * decimalEntryPrice
+            let nowValue = entryValue + pnl
+            self.pnlPercentage = nowValue / entryValue - 1
+        } else {
+            self.pnlPercentage = nil
+        }
         self.pnlColor = pnl >= 0 ? .rising : .falling
         self.actions = [.close, .share]
         self.displaySymbol = position.displaySymbol
-        self.quantity = if let decimalQuantity {
-            CurrencyFormatter.localizedString(
-                from: decimalQuantity,
-                format: .precision,
-                sign: .never,
-            )
-        } else {
-            ""
-        }
+        self.quantity = CurrencyFormatter.localizedString(
+            from: decimalQuantity,
+            format: .precision,
+            sign: .never,
+        )
         self.tokenSymbol = position.tokenSymbol
-        self.orderValueInToken = if let decimalQuantity {
-            CurrencyFormatter.localizedString(
-                from: decimalQuantity,
-                format: .precision,
-                sign: .never,
-                symbol: .custom(position.tokenSymbol)
-            )
-        } else {
-            ""
-        }
-        self.orderValueInFiatMoney = if let decimalQuantity, let decimalEntryPrice {
+        self.orderValueInToken = CurrencyFormatter.localizedString(
+            from: decimalQuantity,
+            format: .precision,
+            sign: .never,
+            symbol: .custom(position.tokenSymbol)
+        )
+        self.orderValueInFiatMoney = if let decimalEntryPrice {
             CurrencyFormatter.localizedString(
                 from: decimalQuantity * decimalEntryPrice * Currency.current.decimalRate,
                 format: .precision,
@@ -129,6 +125,8 @@ struct PerpetualPositionViewModel {
             position.createdAt
         }
         
+        self.openPayAssetID = position.openPayAssetID
+        self.openPayAmount = Decimal(string: position.openPayAmount, locale: .enUSPOSIX)
         self.liquidationPrice = if let decimalEntryPrice {
             PerpetualChangeSimulation.liquidationPrice(
                 side: side,
@@ -144,7 +142,7 @@ struct PerpetualPositionViewModel {
     
     init(wallet: Wallet, history: PerpetualPositionHistoryItem) {
         let side = PerpetualOrderSide(rawValue: history.side) ?? .short
-        let decimalQuantity = Decimal(string: history.quantity, locale: .enUSPOSIX)
+        let decimalQuantity = abs(Decimal(string: history.quantity, locale: .enUSPOSIX) ?? 0)
         let decimalEntryPrice = Decimal(string: history.entryPrice, locale: .enUSPOSIX)
         let decimalClosePrice = Decimal(string: history.closePrice, locale: .enUSPOSIX)
         let pnl = Decimal(string: history.realizedPnL, locale: .enUSPOSIX) ?? 0
@@ -159,44 +157,41 @@ struct PerpetualPositionViewModel {
         switch PerpetualOrderSide(rawValue: history.side) {
         case .long:
             self.directionWithSymbol = R.string.localizable.long_asset(history.tokenSymbol)
-            self.leverage = .long(multiplier)
         case .short:
             self.directionWithSymbol = R.string.localizable.short_asset(history.tokenSymbol)
-            self.leverage = .short(multiplier)
         default:
             self.directionWithSymbol = "\(history.side) \(history.tokenSymbol)"
-            self.leverage = .short(multiplier)
         }
+        self.leverageMultiplier = multiplier
         self.pnl = CurrencyFormatter.localizedString(
             from: pnl * Currency.current.decimalRate,
             format: .precision,
             sign: .always,
             symbol: .currencySymbol
         )
+        if let decimalEntryPrice {
+            let entryValue = decimalQuantity * decimalEntryPrice
+            let nowValue = entryValue + pnl
+            self.pnlPercentage = nowValue / entryValue - 1
+        } else {
+            self.pnlPercentage = nil
+        }
         self.pnlColor = pnl >= 0 ? .rising : .falling
         self.actions = [.tradeAgain, .share]
         self.displaySymbol = history.displaySymbol
-        self.quantity = if let decimalQuantity {
-            CurrencyFormatter.localizedString(
-                from: decimalQuantity,
-                format: .precision,
-                sign: .never,
-            )
-        } else {
-            ""
-        }
+        self.quantity = CurrencyFormatter.localizedString(
+            from: decimalQuantity,
+            format: .precision,
+            sign: .never,
+        )
         self.tokenSymbol = history.tokenSymbol
-        if let decimalQuantity {
-            self.orderValueInToken = CurrencyFormatter.localizedString(
-                from: decimalQuantity,
-                format: .precision,
-                sign: .never,
-                symbol: .custom(history.tokenSymbol)
-            )
-        } else {
-            self.orderValueInToken = "-"
-        }
-        if let decimalQuantity, let decimalEntryPrice {
+        self.orderValueInToken = CurrencyFormatter.localizedString(
+            from: decimalQuantity,
+            format: .precision,
+            sign: .never,
+            symbol: .custom(history.tokenSymbol)
+        )
+        if let decimalEntryPrice {
             self.orderValueInFiatMoney = CurrencyFormatter.localizedString(
                 from: decimalQuantity * decimalEntryPrice * Currency.current.decimalRate,
                 format: .precision,
@@ -222,6 +217,8 @@ struct PerpetualPositionViewModel {
             history.closedAt
         }
         
+        self.openPayAssetID = nil
+        self.openPayAmount = nil
         self.liquidationPrice = nil
         self.closePrice = if let decimalClosePrice {
             CurrencyFormatter.localizedString(

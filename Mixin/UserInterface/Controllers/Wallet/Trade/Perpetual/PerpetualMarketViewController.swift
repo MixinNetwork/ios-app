@@ -223,6 +223,7 @@ final class PerpetualMarketViewController: UIViewController {
             sections.append(.introduction)
             if !(self.actionView is AuthenticationPreviewSingleButtonTrayView) {
                 let view = AuthenticationPreviewSingleButtonTrayView()
+                view.backgroundColor = R.color.background_secondary()
                 view.button.setTitle(R.string.localizable.close_position(), for: .normal)
                 view.button.addTarget(self, action: #selector(closePosition(_:)), for: .touchUpInside)
                 actionView = view

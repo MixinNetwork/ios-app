@@ -40,14 +40,13 @@ final class PerpetualMarketCell: UICollectionViewCell {
     func load(viewModel: PerpetualPositionViewModel) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
         symbolLabel.text = viewModel.directionWithSymbol
-        switch viewModel.leverage {
-        case .long(let value):
-            leverageLabel.text = value
+        switch viewModel.side {
+        case .long:
             leverageLabel.color = .long
-        case .short(let value):
-            leverageLabel.text = value
+        case .short:
             leverageLabel.color = .short
         }
+        leverageLabel.text = viewModel.leverageMultiplier
         priceLabel.text = viewModel.orderValueInFiatMoney
         volumeLabel.text = viewModel.orderValueInToken
         changeLabel.text = viewModel.pnl

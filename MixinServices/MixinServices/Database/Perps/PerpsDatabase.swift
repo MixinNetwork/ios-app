@@ -66,6 +66,8 @@ public final class PerpsDatabase: Database {
                     `unrealized_pnl` TEXT NOT NULL,
                     `roe` TEXT NOT NULL,
                     `settle_asset_id` TEXT NOT NULL,
+                    `open_pay_amount` TEXT NOT NULL,
+                    `open_pay_asset_id` TEXT NOT NULL,
                     `bot_id` TEXT NOT NULL,
                     `wallet_id` TEXT NOT NULL,
                     `created_at` TEXT NOT NULL,

@@ -8,7 +8,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     @IBOutlet weak var pnlContentLabel: MarketColoredLabel!
     
     @IBOutlet weak var directionTitleLabel: UILabel!
-    @IBOutlet weak var directionSideLabel: UILabel!
+    @IBOutlet weak var directionSideLabel: InsetLabel!
     @IBOutlet weak var directionLeverageLabel: UILabel!
     
     @IBOutlet weak var orderValueTitleLabel: UILabel!
@@ -33,6 +33,9 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
                 adjustForContentSize: true
             )
         }
+        directionSideLabel.contentInset = UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)
+        directionSideLabel.layer.cornerRadius = 6
+        directionSideLabel.layer.masksToBounds = true
         let contentLabels: [UILabel] = [
             orderValueContentLabel,
             amountContentLabel,
@@ -53,16 +56,15 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
         pnlContentLabel.text = viewModel.pnl
         pnlContentLabel.marketColor = viewModel.pnlColor
         directionTitleLabel.text = R.string.localizable.direction().uppercased()
-        switch viewModel.leverage {
-        case .long(let value):
+        switch viewModel.side {
+        case .long:
             directionSideLabel.text = R.string.localizable.long()
             directionSideLabel.backgroundColor = MarketColor.rising.uiColor
-            directionLeverageLabel.text = value
-        case .short(let value):
+        case .short:
             directionSideLabel.text = R.string.localizable.short()
             directionSideLabel.backgroundColor = MarketColor.falling.uiColor
-            directionLeverageLabel.text = value
         }
+        directionLeverageLabel.text = viewModel.leverageMultiplier
         orderValueTitleLabel.text = R.string.localizable.position_size().uppercased()
         orderValueContentLabel.text = viewModel.orderValueInToken
         amountTitleLabel.text = R.string.localizable.amount().uppercased()

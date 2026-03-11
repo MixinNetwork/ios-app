@@ -11,6 +11,10 @@ final class TradePerpetualViewController: UIViewController {
         case introduction
     }
     
+    var orderWalletID: String {
+        wallet.tradeOrderWalletID
+    }
+    
     private weak var collectionView: UICollectionView!
     private weak var actionView: OpenPerpetualActionView!
     
@@ -414,23 +418,30 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
         case .value:
             break
         case .positions:
-            if let position = openPositions?[indexPath.item],
-               let market = PerpsMarketDAO.shared.market(marketID: position.marketID),
+            guard let openPositions, !openPositions.isEmpty else {
+                return
+            }
+            let position = openPositions[indexPath.item]
+            if let market = PerpsMarketDAO.shared.market(marketID: position.marketID),
                let viewModel = PerpetualMarketViewModel(market: market)
             {
                 let market = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
                 navigationController?.pushViewController(market, animated: true)
             }
         case .markets:
-            if let viewModel = markets?[indexPath.item] {
-                let market = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
-                navigationController?.pushViewController(market, animated: true)
+            guard let markets, !markets.isEmpty else {
+                return
             }
+            let viewModel = markets[indexPath.item]
+            let market = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
+            navigationController?.pushViewController(market, animated: true)
         case .activity:
-            if let viewModel = closedPositions?[indexPath.item] {
-                let position = PerpetualPositionViewController(wallet: wallet, viewModel: viewModel)
-                navigationController?.pushViewController(position, animated: true)
+            guard let closedPositions, !closedPositions.isEmpty else {
+                return
             }
+            let viewModel = closedPositions[indexPath.item]
+            let position = PerpetualPositionViewController(wallet: wallet, viewModel: viewModel)
+            navigationController?.pushViewController(position, animated: true)
         case .introduction:
             presentPerpsManual()
         }

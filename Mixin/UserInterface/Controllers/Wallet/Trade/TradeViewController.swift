@@ -143,16 +143,21 @@ final class TradeViewController: UIViewController {
     
     @objc func updateOrdersButton() {
         assert(Thread.isMainThread)
-        let walletID = (tradingViewController as? TradeSpotViewController)?.orderWalletID
-        guard let showOrdersItem, let walletID else {
+        guard let showOrdersItem else {
             return
         }
+        let spotWalletID = (tradingViewController as? TradeSpotViewController)?.orderWalletID
+        let perpsWalletID = (tradingViewController as? TradePerpetualViewController)?.orderWalletID
         let swapOrdersUnread = !BadgeManager.shared.hasViewed(identifier: .tradeOrder)
         DispatchQueue.global().async { [weak showOrdersItem] in
-            let openOrdersCount = min(
-                99,
-                Web3OrderDAO.shared.openOrdersCount(walletID: walletID)
-            )
+            let ordersCount = if let spotWalletID {
+                Web3OrderDAO.shared.openOrdersCount(walletID: spotWalletID)
+            } else if let perpsWalletID {
+                PerpsPositionDAO.shared.count()
+            } else {
+                0
+            }
+            let openOrdersCount = min(99, ordersCount)
             let badge: BadgeBarButtonView.Badge? = if openOrdersCount != 0 {
                 .count(openOrdersCount)
             } else if swapOrdersUnread {

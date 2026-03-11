@@ -18,6 +18,10 @@ public final class PerpsPositionDAO: PerpsDAO {
     
     """
     
+    public func count() -> Int {
+        db.select(with: "SELECT COUNT(*) FROM positions") ?? 0
+    }
+    
     public func positionValue() -> PerpetualPositionValue {
         let sql = """
             SELECT

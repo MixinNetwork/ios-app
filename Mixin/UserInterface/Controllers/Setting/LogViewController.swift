@@ -113,6 +113,8 @@ class LogViewController: UIViewController {
             return (R.string.localizable.phone_number_change(), R.string.localizable.your_phone_number_has_been_changed())
         case "ACTIVITY_LOGIN_BY_PHONE":
             return (R.string.localizable.sign_in(), R.string.localizable.sign_with_mobile_number())
+        case "ACTIVITY_LOGIN_BY_MNEMONIC":
+            return (R.string.localizable.sign_in(), R.string.localizable.sign_in_with_mnemonic_phrase())
         case "ACTIVITY_LOGIN_BY_EMERGENCY_CONTACT":
             return (R.string.localizable.sign_in(), R.string.localizable.sign_with_emergency_contact())
         case "ACTIVITY_LOGIN_FROM_DESKTOP":

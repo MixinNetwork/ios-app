@@ -16,7 +16,7 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
-        symbolLabel.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 5, right: 0)
+        symbolLabel.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 6, right: 0)
         directionLabel.contentInset = UIEdgeInsets(top: 3, left: 8, bottom: 3, right: 8)
         directionLabel.layer.cornerRadius = 4
         directionLabel.layer.masksToBounds = true

@@ -168,7 +168,7 @@ extension PerpetualPositionViewController: UICollectionViewDataSource {
                 return cell
             case let .orderValue(token, fiatMoney):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_position_info, for: indexPath)!
-                cell.titleLabel.text = R.string.localizable.order_value().uppercased()
+                cell.titleLabel.text = R.string.localizable.position_size().uppercased()
                 cell.primaryLabel.text = token
                 cell.secondaryLabel.text = fiatMoney
                 return cell

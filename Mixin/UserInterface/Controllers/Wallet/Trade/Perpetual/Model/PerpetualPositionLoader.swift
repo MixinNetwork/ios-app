@@ -19,7 +19,7 @@ final class PerpetualPositionLoader {
         guard timer == nil else {
             return
         }
-        timer = .scheduledTimer(
+        let timer: Timer = .scheduledTimer(
             withTimeInterval: 10,
             repeats: true
         ) { [walletID] (timer) in
@@ -35,6 +35,8 @@ final class PerpetualPositionLoader {
                 }
             }
         }
+        self.timer = timer
+        timer.fire()
     }
     
     func stop() {

@@ -63,7 +63,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             directionSideLabel.backgroundColor = MarketColor.falling.uiColor
             directionLeverageLabel.text = value
         }
-        orderValueTitleLabel.text = R.string.localizable.order_value().uppercased()
+        orderValueTitleLabel.text = R.string.localizable.position_size().uppercased()
         orderValueContentLabel.text = viewModel.orderValueInToken
         amountTitleLabel.text = R.string.localizable.amount().uppercased()
         amountContentLabel.text = viewModel.orderValueInFiatMoney

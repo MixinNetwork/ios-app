@@ -1,16 +1,28 @@
 import Foundation
 
-enum PercentageFormatter {
+public enum PercentageFormatter {
     
-    enum Format {
+    public enum Format {
         case precision
         case pretty
     }
     
-    enum SignBehavior {
+    public enum SignBehavior {
         case always
         case never
         case whenNegative
+    }
+    
+    public struct Option: OptionSet {
+        
+        public static let keepOneFractionDigitForZero = Option(rawValue: 1 << 0)
+        
+        public let rawValue: Int
+        
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
+        
     }
     
     private static let formatter: NumberFormatter = {
@@ -23,10 +35,11 @@ enum PercentageFormatter {
         return formatter
     }()
     
-    static func string(
+    public static func string(
         from decimal: Decimal,
         format: Format,
-        sign: SignBehavior
+        sign: SignBehavior,
+        options: Option = [],
     ) -> String {
         switch format {
         case .precision:
@@ -44,6 +57,11 @@ enum PercentageFormatter {
         case .whenNegative:
             formatter.positivePrefix = ""
             formatter.negativePrefix = formatter.minusSign
+        }
+        if decimal == 0 && options.contains(.keepOneFractionDigitForZero) {
+            formatter.minimumFractionDigits = 1
+        } else {
+            formatter.minimumFractionDigits = 0
         }
         if let string = formatter.string(decimal: decimal) {
             return string

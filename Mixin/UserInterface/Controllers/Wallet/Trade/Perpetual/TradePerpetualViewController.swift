@@ -18,6 +18,7 @@ final class TradePerpetualViewController: UIViewController {
     private let openPositionsLoader: PerpetualPositionLoader
     private let maxItemCount = 3
     
+    private var value: PerpetualPositionValue?
     private var openPositions: [PerpetualPositionViewModel]?
     private var markets: [PerpetualMarketViewModel]?
     private var closedPositions: [PerpetualPositionViewModel]?
@@ -161,6 +162,7 @@ final class TradePerpetualViewController: UIViewController {
         
         let limit = maxItemCount + 1
         DispatchQueue.global().async { [weak self, wallet] in
+            let value = PerpsPositionDAO.shared.positionValue()
             let openPositions = PerpsPositionDAO.shared.positionItems()
                 .map { item in
                     PerpetualPositionViewModel(wallet: wallet, position: item)
@@ -177,6 +179,7 @@ final class TradePerpetualViewController: UIViewController {
                 guard let self else {
                     return
                 }
+                self.value = value
                 self.openPositions = openPositions
                 if !marketViewModels.isEmpty {
                     self.markets = marketViewModels
@@ -201,6 +204,16 @@ final class TradePerpetualViewController: UIViewController {
             name: PerpsPositionHistoryDAO.perpsPositionHistoryDidSaveNotification,
             object: nil
         )
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        openPositionsLoader.start()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        openPositionsLoader.stop()
     }
     
     @objc private func openPosition(_ sender: UIButton) {
@@ -270,6 +283,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .value:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_positions_value, for: indexPath)!
+            cell.loadOpenPositions(value: value)
             return cell
         case .positions:
             if let openPositions, !openPositions.isEmpty {
@@ -451,6 +465,7 @@ extension TradePerpetualViewController {
     
     @objc private func reloadOpenPositions(_ notification: Notification) {
         DispatchQueue.global().async { [weak self, wallet] in
+            let value = PerpsPositionDAO.shared.positionValue()
             let openPositions = PerpsPositionDAO.shared.positionItems()
                 .map { item in
                     PerpetualPositionViewModel(wallet: wallet, position: item)
@@ -459,10 +474,13 @@ extension TradePerpetualViewController {
                 guard let self else {
                     return
                 }
+                self.value = value
                 self.openPositions = openPositions
-                self.collectionView.reloadSections(
-                    IndexSet(integer: Section.positions.rawValue)
-                )
+                let sections = IndexSet([
+                    Section.value.rawValue,
+                    Section.positions.rawValue
+                ])
+                self.collectionView.reloadSections(sections)
             }
         }
     }

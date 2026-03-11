@@ -39,7 +39,7 @@ final class MarketColoredLabel: InsetLabel {
         guard let color = marketColor else {
             return
         }
-        self.textColor = color.uiColor
+        super.textColor = color.uiColor
     }
     
 }

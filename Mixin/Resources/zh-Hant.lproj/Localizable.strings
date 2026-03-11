@@ -1098,7 +1098,6 @@
 "order_type" = "訂單型別";
 "order_type_limit" = "限價";
 "order_type_swap" = "閃兌";
-"order_value" = "訂單價值";
 "orders" = "訂單";
 "other" = "其他";
 "overview" = "具體說明";
@@ -1197,6 +1196,7 @@
 "position" = "倉位";
 "position_closed" = "倉位已關閉";
 "position_opened" = "倉位已開啟";
+"position_size" = "規模";
 "position_value" = "倉位價值";
 "positions" = "倉位";
 "positions_count" = "倉位(%d)";
@@ -1613,6 +1613,8 @@
 "total" = "共計";
 "total_amount" = "總金額";
 "total_balance" = "資產合計";
+"total_position_value" = "倉位總價值";
+"total_realized_pnl" = "總盈虧";
 "total_supply" = "總量";
 "touch_id" = "指紋";
 "track_not_found" = "Track 無效";

@@ -135,7 +135,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
         leverageView.layer.cornerRadius = 8
         leverageView.layer.masksToBounds = true
         
-        orderValueTitleLabel.text = R.string.localizable.order_value()
+        orderValueTitleLabel.text = R.string.localizable.position_size()
         liquidationPriceTitleLabel.text = R.string.localizable.liquidation_price()
         
         leverageMultipliersCollectionViewLayout.itemSize = UICollectionViewFlowLayout.automaticSize

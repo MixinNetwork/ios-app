@@ -1098,7 +1098,6 @@
 "order_type" = "订单类型";
 "order_type_limit" = "限价";
 "order_type_swap" = "闪兑";
-"order_value" = "订单价值";
 "orders" = "订单";
 "other" = "其他";
 "overview" = "具体说明";
@@ -1197,6 +1196,7 @@
 "position" = "仓位";
 "position_closed" = "仓位已关闭";
 "position_opened" = "仓位已打开";
+"position_size" = "规模";
 "position_value" = "仓位价值";
 "positions" = "仓位";
 "positions_count" = "仓位(%d)";
@@ -1613,6 +1613,8 @@
 "total" = "共计";
 "total_amount" = "总金额";
 "total_balance" = "资产合计";
+"total_position_value" = "仓位总价值";
+"total_realized_pnl" = "总盈亏";
 "total_supply" = "总量";
 "touch_id" = "指纹";
 "track_not_found" = "Track 无效";

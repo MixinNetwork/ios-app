@@ -18,6 +18,21 @@ public final class PerpsPositionDAO: PerpsDAO {
     
     """
     
+    public func positionValue() -> PerpetualPositionValue {
+        let sql = """
+            SELECT
+            SUM(ABS(quantity * entry_price)),
+            SUM(unrealized_pnl)
+            FROM positions
+        """
+        let (entryValue, pnl) = try! db.read { (db) -> (String, String) in
+            let rows = try Row.fetchCursor(db, sql: sql)
+            let row = try rows.next()
+            return (row?[0] ?? "0", row?[1] ?? "0")
+        }
+        return .open(entryValue: entryValue, pnl: pnl)
+    }
+    
     public func position(marketID: String) -> PerpetualPositionItem? {
         db.select(with: Self.itemSQL + "WHERE p.market_id = ?", arguments: [marketID])
     }

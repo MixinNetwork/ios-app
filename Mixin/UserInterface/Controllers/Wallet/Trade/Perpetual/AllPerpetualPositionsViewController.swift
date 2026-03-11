@@ -14,7 +14,8 @@ final class AllPerpetualPositionsViewController: UIViewController {
     
     private weak var collectionView: UICollectionView!
     
-    private var viewModels: [PerpetualPositionViewModel] = []
+    private var value: PerpetualPositionValue?
+    private var viewModels: [PerpetualPositionViewModel]?
     private var loadNextPageIndexPath: IndexPath?
     
     init(wallet: Wallet, content: PerpetualPositionType) {
@@ -48,7 +49,7 @@ final class AllPerpetualPositionsViewController: UIViewController {
                     section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                     return section
                 case .positions:
-                    let itemSize = if let self, !self.viewModels.isEmpty {
+                    let itemSize = if let viewModels = self?.viewModels, !viewModels.isEmpty {
                         NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
                     } else {
                         NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(150))
@@ -87,6 +88,7 @@ final class AllPerpetualPositionsViewController: UIViewController {
         switch content {
         case .open:
             DispatchQueue.global().async { [wallet, weak self] in
+                let value = PerpsPositionDAO.shared.positionValue()
                 let viewModels = PerpsPositionDAO.shared.positionItems().map { item in
                     PerpetualPositionViewModel(wallet: wallet, position: item)
                 }
@@ -94,11 +96,24 @@ final class AllPerpetualPositionsViewController: UIViewController {
                     guard let self else {
                         return
                     }
+                    self.value = value
                     self.viewModels = viewModels
                     self.collectionView.reloadData()
                 }
             }
         case .closed:
+            DispatchQueue.global().async { [weak self] in
+                let value = PerpsPositionHistoryDAO.shared.positionValue()
+                DispatchQueue.main.async {
+                    guard let self else {
+                        return
+                    }
+                    self.value = value
+                    self.collectionView.reloadSections(
+                        IndexSet(integer: Section.summary.rawValue)
+                    )
+                }
+            }
             loadNextPage(offset: nil)
         }
     }
@@ -111,30 +126,29 @@ final class AllPerpetualPositionsViewController: UIViewController {
             ).map { item in
                 PerpetualPositionViewModel(wallet: wallet, history: item)
             }
-            let hasMore = viewModels.count < pageCount
+            let hasMore = viewModels.count == pageCount
             DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
-                if self.viewModels.isEmpty {
-                    self.viewModels = viewModels
-                    self.collectionView.reloadData()
+                let itemsBefore = self.viewModels ?? []
+                let itemsCountBefore = itemsBefore.count
+                let itemsAfter = itemsBefore + viewModels
+                let itemsCountAfter = itemsAfter.count
+                self.viewModels = itemsAfter
+                if itemsCountBefore == 0 || itemsCountAfter == 0 {
+                    self.collectionView.reloadSections(
+                        IndexSet(integer: Section.positions.rawValue)
+                    )
                 } else {
-                    let itemsCountBefore = self.viewModels.count
-                    self.viewModels.append(contentsOf: viewModels)
-                    let itemsCountAfter = self.viewModels.count
-                    self.collectionView.performBatchUpdates {
-                        let summary = IndexSet(integer: Section.summary.rawValue)
-                        self.collectionView.reloadSections(summary)
-                        let items = (itemsCountBefore..<itemsCountAfter).map { item in
-                            IndexPath(item: item, section: Section.positions.rawValue)
-                        }
-                        self.collectionView.insertItems(at: items)
+                    let items = (itemsCountBefore..<itemsCountAfter).map { item in
+                        IndexPath(item: item, section: Section.positions.rawValue)
                     }
+                    self.collectionView.insertItems(at: items)
                 }
                 if hasMore {
                     self.loadNextPageIndexPath = IndexPath(
-                        item: self.viewModels.count - 3,
+                        item: itemsCountAfter - 3,
                         section: Section.positions.rawValue
                     )
                 }
@@ -162,7 +176,11 @@ extension AllPerpetualPositionsViewController: UICollectionViewDataSource {
         if section == 0 {
             1
         } else {
-            max(1, viewModels.count)
+            if let viewModels, !viewModels.isEmpty {
+                viewModels.count
+            } else {
+                1 // The placeholder cell
+            }
         }
     }
     
@@ -170,14 +188,15 @@ extension AllPerpetualPositionsViewController: UICollectionViewDataSource {
         switch Section(rawValue: indexPath.section)! {
         case .summary:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_positions_value, for: indexPath)!
+            switch content {
+            case .open:
+                cell.loadOpenPositions(value: value)
+            case .closed:
+                cell.loadClosedPositions(value: value)
+            }
             return cell
         case .positions:
-            if viewModels.isEmpty {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_placeholder, for: indexPath)!
-                cell.activityIndicatorView.stopAnimating()
-                cell.helpButton.isHidden = true
-                return cell
-            } else {
+            if let viewModels, !viewModels.isEmpty {
                 let viewModel = viewModels[indexPath.item]
                 switch content {
                 case .open:
@@ -189,6 +208,11 @@ extension AllPerpetualPositionsViewController: UICollectionViewDataSource {
                     cell.load(viewModel: viewModel)
                     return cell
                 }
+            } else {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_placeholder, for: indexPath)!
+                cell.activityIndicatorView.isAnimating = viewModels == nil
+                cell.helpButton.isHidden = true
+                return cell
             }
         }
     }
@@ -200,7 +224,7 @@ extension AllPerpetualPositionsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath == loadNextPageIndexPath {
             loadNextPageIndexPath = nil
-            if let offset = viewModels.last?.closedAt {
+            if let offset = viewModels?.last?.closedAt {
                 loadNextPage(offset: offset)
             }
         }
@@ -211,6 +235,9 @@ extension AllPerpetualPositionsViewController: UICollectionViewDelegate {
         case .summary:
             break
         case .positions:
+            guard let viewModels, !viewModels.isEmpty else {
+                return
+            }
             let viewModel = viewModels[indexPath.item]
             switch content {
             case .open:

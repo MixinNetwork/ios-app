@@ -1319,7 +1319,6 @@
 		94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */; };
 		94B8D18A266E41D300F43CBB /* DatabaseDiagnosticView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */; };
 		94B9FD9E2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94B9FD9D2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib */; };
-		94BC7AD42F5D7BAB009D8970 /* PercentageFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BC7AD32F5D7BA7009D8970 /* PercentageFormatter.swift */; };
 		94BC7B002F5D8771009D8970 /* PerpsManualShortPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BC7AFF2F5D876D009D8970 /* PerpsManualShortPageView.swift */; };
 		94BD7E772B2983CA0004576D /* MultisigURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BD7E762B2983CA0004576D /* MultisigURL.swift */; };
 		94BE14BF2E891CC200BA95A7 /* DepositAmountLimitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BE14BE2E891CBC00BA95A7 /* DepositAmountLimitation.swift */; };
@@ -3179,7 +3178,6 @@
 		94B8D187266E41D300F43CBB /* DatabaseDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94B8D188266E41D300F43CBB /* DatabaseDiagnosticView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DatabaseDiagnosticView.xib; sourceTree = "<group>"; };
 		94B9FD9D2A55DD3F00C1E286 /* DepositAddressGeneratingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositAddressGeneratingView.xib; sourceTree = "<group>"; };
-		94BC7AD32F5D7BA7009D8970 /* PercentageFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PercentageFormatter.swift; sourceTree = "<group>"; };
 		94BC7AFF2F5D876D009D8970 /* PerpsManualShortPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualShortPageView.swift; sourceTree = "<group>"; };
 		94BD7E762B2983CA0004576D /* MultisigURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultisigURL.swift; sourceTree = "<group>"; };
 		94BE14BE2E891CBC00BA95A7 /* DepositAmountLimitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositAmountLimitation.swift; sourceTree = "<group>"; };
@@ -3663,6 +3661,8 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		943B5FF12F5C1BB80043078A /* SwiftUIPreviews */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = SwiftUIPreviews;
 			sourceTree = "<group>";
 		};
@@ -6480,7 +6480,6 @@
 				94EC9B7D2F2B8E5B00B3CD82 /* PhotoLibrary.swift */,
 				948CFAE92F2CB4B200BC34C3 /* QRCodeDetector.swift */,
 				94EC9CD32F2C7CC000B3CD82 /* VideoCaptureDevice.swift */,
-				94BC7AD32F5D7BA7009D8970 /* PercentageFormatter.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -6708,9 +6707,9 @@
 				9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
 				94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */,
-				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */,
+				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */,
 				94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
-				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */,
+				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */,
 				94ED93882E37592700A3E337 /* XCRemoteSwiftPackageReference "reown-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -7155,13 +7154,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MixinDebug/Pods-MixinDebug-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MixinDebug/Pods-MixinDebug-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -7259,13 +7254,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -7280,13 +7271,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -7510,7 +7497,6 @@
 				94619F1F2C8DA6CA00C58829 /* GradientView.swift in Sources */,
 				7BEEC0101FDEA0C500514A48 /* SystemMessageCell.swift in Sources */,
 				7BA1F8AB221ED35200DBFCE2 /* Hud.swift in Sources */,
-				94BC7AD42F5D7BAB009D8970 /* PercentageFormatter.swift in Sources */,
 				DF06D925222FAEC900FE7FBC /* CALayerExtension.swift in Sources */,
 				52B272762DAE586B00F46EC0 /* TradeSpotPreviewViewController.swift in Sources */,
 				DF0BD35323A8D4B200B44CF6 /* DynamicTextSizeExtension.swift in Sources */,
@@ -8726,15 +8712,15 @@
 /* Begin PBXTargetDependency section */
 		94881FAE2AD0361100CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */;
+			productRef = 94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */;
 		};
 		94881FB02AD0361700CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */;
+			productRef = 94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */;
 		};
 		94C957E52ACFECDE00C1412F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */;
+			productRef = 94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */;
 		};
 		94ED305F2E269B2A00B99837 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -9422,7 +9408,7 @@
 				version = 14.3.1;
 			};
 		};
-		9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */ = {
+		9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MixinNetwork/web3.swift";
 			requirement = {
@@ -9438,7 +9424,7 @@
 				version = 3.1.2;
 			};
 		};
-		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */ = {
+		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mac-cain13/R.swift";
 			requirement = {
@@ -9477,7 +9463,7 @@
 		};
 		9479B7842BBBE589002A2C4F /* web3.swift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */;
+			package = 9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */;
 			productName = web3.swift;
 		};
 		9481C03B2A49A9AA0009DAF8 /* Starscream */ = {
@@ -9487,28 +9473,28 @@
 		};
 		94881FA72AD035C300CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
 			productName = RswiftLibrary;
 		};
 		94881FA92AD035CC00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
 			productName = RswiftLibrary;
 		};
 		94881FAB2AD035ED00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
 			productName = RswiftLibrary;
 		};
-		94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */ = {
+		94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */ = {
+		94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */ = {
+		94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};

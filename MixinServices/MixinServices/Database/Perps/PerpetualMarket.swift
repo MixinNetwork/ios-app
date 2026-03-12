@@ -24,8 +24,6 @@ public struct PerpetualMarket {
     public let change: String
     public let bidPrice: String
     public let askPrice: String
-    public let tradeCount: Int
-    public let firstTradeID: Int
     public let createdAt: String
     public let updatedAt: String
     
@@ -55,8 +53,6 @@ extension PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchableRec
         case change = "change"
         case bidPrice = "bid_price"
         case askPrice = "ask_price"
-        case tradeCount = "trade_count"
-        case firstTradeID = "first_trade_id"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }

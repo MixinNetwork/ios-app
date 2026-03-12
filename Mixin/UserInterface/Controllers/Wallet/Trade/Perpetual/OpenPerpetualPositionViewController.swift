@@ -224,6 +224,11 @@ final class OpenPerpetualPositionViewController: UIViewController {
         
     }
     
+    @IBAction func presentManual(_ sender: Any) {
+        let manual = PerpsManual.viewController(initialPage: .size)
+        present(manual, animated: true)
+    }
+    
     @IBAction func review(_ sender: ConfigurationBasedBusyButton) {
         guard let marginToken else {
             return

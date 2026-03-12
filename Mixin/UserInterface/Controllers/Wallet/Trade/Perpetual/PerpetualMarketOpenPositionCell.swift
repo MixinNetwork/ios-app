@@ -2,6 +2,10 @@ import UIKit
 
 final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     
+    protocol Delegate: AnyObject {
+        func perpetualMarketOpenPositionCellQuestionAboutSize(_ cell: PerpetualMarketOpenPositionCell)
+    }
+    
     @IBOutlet weak var titleLabel: UILabel!
     
     @IBOutlet weak var pnlTitleLabel: UILabel!
@@ -22,6 +26,8 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     
     @IBOutlet weak var liquidationPriceTitleLabel: UILabel!
     @IBOutlet weak var liquidationPriceContentLabel: UILabel!
+    
+    weak var delegate: Delegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -48,6 +54,10 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
                 adjustForContentSize: true
             )
         }
+    }
+    
+    @IBAction func questionAboutSize(_ sender: Any) {
+        delegate?.perpetualMarketOpenPositionCellQuestionAboutSize(self)
     }
     
     func load(viewModel: PerpetualPositionViewModel) {

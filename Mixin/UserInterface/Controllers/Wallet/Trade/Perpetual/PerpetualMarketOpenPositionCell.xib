@@ -81,15 +81,24 @@
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="8HQ-zA-gVn">
                                 <rect key="frame" x="0.0" y="61.333333333333329" width="299" height="41.333333333333329"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="U32-gb-NRT">
+                                    <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" axis="vertical" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="U32-gb-NRT">
                                         <rect key="frame" x="0.0" y="0.0" width="77.666666666666671" height="41.333333333333336"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Order Value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="geS-Tb-3UT">
-                                                <rect key="frame" x="0.0" y="0.0" width="77.666666666666671" height="14.333333333333334"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                <color key="textColor" name="text_quaternary"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="zgI-bP-l7c">
+                                                <rect key="frame" x="0.0" y="0.0" width="46" height="14.333333333333334"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SIZE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="geS-Tb-3UT">
+                                                        <rect key="frame" x="0.0" y="0.0" width="26" height="14.333333333333334"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                        <color key="textColor" name="text_quaternary"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info" id="1ak-wE-I8R">
+                                                        <rect key="frame" x="30" y="0.0" width="16" height="14.333333333333334"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    </imageView>
+                                                </subviews>
+                                            </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.0066 ETH" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bVH-vD-NA9">
                                                 <rect key="frame" x="0.0" y="24.333333333333329" width="77.666666666666671" height="17"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -158,9 +167,23 @@
                             </stackView>
                         </subviews>
                     </stackView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mzf-F7-ZcK">
+                        <rect key="frame" x="38" y="101.66666666666667" width="36" height="36.000000000000014"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="mzf-F7-ZcK" secondAttribute="height" id="I1B-HL-mmu"/>
+                            <constraint firstAttribute="width" constant="36" id="ztg-KV-eZO"/>
+                        </constraints>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain"/>
+                        <connections>
+                            <action selector="questionAboutSize:" destination="sup-Pc-C7A" eventType="touchUpInside" id="W7F-n0-hPf"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" name="background"/>
                 <constraints>
+                    <constraint firstItem="mzf-F7-ZcK" firstAttribute="centerX" secondItem="1ak-wE-I8R" secondAttribute="centerX" id="4Jn-RL-epO"/>
+                    <constraint firstItem="mzf-F7-ZcK" firstAttribute="centerY" secondItem="1ak-wE-I8R" secondAttribute="centerY" id="7Se-My-E1k"/>
                     <constraint firstItem="7ER-8d-x3a" firstAttribute="leading" secondItem="cLJ-fz-r8m" secondAttribute="leading" constant="16" id="TRf-vd-11V"/>
                     <constraint firstItem="7ER-8d-x3a" firstAttribute="top" secondItem="cLJ-fz-r8m" secondAttribute="top" constant="18" id="WhU-Jc-iOu"/>
                     <constraint firstItem="pTA-U1-gyc" firstAttribute="leading" secondItem="cLJ-fz-r8m" secondAttribute="leading" constant="18" id="bRn-uO-Mwq"/>
@@ -190,6 +213,7 @@
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="info" width="16" height="16"/>
         <namedColor name="address_label">
             <color red="0.55294117647058827" green="0.80000000000000004" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

@@ -366,6 +366,7 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
         case .openPosition(let viewModel):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_open_position, for: indexPath)!
             cell.load(viewModel: viewModel)
+            cell.delegate = self
             return cell
         case .info:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_info, for: indexPath)!
@@ -457,6 +458,15 @@ extension PerpetualMarketViewController: PerpetualMarketPriceCell.Delegate {
             cell.load(chart: chart)
         }
         reloadPriceChartFromRemote(timeFrame: timeFrame)
+    }
+    
+}
+
+extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegate {
+    
+    func perpetualMarketOpenPositionCellQuestionAboutSize(_ cell: PerpetualMarketOpenPositionCell) {
+        let manual = PerpsManual.viewController(initialPage: .size)
+        present(manual, animated: true)
     }
     
 }

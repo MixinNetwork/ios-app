@@ -291,7 +291,7 @@
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="sVa-iZ-L0Z">
                                     <rect key="frame" x="36" y="384.66666666666669" width="321" height="50"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7S2-eq-j24">
+                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="7S2-eq-j24">
                                             <rect key="frame" x="0.0" y="0.0" width="321" height="17"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Order Value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="omz-YU-4ws">
@@ -300,15 +300,18 @@
                                                     <color key="textColor" name="text_tertiary"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="info" translatesAutoresizingMaskIntoConstraints="NO" id="GlQ-36-kBr">
+                                                    <rect key="frame" x="80.333333333333329" y="0.0" width="16" height="17"/>
+                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yhl-Sg-7lN">
-                                                    <rect key="frame" x="76.333333333333329" y="0.0" width="244.66666666666669" height="17"/>
+                                                    <rect key="frame" x="100.33333333333336" y="0.0" width="220.66666666666663" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" name="text_tertiary"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                         </stackView>
-                                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZfJ-WI-aXv">
+                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="ZfJ-WI-aXv">
                                             <rect key="frame" x="0.0" y="33" width="321" height="17"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Liquidation Price" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="56Q-Gn-ra7">
@@ -318,7 +321,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eui-rp-lnp">
-                                                    <rect key="frame" x="108" y="0.0" width="213" height="17"/>
+                                                    <rect key="frame" x="112" y="0.0" width="209" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" name="text_tertiary"/>
                                                     <nil key="highlightedColor"/>
@@ -327,6 +330,18 @@
                                         </stackView>
                                     </subviews>
                                 </stackView>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qWe-AM-mzt">
+                                    <rect key="frame" x="106.33333333333333" y="375.33333333333331" width="35.999999999999986" height="36"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="36" id="859-tk-JEG"/>
+                                        <constraint firstAttribute="width" secondItem="qWe-AM-mzt" secondAttribute="height" id="cLM-5X-Q9Z"/>
+                                    </constraints>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="plain"/>
+                                    <connections>
+                                        <action selector="presentManual:" destination="-1" eventType="touchUpInside" id="yqE-WM-6N8"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" name="background_secondary"/>
                             <constraints>
@@ -336,8 +351,10 @@
                                 <constraint firstItem="v7H-a6-XPT" firstAttribute="top" secondItem="Pn8-P6-wWM" secondAttribute="bottom" constant="16" id="KFN-TO-o7B"/>
                                 <constraint firstAttribute="trailing" secondItem="u0I-f4-MTw" secondAttribute="trailing" constant="20" id="NPQ-wR-BQd"/>
                                 <constraint firstAttribute="trailing" secondItem="v7H-a6-XPT" secondAttribute="trailing" constant="20" id="RXn-ya-L56"/>
+                                <constraint firstItem="qWe-AM-mzt" firstAttribute="centerY" secondItem="GlQ-36-kBr" secondAttribute="centerY" id="TLP-zd-CwU"/>
                                 <constraint firstItem="u0I-f4-MTw" firstAttribute="top" secondItem="v7H-a6-XPT" secondAttribute="bottom" constant="2" id="W6C-J6-aN6"/>
                                 <constraint firstItem="sVa-iZ-L0Z" firstAttribute="top" secondItem="u0I-f4-MTw" secondAttribute="bottom" constant="16" id="i3i-p3-Ef9"/>
+                                <constraint firstItem="qWe-AM-mzt" firstAttribute="centerX" secondItem="GlQ-36-kBr" secondAttribute="centerX" id="jWv-DI-fhP"/>
                                 <constraint firstItem="v7H-a6-XPT" firstAttribute="leading" secondItem="H0e-nI-q4n" secondAttribute="leading" constant="20" id="kjg-vM-Pwz"/>
                                 <constraint firstItem="Pn8-P6-wWM" firstAttribute="leading" secondItem="H0e-nI-q4n" secondAttribute="leading" constant="36" id="lOD-B2-1t9"/>
                                 <constraint firstAttribute="bottom" secondItem="sVa-iZ-L0Z" secondAttribute="bottom" id="myo-SW-ji9"/>
@@ -411,6 +428,7 @@
     </objects>
     <resources>
         <image name="ic_selector_down" width="16" height="16"/>
+        <image name="info" width="16" height="16"/>
         <image name="token_receiver_wallet" width="16" height="16"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

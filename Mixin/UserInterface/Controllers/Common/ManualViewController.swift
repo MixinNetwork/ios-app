@@ -16,6 +16,7 @@ final class ManualViewController: UIViewController {
     }
     
     private let pages: [Page]
+    private let initialIndex: Int
     
     private var reusableContentViewControllers: Set<ManualPageContentViewController> = []
     
@@ -23,8 +24,9 @@ final class ManualViewController: UIViewController {
     private weak var pageSelectorCollectionView: UICollectionView!
     private weak var pageViewController: UIPageViewController!
     
-    init(pages: [Page]) {
+    init(pages: [Page], initialIndex: Int = 0) {
         self.pages = pages
+        self.initialIndex = initialIndex
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -96,9 +98,17 @@ final class ManualViewController: UIViewController {
         pageViewController.delegate = self
         self.pageViewController = pageViewController
         
-        if let firstPage = dequeueReusableViewController(of: 0) {
-            pageSelectorCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: [])
-            pageViewController.setViewControllers([firstPage], direction: .forward, animated: false)
+        if let firstPage = dequeueReusableViewController(of: initialIndex) {
+            pageSelectorCollectionView.selectItem(
+                at: IndexPath(item: initialIndex, section: 0),
+                animated: false,
+                scrollPosition: [.centeredHorizontally]
+            )
+            pageViewController.setViewControllers(
+                [firstPage],
+                direction: .forward,
+                animated: false
+            )
         }
     }
     

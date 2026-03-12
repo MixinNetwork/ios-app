@@ -63,6 +63,7 @@ extension MixinAPIResponseError {
     public static let simulationFailed                     = MixinAPIResponseError(status: 202, code: 10631)
     public static let tooManyWallets                       = MixinAPIResponseError(status: 202, code: 10632)
     public static let unsupportedWatchAddress              = MixinAPIResponseError(status: 202, code: 10633)
+    public static let alredyHadPosition                    = MixinAPIResponseError(status: 202, code: 10651)
     public static let referralCodeNotFound                 = MixinAPIResponseError(status: 202, code: 10730)
     public static let alreadyBondedReferralCode            = MixinAPIResponseError(status: 202, code: 10731)
     public static let referringSelf                        = MixinAPIResponseError(status: 202, code: 10732)

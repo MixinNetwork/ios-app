@@ -583,6 +583,7 @@
 "entry_price" = "Entry Price";
 "error_access_limited" = "ERROR 403: Access Limited";
 "error_already_bonded_referral_code" = "ERROR 10731: This account has already applied a referral code";
+"error_already_had_open_position" = "ERROR 10651: You already had a open position";
 "error_bad_data" = "ERROR 10002: The request data has invalid field";
 "error_blockchain" = "ERROR 30100: Blockchain not in sync, please try again later.";
 "error_cannot_apply_your_own_referral_code" = "ERROR 10732: Cannot apply your own referral code";
@@ -1194,6 +1195,7 @@
 "pnl_rules" = "PnL Rules:";
 "position" = "Position";
 "position_closed" = "Position Closed";
+"position_closed_description" = "You have closed a position.";
 "position_closing_failed" = "Closing Failed";
 "position_opened" = "Position Opened";
 "position_opened_description" = "You have opened a position.";

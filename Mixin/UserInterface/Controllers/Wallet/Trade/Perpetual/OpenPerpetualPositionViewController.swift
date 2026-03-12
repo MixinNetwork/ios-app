@@ -9,6 +9,8 @@ final class OpenPerpetualPositionViewController: UIViewController {
         case custom(Decimal)
     }
     
+    @IBOutlet weak var contentView: UIView!
+    
     @IBOutlet weak var tokenIconView: PlainTokenIconView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
@@ -39,12 +41,14 @@ final class OpenPerpetualPositionViewController: UIViewController {
     @IBOutlet weak var liquidationPriceTitleLabel: UILabel!
     @IBOutlet weak var liquidationPriceContentLabel: UILabel!
     
+    @IBOutlet weak var reviewButtonWrapperView: UIView!
     @IBOutlet weak var errorDescriptionLabel: UILabel!
     @IBOutlet weak var reviewButton: UIButton!
     
     private let wallet: Wallet
     private let side: PerpetualOrderSide
     private let viewModel: PerpetualMarketViewModel
+    private let amountValidator: AmountValidator
     private let multipliers: [Multiplier]
     private let cellReuseIdentifier = "l"
     
@@ -87,6 +91,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
         self.wallet = wallet
         self.side = side
         self.viewModel = viewModel
+        self.amountValidator = AmountValidator(market: viewModel.market)
         self.multipliers = [
             .fixed(2),
             .fixed(5),
@@ -135,6 +140,15 @@ final class OpenPerpetualPositionViewController: UIViewController {
         leverageView.layer.cornerRadius = 8
         leverageView.layer.masksToBounds = true
         
+        let infoLabels: [UILabel] = [
+            orderValueTitleLabel,
+            orderValueContentLabel,
+            liquidationPriceTitleLabel,
+            liquidationPriceContentLabel,
+        ]
+        for label in infoLabels {
+            label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        }
         orderValueTitleLabel.text = R.string.localizable.position_size()
         liquidationPriceTitleLabel.text = R.string.localizable.liquidation_price()
         
@@ -155,6 +169,21 @@ final class OpenPerpetualPositionViewController: UIViewController {
                 self.view.layoutIfNeeded()
             }
         }
+        
+        reviewButtonWrapperView.snp.makeConstraints { make in
+            make.bottom.equalTo(view.keyboardLayoutGuide.snp.top)
+                .priority(.high)
+        }
+        reviewButton.configuration?.attributedTitle = AttributedString(
+            R.string.localizable.review(),
+            attributes: {
+                var container = AttributeContainer()
+                container.font = .callout
+                return container
+            }()
+        )
+        reviewButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        
         leverageMultipliersCollectionView.reloadData()
         inputLeverageMultiplier(value: multiplier)
         updateDescriptions(
@@ -162,10 +191,6 @@ final class OpenPerpetualPositionViewController: UIViewController {
             leverageMultiplier: multiplier,
             underlyingAsset: viewModel
         )
-        
-        reviewButton.configuration?.title = R.string.localizable.review()
-        reviewButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        
         reloadMarginTokens()
     }
     
@@ -181,7 +206,6 @@ final class OpenPerpetualPositionViewController: UIViewController {
             leverageMultiplier: multiplier,
             underlyingAsset: viewModel
         )
-        reviewButton.isEnabled = amount > 0 // TODO: check with max/min
     }
     
     @IBAction func pickMarginToken(_ sender: Any) {
@@ -197,20 +221,14 @@ final class OpenPerpetualPositionViewController: UIViewController {
     }
     
     @IBAction func inputTokenBalance(_ sender: Any) {
-        guard let token = marginToken else {
-            return
-        }
-        marginAmountTextField.text = CurrencyFormatter.localizedString(
-            from: token.decimalBalance,
-            format: .precision,
-            sign: .never,
-        )
+        
     }
     
     @IBAction func review(_ sender: ConfigurationBasedBusyButton) {
         guard let marginToken else {
             return
         }
+        marginAmountTextField.resignFirstResponder()
         let request = OpenPerpetualOrderRequest(
             assetID: marginToken.assetID,
             marketID: viewModel.market.marketID,
@@ -252,7 +270,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
     }
     
     private func reloadMarginTokens() {
-        RouteAPI.acceptedPerpsOrderAssets(queue: .global()) { result in
+        RouteAPI.acceptedPerpsOrderAssets(queue: .global()) { [weak self] result in
             switch result {
             case .success(let assetIDs):
                 let tokens = TokenDAO.shared.tokenItems(with: assetIDs)
@@ -260,6 +278,9 @@ final class OpenPerpetualPositionViewController: UIViewController {
                         one.decimalBalance >= another.decimalBalance
                     }
                 DispatchQueue.main.async {
+                    guard let self else {
+                        return
+                    }
                     self.marginTokens = tokens
                     self.marginToken = tokens.first
                     self.marginTokenSelectorStackView.alpha = 1
@@ -267,7 +288,10 @@ final class OpenPerpetualPositionViewController: UIViewController {
                     self.marginLoadingView.stopAnimating()
                 }
             case .failure(let error):
-                break
+                Logger.general.debug(category: "OpenPerpsPosition", message: "\(error)")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    self?.reloadMarginTokens()
+                }
             }
         }
     }
@@ -310,6 +334,8 @@ final class OpenPerpetualPositionViewController: UIViewController {
         leverageMultiplier: Decimal,
         underlyingAsset: PerpetualMarketViewModel
     ) {
+        let orderValue = marginAmount * leverageMultiplier
+        reviewButton.isEnabled = amountValidator.isValid(orderValue: orderValue)
         changeSimulationLabel.text = PerpetualChangeSimulation.profit(
             side: side,
             margin: marginAmount,
@@ -317,7 +343,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
             priceChangePercent: 0.01
         )
         orderValueContentLabel.text = CurrencyFormatter.localizedString(
-            from: marginAmount * leverageMultiplier / underlyingAsset.decimalPrice,
+            from: orderValue / underlyingAsset.decimalPrice,
             format: .precision,
             sign: .never,
             symbol: .custom(underlyingAsset.market.tokenSymbol)
@@ -484,6 +510,29 @@ extension OpenPerpetualPositionViewController {
                 label.textColor = R.color.text()
                 label.backgroundColor = .clear
             }
+        }
+        
+    }
+    
+    private final class AmountValidator {
+        
+        private let minOrderValue: Decimal?
+        private let maxOrderValue: Decimal?
+        
+        init(market: PerpetualMarket) {
+            minOrderValue = Decimal(string: market.minOrderValue, locale: .enUSPOSIX)
+            maxOrderValue = Decimal(string: market.maxOrderValue, locale: .enUSPOSIX)
+        }
+        
+        func isValid(orderValue: Decimal) -> Bool {
+            var result = orderValue > 0
+            if let minOrderValue {
+                result = result && orderValue >= minOrderValue
+            }
+            if let maxOrderValue {
+                result = result &&  orderValue <= maxOrderValue
+            }
+            return result
         }
         
     }

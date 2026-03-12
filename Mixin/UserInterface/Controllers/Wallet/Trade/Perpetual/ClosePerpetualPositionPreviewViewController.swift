@@ -91,7 +91,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                     tableHeaderView.setIcon(progress: .success)
                     layoutTableHeaderView(
                         title: R.string.localizable.position_closed(),
-                        subtitle: "Under Construction"
+                        subtitle: R.string.localizable.position_closed_description()
                     )
                     tableView.setContentOffset(.zero, animated: true)
                     loadFinishedTrayView()

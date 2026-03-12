@@ -583,6 +583,7 @@
 "entry_price" = "开仓价格";
 "error_access_limited" = "错误 403：访问受限";
 "error_already_bonded_referral_code" = "错误 10731：当前账号已绑定邀请码，无法修改绑定。";
+"error_already_had_open_position" = "错误 10651：当前已有持仓";
 "error_bad_data" = "错误 10002：请求数据不合法";
 "error_blockchain" = "错误 30100：区块链同步异常，请稍后重试";
 "error_cannot_apply_your_own_referral_code" = "错误 10732：不可绑定自己的邀请码";
@@ -1194,6 +1195,7 @@
 "pnl_rules" = "盈亏规则：";
 "position" = "仓位";
 "position_closed" = "平仓成功";
+"position_closed_description" = "您的平仓已成功。";
 "position_closing_failed" = "平仓失败";
 "position_opened" = "开仓成功";
 "position_opened_description" = "您的开仓已成功。";

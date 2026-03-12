@@ -232,6 +232,7 @@ final class PerpetualMarketViewController: UIViewController {
                 view.backgroundColor = R.color.background_secondary()
                 view.button.setTitle(R.string.localizable.close_position(), for: .normal)
                 view.button.addTarget(self, action: #selector(closePosition(_:)), for: .touchUpInside)
+                view.button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 37, bottom: 12, right: 37)
                 actionView = view
             }
         } else {

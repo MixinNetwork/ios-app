@@ -583,6 +583,7 @@
 "entry_price" = "開倉價格";
 "error_access_limited" = "錯誤 403：訪問受限";
 "error_already_bonded_referral_code" = "錯誤 10731：當前賬號已繫結邀請碼，無法修改繫結。";
+"error_already_had_open_position" = "錯誤 10651：當前已有持倉";
 "error_bad_data" = "錯誤 10002：請求資料不合法";
 "error_blockchain" = "錯誤 30100：區塊鏈同步異常，請稍後重試";
 "error_cannot_apply_your_own_referral_code" = "錯誤 10732：不可繫結自己的邀請碼";
@@ -1194,6 +1195,7 @@
 "pnl_rules" = "盈虧規則：";
 "position" = "倉位";
 "position_closed" = "平倉成功";
+"position_closed_description" = "您的平倉已成功。";
 "position_closing_failed" = "平倉失敗";
 "position_opened" = "開倉成功";
 "position_opened_description" = "您的開倉已成功。";

@@ -11,12 +11,19 @@ final class PerpetualMarketCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        symbolLabel.setFont(
-            scaledFor: .systemFont(ofSize: 14),
-            adjustForContentSize: true
-        )
-        priceLabel.setFont(
-            scaledFor: .systemFont(ofSize: 14),
+        let subtitleLabels: [UILabel] = [
+            priceLabel,
+            volumeLabel,
+            changeLabel
+        ]
+        for label in subtitleLabels {
+            label.setFont(
+                scaledFor: .systemFont(ofSize: 14),
+                adjustForContentSize: true
+            )
+        }
+        leverageLabel.setFont(
+            scaledFor: .condensed(size: 12),
             adjustForContentSize: true
         )
     }

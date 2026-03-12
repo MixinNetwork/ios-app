@@ -10,14 +10,16 @@ final class PerpetualClosedPositionCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        titleLabel.setFont(
-            scaledFor: .systemFont(ofSize: 14),
+        leverageLabel.setFont(
+            scaledFor: .condensed(size: 12),
             adjustForContentSize: true
         )
-        changeLabel.setFont(
-            scaledFor: .systemFont(ofSize: 14),
-            adjustForContentSize: true
-        )
+        for label: UILabel in [valueLabel, changeLabel] {
+            label.setFont(
+                scaledFor: .systemFont(ofSize: 14),
+                adjustForContentSize: true
+            )
+        }
     }
     
     override func prepareForReuse() {

@@ -93,13 +93,6 @@ final class TradeViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
-        let defaultSelection = if let item = allTradings.firstIndex(of: trading) {
-            IndexPath(item: item, section: 0)
-        } else {
-            IndexPath(item: 0, section: 0)
-        }
-        collectionView.selectItem(at: defaultSelection, animated: false, scrollPosition: .left)
-        replaceChildViewController(trading: trading)
         
         NotificationCenter.default.addObserver(
             self,
@@ -107,7 +100,13 @@ final class TradeViewController: UIViewController {
             name: Web3OrderDAO.didSaveNotification,
             object: nil
         )
-        updateOrdersButton()
+        let defaultSelection = if let item = allTradings.firstIndex(of: trading) {
+            IndexPath(item: item, section: 0)
+        } else {
+            IndexPath(item: 0, section: 0)
+        }
+        collectionView.selectItem(at: defaultSelection, animated: false, scrollPosition: .left)
+        replaceChildViewController(trading: trading)
     }
     
     func prepareForReuse() {
@@ -247,6 +246,7 @@ final class TradeViewController: UIViewController {
         containerView.insertSubview(tradingViewController.view, at: 0)
         tradingViewController.view.snp.makeEdgesEqualToSuperview()
         tradingViewController.didMove(toParent: self)
+        updateOrdersButton()
     }
     
 }

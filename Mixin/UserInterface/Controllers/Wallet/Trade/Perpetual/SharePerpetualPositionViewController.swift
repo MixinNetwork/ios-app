@@ -43,7 +43,7 @@ final class SharePerpetualPositionViewController: ShareViewAsPictureViewControll
     }
     
     override func copyLink(_ sender: Any) {
-        UIPasteboard.general.string = "https://mixin.one/trade?type=perps&product=\(viewModel.marketID)"
+        UIPasteboard.general.string = URL.shortMixinMessenger.absoluteString
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
         close(sender)
     }

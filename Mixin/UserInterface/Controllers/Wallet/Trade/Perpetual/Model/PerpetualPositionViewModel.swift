@@ -43,7 +43,7 @@ struct PerpetualPositionViewModel {
     let date: String
     
     // Only available for open positions
-    let openPayAssetID: String?
+    let settleAssetID: String?
     let openPayAmount: Decimal?
     let liquidationPrice: String?
     
@@ -125,7 +125,7 @@ struct PerpetualPositionViewModel {
             position.createdAt
         }
         
-        self.openPayAssetID = position.openPayAssetID
+        self.settleAssetID = position.settleAssetID
         self.openPayAmount = Decimal(string: position.openPayAmount, locale: .enUSPOSIX)
         self.liquidationPrice = if let decimalEntryPrice {
             PerpetualChangeSimulation.liquidationPrice(
@@ -217,7 +217,7 @@ struct PerpetualPositionViewModel {
             history.closedAt
         }
         
-        self.openPayAssetID = nil
+        self.settleAssetID = nil
         self.openPayAmount = nil
         self.liquidationPrice = nil
         self.closePrice = if let decimalClosePrice {

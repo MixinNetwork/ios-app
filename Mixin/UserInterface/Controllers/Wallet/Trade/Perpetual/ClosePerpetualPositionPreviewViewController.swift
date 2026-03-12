@@ -27,10 +27,10 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         if let name = viewModel.displaySymbol {
             rows.append(.perpsProduct(iconURL: viewModel.iconURL, name: name))
         }
-        if let id = viewModel.openPayAssetID,
+        if let assetID = viewModel.settleAssetID,
            let payAmount = viewModel.openPayAmount,
            let pnlPercentage = viewModel.pnlPercentage,
-           let token = TokenDAO.shared.tokenItem(assetID: id)
+           let token = TokenDAO.shared.tokenItem(assetID: assetID)
         {
             let count = CurrencyFormatter.localizedString(
                 from: payAmount * (1 + pnlPercentage),

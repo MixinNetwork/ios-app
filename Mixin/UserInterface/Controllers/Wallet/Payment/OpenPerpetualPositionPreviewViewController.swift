@@ -69,7 +69,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 primary: direction,
                 secondary: profit,
             ),
-            .info(caption: .string(R.string.localizable.amount_isolated()), content: amount),
+            .info(caption: .string(R.string.localizable.margin_isolated()), content: amount),
             .info(caption: .string(R.string.localizable.entry_price()), content: context.viewModel.price),
             .doubleLineInfo(
                 caption: .string(R.string.localizable.estimated_liquidation_price()),

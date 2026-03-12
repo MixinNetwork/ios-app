@@ -147,7 +147,6 @@
 "allow_manual_report_message" = "メッセージ単位の報告を許可";
 "alphabetical" = "Alphabetical";
 "amount" = "数量";
-"amount_isolated" = "Amount (Isolated)";
 "anonymous_number" = "匿名番号";
 "app_card_shareable_false" = "このカードを共有することはできません";
 "app_update_short_hint" = "Please update Mixin from App Store to continue use the service. Current version %@";
@@ -893,6 +892,7 @@
 "manage_your_apps" = "Manage your bots";
 "manage_your_circles" = "Manage your circles";
 "margin" = "Margin";
+"margin_isolated" = "Margin (Isolated)";
 "market" = "Market";
 "market_cap" = "Market Cap";
 "markets" = "Markets";

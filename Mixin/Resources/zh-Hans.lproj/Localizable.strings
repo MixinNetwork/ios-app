@@ -147,7 +147,6 @@
 "allow_manual_report_message" = "允许手动上报消息";
 "alphabetical" = "按字母顺序";
 "amount" = "金额";
-"amount_isolated" = "保证金（逐仓）";
 "anonymous_number" = "匿名号码";
 "app_card_shareable_false" = "该卡片已被设置为不允许转发";
 "app_update_short_hint" = "请从 App Store 更新 Mixin 至最新版，当前版本号 %@";
@@ -893,6 +892,7 @@
 "manage_your_apps" = "管理你所有的机器人";
 "manage_your_circles" = "管理你所有的圈子";
 "margin" = "保证金";
+"margin_isolated" = "保证金（逐仓）";
 "market" = "行情";
 "market_cap" = "市值";
 "markets" = "行情";

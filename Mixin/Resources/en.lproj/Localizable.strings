@@ -147,7 +147,6 @@
 "allow_manual_report_message" = "Allow Manual Report Message";
 "alphabetical" = "Alphabetical";
 "amount" = "Amount";
-"amount_isolated" = "Amount (Isolated)";
 "anonymous_number" = "Anonymous Number";
 "app_card_shareable_false" = "The card has been set to not allow sharing";
 "app_update_short_hint" = "Please update Mixin from App Store to continue use the service. Current version %@";
@@ -893,6 +892,7 @@
 "manage_your_apps" = "Manage your bots";
 "manage_your_circles" = "Manage your circles";
 "margin" = "Margin";
+"margin_isolated" = "Margin (Isolated)";
 "market" = "Market";
 "market_cap" = "Market Cap";
 "markets" = "Markets";

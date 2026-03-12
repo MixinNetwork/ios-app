@@ -4,7 +4,16 @@ import MixinServices
 
 final class DatabaseDiagnosticViewController: UIViewController {
     
+    enum Database: Int {
+        case signal
+        case user
+        case task
+        case web3
+        case perps
+    }
+    
     @IBOutlet weak var databaseSwitcher: UISegmentedControl!
+    @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var runButton: UIButton!
     @IBOutlet weak var pasteButton: UIButton!
     @IBOutlet weak var inputTextView: UITextView!
@@ -20,17 +29,32 @@ final class DatabaseDiagnosticViewController: UIViewController {
     }
     
     @IBAction func changeDatabase(_ sender: Any) {
-        inputTextView.text = switch databaseSwitcher.selectedSegmentIndex {
-        case 0:
+        let db = Database(rawValue: databaseSwitcher.selectedSegmentIndex)!
+        inputTextView.text = switch db {
+        case .signal:
             "SELECT * FROM identities LIMIT 10"
-        case 1:
+        case .user:
             "SELECT * FROM users LIMIT 10"
-        case 2:
+        case .task:
             "SELECT * FROM messages_blaze LIMIT 10"
-        case 3:
+        case .web3:
             "SELECT * FROM tokens LIMIT 5"
-        default:
+        case .perps:
             "SELECT * FROM positions LIMIT 5"
+        }
+        deleteButton.isHidden = db != .perps
+    }
+    
+    @IBAction func deleteDatabase(_ sender: Any) {
+        guard Database(rawValue: databaseSwitcher.selectedSegmentIndex)! == .perps else {
+            return
+        }
+        do {
+            let url = AppGroupContainer.perpsDatabaseUrl
+            try FileManager.default.removeItem(at: url)
+            outputTextView.text = "Deleted"
+        } catch {
+            outputTextView.text = "\(error)"
         }
     }
     
@@ -40,16 +64,17 @@ final class DatabaseDiagnosticViewController: UIViewController {
         runButton.setTitle("Executing", for: .normal)
         pasteButton.isEnabled = false
         let sql = inputTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-        let database: MixinServices.Database = switch databaseSwitcher.selectedSegmentIndex {
-        case 0:
+        let database: MixinServices.Database
+        database = switch Database(rawValue: databaseSwitcher.selectedSegmentIndex)! {
+        case .signal:
             SignalDatabase.current
-        case 1:
+        case .user:
             UserDatabase.current
-        case 2:
+        case .task:
             TaskDatabase.current
-        case 3:
+        case .web3:
             Web3Database.current
-        default:
+        case .perps:
             PerpsDatabase.current
         }
         

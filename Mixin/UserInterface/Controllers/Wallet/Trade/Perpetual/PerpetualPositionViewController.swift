@@ -214,7 +214,11 @@ extension PerpetualPositionViewController: PillActionView.Delegate {
                let viewModel = PerpetualMarketViewModel(market: market),
                let navigationController
             {
-                let market = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
+                let market = PerpetualMarketViewController(
+                    wallet: wallet,
+                    viewModel: viewModel,
+                    alwaysAutoRefreshOpenPosition: false
+                )
                 var viewControllers = navigationController.viewControllers
                 viewControllers.removeAll { controller in
                     controller is PerpetualMarketViewController

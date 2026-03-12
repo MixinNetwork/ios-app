@@ -98,7 +98,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
             subtitle: R.string.localizable.signature_request_from(.mixin)
         )
         replaceTrayView(with: nil, animation: .vertical)
-        Task {
+        Task { [context] in
             do {
                 try await operation.start(pin: pin)
                 UIDevice.current.playPaymentSuccess()
@@ -113,12 +113,16 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     loadFinishedTrayView()
                     if let navigationController = UIApplication.homeNavigationController {
                         var viewControllers = navigationController.viewControllers
-                        if viewControllers.last is OpenPerpetualPositionViewController {
-                            viewControllers.removeLast()
+                        viewControllers.removeAll { viewController in
+                            viewController is OpenPerpetualPositionViewController
+                            || viewController is PerpetualMarketViewController
                         }
-                        if viewControllers.last is PerpetualMarketViewController {
-                            viewControllers.removeLast()
-                        }
+                        let market = PerpetualMarketViewController(
+                            wallet: context.wallet,
+                            viewModel: context.viewModel,
+                            alwaysAutoRefreshOpenPosition: true
+                        )
+                        viewControllers.append(market)
                         navigationController.setViewControllers(viewControllers, animated: false)
                     }
                 }

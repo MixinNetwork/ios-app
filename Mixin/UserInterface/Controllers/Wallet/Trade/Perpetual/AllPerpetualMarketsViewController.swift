@@ -88,7 +88,11 @@ extension AllPerpetualMarketsViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let viewModel = viewModels[indexPath.item]
-        let market = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
+        let market = PerpetualMarketViewController(
+            wallet: wallet,
+            viewModel: viewModel,
+            alwaysAutoRefreshOpenPosition: false
+        )
         navigationController?.pushViewController(market, animated: true)
     }
     

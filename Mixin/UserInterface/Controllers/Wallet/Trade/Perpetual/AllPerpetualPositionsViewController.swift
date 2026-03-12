@@ -255,7 +255,11 @@ extension AllPerpetualPositionsViewController: UICollectionViewDelegate {
                 if let market = PerpsMarketDAO.shared.market(marketID: viewModel.marketID),
                    let viewModel = PerpetualMarketViewModel(market: market)
                 {
-                    let controller = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
+                    let controller = PerpetualMarketViewController(
+                        wallet: wallet,
+                        viewModel: viewModel,
+                        alwaysAutoRefreshOpenPosition: false
+                    )
                     navigationController?.pushViewController(controller, animated: true)
                 }
             case .closed:

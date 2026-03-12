@@ -431,7 +431,11 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
             if let market = PerpsMarketDAO.shared.market(marketID: position.marketID),
                let viewModel = PerpetualMarketViewModel(market: market)
             {
-                let market = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
+                let market = PerpetualMarketViewController(
+                    wallet: wallet,
+                    viewModel: viewModel,
+                    alwaysAutoRefreshOpenPosition: false
+                )
                 navigationController?.pushViewController(market, animated: true)
             }
         case .markets:
@@ -439,7 +443,11 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
                 return
             }
             let viewModel = markets[indexPath.item]
-            let market = PerpetualMarketViewController(wallet: wallet, viewModel: viewModel)
+            let market = PerpetualMarketViewController(
+                wallet: wallet,
+                viewModel: viewModel,
+                alwaysAutoRefreshOpenPosition: false
+            )
             navigationController?.pushViewController(market, animated: true)
         case .activity:
             guard let closedPositions, !closedPositions.isEmpty else {

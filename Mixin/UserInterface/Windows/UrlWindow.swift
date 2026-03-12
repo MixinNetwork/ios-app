@@ -85,7 +85,11 @@ class UrlWindow {
                                let market,
                                let viewModel = PerpetualMarketViewModel(market: market)
                             {
-                                let market = PerpetualMarketViewController(wallet: .privacy, viewModel: viewModel)
+                                let market = PerpetualMarketViewController(
+                                    wallet: .privacy,
+                                    viewModel: viewModel,
+                                    alwaysAutoRefreshOpenPosition: false
+                                )
                                 navigationController.pushViewController(market, animated: true)
                                 reporter.report(
                                     event: .tradeStart,

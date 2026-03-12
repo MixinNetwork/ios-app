@@ -48,7 +48,7 @@
                     </stackView>
                     <view contentMode="scaleToFill" placeholderIntrinsicWidth="37" placeholderIntrinsicHeight="37" translatesAutoresizingMaskIntoConstraints="NO" id="8za-5G-VrX" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
                         <rect key="frame" x="149" y="79" width="37" height="37"/>
-                        <color key="backgroundColor" name="background"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="tintColor" name="text_quaternary"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="boolean" keyPath="hidesWhenStopped" value="YES"/>
@@ -76,9 +76,6 @@
     </objects>
     <resources>
         <image name="Empty Indicator/ic_data" width="72" height="78"/>
-        <namedColor name="background">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <namedColor name="text_quaternary">
             <color red="0.70196078431372544" green="0.70196078431372544" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

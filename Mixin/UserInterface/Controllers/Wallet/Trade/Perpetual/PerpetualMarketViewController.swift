@@ -42,6 +42,10 @@ final class PerpetualMarketViewController: UIViewController {
             title: viewModel.market.displaySymbol,
             subtitle: R.string.localizable.perpetual()
         )
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         view.backgroundColor = R.color.background_secondary()
         
         let config = UICollectionViewCompositionalLayoutConfiguration()
@@ -173,6 +177,12 @@ final class PerpetualMarketViewController: UIViewController {
             let manual = PerpsManual.viewController()
             present(manual, animated: true)
         }
+    }
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController()
+        present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "perps_market"])
     }
     
     @objc private func openPosition(_ sender: UIButton) {

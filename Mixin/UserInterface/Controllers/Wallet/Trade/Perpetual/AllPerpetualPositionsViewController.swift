@@ -49,21 +49,28 @@ final class AllPerpetualPositionsViewController: UIViewController {
                     section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                     return section
                 case .positions:
-                    let itemSize = if let viewModels = self?.viewModels, !viewModels.isEmpty {
+                    let hasPositions = if let viewModels = self?.viewModels {
+                        !viewModels.isEmpty
+                    } else {
+                        false
+                    }
+                    let itemSize = if hasPositions {
                         NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
                     } else {
-                        NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(150))
+                        NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(200))
                     }
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
                     let section = NSCollectionLayoutSection(group: group)
                     section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
                     section.interGroupSpacing = 20
-                    let background: NSCollectionLayoutDecorationItem = .background(
-                        elementKind: TradeSectionBackgroundView.elementKind
-                    )
-                    background.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-                    section.decorationItems = [background]
+                    if hasPositions {
+                        let background: NSCollectionLayoutDecorationItem = .background(
+                            elementKind: TradeSectionBackgroundView.elementKind
+                        )
+                        background.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                        section.decorationItems = [background]
+                    }
                     return section
                 }
             },
@@ -211,7 +218,11 @@ extension AllPerpetualPositionsViewController: UICollectionViewDataSource {
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_placeholder, for: indexPath)!
                 cell.activityIndicatorView.isAnimating = viewModels == nil
-                cell.helpButton.isHidden = true
+                cell.helpButton.isHidden = content == .closed
+                cell.onHelp = { [weak self] in
+                    let manual = PerpsManual.viewController()
+                    self?.present(manual, animated: true)
+                }
                 return cell
             }
         }

@@ -159,6 +159,7 @@ final class TradePerpetualViewController: UIViewController {
         collectionView.register(R.nib.perpetualPositionValueCell)
         collectionView.register(R.nib.perpetualPlaceholderCell)
         collectionView.register(R.nib.perpetualMarketCell)
+        collectionView.register(R.nib.perpetualClosedPositionCell)
         collectionView.register(R.nib.perpetualIntroductionCell)
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -190,7 +191,7 @@ final class TradePerpetualViewController: UIViewController {
                     self.actionView.isEnabled = true
                 }
                 self.closedPositions = closedPositions
-                self.collectionView.reloadData()
+                UIView.performWithoutAnimation(self.collectionView.reloadData)
                 self.openPositionsLoader.start()
                 self.reloadMarketsAndHistoryFromRemote()
             }
@@ -337,7 +338,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             }
         case .activity:
             if let closedPositions, !closedPositions.isEmpty {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_closed_position, for: indexPath)!
                 let viewModel = closedPositions[indexPath.item]
                 cell.load(viewModel: viewModel)
                 return cell
@@ -492,11 +493,13 @@ extension TradePerpetualViewController {
                 }
                 self.value = value
                 self.openPositions = openPositions
-                let sections = IndexSet([
-                    Section.value.rawValue,
-                    Section.positions.rawValue
-                ])
-                self.collectionView.reloadSections(sections)
+                UIView.performWithoutAnimation {
+                    let sections = IndexSet([
+                        Section.value.rawValue,
+                        Section.positions.rawValue
+                    ])
+                    self.collectionView.reloadSections(sections)
+                }
             }
         }
     }
@@ -515,9 +518,10 @@ extension TradePerpetualViewController {
                     return
                 }
                 self.closedPositions = closedPositions
-                self.collectionView.reloadSections(
-                    IndexSet(integer: Section.activity.rawValue)
-                )
+                UIView.performWithoutAnimation {
+                    let activity = IndexSet(integer: Section.activity.rawValue)
+                    self.collectionView.reloadSections(activity)
+                }
             }
         }
     }
@@ -535,9 +539,10 @@ extension TradePerpetualViewController {
                         return
                     }
                     self.markets = viewModels
-                    self.collectionView.reloadSections(
-                        IndexSet(integer: Section.markets.rawValue)
-                    )
+                    UIView.performWithoutAnimation {
+                        let markets = IndexSet(integer: Section.markets.rawValue)
+                        self.collectionView.reloadSections(markets)
+                    }
                     if !markets.isEmpty {
                         self.actionView.isEnabled = true
                     }

@@ -19,7 +19,7 @@ struct PerpetualMarketViewModel {
         guard
             let decimalPrice = Decimal(string: m.markPrice, locale: .enUSPOSIX),
             let change = Decimal(string: m.change, locale: .enUSPOSIX),
-            let changePercentage = NumberFormatter.percentage.string(decimal: change / 100),
+            let changePercentage = NumberFormatter.percentage.string(decimal: change),
             let decimalVolume = Decimal(string: m.volume, locale: .enUSPOSIX),
             let decimalAmount = Decimal(string: m.amount, locale: .enUSPOSIX),
             let decimalFundingRate = Decimal(string: m.fundingRate, locale: .enUSPOSIX)

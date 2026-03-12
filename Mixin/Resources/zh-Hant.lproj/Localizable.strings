@@ -718,7 +718,7 @@
 "from_address" = "從外部轉入";
 "from_date" = "自%@";
 "from_mixin_wallet" = "從 Mixin 錢包轉入";
-"funding_rate" = "資金利率";
+"funding_rate" = "資金費率";
 "generating" = "正在生成...";
 "generating_keys" = "正在建立金鑰...";
 "global_market_cap" = "全球總市值";
@@ -892,6 +892,7 @@
 "manage" = "管理";
 "manage_your_apps" = "管理你所有的機器人";
 "manage_your_circles" = "管理你所有的圈子";
+"margin" = "保證金";
 "market" = "行情";
 "market_cap" = "市值";
 "markets" = "行情";

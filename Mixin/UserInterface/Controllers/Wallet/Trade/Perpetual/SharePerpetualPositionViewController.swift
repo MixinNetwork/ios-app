@@ -24,6 +24,9 @@ final class SharePerpetualPositionViewController: ShareViewAsPictureViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         positionView.load(viewModel: viewModel)
+        closeButton.overrideUserInterfaceStyle = .light
+        actionButtonBackgroundView.effect = nil
+        actionButtonTrayView.backgroundColor = R.color.background()
     }
     
     override func share(_ sender: Any) {

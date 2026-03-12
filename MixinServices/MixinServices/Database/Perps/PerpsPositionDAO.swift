@@ -42,7 +42,7 @@ public final class PerpsPositionDAO: PerpsDAO {
     }
     
     public func positionItems() -> [PerpetualPositionItem] {
-        db.select(with: Self.itemSQL)
+        db.select(with: Self.itemSQL + "ORDER BY created_at DESC")
     }
     
     public func replace(positions: [PerpetualPosition]) {

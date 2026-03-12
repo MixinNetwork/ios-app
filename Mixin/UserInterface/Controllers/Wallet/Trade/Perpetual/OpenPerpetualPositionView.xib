@@ -53,7 +53,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="393" height="701.66666666666663"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H0e-nI-q4n" userLabel="Content View">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="442.66666666666669"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="434.66666666666669"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Pn8-P6-wWM">
                                     <rect key="frame" x="36" y="22" width="321" height="42"/>
@@ -86,10 +86,10 @@
                                     </subviews>
                                 </stackView>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v7H-a6-XPT">
-                                    <rect key="frame" x="20" y="80" width="353" height="135"/>
+                                    <rect key="frame" x="20" y="80" width="353" height="127"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="E8N-ac-RnC">
-                                            <rect key="frame" x="16" y="16" width="321" height="112"/>
+                                            <rect key="frame" x="16" y="16" width="321" height="104"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5rc-Ey-o4L">
                                                     <rect key="frame" x="0.0" y="0.0" width="321" height="17"/>
@@ -159,10 +159,10 @@
                                                     </constraints>
                                                 </stackView>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="VFF-4J-x7Q" userLabel="Margin Token Footer Stack View">
-                                                    <rect key="frame" x="0.0" y="68" width="321" height="44"/>
+                                                    <rect key="frame" x="0.0" y="68" width="321" height="36"/>
                                                     <subviews>
                                                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ZP-qA-KNh" userLabel="Input Balance Button">
-                                                            <rect key="frame" x="0.0" y="0.0" width="16" height="44"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="16" height="36"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <inset key="contentEdgeInsets" minX="12" minY="10" maxX="0.0" maxY="10"/>
                                                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -178,7 +178,7 @@
                                                             </connections>
                                                         </button>
                                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3VU-hr-SaE" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
-                                                            <rect key="frame" x="19" y="0.0" width="0.0" height="44"/>
+                                                            <rect key="frame" x="19" y="0.0" width="0.0" height="36"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="tintColor" name="theme"/>
                                                             <inset key="contentEdgeInsets" minX="12" minY="10" maxX="12" maxY="10"/>
@@ -192,14 +192,14 @@
                                                             </userDefinedRuntimeAttributes>
                                                         </button>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yh5-1L-Izi">
-                                                            <rect key="frame" x="22" y="0.0" width="299" height="44"/>
+                                                            <rect key="frame" x="22" y="0.0" width="299" height="36"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" name="text_quaternary"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="44" id="HH4-Cm-bX5"/>
+                                                        <constraint firstAttribute="height" constant="36" id="HH4-Cm-bX5"/>
                                                     </constraints>
                                                 </stackView>
                                             </subviews>
@@ -235,7 +235,7 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u0I-f4-MTw">
-                                    <rect key="frame" x="20" y="217" width="353" height="159.66666666666663"/>
+                                    <rect key="frame" x="20" y="209" width="353" height="159.66666666666663"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="gRC-zH-WK2">
                                             <rect key="frame" x="16" y="16.000000000000004" width="321" height="60.333333333333343"/>
@@ -289,7 +289,7 @@
                                     </constraints>
                                 </view>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="sVa-iZ-L0Z">
-                                    <rect key="frame" x="36" y="392.66666666666669" width="321" height="50"/>
+                                    <rect key="frame" x="36" y="384.66666666666669" width="321" height="50"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7S2-eq-j24">
                                             <rect key="frame" x="0.0" y="0.0" width="321" height="17"/>

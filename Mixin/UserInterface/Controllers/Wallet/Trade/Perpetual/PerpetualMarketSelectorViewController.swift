@@ -77,7 +77,19 @@ final class PerpetualMarketSelectorViewController: TokenSelectorViewController {
     }
     
     func search(keyword: String) {
-        
+        let lowercasedKeyword = keyword.lowercased()
+        let searchResults = markets.filter { viewModel in
+            viewModel.market.tokenSymbol.lowercased().contains(lowercasedKeyword)
+        }
+        self.searchResultsKeyword = keyword
+        self.searchResults = searchResults
+        collectionView.reloadData()
+        collectionView.checkEmpty(
+            dataCount: searchResults.count,
+            text: R.string.localizable.no_results(),
+            photo: R.image.emptyIndicator.ic_search_result()!
+        )
+        searchBoxView.isBusy = false
     }
     
     private func viewModel(at indexPath: IndexPath) -> PerpetualMarketViewModel {

@@ -1217,6 +1217,7 @@
 "price_data_unavailable" = "Price data unavailable";
 "price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";
 "price_fall_loss" = "Price decrease %@ → Loss %@";
+"price_fall_loss_all" = "Price decrease %@ → Loss all";
 "price_fall_profit" = "Price decrease %@ → Gain %@";
 "price_fall_profit_value" = "Price decrease %@ → Gain %@ (%@)";
 "price_in_currency" = "Price (%@)";
@@ -1224,6 +1225,7 @@
 "price_must_greater_than_current" = "The set price must be greater than the current price";
 "price_must_less_than_current" = "The set price must be less than the current price";
 "price_rise_loss" = "Price increase %@ → Loss %@";
+"price_rise_loss_all" = "Price increase %@ → Loss all";
 "price_rise_profit" = "Price increase %@ → Gain %@";
 "price_rise_profit_value" = "Price increase %@ → Gain %@ (%@)";
 "price_too_large" = "The set price must be less than %@ times the current price";

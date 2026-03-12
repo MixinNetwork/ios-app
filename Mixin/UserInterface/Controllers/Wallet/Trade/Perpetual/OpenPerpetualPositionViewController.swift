@@ -120,6 +120,10 @@ final class OpenPerpetualPositionViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.title = R.string.localizable.open_position()
+        navigationItem.rightBarButtonItem = .customerService(
+            target: self,
+            action: #selector(presentCustomerService(_:))
+        )
         
         tokenIconView.setIcon(tokenIconURL: viewModel.iconURL)
         titleLabel.text = switch side {
@@ -277,6 +281,12 @@ final class OpenPerpetualPositionViewController: UIViewController {
                 sender?.isBusy = false
             }
         }
+    }
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController()
+        present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "open_perps_position"])
     }
     
     private func reloadMarginTokens() {

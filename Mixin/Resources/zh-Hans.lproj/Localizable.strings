@@ -1217,6 +1217,7 @@
 "price_data_unavailable" = "暂无价格数据";
 "price_decrease_invalid" = "跌幅需大于 %1$@ 且小于 %2$@";
 "price_fall_loss" = "价格上涨 %@ → 亏损 %@";
+"price_fall_loss_all" = "价格上涨 %@ → 亏损全部";
 "price_fall_profit" = "价格下跌 %@ → 盈利 %@";
 "price_fall_profit_value" = "价格下跌 %@ → 盈利 %@（%@）";
 "price_in_currency" = "价格（%@）";
@@ -1224,6 +1225,7 @@
 "price_must_greater_than_current" = "设定价格需大于现价";
 "price_must_less_than_current" = "设定价格需小于现价";
 "price_rise_loss" = "价格下跌 %@ → 亏损 %@";
+"price_rise_loss_all" = "价格下跌 %@ → 亏损全部";
 "price_rise_profit" = "价格上涨 %@ → 盈利 %@";
 "price_rise_profit_value" = "价格上涨 %@ → 盈利 %@（%@）";
 "price_too_large" = "设定价格需小于现价的 %@ 倍";

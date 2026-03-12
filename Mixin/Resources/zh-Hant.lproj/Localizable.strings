@@ -1217,6 +1217,7 @@
 "price_data_unavailable" = "暫無價格資料";
 "price_decrease_invalid" = "跌幅需大於 %1$@ 且小於 %2$@";
 "price_fall_loss" = "價格上漲 %@ → 虧損 %@";
+"price_fall_loss_all" = "價格上漲 %@ → 虧損全部";
 "price_fall_profit" = "價格下跌 %@ → 盈利 %@";
 "price_fall_profit_value" = "價格下跌 %@ → 盈利 %@（%@）";
 "price_in_currency" = "價格（%@）";
@@ -1224,6 +1225,7 @@
 "price_must_greater_than_current" = "設定價格需大於現價";
 "price_must_less_than_current" = "設定價格需小於現價";
 "price_rise_loss" = "價格下跌 %@ → 虧損 %@";
+"price_rise_loss_all" = "價格下跌 %@ → 虧損全部";
 "price_rise_profit" = "價格上漲 %@ → 盈利 %@";
 "price_rise_profit_value" = "價格上漲 %@ → 盈利 %@（%@）";
 "price_too_large" = "設定價格需小於現價的 %@ 倍";

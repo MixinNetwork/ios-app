@@ -74,17 +74,26 @@ enum PerpetualChangeSimulation {
             format: .pretty,
             sign: .never
         )
-        let marginValue = CurrencyFormatter.localizedString(
-            from: -margin * Currency.current.decimalRate,
-            format: .precision,
-            sign: .always,
-            symbol: .currencySymbol
-        )
-        return switch side {
-        case .long:
-            R.string.localizable.price_fall_loss(percentage, marginValue)
-        case .short:
-            R.string.localizable.price_rise_loss(percentage, marginValue)
+        if margin == 0 {
+            return switch side {
+            case .long:
+                R.string.localizable.price_fall_loss_all(percentage)
+            case .short:
+                R.string.localizable.price_rise_loss_all(percentage)
+            }
+        } else {
+            let marginValue = CurrencyFormatter.localizedString(
+                from: -margin * Currency.current.decimalRate,
+                format: .precision,
+                sign: .always,
+                symbol: .currencySymbol
+            )
+            return switch side {
+            case .long:
+                R.string.localizable.price_fall_loss(percentage, marginValue)
+            case .short:
+                R.string.localizable.price_rise_loss(percentage, marginValue)
+            }
         }
     }
     

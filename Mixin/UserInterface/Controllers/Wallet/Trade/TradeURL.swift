@@ -3,7 +3,7 @@ import Foundation
 struct TradeURL {
     
     enum TradingType {
-        case perps(product: String)
+        case perps(market: String)
         case spot(trading: TradeViewController.Trading?, input: String?, output: String?)
     }
     
@@ -11,7 +11,7 @@ struct TradeURL {
     let referral: String?
     
     init?(queryItems: [URLQueryItem]?) {
-        var type, input, output, product, referral: String?
+        var type, input, output, market, referral: String?
         if let queryItems {
             for item in queryItems {
                 switch item.name {
@@ -23,8 +23,8 @@ struct TradeURL {
                     output = item.value
                 case "referral":
                     referral = item.value
-                case "product":
-                    product = item.value
+                case "market":
+                    market = item.value
                 default:
                     break
                 }
@@ -36,13 +36,13 @@ struct TradeURL {
         case "limit":
             self.type = .spot(trading: .advancedSpot, input: input, output: output)
         case "perps":
-            if let product {
-                self.type = .perps(product: product)
+            if let market {
+                self.type = .perps(market: market)
             } else {
                 return nil
             }
         default:
-            return nil
+            self.type = .spot(trading: nil, input: input, output: output)
         }
         self.referral = referral
     }

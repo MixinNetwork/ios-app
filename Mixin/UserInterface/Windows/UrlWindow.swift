@@ -68,7 +68,7 @@ class UrlWindow {
                 return true
             case .trade(let context):
                 switch context.type {
-                case let .perps(product):
+                case let .perps(marketID):
                     let hud = Hud()
                     hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
                     RouteAPI.perpsMarkets(queue: .main) { result in
@@ -79,7 +79,7 @@ class UrlWindow {
                             }
                             hud.hide()
                             let market = markets.first { market in
-                                market.marketID == product
+                                market.marketID == marketID
                             }
                             if let navigationController = UIApplication.homeNavigationController,
                                let market,
@@ -97,7 +97,20 @@ class UrlWindow {
                             hud.scheduleAutoHidden()
                         }
                     }
-                case let .spot(trading, input, output):
+                case let .spot(designatedTrading, input, output):
+                    let trading: TradeViewController.Trading
+                    if let designatedTrading {
+                        trading = designatedTrading
+                    } else {
+                        let mode = AppGroupUserDefaults.Wallet.tradeMode
+                        let lastTrading = TradeViewController.Trading(rawValue: mode)
+                        switch lastTrading {
+                        case .simpleSpot,.perpetualFutures, .none:
+                            trading = .simpleSpot
+                        case .advancedSpot:
+                            trading = .advancedSpot
+                        }
+                    }
                     let trade = TradeViewController(
                         wallet: .privacy,
                         trading: trading,

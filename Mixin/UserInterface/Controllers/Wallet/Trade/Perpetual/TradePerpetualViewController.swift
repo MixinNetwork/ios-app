@@ -213,6 +213,11 @@ final class TradePerpetualViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         openPositionsLoader.start()
+        if !BadgeManager.shared.hasViewed(identifier: .perpsManual) {
+            BadgeManager.shared.setHasViewed(identifier: .perpsManual)
+            let manual = PerpsManual.viewController()
+            present(manual, animated: true)
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {

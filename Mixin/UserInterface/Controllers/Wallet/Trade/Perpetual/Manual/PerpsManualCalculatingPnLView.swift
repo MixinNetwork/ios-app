@@ -53,25 +53,28 @@ struct PerpsManualCalculatingPnLView: View {
         }
     }
     
-    private var pnl: Decimal {
-        margin * pnlPercentage
-    }
-    
     private var pnlColor: MarketColor {
         pnlPercentage > 0 ? .rising : .falling
     }
     
-    private var localizedPnL: String {
-        CurrencyFormatter.localizedString(
+    private var displayPnL: String {
+        let pnl = margin * pnlPercentage
+        let localizedPnL = CurrencyFormatter.localizedString(
             from: pnl,
             format: .precision,
             sign: .always,
             symbol: .custom(marginSymbol)
         )
-    }
-    
-    private var localizedPnLPercentage: String {
-        PercentageFormatter.string(from: pnlPercentage, format: .pretty, sign: .always)
+        if pnl >= 0 {
+            let percentage = PercentageFormatter.string(
+                from: pnlPercentage,
+                format: .pretty,
+                sign: .always
+            )
+            return localizedPnL + "(" + percentage + ")"
+        } else {
+            return localizedPnL
+        }
     }
     
     var body: some View {
@@ -123,7 +126,7 @@ struct PerpsManualCalculatingPnLView: View {
                 Text(R.string.localizable.pnl())
                     .modifier(ManualText(.caption2))
                 Spacer()
-                Text("\(localizedPnL) (\(localizedPnLPercentage))")
+                Text(displayPnL)
                     .modifier(ManualText(.subheading(pnlColor.uiColor), monospacedDigit: true))
             }
         }

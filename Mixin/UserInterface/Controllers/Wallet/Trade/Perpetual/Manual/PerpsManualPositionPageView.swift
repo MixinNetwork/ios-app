@@ -7,9 +7,6 @@ struct PerpsManualPositionPageView: View {
     private let marginSymbol = "USDT"
     private let assetSymbol = "SOL"
     private let assetPrice: Decimal = 74.62
-    private let leverages: [Decimal] = [
-        1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100
-    ]
     
     @State private var margin: Decimal = 1000
     @State private var leverageMultiplier: Decimal = 10
@@ -51,25 +48,20 @@ struct PerpsManualPositionPageView: View {
                             Spacer()
                             HStack(alignment: .center, spacing: 6) {
                                 Button {
-                                    if let index = leverages.firstIndex(of: leverageMultiplier) {
-                                        leverageMultiplier = leverages[index - 1]
-                                    }
+                                    leverageMultiplier -= 1
                                 } label: {
                                     Image(R.image.stepper_decrease)
                                 }
-                                .disabled(leverageMultiplier <= leverages.first!)
+                                .disabled(leverageMultiplier <= 1)
                                 
                                 Text(PerpetualLeverage.stringRepresentation(multiplier: leverageMultiplier))
                                     .modifier(ManualText(.subheading(R.color.text()!), monospacedDigit: true))
                                 
                                 Button {
-                                    if let index = leverages.lastIndex(of: leverageMultiplier) {
-                                        leverageMultiplier = leverages[index + 1]
-                                    }
+                                    leverageMultiplier += 1
                                 } label: {
                                     Image(R.image.stepper_increase)
                                 }
-                                .disabled(leverageMultiplier >= leverages.last!)
                             }
                         }
                         HStack {
@@ -100,7 +92,7 @@ struct PerpsManualPositionPageView: View {
                             }
                         }
                         HStack {
-                            Text(R.string.localizable.position_value())
+                            Text(R.string.localizable.position_size())
                                 .modifier(ManualText(.caption2))
                             Spacer()
                             Text(CurrencyFormatter.localizedString(

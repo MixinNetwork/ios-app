@@ -166,6 +166,15 @@ final class PerpetualMarketViewController: UIViewController {
         reloadPositions()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if !BadgeManager.shared.hasViewed(identifier: .perpsManual) {
+            BadgeManager.shared.setHasViewed(identifier: .perpsManual)
+            let manual = PerpsManual.viewController()
+            present(manual, animated: true)
+        }
+    }
+    
     @objc private func openPosition(_ sender: UIButton) {
         guard let actionView = actionView as? OpenPerpetualActionView else {
             return

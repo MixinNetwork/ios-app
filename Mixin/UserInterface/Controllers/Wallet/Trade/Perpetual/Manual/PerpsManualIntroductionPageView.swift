@@ -26,7 +26,7 @@ struct PerpsManualIntroductionPageView: View {
                     BulletinText([
                         R.string.localizable.product_features_1(),
                         R.string.localizable.product_features_2(),
-                        R.string.localizable.product_features_3(100),
+                        R.string.localizable.product_features_3(200),
                         R.string.localizable.product_features_4(),
                         R.string.localizable.product_features_5(),
                     ])

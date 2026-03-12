@@ -70,7 +70,7 @@ struct PerpsManualLongPageView: View {
                             margin: margin,
                             marginSymbol: marginSymbol,
                             changeStep: 0.01,
-                            change: 0.01
+                            change: 0.1
                         )
                         
                         Rectangle()
@@ -84,7 +84,7 @@ struct PerpsManualLongPageView: View {
                             margin: margin,
                             marginSymbol: marginSymbol,
                             changeStep: 0.01,
-                            change: -0.01
+                            change: -0.1
                         )
                     }
                 }

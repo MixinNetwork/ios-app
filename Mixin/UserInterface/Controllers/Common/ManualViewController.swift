@@ -97,7 +97,7 @@ final class ManualViewController: UIViewController {
         self.pageViewController = pageViewController
         
         if let firstPage = dequeueReusableViewController(of: 0) {
-            pageSelectorCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .left)
+            pageSelectorCollectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: [])
             pageViewController.setViewControllers([firstPage], direction: .forward, animated: false)
         }
     }
@@ -119,7 +119,7 @@ final class ManualViewController: UIViewController {
         let nextTitle: String? = if index < pages.count - 1 {
             pages[index + 1].title
         } else {
-            nil
+            R.string.localizable.start()
         }
         let viewController: ManualPageContentViewController
         if let controller = reusableContentViewControllers.first(where: \.isReusable) {
@@ -212,17 +212,21 @@ extension ManualViewController: UIPageViewControllerDelegate {
 extension ManualViewController: ManualPageContentViewController.Delegate {
     
     func manualPageContentViewController(_ controller: ManualPageContentViewController, didNavigateTo index: Int) {
-        pageSelectorCollectionView.selectItem(
-            at: IndexPath(item: index, section: 0),
-            animated: false,
-            scrollPosition: .left
-        )
-        if let page = dequeueReusableViewController(of: index) {
-            pageViewController.setViewControllers(
-                [page],
-                direction: page.index > controller.index ? .forward : .reverse,
-                animated: true
+        if index == pages.count {
+            presentingViewController?.dismiss(animated: true)
+        } else {
+            pageSelectorCollectionView.selectItem(
+                at: IndexPath(item: index, section: 0),
+                animated: false,
+                scrollPosition: .left
             )
+            if let page = dequeueReusableViewController(of: index) {
+                pageViewController.setViewControllers(
+                    [page],
+                    direction: page.index > controller.index ? .forward : .reverse,
+                    animated: true
+                )
+            }
         }
     }
     

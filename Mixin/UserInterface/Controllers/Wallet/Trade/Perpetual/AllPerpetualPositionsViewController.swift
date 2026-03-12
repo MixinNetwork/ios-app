@@ -42,11 +42,11 @@ final class AllPerpetualPositionsViewController: UIViewController {
             sectionProvider: { [weak self] (sectionIndex, _) in
                 switch Section.allCases[sectionIndex] {
                 case .summary:
-                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(38))
+                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(95))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
                     let section = NSCollectionLayoutSection(group: group)
-                    section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 20, bottom: 0, trailing: 20)
                     return section
                 case .positions:
                     let hasPositions = if let viewModels = self?.viewModels {

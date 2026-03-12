@@ -858,7 +858,6 @@
 "link_desktop_description" = "Link Mixin Desktop by QR code";
 "link_recognition_failure" = "Error de reconocimiento de enlace";
 "link_shareable_false" = "El enlace se ha configurado para no permitir compartir";
-"liquidation" = "Liquidation";
 "liquidation_price" = "Liquidation Price";
 "live" = "En vivo";
 "live_shareable_false" = "El directo se ha configurado para no permitir compartir";
@@ -1195,7 +1194,10 @@
 "pnl_rules" = "PnL Rules:";
 "position" = "Position";
 "position_closed" = "Position Closed";
+"position_closing_failed" = "Closing Failed";
 "position_opened" = "Position Opened";
+"position_opened_description" = "You have opened a position.";
+"position_opening_failed" = "Opening Failed";
 "position_size" = "Size";
 "position_value" = "Position Value";
 "positions" = "Positions";

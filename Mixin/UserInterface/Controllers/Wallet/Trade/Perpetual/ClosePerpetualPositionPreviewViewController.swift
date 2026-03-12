@@ -119,7 +119,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
-                    let title = R.string.localizable.swap_failed()
+                    let title = R.string.localizable.position_closing_failed()
                     layoutTableHeaderView(
                         title: title,
                         subtitle: errorDescription,

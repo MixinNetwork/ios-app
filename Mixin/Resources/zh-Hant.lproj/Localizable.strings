@@ -320,12 +320,12 @@
 "cleared" = "已清空";
 "clock_skew_hint" = "請校正後再繼續使用，設定 > 一般 > 日期與時間 > 自動設定";
 "close" = "關閉";
-"close_position" = "關倉";
-"close_price" = "關倉價格";
+"close_position" = "平倉";
+"close_price" = "平倉價格";
 "closed_long" = "歷史多單";
 "closed_short" = "歷史空單";
 "closing_balance" = "期末餘額";
-"closing_position" = "正在關倉";
+"closing_position" = "正在平倉";
 "collectible" = "藏品";
 "collectible_hash" = "藏品雜湊";
 "collectible_owner" = "擁有者";
@@ -351,7 +351,7 @@
 "compressed" = "已壓縮";
 "confirm" = "確認";
 "confirm_adding_address" = "新增地址確認";
-"confirm_closing_position" = "確認關倉";
+"confirm_closing_position" = "確認平倉";
 "confirm_deleting_address" = "刪除地址確認";
 "confirm_editing_address" = "修改地址確認";
 "confirm_opening_position" = "確認開倉";
@@ -858,7 +858,6 @@
 "link_desktop_description" = "透過二維碼連結桌面端";
 "link_recognition_failure" = "連結識別失敗";
 "link_shareable_false" = "該連結已被設定為不允許分享";
-"liquidation" = "平倉";
 "liquidation_price" = "清算價格";
 "live" = "直播";
 "live_shareable_false" = "該直播已被設定為不允許轉發";
@@ -1194,8 +1193,11 @@
 "pnl_rule_price_rise_profit" = "價格上漲：產生盈利";
 "pnl_rules" = "盈虧規則：";
 "position" = "倉位";
-"position_closed" = "倉位已關閉";
-"position_opened" = "倉位已開啟";
+"position_closed" = "平倉成功";
+"position_closing_failed" = "平倉失敗";
+"position_opened" = "開倉成功";
+"position_opened_description" = "您的開倉已成功。";
+"position_opening_failed" = "開倉失敗";
 "position_size" = "規模";
 "position_value" = "倉位價值";
 "positions" = "倉位";

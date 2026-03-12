@@ -107,7 +107,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     tableHeaderView.setIcon(progress: .success)
                     layoutTableHeaderView(
                         title: R.string.localizable.position_opened(),
-                        subtitle: "您的开仓已成功。"
+                        subtitle: R.string.localizable.position_opened_description()
                     )
                     tableView.setContentOffset(.zero, animated: true)
                     loadFinishedTrayView()
@@ -131,7 +131,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
-                    let title = R.string.localizable.swap_failed()
+                    let title = R.string.localizable.position_opening_failed()
                     layoutTableHeaderView(
                         title: title,
                         subtitle: errorDescription,

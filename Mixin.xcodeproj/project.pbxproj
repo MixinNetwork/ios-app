@@ -652,7 +652,7 @@
 		94046B97272DC2CF007C1D4A /* OutgoingPeerCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94046B95272DC2CF007C1D4A /* OutgoingPeerCall.swift */; };
 		9404AD392F5DA65A007FC231 /* BulletinText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404AD382F5DA656007FC231 /* BulletinText.swift */; };
 		9404AD502F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404AD4F2F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift */; };
-		9404AD5E2F5DAA45007FC231 /* PerpsManualLongPositionPnLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionPnLView.swift */; };
+		9404AD5E2F5DAA45007FC231 /* PerpsManualLongPositionProfitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionProfitView.swift */; };
 		9404AD872F5DB4EF007FC231 /* PerpsManualPositionPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404AD862F5DB4EF007FC231 /* PerpsManualPositionPageView.swift */; };
 		94051FA42E812D64005B3A16 /* DepositFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94051FA32E812D61005B3A16 /* DepositFilter.swift */; };
 		94051FB22E81306F005B3A16 /* RefreshTokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94051FB12E81306F005B3A16 /* RefreshTokenJob.swift */; };
@@ -1022,6 +1022,7 @@
 		945C591A2DC215F60024F6DE /* MembershipCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 945C59182DC215F60024F6DE /* MembershipCell.xib */; };
 		945D48102D8956040093E30D /* WalletSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D480F2D8956000093E30D /* WalletSummary.swift */; };
 		945D867B2C21754A0066C61D /* CGSize+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945D867A2C21754A0066C61D /* CGSize+Constants.swift */; };
+		945E18372F62F054003434AA /* PerpsManualLongPositionLiquidationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E18302F62F04A003434AA /* PerpsManualLongPositionLiquidationView.swift */; };
 		945ED2B22B28342A00C138BF /* WithdrawPaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945ED2B12B28342A00C138BF /* WithdrawPaymentOperation.swift */; };
 		945F833C2A3748A4008C5CE5 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 945F831D2A3748A4008C5CE5 /* GCDWebServerResponse.m */; };
 		945F833D2A3748A4008C5CE5 /* GCDWebServerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 945F83202A3748A4008C5CE5 /* GCDWebServerRequest.m */; };
@@ -2504,7 +2505,7 @@
 		94046B95272DC2CF007C1D4A /* OutgoingPeerCall.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutgoingPeerCall.swift; sourceTree = "<group>"; };
 		9404AD382F5DA656007FC231 /* BulletinText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletinText.swift; sourceTree = "<group>"; };
 		9404AD4F2F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualLeveragePageView.swift; sourceTree = "<group>"; };
-		9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionPnLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualLongPositionPnLView.swift; sourceTree = "<group>"; };
+		9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionProfitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualLongPositionProfitView.swift; sourceTree = "<group>"; };
 		9404AD862F5DB4EF007FC231 /* PerpsManualPositionPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualPositionPageView.swift; sourceTree = "<group>"; };
 		94051FA32E812D61005B3A16 /* DepositFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFilter.swift; sourceTree = "<group>"; };
 		94051FB12E81306F005B3A16 /* RefreshTokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenJob.swift; sourceTree = "<group>"; };
@@ -2873,6 +2874,7 @@
 		945C59182DC215F60024F6DE /* MembershipCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MembershipCell.xib; sourceTree = "<group>"; };
 		945D480F2D8956000093E30D /* WalletSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSummary.swift; sourceTree = "<group>"; };
 		945D867A2C21754A0066C61D /* CGSize+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Constants.swift"; sourceTree = "<group>"; };
+		945E18302F62F04A003434AA /* PerpsManualLongPositionLiquidationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualLongPositionLiquidationView.swift; sourceTree = "<group>"; };
 		945ED2B12B28342A00C138BF /* WithdrawPaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawPaymentOperation.swift; sourceTree = "<group>"; };
 		945F831B2A3748A4008C5CE5 /* GCDWebServerFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFunctions.h; sourceTree = "<group>"; };
 		945F831C2A3748A4008C5CE5 /* GCDWebServerPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerPrivate.h; sourceTree = "<group>"; };
@@ -4828,7 +4830,8 @@
 				943B618B2F5C4B3C0043078A /* ScaledFont.swift */,
 				9404AD382F5DA656007FC231 /* BulletinText.swift */,
 				9463E8472F5D619F0069CF1B /* PerpsManualCalculatingPnLView.swift */,
-				9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionPnLView.swift */,
+				9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionProfitView.swift */,
+				945E18302F62F04A003434AA /* PerpsManualLongPositionLiquidationView.swift */,
 				943B5F932F5C0A6C0043078A /* PerpsManualIntroductionPageView.swift */,
 				943B61B52F5D45F80043078A /* PerpsManualLongPageView.swift */,
 				94BC7AFF2F5D876D009D8970 /* PerpsManualShortPageView.swift */,
@@ -7592,6 +7595,7 @@
 				7C5304A82902AAA200567CF6 /* AuthorizationScopeDataSource.swift in Sources */,
 				94668D682DF06C640068078D /* MembershipOrderRewardsCell.swift in Sources */,
 				944124A42E715CEB00705462 /* EnableNotificationHeaderView.swift in Sources */,
+				945E18372F62F054003434AA /* PerpsManualLongPositionLiquidationView.swift in Sources */,
 				DFBADC121FD1211E00722929 /* AboutViewController.swift in Sources */,
 				9429C1472E059F3100206DAA /* FeeRequiredInputAmountViewController.swift in Sources */,
 				946331C22C622C3500C54B76 /* TransactionHistoryDateFilterView.swift in Sources */,
@@ -8532,7 +8536,7 @@
 				943CAA282CC832E000346677 /* UIBarButtonItem+Convenience.swift in Sources */,
 				94438D57252DAD73005760AF /* Clip.swift in Sources */,
 				7C6132B627953B15002777EE /* DeleteAccountAbortWindow.swift in Sources */,
-				9404AD5E2F5DAA45007FC231 /* PerpsManualLongPositionPnLView.swift in Sources */,
+				9404AD5E2F5DAA45007FC231 /* PerpsManualLongPositionProfitView.swift in Sources */,
 				7BC3EBF72497507900E81FD8 /* GroupCallMemberPickerContentViewController.swift in Sources */,
 				7B86B1E723F6885800C80AD9 /* CardMessageTitleView.swift in Sources */,
 				9406F58F2C256C7900DDE060 /* OutlineButton.swift in Sources */,

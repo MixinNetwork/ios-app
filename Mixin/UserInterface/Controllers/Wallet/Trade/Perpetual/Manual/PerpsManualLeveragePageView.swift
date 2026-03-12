@@ -78,7 +78,7 @@ struct PerpsManualLeveragePageView: View {
                             .fill(Color(R.color.background_quaternary()!))
                             .frame(height: 1)
                         
-                        PerpsManualLongPositionPnLView(
+                        PerpsManualLongPositionProfitView(
                             title: R.string.localizable.example_scene1_increasing(),
                             change: 0.1,
                             marginSymbol: marginSymbol,
@@ -90,9 +90,8 @@ struct PerpsManualLeveragePageView: View {
                             .fill(Color(R.color.background_quaternary()!))
                             .frame(height: 1)
                         
-                        PerpsManualLongPositionPnLView(
+                        PerpsManualLongPositionLiquidationView(
                             title: R.string.localizable.example_scene2_decreasing(),
-                            change: -0.1,
                             marginSymbol: marginSymbol,
                             margin: $margin,
                             leverageMultiplier: $leverageMultiplier,

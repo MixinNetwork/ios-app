@@ -130,6 +130,19 @@ final class OpenPerpetualPositionViewController: UIViewController {
         }
         priceLabel.text = R.string.localizable.current_price(viewModel.price)
         
+        let infoLabels: [UILabel] = [
+            marginTitleLabel,
+            marginNetworkLabel,
+            leverageTitleLabel,
+            orderValueTitleLabel,
+            orderValueContentLabel,
+            liquidationPriceTitleLabel,
+            liquidationPriceContentLabel,
+        ]
+        for label in infoLabels {
+            label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
+        }
+        
         marginView.layer.cornerRadius = 8
         marginView.layer.masksToBounds = true
         marginContentStackView.setCustomSpacing(0, after: marginTokenSelectorStackView)
@@ -139,16 +152,8 @@ final class OpenPerpetualPositionViewController: UIViewController {
         
         leverageView.layer.cornerRadius = 8
         leverageView.layer.masksToBounds = true
+        leverageTitleLabel.text = R.string.localizable.leverage()
         
-        let infoLabels: [UILabel] = [
-            orderValueTitleLabel,
-            orderValueContentLabel,
-            liquidationPriceTitleLabel,
-            liquidationPriceContentLabel,
-        ]
-        for label in infoLabels {
-            label.setFont(scaledFor: .systemFont(ofSize: 14), adjustForContentSize: true)
-        }
         orderValueTitleLabel.text = R.string.localizable.position_size()
         liquidationPriceTitleLabel.text = R.string.localizable.liquidation_price()
         

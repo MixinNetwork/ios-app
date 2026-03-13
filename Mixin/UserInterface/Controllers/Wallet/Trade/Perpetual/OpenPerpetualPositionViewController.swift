@@ -43,7 +43,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
     
     @IBOutlet weak var reviewButtonWrapperView: UIView!
     @IBOutlet weak var errorDescriptionLabel: UILabel!
-    @IBOutlet weak var reviewButton: UIButton!
+    @IBOutlet weak var reviewButton: ConfigurationBasedBusyButton!
     
     private let wallet: Wallet
     private let side: PerpetualOrderSide
@@ -255,12 +255,14 @@ final class OpenPerpetualPositionViewController: UIViewController {
         sender.isBusy = true
         RouteAPI.openPerpsOrder(
             orderRequest: request
-        ) { [weak sender, wallet, viewModel, multiplier] result in
+        ) { [weak self, wallet, viewModel, multiplier] result in
             switch result {
             case .success(let response):
                 guard let url = URL(string: response.paymentURL) else {
-                    showAutoHiddenHud(style: .error, text: R.string.localizable.invalid_payment_link())
-                    sender?.isBusy = false
+                    if let self {
+                        self.showError(description: R.string.localizable.invalid_payment_link())
+                        self.reviewButton.isBusy = false
+                    }
                     return
                 }
                 let context = Payment.PerpsContext(
@@ -270,15 +272,21 @@ final class OpenPerpetualPositionViewController: UIViewController {
                     leverageMultiplier: multiplier
                 )
                 let source: UrlWindow.Source = .perps(context: context) { description in
-                    if let description {
-                        showAutoHiddenHud(style: .error, text: description)
+                    guard let self else {
+                        return
                     }
-                    sender?.isBusy = false
+                    if let description {
+                        self.showError(description: description)
+                    }
+                    self.reviewButton.isBusy = false
                 }
                 _ = UrlWindow.checkUrl(url: url, from: source)
             case .failure(let error):
-                showAutoHiddenHud(style: .error, text: error.localizedDescription)
-                sender?.isBusy = false
+                guard let self else {
+                    return
+                }
+                self.showError(description: error.localizedDescription)
+                self.reviewButton.isBusy = false
             }
         }
     }
@@ -354,8 +362,23 @@ final class OpenPerpetualPositionViewController: UIViewController {
         leverageMultiplier: Decimal,
         underlyingAsset: PerpetualMarketViewModel
     ) {
-        let orderValue = marginAmount * leverageMultiplier
-        reviewButton.isEnabled = amountValidator.isValid(orderValue: orderValue)
+        if marginAmount != 0, let marginToken {
+            let result = amountValidator.validate(
+                amount: marginAmount,
+                symbol: marginToken.symbol
+            )
+            switch result {
+            case .valid:
+                showError(description: nil)
+                reviewButton.isEnabled = true
+            case .invalid(let reason):
+                showError(description: reason)
+                reviewButton.isEnabled = false
+            }
+        } else {
+            showError(description: nil)
+            reviewButton.isEnabled = false
+        }
         changeSimulationLabel.text = PerpetualChangeSimulation.profit(
             side: side,
             margin: marginAmount,
@@ -363,7 +386,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
             priceChangePercent: 0.01
         )
         orderValueContentLabel.text = CurrencyFormatter.localizedString(
-            from: orderValue / underlyingAsset.decimalPrice,
+            from: marginAmount * leverageMultiplier / underlyingAsset.decimalPrice,
             format: .precision,
             sign: .never,
             symbol: .custom(underlyingAsset.market.tokenSymbol)
@@ -383,6 +406,15 @@ final class OpenPerpetualPositionViewController: UIViewController {
             )
         } else {
             liquidationPriceContentLabel.text = "-"
+        }
+    }
+    
+    private func showError(description: String?) {
+        if let description {
+            errorDescriptionLabel.text = description
+            errorDescriptionLabel.isHidden = false
+        } else {
+            errorDescriptionLabel.isHidden = true
         }
     }
     
@@ -536,23 +568,31 @@ extension OpenPerpetualPositionViewController {
     
     private final class AmountValidator {
         
-        private let minOrderValue: Decimal?
-        private let maxOrderValue: Decimal?
-        
-        init(market: PerpetualMarket) {
-            minOrderValue = Decimal(string: market.minOrderValue, locale: .enUSPOSIX)
-            maxOrderValue = Decimal(string: market.maxOrderValue, locale: .enUSPOSIX)
+        enum Result {
+            case valid
+            case invalid(reason: String)
         }
         
-        func isValid(orderValue: Decimal) -> Bool {
-            var result = orderValue > 0
-            if let minOrderValue {
-                result = result && orderValue >= minOrderValue
+        private let minAmount: Decimal
+        private let maxAmount: Decimal?
+        
+        init(market: PerpetualMarket) {
+            minAmount = Decimal(string: market.minAmount, locale: .enUSPOSIX) ?? 1
+            maxAmount = Decimal(string: market.maxAmount, locale: .enUSPOSIX)
+        }
+        
+        func validate(amount: Decimal, symbol: String) -> Result {
+            if amount < minAmount {
+                let min = CurrencyFormatter.localizedString(from: minAmount, format: .precision, sign: .never)
+                let reason = R.string.localizable.single_transaction_should_be_greater_than(min, symbol)
+                return .invalid(reason: reason)
+            } else if let maxAmount, amount > maxAmount {
+                let max = CurrencyFormatter.localizedString(from: maxAmount, format: .precision, sign: .never)
+                let reason = R.string.localizable.single_transaction_should_be_less_than(max, symbol)
+                return .invalid(reason: reason)
+            } else {
+                return .valid
             }
-            if let maxOrderValue {
-                result = result &&  orderValue <= maxOrderValue
-            }
-            return result
         }
         
     }

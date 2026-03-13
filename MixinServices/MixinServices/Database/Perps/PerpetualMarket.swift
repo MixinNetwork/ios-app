@@ -11,10 +11,8 @@ public struct PerpetualMarket {
     public let leverage: Int
     public let iconURL: String
     public let fundingRate: String
-    public let minOrderSize: String
-    public let maxOrderSize: String
-    public let minOrderValue: String
-    public let maxOrderValue: String
+    public let minAmount: String
+    public let maxAmount: String
     public let last: String
     public let volume: String
     public let amount: String
@@ -40,10 +38,8 @@ extension PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchableRec
         case leverage = "leverage"
         case iconURL = "icon_url"
         case fundingRate = "funding_rate"
-        case minOrderSize = "min_order_size"
-        case maxOrderSize = "max_order_size"
-        case minOrderValue = "min_order_value"
-        case maxOrderValue = "max_order_value"
+        case minAmount = "min_amount"
+        case maxAmount = "max_amount"
         case last = "last"
         case volume = "volume"
         case amount = "amount"

@@ -100,6 +100,12 @@ final class TradeViewController: UIViewController {
             name: Web3OrderDAO.didSaveNotification,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateOrdersButton),
+            name: PerpsPositionDAO.perpsPositionDidChangeNotification,
+            object: nil
+        )
         let defaultSelection = if let item = allTradings.firstIndex(of: trading) {
             IndexPath(item: item, section: 0)
         } else {

@@ -4,7 +4,11 @@ import MixinServices
 final class AllPerpetualMarketsViewController: UIViewController {
     
     private let wallet: Wallet
-    private let viewModels: [PerpetualMarketViewModel]
+    private let marketLoader = PerpetualMarketLoader()
+    
+    private var viewModels: [PerpetualMarketViewModel]
+    
+    private weak var collectionView: UICollectionView!
     
     init(wallet: Wallet, viewModels: [PerpetualMarketViewModel]) {
         self.wallet = wallet
@@ -48,16 +52,52 @@ final class AllPerpetualMarketsViewController: UIViewController {
         collectionView.backgroundColor = R.color.background_secondary()
         view.addSubview(collectionView)
         collectionView.snp.makeEdgesEqualToSuperview()
+        self.collectionView = collectionView
+        
         collectionView.register(R.nib.perpetualMarketCell)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadMarkets(_:)),
+            name: PerpsMarketDAO.marketsDidUpdateNotification,
+            object: nil
+        )
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        marketLoader.start()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        marketLoader.stop()
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
         let customerService = CustomerServiceViewController()
         present(customerService, animated: true)
         reporter.report(event: .customerServiceDialog, tags: ["source": "perps_all_markets"])
+    }
+    
+    @objc private func reloadMarkets(_ notification: Notification) {
+        let walletID = wallet.tradingWalletID
+        DispatchQueue.global().async { [weak self] in
+            let markets = PerpsMarketDAO.shared.markets()
+            let viewModels = markets.compactMap(
+                PerpetualMarketViewModel.init(market:)
+            )
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                self.viewModels = viewModels
+                UIView.performWithoutAnimation(self.collectionView.reloadData)
+            }
+        }
     }
     
 }

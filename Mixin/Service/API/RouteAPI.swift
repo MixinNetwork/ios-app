@@ -151,8 +151,6 @@ extension RouteAPI {
 extension RouteAPI {
     
     static func perpsMarkets(
-        offset: String? = nil,
-        limit: Int? = nil,
         queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<[PerpetualMarket]>) -> Void
     ) {

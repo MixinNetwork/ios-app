@@ -12,10 +12,11 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     private let wallet: Wallet
-    private let viewModel: PerpetualMarketViewModel
     private let positionsLoader: PerpetualPositionLoader
+    private let marketLoader = PerpetualMarketLoader()
     private let maxItemCount = 3
     
+    private var viewModel: PerpetualMarketViewModel
     private var sections: [Section] = [.price, .info]
     private var selectedTimeFrame: PerpetualTimeFrame = .oneDay
     private var charts: [PerpetualTimeFrame: [CandlestickChartView.Candle]] = [:]
@@ -31,10 +32,10 @@ final class PerpetualMarketViewController: UIViewController {
         viewModel: PerpetualMarketViewModel,
     ) {
         self.wallet = wallet
-        self.viewModel = viewModel
         self.positionsLoader = PerpetualPositionLoader(
             walletID: wallet.tradingWalletID
         )
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -175,6 +176,12 @@ final class PerpetualMarketViewController: UIViewController {
         
         NotificationCenter.default.addObserver(
             self,
+            selector: #selector(reloadMarket(_:)),
+            name: PerpsMarketDAO.marketsDidUpdateNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(reloadPositions),
             name: PerpsPositionDAO.perpsPositionDidChangeNotification,
             object: nil
@@ -192,6 +199,7 @@ final class PerpetualMarketViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         positionsLoader.start()
+        marketLoader.start()
         if !BadgeManager.shared.hasViewed(identifier: .perpsManual) {
             BadgeManager.shared.setHasViewed(identifier: .perpsManual)
             let manual = PerpsManual.viewController()
@@ -202,25 +210,7 @@ final class PerpetualMarketViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         positionsLoader.stop()
-    }
-    
-    @objc private func reloadPositions() {
-        let marketID = viewModel.market.marketID
-        DispatchQueue.global().async { [weak self, wallet] in
-            let openPosition = PerpsPositionDAO.shared.position(marketID: marketID)
-            let openPositionViewModel: PerpetualPositionViewModel? = if let openPosition {
-                PerpetualPositionViewModel(wallet: wallet, position: openPosition)
-            } else {
-                nil
-            }
-            let closedPositions = PerpsPositionHistoryDAO.shared.historyItems(marketID: marketID)
-                .map { history in
-                    PerpetualPositionViewModel(wallet: wallet, history: history)
-                }
-            DispatchQueue.main.async {
-                self?.reloadData(openPosition: openPositionViewModel, closedPositions: closedPositions)
-            }
-        }
+        marketLoader.stop()
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
@@ -263,6 +253,44 @@ final class PerpetualMarketViewController: UIViewController {
         if let viewModel {
             let preview = ClosePerpetualPositionPreviewViewController(viewModel: viewModel)
             present(preview, animated: true)
+        }
+    }
+    
+    @objc private func reloadMarket(_ notification: Notification) {
+        let marketID = viewModel.market.marketID
+        DispatchQueue.global().async { [weak self] in
+            guard
+                let market = PerpsMarketDAO.shared.market(marketID: marketID),
+                let viewModel = PerpetualMarketViewModel(market: market)
+            else {
+                return
+            }
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                self.viewModel = viewModel
+                UIView.performWithoutAnimation(self.collectionView.reloadData)
+            }
+        }
+    }
+    
+    @objc private func reloadPositions() {
+        let marketID = viewModel.market.marketID
+        DispatchQueue.global().async { [weak self, wallet] in
+            let openPosition = PerpsPositionDAO.shared.position(marketID: marketID)
+            let openPositionViewModel: PerpetualPositionViewModel? = if let openPosition {
+                PerpetualPositionViewModel(wallet: wallet, position: openPosition)
+            } else {
+                nil
+            }
+            let closedPositions = PerpsPositionHistoryDAO.shared.historyItems(marketID: marketID)
+                .map { history in
+                    PerpetualPositionViewModel(wallet: wallet, history: history)
+                }
+            DispatchQueue.main.async {
+                self?.reloadData(openPosition: openPositionViewModel, closedPositions: closedPositions)
+            }
         }
     }
     

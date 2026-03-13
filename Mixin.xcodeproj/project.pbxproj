@@ -1350,6 +1350,7 @@
 		94C5BDEC2D687B760012F840 /* WalletContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C5BDEB2D687B710012F840 /* WalletContainerViewController.swift */; };
 		94C5EE892DBA63C800FFEE91 /* StyledAssetChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C5EE882DBA63C400FFEE91 /* StyledAssetChange.swift */; };
 		94C67F442F63C25900CB11DC /* ManualScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C67F402F63C25500CB11DC /* ManualScrollView.swift */; };
+		94C67FD02F64250500CB11DC /* PerpetualMarketLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C67FCF2F64250000CB11DC /* PerpetualMarketLoader.swift */; };
 		94C688B728978BCD00C69537 /* TIPDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C688B628978BCD00C69537 /* TIPDiagnosticViewController.swift */; };
 		94C6987B2B23257B002377EA /* PaymentPrecondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C6987A2B23257B002377EA /* PaymentPrecondition.swift */; };
 		94C6AA09280D35990011AB02 /* AttachmentDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */; };
@@ -3216,6 +3217,7 @@
 		94C5BDEB2D687B710012F840 /* WalletContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletContainerViewController.swift; sourceTree = "<group>"; };
 		94C5EE882DBA63C400FFEE91 /* StyledAssetChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledAssetChange.swift; sourceTree = "<group>"; };
 		94C67F402F63C25500CB11DC /* ManualScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualScrollView.swift; sourceTree = "<group>"; };
+		94C67FCF2F64250000CB11DC /* PerpetualMarketLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualMarketLoader.swift; sourceTree = "<group>"; };
 		94C688B628978BCD00C69537 /* TIPDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94C6987A2B23257B002377EA /* PaymentPrecondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPrecondition.swift; sourceTree = "<group>"; };
 		94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDiagnosticViewController.swift; sourceTree = "<group>"; };
@@ -5363,6 +5365,7 @@
 			children = (
 				94FB2E6B2F50A50E00F85AB4 /* PerpetualMarketViewModel.swift */,
 				94DC4DB62F51EC3E00D23EB8 /* PerpetualPositionLoader.swift */,
+				94C67FCF2F64250000CB11DC /* PerpetualMarketLoader.swift */,
 				94973DCF2F55E84100C350C7 /* PerpetualChangeSimulation.swift */,
 				94D9DD512F59CFEF00B3B990 /* PerpetualPositionViewModel.swift */,
 				94E066B12F5B15690090F1BA /* PerpetualLeverage.swift */,
@@ -7688,6 +7691,7 @@
 				7BFD345C2285AB4200524EA0 /* AddMemberViewController.swift in Sources */,
 				94F268882E16755200A8A1E0 /* TokenProportionRepresentableCell.swift in Sources */,
 				DF5D9F311F9C95410036D5FD /* CountryLibrary.swift in Sources */,
+				94C67FD02F64250500CB11DC /* PerpetualMarketLoader.swift in Sources */,
 				946331D12C62758000C54B76 /* TransactionHistoryDatePickerViewController.swift in Sources */,
 				DF048CD222433D69005F1EF5 /* LineHeightLabel.swift in Sources */,
 				947F4AD625866D6C00B0A5F9 /* InitializeFTSJob.swift in Sources */,

@@ -69,7 +69,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                 primary: direction,
                 secondary: profit,
             ),
-            .info(caption: .string(R.string.localizable.margin_isolated()), content: amount),
+            .info(caption: .string(R.string.localizable.amount()), content: amount),
             .info(caption: .string(R.string.localizable.entry_price()), content: context.viewModel.price),
             .doubleLineInfo(
                 caption: .string(R.string.localizable.estimated_liquidation_price()),
@@ -113,6 +113,9 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     loadFinishedTrayView()
                     if let navigationController = UIApplication.homeNavigationController {
                         var viewControllers = navigationController.viewControllers
+                        viewControllers.removeAll { viewController in
+                            viewController is OpenPerpetualPositionViewController
+                        }
                         if !(viewControllers.last is PerpetualMarketViewController) {
                             let market = PerpetualMarketViewController(
                                 wallet: context.wallet,

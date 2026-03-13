@@ -150,7 +150,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
         marginView.layer.cornerRadius = 8
         marginView.layer.masksToBounds = true
         marginContentStackView.setCustomSpacing(0, after: marginTokenSelectorStackView)
-        marginTitleLabel.text = R.string.localizable.margin()
+        marginTitleLabel.text = R.string.localizable.amount()
         marginTokenBalanceButton.titleLabel?.adjustsFontForContentSizeCategory = true
         marginLoadingView.startAnimating()
         

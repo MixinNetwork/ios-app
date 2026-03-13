@@ -35,7 +35,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hS7-wT-Jr6">
-                    <rect key="frame" x="20" y="69.999999999999986" width="335" height="197.66666666666663"/>
+                    <rect key="frame" x="20" y="69.999999999999986" width="335" height="205.66666666666663"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10x" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Iml-Mv-mdd">
                             <rect key="frame" x="128.33333333333334" y="40" width="78.666666666666657" height="57.333333333333343"/>
@@ -50,7 +50,7 @@
                             </connections>
                         </slider>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="pC6-jx-HxP">
-                            <rect key="frame" x="16" y="163.33333333333334" width="303" height="14.333333333333343"/>
+                            <rect key="frame" x="17" y="171.33333333333334" width="302" height="14.333333333333343"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hzE-8d-YEn">
                                     <rect key="frame" x="0.0" y="0.0" width="12.333333333333334" height="14.333333333333334"/>
@@ -65,19 +65,19 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xiT-0b-Kg6">
-                                    <rect key="frame" x="135" y="0.0" width="21.666666666666657" height="14.333333333333334"/>
+                                    <rect key="frame" x="134.33333333333334" y="0.0" width="21.666666666666657" height="14.333333333333334"/>
                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                     <color key="textColor" name="text"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mnp-8F-VFO">
-                                    <rect key="frame" x="207.66666666666666" y="0.0" width="22" height="14.333333333333334"/>
+                                    <rect key="frame" x="207" y="0.0" width="22" height="14.333333333333334"/>
                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                     <color key="textColor" name="text"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="40x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hof-ym-GF8">
-                                    <rect key="frame" x="280.66666666666669" y="0.0" width="22.333333333333314" height="14.333333333333334"/>
+                                    <rect key="frame" x="279.66666666666669" y="0.0" width="22.333333333333314" height="14.333333333333334"/>
                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                     <color key="textColor" name="text"/>
                                     <nil key="highlightedColor"/>
@@ -88,18 +88,18 @@
                     <color key="backgroundColor" name="background"/>
                     <constraints>
                         <constraint firstItem="Iml-Mv-mdd" firstAttribute="centerX" secondItem="hS7-wT-Jr6" secondAttribute="centerX" id="0r4-dL-ZKp"/>
-                        <constraint firstItem="pC6-jx-HxP" firstAttribute="leading" secondItem="hS7-wT-Jr6" secondAttribute="leading" constant="16" id="3Bk-p9-PAM"/>
+                        <constraint firstItem="pC6-jx-HxP" firstAttribute="leading" secondItem="hS7-wT-Jr6" secondAttribute="leading" constant="17" id="3Bk-p9-PAM"/>
                         <constraint firstAttribute="bottom" secondItem="pC6-jx-HxP" secondAttribute="bottom" constant="20" id="B9m-5f-8sE"/>
                         <constraint firstItem="xua-ar-gf3" firstAttribute="leading" secondItem="hS7-wT-Jr6" secondAttribute="leading" constant="16" id="Lae-go-lN4"/>
                         <constraint firstItem="Iml-Mv-mdd" firstAttribute="top" secondItem="hS7-wT-Jr6" secondAttribute="top" constant="40" id="Mua-Rd-GZo"/>
-                        <constraint firstItem="pC6-jx-HxP" firstAttribute="top" secondItem="xua-ar-gf3" secondAttribute="bottom" id="TLI-Eu-POC"/>
+                        <constraint firstItem="pC6-jx-HxP" firstAttribute="top" secondItem="xua-ar-gf3" secondAttribute="bottom" constant="8" id="TLI-Eu-POC"/>
                         <constraint firstAttribute="trailing" secondItem="pC6-jx-HxP" secondAttribute="trailing" constant="16" id="Uci-U3-j99"/>
                         <constraint firstAttribute="trailing" secondItem="xua-ar-gf3" secondAttribute="trailing" constant="16" id="W9p-5c-VPK"/>
                         <constraint firstItem="xua-ar-gf3" firstAttribute="top" secondItem="Iml-Mv-mdd" secondAttribute="bottom" constant="32" id="tkG-Dv-qBj"/>
                     </constraints>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="mFD-KR-lGE">
-                    <rect key="frame" x="36" y="279.66666666666669" width="303" height="28.666666666666686"/>
+                    <rect key="frame" x="36" y="287.66666666666669" width="303" height="28.666666666666686"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="价格上涨 1% → 盈利 10%（+$10）" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zt6-ES-ddB">
                             <rect key="frame" x="0.0" y="0.0" width="303" height="14.333333333333334"/>
@@ -144,7 +144,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

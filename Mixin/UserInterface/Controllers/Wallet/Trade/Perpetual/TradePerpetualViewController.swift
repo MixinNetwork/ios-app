@@ -20,11 +20,13 @@ final class TradePerpetualViewController: UIViewController {
     
     private let wallet: Wallet
     private let positionsLoader: PerpetualPositionLoader
+    private let marketLoader = PerpetualMarketLoader()
     private let maxItemCount = 3
     
     private var value: PerpetualPositionValue?
     private var openPositions: [PerpetualPositionViewModel]?
     private var markets: [PerpetualMarketViewModel]?
+    private var hasHistoryLoadedFromRemote = false
     private var closedPositions: [PerpetualPositionViewModel]?
     
     init(
@@ -173,6 +175,12 @@ final class TradePerpetualViewController: UIViewController {
         )
         NotificationCenter.default.addObserver(
             self,
+            selector: #selector(reloadMarkets(_:)),
+            name: PerpsMarketDAO.marketsDidUpdateNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(reloadClosedPositions(_:)),
             name: PerpsPositionHistoryDAO.perpsPositionHistoryDidSaveNotification,
             object: nil
@@ -206,7 +214,6 @@ final class TradePerpetualViewController: UIViewController {
                 self.closedPositions = closedPositions
                 UIView.performWithoutAnimation(self.collectionView.reloadData)
                 self.positionsLoader.start()
-                self.reloadMarketsAndHistoryFromRemote()
             }
         }
     }
@@ -214,6 +221,7 @@ final class TradePerpetualViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         positionsLoader.start()
+        marketLoader.start()
         if !BadgeManager.shared.hasViewed(identifier: .perpsManual) {
             BadgeManager.shared.setHasViewed(identifier: .perpsManual)
             let manual = PerpsManual.viewController()
@@ -224,6 +232,7 @@ final class TradePerpetualViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         positionsLoader.stop()
+        marketLoader.stop()
     }
     
     @objc private func openPosition(_ sender: UIButton) {
@@ -510,6 +519,34 @@ extension TradePerpetualViewController {
         }
     }
     
+    @objc private func reloadMarkets(_ notification: Notification) {
+        let walletID = wallet.tradingWalletID
+        DispatchQueue.global().async { [weak self] in
+            let markets = PerpsMarketDAO.shared.markets()
+            let viewModels = markets.compactMap(
+                PerpetualMarketViewModel.init(market:)
+            )
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                self.markets = viewModels
+                UIView.performWithoutAnimation {
+                    let markets = IndexSet(integer: Section.markets.rawValue)
+                    self.collectionView.reloadSections(markets)
+                }
+                self.actionView.isEnabled = !viewModels.isEmpty
+                if !self.hasHistoryLoadedFromRemote {
+                    // Load history only once, but after the markets
+                    // are loaded, to avoid missing symbols in history
+                    self.hasHistoryLoadedFromRemote = true
+                    let history = SyncPerpsPositionHistoryJob(walletID: walletID)
+                    ConcurrentJobQueue.shared.addJob(job: history)
+                }
+            }
+        }
+    }
+    
     @objc private func reloadClosedPositions(_ notification: Notification) {
         let limit = maxItemCount + 1
         DispatchQueue.global().async { [weak self, wallet] in
@@ -528,35 +565,6 @@ extension TradePerpetualViewController {
                     let activity = IndexSet(integer: Section.activity.rawValue)
                     self.collectionView.reloadSections(activity)
                 }
-            }
-        }
-    }
-    
-    // Reload history after markets loading succeed, to avoid missing symbols in history
-    private func reloadMarketsAndHistoryFromRemote() {
-        let walletID = wallet.tradingWalletID
-        RouteAPI.perpsMarkets(queue: .global()) { [weak self] result in
-            switch result {
-            case .success(let markets):
-                PerpsMarketDAO.shared.replace(markets: markets)
-                let viewModels = markets.compactMap(PerpetualMarketViewModel.init(market:))
-                DispatchQueue.main.async {
-                    guard let self else {
-                        return
-                    }
-                    self.markets = viewModels
-                    UIView.performWithoutAnimation {
-                        let markets = IndexSet(integer: Section.markets.rawValue)
-                        self.collectionView.reloadSections(markets)
-                    }
-                    if !markets.isEmpty {
-                        self.actionView.isEnabled = true
-                    }
-                }
-                let history = SyncPerpsPositionHistoryJob(walletID: walletID)
-                ConcurrentJobQueue.shared.addJob(job: history)
-            case .failure(let error):
-                Logger.general.debug(category: "TradePerp", message: "\(error)")
             }
         }
     }

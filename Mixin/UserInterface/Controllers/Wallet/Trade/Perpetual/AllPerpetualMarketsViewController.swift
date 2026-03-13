@@ -18,7 +18,7 @@ final class AllPerpetualMarketsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = R.string.localizable.all_markets()
+        title = R.string.localizable.perps_markets()
         navigationItem.rightBarButtonItem = .customerService(
             target: self,
             action: #selector(presentCustomerService(_:))

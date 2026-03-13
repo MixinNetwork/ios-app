@@ -379,7 +379,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     self?.viewOpenPositions()
                 }
             case .markets:
-                view.label.text = R.string.localizable.markets()
+                view.label.text = R.string.localizable.perps_markets()
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewAllMarkets()
                 }

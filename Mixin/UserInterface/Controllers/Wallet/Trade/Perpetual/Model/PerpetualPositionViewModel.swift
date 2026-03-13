@@ -43,6 +43,7 @@ struct PerpetualPositionViewModel {
     let date: String
     
     // Only available for open positions
+    let margin: String?
     let settleAssetID: String?
     let openPayAmount: Decimal?
     let liquidationPrice: String?
@@ -57,6 +58,7 @@ struct PerpetualPositionViewModel {
         let decimalQuantity = abs(Decimal(string: position.quantity, locale: .enUSPOSIX) ?? 0)
         let multiplier = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
         let side = PerpetualOrderSide(rawValue: position.side) ?? .short
+        let decimalMargin = Decimal(string: position.margin, locale: .enUSPOSIX)
         
         self.wallet = wallet
         self.marketID = position.marketID
@@ -125,6 +127,16 @@ struct PerpetualPositionViewModel {
             position.createdAt
         }
         
+        self.margin = if let decimalMargin {
+            CurrencyFormatter.localizedString(
+                from: decimalMargin * Currency.current.decimalRate,
+                format: .fiatMoney,
+                sign: .never,
+                symbol: .currencySymbol
+            )
+        } else {
+            nil
+        }
         self.settleAssetID = position.settleAssetID
         self.openPayAmount = Decimal(string: position.openPayAmount, locale: .enUSPOSIX)
         self.liquidationPrice = if let decimalEntryPrice {
@@ -217,6 +229,7 @@ struct PerpetualPositionViewModel {
             history.closedAt
         }
         
+        self.margin = nil
         self.settleAssetID = nil
         self.openPayAmount = nil
         self.liquidationPrice = nil

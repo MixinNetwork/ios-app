@@ -18,8 +18,8 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     @IBOutlet weak var orderValueTitleLabel: UILabel!
     @IBOutlet weak var orderValueContentLabel: UILabel!
     
-    @IBOutlet weak var amountTitleLabel: UILabel!
-    @IBOutlet weak var amountContentLabel: UILabel!
+    @IBOutlet weak var marginTitleLabel: UILabel!
+    @IBOutlet weak var marginContentLabel: UILabel!
     
     @IBOutlet weak var entryPriceTitleLabel: UILabel!
     @IBOutlet weak var entryPriceContentLabel: UILabel!
@@ -44,7 +44,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
         directionSideLabel.layer.masksToBounds = true
         let contentLabels: [UILabel] = [
             orderValueContentLabel,
-            amountContentLabel,
+            marginContentLabel,
             entryPriceContentLabel,
             liquidationPriceContentLabel,
         ]
@@ -61,7 +61,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     }
     
     func load(viewModel: PerpetualPositionViewModel) {
-        titleLabel.text = R.string.localizable.open_position()
+        titleLabel.text = R.string.localizable.position()
         pnlTitleLabel.text = R.string.localizable.pnl().uppercased()
         pnlContentLabel.text = viewModel.pnl
         pnlContentLabel.marketColor = viewModel.pnlColor
@@ -77,8 +77,8 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
         directionLeverageLabel.text = viewModel.leverageMultiplier
         orderValueTitleLabel.text = R.string.localizable.position_size().uppercased()
         orderValueContentLabel.text = viewModel.orderValueInToken
-        amountTitleLabel.text = R.string.localizable.amount().uppercased()
-        amountContentLabel.text = viewModel.orderValueInFiatMoney
+        marginTitleLabel.text = R.string.localizable.margin().uppercased()
+        marginContentLabel.text = viewModel.margin
         entryPriceTitleLabel.text = R.string.localizable.entry_price().uppercased()
         entryPriceContentLabel.text = viewModel.entryPrice
         liquidationPriceTitleLabel.text = R.string.localizable.liquidation_price().uppercased()

@@ -1144,6 +1144,7 @@
 "perps_leverage_overview" = "Leverage allows you to amplify your trading position, enabling you to control a larger contract size with a smaller amount of margin.";
 "perps_leverage_risk_notice" = "Please choose your leverage carefully. With high leverage, even small price fluctuations may result in significant losses.";
 "perps_long_overview" = "Going Long means opening a position when you expect the price to rise. If the price increases, you make a profit; if the price decreases, you incur a loss.";
+"perps_markets" = "Markets";
 "perps_position_overview" = "Margin represents the actual trading value supporting your current position, calculated as Margin × Leverage.";
 "perps_position_purpose_1" = "Supports the current position";
 "perps_position_purpose_2" = "Offsets unrealized losses";

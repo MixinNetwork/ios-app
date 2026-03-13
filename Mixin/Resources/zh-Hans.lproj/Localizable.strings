@@ -1144,6 +1144,7 @@
 "perps_leverage_overview" = "杠杆倍数用于放大交易规模，以较少的保证金控制更大的合约仓位。";
 "perps_leverage_risk_notice" = "请合理选择杠杆倍数，高杠杆下，价格小幅波动也可能导致较大亏损。";
 "perps_long_overview" = "做多是指在预期价格上涨时建立仓位，价格上涨可获得盈利，价格下跌则产生亏损。";
+"perps_markets" = "市场";
 "perps_position_overview" = "当前合约持仓的实际交易价值，由「保证金 × 杠杆」决定。";
 "perps_position_purpose_1" = "支撑当前仓位";
 "perps_position_purpose_2" = "抵扣浮动亏损";

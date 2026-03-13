@@ -194,8 +194,6 @@
             </collectionViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
-                <outlet property="amountContentLabel" destination="sh9-ST-ymA" id="EAf-Fk-9FQ"/>
-                <outlet property="amountTitleLabel" destination="uhI-kg-Qeo" id="D7V-ms-iNw"/>
                 <outlet property="directionLeverageLabel" destination="Qsy-bK-8wp" id="aF9-77-amh"/>
                 <outlet property="directionSideLabel" destination="Wxn-Pa-lTs" id="FLp-eK-cwO"/>
                 <outlet property="directionTitleLabel" destination="hDw-8w-TA8" id="uCI-ST-X4c"/>
@@ -203,6 +201,8 @@
                 <outlet property="entryPriceTitleLabel" destination="6Wc-hP-3gd" id="VPj-Vz-sGy"/>
                 <outlet property="liquidationPriceContentLabel" destination="ccp-1N-i7L" id="YpX-2g-EOL"/>
                 <outlet property="liquidationPriceTitleLabel" destination="bDr-Fv-m4M" id="Csy-fs-ygf"/>
+                <outlet property="marginContentLabel" destination="sh9-ST-ymA" id="EAf-Fk-9FQ"/>
+                <outlet property="marginTitleLabel" destination="uhI-kg-Qeo" id="D7V-ms-iNw"/>
                 <outlet property="orderValueContentLabel" destination="bVH-vD-NA9" id="7bt-oE-L57"/>
                 <outlet property="orderValueTitleLabel" destination="geS-Tb-3UT" id="Il3-QV-dkL"/>
                 <outlet property="pnlContentLabel" destination="ro0-33-6av" id="inJ-Tz-AT0"/>

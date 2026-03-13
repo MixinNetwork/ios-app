@@ -1144,6 +1144,7 @@
 "perps_leverage_overview" = "槓桿倍數用於放大交易規模，以較少的保證金控制更大的合約倉位。";
 "perps_leverage_risk_notice" = "請合理選擇槓桿倍數，高槓杆下，價格小幅波動也可能導致較大虧損。";
 "perps_long_overview" = "做多是指在預期價格上漲時建立倉位，價格上漲可獲得盈利，價格下跌則產生虧損。";
+"perps_markets" = "市場";
 "perps_position_overview" = "當前合約持倉的實際交易價值，由「保證金 × 槓桿」決定。";
 "perps_position_purpose_1" = "支撐當前倉位";
 "perps_position_purpose_2" = "抵扣浮動虧損";

@@ -3,7 +3,7 @@ import MixinServices
 
 extension Wallet {
     
-    var tradeOrderWalletID: String {
+    var tradingWalletID: String {
         switch self {
         case .privacy:
             myUserId

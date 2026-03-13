@@ -29,7 +29,11 @@ final class PerpetualPositionLoader {
             ) { result in
                 switch result {
                 case .success(let positions):
-                    PerpsPositionDAO.shared.replace(positions: positions)
+                    let different = PerpsPositionDAO.shared.replace(positions: positions)
+                    if different {
+                        let history = SyncPerpsPositionHistoryJob(walletID: walletID)
+                        ConcurrentJobQueue.shared.addJob(job: history)
+                    }
                 case .failure(let error):
                     Logger.general.debug(category: "PerpPositionLoader", message: "\(error)")
                 }

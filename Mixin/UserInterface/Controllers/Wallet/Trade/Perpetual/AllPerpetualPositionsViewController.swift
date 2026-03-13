@@ -10,6 +10,7 @@ final class AllPerpetualPositionsViewController: UIViewController {
     
     private let wallet: Wallet
     private let content: PerpetualPositionType
+    private let positionsLoader: PerpetualPositionLoader
     private let pageCount = 50
     
     private weak var collectionView: UICollectionView!
@@ -21,6 +22,9 @@ final class AllPerpetualPositionsViewController: UIViewController {
     init(wallet: Wallet, content: PerpetualPositionType) {
         self.wallet = wallet
         self.content = content
+        self.positionsLoader = PerpetualPositionLoader(
+            walletID: wallet.tradingWalletID
+        )
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -92,6 +96,37 @@ final class AllPerpetualPositionsViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
+        
+        switch content {
+        case .open:
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(reloadData),
+                name: PerpsPositionDAO.perpsPositionDidChangeNotification,
+                object: nil
+            )
+        case .closed:
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(reloadData),
+                name: PerpsPositionHistoryDAO.perpsPositionHistoryDidSaveNotification,
+                object: nil
+            )
+        }
+        reloadData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        positionsLoader.start()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        positionsLoader.stop()
+    }
+    
+    @objc private func reloadData() {
         switch content {
         case .open:
             DispatchQueue.global().async { [wallet, weak self] in
@@ -255,12 +290,11 @@ extension AllPerpetualPositionsViewController: UICollectionViewDelegate {
                 if let market = PerpsMarketDAO.shared.market(marketID: viewModel.marketID),
                    let viewModel = PerpetualMarketViewModel(market: market)
                 {
-                    let controller = PerpetualMarketViewController(
+                    let market = PerpetualMarketViewController(
                         wallet: wallet,
                         viewModel: viewModel,
-                        alwaysAutoRefreshOpenPosition: false
                     )
-                    navigationController?.pushViewController(controller, animated: true)
+                    navigationController?.pushViewController(market, animated: true)
                 }
             case .closed:
                 let controller = PerpetualPositionViewController(wallet: wallet, viewModel: viewModel)

@@ -146,7 +146,7 @@ final class TradeViewController: UIViewController {
             return
         }
         let spotWalletID = (tradingViewController as? TradeSpotViewController)?.orderWalletID
-        let perpsWalletID = (tradingViewController as? TradePerpetualViewController)?.orderWalletID
+        let perpsWalletID = (tradingViewController as? TradePerpetualViewController)?.tradingWalletID
         let swapOrdersUnread = !BadgeManager.shared.hasViewed(identifier: .tradeOrder)
         DispatchQueue.global().async { [weak showOrdersItem] in
             let ordersCount = if let spotWalletID {

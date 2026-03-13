@@ -281,7 +281,7 @@ final class TradeOrdersViewController: UIViewController {
     private func syncOrders(wallets: [Wallet]) {
         let jobs = wallets.map { wallet in
             SyncWeb3OrdersJob(
-                walletID: wallet.tradeOrderWalletID,
+                walletID: wallet.tradingWalletID,
                 reloadOpeningOrdersOnFinished: false
             )
         }
@@ -632,7 +632,7 @@ extension TradeOrdersViewController {
                 wallets = allWallets
             } else {
                 wallets = filter.wallets.reduce(into: [:]) { results, wallet in
-                    results[wallet.tradeOrderWalletID] = wallet
+                    results[wallet.tradingWalletID] = wallet
                 }
             }
             

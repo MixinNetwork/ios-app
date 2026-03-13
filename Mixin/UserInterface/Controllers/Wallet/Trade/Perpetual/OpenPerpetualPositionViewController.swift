@@ -249,7 +249,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
             side: side,
             amount: TokenAmountFormatter.string(from: marginAmount * multiplier),
             leverage: (multiplier as NSDecimalNumber).intValue,
-            walletID: wallet.tradeOrderWalletID,
+            walletID: wallet.tradingWalletID,
             destination: nil
         )
         sender.isBusy = true

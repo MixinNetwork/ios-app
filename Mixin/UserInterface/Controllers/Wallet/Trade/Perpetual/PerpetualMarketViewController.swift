@@ -13,9 +13,8 @@ final class PerpetualMarketViewController: UIViewController {
     
     private let wallet: Wallet
     private let viewModel: PerpetualMarketViewModel
-    private let openPositionsLoader: PerpetualPositionLoader
+    private let positionsLoader: PerpetualPositionLoader
     private let maxItemCount = 3
-    private let alwaysAutoRefreshOpenPosition: Bool
     
     private var sections: [Section] = [.price, .info]
     private var selectedTimeFrame: PerpetualTimeFrame = .oneDay
@@ -30,14 +29,12 @@ final class PerpetualMarketViewController: UIViewController {
     init(
         wallet: Wallet,
         viewModel: PerpetualMarketViewModel,
-        alwaysAutoRefreshOpenPosition: Bool
     ) {
         self.wallet = wallet
         self.viewModel = viewModel
-        self.openPositionsLoader = PerpetualPositionLoader(
-            walletID: wallet.tradeOrderWalletID
+        self.positionsLoader = PerpetualPositionLoader(
+            walletID: wallet.tradingWalletID
         )
-        self.alwaysAutoRefreshOpenPosition = alwaysAutoRefreshOpenPosition
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -182,15 +179,19 @@ final class PerpetualMarketViewController: UIViewController {
             name: PerpsPositionDAO.perpsPositionDidChangeNotification,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadPositions),
+            name: PerpsPositionHistoryDAO.perpsPositionHistoryDidSaveNotification,
+            object: nil
+        )
         reloadPriceChartFromRemote(timeFrame: selectedTimeFrame)
         reloadPositions()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if alwaysAutoRefreshOpenPosition {
-            openPositionsLoader.start()
-        }
+        positionsLoader.start()
         if !BadgeManager.shared.hasViewed(identifier: .perpsManual) {
             BadgeManager.shared.setHasViewed(identifier: .perpsManual)
             let manual = PerpsManual.viewController()
@@ -200,7 +201,7 @@ final class PerpetualMarketViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        openPositionsLoader.stop()
+        positionsLoader.stop()
     }
     
     @objc private func reloadPositions() {
@@ -271,7 +272,6 @@ final class PerpetualMarketViewController: UIViewController {
     ) {
         var actionView: UIView?
         if let openPosition {
-            openPositionsLoader.start()
             sections = [
                 .price,
                 .openPosition(openPosition),
@@ -290,9 +290,6 @@ final class PerpetualMarketViewController: UIViewController {
                 actionView = view
             }
         } else {
-            if !alwaysAutoRefreshOpenPosition {
-                openPositionsLoader.stop()
-            }
             sections = [
                 .price,
                 .introduction,

@@ -80,7 +80,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
         )
         replaceTrayView(with: nil, animation: .vertical)
         let positionID = viewModel.positionID
-        let walletID = viewModel.wallet.tradeOrderWalletID
+        let walletID = viewModel.wallet.tradingWalletID
         Task {
             do {
                 try await AccountAPI.verify(pin: pin)
@@ -95,20 +95,6 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                     )
                     tableView.setContentOffset(.zero, animated: true)
                     loadFinishedTrayView()
-                    if let navigationController = UIApplication.homeNavigationController {
-                        var viewControllers = navigationController.viewControllers
-                        if viewControllers.last is PerpetualPositionViewController {
-                            viewControllers.removeLast()
-                        }
-                        if viewControllers.last is PerpetualMarketViewController {
-                            viewControllers.removeLast()
-                        }
-                        navigationController.setViewControllers(viewControllers, animated: false)
-                    }
-                }
-                DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
-                    let history = SyncPerpsPositionHistoryJob(walletID: walletID)
-                    ConcurrentJobQueue.shared.addJob(job: history)
                 }
             } catch {
                 let errorDescription = if let error = error as? MixinAPIError, PINVerificationFailureHandler.canHandle(error: error) {

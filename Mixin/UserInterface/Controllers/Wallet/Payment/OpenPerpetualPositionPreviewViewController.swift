@@ -113,16 +113,13 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
                     loadFinishedTrayView()
                     if let navigationController = UIApplication.homeNavigationController {
                         var viewControllers = navigationController.viewControllers
-                        viewControllers.removeAll { viewController in
-                            viewController is OpenPerpetualPositionViewController
-                            || viewController is PerpetualMarketViewController
+                        if !(viewControllers.last is PerpetualMarketViewController) {
+                            let market = PerpetualMarketViewController(
+                                wallet: context.wallet,
+                                viewModel: context.viewModel,
+                            )
+                            viewControllers.append(market)
                         }
-                        let market = PerpetualMarketViewController(
-                            wallet: context.wallet,
-                            viewModel: context.viewModel,
-                            alwaysAutoRefreshOpenPosition: true
-                        )
-                        viewControllers.append(market)
                         navigationController.setViewControllers(viewControllers, animated: false)
                     }
                 }

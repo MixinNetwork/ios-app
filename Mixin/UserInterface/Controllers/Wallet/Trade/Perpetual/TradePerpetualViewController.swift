@@ -11,15 +11,15 @@ final class TradePerpetualViewController: UIViewController {
         case introduction
     }
     
-    var orderWalletID: String {
-        wallet.tradeOrderWalletID
+    var tradingWalletID: String {
+        wallet.tradingWalletID
     }
     
     private weak var collectionView: UICollectionView!
     private weak var actionView: OpenPerpetualActionView!
     
     private let wallet: Wallet
-    private let openPositionsLoader: PerpetualPositionLoader
+    private let positionsLoader: PerpetualPositionLoader
     private let maxItemCount = 3
     
     private var value: PerpetualPositionValue?
@@ -31,8 +31,8 @@ final class TradePerpetualViewController: UIViewController {
         wallet: Wallet,
     ) {
         self.wallet = wallet
-        self.openPositionsLoader = PerpetualPositionLoader(
-            walletID: wallet.tradeOrderWalletID
+        self.positionsLoader = PerpetualPositionLoader(
+            walletID: wallet.tradingWalletID
         )
         super.init(nibName: nil, bundle: nil)
     }
@@ -165,6 +165,19 @@ final class TradePerpetualViewController: UIViewController {
         collectionView.delegate = self
         collectionView.reloadData()
         
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadOpenPositions(_:)),
+            name: PerpsPositionDAO.perpsPositionDidChangeNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadClosedPositions(_:)),
+            name: PerpsPositionHistoryDAO.perpsPositionHistoryDidSaveNotification,
+            object: nil
+        )
+        
         let limit = maxItemCount + 1
         DispatchQueue.global().async { [weak self, wallet] in
             let value = PerpsPositionDAO.shared.positionValue()
@@ -192,28 +205,15 @@ final class TradePerpetualViewController: UIViewController {
                 }
                 self.closedPositions = closedPositions
                 UIView.performWithoutAnimation(self.collectionView.reloadData)
-                self.openPositionsLoader.start()
+                self.positionsLoader.start()
                 self.reloadMarketsAndHistoryFromRemote()
             }
         }
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(reloadOpenPositions(_:)),
-            name: PerpsPositionDAO.perpsPositionDidChangeNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(reloadClosedPositions(_:)),
-            name: PerpsPositionHistoryDAO.perpsPositionHistoryDidSaveNotification,
-            object: nil
-        )
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        openPositionsLoader.start()
+        positionsLoader.start()
         if !BadgeManager.shared.hasViewed(identifier: .perpsManual) {
             BadgeManager.shared.setHasViewed(identifier: .perpsManual)
             let manual = PerpsManual.viewController()
@@ -223,7 +223,7 @@ final class TradePerpetualViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        openPositionsLoader.stop()
+        positionsLoader.stop()
     }
     
     @objc private func openPosition(_ sender: UIButton) {
@@ -434,7 +434,6 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
                 let market = PerpetualMarketViewController(
                     wallet: wallet,
                     viewModel: viewModel,
-                    alwaysAutoRefreshOpenPosition: false
                 )
                 navigationController?.pushViewController(market, animated: true)
             }
@@ -446,7 +445,6 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
             let market = PerpetualMarketViewController(
                 wallet: wallet,
                 viewModel: viewModel,
-                alwaysAutoRefreshOpenPosition: false
             )
             navigationController?.pushViewController(market, animated: true)
         case .activity:
@@ -536,7 +534,7 @@ extension TradePerpetualViewController {
     
     // Reload history after markets loading succeed, to avoid missing symbols in history
     private func reloadMarketsAndHistoryFromRemote() {
-        let walletID = wallet.tradeOrderWalletID
+        let walletID = wallet.tradingWalletID
         RouteAPI.perpsMarkets(queue: .global()) { [weak self] result in
             switch result {
             case .success(let markets):

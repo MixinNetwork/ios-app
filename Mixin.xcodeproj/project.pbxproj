@@ -1407,7 +1407,7 @@
 		94D42FD32F334C5C007E12F7 /* CreateAccountIntroductionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D42FD22F334C5C007E12F7 /* CreateAccountIntroductionView.xib */; };
 		94D444922EDEC81B0065FD07 /* TradeOrderTokenFilterPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D444912EDEC81B0065FD07 /* TradeOrderTokenFilterPickerViewController.swift */; };
 		94D4E4F82B1753FE00EE04A3 /* ModernQRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D4E4F72B1753FE00EE04A3 /* ModernQRCodeView.swift */; };
-		94D4EA502EE015D5006BC2DC /* Wallet+TradeOrderWalletID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D4EA4F2EE015CC006BC2DC /* Wallet+TradeOrderWalletID.swift */; };
+		94D4EA502EE015D5006BC2DC /* Wallet+TradingWalletID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D4EA4F2EE015CC006BC2DC /* Wallet+TradingWalletID.swift */; };
 		94D5C0EE2D5C911D0046C20E /* WalletSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D5C0EC2D5C911D0046C20E /* WalletSummaryViewController.swift */; };
 		94D5C0EF2D5C911D0046C20E /* WalletSummaryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94D5C0ED2D5C911D0046C20E /* WalletSummaryView.xib */; };
 		94D63DD62646C29100FD7EE8 /* MessageViewModelFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */; };
@@ -3273,7 +3273,7 @@
 		94D42FD22F334C5C007E12F7 /* CreateAccountIntroductionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreateAccountIntroductionView.xib; sourceTree = "<group>"; };
 		94D444912EDEC81B0065FD07 /* TradeOrderTokenFilterPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOrderTokenFilterPickerViewController.swift; sourceTree = "<group>"; };
 		94D4E4F72B1753FE00EE04A3 /* ModernQRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModernQRCodeView.swift; sourceTree = "<group>"; };
-		94D4EA4F2EE015CC006BC2DC /* Wallet+TradeOrderWalletID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Wallet+TradeOrderWalletID.swift"; sourceTree = "<group>"; };
+		94D4EA4F2EE015CC006BC2DC /* Wallet+TradingWalletID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Wallet+TradingWalletID.swift"; sourceTree = "<group>"; };
 		94D5C0EC2D5C911D0046C20E /* WalletSummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSummaryViewController.swift; sourceTree = "<group>"; };
 		94D5C0ED2D5C911D0046C20E /* WalletSummaryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletSummaryView.xib; sourceTree = "<group>"; };
 		94D63DD52646C29100FD7EE8 /* MessageViewModelFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelFactory.swift; sourceTree = "<group>"; };
@@ -4770,7 +4770,7 @@
 				940FC4E02F502AFD000C4260 /* Spot */,
 				940FC4E72F502B0B000C4260 /* Perpetual */,
 				941C764A2F5EFB0A005B70A9 /* TradeURL.swift */,
-				94D4EA4F2EE015CC006BC2DC /* Wallet+TradeOrderWalletID.swift */,
+				94D4EA4F2EE015CC006BC2DC /* Wallet+TradingWalletID.swift */,
 				94FB2E3F2F509F9E00F85AB4 /* TradeSectionBackgroundView.swift */,
 				940A3D232EB7BEF0001A458F /* TradeSectionHeaderView.xib */,
 				940A3D222EB7BEF0001A458F /* TradeSectionHeaderView.swift */,
@@ -7569,7 +7569,7 @@
 				7BEB423622EAD20A003B4479 /* ModernNetworkOperationButton.swift in Sources */,
 				9465E64B2E6DAE95005974C6 /* DepositLink.swift in Sources */,
 				7BC98FA721EF5B8C004A5D79 /* AudioMessagePlayingManager.swift in Sources */,
-				94D4EA502EE015D5006BC2DC /* Wallet+TradeOrderWalletID.swift in Sources */,
+				94D4EA502EE015D5006BC2DC /* Wallet+TradingWalletID.swift in Sources */,
 				9458A06F2CC8E72900A51154 /* NSAttributedString+Constant.swift in Sources */,
 				943BC6782BCE99BC003FA778 /* CollectiblesViewController.swift in Sources */,
 				94D07AF72DF1883400FDF38E /* MaliciousWarningView.swift in Sources */,

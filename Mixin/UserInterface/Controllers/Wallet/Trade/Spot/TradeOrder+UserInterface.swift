@@ -126,7 +126,7 @@ extension TradeOrder {
             var isIncluded = true
             if !wallets.isEmpty {
                 isIncluded = isIncluded && wallets.contains(where: { wallet in
-                    order.walletID == wallet.tradeOrderWalletID
+                    order.walletID == wallet.tradingWalletID
                 })
             }
             if let type {

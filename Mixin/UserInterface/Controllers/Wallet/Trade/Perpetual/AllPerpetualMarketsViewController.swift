@@ -91,7 +91,6 @@ extension AllPerpetualMarketsViewController: UICollectionViewDelegate {
         let market = PerpetualMarketViewController(
             wallet: wallet,
             viewModel: viewModel,
-            alwaysAutoRefreshOpenPosition: false
         )
         navigationController?.pushViewController(market, animated: true)
     }

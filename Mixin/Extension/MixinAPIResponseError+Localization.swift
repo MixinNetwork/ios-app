@@ -45,7 +45,7 @@ extension MixinAPIResponseError: LocalizedError {
             return R.string.localizable.error_too_many_wallets()
         case .unsupportedWatchAddress:
             return R.string.localizable.error_watch_address_not_supported()
-        case .alredyHadPosition:
+        case .alreadyHadPosition:
             return R.string.localizable.error_already_had_open_position()
         case .referralCodeNotFound:
             return R.string.localizable.error_invalid_referral_code()

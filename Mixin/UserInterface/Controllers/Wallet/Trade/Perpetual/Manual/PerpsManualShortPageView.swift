@@ -9,8 +9,7 @@ struct PerpsManualShortPageView: View {
     private let leverageMultiplier: Decimal = 10
     
     var body: some View {
-        ZStack {
-            Color(R.color.background_secondary)
+        ManualScrollView {
             VStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 20) {
                     Text(R.string.localizable.example())

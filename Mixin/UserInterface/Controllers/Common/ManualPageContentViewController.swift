@@ -7,8 +7,6 @@ final class ManualPageContentViewController: UIViewController {
         func manualPageContentViewController(_ controller: ManualPageContentViewController, didNavigateTo index: Int)
     }
     
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var pageSwitchingView: UIView!
     @IBOutlet weak var previousButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
@@ -49,16 +47,13 @@ final class ManualPageContentViewController: UIViewController {
         super.viewDidLoad()
         let hostingController = UIHostingController(rootView: page.view)
         addChild(hostingController)
-        contentView.addSubview(hostingController.view)
+        view.addSubview(hostingController.view)
         hostingController.view.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
-            make.bottom.lessThanOrEqualTo(pageSwitchingView.snp.top)
+            make.bottom.equalTo(pageSwitchingView.snp.top)
         }
         hostingController.didMove(toParent: self)
         self.hostingController = hostingController
-        if #available(iOS 16.0, *) {
-            hostingController.sizingOptions = [.intrinsicContentSize]
-        }
         updatePageSwitchingButtons(
             previousTitle: previousTitle,
             nextTitle: nextTitle
@@ -88,7 +83,6 @@ final class ManualPageContentViewController: UIViewController {
             previousTitle: previousTitle,
             nextTitle: nextTitle
         )
-        scrollView.setContentOffset(.zero, animated: false)
     }
     
     private func updatePageSwitchingButtons(

@@ -4,8 +4,7 @@ import RswiftResources
 struct PerpsManualIntroductionPageView: View {
     
     var body: some View {
-        ZStack {
-            Color(R.color.background_secondary)
+        ManualScrollView {
             VStack {
                 VStack(alignment: .leading) {
                     Text(R.string.localizable.overview())

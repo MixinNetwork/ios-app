@@ -1349,6 +1349,7 @@
 		94C5BDD82D6865540012F840 /* FiatMoneyValueAttributedStringBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C5BDD72D68653D0012F840 /* FiatMoneyValueAttributedStringBuilder.swift */; };
 		94C5BDEC2D687B760012F840 /* WalletContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C5BDEB2D687B710012F840 /* WalletContainerViewController.swift */; };
 		94C5EE892DBA63C800FFEE91 /* StyledAssetChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C5EE882DBA63C400FFEE91 /* StyledAssetChange.swift */; };
+		94C67F442F63C25900CB11DC /* ManualScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C67F402F63C25500CB11DC /* ManualScrollView.swift */; };
 		94C688B728978BCD00C69537 /* TIPDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C688B628978BCD00C69537 /* TIPDiagnosticViewController.swift */; };
 		94C6987B2B23257B002377EA /* PaymentPrecondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C6987A2B23257B002377EA /* PaymentPrecondition.swift */; };
 		94C6AA09280D35990011AB02 /* AttachmentDiagnosticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */; };
@@ -3214,6 +3215,7 @@
 		94C5BDD72D68653D0012F840 /* FiatMoneyValueAttributedStringBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatMoneyValueAttributedStringBuilder.swift; sourceTree = "<group>"; };
 		94C5BDEB2D687B710012F840 /* WalletContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletContainerViewController.swift; sourceTree = "<group>"; };
 		94C5EE882DBA63C400FFEE91 /* StyledAssetChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledAssetChange.swift; sourceTree = "<group>"; };
+		94C67F402F63C25500CB11DC /* ManualScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualScrollView.swift; sourceTree = "<group>"; };
 		94C688B628978BCD00C69537 /* TIPDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPDiagnosticViewController.swift; sourceTree = "<group>"; };
 		94C6987A2B23257B002377EA /* PaymentPrecondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPrecondition.swift; sourceTree = "<group>"; };
 		94C6AA08280D35990011AB02 /* AttachmentDiagnosticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDiagnosticViewController.swift; sourceTree = "<group>"; };
@@ -4302,6 +4304,7 @@
 				94FB2F012F516AB400F85AB4 /* ManualViewController.swift */,
 				943B5F552F5C02C60043078A /* ManualPageContentView.xib */,
 				943B5F542F5C02C60043078A /* ManualPageContentViewController.swift */,
+				94C67F402F63C25500CB11DC /* ManualScrollView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -4826,12 +4829,8 @@
 		943B5F732F5C09F60043078A /* Manual */ = {
 			isa = PBXGroup;
 			children = (
+				94C67F2E2F63C23000CB11DC /* Utilities */,
 				943B5F7F2F5C0A240043078A /* PerpsManual.swift */,
-				943B618B2F5C4B3C0043078A /* ScaledFont.swift */,
-				9404AD382F5DA656007FC231 /* BulletinText.swift */,
-				9463E8472F5D619F0069CF1B /* PerpsManualCalculatingPnLView.swift */,
-				9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionProfitView.swift */,
-				945E18302F62F04A003434AA /* PerpsManualLongPositionLiquidationView.swift */,
 				943B5F932F5C0A6C0043078A /* PerpsManualIntroductionPageView.swift */,
 				943B61B52F5D45F80043078A /* PerpsManualLongPageView.swift */,
 				94BC7AFF2F5D876D009D8970 /* PerpsManualShortPageView.swift */,
@@ -5147,6 +5146,18 @@
 				94DB79C32E3B22A70066A8E7 /* WalletIdentifyingAuthenticationPreviewViewController.swift */,
 			);
 			path = "Authentication Preview";
+			sourceTree = "<group>";
+		};
+		94C67F2E2F63C23000CB11DC /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				943B618B2F5C4B3C0043078A /* ScaledFont.swift */,
+				9404AD382F5DA656007FC231 /* BulletinText.swift */,
+				9463E8472F5D619F0069CF1B /* PerpsManualCalculatingPnLView.swift */,
+				9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionProfitView.swift */,
+				945E18302F62F04A003434AA /* PerpsManualLongPositionLiquidationView.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		94C8C4A12C11A2A200993027 /* API */ = {
@@ -7611,6 +7622,7 @@
 				7CEB736C29DBD1C0006FB5B2 /* DeviceTransferMessage.swift in Sources */,
 				9463E84E2F5D61B40069CF1B /* PerpsManualCalculatingPnLView.swift in Sources */,
 				7B35AF7C228AA6CD00E8101D /* MessagesWithinConversationSearchResult.swift in Sources */,
+				94C67F442F63C25900CB11DC /* ManualScrollView.swift in Sources */,
 				7BAD50811FA0C8C1009B59FB /* VerificationCodeField.swift in Sources */,
 				944BC2D32C7C71B4008700A8 /* OutlineSegmentedControl.swift in Sources */,
 				7B54F95222B22EA600908A9D /* VerifyMobileNumberPINValidationViewController.swift in Sources */,

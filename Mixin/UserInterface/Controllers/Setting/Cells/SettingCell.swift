@@ -90,7 +90,7 @@ final class SettingCell: ModernSelectedBackgroundCell {
             case .highlighted:
                 R.color.theme()
             case .destructive:
-                R.color.red()
+                R.color.mixin_red()
             }
             setSubtitle(row.subtitle)
             updateAccessory(row.accessory, animated: false)

@@ -53,6 +53,10 @@ public enum AppGroupContainer {
         accountUrl.appendingPathComponent("web3.db", isDirectory: false)
     }
     
+    public static var perpsDatabaseUrl: URL {
+        accountUrl.appendingPathComponent("perps.db", isDirectory: false)
+    }
+    
     @available(iOSApplicationExtension, unavailable)
     public static func migrateIfNeeded() {
         guard !AppGroupUserDefaults.isDocumentsMigrated else {

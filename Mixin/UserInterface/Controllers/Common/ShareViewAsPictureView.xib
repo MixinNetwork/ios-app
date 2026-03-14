@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,6 +13,7 @@
                 <outlet property="actionButtonBackgroundView" destination="BdN-Mg-u4A" id="Q9m-dX-E3s"/>
                 <outlet property="actionButtonStackView" destination="BRj-T7-8lv" id="FsV-vD-VDo"/>
                 <outlet property="actionButtonTrayView" destination="1H8-wN-h5l" id="6ai-hd-Ef3"/>
+                <outlet property="closeButton" destination="o5U-Cc-wet" id="0RJ-6f-Jxw"/>
                 <outlet property="layoutWrapperHeightConstraint" destination="X4N-cr-SYs" id="TcY-Vw-Lb2"/>
                 <outlet property="layoutWrapperView" destination="dMf-Ii-eQE" id="dlu-Xt-T03"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>

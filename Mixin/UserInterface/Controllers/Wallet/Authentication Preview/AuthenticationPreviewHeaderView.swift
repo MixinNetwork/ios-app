@@ -27,6 +27,7 @@ final class AuthenticationPreviewHeaderView: UIView {
     private weak var backgroundView: UIView?
     private weak var imageView: UIImageView?
     private weak var assetIconView: BadgeIconView?
+    private weak var plainTokenIconView: PlainTokenIconView?
     private weak var progressView: AuthenticationProgressView?
     private weak var textContentView: TextInscriptionContentView?
     private weak var multipleTokenIconView: StackedTokenIconView?
@@ -152,6 +153,22 @@ final class AuthenticationPreviewHeaderView: UIView {
             self.multipleTokenIconView = iconView
         }
         iconView.setIcons(urls: tokens.map(\.iconURL))
+    }
+    
+    func setTokenIcon(url: URL?) {
+        let iconView: PlainTokenIconView
+        if let view = self.plainTokenIconView, view.isDescendant(of: iconWrapperView) {
+            iconView = view
+        } else {
+            for iconView in iconWrapperView.subviews {
+                iconView.removeFromSuperview()
+            }
+            iconView = PlainTokenIconView(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
+            iconWrapperView.addSubview(iconView)
+            iconView.snp.makeEdgesEqualToSuperview()
+            self.plainTokenIconView = iconView
+        }
+        iconView.setIcon(tokenIconURL: url)
     }
     
     func setIcon(progress: AuthenticationProgressView.Progress) {

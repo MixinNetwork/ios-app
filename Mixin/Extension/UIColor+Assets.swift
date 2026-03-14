@@ -6,8 +6,8 @@ extension UIColor {
     static let secondaryBackground = R.color.background_secondary()!
     static let inputBackground = R.color.background_input()!
     static let selectionBackground = R.color.background_selection()!
-    static let mixinGreen = R.color.green()!
-    static let mixinRed = R.color.red()!
+    static let mixinGreen = R.color.mixin_green()!
+    static let mixinRed = R.color.mixin_red()!
     static let text = R.color.text()!
     static let theme = R.color.theme()!
     

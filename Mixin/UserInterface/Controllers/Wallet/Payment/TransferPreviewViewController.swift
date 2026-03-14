@@ -8,17 +8,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
     private let operation: TransferPaymentOperation
     private let amountDisplay: AmountIntent
     private let redirection: URL?
-    
-    private var context: Payment.Context? {
-        switch operation.behavior {
-        case .transfer, .consolidation:
-            nil
-        case .inscription(let context):
-                .inscription(context)
-        case .swap(let context):
-                .trade(context)
-        }
-    }
+    private let inscriptionContext: Payment.InscriptionContext?
     
     init(
         issues: [PaymentPreconditionIssue],
@@ -29,6 +19,15 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
         self.operation = operation
         self.amountDisplay = amountDisplay
         self.redirection = redirection
+        switch operation.behavior {
+        case .trade:
+            assertionFailure("Use dedicated preview, like `TradeSpotPreviewViewController`")
+            fallthrough
+        case .transfer, .consolidation:
+            self.inscriptionContext = nil
+        case .inscription(let context):
+            self.inscriptionContext = context
+        }
         super.init(wallet: .privacy, warnings: issues.map(\.description))
     }
     
@@ -40,11 +39,9 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
         super.viewDidLoad()
         
         let token = operation.token
+        let tokenAmount: Decimal
         
-        switch operation.behavior {
-        case .transfer, .consolidation:
-            tableHeaderView.setIcon(token: token)
-        case .inscription(let context):
+        if let context = inscriptionContext {
             switch context.item.inscriptionContent {
             case let .image(url):
                 tableHeaderView.setIcon { imageView in
@@ -60,14 +57,6 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
                     imageView.image = R.image.inscription_intaglio()
                 }
             }
-        case .swap(let context):
-            tableHeaderView.setIcon(sendToken: token, receiveToken: context.receiveToken)
-        }
-        
-        switch context {
-        case .trade:
-            break
-        case .inscription(let context):
             switch context.operation {
             case .transfer:
                 tableHeaderView.titleLabel.text = R.string.localizable.confirm_transfer()
@@ -76,41 +65,35 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
                 tableHeaderView.titleLabel.text = R.string.localizable.collectible_release_confirmation()
                 tableHeaderView.subtitleTextView.text = R.string.localizable.collectible_release_hint()
             }
-        case nil:
-            tableHeaderView.titleLabel.text = R.string.localizable.confirm_transfer()
-            tableHeaderView.subtitleTextView.text = R.string.localizable.review_transfer_hint()
-        }
-        
-        var rows: [Row]
-        
-        let tokenAmount: Decimal = switch context {
-        case .inscription(let context):
-            switch context.operation {
+            tokenAmount = switch context.operation {
             case .transfer:
                 operation.amount
             case .release:
                 context.outputAmount
             }
-        case .trade, .none:
-            operation.amount
+        } else {
+            tableHeaderView.setIcon(token: token)
+            tableHeaderView.titleLabel.text = R.string.localizable.confirm_transfer()
+            tableHeaderView.subtitleTextView.text = R.string.localizable.review_transfer_hint()
+            tokenAmount = operation.amount
         }
+        
+        var rows: [Row]
+        
         let tokenValue = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
         let fiatMoneyAmount = tokenAmount * operation.token.decimalUSDPrice * Currency.current.decimalRate
         let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
         let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
         
-        switch context {
-        case .trade:
-            rows = []
-        case .inscription(let context):
+        if let context = inscriptionContext {
             rows = [
                 .boldInfo(caption: .collectible, content: context.item.collectionSequenceRepresentation),
             ]
             if case .release = context.operation {
                 rows.append(.tokenAmount(token: token, tokenAmount: tokenValue, fiatMoneyAmount: fiatMoneyValue))
             }
-        case .none:
+        } else {
             rows = [
                 .amount(caption: .amount, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),
             ]
@@ -130,17 +113,14 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
         }
         rows.append(.wallet(caption: .sender, wallet: .privacy, threshold: senderThreshold))
         
-        switch context {
-        case .trade:
-            break
-        case .inscription(let context):
+        if let context = inscriptionContext {
             switch context.operation {
             case .transfer:
                 break
             case .release:
                 rows.append(.info(caption: .fee, content: feeTokenValue))
             }
-        case .none:
+        } else {
             rows.append(contentsOf: [
                 .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
                 .amount(caption: .total, token: tokenValue, fiatMoney: fiatMoneyValue, display: amountDisplay, boldPrimaryAmount: false),
@@ -158,21 +138,24 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
     override func performAction(with pin: String) {
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
-        switch context {
-        case .trade:
-           break
-        case .inscription(let context):
+        if let context = inscriptionContext {
             switch context.operation {
             case .transfer:
-                layoutTableHeaderView(title: R.string.localizable.sending_transfer_request(),
-                                      subtitle: R.string.localizable.transfer_sending_description())
+                layoutTableHeaderView(
+                    title: R.string.localizable.sending_transfer_request(),
+                    subtitle: R.string.localizable.transfer_sending_description()
+                )
             case .release:
-                layoutTableHeaderView(title: R.string.localizable.collectible_releasing(),
-                                      subtitle: R.string.localizable.collectible_releasing_description())
+                layoutTableHeaderView(
+                    title: R.string.localizable.collectible_releasing(),
+                    subtitle: R.string.localizable.collectible_releasing_description()
+                )
             }
-        case .none:
-            layoutTableHeaderView(title: R.string.localizable.sending_transfer_request(),
-                                  subtitle: R.string.localizable.transfer_sending_description())
+        } else {
+            layoutTableHeaderView(
+                title: R.string.localizable.sending_transfer_request(),
+                subtitle: R.string.localizable.transfer_sending_description()
+            )
         }
         replaceTrayView(with: nil, animation: .vertical)
         Task {
@@ -182,35 +165,25 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .success)
-                    switch context {
-                    case .trade(let context):
-                        let type = switch context.mode {
-                        case .simple:
-                            "swap"
-                        case .advanced:
-                            "limit"
-                        }
-                        reporter.report(
-                            event: .tradeEnd,
-                            tags: [
-                                "wallet": "main",
-                                "type": type,
-                                "trade_asset_level": operation.amount.reportingAssetLevel
-                            ]
-                        )
-                    case .inscription(let context):
+                    if let context = inscriptionContext {
                         switch context.operation {
                         case .transfer:
-                            layoutTableHeaderView(title: R.string.localizable.transfer_success(),
-                                                  subtitle: R.string.localizable.transfer_sent_description())
+                            layoutTableHeaderView(
+                                title: R.string.localizable.transfer_success(),
+                                subtitle: R.string.localizable.transfer_sent_description()
+                            )
                         case .release:
-                            layoutTableHeaderView(title: R.string.localizable.collectible_release_success(),
-                                                  subtitle: R.string.localizable.collectible_released_description())
+                            layoutTableHeaderView(
+                                title: R.string.localizable.collectible_release_success(),
+                                subtitle: R.string.localizable.collectible_released_description()
+                            )
                         }
-                    case .none:
+                    } else {
                         reporter.report(event: .sendEnd)
-                        layoutTableHeaderView(title: R.string.localizable.transfer_success(),
-                                              subtitle: R.string.localizable.transfer_sent_description())
+                        layoutTableHeaderView(
+                            title: R.string.localizable.transfer_success(),
+                            subtitle: R.string.localizable.transfer_sent_description()
+                        )
                     }
                     tableView.setContentOffset(.zero, animated: true)
                     if redirection == nil {
@@ -237,17 +210,14 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
                 await MainActor.run {
                     canDismissInteractively = true
                     tableHeaderView.setIcon(progress: .failure)
-                    let title = switch context {
-                    case .trade:
-                        R.string.localizable.swap_failed()
-                    case .inscription(let context):
+                    let title = if let context = inscriptionContext {
                         switch context.operation {
                         case .transfer:
                             R.string.localizable.transfer_failed()
                         case .release:
                             R.string.localizable.collectible_release_failed()
                         }
-                    case .none:
+                    } else {
                         R.string.localizable.transfer_failed()
                     }
                     layoutTableHeaderView(title: title,
@@ -315,10 +285,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
             }
         }
         
-        switch context {
-        case .trade:
-            break
-        case .inscription(let context):
+        if let context = inscriptionContext {
             switch context.operation {
             case .transfer:
                 manipulateTransferFinished()
@@ -330,7 +297,7 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
                     return
                 }
             }
-        case .none:
+        } else {
             manipulateTransferFinished()
         }
     }

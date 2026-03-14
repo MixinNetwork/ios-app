@@ -223,22 +223,25 @@ extension Web3TransferInputAmountViewController: AddTokenMethodSelectorViewContr
         guard let feeToken = fee?.token else {
             return
         }
-        let next: UIViewController
-        switch method {
+        let next = switch method {
         case .trade:
-            next = Web3TradeViewController(
-                wallet: payment.wallet,
+            TradeViewController(
+                wallet: .common(payment.wallet),
+                trading: .simpleSpot,
                 sendAssetID: nil,
                 receiveAssetID: feeToken.assetID,
+                referral: nil
             )
         case .deposit:
-            next = DepositViewController(
+            DepositViewController(
                 wallet: payment.wallet,
                 token: feeToken,
                 switchingBetweenNetworks: false
             )
         }
-        navigationController?.pushViewController(next, animated: true)
+        if let next {
+            navigationController?.pushViewController(next, animated: true)
+        }
     }
     
 }

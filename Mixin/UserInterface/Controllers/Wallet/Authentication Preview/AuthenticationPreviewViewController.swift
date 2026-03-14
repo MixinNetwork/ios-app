@@ -54,6 +54,7 @@ class AuthenticationPreviewViewController: UIViewController {
         tableView.register(R.nib.authenticationPreviewWalletCell)
         tableView.register(R.nib.commonWalletReceiverCell)
         tableView.register(R.nib.waivedFeeCell)
+        tableView.register(R.nib.closePerpsReceiveCell)
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -100,7 +101,7 @@ class AuthenticationPreviewViewController: UIViewController {
         tableHeaderView.titleLabel.text = title
         tableHeaderView.subtitleTextView.text = subtitle
         if style.contains(.destructive) {
-            tableHeaderView.subtitleTextView.textColor = R.color.red()
+            tableHeaderView.subtitleTextView.textColor = R.color.mixin_red()
         } else {
             tableHeaderView.subtitleTextView.textColor = R.color.text_secondary()
         }
@@ -350,6 +351,18 @@ extension AuthenticationPreviewViewController: UITableViewDataSource {
                 cell.secondaryLabel.text = token
             }
             return cell
+        case let .perpsProduct(iconURL, name):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.multiple_asset_change, for: indexPath)!
+            cell.reloadPerpsProduct(iconURL: iconURL, name: name)
+            return cell
+        case let .estimatedReceive(token, count, pnl):
+            let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.close_perps_receiving, for: indexPath)!
+            cell.titleLabel.text = R.string.localizable.estimated_receive().uppercased()
+            cell.iconView.setIcon(token: token)
+            cell.valueLabel.text = count
+            cell.networkLabel.text = token.chainName
+            cell.pnlLabel.attributedText = pnl
+            return cell
         }
     }
     
@@ -474,6 +487,8 @@ extension AuthenticationPreviewViewController {
         case commonWalletReceiver(user: UserItem, address: String)
         case user(title: String, user: UserItem)
         case waivedFee(token: String, fiatMoney: String, display: AmountIntent)
+        case perpsProduct(iconURL: URL?, name: String)
+        case estimatedReceive(token: MixinTokenItem, count: String, pnl: NSAttributedString)
     }
     
     struct TableHeaderViewStyle: OptionSet {

@@ -239,7 +239,7 @@ extension TIPIntroViewController {
                 .paragraphStyle: style,
             ]
             let warningAttributes: [NSAttributedString.Key: Any] = [
-                .foregroundColor: R.color.red()!,
+                .foregroundColor: R.color.mixin_red()!,
                 .font: UIFont.preferredFont(forTextStyle: .footnote),
                 .paragraphStyle: style,
             ]

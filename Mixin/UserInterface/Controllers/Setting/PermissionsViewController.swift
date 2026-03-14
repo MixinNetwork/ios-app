@@ -172,7 +172,7 @@ extension PermissionsViewController: UITableViewDataSource {
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.permissions_action, for: indexPath)!
             cell.contentLabel.text = R.string.localizable.revoke_access()
-            cell.contentLabel.textColor = R.color.red()
+            cell.contentLabel.textColor = R.color.mixin_red()
             return cell
         }
     }

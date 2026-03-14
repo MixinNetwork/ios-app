@@ -236,7 +236,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
     }
     
     @objc private func selectReceiving(_ sender: Any) {
-        let selector = BuyTokenSelectorViewController(
+        let selector = SimpleTokenSelectorViewController(
             tokens: tokens,
             selectedAssetID: selectedToken?.assetID
         )

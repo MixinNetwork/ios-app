@@ -195,6 +195,8 @@ final class TradeViewController: UIViewController {
                     referral: initialContext.referral
                 )
             }
+        } else {
+            context = initialContext
         }
         
         let tradingViewController: UIViewController

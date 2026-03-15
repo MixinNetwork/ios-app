@@ -72,7 +72,7 @@
 "alert_frequency_every" = "Always";
 "alert_frequency_every_description" = "Receive an alert on every trigger event";
 "alert_frequency_once" = "Only once";
-"alert_frequency_once_description" = "Receive an alert only on first trigger event";
+"alert_frequency_once_description" = "Receive an alert only on the first trigger event.";
 "alert_key_contact_audio_call_cancelled_message" = "голосовой вызов отменен";
 "alert_key_contact_audio_call_message" = "приглашает вас на голосовой вызов";
 "alert_key_contact_audio_message" = "отправил вам аудио";
@@ -122,12 +122,12 @@
 "alert_type_price_reached_value" = "Price reaches %@";
 "alert_value" = "Value";
 "all" = "Все";
-"all_alert" = "All Alert";
+"all_alert" = "All Alerts";
 "all_assets_will_be_lost" = "All assets will be lost";
 "all_conversations" = "Все разговоры";
 "all_dates" = "All Dates";
 "all_invoices" = "All Invoices";
-"all_signer_failure" = "All node failure";
+"all_signer_failure" = "All nodes failed";
 "all_time_high" = "All Time High";
 "all_time_low" = "All Time Low";
 "all_transactions" = "Все транзакции";
@@ -142,13 +142,13 @@
 "allow_bot_access_snapshots" = "Allow bot to access your transfer records, including deposits and withdrawals.";
 "allow_bot_manage_bots" = "Allow bot to add or modify your bots.";
 "allow_bot_manage_circles" = "Allow bot to add, modify and delete your circles.";
-"allow_bot_send_messages" = "Allow bot to send messages represent of you.";
+"allow_bot_send_messages" = "Allow bot to send messages on your behalf.";
 "allow_manual_report_message" = "Разрешить сообщение ручного отчета";
 "alphabetical" = "Alphabetical";
 "amount" = "Количество";
 "anonymous_number" = "Anonymous Number";
 "app_card_shareable_false" = "Карта была настроена так, чтобы не разрешать совместное использование";
-"app_update_short_hint" = "Please update Mixin from App Store to continue use the service. Current version %@";
+"app_update_short_hint" = "Please update Mixin from the App Store to continue using the service. Current version: %@";
 "app_update_tips" = "Текущая версия (%@) больше недоступна! Нажмите «Обновить» ниже, чтобы выполнить обновление до последней версии из App Store.";
 "appearance" = "Вид";
 "apply" = "Подать заявление";
@@ -169,7 +169,7 @@
 "asset_type" = "Тип актива";
 "assets" = "Assets";
 "audio" = "Аудио";
-"audio_shareable_false" = "The audio has been set to not allow sharing";
+"audio_shareable_false" = "This audio cannot be shared.";
 "audios" = "Аудио";
 "authorization" = "авторизация";
 "authorizations" = "Авторизации";
@@ -193,7 +193,7 @@
 "backup_mnemonic_phrase" = "Backup Mnemonic Phrase";
 "backup_mnemonic_phrase_desc" = "Protect your assets by backing up your mnemonic phrase now.";
 "backup_mnemonic_phrase_warning" = "Please back up your mnemonic phrase immediately! This phrase is one of the key shards of the MPC wallet. If the device is lost or the app is uninstalled, and you haven't backed it up, you won't be able to log back into the current Mixin account (%@).";
-"backup_mnemonic_successfully" = "Backup mnemonic phrase successfully";
+"backup_mnemonic_successfully" = "Mnemonic phrase backed up successfully";
 "backup_now" = "Резервное копирование сейчас";
 "backup_to_icloud" = "Backup to iCloud";
 "balance" = "Баланс";
@@ -237,7 +237,7 @@
 "cancel_floating" = "Отменить всплывание";
 "cancel_order" = "Cancel Order";
 "cancel_transaction" = "Cancel Transaction";
-"cancel_transaction_description" = "If the transaction is too far along cancellation may not be possible";
+"cancel_transaction_description" = "If the transaction is too far along, cancellation may not be possible.";
 "cancel_waiting" = "Cancel Waiting";
 "canceled" = "Отменено";
 "canceled_by_caller" = "Отменено звонившим";
@@ -990,7 +990,7 @@
 "none" = "Никто";
 "normal" = "Normal";
 "not_a_group_member" = "You're no longer a member in this group";
-"not_all_signer_success" = "Not all node success";
+"not_all_signer_success" = "Not all nodes succeeded";
 "not_backed_up" = "Not Backed Up";
 "not_enough_partials" = "Not enough nodes return key shard";
 "not_found" = "Не найден";
@@ -1087,7 +1087,7 @@
 "permission_denied_microphone_hint" = "У Mixin нет разрешения на использование вашего микрофона. Пожалуйста, нажмите Настройки, чтобы открыть системные настройки.";
 "permission_denied_network_hint" = "У Mixin нет разрешения на использование беспроводных данных. Пожалуйста, нажмите Настройки, чтобы открыть системные настройки";
 "permission_denied_photos" = "Adding Photo Denied";
-"permission_denied_photos_hint" = "Mixin doesn't have permission to add photo to your library. Tap Settings to authorize.";
+"permission_denied_photos_hint" = "Mixin doesn't have permission to add photos to your library. Tap Settings to authorize.";
 "permissions" = "Разрешения";
 "phone_as_key_shard" = "Your mobile number will be associated with a key shard of the MPC wallet managed by you";
 "phone_call" = "Телефонный звонок";
@@ -1173,8 +1173,8 @@
 "read_your_snapshots" = "Read your snapshots";
 "rebate" = "Скидка";
 "receive" = "ПОЛУЧИТЬ";
-"receive_from_address_description" = "Receive from other exchange or on-chain wallet using a crypto network";
-"receive_from_other_wallets_description" = "Receive from my other wallet using a crypto network";
+"receive_from_address_description" = "Receive from another exchange or an on-chain wallet using a crypto network";
+"receive_from_other_wallets_description" = "Receive from another wallet you own using a crypto network";
 "receive_money" = "Получить деньги";
 "received" = "received";
 "receiver" = "Получатель";
@@ -1194,7 +1194,7 @@
 "referral_code_applied" = "Applied";
 "referral_code_applied_header" = "The fees are refunded monthly to your Mixin privacy wallet, summarized by the actual fee tokens and amounts consumed. Read the documentation to learn more.";
 "referral_code_applying_failed" = "Applying Failed";
-"referral_description" = "Invite friends earn crypto";
+"referral_description" = "Invite friends and earn crypto";
 "referral_program_introduction_1" = "Up to 60%% commission on trading fees";
 "referral_program_introduction_2" = "Membership commission rebate up to 1,000 USD per order";
 "referral_program_introduction_3" = "Rebate eligibility is valid for life";
@@ -1225,7 +1225,7 @@
 "report" = "Отчет";
 "report_and_block" = "Пожаловаться и заблокировать?";
 "report_title" = "Отправить журнал бесед разработчикам?";
-"represent_send_messages" = "Represent send messages";
+"represent_send_messages" = "Send messages on your behalf";
 "reputation" = "Reputation";
 "reputation_description" = "By default, only transactions with a Good or Unknown reputation are shown. Enable ‘Spam’ to see more.";
 "reputation_spam" = "Spam";
@@ -1234,7 +1234,7 @@
 "reputation_spam_transaction_warning" = "This transaction has been flagged as malicious";
 "request_authorization" = "Request Authorization";
 "request_rejected" = "Request Rejected";
-"request_rejected_reason_another_request_in_process" = "Another request is in process, please retry after current request is finished";
+"request_rejected_reason_another_request_in_process" = "Another request is in progress. Please retry after the current request is finished.";
 "resend_code" = "Отправить код еще раз";
 "resend_code_pending" = "Повторно отправить код в %@";
 "reset" = "Перезагрузить";
@@ -1345,7 +1345,7 @@
 "send_to_contact_common_wallet_description" = "Send to your friends’ Common Wallets quickly and easily.";
 "send_to_contact_description" = "Send to your Mixin friends with privacy, zero fees, and instant delivery.";
 "send_to_developer" = "Отправить разработчику";
-"send_to_other_wallet_description" = "Send to my other wallet using a crypto network";
+"send_to_other_wallet_description" = "Send to another wallet you own using a crypto network";
 "send_to_title" = "Отправить в";
 "send_token_minimum_amount" = "Send at least %@";
 "send_video" = "Отправить 1 видео";
@@ -1366,7 +1366,7 @@
 "set_amount" = "Set Amount";
 "set_as_avatar" = "Set as Avatar";
 "set_disappearing_message_time_to" = "%1$@ установил время исчезновения сообщения на %2$@.";
-"set_emergency_create_successfully" = "Set recovery contact successfully";
+"set_emergency_create_successfully" = "Recovery contact set successfully";
 "set_new_pin" = "Установить новый PIN-код";
 "set_or_update_pin_failed" = "Set or update PIN failed";
 "set_pin_successfully" = "ПИН-код успешно установлен";
@@ -1400,7 +1400,7 @@
 "setting_emergency_desc" = "When your lost your mobile number, please contact your recovery contact by phone or other means to get the Mixin ID and verification code. Read our Recovery Contact to learn more.";
 "setting_emergency_pin_tip" = "Your recovery contact is protected by PIN";
 "setting_emergency_send_code" = "Введите 4-значный код, отправленный на Mixin ID: %@.";
-"setting_emergency_set_message" = "Confirm to set Mixin ID %@ as your recovery contact? Please note that the other party must add you as a contact to set up successfully.";
+"setting_emergency_set_message" = "Confirm setting Mixin ID %@ as your recovery contact? Please note that the other party must add you as a contact for the setup to succeed.";
 "setting_emergency_warning" = "Attention: the Recovery Contact cannot help you to recover PIN";
 "setting_mobile_contact_warning" = "Это удалит ваши контакты с серверов Mixin.";
 "setting_notification_transfer_summary" = "Отображение уведомлений при получении перевода, превышающего или равного %@.";
@@ -1478,7 +1478,7 @@
 "suspicious_link" = "Подозрительная ссылка";
 "swap_confirmation" = "Swap Confirmation";
 "swap_failed" = "Swap Failed";
-"swap_message_success" = "Your transaction has been sent to network and will be processed within a few minutes.";
+"swap_message_success" = "Your transaction has been sent to the network and will be processed within a few minutes.";
 "swap_not_supported" = "%@ swapping is not supported.";
 "swap_order_paid" = "Paid";
 "swap_order_received" = "Received";
@@ -1628,7 +1628,7 @@
 "upgrade_safe" = "Upgrade safe";
 "upgrade_safe_description" = "Upgrade to Mixin One to unlock Mixin Safe and securely manage assets with your family, friends, or colleagues.";
 "upgrade_tip" = "Upgrade TIP";
-"upgrade_tip_successfully" = "Upgrade TIP successfully";
+"upgrade_tip_successfully" = "TIP upgraded successfully";
 "upgrading" = "Обновление";
 "upgrading_plan" = "Upgrading";
 "upgrading_tip_terminated_unexpectedly" = "Upgrading TIP terminated unexpectedly, click \"Continue\" to complete the upgrade";
@@ -1693,9 +1693,9 @@
 "waiting" = "Ожидание";
 "waiting_for_other_device" = "Waiting for Other Device...";
 "waiting_for_other_device_login" = "Log in to your current account on the new device and select the option to restore from another phone.";
-"waiting_for_other_device_scan" = "Connect the new device by scanning the QR code on the top";
+"waiting_for_other_device_scan" = "Connect the new device by scanning the QR code at the top";
 "waiting_transaction" = "Waiting Transaction";
-"waiting_transaction_description" = "You have a transfer or withdrawal has not been completed, please try again later";
+"waiting_transaction_description" = "You have a transfer or withdrawal that has not been completed. Please try again later.";
 "wallet" = "Wallet";
 "wallet_already_added" = "This wallet has already been added";
 "wallet_candidate_imported" = "Imported";
@@ -1741,10 +1741,10 @@
 "web3_message_request" = "Message Request";
 "web3_no_asset" = "Don’t Have Assets";
 "web3_signing" = "Signing";
-"web3_signing_data_success" = "The data has been signed and sent successfully, please return to app to continue.";
+"web3_signing_data_success" = "The data has been signed and sent successfully. Please return to the app to continue.";
 "web3_signing_failed" = "Signing Failed";
-"web3_signing_message_success" = "The message has been signed and sent successfully, please return to app to continue.";
-"web3_signing_transaction_success" = "The transaction has been signed and sent successfully, please return to app to continue.";
+"web3_signing_message_success" = "The message has been signed and sent successfully. Please return to the app to continue.";
+"web3_signing_transaction_success" = "The transaction has been signed and sent successfully. Please return to the app to continue.";
 "web3_signing_warning" = "We cannot verify this request; please ensure you trust this app before proceeding with the request.";
 "web3_transaction_request" = "Transaction Request";
 "web3_transfer_insufficient_fee_count" = "ERROR 20118: Broadcasting the transaction requires %1$@, and the available balance is %2$@.";
@@ -1769,7 +1769,7 @@
 "withdrawal_address_tips" = "Для первого вывода на новый адрес попробуйте небольшие суммы! Если вы выведете активы не на тот адрес, они не будут восстановлены!";
 "withdrawal_failed" = "Withdrawal Failed";
 "withdrawal_hash" = "Withdrawal Hash";
-"withdrawal_label_placeholder" = "Use a unique label to help you identify this address, such as name of the wallet, exchange, or a friend.";
+"withdrawal_label_placeholder" = "Use a unique label to help you identify this address, such as the name of a wallet, exchange, or friend.";
 "withdrawal_memo" = "Памятка";
 "withdrawal_minimum_amount" = "Минимальная сумма вывода: %1$@ %2$@.";
 "withdrawal_minimum_reserve" = "Минимальный резерв: ";
@@ -1781,7 +1781,7 @@
 "withdrawal_sending_description" = "The withdrawal request is being sent to the Mixin mainnet. Please wait a moment.";
 "withdrawal_sent_description" = "Withdrawal request successful. Please wait a moment.";
 "withdrawal_suspended" = "%@ Withdrawal Suspended";
-"withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, hard bifurcation of blockchain network, or congestion. Please try again later.";
+"withdrawal_suspended_description" = "%@ withdrawals are temporarily suspended, possibly due to node failure, a hard fork of the blockchain network, or congestion. Please try again later.";
 "withdrawal_to" = "Вывод на %@";
 "write_down_mnemonic_phrase" = "Write down your mnemonic phrase";
 "write_down_secret_description" = "Write it down on a piece of paper and keep it in a safe place.";

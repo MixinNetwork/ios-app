@@ -31,7 +31,7 @@ struct PINIteratorView: View {
                     }.disabled(test.isBusy)
                 }
             } footer: {
-                Text("Current it: \(iterator)")
+                Text("Current iterator: \(iterator)")
             }
         }
         .navigationTitle("PIN Iterator Test")

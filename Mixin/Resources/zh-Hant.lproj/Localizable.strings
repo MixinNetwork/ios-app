@@ -1002,6 +1002,7 @@
 "new_update_available" = "發現新版本";
 "new_update_available_desc" = "我們定期更新應用程式，以便為您提供更好的服務";
 "next" = "下一步";
+"no_activity" = "暫無歷史記錄";
 "no_alerts" = "沒有價格預警";
 "no_audio" = "沒有音訊";
 "no_authorizations" = "沒有授權任何機器人";

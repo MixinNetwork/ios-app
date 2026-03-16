@@ -46,7 +46,7 @@ final class AllPerpetualPositionsViewController: UIViewController {
             sectionProvider: { [weak self] (sectionIndex, _) in
                 switch Section.allCases[sectionIndex] {
                 case .summary:
-                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(95))
+                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(97))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
                     let section = NSCollectionLayoutSection(group: group)
@@ -252,7 +252,19 @@ extension AllPerpetualPositionsViewController: UICollectionViewDataSource {
                 }
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_placeholder, for: indexPath)!
-                cell.activityIndicatorView.isAnimating = viewModels == nil
+                if viewModels == nil {
+                    cell.activityIndicatorView.startAnimating()
+                    cell.emptyIndicatorStackView.isHidden = true
+                } else {
+                    cell.activityIndicatorView.stopAnimating()
+                    cell.emptyIndicatorStackView.isHidden = false
+                    cell.titleLabel.text = switch content {
+                    case .open:
+                        R.string.localizable.no_position().uppercased()
+                    case .closed:
+                        R.string.localizable.no_activity().uppercased()
+                    }
+                }
                 cell.helpButton.isHidden = content == .closed
                 cell.onHelp = { [weak self] in
                     let manual = PerpsManual.viewController()

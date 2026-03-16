@@ -112,7 +112,7 @@ final class TradePerpetualViewController: UIViewController {
                 
                 return switch Section(rawValue: sectionIndex)! {
                 case .value:
-                    oneCell(estimatedHeight: 94)
+                    oneCell(estimatedHeight: 97)
                 case .positions:
                     multipleCells(itemCount: self?.openPositions?.count)
                 case .markets:
@@ -317,6 +317,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     cell.emptyIndicatorStackView.isHidden = true
                 } else {
                     cell.activityIndicatorView.stopAnimating()
+                    cell.titleLabel.text = R.string.localizable.no_position().uppercased()
                     cell.emptyIndicatorStackView.isHidden = false
                     cell.onHelp = { [weak self] in
                         self?.presentPerpsManual()
@@ -337,8 +338,8 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     cell.emptyIndicatorStackView.isHidden = true
                 } else {
                     cell.activityIndicatorView.stopAnimating()
-                    cell.emptyIndicatorStackView.isHidden = false
                     cell.titleLabel.text = R.string.localizable.no_results().uppercased()
+                    cell.emptyIndicatorStackView.isHidden = false
                     cell.onHelp = { [weak self] in
                         self?.presentPerpsManual()
                     }
@@ -358,8 +359,8 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                     cell.emptyIndicatorStackView.isHidden = true
                 } else {
                     cell.activityIndicatorView.stopAnimating()
+                    cell.titleLabel.text = R.string.localizable.no_activity().uppercased()
                     cell.emptyIndicatorStackView.isHidden = false
-                    cell.titleLabel.text = R.string.localizable.no_position().uppercased()
                     cell.onHelp = { [weak self] in
                         self?.presentPerpsManual()
                     }

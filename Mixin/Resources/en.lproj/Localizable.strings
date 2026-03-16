@@ -1002,6 +1002,7 @@
 "new_update_available" = "New Update Available";
 "new_update_available_desc" = "We update the app regularly so we can make it better for you";
 "next" = "Next";
+"no_activity" = "No Activity";
 "no_alerts" = "NO ALERTS";
 "no_audio" = "NO AUDIO";
 "no_authorizations" = "NO AUTHORIZATIONS";

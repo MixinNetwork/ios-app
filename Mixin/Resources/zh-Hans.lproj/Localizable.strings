@@ -1002,6 +1002,7 @@
 "new_update_available" = "发现新版本";
 "new_update_available_desc" = "我们定期更新应用程序，以便为您提供更好的服务";
 "next" = "下一步";
+"no_activity" = "暂无历史记录";
 "no_alerts" = "没有价格预警";
 "no_audio" = "没有音频";
 "no_authorizations" = "没有授权任何机器人";

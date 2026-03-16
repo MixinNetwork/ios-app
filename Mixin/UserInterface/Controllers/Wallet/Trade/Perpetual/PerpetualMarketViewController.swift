@@ -398,7 +398,7 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
         case .openPosition:
             1
         case .info:
-            3
+            2
         case .closedPositions(let positions):
             positions.count
         case .introduction:
@@ -427,9 +427,6 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             case 0:
                 cell.titleLabel.text = R.string.localizable.volume_24h().uppercased()
                 cell.contentLabel.text = viewModel.volume
-            case 1:
-                cell.titleLabel.text = R.string.localizable.open_interest()
-                cell.contentLabel.text = viewModel.amount
             default:
                 cell.titleLabel.text = R.string.localizable.funding_rate()
                 cell.contentLabel.text = viewModel.fundingRate

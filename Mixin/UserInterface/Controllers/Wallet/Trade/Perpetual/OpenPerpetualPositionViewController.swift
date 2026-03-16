@@ -60,6 +60,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
     private var marginToken: MixinTokenItem? {
         didSet {
             guard let token = marginToken else {
+                marginAmountTextField.inputAccessoryView = nil
                 return
             }
             marginNetworkLabel.text = token.depositNetworkName
@@ -78,6 +79,26 @@ final class OpenPerpetualPositionViewController: UIViewController {
                 }()
             )
             marginTokenNameLabel.text = token.name
+            if marginAmountTextField.inputAccessoryView == nil {
+                let accessoryView = TradeInputAccessoryView(
+                    frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 44)
+                )
+                accessoryView.items = [
+                    .init(title: "25%") { [weak self] in
+                        self?.inputAmount(withBalanceMultipliedBy: 0.25)
+                    },
+                    .init(title: "50%") { [weak self] in
+                        self?.inputAmount(withBalanceMultipliedBy: 0.5)
+                    },
+                    .init(title: R.string.localizable.max()) { [weak self] in
+                        self?.inputAmount(withBalanceMultipliedBy: 1)
+                    },
+                ]
+                accessoryView.onDone = { [weak textField=marginAmountTextField] in
+                    textField?.resignFirstResponder()
+                }
+                marginAmountTextField.inputAccessoryView = accessoryView
+            }
         }
     }
     
@@ -230,7 +251,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
     }
     
     @IBAction func inputTokenBalance(_ sender: Any) {
-        
+        inputAmount(withBalanceMultipliedBy: 1)
     }
     
     @IBAction func presentManual(_ sender: Any) {
@@ -247,7 +268,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
             assetID: marginToken.assetID,
             marketID: viewModel.market.marketID,
             side: side,
-            amount: TokenAmountFormatter.string(from: marginAmount * multiplier),
+            amount: TokenAmountFormatter.string(from: marginAmount),
             leverage: (multiplier as NSDecimalNumber).intValue,
             walletID: wallet.tradingWalletID,
             destination: nil
@@ -324,6 +345,23 @@ final class OpenPerpetualPositionViewController: UIViewController {
         }
     }
     
+    private func inputAmount(withBalanceMultipliedBy multiplier: Decimal) {
+        guard let token = marginToken else {
+            return
+        }
+        marginAmount = token.decimalBalance * multiplier
+        marginAmountTextField.text = CurrencyFormatter.localizedString(
+            from: marginAmount,
+            format: .precision,
+            sign: .never,
+        )
+        updateDescriptions(
+            marginAmount: marginAmount,
+            leverageMultiplier: multiplier,
+            underlyingAsset: viewModel
+        )
+    }
+    
     private func inputLeverageMultiplier(value: Decimal) {
         var presetMultiplierIndex: Int?
         var customMultiplierIndex: Int?
@@ -343,7 +381,6 @@ final class OpenPerpetualPositionViewController: UIViewController {
             return
         }
         self.multiplier = value
-        marginAmountTextField.resignFirstResponder()
         leverageMultiplierTextField.text = PerpetualLeverage.stringRepresentation(multiplier: value)
         leverageMultipliersCollectionView.selectItem(
             at: IndexPath(item: item, section: 0),
@@ -455,6 +492,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         switch multipliers[indexPath.item] {
         case .custom:
+            marginAmountTextField.resignFirstResponder()
             let input = LeverageMultiplierInputViewController(
                 side: side,
                 maxMultiplier: viewModel.maxLeverageMultiplier,
@@ -474,6 +512,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
         switch multipliers[indexPath.item] {
         case .custom:
+            marginAmountTextField.resignFirstResponder()
             let input = LeverageMultiplierInputViewController(
                 side: side,
                 maxMultiplier: viewModel.maxLeverageMultiplier,
@@ -491,6 +530,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        marginAmountTextField.resignFirstResponder()
         switch multipliers[indexPath.item] {
         case .fixed(let leverage):
             inputLeverageMultiplier(value: leverage)

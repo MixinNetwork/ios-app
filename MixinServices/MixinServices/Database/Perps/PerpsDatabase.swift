@@ -36,7 +36,6 @@ public final class PerpsDatabase: Database {
                     `max_amount`        TEXT NOT NULL,
                     `last`              TEXT NOT NULL,
                     `volume`            TEXT NOT NULL,
-                    `amount`            TEXT NOT NULL,
                     `high`              TEXT NOT NULL,
                     `low`               TEXT NOT NULL,
                     `open`              TEXT NOT NULL,

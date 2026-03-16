@@ -15,7 +15,6 @@ public struct PerpetualMarket {
     public let maxAmount: String
     public let last: String
     public let volume: String
-    public let amount: String
     public let high: String
     public let low: String
     public let welcomeOpen: String
@@ -42,7 +41,6 @@ extension PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchableRec
         case maxAmount = "max_amount"
         case last = "last"
         case volume = "volume"
-        case amount = "amount"
         case high = "high"
         case low = "low"
         case welcomeOpen = "open"

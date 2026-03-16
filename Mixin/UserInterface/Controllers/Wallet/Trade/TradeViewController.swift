@@ -18,7 +18,7 @@ final class TradeViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var containerView: UIView!
     
-    private let allTradings: [Trading] = [.simpleSpot, .advancedSpot, .perpetualFutures]
+    private let allTradings: [Trading]
     private let wallet: Wallet
     private let supportedChainIDs: Set<String>? // nil for all
     private let initialContext: Context
@@ -36,19 +36,29 @@ final class TradeViewController: UIViewController {
         receiveAssetID: String?,
         referral: String?,
     ) {
+        var trading = trading
+        ?? Trading(rawValue: AppGroupUserDefaults.Wallet.tradeMode)
+        ?? .simpleSpot
+        let allTradings: [Trading]
         switch wallet {
-        case .safe, 
-                .common where trading == .perpetualFutures:
-            assertionFailure("Unsupported combination")
-            return nil
-        default:
-            break
+        case .privacy:
+            allTradings = [.simpleSpot, .advancedSpot, .perpetualFutures]
+        case .common:
+            allTradings = [.simpleSpot, .advancedSpot]
+        case .safe:
+            allTradings = []
         }
+        if allTradings.isEmpty {
+            assertionFailure("Unsupported wallet")
+            return nil
+        } else if !allTradings.contains(trading) {
+            trading = allTradings[0]
+        }
+        
+        self.allTradings = allTradings
         self.wallet = wallet
         self.supportedChainIDs = supportedChainIDs
         self.trading = trading
-        ?? Trading(rawValue: AppGroupUserDefaults.Wallet.tradeMode)
-        ?? .simpleSpot
         self.initialContext = Context(
             sendAssetID: sendAssetID,
             receiveAssetID: receiveAssetID,

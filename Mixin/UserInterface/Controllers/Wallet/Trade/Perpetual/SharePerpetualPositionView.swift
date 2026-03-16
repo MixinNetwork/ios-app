@@ -34,7 +34,7 @@ final class SharePerpetualPositionView: UIView {
         obiView.contentView.darkColors = nil
     }
     
-    func load(viewModel: PerpetualPositionViewModel) {
+    func load(viewModel: PerpetualPositionViewModel, latestPrice: Decimal?) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
         changeLabel.text = if let percentage = viewModel.pnlPercentage {
             PercentageFormatter.string(
@@ -71,8 +71,21 @@ final class SharePerpetualPositionView: UIView {
         leverageLabel.text = viewModel.leverageMultiplier
         entryPriceTitleLabel.text = R.string.localizable.entry_price()
         entryPriceContentLabel.text = viewModel.entryPrice
-        priceTitleLabel.text = R.string.localizable.close_price()
-        priceContentLabel.text = viewModel.closePrice
+        if let closePrice = viewModel.closePrice {
+            priceTitleLabel.text = R.string.localizable.close_price()
+            priceContentLabel.text = viewModel.closePrice
+        } else if let latestPrice {
+            priceTitleLabel.text = R.string.localizable.perps_current_price()
+            priceContentLabel.text = CurrencyFormatter.localizedString(
+                from: latestPrice * Currency.current.decimalRate,
+                format: .fiatMoneyPrice,
+                sign: .never,
+                symbol: .currencySymbol
+            )
+        } else {
+            priceTitleLabel.text = ""
+            priceContentLabel.text = ""
+        }
     }
     
 }

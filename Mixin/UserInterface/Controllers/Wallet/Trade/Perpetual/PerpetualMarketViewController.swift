@@ -27,6 +27,18 @@ final class PerpetualMarketViewController: UIViewController {
     
     private weak var priceCell: PerpetualMarketPriceCell?
     
+    private var openPositionViewModel: PerpetualPositionViewModel? {
+        for section in sections {
+            switch section {
+            case .openPosition(let viewModel):
+                return viewModel
+            default:
+                break
+            }
+        }
+        return nil
+    }
+    
     init(
         wallet: Wallet,
         viewModel: PerpetualMarketViewModel,
@@ -241,19 +253,11 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     @objc private func closePosition(_ sender: UIButton) {
-        var viewModel: PerpetualPositionViewModel?
-        for section in sections {
-            switch section {
-            case .openPosition(let v):
-                viewModel = v
-            default:
-                break
-            }
+        guard let viewModel = openPositionViewModel else {
+            return
         }
-        if let viewModel {
-            let preview = ClosePerpetualPositionPreviewViewController(viewModel: viewModel)
-            present(preview, animated: true)
-        }
+        let preview = ClosePerpetualPositionPreviewViewController(viewModel: viewModel)
+        present(preview, animated: true)
     }
     
     @objc private func reloadMarket(_ notification: Notification) {
@@ -517,6 +521,17 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
     func perpetualMarketOpenPositionCellQuestionAboutSize(_ cell: PerpetualMarketOpenPositionCell) {
         let manual = PerpsManual.viewController(initialPage: .size)
         present(manual, animated: true)
+    }
+    
+    func perpetualMarketOpenPositionCellAskToShare(_ cell: PerpetualMarketOpenPositionCell) {
+        guard let positionViewModel = openPositionViewModel else {
+            return
+        }
+        let share = SharePerpetualPositionViewController(
+            viewModel: positionViewModel,
+            latestPrice: viewModel.decimalPrice
+        )
+        present(share, animated: true)
     }
     
 }

@@ -231,7 +231,10 @@ extension PerpetualPositionViewController: PillActionView.Delegate {
             let preview = ClosePerpetualPositionPreviewViewController(viewModel: viewModel)
             present(preview, animated: true)
         case .share:
-            let share = SharePerpetualPositionViewController(viewModel: viewModel)
+            let share = SharePerpetualPositionViewController(
+                viewModel: viewModel,
+                latestPrice: nil
+            )
             present(share, animated: true)
         }
     }

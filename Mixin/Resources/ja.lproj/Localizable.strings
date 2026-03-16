@@ -1076,7 +1076,6 @@
 "open_in_gaode_maps" = "Gaodeマップで開く";
 "open_in_google_maps" = "Googleマップで開く";
 "open_in_maps" = "マップで開く";
-"open_interest" = "Open Interest";
 "open_link" = "リンクを開く: %@";
 "open_orders_count" = "Open Orders (%d)";
 "open_position" = "Open Position";
@@ -1136,6 +1135,7 @@
 "perpetual" = "Perpetual";
 "perpetual_futures" = "Perpetual Futures";
 "perps_activity" = "Activity";
+"perps_current_price" = "Current Price";
 "perps_intro_overview" = "Mixin Perpetual Futures are a type of derivatives trading settled in digital assets. They allow traders to go long or short with no expiration date. Through leverage, traders can amplify their position size and capture opportunities from both rising and falling market prices.";
 "perps_intro_risk_notice_1" = "Leveraged trading amplifies both profits and losses";
 "perps_intro_risk_notice_2" = "Positions may be forcibly liquidated if margin becomes insufficient";

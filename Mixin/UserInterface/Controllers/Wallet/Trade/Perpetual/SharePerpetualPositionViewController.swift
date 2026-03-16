@@ -4,10 +4,13 @@ final class SharePerpetualPositionViewController: ShareViewAsPictureViewControll
     
     private let viewModel: PerpetualPositionViewModel
     
+    private var latestPrice: Decimal?
+    
     private weak var positionView: SharePerpetualPositionView!
     
-    init(viewModel: PerpetualPositionViewModel) {
+    init(viewModel: PerpetualPositionViewModel, latestPrice: Decimal?) {
         self.viewModel = viewModel
+        self.latestPrice = latestPrice
         super.init()
     }
     
@@ -23,7 +26,7 @@ final class SharePerpetualPositionViewController: ShareViewAsPictureViewControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        positionView.load(viewModel: viewModel)
+        positionView.load(viewModel: viewModel, latestPrice: latestPrice)
         closeButton.overrideUserInterfaceStyle = .light
         actionButtonBackgroundView.effect = nil
         actionButtonTrayView.backgroundColor = R.color.background()

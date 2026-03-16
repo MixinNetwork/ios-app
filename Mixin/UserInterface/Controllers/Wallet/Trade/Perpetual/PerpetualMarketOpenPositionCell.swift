@@ -4,6 +4,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     
     protocol Delegate: AnyObject {
         func perpetualMarketOpenPositionCellQuestionAboutSize(_ cell: PerpetualMarketOpenPositionCell)
+        func perpetualMarketOpenPositionCellAskToShare(_ cell: PerpetualMarketOpenPositionCell)
     }
     
     @IBOutlet weak var titleLabel: UILabel!
@@ -58,6 +59,10 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     
     @IBAction func questionAboutSize(_ sender: Any) {
         delegate?.perpetualMarketOpenPositionCellQuestionAboutSize(self)
+    }
+    
+    @IBAction func requestShare(_ sender: Any) {
+        delegate?.perpetualMarketOpenPositionCellAskToShare(self)
     }
     
     func load(viewModel: PerpetualPositionViewModel) {

@@ -253,13 +253,24 @@ final class TradePerpetualViewController: UIViewController {
             guard let self else {
                 return
             }
+            let alreadyOpened = self.openPositions?.contains { position in
+                position.marketID == viewModel.market.marketID
+            } ?? false
             self.dismiss(animated: true) {
-                let open = OpenPerpetualPositionViewController(
-                    wallet: wallet,
-                    side: side,
-                    viewModel: viewModel,
-                )
-                self.navigationController?.pushViewController(open, animated: true)
+                if alreadyOpened {
+                    let market = PerpetualMarketViewController(
+                        wallet: self.wallet,
+                        viewModel: viewModel
+                    )
+                    self.navigationController?.pushViewController(market, animated: true)
+                } else {
+                    let open = OpenPerpetualPositionViewController(
+                        wallet: wallet,
+                        side: side,
+                        viewModel: viewModel,
+                    )
+                    self.navigationController?.pushViewController(open, animated: true)
+                }
             }
         }
         present(selector, animated: true)

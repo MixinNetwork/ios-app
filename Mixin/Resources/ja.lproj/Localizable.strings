@@ -1245,7 +1245,6 @@
 "product_features_2" = "Long / Short for two-way trading";
 "product_features_3" = "Up to %d× leverage";
 "product_features_4" = "Isolated margin mode for flexible risk control";
-"product_features_5" = "Delayed liquidation mechanism to reduce wick-triggered liquidations";
 "profile" = "プロフィール";
 "profile_badge" = "Profile Badge";
 "profile_badge_description" = "An exclusive badge next to your name";

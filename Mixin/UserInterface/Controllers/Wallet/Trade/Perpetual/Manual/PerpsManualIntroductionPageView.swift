@@ -27,7 +27,6 @@ struct PerpsManualIntroductionPageView: View {
                         R.string.localizable.product_features_2(),
                         R.string.localizable.product_features_3(200),
                         R.string.localizable.product_features_4(),
-                        R.string.localizable.product_features_5(),
                     ])
                     Spacer()
                         .frame(height: 12)

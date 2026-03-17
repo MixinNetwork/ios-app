@@ -1245,7 +1245,6 @@
 "product_features_2" = "支持做多 / 做空，双向交易";
 "product_features_3" = "最高支持 %d 倍杠杆";
 "product_features_4" = "支持逐仓模式，灵活控制风险";
-"product_features_5" = "延迟爆仓，防插针";
 "profile" = "个人资料";
 "profile_badge" = "个人资料徽章";
 "profile_badge_description" = "您名字旁边的专属徽章";

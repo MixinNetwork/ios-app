@@ -1202,7 +1202,7 @@
 "position_opened" = "開倉成功";
 "position_opened_description" = "您的開倉已成功。";
 "position_opening_failed" = "開倉失敗";
-"position_size" = "規模";
+"position_size" = "倉位規模";
 "position_value" = "倉位價值";
 "positions" = "倉位";
 "positions_count" = "倉位(%d)";

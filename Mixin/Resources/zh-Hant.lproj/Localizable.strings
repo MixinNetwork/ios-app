@@ -1145,11 +1145,11 @@
 "perps_leverage_risk_notice" = "請合理選擇槓桿倍數，高槓杆下，價格小幅波動也可能導致較大虧損。";
 "perps_long_overview" = "做多是指在預期價格上漲時建立倉位，價格上漲可獲得盈利，價格下跌則產生虧損。";
 "perps_markets" = "市場";
-"perps_position_overview" = "當前合約持倉的實際交易價值，由「保證金 × 槓桿」決定。";
-"perps_position_purpose_1" = "支撐當前倉位";
-"perps_position_purpose_2" = "抵扣浮動虧損";
-"perps_position_risk_1" = "當投入資金不足以支撐當前倉位時，倉位將被系統強制平倉。";
-"perps_position_risk_2" = "價格劇烈波動可能會快速消耗投入資金。";
+"perps_position_size_overview" = "當前合約的倉位規模由「投入資金 × 槓桿倍數」計算得出，表示本次交易所控制的資產規模。";
+"perps_position_size_purpose_1" = "決定本次交易的市場敞口規模";
+"perps_position_size_purpose_2" = "影響盈虧變化的放大倍數";
+"perps_position_size_risk_1" = "當虧損接近已投入資金時，可能被系統強制平倉。";
+"perps_position_size_risk_2" = "價格劇烈波動可能會快速消耗投入資金。";
 "perps_short_overview" = "做空是指在預期價格下跌時建立倉位，價格下跌可獲得盈利，價格上漲則產生虧損。";
 "phone_as_key_shard" = "手機號將關聯到由您管理的 MPC 錢包的一個金鑰分片";
 "phone_call" = "電話呼叫";

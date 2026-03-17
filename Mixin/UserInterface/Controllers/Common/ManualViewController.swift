@@ -227,7 +227,7 @@ extension ManualViewController: ManualPageContentViewController.Delegate {
         } else {
             pageSelectorCollectionView.selectItem(
                 at: IndexPath(item: index, section: 0),
-                animated: false,
+                animated: true,
                 scrollPosition: .left
             )
             if let page = dequeueReusableViewController(of: index) {

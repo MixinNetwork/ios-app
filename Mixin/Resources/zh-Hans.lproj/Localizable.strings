@@ -1145,11 +1145,11 @@
 "perps_leverage_risk_notice" = "请合理选择杠杆倍数，高杠杆下，价格小幅波动也可能导致较大亏损。";
 "perps_long_overview" = "做多是指在预期价格上涨时建立仓位，价格上涨可获得盈利，价格下跌则产生亏损。";
 "perps_markets" = "市场";
-"perps_position_overview" = "当前合约持仓的实际交易价值，由「保证金 × 杠杆」决定。";
-"perps_position_purpose_1" = "支撑当前仓位";
-"perps_position_purpose_2" = "抵扣浮动亏损";
-"perps_position_risk_1" = "当投入资金不足以支撑当前仓位时，仓位将被系统强制平仓。";
-"perps_position_risk_2" = "价格剧烈波动可能会快速消耗投入资金。";
+"perps_position_size_overview" = "当前合约的仓位规模由「投入资金 × 杠杆倍数」计算得出，表示本次交易所控制的资产规模。";
+"perps_position_size_purpose_1" = "决定本次交易的市场敞口规模";
+"perps_position_size_purpose_2" = "影响盈亏变化的放大倍数";
+"perps_position_size_risk_1" = "当亏损接近已投入资金时，可能被系统强制平仓。";
+"perps_position_size_risk_2" = "价格剧烈波动可能会快速消耗投入资金。";
 "perps_short_overview" = "做空是指在预期价格下跌时建立仓位，价格下跌可获得盈利，价格上涨则产生亏损。";
 "phone_as_key_shard" = "手机号将关联到由您管理的 MPC 钱包的一个密钥分片";
 "phone_call" = "电话呼叫";

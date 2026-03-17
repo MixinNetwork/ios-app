@@ -1145,11 +1145,11 @@
 "perps_leverage_risk_notice" = "Please choose your leverage carefully. With high leverage, even small price fluctuations may result in significant losses.";
 "perps_long_overview" = "Going Long means opening a position when you expect the price to rise. If the price increases, you make a profit; if the price decreases, you incur a loss.";
 "perps_markets" = "Markets";
-"perps_position_overview" = "Margin represents the actual trading value supporting your current position, calculated as Margin × Leverage.";
-"perps_position_purpose_1" = "Supports the current position";
-"perps_position_purpose_2" = "Offsets unrealized losses";
-"perps_position_risk_1" = "If the margin becomes insufficient to support the position, it may be forcibly liquidated by the system.";
-"perps_position_risk_2" = "Sharp price fluctuations may quickly consume the margin.";
+"perps_position_size_overview" = "Position size is calculated as “Margin × Leverage”, representing the total value of the position you control in a trade.";
+"perps_position_size_purpose_1" = "Defines your market exposure for the trade";
+"perps_position_size_purpose_2" = "Determines how much your PnL is amplified";
+"perps_position_size_risk_1" = "If losses approach your margin, your position may be liquidated by the system.";
+"perps_position_size_risk_2" = "Rapid price movements can quickly deplete your margin.";
 "perps_short_overview" = "Going Short means opening a position when you expect the price to fall. If the price decreases, you make a profit; if the price increases, you incur a loss.";
 "phone_as_key_shard" = "Your mobile number will be associated with a key shard of the MPC wallet managed by you";
 "phone_call" = "Llamada telefónica";

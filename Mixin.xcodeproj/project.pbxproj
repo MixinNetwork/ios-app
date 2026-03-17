@@ -653,7 +653,7 @@
 		9404AD392F5DA65A007FC231 /* BulletinText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404AD382F5DA656007FC231 /* BulletinText.swift */; };
 		9404AD502F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404AD4F2F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift */; };
 		9404AD5E2F5DAA45007FC231 /* PerpsManualLongPositionProfitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionProfitView.swift */; };
-		9404AD872F5DB4EF007FC231 /* PerpsManualPositionPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404AD862F5DB4EF007FC231 /* PerpsManualPositionPageView.swift */; };
+		9404AD872F5DB4EF007FC231 /* PerpsManualPositionSizePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9404AD862F5DB4EF007FC231 /* PerpsManualPositionSizePageView.swift */; };
 		94051FA42E812D64005B3A16 /* DepositFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94051FA32E812D61005B3A16 /* DepositFilter.swift */; };
 		94051FB22E81306F005B3A16 /* RefreshTokenJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94051FB12E81306F005B3A16 /* RefreshTokenJob.swift */; };
 		94062C592AE8C61700ADAE87 /* SnapshotTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94062C582AE8C61700ADAE87 /* SnapshotTableHeaderView.xib */; };
@@ -2508,7 +2508,7 @@
 		9404AD382F5DA656007FC231 /* BulletinText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletinText.swift; sourceTree = "<group>"; };
 		9404AD4F2F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualLeveragePageView.swift; sourceTree = "<group>"; };
 		9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionProfitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualLongPositionProfitView.swift; sourceTree = "<group>"; };
-		9404AD862F5DB4EF007FC231 /* PerpsManualPositionPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualPositionPageView.swift; sourceTree = "<group>"; };
+		9404AD862F5DB4EF007FC231 /* PerpsManualPositionSizePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualPositionSizePageView.swift; sourceTree = "<group>"; };
 		94051FA32E812D61005B3A16 /* DepositFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositFilter.swift; sourceTree = "<group>"; };
 		94051FB12E81306F005B3A16 /* RefreshTokenJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenJob.swift; sourceTree = "<group>"; };
 		94062C582AE8C61700ADAE87 /* SnapshotTableHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SnapshotTableHeaderView.xib; sourceTree = "<group>"; };
@@ -4837,7 +4837,7 @@
 				943B61B52F5D45F80043078A /* PerpsManualLongPageView.swift */,
 				94BC7AFF2F5D876D009D8970 /* PerpsManualShortPageView.swift */,
 				9404AD4F2F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift */,
-				9404AD862F5DB4EF007FC231 /* PerpsManualPositionPageView.swift */,
+				9404AD862F5DB4EF007FC231 /* PerpsManualPositionSizePageView.swift */,
 			);
 			path = Manual;
 			sourceTree = "<group>";
@@ -6728,9 +6728,9 @@
 				9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
 				94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */,
-				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */,
+				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */,
 				94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
-				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */,
+				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */,
 				94ED93882E37592700A3E337 /* XCRemoteSwiftPackageReference "reown-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -7177,9 +7177,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MixinDebug/Pods-MixinDebug-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MixinDebug/Pods-MixinDebug-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -7277,9 +7281,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -7294,9 +7302,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -8364,7 +8376,7 @@
 				949B03C32D15922300A34EE3 /* StackedIconWrapperView.swift in Sources */,
 				94B1E55D2C49222100A2349F /* TradeMixinSpotViewController.swift in Sources */,
 				DF3C47471FA071F400A07C71 /* HomeViewController.swift in Sources */,
-				9404AD872F5DB4EF007FC231 /* PerpsManualPositionPageView.swift in Sources */,
+				9404AD872F5DB4EF007FC231 /* PerpsManualPositionSizePageView.swift in Sources */,
 				94CA5C582CE5F5F80086C484 /* PaymentCollectibleCell.swift in Sources */,
 				DF8CECE51FC3177100E40064 /* BottomSheetView.swift in Sources */,
 				94145BAE2CD5099D00600AD4 /* AddRecoveryContactViewController.swift in Sources */,
@@ -8741,15 +8753,15 @@
 /* Begin PBXTargetDependency section */
 		94881FAE2AD0361100CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */;
+			productRef = 94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */;
 		};
 		94881FB02AD0361700CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */;
+			productRef = 94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */;
 		};
 		94C957E52ACFECDE00C1412F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */;
+			productRef = 94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */;
 		};
 		94ED305F2E269B2A00B99837 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -9437,7 +9449,7 @@
 				version = 14.3.1;
 			};
 		};
-		9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */ = {
+		9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MixinNetwork/web3.swift";
 			requirement = {
@@ -9453,7 +9465,7 @@
 				version = 3.1.2;
 			};
 		};
-		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */ = {
+		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mac-cain13/R.swift";
 			requirement = {
@@ -9492,7 +9504,7 @@
 		};
 		9479B7842BBBE589002A2C4F /* web3.swift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */;
+			package = 9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */;
 			productName = web3.swift;
 		};
 		9481C03B2A49A9AA0009DAF8 /* Starscream */ = {
@@ -9502,28 +9514,28 @@
 		};
 		94881FA72AD035C300CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
 			productName = RswiftLibrary;
 		};
 		94881FA92AD035CC00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
 			productName = RswiftLibrary;
 		};
 		94881FAB2AD035ED00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
 			productName = RswiftLibrary;
 		};
-		94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
+		94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
+		94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */ = {
+		94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};

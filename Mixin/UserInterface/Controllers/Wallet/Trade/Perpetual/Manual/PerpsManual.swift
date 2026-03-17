@@ -33,7 +33,7 @@ enum PerpsManual {
             ),
             ManualViewController.Page(
                 title: R.string.localizable.position_size(),
-                view: PerpsManualPositionPageView()
+                view: PerpsManualPositionSizePageView()
             ),
         ]
         let manual = ManualViewController(

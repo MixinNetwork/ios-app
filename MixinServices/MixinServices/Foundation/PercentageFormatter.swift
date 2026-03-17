@@ -74,7 +74,7 @@ public enum PercentageFormatter {
             case .whenNegative:
                 decimal > 0 ? "" : "-"
             }
-            return symbol + "\(decimal)%"
+            return symbol + "\(decimal * 100)%"
         }
     }
     

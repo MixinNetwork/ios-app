@@ -1,7 +1,7 @@
 import SwiftUI
 import MixinServices
 
-struct PerpsManualPositionPageView: View {
+struct PerpsManualPositionSizePageView: View {
     
     private let marginStep: Decimal = 100
     private let marginSymbol = "USDT"
@@ -137,7 +137,7 @@ struct PerpsManualPositionPageView: View {
                         .modifier(ManualText(.heading))
                     Spacer()
                         .frame(height: 10)
-                    Text(R.string.localizable.perps_position_overview())
+                    Text(R.string.localizable.perps_position_size_overview())
                         .modifier(ManualText(.body))
                     Spacer()
                         .frame(height: 12)
@@ -147,8 +147,8 @@ struct PerpsManualPositionPageView: View {
                     Spacer()
                         .frame(height: 4)
                     BulletinText([
-                        R.string.localizable.perps_position_purpose_1(),
-                        R.string.localizable.perps_position_purpose_2(),
+                        R.string.localizable.perps_position_size_purpose_1(),
+                        R.string.localizable.perps_position_size_purpose_2(),
                     ])
                     Spacer()
                         .frame(height: 12)
@@ -158,8 +158,8 @@ struct PerpsManualPositionPageView: View {
                     Spacer()
                         .frame(height: 4)
                     BulletinText([
-                        R.string.localizable.perps_position_risk_1(),
-                        R.string.localizable.perps_position_risk_2(),
+                        R.string.localizable.perps_position_size_risk_1(),
+                        R.string.localizable.perps_position_size_risk_2(),
                     ])
                 }
                 .padding(PerpsManual.cardInsets)

@@ -123,12 +123,22 @@ extension SafeAPI {
         return result.map(\.asToken)
     }
     
-    public static func asset(
-        id: String,
-        queue: DispatchQueue,
-        completion: @escaping (MixinAPI.Result<MixinToken>) -> Void
-    ) -> Request? {
-        request(method: .get, path: "/safe/assets/\(id)", queue: queue, completion: completion)
+    public static func assets<C: Collection<String> & Encodable>(
+        ids: C,
+        queue: DispatchQueue = .main,
+        completion: @escaping (MixinAPI.Result<[MixinToken]>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/safe/assets/fetch",
+            parameters: ids,
+            queue: queue,
+        ) { (result: MixinAPI.Result<[DisplayMixinToken]>) in
+            let tokensResult = result.map { tokens in
+                tokens.map(\.asToken)
+            }
+            completion(tokensResult)
+        }
     }
     
 }

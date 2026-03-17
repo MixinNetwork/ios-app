@@ -332,14 +332,55 @@ final class OpenPerpetualPositionViewController: UIViewController {
                     }
                     self.marginTokens = tokens
                     self.marginToken = tokens.first
-                    self.marginTokenSelectorStackView.alpha = 1
-                    self.marginTokenFooterStackView.alpha = 1
-                    self.marginLoadingView.stopAnimating()
+                    if !tokens.isEmpty {
+                        self.marginTokenSelectorStackView.alpha = 1
+                        self.marginTokenFooterStackView.alpha = 1
+                        self.marginLoadingView.stopAnimating()
+                    }
+                }
+                let missingAssetIDs = Set(assetIDs).subtracting(tokens.map(\.assetID))
+                if !missingAssetIDs.isEmpty {
+                    let chains = ChainDAO.shared.allChains()
+                    self?.requestMissingMarginTokens(assetIDs: missingAssetIDs, chains: chains)
                 }
             case .failure(let error):
-                Logger.general.debug(category: "OpenPerpsPosition", message: "\(error)")
+                Logger.general.debug(category: "OpenPerpsPosition", message: "Margin Tokens: \(error)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                     self?.reloadMarginTokens()
+                }
+            }
+        }
+    }
+    
+    private func requestMissingMarginTokens(
+        assetIDs: Set<String>,
+        chains: [String: Chain],
+    ) {
+        SafeAPI.assets(ids: assetIDs) { [weak self] result in
+            switch result {
+            case .success(let tokens):
+                guard let self else {
+                    return
+                }
+                let items = tokens.map { token in
+                    MixinTokenItem(
+                        token: token,
+                        balance: "0",
+                        isHidden: false,
+                        chain: chains[token.chainID]
+                    )
+                }
+                self.marginTokens.append(contentsOf: items)
+                if self.marginToken == nil {
+                    self.marginToken = items.first
+                }
+                self.marginTokenSelectorStackView.alpha = 1
+                self.marginTokenFooterStackView.alpha = 1
+                self.marginLoadingView.stopAnimating()
+            case .failure(let error):
+                Logger.general.debug(category: "OpenPerpsPosition", message: "Missing Tokens: \(error)")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    self?.requestMissingMarginTokens(assetIDs: assetIDs, chains: chains)
                 }
             }
         }
@@ -400,17 +441,22 @@ final class OpenPerpetualPositionViewController: UIViewController {
         underlyingAsset: PerpetualMarketViewModel
     ) {
         if marginAmount != 0, let marginToken {
-            let result = amountValidator.validate(
-                amount: marginAmount,
-                symbol: marginToken.symbol
-            )
-            switch result {
-            case .valid:
-                showError(description: nil)
-                reviewButton.isEnabled = true
-            case .invalid(let reason):
-                showError(description: reason)
+            if marginAmount > marginToken.decimalBalance {
+                showError(description: R.string.localizable.insufficient_balance())
                 reviewButton.isEnabled = false
+            } else {
+                let result = amountValidator.validate(
+                    amount: marginAmount,
+                    symbol: marginToken.symbol
+                )
+                switch result {
+                case .valid:
+                    showError(description: nil)
+                    reviewButton.isEnabled = true
+                case .invalid(let reason):
+                    showError(description: reason)
+                    reviewButton.isEnabled = false
+                }
             }
         } else {
             showError(description: nil)

@@ -17,7 +17,7 @@ struct PerpsManualShortPageView: View {
                     
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
-                            Text(R.string.localizable.example_open_position())
+                            Text(R.string.localizable.example_perpetual())
                                 .modifier(ManualText(.caption2))
                             Spacer()
                             Image(R.image.ethereum_chain)
@@ -39,14 +39,14 @@ struct PerpsManualShortPageView: View {
                                 .cornerRadius(6)
                         }
                         HStack {
-                            Text(R.string.localizable.leverage_multiplier())
+                            Text(R.string.localizable.example_leverage_multiplier())
                                 .modifier(ManualText(.caption2))
                             Spacer()
                             Text(PerpetualLeverage.stringRepresentation(multiplier: leverageMultiplier))
                                 .modifier(ManualText(.subheading(R.color.text()!)))
                         }
                         HStack {
-                            Text(R.string.localizable.example_margin())
+                            Text(R.string.localizable.example_amount())
                                 .modifier(ManualText(.caption2))
                             Spacer()
                             Text(CurrencyFormatter.localizedString(

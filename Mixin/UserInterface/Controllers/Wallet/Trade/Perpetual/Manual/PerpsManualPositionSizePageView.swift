@@ -20,7 +20,7 @@ struct PerpsManualPositionSizePageView: View {
                     
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
-                            Text(R.string.localizable.example_open_position())
+                            Text(R.string.localizable.example_perpetual())
                                 .modifier(ManualText(.caption2))
                             Spacer()
                             Image(R.image.solana_chain)
@@ -42,7 +42,7 @@ struct PerpsManualPositionSizePageView: View {
                                 .cornerRadius(6)
                         }
                         HStack {
-                            Text(R.string.localizable.leverage_multiplier())
+                            Text(R.string.localizable.example_leverage_multiplier())
                                 .modifier(ManualText(.caption2))
                             Spacer()
                             HStack(alignment: .center, spacing: 6) {
@@ -64,7 +64,7 @@ struct PerpsManualPositionSizePageView: View {
                             }
                         }
                         HStack {
-                            Text(R.string.localizable.example_margin())
+                            Text(R.string.localizable.example_amount())
                                 .modifier(ManualText(.caption2))
                             Spacer()
                             HStack(alignment: .center, spacing: 6) {

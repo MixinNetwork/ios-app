@@ -642,9 +642,10 @@
 "estimated_receive" = "预计收到";
 "everybody" = "任何人";
 "example" = "举例说明";
+"example_amount" = "投入资金";
 "example_direction" = "开仓方向";
-"example_margin" = "投入资金";
-"example_open_position" = "开仓交易";
+"example_leverage_multiplier" = "杠杆倍数";
+"example_perpetual" = "开仓交易";
 "example_price_decreased" = "下跌幅度";
 "example_price_increased" = "上涨幅度";
 "example_scene1_decreasing" = "场景一：价格下跌";
@@ -835,7 +836,6 @@
 "legacy_network" = "旧网络";
 "legacy_network_transfer_hint" = "当前转账使用的是旧网络";
 "leverage" = "杠杆";
-"leverage_multiplier" = "杠杆倍数";
 "light" = "浅色";
 "lightning_address" = "闪电网络地址";
 "lightning_address_explain" = "%@ 是您的闪电网络地址，通过该地址，您可以便捷、安全地接收支付：";

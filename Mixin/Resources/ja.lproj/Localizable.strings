@@ -642,9 +642,10 @@
 "estimated_receive" = "Estimated Receive";
 "everybody" = "全員";
 "example" = "Example";
+"example_amount" = "Amount";
 "example_direction" = "Direction";
-"example_margin" = "Margin";
-"example_open_position" = "Open Position";
+"example_leverage_multiplier" = "Leverage";
+"example_perpetual" = "Perpetual";
 "example_price_decreased" = "Price Decreased";
 "example_price_increased" = "Price Increased";
 "example_scene1_decreasing" = "Scenario 1: Price Decreases";
@@ -835,7 +836,6 @@
 "legacy_network" = "Legacy Network";
 "legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "leverage" = "Leverage";
-"leverage_multiplier" = "Leverage Multiplier";
 "light" = "ダーク";
 "lightning_address" = "Lightning Address";
 "lightning_address_explain" = "%@ is your Lightning Network address. With this address, you can conveniently and securely receive payments:";

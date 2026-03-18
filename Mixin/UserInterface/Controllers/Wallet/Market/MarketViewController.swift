@@ -440,12 +440,12 @@ extension MarketViewController: UITableViewDataSource {
             cell.setPeriodSelection(period: chartPeriod)
             cell.updateChart(points: chartPoints)
             if market == nil {
-                cell.tokenActions = []
+                cell.actions = []
             } else {
                 if hasAlert {
-                    cell.tokenActions = [.trade, .alert]
+                    cell.actions = [.trade, .alert]
                 } else {
-                    cell.tokenActions = [.trade, .addAlert]
+                    cell.actions = [.trade, .addAlert]
                 }
             }
             cell.delegate = self
@@ -683,7 +683,7 @@ extension MarketViewController: TokenPriceChartCell.Delegate {
 extension MarketViewController: PillActionView.Delegate {
     
     func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
-        guard let market, let actions = tokenPriceChartCell?.tokenActions else {
+        guard let market, let actions = tokenPriceChartCell?.actions else {
             return
         }
         switch actions[index] {

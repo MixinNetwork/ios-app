@@ -1,8 +1,8 @@
 "CFBundleDisplayName" = "Mixin";
-"NSContactsUsageDescription" = "Mixin sincroniza tu libreta de direcciones con los servidores de Mixin para ayudarte a conectarse con otros usuarios de Mixin.";
-"NSCameraUsageDescription" = "Mixin usa la cámara para configurar la foto de perfil y enviar una foto a tu contacto en el chat";
+"NSContactsUsageDescription" = "Mixin sincroniza tu libreta de direcciones con los servidores de Mixin para ayudarte a conectarte con otros usuarios de Mixin.";
+"NSCameraUsageDescription" = "Mixin usa la cámara para configurar tu foto de perfil y enviar fotos a tus contactos en el chat.";
 "NSPhotoLibraryAddUsageDescription" = "Mixin guardará en tu fototeca las imágenes, videos, códigos QR e imágenes de inscription del chat solo cuando tú lo elijas.";
 "NSMicrophoneUsageDescription" = "Mixin usa tu micrófono para grabar mensajes de voz para compartir con tus contactos";
-"NSFaceIDUsageDescription" = "Mixin usa Face ID para autorizar el pago";
+"NSFaceIDUsageDescription" = "Mixin usa Face ID para autorizar pagos.";
 "NSLocationWhenInUseUsageDescription" = "Activa los servicios de ubicación para enviar tu ubicación actual o lugares cercanos en una conversación";
-"NSLocalNetworkUsageDescription" = "Mixin uses the local network to transfer or restore your chat history.";
+"NSLocalNetworkUsageDescription" = "Mixin usa la red local para transferir o restaurar tu historial de chat.";

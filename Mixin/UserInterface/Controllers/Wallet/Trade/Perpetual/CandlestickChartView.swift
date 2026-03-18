@@ -59,7 +59,9 @@ final class CandlestickChartView: UIView {
     var candles: [Candle] = [] {
         didSet {
             updateContentSize()
-            scrollView.setContentOffset(rightMostContentOffset, animated: false)
+            if oldValue.isEmpty {
+                scrollView.setContentOffset(rightMostContentOffset, animated: false)
+            }
             updateChart(forceRedraw: true)
         }
     }

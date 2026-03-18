@@ -59,7 +59,7 @@ final class CandlestickChartView: UIView {
     var candles: [Candle] = [] {
         didSet {
             updateContentSize()
-            scrollToLast()
+            scrollView.setContentOffset(rightMostContentOffset, animated: false)
             updateChart(forceRedraw: true)
         }
     }
@@ -70,6 +70,13 @@ final class CandlestickChartView: UIView {
     private var currentMax: Decimal = 0
     private var isCrosshairActive = false
     private var lastCrosshairIndex: Int = -1
+    
+    private var rightMostContentOffset: CGPoint {
+        CGPoint(
+            x: max(0, scrollView.contentSize.width - scrollView.frame.width),
+            y: scrollView.contentOffset.y
+        )
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -92,32 +99,39 @@ final class CandlestickChartView: UIView {
         guard gesture.numberOfTouches == 2 else {
             return
         }
-        if gesture.state == .began {
+        switch gesture.state {
+        case .began:
             lastPinchWidth = currentCandleWidth
-        } else if gesture.state == .changed {
+        case .changed:
             let scale = gesture.scale
             var newWidth = lastPinchWidth * scale
             newWidth = max(Config.minCandleWidth, min(Config.maxCandleWidth, newWidth))
+            let diff = newWidth - currentCandleWidth
+            let isScalingUp = diff > 0
             
-            if newWidth != currentCandleWidth {
+            if abs(diff) >= 0.08 {
                 let oldStep = currentCandleWidth + Config.candleGap
                 let newStep = newWidth + Config.candleGap
                 
                 let locationX = gesture.location(in: scrollView).x
-                let proportion = locationX / oldStep
-                let newLocationX = proportion * newStep
-                
+                let newLocationX = locationX / oldStep * newStep
                 let shift = newLocationX - locationX
                 
                 currentCandleWidth = newWidth
                 updateContentSize()
                 
-                var newOffset = scrollView.contentOffset
-                newOffset.x += shift
-                scrollView.contentOffset = newOffset
+                let newOffset = CGPoint(
+                    x: scrollView.contentOffset.x + shift,
+                    y: scrollView.contentOffset.y
+                )
+                if isScalingUp || newOffset.x >= rightMostContentOffset.x {
+                    scrollView.contentOffset = newOffset
+                }
                 
                 updateChart(forceRedraw: true)
             }
+        default:
+            break
         }
     }
     
@@ -175,9 +189,11 @@ final class CandlestickChartView: UIView {
         bearLayer.strokeColor = Config.bearColor.cgColor
         contentView.layer.addSublayer(bearLayer)
         
+        latestPriceView.isUserInteractionEnabled = false
         addSubview(latestPriceView)
         latestPriceView.isHidden = true
         
+        crosshairView.isUserInteractionEnabled = false
         addSubview(crosshairView)
         crosshairView.isHidden = true
         
@@ -207,14 +223,6 @@ final class CandlestickChartView: UIView {
             width: scrollView.contentSize.width,
             height: bounds.height
         )
-    }
-    
-    private func scrollToLast() {
-        guard !candles.isEmpty else {
-            return
-        }
-        let x = max(0, scrollView.contentSize.width - scrollView.frame.width)
-        scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: false)
     }
     
     private func updateChart(forceRedraw: Bool) {
@@ -488,7 +496,7 @@ extension CandlestickChartView {
             label.sizeToFit()
             label.center = CGPoint(
                 x: viewWidth - Config.priceAreaWidth / 2,
-                y: height / 2,
+                y: round(height / 2),
             )
         }
         
@@ -576,7 +584,7 @@ extension CandlestickChartView {
             priceLabel.sizeToFit()
             priceLabel.center = CGPoint(
                 x: viewSize.width - Config.priceAreaWidth / 2,
-                y: y,
+                y: round(y),
             )
         }
         

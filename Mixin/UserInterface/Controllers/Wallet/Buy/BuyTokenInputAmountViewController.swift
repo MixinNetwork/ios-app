@@ -505,7 +505,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         guard let token = selectedToken else {
             return
         }
-        guard let amount = NumberFormatter.enUSPOSIXLocalizedDecimal.string(decimal: fiatMoneyAmount) else {
+        guard let amount = NumberFormatter.enUSPOSIXDecimal.string(decimal: fiatMoneyAmount) else {
             return
         }
         let currency = selectedCurrency.code

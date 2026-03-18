@@ -21,10 +21,11 @@ public extension NumberFormatter {
         return formatter
     }()
     
-    static let enUSPOSIXLocalizedDecimal: NumberFormatter = {
+    static let enUSPOSIXDecimal: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.locale = .enUSPOSIX
+        formatter.generatesDecimalNumbers = true
         return formatter
     }()
     

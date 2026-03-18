@@ -355,7 +355,7 @@ final class PerpetualMarketViewController: UIViewController {
         ) { [weak self] result in
             switch result {
             case .success(let candle):
-                guard let chart = candle.asChartData() else {
+                guard let chart = candle.asChartData(timeFrame: timeFrame) else {
                     return
                 }
                 DispatchQueue.main.async {
@@ -538,21 +538,27 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
 
 fileprivate extension PerpetualMarketCandle {
     
-    func asChartData() -> [CandlestickChartView.Candle]? {
-        let drawingItems = items.suffix(50)
+    func asChartData(timeFrame: PerpetualTimeFrame) -> [CandlestickChartView.Candle]? {
+        let dateFormatter: DateFormatter = switch timeFrame {
+        case .oneMinute, .fiveMinutes, .oneHour, .fourHours:
+                .shortTimeOnly
+        case .oneDay, .oneWeek:
+                .shortDateOnly
+        }
+        let drawingItems = items
         var entries: [CandlestickChartView.Candle] = []
         entries.reserveCapacity(drawingItems.count)
         for item in drawingItems {
-            let date = Date(timeIntervalSince1970: TimeInterval(item.timestamp))
-            let open = NumberFormatter.enUSPOSIXLocalizedDecimal.number(from: item.open)?.doubleValue
-            let close = NumberFormatter.enUSPOSIXLocalizedDecimal.number(from: item.close)?.doubleValue
-            let high = NumberFormatter.enUSPOSIXLocalizedDecimal.number(from: item.high)?.doubleValue
-            let low = NumberFormatter.enUSPOSIXLocalizedDecimal.number(from: item.low)?.doubleValue
+            let date = Date(timeIntervalSince1970: TimeInterval(item.timestamp / 1000))
+            let open = NumberFormatter.enUSPOSIXDecimal.number(from: item.open) as? NSDecimalNumber
+            let close = NumberFormatter.enUSPOSIXDecimal.number(from: item.close) as? NSDecimalNumber
+            let high = NumberFormatter.enUSPOSIXDecimal.number(from: item.high) as? NSDecimalNumber
+            let low = NumberFormatter.enUSPOSIXDecimal.number(from: item.low) as? NSDecimalNumber
             guard let open, let close, let high, let low else {
                 return nil
             }
             let entry = CandlestickChartView.Candle(
-                time: date,
+                time: dateFormatter.string(from: date),
                 open: open,
                 high: high,
                 low: low,

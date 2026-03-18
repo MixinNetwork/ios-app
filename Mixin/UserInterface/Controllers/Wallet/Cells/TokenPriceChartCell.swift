@@ -7,7 +7,7 @@ final class TokenPriceChartCell: UITableViewCell {
         func tokenPriceChartCell(_ cell: TokenPriceChartCell, didSelectPeriod period: PriceHistoryPeriod)
     }
     
-    enum TokenAction: Int, CaseIterable {
+    enum MarketAction: Int, CaseIterable {
         
         case trade
         case alert
@@ -17,10 +17,8 @@ final class TokenPriceChartCell: UITableViewCell {
             switch self {
             case .trade:
                 R.string.localizable.trade()
-            case .alert:
+            case .alert, .addAlert:
                 R.string.localizable.alert()
-            case .addAlert:
-                R.string.localizable.add_alert()
             }
         }
         
@@ -43,15 +41,15 @@ final class TokenPriceChartCell: UITableViewCell {
     
     weak var delegate: Delegate?
     
-    var tokenActions: [TokenAction] = [] {
+    var actions: [MarketAction] = [] {
         didSet {
-            if tokenActions.isEmpty {
+            if actions.isEmpty {
                 tokenActionView.isHidden = true
                 periodSelectorScrollViewBottomConstraint.priority = .defaultHigh
                 tokenActionViewBottomConstraint.priority = .defaultLow
             } else {
                 tokenActionView.isHidden = false
-                tokenActionView.actions = tokenActions.map { action in
+                tokenActionView.actions = actions.map { action in
                         .init(title: action.title)
                 }
                 periodSelectorScrollViewBottomConstraint.priority = .defaultLow

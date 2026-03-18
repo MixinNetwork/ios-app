@@ -133,12 +133,12 @@ final class CandlestickChartView: UIView {
             latestPriceView.isHidden = true
             crosshairView.isHidden = false
             feedbackGenerator.prepare()
-            updateCrosshair(at: index)
+            updateCrosshair(location: location, index: index)
         case .changed:
             if index != lastCrosshairIndex {
                 feedbackGenerator.selectionChanged()
-                updateCrosshair(at: index)
             }
+            updateCrosshair(location: location, index: index)
         case .ended, .cancelled, .failed:
             isCrosshairActive = false
             scrollView.isScrollEnabled = true
@@ -310,30 +310,24 @@ final class CandlestickChartView: UIView {
         bearLayer.path = bearPath
     }
     
-    private func updateCrosshair(at index: Int) {
+    private func updateCrosshair(location: CGPoint, index: Int) {
         lastCrosshairIndex = index
         let candle = candles[index]
         let step = currentCandleWidth + Config.candleGap
         let xInContent = CGFloat(index) * step + step / 2.0
         let xOnScreen = xInContent - scrollView.contentOffset.x
         
-        let yRange = (currentMax - currentMin) as NSDecimalNumber
-        let yPos: CGFloat
-        if yRange == 0 {
-            yPos = bounds.height / 2
-        } else {
-            let diff = (currentMax as NSDecimalNumber).subtracting(candle.close)
-            yPos = diff.doubleValue / yRange.doubleValue * bounds.height
-        }
-        
+        let priceRange = (currentMin - currentMax) as NSDecimalNumber
+        let p = priceRange.doubleValue / bounds.height * location.y
+            + (currentMax as NSDecimalNumber).doubleValue
         let price = CurrencyFormatter.localizedString(
-            from: candle.close as Decimal,
+            from: p,
             format: .fiatMoneyPrice,
             sign: .never
-        )
+        ) ?? "\(p)"
         crosshairView.update(
             x: xOnScreen,
-            y: yPos,
+            y: location.y,
             time: candle.time,
             price: price,
             viewSize: bounds.size,

@@ -20,7 +20,7 @@ final class CandlestickChartView: UIView {
         static let priceAreaWidth: CGFloat = 50
         
         static let gridLineCount: Int = 6
-        static let gridLineColor = UIColor(displayP3RgbValue: 0xb3b3b3)
+        static let gridLineColor = R.color.grid_line()
         static let gridPriceFont: UIFont = .systemFont(ofSize: 8)
         static let gridPriceColor = R.color.text_tertiary()!
         static let yAxisPaddingRatio: Decimal = 0.1 // 10% padding top & bottom
@@ -28,10 +28,14 @@ final class CandlestickChartView: UIView {
         static let bullColor = MarketColor.rising.uiColor
         static let bearColor = MarketColor.falling.uiColor
         
-        static let priceTagColor = R.color.text_secondary()!
-        static let priceTagFont: UIFont = .systemFont(ofSize: 8, weight: .semibold)
-        
         static let latestPriceLineColor = R.color.text_tertiary()!
+        
+        enum PriceTag {
+            static let font: UIFont = .systemFont(ofSize: 8, weight: .semibold)
+            static let borderColor = R.color.price_tag_border()!
+            static let backgroundColor = R.color.price_tag_background()!
+            static let textColor = R.color.price_tag_text()!
+        }
         
         static let crosshairColor = R.color.text_tertiary()!
         static let crosshairThickness = 1 / UIScreen.main.scale
@@ -460,10 +464,10 @@ extension CandlestickChartView {
             lineLayer.lineDashPattern = [2.4, 2.4]
             layer.addSublayer(lineLayer)
             
-            label.font = Config.priceTagFont
-            label.textColor = Config.priceTagColor
-            label.backgroundColor = R.color.background()
-            label.layer.borderColor = Config.priceTagColor.cgColor
+            label.font = Config.PriceTag.font
+            label.textColor = Config.PriceTag.textColor
+            label.backgroundColor = Config.PriceTag.backgroundColor
+            label.layer.borderColor = Config.PriceTag.borderColor.cgColor
             label.layer.borderWidth = 1
             label.layer.cornerRadius = 2
             label.layer.masksToBounds = true
@@ -531,10 +535,10 @@ extension CandlestickChartView {
             timeLabel.backgroundColor = R.color.background()
             addSubview(timeLabel)
             
-            priceLabel.font = Config.priceTagFont
-            priceLabel.textColor = Config.priceTagColor
-            priceLabel.backgroundColor = R.color.background()
-            priceLabel.layer.borderColor = Config.priceTagColor.cgColor
+            priceLabel.font = Config.PriceTag.font
+            priceLabel.textColor = Config.PriceTag.textColor
+            priceLabel.backgroundColor = Config.PriceTag.backgroundColor
+            priceLabel.layer.borderColor = Config.PriceTag.borderColor.cgColor
             priceLabel.layer.borderWidth = 1
             priceLabel.layer.cornerRadius = 2
             priceLabel.layer.masksToBounds = true

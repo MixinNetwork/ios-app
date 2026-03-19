@@ -16,6 +16,7 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
     init(
         mode: Mode,
         sendAssetID: String?,
+        sendAmount: Decimal?,
         receiveAssetID: String?,
         referral: String?
     ) {
@@ -24,6 +25,7 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
             mode: mode,
             tokenSource: .mixin,
             sendAssetID: sendAssetID,
+            sendAmount: sendAmount,
             receiveAssetID: receiveAssetID
         )
     }

@@ -27,7 +27,7 @@ class TradeSpotViewController: UIViewController {
     @IBOutlet weak var reviewButton: RoundedButton!
     
     let mode: Mode
-    let pricingModel = TradePricingModel()
+    let pricingModel: TradePricingModel
     
     var tradeViewController: TradeViewController? {
         parent as? TradeViewController
@@ -131,9 +131,11 @@ class TradeSpotViewController: UIViewController {
         mode: Mode,
         tokenSource: RouteTokenSource,
         sendAssetID: String?,
+        sendAmount: Decimal?,
         receiveAssetID: String?
     ) {
         self.mode = mode
+        self.pricingModel = TradePricingModel(sendAmount: sendAmount)
         self.tokenSource = tokenSource
         self.arbitrarySendAssetID = sendAssetID
         self.arbitraryReceiveAssetID = receiveAssetID

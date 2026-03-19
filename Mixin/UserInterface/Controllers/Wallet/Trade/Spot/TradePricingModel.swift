@@ -215,6 +215,15 @@ final class TradePricingModel {
     private var _displayPriceNumeraire: ExchangeRateQuote.Numeraire = .send
     private var _displayPrice: String?
     
+    init(sendAmount: Decimal? = nil) {
+        self._sendAmount = sendAmount
+        self._sendToken = nil
+        self._receiveAmount = nil
+        self._receiveToken = nil
+        self._price = nil
+        self._displayPrice = nil
+    }
+    
     func derivePrice(
         sendToken: BalancedSwapToken?,
         receiveToken: BalancedSwapToken?

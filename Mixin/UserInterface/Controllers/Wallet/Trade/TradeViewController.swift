@@ -9,8 +9,9 @@ final class TradeViewController: UIViewController {
         case perpetualFutures
     }
     
-    struct Context {
+    private struct Context {
         let sendAssetID: String?
+        let sendAmount: Decimal?
         let receiveAssetID: String?
         let referral: String?
     }
@@ -61,6 +62,7 @@ final class TradeViewController: UIViewController {
         self.trading = trading
         self.initialContext = Context(
             sendAssetID: sendAssetID,
+            sendAmount: nil,
             receiveAssetID: receiveAssetID,
             referral: referral
         )
@@ -130,11 +132,12 @@ final class TradeViewController: UIViewController {
     }
     
     func switchTo(trading: Trading) {
-        guard trading != self.trading else {
+        guard let item = allTradings.firstIndex(of: trading) else {
             return
         }
-        self.trading = trading
-        replaceChildViewController(trading: trading)
+        let indexPath = IndexPath(item: item, section: 0)
+        collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
+        switchTo(trading: trading, indexPath: indexPath)
     }
     
     @objc func showOrders(_ sender: Any) {
@@ -192,81 +195,6 @@ final class TradeViewController: UIViewController {
         reporter.report(event: .customerServiceDialog, tags: ["source": "trade_home"])
     }
     
-    private func replaceChildViewController(trading: Trading) {
-        var context: Context?
-        if let tradingViewController {
-            tradingViewController.willMove(toParent: nil)
-            tradingViewController.view.removeFromSuperview()
-            tradingViewController.removeFromParent()
-            if let trading = tradingViewController as? TradeSpotViewController {
-                context = Context(
-                    sendAssetID: trading.sendToken?.assetID,
-                    receiveAssetID: trading.receiveToken?.assetID,
-                    referral: initialContext.referral
-                )
-            }
-        } else {
-            context = initialContext
-        }
-        
-        let tradingViewController: UIViewController
-        switch wallet {
-        case .safe:
-            assertionFailure("Unsupported combination")
-            return
-        case .privacy:
-            switch trading {
-            case .simpleSpot:
-                tradingViewController = TradeMixinSpotViewController(
-                    mode: .simple,
-                    sendAssetID: context?.sendAssetID,
-                    receiveAssetID: context?.receiveAssetID,
-                    referral: context?.referral
-                )
-            case .advancedSpot:
-                tradingViewController = TradeMixinSpotViewController(
-                    mode: .advanced,
-                    sendAssetID: context?.sendAssetID,
-                    receiveAssetID: context?.receiveAssetID,
-                    referral: context?.referral
-                )
-            case .perpetualFutures:
-                tradingViewController = TradePerpetualViewController(
-                    wallet: .privacy
-                )
-            }
-        case .common(let wallet):
-            switch trading {
-            case .simpleSpot:
-                tradingViewController = TradeWeb3SpotViewController(
-                    wallet: wallet,
-                    mode: .simple,
-                    supportedChainIDs: supportedChainIDs,
-                    sendAssetID: context?.sendAssetID,
-                    receiveAssetID: context?.receiveAssetID,
-                )
-            case .advancedSpot:
-                tradingViewController = TradeWeb3SpotViewController(
-                    wallet: wallet,
-                    mode: .advanced,
-                    supportedChainIDs: supportedChainIDs,
-                    sendAssetID: context?.sendAssetID,
-                    receiveAssetID: context?.receiveAssetID,
-                )
-            case .perpetualFutures:
-                assertionFailure("Unsupported combination")
-                return
-            }
-        }
-        self.tradingViewController = tradingViewController
-        
-        addChild(tradingViewController)
-        containerView.insertSubview(tradingViewController.view, at: 0)
-        tradingViewController.view.snp.makeEdgesEqualToSuperview()
-        tradingViewController.didMove(toParent: self)
-        updateOrdersButton()
-    }
-    
 }
 
 extension TradeViewController: HomeNavigationController.NavigationBarStyling {
@@ -309,6 +237,14 @@ extension TradeViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let trading = allTradings[indexPath.item]
+        switchTo(trading: trading, indexPath: indexPath)
+    }
+    
+}
+
+extension TradeViewController {
+    
+    private func switchTo(trading: Trading, indexPath: IndexPath) {
         switch trading {
         case .simpleSpot:
             break
@@ -321,11 +257,88 @@ extension TradeViewController: UICollectionViewDelegate {
             cell.badgeView.isHidden = true
         }
         AppGroupUserDefaults.Wallet.tradeMode = trading.rawValue
-        switchTo(trading: trading)
+        self.trading = trading
+        replaceChildViewController(trading: trading)
     }
     
-}
-
-extension TradeViewController {
+    private func replaceChildViewController(trading: Trading) {
+        var context: Context?
+        if let tradingViewController {
+            tradingViewController.willMove(toParent: nil)
+            tradingViewController.view.removeFromSuperview()
+            tradingViewController.removeFromParent()
+            if let trading = tradingViewController as? TradeSpotViewController {
+                context = Context(
+                    sendAssetID: trading.sendToken?.assetID,
+                    sendAmount: trading.pricingModel.sendAmount,
+                    receiveAssetID: trading.receiveToken?.assetID,
+                    referral: initialContext.referral
+                )
+            }
+        } else {
+            context = initialContext
+        }
+        
+        let tradingViewController: UIViewController
+        switch wallet {
+        case .safe:
+            assertionFailure("Unsupported wallet")
+            return
+        case .privacy:
+            switch trading {
+            case .simpleSpot:
+                tradingViewController = TradeMixinSpotViewController(
+                    mode: .simple,
+                    sendAssetID: context?.sendAssetID,
+                    sendAmount: context?.sendAmount,
+                    receiveAssetID: context?.receiveAssetID,
+                    referral: context?.referral
+                )
+            case .advancedSpot:
+                tradingViewController = TradeMixinSpotViewController(
+                    mode: .advanced,
+                    sendAssetID: context?.sendAssetID,
+                    sendAmount: context?.sendAmount,
+                    receiveAssetID: context?.receiveAssetID,
+                    referral: context?.referral
+                )
+            case .perpetualFutures:
+                tradingViewController = TradePerpetualViewController(
+                    wallet: .privacy
+                )
+            }
+        case .common(let wallet):
+            switch trading {
+            case .simpleSpot:
+                tradingViewController = TradeWeb3SpotViewController(
+                    wallet: wallet,
+                    mode: .simple,
+                    supportedChainIDs: supportedChainIDs,
+                    sendAssetID: context?.sendAssetID,
+                    sendAmount: context?.sendAmount,
+                    receiveAssetID: context?.receiveAssetID,
+                )
+            case .advancedSpot:
+                tradingViewController = TradeWeb3SpotViewController(
+                    wallet: wallet,
+                    mode: .advanced,
+                    supportedChainIDs: supportedChainIDs,
+                    sendAssetID: context?.sendAssetID,
+                    sendAmount: context?.sendAmount,
+                    receiveAssetID: context?.receiveAssetID,
+                )
+            case .perpetualFutures:
+                assertionFailure("Unsupported combination")
+                return
+            }
+        }
+        self.tradingViewController = tradingViewController
+        
+        addChild(tradingViewController)
+        containerView.insertSubview(tradingViewController.view, at: 0)
+        tradingViewController.view.snp.makeEdgesEqualToSuperview()
+        tradingViewController.didMove(toParent: self)
+        updateOrdersButton()
+    }
     
 }

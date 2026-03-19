@@ -70,6 +70,12 @@ final class CandlestickChartView: UIView {
         }
     }
     
+    var currentPrice: Decimal? {
+        didSet {
+            updateLatestPrice()
+        }
+    }
+    
     private var currentCandleWidth: CGFloat = Config.defaultCandleWidth
     private var lastPinchWidth: CGFloat = Config.defaultCandleWidth
     private var currentMin: Decimal = 0
@@ -164,7 +170,7 @@ final class CandlestickChartView: UIView {
             scrollView.isScrollEnabled = true
             pinchGesture.isEnabled = true
             crosshairView.isHidden = true
-            updateLatestPriceVisibility()
+            updateLatestPrice()
         default:
             break
         }
@@ -269,7 +275,7 @@ final class CandlestickChartView: UIView {
         
         // Optimization: Skip heavy redraw if Y scale hasn't changed.
         if !forceRedraw && minVal == currentMin && maxVal == currentMax {
-            updateLatestPriceVisibility()
+            updateLatestPrice()
             return
         }
         
@@ -278,7 +284,7 @@ final class CandlestickChartView: UIView {
         
         redrawPaths()
         gridBackgroundView.updateLabels(minVal: minVal, maxVal: maxVal)
-        updateLatestPriceVisibility()
+        updateLatestPrice()
     }
     
     private func redrawPaths() {
@@ -348,8 +354,8 @@ final class CandlestickChartView: UIView {
         )
     }
     
-    private func updateLatestPriceVisibility() {
-        guard let last = candles.last, !isCrosshairActive else {
+    private func updateLatestPrice() {
+        guard let price = currentPrice, !isCrosshairActive else {
             latestPriceView.isHidden = true
             return
         }
@@ -367,11 +373,11 @@ final class CandlestickChartView: UIView {
             if yRange == 0 {
                 yPos = bounds.height / 2
             } else {
-                let diff = (currentMax as NSDecimalNumber).subtracting(last.close)
+                let diff = (currentMax - price) as NSDecimalNumber
                 yPos = diff.doubleValue / yRange.doubleValue * bounds.height
             }
             let price = CurrencyFormatter.localizedString(
-                from: last.close as Decimal,
+                from: price,
                 format: .fiatMoneyPrice,
                 sign: .never
             )

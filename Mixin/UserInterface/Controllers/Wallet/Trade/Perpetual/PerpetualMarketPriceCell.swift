@@ -92,6 +92,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         changeLabel.text = viewModel.change
         changeLabel.marketColor = viewModel.changeColor
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
+        chartView.currentPrice = viewModel.decimalPrice
     }
     
     func load(chart: [CandlestickChartView.Candle]?) {

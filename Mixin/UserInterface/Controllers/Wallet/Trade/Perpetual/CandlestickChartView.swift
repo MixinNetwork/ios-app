@@ -57,8 +57,9 @@ final class CandlestickChartView: UIView {
     private let bullLayer = CAShapeLayer()
     private let bearLayer = CAShapeLayer()
     
-    private var pinchGesture: UIPinchGestureRecognizer!
-    private let feedbackGenerator = UISelectionFeedbackGenerator()
+    private let feedback = UISelectionFeedbackGenerator()
+    
+    private var pinchGesture: UIPinchGestureRecognizer?
     
     var candles: [Candle] = [] {
         didSet {
@@ -155,20 +156,20 @@ final class CandlestickChartView: UIView {
         case .began:
             isCrosshairActive = true
             scrollView.isScrollEnabled = false
-            pinchGesture.isEnabled = false
+            pinchGesture?.isEnabled = false
             latestPriceView.isHidden = true
             crosshairView.isHidden = false
-            feedbackGenerator.prepare()
+            feedback.prepare()
             updateCrosshair(location: location, index: index)
         case .changed:
             if index != lastCrosshairIndex {
-                feedbackGenerator.selectionChanged()
+                feedback.selectionChanged()
             }
             updateCrosshair(location: location, index: index)
         case .ended, .cancelled, .failed:
             isCrosshairActive = false
             scrollView.isScrollEnabled = true
-            pinchGesture.isEnabled = true
+            pinchGesture?.isEnabled = true
             crosshairView.isHidden = true
             updateLatestPrice()
         default:
@@ -209,11 +210,6 @@ final class CandlestickChartView: UIView {
         addSubview(crosshairView)
         crosshairView.isHidden = true
         
-        pinchGesture = UIPinchGestureRecognizer(
-            target: self,
-            action: #selector(handlePinch(_:))
-        )
-        scrollView.addGestureRecognizer(pinchGesture)
         let longPress = UILongPressGestureRecognizer(
             target: self,
             action: #selector(handleLongPress(_:))

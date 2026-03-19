@@ -648,10 +648,10 @@
 "example_perpetual" = "开仓交易";
 "example_price_decreased" = "下跌幅度";
 "example_price_increased" = "上涨幅度";
-"example_scene1_decreasing" = "场景一：价格下跌";
-"example_scene1_increasing" = "场景一：价格上涨";
-"example_scene2_decreasing" = "场景二：价格下跌";
-"example_scene2_increasing" = "场景二：价格上涨";
+"example_scene1_falls" = "场景一：价格下跌";
+"example_scene1_rises" = "场景一：价格上涨";
+"example_scene2_falls" = "场景二：价格下跌";
+"example_scene2_rises" = "场景二：价格上涨";
 "exchanges_or_wallets" = "交易所或其他钱包";
 "exchanging_data" = "正在同步密钥分片，进度 %@%%...";
 "exit_confirmation" = "退出\"%@\"？";

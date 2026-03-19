@@ -648,10 +648,10 @@
 "example_perpetual" = "開倉交易";
 "example_price_decreased" = "下跌幅度";
 "example_price_increased" = "上漲幅度";
-"example_scene1_decreasing" = "場景一：價格下跌";
-"example_scene1_increasing" = "場景一：價格上漲";
-"example_scene2_decreasing" = "場景二：價格下跌";
-"example_scene2_increasing" = "場景二：價格上漲";
+"example_scene1_falls" = "場景一：價格下跌";
+"example_scene1_rises" = "場景一：價格上漲";
+"example_scene2_falls" = "場景二：價格下跌";
+"example_scene2_rises" = "場景二：價格上漲";
 "exchanges_or_wallets" = "交易所或其他錢包";
 "exchanging_data" = "正在同步金鑰分片，進度 %@%%...";
 "exit_confirmation" = "退出\"%@\"？";

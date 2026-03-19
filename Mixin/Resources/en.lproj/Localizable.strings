@@ -648,10 +648,10 @@
 "example_perpetual" = "Perpetual";
 "example_price_decreased" = "Price Decreased";
 "example_price_increased" = "Price Increased";
-"example_scene1_decreasing" = "Scenario 1: Price Decreases";
-"example_scene1_increasing" = "Scenario 1: Price Increases";
-"example_scene2_decreasing" = "Scenario 2: Price Decreases";
-"example_scene2_increasing" = "Scenario 2: Price Increases";
+"example_scene1_falls" = "Scenario 1: Price Falls";
+"example_scene1_rises" = "Scenario 1: Price Rises";
+"example_scene2_falls" = "Scenario 2: Price Falls";
+"example_scene2_rises" = "Scenario 2: Price Rises";
 "exchanges_or_wallets" = "Exchanges or Wallets";
 "exchanging_data" = "Synchronization key shards in progress %@%%...";
 "exit_confirmation" = "Exit \"%@\"?";

@@ -63,7 +63,7 @@ struct PerpsManualShortPageView: View {
                             .frame(height: 1)
                         
                         PerpsManualCalculatingPnLView(
-                            title: R.string.localizable.example_scene1_decreasing(),
+                            title: R.string.localizable.example_scene1_falls(),
                             direction: .short,
                             leverage: leverageMultiplier,
                             margin: margin,
@@ -77,7 +77,7 @@ struct PerpsManualShortPageView: View {
                             .frame(height: 1)
                         
                         PerpsManualCalculatingPnLView(
-                            title: R.string.localizable.example_scene2_increasing(),
+                            title: R.string.localizable.example_scene2_rises(),
                             direction: .short,
                             leverage: leverageMultiplier,
                             margin: margin,

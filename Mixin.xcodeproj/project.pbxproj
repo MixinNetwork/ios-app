@@ -1263,6 +1263,8 @@
 		9497AEA92C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9497AEA82C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift */; };
 		9497AEE92C5E264600966946 /* MixinTransactionHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9497AEE82C5E264600966946 /* MixinTransactionHistoryViewController.swift */; };
 		9497AEEE2C5E69B000966946 /* TransactionHistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9497AEED2C5E69B000966946 /* TransactionHistoryView.xib */; };
+		949967012F6BD2A400D3F42E /* PerpetualCandleLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949967002F6BD29D00D3F42E /* PerpetualCandleLoader.swift */; };
+		949967182F6BDFB000D3F42E /* PerpetualCandleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949967172F6BDFAA00D3F42E /* PerpetualCandleViewModel.swift */; };
 		949A3686261D9C5C004251B2 /* post.css in Resources */ = {isa = PBXBuildFile; fileRef = 949A3685261D9C5C004251B2 /* post.css */; };
 		949B03C32D15922300A34EE3 /* StackedIconWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 949B03C22D15921E00A34EE3 /* StackedIconWrapperView.swift */; };
 		949B5DCD2EBCEC5F00D33C97 /* TradeOrdersView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 949B5DCC2EBCEC5F00D33C97 /* TradeOrdersView.xib */; };
@@ -3130,6 +3132,8 @@
 		9497AEA82C5D196D00966946 /* UIBackgroundConfiguration+GroupedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBackgroundConfiguration+GroupedCell.swift"; sourceTree = "<group>"; };
 		9497AEE82C5E264600966946 /* MixinTransactionHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinTransactionHistoryViewController.swift; sourceTree = "<group>"; };
 		9497AEED2C5E69B000966946 /* TransactionHistoryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionHistoryView.xib; sourceTree = "<group>"; };
+		949967002F6BD29D00D3F42E /* PerpetualCandleLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualCandleLoader.swift; sourceTree = "<group>"; };
+		949967172F6BDFAA00D3F42E /* PerpetualCandleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualCandleViewModel.swift; sourceTree = "<group>"; };
 		949A3685261D9C5C004251B2 /* post.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = post.css; sourceTree = "<group>"; };
 		949B03C22D15921E00A34EE3 /* StackedIconWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackedIconWrapperView.swift; sourceTree = "<group>"; };
 		949B5DCB2EBCEC5F00D33C97 /* TradeOrdersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeOrdersViewController.swift; sourceTree = "<group>"; };
@@ -5366,6 +5370,8 @@
 				94FB2E6B2F50A50E00F85AB4 /* PerpetualMarketViewModel.swift */,
 				94DC4DB62F51EC3E00D23EB8 /* PerpetualPositionLoader.swift */,
 				94C67FCF2F64250000CB11DC /* PerpetualMarketLoader.swift */,
+				949967002F6BD29D00D3F42E /* PerpetualCandleLoader.swift */,
+				949967172F6BDFAA00D3F42E /* PerpetualCandleViewModel.swift */,
 				94973DCF2F55E84100C350C7 /* PerpetualChangeSimulation.swift */,
 				94D9DD512F59CFEF00B3B990 /* PerpetualPositionViewModel.swift */,
 				94E066B12F5B15690090F1BA /* PerpetualLeverage.swift */,
@@ -8520,6 +8526,7 @@
 				943270B62E5C6F4F00DFC486 /* DepositViewModel.swift in Sources */,
 				940A3CF22EB79244001A458F /* TradeExpirySelectorCell.swift in Sources */,
 				94B820602E00601700D580C9 /* AddTokenMethodSelectorViewController.swift in Sources */,
+				949967012F6BD2A400D3F42E /* PerpetualCandleLoader.swift in Sources */,
 				7B075CD11FC0B268005315A2 /* MessageCell.swift in Sources */,
 				9419950C2CCEBF5800F5425C /* RecoveryContactIntroduction2ViewController.swift in Sources */,
 				94525B342C4E3B91008BA7A8 /* RouteTokenSource.swift in Sources */,
@@ -8615,6 +8622,7 @@
 				941C75DE2F5EA417005B70A9 /* PerpetualPositionType.swift in Sources */,
 				ABE865C223F260FE00C0167D /* PermissionsActionCell.swift in Sources */,
 				7B9A090525481ADB00E8568D /* MinimizedClipIconView.swift in Sources */,
+				949967182F6BDFB000D3F42E /* PerpetualCandleViewModel.swift in Sources */,
 				94735E282E28EBF80001C179 /* ImportedWalletNetworkCell.swift in Sources */,
 				946CB9B62E9F69650099FFCB /* LoadContactCommonWalletAddressViewController.swift in Sources */,
 				943A28082B878FCE0050929A /* TIPNodeResponseError+Localization.swift in Sources */,

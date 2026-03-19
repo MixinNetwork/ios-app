@@ -14,12 +14,13 @@ final class PerpetualMarketViewController: UIViewController {
     private let wallet: Wallet
     private let positionsLoader: PerpetualPositionLoader
     private let marketLoader = PerpetualMarketLoader()
+    private let candleLoader: PerpetualCandleLoader
     private let maxItemCount = 3
     
     private var viewModel: PerpetualMarketViewModel
     private var sections: [Section] = [.price, .info]
     private var selectedTimeFrame: PerpetualTimeFrame = .oneDay
-    private var charts: [PerpetualTimeFrame: [CandlestickChartView.Candle]] = [:]
+    private var charts: [PerpetualTimeFrame: PerpetualMarketPriceCell.Chart] = [:]
     
     private weak var collectionView: UICollectionView!
     private weak var actionWrapperView: UIView!
@@ -47,8 +48,12 @@ final class PerpetualMarketViewController: UIViewController {
         self.positionsLoader = PerpetualPositionLoader(
             walletID: wallet.tradingWalletID
         )
+        self.candleLoader = PerpetualCandleLoader(
+            marketID: viewModel.market.marketID
+        )
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        self.candleLoader.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -204,7 +209,6 @@ final class PerpetualMarketViewController: UIViewController {
             name: PerpsPositionHistoryDAO.perpsPositionHistoryDidSaveNotification,
             object: nil
         )
-        reloadPriceChartFromRemote(timeFrame: selectedTimeFrame)
         reloadPositions()
     }
     
@@ -212,6 +216,7 @@ final class PerpetualMarketViewController: UIViewController {
         super.viewDidAppear(animated)
         positionsLoader.start()
         marketLoader.start()
+        candleLoader.start(timeFrame: selectedTimeFrame)
         if !BadgeManager.shared.hasViewed(identifier: .perpsManual) {
             BadgeManager.shared.setHasViewed(identifier: .perpsManual)
             let manual = PerpsManual.viewController()
@@ -223,6 +228,7 @@ final class PerpetualMarketViewController: UIViewController {
         super.viewDidDisappear(animated)
         positionsLoader.stop()
         marketLoader.stop()
+        candleLoader.stop()
     }
     
     @objc private func presentCustomerService(_ sender: Any) {
@@ -347,33 +353,6 @@ final class PerpetualMarketViewController: UIViewController {
         collectionView.reloadData()
     }
     
-    private func reloadPriceChartFromRemote(timeFrame: PerpetualTimeFrame) {
-        RouteAPI.perpsMarketCandles(
-            marketID: viewModel.market.marketID,
-            timeFrame: timeFrame,
-            queue: .global(),
-        ) { [weak self] result in
-            switch result {
-            case .success(let candle):
-                guard let chart = candle.asChartData(timeFrame: timeFrame) else {
-                    return
-                }
-                DispatchQueue.main.async {
-                    self?.load(chart: chart, for: timeFrame)
-                }
-            case .failure(let error):
-                Logger.general.debug(category: "PerpMarket", message: "\(error)")
-            }
-        }
-    }
-    
-    private func load(chart: [CandlestickChartView.Candle], for timeFrame: PerpetualTimeFrame) {
-        charts[timeFrame] = chart
-        if selectedTimeFrame == timeFrame {
-            priceCell?.load(chart: chart)
-        }
-    }
-    
     private func viewClosedPositions() {
         let positions = AllPerpetualPositionsViewController(wallet: wallet, content: .closed)
         navigationController?.pushViewController(positions, animated: true)
@@ -416,7 +395,7 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_price, for: indexPath)!
             cell.delegate = self
             cell.load(viewModel: viewModel)
-            cell.load(chart: charts[selectedTimeFrame])
+            cell.load(chart: charts[selectedTimeFrame] ?? .loading)
             cell.setTimeFrame(frame: selectedTimeFrame)
             priceCell = cell
             return cell
@@ -508,10 +487,8 @@ extension PerpetualMarketViewController: PerpetualMarketPriceCell.Delegate {
     
     func perpetualMarketPriceCell(_ cell: PerpetualMarketPriceCell, didSelectTimeFrame timeFrame: PerpetualTimeFrame) {
         self.selectedTimeFrame = timeFrame
-        if let chart = charts[timeFrame] {
-            cell.load(chart: chart)
-        }
-        reloadPriceChartFromRemote(timeFrame: timeFrame)
+        cell.load(chart: charts[timeFrame] ?? .loading)
+        candleLoader.start(timeFrame: timeFrame)
     }
     
 }
@@ -536,37 +513,22 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
     
 }
 
-fileprivate extension PerpetualMarketCandle {
+extension PerpetualMarketViewController: PerpetualCandleLoader.Delegate {
     
-    func asChartData(timeFrame: PerpetualTimeFrame) -> [CandlestickChartView.Candle]? {
-        let dateFormatter: DateFormatter = switch timeFrame {
-        case .oneMinute, .fiveMinutes, .oneHour, .fourHours:
-                .shortTimeOnly
-        case .oneDay, .oneWeek:
-                .shortDateOnly
+    func perpetualCandleLoader(
+        _ loader: PerpetualCandleLoader,
+        didLoadCandles candles: [PerpetualCandleViewModel]?,
+        forTimeFrame timeFrame: PerpetualTimeFrame
+    ) {
+        let chart: PerpetualMarketPriceCell.Chart = if let candles {
+            .candles(candles)
+        } else {
+            .unavailable
         }
-        let drawingItems = items
-        var entries: [CandlestickChartView.Candle] = []
-        entries.reserveCapacity(drawingItems.count)
-        for item in drawingItems {
-            let date = Date(timeIntervalSince1970: TimeInterval(item.timestamp / 1000))
-            let open = NumberFormatter.enUSPOSIXDecimal.number(from: item.open) as? NSDecimalNumber
-            let close = NumberFormatter.enUSPOSIXDecimal.number(from: item.close) as? NSDecimalNumber
-            let high = NumberFormatter.enUSPOSIXDecimal.number(from: item.high) as? NSDecimalNumber
-            let low = NumberFormatter.enUSPOSIXDecimal.number(from: item.low) as? NSDecimalNumber
-            guard let open, let close, let high, let low else {
-                return nil
-            }
-            let entry = CandlestickChartView.Candle(
-                time: dateFormatter.string(from: date),
-                open: open,
-                high: high,
-                low: low,
-                close: close
-            )
-            entries.append(entry)
+        charts[timeFrame] = chart
+        if selectedTimeFrame == timeFrame {
+            priceCell?.load(chart: chart)
         }
-        return entries
     }
     
 }

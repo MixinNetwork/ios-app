@@ -7,6 +7,12 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         func perpetualMarketPriceCell(_ cell: PerpetualMarketPriceCell, didSelectTimeFrame timeFrame: PerpetualTimeFrame)
     }
     
+    enum Chart {
+        case unavailable
+        case loading
+        case candles([PerpetualCandleViewModel])
+    }
+    
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
@@ -19,6 +25,9 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     weak var delegate: Delegate?
     
     private weak var unavailableView: UIView?
+    
+    private var chart: Chart?
+    private var timeFrameJustChanged = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -95,19 +104,29 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         chartView.currentPrice = viewModel.decimalPrice
     }
     
-    func load(chart: [CandlestickChartView.Candle]?) {
-        if let chart {
-            if chart.count < 2 {
-                showUnavailableView()
-            } else {
-                chartView.candles = chart
-                hideUnavailableView()
-            }
+    func load(chart: Chart) {
+        switch chart {
+        case .candles(let candles) where candles.isEmpty:
+            fallthrough
+        case .unavailable:
+            showUnavailableView()
             loadingIndicatorView.stopAnimating()
-        } else {
+        case .loading:
             hideUnavailableView()
             loadingIndicatorView.startAnimating()
+        case .candles(let candles):
+            let scrollsToLast = switch self.chart {
+            case .unavailable, .loading, .none:
+                true
+            case .candles:
+                timeFrameJustChanged
+            }
+            chartView.setCandles(candles, scrollsToLast: scrollsToLast)
+            hideUnavailableView()
+            loadingIndicatorView.stopAnimating()
         }
+        self.chart = chart
+        self.timeFrameJustChanged = false
     }
     
     func setTimeFrame(frame: PerpetualTimeFrame) {
@@ -118,9 +137,8 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
     }
     
     @objc private func changeTimeFrame(_ sender: UIButton) {
+        timeFrameJustChanged = true
         setTimeFrameSelection(index: sender.tag)
-        hideUnavailableView()
-        loadingIndicatorView.startAnimating()
         let frame = PerpetualTimeFrame.allCases[sender.tag]
         delegate?.perpetualMarketPriceCell(self, didSelectTimeFrame: frame)
     }

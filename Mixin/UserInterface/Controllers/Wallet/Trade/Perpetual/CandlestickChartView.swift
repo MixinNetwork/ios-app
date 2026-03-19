@@ -3,14 +3,6 @@ import MixinServices
 
 final class CandlestickChartView: UIView {
     
-    struct Candle {
-        let time: String
-        let open: NSDecimalNumber
-        let high: NSDecimalNumber
-        let low: NSDecimalNumber
-        let close: NSDecimalNumber
-    }
-    
     private enum Config {
         
         static let defaultCandleWidth: CGFloat = 6
@@ -60,16 +52,7 @@ final class CandlestickChartView: UIView {
     private let feedback = UISelectionFeedbackGenerator()
     
     private var pinchGesture: UIPinchGestureRecognizer?
-    
-    var candles: [Candle] = [] {
-        didSet {
-            updateContentSize()
-            if oldValue.isEmpty {
-                scrollView.setContentOffset(rightMostContentOffset, animated: false)
-            }
-            updateChart(forceRedraw: true)
-        }
-    }
+    private var candles: [PerpetualCandleViewModel] = []
     
     var currentPrice: Decimal? {
         didSet {
@@ -105,6 +88,15 @@ final class CandlestickChartView: UIView {
         super.layoutSubviews()
         crosshairView.frame = bounds
         updateContentSize()
+        updateChart(forceRedraw: true)
+    }
+    
+    func setCandles(_ candles: [PerpetualCandleViewModel], scrollsToLast: Bool) {
+        self.candles = candles
+        updateContentSize()
+        if scrollsToLast {
+            scrollView.setContentOffset(rightMostContentOffset, animated: false)
+        }
         updateChart(forceRedraw: true)
     }
     
@@ -181,6 +173,7 @@ final class CandlestickChartView: UIView {
         backgroundColor = R.color.background()
         addSubview(gridBackgroundView)
         gridBackgroundView.snp.makeEdgesEqualToSuperview()
+        gridBackgroundView.clipsToBounds = true
         
         scrollView.delegate = self
         scrollView.showsHorizontalScrollIndicator = false

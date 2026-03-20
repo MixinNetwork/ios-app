@@ -102,7 +102,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
         }
     }
     
-    private var multiplier: Decimal
+    private var leverageMultiplier: Decimal
     
     init(
         wallet: Wallet,
@@ -128,7 +128,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
                 true
             }
         }
-        self.multiplier = viewModel.market.leverage > 10 ? 10 : 2
+        self.leverageMultiplier = viewModel.market.leverage > 10 ? 10 : 2
         let nib = R.nib.openPerpetualPositionView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -215,10 +215,10 @@ final class OpenPerpetualPositionViewController: UIViewController {
         reviewButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
         leverageMultipliersCollectionView.reloadData()
-        inputLeverageMultiplier(value: multiplier)
+        inputLeverageMultiplier(value: leverageMultiplier)
         updateDescriptions(
             marginAmount: 0,
-            leverageMultiplier: multiplier,
+            leverageMultiplier: leverageMultiplier,
             underlyingAsset: viewModel
         )
         reloadMarginTokens()
@@ -233,7 +233,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
         self.marginAmount = amount
         updateDescriptions(
             marginAmount: amount,
-            leverageMultiplier: multiplier,
+            leverageMultiplier: leverageMultiplier,
             underlyingAsset: viewModel
         )
     }
@@ -269,14 +269,14 @@ final class OpenPerpetualPositionViewController: UIViewController {
             marketID: viewModel.market.marketID,
             side: side,
             amount: TokenAmountFormatter.string(from: marginAmount),
-            leverage: (multiplier as NSDecimalNumber).intValue,
+            leverage: (leverageMultiplier as NSDecimalNumber).intValue,
             walletID: wallet.tradingWalletID,
             destination: nil
         )
         sender.isBusy = true
         RouteAPI.openPerpsOrder(
             orderRequest: request
-        ) { [weak self, wallet, viewModel, multiplier] result in
+        ) { [weak self, wallet, viewModel, leverageMultiplier] result in
             switch result {
             case .success(let response):
                 guard let url = URL(string: response.paymentURL) else {
@@ -290,7 +290,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
                     wallet: wallet,
                     viewModel: viewModel,
                     side: request.side,
-                    leverageMultiplier: multiplier
+                    leverageMultiplier: leverageMultiplier
                 )
                 let source: UrlWindow.Source = .perps(context: context) { description in
                     guard let self else {
@@ -386,11 +386,11 @@ final class OpenPerpetualPositionViewController: UIViewController {
         }
     }
     
-    private func inputAmount(withBalanceMultipliedBy multiplier: Decimal) {
+    private func inputAmount(withBalanceMultipliedBy balanceMultiplier: Decimal) {
         guard let token = marginToken else {
             return
         }
-        marginAmount = token.decimalBalance * multiplier
+        marginAmount = token.decimalBalance * balanceMultiplier
         marginAmountTextField.text = CurrencyFormatter.localizedString(
             from: marginAmount,
             format: .precision,
@@ -398,7 +398,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
         )
         updateDescriptions(
             marginAmount: marginAmount,
-            leverageMultiplier: multiplier,
+            leverageMultiplier: leverageMultiplier,
             underlyingAsset: viewModel
         )
     }
@@ -421,7 +421,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
         guard let item = presetMultiplierIndex ?? customMultiplierIndex else {
             return
         }
-        self.multiplier = value
+        self.leverageMultiplier = value
         leverageMultiplierTextField.text = PerpetualLeverage.stringRepresentation(multiplier: value)
         leverageMultipliersCollectionView.selectItem(
             at: IndexPath(item: item, section: 0),
@@ -543,7 +543,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
                 side: side,
                 maxMultiplier: viewModel.maxLeverageMultiplier,
                 marginAmount: marginAmount,
-                currentMultiplier: multiplier
+                currentMultiplier: leverageMultiplier
             )
             input.onInput = { [weak self] (leverage) in
                 self?.inputLeverageMultiplier(value: leverage)
@@ -563,7 +563,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
                 side: side,
                 maxMultiplier: viewModel.maxLeverageMultiplier,
                 marginAmount: marginAmount,
-                currentMultiplier: multiplier
+                currentMultiplier: leverageMultiplier
             )
             input.onInput = { [weak self] (leverage) in
                 self?.inputLeverageMultiplier(value: leverage)

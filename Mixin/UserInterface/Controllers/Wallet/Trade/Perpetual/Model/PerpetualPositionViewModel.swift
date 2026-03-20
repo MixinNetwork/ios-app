@@ -106,7 +106,7 @@ struct PerpetualPositionViewModel {
         self.entryPrice = if let entryPrice {
             CurrencyFormatter.localizedString(
                 from: entryPrice * Currency.current.decimalRate,
-                format: .precision,
+                format: .fiatMoneyPrice,
                 sign: .never,
                 symbol: .currencySymbol
             )
@@ -203,7 +203,7 @@ struct PerpetualPositionViewModel {
         self.entryPrice = if let entryPrice {
             CurrencyFormatter.localizedString(
                 from: entryPrice * Currency.current.decimalRate,
-                format: .precision,
+                format: .fiatMoneyPrice,
                 sign: .never,
                 symbol: .currencySymbol
             )
@@ -222,7 +222,7 @@ struct PerpetualPositionViewModel {
         self.closePrice = if let closePrice {
             CurrencyFormatter.localizedString(
                 from: closePrice * Currency.current.decimalRate,
-                format: .precision,
+                format: .fiatMoneyPrice,
                 sign: .never,
                 symbol: .currencySymbol
             )

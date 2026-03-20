@@ -31,7 +31,7 @@ struct PerpetualMarketViewModel {
         self.decimalPrice = decimalPrice
         self.price = CurrencyFormatter.localizedString(
             from: decimalPrice * Currency.current.decimalRate,
-            format: .precision,
+            format: .fiatMoneyPrice,
             sign: .never,
             symbol: .currencySymbol
         )

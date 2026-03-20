@@ -58,7 +58,7 @@ enum PerpetualChangeSimulation {
         }
         return CurrencyFormatter.localizedString(
             from: price * Currency.current.decimalRate,
-            format: .precision,
+            format: .fiatMoneyPrice,
             sign: .never,
             symbol: .currencySymbol
         )

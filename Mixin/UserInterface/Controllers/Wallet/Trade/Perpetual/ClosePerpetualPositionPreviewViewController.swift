@@ -28,7 +28,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             rows.append(.perpsProduct(iconURL: viewModel.iconURL, name: name))
         }
         if let receiving = viewModel.estimatedReceiving,
-           let pnlPercentage = viewModel.pnlPercentage,
+           let roe = viewModel.roe,
            let token = TokenDAO.shared.tokenItem(assetID: receiving.assetID)
         {
             let count = CurrencyFormatter.localizedString(
@@ -50,7 +50,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 sign: .always,
                 symbol: .custom(token.symbol)
             ) + "(" + PercentageFormatter.string(
-                from: pnlPercentage,
+                from: roe,
                 format: .pretty,
                 sign: .always,
                 options: .keepOneFractionDigitForZero

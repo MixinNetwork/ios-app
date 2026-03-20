@@ -16,6 +16,7 @@ final class PerpetualPositionValueCell: UICollectionViewCell {
     
     func loadOpenPositions(value: PerpetualPositionValue?) {
         titleLabel.text = R.string.localizable.total_position_value()
+        changeLabel.isHidden = false
         if let value {
             valueLabel.text = value.value
             changeLabel.text = value.change
@@ -36,23 +37,19 @@ final class PerpetualPositionValueCell: UICollectionViewCell {
     
     func loadClosedPositions(value: PerpetualPositionValue?) {
         titleLabel.text = R.string.localizable.total_realized_pnl()
+        changeLabel.isHidden = true
         if let value {
             valueLabel.text = value.value
-            changeLabel.text = value.change
         } else {
             valueLabel.text = "-"
-            changeLabel.text = "-"
         }
         switch value?.state {
         case .gain:
             valueLabel.marketColor = .rising
-            changeLabel.marketColor = .rising
         case .loss:
             valueLabel.marketColor = .falling
-            changeLabel.marketColor = .falling
         case .neutral, .none:
             valueLabel.textColor = R.color.text_secondary()
-            changeLabel.textColor = R.color.text_secondary()
         }
     }
     

@@ -36,7 +36,7 @@ final class SharePerpetualPositionView: UIView {
     
     func load(viewModel: PerpetualPositionViewModel, latestPrice: Decimal?) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        changeLabel.text = if let percentage = viewModel.pnlPercentage {
+        changeLabel.text = if let percentage = viewModel.roe {
             PercentageFormatter.string(
                 from: percentage,
                 format: .pretty,

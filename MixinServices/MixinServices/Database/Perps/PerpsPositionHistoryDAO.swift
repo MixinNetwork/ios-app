@@ -18,18 +18,13 @@ public final class PerpsPositionHistoryDAO: PerpsDAO {
     """
     
     public func positionValue() -> PerpetualPositionValue {
-        let sql = """
-            SELECT
-            SUM(ABS(quantity * entry_price)),
-            SUM(realized_pnl)
-            FROM position_histories
-        """
-        let (entryValue, pnl) = try! db.read { (db) -> (String, String) in
+        let sql = "SELECT SUM(realized_pnl) FROM position_histories"
+        let pnl: String = try! db.read { (db) in
             let rows = try Row.fetchCursor(db, sql: sql)
             let row = try rows.next()
-            return (row?[0] ?? "0", row?[1] ?? "0")
+            return row?[0] ?? "0"
         }
-        return .closed(entryValue: entryValue, pnl: pnl)
+        return .closed(pnl: pnl)
     }
     
     public func historyItems(marketID: String) -> [PerpetualPositionHistoryItem] {

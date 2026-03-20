@@ -30,13 +30,12 @@ public struct PerpetualPositionValue {
         self.state = state
     }
     
-    static func open(entryValue: String, pnl: String, margin: String) -> PerpetualPositionValue {
-        let decimalEntryValue = Decimal(string: entryValue, locale: .enUSPOSIX) ?? 0
-        let decimalPnL = Decimal(string: pnl, locale: .enUSPOSIX) ?? 0
+    static func open(margin: String, pnl: String) -> PerpetualPositionValue {
         let decimalMargin = Decimal(string: margin, locale: .enUSPOSIX) ?? 0
+        let decimalPnL = Decimal(string: pnl, locale: .enUSPOSIX) ?? 0
         
         let value = CurrencyFormatter.localizedString(
-            from: (decimalEntryValue + decimalPnL) * Currency.current.decimalRate,
+            from: decimalMargin * Currency.current.decimalRate,
             format: .precision,
             sign: .never,
             symbol: .currencySymbol

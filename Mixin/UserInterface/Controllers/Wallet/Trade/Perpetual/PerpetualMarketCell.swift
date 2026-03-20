@@ -5,14 +5,14 @@ final class PerpetualMarketCell: UICollectionViewCell {
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var symbolLabel: UILabel!
     @IBOutlet weak var leverageLabel: LeverageLabel!
-    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var topRightLabel: UILabel!
     @IBOutlet weak var volumeLabel: UILabel!
     @IBOutlet weak var changeLabel: MarketColoredLabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         let subtitleLabels: [UILabel] = [
-            priceLabel,
+            topRightLabel,
             volumeLabel,
             changeLabel
         ]
@@ -38,7 +38,7 @@ final class PerpetualMarketCell: UICollectionViewCell {
         symbolLabel.text = viewModel.market.tokenSymbol
         leverageLabel.text = viewModel.leverage
         leverageLabel.color = .neutral
-        priceLabel.text = viewModel.price
+        topRightLabel.text = viewModel.price
         volumeLabel.text = R.string.localizable.volume_label(viewModel.volume)
         changeLabel.text = viewModel.change
         changeLabel.marketColor = viewModel.changeColor
@@ -54,7 +54,7 @@ final class PerpetualMarketCell: UICollectionViewCell {
             leverageLabel.color = .short
         }
         leverageLabel.text = viewModel.leverageMultiplier
-        priceLabel.text = viewModel.orderValueInFiatMoney
+        topRightLabel.text = viewModel.margin
         volumeLabel.text = viewModel.orderValueInToken
         changeLabel.text = viewModel.pnl
         changeLabel.marketColor = viewModel.pnlColor

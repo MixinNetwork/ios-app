@@ -44,7 +44,6 @@ struct PerpetualPositionViewModel {
     let quantity: String
     let tokenSymbol: String?
     let orderValueInToken: String
-    let orderValueInFiatMoney: String
     let entryPrice: String
     let date: String
     
@@ -104,16 +103,6 @@ struct PerpetualPositionViewModel {
             sign: .never,
             symbol: .custom(position.tokenSymbol)
         )
-        self.orderValueInFiatMoney = if let entryPrice {
-            CurrencyFormatter.localizedString(
-                from: quantity * entryPrice * Currency.current.decimalRate,
-                format: .precision,
-                sign: .never,
-                symbol: .currencySymbol
-            )
-        } else {
-            ""
-        }
         self.entryPrice = if let entryPrice {
             CurrencyFormatter.localizedString(
                 from: entryPrice * Currency.current.decimalRate,
@@ -211,16 +200,6 @@ struct PerpetualPositionViewModel {
             sign: .never,
             symbol: .custom(history.tokenSymbol)
         )
-        if let entryPrice {
-            self.orderValueInFiatMoney = CurrencyFormatter.localizedString(
-                from: quantity * entryPrice * Currency.current.decimalRate,
-                format: .precision,
-                sign: .never,
-                symbol: .currencySymbol
-            )
-        } else {
-            self.orderValueInFiatMoney = "-"
-        }
         self.entryPrice = if let entryPrice {
             CurrencyFormatter.localizedString(
                 from: entryPrice * Currency.current.decimalRate,

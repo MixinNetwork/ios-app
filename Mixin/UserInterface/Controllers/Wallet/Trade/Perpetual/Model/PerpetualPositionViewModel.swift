@@ -22,6 +22,12 @@ struct PerpetualPositionViewModel {
         
     }
     
+    struct EstimatedReceiving {
+        let assetID: String
+        let receivingAmount: Decimal
+        let pnlAmount: Decimal
+    }
+    
     let wallet: Wallet
     let marketID: String
     let positionID: String
@@ -44,8 +50,7 @@ struct PerpetualPositionViewModel {
     
     // Only available for open positions
     let margin: String?
-    let settleAssetID: String?
-    let openPayAmount: Decimal?
+    let estimatedReceiving: EstimatedReceiving?
     let liquidationPrice: String?
     
     // Only available for closed positions
@@ -137,8 +142,15 @@ struct PerpetualPositionViewModel {
         } else {
             nil
         }
-        self.settleAssetID = position.settleAssetID
-        self.openPayAmount = Decimal(string: position.openPayAmount, locale: .enUSPOSIX)
+        self.estimatedReceiving = if let decimalMargin {
+            EstimatedReceiving(
+                assetID: position.settleAssetID,
+                receivingAmount: decimalMargin + pnl,
+                pnlAmount: pnl
+            )
+        } else {
+            nil
+        }
         self.liquidationPrice = if let decimalEntryPrice {
             PerpetualChangeSimulation.liquidationPrice(
                 side: side,
@@ -230,8 +242,7 @@ struct PerpetualPositionViewModel {
         }
         
         self.margin = nil
-        self.settleAssetID = nil
-        self.openPayAmount = nil
+        self.estimatedReceiving = nil
         self.liquidationPrice = nil
         self.closePrice = if let decimalClosePrice {
             CurrencyFormatter.localizedString(

@@ -183,6 +183,17 @@ final class TIPIntroViewController: UIViewController {
         reporter.report(event: .customerServiceDialog, tags: ["source": "tip_intro"])
     }
     
+    @objc private func presentMoreActions(_ sender: Any) {
+        let sheet = UIAlertController(title: R.string.localizable.help(), message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.logs(), style: .default, handler: { _ in
+            let logs = LogViewController.instance(category: .all)
+            let navigationController = GeneralAppearanceNavigationController(rootViewController: logs)
+            self.present(navigationController, animated: true)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel))
+        present(sheet, animated: true)
+    }
+    
 }
 
 extension TIPIntroViewController: CoreTextLabelDelegate {
@@ -216,10 +227,17 @@ extension TIPIntroViewController {
         default:
             navigationItem.leftBarButtonItem = nil
         }
-        navigationItem.rightBarButtonItem = .customerService(
-            target: self,
-            action: #selector(presentCustomerService(_:))
-        )
+        navigationItem.rightBarButtonItems = [
+            .tintedIcon(
+                image: R.image.ic_title_more(),
+                target: self,
+                action: #selector(presentMoreActions(_:))
+            ),
+            .customerService(
+                target: self,
+                action: #selector(presentCustomerService(_:))
+            ),
+        ]
     }
     
     private func setNoticeHidden(_ hidden: Bool) {

@@ -122,6 +122,7 @@ final class ExploreViewController: UIViewController {
             let buy = BuyTokenInputAmountViewController(wallet: .privacy)
             navigationController?.pushViewController(buy, animated: true)
             BadgeManager.shared.setHasViewed(identifier: .buy)
+            reporter.report(event: .buyStart, tags: ["wallet": "main", "source": "explore"])
         case .trade:
             reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "explore"])
             let trade = TradeViewController(

@@ -44,7 +44,7 @@ final class RecoveryContactLoginVerificationCodeViewController: LoginVerificatio
 
 extension RecoveryContactLoginVerificationCodeViewController: Captcha.Reporting {
     
-    var reportingContent: (event: Reporter.Event, type: String) {
+    var reportingContent: (event: Reporter.Event, type: String?) {
         (event: .loginCAPTCHA, type: "recovery_contact")
     }
     

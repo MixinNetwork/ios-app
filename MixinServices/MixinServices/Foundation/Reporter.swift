@@ -5,20 +5,22 @@ open class Reporter {
     
     public enum Event: String {
         case signUpStart        = "sign_up_start"
-        case signUpFullname     = "sign_up_fullname"
         case signUpCAPTCHA      = "sign_up_captcha"
-        case signUpSMSVerify    = "sign_up_sms_verify"
+        case signUpFullname     = "sign_up_fullname"
         case signUpSignalInit   = "sign_up_signal_init"
         case signUpPINSet       = "sign_up_pin_set"
+        case signUpPINQuiz      = "sign_up_pin_quiz"
         case signUpEnd          = "sign_up_end"
         
-        case loginStart         = "login_start"
-        case loginSMSVerify     = "login_sms_verify"
-        case loginRestore       = "login_restore"
-        case loginVerifyPIN     = "login_verify_pin"
-        case loginCAPTCHA       = "login_captcha"
-        case loginSignalInit    = "login_signal_init"
-        case loginEnd           = "login_end"
+        case loginStart             = "login_start"
+        case loginSMSSendConfirmed  = "login_sms_send_confirmed"
+        case loginMnemonicPhrase    = "login_mnemonic_phrase"
+        case loginCAPTCHA           = "login_captcha"
+        case loginSMSVerify         = "login_sms_verify"
+        case loginRestore           = "login_restore"
+        case loginSignalInit        = "login_signal_init"
+        case loginVerifyPIN         = "login_pin_verify"
+        case loginEnd               = "login_end"
         
         case tradeStart         = "trade_start"
         case tradeTokenSelect   = "trade_token_select"
@@ -27,6 +29,11 @@ open class Reporter {
         case tradeEnd           = "trade_end"
         case tradeTransactions  = "trade_transactions"
         case tradeDetail        = "trade_detail"
+        
+        case buyStart           = "buy_start"
+        case buyTokenSelect     = "buy_token_select"
+        case buyFiatSelect      = "buy_fiat_select"
+        case buyPreview         = "buy_preview"
         
         case assetDetail        = "asset_detail"
         case allTransactions    = "all_transactions"

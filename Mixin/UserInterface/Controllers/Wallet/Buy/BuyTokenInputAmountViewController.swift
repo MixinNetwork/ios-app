@@ -231,6 +231,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
             self.reloadMinimalAmount()
             self.dismiss(animated: true)
             AppGroupUserDefaults.Wallet.lastBuyingCurrencyCode = currency.code
+            reporter.report(event: .buyFiatSelect)
         }
         present(selector, animated: true, completion: nil)
     }
@@ -247,6 +248,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
             self.reloadMinimalAmount()
             self.dismiss(animated: true)
             AppGroupUserDefaults.Wallet.lastBuyingAssetID = token.assetID
+            reporter.report(event: .buyTokenSelect)
         }
         present(selector, animated: true, completion: nil)
     }
@@ -508,6 +510,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         guard let amount = NumberFormatter.enUSPOSIXDecimal.string(decimal: fiatMoneyAmount) else {
             return
         }
+        reporter.report(event: .buyPreview)
         let currency = selectedCurrency.code
         reviewButton.isBusy = true
         Task { [weak self] in

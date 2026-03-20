@@ -422,6 +422,7 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
         case .buy:
             let buy = BuyTokenInputAmountViewController(wallet: .common(wallet))
             navigationController?.pushViewController(buy, animated: true)
+            reporter.report(event: .buyStart, tags: ["wallet": "web3", "source": "wallet_home"])
         case .send:
             let selector = Web3TokenSelectorViewController(
                 wallet: wallet,

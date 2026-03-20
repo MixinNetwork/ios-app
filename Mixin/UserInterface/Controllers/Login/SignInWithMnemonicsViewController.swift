@@ -72,6 +72,8 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
         )
         confirmButton.isEnabled = false
         NotificationCenter.default.addObserver(self, selector: #selector(detectPhrases(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        reporter.report(event: .loginMnemonicPhrase)
     }
     
     override func confirm(_ sender: Any) {

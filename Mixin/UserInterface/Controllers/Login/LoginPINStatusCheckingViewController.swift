@@ -40,6 +40,20 @@ final class LoginPINStatusCheckingViewController: LoginLoadingViewController {
                         let intro = TIPIntroViewController(context: context)
                         let navigation = TIPNavigationController(intro: intro)
                         AppDelegate.current.mainWindow.rootViewController = navigation
+                        switch context.action {
+                        case .create:
+                            break
+                        case .change:
+                            reporter.report(
+                                event: .loginVerifyPIN,
+                                tags: ["type": "pin_change"]
+                            )
+                        case .migrate:
+                            reporter.report(
+                                event: .loginVerifyPIN,
+                                tags: ["type": "pin_upgrade"]
+                            )
+                        }
                     } else {
                         let validation = LoginPINValidationViewController(account: account)
                         let navigation = GeneralAppearanceNavigationController(rootViewController: validation)

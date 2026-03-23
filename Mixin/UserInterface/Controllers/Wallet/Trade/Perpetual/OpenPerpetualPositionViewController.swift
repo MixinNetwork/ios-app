@@ -483,7 +483,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
             }
             liquidationPriceContentLabel.text = CurrencyFormatter.localizedString(
                 from: liquidationPrice * Currency.current.decimalRate,
-                format: .precision,
+                format: .fiatMoneyPrice,
                 sign: .never,
                 symbol: .currencySymbol
             )

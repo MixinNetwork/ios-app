@@ -65,7 +65,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
             wallet: wallet
         )
         amountLabel.text = CurrencyFormatter.localizedString(
-            from: 0,
+            from: Decimal(0),
             format: .precision,
             sign: .never,
             symbol: .custom(selectedCurrency.code)
@@ -118,7 +118,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                     return
                 }
                 self.calculatedValueLabel.text = CurrencyFormatter.localizedString(
-                    from: 0,
+                    from: Decimal(0),
                     format: .precision,
                     sign: .never,
                     symbol: .custom(placeholder.symbol)

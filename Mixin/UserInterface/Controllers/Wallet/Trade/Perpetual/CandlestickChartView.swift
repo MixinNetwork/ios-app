@@ -326,14 +326,13 @@ final class CandlestickChartView: UIView {
         let xInContent = CGFloat(index) * step + step / 2.0
         let xOnScreen = xInContent - scrollView.contentOffset.x
         
-        let priceRange = (currentMin - currentMax) as NSDecimalNumber
-        let p = priceRange.doubleValue / bounds.height * location.y
-            + (currentMax as NSDecimalNumber).doubleValue
+        let priceRange = currentMin - currentMax
+        let p = Decimal(location.y) * priceRange / Decimal(bounds.height) + currentMax
         let price = CurrencyFormatter.localizedString(
             from: p,
             format: .fiatMoneyPrice,
             sign: .never
-        ) ?? "\(p)"
+        )
         crosshairView.update(
             x: xOnScreen,
             y: location.y,

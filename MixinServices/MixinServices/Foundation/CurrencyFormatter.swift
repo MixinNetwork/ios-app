@@ -7,6 +7,7 @@ public struct CurrencyFormatter {
         case pretty
         case fiatMoney
         case fiatMoneyPrice
+        case fiatMoneyValue
     }
     
     public enum SignBehavior {
@@ -17,7 +18,6 @@ public struct CurrencyFormatter {
     }
     
     public enum Symbol {
-        case btc
         case currencyCode
         case currencySymbol
         case custom(String)
@@ -61,14 +61,15 @@ public struct CurrencyFormatter {
     }
 
     public static func localizedPrice(price: String, priceUsd: String) -> String {
-        guard let value = CurrencyFormatter.localizedString(from: price.doubleValue * priceUsd.doubleValue * Currency.current.rate, format: .fiatMoney, sign: .never) else {
-            return price
-        }
-        
+        let value = CurrencyFormatter.localizedString(
+            from: price.doubleValue * priceUsd.doubleValue * Currency.current.rate,
+            format: .fiatMoney,
+            sign: .never
+        ) 
         return "≈ " + Currency.current.symbol + value
     }
     
-    public static func localizedString(from number: Double, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
+    public static func localizedString(from number: Double, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String {
         let decimal = Decimal(number)
         return localizedString(from: decimal, format: format, sign: sign, symbol: symbol)
     }
@@ -76,21 +77,20 @@ public struct CurrencyFormatter {
     public static func localizedString(from decimal: Decimal, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String {
         let number = NSDecimalNumber(decimal: decimal)
         let isNumberZero = decimal.isZero
-        let symbolPrefix: String? = switch symbol {
+        var symbolPrefix: String = switch symbol {
         case .currencySymbol:
             Currency.current.symbol
         default:
-            nil
+            ""
         }
         
         var str: String
         
-        let lock: NSLock
         switch format {
         case .precision:
             precisionFormatterLock.lock()
             precisionFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
-            str = precisionFormatter.string(from: number) ?? ""
+            str = precisionFormatter.string(from: number) ?? "\(decimal)"
             precisionFormatterLock.unlock()
         case .pretty:
             prettyFormatterLock.lock()
@@ -105,30 +105,40 @@ public struct CurrencyFormatter {
             } else {
                 prettyFormatter.maximumFractionDigits = 0
             }
-            str = prettyFormatter.string(from: number) ?? ""
+            str = prettyFormatter.string(from: number) ?? "\(decimal)"
             prettyFormatterLock.unlock()
         case .fiatMoney:
             fiatMoneyFormatterLock.lock()
             fiatMoneyFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
-            str = fiatMoneyFormatter.string(from: number) ?? ""
+            str = fiatMoneyFormatter.string(from: number) ?? "\(decimal)"
             fiatMoneyFormatterLock.unlock()
         case .fiatMoneyPrice:
             if abs(decimal) < 1 {
                 precisionFormatterLock.lock()
                 precisionFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
-                str = precisionFormatter.string(from: number) ?? ""
+                str = precisionFormatter.string(from: number) ?? "\(decimal)"
                 precisionFormatterLock.unlock()
             } else {
                 fiatMoneyFormatterLock.lock()
                 fiatMoneyFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
-                str = fiatMoneyFormatter.string(from: number) ?? ""
+                str = fiatMoneyFormatter.string(from: number) ?? "\(decimal)"
                 fiatMoneyFormatterLock.unlock()
             }
+        case .fiatMoneyValue:
+            fiatMoneyFormatterLock.lock()
+            let value: NSDecimalNumber
+            if abs(decimal) < 0.01 {
+                symbolPrefix.insert("<", at: symbolPrefix.startIndex)
+                value = 0.01
+            } else {
+                value = number
+            }
+            fiatMoneyFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
+            str = fiatMoneyFormatter.string(from: value) ?? "\(value)"
+            fiatMoneyFormatterLock.unlock()
         }
         
         switch symbol {
-        case .btc:
-            str += " BTC"
         case .currencyCode:
             str += " " + Currency.current.code
         case .currencySymbol:
@@ -149,7 +159,7 @@ fileprivate extension NumberFormatter {
     
     func setSignBehavior(
         _ behavior: CurrencyFormatter.SignBehavior,
-        symbolPrefix: String?,
+        symbolPrefix: String,
         isNumberZero: Bool
     ) {
         switch behavior {
@@ -171,10 +181,8 @@ fileprivate extension NumberFormatter {
                 negativePrefix = minusSign
             }
         }
-        if let prefix = symbolPrefix {
-            positivePrefix += prefix
-            negativePrefix += prefix
-        }
+        positivePrefix += symbolPrefix
+        negativePrefix += symbolPrefix
     }
     
 }

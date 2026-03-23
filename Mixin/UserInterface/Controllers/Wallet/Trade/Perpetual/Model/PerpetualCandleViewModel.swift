@@ -1,6 +1,7 @@
 import Foundation
 import MixinServices
 
+// All prices are in local currency
 struct PerpetualCandleViewModel {
     
     let time: String
@@ -26,6 +27,7 @@ extension PerpetualCandleViewModel {
                 .shortDateOnly
         }
         let numberFormatter: NumberFormatter = .enUSPOSIXDecimal
+        let currencyRate = Currency.current.decimalRate as NSDecimalNumber
         
         var entries: [PerpetualCandleViewModel] = []
         entries.reserveCapacity(drawingItems.count)
@@ -40,10 +42,10 @@ extension PerpetualCandleViewModel {
             }
             let entry = PerpetualCandleViewModel(
                 time: dateFormatter.string(from: date),
-                open: open,
-                high: high,
-                low: low,
-                close: close
+                open: open.multiplying(by: currencyRate),
+                high: high.multiplying(by: currencyRate),
+                low: low.multiplying(by: currencyRate),
+                close: close.multiplying(by: currencyRate),
             )
             entries.append(entry)
         }

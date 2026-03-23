@@ -17,16 +17,6 @@ public final class PerpsPositionHistoryDAO: PerpsDAO {
     
     """
     
-    public func positionValue() -> PerpetualPositionValue {
-        let sql = "SELECT SUM(realized_pnl) FROM position_histories"
-        let pnl: String = try! db.read { (db) in
-            let rows = try Row.fetchCursor(db, sql: sql)
-            let row = try rows.next()
-            return row?[0] ?? "0"
-        }
-        return .closed(pnl: pnl)
-    }
-    
     public func historyItems(marketID: String) -> [PerpetualPositionHistoryItem] {
         db.select(
             with: Self.itemSQL + "WHERE h.market_id = ? ORDER BY closed_at DESC",

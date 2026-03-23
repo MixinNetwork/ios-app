@@ -3,7 +3,7 @@ import MixinServices
 
 final class AllPerpetualPositionsViewController: UIViewController {
     
-    private enum Section: Int, CaseIterable {
+    private enum Section {
         case summary
         case positions
     }
@@ -11,6 +11,7 @@ final class AllPerpetualPositionsViewController: UIViewController {
     private let wallet: Wallet
     private let content: PerpetualPositionType
     private let positionsLoader: PerpetualPositionLoader
+    private let sections: [Section]
     private let pageCount = 50
     
     private weak var collectionView: UICollectionView!
@@ -25,6 +26,12 @@ final class AllPerpetualPositionsViewController: UIViewController {
         self.positionsLoader = PerpetualPositionLoader(
             walletID: wallet.tradingWalletID
         )
+        self.sections = switch content {
+        case .open:
+            [.summary, .positions]
+        case .closed:
+            [.positions]
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -44,8 +51,8 @@ final class AllPerpetualPositionsViewController: UIViewController {
         config.interSectionSpacing = 10
         let layout = UICollectionViewCompositionalLayout(
             sectionProvider: { [weak self] (sectionIndex, _) in
-                switch Section.allCases[sectionIndex] {
-                case .summary:
+                switch self?.sections[sectionIndex] {
+                case .none, .summary:
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(97))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
@@ -144,18 +151,6 @@ final class AllPerpetualPositionsViewController: UIViewController {
                 }
             }
         case .closed:
-            DispatchQueue.global().async { [weak self] in
-                let value = PerpsPositionHistoryDAO.shared.positionValue()
-                DispatchQueue.main.async {
-                    guard let self else {
-                        return
-                    }
-                    self.value = value
-                    self.collectionView.reloadSections(
-                        IndexSet(integer: Section.summary.rawValue)
-                    )
-                }
-            }
             loadNextPage(offset: nil)
         }
     }
@@ -179,20 +174,17 @@ final class AllPerpetualPositionsViewController: UIViewController {
                 let itemsCountAfter = itemsAfter.count
                 self.viewModels = itemsAfter
                 if itemsCountBefore == 0 || itemsCountAfter == 0 {
-                    self.collectionView.reloadSections(
-                        IndexSet(integer: Section.positions.rawValue)
-                    )
-                } else {
+                    self.collectionView.reloadData()
+                } else if let section = self.sections.firstIndex(of: .positions) {
                     let items = (itemsCountBefore..<itemsCountAfter).map { item in
-                        IndexPath(item: item, section: Section.positions.rawValue)
+                        IndexPath(item: item, section: section)
                     }
                     self.collectionView.insertItems(at: items)
+                } else {
+                    self.collectionView.reloadData()
                 }
-                if hasMore {
-                    self.loadNextPageIndexPath = IndexPath(
-                        item: itemsCountAfter - 3,
-                        section: Section.positions.rawValue
-                    )
+                if hasMore, let section = self.sections.firstIndex(of: .positions) {
+                    self.loadNextPageIndexPath = IndexPath(item: itemsCountAfter - 3, section: section)
                 }
             }
         }
@@ -211,13 +203,14 @@ extension AllPerpetualPositionsViewController: HomeNavigationController.Navigati
 extension AllPerpetualPositionsViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        Section.allCases.count
+        sections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
+        switch sections[section] {
+        case .summary:
             1
-        } else {
+        case .positions:
             if let viewModels, !viewModels.isEmpty {
                 viewModels.count
             } else {
@@ -227,7 +220,7 @@ extension AllPerpetualPositionsViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch Section(rawValue: indexPath.section)! {
+        switch sections[indexPath.section] {
         case .summary:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_positions_value, for: indexPath)!
             switch content {
@@ -289,7 +282,7 @@ extension AllPerpetualPositionsViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch Section(rawValue: indexPath.section)! {
+        switch sections[indexPath.section] {
         case .summary:
             break
         case .positions:

@@ -28,7 +28,6 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
             rows.append(.perpsProduct(iconURL: viewModel.iconURL, name: name))
         }
         if let receiving = viewModel.estimatedReceiving,
-           let roe = viewModel.roe,
            let token = TokenDAO.shared.tokenItem(assetID: receiving.assetID)
         {
             let count = CurrencyFormatter.localizedString(
@@ -44,12 +43,15 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                     .foregroundColor: R.color.text_tertiary()!
                 ]
             )
-            let pnlValue = CurrencyFormatter.localizedString(
+            var pnlValue = CurrencyFormatter.localizedString(
                 from: receiving.pnlAmount,
                 format: .precision,
                 sign: .always,
                 symbol: .custom(token.symbol)
-            ) + " (" + roe + ")"
+            )
+            if let roe = viewModel.roe {
+                pnlValue += " (" + roe + ")"
+            }
             pnl.append(NSAttributedString(
                 string: pnlValue,
                 attributes: [

@@ -56,7 +56,11 @@ final class PerpetualMarketCell: UICollectionViewCell {
         leverageLabel.text = viewModel.leverageMultiplier
         topRightLabel.text = viewModel.margin
         volumeLabel.text = viewModel.orderValueInToken
-        changeLabel.text = viewModel.pnl
+        changeLabel.text = if let roe = viewModel.roe {
+            viewModel.pnl + " (" + roe + ")"
+        } else {
+            viewModel.pnl
+        }
         changeLabel.marketColor = viewModel.pnlColor
     }
     

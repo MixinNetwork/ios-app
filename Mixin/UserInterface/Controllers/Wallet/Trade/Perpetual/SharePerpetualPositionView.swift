@@ -36,16 +36,7 @@ final class SharePerpetualPositionView: UIView {
     
     func load(viewModel: PerpetualPositionViewModel, latestPrice: Decimal?) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        changeLabel.text = if let percentage = viewModel.roe {
-            PercentageFormatter.string(
-                from: percentage,
-                format: .pretty,
-                sign: .always,
-                options: .keepOneFractionDigitForZero
-            )
-        } else {
-            "-.--%"
-        }
+        changeLabel.text = viewModel.roe
         let layer = layer as! CAGradientLayer
         switch (AppGroupUserDefaults.User.marketColorAppearance, viewModel.pnlColor) {
         case (.greenUpRedDown, .rising), (.redUpGreenDown, .falling):
@@ -73,7 +64,7 @@ final class SharePerpetualPositionView: UIView {
         entryPriceContentLabel.text = viewModel.entryPrice
         if let closePrice = viewModel.closePrice {
             priceTitleLabel.text = R.string.localizable.close_price()
-            priceContentLabel.text = viewModel.closePrice
+            priceContentLabel.text = closePrice
         } else if let latestPrice {
             priceTitleLabel.text = R.string.localizable.perps_current_price()
             priceContentLabel.text = CurrencyFormatter.localizedString(

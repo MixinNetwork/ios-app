@@ -38,7 +38,7 @@ struct PerpetualPositionViewModel {
     let leverageMultiplier: String
     let pnl: String
     let pnlColor: MarketColor
-    let roe: Decimal?
+    let roe: String?
     let actions: [Action]
     let displaySymbol: String?
     let quantity: String
@@ -86,7 +86,12 @@ struct PerpetualPositionViewModel {
         )
         self.pnlColor = pnl >= 0 ? .rising : .falling
         if let margin, margin != 0 {
-            self.roe = pnl / margin
+            self.roe = PercentageFormatter.string(
+                from: pnl / margin,
+                format: .pretty,
+                sign: .always,
+                options: .keepOneFractionDigitForZero
+            )
         } else {
             self.roe = nil
         }
@@ -184,7 +189,17 @@ struct PerpetualPositionViewModel {
         )
         self.pnlColor = pnl >= 0 ? .rising : .falling
         if let entryPrice, let closePrice {
-            self.roe = (closePrice / entryPrice - 1) * Decimal(history.leverage)
+            var roe = (closePrice / entryPrice - 1) * Decimal(history.leverage)
+            roe = abs(roe)
+            if pnl < 0 {
+                roe = -roe
+            }
+            self.roe = PercentageFormatter.string(
+                from: roe,
+                format: .pretty,
+                sign: .always,
+                options: .keepOneFractionDigitForZero
+            )
         } else {
             self.roe = nil
         }

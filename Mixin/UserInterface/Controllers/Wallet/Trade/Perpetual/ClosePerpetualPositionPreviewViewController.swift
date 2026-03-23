@@ -49,12 +49,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 format: .precision,
                 sign: .always,
                 symbol: .custom(token.symbol)
-            ) + "(" + PercentageFormatter.string(
-                from: roe,
-                format: .pretty,
-                sign: .always,
-                options: .keepOneFractionDigitForZero
-            ) + ")"
+            ) + " (" + roe + ")"
             pnl.append(NSAttributedString(
                 string: pnlValue,
                 attributes: [

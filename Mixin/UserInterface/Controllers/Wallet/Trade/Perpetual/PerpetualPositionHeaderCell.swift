@@ -29,7 +29,7 @@ final class PerpetualPositionHeaderCell: UICollectionViewCell {
     
     func load(viewModel: PerpetualPositionViewModel) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        switch viewModel.state {
+        switch viewModel.type {
         case .open:
             titleTopConstraint.constant = 15
             directionTopConstraint.constant = 16

@@ -91,7 +91,7 @@ final class AllPerpetualPositionsViewController: UIViewController {
         self.collectionView = collectionView
         collectionView.register(R.nib.perpetualPositionValueCell)
         collectionView.register(R.nib.perpetualMarketCell)
-        collectionView.register(R.nib.perpetualClosedPositionCell)
+        collectionView.register(R.nib.perpetualInactivePositionCell)
         collectionView.register(R.nib.perpetualPlaceholderCell)
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -246,7 +246,7 @@ extension AllPerpetualPositionsViewController: UICollectionViewDataSource {
                     cell.load(viewModel: viewModel)
                     return cell
                 case .closed:
-                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_closed_position, for: indexPath)!
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_inactive_position, for: indexPath)!
                     cell.load(viewModel: viewModel)
                     return cell
                 }

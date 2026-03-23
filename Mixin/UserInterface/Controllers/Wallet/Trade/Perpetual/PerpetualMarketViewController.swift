@@ -186,7 +186,7 @@ final class PerpetualMarketViewController: UIViewController {
         collectionView.register(R.nib.perpetualMarketInfoCell)
         collectionView.register(R.nib.perpetualIntroductionCell)
         collectionView.register(R.nib.perpetualMarketOpenPositionCell)
-        collectionView.register(R.nib.perpetualClosedPositionCell)
+        collectionView.register(R.nib.perpetualInactivePositionCell)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.reloadData()
@@ -308,8 +308,8 @@ final class PerpetualMarketViewController: UIViewController {
         openPosition: PerpetualPositionViewModel?,
         closedPositions: [PerpetualPositionViewModel]
     ) {
-        var actionView: UIView?
-        if let openPosition {
+        let actionViewToAdd: UIView?
+        if let openPosition, openPosition.state != .opening {
             sections = [
                 .price,
                 .openPosition(openPosition),
@@ -319,14 +319,19 @@ final class PerpetualMarketViewController: UIViewController {
                 sections.append(.closedPositions(closedPositions))
             }
             sections.append(.introduction)
-            if !(self.actionView is AuthenticationPreviewSingleButtonTrayView) {
-                let view = AuthenticationPreviewSingleButtonTrayView()
-                view.backgroundColor = R.color.background_secondary()
-                view.button.setTitle(R.string.localizable.close_position(), for: .normal)
-                view.button.addTarget(self, action: #selector(closePosition(_:)), for: .touchUpInside)
-                view.button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 37, bottom: 12, right: 37)
+            let actionView: AuthenticationPreviewSingleButtonTrayView
+            if let view = self.actionView as? AuthenticationPreviewSingleButtonTrayView {
                 actionView = view
+                actionViewToAdd = nil
+                actionView.button.removeTarget(self, action: nil, for: .touchUpInside)
+            } else {
+                actionView = AuthenticationPreviewSingleButtonTrayView()
+                actionViewToAdd = actionView
+                actionView.backgroundColor = R.color.background_secondary()
+                actionView.button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 37, bottom: 12, right: 37)
             }
+            actionView.button.setTitle(R.string.localizable.close_position(), for: .normal)
+            actionView.button.addTarget(self, action: #selector(closePosition(_:)), for: .touchUpInside)
         } else {
             sections = [
                 .price,
@@ -336,15 +341,33 @@ final class PerpetualMarketViewController: UIViewController {
             if !closedPositions.isEmpty {
                 sections.append(.closedPositions(closedPositions))
             }
-            if !(self.actionView is OpenPerpetualActionView) {
-                let view = R.nib.openPerpetualActionView(withOwner: nil)!
-                view.longButton.addTarget(self, action: #selector(openPosition(_:)), for: .touchUpInside)
-                view.shortButton.addTarget(self, action: #selector(openPosition(_:)), for: .touchUpInside)
-                view.isEnabled = true
-                actionView = view
+            if openPosition == nil {
+                if !(self.actionView is OpenPerpetualActionView) {
+                    let view = R.nib.openPerpetualActionView(withOwner: nil)!
+                    view.longButton.addTarget(self, action: #selector(openPosition(_:)), for: .touchUpInside)
+                    view.shortButton.addTarget(self, action: #selector(openPosition(_:)), for: .touchUpInside)
+                    view.isEnabled = true
+                    actionViewToAdd = view
+                } else {
+                    actionViewToAdd = nil
+                }
+            } else {
+                let actionView: AuthenticationPreviewSingleButtonTrayView
+                if let view = self.actionView as? AuthenticationPreviewSingleButtonTrayView {
+                    actionView = view
+                    actionViewToAdd = nil
+                    actionView.button.removeTarget(self, action: nil, for: .touchUpInside)
+                } else {
+                    actionView = AuthenticationPreviewSingleButtonTrayView()
+                    actionViewToAdd = actionView
+                    actionView.backgroundColor = R.color.background_secondary()
+                    actionView.button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 37, bottom: 12, right: 37)
+                }
+                actionView.button.setTitle(R.string.localizable.perp_state_opening(), for: .normal)
+                actionView.button.isEnabled = false
             }
         }
-        if let actionView {
+        if let actionView = actionViewToAdd {
             self.actionView?.removeFromSuperview()
             actionWrapperView.addSubview(actionView)
             actionView.snp.makeEdgesEqualToSuperview()
@@ -416,7 +439,7 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             }
             return cell
         case .closedPositions(let viewModels):
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_closed_position, for: indexPath)!
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_inactive_position, for: indexPath)!
             let viewModel = viewModels[indexPath.item]
             cell.load(viewModel: viewModel)
             return cell

@@ -3,6 +3,10 @@ import GRDB
 
 public class PerpetualPosition: Codable, DatabaseColumnConvertible, MixinFetchableRecord, MixinEncodableRecord {
     
+    public enum State: String {
+        case opening
+    }
+    
     public enum CodingKeys: String, CodingKey {
         case positionID = "position_id"
         case marketID = "market_id"
@@ -31,7 +35,7 @@ public class PerpetualPosition: Codable, DatabaseColumnConvertible, MixinFetchab
     public let entryPrice: String
     public let margin: String
     public let leverage: Int
-    public let state: String
+    public let state: UnknownableEnum<State>
     public let markPrice: String
     public let unrealizedPnL: String
     public let roe: String

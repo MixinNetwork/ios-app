@@ -1133,6 +1133,7 @@
 "permission_denied_photos" = "Adding Photo Denied";
 "permission_denied_photos_hint" = "Mixin doesn't have permission to add photo to your library. Tap Settings to authorize.";
 "permissions" = "Разрешения";
+"perp_state_opening" = "Opening";
 "perpetual" = "Perpetual";
 "perpetual_futures" = "Perpetual Futures";
 "perps_activity" = "Activity";

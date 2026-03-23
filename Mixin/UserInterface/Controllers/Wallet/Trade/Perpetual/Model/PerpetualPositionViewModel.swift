@@ -31,7 +31,7 @@ struct PerpetualPositionViewModel {
     let wallet: Wallet
     let marketID: String
     let positionID: String
-    let state: PerpetualPositionType
+    let type: PerpetualPositionType
     let side: PerpetualOrderSide
     let iconURL: URL?
     let directionWithSymbol: String
@@ -48,6 +48,7 @@ struct PerpetualPositionViewModel {
     let date: String
     
     // Only available for open positions
+    let state: PerpetualPosition.State?
     let margin: String?
     let estimatedReceiving: EstimatedReceiving?
     let liquidationPrice: String?
@@ -67,7 +68,7 @@ struct PerpetualPositionViewModel {
         self.wallet = wallet
         self.marketID = position.marketID
         self.positionID = position.positionID
-        self.state = .open
+        self.type = .open
         self.side = side
         self.iconURL = position.iconURL
         switch side {
@@ -119,6 +120,7 @@ struct PerpetualPositionViewModel {
             position.createdAt
         }
         
+        self.state = position.state.knownCase
         self.margin = if let margin {
             CurrencyFormatter.localizedString(
                 from: margin * Currency.current.decimalRate,
@@ -162,7 +164,7 @@ struct PerpetualPositionViewModel {
         self.wallet = wallet
         self.marketID = history.marketID
         self.positionID = history.positionID
-        self.state = .closed
+        self.type = .closed
         self.side = side
         self.iconURL = history.iconURL
         switch PerpetualOrderSide(rawValue: history.side) {
@@ -216,6 +218,7 @@ struct PerpetualPositionViewModel {
             history.closedAt
         }
         
+        self.state = nil
         self.margin = nil
         self.estimatedReceiving = nil
         self.liquidationPrice = nil

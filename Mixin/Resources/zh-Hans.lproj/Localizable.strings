@@ -1133,6 +1133,7 @@
 "permission_denied_photos" = "授权写入相册";
 "permission_denied_photos_hint" = "Mixin 需要写入相册权限，请点击'设置'并调整授权。";
 "permissions" = "权限列表";
+"perp_state_opening" = "正在处理";
 "perpetual" = "永续合约";
 "perpetual_futures" = "永续合约";
 "perps_activity" = "历史记录";

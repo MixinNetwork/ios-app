@@ -161,7 +161,7 @@ final class TradePerpetualViewController: UIViewController {
         collectionView.register(R.nib.perpetualPositionValueCell)
         collectionView.register(R.nib.perpetualPlaceholderCell)
         collectionView.register(R.nib.perpetualMarketCell)
-        collectionView.register(R.nib.perpetualClosedPositionCell)
+        collectionView.register(R.nib.perpetualInactivePositionCell)
         collectionView.register(R.nib.perpetualIntroductionCell)
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -317,10 +317,17 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             return cell
         case .positions:
             if let openPositions, !openPositions.isEmpty {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
                 let position = openPositions[indexPath.item]
-                cell.load(viewModel: position)
-                return cell
+                switch position.state {
+                case .opening:
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_inactive_position, for: indexPath)!
+                    cell.load(viewModel: position)
+                    return cell
+                default:
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
+                    cell.load(viewModel: position)
+                    return cell
+                }
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_placeholder, for: indexPath)!
                 if openPositions == nil {
@@ -359,7 +366,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             }
         case .activity:
             if let closedPositions, !closedPositions.isEmpty {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_closed_position, for: indexPath)!
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_inactive_position, for: indexPath)!
                 let viewModel = closedPositions[indexPath.item]
                 cell.load(viewModel: viewModel)
                 return cell

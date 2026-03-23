@@ -1470,8 +1470,8 @@
 		94DF6CDE2E4B8C5700808028 /* SequentialWalletPathGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF6CDD2E4B8C5000808028 /* SequentialWalletPathGenerator.swift */; };
 		94DF7D5928DC0F17006E415B /* Acknowledgement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF7D5828DC0F17006E415B /* Acknowledgement.swift */; };
 		94DF7E0E28DC1697006E415B /* AcknowledgementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94DF7E0D28DC1697006E415B /* AcknowledgementViewController.swift */; };
-		94E065B22F5AC9BF0090F1BA /* PerpetualClosedPositionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E065B02F5AC9BF0090F1BA /* PerpetualClosedPositionCell.swift */; };
-		94E065B32F5AC9BF0090F1BA /* PerpetualClosedPositionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E065B12F5AC9BF0090F1BA /* PerpetualClosedPositionCell.xib */; };
+		94E065B22F5AC9BF0090F1BA /* PerpetualInactivePositionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E065B02F5AC9BF0090F1BA /* PerpetualInactivePositionCell.swift */; };
+		94E065B32F5AC9BF0090F1BA /* PerpetualInactivePositionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E065B12F5AC9BF0090F1BA /* PerpetualInactivePositionCell.xib */; };
 		94E066B22F5B156D0090F1BA /* PerpetualLeverage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E066B12F5B15690090F1BA /* PerpetualLeverage.swift */; };
 		94E0BB802EB11B7B0096797E /* SwapPriceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94E0BB7F2EB11B7B0096797E /* SwapPriceCell.xib */; };
 		94E0BB812EB11B7B0096797E /* SwapPriceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E0BB7E2EB11B7B0096797E /* SwapPriceCell.swift */; };
@@ -3338,8 +3338,8 @@
 		94DF6CDD2E4B8C5000808028 /* SequentialWalletPathGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequentialWalletPathGenerator.swift; sourceTree = "<group>"; };
 		94DF7D5828DC0F17006E415B /* Acknowledgement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Acknowledgement.swift; sourceTree = "<group>"; };
 		94DF7E0D28DC1697006E415B /* AcknowledgementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementViewController.swift; sourceTree = "<group>"; };
-		94E065B02F5AC9BF0090F1BA /* PerpetualClosedPositionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualClosedPositionCell.swift; sourceTree = "<group>"; };
-		94E065B12F5AC9BF0090F1BA /* PerpetualClosedPositionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpetualClosedPositionCell.xib; sourceTree = "<group>"; };
+		94E065B02F5AC9BF0090F1BA /* PerpetualInactivePositionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualInactivePositionCell.swift; sourceTree = "<group>"; };
+		94E065B12F5AC9BF0090F1BA /* PerpetualInactivePositionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpetualInactivePositionCell.xib; sourceTree = "<group>"; };
 		94E066B12F5B15690090F1BA /* PerpetualLeverage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualLeverage.swift; sourceTree = "<group>"; };
 		94E0BB7E2EB11B7B0096797E /* SwapPriceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapPriceCell.swift; sourceTree = "<group>"; };
 		94E0BB7F2EB11B7B0096797E /* SwapPriceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwapPriceCell.xib; sourceTree = "<group>"; };
@@ -4594,8 +4594,8 @@
 				940FC4B02F500A8B000C4260 /* PerpetualMarketSelectorViewController.swift */,
 				940FC4BC2F500BEC000C4260 /* PerpetualMarketCell.xib */,
 				940FC4BB2F500BEC000C4260 /* PerpetualMarketCell.swift */,
-				94E065B12F5AC9BF0090F1BA /* PerpetualClosedPositionCell.xib */,
-				94E065B02F5AC9BF0090F1BA /* PerpetualClosedPositionCell.swift */,
+				94E065B12F5AC9BF0090F1BA /* PerpetualInactivePositionCell.xib */,
+				94E065B02F5AC9BF0090F1BA /* PerpetualInactivePositionCell.swift */,
 				94F303382F5816E400FFF858 /* AllPerpetualMarketsViewController.swift */,
 				940FC4F72F502BA2000C4260 /* PerpetualMarketViewController.swift */,
 				941C768B2F5F1FA0005B70A9 /* CandlestickChartView.swift */,
@@ -6880,7 +6880,7 @@
 				940EB0AC2EB0A3D1009B3DAA /* TradeAmountInputCell.xib in Resources */,
 				944C61F42B6BF97B00C7DF06 /* PaymentUserGroupCell.xib in Resources */,
 				944BC2E02C7DB9E9008700A8 /* ExploreGlobalMarketCell.xib in Resources */,
-				94E065B32F5AC9BF0090F1BA /* PerpetualClosedPositionCell.xib in Resources */,
+				94E065B32F5AC9BF0090F1BA /* PerpetualInactivePositionCell.xib in Resources */,
 				94A72CA52C2EBFF9001E8782 /* InscriptionTraitCell.xib in Resources */,
 				9464B2762C81DFBB00588EE6 /* WatchlistEmptyCell.xib in Resources */,
 				7B70D8532457F4F800E01239 /* AnnouncementBadgeContentView.xib in Resources */,
@@ -7494,7 +7494,7 @@
 				9417EF342DC3549C005079CB /* MembershipBenefitCell.swift in Sources */,
 				7C427BC428373F8000FFDE12 /* Wallpaper.swift in Sources */,
 				E090B90F23B0B27F0012C7E9 /* ConversationDAO+Search.swift in Sources */,
-				94E065B22F5AC9BF0090F1BA /* PerpetualClosedPositionCell.swift in Sources */,
+				94E065B22F5AC9BF0090F1BA /* PerpetualInactivePositionCell.swift in Sources */,
 				7BF42E3122DC85E9005066E6 /* GalleryImageItemViewController.swift in Sources */,
 				94F35A602D255B61001BCAE7 /* Invoice.swift in Sources */,
 				940764C529B26B0B00B779A6 /* PropertyListEncoder+Global.swift in Sources */,

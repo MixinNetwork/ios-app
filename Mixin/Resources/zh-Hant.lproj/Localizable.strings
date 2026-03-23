@@ -1133,6 +1133,7 @@
 "permission_denied_photos" = "授權寫入相簿";
 "permission_denied_photos_hint" = "Mixin 需要寫入相簿許可權，請點選'設定'並調整授權。";
 "permissions" = "許可權列表";
+"perp_state_opening" = "正在處理";
 "perpetual" = "永續合約";
 "perpetual_futures" = "永續合約";
 "perps_activity" = "歷史記錄";

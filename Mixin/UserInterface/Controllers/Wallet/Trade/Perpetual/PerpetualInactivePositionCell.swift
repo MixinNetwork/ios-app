@@ -1,6 +1,6 @@
 import UIKit
 
-final class PerpetualClosedPositionCell: UICollectionViewCell {
+final class PerpetualInactivePositionCell: UICollectionViewCell {
     
     @IBOutlet weak var iconView: PlainTokenIconView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -30,16 +30,23 @@ final class PerpetualClosedPositionCell: UICollectionViewCell {
     func load(viewModel: PerpetualPositionViewModel) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
         titleLabel.text = viewModel.directionWithSymbol
-        switch viewModel.side {
-        case .long:
-            leverageLabel.color = .long
-        case .short:
-            leverageLabel.color = .short
-        }
         leverageLabel.text = viewModel.leverageMultiplier
         valueLabel.text = viewModel.orderValueInToken
-        changeLabel.text = viewModel.pnl
-        changeLabel.marketColor = viewModel.pnlColor
+        switch viewModel.type {
+        case .open:
+            leverageLabel.color = .neutral
+            changeLabel.text = R.string.localizable.perp_state_opening()
+            changeLabel.textColor = R.color.text_tertiary()
+        case .closed:
+            switch viewModel.side {
+            case .long:
+                leverageLabel.color = .long
+            case .short:
+                leverageLabel.color = .short
+            }
+            changeLabel.text = viewModel.pnl
+            changeLabel.marketColor = viewModel.pnlColor
+        }
     }
     
 }

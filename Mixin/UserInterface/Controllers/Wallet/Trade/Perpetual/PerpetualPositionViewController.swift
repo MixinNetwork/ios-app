@@ -55,7 +55,7 @@ final class PerpetualPositionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = switch (viewModel.state, viewModel.side) {
+        title = switch (viewModel.type, viewModel.side) {
         case (.open, .long):
             R.string.localizable.opened_long()
         case (.open, .short):

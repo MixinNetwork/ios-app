@@ -23,25 +23,35 @@ public struct CurrencyFormatter {
         case custom(String)
     }
     
-    static let precisionFormatter: NumberFormatter = {
+    private static let precisionFormatterLock = NSLock()
+    private static let precisionFormatter: NumberFormatter = {
         let formatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 8, roundingMode: .down, locale: .current)
         formatter.locale = .current
         return formatter
     }()
     
-    static let prettyFormatter: NumberFormatter = {
+    private static let prettyFormatterLock = NSLock()
+    private static let prettyFormatter: NumberFormatter = {
         let formatter = NumberFormatter(numberStyle: .decimal, roundingMode: .down, locale: .current)
         formatter.locale = .current
         return formatter
     }()
     
-    static let fiatMoneyFormatter: NumberFormatter = {
+    private static let fiatMoneyFormatterLock = NSLock()
+    private static let fiatMoneyFormatter: NumberFormatter = {
         let formatter = NumberFormatter(numberStyle: .decimal, maximumFractionDigits: 2, roundingMode: .down, locale: .current)
         formatter.locale = .current
         return formatter
     }()
     
-    static let roundToIntegerBehavior = NSDecimalNumberHandler(roundingMode: .down, scale: 0, raiseOnExactness: false, raiseOnOverflow: false, raiseOnUnderflow: false, raiseOnDivideByZero: false)
+    private static let roundToIntegerBehavior = NSDecimalNumberHandler(
+        roundingMode: .down,
+        scale: 0,
+        raiseOnExactness: false,
+        raiseOnOverflow: false,
+        raiseOnUnderflow: false,
+        raiseOnDivideByZero: false
+    )
     
     public static func localizedString(from string: String?, locale: Locale = .us, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
         guard let string = string, let decimal = Decimal(string: string, locale: locale), decimal.isZero || decimal.isNormal else {
@@ -56,10 +66,6 @@ public struct CurrencyFormatter {
         }
         
         return "≈ " + Currency.current.symbol + value
-    }
-    
-    public static func estimatedFiatMoneyValue(amount: Decimal) -> String {
-        "≈ " + Currency.current.symbol + CurrencyFormatter.localizedString(from: amount, format: .fiatMoney, sign: .never)
     }
     
     public static func localizedString(from number: Double, format: Format, sign: SignBehavior, symbol: Symbol? = nil) -> String? {
@@ -79,11 +85,15 @@ public struct CurrencyFormatter {
         
         var str: String
         
+        let lock: NSLock
         switch format {
         case .precision:
+            precisionFormatterLock.lock()
             precisionFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
             str = precisionFormatter.string(from: number) ?? ""
+            precisionFormatterLock.unlock()
         case .pretty:
+            prettyFormatterLock.lock()
             prettyFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
             let numberOfFractionalDigits = decimal.numberOfSignificantFractionalDigits
             let integralPart = number.rounding(accordingToBehavior: roundToIntegerBehavior).doubleValue
@@ -96,16 +106,23 @@ public struct CurrencyFormatter {
                 prettyFormatter.maximumFractionDigits = 0
             }
             str = prettyFormatter.string(from: number) ?? ""
+            prettyFormatterLock.unlock()
         case .fiatMoney:
+            fiatMoneyFormatterLock.lock()
             fiatMoneyFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
             str = fiatMoneyFormatter.string(from: number) ?? ""
+            fiatMoneyFormatterLock.unlock()
         case .fiatMoneyPrice:
             if abs(decimal) < 1 {
+                precisionFormatterLock.lock()
                 precisionFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
                 str = precisionFormatter.string(from: number) ?? ""
+                precisionFormatterLock.unlock()
             } else {
+                fiatMoneyFormatterLock.lock()
                 fiatMoneyFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
                 str = fiatMoneyFormatter.string(from: number) ?? ""
+                fiatMoneyFormatterLock.unlock()
             }
         }
         

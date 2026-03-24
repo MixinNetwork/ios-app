@@ -16,12 +16,16 @@ public final class PerpsMarketDAO: PerpsDAO {
     }
     
     public func replace(markets: [PerpetualMarket]) {
-        db.save(markets) { _ in
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(
-                    name: Self.marketsDidUpdateNotification,
-                    object: self
-                )
+        db.write { db in
+            try db.execute(sql: "DELETE FROM markets")
+            try markets.save(db)
+            db.afterNextTransaction { _ in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(
+                        name: Self.marketsDidUpdateNotification,
+                        object: self
+                    )
+                }
             }
         }
     }

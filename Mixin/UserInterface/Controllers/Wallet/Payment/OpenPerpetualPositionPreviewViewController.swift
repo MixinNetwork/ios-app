@@ -94,7 +94,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         canDismissInteractively = false
         tableHeaderView.setIcon(progress: .busy)
         layoutTableHeaderView(
-            title: R.string.localizable.opening_position(),
+            title: R.string.localizable.submitting_position(),
             subtitle: R.string.localizable.signature_request_from(.mixin)
         )
         replaceTrayView(with: nil, animation: .vertical)

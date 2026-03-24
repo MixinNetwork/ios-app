@@ -1083,7 +1083,6 @@
 "opened_long" = "Opened Long";
 "opened_short" = "Opened Short";
 "opening_balance" = "Opening Balance";
-"opening_position" = "Opening Position";
 "operation_failed" = "Операция не удалась, повторите попытку позже";
 "opponents" = "Opponents";
 "optimize_database" = "Оптимизировать базу данных";
@@ -1566,6 +1565,7 @@
 "stop_playing_this_list" = "Прекратить воспроизведение этого списка?";
 "storage_usage" = "Использование хранилища";
 "stranger_hint" = "Этого отправителя нет в ваших контактах";
+"submitting_position" = "Submitting Position";
 "successful" = "Успешный";
 "suspicious_link" = "Подозрительная ссылка";
 "swap_confirmation" = "Swap Confirmation";

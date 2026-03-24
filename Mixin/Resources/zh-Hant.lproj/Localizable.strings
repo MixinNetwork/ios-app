@@ -1083,7 +1083,6 @@
 "opened_long" = "持有多單";
 "opened_short" = "持有空單";
 "opening_balance" = "期初餘額";
-"opening_position" = "正在開倉";
 "operation_failed" = "操作失敗，請稍後重試";
 "opponents" = "收發人";
 "optimize_database" = "最佳化查詢索引";
@@ -1566,6 +1565,7 @@
 "stop_playing_this_list" = "確定要停止並關閉播放列表？";
 "storage_usage" = "儲存空間";
 "stranger_hint" = "對方不是你的聯絡人";
+"submitting_position" = "正在提交倉位";
 "successful" = "成功";
 "suspicious_link" = "可疑連結";
 "swap_confirmation" = "確認交易";

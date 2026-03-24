@@ -1083,7 +1083,6 @@
 "opened_long" = "Opened Long";
 "opened_short" = "Opened Short";
 "opening_balance" = "Opening Balance";
-"opening_position" = "Opening Position";
 "operation_failed" = "操作が失敗しました。しばらくしてからもう一度お試しください";
 "opponents" = "Opponents";
 "optimize_database" = "データベースの最適化";
@@ -1566,6 +1565,7 @@
 "stop_playing_this_list" = "再生を止めて、プレイリストを閉じますか？";
 "storage_usage" = "ストレージ使用率";
 "stranger_hint" = "連絡先にない相手からのメッセージです";
+"submitting_position" = "Submitting Position";
 "successful" = "成功";
 "suspicious_link" = "不審なリンクです";
 "swap_confirmation" = "Swap Confirmation";

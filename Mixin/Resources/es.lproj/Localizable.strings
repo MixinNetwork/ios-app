@@ -1083,7 +1083,6 @@
 "opened_long" = "Opened Long";
 "opened_short" = "Opened Short";
 "opening_balance" = "Opening Balance";
-"opening_position" = "Opening Position";
 "operation_failed" = "La operación ha fallado, intenta nuevamente más tarde";
 "opponents" = "Opponents";
 "optimize_database" = "Optimizar base de datos";
@@ -1566,6 +1565,7 @@
 "stop_playing_this_list" = "¿Dejar de reproducir esta lista?";
 "storage_usage" = "Uso de almacenamiento";
 "stranger_hint" = "Este remitente no está en tus contactos";
+"submitting_position" = "Submitting Position";
 "successful" = "Exitoso";
 "suspicious_link" = "Enlace sospechoso";
 "swap_confirmation" = "Swap Confirmation";

@@ -1083,7 +1083,6 @@
 "opened_long" = "持有多单";
 "opened_short" = "持有空单";
 "opening_balance" = "期初余额";
-"opening_position" = "正在开仓";
 "operation_failed" = "操作失败，请稍后重试";
 "opponents" = "收发人";
 "optimize_database" = "优化查询索引";
@@ -1566,6 +1565,7 @@
 "stop_playing_this_list" = "确定要停止并关闭播放列表？";
 "storage_usage" = "储存空间";
 "stranger_hint" = "对方不是你的联系人";
+"submitting_position" = "正在提交仓位";
 "successful" = "成功";
 "suspicious_link" = "可疑链接";
 "swap_confirmation" = "确认交易";

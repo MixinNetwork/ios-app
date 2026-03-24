@@ -11,6 +11,10 @@ struct PerpsManualLongPositionProfitView: View {
     @Binding var margin: Decimal
     @Binding var leverageMultiplier: Decimal
     
+    private var changeColor: MarketColor {
+        change >= 0 ? .rising : .falling
+    }
+    
     private var pnl: String {
         let multipliedChange = change * leverageMultiplier
         return CurrencyFormatter.localizedString(
@@ -30,11 +34,11 @@ struct PerpsManualLongPositionProfitView: View {
             Text(title)
                 .modifier(ManualText(.caption1))
             HStack {
-                Text(R.string.localizable.example_price_increased())
+                Text(R.string.localizable.example_price_change())
                     .modifier(ManualText(.caption2))
                 Spacer()
-                Text(PercentageFormatter.string(from: change, format: .pretty, sign: .never))
-                    .modifier(ManualText(.subheading(R.color.text()!)))
+                Text(PercentageFormatter.string(from: change, format: .pretty, sign: .always))
+                    .modifier(ManualText(.subheading(changeColor.uiColor)))
             }
             HStack {
                 Text(R.string.localizable.pnl())

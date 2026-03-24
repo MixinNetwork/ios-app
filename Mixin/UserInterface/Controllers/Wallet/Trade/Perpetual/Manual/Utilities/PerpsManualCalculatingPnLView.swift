@@ -19,6 +19,10 @@ struct PerpsManualCalculatingPnLView: View {
     @State
     var change: Decimal = 0.1
     
+    private var changeColor: MarketColor {
+        change >= 0 ? .rising : .falling
+    }
+    
     private var canDecrease: Bool {
         if change > 0 {
             change > changeStep
@@ -54,7 +58,7 @@ struct PerpsManualCalculatingPnLView: View {
     }
     
     private var pnlColor: MarketColor {
-        pnlPercentage > 0 ? .rising : .falling
+        pnlPercentage >= 0 ? .rising : .falling
     }
     
     private var displayPnL: String {
@@ -83,10 +87,10 @@ struct PerpsManualCalculatingPnLView: View {
                 .modifier(ManualText(.caption1))
             HStack {
                 if change >= 0 {
-                    Text(R.string.localizable.example_price_increased())
+                    Text(R.string.localizable.example_price_change())
                         .modifier(ManualText(.caption2))
                 } else {
-                    Text(R.string.localizable.example_price_decreased())
+                    Text(R.string.localizable.example_price_change())
                         .modifier(ManualText(.caption2))
                 }
                 Spacer()
@@ -105,8 +109,8 @@ struct PerpsManualCalculatingPnLView: View {
                     }
                     .disabled(!canDecrease)
                     
-                    Text(PercentageFormatter.string(from: change, format: .pretty, sign: .never))
-                        .modifier(ManualText(.subheading(R.color.text()!), monospacedDigit: true))
+                    Text(PercentageFormatter.string(from: change, format: .pretty, sign: .always))
+                        .modifier(ManualText(.subheading(changeColor.uiColor), monospacedDigit: true))
                     
                     Button {
                         guard canIncrease else {

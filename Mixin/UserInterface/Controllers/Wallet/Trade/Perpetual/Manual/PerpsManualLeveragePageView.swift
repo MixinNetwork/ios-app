@@ -17,7 +17,7 @@ struct PerpsManualLeveragePageView: View {
                     
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
-                            Text(R.string.localizable.example_perpetual())
+                            Text(R.string.localizable.example_market())
                                 .modifier(ManualText(.caption2))
                             Spacer()
                             Image(R.image.solana_chain)
@@ -112,7 +112,7 @@ struct PerpsManualLeveragePageView: View {
                     Spacer()
                         .frame(height: 12)
                     
-                    Text(R.string.localizable.impact_on_pnl())
+                    Text(R.string.localizable.pnl())
                         .modifier(ManualText(.subheading(R.color.text()!)))
                     Spacer()
                         .frame(height: 4)
@@ -128,7 +128,8 @@ struct PerpsManualLeveragePageView: View {
                     Spacer()
                         .frame(height: 4)
                     BulletinText([
-                        R.string.localizable.perps_leverage_risk_notice(),
+                        R.string.localizable.perps_leverage_risk_notice_1(),
+                        R.string.localizable.perps_leverage_risk_notice_2(),
                     ])
                 }
                 .padding(PerpsManual.cardInsets)

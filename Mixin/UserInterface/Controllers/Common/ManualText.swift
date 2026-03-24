@@ -48,9 +48,11 @@ struct ManualText: ViewModifier {
         if monospacedDigit {
             content.font(.system(size: size, weight: weight).monospacedDigit())
                 .foregroundColor(Color(color))
+                .lineSpacing(4)
         } else {
             content.font(.system(size: size, weight: weight))
                 .foregroundColor(Color(color))
+                .lineSpacing(4)
         }
     }
     

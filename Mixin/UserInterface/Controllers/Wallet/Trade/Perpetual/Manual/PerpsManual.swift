@@ -40,7 +40,7 @@ enum PerpsManual {
             pages: pages,
             initialIndex: initialPage.rawValue
         )
-        manual.title = R.string.localizable.perpetual_futures()
+        manual.title = R.string.localizable.perpetual_futures_guide()
         return manual
     }
     

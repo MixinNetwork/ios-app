@@ -20,7 +20,7 @@ struct PerpsManualPositionSizePageView: View {
                     
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
-                            Text(R.string.localizable.example_perpetual())
+                            Text(R.string.localizable.example_market())
                                 .modifier(ManualText(.caption2))
                             Spacer()
                             Image(R.image.solana_chain)
@@ -142,24 +142,13 @@ struct PerpsManualPositionSizePageView: View {
                     Spacer()
                         .frame(height: 12)
                     
-                    Text(R.string.localizable.purpose())
+                    Text(R.string.localizable.pnl())
                         .modifier(ManualText(.subheading(R.color.text()!)))
                     Spacer()
                         .frame(height: 4)
                     BulletinText([
-                        R.string.localizable.perps_position_size_purpose_1(),
-                        R.string.localizable.perps_position_size_purpose_2(),
-                    ])
-                    Spacer()
-                        .frame(height: 12)
-                    
-                    Text(R.string.localizable.risk_notice())
-                        .modifier(ManualText(.subheading(R.color.text()!)))
-                    Spacer()
-                        .frame(height: 4)
-                    BulletinText([
-                        R.string.localizable.perps_position_size_risk_1(),
-                        R.string.localizable.perps_position_size_risk_2(),
+                        R.string.localizable.perps_position_size_pnl_1(),
+                        R.string.localizable.perps_position_size_pnl_2(),
                     ])
                 }
                 .padding(PerpsManual.cardInsets)

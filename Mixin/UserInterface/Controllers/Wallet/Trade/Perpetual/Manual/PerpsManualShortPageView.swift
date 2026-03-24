@@ -17,7 +17,7 @@ struct PerpsManualShortPageView: View {
                     
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
-                            Text(R.string.localizable.example_perpetual())
+                            Text(R.string.localizable.example_market())
                                 .modifier(ManualText(.caption2))
                             Spacer()
                             Image(R.image.ethereum_chain)
@@ -102,7 +102,7 @@ struct PerpsManualShortPageView: View {
                     Spacer()
                         .frame(height: 12)
                     
-                    Text(R.string.localizable.pnl_rules())
+                    Text(R.string.localizable.pnl())
                         .modifier(ManualText(.subheading(R.color.text()!)))
                     Spacer()
                         .frame(height: 4)

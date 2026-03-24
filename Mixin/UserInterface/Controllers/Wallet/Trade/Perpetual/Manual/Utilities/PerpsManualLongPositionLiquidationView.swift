@@ -12,9 +12,9 @@ struct PerpsManualLongPositionLiquidationView: View {
     
     private var change: String {
         PercentageFormatter.string(
-            from: 1 / leverageMultiplier,
+            from: -1 / leverageMultiplier,
             format: .pretty,
-            sign: .never
+            sign: .always
         )
     }
     
@@ -32,18 +32,18 @@ struct PerpsManualLongPositionLiquidationView: View {
             Text(title)
                 .modifier(ManualText(.caption1))
             HStack {
-                Text(R.string.localizable.example_price_decreased())
+                Text(R.string.localizable.example_price_change())
                     .modifier(ManualText(.caption2))
                 Spacer()
                 Text(change)
-                    .modifier(ManualText(.subheading(R.color.text()!)))
+                    .modifier(ManualText(.subheading(MarketColor.falling.uiColor)))
             }
             HStack {
                 Text(R.string.localizable.pnl())
                     .modifier(ManualText(.caption2))
                 Spacer()
                 Text(loss)
-                    .modifier(ManualText(.subheading(MarketColor.falling.uiColor), monospacedDigit: true))
+                    .modifier(ManualText(.subheading(MarketColor.falling.uiColor)))
             }
         }
     }

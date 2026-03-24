@@ -211,7 +211,7 @@
 "bot_not_found" = "ミニアプリが見つかりません";
 "bots" = "ミニアプリ";
 "bots_title" = "Myミニアプリ一覧";
-"brief_introduction" = "Introduction";
+"brief_introduction" = "Intro";
 "browser" = "Browser";
 "btc_tx_already_speedy" = "Current fee rate is already sufficient; acceleration is meaningless.";
 "buy" = "Buy";

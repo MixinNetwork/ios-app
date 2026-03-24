@@ -211,7 +211,7 @@
 "bot_not_found" = "Bot not found";
 "bots" = "BOTS";
 "bots_title" = "Bots";
-"brief_introduction" = "Introduction";
+"brief_introduction" = "Intro";
 "browser" = "Browser";
 "btc_tx_already_speedy" = "Current fee rate is already sufficient; acceleration is meaningless.";
 "buy" = "Buy";

@@ -53,6 +53,8 @@ final class ManualViewController: UIViewController {
             make.height.equalTo(70)
         }
         titleView.titleLabel.text = title
+        titleView.titleLabel.minimumScaleFactor = 0.5
+        titleView.titleLabel.adjustsFontSizeToFitWidth = true
         self.titleView = titleView
         titleView.closeButton.addTarget(self, action: #selector(close(_:)), for: .touchUpInside)
         

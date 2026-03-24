@@ -39,6 +39,7 @@ struct PerpetualPositionViewModel {
     let pnl: String
     let pnlColor: MarketColor
     let roe: String?
+    let pnlWithROE: String
     let actions: [Action]
     let displaySymbol: String?
     let quantity: String
@@ -64,6 +65,12 @@ struct PerpetualPositionViewModel {
         let multiplier = PerpetualLeverage.stringRepresentation(multiplier: position.leverage)
         let side = PerpetualOrderSide(rawValue: position.side) ?? .short
         let margin = Decimal(string: position.margin, locale: .enUSPOSIX)
+        let localizedPnL = CurrencyFormatter.localizedString(
+            from: pnl * Currency.current.decimalRate,
+            format: .fiatMoneyValue,
+            sign: .always,
+            symbol: .currencySymbol
+        )
         
         self.wallet = wallet
         self.marketID = position.marketID
@@ -78,22 +85,20 @@ struct PerpetualPositionViewModel {
             self.directionWithSymbol = R.string.localizable.short_asset(position.tokenSymbol)
         }
         self.leverageMultiplier = multiplier
-        self.pnl = CurrencyFormatter.localizedString(
-            from: pnl * Currency.current.decimalRate,
-            format: .fiatMoneyValue,
-            sign: .always,
-            symbol: .currencySymbol
-        )
+        self.pnl = localizedPnL
         self.pnlColor = pnl >= 0 ? .rising : .falling
         if let margin, margin != 0 {
-            self.roe = PercentageFormatter.string(
+            let roe = PercentageFormatter.string(
                 from: pnl / margin,
                 format: .pretty,
                 sign: .always,
                 options: .keepOneFractionDigitForZero
             )
+            self.roe = roe
+            self.pnlWithROE = localizedPnL + " (" + roe + ")"
         } else {
             self.roe = nil
+            self.pnlWithROE = localizedPnL
         }
         self.actions = [.close, .share]
         self.displaySymbol = position.displaySymbol
@@ -165,6 +170,12 @@ struct PerpetualPositionViewModel {
         let closePrice = Decimal(string: history.closePrice, locale: .enUSPOSIX)
         let pnl = Decimal(string: history.realizedPnL, locale: .enUSPOSIX) ?? 0
         let leverage = PerpetualLeverage.stringRepresentation(multiplier: history.leverage)
+        let localizedPnL = CurrencyFormatter.localizedString(
+            from: pnl * Currency.current.decimalRate,
+            format: .fiatMoneyValue,
+            sign: .always,
+            symbol: .currencySymbol
+        )
         
         self.wallet = wallet
         self.marketID = history.marketID
@@ -181,12 +192,7 @@ struct PerpetualPositionViewModel {
             self.directionWithSymbol = "\(history.side) \(history.tokenSymbol)"
         }
         self.leverageMultiplier = leverage
-        self.pnl = CurrencyFormatter.localizedString(
-            from: pnl * Currency.current.decimalRate,
-            format: .fiatMoneyValue,
-            sign: .always,
-            symbol: .currencySymbol
-        )
+        self.pnl = localizedPnL
         self.pnlColor = pnl >= 0 ? .rising : .falling
         if let entryPrice, let closePrice {
             var roe = (closePrice / entryPrice - 1) * Decimal(history.leverage)
@@ -194,14 +200,17 @@ struct PerpetualPositionViewModel {
             if pnl < 0 {
                 roe = -roe
             }
-            self.roe = PercentageFormatter.string(
+            let localizedROE = PercentageFormatter.string(
                 from: roe,
                 format: .pretty,
                 sign: .always,
                 options: .keepOneFractionDigitForZero
             )
+            self.roe = localizedROE
+            self.pnlWithROE = localizedPnL + " (" + localizedROE + ")"
         } else {
             self.roe = nil
+            self.pnlWithROE = localizedPnL
         }
         self.actions = [.tradeAgain, .share]
         self.displaySymbol = history.displaySymbol

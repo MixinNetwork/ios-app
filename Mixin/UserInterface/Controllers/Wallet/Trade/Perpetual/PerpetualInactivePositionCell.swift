@@ -44,11 +44,7 @@ final class PerpetualInactivePositionCell: UICollectionViewCell {
             case .short:
                 leverageLabel.color = .short
             }
-            if let roe = viewModel.roe {
-                changeLabel.text = viewModel.pnl + " (" + roe + ")"
-            } else {
-                changeLabel.text = viewModel.pnl 
-            }
+            changeLabel.text = viewModel.pnlWithROE
             changeLabel.marketColor = viewModel.pnlColor
         }
     }

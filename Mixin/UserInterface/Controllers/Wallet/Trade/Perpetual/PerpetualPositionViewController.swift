@@ -21,18 +21,12 @@ final class PerpetualPositionViewController: UIViewController {
     private let infos: [Info]
     
     init(wallet: Wallet, viewModel: PerpetualPositionViewModel) {
-        let pnl = if let roe = viewModel.roe {
-            viewModel.pnl + " (" + roe + ")"
-        } else {
-            viewModel.pnl
-        }
-        
         var infos: [Info] = []
         if let displaySymbol = viewModel.displaySymbol {
             infos.append(.product(iconURL: viewModel.iconURL, name: displaySymbol))
         }
         infos.append(contentsOf: [
-            .pnl(value: pnl, color: viewModel.pnlColor),
+            .pnl(value: viewModel.pnlWithROE, color: viewModel.pnlColor),
             .general(
                 title: R.string.localizable.entry_price().uppercased(),
                 content: viewModel.entryPrice

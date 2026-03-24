@@ -68,7 +68,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     func load(viewModel: PerpetualPositionViewModel) {
         titleLabel.text = R.string.localizable.position()
         pnlTitleLabel.text = R.string.localizable.pnl().uppercased()
-        pnlContentLabel.text = viewModel.pnl
+        pnlContentLabel.text = viewModel.pnlWithROE
         pnlContentLabel.marketColor = viewModel.pnlColor
         directionTitleLabel.text = R.string.localizable.direction().uppercased()
         switch viewModel.side {

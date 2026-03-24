@@ -12,6 +12,10 @@ final class PerpetualPositionValueCell: UICollectionViewCell {
         super.awakeFromNib()
         contentView.layer.cornerRadius = 8
         contentView.layer.masksToBounds = true
+        valueLabel.setFont(
+            scaledFor: .systemFont(ofSize: 18, weight: .medium),
+            adjustForContentSize: true
+        )
     }
     
     func loadOpenPositions(value: PerpetualPositionValue?) {

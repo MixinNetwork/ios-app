@@ -44,10 +44,9 @@ final class PerpetualMarketSelectorViewController: TokenSelectorViewController {
             }
         collectionView.register(R.nib.perpetualMarketCell)
         collectionView.collectionViewLayout = UICollectionViewCompositionalLayout { (_, _) in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(50))
-            let group: NSCollectionLayoutGroup = .horizontal(layoutSize: groupSize, subitems: [item])
+            let group: NSCollectionLayoutGroup = .horizontal(layoutSize: itemSize, subitems: [item])
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = 20
             section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 0)

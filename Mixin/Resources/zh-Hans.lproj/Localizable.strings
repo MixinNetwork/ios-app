@@ -1197,10 +1197,10 @@
 "position_closed" = "平仓成功";
 "position_closed_description" = "您的平仓已成功。";
 "position_closing_failed" = "平仓失败";
-"position_opened" = "开仓成功";
-"position_opened_description" = "您的开仓已成功。";
 "position_opening_failed" = "开仓失败";
 "position_size" = "仓位规模";
+"position_submitted" = "仓位已提交";
+"position_submitted_description" = "您的仓位已经成功提交。";
 "positions" = "仓位";
 "positions_count" = "仓位(%d)";
 "post" = "文章";

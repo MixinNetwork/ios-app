@@ -1197,10 +1197,10 @@
 "position_closed" = "Position Closed";
 "position_closed_description" = "You have closed a position.";
 "position_closing_failed" = "Closing Failed";
-"position_opened" = "Position Opened";
-"position_opened_description" = "You have opened a position.";
 "position_opening_failed" = "Opening Failed";
 "position_size" = "Size";
+"position_submitted" = "Position Submitted";
+"position_submitted_description" = "You have submitted a position.";
 "positions" = "Positions";
 "positions_count" = "Positions(%d)";
 "post" = "Post";

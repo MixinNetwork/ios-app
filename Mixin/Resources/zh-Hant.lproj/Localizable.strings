@@ -1197,10 +1197,10 @@
 "position_closed" = "平倉成功";
 "position_closed_description" = "您的平倉已成功。";
 "position_closing_failed" = "平倉失敗";
-"position_opened" = "開倉成功";
-"position_opened_description" = "您的開倉已成功。";
 "position_opening_failed" = "開倉失敗";
 "position_size" = "倉位規模";
+"position_submitted" = "倉位已提交";
+"position_submitted_description" = "您的倉位已經成功提交。";
 "positions" = "倉位";
 "positions_count" = "倉位(%d)";
 "post" = "文章";

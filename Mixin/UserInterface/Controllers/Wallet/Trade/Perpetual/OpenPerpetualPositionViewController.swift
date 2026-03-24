@@ -25,6 +25,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
     @IBOutlet weak var marginTokenSymbolLabel: UILabel!
     @IBOutlet weak var marginTokenFooterStackView: UIStackView!
     @IBOutlet weak var marginTokenBalanceButton: UIButton!
+    @IBOutlet weak var marginTokenDepositButton: UIButton!
     @IBOutlet weak var marginTokenNameLabel: UILabel!
     @IBOutlet weak var marginLoadingView: ActivityIndicatorView!
     
@@ -60,6 +61,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
     private var marginToken: MixinTokenItem? {
         didSet {
             guard let token = marginToken else {
+                marginTokenDepositButton.isHidden = true
                 marginAmountTextField.inputAccessoryView = nil
                 return
             }
@@ -78,6 +80,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
                     return attributes
                 }()
             )
+            marginTokenDepositButton.isHidden = token.decimalBalance > 0
             marginTokenNameLabel.text = token.name
             if marginAmountTextField.inputAccessoryView == nil {
                 let accessoryView = TradeInputAccessoryView(
@@ -172,7 +175,14 @@ final class OpenPerpetualPositionViewController: UIViewController {
         marginView.layer.masksToBounds = true
         marginContentStackView.setCustomSpacing(0, after: marginTokenSelectorStackView)
         marginTitleLabel.text = R.string.localizable.amount()
+        marginTokenFooterStackView.setCustomSpacing(0, after: marginTokenBalanceButton)
         marginTokenBalanceButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        marginTokenDepositButton.configuration?.attributedTitle = {
+            var attributes = AttributeContainer()
+            attributes.font = UIFont.preferredFont(forTextStyle: .caption1)
+            return AttributedString(R.string.localizable.add(), attributes: attributes)
+        }()
+        marginTokenDepositButton.titleLabel?.adjustsFontForContentSizeCategory = true
         marginLoadingView.startAnimating()
         
         leverageView.layer.cornerRadius = 8
@@ -252,6 +262,15 @@ final class OpenPerpetualPositionViewController: UIViewController {
     
     @IBAction func inputTokenBalance(_ sender: Any) {
         inputAmount(withBalanceMultipliedBy: 1)
+    }
+    
+    @IBAction func depositMarginToken(_ sender: Any) {
+        guard let marginToken else {
+            return
+        }
+        let selector = AddTokenMethodSelectorViewController(token: marginToken)
+        selector.delegate = self
+        present(selector, animated: true)
     }
     
     @IBAction func presentManual(_ sender: Any) {
@@ -584,6 +603,45 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
             inputLeverageMultiplier(value: viewModel.maxLeverageMultiplier)
         case .custom:
             break
+        }
+    }
+    
+}
+
+extension OpenPerpetualPositionViewController: AddTokenMethodSelectorViewController.Delegate {
+    
+    func addTokenMethodSelectorViewController(
+        _ viewController: AddTokenMethodSelectorViewController,
+        didPickMethod method: AddTokenMethodSelectorViewController.Method
+    ) {
+        guard let token = marginToken, let navigationController else {
+            return
+        }
+        switch method {
+        case .trade:
+            var viewControllers = navigationController.viewControllers
+            let index = viewControllers.firstIndex { viewController in
+                viewController is TradeViewController
+                || viewController is PerpetualMarketViewController
+            }
+            if let index {
+                let count = viewControllers.count - index
+                viewControllers.removeLast(count)
+            }
+            let trade = TradeViewController(
+                wallet: .privacy,
+                trading: .simpleSpot,
+                sendAssetID: nil,
+                receiveAssetID: token.assetID,
+                referral: nil
+            )
+            if let trade {
+                viewControllers.append(trade)
+                navigationController.setViewControllers(viewControllers, animated: true)
+            }
+        case .deposit:
+            let deposit = DepositViewController(token: token, switchingBetweenNetworks: false)
+            navigationController.pushViewController(replacingCurrent: deposit, animated: true)
         }
     }
     

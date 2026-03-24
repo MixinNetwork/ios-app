@@ -28,6 +28,7 @@
                 <outlet property="marginNetworkLabel" destination="Re5-SQ-jHm" id="9iz-7n-GVb"/>
                 <outlet property="marginTitleLabel" destination="7sY-zd-uFL" id="7WS-ae-G9L"/>
                 <outlet property="marginTokenBalanceButton" destination="3ZP-qA-KNh" id="Nyz-ls-ZQO"/>
+                <outlet property="marginTokenDepositButton" destination="3VU-hr-SaE" id="svr-2B-jSU"/>
                 <outlet property="marginTokenFooterStackView" destination="VFF-4J-x7Q" id="H1B-Lr-8Sl"/>
                 <outlet property="marginTokenIconView" destination="zUY-Pv-9B5" id="QQF-iw-HW8"/>
                 <outlet property="marginTokenNameLabel" destination="yh5-1L-Izi" id="9ag-8j-aZU"/>
@@ -177,8 +178,9 @@
                                                                 <action selector="inputTokenBalance:" destination="-1" eventType="touchUpInside" id="Zgc-hG-khK"/>
                                                             </connections>
                                                         </button>
-                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3VU-hr-SaE" customClass="BusyButton" customModule="Mixin" customModuleProvider="target">
+                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3VU-hr-SaE">
                                                             <rect key="frame" x="19" y="0.0" width="0.0" height="36"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="tintColor" name="theme"/>
                                                             <inset key="contentEdgeInsets" minX="12" minY="10" maxX="12" maxY="10"/>
@@ -186,10 +188,13 @@
                                                             <state key="normal" title="Deposit">
                                                                 <color key="titleColor" name="theme"/>
                                                             </state>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="boolean" keyPath="adjustsFontForContentSizeCategory" value="YES"/>
-                                                                <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="deposit"/>
-                                                            </userDefinedRuntimeAttributes>
+                                                            <buttonConfiguration key="configuration" style="plain" title="Deposit">
+                                                                <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
+                                                                <color key="baseForegroundColor" name="theme"/>
+                                                            </buttonConfiguration>
+                                                            <connections>
+                                                                <action selector="depositMarginToken:" destination="-1" eventType="touchUpInside" id="n9u-c2-gJd"/>
+                                                            </connections>
                                                         </button>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yh5-1L-Izi">
                                                             <rect key="frame" x="22" y="0.0" width="299" height="36"/>

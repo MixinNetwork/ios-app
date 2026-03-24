@@ -1629,6 +1629,7 @@
 "trade_expiry_never" = "Never";
 "trade_filled" = "Filled";
 "trade_native_tokens" = "Trade thousands of native tokens";
+"trade_order_pending" = "Pending";
 "trade_simple" = "Simple";
 "transaction" = "Transacción";
 "transaction_approved" = "Transaction Approved";

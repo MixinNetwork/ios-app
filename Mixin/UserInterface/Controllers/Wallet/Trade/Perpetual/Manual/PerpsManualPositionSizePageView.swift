@@ -20,7 +20,7 @@ struct PerpsManualPositionSizePageView: View {
                     
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
-                            Text(R.string.localizable.example_market())
+                            Text(R.string.localizable.perps_product())
                                 .modifier(ManualText(.caption2))
                             Spacer()
                             Image(R.image.solana_chain)

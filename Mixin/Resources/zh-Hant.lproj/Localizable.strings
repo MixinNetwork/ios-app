@@ -645,7 +645,6 @@
 "example_amount" = "金額";
 "example_direction" = "方向";
 "example_leverage_multiplier" = "槓桿";
-"example_market" = "合約";
 "example_price_change" = "價格變化";
 "example_scene1_falls" = "場景一：價格下跌";
 "example_scene1_rises" = "場景一：價格上漲";
@@ -1148,6 +1147,7 @@
 "perps_position_size_overview" = "當前合約的倉位規模由「金額 × 槓桿」計算得出，表示本次交易所控制的資產規模。";
 "perps_position_size_pnl_1" = "倉位越大，盈虧金額越大";
 "perps_position_size_pnl_2" = "倉位越小，盈虧金額越小";
+"perps_product" = "合約";
 "perps_short_overview" = "做空是指在預期價格下跌時建立倉位，價格下跌可獲得盈利，價格上漲則產生虧損。";
 "phone_as_key_shard" = "手機號將關聯到由您管理的 MPC 錢包的一個金鑰分片";
 "phone_call" = "電話呼叫";

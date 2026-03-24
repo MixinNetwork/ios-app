@@ -102,7 +102,7 @@ final class MultipleAssetChangeCell: UITableViewCell {
     }
     
     func reloadPerpsProduct(iconURL: URL?, name: String) {
-        titleLabel.text = R.string.localizable.perpetual().uppercased()
+        titleLabel.text = R.string.localizable.perps_product().uppercased()
         loadRowViews(count: 1)
         let rowView = rowViews[0]
         rowView.iconView.setIcon(tokenIconURL: iconURL)

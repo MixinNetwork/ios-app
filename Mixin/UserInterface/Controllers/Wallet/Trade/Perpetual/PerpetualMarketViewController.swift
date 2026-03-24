@@ -434,7 +434,7 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
                 cell.titleLabel.text = R.string.localizable.volume_24h().uppercased()
                 cell.contentLabel.text = viewModel.volume
             default:
-                cell.titleLabel.text = R.string.localizable.funding_rate()
+                cell.titleLabel.text = R.string.localizable.funding_rate().uppercased()
                 cell.contentLabel.text = viewModel.fundingRate
             }
             return cell

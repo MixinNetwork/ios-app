@@ -645,7 +645,6 @@
 "example_amount" = "Amount";
 "example_direction" = "Direction";
 "example_leverage_multiplier" = "Leverage";
-"example_market" = "Market";
 "example_price_change" = "Price Change";
 "example_scene1_falls" = "Scenario 1: Price Falls";
 "example_scene1_rises" = "Scenario 1: Price Rises";
@@ -1148,6 +1147,7 @@
 "perps_position_size_overview" = "Size represents the total value of your position, calculated as margin × leverage.";
 "perps_position_size_pnl_1" = "Larger size, larger PnL";
 "perps_position_size_pnl_2" = "Smaller size, smaller PnL";
+"perps_product" = "Market";
 "perps_short_overview" = "You open a short position when you expect the price to fall. If the price falls, you profit; if the price rises, you incur a loss.";
 "phone_as_key_shard" = "Your mobile number will be associated with a key shard of the MPC wallet managed by you";
 "phone_call" = "Llamada telefónica";

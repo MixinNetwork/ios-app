@@ -645,7 +645,6 @@
 "example_amount" = "金额";
 "example_direction" = "方向";
 "example_leverage_multiplier" = "杠杆";
-"example_market" = "合约";
 "example_price_change" = "价格变化";
 "example_scene1_falls" = "场景一：价格下跌";
 "example_scene1_rises" = "场景一：价格上涨";
@@ -1148,6 +1147,7 @@
 "perps_position_size_overview" = "当前合约的仓位规模由「金额 × 杠杆」计算得出，表示本次交易所控制的资产规模。";
 "perps_position_size_pnl_1" = "仓位越大，盈亏金额越大";
 "perps_position_size_pnl_2" = "仓位越小，盈亏金额越小";
+"perps_product" = "合约";
 "perps_short_overview" = "做空是指在预期价格下跌时建立仓位，价格下跌可获得盈利，价格上涨则产生亏损。";
 "phone_as_key_shard" = "手机号将关联到由您管理的 MPC 钱包的一个密钥分片";
 "phone_call" = "电话呼叫";

@@ -151,6 +151,7 @@ final class AllPerpetualPositionsViewController: UIViewController {
                 }
             }
         case .closed:
+            loadNextPageIndexPath = nil
             loadNextPage(offset: nil)
         }
     }
@@ -173,7 +174,7 @@ final class AllPerpetualPositionsViewController: UIViewController {
                 let itemsAfter = itemsBefore + viewModels
                 let itemsCountAfter = itemsAfter.count
                 self.viewModels = itemsAfter
-                if itemsCountBefore == 0 || itemsCountAfter == 0 {
+                if offset == nil || itemsCountBefore == 0 || itemsCountAfter == 0 {
                     self.collectionView.reloadData()
                 } else if let section = self.sections.firstIndex(of: .positions) {
                     let items = (itemsCountBefore..<itemsCountAfter).map { item in

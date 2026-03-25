@@ -122,7 +122,6 @@
 "alert_type_price_reached_value" = "Price reaches %@";
 "alert_value" = "Value";
 "all" = "Все";
-"all_alert" = "All Alert";
 "all_assets_will_be_lost" = "All assets will be lost";
 "all_conversations" = "Все разговоры";
 "all_dates" = "All Dates";
@@ -1210,6 +1209,7 @@
 "preview" = "Preview";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
+"price_alerts" = "Price Alerts";
 "price_change_24h" = "24h Price Change";
 "price_data_unavailable" = "Price data unavailable";
 "price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";

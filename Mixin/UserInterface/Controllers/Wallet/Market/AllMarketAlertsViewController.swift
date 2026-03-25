@@ -35,7 +35,7 @@ final class AllMarketAlertsViewController: MarketAlertViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = R.string.localizable.all_alert()
+        title = R.string.localizable.price_alerts()
         assetFilterView.reloadData(coins: coins)
         assetFilterView.button.addTarget(self, action: #selector(pickTokens(_:)), for: .touchUpInside)
         addAlertButton.setTitle(R.string.localizable.add_alert(), for: .normal)

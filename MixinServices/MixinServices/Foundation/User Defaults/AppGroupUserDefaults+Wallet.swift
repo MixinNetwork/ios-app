@@ -34,6 +34,7 @@ extension AppGroupUserDefaults {
             
             case lastBuyingAssetID = "last_buy_asset"
             case lastBuyingCurrencyCode = "last_buy_currency"
+            case lastPerpsLeverageMultiplier = "last_perps_leverage"
         }
         
         public static let didChangeWalletTipNotification = Notification.Name(rawValue: "one.mixin.services.DidChangeWalletTip")
@@ -98,11 +99,14 @@ extension AppGroupUserDefaults {
             }
         }
         
-        @Default(namespace: .user, key: Key.lastBuyingAssetID, defaultValue: nil)
+        @Default(namespace: .wallet, key: Key.lastBuyingAssetID, defaultValue: nil)
         public static var lastBuyingAssetID: String?
         
-        @Default(namespace: .user, key: Key.lastBuyingCurrencyCode, defaultValue: nil)
+        @Default(namespace: .wallet, key: Key.lastBuyingCurrencyCode, defaultValue: nil)
         public static var lastBuyingCurrencyCode: String?
+        
+        @Default(namespace: .wallet, key: Key.lastPerpsLeverageMultiplier, defaultValue: nil)
+        public static var lastPerpsLeverageMultiplier: Int?
         
         internal static func migrate() {
             lastPINVerifiedDate = Date(timeIntervalSince1970: WalletUserDefault.shared.lastInputPinTime)

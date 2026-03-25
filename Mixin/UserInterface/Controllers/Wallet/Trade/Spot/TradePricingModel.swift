@@ -38,7 +38,11 @@ final class TradePricingModel {
             _sendToken = newValue
             var updates: [Update] = []
             
-            let price = derivePrice(sendToken: _sendToken, receiveToken: _receiveToken)
+            let price = derivePrice(
+                sendToken: _sendToken,
+                receiveToken: _receiveToken,
+                aggressive: true
+            )
             if price != _price {
                 _price = price
                 _displayPrice = displayPrice(price: price, numraire: _displayPriceNumeraire)
@@ -91,7 +95,11 @@ final class TradePricingModel {
             _receiveToken = newValue
             var updates: [Update] = []
             
-            let price = derivePrice(sendToken: _sendToken, receiveToken: _receiveToken)
+            let price = derivePrice(
+                sendToken: _sendToken,
+                receiveToken: _receiveToken,
+                aggressive: true
+            )
             if price != _price {
                 _price = price
                 _displayPrice = displayPrice(price: price, numraire: _displayPriceNumeraire)
@@ -226,7 +234,8 @@ final class TradePricingModel {
     
     func derivePrice(
         sendToken: BalancedSwapToken?,
-        receiveToken: BalancedSwapToken?
+        receiveToken: BalancedSwapToken?,
+        aggressive: Bool,
     ) -> Decimal? {
         guard
             let sendPrice = sendToken?.decimalUSDPrice,
@@ -236,7 +245,12 @@ final class TradePricingModel {
         else {
             return nil
         }
-        return sendPrice / receivePrice
+        let price = sendPrice / receivePrice
+        if aggressive {
+            return price * 0.99
+        } else {
+            return price
+        }
     }
     
     func priceEquation() -> String? {
@@ -261,7 +275,11 @@ final class TradePricingModel {
         swap(&_sendToken, &_receiveToken)
         var updates: [Update] = []
         
-        let price = derivePrice(sendToken: _sendToken, receiveToken: _receiveToken)
+        let price = derivePrice(
+            sendToken: _sendToken,
+            receiveToken: _receiveToken,
+            aggressive: true
+        )
         if price != _price {
             _price = price
             _displayPrice = displayPrice(price: price, numraire: _displayPriceNumeraire)

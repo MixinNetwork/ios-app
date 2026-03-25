@@ -958,7 +958,8 @@ extension TradeSpotViewController {
         }
         let price = pricingModel.derivePrice(
             sendToken: sendToken,
-            receiveToken: receiveToken
+            receiveToken: receiveToken,
+            aggressive: true
         )
         guard price != nil else {
             priceInputAccessory = .unavailable
@@ -1103,7 +1104,8 @@ extension TradeSpotViewController {
         }
         let price = pricingModel.derivePrice(
             sendToken: sendToken,
-            receiveToken: receiveToken
+            receiveToken: receiveToken,
+            aggressive: multiplier == 1
         )
         guard let price else {
             return

@@ -105,8 +105,9 @@ extension AppGroupUserDefaults {
         @Default(namespace: .wallet, key: Key.lastBuyingCurrencyCode, defaultValue: nil)
         public static var lastBuyingCurrencyCode: String?
         
-        @Default(namespace: .wallet, key: Key.lastPerpsLeverageMultiplier, defaultValue: nil)
-        public static var lastPerpsLeverageMultiplier: Int?
+        // Key is market id
+        @Default(namespace: .wallet, key: Key.lastPerpsLeverageMultiplier, defaultValue: [:])
+        public static var lastPerpsLeverageMultiplier: [String: Int]
         
         internal static func migrate() {
             lastPINVerifiedDate = Date(timeIntervalSince1970: WalletUserDefault.shared.lastInputPinTime)

@@ -113,7 +113,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
         viewModel: PerpetualMarketViewModel,
     ) {
         var leverageMultiplier = Decimal(
-            AppGroupUserDefaults.Wallet.lastPerpsLeverageMultiplier ?? 10
+            AppGroupUserDefaults.Wallet.lastPerpsLeverageMultiplier[viewModel.market.marketID] ?? 10
         )
         if leverageMultiplier > viewModel.maxLeverageMultiplier {
             leverageMultiplier = viewModel.maxLeverageMultiplier < 10 ? 2 : 10
@@ -459,7 +459,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
             leverageMultiplier: value,
             underlyingAsset: viewModel
         )
-        AppGroupUserDefaults.Wallet.lastPerpsLeverageMultiplier = (value as NSDecimalNumber).intValue
+        AppGroupUserDefaults.Wallet.lastPerpsLeverageMultiplier[viewModel.market.marketID] = (value as NSDecimalNumber).intValue
     }
     
     private func updateDescriptions(

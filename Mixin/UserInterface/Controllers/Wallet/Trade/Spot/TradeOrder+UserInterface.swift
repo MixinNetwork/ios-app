@@ -160,7 +160,7 @@ extension TradeOrder.State: AnyLocalized {
         case .created:
             R.string.localizable.created()
         case .pending:
-            R.string.localizable.pending()
+            R.string.localizable.trade_order_pending()
         case .success:
             R.string.localizable.completed()
         case .failed:

@@ -463,7 +463,7 @@ extension TradeOrdersViewController {
             case .none:
                 R.string.localizable.order_status()
             case .pending:
-                R.string.localizable.pending()
+                R.string.localizable.trade_order_pending()
             case .done:
                 R.string.localizable.done()
             case .other:
@@ -866,7 +866,7 @@ extension TradeOrdersViewController {
                 handler: { [weak self] _ in self?.reloadData(status: nil) }
             ),
             UIAction(
-                title: R.string.localizable.pending(),
+                title: R.string.localizable.trade_order_pending(),
                 image: R.image.filter_pending(),
                 state: .off,
                 handler: { [weak self] _ in self?.reloadData(status: .pending) }

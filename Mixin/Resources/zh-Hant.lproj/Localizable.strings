@@ -1629,6 +1629,7 @@
 "trade_expiry_never" = "永不";
 "trade_filled" = "已成交";
 "trade_native_tokens" = "交易數千種原生代幣";
+"trade_order_pending" = "待成交";
 "trade_simple" = "簡單兌換";
 "transaction" = "交易詳情";
 "transaction_approved" = "批准成功";

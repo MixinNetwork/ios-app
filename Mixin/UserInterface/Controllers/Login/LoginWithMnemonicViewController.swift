@@ -161,10 +161,10 @@ final class LoginWithMnemonicViewController: IntroductionViewController, LoginAc
 
 extension LoginWithMnemonicViewController: Captcha.Reporting {
     
-    var reportingContent: (event: Reporter.Event, type: String) {
+    var reportingContent: (event: Reporter.Event, type: String?) {
         switch action {
         case .signUp:
-            (event: .signUpCAPTCHA, type: "mnemonic_phrase")
+            (event: .signUpCAPTCHA, type: nil)
         case .signIn:
             (event: .loginCAPTCHA, type: "mnemonic_phrase")
         }

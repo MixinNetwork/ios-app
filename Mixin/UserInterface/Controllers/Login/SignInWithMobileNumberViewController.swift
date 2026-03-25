@@ -53,6 +53,8 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        reporter.report(event: .loginStart)
     }
     
     override func continueToNext(_ sender: Any) {
@@ -61,6 +63,7 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
         alert.addAction(UIAlertAction(title: R.string.localizable.change(), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: R.string.localizable.confirm(), style: .default, handler: { _ in
             self.requestVerificationCode(captchaToken: nil)
+            reporter.report(event: .loginSMSSendConfirmed)
         }))
         present(alert, animated: true, completion: nil)
     }
@@ -95,7 +98,7 @@ final class SignInWithMobileNumberViewController: MobileNumberViewController {
 
 extension SignInWithMobileNumberViewController: Captcha.Reporting {
     
-    var reportingContent: (event: Reporter.Event, type: String) {
+    var reportingContent: (event: Reporter.Event, type: String?) {
         (event: .loginCAPTCHA, type: "phone_number")
     }
     

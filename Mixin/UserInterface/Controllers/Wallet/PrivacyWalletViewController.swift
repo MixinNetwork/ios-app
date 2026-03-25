@@ -306,6 +306,7 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
             tableHeaderView.actionView.badgeActions.remove(.buy)
             navigationController?.pushViewController(buy, animated: true)
             BadgeManager.shared.setHasViewed(identifier: .buy)
+            reporter.report(event: .buyStart, tags: ["wallet": "main", "source": "wallet_home"])
         case .send:
             reporter.report(event: .sendStart, tags: ["wallet": "main", "source": "wallet_home"])
             let selector = MixinTokenSelectorViewController(intent: .send)

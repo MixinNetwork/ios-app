@@ -1,5 +1,6 @@
 import UIKit
 import SafariServices
+import MixinServices
 
 final class TIPQuizViewController: UIViewController {
     
@@ -98,6 +99,7 @@ final class TIPQuizViewController: UIViewController {
         explainPINButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
         selectedAnswer = nil
+        reporter.report(event: .signUpPINQuiz)
     }
     
     @IBAction func checkAnswer(_ sender: Any) {

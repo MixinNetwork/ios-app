@@ -68,7 +68,7 @@ final class PhoneNumberLoginVerificationCodeViewController: LoginVerificationCod
 
 extension PhoneNumberLoginVerificationCodeViewController: Captcha.Reporting {
     
-    var reportingContent: (event: Reporter.Event, type: String) {
+    var reportingContent: (event: Reporter.Event, type: String?) {
         (event: .loginCAPTCHA, type: "phone_number")
     }
     

@@ -37,6 +37,7 @@ final class TIPNavigationController: GeneralAppearanceNavigationController {
             AppDelegate.current.mainWindow.rootViewController = HomeContainerViewController(
                 initialTab: redirectsToWalletTabOnFinished ? .wallet : .chat
             )
+            reporter.report(event: .loginEnd)
         } else {
             presentingViewController?.dismiss(animated: true)
         }

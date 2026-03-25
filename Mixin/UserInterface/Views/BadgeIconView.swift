@@ -187,6 +187,20 @@ final class BadgeIconView: UIView {
         corner = .round
     }
     
+    func setIcon(market: PerpetualMarket) {
+        if let url = URL(string: market.iconURL) {
+            iconImageView.sd_setImage(
+                with: url,
+                placeholderImage: nil,
+                context: assetIconContext
+            )
+        } else {
+            iconImageView.image = R.image.unknown_session()
+        }
+        isBadgeHidden = true
+        corner = .round
+    }
+    
     func setIcon(address: AddressItem) {
         if let string = address.tokenChainIconURL, let url = URL(string: string) {
             iconImageView.sd_setImage(with: url,

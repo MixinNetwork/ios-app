@@ -124,13 +124,17 @@ final class ExploreViewController: UIViewController {
             BadgeManager.shared.setHasViewed(identifier: .buy)
         case .trade:
             reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "explore"])
-            let trade = MixinTradeViewController(
+            let trade = TradeViewController(
+                wallet: .privacy,
+                trading: nil,
                 sendAssetID: nil,
                 receiveAssetID: nil,
                 referral: nil
             )
-            navigationController?.pushViewController(trade, animated: true)
-            BadgeManager.shared.setHasViewed(identifier: .trade)
+            if let trade {
+                navigationController?.pushViewController(trade, animated: true)
+                BadgeManager.shared.setHasViewed(identifier: .trade)
+            }
         case .membership:
             if let membership = LoginManager.shared.account?.membership, let plan = membership.plan {
                 let membership = MembershipViewController(plan: plan, expiredAt: membership.expiredAt)

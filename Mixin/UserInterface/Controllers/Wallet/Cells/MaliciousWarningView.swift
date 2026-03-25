@@ -27,7 +27,7 @@ final class MaliciousWarningView: UIView {
         super.awakeFromNib()
         imageView.image = R.image.web3_reputation_bad()!.withRenderingMode(.alwaysTemplate)
         imageView.tintColor = R.color.error_red()
-        backgroundColor = R.color.red()!.withAlphaComponent(0.2)
+        backgroundColor = R.color.mixin_red()!.withAlphaComponent(0.2)
         layer.cornerRadius = 8
         layer.masksToBounds = true
     }

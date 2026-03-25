@@ -5,6 +5,7 @@ struct Payment: PaymentPreconditionChecker {
     
     enum Context {
         case trade(TradeContext)
+        case perps(PerpsContext)
         case inscription(InscriptionContext)
     }
     
@@ -177,6 +178,13 @@ extension Payment {
         
     }
     
+    struct PerpsContext {
+        let wallet: Wallet
+        let viewModel: PerpetualMarketViewModel
+        let side: PerpetualOrderSide
+        let leverageMultiplier: Decimal
+    }
+    
     enum InscriptionError: Error, LocalizedError {
         
         case missingLocalItem
@@ -206,7 +214,7 @@ extension Payment {
                         KnownOpponentPrecondition(opponent: opponent),
                         ReferenceValidityPrecondition(reference: reference),
                     ]
-                case .trade:
+                case .trade, .perps:
                     preconditions = [
                         NoPendingTransactionPrecondition(),
                         AlreadyPaidPrecondition(traceID: traceID),
@@ -249,7 +257,7 @@ extension Payment {
                     } else {
                         .failure(.description("Invalid Amount"))
                     }
-                case .trade, .none:
+                case .trade, .perps, .none:
                     await collectOutputs(token: token, amount: tokenAmount, on: parent)
                 }
                 
@@ -266,8 +274,8 @@ extension Payment {
                             reference: reference,
                             context: context
                         )
-                    case let .trade(context):
-                        TransferPaymentOperation.swap(
+                    case .trade, .perps:
+                        TransferPaymentOperation.trade(
                             traceID: traceID,
                             spendingOutputs: collection,
                             destination: destination,
@@ -275,7 +283,6 @@ extension Payment {
                             amount: tokenAmount,
                             memo: memo,
                             reference: reference,
-                            context: context
                         )
                     case .none:
                         TransferPaymentOperation.transfer(

@@ -101,6 +101,20 @@ final class MultipleAssetChangeCell: UITableViewCell {
         rowView.networkLabel.text = network
     }
     
+    func reloadPerpsProduct(iconURL: URL?, name: String) {
+        titleLabel.text = R.string.localizable.perps_product().uppercased()
+        loadRowViews(count: 1)
+        let rowView = rowViews[0]
+        rowView.iconView.setIcon(tokenIconURL: iconURL)
+        rowView.amountLabel.setFont(
+            scaledFor: .systemFont(ofSize: 16, weight: .medium),
+            adjustForContentSize: true
+        )
+        rowView.amountLabel.text = name
+        rowView.amountLabel.textColor = R.color.text()
+        rowView.networkLabel.text = nil
+    }
+    
     private func loadRowViews(count: Int) {
         let diff = rowViews.count - count
         if diff > 0 {

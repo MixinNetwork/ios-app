@@ -14,11 +14,8 @@ public final class AssetItem: Asset, NumberStringLocalizable {
     
     public lazy var localizedFiatMoneyBalance: String = {
         let fiatMoneyBalance = balance.doubleValue * priceUsd.doubleValue * Currency.current.rate
-        if let value = CurrencyFormatter.localizedString(from: fiatMoneyBalance, format: .fiatMoney, sign: .never) {
-            return "≈ " + Currency.current.symbol + value
-        } else {
-            return ""
-        }
+        let value = CurrencyFormatter.localizedString(from: fiatMoneyBalance, format: .fiatMoney, sign: .never)
+        return "≈ " + Currency.current.symbol + value
     }()
     
     public lazy var localizedUsdChange: String = {

@@ -327,15 +327,22 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
                 self.present(selector, animated: true, completion: nil)
             }
         case .trade:
-            reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "wallet_home"])
-            tableHeaderView.actionView.badgeActions.remove(.trade)
-            let trade = MixinTradeViewController(
+            let trade = TradeViewController(
+                wallet: .privacy,
+                trading: nil,
                 sendAssetID: nil,
                 receiveAssetID: nil,
                 referral: nil
             )
-            navigationController?.pushViewController(trade, animated: true)
-            BadgeManager.shared.setHasViewed(identifier: .trade)
+            if let trade {
+                navigationController?.pushViewController(trade, animated: true)
+                tableHeaderView.actionView.badgeActions.remove(.trade)
+                BadgeManager.shared.setHasViewed(identifier: .trade)
+                reporter.report(
+                    event: .tradeStart,
+                    tags: ["wallet": "main", "source": "wallet_home"]
+                )
+            }
         }
     }
     

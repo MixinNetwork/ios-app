@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -13,6 +13,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DatabaseDiagnosticViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="databaseSwitcher" destination="7CO-9D-3sK" id="thY-RJ-n74"/>
+                <outlet property="deleteButton" destination="lCf-pi-Atx" id="LyN-HH-V0P"/>
                 <outlet property="inputTextView" destination="6Xy-6B-HGH" id="s2M-tX-yhJ"/>
                 <outlet property="outputTextView" destination="amz-rh-cDb" id="cHt-gn-7GE"/>
                 <outlet property="pasteButton" destination="UKN-un-OOw" id="leL-XC-5Yf"/>
@@ -26,46 +27,71 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="7CO-9D-3sK">
-                    <rect key="frame" x="91.5" y="48" width="231" height="32"/>
+                    <rect key="frame" x="64.5" y="96" width="285" height="32"/>
                     <segments>
                         <segment title="Signal"/>
                         <segment title="User"/>
                         <segment title="Task"/>
                         <segment title="Web3"/>
+                        <segment title="Perps"/>
                     </segments>
                     <connections>
                         <action selector="changeDatabase:" destination="-1" eventType="valueChanged" id="w9r-IJ-EQ5"/>
                     </connections>
                 </segmentedControl>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bYi-xr-8ed">
-                    <rect key="frame" x="0.0" y="79" width="414" height="177"/>
+                    <rect key="frame" x="0.0" y="127" width="414" height="158"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EX9-NX-UEd">
-                            <rect key="frame" x="229" y="0.0" width="177" height="42"/>
+                            <rect key="frame" x="0.0" y="0.0" width="406" height="32"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xuj-ng-kb2">
-                                    <rect key="frame" x="0.0" y="0.0" width="51" height="42"/>
+                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lCf-pi-Atx">
+                                    <rect key="frame" x="0.0" y="0.0" width="68.5" height="32"/>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="plain" title="Delete">
+                                        <fontDescription key="titleFontDescription" type="system" pointSize="15"/>
+                                        <color key="baseForegroundColor" systemColor="systemRedColor"/>
+                                    </buttonConfiguration>
+                                    <connections>
+                                        <action selector="deleteDatabase:" destination="-1" eventType="touchUpInside" id="D1Z-H2-YFl"/>
+                                    </connections>
+                                </button>
+                                <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="zEI-im-t4H">
+                                    <rect key="frame" x="68.5" y="0.0" width="161" height="32"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </view>
+                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xuj-ng-kb2">
+                                    <rect key="frame" x="229.5" y="0.0" width="51" height="32"/>
                                     <color key="backgroundColor" name="background"/>
                                     <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
                                     <state key="normal" title="Run"/>
+                                    <buttonConfiguration key="configuration" style="plain" title="Run">
+                                        <fontDescription key="titleFontDescription" type="system" pointSize="15"/>
+                                    </buttonConfiguration>
                                     <connections>
                                         <action selector="run:" destination="-1" eventType="touchUpInside" id="yXF-Au-pc1"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKN-un-OOw">
-                                    <rect key="frame" x="51" y="0.0" width="63" height="42"/>
+                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKN-un-OOw">
+                                    <rect key="frame" x="280.5" y="0.0" width="62.5" height="32"/>
                                     <color key="backgroundColor" name="background"/>
                                     <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
                                     <state key="normal" title="Paste"/>
+                                    <buttonConfiguration key="configuration" style="plain" title="Paste">
+                                        <fontDescription key="titleFontDescription" type="system" pointSize="15"/>
+                                    </buttonConfiguration>
                                     <connections>
                                         <action selector="pasteInput:" destination="-1" eventType="touchUpInside" id="0Mp-3t-Dwk"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pxZ-kd-Nbo">
-                                    <rect key="frame" x="114" y="0.0" width="63" height="42"/>
+                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pxZ-kd-Nbo">
+                                    <rect key="frame" x="343" y="0.0" width="63" height="32"/>
                                     <color key="backgroundColor" name="background"/>
                                     <inset key="contentEdgeInsets" minX="12" minY="12" maxX="12" maxY="12"/>
                                     <state key="normal" title="Clean"/>
+                                    <buttonConfiguration key="configuration" style="plain" title="Clean">
+                                        <fontDescription key="titleFontDescription" type="system" pointSize="15"/>
+                                    </buttonConfiguration>
                                     <connections>
                                         <action selector="cleanInput:" destination="-1" eventType="touchUpInside" id="lgP-B9-dhY"/>
                                     </connections>
@@ -73,7 +99,7 @@
                             </subviews>
                         </stackView>
                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="6Xy-6B-HGH">
-                            <rect key="frame" x="8" y="42" width="398" height="135"/>
+                            <rect key="frame" x="8" y="32" width="398" height="126"/>
                             <color key="backgroundColor" name="button_background_secondary"/>
                             <color key="textColor" systemColor="labelColor"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -87,6 +113,7 @@
                     </subviews>
                     <color key="backgroundColor" name="background"/>
                     <constraints>
+                        <constraint firstItem="EX9-NX-UEd" firstAttribute="leading" secondItem="bYi-xr-8ed" secondAttribute="leading" id="Azf-7w-9XP"/>
                         <constraint firstItem="6Xy-6B-HGH" firstAttribute="leading" secondItem="bYi-xr-8ed" secondAttribute="leading" constant="8" id="BWE-RX-nBi"/>
                         <constraint firstItem="6Xy-6B-HGH" firstAttribute="top" secondItem="EX9-NX-UEd" secondAttribute="bottom" id="JzP-OM-Ksn"/>
                         <constraint firstAttribute="trailing" secondItem="EX9-NX-UEd" secondAttribute="trailing" constant="8" id="LIx-DD-ayw"/>
@@ -96,7 +123,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jtp-59-v6Q">
-                    <rect key="frame" x="0.0" y="264" width="414" height="590"/>
+                    <rect key="frame" x="0.0" y="293" width="414" height="527"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ESN-Qd-JWk">
                             <rect key="frame" x="346" y="0.0" width="60" height="42"/>
@@ -108,7 +135,7 @@
                             </connections>
                         </button>
                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Output" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="amz-rh-cDb">
-                            <rect key="frame" x="8" y="42" width="398" height="548"/>
+                            <rect key="frame" x="8" y="42" width="398" height="485"/>
                             <color key="backgroundColor" name="button_background_secondary"/>
                             <color key="textColor" systemColor="labelColor"/>
                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -157,6 +184,9 @@
         </namedColor>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

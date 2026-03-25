@@ -45,9 +45,9 @@ final class Web3AmountChangeCell: UITableViewCell {
                 scaledFor: .systemFont(ofSize: 20, weight: .medium),
                 adjustForContentSize: true
             )
-            symbolLabel.textColor = R.color.red()
+            symbolLabel.textColor = R.color.mixin_red()
             fiatMoneyValueLabel.text = R.string.localizable.approval_unlimited_warning(token?.symbol ?? "")
-            fiatMoneyValueLabel.textColor = R.color.red()
+            fiatMoneyValueLabel.textColor = R.color.mixin_red()
             assetIconView.isHidden = false
             assetIconView.setIcon(token: token, chain: chain)
         case let .limited(tokenAmount, fiatMoneyAmount):
@@ -70,7 +70,7 @@ final class Web3AmountChangeCell: UITableViewCell {
                 scaledFor: .systemFont(ofSize: 16, weight: .regular),
                 adjustForContentSize: true
             )
-            symbolLabel.textColor = R.color.red()
+            symbolLabel.textColor = R.color.mixin_red()
             fiatMoneyValueLabel.text = nil
             assetIconView.isHidden = true
         }

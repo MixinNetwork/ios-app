@@ -31,7 +31,7 @@ final class TransferPaymentOperation {
         case transfer
         case consolidation
         case inscription(Payment.InscriptionContext)
-        case swap(Payment.TradeContext)
+        case trade
         
         var description: String {
             switch self {
@@ -41,8 +41,8 @@ final class TransferPaymentOperation {
                 "consolidation"
             case .inscription(let context):
                 context.description
-            case .swap:
-                "swap"
+            case .trade:
+                "trade"
             }
         }
         
@@ -124,14 +124,17 @@ final class TransferPaymentOperation {
         )
     }
     
-    static func swap(
-        traceID: String, spendingOutputs: UTXOService.OutputCollection,
-        destination: Payment.TransferDestination, token: MixinTokenItem,
-        amount: Decimal, memo: String, reference: String?,
-        context: Payment.TradeContext
+    static func trade(
+        traceID: String,
+        spendingOutputs: UTXOService.OutputCollection,
+        destination: Payment.TransferDestination,
+        token: MixinTokenItem,
+        amount: Decimal,
+        memo: String,
+        reference: String?,
     ) -> TransferPaymentOperation {
         TransferPaymentOperation(
-            behavior: .swap(context),
+            behavior: .trade,
             traceID: traceID,
             spendingOutputs: spendingOutputs,
             destination: destination,
@@ -289,7 +292,7 @@ final class TransferPaymentOperation {
         let snapshotInscriptionHash: String? = switch behavior {
         case .inscription(let context):
             context.item.inscriptionHash
-        case .consolidation, .transfer, .swap:
+        case .consolidation, .transfer, .trade:
             nil
         }
         let snapshot = SafeSnapshot(
@@ -341,7 +344,7 @@ final class TransferPaymentOperation {
                     case .release:
                         saveSnapshot = false
                     }
-                case .transfer, .swap:
+                case .transfer, .trade:
                     saveSnapshot = true
                 }
                 if saveSnapshot {
@@ -350,7 +353,7 @@ final class TransferPaymentOperation {
                         let receiverID = opponent.userId
                         let conversationID = ConversationDAO.shared.makeConversationId(userId: senderID, ownerUserId: receiverID)
                         let inscriptionItem: InscriptionItem? = switch behavior {
-                        case .transfer, .consolidation, .swap:
+                        case .transfer, .consolidation, .trade:
                             nil
                         case .inscription(let context):
                             context.item
@@ -404,7 +407,7 @@ final class TransferPaymentOperation {
         case .transfer:
             AppGroupUserDefaults.User.hasPerformedTransfer = true
             AppGroupUserDefaults.Wallet.defaultTransferAssetId = token.assetID
-        case .consolidation, .inscription, .swap:
+        case .consolidation, .inscription, .trade:
             break
         }
     }

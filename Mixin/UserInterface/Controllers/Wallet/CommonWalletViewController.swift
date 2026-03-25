@@ -462,14 +462,21 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
                 self.present(selector, animated: true, completion: nil)
             }
         case .trade:
-            let trade = Web3TradeViewController(
-                wallet: wallet,
+            let trade = TradeViewController(
+                wallet: .common(wallet),
                 supportedChainIDs: supportedChainIDs,
+                trading: nil,
                 sendAssetID: nil,
-                receiveAssetID: nil
+                receiveAssetID: nil,
+                referral: nil
             )
-            navigationController?.pushViewController(trade, animated: true)
-            reporter.report(event: .tradeStart, tags: ["wallet": "web3", "source": "wallet_home"])
+            if let trade {
+                navigationController?.pushViewController(trade, animated: true)
+                reporter.report(
+                    event: .tradeStart,
+                    tags: ["wallet": "web3", "source": "wallet_home"]
+                )
+            }
         }
     }
     

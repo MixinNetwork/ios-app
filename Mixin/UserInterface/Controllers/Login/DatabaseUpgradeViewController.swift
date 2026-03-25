@@ -38,6 +38,7 @@ final class DatabaseUpgradeViewController: UIViewController, CheckSessionEnviron
             TaskDatabase.reloadCurrent()
             UserDatabase.reloadCurrent()
             Web3Database.reloadCurrent()
+            PerpsDatabase.reloadCurrent()
             
             if localVersion < 4 {
                 ConcurrentJobQueue.shared.addJob(job: RefreshAssetsJob(request: .allAssets))

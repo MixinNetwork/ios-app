@@ -692,13 +692,20 @@ extension MarketViewController: PillActionView.Delegate {
                 alert(R.string.localizable.swap_not_supported(market.symbol))
             } else {
                 pickSingleToken { token in
-                    let trade = MixinTradeViewController(
+                    let trade = TradeViewController(
+                        wallet: .privacy,
+                        trading: nil,
                         sendAssetID: AssetID.erc20USDT,
                         receiveAssetID: token.assetID,
                         referral: nil
                     )
-                    self.navigationController?.pushViewController(trade, animated: true)
-                    reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "market_detail"])
+                    if let trade {
+                        self.navigationController?.pushViewController(trade, animated: true)
+                        reporter.report(
+                            event: .tradeStart,
+                            tags: ["wallet": "main", "source": "market_detail"]
+                        )
+                    }
                 }
             }
         case .alert:

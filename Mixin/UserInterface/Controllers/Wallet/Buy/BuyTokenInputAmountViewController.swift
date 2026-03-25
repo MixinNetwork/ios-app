@@ -65,7 +65,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
             wallet: wallet
         )
         amountLabel.text = CurrencyFormatter.localizedString(
-            from: 0,
+            from: Decimal(0),
             format: .precision,
             sign: .never,
             symbol: .custom(selectedCurrency.code)
@@ -118,7 +118,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                     return
                 }
                 self.calculatedValueLabel.text = CurrencyFormatter.localizedString(
-                    from: 0,
+                    from: Decimal(0),
                     format: .precision,
                     sign: .never,
                     symbol: .custom(placeholder.symbol)
@@ -236,7 +236,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
     }
     
     @objc private func selectReceiving(_ sender: Any) {
-        let selector = BuyTokenSelectorViewController(
+        let selector = SimpleTokenSelectorViewController(
             tokens: tokens,
             selectedAssetID: selectedToken?.assetID
         )
@@ -505,7 +505,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         guard let token = selectedToken else {
             return
         }
-        guard let amount = NumberFormatter.enUSPOSIXLocalizedDecimal.string(decimal: fiatMoneyAmount) else {
+        guard let amount = NumberFormatter.enUSPOSIXDecimal.string(decimal: fiatMoneyAmount) else {
             return
         }
         let currency = selectedCurrency.code

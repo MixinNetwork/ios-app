@@ -93,11 +93,12 @@ extension AppGroupUserDefaults {
         
         public static var needsUpgradeInMainApp: Bool {
             return localVersion < version
-                || needsRebuildDatabase
-                || TaskDatabase.current.needsMigration
-                || SignalDatabase.current.needsMigration
-                || UserDatabase.current.needsMigration
-                || Web3Database.current.needsMigration
+            || needsRebuildDatabase
+            || TaskDatabase.current.needsMigration
+            || SignalDatabase.current.needsMigration
+            || UserDatabase.current.needsMigration
+            || Web3Database.current.needsMigration
+            || PerpsDatabase.current.needsMigration
         }
         
         @Default(namespace: .user, key: Key.localVersion, defaultValue: uninitializedVersion)

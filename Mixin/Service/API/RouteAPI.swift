@@ -20,7 +20,7 @@ final class RouteAPI {
     
 }
 
-// MARK: - Swap
+// MARK: - Spot Trading
 extension RouteAPI {
     
     static func swappableTokens(
@@ -143,6 +143,109 @@ extension RouteAPI {
         completion: @escaping (MixinAPI.Result<TradeOrder>) -> Void
     ) {
         request(method: .post, path: "/web3/limit_orders/\(id)/cancel", completion: completion)
+    }
+    
+}
+
+// MARK: - Perpetual Futures
+extension RouteAPI {
+    
+    static func perpsMarkets(
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[PerpetualMarket]>) -> Void
+    ) {
+        request(
+            method: .get,
+            path: "/perps/markets",
+            queue: queue,
+            completion: completion
+        )
+    }
+    
+    static func perpsMarket(
+        marketID: String,
+        queue: DispatchQueue = .main,
+        completion: @escaping (MixinAPI.Result<PerpetualMarket>) -> Void
+    ) {
+        request(
+            method: .get,
+            path: "/perps/markets/" + marketID,
+            queue: queue,
+            completion: completion
+        )
+    }
+    
+    static func perpsMarketCandles(
+        marketID: String,
+        timeFrame: PerpetualTimeFrame,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<PerpetualMarketCandle>) -> Void
+    ) {
+        request(
+            method: .get,
+            path: "/perps/markets/candles?market_id=\(marketID)&time_frame=\(timeFrame.rawValue)",
+            queue: queue,
+            completion: completion
+        )
+    }
+    
+    static func acceptedPerpsOrderAssets(
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[String]>) -> Void
+    ) {
+        request(
+            method: .get,
+            path: "/perps/orders/accepted-assets",
+            queue: queue,
+            completion: completion,
+        )
+    }
+    
+    static func openPerpsOrder(
+        orderRequest: OpenPerpetualOrderRequest,
+        completion: @escaping (MixinAPI.Result<OpenPerpetualOrderResponse>) -> Void
+    ) {
+        request(
+            method: .post,
+            path: "/perps/orders/open",
+            with: orderRequest,
+            completion: completion,
+        )
+    }
+    
+    static func closePerpsOrder(
+        positionID: String,
+    ) async throws -> ClosePerpetualOrderResponse {
+        try await request(
+            method: .post,
+            path: "/perps/orders/close",
+            with: ["position_id": positionID],
+        )
+    }
+    
+    static func positions(
+        walletID: String,
+        queue: DispatchQueue,
+        completion: @escaping (MixinAPI.Result<[PerpetualPosition]>) -> Void
+    ) {
+        request(
+            method: .get,
+            path: "/perps/positions?wallet_id=\(walletID)",
+            queue: queue,
+            completion: completion,
+        )
+    }
+    
+    static func positionsHistory(
+        walletID: String,
+        offset: String?,
+        limit: Int = 100,
+    ) async throws -> [PerpetualPositionHistory] {
+        var path = "/perps/positions/history?wallet_id=\(walletID)&limit=\(limit)"
+        if let offset {
+            path += "&offset=\(offset)"
+        }
+        return try await request(method: .get, path: path)
     }
     
 }

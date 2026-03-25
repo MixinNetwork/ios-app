@@ -43,7 +43,7 @@ final class AuthenticationPreviewDialogView: UIView {
         case .gray:
             R.color.text_tertiary()!
         case .red:
-            R.color.red()!
+            R.color.mixin_red()!
         case .yellow:
             UIColor(displayP3RgbValue: 0xfacd59)
         }
@@ -54,7 +54,7 @@ final class AuthenticationPreviewDialogView: UIView {
         case .gray, .yellow:
             R.color.text()!
         case .red:
-            R.color.red()!
+            R.color.mixin_red()!
         }
         stepLabel.textColor = textColor
         titleLabel.textColor = textColor
@@ -63,7 +63,7 @@ final class AuthenticationPreviewDialogView: UIView {
         case .gray:
             R.color.text_secondary()!
         case .red:
-            R.color.red()!
+            R.color.mixin_red()!
         case .yellow:
             UIColor(displayP3RgbValue: 0xf6a417)
         }

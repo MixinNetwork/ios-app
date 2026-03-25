@@ -57,11 +57,11 @@ final class AllPerpetualMarketsViewController: UIViewController {
         collectionView.register(R.nib.perpetualMarketCell)
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.reloadData()
+        reloadMarkets()
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(reloadMarkets(_:)),
+            selector: #selector(reloadMarkets),
             name: PerpsMarketDAO.marketsDidUpdateNotification,
             object: nil
         )
@@ -83,10 +83,10 @@ final class AllPerpetualMarketsViewController: UIViewController {
         reporter.report(event: .customerServiceDialog, tags: ["source": "perps_all_markets"])
     }
     
-    @objc private func reloadMarkets(_ notification: Notification) {
+    @objc private func reloadMarkets() {
         let walletID = wallet.tradingWalletID
         DispatchQueue.global().async { [weak self] in
-            let markets = PerpsMarketDAO.shared.availableMarkets()
+            let markets = PerpsMarketDAO.shared.availableMarkets(limit: nil)
             let viewModels = markets.compactMap(
                 PerpetualMarketViewModel.init(market:)
             )

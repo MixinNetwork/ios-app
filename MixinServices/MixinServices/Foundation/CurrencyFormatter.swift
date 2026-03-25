@@ -127,7 +127,10 @@ public struct CurrencyFormatter {
         case .fiatMoneyValue:
             fiatMoneyFormatterLock.lock()
             let value: NSDecimalNumber
-            if abs(decimal) < 0.01 {
+            if isNumberZero {
+                value = 0
+                fiatMoneyFormatter.minimumFractionDigits = 2
+            } else if abs(decimal) < 0.01 {
                 symbolPrefix.insert("<", at: symbolPrefix.startIndex)
                 value = 0.01
             } else {
@@ -135,6 +138,9 @@ public struct CurrencyFormatter {
             }
             fiatMoneyFormatter.setSignBehavior(sign, symbolPrefix: symbolPrefix, isNumberZero: isNumberZero)
             str = fiatMoneyFormatter.string(from: value) ?? "\(value)"
+            if isNumberZero {
+                fiatMoneyFormatter.minimumFractionDigits = 0
+            }
             fiatMoneyFormatterLock.unlock()
         }
         

@@ -11,8 +11,12 @@ public final class PerpsMarketDAO: PerpsDAO {
         db.select(with: "SELECT * FROM markets WHERE market_id = ?", arguments: [marketID])
     }
     
-    public func availableMarkets() -> [PerpetualMarket] {
-        db.select(with: "SELECT * FROM markets WHERE volume > 0")
+    public func availableMarkets(limit: Int?) -> [PerpetualMarket] {
+        var sql = "SELECT * FROM markets WHERE volume > 0 ORDER BY rowid ASC"
+        if let limit {
+            sql += " LIMIT \(limit)"
+        }
+        return db.select(with: sql)
     }
     
     public func save(market: PerpetualMarket) {

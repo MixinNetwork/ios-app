@@ -165,27 +165,39 @@ final class AllPerpetualPositionsViewController: UIViewController {
                 PerpetualPositionViewModel(wallet: wallet, history: item)
             }
             let hasMore = viewModels.count == pageCount
+            if offset != nil, viewModels.isEmpty {
+                // Last page is empty
+                return
+            }
             DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
                 let itemsBefore = self.viewModels ?? []
                 let itemsCountBefore = itemsBefore.count
-                let itemsAfter = itemsBefore + viewModels
-                let itemsCountAfter = itemsAfter.count
-                self.viewModels = itemsAfter
-                if offset == nil || itemsCountBefore == 0 || itemsCountAfter == 0 {
+                if offset == nil || itemsCountBefore == 0 || viewModels.count == 0 {
+                    self.viewModels = viewModels
                     self.collectionView.reloadData()
                 } else if let section = self.sections.firstIndex(of: .positions) {
+                    let itemsAfter = itemsBefore + viewModels
+                    let itemsCountAfter = itemsAfter.count
+                    self.viewModels = itemsAfter
                     let items = (itemsCountBefore..<itemsCountAfter).map { item in
                         IndexPath(item: item, section: section)
                     }
-                    self.collectionView.insertItems(at: items)
+                    UIView.performWithoutAnimation {
+                        self.collectionView.insertItems(at: items)
+                    }
                 } else {
+                    assertionFailure("Not expected to happen. There should be a section for positions")
+                    self.viewModels = viewModels
                     self.collectionView.reloadData()
                 }
-                if hasMore, let section = self.sections.firstIndex(of: .positions) {
-                    self.loadNextPageIndexPath = IndexPath(item: itemsCountAfter - 3, section: section)
+                if hasMore,
+                   let section = self.sections.firstIndex(of: .positions),
+                   let count = self.viewModels?.count
+                {
+                    self.loadNextPageIndexPath = IndexPath(item: count - 3, section: section)
                 }
             }
         }

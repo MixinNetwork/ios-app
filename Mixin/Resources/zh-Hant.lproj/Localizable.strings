@@ -122,7 +122,6 @@
 "alert_type_price_reached_value" = "價格達到 %@";
 "alert_value" = "數值";
 "all" = "全部";
-"all_alert" = "所有價格預警";
 "all_assets_will_be_lost" = "所有資產將無法取回";
 "all_conversations" = "所有會話";
 "all_dates" = "所有日期";
@@ -1210,6 +1209,7 @@
 "preview" = "預覽";
 "price" = "價格";
 "price_alert_notification_permission" = "價格預警需要開啟通知許可權";
+"price_alerts" = "所有價格預警";
 "price_change_24h" = "24 小時價格變化";
 "price_data_unavailable" = "暫無價格資料";
 "price_decrease_invalid" = "跌幅需大於 %1$@ 且小於 %2$@";

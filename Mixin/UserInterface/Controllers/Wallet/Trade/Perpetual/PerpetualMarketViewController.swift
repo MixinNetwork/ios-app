@@ -335,6 +335,7 @@ final class PerpetualMarketViewController: UIViewController {
             }
             actionView.button.setTitle(R.string.localizable.close_position(), for: .normal)
             actionView.button.addTarget(self, action: #selector(closePosition(_:)), for: .touchUpInside)
+            actionView.button.isEnabled = true
         } else {
             sections = [
                 .price,

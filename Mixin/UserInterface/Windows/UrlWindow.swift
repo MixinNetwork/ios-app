@@ -71,18 +71,14 @@ class UrlWindow {
                 case let .perps(marketID):
                     let hud = Hud()
                     hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
-                    RouteAPI.perpsMarkets(queue: .main) { result in
+                    RouteAPI.perpsMarket(marketID: marketID) { result in
                         switch result {
-                        case .success(let markets):
+                        case .success(let market):
                             DispatchQueue.global().async {
-                                PerpsMarketDAO.shared.replace(markets: markets)
+                                PerpsMarketDAO.shared.save(market: market)
                             }
                             hud.hide()
-                            let market = markets.first { market in
-                                market.marketID == marketID
-                            }
                             if let navigationController = UIApplication.homeNavigationController,
-                               let market,
                                let viewModel = PerpetualMarketViewModel(market: market)
                             {
                                 let market = PerpetualMarketViewController(

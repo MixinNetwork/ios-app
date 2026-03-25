@@ -13,7 +13,7 @@ final class PerpetualMarketViewController: UIViewController {
     
     private let wallet: Wallet
     private let positionsLoader: PerpetualPositionLoader
-    private let marketLoader = PerpetualMarketLoader()
+    private let marketLoader: PerpetualMarketLoader
     private let candleLoader: PerpetualCandleLoader
     private let maxItemCount = 3
     
@@ -47,6 +47,9 @@ final class PerpetualMarketViewController: UIViewController {
         self.wallet = wallet
         self.positionsLoader = PerpetualPositionLoader(
             walletID: wallet.tradingWalletID
+        )
+        self.marketLoader = PerpetualMarketLoader(
+            marketID: viewModel.market.marketID
         )
         self.candleLoader = PerpetualCandleLoader(
             marketID: viewModel.market.marketID

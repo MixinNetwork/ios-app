@@ -20,7 +20,7 @@ final class TradePerpetualViewController: UIViewController {
     
     private let wallet: Wallet
     private let positionsLoader: PerpetualPositionLoader
-    private let marketLoader = PerpetualMarketLoader()
+    private let marketLoader = PerpetualMarketLoader(marketID: nil)
     private let maxItemCount = 3
     
     private var value: PerpetualPositionValue?
@@ -193,7 +193,7 @@ final class TradePerpetualViewController: UIViewController {
                 .map { item in
                     PerpetualPositionViewModel(wallet: wallet, position: item)
                 }
-            let markets = PerpsMarketDAO.shared.markets()
+            let markets = PerpsMarketDAO.shared.availableMarkets()
             let marketViewModels = markets.compactMap(PerpetualMarketViewModel.init(market:))
             let closedPositions = PerpsPositionHistoryDAO.shared.historyItems(
                 offsetClosedAt: nil,
@@ -541,7 +541,7 @@ extension TradePerpetualViewController {
     @objc private func reloadMarkets(_ notification: Notification) {
         let walletID = wallet.tradingWalletID
         DispatchQueue.global().async { [weak self] in
-            let markets = PerpsMarketDAO.shared.markets()
+            let markets = PerpsMarketDAO.shared.availableMarkets()
             let viewModels = markets.compactMap(
                 PerpetualMarketViewModel.init(market:)
             )

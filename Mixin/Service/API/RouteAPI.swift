@@ -164,9 +164,15 @@ extension RouteAPI {
     
     static func perpsMarket(
         marketID: String,
+        queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<PerpetualMarket>) -> Void
     ) {
-        request(method: .get, path: "/perps/market?market_id=\(marketID)", completion: completion)
+        request(
+            method: .get,
+            path: "/perps/markets/" + marketID,
+            queue: queue,
+            completion: completion
+        )
     }
     
     static func perpsMarketCandles(

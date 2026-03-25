@@ -11,21 +11,28 @@ public final class PerpsMarketDAO: PerpsDAO {
         db.select(with: "SELECT * FROM markets WHERE market_id = ?", arguments: [marketID])
     }
     
-    public func markets() -> [PerpetualMarket] {
-        db.select(with: "SELECT * FROM markets")
+    public func availableMarkets() -> [PerpetualMarket] {
+        db.select(with: "SELECT * FROM markets WHERE volume > 0")
     }
     
-    public func replace(markets: [PerpetualMarket]) {
-        db.write { db in
-            try db.execute(sql: "DELETE FROM markets")
-            try markets.save(db)
-            db.afterNextTransaction { _ in
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(
-                        name: Self.marketsDidUpdateNotification,
-                        object: self
-                    )
-                }
+    public func save(market: PerpetualMarket) {
+        db.save(market) { _ in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: Self.marketsDidUpdateNotification,
+                    object: self
+                )
+            }
+        }
+    }
+    
+    public func save(markets: [PerpetualMarket]) {
+        db.save(markets) { _ in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(
+                    name: Self.marketsDidUpdateNotification,
+                    object: self
+                )
             }
         }
     }

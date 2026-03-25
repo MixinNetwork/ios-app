@@ -4,7 +4,7 @@ import MixinServices
 final class AllPerpetualMarketsViewController: UIViewController {
     
     private let wallet: Wallet
-    private let marketLoader = PerpetualMarketLoader()
+    private let marketLoader = PerpetualMarketLoader(marketID: nil)
     
     private var viewModels: [PerpetualMarketViewModel]
     
@@ -86,7 +86,7 @@ final class AllPerpetualMarketsViewController: UIViewController {
     @objc private func reloadMarkets(_ notification: Notification) {
         let walletID = wallet.tradingWalletID
         DispatchQueue.global().async { [weak self] in
-            let markets = PerpsMarketDAO.shared.markets()
+            let markets = PerpsMarketDAO.shared.availableMarkets()
             let viewModels = markets.compactMap(
                 PerpetualMarketViewModel.init(market:)
             )

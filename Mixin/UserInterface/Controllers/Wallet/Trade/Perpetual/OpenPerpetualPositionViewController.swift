@@ -348,10 +348,13 @@ final class OpenPerpetualPositionViewController: UIViewController {
         RouteAPI.acceptedPerpsOrderAssets(queue: .global()) { [weak self] result in
             switch result {
             case .success(let assetIDs):
-                let tokens = TokenDAO.shared.tokenItems(with: assetIDs)
-                    .sorted { one, another in
-                        one.decimalBalance >= another.decimalBalance
+                let orders = assetIDs.enumerated()
+                    .reduce(into: [:]) { results, enumerated in
+                        results[enumerated.element] = enumerated.offset
                     }
+                let comparator = MarginTokenComparator(orders: orders)
+                let tokens = TokenDAO.shared.tokenItems(with: assetIDs)
+                    .sorted(using: comparator)
                 DispatchQueue.main.async {
                     guard let self else {
                         return
@@ -367,7 +370,12 @@ final class OpenPerpetualPositionViewController: UIViewController {
                 let missingAssetIDs = Set(assetIDs).subtracting(tokens.map(\.assetID))
                 if !missingAssetIDs.isEmpty {
                     let chains = ChainDAO.shared.allChains()
-                    self?.requestMissingMarginTokens(assetIDs: missingAssetIDs, chains: chains)
+                    self?.requestMissingMarginTokens(
+                        assetIDs: missingAssetIDs,
+                        chains: chains,
+                        existedTokens: tokens,
+                        comparator: comparator,
+                    )
                 }
             case .failure(let error):
                 Logger.general.debug(category: "OpenPerpsPosition", message: "Margin Tokens: \(error)")
@@ -381,14 +389,13 @@ final class OpenPerpetualPositionViewController: UIViewController {
     private func requestMissingMarginTokens(
         assetIDs: Set<String>,
         chains: [String: Chain],
+        existedTokens: [MixinTokenItem],
+        comparator: MarginTokenComparator,
     ) {
-        SafeAPI.assets(ids: assetIDs) { [weak self] result in
+        SafeAPI.assets(ids: assetIDs, queue: .global()) { [weak self] result in
             switch result {
             case .success(let tokens):
-                guard let self else {
-                    return
-                }
-                let items = tokens.map { token in
+                var items = existedTokens + tokens.map { token in
                     MixinTokenItem(
                         token: token,
                         balance: "0",
@@ -396,17 +403,28 @@ final class OpenPerpetualPositionViewController: UIViewController {
                         chain: chains[token.chainID]
                     )
                 }
-                self.marginTokens.append(contentsOf: items)
-                if self.marginToken == nil {
-                    self.marginToken = items.first
+                items.sort(using: comparator)
+                DispatchQueue.main.async {
+                    guard let self else {
+                        return
+                    }
+                    self.marginTokens = items
+                    if self.marginToken == nil {
+                        self.marginToken = items.first
+                    }
+                    self.marginTokenSelectorStackView.alpha = 1
+                    self.marginTokenFooterStackView.alpha = 1
+                    self.marginLoadingView.stopAnimating()
                 }
-                self.marginTokenSelectorStackView.alpha = 1
-                self.marginTokenFooterStackView.alpha = 1
-                self.marginLoadingView.stopAnimating()
             case .failure(let error):
                 Logger.general.debug(category: "OpenPerpsPosition", message: "Missing Tokens: \(error)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                    self?.requestMissingMarginTokens(assetIDs: assetIDs, chains: chains)
+                    self?.requestMissingMarginTokens(
+                        assetIDs: assetIDs,
+                        chains: chains,
+                        existedTokens: existedTokens,
+                        comparator: comparator
+                    )
                 }
             }
         }
@@ -744,6 +762,56 @@ extension OpenPerpetualPositionViewController {
                 return .invalid(reason: reason)
             } else {
                 return .valid
+            }
+        }
+        
+    }
+    
+    private struct MarginTokenComparator: SortComparator {
+        
+        var order: SortOrder = .forward
+        
+        private let orders: [String: Int]
+        
+        init(orders: [String: Int]) {
+            self.orders = orders
+        }
+        
+        func compare(_ lhs: MixinTokenItem, _ rhs: MixinTokenItem) -> ComparisonResult {
+            let result = withUnsafePointer(to: lhs.decimalBalance) { l in
+                withUnsafePointer(to: rhs.decimalBalance) { r in
+                    NSDecimalCompare(l, r)
+                }
+            }
+            let forwardResult: ComparisonResult
+            switch result {
+            case .orderedAscending:
+                forwardResult = .orderedDescending
+            case .orderedDescending:
+                forwardResult = .orderedAscending
+            case .orderedSame:
+                let l = orders[lhs.assetID] ?? -1
+                let r = orders[rhs.assetID] ?? -1
+                forwardResult = if l > r {
+                    .orderedDescending
+                } else if l == r {
+                    .orderedSame
+                } else {
+                    .orderedAscending
+                }
+            }
+            return switch order {
+            case .forward:
+                 forwardResult
+            case .reverse:
+                switch forwardResult {
+                case .orderedAscending:
+                        .orderedDescending
+                case .orderedDescending:
+                        .orderedAscending
+                case .orderedSame:
+                        .orderedSame
+                }
             }
         }
         

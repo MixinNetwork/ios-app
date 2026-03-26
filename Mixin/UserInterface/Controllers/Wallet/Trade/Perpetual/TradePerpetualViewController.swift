@@ -248,7 +248,7 @@ final class TradePerpetualViewController: UIViewController {
         default:
             return
         }
-        let selector = PerpetualMarketSelectorViewController(markets: markets)
+        let selector = PerpetualMarketSelectorViewController()
         selector.onSelected = { [wallet, weak self] (viewModel) in
             guard let self else {
                 return

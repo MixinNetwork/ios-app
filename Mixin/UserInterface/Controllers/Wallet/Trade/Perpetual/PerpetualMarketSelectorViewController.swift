@@ -1,24 +1,15 @@
 import UIKit
 import Combine
+import MixinServices
 
 final class PerpetualMarketSelectorViewController: TokenSelectorViewController {
     
     var onSelected: ((PerpetualMarketViewModel) -> Void)?
     
-    private let markets: [PerpetualMarketViewModel]
-    
     private var searchObserver: AnyCancellable?
     private var searchResultsKeyword: String?
     private var searchResults: [PerpetualMarketViewModel]?
-    
-    init(markets: [PerpetualMarketViewModel]) {
-        self.markets = markets
-        super.init()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("Storyboard is not supported")
-    }
+    private var markets: [PerpetualMarketViewModel] = []
     
     deinit {
         searchObserver?.cancel()
@@ -55,7 +46,17 @@ final class PerpetualMarketSelectorViewController: TokenSelectorViewController {
         collectionView.allowsMultipleSelection = false
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.reloadData()
+        DispatchQueue.global().async { [weak self] in
+            let markets = PerpsMarketDAO.shared.availableMarkets(limit: nil)
+            let viewModels = markets.compactMap(PerpetualMarketViewModel.init(market:))
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                self.markets = viewModels
+                UIView.performWithoutAnimation(self.collectionView.reloadData)
+            }
+        }
     }
     
     @objc func prepareForSearch(_ textField: UITextField) {

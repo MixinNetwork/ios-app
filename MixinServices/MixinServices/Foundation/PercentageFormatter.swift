@@ -25,6 +25,7 @@ public enum PercentageFormatter {
         
     }
     
+    private static let lock = NSLock()
     private static let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .percent
@@ -41,6 +42,10 @@ public enum PercentageFormatter {
         sign: SignBehavior,
         options: Option = [],
     ) -> String {
+        lock.lock()
+        defer {
+            lock.unlock()
+        }
         switch format {
         case .precision:
             formatter.maximumFractionDigits = 8

@@ -166,10 +166,11 @@ struct TradeOrderViewModel {
             } else {
                 (payAmount - pendingAmount) / payAmount
             }
-            let roundedPercent = NSDecimalNumber(decimal: percent)
-                .rounding(accordingToBehavior: NSDecimalNumberHandler.extractIntegralPart)
-                .decimalValue
-            let percentage = NumberFormatter.percentage.string(decimal: roundedPercent) ?? ""
+            let percentage = PercentageFormatter.string(
+                from: percent,
+                format: .pretty,
+                sign: .never
+            )
             let amount = CurrencyFormatter.localizedString(
                 from: filledReceiveAmount,
                 format: .precision,

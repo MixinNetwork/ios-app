@@ -1,7 +1,7 @@
 import UIKit
 import SwiftUI
 
-final class ManualViewController: UIViewController {
+class ManualViewController: UIViewController {
     
     struct Page {
         
@@ -114,6 +114,15 @@ final class ManualViewController: UIViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        pageDidAppear(index: initialIndex)
+    }
+    
+    func pageDidAppear(index: Int) {
+        
+    }
+    
     @objc private func close(_ sender: Any) {
         presentingViewController?.dismiss(animated: true)
     }
@@ -187,6 +196,7 @@ extension ManualViewController: UICollectionViewDelegate {
         } else {
             pageViewController.setViewControllers([page], direction: .forward, animated: false)
         }
+        pageDidAppear(index: indexPath.item)
     }
     
 }
@@ -217,6 +227,7 @@ extension ManualViewController: UIPageViewControllerDelegate {
         }
         let indexPath = IndexPath(item: focus.index, section: 0)
         pageSelectorCollectionView.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
+        pageDidAppear(index: focus.index)
     }
     
 }
@@ -226,19 +237,18 @@ extension ManualViewController: ManualPageContentViewController.Delegate {
     func manualPageContentViewController(_ controller: ManualPageContentViewController, didNavigateTo index: Int) {
         if index == pages.count {
             presentingViewController?.dismiss(animated: true)
-        } else {
+        } else if let page = dequeueReusableViewController(of: index) {
             pageSelectorCollectionView.selectItem(
                 at: IndexPath(item: index, section: 0),
                 animated: true,
                 scrollPosition: .left
             )
-            if let page = dequeueReusableViewController(of: index) {
-                pageViewController.setViewControllers(
-                    [page],
-                    direction: page.index > controller.index ? .forward : .reverse,
-                    animated: true
-                )
-            }
+            pageViewController.setViewControllers(
+                [page],
+                direction: page.index > controller.index ? .forward : .reverse,
+                animated: true
+            )
+            pageDidAppear(index: index)
         }
     }
     

@@ -127,6 +127,16 @@ final class TradeViewController: UIViewController {
         replaceChildViewController(trading: trading)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let firstTime = !BadgeManager.shared.hasViewed(identifier: .trade)
+        BadgeManager.shared.setHasViewed(identifier: .trade)
+        if firstTime {
+            let manual = SpotTradingManualViewController()
+            present(manual, animated: true)
+        }
+    }
+    
     func prepareForReuse() {
         
     }
@@ -190,9 +200,18 @@ final class TradeViewController: UIViewController {
     }
     
     @objc func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
-        present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "trade_home"])
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.contact_support(), style: .default, handler: { _ in
+            let customerService = CustomerServiceViewController()
+            self.present(customerService, animated: true)
+            reporter.report(event: .customerServiceDialog, tags: ["source": "trade_home"])
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.spot_trading_guide(), style: .default, handler: { _ in
+            let manual = SpotTradingManualViewController()
+            self.present(manual, animated: true)
+        }))
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true)
     }
     
 }

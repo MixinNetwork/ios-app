@@ -29,20 +29,21 @@ enum ExchangeRateQuote {
         sendSymbol: String,
         receiveAmount: Decimal,
         receiveSymbol: String,
-        numeraire: Numeraire
+        numeraire: Numeraire,
+        format: CurrencyFormatter.Format = .precision,
     ) -> String {
         switch numeraire {
         case .send:
             let quote = CurrencyFormatter.localizedString(
                 from: receiveAmount / sendAmount,
-                format: .precision,
+                format: format,
                 sign: .never
             )
             return "1 \(sendSymbol) ≈ \(quote) \(receiveSymbol)"
         case .receive:
             let quote = CurrencyFormatter.localizedString(
                 from: sendAmount / receiveAmount,
-                format: .precision,
+                format: format,
                 sign: .never
             )
             return "1 \(receiveSymbol) ≈ \(quote) \(sendSymbol)"

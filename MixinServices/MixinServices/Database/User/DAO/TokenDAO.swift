@@ -237,6 +237,13 @@ public final class TokenDAO: UserDatabaseDAO {
         )
     }
     
+    public func usdPrice(assetID: String) -> String? {
+        db.select(
+            with: "SELECT price_usd FROM tokens WHERE asset_id = ?",
+            arguments: [assetID]
+        )
+    }
+    
     public func save(assets: [MixinToken], completion: (() -> Void)? = nil) {
         guard !assets.isEmpty else {
             return

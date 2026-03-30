@@ -883,6 +883,13 @@
 		943BC6782BCE99BC003FA778 /* CollectiblesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BC6772BCE99BC003FA778 /* CollectiblesViewController.swift */; };
 		943BC67A2BCE9A17003FA778 /* CollectiblesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943BC6792BCE9A17003FA778 /* CollectiblesView.xib */; };
 		943BC7022BCFB56F003FA778 /* Web3TokenSenderSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BC7002BCFB56F003FA778 /* Web3TokenSenderSelectorViewController.swift */; };
+		943BEAA72F74DF5E009376AA /* SpotTradingManualIntroductionPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BEAA62F74DF5D009376AA /* SpotTradingManualIntroductionPageView.swift */; };
+		943BEAB22F74EA9A009376AA /* SpotTradingManualSimpleModePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BEAB12F74EA92009376AA /* SpotTradingManualSimpleModePageView.swift */; };
+		943BEAC02F74EAAD009376AA /* SpotTradingManualAdvancedModePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BEABC2F74EAA6009376AA /* SpotTradingManualAdvancedModePageView.swift */; };
+		943BEAE22F74F372009376AA /* SpotTradingTokenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BEAE12F74F36E009376AA /* SpotTradingTokenView.swift */; };
+		943BEB1D2F751A2A009376AA /* SpotTradingSegmentControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BEB192F751A03009376AA /* SpotTradingSegmentControl.swift */; };
+		943BEB2E2F7567FB009376AA /* SpotTradingManualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BEB2D2F7567FA009376AA /* SpotTradingManualViewController.swift */; };
+		943BEB392F7568B6009376AA /* SpotTradingManual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943BEB382F7568B3009376AA /* SpotTradingManual.swift */; };
 		943CAA012CC68AF000346677 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943CAA002CC68AEA00346677 /* OnboardingViewController.swift */; };
 		943CAA062CC6908F00346677 /* OnboardingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 943CAA052CC6908F00346677 /* OnboardingView.xib */; };
 		943CAA082CC6A84200346677 /* StyledButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 943CAA072CC6A83F00346677 /* StyledButton.swift */; };
@@ -2739,6 +2746,13 @@
 		943BC6772BCE99BC003FA778 /* CollectiblesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectiblesViewController.swift; sourceTree = "<group>"; };
 		943BC6792BCE9A17003FA778 /* CollectiblesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectiblesView.xib; sourceTree = "<group>"; };
 		943BC7002BCFB56F003FA778 /* Web3TokenSenderSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TokenSenderSelectorViewController.swift; sourceTree = "<group>"; };
+		943BEAA62F74DF5D009376AA /* SpotTradingManualIntroductionPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotTradingManualIntroductionPageView.swift; sourceTree = "<group>"; };
+		943BEAB12F74EA92009376AA /* SpotTradingManualSimpleModePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotTradingManualSimpleModePageView.swift; sourceTree = "<group>"; };
+		943BEABC2F74EAA6009376AA /* SpotTradingManualAdvancedModePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotTradingManualAdvancedModePageView.swift; sourceTree = "<group>"; };
+		943BEAE12F74F36E009376AA /* SpotTradingTokenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotTradingTokenView.swift; sourceTree = "<group>"; };
+		943BEB192F751A03009376AA /* SpotTradingSegmentControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotTradingSegmentControl.swift; sourceTree = "<group>"; };
+		943BEB2D2F7567FA009376AA /* SpotTradingManualViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotTradingManualViewController.swift; sourceTree = "<group>"; };
+		943BEB382F7568B3009376AA /* SpotTradingManual.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotTradingManual.swift; sourceTree = "<group>"; };
 		943CAA002CC68AEA00346677 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		943CAA052CC6908F00346677 /* OnboardingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OnboardingView.xib; sourceTree = "<group>"; };
 		943CAA072CC6A83F00346677 /* StyledButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledButton.swift; sourceTree = "<group>"; };
@@ -4532,6 +4546,7 @@
 		940FC4E02F502AFD000C4260 /* Spot */ = {
 			isa = PBXGroup;
 			children = (
+				94BCCBD82F7420870059F73E /* Manual */,
 				94066E9B2ED4362A0068659B /* ExchangeRateQuote.swift */,
 				94C56D382C53C954009F3AB8 /* SwapQuoteDraft.swift */,
 				94428E472CA3435300157E93 /* SwapQuote.swift */,
@@ -5109,6 +5124,20 @@
 				948DFCED2F192E4000200EFA /* Web3OutputsViewController.swift */,
 			);
 			path = Diagnose;
+			sourceTree = "<group>";
+		};
+		94BCCBD82F7420870059F73E /* Manual */ = {
+			isa = PBXGroup;
+			children = (
+				943BEB382F7568B3009376AA /* SpotTradingManual.swift */,
+				943BEB2D2F7567FA009376AA /* SpotTradingManualViewController.swift */,
+				943BEAE12F74F36E009376AA /* SpotTradingTokenView.swift */,
+				943BEB192F751A03009376AA /* SpotTradingSegmentControl.swift */,
+				943BEAA62F74DF5D009376AA /* SpotTradingManualIntroductionPageView.swift */,
+				943BEAB12F74EA92009376AA /* SpotTradingManualSimpleModePageView.swift */,
+				943BEABC2F74EAA6009376AA /* SpotTradingManualAdvancedModePageView.swift */,
+			);
+			path = Manual;
 			sourceTree = "<group>";
 		};
 		94BE6E922BA0622B00CE65A3 /* Authentication Preview */ = {
@@ -6734,9 +6763,9 @@
 				9416231829BEEFB800E540B9 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				9481C03A2A49A9AA0009DAF8 /* XCRemoteSwiftPackageReference "Starscream" */,
 				94787E162A7C071E00BB0124 /* XCRemoteSwiftPackageReference "QRCode" */,
-				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */,
+				94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */,
 				94E82E922BB564CF00092249 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
-				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */,
+				9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */,
 				94ED93882E37592700A3E337 /* XCRemoteSwiftPackageReference "reown-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -7183,13 +7212,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MixinDebug/Pods-MixinDebug-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MixinDebug/Pods-MixinDebug-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -7287,13 +7312,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -7308,13 +7329,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Mixin/Pods-Mixin-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -7642,6 +7659,7 @@
 				7BCA3A572057F08E007617C1 /* CATransactionExtension.swift in Sources */,
 				7C5304A129014F6800567CF6 /* AuthorizationScopesTableView.swift in Sources */,
 				94B8D189266E41D300F43CBB /* DatabaseDiagnosticViewController.swift in Sources */,
+				943BEAC02F74EAAD009376AA /* SpotTradingManualAdvancedModePageView.swift in Sources */,
 				942BA99C2C689FA10096CCC3 /* MarketViewController.swift in Sources */,
 				7BEED0D7244D74FC00F3A2B9 /* SettingsSection.swift in Sources */,
 				7BC51F042227E69B0032BA15 /* InteractiveDismissResponder.swift in Sources */,
@@ -7738,6 +7756,7 @@
 				942C637D2D79E467003B3A5F /* HiddenMixinTokensViewController.swift in Sources */,
 				7B2E3E521FA07F7B00DDDDEB /* CallingCodeCell.swift in Sources */,
 				7B5EA41220B2734C00940D1A /* GalleryVideoSlider.swift in Sources */,
+				943BEAB22F74EA9A009376AA /* SpotTradingManualSimpleModePageView.swift in Sources */,
 				7B7DACAA23505F06006AA2AC /* SharedMediaAudio.swift in Sources */,
 				94793AD12C3A57230078ED51 /* QuoteResponse.swift in Sources */,
 				7B65568324C8555D0038BC14 /* GroupCallMemberConnectingView.swift in Sources */,
@@ -8337,6 +8356,7 @@
 				94C5A8932B2157CE00201CDA /* Payment.swift in Sources */,
 				7B8261D124D9548E00A39635 /* PINVerificationFailureHandler.swift in Sources */,
 				9449775F2F0A8E0100472465 /* BitcoinTransferOperation.swift in Sources */,
+				943BEB1D2F751A2A009376AA /* SpotTradingSegmentControl.swift in Sources */,
 				DF8CECD71FC2EE4200E40064 /* PayWindow.swift in Sources */,
 				94CAAAB42F1F71B50022D29F /* MultilineTextButton.swift in Sources */,
 				7BB633DF22702D0500A106D2 /* SearchCancelButton.swift in Sources */,
@@ -8460,6 +8480,7 @@
 				7B28FA18201196F80023B28D /* DataMessageCell.swift in Sources */,
 				DF121F311FA1C767000F701D /* ConversationCell.swift in Sources */,
 				DFB2062A21AC1771006E4341 /* RestoreJob.swift in Sources */,
+				943BEB392F7568B6009376AA /* SpotTradingManual.swift in Sources */,
 				94A40C472B2781AF0028BC02 /* TransferPaymentOperation.swift in Sources */,
 				7B9EDF101FB588D700D26989 /* UIImageExtension.swift in Sources */,
 				7B2636D5224E2A7E0057116D /* InfiniteTopView.swift in Sources */,
@@ -8506,6 +8527,7 @@
 				946485622DB774CB0034D7AF /* TransactionSimulation.swift in Sources */,
 				DFE356B81FB4994200E0E3A8 /* SettingsViewController.swift in Sources */,
 				94BC7B002F5D8771009D8970 /* PerpsManualShortPageView.swift in Sources */,
+				943BEB2E2F7567FB009376AA /* SpotTradingManualViewController.swift in Sources */,
 				7BF9969520CA6F3800FD948F /* Waveform.swift in Sources */,
 				94525B362C4E3CF2008BA7A8 /* SwapToken.swift in Sources */,
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,
@@ -8627,6 +8649,7 @@
 				946CB9B62E9F69650099FFCB /* LoadContactCommonWalletAddressViewController.swift in Sources */,
 				943A28082B878FCE0050929A /* TIPNodeResponseError+Localization.swift in Sources */,
 				94F35B872D2818B2001BCAE7 /* InvoicePreviewViewController.swift in Sources */,
+				943BEAE22F74F372009376AA /* SpotTradingTokenView.swift in Sources */,
 				94B7B6DE26B43581000B0AC5 /* SilentNotificationMessagePreviewViewController.swift in Sources */,
 				7B37B16323ED483D00590215 /* GalleryTransitionFromNonQuotingMessageCellView.swift in Sources */,
 				94DB79C42E3B22A70066A8E7 /* WalletIdentifyingAuthenticationPreviewViewController.swift in Sources */,
@@ -8663,6 +8686,7 @@
 				946B9FBB2B0493E800DB4DC1 /* WalletHintViewController.swift in Sources */,
 				7C952CFE27E035080083F92B /* ExpiredMessageViewController.swift in Sources */,
 				9451E1F22E6B6AC300A5CA45 /* ReceiveMoneyViewController.swift in Sources */,
+				943BEAA72F74DF5E009376AA /* SpotTradingManualIntroductionPageView.swift in Sources */,
 				9451E1F32E6B6AC300A5CA45 /* ShareDepositLinkViewController.swift in Sources */,
 				944ED8D4264666AC00C97215 /* FullscreenPopupViewController.swift in Sources */,
 				944B5A5C2CFCA7EE000BB893 /* UINavigationBarAppearance+General.swift in Sources */,
@@ -8761,15 +8785,15 @@
 /* Begin PBXTargetDependency section */
 		94881FAE2AD0361100CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */;
+			productRef = 94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */;
 		};
 		94881FB02AD0361700CA7A29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */;
+			productRef = 94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */;
 		};
 		94C957E52ACFECDE00C1412F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = 94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */;
+			productRef = 94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */;
 		};
 		94ED305F2E269B2A00B99837 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -9457,7 +9481,7 @@
 				version = 14.3.1;
 			};
 		};
-		9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */ = {
+		9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MixinNetwork/web3.swift";
 			requirement = {
@@ -9473,7 +9497,7 @@
 				version = 3.1.2;
 			};
 		};
-		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */ = {
+		94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mac-cain13/R.swift";
 			requirement = {
@@ -9512,7 +9536,7 @@
 		};
 		9479B7842BBBE589002A2C4F /* web3.swift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3" */;
+			package = 9479B7832BBBE589002A2C4F /* XCRemoteSwiftPackageReference "web3.swift" */;
 			productName = web3.swift;
 		};
 		9481C03B2A49A9AA0009DAF8 /* Starscream */ = {
@@ -9522,28 +9546,28 @@
 		};
 		94881FA72AD035C300CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
 			productName = RswiftLibrary;
 		};
 		94881FA92AD035CC00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
 			productName = RswiftLibrary;
 		};
 		94881FAB2AD035ED00CA7A29 /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R" */;
+			package = 94C957E32ACFECA300C1412F /* XCRemoteSwiftPackageReference "R.swift" */;
 			productName = RswiftLibrary;
 		};
-		94881FAD2AD0361100CA7A29 /* RswiftGenerateInternalResources */ = {
+		94881FAD2AD0361100CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94881FAF2AD0361700CA7A29 /* RswiftGenerateInternalResources */ = {
+		94881FAF2AD0361700CA7A29 /* plugin:RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};
-		94C957E42ACFECDE00C1412F /* RswiftGenerateInternalResources */ = {
+		94C957E42ACFECDE00C1412F /* plugin:RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
 		};

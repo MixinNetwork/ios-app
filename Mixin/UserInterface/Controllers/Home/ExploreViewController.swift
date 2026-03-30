@@ -134,7 +134,6 @@ final class ExploreViewController: UIViewController {
             )
             if let trade {
                 navigationController?.pushViewController(trade, animated: true)
-                BadgeManager.shared.setHasViewed(identifier: .trade)
             }
         case .membership:
             if let membership = LoginManager.shared.account?.membership, let plan = membership.plan {

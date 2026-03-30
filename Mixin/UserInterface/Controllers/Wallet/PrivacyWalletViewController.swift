@@ -338,7 +338,6 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
             if let trade {
                 navigationController?.pushViewController(trade, animated: true)
                 tableHeaderView.actionView.badgeActions.remove(.trade)
-                BadgeManager.shared.setHasViewed(identifier: .trade)
                 reporter.report(
                     event: .tradeStart,
                     tags: ["wallet": "main", "source": "wallet_home"]

@@ -527,7 +527,7 @@ extension WalletSummaryViewController: PillActionView.Delegate {
             if index == 0 {
                 addWallet(view)
             } else {
-                let safari = SFSafariViewController(url: .commonWallet)
+                let safari = SFSafariViewController(url: .importWallet)
                 present(safari, animated: true)
             }
         case .watching:

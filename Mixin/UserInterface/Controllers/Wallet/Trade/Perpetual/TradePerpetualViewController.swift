@@ -236,9 +236,6 @@ final class TradePerpetualViewController: UIViewController {
     }
     
     @objc private func openPosition(_ sender: UIButton) {
-        guard let markets, !markets.isEmpty else {
-            return
-        }
         let side: PerpetualOrderSide
         switch sender {
         case actionView.longButton:
@@ -448,6 +445,7 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
 extension TradePerpetualViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
         switch Section(rawValue: indexPath.section)! {
         case .value:
             break
@@ -497,11 +495,20 @@ extension TradePerpetualViewController {
     }
     
     private func viewAllMarkets() {
-        guard let markets else {
-            return
+        let selector = PerpetualMarketSelectorViewController()
+        selector.onSelected = { [wallet, weak self] (viewModel) in
+            guard let self else {
+                return
+            }
+            self.dismiss(animated: true) {
+                let market = PerpetualMarketViewController(
+                    wallet: wallet,
+                    viewModel: viewModel,
+                )
+                self.navigationController?.pushViewController(market, animated: true)
+            }
         }
-        let allMarkets = AllPerpetualMarketsViewController(wallet: wallet, viewModels: markets)
-        navigationController?.pushViewController(allMarkets, animated: true)
+        present(selector, animated: true)
     }
     
     private func viewClosedPositions() {

@@ -190,9 +190,26 @@ final class TradeViewController: UIViewController {
     }
     
     @objc func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController()
-        present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "trade_home"])
+        let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: R.string.localizable.contact_support(), style: .default, handler: { _ in
+            let customerService = CustomerServiceViewController()
+            self.present(customerService, animated: true)
+            reporter.report(event: .customerServiceDialog, tags: ["source": "trade_home"])
+        }))
+        switch trading {
+        case .simpleSpot, .advancedSpot:
+            sheet.addAction(UIAlertAction(title: R.string.localizable.spot_trading_guide(), style: .default, handler: { _ in
+                let manual = SpotTradingManualViewController()
+                self.present(manual, animated: true)
+            }))
+        case .perpetualFutures:
+            sheet.addAction(UIAlertAction(title: R.string.localizable.perpetual_futures_guide(), style: .default, handler: { _ in
+                let manual = PerpsManual.viewController()
+                self.present(manual, animated: true)
+            }))
+        }
+        sheet.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
+        present(sheet, animated: true)
     }
     
 }

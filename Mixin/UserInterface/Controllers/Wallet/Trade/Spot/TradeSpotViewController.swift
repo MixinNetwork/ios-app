@@ -298,6 +298,11 @@ class TradeSpotViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if !BadgeManager.shared.hasViewed(identifier: .spotTradingManual) {
+            BadgeManager.shared.setHasViewed(identifier: .spotTradingManual)
+            let manual = SpotTradingManualViewController()
+            present(manual, animated: true)
+        }
         switch mode {
         case .simple:
             quoteRequester?.start(delay: 0)

@@ -15,6 +15,7 @@ public final class BadgeManager {
         case advancedTrade = "advanced_trade"
         case perps = "perps"
         case perpsManual = "perps_manual"
+        case spotTradingManual = "spot_trade_manual"
     }
     
     public static let shared = BadgeManager()
@@ -53,6 +54,7 @@ public final class BadgeManager {
     }
     
     public func resetAll() {
+        hasViewed = [:]
         DispatchQueue.global().async {
             for identifier in Identifier.allCases {
                 let key = "has_viewed_" + identifier.rawValue

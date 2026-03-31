@@ -1,4 +1,6 @@
 import UIKit
+import SafariServices
+import MixinServices
 
 final class WalletTipCell: UICollectionViewCell {
     
@@ -6,10 +8,11 @@ final class WalletTipCell: UICollectionViewCell {
         case safe
         case privacy
         case classic
+        case importedWalletSafety
     }
     
     protocol Delegate: AnyObject {
-        func walletTipCellWantsToClose(_ cell: WalletTipCell)
+        func walletTipCell(_ cell: WalletTipCell, requestToLearnMore url: URL)
     }
     
     @IBOutlet weak var imageView: UIImageView!
@@ -34,6 +37,10 @@ final class WalletTipCell: UICollectionViewCell {
                 imageView.image = R.image.safe_wallet_introduction()
                 titleLabel.text = R.string.localizable.whats_safe_wallet()
                 descriptionLabel.text = R.string.localizable.safe_wallet_description()
+            case .importedWalletSafety:
+                imageView.image = R.image.free()
+                titleLabel.text = R.string.localizable.free_transfers_between_wallets_title()
+                descriptionLabel.text = R.string.localizable.free_transfers_between_wallets_description()
             case nil:
                 break
             }
@@ -65,7 +72,18 @@ final class WalletTipCell: UICollectionViewCell {
     }
     
     @IBAction func close(_ sender: Any) {
-        delegate?.walletTipCellWantsToClose(self)
+        switch content {
+        case .privacy:
+            AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip = true
+        case .classic:
+            AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = true
+        case .safe:
+            AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip = true
+        case .importedWalletSafety:
+            BadgeManager.shared.setHasViewed(identifier: .freeTransfer)
+        case .none:
+            break
+        }
     }
     
     @IBAction func learnMore(_ sender: Any) {
@@ -79,11 +97,13 @@ final class WalletTipCell: UICollectionViewCell {
             R.string.localizable.url_classic_wallet()
         case .safe:
             R.string.localizable.safe_learn_more_url()
+        case .importedWalletSafety:
+            R.string.localizable.url_cross_wallet_transaction_free()
         }
         guard let url = URL(string: string) else {
             return
         }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        delegate?.walletTipCell(self, requestToLearnMore: url)
     }
     
 }

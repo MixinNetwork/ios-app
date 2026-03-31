@@ -1,14 +1,17 @@
 import UIKit
 
-final class WalletSummarySafeIntroductionCell: UICollectionViewCell {
+final class WalletSummaryIntroductionCell: UICollectionViewCell {
     
     enum Content {
+        case imported
+        case watch
         case upgradePlan
         case createSafe
     }
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var actionView: PillActionView!
     @IBOutlet weak var actionIndicatorImageView: UIImageView!
     
@@ -30,9 +33,30 @@ final class WalletSummarySafeIntroductionCell: UICollectionViewCell {
     
     func load(content: Content) {
         switch content {
+        case .imported:
+            titleLabel.text = R.string.localizable.import_wallet_title()
+            descriptionLabel.text = R.string.localizable.import_wallet_empty_description()
+            imageView.image = R.image.wallet_intro_imported()
+            actionView.backgroundColor = R.color.background_quaternary()
+            actionView.actions = [
+                .init(title: R.string.localizable.import(), style: .vibrant),
+                .init(title: R.string.localizable.learn_more()),
+            ]
+            actionIndicatorImageView.tintColor = UIColor(displayP3RgbValue: 0x999999)
+        case .watch:
+            titleLabel.text = R.string.localizable.add_watch_address()
+            descriptionLabel.text = R.string.localizable.watch_wallet_empty_description()
+            imageView.image = R.image.wallet_intro_watch()
+            actionView.backgroundColor = R.color.background_quaternary()
+            actionView.actions = [
+                .init(title: R.string.localizable.add(), style: .vibrant),
+                .init(title: R.string.localizable.learn_more()),
+            ]
+            actionIndicatorImageView.tintColor = UIColor(displayP3RgbValue: 0x999999)
         case .upgradePlan:
             titleLabel.text = R.string.localizable.upgrade_plan()
             descriptionLabel.text = R.string.localizable.upgrade_safe_description()
+            imageView.image = R.image.wallet_intro_safe()
             actionView.backgroundColor = R.color.background_quaternary()
             actionView.actions = [
                 .init(title: R.string.localizable.upgrade(), style: .vibrant),
@@ -42,6 +66,7 @@ final class WalletSummarySafeIntroductionCell: UICollectionViewCell {
         case .createSafe:
             titleLabel.text = R.string.localizable.create_safe()
             descriptionLabel.text = R.string.localizable.create_safe_description()
+            imageView.image = R.image.safe_wallet_introduction()
             actionView.backgroundColor = R.color.theme()
             actionView.actions = [
                 .init(title: R.string.localizable.guideline(), style: .filled),

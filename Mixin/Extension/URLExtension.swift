@@ -31,6 +31,7 @@ extension URL {
     static let learnAboutSafe       = URL(string: R.string.localizable.safe_learn_more_url())!
     static let createSafeGuide      = URL(string: R.string.localizable.safe_create_guideline_url())!
     static let privacyWallet        = URL(string: R.string.localizable.url_privacy_wallet())!
+    static let commonWallet         = URL(string: R.string.localizable.url_classic_wallet())!
     
     func getKeyVals() -> [String: String] {
         return URLComponents(url: self, resolvingAgainstBaseURL: true)?.getKeyVals() ?? [:]

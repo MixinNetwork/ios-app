@@ -74,7 +74,7 @@ final class WalletSummaryViewController: UIViewController {
         collectionView.register(R.nib.walletSummaryValueCell)
         collectionView.register(R.nib.exploreSegmentCell)
         collectionView.register(R.nib.walletCell)
-        collectionView.register(R.nib.walletSummarySafeIntroductionCell)
+        collectionView.register(R.nib.walletSummaryIntroductionCell)
         collectionView.register(R.nib.walletTipCell)
         collectionView.register(
             WalletTipPageControlCell.self,
@@ -112,7 +112,7 @@ final class WalletSummaryViewController: UIViewController {
                     section.interGroupSpacing = 10
                     section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
                     return section
-                } else if self?.isLoadingSafeWallets ?? false {
+                } else if let self, self.selectedCategory == .safe, self.isLoadingSafeWallets {
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.3))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(0.3))
@@ -276,9 +276,6 @@ final class WalletSummaryViewController: UIViewController {
                 digests: [privacyWalletDigest] + commonWalletDigests + safeWalletDigests
             ).reduce(into: [:]) { (results, element) in
                 let (category, allDigests) = element
-                guard category == .safe || !allDigests.isEmpty else {
-                    return
-                }
                 let summarizingDigests = switch category {
                 case .all, .created, .imported, .watching:
                     allDigests
@@ -326,18 +323,8 @@ final class WalletSummaryViewController: UIViewController {
 
 extension WalletSummaryViewController: WalletTipCell.Delegate {
     
-    func walletTipCellWantsToClose(_ cell: WalletTipCell) {
-        guard let content = cell.content else {
-            return
-        }
-        switch content {
-        case .privacy:
-            AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip = true
-        case .classic:
-            AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = true
-        case .safe:
-            AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip = true
-        }
+    func walletTipCell(_ cell: WalletTipCell, requestToLearnMore url: URL) {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
 }
@@ -361,10 +348,11 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
             return 1
         case .wallets:
             let count = pages[selectedCategory]?.digests.count ?? 0
-            if selectedCategory == .safe && count == 0 {
-                return 1
-            } else {
-                return count
+            return switch selectedCategory {
+            case .all, .created:
+                count
+            case .imported, .watching, .safe:
+                count == 0 ? 1 : count
             }
         case .tips:
             return tips.count
@@ -413,18 +401,34 @@ extension WalletSummaryViewController: UICollectionViewDataSource {
                 cell.load(digest: digest, hasSecret: hasSecret)
                 return cell
             } else {
-                if isLoadingSafeWallets {
-                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseIdentifier.loading, for: indexPath)
-                    return cell
-                } else {
-                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_summary_safe_introduction, for: indexPath)!
-                    if unexpiredPlan == nil {
-                        cell.load(content: .upgradePlan)
-                    } else {
-                        cell.load(content: .createSafe)
-                    }
+                switch selectedCategory {
+                case .all, .created:
+                    assertionFailure("There should be a default wallet here")
+                    fallthrough
+                case .imported:
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_summary_introduction, for: indexPath)!
+                    cell.load(content: .imported)
                     cell.actionView.delegate = self
                     return cell
+                case .watching:
+                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_summary_introduction, for: indexPath)!
+                    cell.load(content: .watch)
+                    cell.actionView.delegate = self
+                    return cell
+                case .safe:
+                    if isLoadingSafeWallets {
+                        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ReuseIdentifier.loading, for: indexPath)
+                        return cell
+                    } else {
+                        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.wallet_summary_introduction, for: indexPath)!
+                        if unexpiredPlan == nil {
+                            cell.load(content: .upgradePlan)
+                        } else {
+                            cell.load(content: .createSafe)
+                        }
+                        cell.actionView.delegate = self
+                        return cell
+                    }
                 }
             }
         case .tips:
@@ -516,17 +520,36 @@ extension WalletSummaryViewController: UICollectionViewDelegate {
 extension WalletSummaryViewController: PillActionView.Delegate {
     
     func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
-        if unexpiredPlan == nil {
+        switch selectedCategory {
+        case .all, .created:
+            break
+        case .imported:
             if index == 0 {
-                let buy = MembershipPlansViewController(selectedPlan: nil)
-                present(buy, animated: true)
+                addWallet(view)
             } else {
-                let safari = SFSafariViewController(url: .learnAboutSafe)
+                let safari = SFSafariViewController(url: .commonWallet)
                 present(safari, animated: true)
             }
-        } else {
-            let safari = SFSafariViewController(url: .createSafeGuide)
-            present(safari, animated: true)
+        case .watching:
+            if index == 0 {
+                addWallet(view)
+            } else {
+                let safari = SFSafariViewController(url: .watchWallet)
+                present(safari, animated: true)
+            }
+        case .safe:
+            if unexpiredPlan == nil {
+                if index == 0 {
+                    let buy = MembershipPlansViewController(selectedPlan: nil)
+                    present(buy, animated: true)
+                } else {
+                    let safari = SFSafariViewController(url: .learnAboutSafe)
+                    present(safari, animated: true)
+                }
+            } else {
+                let safari = SFSafariViewController(url: .createSafeGuide)
+                present(safari, animated: true)
+            }
         }
     }
     

@@ -458,18 +458,8 @@ final class WalletSelectorViewController: UIViewController {
 
 extension WalletSelectorViewController: WalletTipCell.Delegate {
     
-    func walletTipCellWantsToClose(_ cell: WalletTipCell) {
-        guard let content = cell.content else {
-            return
-        }
-        switch content {
-        case .privacy:
-            AppGroupUserDefaults.Wallet.hasViewedPrivacyWalletTip = true
-        case .classic:
-            AppGroupUserDefaults.Wallet.hasViewedClassicWalletTip = true
-        case .safe:
-            AppGroupUserDefaults.Wallet.hasViewedSafeWalletTip = true
-        }
+    func walletTipCell(_ cell: WalletTipCell, requestToLearnMore url: URL) {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
     
 }

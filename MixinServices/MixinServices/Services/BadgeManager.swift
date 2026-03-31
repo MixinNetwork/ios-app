@@ -16,6 +16,7 @@ public final class BadgeManager {
         case perps = "perps"
         case perpsManual = "perps_manual"
         case spotTradingManual = "spot_trade_manual"
+        case freeTransfer = "free_transfer"
     }
     
     public static let shared = BadgeManager()

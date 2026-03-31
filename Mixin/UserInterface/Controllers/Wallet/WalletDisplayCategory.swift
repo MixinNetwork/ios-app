@@ -57,10 +57,10 @@ extension WalletDisplayCategory {
                     false
                 }
             },
-            .safe: [],
             .created: [],
             .imported: [],
             .watching: [],
+            .safe: [],
         ]
         for digest in digests {
             let category: WalletDisplayCategory? = switch digest.wallet {

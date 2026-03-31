@@ -764,12 +764,14 @@
 "import_single_chain_wallet" = "导入单链钱包";
 "import_wallet_count" = "导入 %d 个钱包";
 "import_wallet_count_one" = "导入 1 个钱包";
+"import_wallet_empty_description" = "通过私钥或 12/24 个助记词导入钱包，支持 Bitcoin、Solana、Ethereum 及其他 EVM 网络。";
 "import_wallet_guide_1" = "· 创建一个 Mixin 账号。";
 "import_wallet_guide_2" = "· 前往钱包列表 → 添加钱包 > 选择导入助记词。";
 "import_wallet_guide_3" = "· 输入您的 12 或 24 位助记词或私钥完成导入。";
 "import_wallet_guide_4" = "· 开始使用。";
 "import_wallet_guide_footer" = "创建 Mixin 账号后，将默认生成一个隐私钱包，您的余额、转账、交易等功能都会默认受到隐私保护，查看文档了解更多。";
 "import_wallet_guide_header" = "如需使用 12 或 24 位助记词钱包，请按以下步骤操作：";
+"import_wallet_title" = "导入钱包";
 "import_wallets" = "导入钱包";
 "import_wallets_from_another_wallet" = "从其他钱包导入钱包";
 "importing_into_your_wallet" = "正在导入你的钱包...";
@@ -1855,6 +1857,8 @@
 "watch_address" = "观察 %@";
 "watch_wallet" = "观察钱包";
 "watch_wallet_description" = "你无法使用观察钱包中的资产，但可以追踪它们。 ";
+"watch_wallet_empty_description" = "无需私钥即可添加观察地址，支持查看余额、交易记录，并接收交易通知。";
+"watch_wallet_guide_url" = "https://support.mixin.one/zh/article/5aac5l2v5re75yqg6kec5af5zyw5z2a77yf-r3pitk/";
 "watch_wallet_index" = "观察钱包 %@";
 "watch_wallet_instruction_benefit" = "可方便地监控指定地址的余额与交易记录。";
 "watch_wallet_instruction_restriction" = "无法转账，不能与链上应用或 DeFi 项目交互。";

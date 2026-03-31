@@ -49,13 +49,22 @@ final class DatabaseDiagnosticViewController: UIViewController {
         guard Database(rawValue: databaseSwitcher.selectedSegmentIndex)! == .perps else {
             return
         }
-        do {
-            let url = AppGroupContainer.perpsDatabaseUrl
-            try FileManager.default.removeItem(at: url)
-            outputTextView.text = "Deleted"
-        } catch {
-            outputTextView.text = "\(error)"
+        outputTextView.text = ""
+        let urls = [
+            AppGroupContainer.perpsDatabaseUrl,
+            AppGroupContainer.accountUrl.appendingPathComponent("perps.db-shm", isDirectory: false),
+            AppGroupContainer.accountUrl.appendingPathComponent("perps.db-wal", isDirectory: false),
+        ]
+        var deletedCount = 0
+        for url in urls {
+            do {
+                try FileManager.default.removeItem(at: url)
+                deletedCount += 1
+            } catch {
+                outputTextView.text.append("\(error)\n")
+            }
         }
+        outputTextView.text.append("\(deletedCount) files deleted")
     }
     
     @IBAction func run(_ sender: Any) {

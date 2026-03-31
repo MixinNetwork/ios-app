@@ -710,7 +710,7 @@
 "fourth_pin_confirm_hint" = "Yes, there is a fourth PIN confirmation, and I promise it's the last one to ensure you have remembered your PIN. The PIN is unrecoverable if lost.";
 "free" = "FREE";
 "free_recovery_service" = "Free Recovery Service";
-"free_transfers_between_wallets_description" = "Send crypto to friends using Mixin directly without fees.";
+"free_transfers_between_wallets_description" = "Free transfers between wallets, for a limited time.";
 "free_transfers_between_wallets_title" = "Free transfers between wallets";
 "from" = "From";
 "from_address" = "From address";
@@ -1552,7 +1552,6 @@
 "speed_up_failed" = "Speed up failed";
 "speed_up_transaction" = "Speed Up Transaction";
 "speed_up_transaction_description" = "If the transaction is too far along this may not be possible";
-"spot_trade_guide_additional_notes" = "Additional Notes";
 "spot_trade_guide_feature_1" = "Liquidity aggregation: access to liquidity from Uniswap, 1inch, Jupiter, MixPay, BigONE, and other DEXs and CEXs.";
 "spot_trade_guide_feature_2" = "Cross-chain trading: supports assets across Bitcoin, Ethereum, Solana, and more.";
 "spot_trade_guide_fees" = "Fees";
@@ -1658,7 +1657,6 @@
 "trade_expiry" = "Expiry";
 "trade_expiry_never" = "Never";
 "trade_filled" = "Filled";
-"trade_guide_exchange_price" = "Exchange Price";
 "trade_guide_limit_price" = "Limit Price";
 "trade_guide_market_price" = "Market Price";
 "trade_guide_pay_amount" = "You Pay";

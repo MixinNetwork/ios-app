@@ -710,8 +710,8 @@
 "fourth_pin_confirm_hint" = "这是最后一次确认 PIN，记住：PIN 丢失将永远无法找回！";
 "free" = "免手续费";
 "free_recovery_service" = "免费的资产恢复服务";
-"free_transfers_between_wallets_description" = "直接使用 Mixin 转账给朋友，无需手续费。";
-"free_transfers_between_wallets_title" = "钱包之间免费提现";
+"free_transfers_between_wallets_description" = "钱包之间转账限时免费";
+"free_transfers_between_wallets_title" = "钱包之间转账免费";
 "from" = "来自";
 "from_address" = "从外部转入";
 "from_date" = "自%@";
@@ -928,9 +928,9 @@
 "mixin" = "Mixin";
 "mixin_contact" = "Mixin 联系人";
 "mixin_id_or_phone" = "Mixin ID 或手机号";
-"mixin_import_safety_1" = "Mixin 是开源的、可复现构建的，并经过独立审计。";
-"mixin_import_safety_2" = "您的数据会被安全加密，并仅存储在您的本地设备上。";
-"mixin_import_safety_3" = "Mixin 绝不会访问您的隐私信息，也不会与第三方共享。";
+"mixin_import_safety_1" = "Mixin 开源、可验证，并经过独立审计";
+"mixin_import_safety_2" = "您的数据经过安全加密，并仅存储在本地";
+"mixin_import_safety_3" = "Mixin 绝不会访问你的隐私信息，也不会与第三方共享";
 "mixin_locked" = "Mixin 已锁定";
 "mixin_logs" = "Mixin 日志";
 "mixin_messenger_desktop" = "Mixin 桌面端";
@@ -1552,7 +1552,6 @@
 "speed_up_failed" = "加速失败";
 "speed_up_transaction" = "加速交易";
 "speed_up_transaction_description" = "如果交易已接近完成，可能无法加速";
-"spot_trade_guide_additional_notes" = "补充说明";
 "spot_trade_guide_feature_1" = "最优聚合：接入 Uniswap、 1inch、Jupiter、MixPay、BigONE 等 DEX 和 CEX。";
 "spot_trade_guide_feature_2" = "跨链交易：支持 Bitcoin、Ethereum、Solana 等多链资产交易。";
 "spot_trade_guide_fees" = "费用说明";
@@ -1658,7 +1657,6 @@
 "trade_expiry" = "过期";
 "trade_expiry_never" = "永不";
 "trade_filled" = "已成交";
-"trade_guide_exchange_price" = "兑换价格";
 "trade_guide_limit_price" = "成交价格";
 "trade_guide_market_price" = "市场价格";
 "trade_guide_pay_amount" = "支付金额";

@@ -9,11 +9,23 @@ final class WalletSummaryIntroductionCell: UICollectionViewCell {
         case createSafe
     }
     
+    protocol Delegate: AnyObject {
+        func walletSummaryIntroductionCell(_ cell: WalletSummaryIntroductionCell, didSelectActionAtIndex index: Int)
+    }
+    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var actionView: PillActionView!
     @IBOutlet weak var actionIndicatorImageView: UIImageView!
+    
+    var content: Content? {
+        didSet {
+            load(content: content)
+        }
+    }
+    
+    weak var delegate: Delegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -29,10 +41,13 @@ final class WalletSummaryIntroductionCell: UICollectionViewCell {
         )
         actionView.layer.cornerRadius = 12
         actionView.layer.masksToBounds = true
+        actionView.delegate = self
     }
     
-    func load(content: Content) {
+    private func load(content: Content?) {
         switch content {
+        case .none:
+            break
         case .imported:
             titleLabel.text = R.string.localizable.import_wallet_title()
             descriptionLabel.text = R.string.localizable.import_wallet_empty_description()
@@ -73,6 +88,14 @@ final class WalletSummaryIntroductionCell: UICollectionViewCell {
             ]
             actionIndicatorImageView.tintColor = .white
         }
+    }
+    
+}
+
+extension WalletSummaryIntroductionCell: PillActionView.Delegate {
+    
+    func pillActionView(_ view: PillActionView, didSelectActionAtIndex index: Int) {
+        delegate?.walletSummaryIntroductionCell(self, didSelectActionAtIndex: index)
     }
     
 }

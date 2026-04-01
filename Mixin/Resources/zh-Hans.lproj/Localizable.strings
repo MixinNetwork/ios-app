@@ -173,7 +173,7 @@
 "authorization" = "授权";
 "authorizations" = "授权";
 "authorize" = "授权";
-"authorize_desktop_login" = "通过%@授权桌面登录";
+"authorize_desktop_login" = "通过%@授权桌面端登录";
 "authorize_payment_via" = "通过%@验证支付";
 "authorized" = "已授权";
 "auto_back_up_hint" = "只会在 Wi-Fi 下自动备份聊天记录。";
@@ -510,7 +510,7 @@
 "deselect_all" = "取消所有选择";
 "desktop_login" = "登录 Mixin 桌面端";
 "desktop_logout" = "退出 Mixin 桌面端";
-"desktop_on_hint" = "桌面版已登入。";
+"desktop_on_hint" = "桌面端已登入。";
 "desktop_upgrade" = "请升级 Mixin 桌面端至最新版！";
 "detect_qr_tip" = "检测到一个 Mixin 二维码，点击识别";
 "developer" = "开发者";
@@ -871,7 +871,7 @@
 "lock_with_biometric" = "%@锁定";
 "log_in" = "登录";
 "log_out" = "退出登录";
-"log_out_from_desktop" = "从桌面版退出";
+"log_out_from_desktop" = "从桌面端退出";
 "log_out_instead" = "仅退出登录";
 "login_and_abort_account_deletion" = "继续登录并放弃删除账号";
 "login_desktop_first" = "请先登录桌面端";

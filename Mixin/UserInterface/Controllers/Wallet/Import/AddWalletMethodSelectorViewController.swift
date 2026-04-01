@@ -83,14 +83,16 @@ final class AddWalletMethodSelectorViewController: UIViewController {
     }
     
     @objc private func reloadTips(_ notification: Notification) {
-        let identifier = notification.userInfo?[BadgeManager.identifierUserInfoKey]
-        guard let identifier = identifier as? BadgeManager.Identifier else {
+        guard
+            let identifier = notification.userInfo?[BadgeManager.identifierUserInfoKey],
+            identifier as? BadgeManager.Identifier == .freeTransfer,
+            let index = sections.firstIndex(of: .freeTransfer)
+        else {
             return
         }
-        if identifier == .freeTransfer {
-            sections = [.methods, .footer]
-            collectionView.reloadData()
-        }
+        sections.remove(at: index)
+        let sections = IndexSet(integer: index)
+        collectionView.deleteSections(sections)
     }
     
 }

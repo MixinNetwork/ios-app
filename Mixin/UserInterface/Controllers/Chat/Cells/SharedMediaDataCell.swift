@@ -16,6 +16,12 @@ class SharedMediaDataCell: ModernSelectedBackgroundCell, AttachmentLoadingMessag
         NotificationCenter.default.removeObserver(self)
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        extensionNameLabel.layer.cornerRadius = 25
+        extensionNameLabel.layer.masksToBounds = true
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         NotificationCenter.default.removeObserver(self)

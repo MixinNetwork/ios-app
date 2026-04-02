@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -66,7 +66,6 @@
                     <constraint firstItem="u6N-47-50e" firstAttribute="centerY" secondItem="IU9-xo-BfA" secondAttribute="centerY" multiplier="90:74" id="5AA-1t-eVE"/>
                     <constraint firstAttribute="trailing" secondItem="u6N-47-50e" secondAttribute="trailing" constant="16" id="Fk8-tx-Jqr"/>
                     <constraint firstItem="u6N-47-50e" firstAttribute="top" relation="greaterThanOrEqual" secondItem="VHc-8T-GHb" secondAttribute="top" id="JAY-b0-EMQ"/>
-                    <constraint firstItem="u6N-47-50e" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="lqk-fw-mTJ" secondAttribute="leading" constant="16" id="Lym-hJ-dOF"/>
                     <constraint firstAttribute="bottom" secondItem="vaN-TA-7q7" secondAttribute="bottom" id="OOA-4H-keV"/>
                     <constraint firstItem="lqk-fw-mTJ" firstAttribute="top" secondItem="IU9-xo-BfA" secondAttribute="top" constant="16" id="QoH-zc-fZB"/>
                     <constraint firstItem="vaN-TA-7q7" firstAttribute="top" secondItem="lqk-fw-mTJ" secondAttribute="bottom" constant="14" id="RmH-an-xS6"/>
@@ -92,7 +91,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

@@ -3,10 +3,6 @@ import MixinServices
 
 final class WalletSummaryValueCell: UICollectionViewCell {
     
-    protocol Delegate: AnyObject {
-        func walletSummaryValueCellRequestTip(_ cell: WalletSummaryValueCell)
-    }
-    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var infoButton: UIButton!
     @IBOutlet weak var valueLabel: UILabel!
@@ -26,7 +22,7 @@ final class WalletSummaryValueCell: UICollectionViewCell {
     @IBOutlet weak var rightAssetSymbolLabel: UILabel!
     @IBOutlet weak var rightAssetPercentLabel: UILabel!
     
-    weak var delegate: Delegate?
+    var presentTip: ((WalletSummaryValueCell) -> Void)?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -37,7 +33,7 @@ final class WalletSummaryValueCell: UICollectionViewCell {
     }
     
     @IBAction func requestTip(_ sender: Any) {
-        delegate?.walletSummaryValueCellRequestTip(self)
+        presentTip?(self)
     }
     
     func load(summary: WalletSummary) {

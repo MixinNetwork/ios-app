@@ -764,12 +764,14 @@
 "import_single_chain_wallet" = "匯入單鏈錢包";
 "import_wallet_count" = "匯入 %d 個錢包";
 "import_wallet_count_one" = "匯入 1 個錢包";
+"import_wallet_empty_description" = "透過私鑰或 12/24 個助記詞匯入錢包，支援 Bitcoin、Solana、Ethereum 及其他 EVM 網路。";
 "import_wallet_guide_1" = "· 建立一個 Mixin 賬號。";
 "import_wallet_guide_2" = "· 前往錢包列表 → 新增錢包 > 選擇匯入助記詞。";
 "import_wallet_guide_3" = "· 輸入您的 12 或 24 位助記詞或私鑰完成匯入。";
 "import_wallet_guide_4" = "· 開始使用。";
 "import_wallet_guide_footer" = "建立 Mixin 賬號後，將預設生成一個隱私錢包，您的餘額、轉賬、交易等功能都會預設受到隱私保護，檢視檔案瞭解更多。";
 "import_wallet_guide_header" = "如需使用 12 或 24 位助記詞錢包，請按以下步驟操作：";
+"import_wallet_title" = "匯入錢包";
 "import_wallets" = "匯入錢包";
 "import_wallets_from_another_wallet" = "從其他錢包匯入錢包";
 "importing_into_your_wallet" = "正在匯入你的錢包...";
@@ -1773,6 +1775,7 @@
 "url_deposit_suspended" = "https://support.mixin.one/zh/article/5ywz5lqo5pq56en6lwe5lqn5lin5psv5oyb5ywf5yc855qe6k05pio-1sh1z50/";
 "url_disappearing_message" = "https://support.mixin.one/zh/article/5aac5l2v5bya5zcv6zmq5pe25rai5ogv77yf-18dzv5i/";
 "url_forget_pin" = "https://support.mixin.one/zh/article/pin-1vb2rc7/";
+"url_import_wallet" = "https://support.mixin.one/zh/article/5aac5l2v5a85ywl5yqp6k6w6kn6zkx5yyf77yf-eri489/";
 "url_lightning_address" = "https://support.mixin.one/zh/article/lightning-address-1fzf8s4/";
 "url_privacy_wallet" = "https://support.mixin.one/zh/article/5lua5lmi5piv6zqq56eb6zkx5yyf77yf-1s7o0e2/";
 "url_recall_message" = "https://support.mixin.one/zh/article/mixin-messenger-bjr9re/";
@@ -1855,6 +1858,8 @@
 "watch_address" = "觀察 %@";
 "watch_wallet" = "觀察錢包";
 "watch_wallet_description" = "你無法使用觀察錢包中的資產，但可以追蹤它們。 ";
+"watch_wallet_empty_description" = "無需私鑰即可新增觀察地址，支援檢視餘額、交易記錄，並接收交易通知。";
+"watch_wallet_guide_url" = "https://support.mixin.one/zh/article/5aac5l2v5re75yqg6kec5af5zyw5z2a77yf-r3pitk/";
 "watch_wallet_index" = "觀察錢包 %@";
 "watch_wallet_instruction_benefit" = "可方便地監控指定地址的餘額與交易記錄。";
 "watch_wallet_instruction_restriction" = "無法轉賬，不能與鏈上應用或 DeFi 專案互動。";

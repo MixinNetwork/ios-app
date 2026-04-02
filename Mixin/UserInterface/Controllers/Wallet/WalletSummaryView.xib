@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,7 +12,9 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WalletSummaryViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
                 <outlet property="addWalletView" destination="RTR-DM-mcJ" id="Ghn-hm-v7M"/>
-                <outlet property="collectionView" destination="3jQ-cV-9qL" id="PSz-45-JFZ"/>
+                <outlet property="categorySelectorCollectionView" destination="tr6-VV-3oq" id="gHI-pn-CLP"/>
+                <outlet property="categorySelectorHeightConstraint" destination="q2f-xg-AFe" id="DX9-9g-Dzb"/>
+                <outlet property="categorySelectorLayout" destination="PMB-gi-9AE" id="0c8-jA-SEz"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -54,14 +56,18 @@
                         <constraint firstItem="RTR-DM-mcJ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Jn5-Sr-Ev6" secondAttribute="trailing" id="yBF-NN-oYh"/>
                     </constraints>
                 </view>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="3jQ-cV-9qL">
-                    <rect key="frame" x="0.0" y="162" width="393" height="690"/>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="tr6-VV-3oq">
+                    <rect key="frame" x="0.0" y="162" width="393" height="58"/>
                     <color key="backgroundColor" name="background_secondary"/>
-                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="GWW-jB-fH0">
+                    <constraints>
+                        <constraint firstAttribute="height" constant="58" id="q2f-xg-AFe"/>
+                    </constraints>
+                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="PMB-gi-9AE">
                         <size key="itemSize" width="128" height="128"/>
+                        <size key="estimatedItemSize" width="100" height="38"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <inset key="sectionInset" minX="15" minY="10" maxX="15" maxY="10"/>
                     </collectionViewFlowLayout>
                 </collectionView>
             </subviews>
@@ -70,11 +76,10 @@
             <constraints>
                 <constraint firstItem="N3G-DI-chj" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="8eQ-Ll-nKq"/>
                 <constraint firstAttribute="trailing" secondItem="N3G-DI-chj" secondAttribute="trailing" id="K4Q-A8-aMt"/>
-                <constraint firstAttribute="trailing" secondItem="3jQ-cV-9qL" secondAttribute="trailing" id="Uez-DW-qEa"/>
-                <constraint firstAttribute="bottom" secondItem="3jQ-cV-9qL" secondAttribute="bottom" id="bdd-mf-Svv"/>
-                <constraint firstItem="3jQ-cV-9qL" firstAttribute="top" secondItem="N3G-DI-chj" secondAttribute="bottom" id="n2O-Qd-cfg"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="tr6-VV-3oq" secondAttribute="trailing" id="MVe-Ug-eAD"/>
+                <constraint firstItem="tr6-VV-3oq" firstAttribute="top" secondItem="N3G-DI-chj" secondAttribute="bottom" id="Zxk-X4-EtD"/>
+                <constraint firstItem="tr6-VV-3oq" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="m35-Om-1q8"/>
                 <constraint firstItem="N3G-DI-chj" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="uhg-H0-adW"/>
-                <constraint firstItem="3jQ-cV-9qL" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="wpV-SB-luc"/>
             </constraints>
             <point key="canvasLocation" x="49.618320610687022" y="41.549295774647888"/>
         </view>

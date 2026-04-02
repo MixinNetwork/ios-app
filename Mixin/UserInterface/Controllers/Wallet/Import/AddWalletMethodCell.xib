@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="add_wallet_method" id="ljI-HK-BMy" customClass="AddWalletMethodCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="343" height="64"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="B46-o0-NvE">
+                <rect key="frame" x="0.0" y="0.0" width="343" height="64"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9SH-VK-cwR">
+                        <rect key="frame" x="0.0" y="0.0" width="343" height="64"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="4r3-zc-a99">
+                                <rect key="frame" x="20" y="13" width="303" height="38"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="750" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ps0-ot-rVg">
+                                        <rect key="frame" x="0.0" y="7" width="24" height="24"/>
+                                        <color key="tintColor" red="0.87843137250000003" green="0.87843137250000003" blue="0.87843137250000003" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="24" id="RuT-FF-JfW"/>
+                                            <constraint firstAttribute="width" secondItem="Ps0-ot-rVg" secondAttribute="height" id="aYs-A2-FEV"/>
+                                        </constraints>
+                                    </imageView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="JeY-pe-Cau">
+                                        <rect key="frame" x="36" y="0.0" width="267" height="38"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="19.333333333333332" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EbW-0q-qy2">
+                                                <rect key="frame" x="0.0" y="0.0" width="267" height="19.333333333333332"/>
+                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                                <color key="textColor" name="text"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="500" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="15.666666666666668" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wSV-9Q-r4J">
+                                                <rect key="frame" x="0.0" y="23.333333333333336" width="267" height="14.666666666666664"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                                <color key="textColor" name="text_tertiary"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" name="background"/>
+                        <constraints>
+                            <constraint firstItem="4r3-zc-a99" firstAttribute="leading" secondItem="9SH-VK-cwR" secondAttribute="leading" constant="20" id="PWN-V9-d9h"/>
+                            <constraint firstItem="4r3-zc-a99" firstAttribute="top" secondItem="9SH-VK-cwR" secondAttribute="top" constant="13" id="f3b-7N-z3Y"/>
+                            <constraint firstAttribute="trailing" secondItem="4r3-zc-a99" secondAttribute="trailing" constant="20" id="mia-36-AJn"/>
+                            <constraint firstAttribute="bottom" secondItem="4r3-zc-a99" secondAttribute="bottom" constant="13" id="wGI-06-c7k"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="13"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="9SH-VK-cwR" secondAttribute="trailing" id="PgM-x0-7KD"/>
+                    <constraint firstItem="9SH-VK-cwR" firstAttribute="leading" secondItem="B46-o0-NvE" secondAttribute="leading" id="PyT-6e-t9u"/>
+                    <constraint firstAttribute="bottom" secondItem="9SH-VK-cwR" secondAttribute="bottom" id="u09-Vf-WfU"/>
+                    <constraint firstItem="9SH-VK-cwR" firstAttribute="top" secondItem="B46-o0-NvE" secondAttribute="top" id="zmN-2r-deC"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <connections>
+                <outlet property="iconImageView" destination="Ps0-ot-rVg" id="Dfr-Kx-aVk"/>
+                <outlet property="subtitleLabel" destination="wSV-9Q-r4J" id="569-Xn-WQc"/>
+                <outlet property="titleLabel" destination="EbW-0q-qy2" id="CC1-Rw-49A"/>
+            </connections>
+            <point key="canvasLocation" x="-502" y="165"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

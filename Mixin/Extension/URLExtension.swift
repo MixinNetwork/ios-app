@@ -33,6 +33,7 @@ extension URL {
     static let privacyWallet        = URL(string: R.string.localizable.url_privacy_wallet())!
     static let commonWallet         = URL(string: R.string.localizable.url_classic_wallet())!
     static let importWallet         = URL(string: R.string.localizable.url_import_wallet())!
+    static let recoveryKit          = URL(string: R.string.localizable.url_recovery_kit())!
     
     func getKeyVals() -> [String: String] {
         return URLComponents(url: self, resolvingAgainstBaseURL: true)?.getKeyVals() ?? [:]

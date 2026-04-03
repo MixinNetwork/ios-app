@@ -83,7 +83,7 @@ final class PopupTipViewController: UIViewController {
             if let learnMoreRange {
                 let linkRange = NSRange(learnMoreRange, in: description)
                 attributedDescription.addAttributes(
-                    [.foregroundColor: R.color.theme()!, .link: URL.recoveryContact],
+                    [.foregroundColor: R.color.theme()!, .link: URL.recoveryKit],
                     range: linkRange
                 )
             }

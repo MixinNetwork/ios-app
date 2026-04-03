@@ -45,7 +45,7 @@ final class RecoveryKitViewController: SettingsTableViewController {
             return
         }
         self.account = account
-        var rows = [
+        let section = SettingsSection(rows: [
             SettingsRow(
                 title: R.string.localizable.mobile_number(),
                 subtitle: account.isAnonymous ? R.string.localizable.set_up() : R.string.localizable.added(),
@@ -56,17 +56,12 @@ final class RecoveryKitViewController: SettingsTableViewController {
                 subtitle: account.hasSaltExported ? R.string.localizable.backed_up() : R.string.localizable.not_backed_up(),
                 accessory: .disclosure
             ),
-        ]
-        if !account.isAnonymous {
-            rows.append(
-                SettingsRow(
-                    title: R.string.localizable.emergency_contact(),
-                    subtitle: account.hasEmergencyContact ? R.string.localizable.added() : R.string.localizable.set_up(),
-                    accessory: .disclosure
-                )
-            )
-        }
-        let section = SettingsSection(rows: rows)
+            SettingsRow(
+                title: R.string.localizable.emergency_contact(),
+                subtitle: account.hasEmergencyContact ? R.string.localizable.added() : R.string.localizable.set_up(),
+                accessory: .disclosure
+            ),
+        ])
         dataSource.reloadSections([section])
     }
     
@@ -89,23 +84,28 @@ extension RecoveryKitViewController: UITableViewDelegate {
         guard let account else {
             return
         }
-        let viewController = switch indexPath.row {
+        let next: UIViewController
+        switch indexPath.row {
         case 0:
-            if let number = account.phone, !account.isAnonymous {
+            next = if let number = account.phone, !account.isAnonymous {
                 ChangeMobileNumberViewController(phoneNumber: number)
             } else {
                 AddMobileNumberViewController()
             }
         case 1:
-            ExportMnemonicPhrasesViewController()
+            next = ExportMnemonicPhrasesViewController()
         default:
-            if account.hasEmergencyContact {
-                ViewRecoveryContactViewController()
+            if account.isAnonymous {
+                let tip = PopupTipViewController(tip: .addMobileNumber(.setRecoveryContact))
+                present(tip, animated: true)
+                return
+            } else if account.hasEmergencyContact {
+                next = ViewRecoveryContactViewController()
             } else {
-                AddRecoveryContactViewController()
+                next = AddRecoveryContactViewController()
             }
         }
-        navigationController?.pushViewController(viewController, animated: true)
+        navigationController?.pushViewController(next, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {

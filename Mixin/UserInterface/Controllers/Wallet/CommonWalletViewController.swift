@@ -445,7 +445,9 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
                 let selector = Web3TokenReceiverViewController(payment: payment)
                 self.navigationController?.pushViewController(selector, animated: true)
             }
-            present(selector, animated: true, completion: nil)
+            withAccountRecoveryChecked { [weak self] in
+                self?.present(selector, animated: true, completion: nil)
+            }
         case .receive:
             let selector = Web3TokenSelectorViewController(
                 wallet: wallet,
@@ -459,8 +461,8 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
                 )
                 self.navigationController?.pushViewController(selector, animated: true)
             }
-            withMnemonicsBackupChecked {
-                self.present(selector, animated: true, completion: nil)
+            withAccountRecoveryChecked { [weak self] in
+                self?.present(selector, animated: true, completion: nil)
             }
         case .trade:
             let trade = TradeViewController(
@@ -471,8 +473,14 @@ extension CommonWalletViewController: WalletHeaderView.Delegate {
                 receiveAssetID: nil,
                 referral: nil
             )
-            if let trade {
-                navigationController?.pushViewController(trade, animated: true)
+            guard let trade else {
+                return
+            }
+            withAccountRecoveryChecked { [weak self] in
+                guard let self else {
+                    return
+                }
+                self.navigationController?.pushViewController(trade, animated: true)
                 reporter.report(
                     event: .tradeStart,
                     tags: ["wallet": "web3", "source": "wallet_home"]

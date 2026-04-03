@@ -5,13 +5,27 @@ final class PopupTipViewController: UIViewController {
     
     @IBOutlet weak var imageBackgroundView: GradientView!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var bodyStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
-    @IBOutlet weak var continueButton: StyledButton!
+    @IBOutlet weak var descriptionTextView: IntroTextView!
+    @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
     
     private let tip: PopupTip
     private let presentationManager = PopupPresentationManager()
+    
+    private var descriptionAttributes: [NSAttributedString.Key: Any] {
+        let descriptionParagraph = NSMutableParagraphStyle()
+        descriptionParagraph.lineHeightMultiple = 1.5
+        descriptionParagraph.alignment = .center
+        return [
+            .font: UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 14)
+            ),
+            .foregroundColor: R.color.text_secondary()!,
+            .paragraphStyle: descriptionParagraph,
+        ]
+    }
     
     init(tip: PopupTip) {
         self.tip = tip
@@ -38,57 +52,134 @@ final class PopupTipViewController: UIViewController {
             UIColor(displayP3RgbValue: 0x2C3136),
             UIColor(displayP3RgbValue: 0x1C2029),
         ]
+        descriptionTextView.textContainerInset = .zero
+        descriptionTextView.textContainer.lineFragmentPadding = 0
+        descriptionTextView.adjustsFontForContentSizeCategory = true
+        
+        let continueButtonTitle: String
+        let cancelButtonTitle: String
         switch tip {
         case .appUpdate:
             imageView.image = R.image.tips_update()
             titleLabel.text = R.string.localizable.new_update_available()
-            descriptionLabel.text = R.string.localizable.new_update_available_desc()
-            continueButton.setTitle(R.string.localizable.update_now(), for: .normal)
-        case .backupMnemonics:
-            imageView.image = R.image.tips_mnemonics()
-            titleLabel.text = R.string.localizable.backup_mnemonic_phrase()
-            descriptionLabel.text = R.string.localizable.backup_mnemonic_phrase_desc()
-            continueButton.setTitle(R.string.localizable.backup_now(), for: .normal)
+            descriptionTextView.attributedText = NSAttributedString(
+                string: R.string.localizable.new_update_available_desc(),
+                attributes: descriptionAttributes
+            )
+            continueButtonTitle = R.string.localizable.update_now()
+            cancelButtonTitle = R.string.localizable.not_now()
+        case .recovery(let context):
+            imageView.image = R.image.tips_recovery()
+            titleLabel.text = R.string.localizable.recovery_kit()
+            let description = R.string.localizable.recovery_kit_alert()
+            let attributedDescription = NSMutableAttributedString(
+                string: description,
+                attributes: descriptionAttributes
+            )
+            let learnMoreRange = description.range(
+                of: R.string.localizable.learn_more(),
+                options: [.backwards, .caseInsensitive]
+            )
+            if let learnMoreRange {
+                let linkRange = NSRange(learnMoreRange, in: description)
+                attributedDescription.addAttributes(
+                    [.foregroundColor: R.color.theme()!, .link: URL.recoveryContact],
+                    range: linkRange
+                )
+            }
+            descriptionTextView.attributedText = attributedDescription
+            bodyStackView.setCustomSpacing(24, after: descriptionTextView)
+            let optionsView = PopupTipRecoveryKitOptionsView(
+                enabledOptions: context.enabledOptions
+            )
+            bodyStackView.addArrangedSubview(optionsView)
+            continueButtonTitle = R.string.localizable.continue()
+            cancelButtonTitle = switch context.intent {
+            case .homePageInspection, .assetChangingConfirmation:
+                R.string.localizable.not_now()
+            case .logoutConfirmation:
+                R.string.localizable.cancel()
+            }
         case .notification:
             imageView.image = R.image.tips_notification()
             titleLabel.text = R.string.localizable.enable_push_notification()
-            descriptionLabel.text = R.string.localizable.notification_content()
-            continueButton.setTitle(R.string.localizable.enable_notifications(), for: .normal)
-        case .recoveryContact:
-            imageView.image = R.image.tips_recovery_contact()
-            titleLabel.text = R.string.localizable.emergency_contact()
-            descriptionLabel.text = R.string.localizable.setting_emergency_content()
-            continueButton.setTitle(R.string.localizable.continue(), for: .normal)
+            descriptionTextView.attributedText = NSAttributedString(
+                string: R.string.localizable.notification_content(),
+                attributes: descriptionAttributes
+            )
+            continueButtonTitle = R.string.localizable.enable_notifications()
+            cancelButtonTitle = R.string.localizable.not_now()
         case .verifyMobileNumber:
             imageView.image = R.image.tips_verify_phone()
             titleLabel.text = R.string.localizable.verify_mobile_number()
-            descriptionLabel.text = R.string.localizable.periodic_sms_verification_benefits()
-            continueButton.setTitle(R.string.localizable.verify_now(), for: .normal)
+            descriptionTextView.attributedText = NSAttributedString(
+                string: R.string.localizable.periodic_sms_verification_benefits(),
+                attributes: descriptionAttributes
+            )
+            continueButtonTitle = R.string.localizable.verify_now()
+            cancelButtonTitle = R.string.localizable.not_now()
         case .appRating:
             assertionFailure("No preview for app rating. Call `AppStore.requestReview(in:)` instead.")
+            continueButtonTitle = ""
+            cancelButtonTitle = ""
         case .importPrivateKey:
             imageView.image = R.image.tips_import_private_key()
             titleLabel.text = R.string.localizable.import_private_key()
-            descriptionLabel.text = R.string.localizable.import_secret_description(R.string.localizable.private_key())
-            continueButton.setTitle(R.string.localizable.import_now(), for: .normal)
+            descriptionTextView.attributedText = NSAttributedString(
+                string: R.string.localizable.import_secret_description(R.string.localizable.private_key()),
+                attributes: descriptionAttributes
+            )
+            continueButtonTitle = R.string.localizable.import_now()
+            cancelButtonTitle = R.string.localizable.not_now()
         case .importMnemonics:
             imageView.image = R.image.tips_import_mnemonics()
             titleLabel.text = R.string.localizable.import_mnemonic_phrase()
-            descriptionLabel.text = R.string.localizable.import_secret_description(R.string.localizable.mnemonic_phrase())
-            continueButton.setTitle(R.string.localizable.import_now(), for: .normal)
-        case .addMobileNumber:
+            descriptionTextView.attributedText = NSAttributedString(
+                string: R.string.localizable.import_secret_description(R.string.localizable.mnemonic_phrase()),
+                attributes: descriptionAttributes
+            )
+            continueButtonTitle = R.string.localizable.import_now()
+            cancelButtonTitle = R.string.localizable.not_now()
+        case .addMobileNumber(let intent):
             imageView.image = R.image.tips_verify_phone()
             titleLabel.text = R.string.localizable.add_mobile_number()
-            descriptionLabel.text = R.string.localizable.add_mobile_number_reason()
-            continueButton.setTitle(R.string.localizable.add_now(), for: .normal)
+            let description = switch intent {
+            case .buyToken:
+                R.string.localizable.add_mobile_number_reason_buy_token()
+            case .setRecoveryContact:
+                R.string.localizable.add_mobile_number_reason_set_recovery_contact()
+            }
+            descriptionTextView.attributedText = NSAttributedString(
+                string: description,
+                attributes: descriptionAttributes
+            )
+            continueButtonTitle = R.string.localizable.add_now()
+            cancelButtonTitle = R.string.localizable.not_now()
         }
-        continueButton.style = .filled
-        continueButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
-        continueButton.applyDefaultContentInsets()
-        cancelButton.setTitle(R.string.localizable.not_now(), for: .normal)
-        cancelButton.setTitleColor(R.color.theme(), for: .normal)
-        cancelButton.titleLabel?.setFont(scaledFor: .systemFont(ofSize: 16, weight: .medium), adjustForContentSize: true)
-        cancelButton.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 0, bottom: 15, trailing: 0)
+        
+        continueButton.configuration?.attributedTitle = {
+            var attributes = AttributeContainer()
+            attributes.font = UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 16, weight: .medium)
+            )
+            attributes.foregroundColor = .white
+            return AttributedString(continueButtonTitle, attributes: attributes)
+        }()
+        continueButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        
+        if var config = cancelButton.configuration {
+            config.attributedTitle = {
+                var attributes = AttributeContainer()
+                attributes.font = UIFontMetrics.default.scaledFont(
+                    for: .systemFont(ofSize: 16, weight: .medium)
+                )
+                attributes.foregroundColor = R.color.theme()
+                return AttributedString(cancelButtonTitle, attributes: attributes)
+            }()
+            config.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 0, bottom: 15, trailing: 0)
+            cancelButton.configuration = config
+        }
+        cancelButton.titleLabel?.adjustsFontForContentSizeCategory = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -106,10 +197,10 @@ final class PopupTipViewController: UIViewController {
         case .appUpdate:
             UIApplication.shared.open(.mixinMessenger, options: [:], completionHandler: nil)
             presentingViewController?.dismiss(animated: true)
-        case .backupMnemonics:
+        case .recovery:
             presentingViewController?.dismiss(animated: true) {
-                let introduction = ExportMnemonicPhrasesIntroductionViewController()
-                UIApplication.homeNavigationController?.pushViewController(introduction, animated: true)
+                let recovery = RecoveryKitViewController()
+                UIApplication.homeNavigationController?.pushViewController(recovery, animated: true)
             }
         case .notification:
             presentingViewController?.dismiss(animated: true)
@@ -125,11 +216,6 @@ final class PopupTipViewController: UIViewController {
                 @unknown default:
                     break
                 }
-            }
-        case .recoveryContact:
-            presentingViewController?.dismiss(animated: true) {
-                let add = AddRecoveryContactViewController()
-                UIApplication.homeNavigationController?.pushViewController(add, animated: true)
             }
         case .verifyMobileNumber:
             presentingViewController?.dismiss(animated: true) {
@@ -158,14 +244,25 @@ final class PopupTipViewController: UIViewController {
     
     @IBAction func cancel(_ sender: Any) {
         switch tip {
+        case .recovery(let context):
+            switch context.intent {
+            case .assetChangingConfirmation(let onCancel):
+                presentingViewController?.dismiss(animated: true, completion: onCancel)
+                return
+            default:
+                break
+            }
+        default:
+            break
+        }
+        
+        switch tip {
         case .appUpdate:
             AppGroupUserDefaults.appUpdateTipDismissalDate = Date()
-        case .backupMnemonics:
-            AppGroupUserDefaults.User.backupMnemonicsTipDismissalDate = Date()
+        case .recovery:
+            AppGroupUserDefaults.User.recoveryKitTipDismissalDate = Date()
         case .notification:
             AppGroupUserDefaults.notificationTipDismissalDate = Date()
-        case .recoveryContact:
-            AppGroupUserDefaults.User.recoveryContactTipDismissalDate = Date()
         case .verifyMobileNumber:
             AppGroupUserDefaults.User.verifyPhoneTipDismissalDate = Date()
         case .appRating, .importPrivateKey, .importMnemonics, .addMobileNumber:
@@ -183,11 +280,13 @@ final class PopupTipViewController: UIViewController {
             width: superview.bounds.width,
             height: UIView.layoutFittingExpandedSize.height
         )
-        preferredContentSize.height = view.systemLayoutSizeFitting(
+        let height = view.systemLayoutSizeFitting(
             sizeToFit,
             withHorizontalFittingPriority: .required,
             verticalFittingPriority: .fittingSizeLevel
         ).height
+        let maxHeight = superview.bounds.height - superview.safeAreaInsets.top
+        preferredContentSize.height = min(maxHeight, height)
     }
     
 }

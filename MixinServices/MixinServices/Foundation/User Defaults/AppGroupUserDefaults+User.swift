@@ -45,8 +45,7 @@ extension AppGroupUserDefaults {
             case assetSearchHistory = "asset_search_history"
             case recentSearches = "recent_searches"
             
-            case recoveryContactTipDismissalDate = "emergency_contact_bulletin_dismissal_date"
-            case backupMnemonicsTipDismissalDate = "backup_mnemonics_tip_dismissal_date"
+            case recoveryKitTipDismissalDate = "emergency_contact_bulletin_dismissal_date"
             case verifyPhoneTipDismissalDate = "verify_phone_tip_dismissal_date"
             
             case lockScreenTimeout = "lock_screen_timeout_interval"
@@ -207,11 +206,8 @@ extension AppGroupUserDefaults {
             }
         }
         
-        @Default(namespace: .user, key: Key.recoveryContactTipDismissalDate, defaultValue: nil)
-        public static var recoveryContactTipDismissalDate: Date?
-        
-        @Default(namespace: .user, key: Key.backupMnemonicsTipDismissalDate, defaultValue: nil)
-        public static var backupMnemonicsTipDismissalDate: Date?
+        @Default(namespace: .user, key: Key.recoveryKitTipDismissalDate, defaultValue: nil)
+        public static var recoveryKitTipDismissalDate: Date?
         
         @Default(namespace: .user, key: Key.verifyPhoneTipDismissalDate, defaultValue: nil)
         public static var verifyPhoneTipDismissalDate: Date?

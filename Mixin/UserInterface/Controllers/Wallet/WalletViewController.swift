@@ -2,7 +2,7 @@ import UIKit
 import LocalAuthentication
 import MixinServices
 
-class WalletViewController: UIViewController, MnemonicsBackupChecking {
+class WalletViewController: UIViewController, AssetChangeAccountRecoveryChecking {
     
     @IBOutlet weak var titleView: UIView!
     @IBOutlet weak var titleInfoStackView: UIStackView!

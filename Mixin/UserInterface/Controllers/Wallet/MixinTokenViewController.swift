@@ -184,11 +184,13 @@ extension MixinTokenViewController: TokenActionView.Delegate {
         switch action {
         case .receive:
             let deposit = DepositViewController(token: token, switchingBetweenNetworks: true)
-            withMnemonicsBackupChecked {
-                self.navigationController?.pushViewController(deposit, animated: true)
+            withAccountRecoveryChecked { [weak self] in
+                self?.navigationController?.pushViewController(deposit, animated: true)
             }
         case .send:
-            send()
+            withAccountRecoveryChecked { [weak self] in
+                self?.send()
+            }
         case .trade:
             let trade = TradeViewController(
                 wallet: .privacy,
@@ -197,8 +199,14 @@ extension MixinTokenViewController: TokenActionView.Delegate {
                 receiveAssetID: AssetID.erc20USDT,
                 referral: nil
             )
-            if let trade {
-                navigationController?.pushViewController(trade, animated: true)
+            guard let trade else {
+                return
+            }
+            withAccountRecoveryChecked { [weak self] in
+                guard let self else {
+                    return
+                }
+                self.navigationController?.pushViewController(trade, animated: true)
                 reporter.report(
                     event: .tradeStart,
                     tags: ["wallet": "main", "source": "asset_detail"]

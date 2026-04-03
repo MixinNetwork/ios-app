@@ -315,7 +315,9 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
                 let receiver = MixinTokenReceiverViewController(token: token)
                 self.navigationController?.pushViewController(receiver, animated: true)
             }
-            present(selector, animated: true, completion: nil)
+            withAccountRecoveryChecked { [weak self] in
+                self?.present(selector, animated: true, completion: nil)
+            }
         case .receive:
             reporter.report(event: .receiveStart, tags: ["wallet": "main", "source": "wallet_home"])
             let selector = MixinTokenSelectorViewController(intent: .receive)
@@ -324,8 +326,8 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
                 let deposit = DepositViewController(token: token, switchingBetweenNetworks: true)
                 self.navigationController?.pushViewController(deposit, animated: true)
             }
-            withMnemonicsBackupChecked {
-                self.present(selector, animated: true, completion: nil)
+            withAccountRecoveryChecked { [weak self] in
+                self?.present(selector, animated: true, completion: nil)
             }
         case .trade:
             let trade = TradeViewController(
@@ -335,9 +337,15 @@ extension PrivacyWalletViewController: WalletHeaderView.Delegate {
                 receiveAssetID: nil,
                 referral: nil
             )
-            if let trade {
-                navigationController?.pushViewController(trade, animated: true)
-                tableHeaderView.actionView.badgeActions.remove(.trade)
+            guard let trade else {
+                return
+            }
+            withAccountRecoveryChecked { [weak self] in
+                guard let self else {
+                    return
+                }
+                self.navigationController?.pushViewController(trade, animated: true)
+                self.tableHeaderView.actionView.badgeActions.remove(.trade)
                 BadgeManager.shared.setHasViewed(identifier: .trade)
                 reporter.report(
                     event: .tradeStart,

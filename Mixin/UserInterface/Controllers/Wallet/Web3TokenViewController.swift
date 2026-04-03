@@ -223,15 +223,17 @@ extension Web3TokenViewController: TokenActionView.Delegate {
         }
         switch action {
         case .receive:
-            withMnemonicsBackupChecked { [wallet, token] in
+            withAccountRecoveryChecked { [weak self, wallet, token] in
                 let selector = Web3TokenSenderSelectorViewController(
                     receivingWallet: wallet,
                     receivingToken: token
                 )
-                self.navigationController?.pushViewController(selector, animated: true)
+                self?.navigationController?.pushViewController(selector, animated: true)
             }
         case .send:
-            send()
+            withAccountRecoveryChecked { [weak self] in
+                self?.send()
+            }
         case .trade:
             let trade = TradeViewController(
                 wallet: .common(wallet),
@@ -240,8 +242,14 @@ extension Web3TokenViewController: TokenActionView.Delegate {
                 receiveAssetID: AssetID.erc20USDT,
                 referral: nil
             )
-            if let trade {
-                navigationController?.pushViewController(trade, animated: true)
+            guard let trade else {
+                return
+            }
+            withAccountRecoveryChecked { [weak self] in
+                guard let self else {
+                    return
+                }
+                self.navigationController?.pushViewController(trade, animated: true)
                 reporter.report(
                     event: .tradeStart,
                     tags: ["wallet": "web3", "source": "asset_detail"]

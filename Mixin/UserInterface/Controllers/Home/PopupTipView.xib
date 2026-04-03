@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,9 +11,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PopupTipViewController" customModule="Mixin" customModuleProvider="target">
             <connections>
+                <outlet property="bodyStackView" destination="DKs-Ne-QNE" id="ndX-V2-hzo"/>
                 <outlet property="cancelButton" destination="cLe-z4-73j" id="EkF-tm-b1p"/>
                 <outlet property="continueButton" destination="clg-3U-FPd" id="XJk-3A-bgZ"/>
-                <outlet property="descriptionLabel" destination="4oa-9i-Jlf" id="rnC-aJ-zQh"/>
+                <outlet property="descriptionTextView" destination="4oa-9i-Jlf" id="rnC-aJ-zQh"/>
                 <outlet property="imageBackgroundView" destination="aMa-XS-PVS" id="liZ-rD-Uaa"/>
                 <outlet property="imageView" destination="wX1-Iy-rao" id="0nw-LD-Z8c"/>
                 <outlet property="titleLabel" destination="qBf-mR-W0J" id="LIU-sa-g8G"/>
@@ -26,45 +27,54 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aMa-XS-PVS" customClass="GradientView" customModule="Mixin" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="310"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="279"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="310" translatesAutoresizingMaskIntoConstraints="NO" id="wX1-Iy-rao">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="310"/>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" placeholderIntrinsicWidth="375" placeholderIntrinsicHeight="310" translatesAutoresizingMaskIntoConstraints="NO" id="wX1-Iy-rao">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="279"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </imageView>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="DKs-Ne-QNE">
-                    <rect key="frame" x="30" y="350" width="315" height="60"/>
+                    <rect key="frame" x="30" y="319" width="315" height="105"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qBf-mR-W0J">
-                            <rect key="frame" x="0.0" y="0.0" width="315" height="50"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="26" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qBf-mR-W0J">
+                            <rect key="frame" x="0.0" y="0.0" width="315" height="26"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
                             <color key="textColor" name="text"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4oa-9i-Jlf">
-                            <rect key="frame" x="0.0" y="60" width="315" height="0.0"/>
+                        <textView opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="69" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="4oa-9i-Jlf" customClass="IntroTextView" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="36" width="315" height="69"/>
+                            <color key="textColor" name="text_secondary"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <color key="textColor" name="text_tertiary"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                            <textInputTraits key="textInputTraits"/>
+                        </textView>
                     </subviews>
                 </stackView>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="j0X-Dt-Yb4">
-                    <rect key="frame" x="24" y="480" width="327" height="120"/>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="j0X-Dt-Yb4">
+                    <rect key="frame" x="24" y="494" width="327" height="106"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="clg-3U-FPd" customClass="StyledButton" customModule="Mixin" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="327" height="14"/>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" title=""/>
+                        <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="48" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="clg-3U-FPd" customClass="StyledButton" customModule="Mixin" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="327" height="48"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title=""/>
+                            <buttonConfiguration key="configuration" style="filled" title="Continue" cornerStyle="capsule">
+                                <directionalEdgeInsets key="contentInsets" top="15" leading="20" bottom="14" trailing="20"/>
+                                <color key="baseBackgroundColor" name="theme"/>
+                            </buttonConfiguration>
                             <connections>
                                 <action selector="continueToNext:" destination="-1" eventType="touchUpInside" id="nNr-hU-KYZ"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cLe-z4-73j">
-                            <rect key="frame" x="0.0" y="24" width="327" height="96"/>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" title=""/>
+                        <button opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="infinite" placeholderIntrinsicHeight="48" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cLe-z4-73j">
+                            <rect key="frame" x="0.0" y="58" width="327" height="48"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="Cancel">
+                                <color key="titleColor" name="theme"/>
+                            </state>
+                            <buttonConfiguration key="configuration" style="plain" title="Cancel">
+                                <color key="baseForegroundColor" name="theme"/>
+                            </buttonConfiguration>
                             <connections>
                                 <action selector="cancel:" destination="-1" eventType="touchUpInside" id="hBE-9o-zdU"/>
                             </connections>
@@ -75,17 +85,45 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" name="background"/>
             <constraints>
+                <constraint firstItem="j0X-Dt-Yb4" firstAttribute="top" relation="greaterThanOrEqual" secondItem="DKs-Ne-QNE" secondAttribute="bottom" id="5ho-L6-Jlx"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="DKs-Ne-QNE" secondAttribute="trailing" constant="30" id="8PI-Eg-fSI"/>
                 <constraint firstItem="j0X-Dt-Yb4" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="24" id="BBY-fM-dcE"/>
                 <constraint firstItem="DKs-Ne-QNE" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="30" id="Bc7-p2-QAq"/>
                 <constraint firstItem="aMa-XS-PVS" firstAttribute="trailing" secondItem="wX1-Iy-rao" secondAttribute="trailing" id="Dd6-lm-LSK"/>
                 <constraint firstItem="aMa-XS-PVS" firstAttribute="top" secondItem="wX1-Iy-rao" secondAttribute="top" id="Iej-0T-tMk"/>
                 <constraint firstAttribute="trailing" secondItem="wX1-Iy-rao" secondAttribute="trailing" id="O4e-Ce-fxL"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="j0X-Dt-Yb4" secondAttribute="bottom" constant="20" id="UBs-tZ-Vy1"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="j0X-Dt-Yb4" secondAttribute="bottom" constant="20" id="UBs-tZ-Vy1" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="0.0"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
                 <constraint firstItem="aMa-XS-PVS" firstAttribute="bottom" secondItem="wX1-Iy-rao" secondAttribute="bottom" id="aHe-Hz-V80"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="j0X-Dt-Yb4" secondAttribute="trailing" constant="24" id="dtw-uJ-zfQ"/>
-                <constraint firstItem="DKs-Ne-QNE" firstAttribute="top" secondItem="wX1-Iy-rao" secondAttribute="bottom" constant="40" id="fZx-Tc-3nb"/>
-                <constraint firstItem="j0X-Dt-Yb4" firstAttribute="top" secondItem="DKs-Ne-QNE" secondAttribute="bottom" constant="70" id="gg1-zf-HUd"/>
+                <constraint firstItem="DKs-Ne-QNE" firstAttribute="top" secondItem="wX1-Iy-rao" secondAttribute="bottom" constant="40" id="fZx-Tc-3nb" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                            <real key="value" value="20"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
+                <constraint firstItem="j0X-Dt-Yb4" firstAttribute="top" secondItem="DKs-Ne-QNE" secondAttribute="bottom" priority="500" constant="70" id="gg1-zf-HUd" customClass="ScreenHeightCompatibleLayoutConstraint" customModule="Mixin" customModuleProvider="target">
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="mediumConstant">
+                            <real key="value" value="50"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="shortConstant">
+                            <real key="value" value="20"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </constraint>
                 <constraint firstItem="wX1-Iy-rao" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="iH8-O3-LNi"/>
                 <constraint firstItem="aMa-XS-PVS" firstAttribute="leading" secondItem="wX1-Iy-rao" secondAttribute="leading" id="x04-HA-dsx"/>
                 <constraint firstItem="wX1-Iy-rao" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="zxV-1N-bQn"/>
@@ -101,8 +139,11 @@
         <namedColor name="text">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="text_secondary">
+            <color red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

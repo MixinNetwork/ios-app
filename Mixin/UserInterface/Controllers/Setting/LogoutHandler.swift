@@ -11,21 +11,23 @@ extension LogoutHandler where Self: UIViewController {
         let confirmation = UIAlertController(title: R.string.localizable.logout_confirmation(), message: nil, preferredStyle: .alert)
         confirmation.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .cancel, handler: nil))
         confirmation.addAction(UIAlertAction(title: R.string.localizable.log_out(), style: .destructive) { _ in
-            self.logoutAfterMnemonicsBackedUp()
+            self.logoutAfterRecoverableConfirmed()
         })
         present(confirmation, animated: true)
     }
     
-    private func logoutAfterMnemonicsBackedUp() {
+    private func logoutAfterRecoverableConfirmed() {
         guard let account = LoginManager.shared.account else {
             return
         }
-        if account.isAnonymous, !account.hasSaltExported {
-            let warning = BackupMnemonicsWarningViewController(
-                navigationController: navigationController,
-                cancelTitle: R.string.localizable.cancel()
+        let enabledOptions = AccountRecoveryOption.enabledOptions(account: account)
+        if enabledOptions.isEmpty {
+            let context = PopupTip.RecoveryContext(
+                intent: .logoutConfirmation,
+                enabledOptions: enabledOptions
             )
-            present(warning, animated: true)
+            let popup = PopupTipViewController(tip: .recovery(context))
+            present(popup, animated: true)
         } else {
             let logout = LogoutValidationViewController()
             let validation = AuthenticationViewController(intent: logout)

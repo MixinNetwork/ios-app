@@ -95,8 +95,10 @@ final class PopupTipViewController: UIViewController {
             bodyStackView.addArrangedSubview(optionsView)
             continueButtonTitle = R.string.localizable.continue()
             cancelButtonTitle = switch context.intent {
-            case .homePageInspection, .assetChangingConfirmation:
+            case .homePageInspection:
                 R.string.localizable.not_now()
+            case .assetChangingConfirmation:
+                R.string.localizable.skip()
             case .logoutConfirmation:
                 R.string.localizable.cancel()
             }
@@ -244,23 +246,19 @@ final class PopupTipViewController: UIViewController {
     
     @IBAction func cancel(_ sender: Any) {
         switch tip {
+        case .appUpdate:
+            AppGroupUserDefaults.appUpdateTipDismissalDate = Date()
         case .recovery(let context):
             switch context.intent {
+            case .homePageInspection:
+                AppGroupUserDefaults.User.recoveryKitTipDismissalDate = Date()
+            case .logoutConfirmation:
+                presentingViewController?.dismiss(animated: true)
+                return
             case .assetChangingConfirmation(let onCancel):
                 presentingViewController?.dismiss(animated: true, completion: onCancel)
                 return
-            default:
-                break
             }
-        default:
-            break
-        }
-        
-        switch tip {
-        case .appUpdate:
-            AppGroupUserDefaults.appUpdateTipDismissalDate = Date()
-        case .recovery:
-            AppGroupUserDefaults.User.recoveryKitTipDismissalDate = Date()
         case .notification:
             AppGroupUserDefaults.notificationTipDismissalDate = Date()
         case .verifyMobileNumber:

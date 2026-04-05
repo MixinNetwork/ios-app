@@ -1465,6 +1465,7 @@
 "set_or_update_pin_failed" = "Set or update PIN failed";
 "set_pin_successfully" = "PINコードの設定が完了しました。";
 "set_up" = "Set up";
+"set_up_now" = "Set Up Now";
 "set_up_pin" = "Set up PIN";
 "set_up_pin_answer_1" = "I can recover my account later.";
 "set_up_pin_answer_2" = "I will lose access to my account and funds.";

@@ -93,7 +93,7 @@ final class PopupTipViewController: UIViewController {
                 enabledOptions: context.enabledOptions
             )
             bodyStackView.addArrangedSubview(optionsView)
-            continueButtonTitle = R.string.localizable.continue()
+            continueButtonTitle = R.string.localizable.set_up_now()
             cancelButtonTitle = switch context.intent {
             case .homePageInspection:
                 R.string.localizable.not_now()

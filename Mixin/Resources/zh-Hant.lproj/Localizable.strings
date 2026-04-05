@@ -1465,6 +1465,7 @@
 "set_or_update_pin_failed" = "設定或更新 PIN 失敗";
 "set_pin_successfully" = "PIN 設定成功";
 "set_up" = "設定";
+"set_up_now" = "現在設定";
 "set_up_pin" = "設定 PIN";
 "set_up_pin_answer_1" = "我可以稍後恢復我的帳戶。";
 "set_up_pin_answer_2" = "我將無法訪問我的帳戶和資金。";

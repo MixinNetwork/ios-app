@@ -9,9 +9,13 @@ enum AccountRecoveryOption: CaseIterable {
     
     static func enabledOptions(account: Account) -> [AccountRecoveryOption] {
         var options: [AccountRecoveryOption] = AccountRecoveryOption.allCases
+        
+        // Removes all options that user did not enabled
         options.removeAll { option in
             switch option {
             case .mobileNumber:
+                // False value of `isAnonymous` indicates that user has never
+                // registered his phone number
                 account.isAnonymous
             case .mnemonicPhrase:
                 !account.hasSaltExported
@@ -19,6 +23,7 @@ enum AccountRecoveryOption: CaseIterable {
                 !account.hasEmergencyContact
             }
         }
+        
         return options
     }
     

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class ExploreViewController: UIViewController {
+final class ExploreViewController: UIViewController, AssetChangeAccountRecoveryChecking {
     
     @IBOutlet weak var segmentsCollectionView: UICollectionView!
     @IBOutlet weak var contentContainerView: UIView!
@@ -124,7 +124,7 @@ final class ExploreViewController: UIViewController {
             BadgeManager.shared.setHasViewed(identifier: .buy)
             reporter.report(event: .buyStart, tags: ["wallet": "main", "source": "explore"])
         case .trade:
-            reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "explore"])
+            BadgeManager.shared.setHasViewed(identifier: .trade)
             let trade = TradeViewController(
                 wallet: .privacy,
                 trading: nil,
@@ -132,9 +132,12 @@ final class ExploreViewController: UIViewController {
                 receiveAssetID: nil,
                 referral: nil
             )
-            if let trade {
-                navigationController?.pushViewController(trade, animated: true)
-                BadgeManager.shared.setHasViewed(identifier: .trade)
+            guard let trade else {
+                return
+            }
+            withAccountRecoveryChecked { [weak self] in
+                self?.navigationController?.pushViewController(trade, animated: true)
+                reporter.report(event: .tradeStart, tags: ["wallet": "main", "source": "explore"])
             }
         case .membership:
             if let membership = LoginManager.shared.account?.membership, let plan = membership.plan {

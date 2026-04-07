@@ -19,7 +19,8 @@
 "add_emergency_contact" = "添加恢复联系人";
 "add_failed" = "添加失败";
 "add_mobile_number" = "添加手机号码";
-"add_mobile_number_reason" = "基于合规与安全原因，我们需要验证你的手机号码。";
+"add_mobile_number_reason_buy_token" = "基于合规与安全原因，我们需要验证你的手机号码。";
+"add_mobile_number_reason_set_recovery_contact" = "设置恢复联系人之前，需要先添加手机号码。";
 "add_now" = "立即添加";
 "add_or_remove_favorite_bots" = "添加或删除收藏的机器人";
 "add_participants" = "添加成员";
@@ -31,7 +32,6 @@
 "add_recovery_contact_before_instruction_1" = "要添加的恢复联系人已下载并登录了 Mixin。";
 "add_recovery_contact_before_instruction_2" = "要添加的恢复联系人保持 Mixin 在线或者正在与您面对面。";
 "add_recovery_contact_before_instruction_3" = "要添加的恢复联系人已添加当前账号（%@）为联系人，否则对方可能无法收到验证码。";
-"add_recovery_contact_desc" = "恢复联系人旨在帮助您在丢失手机号码或助记词时登录您的帐户。";
 "add_recovery_contact_instruction_1" = "添加您信任的人为恢复联系人，例如你的家人、朋友或同事。";
 "add_recovery_contact_instruction_2" = "若您无法通过手机号或助记词登录账号，请向您的恢复联系人当面或致电求助。";
 "add_recovery_contact_instruction_3" = "恢复联系人无法转移您 Mixin 钱包里的资产，但可以协助您重新访问账号。";
@@ -190,8 +190,6 @@
 "backing_up" = "正在备份...";
 "backup_disable_hint" = "需要登录 iCloud 来备份你的聊天记录。 设置 > iCloud > 打开 iCloud 云盘。";
 "backup_mnemonic_phrase" = "备份助记词";
-"backup_mnemonic_phrase_desc" = "立即通过备份您的助记词来保护您的资产。";
-"backup_mnemonic_phrase_warning" = "请立即备份您的助记词。该助记词为 MPC 钱包密钥分片之一，一旦设备遗失或应用被卸载，若您没有备份，将无法重新登录当前 Mixin 账号 (%@)。";
 "backup_mnemonic_successfully" = "成功备份助记词";
 "backup_now" = "立即备份";
 "backup_to_icloud" = "备份到 iCloud";
@@ -945,8 +943,6 @@
 "mixin_support" = "Mixin 客服";
 "mnemonic_phrase" = "助记词";
 "mnemonic_phrase_instruction" = "你可以通过助记词登录你的账号，当前助记词已关联到 MPC 钱包的密钥分片，完整的密钥只存在当前设备的 TEE 安全环境中，阅读文档以了解%@。";
-"mnemonic_phrase_instruction_1" = "创建账号生成的 13 个助记词仅用于 Mixin Network 相关产品。";
-"mnemonic_phrase_instruction_2" = "助记词将关联到由您管理的 MPC 钱包的一个密钥分片。";
 "mnemonic_phrase_take_long" = "这应该不会花太长时间。";
 "mnemonic_phrase_tip_1" = "·存放在保险箱或安全的地方";
 "mnemonic_phrase_tip_2" = "·不要在网络上发送";
@@ -1033,6 +1029,7 @@
 "none" = "无";
 "normal" = "普通";
 "not_a_group_member" = "你已不再是该群组的成员";
+"not_added" = "待添加";
 "not_all_signer_success" = "有些节点失败了";
 "not_backed_up" = "未备份";
 "not_enough_partials" = "没有足够的节点返回密钥分片";
@@ -1281,6 +1278,7 @@
 "recipients" = "收款人";
 "recovery_contact" = "恢复联系人";
 "recovery_kit" = "账号恢复";
+"recovery_kit_alert" = "为了您的账户安全，请尽快备份助记词、添加手机号并且设置恢复联系人，阅读文档以了解更多。";
 "recovery_kit_attention" = "注意：账号恢复无法帮助您恢复 PIN";
 "recovery_kit_instruction" = "Mixin 的 MPC 钱包基于去中心化密钥协议 TIP 构建，您可以通过手机号、助记词或可信联系人登录恢复你的账号，钱包完整的密钥只存在当前设备的 TEE 安全环境中，阅读文档以了解%@。";
 "red_up_green_down" = "红涨绿跌";
@@ -1311,7 +1309,6 @@
 "remove_contact" = "删除联系人";
 "remove_contact_hint" = "删除联系人？聊天记录将会保留";
 "remove_emergency_contact" = "移除恢复联系人";
-"remove_emergency_contact_confirmation" = "确定移除恢复联系人？";
 "remove_emergency_contact_for_sure" = "确定删除恢复联系人？";
 "remove_from_group" = "从群组中移除";
 "remove_stickers" = "移除所有表情";
@@ -1468,6 +1465,7 @@
 "set_or_update_pin_failed" = "设置或更新 PIN 失败";
 "set_pin_successfully" = "PIN 设置成功";
 "set_up" = "设置";
+"set_up_now" = "现在设置";
 "set_up_pin" = "设置 PIN";
 "set_up_pin_answer_1" = "我可以稍后恢复我的帐户。";
 "set_up_pin_answer_2" = "我将无法访问我的帐户和资金。";
@@ -1493,12 +1491,10 @@
 "setting_delete_account_tip" = "你的 Mixin 钱包还有一些资产，可以提现至其他钱包或交易所，账号一旦注销，这些资产将和钱包一起被弃用无法找回。";
 "setting_duplicate_transfer_desc" = "当你在 6 个小时内给相同的人转相同的金额时显示确认弹窗。";
 "setting_emergency_change_mobile" = "立即修改手机号？";
-"setting_emergency_content" = "恢复联系人旨在帮助你在丢失且无法找回手机号的情况下登录你的账号。";
 "setting_emergency_desc" = "请放心，即使您的手机号丢失无法找回钱包资产也很安全，请牢记您的 PIN，阅读文档了解更多。";
 "setting_emergency_pin_tip" = "恢复联系人受 PIN 加密保护";
 "setting_emergency_send_code" = "请输入发送至以下 Mixin ID 的 4 位验证码：%@";
 "setting_emergency_set_message" = "确认设置 Mixin ID %@ 为你的恢复联系人？注意双方必须互为联系人才能设置成功！";
-"setting_emergency_warning" = "注意：恢复联系人无法帮助找回支付 PIN";
 "setting_mobile_contact_warning" = "确定删除已同步到 Mixin 服务器的通讯录？";
 "setting_notification_transfer_summary" = "收到不少于 %@ 转账时显示通知。";
 "setting_privacy_tip" = "谁可以给你发消息或邀请你加入群聊。";
@@ -1780,6 +1776,7 @@
 "url_privacy_wallet" = "https://support.mixin.one/zh/article/5lua5lmi5piv6zqq56eb6zkx5yyf77yf-1s7o0e2/";
 "url_recall_message" = "https://support.mixin.one/zh/article/mixin-messenger-bjr9re/";
 "url_recovery_contact" = "https://support.mixin.one/zh/article/5aac5l2v6k6572u57sn5ocl6igu57o75lq6-d2nssy/";
+"url_recovery_kit" = "https://support.mixin.one/zh/article/6lsm5y35ogi5asn5yqf6io9-18lds0b/";
 "url_referral" = "https://support.mixin.one/zh/article/5aac5l2v6i635b6x6yka6k35aww5yqx-2tmv1n/";
 "url_support" = "https://support.mixin.one/zh/";
 "url_unrecognized_hint" = "%@ 识别失败，请升级至 Mixin 最新版本或联系开发者检查链接";

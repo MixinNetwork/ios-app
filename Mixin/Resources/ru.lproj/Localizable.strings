@@ -19,7 +19,8 @@
 "add_emergency_contact" = "Add recovery contact";
 "add_failed" = "Add Failed";
 "add_mobile_number" = "Add Mobile Number";
-"add_mobile_number_reason" = "For compliance and security reasons, we need to verify your mobile number.";
+"add_mobile_number_reason_buy_token" = "For compliance and security reasons, we need to verify your mobile number.";
+"add_mobile_number_reason_set_recovery_contact" = "Add your mobile number to set up a recovery contact.";
 "add_now" = "Add Now";
 "add_or_remove_favorite_bots" = "Add or remove favorite bots";
 "add_participants" = "Добавить участников";
@@ -31,7 +32,6 @@
 "add_recovery_contact_before_instruction_1" = "The recovery contact you want to add has downloaded and logged in to Mixin.";
 "add_recovery_contact_before_instruction_2" = "The recovery contact you want to add should stay online in Mixin or meet you face to face.";
 "add_recovery_contact_before_instruction_3" = "The recovery contact you want to add has added the current account (%@) as a contact; otherwise, they may not receive the verification code.";
-"add_recovery_contact_desc" = "A recovery contact helps you log in if you lose access to your mobile number or mnemonic phrase.";
 "add_recovery_contact_instruction_1" = "Add someone you trust as a recovery contact, such as your family, friends, or colleagues.";
 "add_recovery_contact_instruction_2" = "If you cannot log in to your account using your mobile number or mnemonic phrase, seek help from your recovery contact in person or by phone.";
 "add_recovery_contact_instruction_3" = "The recovery contact cannot transfer assets from your Mixin wallet but can help you regain access to your account.";
@@ -190,8 +190,6 @@
 "backing_up" = "Резервное копирование...";
 "backup_disable_hint" = "Войдите в iCloud, чтобы создать резервную копию своей истории. Настройки > iCloud > Включить iCloud Drive.";
 "backup_mnemonic_phrase" = "Backup Mnemonic Phrase";
-"backup_mnemonic_phrase_desc" = "Protect your assets by backing up your mnemonic phrase now.";
-"backup_mnemonic_phrase_warning" = "Please back up your mnemonic phrase immediately! This phrase is one of the key shards of the MPC wallet. If the device is lost or the app is uninstalled, and you haven't backed it up, you won't be able to log back into the current Mixin account (%@).";
 "backup_mnemonic_successfully" = "Mnemonic phrase backed up successfully";
 "backup_now" = "Резервное копирование сейчас";
 "backup_to_icloud" = "Backup to iCloud";
@@ -945,8 +943,6 @@
 "mixin_support" = "Mixin Support";
 "mnemonic_phrase" = "Mnemonic Phrase";
 "mnemonic_phrase_instruction" = "You can log in to your account using the mnemonic phrase. The current mnemonic phrase is linked to a key shard of the MPC wallet, with the complete key existing only in the TEE security environment on the current device. Read the documentation to learn %@.";
-"mnemonic_phrase_instruction_1" = "The 13 mnemonic phrases generated when creating an account are intended only for Mixin Network-related products.";
-"mnemonic_phrase_instruction_2" = "The mnemonic phrase will be associated with a key shard for your MPC wallet under your management.";
 "mnemonic_phrase_take_long" = "This shouldn't take long.";
 "mnemonic_phrase_tip_1" = "· Store it in a vault or secure place";
 "mnemonic_phrase_tip_2" = "· Do not share it over the internet";
@@ -1033,6 +1029,7 @@
 "none" = "Никто";
 "normal" = "Normal";
 "not_a_group_member" = "You're no longer a member in this group";
+"not_added" = "Not Added";
 "not_all_signer_success" = "Not all nodes succeeded";
 "not_backed_up" = "Not Backed Up";
 "not_enough_partials" = "Not enough nodes return key shard";
@@ -1281,6 +1278,7 @@
 "recipients" = "Recipients";
 "recovery_contact" = "Recovery Contact";
 "recovery_kit" = "Recovery Kit";
+"recovery_kit_alert" = "For your account security, please back up your recovery phrase, add a phone number, and set a recovery contact as soon as possible. See the documentation to learn more.";
 "recovery_kit_attention" = "Attention: The Recovery Kit cannot help you recover your PIN";
 "recovery_kit_instruction" = "The MPC wallet in Mixin is built on the decentralized key protocol TIP. You can recover your account through your mobile number, mnemonic phrase, or a trusted contact. The complete wallet key exists only in the TEE security environment on the current device. Read the documentation to learn %@.";
 "red_up_green_down" = "Red Up / Green Down";
@@ -1311,7 +1309,6 @@
 "remove_contact" = "Удалить контакт";
 "remove_contact_hint" = "Удалить друга? История чата останется на вашем устройстве";
 "remove_emergency_contact" = "Remove recovery contact";
-"remove_emergency_contact_confirmation" = "Remove recovery contact?";
 "remove_emergency_contact_for_sure" = "Remove recovery contact for sure?";
 "remove_from_group" = "Удалить из группы";
 "remove_stickers" = "Удалить наклейки";
@@ -1468,6 +1465,7 @@
 "set_or_update_pin_failed" = "Set or update PIN failed";
 "set_pin_successfully" = "ПИН-код успешно установлен";
 "set_up" = "Set up";
+"set_up_now" = "Set Up Now";
 "set_up_pin" = "Set up PIN";
 "set_up_pin_answer_1" = "I can recover my account later.";
 "set_up_pin_answer_2" = "I will lose access to my account and funds.";
@@ -1493,12 +1491,10 @@
 "setting_delete_account_tip" = "В вашем кошельке Mixin все еще есть активы, которые можно вывести на другие кошельки или биржи. После удаления учетной записи эти активы будут закрыты вместе с кошельком и их нельзя будет восстановить.";
 "setting_duplicate_transfer_desc" = "Отображение диалогового окна подтверждения при переводе одной и той же суммы одному и тому же человеку в течение 6 часов.";
 "setting_emergency_change_mobile" = "Вы хотите изменить свой номер мобильного телефона сейчас?";
-"setting_emergency_content" = "The Recovery Contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number.";
 "setting_emergency_desc" = "When your lost your mobile number, please contact your recovery contact by phone or other means to get the Mixin ID and verification code. Read our Recovery Contact to learn more.";
 "setting_emergency_pin_tip" = "Your recovery contact is protected by PIN";
 "setting_emergency_send_code" = "Введите 4-значный код, отправленный на Mixin ID: %@.";
 "setting_emergency_set_message" = "Confirm setting Mixin ID %@ as your recovery contact? Please note that the other party must add you as a contact for the setup to succeed.";
-"setting_emergency_warning" = "Attention: the Recovery Contact cannot help you to recover PIN";
 "setting_mobile_contact_warning" = "Это удалит ваши контакты с серверов Mixin.";
 "setting_notification_transfer_summary" = "Отображение уведомлений при получении перевода, превышающего или равного %@.";
 "setting_privacy_tip" = "Измените, кто может добавлять вас в беседу и группы.";
@@ -1780,6 +1776,7 @@
 "url_privacy_wallet" = "https://support.mixin.one/en/article/what-is-a-privacy-wallet-1ng5j8f/";
 "url_recall_message" = "https://support.mixin.one/en/article/how-to-recall-in-mixin-messenger-n3v3p1/";
 "url_recovery_contact" = "https://support.mixin.one/en/article/how-to-set-up-an-emergency-contact-1kvd6g8/";
+"url_recovery_kit" = "https://support.mixin.one/en/article/what-is-the-recovery-kit-162wv1w";
 "url_referral" = "https://support.mixin.one/en/article/how-to-get-a-referral-reward-vmxho0/";
 "url_support" = "https://support.mixin.one/en/";
 "url_unrecognized_hint" = "%@ не удалось распознать, обновите Mixin до последней версии или свяжитесь с разработчиком, чтобы проверить ссылку";

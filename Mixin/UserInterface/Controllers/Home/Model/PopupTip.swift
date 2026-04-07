@@ -3,26 +3,41 @@ import MixinServices
 
 enum PopupTip {
     
+    struct RecoveryContext {
+        
+        enum Intent {
+            case homePageInspection
+            case logoutConfirmation
+            case assetChangingConfirmation(onCancel: () -> Void)
+        }
+        
+        let intent: Intent
+        let enabledOptions: [AccountRecoveryOption]
+        
+    }
+    
+    enum AddMobileNumberIntent {
+        case buyToken
+        case setRecoveryContact
+    }
+    
     case appUpdate
-    case backupMnemonics
+    case recovery(RecoveryContext)
     case notification
-    case recoveryContact
     case verifyMobileNumber
     case appRating
     case importPrivateKey(Web3Wallet)
     case importMnemonics(Web3Wallet)
-    case addMobileNumber
+    case addMobileNumber(AddMobileNumberIntent)
     
     private var detectInterval: TimeInterval {
         switch self {
         case .appUpdate:
                 .day
-        case .backupMnemonics:
-                .day
+        case .recovery:
+            7 * .day
         case .notification:
             2 * .day
-        case .recoveryContact:
-            7 * .day
         case .verifyMobileNumber:
             7 * .day
         case .appRating:
@@ -36,12 +51,10 @@ enum PopupTip {
 
 extension PopupTip {
     
-    static func next() async -> PopupTip? {
+    static func inspect() async -> PopupTip? {
         guard let account = LoginManager.shared.account else {
             return nil
         }
-        
-        lazy var walletUSDBalance = TokenDAO.shared.usdBalanceSum()
         
         if userDismissalOutdates(tip: .appUpdate, dismissalDate: AppGroupUserDefaults.appUpdateTipDismissalDate),
            let latestVersion = account.system?.messenger.version,
@@ -51,24 +64,18 @@ extension PopupTip {
             return .appUpdate
         }
         
-        if account.isAnonymous,
-           !account.hasSaltExported,
-           userDismissalOutdates(tip: .backupMnemonics, dismissalDate: AppGroupUserDefaults.User.backupMnemonicsTipDismissalDate)
+        let enabledOptions = AccountRecoveryOption.enabledOptions(account: account)
+        let context = RecoveryContext(intent: .homePageInspection, enabledOptions: enabledOptions)
+        if enabledOptions.count < 2,
+           userDismissalOutdates(tip: .recovery(context), dismissalDate: AppGroupUserDefaults.User.recoveryKitTipDismissalDate)
         {
-            return .backupMnemonics
+            return .recovery(context)
         }
         
         if userDismissalOutdates(tip: .notification, dismissalDate: AppGroupUserDefaults.notificationTipDismissalDate),
            await !NotificationManager.shared.getAuthorized()
         {
             return .notification
-        }
-        
-        if !account.hasEmergencyContact,
-           userDismissalOutdates(tip: .recoveryContact, dismissalDate: AppGroupUserDefaults.User.recoveryContactTipDismissalDate),
-           walletUSDBalance > 100
-        {
-            return .recoveryContact
         }
         
         if AppGroupUserDefaults.User.hasPerformedTransfer,

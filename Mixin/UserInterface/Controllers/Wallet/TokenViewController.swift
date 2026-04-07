@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistinguishable, Transaction>: UIViewController, UITableViewDataSource, UITableViewDelegate, MnemonicsBackupChecking {
+class TokenViewController<Token: HideableToken & ValuableToken & MaliciousDistinguishable, Transaction>: UIViewController, UITableViewDataSource, UITableViewDelegate, AssetChangeAccountRecoveryChecking {
     
     let queue = DispatchQueue(label: "one.mixin.messenger.TokenViewController")
     let transactionsCount = 20

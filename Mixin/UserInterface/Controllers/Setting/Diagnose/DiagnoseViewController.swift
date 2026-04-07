@@ -138,9 +138,8 @@ extension DiagnoseViewController: UITableViewDelegate {
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())
         case (10, 0):
             AppGroupUserDefaults.appUpdateTipDismissalDate = nil
-            AppGroupUserDefaults.User.backupMnemonicsTipDismissalDate = nil
+            AppGroupUserDefaults.User.recoveryKitTipDismissalDate = nil
             AppGroupUserDefaults.notificationTipDismissalDate = nil
-            AppGroupUserDefaults.User.recoveryContactTipDismissalDate = nil
             AppGroupUserDefaults.appRatingRequestDate = nil
             AppGroupUserDefaults.User.verifyPhoneTipDismissalDate = nil
             showAutoHiddenHud(style: .notification, text: R.string.localizable.successful())

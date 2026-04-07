@@ -18,7 +18,7 @@ extension Account {
         onVerificationNeeded: (PopupTipViewController) -> Void,
     ) {
         if isAnonymous {
-            let tip = PopupTipViewController(tip: .addMobileNumber)
+            let tip = PopupTipViewController(tip: .addMobileNumber(.buyToken))
             onVerificationNeeded(tip)
         } else if isPhoneVerificationValid {
             onEligible()

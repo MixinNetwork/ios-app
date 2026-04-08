@@ -56,7 +56,7 @@ class TradeSpotViewController: UIViewController {
     private let maxOpenOrderCount = 10
     
     private lazy var tokenAmountRoundingHandler = NSDecimalNumberHandler(
-        roundingMode: .plain,
+        roundingMode: .down,
         scale: MixinToken.internalPrecision,
         raiseOnExactness: false,
         raiseOnOverflow: false,

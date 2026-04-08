@@ -1491,6 +1491,7 @@
 "setting_delete_account_tip" = "警告：Mixinウォレット内に他のウォレットや取引所に送金可能な仮想通貨が残っています。アカウントを削除すると、仮想通貨を永遠に引き出すことができませんが、よろしいでしょうか？";
 "setting_duplicate_transfer_desc" = "6時間以内に同じ人に同額の送金を実行する際、確認を行う。";
 "setting_emergency_change_mobile" = "新しい電話番号の登録をしますか？";
+"setting_emergency_content" = "The Recovery Contact is designed to help you log in to your account if you are lost and cannot retrieve your mobile number.";
 "setting_emergency_desc" = "When your lost your mobile number, please contact your recovery contact by phone or other means to get the Mixin ID and verification code. Read our Recovery Contact to learn more.";
 "setting_emergency_pin_tip" = "Your recovery contact is protected by PIN";
 "setting_emergency_send_code" = "Mixin ID: %@に送信された4桁のコードを入力してください";

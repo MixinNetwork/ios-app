@@ -39,10 +39,10 @@ final class WithdrawPreviewViewController: WalletIdentifyingAuthenticationPrevie
         let totalFiatMoneyAmount = withdrawalFiatMoneyAmount + feeFiatMoneyAmount
         
         let withdrawalTokenValue = CurrencyFormatter.localizedString(from: withdrawalTokenAmount, format: .precision, sign: .never, symbol: .custom(withdrawalToken.symbol))
-        let withdrawalFiatMoneyValue = CurrencyFormatter.localizedString(from: operation.withdrawalFiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        let withdrawalFiatMoneyValue = CurrencyFormatter.localizedString(from: operation.withdrawalFiatMoneyAmount, format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
         let feeTokenValue = CurrencyFormatter.localizedString(from: feeTokenAmount, format: .precision, sign: .never, symbol: .custom(feeToken.symbol))
-        let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: feeFiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
-        let totalFiatMoneyValue = CurrencyFormatter.localizedString(from: totalFiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: feeFiatMoneyAmount, format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
+        let totalFiatMoneyValue = CurrencyFormatter.localizedString(from: totalFiatMoneyAmount, format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
         
         var rows: [Row] = [
             .amount(caption: .amount, token: withdrawalTokenValue, fiatMoney: withdrawalFiatMoneyValue, display: amountDisplay, boldPrimaryAmount: true),

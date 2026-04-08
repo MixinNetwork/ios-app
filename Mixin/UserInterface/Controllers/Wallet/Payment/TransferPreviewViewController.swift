@@ -82,9 +82,9 @@ final class TransferPreviewViewController: WalletIdentifyingAuthenticationPrevie
         
         let tokenValue = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(token.symbol))
         let fiatMoneyAmount = tokenAmount * operation.token.decimalUSDPrice * Currency.current.decimalRate
-        let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
         let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
-        let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
         
         if let context = inscriptionContext {
             rows = [

@@ -41,7 +41,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
         }
         let totalFiatMoneyAmount = CurrencyFormatter.localizedString(
             from: totalUSDAmount * Currency.current.decimalRate,
-            format: .fiatMoney,
+            format: .fiatMoneyPrecision,
             sign: .never,
             symbol: .currencySymbol
         )
@@ -99,7 +99,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
                 ),
                 fiatMoney: CurrencyFormatter.localizedString(
                     from: fiatMoneyAmount,
-                    format: .fiatMoney,
+                    format: .fiatMoneyPrecision,
                     sign: .never,
                     symbol: .currencySymbol
                 ),
@@ -116,7 +116,7 @@ final class InvoicePreviewViewController: AuthenticationPreviewViewController {
                 ),
                 fiatMoney: CurrencyFormatter.localizedString(
                     from: Decimal(0),
-                    format: .fiatMoney,
+                    format: .fiatMoneyPrecision,
                     sign: .never,
                     symbol: .currencySymbol
                 ),

@@ -14,13 +14,13 @@ public final class AssetItem: Asset, NumberStringLocalizable {
     
     public lazy var localizedFiatMoneyBalance: String = {
         let fiatMoneyBalance = balance.doubleValue * priceUsd.doubleValue * Currency.current.rate
-        let value = CurrencyFormatter.localizedString(from: fiatMoneyBalance, format: .fiatMoney, sign: .never)
+        let value = CurrencyFormatter.localizedString(from: fiatMoneyBalance, format: .fiatMoneyPrecision, sign: .never)
         return "≈ " + Currency.current.symbol + value
     }()
     
     public lazy var localizedUsdChange: String = {
         let usdChange = changeUsd.doubleValue * 100
-        return CurrencyFormatter.localizedString(from: usdChange, format: .fiatMoney, sign: .whenNegative) ?? zeroWith2Fractions
+        return CurrencyFormatter.localizedString(from: usdChange, format: .fiatMoneyPrecision, sign: .whenNegative) ?? zeroWith2Fractions
     }()
     
     public init(asset: Asset, chain: Chain) {

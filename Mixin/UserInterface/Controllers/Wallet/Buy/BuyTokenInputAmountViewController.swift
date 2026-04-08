@@ -170,7 +170,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                 .decimalValue
             calculatedValueLabel.text = CurrencyFormatter.localizedString(
                 from: fiatMoneyAmount,
-                format: .fiatMoney,
+                format: .fiatMoneyPrecision,
                 sign: .never,
                 symbol: .custom(selectedCurrency.code)
             )
@@ -495,7 +495,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         }
         let limitation = CurrencyFormatter.localizedString(
             from: minimalAmount.fiatMoney,
-            format: .fiatMoney,
+            format: .fiatMoneyPrecision,
             sign: .never,
             symbol: .custom(selectedCurrency.code)
         )

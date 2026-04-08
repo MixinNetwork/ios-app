@@ -120,7 +120,7 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
         switch operation {
         case .mixin(let operation):
             let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
-            let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+            let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
             rows.append(.amount(caption: .networkFee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false))
             rows.append(.receivers([receiver], threshold: nil))
             rows.append(.wallet(caption: .sender, wallet: .privacy, threshold: nil))
@@ -145,9 +145,9 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                     feeValue.append(" (\(feePerGas))")
                 }
                 let feeCost = if fee.fiatMoneyAmount >= 0.01 {
-                    CurrencyFormatter.localizedString(from: fee.fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+                    CurrencyFormatter.localizedString(from: fee.fiatMoneyAmount, format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
                 } else {
-                    "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+                    "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
                 }
                 rows.append(.amount(
                     caption: .fee,

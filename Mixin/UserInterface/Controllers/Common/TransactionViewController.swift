@@ -76,7 +76,7 @@ class TransactionViewController: UIViewController {
     func fiatMoneyValue(amount: Decimal, usdPrice: Decimal) -> String {
         CurrencyFormatter.localizedString(
             from: amount * usdPrice * Currency.current.decimalRate,
-            format: .fiatMoney,
+            format: .fiatMoneyPrecision,
             sign: .never,
             symbol: .currencySymbol
         )

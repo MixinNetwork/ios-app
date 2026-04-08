@@ -136,9 +136,9 @@ final class MultisigPreviewViewController: AuthenticationPreviewViewController {
         
         let tokenValue = CurrencyFormatter.localizedString(from: amount, format: .precision, sign: .never, symbol: .custom(token.symbol))
         let fiatMoneyAmount = amount * token.decimalUSDPrice * Decimal(Currency.current.rate)
-        let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
         let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
-        let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+        let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
         
         var rows: [Row]
         if let safe {

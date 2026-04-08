@@ -232,7 +232,7 @@ extension LegacyTransactionViewController {
     
     private func getFormatValue(priceUsd: String) -> String {
         let fiatMoneyValue = snapshot.amount.doubleValue * priceUsd.doubleValue * Currency.current.rate
-        return CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoney, sign: .never) ?? ""
+        return CurrencyFormatter.localizedString(from: fiatMoneyValue, format: .fiatMoneyPrecision, sign: .never) ?? ""
     }
     
     private func makeContents() {

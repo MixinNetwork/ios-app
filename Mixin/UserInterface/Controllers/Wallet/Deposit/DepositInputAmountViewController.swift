@@ -76,7 +76,7 @@ final class DepositInputAmountViewController: InputAmountViewController {
             fiatMoneyAmount = inputAmount * price
             calculatedValueLabel.text = CurrencyFormatter.localizedString(
                 from: fiatMoneyAmount,
-                format: .fiatMoney,
+                format: .fiatMoneyPrecision,
                 sign: .never,
                 symbol: .currencyCode
             )

@@ -6,7 +6,7 @@ enum FiatMoneyValueAttributedStringBuilder {
     static func attributedString(usdValue: Decimal, fontSize: CGFloat) -> NSAttributedString {
         var amount = CurrencyFormatter.localizedString(
             from: usdValue * Currency.current.decimalRate,
-            format: .fiatMoney,
+            format: .fiatMoneyPrecision,
             sign: .never
         )
         if amount.count > 3 {

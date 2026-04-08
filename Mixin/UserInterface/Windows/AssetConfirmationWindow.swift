@@ -57,7 +57,7 @@ class AssetConfirmationWindow: BottomSheetView {
         self.completion = completion
         
         amountLabel.text = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .whenNegative, symbol: .custom(token.symbol))
-        amountExchangeLabel.text = "≈ " + Currency.current.symbol + CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never)
+        amountExchangeLabel.text = "≈ " + Currency.current.symbol + CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoneyPrecision, sign: .never)
         
         assetIconView.setIcon(token: token)
         memoLabel.isHidden = memo.isEmpty

@@ -1080,7 +1080,7 @@ extension MarketViewController {
                     period: R.string.localizable.hours_count_short(24),
                     value: "≈ " + CurrencyFormatter.localizedString(
                         from: balance * market.decimalPrice * Currency.current.decimalRate,
-                        format: .fiatMoney,
+                        format: .fiatMoneyPrecision,
                         sign: .never,
                         symbol: .currencySymbol
                     ),

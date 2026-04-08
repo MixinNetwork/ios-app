@@ -132,10 +132,10 @@ class LegacyTransferOutViewController: KeyboardBasedLayoutViewController {
         let fiatMoneyPrice = asset.priceUsd.doubleValue * Currency.current.rate
         if isInputAssetAmount {
             let fiatMoneyAmount = amountText.doubleValue * fiatMoneyPrice
-            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencyCode)
+            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoneyPrecision, sign: .never, symbol: .currencyCode)
         } else {
             let assetAmount = amountText.doubleValue / fiatMoneyPrice
-            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: assetAmount, format: .pretty, sign: .whenNegative, symbol: .custom(asset.symbol))
+            amountExchangeLabel.text = CurrencyFormatter.localizedString(from: assetAmount, format: .significantDigits, sign: .whenNegative, symbol: .custom(asset.symbol))
         }
         
         if isInputAssetAmount {

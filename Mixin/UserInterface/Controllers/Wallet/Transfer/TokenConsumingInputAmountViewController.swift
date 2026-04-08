@@ -137,7 +137,7 @@ class TokenConsumingInputAmountViewController: InputAmountViewController {
         case .byToken:
             tokenAmount = inputAmount
             fiatMoneyAmount = inputAmount * price
-            calculatedValueLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencyCode)
+            calculatedValueLabel.text = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoneyPrecision, sign: .never, symbol: .currencyCode)
             inputAmountString.append(" " + token.symbol)
         case .byFiatMoney:
             tokenAmount = NSDecimalNumber(decimal: inputAmount / price)

@@ -80,6 +80,20 @@ class InputAmountViewController: UIViewController {
         feedback.prepare()
     }
     
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        action == #selector(paste(_:))
+    }
+    
+    override func paste(_ sender: Any?) {
+        guard let string = UIPasteboard.general.string else {
+            return
+        }
+        guard let amount = Decimal(string: string, locale: .current) else {
+            return
+        }
+        accumulator.decimal = amount
+    }
+    
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         guard let key = presses.first?.key else {
             super.pressesBegan(presses, with: event)
@@ -132,6 +146,13 @@ class InputAmountViewController: UIViewController {
                 super.pressesEnded(presses, with: event)
             }
         }
+    }
+    
+    @IBAction func presentAmountMenu(_ sender: Any) {
+        becomeFirstResponder()
+        AppDelegate.current.mainWindow.addDismissMenuResponder()
+        let rect = amountLabel.convert(amountLabel.bounds, to: view)
+        UIMenuController.shared.showMenu(from: view, rect: rect)
     }
     
     @IBAction func toggleAmountIntent(_ sender: Any) {

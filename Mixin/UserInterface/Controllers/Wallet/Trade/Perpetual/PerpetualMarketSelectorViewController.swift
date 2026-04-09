@@ -46,20 +46,16 @@ final class PerpetualMarketSelectorViewController: TokenSelectorViewController {
         collectionView.allowsMultipleSelection = false
         collectionView.dataSource = self
         collectionView.delegate = self
-        DispatchQueue.global().async { [weak self] in
-            let markets = PerpsMarketDAO.shared.availableMarkets(limit: nil)
-            let viewModels = markets.compactMap(PerpetualMarketViewModel.init(market:))
-            DispatchQueue.main.async {
-                guard let self else {
-                    return
-                }
-                self.markets = viewModels
-                UIView.performWithoutAnimation(self.collectionView.reloadData)
-            }
-        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadData),
+            name: PerpsMarketDAO.marketsDidUpdateNotification,
+            object: nil
+        )
+        reloadData()
     }
     
-    @objc func prepareForSearch(_ textField: UITextField) {
+    @objc private func prepareForSearch(_ textField: UITextField) {
         let keyword = self.trimmedKeyword
         if keyword.isEmpty {
             searchResultsKeyword = nil
@@ -73,6 +69,20 @@ final class PerpetualMarketSelectorViewController: TokenSelectorViewController {
             searchBoxView.isBusy = false
         } else if keyword != searchResultsKeyword {
             searchBoxView.isBusy = true
+        }
+    }
+    
+    @objc private func reloadData() {
+        DispatchQueue.global().async { [weak self] in
+            let markets = PerpsMarketDAO.shared.availableMarkets(limit: nil)
+            let viewModels = markets.compactMap(PerpetualMarketViewModel.init(market:))
+            DispatchQueue.main.async {
+                guard let self else {
+                    return
+                }
+                self.markets = viewModels
+                UIView.performWithoutAnimation(self.collectionView.reloadData)
+            }
         }
     }
     

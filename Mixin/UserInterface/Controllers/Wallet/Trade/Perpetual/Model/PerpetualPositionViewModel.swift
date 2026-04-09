@@ -89,7 +89,7 @@ struct PerpetualPositionViewModel {
         self.pnlColor = pnl >= 0 ? .rising : .falling
         if let margin, margin != 0 {
             let roe = PercentageFormatter.string(
-                from: pnl / margin,
+                from: max(-1, pnl / margin),
                 format: .pretty,
                 sign: .always,
                 options: .keepOneFractionDigitForZero
@@ -200,6 +200,7 @@ struct PerpetualPositionViewModel {
             if pnl < 0 {
                 roe = -roe
             }
+            roe = max(-1, roe)
             let localizedROE = PercentageFormatter.string(
                 from: roe,
                 format: .pretty,

@@ -88,14 +88,21 @@ struct PerpetualPositionViewModel {
         self.pnl = localizedPnL
         self.pnlColor = pnl >= 0 ? .rising : .falling
         if let margin, margin != 0 {
-            let roe = PercentageFormatter.string(
-                from: max(-1, pnl / margin),
+            let roe = max(-1, pnl / margin)
+            let roeWithSign = PercentageFormatter.string(
+                from: roe,
                 format: .pretty,
                 sign: .always,
                 options: .keepOneFractionDigitForZero
             )
-            self.roe = roe
-            self.pnlWithROE = localizedPnL + " (" + roe + ")"
+            let roeWithoutSign = PercentageFormatter.string(
+                from: roe,
+                format: .pretty,
+                sign: .never,
+                options: .keepOneFractionDigitForZero
+            )
+            self.roe = roeWithSign
+            self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
         } else {
             self.roe = nil
             self.pnlWithROE = localizedPnL
@@ -201,14 +208,20 @@ struct PerpetualPositionViewModel {
                 roe = -roe
             }
             roe = max(-1, roe)
-            let localizedROE = PercentageFormatter.string(
+            let roeWithSign = PercentageFormatter.string(
                 from: roe,
                 format: .pretty,
                 sign: .always,
                 options: .keepOneFractionDigitForZero
             )
-            self.roe = localizedROE
-            self.pnlWithROE = localizedPnL + " (" + localizedROE + ")"
+            let roeWithoutSign = PercentageFormatter.string(
+                from: roe,
+                format: .pretty,
+                sign: .never,
+                options: .keepOneFractionDigitForZero
+            )
+            self.roe = roeWithSign
+            self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
         } else {
             self.roe = nil
             self.pnlWithROE = localizedPnL

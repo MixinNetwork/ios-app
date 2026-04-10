@@ -157,10 +157,7 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
         }
         let price = token.decimalUSDPrice * selectedCurrency.decimalRate
         
-        formatter.alwaysShowsDecimalSeparator = accumulator.willInputFraction
-        formatter.minimumFractionDigits = accumulator.fractions?.count ?? 0
-        var inputAmountString = formatter.string(from: inputAmount as NSDecimalNumber) ?? "0"
-        
+        var inputAmountString = inputAmount.formatted(amountStyle)
         let isAmountGreaterThanMinimum: Bool
         switch amountIntent {
         case .byToken:

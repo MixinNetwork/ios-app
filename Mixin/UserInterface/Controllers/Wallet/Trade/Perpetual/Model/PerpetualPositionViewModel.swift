@@ -38,7 +38,8 @@ struct PerpetualPositionViewModel {
     let leverageMultiplier: String
     let pnl: String
     let pnlColor: MarketColor
-    let roe: String?
+    let roeWithSign: String?
+    let roeWithoutSign: String?
     let pnlWithROE: String
     let actions: [Action]
     let displaySymbol: String?
@@ -88,16 +89,25 @@ struct PerpetualPositionViewModel {
         self.pnl = localizedPnL
         self.pnlColor = pnl >= 0 ? .rising : .falling
         if let margin, margin != 0 {
-            let roe = PercentageFormatter.string(
-                from: pnl / margin,
+            let roe = max(-1, pnl / margin)
+            let roeWithSign = PercentageFormatter.string(
+                from: roe,
                 format: .pretty,
                 sign: .always,
                 options: .keepOneFractionDigitForZero
             )
-            self.roe = roe
-            self.pnlWithROE = localizedPnL + " (" + roe + ")"
+            let roeWithoutSign = PercentageFormatter.string(
+                from: roe,
+                format: .pretty,
+                sign: .never,
+                options: .keepOneFractionDigitForZero
+            )
+            self.roeWithSign = roeWithSign
+            self.roeWithoutSign = roeWithoutSign
+            self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
         } else {
-            self.roe = nil
+            self.roeWithSign = nil
+            self.roeWithoutSign = nil
             self.pnlWithROE = localizedPnL
         }
         self.actions = [.close, .share]
@@ -200,16 +210,25 @@ struct PerpetualPositionViewModel {
             if pnl < 0 {
                 roe = -roe
             }
-            let localizedROE = PercentageFormatter.string(
+            roe = max(-1, roe)
+            let roeWithSign = PercentageFormatter.string(
                 from: roe,
                 format: .pretty,
                 sign: .always,
                 options: .keepOneFractionDigitForZero
             )
-            self.roe = localizedROE
-            self.pnlWithROE = localizedPnL + " (" + localizedROE + ")"
+            let roeWithoutSign = PercentageFormatter.string(
+                from: roe,
+                format: .pretty,
+                sign: .never,
+                options: .keepOneFractionDigitForZero
+            )
+            self.roeWithSign = roeWithSign
+            self.roeWithoutSign = roeWithoutSign
+            self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
         } else {
-            self.roe = nil
+            self.roeWithSign = nil
+            self.roeWithoutSign = nil
             self.pnlWithROE = localizedPnL
         }
         self.actions = [.tradeAgain, .share]

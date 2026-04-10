@@ -36,7 +36,7 @@ final class SharePerpetualPositionView: UIView {
     
     func load(viewModel: PerpetualPositionViewModel, latestPrice: Decimal?) {
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
-        changeLabel.text = viewModel.roe
+        changeLabel.text = viewModel.roeWithSign
         let layer = layer as! CAGradientLayer
         switch (AppGroupUserDefaults.User.marketColorAppearance, viewModel.pnlColor) {
         case (.greenUpRedDown, .rising), (.redUpGreenDown, .falling):

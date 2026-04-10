@@ -40,7 +40,7 @@ extension ValuableToken {
     public func localizeFiatMoneyBalance() -> String {
         CurrencyFormatter.localizedString(
             from: decimalUSDBalance * Currency.current.decimalRate,
-            format: .fiatMoney,
+            format: .fiatMoneyPrecision,
             sign: .never,
             symbol: .currencySymbol
         )

@@ -69,7 +69,7 @@ final class Web3SignViewController: WalletIdentifyingAuthenticationPreviewViewCo
             layoutTableHeaderView(title: R.string.localizable.web3_message_request(),
                                   subtitle: R.string.localizable.web3_ensure_trust())
             let feeTokenValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .precision, sign: .never)
-            let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+            let feeFiatMoneyValue = CurrencyFormatter.localizedString(from: Decimal(0), format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
             reloadData(with: [
                 .web3Message(caption: R.string.localizable.unsigned_message(), message: operation.humanReadableMessage),
                 .amount(caption: .fee, token: feeTokenValue, fiatMoney: feeFiatMoneyValue, display: .byToken, boldPrimaryAmount: false),

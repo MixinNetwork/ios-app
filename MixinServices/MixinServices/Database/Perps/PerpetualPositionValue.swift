@@ -36,7 +36,7 @@ public struct PerpetualPositionValue {
         
         let value = CurrencyFormatter.localizedString(
             from: decimalMargin * Currency.current.decimalRate,
-            format: .fiatMoneyValue,
+            format: .fiatMoneyPretty,
             sign: .never,
             symbol: .currencySymbol
         )
@@ -46,7 +46,7 @@ public struct PerpetualPositionValue {
         } else {
             CurrencyFormatter.localizedString(
                 from: decimalPnL * Currency.current.decimalRate,
-                format: .fiatMoneyValue,
+                format: .fiatMoneyPretty,
                 sign: .always,
                 symbol: .currencySymbol
             )

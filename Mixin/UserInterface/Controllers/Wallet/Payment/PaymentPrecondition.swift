@@ -27,7 +27,7 @@ enum PaymentPreconditionIssue {
             return R.string.localizable.duplication_reminder(amount, interval)
         case let .bigAmount(tokenAmount, fiatMoneyAmount, symbol):
             let tokenValue = CurrencyFormatter.localizedString(from: tokenAmount, format: .precision, sign: .never, symbol: .custom(symbol))
-            let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoney, sign: .never, symbol: .currencySymbol)
+            let fiatMoneyValue = CurrencyFormatter.localizedString(from: fiatMoneyAmount, format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
             return R.string.localizable.large_amount_reminder(tokenValue, fiatMoneyValue)
         case let .notContact(user):
             return R.string.localizable.unfamiliar_person_reminder(user.fullName, user.identityNumber)

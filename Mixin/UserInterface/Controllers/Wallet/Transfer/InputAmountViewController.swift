@@ -18,21 +18,23 @@ class InputAmountViewController: UIViewController {
     @IBOutlet weak var numberPadTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var reviewButtonStackViewBottomConstraint: NSLayoutConstraint!
     
-    let formatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.locale = .current
-        formatter.usesGroupingSeparator = true
-        formatter.positivePrefix = ""
-        formatter.negativePrefix = ""
-        return formatter
-    }()
+    var amountStyle = Decimal.FormatStyle.number
+        .grouping(.automatic)
+        .sign(strategy: .never)
     
     var accumulator: DecimalAccumulator {
         didSet {
             guard isViewLoaded else {
                 return
             }
+            if accumulator.willInputFraction {
+                amountStyle = amountStyle.decimalSeparator(strategy: .always)
+            } else {
+                amountStyle = amountStyle.decimalSeparator(strategy: .automatic)
+            }
+            let fractionLength = accumulator.fractions?.count ?? 0
+            amountStyle = amountStyle
+                .precision(.fractionLength(fractionLength...fractionLength))
             reloadViews(inputAmount: accumulator.decimal)
         }
     }
@@ -78,6 +80,35 @@ class InputAmountViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         feedback.prepare()
+    }
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        switch action {
+        case #selector(copy(_:)):
+            accumulator.decimal != 0
+        case #selector(paste(_:)):
+            true
+        default:
+            false
+        }
+    }
+    
+    override func copy(_ sender: Any?) {
+        UIPasteboard.general.string = accumulator.decimal.formatted(
+            Decimal.FormatStyle.number
+                .grouping(.never)
+                .sign(strategy: .never)
+        )
+    }
+    
+    override func paste(_ sender: Any?) {
+        guard let string = UIPasteboard.general.string else {
+            return
+        }
+        guard let amount = Decimal(string: string, locale: .current) else {
+            return
+        }
+        accumulator.decimal = amount
     }
     
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
@@ -132,6 +163,13 @@ class InputAmountViewController: UIViewController {
                 super.pressesEnded(presses, with: event)
             }
         }
+    }
+    
+    @IBAction func presentAmountMenu(_ sender: Any) {
+        becomeFirstResponder()
+        AppDelegate.current.mainWindow.addDismissMenuResponder()
+        let rect = amountLabel.convert(amountLabel.bounds, to: view)
+        UIMenuController.shared.showMenu(from: view, rect: rect)
     }
     
     @IBAction func toggleAmountIntent(_ sender: Any) {

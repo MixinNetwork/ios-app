@@ -344,14 +344,14 @@ extension Web3TransferPreviewViewController {
         let feeCost = if fee.fiatMoneyAmount >= 0.01 {
             CurrencyFormatter.localizedString(
                 from: fee.fiatMoneyAmount,
-                format: .fiatMoney,
+                format: .fiatMoneyPrecision,
                 sign: .never,
                 symbol: .currencySymbol
             )
         } else {
             "<" + CurrencyFormatter.localizedString(
                 from: 0.01,
-                format: .fiatMoney,
+                format: .fiatMoneyPrecision,
                 sign: .never,
                 symbol: .currencySymbol
             )
@@ -427,7 +427,7 @@ extension Web3TransferPreviewViewController {
                 let fiatMoneyAmount: String? = if let token {
                     CurrencyFormatter.localizedString(
                         from: value * token.decimalUSDPrice * Currency.current.decimalRate,
-                        format: .fiatMoney,
+                        format: .fiatMoneyPrecision,
                         sign: .never,
                         symbol: .currencySymbol
                     )
@@ -465,7 +465,7 @@ extension Web3TransferPreviewViewController {
             let fiatMoneyAmount: String? = if let token, let amount {
                 CurrencyFormatter.localizedString(
                     from: amount * token.decimalUSDPrice * Currency.current.decimalRate,
-                    format: .fiatMoney,
+                    format: .fiatMoneyPrecision,
                     sign: .never,
                     symbol: .currencySymbol
                 )

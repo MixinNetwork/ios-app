@@ -24,7 +24,7 @@ enum PerpetualChangeSimulation {
         if margin > 0 {
             let profitValue = CurrencyFormatter.localizedString(
                 from: margin * exposure * Currency.current.decimalRate,
-                format: .fiatMoneyValue,
+                format: .fiatMoneyPretty,
                 sign: .always,
                 symbol: .currencySymbol
             )
@@ -84,7 +84,7 @@ enum PerpetualChangeSimulation {
         } else {
             let marginValue = CurrencyFormatter.localizedString(
                 from: -margin * Currency.current.decimalRate,
-                format: .fiatMoneyValue,
+                format: .fiatMoneyPretty,
                 sign: .always,
                 symbol: .currencySymbol
             )

@@ -68,7 +68,7 @@ struct PerpetualPositionViewModel {
         let margin = Decimal(string: position.margin, locale: .enUSPOSIX)
         let localizedPnL = CurrencyFormatter.localizedString(
             from: pnl * Currency.current.decimalRate,
-            format: .fiatMoneyValue,
+            format: .fiatMoneyPretty,
             sign: .always,
             symbol: .currencySymbol
         )
@@ -144,7 +144,7 @@ struct PerpetualPositionViewModel {
         self.margin = if let margin {
             CurrencyFormatter.localizedString(
                 from: margin * Currency.current.decimalRate,
-                format: .fiatMoneyValue,
+                format: .fiatMoneyPretty,
                 sign: .never,
                 symbol: .currencySymbol
             )
@@ -182,7 +182,7 @@ struct PerpetualPositionViewModel {
         let leverage = PerpetualLeverage.stringRepresentation(multiplier: history.leverage)
         let localizedPnL = CurrencyFormatter.localizedString(
             from: pnl * Currency.current.decimalRate,
-            format: .fiatMoneyValue,
+            format: .fiatMoneyPretty,
             sign: .always,
             symbol: .currencySymbol
         )

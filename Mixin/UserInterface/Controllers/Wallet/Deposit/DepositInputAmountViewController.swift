@@ -66,17 +66,14 @@ final class DepositInputAmountViewController: InputAmountViewController {
     override func reloadViews(inputAmount: Decimal) {
         let price = token.decimalUSDPrice * Currency.current.decimalRate
         
-        formatter.alwaysShowsDecimalSeparator = accumulator.willInputFraction
-        formatter.minimumFractionDigits = accumulator.fractions?.count ?? 0
-        var inputAmountString = formatter.string(from: inputAmount as NSDecimalNumber) ?? "0"
-        
+        var inputAmountString = inputAmount.formatted(amountStyle)
         switch amountIntent {
         case .byToken:
             tokenAmount = inputAmount
             fiatMoneyAmount = inputAmount * price
             calculatedValueLabel.text = CurrencyFormatter.localizedString(
                 from: fiatMoneyAmount,
-                format: .fiatMoney,
+                format: .fiatMoneyPrecision,
                 sign: .never,
                 symbol: .currencyCode
             )

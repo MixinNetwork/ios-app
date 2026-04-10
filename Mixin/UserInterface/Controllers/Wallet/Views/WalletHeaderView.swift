@@ -157,7 +157,7 @@ final class WalletHeaderView: InfiniteTopView {
         } else {
             CurrencyFormatter.localizedString(
                 from: totalUSDBalance * Currency.current.decimalRate,
-                format: .fiatMoney,
+                format: .fiatMoneyPrecision,
                 sign: .never
             )
         }
@@ -165,7 +165,7 @@ final class WalletHeaderView: InfiniteTopView {
             let totalBTCValue = tokens.reduce(0) { result, token in
                 result + token.decimalBTCPrice * token.decimalBalance
             }
-            let btcValue = CurrencyFormatter.localizedString(from: totalBTCValue, format: .pretty, sign: .never)
+            let btcValue = CurrencyFormatter.localizedString(from: totalBTCValue, format: .significantDigits, sign: .never)
             let attributedBTCValue = NSMutableAttributedString(string: btcValue, attributes: btcValueAttributes)
             attributedBTCValue.append(
                 NSAttributedString(

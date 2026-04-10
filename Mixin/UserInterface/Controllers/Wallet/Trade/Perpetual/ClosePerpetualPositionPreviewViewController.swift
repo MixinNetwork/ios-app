@@ -49,7 +49,7 @@ final class ClosePerpetualPositionPreviewViewController: WalletIdentifyingAuthen
                 sign: .always,
                 symbol: .custom(token.symbol)
             )
-            if let roe = viewModel.roe {
+            if let roe = viewModel.roeWithoutSign {
                 pnlValue += " (" + roe + ")"
             }
             pnl.append(NSAttributedString(

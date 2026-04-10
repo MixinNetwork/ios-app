@@ -38,7 +38,8 @@ struct PerpetualPositionViewModel {
     let leverageMultiplier: String
     let pnl: String
     let pnlColor: MarketColor
-    let roe: String?
+    let roeWithSign: String?
+    let roeWithoutSign: String?
     let pnlWithROE: String
     let actions: [Action]
     let displaySymbol: String?
@@ -101,10 +102,12 @@ struct PerpetualPositionViewModel {
                 sign: .never,
                 options: .keepOneFractionDigitForZero
             )
-            self.roe = roeWithSign
+            self.roeWithSign = roeWithSign
+            self.roeWithoutSign = roeWithoutSign
             self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
         } else {
-            self.roe = nil
+            self.roeWithSign = nil
+            self.roeWithoutSign = nil
             self.pnlWithROE = localizedPnL
         }
         self.actions = [.close, .share]
@@ -220,10 +223,12 @@ struct PerpetualPositionViewModel {
                 sign: .never,
                 options: .keepOneFractionDigitForZero
             )
-            self.roe = roeWithSign
+            self.roeWithSign = roeWithSign
+            self.roeWithoutSign = roeWithoutSign
             self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
         } else {
-            self.roe = nil
+            self.roeWithSign = nil
+            self.roeWithoutSign = nil
             self.pnlWithROE = localizedPnL
         }
         self.actions = [.tradeAgain, .share]

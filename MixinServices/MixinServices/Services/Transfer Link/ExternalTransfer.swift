@@ -34,15 +34,20 @@ public struct ExternalTransfer {
         guard let components = URLComponents(string: raw) else {
             throw TransferLinkError.notTransferLink
         }
-        guard let scheme = components.scheme?.lowercased(), let queryItems = components.queryItems else {
+        guard let scheme = components.scheme?.lowercased() else {
             throw TransferLinkError.notTransferLink
         }
         guard let schemeAssetID = Self.supportedAssetIDs[scheme] else {
             // Drop schemes which are not listed in `supportedAssetIds`
             throw TransferLinkError.notTransferLink
         }
-        let queries = queryItems.reduce(into: [:]) { queries, item in
-            queries[item.name] = item.value
+        let queries: [String: String]
+        if let queryItems = components.queryItems {
+            queries = queryItems.reduce(into: [:]) { queries, item in
+                queries[item.name] = item.value
+            }
+        } else {
+            queries = [:]
         }
         if scheme == "ethereum" {
             // https://eips.ethereum.org/EIPS/eip-681

@@ -247,11 +247,11 @@ extension AllPerpetualPositionsViewController: UICollectionViewDataSource {
             if let viewModels, !viewModels.isEmpty {
                 let viewModel = viewModels[indexPath.item]
                 switch content {
-                case .open:
+                case .open where viewModel.state != .opening:
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
                     cell.load(viewModel: viewModel)
                     return cell
-                case .closed:
+                case .open, .closed:
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_inactive_position, for: indexPath)!
                     cell.load(viewModel: viewModel)
                     return cell

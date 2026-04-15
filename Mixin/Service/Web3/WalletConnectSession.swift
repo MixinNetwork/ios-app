@@ -183,8 +183,8 @@ extension WalletConnectSession {
                     session: self,
                     request: request
                 )
-                let fee = try await operation.loadFee()
-                let feeRequirement = BalanceRequirement(token: operation.feeToken, amount: fee.tokenAmount)
+                let fee = try await operation.reloadFee().selected
+                let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
                 if feeRequirement.isSufficient {
                     await MainActor.run {
                         let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))
@@ -254,8 +254,8 @@ extension WalletConnectSession {
                     session: self,
                     request: request
                 )
-                let fee = try await operation.loadFee()
-                let feeRequirement = BalanceRequirement(token: operation.feeToken, amount: fee.tokenAmount)
+                let fee = try await operation.reloadFee().selected
+                let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
                 if feeRequirement.isSufficient {
                     await MainActor.run {
                         let transfer = Web3TransferPreviewViewController(operation: operation, proposer: .dapp(proposer))

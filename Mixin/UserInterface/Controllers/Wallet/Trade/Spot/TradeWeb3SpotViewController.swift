@@ -326,18 +326,26 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
                 try EVMTransferToAddressOperation(
                     evmChainID: id,
                     payment: payment,
-                    decimalAmount: sendAmount
+                    decimalAmount: sendAmount,
+                    feePolicy: .prefersGaslessInKind,
                 )
             case .solana:
                 try SolanaTransferToAddressOperation(
                     payment: payment,
-                    decimalAmount: sendAmount
+                    decimalAmount: sendAmount,
+                    feePolicy: .prefersGaslessInKind,
                 )
             }
             
-            let fee = try await operation.loadFee()
-            let sendRequirement = BalanceRequirement(token: payment.token, amount: sendAmount)
-            let feeRequirement = BalanceRequirement(token: operation.feeToken, amount: fee.tokenAmount)
+            let fee = try await operation.reloadFee().selected
+            let sendRequirement = BalanceRequirement(
+                token: payment.token,
+                amount: sendAmount
+            )
+            let feeRequirement = BalanceRequirement(
+                token: fee.token,
+                amount: fee.amount
+            )
             let requirements = sendRequirement.merging(with: feeRequirement)
             let isBalanceSufficient = requirements.allSatisfy(\.isSufficient)
             

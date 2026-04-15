@@ -50,6 +50,27 @@ public final class Web3RawTransactionDAO: Web3DAO {
         return db.select(with: query) ?? 0
     }
     
+    public func updateGaslessSponsorTransaction(
+        sponsorTxID: String,
+        broadcastTxHash: String,
+        db: GRDB.Database,
+    ) throws {
+        try db.execute(
+            sql: """
+            UPDATE raw_transactions
+            SET hash = :new_hash, raw = :new_raw
+            WHERE hash = :hash
+            """,
+            arguments: [
+                "new_hash": broadcastTxHash,
+                "new_raw": Web3RawTransaction.gaslessBroadcastRaw(
+                    broadcastTxHash: broadcastTxHash
+                ),
+                "hash": sponsorTxID,
+            ]
+        )
+    }
+    
     public func deleteRawTransaction(hash: String, alongsideTransaction change: ((GRDB.Database) throws -> Void)) throws {
         db.write { db in
             try db.execute(

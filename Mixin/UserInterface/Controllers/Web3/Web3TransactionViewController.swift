@@ -561,6 +561,8 @@ extension Web3TransactionViewController {
                 let cancelOperation: Web3TransferOperation?
                 if let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID),
                    let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash),
+                   !rawTransaction.isGaslessSponsorTransaction,
+                   !rawTransaction.isGaslessBroadcastTransaction,
                    let transaction = EIP1559Transaction(rawTransaction: rawTransaction.raw)
                 {
                     do {

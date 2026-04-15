@@ -109,6 +109,27 @@ public final class Web3TransactionDAO: Web3DAO {
         }
     }
     
+    public func updateGaslessSponsorTransaction(
+        sponsorTxID: String,
+        broadcastTxHash: String,
+        alongsideTransaction change: ((GRDB.Database) throws -> Void),
+    ) {
+        db.write { db in
+            try db.execute(
+                sql: """
+                    UPDATE transactions
+                    SET transaction_hash = :broadcast_tx_hash
+                    WHERE transaction_hash = :sponsor_tx_id
+                """,
+                arguments: [
+                    "sponsor_tx_id": sponsorTxID,
+                    "broadcast_tx_hash": broadcastTxHash,
+                ]
+            )
+            try change(db)
+        }
+    }
+    
     public func deleteAll() {
         db.execute(sql: "DELETE FROM transactions")
     }

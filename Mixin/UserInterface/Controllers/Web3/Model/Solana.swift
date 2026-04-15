@@ -233,16 +233,29 @@ extension Solana {
             solana_transaction_contains_set_authority(pointer)
         }
         
-        func sign(withPrivateKeyFrom seed: Data, recentBlockhash: Data) throws -> String {
-            try recentBlockhash.withUnsafeBytes { recentBlockhash in
-                try seed.withUnsafeBytes { seed in
-                    try withSolanaStringPointer { signature in
-                        solana_sign_transaction(pointer,
-                                                recentBlockhash.baseAddress,
-                                                recentBlockhash.count,
-                                                seed.baseAddress,
-                                                seed.count,
-                                                &signature)
+        func sign(withPrivateKeyFrom seed: Data, recentBlockhash: Data?) throws -> String {
+            try withSolanaStringPointer { signature in
+                seed.withUnsafeBytes { seed in
+                    if let recentBlockhash {
+                        recentBlockhash.withUnsafeBytes { recentBlockhash in
+                            solana_sign_transaction(
+                                pointer,
+                                recentBlockhash.baseAddress,
+                                recentBlockhash.count,
+                                seed.baseAddress,
+                                seed.count,
+                                &signature
+                            )
+                        }
+                    } else {
+                        solana_sign_transaction(
+                            pointer,
+                            nil,
+                            0,
+                            seed.baseAddress,
+                            seed.count,
+                            &signature
+                        )
                     }
                 }
             }

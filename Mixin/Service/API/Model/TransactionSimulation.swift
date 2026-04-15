@@ -15,11 +15,12 @@ struct TransactionSimulation {
     
     static func balanceChange(
         token: Web3TokenItem,
-        amount: Decimal
+        amount: Decimal,
+        from: String,
     ) -> TransactionSimulation {
         TransactionSimulation(
             balanceChanges: [
-                BalanceChange(token: token, amount: amount)
+                BalanceChange(token: token, amount: amount, from: from)
             ],
             approves: nil
         )

@@ -405,7 +405,7 @@ extension Payment {
                 }
             case .passed(let issues):
                 let amount: Decimal
-                if fee.tokenItem.assetID == token.assetID {
+                if fee.token.assetID == token.assetID {
                     amount = tokenAmount + fee.amount
                 } else {
                     amount = tokenAmount
@@ -435,7 +435,7 @@ extension Payment {
                         withdrawalTokenAmount: tokenAmount,
                         withdrawalFiatMoneyAmount: fiatMoneyAmount,
                         withdrawalOutputs: collection,
-                        feeToken: fee.tokenItem,
+                        feeToken: fee.token,
                         feeAmount: fee.amount,
                         address: destination.withdrawable,
                         addressLabel: addressLabel,

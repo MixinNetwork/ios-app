@@ -99,29 +99,30 @@ enum Web3AddressValidator {
                         try EVMTransferToAddressOperation(
                             evmChainID: chainID,
                             payment: addressPayment,
-                            decimalAmount: amount
+                            decimalAmount: amount,
+                            feePolicy: .alwaysNative,
                         )
                     case .solana:
                         try SolanaTransferToAddressOperation(
                             payment: addressPayment,
-                            decimalAmount: amount
+                            decimalAmount: amount,
+                            feePolicy: .alwaysNative,
                         )
                     }
-                    let fee = try await operation.loadFee()
-                    if let operation = operation as? SolanaTransferToAddressOperation,
-                       let accountExists = await operation.receiverAccountExists
-                    {
+                    let fee = try await operation.reloadFee().selected
+                    if let operation = operation as? SolanaTransferToAddressOperation {
+                        let accountExists = await operation.receiverAccountStatus == .exist
                         let reason = if payment.sendingNativeToken {
                             Solana.checkRentExemptionForSOLTransfer(
                                 sendingAmount: amount,
-                                feeAmount: fee.tokenAmount,
+                                feeAmount: fee.amount,
                                 senderSOLBalance: payment.token.decimalBalance,
                                 receiverAccountExists: accountExists
                             )
                         } else {
                             Solana.checkRentExemptionForSPLTokenTransfer(
-                                senderSOLBalance: operation.feeToken.decimalBalance,
-                                feeAmount: fee.tokenAmount,
+                                senderSOLBalance: operation.nativeFeeToken.decimalBalance,
+                                feeAmount: fee.amount,
                                 receiverAccountExists: accountExists
                             )
                         }
@@ -133,7 +134,7 @@ enum Web3AddressValidator {
                         }
                     }
                     let transferRequirement = BalanceRequirement(token: token, amount: amount)
-                    let feeRequirement = BalanceRequirement(token: operation.feeToken, amount: fee.tokenAmount)
+                    let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
                     let requirements = transferRequirement.merging(with: feeRequirement)
                     let isBalanceSufficient = requirements.allSatisfy(\.isSufficient)
                     await MainActor.run {

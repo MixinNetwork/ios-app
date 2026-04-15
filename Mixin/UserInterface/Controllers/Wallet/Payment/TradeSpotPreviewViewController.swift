@@ -128,12 +128,12 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                 rows.append(.info(caption: .memo, content: memo))
             }
         case .web3(let operation):
-            if let fee = operation.fee {
+            if let fee = operation.fee?.selected {
                 var feeValue = CurrencyFormatter.localizedString(
-                    from: fee.tokenAmount,
+                    from: fee.amount,
                     format: .precision,
                     sign: .never,
-                    symbol: .custom(operation.feeToken.symbol)
+                    symbol: .custom(fee.token.symbol)
                 )
                 if let fee = fee as? EVMTransferOperation.EVMDisplayFee {
                     let feePerGas = CurrencyFormatter.localizedString(

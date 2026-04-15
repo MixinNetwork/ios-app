@@ -21,6 +21,8 @@ typedef enum SolanaErrorCode {
   SolanaErrorCodeTransactionToString = -13,
   SolanaErrorCodeNotOnCurve = -14,
   SolanaErrorCodeInvalidProgramID = -15,
+  SolanaErrorCodeRequiresRecentBlockhash = -16,
+  SolanaErrorCodeAccountNotIncludedInTransaction = -17,
 } SolanaErrorCode;
 
 typedef enum SolanaSignatureFormat {
@@ -60,7 +62,7 @@ bool solana_transaction_contains_set_authority(const void *txn);
 
 int16_t solana_transaction_number_of_required_signatures(const void *txn);
 
-enum SolanaErrorCode solana_sign_transaction(const void *txn,
+enum SolanaErrorCode solana_sign_transaction(const void *tx,
                                              const uint8_t *recent_blockhash,
                                              size_t recent_blockhash_len,
                                              const uint8_t *seed,

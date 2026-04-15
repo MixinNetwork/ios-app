@@ -65,6 +65,7 @@ class FeeRequiredInputAmountViewController: TokenConsumingInputAmountViewControl
         changeFeeButton.tintColor = R.color.icon_tint_tertiary()
         changeFeeButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         changeFeeButton.alpha = 0
+        changeFeeButton.addTarget(self, action: #selector(changeFee(_:)), for: .touchUpInside)
         self.changeFeeButton = changeFeeButton
         
         let feeStackView = UIStackView(
@@ -111,6 +112,10 @@ class FeeRequiredInputAmountViewController: TokenConsumingInputAmountViewControl
                 feeWaivedButton = button
             }
         }
+    }
+    
+    @objc func changeFee(_ sender: UIButton) {
+        
     }
     
     @objc private func presentCrossWalletTransactionFreeDescription(_ sender: Any) {

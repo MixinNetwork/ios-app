@@ -48,7 +48,6 @@ class BitcoinTransferOperation: Web3TransferOperation {
             toAddress: toAddress,
             chain: .bitcoin,
             feeToken: token,
-            isResendingTransactionAvailable: true,
             simulationDisplay: simulationDisplay,
             isFeeWaived: isFeeWaived,
         )
@@ -56,7 +55,7 @@ class BitcoinTransferOperation: Web3TransferOperation {
     
     override func start(pin: String) async throws {
         let (fee, spendingOutputs) = await MainActor.run {
-            (self.fee, self.spendingOutputs)
+            (self.fee?.selected, self.spendingOutputs)
         }
         guard let fee, let spendingOutputs else {
             throw SigningError.feeNotReady
@@ -76,7 +75,7 @@ class BitcoinTransferOperation: Web3TransferOperation {
                 outputs: spendingOutputs,
                 sendAddress: fromAddress.destination,
                 sendAmount: sendAmount,
-                fee: fee.tokenAmount,
+                fee: fee.amount,
                 receiveAddress: toAddress,
                 privateKey: privateKey
             )
@@ -91,7 +90,7 @@ class BitcoinTransferOperation: Web3TransferOperation {
             return
         }
         let feeRate = TokenAmountFormatter.string(
-            from: fee.tokenAmount / .satoshi / Decimal(signedTransaction.vsize)
+            from: fee.amount / .satoshi / Decimal(signedTransaction.vsize)
         )
         await MainActor.run {
             self.state = .sending
@@ -108,7 +107,11 @@ class BitcoinTransferOperation: Web3TransferOperation {
                 .replacingNonce(with: feeRate)
             let hash = rawTransaction.hash
             Logger.web3.info(category: "BTCTransfer", message: "Tx sent, hash: \(hash)")
-            let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.tokenAmount)
+            let pendingTransaction = Web3Transaction(
+                rawTransaction: rawTransaction,
+                fee: fee.amount,
+                myAddress: fromAddress.destination,
+            )
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
                 try rawTransaction.save(db)
                 try Web3OutputDAO.shared.sign(
@@ -159,7 +162,8 @@ final class BitcoinTransferToAddressOperation: BitcoinTransferOperation {
         )
         let simulation: TransactionSimulation = .balanceChange(
             token: payment.token,
-            amount: decimalAmount
+            amount: decimalAmount,
+            from: payment.fromAddress.destination,
         )
         let isFeeWaived = payment.toAddressLabel?.isFeeWaived() ?? false
         self.payment = payment
@@ -174,7 +178,7 @@ final class BitcoinTransferToAddressOperation: BitcoinTransferOperation {
         )
     }
     
-    override func loadFee() async throws -> Web3DisplayFee {
+    override func reloadFee() async throws -> Fee {
         let info = try await RouteAPI.bitcoinNetworkInfo(feeRate: nil)
         let calculator = Bitcoin.P2WPKHFeeCalculator(
             outputs: allOutputs,
@@ -182,13 +186,13 @@ final class BitcoinTransferToAddressOperation: BitcoinTransferOperation {
             minimum: info.minimalFee,
         )
         let result = try calculator.calculate(transferAmount: sendAmount)
-        let displayFee = Web3DisplayFee(token: payment.token, amount: result.feeAmount)
+        let fee = Fee.native(token: payment.token, amount: result.feeAmount)
         await MainActor.run {
-            self.fee = displayFee
+            self.fee = fee
             self.spendingOutputs = result.spendingOutputs
             self.state = .ready
         }
-        return displayFee
+        return fee
     }
     
 }
@@ -302,8 +306,8 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
         )
     }
     
-    override func loadFee() async throws -> Web3DisplayFee {
-        let displayFee: Web3DisplayFee
+    override func reloadFee() async throws -> Fee {
+        let fee: Fee
         let info = try await RouteAPI.bitcoinNetworkInfo(feeRate: previousFeeRate)
         do {
             if info.decimalFeeRate <= decimalPreviousFeeRate {
@@ -314,9 +318,9 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
                 )
                 let result = try calculator.calculate(transferAmount: sendAmount)
                 Logger.web3.info(category: "BTCSpeedUp", message: "Already speedy")
-                displayFee = Web3DisplayFee(token: token, amount: result.feeAmount)
+                fee = Fee.native(token: token, amount: result.feeAmount)
                 await MainActor.run {
-                    self.fee = displayFee
+                    self.fee = fee
                     self.state = .unavailable(reason: R.string.localizable.btc_tx_already_speedy())
                 }
             } else {
@@ -327,21 +331,21 @@ final class BitcoinSpeedUpOperation: BitcoinRBFOperation {
                 )
                 let result = try calculator.calculate(transferAmount: sendAmount)
                 Logger.web3.info(category: "BTCSpeedUp", message: "Using \(result)")
-                displayFee = Web3DisplayFee(token: token, amount: result.feeAmount)
+                fee = Fee.native(token: token, amount: result.feeAmount)
                 await MainActor.run {
                     self.spendingOutputs = result.spendingOutputs
-                    self.fee = displayFee
+                    self.fee = fee
                     self.state = .ready
                 }
             }
         } catch let .insufficientOutputs(feeAmount) {
-            displayFee = Web3DisplayFee(token: token, amount: feeAmount)
+            fee = Fee.native(token: token, amount: feeAmount)
             await MainActor.run {
-                self.fee = displayFee
+                self.fee = fee
                 self.state = .unavailable(reason: R.string.localizable.insufficient_balance())
             }
         }
-        return displayFee
+        return fee
     }
     
 }
@@ -392,7 +396,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
         )
     }
     
-    override func loadFee() async throws -> Web3DisplayFee {
+    override func reloadFee() async throws -> Fee {
         let info = try await RouteAPI.bitcoinNetworkInfo(feeRate: previousFeeRate)
         let calculator = Bitcoin.P2WPKHFeeCalculator(
             outputs: availableOutputs,
@@ -405,18 +409,18 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
             incrementalFee: info.incrementalFee
         )
         Logger.web3.info(category: "BTCCancel", message: "Using \(result)")
-        let displayFee = Web3DisplayFee(token: token, amount: result.feeAmount)
+        let fee = Fee.native(token: token, amount: result.feeAmount)
         await MainActor.run {
             self.spendingOutputs = result.spendingOutputs
-            self.fee = displayFee
+            self.fee = fee
             self.state = .ready
         }
-        return displayFee
+        return fee
     }
     
     override func start(pin: String) async throws {
         let (fee, spendingOutputs) = await MainActor.run {
-            (self.fee, self.spendingOutputs)
+            (self.fee?.selected, self.spendingOutputs)
         }
         guard let fee, let spendingOutputs else {
             throw SigningError.feeNotReady
@@ -424,7 +428,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
         await MainActor.run {
             state = .signing
         }
-        let sendAmount = previousInputsAmount - fee.tokenAmount
+        let sendAmount = previousInputsAmount - fee.amount
         let signedTransaction: Bitcoin.SignedTransaction
         do {
             Logger.web3.info(category: "BTCCancel", message: "Start")
@@ -434,7 +438,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
                 outputs: spendingOutputs,
                 sendAddress: fromAddress.destination,
                 sendAmount: sendAmount,
-                fee: fee.tokenAmount,
+                fee: fee.amount,
                 receiveAddress: fromAddress.destination,
                 privateKey: privateKey
             )
@@ -449,7 +453,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
             return
         }
         let feeRate = TokenAmountFormatter.string(
-            from: fee.tokenAmount / .satoshi / Decimal(signedTransaction.vsize)
+            from: fee.amount / .satoshi / Decimal(signedTransaction.vsize)
         )
         await MainActor.run {
             self.state = .sending
@@ -465,7 +469,11 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
                 )
                 .replacingNonce(with: feeRate)
             Logger.web3.info(category: "BTCCancel", message: "Tx sent, hash: \(rawTransaction.hash)")
-            let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.tokenAmount)
+            let pendingTransaction = Web3Transaction(
+                rawTransaction: rawTransaction,
+                fee: fee.amount,
+                myAddress: fromAddress.destination
+            )
             let now = Date().toUTCString()
             let receivingOutput = Web3Output(
                 id: Web3Output.bitcoinOutputID(txid: rawTransaction.hash, vout: 0),

@@ -636,6 +636,75 @@ extension RouteAPI {
         )
     }
     
+    static func gaslessFees(
+        from: String,
+        to: String,
+        assetID: String,
+        chainID: String,
+    ) async throws -> [GaslessFee] {
+        struct Response: Decodable {
+            let fees: [GaslessFee]
+        }
+        let response: Response = try await request(
+            method: .post,
+            path: "/web3/gasless/fees",
+            with: [
+                "from": from,
+                "to": to,
+                "asset_id": assetID,
+                "chain_id": chainID,
+            ],
+        )
+        return response.fees
+    }
+    
+    static func gaslessPrepare(
+        from: String,
+        to: String,
+        assetID: String,
+        amount: String,
+        feeAssetID: String,
+        feeAmount: String,
+        chainID: String,
+    ) async throws -> GaslessTransactionProposal {
+        try await request(
+            method: .post,
+            path: "/web3/gasless/prepare",
+            with: [
+                "from": from,
+                "to": to,
+                "asset_id": assetID,
+                "amount": amount,
+                "fee_asset_id": feeAssetID,
+                "chain_id": chainID,
+            ],
+        )
+    }
+    
+    static func gaslessSubmit(
+        transaction: SignedEVMGaslessTransactionProposal
+    ) async throws -> String {
+        struct Response: Decodable {
+            let sponsor_tx_id: String
+        }
+        
+        let response: Response = try await request(
+            method: .post,
+            path: "/web3/gasless/submit",
+            with: transaction,
+        )
+        return response.sponsor_tx_id
+    }
+    
+    static func gaslessTransaction(
+        id: String
+    ) -> MixinAPI.Result<GaslessTransaction> {
+        request(
+            method: .get,
+            path: "/web3/gasless/transactions/" + id,
+        )
+    }
+    
 }
 
 // MARK: - RPC

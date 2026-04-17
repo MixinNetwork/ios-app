@@ -25,7 +25,6 @@ struct GaslessTransactionEVMPayload: Codable {
         }
         
         struct EIP7702Auth: Codable {
-            let required: Bool
             let signType: String
             let message: String
             let chainId: String

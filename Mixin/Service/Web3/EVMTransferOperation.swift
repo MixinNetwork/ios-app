@@ -636,11 +636,6 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             guard case let .evm(payload) = tx.payload else {
                 throw SigningError.gaslessPayloadMismatch
             }
-            if let address = payload.signing.eip7702Auth?.address,
-               address.lowercased() != eip7702AuthAddress
-            {
-                throw SigningError.invalidEIP7702AuthAddress
-            }
             Logger.web3.info(category: "EVMTransfer(Gasless)", message: "Will sign")
             let signedUserOperation = try {
                 var message = payload.signing.userOperation.message
@@ -653,8 +648,11 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
                 return try account.signGaslessPayload(message: messageData)
             }()
             let signedAuth: String? = try {
-                guard let auth = payload.signing.eip7702Auth, auth.required else {
+                guard let auth = payload.signing.eip7702Auth else {
                     return nil
+                }
+                guard auth.address.lowercased() == eip7702AuthAddress else {
+                    throw SigningError.invalidEIP7702AuthAddress
                 }
                 var message = auth.message
                 if message.hasPrefix("0x") {

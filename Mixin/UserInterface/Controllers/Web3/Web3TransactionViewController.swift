@@ -43,7 +43,7 @@ final class Web3TransactionViewController: TransactionViewController {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadDataIfContains(_:)),
-            name: Web3TransactionDAO.transactionDidSaveNotification,
+            name: Web3TransactionDAO.transactionDidUpdateNotification,
             object: nil
         )
         reloadData()

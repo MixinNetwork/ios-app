@@ -5,7 +5,7 @@ public final class Web3TransactionDAO: Web3DAO {
     
     public static let shared = Web3TransactionDAO()
     
-    public static let transactionDidSaveNotification = Notification.Name("one.mixin.services.Web3TransactionDAO.TransactionDidSave")
+    public static let transactionDidUpdateNotification = Notification.Name("one.mixin.services.Web3TransactionDAO.TransactionDidUpdate")
     public static let transactionsUserInfoKey = "s"
     
     public func transaction(hash: String, chainID: String, address: String) -> Web3Transaction? {
@@ -61,7 +61,7 @@ public final class Web3TransactionDAO: Web3DAO {
             db.afterNextTransaction { _ in
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(
-                        name: Self.transactionDidSaveNotification,
+                        name: Self.transactionDidUpdateNotification,
                         object: self,
                         userInfo: [Self.transactionsUserInfoKey: transactions]
                     )
@@ -100,7 +100,7 @@ public final class Web3TransactionDAO: Web3DAO {
             db.afterNextTransaction { _ in
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(
-                        name: Self.transactionDidSaveNotification,
+                        name: Self.transactionDidUpdateNotification,
                         object: self,
                         userInfo: [Self.transactionsUserInfoKey: [transaction]]
                     )
@@ -115,18 +115,39 @@ public final class Web3TransactionDAO: Web3DAO {
         alongsideTransaction change: ((GRDB.Database) throws -> Void),
     ) {
         db.write { db in
-            try db.execute(
-                sql: """
-                    UPDATE transactions
-                    SET transaction_hash = :broadcast_tx_hash
-                    WHERE transaction_hash = :sponsor_tx_id
-                """,
-                arguments: [
-                    "sponsor_tx_id": sponsorTxID,
-                    "broadcast_tx_hash": broadcastTxHash,
-                ]
-            )
+            let transactionExists = try Int.fetchOne(
+                db,
+                sql: "SELECT 1 FROM transactions WHERE transaction_hash = ?",
+                arguments: [broadcastTxHash],
+            ) == 1
+            if transactionExists {
+                try db.execute(
+                    sql: "DELETE FROM transactions WHERE transaction_hash = ?",
+                    arguments: [sponsorTxID],
+                )
+            } else {
+                try db.execute(
+                    sql: """
+                        UPDATE transactions
+                        SET transaction_hash = :broadcast_tx_hash
+                        WHERE transaction_hash = :sponsor_tx_id
+                    """,
+                    arguments: [
+                        "sponsor_tx_id": sponsorTxID,
+                        "broadcast_tx_hash": broadcastTxHash,
+                    ]
+                )
+            }
             try change(db)
+            db.afterNextTransaction { _ in
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(
+                        name: Self.transactionDidUpdateNotification,
+                        object: self,
+                        userInfo: nil,
+                    )
+                }
+            }
         }
     }
     

@@ -76,7 +76,7 @@ final class Web3TransactionHistoryViewController: TransactionHistoryViewControll
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadData),
-            name: Web3TransactionDAO.transactionDidSaveNotification,
+            name: Web3TransactionDAO.transactionDidUpdateNotification,
             object: nil
         )
         reloadData()

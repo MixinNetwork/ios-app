@@ -49,7 +49,7 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadIfContains(_:)),
-            name: Web3TransactionDAO.transactionDidSaveNotification,
+            name: Web3TransactionDAO.transactionDidUpdateNotification,
             object: nil
         )
         

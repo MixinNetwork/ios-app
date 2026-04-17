@@ -138,6 +138,15 @@ public final class Web3TokenDAO: Web3DAO {
         return db.select(with: sql)
     }
     
+    public func tokenItems(ids: any Collection<String>) -> [Web3TokenItem] {
+        guard !ids.isEmpty else {
+            return []
+        }
+        var query = GRDB.SQL(sql: SQL.selector)
+        query.append(literal: "\nWHERE t.asset_id IN \(ids)")
+        return db.select(with: query)
+    }
+    
     public func tokenItems(walletID: String, ids: any Collection<String>) -> [Web3TokenItem] {
         guard !ids.isEmpty else {
             return []

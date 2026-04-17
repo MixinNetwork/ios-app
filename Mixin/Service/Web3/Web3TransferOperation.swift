@@ -152,14 +152,83 @@ extension Web3TransferOperation {
         walletID: String,
         assetIDs: [String]
     ) async throws -> [String: Web3TokenItem] {
-        var tokens = Web3TokenDAO.shared.tokenItems(
+        var results = Web3TokenDAO.shared.tokenItems(
             walletID: walletID,
             ids: assetIDs
         ).reduce(into: [:]) { result, token in
             result[token.assetID] = token
         }
-        // TODO: Get more tokens from remote
-        return tokens
+        var missingAssetIDs = Set(assetIDs).subtracting(results.keys)
+        if !missingAssetIDs.isEmpty {
+            let tokensFromOtherWallets = Web3TokenDAO.shared.tokenItems(
+                ids: missingAssetIDs
+            ).map { token in
+                Web3TokenItem(token: token, replacingAmountWith: "0")
+            }
+            for token in tokensFromOtherWallets {
+                missingAssetIDs.remove(token.assetID)
+                results[token.assetID] = token
+            }
+        }
+        if !missingAssetIDs.isEmpty {
+            var madeUpTokens = TokenDAO.shared.tokenItems(
+                with: missingAssetIDs
+            ).map { token in
+                missingAssetIDs.remove(token.assetID)
+                return Web3Token(
+                    walletID: walletID,
+                    assetID: token.assetID,
+                    chainID: token.chainID,
+                    assetKey: token.assetKey,
+                    kernelAssetID: token.kernelAssetID,
+                    symbol: token.symbol,
+                    name: token.name,
+                    precision: token.precision,
+                    iconURL: token.iconURL,
+                    amount: "0",
+                    usdPrice: token.usdPrice,
+                    usdChange: token.usdChange,
+                    level: Web3Reputation.Level.verified.rawValue,
+                )
+            }
+            if !missingAssetIDs.isEmpty {
+                do {
+                    let remoteTokens = try await SafeAPI.assets(
+                        ids: missingAssetIDs
+                    ).map { token in
+                        Web3Token(
+                            walletID: walletID,
+                            assetID: token.assetID,
+                            chainID: token.chainID,
+                            assetKey: token.assetKey,
+                            kernelAssetID: token.kernelAssetID,
+                            symbol: token.symbol,
+                            name: token.name,
+                            precision: token.precision,
+                            iconURL: token.iconURL,
+                            amount: "0",
+                            usdPrice: token.usdPrice,
+                            usdChange: token.usdChange,
+                            level: Web3Reputation.Level.verified.rawValue,
+                        )
+                    }
+                    madeUpTokens.append(contentsOf: remoteTokens)
+                } catch {
+                    // Ignore those errors. 0 balance anyway
+                }
+            }
+            let chains = Web3ChainDAO.shared.chains(
+                chainIDs: Set(madeUpTokens.map(\.chainID))
+            )
+            for token in madeUpTokens {
+                results[token.assetID] = Web3TokenItem(
+                    token: token,
+                    hidden: false,
+                    chain: chains[token.chainID]
+                )
+            }
+        }
+        return results
     }
     
     func tokenAmountFormat(precision: Int16) -> Decimal.FormatStyle {

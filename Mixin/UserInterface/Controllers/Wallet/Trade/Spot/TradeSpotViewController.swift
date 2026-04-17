@@ -689,19 +689,26 @@ extension TradeSpotViewController: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
+        guard textField == amountInputCell?.sendAmountTextField else {
+            return true
+        }
         let newText = ((textField.text ?? "") as NSString)
             .replacingCharacters(in: range, with: string)
         if newText.isEmpty {
             return true
         }
         let components = newText.components(separatedBy: currentDecimalSeparator)
-        switch components.count {
+        return switch components.count {
         case 1:
-            return true
+            true
         case 2:
-            return components[1].count <= 8
+            if let precision = sendToken?.decimals {
+                components[1].count <= precision
+            } else {
+                components[1].count <= MixinToken.internalPrecision
+            }
         default:
-            return false
+            false
         }
     }
     

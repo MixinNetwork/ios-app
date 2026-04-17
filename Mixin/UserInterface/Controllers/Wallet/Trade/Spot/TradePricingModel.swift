@@ -340,7 +340,13 @@ final class TradePricingModel {
             case .receive:
                 1 / price
             }
-            return NumberFormatter.userInputAmountSimulation.string(decimal: value)
+            return value.formatted(
+                Decimal.FormatStyle.number
+                    .locale(.current)
+                    .grouping(.never)
+                    .sign(strategy: .never)
+                    .precision(.fractionLength(0...8))
+            )
         } else {
             return nil
         }

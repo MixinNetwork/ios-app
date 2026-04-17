@@ -63,20 +63,28 @@ final class TradeAmountInputCell: UICollectionViewCell {
         updateReceiveView(style: .loading)
     }
     
-    func updateSendAmountTextField(amount: Decimal?) {
-        sendAmountTextField.text = if let amount {
-            NumberFormatter.userInputAmountSimulation.string(decimal: amount)
-        } else {
-            nil
-        }
+    func updateSendAmountTextField(amount: Decimal?, precision: Int?) {
+        let precision = precision ?? Int(MixinToken.internalPrecision)
+        let formatted = amount?.formatted(
+            Decimal.FormatStyle.number
+                .locale(.current)
+                .grouping(.never)
+                .sign(strategy: .never)
+                .precision(.fractionLength(0...precision))
+        )
+        sendAmountTextField.text = formatted
     }
     
-    func updateReceiveAmountTextField(amount: Decimal?) {
-        receiveAmountTextField.text = if let amount {
-            NumberFormatter.userInputAmountSimulation.string(decimal: amount)
-        } else {
-            nil
-        }
+    func updateReceiveAmountTextField(amount: Decimal?, precision: Int?) {
+        let precision = precision ?? Int(MixinToken.internalPrecision)
+        let formatted = amount?.formatted(
+            Decimal.FormatStyle.number
+                .locale(.current)
+                .grouping(.never)
+                .sign(strategy: .never)
+                .precision(.fractionLength(0...precision))
+        )
+        receiveAmountTextField.text = formatted
     }
     
 }

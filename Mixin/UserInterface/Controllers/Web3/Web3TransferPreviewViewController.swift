@@ -286,7 +286,7 @@ extension Web3TransferPreviewViewController {
             tableHeaderView.setIcon(progress: .failure)
             layoutTableHeaderView(
                 title: R.string.localizable.sending_failed(),
-                subtitle: "\(error)",
+                subtitle: error.localizedDescription,
                 style: .destructive,
             )
             tableView.setContentOffset(.zero, animated: true)

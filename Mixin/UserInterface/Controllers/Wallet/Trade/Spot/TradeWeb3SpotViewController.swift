@@ -96,8 +96,6 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
     
     override func review(_ sender: RoundedButton) {
         view.endEditing(false)
-        let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
-        ConcurrentJobQueue.shared.addJob(job: job)
         switch mode {
         case .simple:
             reviewSimpleOrder()
@@ -135,21 +133,55 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
             } else {
                 nil
             }
-            result[token.assetID] = if let item = availableTokens[token.assetID] {
-                BalancedSwapToken(
+            if let item = availableTokens[token.assetID] {
+                let availableBalance = switch item.assetID {
+                case AssetID.sol:
+                    max(0, item.decimalBalance - Solana.RentExemptionValue.tokenAccount)
+                default:
+                    item.decimalBalance
+                }
+                result[token.assetID] = BalancedSwapToken(
                     token: token,
                     balance: item.decimalBalance,
+                    availableBalance: availableBalance,
                     usdPrice: marketPrice ?? item.decimalUSDPrice,
                     isMalicious: item.isMalicious,
                 )
             } else {
-                BalancedSwapToken(
+                result[token.assetID] = BalancedSwapToken(
                     token: token,
                     balance: 0,
+                    availableBalance: 0,
                     usdPrice: 0,
                     isMalicious: false,
                 )
             }
+        }
+    }
+    
+    override func inputSendAmount(multiplier: Decimal) {
+        guard let sendToken else {
+            return
+        }
+        var amount = sendToken.decimalBalance * multiplier
+        if sendToken.assetID == AssetID.sol {
+            let maxAmount = sendToken.decimalBalance - Solana.RentExemptionValue.tokenAccount
+            amount = min(maxAmount, amount)
+        } else {
+            amount = withUnsafePointer(to: amount) { amount in
+                var rounded: Decimal = 0
+                NSDecimalRound(&rounded, amount, sendToken.decimals, .down)
+                return rounded
+            }
+        }
+        if amount >= MixinToken.minimalAmount {
+            pricingModel.sendAmount = amount
+            amountInputCell?.updateSendAmountTextField(
+                amount: amount,
+                precision: sendToken.decimals
+            )
+            startQuoteRequesterIfAvailable()
+            reloadSections()
         }
     }
     
@@ -182,7 +214,8 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
         else {
             return
         }
-        
+        let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
+        ConcurrentJobQueue.shared.addJob(job: job)
         let payment = Web3SendingTokenPayment(
             wallet: wallet,
             chain: sendChain,
@@ -255,6 +288,8 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
         else {
             return
         }
+        let job = AddBotIfNotFriendJob(userID: BotUserID.mixinRoute)
+        ConcurrentJobQueue.shared.addJob(job: job)
         reviewButton.isBusy = true
         let payment = Web3SendingTokenPayment(
             wallet: wallet,
@@ -342,10 +377,12 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
                 token: payment.token,
                 amount: sendAmount
             )
-            let feeRequirement = BalanceRequirement(
-                token: fee.token,
-                amount: fee.amount
-            )
+            let feeRequirement = switch fee.token.assetID {
+            case AssetID.sol:
+                BalanceRequirement(token: fee.token, amount: fee.amount + Solana.RentExemptionValue.tokenAccount)
+            default:
+                BalanceRequirement(token: fee.token, amount: fee.amount)
+            }
             let requirements = sendRequirement.merging(with: feeRequirement)
             let isBalanceSufficient = requirements.allSatisfy(\.isSufficient)
             

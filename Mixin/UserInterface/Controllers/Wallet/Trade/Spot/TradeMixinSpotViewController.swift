@@ -130,6 +130,7 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
                 BalancedSwapToken(
                     token: token,
                     balance: item.decimalBalance,
+                    availableBalance: item.decimalBalance,
                     usdPrice: marketPrice ?? item.decimalUSDPrice,
                     isMalicious: false,
                 )
@@ -137,10 +138,29 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
                 BalancedSwapToken(
                     token: token,
                     balance: 0,
+                    availableBalance: 0,
                     usdPrice: 0,
                     isMalicious: false,
                 )
             }
+        }
+    }
+    
+    override func inputSendAmount(multiplier: Decimal) {
+        guard let sendToken else {
+            return
+        }
+        let amount = NSDecimalNumber(decimal: sendToken.decimalBalance * multiplier)
+            .rounding(accordingToBehavior: mixinPrecisionRoundingHandler)
+            .decimalValue
+        if amount >= MixinToken.minimalAmount {
+            pricingModel.sendAmount = amount
+            amountInputCell?.updateSendAmountTextField(
+                amount: amount,
+                precision: sendToken.decimals
+            )
+            startQuoteRequesterIfAvailable()
+            reloadSections()
         }
     }
     

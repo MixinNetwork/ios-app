@@ -226,7 +226,18 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
             }
         }
         
-        let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
+        let feeRequirement = switch fee.token.assetID {
+        case AssetID.sol:
+            BalanceRequirement(
+                token: fee.token,
+                amount: fee.amount - Solana.RentExemptionValue.tokenAccount
+            )
+        default:
+            BalanceRequirement(
+                token: fee.token,
+                amount: fee.amount
+            )
+        }
         let requirements = inputAmountRequirement.merging(with: feeRequirement)
         if requirements.allSatisfy(\.isSufficient) && transferAmountFailure == nil {
             insufficientBalanceLabel.text = nil

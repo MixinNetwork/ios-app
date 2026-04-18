@@ -3,10 +3,14 @@ import GRDB
 
 public final class Web3TransactionDAO: Web3DAO {
     
+    public enum UserInfoKey {
+        public static let transactions = "s"
+        public static let sponsorTxID = "stid"
+    }
+    
     public static let shared = Web3TransactionDAO()
     
     public static let transactionDidUpdateNotification = Notification.Name("one.mixin.services.Web3TransactionDAO.TransactionDidUpdate")
-    public static let transactionsUserInfoKey = "s"
     
     public func transaction(hash: String, chainID: String, address: String) -> Web3Transaction? {
         let sql = "SELECT * FROM transactions WHERE transaction_hash = ? AND chain_id = ? AND address = ?"
@@ -63,7 +67,7 @@ public final class Web3TransactionDAO: Web3DAO {
                     NotificationCenter.default.post(
                         name: Self.transactionDidUpdateNotification,
                         object: self,
-                        userInfo: [Self.transactionsUserInfoKey: transactions]
+                        userInfo: [Self.UserInfoKey.transactions: transactions]
                     )
                 }
             }
@@ -102,7 +106,7 @@ public final class Web3TransactionDAO: Web3DAO {
                     NotificationCenter.default.post(
                         name: Self.transactionDidUpdateNotification,
                         object: self,
-                        userInfo: [Self.transactionsUserInfoKey: [transaction]]
+                        userInfo: [Self.UserInfoKey.transactions: [transaction]]
                     )
                 }
             }
@@ -138,13 +142,24 @@ public final class Web3TransactionDAO: Web3DAO {
                     ]
                 )
             }
+            let transaction = try Web3Transaction.fetchOne(
+                db,
+                sql: "SELECT * FROM transactions WHERE transaction_hash = ?",
+                arguments: [broadcastTxHash],
+            )
             try change(db)
             db.afterNextTransaction { _ in
+                var userInfo: [String: Any] = [
+                    UserInfoKey.sponsorTxID: sponsorTxID,
+                ]
+                if let transaction {
+                    userInfo[Self.UserInfoKey.transactions] = [transaction]
+                }
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(
                         name: Self.transactionDidUpdateNotification,
                         object: self,
-                        userInfo: nil,
+                        userInfo: userInfo,
                     )
                 }
             }

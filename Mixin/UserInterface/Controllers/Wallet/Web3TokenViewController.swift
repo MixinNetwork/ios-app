@@ -194,7 +194,7 @@ final class Web3TokenViewController: TokenViewController<Web3TokenItem, Web3Tran
     @objc private func reloadIfContains(_ notification: Notification) {
         guard
             let userInfo = notification.userInfo,
-            let transactions = userInfo[Web3TransactionDAO.transactionsUserInfoKey] as? [Web3Transaction],
+            let transactions = userInfo[Web3TransactionDAO.UserInfoKey.transactions] as? [Web3Transaction],
             transactions.contains(where: { [$0.sendAssetID, $0.receiveAssetID].contains(token.assetID) })
         else {
             return

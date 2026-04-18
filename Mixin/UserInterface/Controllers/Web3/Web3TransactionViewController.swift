@@ -74,13 +74,23 @@ final class Web3TransactionViewController: TransactionViewController {
     @objc private func reloadDataIfContains(_ notification: Notification) {
         guard
             let userInfo = notification.userInfo,
-            let transactions = userInfo[Web3TransactionDAO.transactionsUserInfoKey] as? [Web3Transaction],
-            let transaction = transactions.first(where: { $0.matches(with: transaction) })
+            let transactions = userInfo[Web3TransactionDAO.UserInfoKey.transactions] as? [Web3Transaction]
         else {
             return
         }
-        self.transaction = transaction
-        reloadData()
+        let newTransaction: Web3Transaction?
+        if let sponsorTxID = userInfo[Web3TransactionDAO.UserInfoKey.sponsorTxID] as? String,
+           self.transaction.transactionHash == sponsorTxID,
+           transactions.count == 1
+        {
+            newTransaction = transactions.first
+        } else {
+            newTransaction = transactions.first(where: { $0.matches(with: transaction) })
+        }
+        if let newTransaction {
+            self.transaction = newTransaction
+            reloadData()
+        }
     }
     
 }

@@ -45,8 +45,8 @@ class Web3TransferOperation {
         case prefersGasless
         
         // Use same token for transferring and gasless fee
-        // fallback to native if balance insufficient, or network failure
-        case prefersGaslessInKind
+        // fallback to native if refused by remote
+        case prefersGaslessTrade
         
         case alwaysNative
         

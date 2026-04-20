@@ -935,6 +935,7 @@
 		944535CE2EFBDD7300E056D1 /* UnlockBitcoinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944535CC2EFBDD7300E056D1 /* UnlockBitcoinViewController.swift */; };
 		944535CF2EFBDD7300E056D1 /* UnlockBitcoinView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 944535CD2EFBDD7300E056D1 /* UnlockBitcoinView.xib */; };
 		9445C2552B6161F1001C4AAC /* FavoriteAppCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */; };
+		9445C6FA2F9602D70016BCC6 /* Web3GaslessTradingFee.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445C6F92F9602D00016BCC6 /* Web3GaslessTradingFee.swift */; };
 		9445D6642E82838F003BD76C /* WalletSearchModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9445D6632E82838E003BD76C /* WalletSearchModelController.swift */; };
 		94463C51298D627800E63547 /* AuthenticationFailureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94463C50298D627800E63547 /* AuthenticationFailureView.xib */; };
 		94463C53298D690F00E63547 /* AuthenticationFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94463C52298D690F00E63547 /* AuthenticationFailureView.swift */; };
@@ -2805,6 +2806,7 @@
 		944535CC2EFBDD7300E056D1 /* UnlockBitcoinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockBitcoinViewController.swift; sourceTree = "<group>"; };
 		944535CD2EFBDD7300E056D1 /* UnlockBitcoinView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UnlockBitcoinView.xib; sourceTree = "<group>"; };
 		9445C2532B6161F1001C4AAC /* FavoriteAppCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FavoriteAppCell.xib; sourceTree = "<group>"; };
+		9445C6F92F9602D00016BCC6 /* Web3GaslessTradingFee.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3GaslessTradingFee.swift; sourceTree = "<group>"; };
 		9445D6632E82838E003BD76C /* WalletSearchModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSearchModelController.swift; sourceTree = "<group>"; };
 		94463C50298D627800E63547 /* AuthenticationFailureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AuthenticationFailureView.xib; sourceTree = "<group>"; };
 		94463C52298D690F00E63547 /* AuthenticationFailureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationFailureView.swift; sourceTree = "<group>"; };
@@ -4731,6 +4733,7 @@
 				947015C32DA3A9AC00D8AA5A /* EIP1559Transaction.swift */,
 				940764C029B1E31F00B779A6 /* ExternalEVMTransaction.swift */,
 				94C578CC2F0FDCCB0000561B /* Web3DisplayFee.swift */,
+				9445C6F92F9602D00016BCC6 /* Web3GaslessTradingFee.swift */,
 				94E9C0CC2BC6CF7A00D6157C /* Web3Worker.swift */,
 				946575972BC8684D00C4C4F4 /* Web3DappProposer.swift */,
 				9480FB412BC6D623001B5D57 /* Web3SignOperation.swift */,
@@ -7712,6 +7715,7 @@
 				948CFAED2F2CB4C000BC34C3 /* QRCodeDetector.swift in Sources */,
 				94B820692E00613100D580C9 /* AddTokenMethodCell.swift in Sources */,
 				7B86B1F323F6AA5C00C80AD9 /* AudioMessageProgressView.swift in Sources */,
+				9445C6FA2F9602D70016BCC6 /* Web3GaslessTradingFee.swift in Sources */,
 				7BA24D77253438B9004906AD /* ViewPanningController.swift in Sources */,
 				94510FD42C8743AA00ACD972 /* MarketTokenSelectorCell.swift in Sources */,
 				7B311BAA22B9EAFE00C16652 /* IntroTextView.swift in Sources */,

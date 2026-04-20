@@ -331,27 +331,23 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
                 Logger.web3.error(category: "SolanaTransfer", message: "Gasless unavailable: \(error)")
                 return try await reloadNativeFee()
             }
-        case .prefersGaslessInKind:
+        case .prefersGaslessTrade:
             do {
-                let fees = try await RouteAPI.gaslessFees(
+                let amount = decimalAmount.formatted(
+                    tokenAmountFormat(precision: payment.token.precision)
+                )
+                let proposal = try await RouteAPI.gaslessPrepare(
                     from: payment.fromAddress.destination,
                     to: payment.toAddress,
                     assetID: payment.token.assetID,
+                    amount: amount,
+                    feeAssetID: payment.token.assetID,
+                    feeAmount: nil,
                     chainID: payment.token.chainID
                 )
-                let inKindFee = fees.first { fee in
-                    fee.assetID == payment.token.assetID
-                }
-                guard let inKindFee else {
-                    throw FeeLoadingError.gaslessUnavailable
-                }
-                if decimalAmount + inKindFee.amount > payment.token.decimalBalance {
-                    throw FeeLoadingError.gaslessInKindInsufficient
-                }
-                let option = Web3DisplayFee(
+                let option = Web3GaslessTradingFee(
                     token: payment.token,
-                    amount: inKindFee.amount,
-                    gasless: true
+                    proposal: proposal
                 )
                 let fee = Fee(options: [option], selectedIndex: 0)
                 await MainActor.run {
@@ -379,28 +375,33 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             await MainActor.run {
                 state = .signing
             }
-            let chainID = payment.chain.chainID
+            let chainID = payment.token.chainID
             let signedTransaction: String
             do {
-                let amount = decimalAmount.formatted(
-                    tokenAmountFormat(precision: payment.token.precision)
-                )
-                let feeAmount = fee.amount.formatted(
-                    tokenAmountFormat(precision: fee.token.precision)
-                )
-                let tx = try await RouteAPI.gaslessPrepare(
-                    from: payment.fromAddress.destination,
-                    to: payment.toAddress,
-                    assetID: payment.token.assetID,
-                    amount: amount,
-                    feeAssetID: fee.token.assetID,
-                    feeAmount: feeAmount,
-                    chainID: chainID,
-                )
-                guard tx.chainID == chainID else {
+                let proposal: GaslessTransactionProposal
+                if let fee = fee as? Web3GaslessTradingFee {
+                    proposal = fee.proposal
+                } else {
+                    let amount = decimalAmount.formatted(
+                        tokenAmountFormat(precision: payment.token.precision)
+                    )
+                    let feeAmount = fee.amount.formatted(
+                        tokenAmountFormat(precision: fee.token.precision)
+                    )
+                    proposal = try await RouteAPI.gaslessPrepare(
+                        from: payment.fromAddress.destination,
+                        to: payment.toAddress,
+                        assetID: payment.token.assetID,
+                        amount: amount,
+                        feeAssetID: fee.token.assetID,
+                        feeAmount: feeAmount,
+                        chainID: chainID,
+                    )
+                }
+                guard proposal.chainID == chainID else {
                     throw SigningError.gaslessChainMismatch
                 }
-                guard case let .solana(transaction) = tx.payload else {
+                guard case let .solana(transaction) = proposal.payload else {
                     throw SigningError.gaslessPayloadMismatch
                 }
                 Logger.web3.info(category: "SolanaTransfer(Gasless)", message: "Will sign")

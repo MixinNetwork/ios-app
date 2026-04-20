@@ -362,13 +362,13 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
                     evmChainID: id,
                     payment: payment,
                     decimalAmount: sendAmount,
-                    feePolicy: .prefersGaslessInKind,
+                    feePolicy: .prefersGaslessTrade,
                 )
             case .solana:
                 try SolanaTransferToAddressOperation(
                     payment: payment,
                     decimalAmount: sendAmount,
-                    feePolicy: .prefersGaslessInKind,
+                    feePolicy: .prefersGaslessTrade,
                 )
             }
             

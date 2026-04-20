@@ -664,21 +664,24 @@ extension RouteAPI {
         assetID: String,
         amount: String,
         feeAssetID: String,
-        feeAmount: String,
+        feeAmount: String?,
         chainID: String,
     ) async throws -> GaslessTransactionProposal {
-        try await request(
+        var parameters = [
+            "from": from,
+            "to": to,
+            "asset_id": assetID,
+            "amount": amount,
+            "fee_asset_id": feeAssetID,
+            "chain_id": chainID,
+        ]
+        if let feeAmount {
+            parameters["fee_amount"] = feeAmount
+        }
+        return try await request(
             method: .post,
             path: "/web3/gasless/prepare",
-            with: [
-                "from": from,
-                "to": to,
-                "asset_id": assetID,
-                "amount": amount,
-                "fee_asset_id": feeAssetID,
-                "fee_amount": feeAmount,
-                "chain_id": chainID,
-            ],
+            with: parameters,
         )
     }
     

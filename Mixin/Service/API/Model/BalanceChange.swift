@@ -1,7 +1,7 @@
 import Foundation
 import MixinServices
 
-struct BalanceChange: Codable, Token {
+struct BalanceChange: Decodable, Token {
     
     enum CodingKeys: String, CodingKey {
         case assetID = "asset_id"
@@ -19,7 +19,7 @@ struct BalanceChange: Codable, Token {
     let name: String
     let symbol: String
     let iconURL: String
-    let from: String
+    let from: String?
     
     init(token: Web3TokenItem, amount: Decimal, from: String) {
         self.assetID = token.assetID

@@ -676,6 +676,7 @@ extension RouteAPI {
                 "asset_id": assetID,
                 "amount": amount,
                 "fee_asset_id": feeAssetID,
+                "fee_amount": feeAmount,
                 "chain_id": chainID,
             ],
         )

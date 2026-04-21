@@ -299,7 +299,7 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
         )
         let request = Web3LimitOrderRequest(
             walletID: walletID,
-            assetID: sendToken.assetID,
+            sendToken: sendToken,
             amount: sendAmount,
             assetDestination: sendTokenAddress.destination,
             receiveAssetID: receiveToken.assetID,

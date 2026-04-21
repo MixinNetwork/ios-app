@@ -14,7 +14,7 @@ struct Web3LimitOrderRequest {
     
     init(
         walletID: String,
-        assetID: String,
+        sendToken: Web3TokenItem,
         amount: Decimal,
         assetDestination: String,
         receiveAssetID: String,
@@ -23,8 +23,14 @@ struct Web3LimitOrderRequest {
         expireAt: Date,
     ) {
         self.walletID = walletID
-        self.assetID = assetID
-        self.amount = TokenAmountFormatter.string(from: amount)
+        self.assetID = sendToken.assetID
+        self.amount = amount.formatted(
+            Decimal.FormatStyle.number
+                .locale(.enUSPOSIX)
+                .grouping(.never)
+                .sign(strategy: .never)
+                .precision(.fractionLength(0...Int(sendToken.precision)))
+        )
         self.assetDestination = assetDestination
         self.receiveAssetID = receiveAssetID
         self.expectedReceiveAmount = TokenAmountFormatter.string(from: expectedReceiveAmount)

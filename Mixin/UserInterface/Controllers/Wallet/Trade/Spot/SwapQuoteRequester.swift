@@ -38,14 +38,23 @@ final class SwapQuotePeriodicRequester {
     }
     
     init(
-        sendToken: BalancedSwapToken, sendAmount: Decimal,
-        receiveToken: SwapToken, slippage: Decimal,
+        sendToken: BalancedSwapToken,
+        sendAmount: Decimal,
+        receiveToken: SwapToken,
+        slippage: Decimal,
         source: RouteTokenSource
     ) {
+        let amount = sendAmount.formatted(
+            Decimal.FormatStyle.number
+                .locale(.enUSPOSIX)
+                .grouping(.never)
+                .sign(strategy: .never)
+                .precision(.fractionLength(0...sendToken.decimals))
+        )
         self.request = QuoteRequest(
             inputMint: sendToken.assetID,
             outputMint: receiveToken.assetID,
-            amount: TokenAmountFormatter.string(from: sendAmount),
+            amount: amount,
             slippage: Slippage(decimal: slippage).integral,
             source: source
         )

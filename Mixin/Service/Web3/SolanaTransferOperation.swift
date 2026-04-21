@@ -131,7 +131,7 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
             await MainActor.run {
                 self.state = .signingFailed(error)
             }
-            return
+            throw error
         }
         let fee = await MainActor.run {
             self.state = .sending
@@ -144,6 +144,7 @@ class ArbitraryTransactionSolanaTransferOperation: SolanaTransferOperation {
             await MainActor.run {
                 self.state = .sendingFailed(error)
             }
+            throw error
         }
     }
     
@@ -412,7 +413,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
                 await MainActor.run {
                     state = .signingFailed(error)
                 }
-                return
+                throw error
             }
             await MainActor.run {
                 state = .sending
@@ -424,6 +425,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
                 await MainActor.run {
                     self.state = .sendingFailed(error)
                 }
+                throw error
             }
         } else {
             guard let context = await nativeTransferContext else {
@@ -452,7 +454,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
                 await MainActor.run {
                     self.state = .signingFailed(error)
                 }
-                return
+                throw error
             }
             let fee = await MainActor.run {
                 self.state = .sending
@@ -465,6 +467,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
                 await MainActor.run {
                     self.state = .sendingFailed(error)
                 }
+                throw error
             }
         }
     }

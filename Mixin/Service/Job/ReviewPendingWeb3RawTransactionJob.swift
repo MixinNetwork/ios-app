@@ -79,10 +79,10 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
                     )
                 }
             } else {
-                Logger.web3.debug(category: "ReviewPendingWeb3RawTxn", message: "No broadcast tx hash")
+                Logger.web3.warn(category: "ReviewPendingWeb3RawTxn", message: "No broadcast tx hash")
             }
         case .failure(let error):
-            Logger.web3.debug(category: "ReviewPendingWeb3RawTxn", message: "\(transaction.hash):\n\(error)")
+            Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "\(transaction.hash):\n\(error)")
         }
     }
     
@@ -128,7 +128,7 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
             ConcurrentJobQueue.shared.addJob(job: refresh)
         case let .success(transaction):
             // Delete not pending raw txn
-            Logger.web3.debug(category: "ReviewPendingWeb3RawTxn", message: "Txn deleted \(transaction.hash)")
+            Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Txn deleted \(transaction.hash)")
             try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
                 if transaction.state.knownCase == .notFound {
                     try Web3TransactionDAO.shared.setTransactionStatusNotFound(
@@ -140,7 +140,7 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
                 }
             }
         case let .failure(error):
-            Logger.web3.debug(category: "ReviewPendingWeb3RawTxn", message: "\(transaction.hash):\n\(error)")
+            Logger.web3.error(category: "ReviewPendingWeb3RawTxn", message: "\(transaction.hash):\n\(error)")
         }
     }
     

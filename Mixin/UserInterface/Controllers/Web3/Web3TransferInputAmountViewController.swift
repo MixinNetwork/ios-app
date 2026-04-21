@@ -227,10 +227,12 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
         }
         
         let feeRequirement = switch fee.token.assetID {
-        case AssetID.sol:
+        case AssetID.sol where fee.gasless:
+            // Rent exemption of native Solana transfer fee is checked above by `transferAmountFailure`
+            // When it comes to gasless Solana transfer, SOL balance should be greater than fee.amount + rent
             BalanceRequirement(
                 token: fee.token,
-                amount: fee.amount - Solana.RentExemptionValue.tokenAccount
+                amount: fee.amount + Solana.RentExemptionValue.tokenAccount
             )
         default:
             BalanceRequirement(

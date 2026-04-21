@@ -31,7 +31,7 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
                 } else {
                     try reviewNativeTransaction(
                         transaction,
-                        bitcoinOutputIDsOccupeidByOtherTransactions: Set(
+                        bitcoinOutputIDsOccupiedByOtherTransactions: Set(
                             transactions.compactMap { (tx) -> Bitcoin.DecodedTransaction? in
                                 guard tx.chainID == ChainID.bitcoin && tx.hash != transaction.hash else {
                                     return nil
@@ -86,7 +86,7 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
     
     private func reviewNativeTransaction(
         _ transaction: Web3RawTransaction,
-        bitcoinOutputIDsOccupeidByOtherTransactions: @autoclosure () -> Set<String>,
+        bitcoinOutputIDsOccupiedByOtherTransactions: @autoclosure () -> Set<String>,
     ) throws {
         let result = RouteAPI.transaction(
             chainID: transaction.chainID,
@@ -98,7 +98,7 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
             Logger.web3.debug(category: "ReviewPendingWeb3RawTxn", message: "Txn still pending \(transaction.hash)")
         case let .success(transaction) where transaction.chainID == ChainID.bitcoin && transaction.state.knownCase == .notFound:
             Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "BTC Txn not found \(transaction.hash)")
-            let outputIDsOccupiedByOtherTransactions = bitcoinOutputIDsOccupeidByOtherTransactions()
+            let outputIDsOccupiedByOtherTransactions = bitcoinOutputIDsOccupiedByOtherTransactions()
             try Web3RawTransactionDAO.shared.deleteRawTransaction(hash: transaction.hash) { db in
                 let txn = try Bitcoin.decode(transaction: transaction.raw)
                 

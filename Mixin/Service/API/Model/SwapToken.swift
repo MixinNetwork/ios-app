@@ -5,7 +5,7 @@ class SwapToken: Token {
     
     let address: String
     let assetID: String
-    let decimals: Int16
+    let decimals: Int
     let name: String
     let symbol: String
     let iconURL: String
@@ -26,7 +26,7 @@ class SwapToken: Token {
     }
     
     init(
-        address: String, assetID: String, decimals: Int16,
+        address: String, assetID: String, decimals: Int,
         name: String, symbol: String, iconURL: String,
         category: Category?, chain: SwapToken.Chain,
     ) {
@@ -75,11 +75,6 @@ extension SwapToken {
         default:
             nil
         }
-    }
-    
-    func decimalAmount(nativeAmount: Decimal) -> NSDecimalNumber? {
-        let nativeAmountNumber = nativeAmount as NSDecimalNumber
-        return nativeAmountNumber.multiplying(byPowerOf10: -decimals)
     }
     
 }
@@ -143,7 +138,7 @@ extension SwapToken {
         }
         
         override init(
-            address: String, assetID: String, decimals: Int16, name: String,
+            address: String, assetID: String, decimals: Int, name: String,
             symbol: String, iconURL: String, category: Category?,
             chain: SwapToken.Chain,
         ) {
@@ -170,7 +165,7 @@ extension SwapToken {
             super.init(
                 address: try container.decode(String.self, forKey: .address),
                 assetID: try container.decode(String.self, forKey: .assetID),
-                decimals: try container.decode(Int16.self, forKey: .decimals),
+                decimals: try container.decode(Int.self, forKey: .decimals),
                 name: try container.decode(String.self, forKey: .name),
                 symbol: try container.decode(String.self, forKey: .symbol),
                 iconURL: try container.decode(String.self, forKey: .iconURL),

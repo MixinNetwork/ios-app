@@ -53,3 +53,48 @@ extension Web3RawTransaction: TableRecord, DatabaseColumnConvertible, Persistabl
     public static let databaseTableName = "raw_transactions"
     
 }
+
+extension Web3RawTransaction {
+    
+    private static let gaslessSponsorHashPrefix = "gasless:sponsor:"
+    
+    public var isGaslessSponsorTransaction: Bool {
+        raw.hasPrefix(Self.gaslessSponsorHashPrefix)
+    }
+    
+    public static func gaslessSponsorTransaction(
+        sponsorTxID: String,
+        chainID: String,
+        account: String,
+        nonce: String,
+        state: Web3RawTransaction.State,
+        createdAt: String,
+        updatedAt: String
+    ) -> Web3RawTransaction {
+        Web3RawTransaction(
+            hash: sponsorTxID,
+            chainID: chainID,
+            account: account,
+            nonce: nonce,
+            raw: gaslessSponsorHashPrefix + sponsorTxID,
+            state: .known(state),
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+        )
+    }
+    
+}
+
+extension Web3RawTransaction {
+    
+    private static let gaslessBroadcastHashPrefix = "gasless:broadcast:"
+    
+    public var isGaslessBroadcastTransaction: Bool {
+        raw.hasPrefix(Self.gaslessBroadcastHashPrefix)
+    }
+    
+    public static func gaslessBroadcastRaw(broadcastTxHash: String) -> String {
+        gaslessBroadcastHashPrefix + broadcastTxHash
+    }
+    
+}

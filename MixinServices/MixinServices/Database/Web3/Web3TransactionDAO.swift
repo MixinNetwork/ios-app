@@ -3,10 +3,14 @@ import GRDB
 
 public final class Web3TransactionDAO: Web3DAO {
     
+    public enum UserInfoKey {
+        public static let transactions = "s"
+        public static let sponsorTxID = "stid"
+    }
+    
     public static let shared = Web3TransactionDAO()
     
-    public static let transactionDidSaveNotification = Notification.Name("one.mixin.services.Web3TransactionDAO.TransactionDidSave")
-    public static let transactionsUserInfoKey = "s"
+    public static let transactionDidUpdateNotification = Notification.Name("one.mixin.services.Web3TransactionDAO.TransactionDidUpdate")
     
     public func transaction(hash: String, chainID: String, address: String) -> Web3Transaction? {
         let sql = "SELECT * FROM transactions WHERE transaction_hash = ? AND chain_id = ? AND address = ?"
@@ -61,9 +65,9 @@ public final class Web3TransactionDAO: Web3DAO {
             db.afterNextTransaction { _ in
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(
-                        name: Self.transactionDidSaveNotification,
+                        name: Self.transactionDidUpdateNotification,
                         object: self,
-                        userInfo: [Self.transactionsUserInfoKey: transactions]
+                        userInfo: [Self.UserInfoKey.transactions: transactions]
                     )
                 }
             }
@@ -100,9 +104,87 @@ public final class Web3TransactionDAO: Web3DAO {
             db.afterNextTransaction { _ in
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(
-                        name: Self.transactionDidSaveNotification,
+                        name: Self.transactionDidUpdateNotification,
                         object: self,
-                        userInfo: [Self.transactionsUserInfoKey: [transaction]]
+                        userInfo: [Self.UserInfoKey.transactions: [transaction]]
+                    )
+                }
+            }
+        }
+    }
+    
+    public func updateGaslessSponsorTransaction(
+        sponsorTxID: String,
+        chainID: String,
+        address: String,
+        broadcastTxHash: String,
+        alongsideTransaction change: ((GRDB.Database) throws -> Void),
+    ) {
+        db.write { db in
+            let transactionExists = try Int.fetchOne(
+                db,
+                sql: """
+                    SELECT 1
+                    FROM transactions
+                    WHERE transaction_hash = :hash
+                        AND chain_id = :chain_id
+                        AND address = :address
+                """,
+                arguments: [
+                    "hash": broadcastTxHash,
+                    "chain_id": chainID,
+                    "address": address,
+                ],
+            ) == 1
+            if transactionExists {
+                try db.execute(
+                    sql: """
+                        DELETE FROM transactions
+                        WHERE transaction_hash = :hash
+                            AND chain_id = :chain_id
+                            AND address = :address
+                    """,
+                    arguments: [
+                        "hash": sponsorTxID,
+                        "chain_id": chainID,
+                        "address": address,
+                    ],
+                )
+            } else {
+                try db.execute(
+                    sql: """
+                        UPDATE transactions
+                        SET transaction_hash = :broadcast_tx_hash
+                        WHERE transaction_hash = :sponsor_tx_id
+                            AND chain_id = :chain_id
+                            AND address = :address
+                    """,
+                    arguments: [
+                        "broadcast_tx_hash": broadcastTxHash,
+                        "sponsor_tx_id": sponsorTxID,
+                        "chain_id": chainID,
+                        "address": address,
+                    ]
+                )
+            }
+            let transaction = try Web3Transaction.fetchOne(
+                db,
+                sql: "SELECT * FROM transactions WHERE transaction_hash = ?",
+                arguments: [broadcastTxHash],
+            )
+            try change(db)
+            db.afterNextTransaction { _ in
+                var userInfo: [String: Any] = [
+                    UserInfoKey.sponsorTxID: sponsorTxID,
+                ]
+                if let transaction {
+                    userInfo[Self.UserInfoKey.transactions] = [transaction]
+                }
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(
+                        name: Self.transactionDidUpdateNotification,
+                        object: self,
+                        userInfo: userInfo,
                     )
                 }
             }

@@ -128,34 +128,52 @@ final class TradeSpotPreviewViewController: WalletIdentifyingAuthenticationPrevi
                 rows.append(.info(caption: .memo, content: memo))
             }
         case .web3(let operation):
-            if let fee = operation.fee {
-                var feeValue = CurrencyFormatter.localizedString(
-                    from: fee.tokenAmount,
-                    format: .precision,
-                    sign: .never,
-                    symbol: .custom(operation.feeToken.symbol)
-                )
-                if let fee = fee as? EVMTransferOperation.EVMDisplayFee {
-                    let feePerGas = CurrencyFormatter.localizedString(
-                        from: fee.feePerGas,
+            if let fee = operation.fee?.selected {
+                if fee is Web3GaslessTradingFee {
+                    let feeValue = Decimal(0).formatted()
+                    let feeCost = Decimal(0).formatted(
+                        Decimal.FormatStyle.Currency(
+                            code: Currency.current.code
+                        )
+                        .presentation(.narrow)
+                        .precision(.fractionLength(0...0))
+                    )
+                    rows.append(.amount(
+                        caption: .fee,
+                        token: feeValue,
+                        fiatMoney: feeCost,
+                        display: .byToken,
+                        boldPrimaryAmount: false
+                    ))
+                } else {
+                    var feeValue = CurrencyFormatter.localizedString(
+                        from: fee.amount,
                         format: .precision,
                         sign: .never,
-                        symbol: .custom("Gwei")
+                        symbol: .custom(fee.token.symbol)
                     )
-                    feeValue.append(" (\(feePerGas))")
+                    if let fee = fee as? EVMTransferOperation.EVMDisplayFee {
+                        let feePerGas = CurrencyFormatter.localizedString(
+                            from: fee.feePerGas,
+                            format: .precision,
+                            sign: .never,
+                            symbol: .custom("Gwei")
+                        )
+                        feeValue.append(" (\(feePerGas))")
+                    }
+                    let feeCost = if fee.fiatMoneyAmount >= 0.01 {
+                        CurrencyFormatter.localizedString(from: fee.fiatMoneyAmount, format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
+                    } else {
+                        "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
+                    }
+                    rows.append(.amount(
+                        caption: .fee,
+                        token: feeValue,
+                        fiatMoney: feeCost,
+                        display: .byToken,
+                        boldPrimaryAmount: false
+                    ))
                 }
-                let feeCost = if fee.fiatMoneyAmount >= 0.01 {
-                    CurrencyFormatter.localizedString(from: fee.fiatMoneyAmount, format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
-                } else {
-                    "<" + CurrencyFormatter.localizedString(from: 0.01, format: .fiatMoneyPrecision, sign: .never, symbol: .currencySymbol)
-                }
-                rows.append(.amount(
-                    caption: .fee,
-                    token: feeValue,
-                    fiatMoney: feeCost,
-                    display: .byToken,
-                    boldPrimaryAmount: false
-                ))
             }
             rows.append(contentsOf: [
                 .receivers([receiver], threshold: nil),

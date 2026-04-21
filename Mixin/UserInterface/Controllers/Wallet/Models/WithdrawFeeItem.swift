@@ -1,26 +1,26 @@
 import Foundation
 import MixinServices
 
-struct WithdrawFeeItem {
+struct WithdrawFeeItem: NetworkFee {
     
+    let token: MixinTokenItem
     let amount: Decimal
-    let tokenItem: MixinTokenItem
     let localizedAmountWithSymbol: String
     
     var assetID: String {
-        tokenItem.assetID
+        token.assetID
     }
     
-    init?(amountString: String, tokenItem: MixinTokenItem) {
+    init?(tokenItem: MixinTokenItem, amountString: String) {
         guard let amount = Decimal(string: amountString, locale: .enUSPOSIX) else {
             return nil
         }
-        self.init(amount: amount, tokenItem: tokenItem)
+        self.init(tokenItem: tokenItem, amount: amount)
     }
     
-    init(amount: Decimal, tokenItem: MixinTokenItem) {
+    init(tokenItem: MixinTokenItem, amount: Decimal) {
         self.amount = amount
-        self.tokenItem = tokenItem
+        self.token = tokenItem
         self.localizedAmountWithSymbol = CurrencyFormatter.localizedString(
             from: amount,
             format: .precision,

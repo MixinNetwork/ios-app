@@ -43,7 +43,7 @@ final class Web3TransactionViewController: TransactionViewController {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(reloadDataIfContains(_:)),
-            name: Web3TransactionDAO.transactionDidSaveNotification,
+            name: Web3TransactionDAO.transactionDidUpdateNotification,
             object: nil
         )
         reloadData()
@@ -74,13 +74,23 @@ final class Web3TransactionViewController: TransactionViewController {
     @objc private func reloadDataIfContains(_ notification: Notification) {
         guard
             let userInfo = notification.userInfo,
-            let transactions = userInfo[Web3TransactionDAO.transactionsUserInfoKey] as? [Web3Transaction],
-            let transaction = transactions.first(where: { $0.matches(with: transaction) })
+            let transactions = userInfo[Web3TransactionDAO.UserInfoKey.transactions] as? [Web3Transaction]
         else {
             return
         }
-        self.transaction = transaction
-        reloadData()
+        let newTransaction: Web3Transaction?
+        if let sponsorTxID = userInfo[Web3TransactionDAO.UserInfoKey.sponsorTxID] as? String,
+           self.transaction.transactionHash == sponsorTxID,
+           transactions.count == 1
+        {
+            newTransaction = transactions.first
+        } else {
+            newTransaction = transactions.first(where: { $0.matches(with: transaction) })
+        }
+        if let newTransaction {
+            self.transaction = newTransaction
+            reloadData()
+        }
     }
     
 }
@@ -376,12 +386,25 @@ extension Web3TransactionViewController {
         layoutTableHeaderView()
         
         let feeToken = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: transaction.chainID)
-        let feeRow: Row? = switch transaction.transactionType.knownCase {
+        
+        let feeRow: Row?
+        switch transaction.transactionType.knownCase {
         case .transferIn:
-            nil
+            feeRow = nil
         default:
-            if let feeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
-                .fee(
+            let isPendingGaslessTransaction: Bool
+            if transaction.status == .pending,
+               let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: transaction.transactionHash),
+               rawTransaction.isGaslessSponsorTransaction || rawTransaction.isGaslessBroadcastTransaction
+            {
+                isPendingGaslessTransaction = true
+            } else {
+                isPendingGaslessTransaction = false
+            }
+            if isPendingGaslessTransaction {
+                feeRow = nil
+            } else if let feeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
+                feeRow = .fee(
                     token: CurrencyFormatter.localizedString(
                         from: amount,
                         format: .precision,
@@ -396,7 +419,7 @@ extension Web3TransactionViewController {
                     )
                 )
             } else {
-                .plain(key: .fee, value: transaction.fee)
+                feeRow = .plain(key: .fee, value: transaction.fee)
             }
         }
         
@@ -561,6 +584,8 @@ extension Web3TransactionViewController {
                 let cancelOperation: Web3TransferOperation?
                 if let fromAddress = Web3AddressDAO.shared.address(walletID: wallet.walletID, chainID: chain.chainID),
                    let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: hash),
+                   !rawTransaction.isGaslessSponsorTransaction,
+                   !rawTransaction.isGaslessBroadcastTransaction,
                    let transaction = EIP1559Transaction(rawTransaction: rawTransaction.raw)
                 {
                     do {

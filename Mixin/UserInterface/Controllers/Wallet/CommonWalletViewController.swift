@@ -89,7 +89,7 @@ final class CommonWalletViewController: WalletViewController {
         notificationCenter.addObserver(
             self,
             selector: #selector(reloadPendingTransactions),
-            name: Web3TransactionDAO.transactionDidSaveNotification,
+            name: Web3TransactionDAO.transactionDidUpdateNotification,
             object: nil
         )
         

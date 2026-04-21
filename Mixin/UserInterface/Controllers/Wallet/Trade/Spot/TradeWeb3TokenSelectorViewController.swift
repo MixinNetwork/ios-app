@@ -206,15 +206,23 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                 let assetID = token.assetID
                 let localResult = localResultsMap[assetID]
                 let balance = localResult?.decimalBalance ?? {
-                    guard let amount = Web3TokenDAO.shared.amount(walletID: walletID, assetID: assetID) else {
-                        return nil
+                    if let amount = Web3TokenDAO.shared.amount(walletID: walletID, assetID: assetID) {
+                        Decimal(string: amount, locale: .enUSPOSIX) ?? 0
+                    } else {
+                        0
                     }
-                    return Decimal(string: amount, locale: .enUSPOSIX)
                 }()
+                let availableBalance = switch token.assetID {
+                case AssetID.sol:
+                    max(0, balance - Solana.RentExemptionValue.tokenAccount)
+                default:
+                    balance
+                }
                 hasStockTokens = hasStockTokens || token.category == .stock
                 result[assetID] = BalancedSwapToken(
                     token: token,
-                    balance: balance ?? 0,
+                    balance: balance,
+                    availableBalance: availableBalance,
                     usdPrice: localResult?.decimalUSDPrice ?? 0,
                     isMalicious: localResult?.isMalicious ?? false,
                 )

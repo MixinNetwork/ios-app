@@ -62,7 +62,6 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
         tokenBalanceLabel.text = tokenItem.localizedBalanceWithSymbol
         
         addFeeView()
-        changeFeeButton?.addTarget(self, action: #selector(changeFee(_:)), for: .touchUpInside)
         reloadWithdrawFee(with: tokenItem, destination: destination)
         
         reporter.report(event: .sendAmount)
@@ -105,7 +104,7 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
     }
     
     override func addFee(_ sender: Any) {
-        guard let feeToken = selectedFeeItem?.tokenItem else {
+        guard let feeToken = selectedFeeItem?.token else {
             return
         }
         let selector = AddTokenMethodSelectorViewController(token: feeToken)
@@ -132,7 +131,7 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
             reviewButton.isEnabled = false
             return
         }
-        let feeRequirement = BalanceRequirement(token: fee.tokenItem, amount: fee.amount)
+        let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
         let requirements = inputAmountRequirement.merging(with: feeRequirement)
         if requirements.allSatisfy(\.isSufficient) {
             insufficientBalanceLabel.text = nil
@@ -158,16 +157,16 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
         }
     }
     
-    @objc private func changeFee(_ sender: UIButton) {
+    override func changeFee(_ sender: UIButton) {
         guard let selectableFeeItems, let selectedFeeItemIndex else {
             return
         }
-        let selector = WithdrawFeeSelectorViewController(
+        let selector = NetworkFeeSelectorViewController(
             fees: selectableFeeItems,
             selectedIndex: selectedFeeItemIndex
         ) { index in
             let feeItem = selectableFeeItems[index]
-            self.feeTokenSameAsWithdrawToken = feeItem.tokenItem.assetID == self.tokenItem.assetID
+            self.feeTokenSameAsWithdrawToken = feeItem.token.assetID == self.tokenItem.assetID
             self.selectedFeeItemIndex = index
             self.reloadViewsWithBalanceRequirements()
             self.updateFeeDisplay(fee: feeItem)
@@ -182,7 +181,7 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
                 from: max(0, tokenItem.decimalBalance - fee.amount),
                 format: .precision,
                 sign: .never,
-                symbol: .custom(fee.tokenItem.symbol)
+                symbol: .custom(fee.token.symbol)
             )
         } else {
             tokenItem.localizedBalanceWithSymbol
@@ -205,12 +204,12 @@ final class WithdrawInputAmountViewController: FeeRequiredInputAmountViewControl
                     }
                 let feeItems: [WithdrawFeeItem] = fees.compactMap { fee in
                     if let token = tokensMap[fee.assetID] {
-                        return WithdrawFeeItem(amountString: fee.amount, tokenItem: token)
+                        return WithdrawFeeItem(tokenItem: token, amountString: fee.amount)
                     } else {
                         return nil
                     }
                 }
-                guard let feeToken = feeItems.first, feeToken.tokenItem.assetID == fee.assetID else {
+                guard let feeToken = feeItems.first, feeToken.token.assetID == fee.assetID else {
                     return
                 }
                 let feeTokenSameAsWithdrawToken = fee.assetID == token.assetID
@@ -286,7 +285,7 @@ extension WithdrawInputAmountViewController: AddTokenMethodSelectorViewControlle
         _ viewController: AddTokenMethodSelectorViewController,
         didPickMethod method: AddTokenMethodSelectorViewController.Method
     ) {
-        guard let feeToken = selectedFeeItem?.tokenItem else {
+        guard let feeToken = selectedFeeItem?.token else {
             return
         }
         let next = switch method {

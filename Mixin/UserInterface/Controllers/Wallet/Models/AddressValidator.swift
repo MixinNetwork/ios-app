@@ -234,7 +234,7 @@ extension AddressValidator {
         var feeItems: [WithdrawFeeItem] = []
         for fee in fees {
             let feeToken = try await syncToken(assetID: fee.assetID)
-            let feeItem = WithdrawFeeItem(amountString: fee.amount, tokenItem: feeToken)
+            let feeItem = WithdrawFeeItem(tokenItem: feeToken, amountString: fee.amount)
             if let feeItem {
                 feeItems.append(feeItem)
             } else {
@@ -255,7 +255,7 @@ extension AddressValidator {
         )
         let sufficientFeeItems = feeItems.lazy.compactMap { item in
             let feeRequirement = BalanceRequirement(
-                token: item.tokenItem,
+                token: item.token,
                 amount: item.amount
             )
             let requirements = feeRequirement.merging(with: withdrawRequirement)
@@ -269,7 +269,7 @@ extension AddressValidator {
             return .sufficient(feeItem)
         } else {
             let feeRequirement = BalanceRequirement(
-                token: firstFeeItem.tokenItem,
+                token: firstFeeItem.token,
                 amount: firstFeeItem.amount
             )
             return .insufficient(withdrawing: withdrawRequirement, fee: feeRequirement)

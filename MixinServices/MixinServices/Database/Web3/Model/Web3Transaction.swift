@@ -183,12 +183,13 @@ extension Web3Transaction {
         public let amount: String
         public let to: String?
         
-        public lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
         public lazy var localizedAmount = CurrencyFormatter.localizedString(
-            from: decimalAmount,
+            from: abs(decimalAmount),
             format: .precision,
             sign: .always
         )
+        
+        private lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
         
         public init(assetID: String, amount: String, to: String?) {
             self.assetID = assetID
@@ -210,12 +211,13 @@ extension Web3Transaction {
         public let amount: String
         public let from: String?
         
-        public lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
         public lazy var localizedAmount = CurrencyFormatter.localizedString(
-            from: -decimalAmount,
+            from: -abs(decimalAmount),
             format: .precision,
             sign: .always
         )
+        
+        private lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
         
         public init(assetID: String, amount: String, from: String?) {
             self.assetID = assetID

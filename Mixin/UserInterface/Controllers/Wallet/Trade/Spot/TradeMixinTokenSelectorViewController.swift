@@ -149,10 +149,12 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
                 let localResult = localResultsMap[assetID]
                 let balance = localResult?.decimalBalance
                     ?? TokenExtraDAO.shared.decimalBalance(assetID: assetID)
+                    ?? 0
                 hasStockTokens = hasStockTokens || token.category == .stock
                 result[assetID] = BalancedSwapToken(
                     token: token,
-                    balance: balance ?? 0,
+                    balance: balance,
+                    availableBalance: balance,
                     usdPrice: localResult?.decimalUSDPrice ?? 0,
                     isMalicious: false,
                 )

@@ -6,7 +6,7 @@ import MixinServices
 
 class EVMTransferOperation: Web3TransferOperation {
     
-    class EVMDisplayFee: Web3DisplayFee {
+    final class EVMDisplayFee: Web3DisplayFee {
         
         let feePerGas: Decimal // In Gwei
         
@@ -14,9 +14,10 @@ class EVMTransferOperation: Web3TransferOperation {
             token: Web3TokenItem,
             amount: Decimal,
             feePerGas: Decimal,
+            gasless: Bool,
         ) {
             self.feePerGas = feePerGas
-            super.init(token: token, amount: amount)
+            super.init(token: token, amount: amount, gasless: gasless)
         }
         
     }
@@ -28,7 +29,7 @@ class EVMTransferOperation: Web3TransferOperation {
         case notEVMChain(String)
     }
     
-    private enum RequestError: Error {
+    fileprivate enum RequestError: Error {
         case invalidTransaction
         case mismatchedAddress
         case invalidFee
@@ -41,6 +42,11 @@ class EVMTransferOperation: Web3TransferOperation {
         let gasLimit: BigUInt
         let maxFeePerGas: BigUInt
         let maxPriorityFeePerGas: BigUInt
+    }
+    
+    @MainActor
+    override var isResendingTransactionAvailable: Bool {
+        evmFee != nil && account != nil
     }
     
     private let mixinChainID: String
@@ -86,7 +92,6 @@ class EVMTransferOperation: Web3TransferOperation {
             toAddress: toAddress,
             chain: chain,
             feeToken: feeToken,
-            isResendingTransactionAvailable: true,
             simulationDisplay: simulationDisplay,
             isFeeWaived: isFeeWaived,
         )
@@ -129,13 +134,12 @@ class EVMTransferOperation: Web3TransferOperation {
             toAddress: transaction.to?.toChecksumAddress(),
             chain: chain,
             feeToken: feeToken,
-            isResendingTransactionAvailable: true,
             simulationDisplay: simulationDisplay,
             isFeeWaived: isFeeWaived,
         )
     }
     
-    override func loadFee() async throws -> Web3DisplayFee {
+    override func reloadFee() async throws -> Fee {
         let rawFee = try await RouteAPI.estimatedEthereumFee(
             mixinChainID: mixinChainID,
             from: fromAddress.destination,
@@ -173,13 +177,15 @@ class EVMTransferOperation: Web3TransferOperation {
             feePerGas = maxFeePerGasNumber * .gwei
             tokenAmount = weiCount * .wei
         }
-        let fee = EVMDisplayFee(
-            token: feeToken,
+        let nativeFee = EVMDisplayFee(
+            token: nativeFeeToken,
             amount: tokenAmount,
             feePerGas: NSDecimalNumber(decimal: feePerGas)
                 .rounding(accordingToBehavior: gweiRoundingHandler)
                 .decimalValue,
+            gasless: false,
         )
+        let fee = Fee(options: [nativeFee], selectedIndex: 0)
         await MainActor.run {
             self.evmFee = evmFee
             self.fee = fee
@@ -214,10 +220,11 @@ class EVMTransferOperation: Web3TransferOperation {
     }
     
     override func start(pin: String) async throws {
-        guard let evmFee = await evmFee, let fee = await fee else {
-            assertionFailure("Missing fee, call `start(with:)` only after fee is arrived")
+        guard let evmFee = await evmFee, let fee = await fee?.selected else {
+            assertionFailure("Missing fee, call `start(with:)` only after fee is ready")
             return
         }
+        assert(!fee.gasless)
         await MainActor.run {
             state = .signing
         }
@@ -261,11 +268,12 @@ class EVMTransferOperation: Web3TransferOperation {
         guard let fee, let account else {
             return
         }
+        assert(!fee.selected.gasless)
         state = .sending
         Logger.web3.info(category: "EVMTransfer", message: "Will resend")
         Task.detached { [transaction] in
             Logger.web3.info(category: "EVMTransfer", message: "Will resend")
-            await self.send(transaction: transaction, with: account, fee: fee)
+            await self.send(transaction: transaction, with: account, fee: fee.selected)
         }
     }
     
@@ -325,12 +333,16 @@ class EVMTransferOperation: Web3TransferOperation {
                 rawTransaction: hexEncodedSignedTransaction,
                 feeType: isFeeWaived ? .free : nil,
             )
-            let pendingTransaction = Web3Transaction(rawTransaction: rawTransaction, fee: fee.tokenAmount)
+            let pendingTransaction = Web3Transaction(
+                rawTransaction: rawTransaction,
+                fee: fee.amount,
+                myAddress: fromAddress.destination,
+            )
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
                 try rawTransaction.save(db)
             }
             let hash = rawTransaction.hash
-            Logger.web3.info(category: "TxnRequest", message: "Will respond hash: \(hash)")
+            Logger.web3.info(category: "EVMTransfer", message: "Will respond hash: \(hash)")
             try await respond(hash: hash)
             Logger.web3.info(category: "EVMTransfer", message: "Txn sent")
             await MainActor.run {
@@ -434,10 +446,17 @@ final class EVMTransferWithBrowserWalletOperation: EVMTransferOperation {
 // MARK: - User Initiated Transactions
 final class EVMTransferToAddressOperation: EVMTransferOperation {
     
+    private let payment: Web3SendingTokenToAddressPayment
+    private let decimalAmount: Decimal
+    private let simulation: TransactionSimulation
+    private let feePolicy: FeePolicy
+    private let eip7702AuthAddress = "0xe6cae83bde06e4c305530e199d7217f42808555b"
+    
     init(
         evmChainID: Int,
         payment: Web3SendingTokenToAddressPayment,
-        decimalAmount: Decimal
+        decimalAmount: Decimal,
+        feePolicy: FeePolicy,
     ) throws {
         guard let amount = payment.token.nativeAmount(decimalAmount: decimalAmount) else {
             throw InitError.invalidAmount(decimalAmount)
@@ -482,14 +501,17 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
                 data: data
             )
         }
-        
         let simulation: TransactionSimulation = .balanceChange(
             token: payment.token,
-            amount: decimalAmount
+            amount: decimalAmount,
+            from: payment.fromAddress.destination,
         )
-        
         let isFeeWaived = payment.toAddressLabel?.isFeeWaived() ?? false
         
+        self.payment = payment
+        self.decimalAmount = decimalAmount
+        self.simulation = simulation
+        self.feePolicy = feePolicy
         try super.init(
             wallet: payment.wallet,
             fromAddress: payment.fromAddress,
@@ -501,12 +523,208 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
         )
     }
     
+    override func reloadFee() async throws -> Web3TransferOperation.Fee {
+        switch feePolicy {
+        case .prefersGasless:
+            do {
+                let fees = try await RouteAPI.gaslessFees(
+                    from: payment.fromAddress.destination,
+                    to: payment.toAddress,
+                    assetID: payment.token.assetID,
+                    chainID: payment.token.chainID
+                )
+                let tokens = try await Self.tokens(
+                    walletID: payment.wallet.walletID,
+                    assetIDs: fees.map(\.assetID)
+                )
+                let options = fees.compactMap { fee in
+                    if let token = tokens[fee.assetID] {
+                        Web3DisplayFee(token: token, amount: fee.amount, gasless: true)
+                    } else {
+                        nil
+                    }
+                }
+                if options.isEmpty {
+                    throw FeeLoadingError.gaslessUnavailable
+                }
+                let fee = Fee(options: options, selectedIndex: 0)
+                await MainActor.run {
+                    self.fee = fee
+                    self.state = .ready
+                }
+                return fee
+            } catch {
+                Logger.web3.error(category: "EVMTransfer", message: "Gasless unavailable: \(error)")
+                return try await super.reloadFee()
+            }
+        case .prefersGaslessTrade:
+            do {
+                let amount = decimalAmount.formatted(
+                    tokenAmountFormat(precision: payment.token.precision)
+                )
+                let proposal = try await RouteAPI.gaslessPrepare(
+                    from: payment.fromAddress.destination,
+                    to: payment.toAddress,
+                    assetID: payment.token.assetID,
+                    amount: amount,
+                    feeAssetID: payment.token.assetID,
+                    feeAmount: nil,
+                    chainID: payment.token.chainID
+                )
+                let option = Web3GaslessTradingFee(
+                    token: payment.token,
+                    proposal: proposal
+                )
+                let fee = Fee(options: [option], selectedIndex: 0)
+                await MainActor.run {
+                    self.fee = fee
+                    self.state = .ready
+                }
+                return fee
+            } catch {
+                Logger.web3.error(category: "EVMTransfer", message: "Gasless unavailable: \(error)")
+                return try await super.reloadFee()
+            }
+        case .alwaysNative:
+            return try await super.reloadFee()
+        }
+    }
+    
+    override func start(pin: String) async throws {
+        guard let fee = await fee?.selected else {
+            assertionFailure("Missing fee, call `start(with:)` only after fee is ready")
+            return
+        }
+        guard fee.gasless else {
+            try await super.start(pin: pin)
+            return
+        }
+        Logger.web3.info(category: "EVMTransfer(Gasless)", message: "Start")
+        let chainID = payment.chain.chainID
+        await MainActor.run {
+            state = .signing
+        }
+        let signedTransaction: SignedEVMGaslessTransactionProposal
+        let nonce: String
+        do {
+            let account = try await wallet.ethereumAccount(pin: pin, address: fromAddress)
+            guard fromAddress.destination == account.address.toChecksumAddress() else {
+                throw RequestError.mismatchedAddress
+            }
+            let proposal: GaslessTransactionProposal
+            if let fee = fee as? Web3GaslessTradingFee {
+                proposal = fee.proposal
+            } else {
+                let amount = decimalAmount.formatted(
+                    tokenAmountFormat(precision: payment.token.precision)
+                )
+                let feeAmount = fee.amount.formatted(
+                    tokenAmountFormat(precision: fee.token.precision)
+                )
+                proposal = try await RouteAPI.gaslessPrepare(
+                    from: fromAddress.destination,
+                    to: payment.toAddress,
+                    assetID: payment.token.assetID,
+                    amount: amount,
+                    feeAssetID: fee.token.assetID,
+                    feeAmount: feeAmount,
+                    chainID: chainID
+                )
+            }
+            guard proposal.chainID == chainID else {
+                throw SigningError.gaslessChainMismatch
+            }
+            guard case let .evm(payload) = proposal.payload else {
+                throw SigningError.gaslessPayloadMismatch
+            }
+            Logger.web3.info(category: "EVMTransfer(Gasless)", message: "Will sign")
+            let signedUserOperation = try {
+                var message = payload.signing.userOperation.message
+                if message.hasPrefix("0x") {
+                    message.removeFirst(2)
+                }
+                guard let messageData = Data(hexEncodedString: message) else {
+                    throw SigningError.invalidUserOperation
+                }
+                return try account.signGaslessPayload(message: messageData)
+            }()
+            let signedAuth: String? = try {
+                guard let auth = payload.signing.eip7702Auth else {
+                    return nil
+                }
+                guard auth.address.lowercased() == eip7702AuthAddress else {
+                    throw SigningError.invalidEIP7702AuthAddress
+                }
+                var message = auth.message
+                if message.hasPrefix("0x") {
+                    message.removeFirst(2)
+                }
+                guard let messageData = Data(hexEncodedString: message) else {
+                    throw SigningError.invalidEIP7702AuthMessage
+                }
+                return try account.signGaslessPayload(message: messageData)
+            }()
+            signedTransaction = SignedEVMGaslessTransactionProposal(
+                chainID: chainID,
+                payload: payload,
+                userOperationSignature: signedUserOperation,
+                eip7702AuthSignature: signedAuth
+            )
+            nonce = payload.userOperation.nonce
+        } catch {
+            Logger.web3.error(category: "EVMTransfer(Gasless)", message: "Failed to sign: \(error)")
+            await MainActor.run {
+                self.state = .signingFailed(error)
+            }
+            return
+        }
+        do {
+            Logger.web3.info(category: "EVMTransfer(Gasless)", message: "Will send tx")
+            let sponsorTxID = try await RouteAPI.gaslessSubmit(transaction: signedTransaction)
+            Logger.web3.info(category: "EVMTransfer(Gasless)", message: "Sponsor txid: \(sponsorTxID)")
+            let now = Date().toUTCString()
+            let rawTransaction: Web3RawTransaction = .gaslessSponsorTransaction(
+                sponsorTxID: sponsorTxID,
+                chainID: chainID,
+                account: fromAddress.destination,
+                nonce: nonce,
+                state: .pending,
+                createdAt: now,
+                updatedAt: now
+            )
+            let pendingTransaction = Web3Transaction(
+                rawTransaction: rawTransaction,
+                simulation: simulation,
+                fee: fee.amount,
+                myAddress: fromAddress.destination,
+            )
+            Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
+                try rawTransaction.save(db)
+            }
+            Logger.web3.info(category: "EVMTransfer(Gasless)", message: "Txn sent")
+            await MainActor.run {
+                self.state = .success
+                self.hasTransactionSent = true
+            }
+        } catch {
+            Logger.web3.error(category: "EVMTransfer(Gasless)", message: "Send: \(error)")
+            await MainActor.run {
+                self.state = .sendingFailed(error)
+            }
+        }
+    }
+    
     override func respond(hash: String) async throws {
         
     }
     
     override func reject() {
         
+    }
+    
+    @MainActor func load(fee: Fee) {
+        self.fee = fee
+        self.state = .ready
     }
     
 }

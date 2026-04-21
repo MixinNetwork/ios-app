@@ -17,7 +17,13 @@ class Web3TransferOperation {
     enum SigningError: Error {
         case invalidTransaction
         case invalidBlockhash
+        case noFeeLoaded
         case noFeeToken(String)
+        case gaslessChainMismatch
+        case gaslessPayloadMismatch
+        case invalidEIP7702AuthAddress
+        case invalidUserOperation
+        case invalidEIP7702AuthMessage
     }
     
     enum SimulationDisplay {
@@ -32,12 +38,47 @@ class Web3TransferOperation {
         
     }
     
+    enum FeePolicy {
+        
+        // Provides several gasless fees for user to pick
+        // fallback to native if network failure
+        case prefersGasless
+        
+        // Use same token for transferring and gasless fee
+        // fallback to native if refused by remote
+        case prefersGaslessTrade
+        
+        case alwaysNative
+        
+    }
+    
+    enum FeeLoadingError: Error {
+        case gaslessUnavailable
+        case gaslessInKindInsufficient
+    }
+    
+    struct Fee {
+        
+        let options: [Web3DisplayFee]
+        
+        var selectedIndex: Int
+        
+        var selected: Web3DisplayFee {
+            options[selectedIndex]
+        }
+        
+        static func native(token: Web3TokenItem, amount: Decimal) -> Fee {
+            let option = Web3DisplayFee(token: token, amount: amount, gasless: false)
+            return Fee(options: [option], selectedIndex: 0)
+        }
+        
+    }
+    
     let wallet: Web3Wallet
     let fromAddress: Web3Address
     let toAddress: String? // Always the receiver, not the contract address
     let chain: Web3Chain
-    let feeToken: Web3TokenItem
-    let isResendingTransactionAvailable: Bool
+    let nativeFeeToken: Web3TokenItem
     let simulationDisplay: SimulationDisplay
     let isFeeWaived: Bool
     
@@ -45,27 +86,30 @@ class Web3TransferOperation {
     var state: State = .loading
     
     @MainActor
-    var fee: Web3DisplayFee?
+    var fee: Fee?
     
     var hasTransactionSent = false
+    
+    @MainActor
+    var isResendingTransactionAvailable: Bool {
+        false
+    }
     
     init(
         wallet: Web3Wallet, fromAddress: Web3Address, toAddress: String?,
         chain: Web3Chain, feeToken: Web3TokenItem,
-        isResendingTransactionAvailable: Bool,
         simulationDisplay: SimulationDisplay, isFeeWaived: Bool
     ) {
         self.wallet = wallet
         self.fromAddress = fromAddress
         self.toAddress = toAddress
         self.chain = chain
-        self.feeToken = feeToken
-        self.isResendingTransactionAvailable = isResendingTransactionAvailable
+        self.nativeFeeToken = feeToken
         self.simulationDisplay = simulationDisplay
         self.isFeeWaived = isFeeWaived
     }
     
-    func loadFee() async throws -> Web3DisplayFee {
+    func reloadFee() async throws -> Fee {
         fatalError("Must override")
     }
     
@@ -98,6 +142,101 @@ class Web3TransferOperation {
     
     @MainActor func resendTransaction() {
         
+    }
+    
+}
+
+extension Web3TransferOperation {
+    
+    static func tokens(
+        walletID: String,
+        assetIDs: [String]
+    ) async throws -> [String: Web3TokenItem] {
+        var results = Web3TokenDAO.shared.tokenItems(
+            walletID: walletID,
+            ids: assetIDs
+        ).reduce(into: [:]) { result, token in
+            result[token.assetID] = token
+        }
+        var missingAssetIDs = Set(assetIDs).subtracting(results.keys)
+        if !missingAssetIDs.isEmpty {
+            let tokensFromOtherWallets = Web3TokenDAO.shared.tokenItems(
+                ids: missingAssetIDs
+            ).map { token in
+                Web3TokenItem(token: token, replacingAmountWith: "0")
+            }
+            for token in tokensFromOtherWallets {
+                missingAssetIDs.remove(token.assetID)
+                results[token.assetID] = token
+            }
+        }
+        if !missingAssetIDs.isEmpty {
+            var madeUpTokens = TokenDAO.shared.tokenItems(
+                with: missingAssetIDs
+            ).map { token in
+                missingAssetIDs.remove(token.assetID)
+                return Web3Token(
+                    walletID: walletID,
+                    assetID: token.assetID,
+                    chainID: token.chainID,
+                    assetKey: token.assetKey,
+                    kernelAssetID: token.kernelAssetID,
+                    symbol: token.symbol,
+                    name: token.name,
+                    precision: token.precision,
+                    iconURL: token.iconURL,
+                    amount: "0",
+                    usdPrice: token.usdPrice,
+                    usdChange: token.usdChange,
+                    level: Web3Reputation.Level.verified.rawValue,
+                )
+            }
+            if !missingAssetIDs.isEmpty {
+                do {
+                    let remoteTokens = try await SafeAPI.assets(
+                        ids: missingAssetIDs
+                    ).map { token in
+                        Web3Token(
+                            walletID: walletID,
+                            assetID: token.assetID,
+                            chainID: token.chainID,
+                            assetKey: token.assetKey,
+                            kernelAssetID: token.kernelAssetID,
+                            symbol: token.symbol,
+                            name: token.name,
+                            precision: token.precision,
+                            iconURL: token.iconURL,
+                            amount: "0",
+                            usdPrice: token.usdPrice,
+                            usdChange: token.usdChange,
+                            level: Web3Reputation.Level.verified.rawValue,
+                        )
+                    }
+                    madeUpTokens.append(contentsOf: remoteTokens)
+                } catch {
+                    // Ignore those errors. 0 balance anyway
+                }
+            }
+            let chains = Web3ChainDAO.shared.chains(
+                chainIDs: Set(madeUpTokens.map(\.chainID))
+            )
+            for token in madeUpTokens {
+                results[token.assetID] = Web3TokenItem(
+                    token: token,
+                    hidden: false,
+                    chain: chains[token.chainID]
+                )
+            }
+        }
+        return results
+    }
+    
+    func tokenAmountFormat(precision: Int16) -> Decimal.FormatStyle {
+        Decimal.FormatStyle.number
+            .locale(.enUSPOSIX)
+            .grouping(.never)
+            .sign(strategy: .never)
+            .precision(.fractionLength(0...Int(precision)))
     }
     
 }

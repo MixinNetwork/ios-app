@@ -50,12 +50,7 @@ class TradeSpotViewController: UIViewController {
     private(set) var stockTokens: [BalancedSwapToken] = []
     private(set) var quote: SwapQuote?
     
-    private let tokenSource: RouteTokenSource
-    private let arbitrarySendAssetID: String?
-    private let arbitraryReceiveAssetID: String?
-    private let maxOpenOrderCount = 10
-    
-    private lazy var tokenAmountRoundingHandler = NSDecimalNumberHandler(
+    private(set) lazy var mixinPrecisionRoundingHandler = NSDecimalNumberHandler(
         roundingMode: .down,
         scale: MixinToken.internalPrecision,
         raiseOnExactness: false,
@@ -63,6 +58,11 @@ class TradeSpotViewController: UIViewController {
         raiseOnUnderflow: false,
         raiseOnDivideByZero: false
     )
+    
+    private let tokenSource: RouteTokenSource
+    private let arbitrarySendAssetID: String?
+    private let arbitraryReceiveAssetID: String?
+    private let maxOpenOrderCount = 10
     
     private var showReviewWrapperConstraints: [NSLayoutConstraint] = []
     private var hideReviewWrapperConstraints: [NSLayoutConstraint] = []
@@ -76,7 +76,7 @@ class TradeSpotViewController: UIViewController {
     private var allOpenOrdersCount: Int?
     
     // TradeAmountInputCell
-    private weak var amountInputCell: TradeAmountInputCell?
+    private(set) weak var amountInputCell: TradeAmountInputCell?
     
     private var sendViewStyle: TradeTokenSelectorStyle = .loading {
         didSet {
@@ -363,7 +363,7 @@ class TradeSpotViewController: UIViewController {
     
     func prepareForReuse(sender: Any) {
         pricingModel.prepareForReuse()
-        amountInputCell?.updateSendAmountTextField(amount: nil)
+        amountInputCell?.updateSendAmountTextField(amount: nil, precision: nil)
         selectedExpiry = .never
         reloadSections()
         reloadTokens() // Update send token balance
@@ -426,6 +426,48 @@ class TradeSpotViewController: UIViewController {
                 collectionView.reloadSections(sections)
             }
         }
+    }
+    
+    func inputSendAmount(multiplier: Decimal) {
+        
+    }
+    
+    func startQuoteRequesterIfAvailable() {
+        guard mode == .simple else {
+            return
+        }
+        pricingModel.receiveAmount = nil
+        amountInputCell?.updateReceiveAmountTextField(amount: nil, precision: nil)
+        quote = nil
+        reviewButton.isEnabled = false
+        quoteRequester?.stop()
+        quoteRequester = nil
+        guard
+            let sendAmount = pricingModel.sendAmount,
+            sendAmount > 0,
+            let sendToken,
+            let receiveToken
+        else {
+            swapPriceContent = nil
+            reviewButton.setTitle(R.string.localizable.review(), for: .normal)
+            return
+        }
+        if sendAmount > sendToken.availableBalance {
+            reviewButton.setTitle(R.string.localizable.insufficient_balance(), for: .normal)
+        } else {
+            reviewButton.setTitle(R.string.localizable.review(), for: .normal)
+        }
+        swapPriceContent = .calculating
+        let requester = SwapQuotePeriodicRequester(
+            sendToken: sendToken,
+            sendAmount: sendAmount,
+            receiveToken: receiveToken,
+            slippage: 0.01,
+            source: tokenSource
+        )
+        requester.delegate = self
+        self.quoteRequester = requester
+        requester.start(delay: 1)
     }
     
 }
@@ -510,8 +552,14 @@ extension TradeSpotViewController: UICollectionViewDataSource {
                 amountInputCell = cell
             }
             cell.updateSendView(style: sendViewStyle)
-            cell.updateSendAmountTextField(amount: pricingModel.sendAmount)
-            cell.updateReceiveAmountTextField(amount: pricingModel.receiveAmount)
+            cell.updateSendAmountTextField(
+                amount: pricingModel.sendAmount,
+                precision: sendToken?.decimals
+            )
+            cell.updateReceiveAmountTextField(
+                amount: pricingModel.receiveAmount,
+                precision: receiveToken?.decimals
+            )
             cell.updateReceiveView(style: receiveViewStyle)
             return cell
         case .priceInput:
@@ -641,19 +689,26 @@ extension TradeSpotViewController: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
+        guard textField == amountInputCell?.sendAmountTextField else {
+            return true
+        }
         let newText = ((textField.text ?? "") as NSString)
             .replacingCharacters(in: range, with: string)
         if newText.isEmpty {
             return true
         }
         let components = newText.components(separatedBy: currentDecimalSeparator)
-        switch components.count {
+        return switch components.count {
         case 1:
-            return true
+            true
         case 2:
-            return components[1].count <= 8
+            if let precision = sendToken?.decimals {
+                components[1].count <= precision
+            } else {
+                components[1].count <= MixinToken.internalPrecision
+            }
         default:
-            return false
+            false
         }
     }
     
@@ -665,7 +720,10 @@ extension TradeSpotViewController: TradePricingModel.Delegate {
         for update in updates {
             switch update {
             case .receiveAmount(let amount):
-                amountInputCell?.updateReceiveAmountTextField(amount: amount)
+                amountInputCell?.updateReceiveAmountTextField(
+                    amount: amount,
+                    precision: receiveToken?.decimals
+                )
             case .displayPrice(let text):
                 priceInputCell?.textField.text = text
             case .priceToken(let token):
@@ -688,7 +746,7 @@ extension TradeSpotViewController: TradePricingModel.Delegate {
             break
         case .advanced:
             if let sendAmount = model.sendAmount, let sendToken = model.sendToken {
-                if sendAmount > sendToken.decimalBalance {
+                if sendAmount > sendToken.availableBalance {
                     reviewButton.setTitle(R.string.localizable.insufficient_balance(), for: .normal)
                     reviewButton.isEnabled = false
                 } else {
@@ -718,7 +776,10 @@ extension TradeSpotViewController: SwapQuotePeriodicRequesterDelegate {
             self.amountRange = nil
             Logger.general.debug(category: "Trade", message: "Got quote: \(quote)")
             pricingModel.receiveAmount = quote.receiveAmount
-            amountInputCell?.updateReceiveAmountTextField(amount: quote.receiveAmount)
+            amountInputCell?.updateReceiveAmountTextField(
+                amount: quote.receiveAmount,
+                precision: receiveToken?.decimals
+            )
             swapPriceProgress = 1
             swapPriceCell?.footerInfoProgressView.setProgress(1, animationDuration: nil)
             reviewButton.isEnabled = quote.sendAmount > 0
@@ -846,11 +907,17 @@ extension TradeSpotViewController {
         }
         if let minimum = amountRange.minimum, sendAmount < minimum {
             pricingModel.sendAmount = minimum
-            amountInputCell?.updateSendAmountTextField(amount: minimum)
+            amountInputCell?.updateSendAmountTextField(
+                amount: minimum,
+                precision: sendToken?.decimals
+            )
             startQuoteRequesterIfAvailable()
         } else if let maximum = amountRange.maximum, sendAmount > maximum {
             pricingModel.sendAmount = maximum
-            amountInputCell?.updateSendAmountTextField(amount: maximum)
+            amountInputCell?.updateSendAmountTextField(
+                amount: maximum,
+                precision: sendToken?.decimals
+            )
             startQuoteRequesterIfAvailable()
         }
     }
@@ -1087,21 +1154,6 @@ extension TradeSpotViewController {
         }
     }
     
-    private func inputSendAmount(multiplier: Decimal) {
-        guard let sendToken else {
-            return
-        }
-        let amount = NSDecimalNumber(decimal: sendToken.decimalBalance * multiplier)
-            .rounding(accordingToBehavior: tokenAmountRoundingHandler)
-            .decimalValue
-        if amount >= MixinToken.minimalAmount {
-            pricingModel.sendAmount = amount
-            amountInputCell?.updateSendAmountTextField(amount: amount)
-            startQuoteRequesterIfAvailable()
-            reloadSections()
-        }
-    }
-    
     private func inputPrice(multiplier: Decimal) {
         updateMarkets()
         guard let sendToken, let receiveToken else {
@@ -1116,46 +1168,8 @@ extension TradeSpotViewController {
             return
         }
         pricingModel.price = NSDecimalNumber(decimal: price * multiplier)
-            .rounding(accordingToBehavior: tokenAmountRoundingHandler)
+            .rounding(accordingToBehavior: mixinPrecisionRoundingHandler)
             .decimalValue
-    }
-    
-    private func startQuoteRequesterIfAvailable() {
-        guard mode == .simple else {
-            return
-        }
-        pricingModel.receiveAmount = nil
-        amountInputCell?.updateReceiveAmountTextField(amount: nil)
-        quote = nil
-        reviewButton.isEnabled = false
-        quoteRequester?.stop()
-        quoteRequester = nil
-        guard
-            let sendAmount = pricingModel.sendAmount,
-            sendAmount > 0,
-            let sendToken,
-            let receiveToken
-        else {
-            swapPriceContent = nil
-            reviewButton.setTitle(R.string.localizable.review(), for: .normal)
-            return
-        }
-        if sendAmount > sendToken.decimalBalance {
-            reviewButton.setTitle(R.string.localizable.insufficient_balance(), for: .normal)
-        } else {
-            reviewButton.setTitle(R.string.localizable.review(), for: .normal)
-        }
-        swapPriceContent = .calculating
-        let requester = SwapQuotePeriodicRequester(
-            sendToken: sendToken,
-            sendAmount: sendAmount,
-            receiveToken: receiveToken,
-            slippage: 0.01,
-            source: tokenSource
-        )
-        requester.delegate = self
-        self.quoteRequester = requester
-        requester.start(delay: 1)
     }
     
     private func startOpenOrderRequester() {

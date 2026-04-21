@@ -386,12 +386,25 @@ extension Web3TransactionViewController {
         layoutTableHeaderView()
         
         let feeToken = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: transaction.chainID)
-        let feeRow: Row? = switch transaction.transactionType.knownCase {
+        
+        let feeRow: Row?
+        switch transaction.transactionType.knownCase {
         case .transferIn:
-            nil
+            feeRow = nil
         default:
-            if let feeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
-                .fee(
+            let isPendingGaslessTransaction: Bool
+            if transaction.status == .pending,
+               let rawTransaction = Web3RawTransactionDAO.shared.pendingRawTransaction(hash: transaction.transactionHash),
+               rawTransaction.isGaslessSponsorTransaction || rawTransaction.isGaslessBroadcastTransaction
+            {
+                isPendingGaslessTransaction = true
+            } else {
+                isPendingGaslessTransaction = false
+            }
+            if isPendingGaslessTransaction {
+                feeRow = nil
+            } else if let feeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
+                feeRow = .fee(
                     token: CurrencyFormatter.localizedString(
                         from: amount,
                         format: .precision,
@@ -406,7 +419,7 @@ extension Web3TransactionViewController {
                     )
                 )
             } else {
-                .plain(key: .fee, value: transaction.fee)
+                feeRow = .plain(key: .fee, value: transaction.fee)
             }
         }
         

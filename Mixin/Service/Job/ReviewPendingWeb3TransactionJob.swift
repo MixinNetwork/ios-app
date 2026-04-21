@@ -21,7 +21,7 @@ final class ReviewPendingWeb3TransactionJob: BaseJob {
     override func run() throws {
         var transactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
         while LoginManager.shared.isLoggedIn && !transactions.isEmpty && !isCancelled {
-            Logger.general.debug(category: "ReviewPendingWeb3Txn", message: "\(transactions.count) txns to review")
+            Logger.web3.debug(category: "ReviewPendingWeb3Txn", message: "\(transactions.count) txns to review")
             let hashes = transactions.map(\.transactionHash)
             let rawTransactionsCount = Web3RawTransactionDAO.shared
                 .pendingRawTransactionsCount(hashIn: hashes)
@@ -29,9 +29,9 @@ final class ReviewPendingWeb3TransactionJob: BaseJob {
             if rawTransactionsCount == transactions.count {
                 // All pending txns have a corresponding raw txn
                 // Wait until `ReviewPendingWeb3RawTransactionJob` finishes
-                Logger.general.debug(category: "ReviewPendingWeb3Txn", message: "Leave \(transactions.count) txns to raw txn reviewer")
+                Logger.web3.debug(category: "ReviewPendingWeb3Txn", message: "Leave \(transactions.count) txns to raw txn reviewer")
             } else {
-                Logger.general.debug(category: "ReviewPendingWeb3Txn", message: "\(transactions.count - rawTransactionsCount) txns don't have raw txn, sync it")
+                Logger.web3.debug(category: "ReviewPendingWeb3Txn", message: "\(transactions.count - rawTransactionsCount) txns don't have raw txn, sync it")
                 let jobs = [
                     RefreshWeb3WalletTokenJob(walletID: walletID),
                     SyncWeb3TransactionJob(walletID: walletID),
@@ -47,7 +47,7 @@ final class ReviewPendingWeb3TransactionJob: BaseJob {
             }
             transactions = Web3TransactionDAO.shared.pendingTransactions(walletID: walletID)
         }
-        Logger.general.info(category: "ReviewPendingWeb3Txn", message: "Ended")
+        Logger.web3.info(category: "ReviewPendingWeb3Txn", message: "Ended")
     }
     
 }

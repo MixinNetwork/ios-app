@@ -410,7 +410,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             } catch {
                 Logger.web3.error(category: "SolanaTransfer(Gasless)", message: "Failed to sign: \(error)")
                 await MainActor.run {
-                    state = .sendingFailed(error)
+                    state = .signingFailed(error)
                 }
                 return
             }

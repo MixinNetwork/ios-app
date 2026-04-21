@@ -267,17 +267,33 @@ extension Web3TransferPreviewViewController {
                                   subtitle: R.string.localizable.web3_ensure_trust())
             replaceTrayView(with: nil, animation: .vertical)
         case .signingFailed(let error):
-            canDismissInteractively = true
-            tableHeaderView.setIcon(progress: .failure)
-            layoutTableHeaderView(title: R.string.localizable.web3_signing_failed(),
-                                  subtitle: "\(error)",
-                                  style: .destructive)
-            tableView.setContentOffset(.zero, animated: true)
-            loadDoubleButtonTrayView(leftTitle: R.string.localizable.cancel(),
-                                     leftAction: #selector(close(_:)),
-                                     rightTitle: R.string.localizable.retry(),
-                                     rightAction: #selector(confirm(_:)),
-                                     animation: .vertical)
+            Task {
+                let errorDescription: String
+                if let error = error as? MixinAPIError,
+                   PINVerificationFailureHandler.canHandle(error: error)
+                {
+                    errorDescription = await PINVerificationFailureHandler.handle(error: error)
+                } else {
+                    errorDescription = error.localizedDescription
+                }
+                await MainActor.run {
+                    canDismissInteractively = true
+                    tableHeaderView.setIcon(progress: .failure)
+                    layoutTableHeaderView(
+                        title: R.string.localizable.web3_signing_failed(),
+                        subtitle: errorDescription,
+                        style: .destructive
+                    )
+                    tableView.setContentOffset(.zero, animated: true)
+                    loadDoubleButtonTrayView(
+                        leftTitle: R.string.localizable.cancel(),
+                        leftAction: #selector(close(_:)),
+                        rightTitle: R.string.localizable.retry(),
+                        rightAction: #selector(confirm(_:)),
+                        animation: .vertical
+                    )
+                }
+            }
         case .sending:
             layoutTableHeaderView(title: R.string.localizable.sending(),
                                   subtitle: R.string.localizable.web3_ensure_trust())

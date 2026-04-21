@@ -252,7 +252,7 @@ class EVMTransferOperation: Web3TransferOperation {
             await MainActor.run {
                 self.state = .signingFailed(error)
             }
-            return
+            throw error
         }
         
         Logger.web3.info(category: "EVMTransfer", message: "Will send")
@@ -261,7 +261,7 @@ class EVMTransferOperation: Web3TransferOperation {
             self.account = account
             self.state = .sending
         }
-        await self.send(transaction: updatedTransaction, with: account, fee: fee)
+        try await self.send(transaction: updatedTransaction, with: account, fee: fee)
     }
     
     override func resendTransaction() {
@@ -273,7 +273,7 @@ class EVMTransferOperation: Web3TransferOperation {
         Logger.web3.info(category: "EVMTransfer", message: "Will resend")
         Task.detached { [transaction] in
             Logger.web3.info(category: "EVMTransfer", message: "Will resend")
-            await self.send(transaction: transaction, with: account, fee: fee.selected)
+            try? await self.send(transaction: transaction, with: account, fee: fee.selected)
         }
     }
     
@@ -314,7 +314,7 @@ class EVMTransferOperation: Web3TransferOperation {
         transaction: EIP1559Transaction,
         with account: EthereumAccount,
         fee: Web3DisplayFee
-    ) async {
+    ) async throws {
         do {
             let transactionDescription = transaction.raw?.hexEncodedString()
                 ?? transaction.jsonRepresentation
@@ -355,6 +355,7 @@ class EVMTransferOperation: Web3TransferOperation {
             await MainActor.run {
                 self.state = .sendingFailed(error)
             }
+            throw error
         }
     }
     
@@ -676,7 +677,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             await MainActor.run {
                 self.state = .signingFailed(error)
             }
-            return
+            throw error
         }
         do {
             Logger.web3.info(category: "EVMTransfer(Gasless)", message: "Will send tx")
@@ -711,6 +712,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
             await MainActor.run {
                 self.state = .sendingFailed(error)
             }
+            throw error
         }
     }
     

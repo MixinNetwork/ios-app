@@ -65,9 +65,11 @@ final class ReviewPendingWeb3RawTransactionJob: BaseJob {
         switch RouteAPI.gaslessTransaction(id: sponsorTxID) {
         case .success(let tx):
             if let broadcastTxHash = tx.broadcastTxHash, !broadcastTxHash.isEmpty {
-                Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Got broadcast tx hash for \(transaction.hash)")
+                Logger.web3.info(category: "ReviewPendingWeb3RawTxn", message: "Got broadcast tx hash for \(sponsorTxID)")
                 Web3TransactionDAO.shared.updateGaslessSponsorTransaction(
                     sponsorTxID: sponsorTxID,
+                    chainID: transaction.chainID,
+                    address: transaction.account,
                     broadcastTxHash: broadcastTxHash
                 ) { db in
                     try Web3RawTransactionDAO.shared.updateGaslessSponsorTransaction(

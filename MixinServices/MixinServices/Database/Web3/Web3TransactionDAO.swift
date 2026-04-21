@@ -115,19 +115,40 @@ public final class Web3TransactionDAO: Web3DAO {
     
     public func updateGaslessSponsorTransaction(
         sponsorTxID: String,
+        chainID: String,
+        address: String,
         broadcastTxHash: String,
         alongsideTransaction change: ((GRDB.Database) throws -> Void),
     ) {
         db.write { db in
             let transactionExists = try Int.fetchOne(
                 db,
-                sql: "SELECT 1 FROM transactions WHERE transaction_hash = ?",
-                arguments: [broadcastTxHash],
+                sql: """
+                    SELECT 1
+                    FROM transactions
+                    WHERE transaction_hash = :hash
+                        AND chain_id = :chain_id
+                        AND address = :address
+                """,
+                arguments: [
+                    "hash": broadcastTxHash,
+                    "chain_id": chainID,
+                    "address": address,
+                ],
             ) == 1
             if transactionExists {
                 try db.execute(
-                    sql: "DELETE FROM transactions WHERE transaction_hash = ?",
-                    arguments: [sponsorTxID],
+                    sql: """
+                        DELETE FROM transactions
+                        WHERE transaction_hash = :hash
+                            AND chain_id = :chain_id
+                            AND address = :address
+                    """,
+                    arguments: [
+                        "hash": sponsorTxID,
+                        "chain_id": chainID,
+                        "address": address,
+                    ],
                 )
             } else {
                 try db.execute(
@@ -135,10 +156,14 @@ public final class Web3TransactionDAO: Web3DAO {
                         UPDATE transactions
                         SET transaction_hash = :broadcast_tx_hash
                         WHERE transaction_hash = :sponsor_tx_id
+                            AND chain_id = :chain_id
+                            AND address = :address
                     """,
                     arguments: [
-                        "sponsor_tx_id": sponsorTxID,
                         "broadcast_tx_hash": broadcastTxHash,
+                        "sponsor_tx_id": sponsorTxID,
+                        "chain_id": chainID,
+                        "address": address,
                     ]
                 )
             }

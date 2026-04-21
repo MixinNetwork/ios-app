@@ -38,15 +38,28 @@ final class TIPActionViewController: UIViewController {
         
     }
     
+    private struct ErrorContext {
+        let error: Error
+        let pin: String
+        let accountCounterBefore: UInt64
+    }
+    
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
-    @IBOutlet weak var progressView: UIProgressView!
+    
+    @IBOutlet weak var retryStackView: UIStackView!
+    @IBOutlet weak var retryButton: UIButton!
+    @IBOutlet weak var errorDescriptionLabel: UILabel!
+    
+    @IBOutlet weak var progressStackView: UIStackView!
     @IBOutlet weak var activityIndicatorView: ActivityIndicatorView!
     @IBOutlet weak var progressLabel: UILabel!
     
     private let action: Action
+    
+    private var errorContext: ErrorContext?
     
     private var tipNavigationController: TIPNavigationController? {
         navigationController as? TIPNavigationController
@@ -80,23 +93,22 @@ final class TIPActionViewController: UIViewController {
                 .paragraphStyle: descriptionParagraphStyle,
             ]
         )
-        progressLabel.font = UIFontMetrics.default.scaledFont(for: .monospacedDigitSystemFont(ofSize: 14, weight: .regular))
+        retryButton.configuration?.attributedTitle = {
+            var attributes = AttributeContainer()
+            attributes.font = UIFontMetrics.default.scaledFont(
+                for: .systemFont(ofSize: 16, weight: .medium)
+            )
+            attributes.foregroundColor = .white
+            return AttributedString(
+                R.string.localizable.retry(),
+                attributes: attributes
+            )
+        }()
+        progressLabel.font = UIFontMetrics.default.scaledFont(
+            for: .monospacedDigitSystemFont(ofSize: 14, weight: .regular)
+        )
         progressLabel.adjustsFontForContentSizeCategory = true
-        performAction()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        Logger.tip.info(category: "TIPAction", message: "View did appear with action: \(action.debugDescription)")
-    }
-    
-    @objc private func presentCustomerService(_ sender: Any) {
-        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
-        present(customerService, animated: true)
-        reporter.report(event: .customerServiceDialog, tags: ["source": "tip_action"])
-    }
-    
-    private func performAction() {
+        
         guard let accountCounterBefore = LoginManager.shared.account?.tipCounter else {
             return
         }
@@ -127,7 +139,11 @@ final class TIPActionViewController: UIViewController {
                         finish()
                     }
                 } catch {
-                    await handle(error: error, accountCounterBefore: accountCounterBefore)
+                    await handle(
+                        error: error,
+                        pin: pin,
+                        accountCounterBefore: accountCounterBefore
+                    )
                 }
             }
         case let .change(old, new):
@@ -170,7 +186,11 @@ final class TIPActionViewController: UIViewController {
                         finish()
                     }
                 } catch {
-                    await handle(error: error, accountCounterBefore: accountCounterBefore)
+                    await handle(
+                        error: error,
+                        pin: new,
+                        accountCounterBefore: accountCounterBefore
+                    )
                 }
             }
         case let .migrate(pin):
@@ -198,10 +218,34 @@ final class TIPActionViewController: UIViewController {
                         finish()
                     }
                 } catch {
-                    await handle(error: error, accountCounterBefore: accountCounterBefore)
+                    await handle(
+                        error: error,
+                        pin: pin,
+                        accountCounterBefore: accountCounterBefore
+                    )
                 }
             }
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        Logger.tip.info(category: "TIPAction", message: "View did appear with action: \(action.debugDescription)")
+    }
+    
+    @IBAction func tryAgain(_ sender: Any) {
+        guard let context = errorContext else {
+            return
+        }
+        Task {
+            await handle(context: context)
+        }
+    }
+    
+    @objc private func presentCustomerService(_ sender: Any) {
+        let customerService = CustomerServiceViewController(presentLoginLogsOnLongPressingTitle: true)
+        present(customerService, animated: true)
+        reporter.report(event: .customerServiceDialog, tags: ["source": "tip_action"])
     }
     
     @MainActor
@@ -221,10 +265,27 @@ final class TIPActionViewController: UIViewController {
         }
     }
     
-    private func handle(error: Error, accountCounterBefore: UInt64) async {
+    private func handle(
+        error: Error,
+        pin: String,
+        accountCounterBefore: UInt64,
+    ) async {
         let reportingError = ReportingError(underlying: error, counter: accountCounterBefore)
         reporter.report(error: reportingError)
         Logger.tip.error(category: "TIPAction", message: "Failed with: \(error)")
+        let context = ErrorContext(
+            error: error,
+            pin: pin,
+            accountCounterBefore: accountCounterBefore
+        )
+        self.errorContext = context
+        await handle(context: context)
+    }
+    
+    private func handle(context: ErrorContext) async {
+        await MainActor.run {
+            showProgress(.connecting)
+        }
         do {
             if let context = try await TIP.checkCounter() {
                 await MainActor.run {
@@ -232,51 +293,47 @@ final class TIPActionViewController: UIViewController {
                     navigationController?.setViewControllers([intro], animated: true)
                 }
             } else {
-                try await MainActor.run {
-                    guard let accountCounterAfter = LoginManager.shared.account?.tipCounter else {
-                        throw TIP.Error.noAccount
-                    }
-                    if accountCounterAfter == accountCounterBefore {
-                        Logger.tip.error(category: "TIPAction", message: "Nothing changed")
-                        let intro = TIPIntroViewController(action: action, changedNothingWith: error)
+                guard let accountCounterAfter = LoginManager.shared.account?.tipCounter else {
+                    throw TIP.Error.noAccount
+                }
+                if accountCounterAfter == context.accountCounterBefore {
+                    Logger.tip.error(category: "TIPAction", message: "Nothing changed")
+                    await MainActor.run {
+                        let intro = TIPIntroViewController(
+                            action: action,
+                            changedNothingWith: context.error
+                        )
                         navigationController?.setViewControllers([intro], animated: true)
-                    } else {
-                        Logger.tip.warn(category: "TIPAction", message: "No interruption is detected")
+                    }
+                } else {
+                    Logger.tip.warn(category: "TIPAction", message: "No interruption is detected")
+                    try await TIP.registerToSafeIfNeeded(account: nil, pin: context.pin)
+                    try await TIP.registerDefaultCommonWalletIfNeeded(pin: context.pin)
+                    AppGroupUserDefaults.User.loginPINValidated = true
+                    Logger.tip.warn(category: "TIPAction", message: "Registration finished")
+                    await MainActor.run {
                         finish()
                     }
                 }
             }
         } catch {
             Logger.tip.error(category: "TIPAction", message: "Handle failed with: \(error)")
-            await MainActor.run {
-                let intro: TIPIntroViewController
-                switch action {
-                case .create:
-                    intro = TIPIntroViewController(intent: .create)
-                case .change:
-                    intro = TIPIntroViewController(intent: .change)
-                case .migrate:
-                    intro = TIPIntroViewController(intent: .migrate)
-                }
-                navigationController?.setViewControllers([intro], animated: true)
-            }
+            retryStackView.isHidden = false
+            progressStackView.isHidden = true
+            errorDescriptionLabel.text = error.localizedDescription
         }
     }
     
     private func showProgress(_ progress: TIP.Progress) {
+        retryStackView.isHidden = true
+        progressStackView.isHidden = false
+        activityIndicatorView.startAnimating()
         switch progress {
         case .creating:
-            activityIndicatorView.startAnimating()
-            progressView.isHidden = true
             progressLabel.text = R.string.localizable.generating_keys()
         case .connecting:
-            activityIndicatorView.startAnimating()
-            progressView.isHidden = true
             progressLabel.text = R.string.localizable.trying_connect_tip_node()
         case .synchronizing(let fractionCompleted):
-            activityIndicatorView.stopAnimating()
-            progressView.isHidden = false
-            progressView.progress = fractionCompleted
             let percent = Int(ceil(fractionCompleted * 100))
             progressLabel.text = R.string.localizable.exchanging_data("\(percent)")
         }

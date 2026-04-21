@@ -109,7 +109,7 @@ extension DeleteAccountSettingViewController {
         controller.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .default, handler: nil))
         if let phoneNumber {
             controller.addAction(UIAlertAction(title: R.string.localizable.continue(), style: .default, handler: { _ in
-                self.requestVerificationCode(for: phoneNumber, captchaToken: nil)
+                self.requestVerificationCode(for: phoneNumber, captchaToken: nil, displayingHUD: nil)
             }))
         } else {
             controller.addAction(UIAlertAction(title: R.string.localizable.delete(), style: .destructive, handler: { _ in
@@ -149,16 +149,26 @@ extension DeleteAccountSettingViewController {
         }
     }
     
-    private func requestVerificationCode(for phone: String, captchaToken token: CaptchaToken?) {
-        let hud = Hud()
-        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+    private func requestVerificationCode(
+        for phone: String,
+        captchaToken token: CaptchaToken?,
+        displayingHUD: Hud?
+    ) {
+        let hud: Hud
+        if let displayingHUD {
+            hud = displayingHUD
+            hud.set(style: .busy, text: "")
+        } else {
+            hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        }
         AccountAPI.deactivateVerifications(phoneNumber: phone, captchaToken: token) { [weak self] (result) in
             guard let self else {
                 return
             }
-            hud.hide()
             switch result {
             case .success(let verification):
+                hud.hide()
                 let context = DeleteAccountContext(phoneNumber: phone, verificationID: verification.id)
                 let vc = DeleteAccountVerifyCodeViewController(context: context)
                 self.navigationController?.pushViewController(vc, animated: true)
@@ -166,12 +176,13 @@ extension DeleteAccountSettingViewController {
                 self.captcha.validate(errorDescription: error.description) { [weak self] (result) in
                     switch result {
                     case .success(let token):
-                        self?.requestVerificationCode(for: phone, captchaToken: token)
+                        self?.requestVerificationCode(for: phone, captchaToken: token, displayingHUD: hud)
                     case .cancel, .timedOut:
                         hud.hide()
                     }
                 }
             case let .failure(error):
+                hud.hide()
                 self.alert(error.localizedDescription)
             }
         }

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TIPActionViewController" customModule="Mixin" customModuleProvider="target">
+            <connections>
+                <outlet property="activityIndicatorView" destination="CtW-PJ-GQX" id="peb-fa-LmK"/>
+                <outlet property="contentStackView" destination="EOR-Ok-HU0" id="VcT-7T-GaQ"/>
+                <outlet property="descriptionLabel" destination="Lte-MD-U0O" id="MMH-c6-DAg"/>
+                <outlet property="errorDescriptionLabel" destination="aUc-5V-aYV" id="yeX-LB-pl2"/>
+                <outlet property="iconImageView" destination="MAr-uB-KWa" id="ASa-y7-PjB"/>
+                <outlet property="progressLabel" destination="AH0-xI-fqJ" id="5wD-mr-gJB"/>
+                <outlet property="progressStackView" destination="VEl-s4-hvK" id="p1D-gC-pdY"/>
+                <outlet property="retryButton" destination="seu-3B-tpi" id="l5W-H4-CEk"/>
+                <outlet property="retryStackView" destination="gFh-Uu-Z0q" id="TzC-Ms-DFb"/>
+                <outlet property="titleLabel" destination="RAW-6c-WHj" id="2Nm-6B-Yho"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="EOR-Ok-HU0">
+                    <rect key="frame" x="38" y="160.5" width="338" height="159"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tip_wallet" translatesAutoresizingMaskIntoConstraints="NO" id="MAr-uB-KWa">
+                            <rect key="frame" x="0.0" y="0.0" width="338" height="72"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Create PIN" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RAW-6c-WHj">
+                            <rect key="frame" x="0.0" y="88" width="338" height="21.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                            <color key="textColor" name="text"/>
+                            <nil key="highlightedColor"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="dynamicTextSize" value="semibold18"/>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="正在验证并同步密钥分片到 TIP 网络，请保持应用在前台，设置过程中不要强制关闭应用" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lte-MD-U0O">
+                            <rect key="frame" x="0.0" y="125.5" width="338" height="33.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="text_tertiary"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="1xX-dH-7IH">
+                    <rect key="frame" x="20" y="743" width="374" height="53"/>
+                    <subviews>
+                        <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="gFh-Uu-Z0q">
+                            <rect key="frame" x="16" y="0.0" width="342" height="10"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="seu-3B-tpi">
+                                    <rect key="frame" x="0.0" y="0.0" width="342" height="0.0"/>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="filled" title="Retry" cornerStyle="capsule">
+                                        <directionalEdgeInsets key="contentInsets" top="12" leading="0.0" bottom="11" trailing="0.0"/>
+                                        <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="baseBackgroundColor" name="theme"/>
+                                    </buttonConfiguration>
+                                    <connections>
+                                        <action selector="tryAgain:" destination="-1" eventType="touchUpInside" id="QjX-gp-E9E"/>
+                                    </connections>
+                                </button>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aUc-5V-aYV">
+                                    <rect key="frame" x="0.0" y="10" width="342" height="0.0"/>
+                                    <string key="text">连接 TIP 网络失败，请尝试切换4G、
+Wi-Fi 或 VPN 后重试</string>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                    <color key="textColor" name="market_red"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="VEl-s4-hvK">
+                            <rect key="frame" x="169.5" y="0.0" width="35.5" height="53"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CtW-PJ-GQX" customClass="ActivityIndicatorView" customModule="Mixin" customModuleProvider="target">
+                                    <rect key="frame" x="2.5" y="0.0" width="30" height="30"/>
+                                    <color key="backgroundColor" name="background"/>
+                                    <color key="tintColor" name="text_tertiary"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="30" id="ABR-RB-43V"/>
+                                        <constraint firstAttribute="width" constant="30" id="uqq-vc-dkS"/>
+                                    </constraints>
+                                </view>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AH0-xI-fqJ" userLabel="Progress Label">
+                                    <rect key="frame" x="0.0" y="36" width="35.5" height="17"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <color key="textColor" name="text_tertiary"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" name="background"/>
+            <constraints>
+                <constraint firstItem="1xX-dH-7IH" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="0vb-N3-8PE"/>
+                <constraint firstItem="gFh-Uu-Z0q" firstAttribute="width" secondItem="fnl-2z-Ty3" secondAttribute="width" constant="-72" id="7f1-rX-CKr"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="EOR-Ok-HU0" secondAttribute="trailing" constant="38" id="FFM-MI-whQ"/>
+                <constraint firstItem="EOR-Ok-HU0" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="38" id="QOx-d0-W96"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="1xX-dH-7IH" secondAttribute="bottom" constant="32" id="eba-G5-XVk"/>
+                <constraint firstItem="EOR-Ok-HU0" firstAttribute="centerY" secondItem="fnl-2z-Ty3" secondAttribute="centerY" multiplier="0.52" priority="750" id="fX3-uE-yhc"/>
+                <constraint firstItem="1xX-dH-7IH" firstAttribute="top" relation="greaterThanOrEqual" secondItem="EOR-Ok-HU0" secondAttribute="bottom" constant="20" id="jWP-tH-fWj"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="1xX-dH-7IH" secondAttribute="trailing" constant="20" id="n6t-0x-An0"/>
+                <constraint firstItem="EOR-Ok-HU0" firstAttribute="top" relation="greaterThanOrEqual" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="64" id="s1O-wa-Ff0"/>
+            </constraints>
+            <point key="canvasLocation" x="137.68115942028987" y="152.67857142857142"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="tip_wallet" width="76" height="72"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="market_red">
+            <color red="0.89803921568627454" green="0.47058823529411764" blue="0.45490196078431372" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

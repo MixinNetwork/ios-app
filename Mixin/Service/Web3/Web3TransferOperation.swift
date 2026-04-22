@@ -231,12 +231,4 @@ extension Web3TransferOperation {
         return results
     }
     
-    func tokenAmountFormat(precision: Int16) -> Decimal.FormatStyle {
-        Decimal.FormatStyle.number
-            .locale(.enUSPOSIX)
-            .grouping(.never)
-            .sign(strategy: .never)
-            .precision(.fractionLength(0...Int(precision)))
-    }
-    
 }

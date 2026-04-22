@@ -111,19 +111,20 @@ enum Web3AddressValidator {
                     }
                     let fee = try await operation.reloadFee().selected
                     if let operation = operation as? SolanaTransferToAddressOperation {
-                        let accountExists = await operation.receiverAccountStatus == .exist
+                        let accountExists = await operation.receiverAccountExists
+                        assert(accountExists != nil)
                         let reason = if payment.sendingNativeToken {
                             Solana.checkRentExemptionForSOLTransfer(
-                                sendingAmount: amount,
-                                feeAmount: fee.amount,
                                 senderSOLBalance: payment.token.decimalBalance,
-                                receiverAccountExists: accountExists
+                                sendAmount: amount,
+                                fee: fee,
+                                receiverAccountExists: accountExists ?? false
                             )
                         } else {
                             Solana.checkRentExemptionForSPLTokenTransfer(
                                 senderSOLBalance: operation.nativeFeeToken.decimalBalance,
-                                feeAmount: fee.amount,
-                                receiverAccountExists: accountExists
+                                fee: fee,
+                                receiverAccountExists: accountExists ?? false
                             )
                         }
                         if let reason {

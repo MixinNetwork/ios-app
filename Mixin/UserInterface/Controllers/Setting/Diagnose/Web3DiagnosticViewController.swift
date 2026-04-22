@@ -17,7 +17,14 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
                     isOn: Web3Diagnostic.usesLowEVMFeeOnce,
                     isEnabled: true
                 )
-            )
+            ),
+            SettingsRow(
+                title: "Disable Gasless (Debug Build)",
+                accessory: .switch(
+                    isOn: Web3Diagnostic.disableGasless,
+                    isEnabled: true
+                )
+            ),
         ]),
         SettingsSection(rows: [
             SettingsRow(title: "Remove Imported Secrets", accessory: .disclosure),
@@ -44,6 +51,12 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
             name: SettingsRow.accessoryDidChangeNotification,
             object: dataSource.sections[2].rows[0]
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(switchGasless(_:)),
+            name: SettingsRow.accessoryDidChangeNotification,
+            object: dataSource.sections[2].rows[1]
+        )
     }
     
     @objc private func switchEVMFee(_ notification: Notification) {
@@ -54,6 +67,16 @@ final class Web3DiagnosticViewController: SettingsTableViewController {
             return
         }
         Web3Diagnostic.usesLowEVMFeeOnce = isOn
+    }
+    
+    @objc private func switchGasless(_ notification: Notification) {
+        guard let row = notification.object as? SettingsRow else {
+            return
+        }
+        guard case let .switch(isOn, _) = row.accessory else {
+            return
+        }
+        Web3Diagnostic.disableGasless = isOn
     }
     
 }

@@ -65,6 +65,14 @@ public class Web3Token: Codable, Token, ValuableToken, ChangeReportingToken {
         }
     }
     
+    public var canonicalFormatStyle: Decimal.FormatStyle {
+        Decimal.FormatStyle.number
+            .locale(.enUSPOSIX)
+            .grouping(.never)
+            .sign(strategy: .never)
+            .precision(.fractionLength(0...Int(precision)))
+    }
+    
     public init(
         walletID: String, assetID: String, chainID: String, assetKey: String,
         kernelAssetID: String, symbol: String, name: String, precision: Int16,

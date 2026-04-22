@@ -320,31 +320,51 @@ extension Solana {
     }
     
     static func checkRentExemptionForSOLTransfer(
-        sendingAmount: Decimal,
-        feeAmount: Decimal,
         senderSOLBalance: Decimal,
+        sendAmount: Decimal,
+        fee: Web3DisplayFee,
         receiverAccountExists: Bool
     ) -> RentExemptionFailedReason? {
-        if senderSOLBalance - sendingAmount - feeAmount < RentExemptionValue.systemAccount {
-            .reserveSOLForRent(RentExemptionValue.systemAccount)
-        } else if !receiverAccountExists && sendingAmount < RentExemptionValue.tokenAccount {
-            .sendSOLForRent(RentExemptionValue.tokenAccount)
+        var balanceAfterSending = senderSOLBalance - sendAmount
+        if fee.gasless {
+            if fee.token.assetID == AssetID.sol {
+                balanceAfterSending -= fee.amount
+            }
+            if balanceAfterSending < RentExemptionValue.systemAccount && balanceAfterSending != 0 {
+                return .reserveSOLForRent(RentExemptionValue.systemAccount)
+            }
         } else {
-            nil
+            balanceAfterSending -= fee.amount
+            if balanceAfterSending < RentExemptionValue.systemAccount {
+                return .reserveSOLForRent(RentExemptionValue.systemAccount)
+            }
         }
+        if !receiverAccountExists && sendAmount < RentExemptionValue.systemAccount {
+            return .sendSOLForRent(RentExemptionValue.systemAccount)
+        }
+        return nil
     }
     
     static func checkRentExemptionForSPLTokenTransfer(
         senderSOLBalance: Decimal,
-        feeAmount: Decimal,
+        fee: Web3DisplayFee,
         receiverAccountExists: Bool
     ) -> RentExemptionFailedReason? {
-        let minBalance = RentExemptionValue.systemAccount + RentExemptionValue.tokenAccount + feeAmount
-        if receiverAccountExists || senderSOLBalance >= minBalance {
-            return nil
-        } else {
-            return .insufficientSOL(requiredAmount: minBalance)
+        if fee.gasless && fee.token.assetID == AssetID.sol {
+            let solBalanceAfterSending = senderSOLBalance - fee.amount
+            if solBalanceAfterSending < RentExemptionValue.systemAccount && solBalanceAfterSending != 0 {
+                return .insufficientSOL(requiredAmount: fee.amount + RentExemptionValue.systemAccount)
+            }
+        } else if !fee.gasless {
+            var minBalance = fee.amount + RentExemptionValue.systemAccount
+            if !receiverAccountExists {
+                minBalance += RentExemptionValue.tokenAccount
+            }
+            if senderSOLBalance < minBalance {
+                return .insufficientSOL(requiredAmount: minBalance)
+            }
         }
+        return nil
     }
     
 }

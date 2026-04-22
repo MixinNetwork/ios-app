@@ -468,20 +468,23 @@ extension Web3TransferPreviewViewController {
         let changes = simulation.balanceChanges ?? []
         if changes.count == 1 {
             let amount = Decimal(string: changes[0].amount, locale: .enUSPOSIX)
-            let tokenAmount = if let amount {
-                CurrencyFormatter.localizedString(
-                    from: amount,
-                    format: .precision,
-                    sign: .never
+            let token = Web3TokenDAO.shared.token(
+                walletID: operation.wallet.walletID,
+                assetID: changes[0].assetID
+            )
+            
+            let tokenAmount = if let amount, let token {
+                amount.formatted(
+                    Decimal.FormatStyle.number
+                        .locale(.current)
+                        .grouping(.automatic)
+                        .sign(strategy: .never)
+                        .precision(.fractionLength(0...Int(token.precision)))
                 )
             } else {
                 changes[0].amount
             }
             
-            let token = Web3TokenDAO.shared.token(
-                walletID: operation.wallet.walletID,
-                assetID: changes[0].assetID
-            )
             let fiatMoneyAmount: String? = if let token, let amount {
                 CurrencyFormatter.localizedString(
                     from: amount * token.decimalUSDPrice * Currency.current.decimalRate,

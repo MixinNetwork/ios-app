@@ -7,6 +7,7 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
         case privacyWalletTransfer(BalanceRequirement)
         case withdraw(withdrawing: BalanceRequirement, fee: BalanceRequirement)
         case commonWalletTransfer(wallet: Web3Wallet, transferring: BalanceRequirement, fee: BalanceRequirement)
+        case commonWalletTrade(wallet: Web3Wallet, sol: Web3TokenItem, reason: Solana.RentExemptionFailedReason)
         case externalWeb3Transaction(wallet: Web3Wallet, fee: BalanceRequirement)
     }
     
@@ -36,11 +37,13 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
             } else {
                 fee.token
             }
+        case let .commonWalletTrade(_, sol, _):
+            sol
         }
         switch intent {
         case .privacyWalletTransfer, .withdraw:
             super.init(wallet: .privacy, warnings: [])
-        case let .commonWalletTransfer(wallet, _, _), let .externalWeb3Transaction(wallet, _):
+        case let .commonWalletTransfer(wallet, _, _), let .commonWalletTrade(wallet, _, _), let .externalWeb3Transaction(wallet, _):
             super.init(wallet: .common(wallet), warnings: [])
         }
     }
@@ -101,6 +104,8 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
                     fee.token.localizedBalanceWithSymbol,
                 )
             }
+        case let .commonWalletTrade(_, _, reason):
+            subtitle = reason.localizedDescription
         case let .externalWeb3Transaction(_, fee):
             subtitle = R.string.localizable.web3_transfer_insufficient_fee_count(
                 fee.localizedAmountWithSymbol,
@@ -200,6 +205,16 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
                     ]
                 }
             }
+        case let .commonWalletTrade(_, sol, _):
+            rows = [
+                .amount(
+                    caption: .availableBalance,
+                    token: sol.localizedBalanceWithSymbol,
+                    fiatMoney: sol.localizedFiatMoneyBalance,
+                    display: .byToken,
+                    boldPrimaryAmount: false
+                ),
+            ]
         case let .externalWeb3Transaction(_, fee):
             rows = [
                 .amount(
@@ -234,7 +249,7 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
                 let mostValuableStablecoin: (any ValuableToken)? = switch intent {
                 case .privacyWalletTransfer, .withdraw:
                     TokenDAO.shared.greatestBalanceToken(assetIDs: fromAssetIDs)
-                case .commonWalletTransfer, .externalWeb3Transaction:
+                case .commonWalletTransfer, .commonWalletTrade, .externalWeb3Transaction:
                     if let walletID = (currentToken as? Web3TokenItem)?.walletID {
                         Web3TokenDAO.shared.greatestBalanceToken(walletID: walletID, assetIDs: fromAssetIDs)
                     } else {
@@ -319,7 +334,7 @@ final class InsufficientBalanceViewController: WalletIdentifyingAuthenticationPr
                 receiveAssetID: to,
                 referral: nil
             )
-        case let .commonWalletTransfer(wallet, _, _), let .externalWeb3Transaction(wallet, _):
+        case let .commonWalletTransfer(wallet, _, _), let .commonWalletTrade(wallet, _, _), let .externalWeb3Transaction(wallet, _):
             TradeViewController(
                 wallet: .common(wallet),
                 trading: .simpleSpot,

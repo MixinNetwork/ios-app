@@ -3,14 +3,6 @@ import MixinServices
 
 final class TradePerpetualViewController: UIViewController {
     
-    private enum Section: Int, CaseIterable {
-        case value
-        case positions
-        case markets
-        case activity
-        case introduction
-    }
-    
     var tradingWalletID: String {
         wallet.tradingWalletID
     }
@@ -23,8 +15,9 @@ final class TradePerpetualViewController: UIViewController {
     private let marketLoader = PerpetualMarketLoader(marketID: nil)
     private let maxItemCount = 3
     
+    private var sections: [Section] = []
     private var value: PerpetualPositionValue?
-    private var openPositions: [PerpetualPositionViewModel]?
+    private var openPositions: [PerpetualPositionViewModel] = []
     private var markets: [PerpetualMarketViewModel]?
     private var hasHistoryLoadedFromRemote = false
     private var closedPositions: [PerpetualPositionViewModel]?
@@ -110,11 +103,11 @@ final class TradePerpetualViewController: UIViewController {
                     return section
                 }
                 
-                return switch Section(rawValue: sectionIndex)! {
-                case .value:
+                return switch self?.sections[sectionIndex] {
+                case .none, .value:
                     oneCell(estimatedHeight: 97)
                 case .positions:
-                    multipleCells(itemCount: self?.openPositions?.count)
+                    multipleCells(itemCount: self?.openPositions.count)
                 case .markets:
                     multipleCells(itemCount: self?.markets?.count)
                 case .activity:
@@ -212,6 +205,7 @@ final class TradePerpetualViewController: UIViewController {
                     self.actionView.isEnabled = true
                 }
                 self.closedPositions = closedPositions
+                self.sections = Section.sections(openPositionCount: openPositions.count)
                 UIView.performWithoutAnimation(self.collectionView.reloadData)
                 self.positionsLoader.start()
             }
@@ -250,9 +244,9 @@ final class TradePerpetualViewController: UIViewController {
             guard let self else {
                 return
             }
-            let alreadyOpened = self.openPositions?.contains { position in
+            let alreadyOpened = self.openPositions.contains { position in
                 position.marketID == viewModel.market.marketID
-            } ?? false
+            }
             self.dismiss(animated: true) {
                 if alreadyOpened {
                     let market = PerpetualMarketViewController(
@@ -278,19 +272,15 @@ final class TradePerpetualViewController: UIViewController {
 extension TradePerpetualViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        Section.allCases.count
+        sections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch Section(rawValue: section)! {
+        switch sections[section] {
         case .value, .introduction:
             1
         case .positions:
-            if let count = openPositions?.count, count != 0 {
-                min(maxItemCount, count)
-            } else {
-                1
-            }
+            min(maxItemCount, openPositions.count)
         case .markets:
             if let count = markets?.count, count != 0 {
                 min(maxItemCount, count)
@@ -307,37 +297,21 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch Section(rawValue: indexPath.section)! {
+        switch sections[indexPath.section] {
         case .value:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_positions_value, for: indexPath)!
             cell.loadOpenPositions(value: value)
             return cell
         case .positions:
-            if let openPositions, !openPositions.isEmpty {
-                let position = openPositions[indexPath.item]
-                switch position.state {
-                case .opening:
-                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_inactive_position, for: indexPath)!
-                    cell.load(viewModel: position)
-                    return cell
-                default:
-                    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
-                    cell.load(viewModel: position)
-                    return cell
-                }
-            } else {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_placeholder, for: indexPath)!
-                if openPositions == nil {
-                    cell.activityIndicatorView.startAnimating()
-                    cell.emptyIndicatorStackView.isHidden = true
-                } else {
-                    cell.activityIndicatorView.stopAnimating()
-                    cell.titleLabel.text = R.string.localizable.no_position().uppercased()
-                    cell.emptyIndicatorStackView.isHidden = false
-                    cell.onHelp = { [weak self] in
-                        self?.presentPerpsManual()
-                    }
-                }
+            let position = openPositions[indexPath.item]
+            switch position.state {
+            case .opening:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_inactive_position, for: indexPath)!
+                cell.load(viewModel: position)
+                return cell
+            default:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
+                cell.load(viewModel: position)
                 return cell
             }
         case .markets:
@@ -391,15 +365,11 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: R.reuseIdentifier.trade_section_header, for: indexPath)!
-            switch Section(rawValue: indexPath.section)! {
+            switch sections[indexPath.section] {
             case .value, .introduction:
                 break
             case .positions:
-                view.label.text = if let count = openPositions?.count {
-                    R.string.localizable.positions_count(count)
-                } else {
-                    R.string.localizable.positions()
-                }
+                view.label.text = R.string.localizable.positions_count(openPositions.count)
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewOpenPositions()
                 }
@@ -417,11 +387,11 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             return view
         default:
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TradeViewAllFooterView.reuseIdentifier, for: indexPath) as! TradeViewAllFooterView
-            switch Section(rawValue: indexPath.section)! {
+            switch sections[indexPath.section] {
             case .value, .introduction:
                 break
             case .positions:
-                view.viewAllButton.isHidden = (openPositions?.count ?? 0) <= maxItemCount
+                view.viewAllButton.isHidden = openPositions.count <= maxItemCount
                 view.onViewAll = { [weak self] (sender) in
                     self?.viewOpenPositions()
                 }
@@ -446,13 +416,10 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        switch Section(rawValue: indexPath.section)! {
+        switch sections[indexPath.section] {
         case .value:
             break
         case .positions:
-            guard let openPositions, !openPositions.isEmpty else {
-                return
-            }
             let position = openPositions[indexPath.item]
             if let market = PerpsMarketDAO.shared.market(marketID: position.marketID),
                let viewModel = PerpetualMarketViewModel(market: market)
@@ -488,6 +455,31 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
 }
 
 extension TradePerpetualViewController {
+    
+    private enum Section {
+        
+        case value
+        case positions
+        case markets
+        case activity
+        case introduction
+        
+        static func sections(openPositionCount: Int) -> [Section] {
+            var sections: [Section] = [
+                .value,
+                .markets,
+                .activity,
+            ]
+            if openPositionCount == 0 {
+                sections.insert(.introduction, at: 1)
+            } else {
+                sections.insert(.positions, at: 1)
+                sections.append(.introduction)
+            }
+            return sections
+        }
+        
+    }
     
     private func viewOpenPositions() {
         let positions = AllPerpetualPositionsViewController(wallet: wallet, content: .open)
@@ -534,12 +526,24 @@ extension TradePerpetualViewController {
                 }
                 self.value = value
                 self.openPositions = openPositions
+                let sectionsBefore = self.sections
+                let sectionsAfter = Section.sections(openPositionCount: openPositions.count)
+                self.sections = sectionsAfter
                 UIView.performWithoutAnimation {
-                    let sections = IndexSet([
-                        Section.value.rawValue,
-                        Section.positions.rawValue
-                    ])
-                    self.collectionView.reloadSections(sections)
+                    if sectionsBefore == sectionsAfter {
+                        var sections = IndexSet()
+                        for (index, section) in self.sections.enumerated() {
+                            switch section {
+                            case .value, .positions:
+                                sections.insert(index)
+                            default:
+                                break
+                            }
+                        }
+                        self.collectionView.reloadSections(sections)
+                    } else {
+                        self.collectionView.reloadData()
+                    }
                 }
             }
         }
@@ -558,9 +562,11 @@ extension TradePerpetualViewController {
                     return
                 }
                 self.markets = viewModels
-                UIView.performWithoutAnimation {
-                    let markets = IndexSet(integer: Section.markets.rawValue)
-                    self.collectionView.reloadSections(markets)
+                if let section = self.sections.firstIndex(of: .markets) {
+                    UIView.performWithoutAnimation {
+                        let markets = IndexSet(integer: section)
+                        self.collectionView.reloadSections(markets)
+                    }
                 }
                 self.actionView.isEnabled = !viewModels.isEmpty
                 if !self.hasHistoryLoadedFromRemote {
@@ -588,9 +594,11 @@ extension TradePerpetualViewController {
                     return
                 }
                 self.closedPositions = closedPositions
-                UIView.performWithoutAnimation {
-                    let activity = IndexSet(integer: Section.activity.rawValue)
-                    self.collectionView.reloadSections(activity)
+                if let section = self.sections.firstIndex(of: .activity) {
+                    UIView.performWithoutAnimation {
+                        let activity = IndexSet(integer: section)
+                        self.collectionView.reloadSections(activity)
+                    }
                 }
             }
         }

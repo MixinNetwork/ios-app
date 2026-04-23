@@ -135,7 +135,7 @@ final class MultipleAssetChangeCell: UITableViewCell {
 
 extension MultipleAssetChangeCell {
     
-    class RowStackView: UIStackView {
+    final class RowStackView: UIStackView {
         
         let iconView = PlainTokenIconView(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
         let amountLabel = UILabel()

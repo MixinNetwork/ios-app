@@ -157,7 +157,7 @@ extension Web3TransactionViewController: UITableViewDataSource {
                 }
                 let amountColor = switch change.style {
                 case .send:
-                    R.color.error_red()!
+                    R.color.market_red()!
                 case .receive:
                     R.color.market_green()!
                 case .pending:

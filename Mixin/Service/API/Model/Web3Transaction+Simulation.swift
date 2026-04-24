@@ -52,7 +52,7 @@ extension Web3Transaction {
                 Web3Transaction.Receiver(
                     assetID: change.assetID,
                     amount: change.amount,
-                    to: nil
+                    to: myAddress
                 )
             }
             approvals = nil
@@ -61,7 +61,7 @@ extension Web3Transaction {
                 Web3Transaction.Sender(
                     assetID: change.assetID,
                     amount: change.amount,
-                    from: nil
+                    from: myAddress
                 )
             }
             receivers = nil
@@ -71,14 +71,14 @@ extension Web3Transaction {
                 Web3Transaction.Sender(
                     assetID: change.assetID,
                     amount: change.amount,
-                    from: nil
+                    from: myAddress
                 )
             }
             receivers = receiveChanges.map { change in
                 Web3Transaction.Receiver(
                     assetID: change.assetID,
                     amount: change.amount,
-                    to: nil
+                    to: myAddress
                 )
             }
             approvals = nil

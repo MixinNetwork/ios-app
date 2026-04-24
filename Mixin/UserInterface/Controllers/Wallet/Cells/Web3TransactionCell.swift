@@ -61,25 +61,27 @@ final class Web3TransactionCell: ModernSelectedBackgroundCell {
         } else {
             switch transaction.transactionType.knownCase {
             case .transferIn, .transferOut, .swap, .unknown, .none:
-                let senders = transaction.filteredSenders
-                let receivers = transaction.filteredReceivers
-                let count = min(3, senders.count + receivers.count)
+                let count = min(3, transaction.assetChanges.count)
                 let rowStyle: RowStackView.Style = count == 1 ? .singleTransfer : .multipleTransfer
                 loadRowViews(count: count)
                 for i in 0..<count {
                     let row = rowViews[i]
                     row.style = rowStyle
-                    if i < receivers.count {
-                        let receiver = receivers[i]
-                        row.amountLabel.text = receiver.localizedAmount
-                        row.amountLabel.textColor = receiveAmountColor
-                        row.symbolLabel.text = symbols[receiver.assetID]
+                    let change = transaction.assetChanges[i]
+                    row.amountLabel.text = change.amount.formatted(
+                        Decimal.FormatStyle.number
+                            .locale(.current)
+                            .grouping(.never)
+                            .sign(strategy: .always())
+                            .precision(.fractionLength(0...8))
+                            .rounded(rule: .towardZero)
+                    )
+                    row.amountLabel.textColor = if change.amount >= 0 {
+                        receiveAmountColor
                     } else {
-                        let sender = senders[i - receivers.count]
-                        row.amountLabel.text = sender.localizedAmount
-                        row.amountLabel.textColor = sendAmountColor
-                        row.symbolLabel.text = symbols[sender.assetID]
+                        sendAmountColor
                     }
+                    row.symbolLabel.text = symbols[change.assetID]
                 }
             case .approval:
                 loadRowViews(count: 1)

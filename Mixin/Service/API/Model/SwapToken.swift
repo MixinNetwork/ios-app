@@ -25,14 +25,6 @@ class SwapToken: Token {
         )
     }
     
-    var canonicalFormatStyle: Decimal.FormatStyle {
-        Decimal.FormatStyle.number
-            .locale(.enUSPOSIX)
-            .grouping(.never)
-            .sign(strategy: .never)
-            .precision(.fractionLength(0...decimals))
-    }
-    
     init(
         address: String, assetID: String, decimals: Int,
         name: String, symbol: String, iconURL: String,
@@ -46,6 +38,25 @@ class SwapToken: Token {
         self.iconURL = iconURL
         self.category = category
         self.chain = chain
+    }
+    
+    func canonicalFormatStyle(source: RouteTokenSource) -> Decimal.FormatStyle {
+        var style = Decimal.FormatStyle.number
+            .locale(.enUSPOSIX)
+            .grouping(.never)
+            .sign(strategy: .never)
+            .rounded(rule: .towardZero)
+        switch source {
+        case .mixin, .other:
+            style = style.precision(
+                .fractionLength(0...Int(MixinToken.internalPrecision))
+            )
+        case .web3:
+            style = style.precision(
+                .fractionLength(0...decimals)
+            )
+        }
+        return style
     }
     
 }

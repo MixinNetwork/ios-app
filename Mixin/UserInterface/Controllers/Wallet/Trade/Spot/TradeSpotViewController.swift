@@ -50,15 +50,6 @@ class TradeSpotViewController: UIViewController {
     private(set) var stockTokens: [BalancedSwapToken] = []
     private(set) var quote: SwapQuote?
     
-    private(set) lazy var mixinPrecisionRoundingHandler = NSDecimalNumberHandler(
-        roundingMode: .down,
-        scale: MixinToken.internalPrecision,
-        raiseOnExactness: false,
-        raiseOnOverflow: false,
-        raiseOnUnderflow: false,
-        raiseOnDivideByZero: false
-    )
-    
     private let tokenSource: RouteTokenSource
     private let arbitrarySendAssetID: String?
     private let arbitraryReceiveAssetID: String?
@@ -1031,7 +1022,8 @@ extension TradeSpotViewController {
         let price = pricingModel.derivePrice(
             sendToken: sendToken,
             receiveToken: receiveToken,
-            aggressive: true
+            aggressive: true,
+            rounding: true,
         )
         guard price != nil else {
             priceInputAccessory = .unavailable
@@ -1162,14 +1154,15 @@ extension TradeSpotViewController {
         let price = pricingModel.derivePrice(
             sendToken: sendToken,
             receiveToken: receiveToken,
-            aggressive: multiplier == 1
+            aggressive: multiplier == 1,
+            rounding: false
         )
         guard let price else {
             return
         }
-        pricingModel.price = NSDecimalNumber(decimal: price * multiplier)
-            .rounding(accordingToBehavior: mixinPrecisionRoundingHandler)
-            .decimalValue
+        pricingModel.price = TradePricingModel.rounded(
+            price: price * multiplier
+        )
     }
     
     private func startOpenOrderRequester() {

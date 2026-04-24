@@ -71,6 +71,7 @@ final class TradeAmountInputCell: UICollectionViewCell {
                 .grouping(.never)
                 .sign(strategy: .never)
                 .precision(.fractionLength(0...precision))
+                .rounded(rule: .towardZero)
         )
         sendAmountTextField.text = formatted
     }

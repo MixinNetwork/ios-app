@@ -45,7 +45,7 @@ final class SwapQuotePeriodicRequester {
         source: RouteTokenSource
     ) {
         let amount = sendAmount.formatted(
-            sendToken.canonicalFormatStyle
+            sendToken.canonicalFormatStyle(source: source)
         )
         self.request = QuoteRequest(
             inputMint: sendToken.assetID,

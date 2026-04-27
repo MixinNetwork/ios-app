@@ -250,8 +250,8 @@
 "change_emergency_contact" = "Change recovery contact";
 "change_mobile_number" = "Change Mobile Number";
 "change_name" = "Cambiar nombre";
-"change_number" = "Cambie el número";
-"change_number_instead" = "Cambiar número en su lugar";
+"change_number" = "Cambiar número";
+"change_number_instead" = "Cambiar número";
 "change_percent_period_day" = "%dD %%";
 "change_percent_period_hour" = "%dh %%";
 "change_phone_desc" = "You can log in to your account with your mobile number. Your current mobile number (%1$@) is linked to a key shard of your MPC wallet. The full key exists only in the TEE security environment on this device. Read the documentation to learn more about %2$@.";
@@ -278,7 +278,7 @@
 "chat_group_call_did_not_answer" = "%@ did not answer group call";
 "chat_group_call_invite" = "%@ te ha invitado a una llamada de grupo";
 "chat_group_call_self_did_not_answer" = "You did not answer group call";
-"chat_group_exit" = "quedan %@";
+"chat_group_exit" = "%@ salió";
 "chat_group_join" = "%@ se ha unido al grupo mediante un enlace de invitación";
 "chat_group_remove" = "%1$@ ha eliminado %2$@";
 "chat_list_empty_info" = "Puedes chatear con contactos que tengan Mixin instalado en tu teléfono.";
@@ -336,7 +336,7 @@
 "collectibles" = "Collectibles";
 "collection" = "Collection";
 "collection_collected" = "%d collected";
-"combine_and_forward" = "Combinar y avanzar";
+"combine_and_forward" = "Combinar y reenviar";
 "common_wallet" = "Common Wallet";
 "common_wallet_index" = "Common Wallet %@";
 "common_wallet_now_supports_btc" = "Common Wallet now supports Bitcoin";
@@ -441,7 +441,7 @@
 "current_selected" = "Seleccionado actual";
 "current_version" = "Version: %@";
 "custom" = "Custom";
-"custom_time" = "Hora personalizada";
+"custom_time" = "Tiempo personalizado";
 "daily" = "Diario";
 "dark" = "Oscuro";
 "data_and_storage_usage" = "Uso de datos y almacenamiento";
@@ -519,7 +519,7 @@
 "direction" = "Direction";
 "disable" = "Desactivar";
 "disable_biometric_pay_confirmation" = "¿Desactivar %@ Pagar?";
-"disable_disappearing_message" = "%@ mensaje de desaparición inhabilitado";
+"disable_disappearing_message" = "%@ ha desactivado los mensajes que desaparecen";
 "disappearing_message" = "Mensajes que desaparecen";
 "disappearing_message_hint" = "Cuando está habilitado, los nuevos mensajes enviados y recibidos en este chat desaparecerán después de que se hayan visto, lee el documento para obtener más información.";
 "disappearing_option_1" = "30 segundos";
@@ -531,7 +531,7 @@
 "disconnect" = "Disconnect";
 "disconnected" = "Disconnected";
 "disconnecting" = "Desconectando";
-"dismiss_as_admin" = "Descartar como administrador";
+"dismiss_as_admin" = "Quitar como administrador";
 "dominance" = "Dominance";
 "done" = "Hecho";
 "dont_have_assets" = "¿No tienes activos?";
@@ -592,7 +592,7 @@
 "error_insufficient_transaction_fee_with_amount" = "ERROR 20124: Tarifa de transacción insuficiente. Asegúrate de que tu cartera tenga %@ como tarifa";
 "error_internal_with_msg" = "Error interno: %@";
 "error_invalid_address_plain" = "ERROR 30102: formato de dirección no válido.";
-"error_invalid_code_too_frequent" = "ERROR 20129: enviar el código de verificación con demasiada frecuencia, inténtalo de nuevo más tarde.";
+"error_invalid_code_too_frequent" = "ERROR 20129: Los códigos de verificación se envían con demasiada frecuencia. Inténtalo de nuevo más tarde.";
 "error_invalid_emergency_contact" = "ERROR 20130: Invalid recovery contact";
 "error_invalid_pin_format" = "ERROR 20118: Formato de PIN no válido. ";
 "error_invalid_quote_amount" = "ERROR 10614: The input amount is either too small or too large, please adjust the amount.";
@@ -603,7 +603,7 @@
 "error_network_task_failed" = "La conexión de red ha fallado. Comprueba o cambia tu red e inténtalo de nuevo";
 "error_no_quote" = "ERROR 10611: No quotes available at the moment, please try again later.";
 "error_no_quote_detailed" = "ERROR 10611: No quotes available at the moment, please try again later. Try placing a limit order? No restrictions on amount or token.";
-"error_not_found" = "Error 404 no encontrado";
+"error_not_found" = "ERROR 404: No encontrado";
 "error_number_reached_limit" = "ERROR 20132: El número ha llegado al límite.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
 "error_payment_capture_failed" = "ERROR 10603: Payment capture failed";
@@ -632,7 +632,7 @@
 "error_used_phone" = "ERROR 20122: Este número de teléfono ya está asociado a otra cuenta.";
 "error_watch_address_not_supported" = "ERROR 10633: Invalid Address";
 "error_withdrawal_memo_format_incorrect" = "ERROR 20131: Formato de nota de retiro incorrecto.";
-"error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
+"error_withdrawal_suspend" = "ERROR 20137: Withdrawals are suspended.";
 "estimated_balance_change" = "Balance Change (estimate)";
 "estimated_liquidation_price" = "Estimated Liquidation Price";
 "estimated_price" = "Estimated Price";
@@ -704,7 +704,7 @@
 "follow_us_on_facebook" = "Síguenos en Facebook";
 "follow_us_on_x" = "Síguenos en X";
 "forget_pin" = "Forget PIN?";
-"forward" = "Adelante";
+"forward" = "Reenviar";
 "fourth_pin_confirm_hint" = "Sí, hay una cuarta confirmación de PIN y le prometo que es la última para asegurarse de que has recordado tu PIN. El PIN es irrecuperable si se pierde.";
 "free" = "FREE";
 "free_recovery_service" = "Free Recovery Service";
@@ -743,7 +743,7 @@
 "hour" = "%d Hora";
 "hour_count" = "%d Horas";
 "hours_count_short" = "%dH";
-"how_are_you" = "¿Hola, cómo estás?";
+"how_are_you" = "Hola, ¿cómo estás?";
 "how_perps_works" = "How perpetual futures works?";
 "i_am_good" = "Estoy bien.";
 "id" = "ID";
@@ -820,7 +820,7 @@
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "keep_waiting" = "Keep Waiting";
 "label" = "Etiqueta";
-"landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to login, your account deletion will be cancelled.";
+"landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to log in, your account deletion will be cancelled.";
 "landing_have_account" = "I already have an account";
 "landing_validation_title" = "Introduce el código de 4 dígitos que te enviamos a %@";
 "language" = "Idioma";
@@ -916,7 +916,7 @@
 "message_e2ee" = "Los mensajes de esta conversación están encriptados de extremo a extremo, toca para obtener más información.";
 "message_encryption_hint" = "Los mensajes entre usuarios están protegidos con un cifrado de extremo a extremo";
 "message_not_found" = "Mensaje no encontrado";
-"message_not_support" = "Este tipo de mensaje no es compatible, actualice Mixin a la última versión.";
+"message_not_support" = "Este tipo de mensaje no es compatible. Actualiza Mixin a la última versión.";
 "message_preview" = "Vista previa del mensaje";
 "message_sent" = "Mensaje enviado";
 "messages" = "Mensajes";
@@ -1789,7 +1789,7 @@
 "use_another_address" = "Use Another Address";
 "use_biometry" = "Usar %@";
 "use_system_text_size" = "Usar tamaño de texto del sistema";
-"user_delete_hint" = "The user has deleted his own account.";
+"user_delete_hint" = "This user has deleted their account.";
 "user_is_reported" = "El usuario ha sido reportado";
 "user_not_found" = "Usuario no encontrado";
 "username_description" = "This is the name your friends will see when you chat or send them tokens";
@@ -1859,7 +1859,6 @@
 "watch_wallet" = "Watch Wallet";
 "watch_wallet_description" = "You are unable to control assets in a watch-only wallet, but you can track them. ";
 "watch_wallet_empty_description" = "Watch addresses without private keys. View balances, transactions, and receive activity notifications with a fast native experience.";
-"watch_wallet_guide_url" = "https://support.mixin.one/en/article/how-to-add-a-watch-only-address-17ifo8w/";
 "watch_wallet_index" = "Watch Wallet %@";
 "watch_wallet_instruction_benefit" = "Easily monitor the balance and transaction history of the address.";
 "watch_wallet_instruction_restriction" = "Cannot transfer funds or interact with on-chain applications or DeFi projects.";

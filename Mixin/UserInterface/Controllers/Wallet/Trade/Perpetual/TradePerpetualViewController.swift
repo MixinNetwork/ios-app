@@ -186,7 +186,7 @@ final class TradePerpetualViewController: UIViewController {
                 .map { item in
                     PerpetualPositionViewModel(wallet: wallet, position: item)
                 }
-            let markets = PerpsMarketDAO.shared.availableMarkets(limit: limit)
+            let markets = PerpsMarketDAO.shared.availableMarkets(ordering: nil, limit: limit)
             let marketViewModels = markets.compactMap(PerpetualMarketViewModel.init(market:))
             let closedPositions = PerpsPositionHistoryDAO.shared.historyItems(
                 offsetClosedAt: nil,
@@ -553,7 +553,10 @@ extension TradePerpetualViewController {
         let limit = maxItemCount + 1
         let walletID = wallet.tradingWalletID
         DispatchQueue.global().async { [weak self] in
-            let markets = PerpsMarketDAO.shared.availableMarkets(limit: limit)
+            let markets = PerpsMarketDAO.shared.availableMarkets(
+                ordering: nil,
+                limit: limit
+            )
             let viewModels = markets.compactMap(
                 PerpetualMarketViewModel.init(market:)
             )

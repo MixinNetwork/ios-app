@@ -246,6 +246,7 @@
 "category_chats" = "最近聊天";
 "chain" = "所属公链";
 "change" = "更改";
+"change_24h" = "24 小时涨跌";
 "change_amount" = "修改金额";
 "change_emergency_contact" = "修改恢复联系人";
 "change_mobile_number" = "更改手机号码";
@@ -1139,6 +1140,12 @@
 "perpetual_futures" = "永续合约";
 "perpetual_futures_guide" = "永续合约指南";
 "perps_activity" = "历史记录";
+"perps_category_all" = "全部";
+"perps_category_commodities" = "大宗商品";
+"perps_category_crypto" = "加密货币";
+"perps_category_forex" = "外汇";
+"perps_category_indices" = "指数";
+"perps_category_stocks" = "股票";
 "perps_current_price" = "最新价格";
 "perps_intro_overview" = "Mixin 永续合约是一种以数字资产结算的衍生品交易方式，支持做多和做空，无到期日。通过杠杆机制，交易者可以放大仓位，把握价格上涨或下跌带来的交易机会。";
 "perps_intro_risk_notice_1" = "杠杆交易可能放大收益，同时也会放大亏损";

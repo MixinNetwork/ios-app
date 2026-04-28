@@ -86,7 +86,10 @@ final class AllPerpetualMarketsViewController: UIViewController {
     @objc private func reloadMarkets() {
         let walletID = wallet.tradingWalletID
         DispatchQueue.global().async { [weak self] in
-            let markets = PerpsMarketDAO.shared.availableMarkets(limit: nil)
+            let markets = PerpsMarketDAO.shared.availableMarkets(
+                ordering: nil,
+                limit: nil
+            )
             let viewModels = markets.compactMap(
                 PerpetualMarketViewModel.init(market:)
             )

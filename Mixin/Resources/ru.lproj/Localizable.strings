@@ -246,6 +246,7 @@
 "category_chats" = "Чаты";
 "chain" = "Цепь";
 "change" = "Изменить";
+"change_24h" = "24H %%";
 "change_amount" = "Изменить сумму";
 "change_emergency_contact" = "Change recovery contact";
 "change_mobile_number" = "Change Mobile Number";
@@ -1139,6 +1140,12 @@
 "perpetual_futures" = "Perpetual Futures";
 "perpetual_futures_guide" = "Perpetual Futures Guide";
 "perps_activity" = "Activity";
+"perps_category_all" = "All";
+"perps_category_commodities" = "Commodities";
+"perps_category_crypto" = "Crypto";
+"perps_category_forex" = "Forex";
+"perps_category_indices" = "Indices";
+"perps_category_stocks" = "Stocks";
 "perps_current_price" = "Current Price";
 "perps_intro_overview" = "Mixin Perpetual Futures are crypto-settled perpetual contracts with no expiry date that allow traders to speculate on the price of crypto assets. They can be held indefinitely and typically track the underlying spot market.";
 "perps_intro_risk_notice_1" = "Leverage amplifies both profits and losses";

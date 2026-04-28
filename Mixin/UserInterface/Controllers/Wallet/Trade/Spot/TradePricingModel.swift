@@ -211,6 +211,8 @@ final class TradePricingModel {
         }
     }
     
+    private let source: RouteTokenSource
+    
     private var _sendAmount: Decimal?
     private var _sendToken: BalancedSwapToken?
     private var _receiveAmount: Decimal?
@@ -225,7 +227,8 @@ final class TradePricingModel {
     private var _displayPriceNumeraire: ExchangeRateQuote.Numeraire = .send
     private var _displayPrice: String?
     
-    init(sendAmount: Decimal? = nil) {
+    init(source: RouteTokenSource, sendAmount: Decimal? = nil) {
+        self.source = source
         self._sendAmount = sendAmount
         self._sendToken = nil
         self._receiveAmount = nil
@@ -335,7 +338,21 @@ final class TradePricingModel {
         else {
             return nil
         }
-        return sendAmount * price
+        let receiveAmount = sendAmount * price
+        return withUnsafePointer(to: receiveAmount) { receiveAmount in
+            var rounded: Decimal = 0
+            switch source {
+            case .web3:
+                if let receiveToken {
+                    NSDecimalRound(&rounded, receiveAmount, receiveToken.decimals, .down)
+                } else {
+                    fallthrough
+                }
+            case .mixin, .other:
+                NSDecimalRound(&rounded, receiveAmount, Int(MixinToken.internalPrecision), .down)
+            }
+            return rounded
+        }
     }
     
     private func displayPrice(

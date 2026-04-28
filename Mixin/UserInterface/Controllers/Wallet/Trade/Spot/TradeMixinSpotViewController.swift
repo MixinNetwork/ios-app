@@ -157,10 +157,7 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
         }
         if amount >= MixinToken.minimalAmount {
             pricingModel.sendAmount = amount
-            amountInputCell?.updateSendAmountTextField(
-                amount: amount,
-                precision: Int(MixinToken.internalPrecision)
-            )
+            amountInputCell?.updateSendAmountTextField(amount: amount)
             startQuoteRequesterIfAvailable()
             reloadSections()
         }

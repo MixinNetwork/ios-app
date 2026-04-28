@@ -88,6 +88,7 @@ final class AllPerpetualMarketsViewController: UIViewController {
         DispatchQueue.global().async { [weak self] in
             let markets = PerpsMarketDAO.shared.availableMarkets(
                 ordering: nil,
+                category: nil,
                 limit: nil
             )
             let viewModels = markets.compactMap(

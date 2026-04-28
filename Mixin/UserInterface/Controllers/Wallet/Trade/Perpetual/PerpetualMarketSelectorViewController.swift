@@ -26,7 +26,7 @@ final class PerpetualMarketSelectorViewController: UIViewController {
     private var searchResultsKeyword: String?
     private var searchResults: [PerpetualMarketViewModel]?
     
-    private var selectedCategory: DisplayCategory = .all
+    private var selectedCategory: DisplayCategory
     private var markets: [DisplayCategory: [PerpetualMarketViewModel]] = [:]
     private var ordering: PerpsMarketDAO.Ordering?
     
@@ -40,7 +40,8 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         markets[selectedCategory] ?? []
     }
     
-    init() {
+    init(selectedCategory: DisplayCategory) {
+        self.selectedCategory = selectedCategory
         let nib = R.nib.perpetualMarketSelectorView
         super.init(nibName: nib.name, bundle: nib.bundle)
     }
@@ -174,7 +175,11 @@ final class PerpetualMarketSelectorViewController: UIViewController {
         assert(Thread.isMainThread)
         let ordering = self.ordering
         DispatchQueue.global().async { [weak self] in
-            let markets = PerpsMarketDAO.shared.availableMarkets(ordering: ordering, limit: nil)
+            let markets = PerpsMarketDAO.shared.availableMarkets(
+                ordering: ordering,
+                category: nil,
+                limit: nil
+            )
             let viewModels = markets.compactMap(PerpetualMarketViewModel.init(market:))
             var results: [DisplayCategory: [PerpetualMarketViewModel]] = [.all: viewModels]
             for viewModel in viewModels {

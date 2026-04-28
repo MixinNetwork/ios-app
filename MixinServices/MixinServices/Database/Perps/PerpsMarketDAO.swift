@@ -36,9 +36,13 @@ public final class PerpsMarketDAO: PerpsDAO {
     
     public func availableMarkets(
         ordering: Ordering?,
+        category: PerpetualMarket.Category?,
         limit: Int?
     ) -> [PerpetualMarket] {
-        var sql = "SELECT * FROM markets WHERE volume > 0"
+        var sql: GRDB.SQL = "SELECT * FROM markets WHERE volume > 0"
+        if let category {
+            sql.append(literal: " AND category = \(category.rawValue)")
+        }
         if let ordering {
             switch ordering.field {
             case .volume:

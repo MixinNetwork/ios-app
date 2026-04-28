@@ -199,6 +199,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
         orderValueTitleLabel.text = R.string.localizable.position_size()
         liquidationPriceTitleLabel.text = R.string.localizable.liquidation_price()
         
+        leverageMultiplierTextField.delegate = self
         leverageMultipliersCollectionViewLayout.itemSize = UICollectionViewFlowLayout.automaticSize
         leverageMultipliersCollectionView.register(LeverageCell.self, forCellWithReuseIdentifier: cellReuseIdentifier)
         leverageMultipliersCollectionView.contentInset = UIEdgeInsets(top: 7, left: 16, bottom: 7, right: 16)
@@ -447,6 +448,20 @@ final class OpenPerpetualPositionViewController: UIViewController {
         )
     }
     
+    private func inputCustomeLeverageMultiplier() {
+        marginAmountTextField.resignFirstResponder()
+        let input = LeverageMultiplierInputViewController(
+            side: side,
+            maxMultiplier: viewModel.maxLeverageMultiplier,
+            marginAmount: marginAmount,
+            currentMultiplier: leverageMultiplier
+        )
+        input.onInput = { [weak self] (leverage) in
+            self?.inputLeverageMultiplier(value: leverage)
+        }
+        present(input, animated: true)
+    }
+    
     private func inputLeverageMultiplier(value: Decimal) {
         var presetMultiplierIndex: Int?
         var customMultiplierIndex: Int?
@@ -583,17 +598,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         switch multipliers[indexPath.item] {
         case .custom:
-            marginAmountTextField.resignFirstResponder()
-            let input = LeverageMultiplierInputViewController(
-                side: side,
-                maxMultiplier: viewModel.maxLeverageMultiplier,
-                marginAmount: marginAmount,
-                currentMultiplier: leverageMultiplier
-            )
-            input.onInput = { [weak self] (leverage) in
-                self?.inputLeverageMultiplier(value: leverage)
-            }
-            present(input, animated: true)
+            inputCustomeLeverageMultiplier()
             return false
         default:
             return true
@@ -603,17 +608,7 @@ extension OpenPerpetualPositionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
         switch multipliers[indexPath.item] {
         case .custom:
-            marginAmountTextField.resignFirstResponder()
-            let input = LeverageMultiplierInputViewController(
-                side: side,
-                maxMultiplier: viewModel.maxLeverageMultiplier,
-                marginAmount: marginAmount,
-                currentMultiplier: leverageMultiplier
-            )
-            input.onInput = { [weak self] (leverage) in
-                self?.inputLeverageMultiplier(value: leverage)
-            }
-            present(input, animated: true)
+            inputCustomeLeverageMultiplier()
         default:
             break
         }
@@ -669,6 +664,15 @@ extension OpenPerpetualPositionViewController: AddTokenMethodSelectorViewControl
             let deposit = DepositViewController(token: token, switchingBetweenNetworks: false)
             navigationController.pushViewController(replacingCurrent: deposit, animated: true)
         }
+    }
+    
+}
+
+extension OpenPerpetualPositionViewController: UITextFieldDelegate {
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        inputCustomeLeverageMultiplier()
+        return false
     }
     
 }

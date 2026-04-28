@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -47,14 +47,35 @@
                         <constraint firstAttribute="height" constant="38" id="nMg-YU-857"/>
                     </constraints>
                 </stackView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fmx-J1-XiM">
+                    <rect key="frame" x="10" y="54" width="92.333333333333329" height="40"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal" title="Watchlist" image="order_descending">
+                        <color key="titleColor" name="text_tertiary"/>
+                    </state>
+                    <buttonConfiguration key="configuration" style="plain" image="order_descending" imagePlacement="trailing" title="Watchlist" imagePadding="4">
+                        <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
+                        <directionalEdgeInsets key="contentInsets" top="14" leading="10" bottom="10" trailing="10"/>
+                        <color key="baseForegroundColor" name="text_tertiary"/>
+                    </buttonConfiguration>
+                    <connections>
+                        <action selector="sortByMarketCap:" destination="8bo-Qm-44A" eventType="touchUpInside" id="CXk-H7-qCT"/>
+                    </connections>
+                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oqe-E4-UR0">
-                    <rect key="frame" x="253" y="55" width="49" height="39"/>
+                    <rect key="frame" x="233" y="54" width="69" height="40"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                     <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                     <state key="normal" title="Price">
                         <color key="titleColor" name="text_tertiary"/>
                     </state>
+                    <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="Price" imagePadding="4">
+                        <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
+                        <directionalEdgeInsets key="contentInsets" top="14" leading="10" bottom="10" trailing="10"/>
+                        <color key="baseForegroundColor" name="text_tertiary"/>
+                    </buttonConfiguration>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="local_title" value="price"/>
                     </userDefinedRuntimeAttributes>
@@ -63,37 +84,31 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Yp-6g-I9K">
-                    <rect key="frame" x="332" y="55" width="51" height="39"/>
+                    <rect key="frame" x="312.66666666666669" y="54" width="70.333333333333314" height="40"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                     <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                     <state key="normal" title="7D %">
                         <color key="titleColor" name="text_tertiary"/>
                     </state>
+                    <buttonConfiguration key="configuration" style="plain" image="order_none" imagePlacement="trailing" title="7D %" imagePadding="4">
+                        <fontDescription key="titleFontDescription" style="UICTFontTextStyleCaption1"/>
+                        <directionalEdgeInsets key="contentInsets" top="14" leading="10" bottom="10" trailing="10"/>
+                        <color key="baseForegroundColor" name="text_tertiary"/>
+                    </buttonConfiguration>
                     <connections>
                         <action selector="sortByChange:" destination="8bo-Qm-44A" eventType="touchUpInside" id="IrD-KR-8Af"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fmx-J1-XiM">
-                    <rect key="frame" x="10" y="54" width="89" height="40"/>
-                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                    <inset key="contentEdgeInsets" minX="10" minY="14" maxX="10" maxY="10"/>
-                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                    <state key="normal" title="Watchlist" image="selector_down">
-                        <color key="titleColor" name="text_tertiary"/>
-                    </state>
-                    <connections>
-                        <action selector="sortByMarketCap:" destination="8bo-Qm-44A" eventType="touchUpInside" id="CXk-H7-qCT"/>
                     </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" name="background"/>
             <constraints>
+                <constraint firstItem="2Yp-6g-I9K" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="oqe-E4-UR0" secondAttribute="trailing" id="8LU-Dq-woN"/>
                 <constraint firstItem="gPU-Xh-AWI" firstAttribute="top" secondItem="8bo-Qm-44A" secondAttribute="top" constant="10" id="9cL-t0-1iR"/>
                 <constraint firstItem="Fmx-J1-XiM" firstAttribute="leading" secondItem="8bo-Qm-44A" secondAttribute="leading" constant="10" id="AFW-ec-tJF"/>
                 <constraint firstItem="uT0-8z-7TE" firstAttribute="top" secondItem="8bo-Qm-44A" secondAttribute="top" constant="10" id="DX1-LM-SSx"/>
                 <constraint firstAttribute="trailing" secondItem="2Yp-6g-I9K" secondAttribute="trailing" constant="10" id="Ex1-zv-uhc"/>
-                <constraint firstAttribute="trailing" secondItem="oqe-E4-UR0" secondAttribute="trailing" constant="91" id="IGB-xK-g0Q"/>
+                <constraint firstAttribute="trailing" secondItem="oqe-E4-UR0" secondAttribute="trailing" priority="500" constant="91" id="IGB-xK-g0Q"/>
                 <constraint firstAttribute="bottom" secondItem="Fmx-J1-XiM" secondAttribute="bottom" id="Jty-eX-bXg"/>
                 <constraint firstItem="gPU-Xh-AWI" firstAttribute="leading" secondItem="8bo-Qm-44A" secondAttribute="leading" constant="20" id="bzA-qM-DMQ"/>
                 <constraint firstAttribute="bottom" secondItem="2Yp-6g-I9K" secondAttribute="bottom" id="c9Q-cV-LM8"/>
@@ -114,12 +129,13 @@
     </objects>
     <resources>
         <image name="ic_arrow_down" width="30" height="30"/>
-        <image name="selector_down" width="16" height="16"/>
+        <image name="order_descending" width="16" height="16"/>
+        <image name="order_none" width="16" height="16"/>
         <namedColor name="background">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="text_tertiary">
-            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="theme">
             <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

@@ -69,30 +69,22 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
             switch category {
             case .all:
                 segmentedControl.selectItem(at: 1)
-                UIView.performWithoutAnimation {
-                    marketCapButton.setTitle(R.string.localizable.market_cap(), for: .normal)
-                    marketCapButton.layoutIfNeeded()
-                }
+                marketCapButton.configuration?.title = R.string.localizable.market_cap()
             case .favorite:
                 segmentedControl.selectItem(at: 0)
-                UIView.performWithoutAnimation {
-                    marketCapButton.setTitle(R.string.localizable.watchlist(), for: .normal)
-                    marketCapButton.layoutIfNeeded()
-                }
+                marketCapButton.configuration?.title = R.string.localizable.watchlist()
             }
         }
     }
     
     var order: Market.OrderingExpression = .marketCap(.descending) {
         didSet {
-            iconButton(ordering: oldValue).setImage(nil, for: .normal)
-            let button = iconButton(ordering: order)
-            button.setImage(R.image.selector_down(), for: .normal)
-            switch order.ordering {
+            iconButton(ordering: oldValue).configuration?.image = R.image.order_none()
+            iconButton(ordering: order).configuration?.image = switch order.ordering {
             case .ascending:
-                button.imageView?.transform = CGAffineTransform(scaleX: 1, y: -1)
+                R.image.order_ascending()
             case .descending:
-                button.imageView?.transform = .identity
+                R.image.order_descending()
             }
         }
     }
@@ -119,8 +111,6 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         )
         changePeriodButton.menu = UIMenu(children: changePeriodActions(selectedPeriod: changePeriod))
         changePeriodButton.showsMenuAsPrimaryAction = true
-        marketCapButton.semanticContentAttribute = .forceRightToLeft
-        priceButton.semanticContentAttribute = .forceRightToLeft
         let priceButtonMargin: CGFloat = switch ScreenWidth.current {
         case .long:
             40
@@ -131,12 +121,14 @@ final class ExploreMarketHeaderView: UICollectionReusableView {
         }
         priceButtonTrailingConstraint.constant = 20 + 60 + priceButtonMargin - (priceButton.configuration?.contentInsets.trailing ?? 0)
         periodButton.setTitle(changePeriod.displayTitle, for: .normal)
-        periodButton.semanticContentAttribute = .forceRightToLeft
         
-        // UIButton with image and title failed to calculate intrinsicContentSize if bold text is turned on in iOS Display Settings
-        // Set lineBreakMode to byClipping as a workaround. Tested on iOS 17.6.1
-        for button: UIButton in [limitButton, changePeriodButton, marketCapButton] {
-            button.titleLabel?.lineBreakMode = .byClipping
+        for button: UIButton in [marketCapButton, priceButton, periodButton] {
+            button.titleLabel?.adjustsFontForContentSizeCategory = true
+            button.configuration?.titleTextAttributesTransformer = .init { incoming in
+                var outgoing = incoming
+                outgoing.font = UIFont.preferredFont(forTextStyle: .caption1)
+                return outgoing
+            }
         }
     }
     

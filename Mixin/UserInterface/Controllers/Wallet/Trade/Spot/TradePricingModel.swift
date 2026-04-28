@@ -41,7 +41,8 @@ final class TradePricingModel {
             let price = derivePrice(
                 sendToken: _sendToken,
                 receiveToken: _receiveToken,
-                aggressive: true
+                aggressive: true,
+                rounding: true,
             )
             if price != _price {
                 _price = price
@@ -98,7 +99,8 @@ final class TradePricingModel {
             let price = derivePrice(
                 sendToken: _sendToken,
                 receiveToken: _receiveToken,
-                aggressive: true
+                aggressive: true,
+                rounding: true,
             )
             if price != _price {
                 _price = price
@@ -209,6 +211,8 @@ final class TradePricingModel {
         }
     }
     
+    private let source: RouteTokenSource
+    
     private var _sendAmount: Decimal?
     private var _sendToken: BalancedSwapToken?
     private var _receiveAmount: Decimal?
@@ -223,7 +227,8 @@ final class TradePricingModel {
     private var _displayPriceNumeraire: ExchangeRateQuote.Numeraire = .send
     private var _displayPrice: String?
     
-    init(sendAmount: Decimal? = nil) {
+    init(source: RouteTokenSource, sendAmount: Decimal? = nil) {
+        self.source = source
         self._sendAmount = sendAmount
         self._sendToken = nil
         self._receiveAmount = nil
@@ -236,6 +241,7 @@ final class TradePricingModel {
         sendToken: BalancedSwapToken?,
         receiveToken: BalancedSwapToken?,
         aggressive: Bool,
+        rounding: Bool,
     ) -> Decimal? {
         guard
             let sendPrice = sendToken?.decimalUSDPrice,
@@ -245,9 +251,14 @@ final class TradePricingModel {
         else {
             return nil
         }
-        let price = sendPrice / receivePrice
-        if aggressive {
-            return price * 0.99
+        let fairPrice = sendPrice / receivePrice
+        let price = if aggressive {
+            fairPrice * 0.99
+        } else {
+            fairPrice
+        }
+        if rounding {
+            return Self.rounded(price: price)
         } else {
             return price
         }
@@ -278,7 +289,8 @@ final class TradePricingModel {
         let price = derivePrice(
             sendToken: _sendToken,
             receiveToken: _receiveToken,
-            aggressive: true
+            aggressive: true,
+            rounding: true,
         )
         if price != _price {
             _price = price
@@ -326,7 +338,21 @@ final class TradePricingModel {
         else {
             return nil
         }
-        return sendAmount * price
+        let receiveAmount = sendAmount * price
+        return withUnsafePointer(to: receiveAmount) { receiveAmount in
+            var rounded: Decimal = 0
+            switch source {
+            case .web3:
+                if let receiveToken {
+                    NSDecimalRound(&rounded, receiveAmount, receiveToken.decimals, .down)
+                } else {
+                    fallthrough
+                }
+            case .mixin, .other:
+                NSDecimalRound(&rounded, receiveAmount, Int(MixinToken.internalPrecision), .down)
+            }
+            return rounded
+        }
     }
     
     private func displayPrice(
@@ -345,10 +371,29 @@ final class TradePricingModel {
                     .locale(.current)
                     .grouping(.never)
                     .sign(strategy: .never)
-                    .precision(.fractionLength(0...8))
+                    .precision(.fractionLength(0...Self.pricePrecision))
             )
         } else {
             return nil
+        }
+    }
+    
+}
+
+extension TradePricingModel {
+    
+    static let pricePrecision: Int = 8
+    static let minimumPrice: Decimal = 0.00000001
+    
+    static func rounded(price: Decimal) -> Decimal {
+        var result: Decimal = 0
+        withUnsafePointer(to: price) { price in
+            NSDecimalRound(&result, price, pricePrecision, .down)
+        }
+        if result == 0 {
+            return minimumPrice
+        } else {
+            return result
         }
     }
     

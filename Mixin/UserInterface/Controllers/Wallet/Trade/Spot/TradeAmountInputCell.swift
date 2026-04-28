@@ -63,28 +63,38 @@ final class TradeAmountInputCell: UICollectionViewCell {
         updateReceiveView(style: .loading)
     }
     
-    func updateSendAmountTextField(amount: Decimal?, precision: Int?) {
-        let precision = precision ?? Int(MixinToken.internalPrecision)
-        let formatted = amount?.formatted(
-            Decimal.FormatStyle.number
-                .locale(.current)
-                .grouping(.never)
-                .sign(strategy: .never)
-                .precision(.fractionLength(0...precision))
-        )
-        sendAmountTextField.text = formatted
+    func updateSendAmountTextField(amount: Decimal?) {
+        if let amount {
+            let precision = amount.numberOfSignificantFractionalDigits
+            let formatted = amount.formatted(
+                Decimal.FormatStyle.number
+                    .locale(.current)
+                    .grouping(.never)
+                    .sign(strategy: .never)
+                    .precision(.fractionLength(0...precision))
+                    .rounded(rule: .towardZero)
+            )
+            sendAmountTextField.text = formatted
+        } else {
+            sendAmountTextField.text = nil
+        }
     }
     
-    func updateReceiveAmountTextField(amount: Decimal?, precision: Int?) {
-        let precision = precision ?? Int(MixinToken.internalPrecision)
-        let formatted = amount?.formatted(
-            Decimal.FormatStyle.number
-                .locale(.current)
-                .grouping(.never)
-                .sign(strategy: .never)
-                .precision(.fractionLength(0...precision))
-        )
-        receiveAmountTextField.text = formatted
+    func updateReceiveAmountTextField(amount: Decimal?) {
+        if let amount {
+            let precision = amount.numberOfSignificantFractionalDigits
+            let formatted = amount.formatted(
+                Decimal.FormatStyle.number
+                    .locale(.current)
+                    .grouping(.never)
+                    .sign(strategy: .never)
+                    .precision(.fractionLength(0...precision))
+                    .rounded(rule: .towardZero)
+            )
+            receiveAmountTextField.text = formatted
+        } else {
+            receiveAmountTextField.text = nil
+        }
     }
     
 }

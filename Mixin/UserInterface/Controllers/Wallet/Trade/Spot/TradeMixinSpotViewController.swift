@@ -148,15 +148,16 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
         guard let sendToken else {
             return
         }
-        let amount = NSDecimalNumber(decimal: sendToken.decimalBalance * multiplier)
-            .rounding(accordingToBehavior: mixinPrecisionRoundingHandler)
-            .decimalValue
+        let amount = withUnsafePointer(
+            to: sendToken.decimalBalance * multiplier
+        ) { amount in
+            var rounded: Decimal = 0
+            NSDecimalRound(&rounded, amount, Int(MixinToken.internalPrecision), .down)
+            return rounded
+        }
         if amount >= MixinToken.minimalAmount {
             pricingModel.sendAmount = amount
-            amountInputCell?.updateSendAmountTextField(
-                amount: amount,
-                precision: sendToken.decimals
-            )
+            amountInputCell?.updateSendAmountTextField(amount: amount)
             startQuoteRequesterIfAvailable()
             reloadSections()
         }

@@ -307,7 +307,7 @@
 "circulation_supply" = "流通量";
 "classic_wallet_tip_description" = "一個支援多鏈的常規錢包，可用於訪問去中心化應用和 DeFi 協議。";
 "classic_wallet_tip_title" = "什麼是普通錢包？";
-"clear" = "清理";
+"clear" = "清除";
 "clear_cache" = "清理快取";
 "clear_chat" = "清除聊天記錄";
 "clear_contact_chat_confirmation" = "清空與\"%@\"的聊天記錄？";
@@ -816,7 +816,7 @@
 "invoices" = "賬單";
 "is_it_safe_to_import_into_mixin" = "匯入到 Mixin 安全嗎？";
 "join_group" = "加入群組";
-"joined_in" = "%@ 加入";
+"joined_in" = "加入於 %@";
 "keep_running_foreground" = "不要關閉螢幕並保持 Mixin 在前臺執行";
 "keep_waiting" = "繼續等待";
 "label" = "標題";
@@ -916,7 +916,7 @@
 "message_e2ee" = "此對話中的訊息使用端對端加密。點選瞭解更多。";
 "message_encryption_hint" = "使用者之間的訊息將受到端對端加密保護";
 "message_not_found" = "找不到該訊息";
-"message_not_support" = "不支援此型別訊息。請升級 Mixin 檢視。";
+"message_not_support" = "不支援此類訊息，請升級 Mixin 到最新版本。";
 "message_preview" = "顯示訊息內容";
 "message_sent" = "訊息已傳送";
 "messages" = "訊息";
@@ -1121,8 +1121,8 @@
 "peer_closed" = "Peer 已關閉";
 "peer_not_found" = "Peer 無效";
 "pending" = "確認中";
-"pending_confirmation" = "%1$d/%2$d 區塊確認數";
-"pending_confirmation_count" = "%1$d/%2$d 區塊確認數";
+"pending_confirmation" = "%1$d/%2$d 確認";
+"pending_confirmation_count" = "%1$d/%2$d 確認";
 "pending_confirmations" = "%d/%d 區塊確認數";
 "pending_transaction_one" = "有 1 筆交易處理中";
 "pending_transactions_count" = "有 %d 筆交易處理中";
@@ -1403,8 +1403,8 @@
 "search_placeholder_contact" = "Mixin ID, 名稱, 手機號碼";
 "search_placeholder_dapp" = "名稱, URL";
 "search_placeholder_number" = "搜尋 Mixin ID 或手機號碼：";
-"search_related_message" = "%d 條相關的訊息";
-"search_related_message_count" = "%d 條相關的訊息";
+"search_related_message" = "%d 條相關訊息";
+"search_related_message_count" = "%d 條相關訊息";
 "search_result_prefix_phone" = "手機號碼：";
 "secured_by_tip" = "由 TIP 提供安全保障";
 "security" = "安全";
@@ -1623,7 +1623,7 @@
 "terms_of_service" = "服務條款";
 "text" = "資訊";
 "text_confirm_send_code" = "確認你的手機號碼 %@";
-"text_qr_code" = "文字二維碼";
+"text_qr_code" = "文本二維碼";
 "the_code_is_incorrect" = "驗證碼不正確";
 "third_pin_confirm_hint" = "很少看到第三次確認吧！所以請牢記，PIN 丟失是無法找回的。";
 "this_message_was_deleted" = "此訊息已撤回";
@@ -1675,8 +1675,8 @@
 "transaction_rejected" = "拒絕成功";
 "transaction_request" = "請求轉賬";
 "transaction_type" = "交易型別";
-"transactions" = "轉賬記錄";
-"transactions_cannot_be_deleted" = "轉賬記錄不會被刪除";
+"transactions" = "交易記錄";
+"transactions_cannot_be_deleted" = "交易記錄不會被刪除";
 "transcript" = "聊天記錄";
 "transfer" = "轉賬";
 "transfer_aggregated_insufficient_balance_count" = "轉賬金額 %1$@，手續費 %2$@，錢包餘額 %3$@。";
@@ -1859,7 +1859,6 @@
 "watch_wallet" = "觀察錢包";
 "watch_wallet_description" = "你無法使用觀察錢包中的資產，但可以追蹤它們。 ";
 "watch_wallet_empty_description" = "無需私鑰即可新增觀察地址，支援檢視餘額、交易記錄，並接收交易通知。";
-"watch_wallet_guide_url" = "https://support.mixin.one/zh/article/5aac5l2v5re75yqg6kec5af5zyw5z2a77yf-r3pitk/";
 "watch_wallet_index" = "觀察錢包 %@";
 "watch_wallet_instruction_benefit" = "可方便地監控指定地址的餘額與交易記錄。";
 "watch_wallet_instruction_restriction" = "無法轉賬，不能與鏈上應用或 DeFi 專案互動。";

@@ -36,7 +36,7 @@
 "add_recovery_contact_instruction_2" = "If you cannot log in to your account using your mobile number or mnemonic phrase, seek help from your recovery contact in person or by phone.";
 "add_recovery_contact_instruction_3" = "The recovery contact cannot transfer assets from your Mixin wallet but can help you regain access to your account.";
 "add_recovery_contact_instruction_4" = "The recovery contact cannot recover your PIN.";
-"add_sticker" = "スタンプを追加する";
+"add_sticker" = "スタンプを追加";
 "add_stickers" = "スタンプを追加";
 "add_tag" = "タグを追加";
 "add_to_stickers" = "スタンプを追加";
@@ -47,7 +47,7 @@
 "add_wallet_instruction_tip_derivation" = "This wallet is TIP-derived and does not support viewing the private key.";
 "add_watch_address" = "Add Watch Address";
 "add_watch_address_description" = "Track any public wallet address";
-"added" = "追加ずみ";
+"added" = "追加済み";
 "adding_address" = "Adding Address";
 "adding_address_failed" = "Adding Address Failed";
 "address" = "アドレス";
@@ -207,7 +207,7 @@
 "blocked_users" = "ブロック中のユーザー";
 "bot_not_found" = "ミニアプリが見つかりません";
 "bots" = "ミニアプリ";
-"bots_title" = "Myミニアプリ一覧";
+"bots_title" = "Bot一覧";
 "brief_introduction" = "Intro";
 "browser" = "Browser";
 "btc_tx_already_speedy" = "The current fee rate is already sufficient, so acceleration would have no effect.";
@@ -300,14 +300,14 @@
 "choose_token_desc" = "%@ is issued on multiple networks";
 "circle_info" = "グループリストを作成し、種類の異なるチャットを切り替えましょう";
 "circle_no_conversation_hint" = "友人またはグループを既に作成したのグループリストに追加できます";
-"circle_subtitle" = "%dのチャットルーム";
-"circle_subtitle_count" = "%dのチャットルーム";
+"circle_subtitle" = "%d件の会話";
+"circle_subtitle_count" = "%d件の会話";
 "circle_title" = "%@のグループリスト";
 "circles" = "グループリスト";
 "circulation_supply" = "Circulation Supply";
 "classic_wallet_tip_description" = "A common multi-chain wallet that accesses decentralized applications and DeFi protocols.";
 "classic_wallet_tip_title" = "What’s the Common Wallet?";
-"clear" = "削除";
+"clear" = "クリア";
 "clear_cache" = "キャッシュをクリア";
 "clear_chat" = "チャットを削除する";
 "clear_contact_chat_confirmation" = "\"%@\"とチャットを削除しますか?";
@@ -443,7 +443,7 @@
 "custom" = "Custom";
 "custom_time" = "日時";
 "daily" = "日";
-"dark" = "ライト";
+"dark" = "ダーク";
 "data_and_storage_usage" = "ストレージ使用率";
 "data_parsing_error" = "データ解析エラー";
 "database_access" = "データベースへの接続";
@@ -519,8 +519,8 @@
 "direction" = "Direction";
 "disable" = "無効にする";
 "disable_biometric_pay_confirmation" = "%@の支払いを無効にしますか?";
-"disable_disappearing_message" = "%@が表示されないメッセージを無効にしました";
-"disappearing_message" = "表示されないメッセージ";
+"disable_disappearing_message" = "%@が消えるメッセージを無効にしました";
+"disappearing_message" = "消えるメッセージ";
 "disappearing_message_hint" = "有効にすると、このチャットで送受信された新しいメッセージは、見た後に消えます。詳しくは、こちらをお読みください。";
 "disappearing_option_1" = "30秒";
 "disappearing_option_2" = "10分間";
@@ -609,7 +609,7 @@
 "error_payment_capture_failed" = "ERROR 10603: Payment capture failed";
 "error_phone_invalid_format" = "エラー 20110：無効な電話番号です";
 "error_phone_sms_delivery" = "エラー 10003：SMSの送信に失敗しました";
-"error_phone_verification_code_expired" = "期限切れ";
+"error_phone_verification_code_expired" = "エラー 20114：電話番号認証コードの有効期限が切れています";
 "error_phone_verification_code_invalid" = "エラー 20113：電話番号認証コードが無効です";
 "error_pin_check_too_many_request" = "入力ミスが5回に達したため一時的にロックします。24時間後にもう一度試してください。";
 "error_pin_incorrect" = "PINコードが違います";
@@ -632,7 +632,7 @@
 "error_used_phone" = "エラー20122：この電話番号はすでに他のアカウントと紐づけられています";
 "error_watch_address_not_supported" = "ERROR 10633: Invalid Address";
 "error_withdrawal_memo_format_incorrect" = "エラー20131：出金メモのフォーマットが不正確です";
-"error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
+"error_withdrawal_suspend" = "ERROR 20137: Withdrawals are suspended.";
 "estimated_balance_change" = "Balance Change (estimate)";
 "estimated_liquidation_price" = "Estimated Liquidation Price";
 "estimated_price" = "Estimated Price";
@@ -710,7 +710,7 @@
 "free_recovery_service" = "Free Recovery Service";
 "free_transfers_between_wallets_description" = "Free transfers between wallets, for a limited time.";
 "free_transfers_between_wallets_title" = "Free transfers between wallets";
-"from" = "より";
+"from" = "送信元";
 "from_address" = "From address";
 "from_date" = "From %@";
 "from_mixin_wallet" = "From Mixin Wallet";
@@ -816,11 +816,11 @@
 "invoices" = "Invoices";
 "is_it_safe_to_import_into_mixin" = "Is it safe to import into Mixin?";
 "join_group" = "グループに参加";
-"joined_in" = "%@からMixinを利用しています";
+"joined_in" = "参加日 %@";
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "keep_waiting" = "Keep Waiting";
 "label" = "ラベル";
-"landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to login, your account deletion will be cancelled.";
+"landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to log in, your account deletion will be cancelled.";
 "landing_have_account" = "I already have an account";
 "landing_validation_title" = "%@に送信された4桁のコードを入力してください";
 "language" = "言語";
@@ -836,7 +836,7 @@
 "legacy_network" = "Legacy Network";
 "legacy_network_transfer_hint" = "Current transfer is using legacy network";
 "leverage" = "Leverage";
-"light" = "ダーク";
+"light" = "ライト";
 "lightning_address" = "Lightning Address";
 "lightning_address_explain" = "%@ is your Lightning Network address. With this address, you can conveniently and securely receive payments:";
 "lightning_address_explain_1" = "The address format is similar to an email, simple and easy to remember.";
@@ -1158,7 +1158,7 @@
 "phone_call" = "通話";
 "phone_contact" = "連絡帳";
 "phone_contacts" = "連絡帳";
-"phone_number" = "電話番号を変更する";
+"phone_number" = "電話番号";
 "phone_number_change" = "電話番号変更";
 "phone_number_privacy" = "あなたを電話番号検索で追加できるユーザー";
 "photo" = "写真";
@@ -1675,7 +1675,7 @@
 "transaction_rejected" = "Transaction Rejected";
 "transaction_request" = "Transaction Request";
 "transaction_type" = "トランザクションタイプ";
-"transactions" = "もらった・あげたコイン💰";
+"transactions" = "取引";
 "transactions_cannot_be_deleted" = "トランザクション履歴を削除することはできません";
 "transcript" = "メッセージ履歴";
 "transfer" = "送金";
@@ -1789,7 +1789,7 @@
 "use_another_address" = "Use Another Address";
 "use_biometry" = "%@を使用する";
 "use_system_text_size" = "Use System Text Size";
-"user_delete_hint" = "The user has deleted his own account.";
+"user_delete_hint" = "This user has deleted their account.";
 "user_is_reported" = "報告しました。";
 "user_not_found" = "ユーザーが見つかりませんでした";
 "username_description" = "This is the name your friends will see when you chat or send them tokens";
@@ -1859,7 +1859,6 @@
 "watch_wallet" = "Watch Wallet";
 "watch_wallet_description" = "You are unable to control assets in a watch-only wallet, but you can track them. ";
 "watch_wallet_empty_description" = "Watch addresses without private keys. View balances, transactions, and receive activity notifications with a fast native experience.";
-"watch_wallet_guide_url" = "https://support.mixin.one/en/article/how-to-add-a-watch-only-address-17ifo8w/";
 "watch_wallet_index" = "Watch Wallet %@";
 "watch_wallet_instruction_benefit" = "Easily monitor the balance and transaction history of the address.";
 "watch_wallet_instruction_restriction" = "Cannot transfer funds or interact with on-chain applications or DeFi projects.";

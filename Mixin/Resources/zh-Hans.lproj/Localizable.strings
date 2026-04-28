@@ -307,7 +307,7 @@
 "circulation_supply" = "流通量";
 "classic_wallet_tip_description" = "一个支持多链的常规钱包，可用于访问去中心化应用和 DeFi 协议。";
 "classic_wallet_tip_title" = "什么是普通钱包？";
-"clear" = "清理";
+"clear" = "清除";
 "clear_cache" = "清理缓存";
 "clear_chat" = "清除聊天记录";
 "clear_contact_chat_confirmation" = "清空与\"%@\"的聊天记录？";
@@ -816,7 +816,7 @@
 "invoices" = "账单";
 "is_it_safe_to_import_into_mixin" = "导入到 Mixin 安全吗？";
 "join_group" = "加入群组";
-"joined_in" = "%@ 加入";
+"joined_in" = "加入于 %@";
 "keep_running_foreground" = "不要关闭屏幕并保持 Mixin 在前台运行";
 "keep_waiting" = "继续等待";
 "label" = "标题";
@@ -916,7 +916,7 @@
 "message_e2ee" = "此对话中的消息使用端对端加密。点击了解更多。";
 "message_encryption_hint" = "用户之间的消息将受到端对端加密保护";
 "message_not_found" = "找不到该消息";
-"message_not_support" = "不支持此类型消息。请升级 Mixin 查看。";
+"message_not_support" = "不支持此类消息，请升级 Mixin 到最新版本。";
 "message_preview" = "显示消息内容";
 "message_sent" = "消息已发送";
 "messages" = "消息";
@@ -1121,8 +1121,8 @@
 "peer_closed" = "Peer 已关闭";
 "peer_not_found" = "Peer 无效";
 "pending" = "确认中";
-"pending_confirmation" = "%1$d/%2$d 区块确认数";
-"pending_confirmation_count" = "%1$d/%2$d 区块确认数";
+"pending_confirmation" = "%1$d/%2$d 确认";
+"pending_confirmation_count" = "%1$d/%2$d 确认";
 "pending_confirmations" = "%d/%d 区块确认数";
 "pending_transaction_one" = "有 1 笔交易处理中";
 "pending_transactions_count" = "有 %d 笔交易处理中";
@@ -1403,8 +1403,8 @@
 "search_placeholder_contact" = "Mixin ID, 名称, 手机号码";
 "search_placeholder_dapp" = "名称, URL";
 "search_placeholder_number" = "搜索 Mixin ID 或手机号码：";
-"search_related_message" = "%d 条相关的消息";
-"search_related_message_count" = "%d 条相关的消息";
+"search_related_message" = "%d 条相关消息";
+"search_related_message_count" = "%d 条相关消息";
 "search_result_prefix_phone" = "手机号码：";
 "secured_by_tip" = "由 TIP 提供安全保障";
 "security" = "安全";
@@ -1675,8 +1675,8 @@
 "transaction_rejected" = "拒绝成功";
 "transaction_request" = "请求转账";
 "transaction_type" = "交易类型";
-"transactions" = "转账记录";
-"transactions_cannot_be_deleted" = "转账记录不会被删除";
+"transactions" = "交易记录";
+"transactions_cannot_be_deleted" = "交易记录不会被删除";
 "transcript" = "聊天记录";
 "transfer" = "转账";
 "transfer_aggregated_insufficient_balance_count" = "转账金额 %1$@，手续费 %2$@，钱包余额 %3$@。";
@@ -1859,7 +1859,6 @@
 "watch_wallet" = "观察钱包";
 "watch_wallet_description" = "你无法使用观察钱包中的资产，但可以追踪它们。 ";
 "watch_wallet_empty_description" = "无需私钥即可添加观察地址，支持查看余额、交易记录，并接收交易通知。";
-"watch_wallet_guide_url" = "https://support.mixin.one/zh/article/5aac5l2v5re75yqg6kec5af5zyw5z2a77yf-r3pitk/";
 "watch_wallet_index" = "观察钱包 %@";
 "watch_wallet_instruction_benefit" = "可方便地监控指定地址的余额与交易记录。";
 "watch_wallet_instruction_restriction" = "无法转账，不能与链上应用或 DeFi 项目交互。";

@@ -1,4 +1,4 @@
-"about" = "Про";
+"about" = "О приложении";
 "access_contacts_hint" = "Mixin синхронизирует вашу адресную книгу с серверами Mixin, чтобы помочь вам связаться с другими пользователями Mixin.";
 "access_dapps_defi_projects" = "Access apps and DeFi projects.";
 "access_to_contacts" = "Доступ к контактам";
@@ -278,7 +278,7 @@
 "chat_group_call_did_not_answer" = "%@ did not answer group call";
 "chat_group_call_invite" = "%@ пригласил вас на групповой вызов";
 "chat_group_call_self_did_not_answer" = "You did not answer group call";
-"chat_group_exit" = "%@ ушло";
+"chat_group_exit" = "%@ покинул(а) группу";
 "chat_group_join" = "%@ присоединился к группе по ссылке-приглашению";
 "chat_group_remove" = "%1$@ удалил %2$@";
 "chat_list_empty_info" = "Вы можете общаться с контактами, на телефоне которых установлен Mixin.";
@@ -336,7 +336,7 @@
 "collectibles" = "Collectibles";
 "collection" = "Collection";
 "collection_collected" = "%d collected";
-"combine_and_forward" = "Объединить и вперед";
+"combine_and_forward" = "Объединить и переслать";
 "common_wallet" = "Common Wallet";
 "common_wallet_index" = "Common Wallet %@";
 "common_wallet_now_supports_btc" = "Common Wallet now supports Bitcoin";
@@ -441,7 +441,7 @@
 "current_selected" = "Текущий выбранный";
 "current_version" = "Version: %@";
 "custom" = "Custom";
-"custom_time" = "Пользовательское время";
+"custom_time" = "Произвольное время";
 "daily" = "Повседневный";
 "dark" = "Темное";
 "data_and_storage_usage" = "Использование данных и хранилища";
@@ -531,7 +531,7 @@
 "disconnect" = "Disconnect";
 "disconnected" = "Disconnected";
 "disconnecting" = "Отключение";
-"dismiss_as_admin" = "Закрыть как администратор";
+"dismiss_as_admin" = "Снять права администратора";
 "dominance" = "Dominance";
 "done" = "Сделано";
 "dont_have_assets" = "No assets";
@@ -603,7 +603,7 @@
 "error_network_task_failed" = "Не удалось подключиться к сети. Проверьте или переключите сеть и повторите попытку.";
 "error_no_quote" = "ERROR 10611: No quotes available at the moment, please try again later.";
 "error_no_quote_detailed" = "ERROR 10611: No quotes available at the moment, please try again later. Try placing a limit order? No restrictions on amount or token.";
-"error_not_found" = "Ошибка 404: Не найдено";
+"error_not_found" = "ОШИБКА 404: Не найдено";
 "error_number_reached_limit" = "ОШИБКА 20132: число достигло предела.";
 "error_opponent_not_registered_to_safe" = "ERROR 10404: The opponent is using an earlier version, you can remind them to update";
 "error_payment_capture_failed" = "ERROR 10603: Payment capture failed";
@@ -632,7 +632,7 @@
 "error_used_phone" = "ОШИБКА 20122: этот номер телефона уже связан с другой учетной записью.";
 "error_watch_address_not_supported" = "ERROR 10633: Invalid Address";
 "error_withdrawal_memo_format_incorrect" = "ОШИБКА 20131: Неверный формат уведомления о снятии средств.";
-"error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
+"error_withdrawal_suspend" = "ERROR 20137: Withdrawals are suspended.";
 "estimated_balance_change" = "Balance Change (estimate)";
 "estimated_liquidation_price" = "Estimated Liquidation Price";
 "estimated_price" = "Estimated Price";
@@ -704,7 +704,7 @@
 "follow_us_on_facebook" = "Следите за нами на Фейсбуке";
 "follow_us_on_x" = "Следите за нами на X";
 "forget_pin" = "Forget PIN?";
-"forward" = "Перенаправить";
+"forward" = "Переслать";
 "fourth_pin_confirm_hint" = "Да, есть четвертое подтверждение PIN-кода, и я обещаю, что оно будет последним, чтобы убедиться, что вы запомнили свой PIN-код. PIN-код невозможно восстановить, если он утерян.";
 "free" = "FREE";
 "free_recovery_service" = "Free Recovery Service";
@@ -820,7 +820,7 @@
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "keep_waiting" = "Keep Waiting";
 "label" = "Этикетка";
-"landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to login, your account deletion will be cancelled.";
+"landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to log in, your account deletion will be cancelled.";
 "landing_have_account" = "I already have an account";
 "landing_validation_title" = "Введите 4-значный код, отправленный вам на %@.";
 "language" = "Язык";
@@ -916,7 +916,7 @@
 "message_e2ee" = "Сообщения в этом чате полностью зашифрованы. Нажмите, чтобы узнать больше.";
 "message_encryption_hint" = "Сообщения между пользователями защищены сквозным шифрованием";
 "message_not_found" = "Сообщение не найдено";
-"message_not_support" = "Этот тип сообщений не поддерживается, пожалуйста, обновите Mixin до последней версии.";
+"message_not_support" = "Этот тип сообщений не поддерживается. Обновите Mixin до последней версии.";
 "message_preview" = "Предварительный просмотр сообщения";
 "message_sent" = "Сообщение отправлено";
 "messages" = "Сообщения";
@@ -1789,7 +1789,7 @@
 "use_another_address" = "Use Another Address";
 "use_biometry" = "Использовать %@";
 "use_system_text_size" = "Use System Text Size";
-"user_delete_hint" = "The user has deleted his own account.";
+"user_delete_hint" = "This user has deleted their account.";
 "user_is_reported" = "Сообщено о пользователе";
 "user_not_found" = "Пользователь не найден";
 "username_description" = "This is the name your friends will see when you chat or send them tokens";
@@ -1859,7 +1859,6 @@
 "watch_wallet" = "Watch Wallet";
 "watch_wallet_description" = "You are unable to control assets in a watch-only wallet, but you can track them. ";
 "watch_wallet_empty_description" = "Watch addresses without private keys. View balances, transactions, and receive activity notifications with a fast native experience.";
-"watch_wallet_guide_url" = "https://support.mixin.one/en/article/how-to-add-a-watch-only-address-17ifo8w/";
 "watch_wallet_index" = "Watch Wallet %@";
 "watch_wallet_instruction_benefit" = "Easily monitor the balance and transaction history of the address.";
 "watch_wallet_instruction_restriction" = "Cannot transfer funds or interact with on-chain applications or DeFi projects.";

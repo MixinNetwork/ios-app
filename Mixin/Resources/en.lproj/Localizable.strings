@@ -169,7 +169,7 @@
 "assets" = "Assets";
 "audio" = "Audio";
 "audio_shareable_false" = "This audio cannot be shared";
-"audios" = "Audios";
+"audios" = "Audio";
 "authorization" = "authorization";
 "authorizations" = "Authorizations";
 "authorize" = "Authorize";
@@ -447,7 +447,7 @@
 "data_and_storage_usage" = "Data and Storage Usage";
 "data_parsing_error" = "Data parsing error";
 "database_access" = "Database access";
-"database_upgrade_tips" = "The database is being upgraded, it may take several minutes, please do not close this App.";
+"database_upgrade_tips" = "The database is being upgraded. This may take several minutes. Please do not close this app.";
 "date" = "Date";
 "date_format_date" = "MMM dd, yyyy";
 "date_format_day" = "hh:mm a";
@@ -521,7 +521,7 @@
 "disable_biometric_pay_confirmation" = "Disable %@ Pay?";
 "disable_disappearing_message" = "%@ disabled disappearing message";
 "disappearing_message" = "Disappearing Messages";
-"disappearing_message_hint" = "When enabled, new messages sent and received in this chat will disappear after they have been seen, read the document to learn more.";
+"disappearing_message_hint" = "When enabled, new messages sent and received in this chat will disappear after they have been seen. Read the document to learn more.";
 "disappearing_option_1" = "30 seconds";
 "disappearing_option_2" = "10 minutes";
 "disappearing_option_3" = "2 hours";
@@ -558,7 +558,7 @@
 "enable_notifications" = "Enable Notifications";
 "enable_pay" = "Enable %@ Pay";
 "enable_pay_confirmation" = "Enable %@ Pay?";
-"enable_push_notification" = "Enable push notification";
+"enable_push_notification" = "Enable push notifications";
 "enable_touch_pay_hint" = "Confirm PIN to enable Touch Pay";
 "end" = "End";
 "end_to_end_encryption" = "End-to-end Encrypted";
@@ -579,7 +579,7 @@
 "error_access_limited" = "ERROR 403: Access Limited";
 "error_already_bonded_referral_code" = "ERROR 10731: This account has already applied a referral code";
 "error_already_had_open_position" = "ERROR 10651: You already had a open position";
-"error_bad_data" = "ERROR 10002: The request data has invalid field";
+"error_bad_data" = "ERROR 10002: The request data has an invalid field";
 "error_blockchain" = "ERROR 30100: Blockchain not in sync, please try again later.";
 "error_cannot_apply_your_own_referral_code" = "ERROR 10732: Cannot apply your own referral code";
 "error_captcha_is_invalid" = "ERROR 10004: CAPTCHA is invalid";
@@ -592,7 +592,7 @@
 "error_insufficient_transaction_fee_with_amount" = "ERROR 20124: Insufficient transaction fee. Please make sure your wallet has %@ as fee";
 "error_internal_with_msg" = "Internal error: %@";
 "error_invalid_address_plain" = "ERROR 30102: Invalid address format.";
-"error_invalid_code_too_frequent" = "ERROR 20129: Send verification code too frequent, please try again later.";
+"error_invalid_code_too_frequent" = "ERROR 20129: Verification codes are being sent too frequently. Please try again later.";
 "error_invalid_emergency_contact" = "ERROR 20130: Invalid recovery contact";
 "error_invalid_pin_format" = "ERROR 20118: Invalid PIN format.";
 "error_invalid_quote_amount" = "ERROR 10614: The input amount is either too small or too large, please adjust the amount.";
@@ -632,7 +632,7 @@
 "error_used_phone" = "ERROR 20122: This mobile number is already associated with another account.";
 "error_watch_address_not_supported" = "ERROR 10633: Invalid Address";
 "error_withdrawal_memo_format_incorrect" = "ERROR 20131: Withdrawal memo format incorrect.";
-"error_withdrawal_suspend" = "ERROR 20137: Withdrawal suspend.";
+"error_withdrawal_suspend" = "ERROR 20137: Withdrawals are suspended.";
 "estimated_balance_change" = "Balance Change (estimate)";
 "estimated_liquidation_price" = "Estimated Liquidation Price";
 "estimated_price" = "Estimated Price";
@@ -733,7 +733,7 @@
 "guideline" = "Guideline";
 "hash" = "HASH";
 "help" = "Help";
-"help_center" = "Help center";
+"help_center" = "Help Center";
 "hidden_assets" = "Hidden Assets";
 "hide" = "Hide";
 "hide_asset" = "Hide asset";
@@ -748,7 +748,7 @@
 "i_am_good" = "I’m good.";
 "id" = "ID";
 "im_ready" = "I'm Ready";
-"image" = "image";
+"image" = "Image";
 "immediately" = "Immediately";
 "impact_on_pnl_1" = "Higher leverage, larger and faster PnL";
 "impact_on_pnl_2" = "Lower leverage, smaller and slower PnL";
@@ -820,7 +820,7 @@
 "keep_running_foreground" = "Please do not close the screen and keep Mixin running in the foreground";
 "keep_waiting" = "Keep Waiting";
 "label" = "Label";
-"landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to login, your account deletion will be cancelled.";
+"landing_delete_content" = "You requested to delete your account on %1$@. The account will be deleted on %2$@. If you continue to log in, your account deletion will be cancelled.";
 "landing_have_account" = "I already have an account";
 "landing_validation_title" = "Enter the 4-digit code sent to you at %@";
 "language" = "Language";
@@ -913,7 +913,7 @@
 "membership_prosperity_description" = "Professional crypto solutions with 24/7 support, best for family offices, large corporations and financial institutions.";
 "memo" = "Memo";
 "memo_placeholder" = "Enter the Memo. If there isn’t one, just tap “Next”.";
-"message_e2ee" = "Messages to this conversation are end-to-end encrypted, tap for more info.";
+"message_e2ee" = "Messages in this conversation are end-to-end encrypted. Tap for more info.";
 "message_encryption_hint" = "Messages between users are protected with an end-to-end encryption";
 "message_not_found" = "Message not found";
 "message_not_support" = "This type of message is not supported, please upgrade Mixin to the latest version.";
@@ -1074,7 +1074,7 @@
 "one_year" = "1 Year";
 "open" = "Open";
 "open_desktop_to_confirm" = "Please open your Mixin desktop to confirm the operation.";
-"open_home_page" = "Open Home page";
+"open_home_page" = "Open Homepage";
 "open_in_browser" = "Open in browser";
 "open_in_gaode_maps" = "Open in 高德地图";
 "open_in_google_maps" = "Open in Google Maps";
@@ -1488,7 +1488,7 @@
 "setting_chats" = "Chats";
 "setting_conversation_group_tip" = "Who can add me to groups";
 "setting_conversation_tip" = "Who can send message to me";
-"setting_delete_account_pin_content" = "If you continue, your profile and account details will be delete on %@. read our document to learn more.";
+"setting_delete_account_pin_content" = "If you continue, your profile and account details will be deleted on %@. Read our document to learn more.";
 "setting_delete_account_send" = "We will send a 4-digit code to %@";
 "setting_delete_account_tip" = "Your Mixin wallet still has some assets that can be withdrawn to other wallets or exchanges. Once the account is cancelled, these assets will be abandoned along with the wallet and cannot be recovered.";
 "setting_duplicate_transfer_desc" = "Display confirmation dialog when you transfer the same amount to the same person within 6 hours.";
@@ -1511,7 +1511,7 @@
 "share_contact" = "Share Contact";
 "share_link" = "Share Link";
 "share_log_file" = "Share Log File";
-"share_message_description" = "Are you sure you want to send a %2$@ from %1$@?";
+"share_message_description" = "Are you sure you want to send %2$@ from %1$@?";
 "share_message_description_empty" = "Are you sure you want to send the %@?";
 "share_pair" = "Share Pair";
 "share_to" = "Share To";
@@ -1676,7 +1676,7 @@
 "transaction_request" = "Transaction Request";
 "transaction_type" = "Transaction Type";
 "transactions" = "Transactions";
-"transactions_cannot_be_deleted" = "Transactions CANNOT be deleted";
+"transactions_cannot_be_deleted" = "Transactions cannot be deleted";
 "transcript" = "Transcript";
 "transfer" = "Transfer";
 "transfer_aggregated_insufficient_balance_count" = "The transfer amount is %1$@, the transaction fee is %2$@, and the balance is %3$@.";
@@ -1789,7 +1789,7 @@
 "use_another_address" = "Use Another Address";
 "use_biometry" = "Use %@";
 "use_system_text_size" = "Use System Text Size";
-"user_delete_hint" = "The user has deleted his own account.";
+"user_delete_hint" = "This user has deleted their account.";
 "user_is_reported" = "User has been reported";
 "user_not_found" = "User not found";
 "username_description" = "This is the name your friends will see when you chat or send them tokens";
@@ -1859,7 +1859,6 @@
 "watch_wallet" = "Watch Wallet";
 "watch_wallet_description" = "You are unable to control assets in a watch-only wallet, but you can track them. ";
 "watch_wallet_empty_description" = "Watch addresses without private keys. View balances, transactions, and receive activity notifications with a fast native experience.";
-"watch_wallet_guide_url" = "https://support.mixin.one/en/article/how-to-add-a-watch-only-address-17ifo8w/";
 "watch_wallet_index" = "Watch Wallet %@";
 "watch_wallet_instruction_benefit" = "Easily monitor the balance and transaction history of the address.";
 "watch_wallet_instruction_restriction" = "Cannot transfer funds or interact with on-chain applications or DeFi projects.";

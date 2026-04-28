@@ -50,7 +50,7 @@ public final class PerpsMarketDAO: PerpsDAO {
             case .price:
                 sql += " ORDER BY CAST(last AS REAL)"
             case .change:
-                sql += " ORDER BY ABS(CAST(change AS REAL))"
+                sql += " ORDER BY CAST(change AS REAL)"
             }
             switch ordering.direction {
             case .ascending:

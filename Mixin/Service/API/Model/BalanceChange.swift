@@ -24,7 +24,7 @@ struct BalanceChange: Decodable, Token {
     init(token: Web3TokenItem, amount: Decimal, from: String) {
         self.assetID = token.assetID
         self.assetKey = token.assetKey
-        self.amount = TokenAmountFormatter.string(from: amount)
+        self.amount = amount.formatted(token.canonicalFormatStyle)
         self.name = token.name
         self.symbol = token.symbol
         self.iconURL = token.iconURL

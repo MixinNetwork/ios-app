@@ -154,7 +154,6 @@ final class TradeMixinTokenSelectorViewController: TradeTokenSelectorViewControl
                 result[assetID] = BalancedSwapToken(
                     token: token,
                     balance: balance,
-                    availableBalance: balance,
                     usdPrice: localResult?.decimalUSDPrice ?? 0,
                     isMalicious: false,
                 )

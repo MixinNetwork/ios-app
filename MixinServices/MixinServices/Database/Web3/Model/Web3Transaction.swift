@@ -76,23 +76,28 @@ public class Web3Transaction: Codable, Identifiable {
         }
     }()
     
-    // Drop receivers if the type is 'transfer_out'
-    public lazy var filteredReceivers: [Receiver] = {
-        switch transactionType.knownCase {
-        case .transferOut:
-            []
-        default:
-            receivers ?? []
-        }
-    }()
-    
-    // Drop senders if the type is 'transfer_in'
-    public lazy var filteredSenders: [Sender] = {
-        switch transactionType.knownCase {
+    public lazy var assetChanges: [AssetChange] = {
+        let sendings: [AssetChange] = senders?.compactMap { sender in
+            if let amount = Decimal(string: sender.amount, locale: .enUSPOSIX) {
+                AssetChange(assetID: sender.assetID, amount: -abs(amount))
+            } else {
+                nil
+            }
+        } ?? []
+        let receivings: [AssetChange] = receivers?.compactMap { receiver in
+            if let amount = Decimal(string: receiver.amount, locale: .enUSPOSIX) {
+                AssetChange(assetID: receiver.assetID, amount: abs(amount))
+            } else {
+                nil
+            }
+        } ?? []
+        return switch transactionType.knownCase {
         case .transferIn:
-            []
-        default:
-            senders ?? []
+            receivings
+        case .transferOut:
+            sendings
+        case .swap, .approval, .unknown, .none:
+            sendings + receivings
         }
     }()
     
@@ -183,14 +188,6 @@ extension Web3Transaction {
         public let amount: String
         public let to: String?
         
-        public lazy var localizedAmount = CurrencyFormatter.localizedString(
-            from: abs(decimalAmount),
-            format: .precision,
-            sign: .always
-        )
-        
-        private lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
-        
         public init(assetID: String, amount: String, to: String?) {
             self.assetID = assetID
             self.amount = amount
@@ -210,14 +207,6 @@ extension Web3Transaction {
         public let assetID: String
         public let amount: String
         public let from: String?
-        
-        public lazy var localizedAmount = CurrencyFormatter.localizedString(
-            from: -abs(decimalAmount),
-            format: .precision,
-            sign: .always
-        )
-        
-        private lazy var decimalAmount = Decimal(string: amount, locale: .enUSPOSIX) ?? 0
         
         public init(assetID: String, amount: String, from: String?) {
             self.assetID = assetID
@@ -360,6 +349,20 @@ extension Web3Transaction {
                 sign: .whenNotZero
             )
         }
+        
+    }
+    
+}
+
+extension Web3Transaction {
+    
+    public struct AssetChange {
+        
+        public let assetID: String
+        
+        // Positive value for receiving in
+        // Negative value for sending out
+        public let amount: Decimal
         
     }
     

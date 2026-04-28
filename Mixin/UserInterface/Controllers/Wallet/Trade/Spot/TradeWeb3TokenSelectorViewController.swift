@@ -212,17 +212,10 @@ final class TradeWeb3TokenSelectorViewController: TradeTokenSelectorViewControll
                         0
                     }
                 }()
-                let availableBalance = switch token.assetID {
-                case AssetID.sol:
-                    max(0, balance - Solana.RentExemptionValue.tokenAccount)
-                default:
-                    balance
-                }
                 hasStockTokens = hasStockTokens || token.category == .stock
                 result[assetID] = BalancedSwapToken(
                     token: token,
                     balance: balance,
-                    availableBalance: availableBalance,
                     usdPrice: localResult?.decimalUSDPrice ?? 0,
                     isMalicious: localResult?.isMalicious ?? false,
                 )

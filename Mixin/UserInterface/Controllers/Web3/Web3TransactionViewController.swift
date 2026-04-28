@@ -155,32 +155,7 @@ extension Web3TransactionViewController: UITableViewDataSource {
                 if let token = change.token {
                     row.iconView.setIcon(token: token)
                 }
-                let amountColor = switch change.style {
-                case .send:
-                    R.color.market_red()!
-                case .receive:
-                    R.color.market_green()!
-                case .pending:
-                    R.color.text()!
-                }
-                let amount = NSMutableAttributedString(
-                    string: change.amount,
-                    attributes: [
-                        .font: UIFont.preferredFont(forTextStyle: .callout),
-                        .foregroundColor: amountColor,
-                    ]
-                )
-                if let symbol = change.token?.symbol {
-                    let attributedSymbol = NSAttributedString(
-                        string: " " + symbol,
-                        attributes: [
-                            .font: UIFont.preferredFont(forTextStyle: .callout),
-                            .foregroundColor: R.color.text()!,
-                        ]
-                    )
-                    amount.append(attributedSymbol)
-                }
-                row.amountLabel.attributedText = amount
+                row.amountLabel.attributedText = change.amount
                 row.networkLabel.text = nil
             }
             return cell
@@ -261,15 +236,48 @@ extension Web3TransactionViewController {
     
     private struct AssetChange {
         
-        enum Style {
-            case send
-            case receive
-            case pending
-        }
+        let token: Web3Token?
+        let amount: NSAttributedString
         
-        let token: (any Token)?
-        let amount: String
-        let style: Style
+        init(token: Web3Token?, amount: Decimal, pending: Bool) {
+            let amountColor = if pending {
+                R.color.text()!
+            } else {
+                if amount >= 0 {
+                    R.color.market_green()!
+                } else {
+                    R.color.market_red()!
+                }
+            }
+            let precision = token?.precision ?? 8
+            let amount = NSMutableAttributedString(
+                string: amount.formatted(
+                    Decimal.FormatStyle.number
+                        .locale(.current)
+                        .grouping(.automatic)
+                        .sign(strategy: .always(includingZero: false))
+                        .precision(.fractionLength(0...Int(precision)))
+                        .rounded(rule: .towardZero)
+                ),
+                attributes: [
+                    .font: UIFont.preferredFont(forTextStyle: .callout),
+                    .foregroundColor: amountColor,
+                ]
+            )
+            if let symbol = token?.symbol {
+                let attributedSymbol = NSAttributedString(
+                    string: " " + symbol,
+                    attributes: [
+                        .font: UIFont.preferredFont(forTextStyle: .callout),
+                        .foregroundColor: R.color.text()!,
+                    ]
+                )
+                amount.append(attributedSymbol)
+            }
+            
+            self.token = token
+            self.amount = amount
+        }
         
     }
     
@@ -442,42 +450,13 @@ extension Web3TransactionViewController {
                     .reduce(into: [:]) { result, token in
                         result[token.assetID] = token
                     }
-                
-                let sendStyle: AssetChange.Style
-                let receiveStyle: AssetChange.Style
-                switch transaction.status {
-                case .success:
-                    sendStyle = .send
-                    receiveStyle = .receive
-                default:
-                    sendStyle = .pending
-                    receiveStyle = .pending
-                }
-                
-                let changes = transaction.filteredReceivers.map { receiver in
-                    let token = tokens[receiver.assetID]
-                    let amount = if let amount = Decimal(string: receiver.amount, locale: .enUSPOSIX) {
-                        CurrencyFormatter.localizedString(
-                            from: amount,
-                            format: .precision,
-                            sign: .always
-                        )
-                    } else {
-                        receiver.amount
-                    }
-                    return AssetChange(token: token, amount: amount, style: receiveStyle)
-                } + transaction.filteredSenders.map { sender in
-                    let token = tokens[sender.assetID]
-                    let amount = if let amount = Decimal(string: sender.amount, locale: .enUSPOSIX) {
-                        CurrencyFormatter.localizedString(
-                            from: -amount,
-                            format: .precision,
-                            sign: .always
-                        )
-                    } else {
-                        "-" + sender.amount
-                    }
-                    return AssetChange(token: token, amount: amount, style: sendStyle)
+                let pending = transaction.status == .pending
+                let changes = transaction.assetChanges.map { change in
+                    AssetChange(
+                        token: tokens[change.assetID],
+                        amount: change.amount,
+                        pending: pending
+                    )
                 }
                 if changes.isEmpty {
                     rows = []

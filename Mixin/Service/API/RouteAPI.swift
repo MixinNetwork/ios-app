@@ -642,6 +642,11 @@ extension RouteAPI {
         assetID: String,
         chainID: String,
     ) async throws -> [GaslessFee] {
+#if DEBUG
+        if await Web3Diagnostic.disableGasless {
+            throw Web3Diagnostic.DiagnosticError.gaslessDisabled
+        }
+#endif
         struct Response: Decodable {
             let fees: [GaslessFee]
         }
@@ -667,6 +672,11 @@ extension RouteAPI {
         feeAmount: String?,
         chainID: String,
     ) async throws -> GaslessTransactionProposal {
+#if DEBUG
+        if await Web3Diagnostic.disableGasless {
+            throw Web3Diagnostic.DiagnosticError.gaslessDisabled
+        }
+#endif
         var parameters = [
             "from": from,
             "to": to,

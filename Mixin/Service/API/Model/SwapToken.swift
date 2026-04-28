@@ -25,6 +25,14 @@ class SwapToken: Token {
         )
     }
     
+    var canonicalFormatStyle: Decimal.FormatStyle {
+        Decimal.FormatStyle.number
+            .locale(.enUSPOSIX)
+            .grouping(.never)
+            .sign(strategy: .never)
+            .precision(.fractionLength(0...decimals))
+    }
+    
     init(
         address: String, assetID: String, decimals: Int,
         name: String, symbol: String, iconURL: String,

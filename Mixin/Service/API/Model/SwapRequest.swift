@@ -29,11 +29,7 @@ struct SwapRequest: Encodable {
         self.payer = myUserId
         self.inputMint = sendToken.assetID
         self.inputAmount = sendAmount.formatted(
-            Decimal.FormatStyle.number
-                .locale(.enUSPOSIX)
-                .grouping(.never)
-                .sign(strategy: .never)
-                .precision(.fractionLength(0...sendToken.decimals))
+            sendToken.canonicalFormatStyle
         )
         self.outputMint = receiveToken.assetID
         self.slippage = Slippage(decimal: slippage).integral

@@ -4,7 +4,6 @@ import MixinServices
 final class BalancedSwapToken: SwapToken, ValuableToken {
     
     let decimalBalance: Decimal
-    let availableBalance: Decimal
     let decimalUSDPrice: Decimal
     let isMalicious: Bool
     
@@ -17,12 +16,10 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
     init(
         token: SwapToken,
         balance: Decimal,
-        availableBalance: Decimal,
         usdPrice: Decimal,
         isMalicious: Bool
     ) {
         self.decimalBalance = balance
-        self.availableBalance = availableBalance
         self.decimalUSDPrice = usdPrice
         self.isMalicious = isMalicious
         super.init(
@@ -42,7 +39,6 @@ final class BalancedSwapToken: SwapToken, ValuableToken {
             return nil
         }
         self.decimalBalance = i.decimalBalance
-        self.availableBalance = i.decimalBalance
         self.decimalUSDPrice = i.decimalUSDPrice
         self.isMalicious = (i as? MaliciousDistinguishable)?.isMalicious ?? false
         super.init(

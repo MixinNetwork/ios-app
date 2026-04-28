@@ -130,7 +130,6 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
                 BalancedSwapToken(
                     token: token,
                     balance: item.decimalBalance,
-                    availableBalance: item.decimalBalance,
                     usdPrice: marketPrice ?? item.decimalUSDPrice,
                     isMalicious: false,
                 )
@@ -138,7 +137,6 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
                 BalancedSwapToken(
                     token: token,
                     balance: 0,
-                    availableBalance: 0,
                     usdPrice: 0,
                     isMalicious: false,
                 )

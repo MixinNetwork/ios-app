@@ -561,7 +561,7 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
         case .prefersGaslessTrade:
             do {
                 let amount = decimalAmount.formatted(
-                    tokenAmountFormat(precision: payment.token.precision)
+                    payment.token.canonicalFormatStyle
                 )
                 let proposal = try await RouteAPI.gaslessPrepare(
                     from: payment.fromAddress.destination,
@@ -617,10 +617,10 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
                 proposal = fee.proposal
             } else {
                 let amount = decimalAmount.formatted(
-                    tokenAmountFormat(precision: payment.token.precision)
+                    payment.token.canonicalFormatStyle
                 )
                 let feeAmount = fee.amount.formatted(
-                    tokenAmountFormat(precision: fee.token.precision)
+                    fee.token.canonicalFormatStyle
                 )
                 proposal = try await RouteAPI.gaslessPrepare(
                     from: fromAddress.destination,

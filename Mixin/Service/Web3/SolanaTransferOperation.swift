@@ -244,13 +244,6 @@ final class SolanaTransferWithCustomRespondingOperation: ArbitraryTransactionSol
 
 final class SolanaTransferToAddressOperation: SolanaTransferOperation {
     
-    enum ReceiverAccountStatus {
-        case unknown
-        case notInvolved // Gasless
-        case exist
-        case notExist
-    }
-    
     struct NativeTransferContext {
         let createAssociatedTokenAccountForReceiver: Bool
         let tokenProgramID: String
@@ -258,7 +251,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
     }
     
     @MainActor
-    private(set) var receiverAccountStatus: ReceiverAccountStatus = .unknown
+    private(set) var receiverAccountExists: Bool?
     
     @MainActor
     private(set) var nativeTransferContext: NativeTransferContext?
@@ -300,6 +293,22 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         switch feePolicy {
         case .prefersGasless:
             do {
+                let receiverAccountExists: Bool
+                if payment.sendingNativeToken {
+                    receiverAccountExists = try await RouteAPI.solanaAccountExists(
+                        pubkey: payment.toAddress
+                    )
+                } else {
+                    let tokenProgramID = try await RouteAPI
+                        .solanaGetAccountInfo(pubkey: payment.token.assetKey)
+                        .owner
+                    let ata = try Solana.tokenAssociatedAccount(
+                        walletAddress: payment.toAddress,
+                        mint: payment.token.assetKey,
+                        tokenProgramID: tokenProgramID
+                    )
+                    receiverAccountExists = try await RouteAPI.solanaAccountExists(pubkey: ata)
+                }
                 let fees = try await RouteAPI.gaslessFees(
                     from: payment.fromAddress.destination,
                     to: payment.toAddress,
@@ -322,7 +331,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
                 }
                 let fee = Fee(options: options, selectedIndex: 0)
                 await MainActor.run {
-                    self.receiverAccountStatus = .notInvolved
+                    self.receiverAccountExists = receiverAccountExists
                     self.nativeTransferContext = nil
                     self.fee = fee
                     self.state = .ready
@@ -334,8 +343,24 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
             }
         case .prefersGaslessTrade:
             do {
+                let receiverAccountExists: Bool
+                if payment.sendingNativeToken {
+                    receiverAccountExists = try await RouteAPI.solanaAccountExists(
+                        pubkey: payment.toAddress
+                    )
+                } else {
+                    let tokenProgramID = try await RouteAPI
+                        .solanaGetAccountInfo(pubkey: payment.token.assetKey)
+                        .owner
+                    let ata = try Solana.tokenAssociatedAccount(
+                        walletAddress: payment.toAddress,
+                        mint: payment.token.assetKey,
+                        tokenProgramID: tokenProgramID
+                    )
+                    receiverAccountExists = try await RouteAPI.solanaAccountExists(pubkey: ata)
+                }
                 let amount = decimalAmount.formatted(
-                    tokenAmountFormat(precision: payment.token.precision)
+                    payment.token.canonicalFormatStyle
                 )
                 let proposal = try await RouteAPI.gaslessPrepare(
                     from: payment.fromAddress.destination,
@@ -352,7 +377,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
                 )
                 let fee = Fee(options: [option], selectedIndex: 0)
                 await MainActor.run {
-                    self.receiverAccountStatus = .notInvolved
+                    self.receiverAccountExists = receiverAccountExists
                     self.nativeTransferContext = nil
                     self.fee = fee
                     self.state = .ready
@@ -384,10 +409,10 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
                     proposal = fee.proposal
                 } else {
                     let amount = decimalAmount.formatted(
-                        tokenAmountFormat(precision: payment.token.precision)
+                        payment.token.canonicalFormatStyle
                     )
                     let feeAmount = fee.amount.formatted(
-                        tokenAmountFormat(precision: fee.token.precision)
+                        fee.token.canonicalFormatStyle
                     )
                     proposal = try await RouteAPI.gaslessPrepare(
                         from: payment.fromAddress.destination,
@@ -482,10 +507,10 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
     
     @MainActor func load(
         fee: Fee,
-        receiverAccountStatus: ReceiverAccountStatus,
+        receiverAccountExists: Bool?,
         nativeTransferContext: NativeTransferContext?
     ) {
-        self.receiverAccountStatus = receiverAccountStatus
+        self.receiverAccountExists = receiverAccountExists
         self.nativeTransferContext = nativeTransferContext
         self.fee = fee
         self.state = .ready
@@ -532,7 +557,7 @@ final class SolanaTransferToAddressOperation: SolanaTransferOperation {
         )
         
         await MainActor.run {
-            self.receiverAccountStatus = receiverAccountExists ? .exist : .notExist
+            self.receiverAccountExists = receiverAccountExists
             self.nativeTransferContext = nativeTransferContext
             self.fee = fee
             self.state = .ready

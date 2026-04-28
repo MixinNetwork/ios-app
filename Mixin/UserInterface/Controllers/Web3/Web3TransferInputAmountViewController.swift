@@ -125,7 +125,7 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
                     )
                     op.load(
                         fee: fee,
-                        receiverAccountStatus: solanaFeeCalculatingOperation.receiverAccountStatus,
+                        receiverAccountExists: solanaFeeCalculatingOperation.receiverAccountExists,
                         nativeTransferContext: solanaFeeCalculatingOperation.nativeTransferContext,
                     )
                     operation = op
@@ -169,11 +169,9 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
         if let bitcoinFeeCalculator, multiplier == 1 {
             let maxAmount = bitcoinFeeCalculator.exhaustingOutputsTransferAmount()
             replaceAmount(maxAmount)
-        } else if payment.token.assetID == fee.token.assetID {
+        } else {
             let availableBalance = availableBalance(fee: fee)
             replaceAmount(availableBalance * multiplier)
-        } else {
-            replaceAmount(token.decimalBalance * multiplier)
         }
     }
     
@@ -191,9 +189,27 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
         }
         
         let transferAmountFailure: TransferAmountFailure?
-        let receiverAccountStatus = solanaFeeCalculatingOperation?.receiverAccountStatus
-        switch receiverAccountStatus {
-        case .none, .unknown, .notInvolved:
+        if let receiverAccountExists = solanaFeeCalculatingOperation?.receiverAccountExists {
+            let reason = if payment.sendingNativeToken {
+                Solana.checkRentExemptionForSOLTransfer(
+                    senderSOLBalance: payment.token.decimalBalance,
+                    sendAmount: tokenAmount,
+                    fee: fee,
+                    receiverAccountExists: receiverAccountExists
+                )
+            } else {
+                Solana.checkRentExemptionForSPLTokenTransfer(
+                    senderSOLBalance: fee.token.decimalBalance,
+                    fee: fee,
+                    receiverAccountExists: receiverAccountExists
+                )
+            }
+            if let reason {
+                transferAmountFailure = .solanaRentExemption(reason)
+            } else {
+                transferAmountFailure = nil
+            }
+        } else {
             if payment.chain == .bitcoin {
                 if tokenAmount < Bitcoin.spendingDust {
                     transferAmountFailure = .bitcoinDust
@@ -203,43 +219,9 @@ final class Web3TransferInputAmountViewController: FeeRequiredInputAmountViewCon
             } else {
                 transferAmountFailure = nil
             }
-        case .exist, .notExist:
-            let accountExists = receiverAccountStatus == .exist
-            let reason = if payment.sendingNativeToken {
-                Solana.checkRentExemptionForSOLTransfer(
-                    sendingAmount: tokenAmount,
-                    feeAmount: fee.amount,
-                    senderSOLBalance: payment.token.decimalBalance,
-                    receiverAccountExists: accountExists
-                )
-            } else {
-                Solana.checkRentExemptionForSPLTokenTransfer(
-                    senderSOLBalance: fee.token.decimalBalance,
-                    feeAmount: fee.amount,
-                    receiverAccountExists: accountExists
-                )
-            }
-            if let reason {
-                transferAmountFailure = .solanaRentExemption(reason)
-            } else {
-                transferAmountFailure = nil
-            }
         }
         
-        let feeRequirement = switch fee.token.assetID {
-        case AssetID.sol where fee.gasless:
-            // Rent exemption of native Solana transfer fee is checked above by `transferAmountFailure`
-            // When it comes to gasless Solana transfer, SOL balance should be greater than fee.amount + rent
-            BalanceRequirement(
-                token: fee.token,
-                amount: fee.amount + Solana.RentExemptionValue.tokenAccount
-            )
-        default:
-            BalanceRequirement(
-                token: fee.token,
-                amount: fee.amount
-            )
-        }
+        let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
         let requirements = inputAmountRequirement.merging(with: feeRequirement)
         if requirements.allSatisfy(\.isSufficient) && transferAmountFailure == nil {
             insufficientBalanceLabel.text = nil
@@ -465,15 +447,9 @@ extension Web3TransferInputAmountViewController {
     
     private func availableBalance(fee: Web3DisplayFee) -> Decimal {
         if payment.token.assetID == fee.token.assetID {
-            let amount = switch payment.chain.kind {
-            case .solana where payment.sendingNativeToken:
-                payment.token.decimalBalance - fee.amount - Solana.RentExemptionValue.systemAccount
-            case .bitcoin, .evm, .solana:
-                payment.token.decimalBalance - fee.amount
-            }
-            return max(0, amount)
+            payment.token.decimalBalance - fee.amount
         } else {
-            return payment.token.decimalBalance
+            payment.token.decimalBalance
         }
     }
     

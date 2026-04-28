@@ -452,7 +452,7 @@ class TradeSpotViewController: UIViewController {
             reviewButton.setTitle(R.string.localizable.review(), for: .normal)
             return
         }
-        if sendAmount > sendToken.availableBalance {
+        if sendAmount > sendToken.decimalBalance {
             reviewButton.setTitle(R.string.localizable.insufficient_balance(), for: .normal)
         } else {
             reviewButton.setTitle(R.string.localizable.review(), for: .normal)
@@ -746,7 +746,7 @@ extension TradeSpotViewController: TradePricingModel.Delegate {
             break
         case .advanced:
             if let sendAmount = model.sendAmount, let sendToken = model.sendToken {
-                if sendAmount > sendToken.availableBalance {
+                if sendAmount > sendToken.decimalBalance {
                     reviewButton.setTitle(R.string.localizable.insufficient_balance(), for: .normal)
                     reviewButton.isEnabled = false
                 } else {

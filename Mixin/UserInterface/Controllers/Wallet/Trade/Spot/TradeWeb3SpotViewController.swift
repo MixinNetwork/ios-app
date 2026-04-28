@@ -134,16 +134,9 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
                 nil
             }
             if let item = availableTokens[token.assetID] {
-                let availableBalance = switch item.assetID {
-                case AssetID.sol:
-                    max(0, item.decimalBalance - Solana.RentExemptionValue.tokenAccount)
-                default:
-                    item.decimalBalance
-                }
                 result[token.assetID] = BalancedSwapToken(
                     token: token,
                     balance: item.decimalBalance,
-                    availableBalance: availableBalance,
                     usdPrice: marketPrice ?? item.decimalUSDPrice,
                     isMalicious: item.isMalicious,
                 )
@@ -151,7 +144,6 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
                 result[token.assetID] = BalancedSwapToken(
                     token: token,
                     balance: 0,
-                    availableBalance: 0,
                     usdPrice: 0,
                     isMalicious: false,
                 )
@@ -164,15 +156,10 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
             return
         }
         var amount = sendToken.decimalBalance * multiplier
-        if sendToken.assetID == AssetID.sol {
-            let maxAmount = sendToken.decimalBalance - Solana.RentExemptionValue.tokenAccount
-            amount = min(maxAmount, amount)
-        } else {
-            amount = withUnsafePointer(to: amount) { amount in
-                var rounded: Decimal = 0
-                NSDecimalRound(&rounded, amount, sendToken.decimals, .down)
-                return rounded
-            }
+        amount = withUnsafePointer(to: amount) { amount in
+            var rounded: Decimal = 0
+            NSDecimalRound(&rounded, amount, sendToken.decimals, .down)
+            return rounded
         }
         if amount >= MixinToken.minimalAmount {
             pricingModel.sendAmount = amount
@@ -373,18 +360,32 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
             }
             
             let fee = try await operation.reloadFee().selected
-            let sendRequirement = BalanceRequirement(
-                token: payment.token,
-                amount: sendAmount
-            )
-            let feeRequirement = switch fee.token.assetID {
-            case AssetID.sol:
-                BalanceRequirement(token: fee.token, amount: fee.amount + Solana.RentExemptionValue.tokenAccount)
-            default:
-                BalanceRequirement(token: fee.token, amount: fee.amount)
-            }
+            let sendRequirement = BalanceRequirement(token: payment.token, amount: sendAmount)
+            let feeRequirement = BalanceRequirement(token: fee.token, amount: fee.amount)
             let requirements = sendRequirement.merging(with: feeRequirement)
             let isBalanceSufficient = requirements.allSatisfy(\.isSufficient)
+            
+            let solanaRentExemptionFailure: Solana.RentExemptionFailedReason?
+            if let operation = operation as? SolanaTransferToAddressOperation,
+               let receiverAccountExists = operation.receiverAccountExists
+            {
+                solanaRentExemptionFailure = if payment.sendingNativeToken {
+                    Solana.checkRentExemptionForSOLTransfer(
+                        senderSOLBalance: payment.token.decimalBalance,
+                        sendAmount: sendAmount,
+                        fee: fee,
+                        receiverAccountExists: receiverAccountExists
+                    )
+                } else {
+                    Solana.checkRentExemptionForSPLTokenTransfer(
+                        senderSOLBalance: fee.token.decimalBalance,
+                        fee: fee,
+                        receiverAccountExists: receiverAccountExists
+                    )
+                }
+            } else {
+                solanaRentExemptionFailure = nil
+            }
             
             await MainActor.run {
                 guard let homeContainer = UIApplication.homeContainerViewController else {
@@ -397,6 +398,18 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
                             wallet: wallet,
                             transferring: sendRequirement,
                             fee: feeRequirement
+                        )
+                    )
+                    homeContainer.present(insufficient, animated: true)
+                    return
+                }
+                if let reason = solanaRentExemptionFailure {
+                    reviewButton.isBusy = false
+                    let insufficient = InsufficientBalanceViewController(
+                        intent: .commonWalletTrade(
+                            wallet: wallet,
+                            sol: operation.nativeFeeToken,
+                            reason: reason
                         )
                     )
                     homeContainer.present(insufficient, animated: true)

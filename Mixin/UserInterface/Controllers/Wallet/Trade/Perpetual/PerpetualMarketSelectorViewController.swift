@@ -385,7 +385,7 @@ extension PerpetualMarketSelectorViewController {
         
         private let collectionView: UICollectionView
         private let categories: [DisplayCategory] = [
-            .all, .crypto, .stocks, .indices, .commodities, .forex
+            .all, .crypto, .stocks, .commodities,
         ]
         
         init(collectionView: UICollectionView) {

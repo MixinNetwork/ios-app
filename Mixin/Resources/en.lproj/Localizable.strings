@@ -1511,7 +1511,7 @@
 "share_contact" = "Share Contact";
 "share_link" = "Share Link";
 "share_log_file" = "Share Log File";
-"share_message_description" = "Are you sure you want to send %1$@ from %2$@?";
+"share_message_description" = "Are you sure you want to send %2$@ from %1$@?";
 "share_message_description_empty" = "Are you sure you want to send the %@?";
 "share_pair" = "Share Pair";
 "share_to" = "Share To";

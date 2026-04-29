@@ -112,7 +112,7 @@ final class HomeContainerViewController: UIViewController {
     }
     
     func presentReferralPage() {
-        let appID = BotUserID.referral
+        let appID = BotUserID.rewards
         
         if let app = AppDAO.shared.getApp(appId: appID) {
             presentWebViewController(context: .init(conversationId: "", app: app))

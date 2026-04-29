@@ -290,7 +290,7 @@ extension StaticMessagesViewController {
                         guard let container = UIApplication.homeContainerViewController else {
                             return
                         }
-                        let context = MixinWebViewController.Context(conversationId: "", url: content.action, app: app)
+                        let context = MixinWebContext(conversationId: "", url: content.action, app: app)
                         container.presentWebViewController(context: context)
                     }
                 }

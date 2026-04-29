@@ -3,6 +3,14 @@ import GRDB
 
 public struct PerpetualMarket {
     
+    public enum Category: String {
+        case crypto = "crypto"
+        case stocks = "stocks"
+        case indices = "indices"
+        case commodities = "commodities"
+        case forex = "forex"
+    }
+    
     public let marketID: String
     public let displaySymbol: String
     public let tokenSymbol: String
@@ -23,6 +31,8 @@ public struct PerpetualMarket {
     public let askPrice: String
     public let createdAt: String
     public let updatedAt: String
+    public let category: UnknownableEnum<Category>
+    public let tags: [String]
     
 }
 
@@ -49,6 +59,8 @@ extension PerpetualMarket: Codable, DatabaseColumnConvertible, MixinFetchableRec
         case askPrice = "ask_price"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+        case category = "category"
+        case tags = "tags"
     }
     
 }

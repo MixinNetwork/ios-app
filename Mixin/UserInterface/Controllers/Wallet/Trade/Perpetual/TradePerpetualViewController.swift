@@ -19,6 +19,8 @@ final class TradePerpetualViewController: UIViewController {
     private var value: PerpetualPositionValue?
     private var openPositions: [PerpetualPositionViewModel] = []
     private var markets: [PerpetualMarketViewModel]?
+    private var stocks: [PerpetualMarketViewModel]?
+    private var commodities: [PerpetualMarketViewModel]?
     private var hasHistoryLoadedFromRemote = false
     private var closedPositions: [PerpetualPositionViewModel]?
     
@@ -108,8 +110,8 @@ final class TradePerpetualViewController: UIViewController {
                     oneCell(estimatedHeight: 97)
                 case .positions:
                     multipleCells(itemCount: self?.openPositions.count)
-                case .markets:
-                    multipleCells(itemCount: self?.markets?.count)
+                case .markets(let category):
+                    multipleCells(itemCount: self?.marketItems(category: category)?.count)
                 case .activity:
                     multipleCells(itemCount: self?.closedPositions?.count)
                 case .introduction:
@@ -186,8 +188,7 @@ final class TradePerpetualViewController: UIViewController {
                 .map { item in
                     PerpetualPositionViewModel(wallet: wallet, position: item)
                 }
-            let markets = PerpsMarketDAO.shared.availableMarkets(limit: limit)
-            let marketViewModels = markets.compactMap(PerpetualMarketViewModel.init(market:))
+            let markets = AggregatedMarkets.fetch(limit: limit)
             let closedPositions = PerpsPositionHistoryDAO.shared.historyItems(
                 offsetClosedAt: nil,
                 limit: limit
@@ -200,8 +201,10 @@ final class TradePerpetualViewController: UIViewController {
                 }
                 self.value = value
                 self.openPositions = openPositions
-                if !marketViewModels.isEmpty {
-                    self.markets = marketViewModels
+                if !markets.all.isEmpty {
+                    self.markets = markets.all
+                    self.stocks = markets.stocks
+                    self.commodities = markets.commodities
                     self.actionView.isEnabled = true
                 }
                 self.closedPositions = closedPositions
@@ -239,7 +242,7 @@ final class TradePerpetualViewController: UIViewController {
         default:
             return
         }
-        let selector = PerpetualMarketSelectorViewController()
+        let selector = PerpetualMarketSelectorViewController(selectedCategory: .all)
         selector.onSelected = { [wallet, weak self] (viewModel) in
             guard let self else {
                 return
@@ -281,8 +284,8 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
             1
         case .positions:
             min(maxItemCount, openPositions.count)
-        case .markets:
-            if let count = markets?.count, count != 0 {
+        case .markets(let category):
+            if let count = marketItems(category: category)?.count, count != 0 {
                 min(maxItemCount, count)
             } else {
                 1
@@ -314,15 +317,16 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 cell.load(viewModel: position)
                 return cell
             }
-        case .markets:
-            if let markets, !markets.isEmpty {
+        case .markets(let category):
+            let items = marketItems(category: category)
+            if let items, !items.isEmpty {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market, for: indexPath)!
-                let viewModel = markets[indexPath.item]
+                let viewModel = items[indexPath.item]
                 cell.load(viewModel: viewModel)
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_placeholder, for: indexPath)!
-                if markets == nil {
+                if items == nil {
                     cell.activityIndicatorView.startAnimating()
                     cell.emptyIndicatorStackView.isHidden = true
                 } else {
@@ -373,10 +377,17 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 view.onShowAll = { [weak self] (sender) in
                     self?.viewOpenPositions()
                 }
-            case .markets:
-                view.label.text = R.string.localizable.perps_markets()
+            case .markets(let category):
+                view.label.text = switch category {
+                case .all:
+                    R.string.localizable.perps_markets()
+                case .stocks:
+                    R.string.localizable.perps_category_stocks()
+                case .commodities:
+                    R.string.localizable.perps_category_commodities()
+                }
                 view.onShowAll = { [weak self] (sender) in
-                    self?.viewAllMarkets()
+                    self?.viewAllMarkets(category: category)
                 }
             case .activity:
                 view.label.text = R.string.localizable.perps_activity()
@@ -395,10 +406,10 @@ extension TradePerpetualViewController: UICollectionViewDataSource {
                 view.onViewAll = { [weak self] (sender) in
                     self?.viewOpenPositions()
                 }
-            case .markets:
-                view.viewAllButton.isHidden = (markets?.count ?? 0) <= maxItemCount
+            case .markets(let category):
+                view.viewAllButton.isHidden = false
                 view.onViewAll = { [weak self] (sender) in
-                    self?.viewAllMarkets()
+                    self?.viewAllMarkets(category: category)
                 }
             case .activity:
                 view.viewAllButton.isHidden = (closedPositions?.count ?? 0) <= maxItemCount
@@ -430,11 +441,12 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
                 )
                 navigationController?.pushViewController(market, animated: true)
             }
-        case .markets:
-            guard let markets, !markets.isEmpty else {
+        case .markets(let category):
+            let items = marketItems(category: category)
+            guard let items, !items.isEmpty else {
                 return
             }
-            let viewModel = markets[indexPath.item]
+            let viewModel = items[indexPath.item]
             let market = PerpetualMarketViewController(
                 wallet: wallet,
                 viewModel: viewModel,
@@ -456,18 +468,26 @@ extension TradePerpetualViewController: UICollectionViewDelegate {
 
 extension TradePerpetualViewController {
     
-    private enum Section {
+    private enum MarketCategory: Equatable {
+        case all
+        case stocks
+        case commodities
+    }
+    
+    private enum Section: Equatable {
         
         case value
         case positions
-        case markets
+        case markets(MarketCategory)
         case activity
         case introduction
         
         static func sections(openPositionCount: Int) -> [Section] {
             var sections: [Section] = [
                 .value,
-                .markets,
+                .markets(.all),
+                .markets(.stocks),
+                .markets(.commodities),
                 .activity,
             ]
             if openPositionCount == 0 {
@@ -481,13 +501,65 @@ extension TradePerpetualViewController {
         
     }
     
+    private struct AggregatedMarkets {
+        
+        let all: [PerpetualMarketViewModel]
+        let stocks: [PerpetualMarketViewModel]
+        let commodities: [PerpetualMarketViewModel]
+        
+        static func fetch(limit: Int) -> AggregatedMarkets {
+            let all = PerpsMarketDAO.shared.availableMarkets(
+                ordering: nil,
+                category: nil,
+                limit: limit
+            )
+            let allViewModels = all.compactMap(PerpetualMarketViewModel.init(market:))
+            let stocks = PerpsMarketDAO.shared.availableMarkets(
+                ordering: nil,
+                category: .stocks,
+                limit: limit
+            )
+            let stockViewModels = stocks.compactMap(PerpetualMarketViewModel.init(market:))
+            let commodities = PerpsMarketDAO.shared.availableMarkets(
+                ordering: nil,
+                category: .commodities,
+                limit: limit
+            )
+            let commoditiesViewModels = commodities.compactMap(PerpetualMarketViewModel.init(market:))
+            return AggregatedMarkets(
+                all: allViewModels,
+                stocks: stockViewModels,
+                commodities: commoditiesViewModels
+            )
+        }
+        
+    }
+    
+    private func marketItems(category: MarketCategory) -> [PerpetualMarketViewModel]? {
+        switch category {
+        case .all:
+            markets
+        case .stocks:
+            stocks
+        case .commodities:
+            commodities
+        }
+    }
+    
     private func viewOpenPositions() {
         let positions = AllPerpetualPositionsViewController(wallet: wallet, content: .open)
         navigationController?.pushViewController(positions, animated: true)
     }
     
-    private func viewAllMarkets() {
-        let selector = PerpetualMarketSelectorViewController()
+    private func viewAllMarkets(category: MarketCategory) {
+        let selector = switch category {
+        case .all:
+            PerpetualMarketSelectorViewController(selectedCategory: .all)
+        case .stocks:
+            PerpetualMarketSelectorViewController(selectedCategory: .stocks)
+        case .commodities:
+            PerpetualMarketSelectorViewController(selectedCategory: .commodities)
+        }
         selector.onSelected = { [wallet, weak self] (viewModel) in
             guard let self else {
                 return
@@ -553,22 +625,30 @@ extension TradePerpetualViewController {
         let limit = maxItemCount + 1
         let walletID = wallet.tradingWalletID
         DispatchQueue.global().async { [weak self] in
-            let markets = PerpsMarketDAO.shared.availableMarkets(limit: limit)
-            let viewModels = markets.compactMap(
-                PerpetualMarketViewModel.init(market:)
-            )
+            let markets = AggregatedMarkets.fetch(limit: limit)
             DispatchQueue.main.async {
                 guard let self else {
                     return
                 }
-                self.markets = viewModels
-                if let section = self.sections.firstIndex(of: .markets) {
-                    UIView.performWithoutAnimation {
-                        let markets = IndexSet(integer: section)
-                        self.collectionView.reloadSections(markets)
-                    }
+                self.markets = markets.all
+                self.stocks = markets.stocks
+                self.commodities = markets.commodities
+                
+                var sections = IndexSet()
+                if let section = self.sections.firstIndex(of: .markets(.all)) {
+                    sections.insert(section)
                 }
-                self.actionView.isEnabled = !viewModels.isEmpty
+                if let section = self.sections.firstIndex(of: .markets(.stocks)) {
+                    sections.insert(section)
+                }
+                if let section = self.sections.firstIndex(of: .markets(.commodities)) {
+                    sections.insert(section)
+                }
+                UIView.performWithoutAnimation {
+                    self.collectionView.reloadSections(sections)
+                }
+                
+                self.actionView.isEnabled = !markets.all.isEmpty
                 if !self.hasHistoryLoadedFromRemote {
                     // Load history only once, but after the markets
                     // are loaded, to avoid missing symbols in history

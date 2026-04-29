@@ -93,6 +93,17 @@ public final class PerpsDatabase: Database {
             }
         }
         
+        migrator.registerMigration("market_category") { db in
+            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(markets)")
+            let columnNames = infos.map(\.name)
+            if !columnNames.contains("category") {
+                try db.execute(sql: "ALTER TABLE markets ADD COLUMN category TEXT NOT NULL DEFAULT ''")
+            }
+            if !columnNames.contains("tags") {
+                try db.execute(sql: "ALTER TABLE markets ADD COLUMN tags TEXT NOT NULL DEFAULT '[]'")
+            }
+        }
+        
         return migrator
     }
     

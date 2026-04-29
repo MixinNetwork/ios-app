@@ -1618,6 +1618,7 @@
 		94FB8E0E2D1ACB32002DCA20 /* TradeTokenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FB8E0B2D1ACB32002DCA20 /* TradeTokenCell.swift */; };
 		94FCB5FF264673C400CCC8FD /* TranscriptPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */; };
 		94FCB83B264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */; };
+		94FD6B5B2F9F356F00DFCDCA /* PerpetualMarketSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FD6B5A2F9F356F00DFCDCA /* PerpetualMarketSelectorView.xib */; };
 		94FE0C4F2B3083CA006DEFC5 /* SendingDestinationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */; };
 		94FE0C502B3083CA006DEFC5 /* SendingDestinationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FE0C4E2B3083CA006DEFC5 /* SendingDestinationCell.xib */; };
 		94FE11F62DA7AC830026AB9A /* Web3TransactionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FE11F52DA7AC830026AB9A /* Web3TransactionCell.xib */; };
@@ -3501,6 +3502,7 @@
 		94FB8E0C2D1ACB32002DCA20 /* TradeTokenCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TradeTokenCell.xib; sourceTree = "<group>"; };
 		94FCB5FE264673C400CCC8FD /* TranscriptPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptPreviewViewController.swift; sourceTree = "<group>"; };
 		94FCB83A264683D900CCC8FD /* TranscriptAttachmentUploadJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptAttachmentUploadJob.swift; sourceTree = "<group>"; };
+		94FD6B5A2F9F356F00DFCDCA /* PerpetualMarketSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpetualMarketSelectorView.xib; sourceTree = "<group>"; };
 		94FE0C4D2B3083CA006DEFC5 /* SendingDestinationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingDestinationCell.swift; sourceTree = "<group>"; };
 		94FE0C4E2B3083CA006DEFC5 /* SendingDestinationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SendingDestinationCell.xib; sourceTree = "<group>"; };
 		94FE11F42DA7AC830026AB9A /* Web3TransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionCell.swift; sourceTree = "<group>"; };
@@ -4609,6 +4611,7 @@
 				94E206EC2F4EB61100D65D98 /* PerpetualPositionValueCell.swift */,
 				94FB2E082F504D9200F85AB4 /* PerpetualPlaceholderCell.xib */,
 				94FB2E072F504D9200F85AB4 /* PerpetualPlaceholderCell.swift */,
+				94FD6B5A2F9F356F00DFCDCA /* PerpetualMarketSelectorView.xib */,
 				940FC4B02F500A8B000C4260 /* PerpetualMarketSelectorViewController.swift */,
 				940FC4BC2F500BEC000C4260 /* PerpetualMarketCell.xib */,
 				940FC4BB2F500BEC000C4260 /* PerpetualMarketCell.swift */,
@@ -6825,6 +6828,7 @@
 				277FF70F1F909A1200DBB2EB /* LaunchScreen.storyboard in Resources */,
 				7CEB735529DB24F3006FB5B2 /* RestoreChatView.xib in Resources */,
 				94CB85E12C6BA9D000135641 /* TokenStatsCell.xib in Resources */,
+				94FD6B5B2F9F356F00DFCDCA /* PerpetualMarketSelectorView.xib in Resources */,
 				942AA7402C9473C9007B97A4 /* user_membership_prosperity.json in Resources */,
 				7CEB735929DB272F006FB5B2 /* RestoreChatTableViewCell.xib in Resources */,
 				948AB72B2DE5B6B6005E76A0 /* MembershipInvoiceCell.xib in Resources */,

@@ -11,13 +11,13 @@ class UrlWindow {
         
         case openURL
         case userActivity
-        case webView(MixinWebViewController.Context)
+        case webView(MixinWebContext)
         case conversation(WeakWrapper<ConversationMessageComposer>)
         case swap(context: Payment.TradeContext, completion: (String?) -> Void)
         case perps(context: Payment.PerpsContext, completion: (String?) -> Void)
         case other
         
-        var webContext: MixinWebViewController.Context? {
+        var webContext: MixinWebContext? {
             switch self {
             case .webView(let context):
                 return context
@@ -723,7 +723,7 @@ class UrlWindow {
         return true
     }
     
-    class func checkSendUrl(sharingContext: ExternalSharingContext, webContext: MixinWebViewController.Context?) -> Bool {
+    class func checkSendUrl(sharingContext: ExternalSharingContext, webContext: MixinWebContext?) -> Bool {
         let hud = Hud()
         hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
         
@@ -1454,7 +1454,7 @@ extension UrlWindow {
         }
     }
     
-    private static func checkCodesUrl(_ codeId: String, clearNavigationStack: Bool, webContext: MixinWebViewController.Context? = nil) -> Bool {
+    private static func checkCodesUrl(_ codeId: String, clearNavigationStack: Bool, webContext: MixinWebContext? = nil) -> Bool {
         guard !codeId.isEmpty, UUID(uuidString: codeId) != nil else {
             return false
         }
@@ -1935,7 +1935,7 @@ extension UrlWindow {
         }
     }
     
-    private static func presentAuthorization(authorization: AuthorizationResponse, webContext: MixinWebViewController.Context? = nil, hud: Hud) {
+    private static func presentAuthorization(authorization: AuthorizationResponse, webContext: MixinWebContext? = nil, hud: Hud) {
         if let context = webContext,  case let .app(app, _) = context.style {
             if let switcher = UIApplication.homeContainerViewController?.clipSwitcher, let clip = switcher.clips.first(where: { $0.app?.appId == app.appId }) {
                 Logger.general.info(category: "Authorization", message: "Auth window presented from clip: \(clip.title), url: \(clip.url)")

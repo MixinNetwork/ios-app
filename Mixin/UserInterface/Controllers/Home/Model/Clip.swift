@@ -46,7 +46,7 @@ final class Clip: Codable {
             if let controller = controllerIfLoaded {
                 return controller
             } else {
-                let context: MixinWebViewController.Context
+                let context: MixinWebContext
                 if let app = app {
                     context = .init(conversationId: conversationId, app: app, shareable: isShareable)
                 } else {

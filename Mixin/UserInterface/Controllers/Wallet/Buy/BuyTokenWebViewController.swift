@@ -141,8 +141,21 @@ extension BuyTokenWebViewController: WebViewMessageHandler.Delegate {
             webView.evaluateJavaScript(callback)
         case .tipSign(let callback):
             webView.evaluateJavaScript(callback)
-        case .getAssets(_, let callback):
-            webView.evaluateJavaScript("\(callback)('[]');")
+        case let .getAssets(assetIDs, callback):
+            let failureCallback = "\(callback)('[]');"
+            guard !assetIDs.isEmpty, assetIDs.allSatisfy(UUID.isValidLowercasedUUIDString) else {
+                webView.evaluateJavaScript(failureCallback)
+                return
+            }
+            let tokens = TokenDAO.shared.appTokens(ids: assetIDs)
+            if let data = try? JSONEncoder.default.encode(tokens),
+               let string = String(data: data, encoding: .utf8)
+            {
+                let assets = string.replacingOccurrences(of: "'", with: "\\'")
+                webView.evaluateJavaScript("\(callback)('\(assets)');")
+            } else {
+                webView.evaluateJavaScript(failureCallback)
+            }
         case .web3Bridge:
             break
         case .signBotSignature(let callback):

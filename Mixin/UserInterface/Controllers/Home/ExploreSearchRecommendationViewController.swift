@@ -164,7 +164,7 @@ extension ExploreSearchRecommendationViewController: UICollectionViewDelegate {
             parent?.pushConversationViewController(userItem: item)
         case let .link(url):
             if let container = UIApplication.homeContainerViewController {
-                let context = MixinWebViewController.Context(conversationId: "", initialUrl: url, saveAsRecentSearch: true)
+                let context = MixinWebContext(conversationId: "", initialUrl: url, saveAsRecentSearch: true)
                 container.presentWebViewController(context: context)
             }
         case let .dapp(app):

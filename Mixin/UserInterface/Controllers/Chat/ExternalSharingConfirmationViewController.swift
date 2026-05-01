@@ -55,7 +55,7 @@ class ExternalSharingConfirmationViewController: UIViewController {
         }
     }
     
-    func load(sharingContext: ExternalSharingContext, message: Message, webContext: MixinWebViewController.Context?, action: Action) {
+    func load(sharingContext: ExternalSharingContext, message: Message, webContext: MixinWebContext?, action: Action) {
         self.sharingContext = sharingContext
         self.message = message
         self.action = action

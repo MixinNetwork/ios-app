@@ -140,7 +140,7 @@ final class HomeContainerViewController: UIViewController {
         }
     }
     
-    func presentWebViewController(context: MixinWebViewController.Context) {
+    func presentWebViewController(context: MixinWebContext) {
         present(webViewController: .instance(with: context))
     }
     

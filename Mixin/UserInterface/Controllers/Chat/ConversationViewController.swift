@@ -2682,7 +2682,7 @@ extension ConversationViewController {
         guard let container = UIApplication.homeContainerViewController else {
             return
         }
-        let context: MixinWebViewController.Context
+        let context: MixinWebContext
         if let app = app {
             context = .init(conversationId: conversationId, url: url, app: app, shareable: shareable)
         } else {

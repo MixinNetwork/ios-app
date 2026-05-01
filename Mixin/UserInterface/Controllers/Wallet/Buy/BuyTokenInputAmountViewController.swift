@@ -555,12 +555,8 @@ final class BuyTokenInputAmountViewController: InputAmountViewController {
                         return
                     }
                     self.reviewButton.isBusy = false
-                    let onramp = BuyTokenWebViewController(
-                        title: R.string.localizable.buy_asset(token.symbol),
-                        subtitle: nil,
-                        url: url
-                    )
-                    self.present(onramp, animated: true)
+                    let buy = BuyTokenWebViewController(tokenSymbol: token.symbol, url: url)
+                    self.present(buy, animated: true)
                 }
             } catch {
                 Logger.general.info(category: "Buy", message: "\(error)")

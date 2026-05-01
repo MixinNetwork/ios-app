@@ -1353,6 +1353,7 @@
 		94C199732A1CA9430098EDB3 /* DeviceTransferError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C199722A1CA9430098EDB3 /* DeviceTransferError.swift */; };
 		94C359F628B506D40010F53C /* TIPFullscreenInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */; };
 		94C359F728B506D40010F53C /* TIPFullscreenInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94C359F528B506D40010F53C /* TIPFullscreenInputView.xib */; };
+		94C3BDDC2FA23A6400BFAE47 /* MixinWebContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C3BDDB2FA23A5E00BFAE47 /* MixinWebContext.swift */; };
 		94C3E56C2DAE76CF0015AFA4 /* Web3TransactionTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C3E56B2DAE76CC0015AFA4 /* Web3TransactionTableHeaderView.swift */; };
 		94C3E57E2DAE80510015AFA4 /* RLPDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C3E57D2DAE804E0015AFA4 /* RLPDecoder.swift */; };
 		94C56D342C53AFBE009F3AB8 /* SwapQuoteRequester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C56D332C53AFBE009F3AB8 /* SwapQuoteRequester.swift */; };
@@ -3238,6 +3239,7 @@
 		94C199722A1CA9430098EDB3 /* DeviceTransferError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferError.swift; sourceTree = "<group>"; };
 		94C359F428B506D40010F53C /* TIPFullscreenInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TIPFullscreenInputViewController.swift; sourceTree = "<group>"; };
 		94C359F528B506D40010F53C /* TIPFullscreenInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TIPFullscreenInputView.xib; sourceTree = "<group>"; };
+		94C3BDDB2FA23A5E00BFAE47 /* MixinWebContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixinWebContext.swift; sourceTree = "<group>"; };
 		94C3E56B2DAE76CC0015AFA4 /* Web3TransactionTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Web3TransactionTableHeaderView.swift; sourceTree = "<group>"; };
 		94C3E57D2DAE804E0015AFA4 /* RLPDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RLPDecoder.swift; sourceTree = "<group>"; };
 		94C56D332C53AFBE009F3AB8 /* SwapQuoteRequester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapQuoteRequester.swift; sourceTree = "<group>"; };
@@ -6599,6 +6601,7 @@
 				94D806982EA7698C008D6B62 /* TokenSelectorIntent.swift */,
 				94386B392F7E9FC200FF1FB9 /* AccountRecoveryOption.swift */,
 				9495E57D2CF0D71300124CC7 /* AssetChangeAccountRecoveryChecking.swift */,
+				94C3BDDB2FA23A5E00BFAE47 /* MixinWebContext.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -8570,6 +8573,7 @@
 				94525B362C4E3CF2008BA7A8 /* SwapToken.swift in Sources */,
 				7BA1F8CD221FDABF00DBFCE2 /* RoundedButton.swift in Sources */,
 				7B8ECAE8250F6BE8006F0479 /* ExternalSharingContext.swift in Sources */,
+				94C3BDDC2FA23A6400BFAE47 /* MixinWebContext.swift in Sources */,
 				7C5DFE30284F23F6008733FC /* UserCenterViewController.swift in Sources */,
 				94D9DDA02F59DB0000B3B990 /* PerpetualPositionInfoCell.swift in Sources */,
 				945ED2B22B28342A00C138BF /* WithdrawPaymentOperation.swift in Sources */,

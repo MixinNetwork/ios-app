@@ -125,9 +125,16 @@ extension BottomSheetView {
 extension BottomSheetView {
 
     func alert(_ message: String, actionTitle: String = R.string.localizable.ok(), cancelHandler: ((UIAlertAction) -> Void)? = nil) {
+        guard let root = AppDelegate.current.mainWindow.rootViewController else {
+            return
+        }
         let alc = UIAlertController(title: message, message: nil, preferredStyle: .alert)
         alc.addAction(UIAlertAction(title: actionTitle, style: .default, handler: cancelHandler))
-        AppDelegate.current.mainWindow.rootViewController?.present(alc, animated: true, completion: nil)
+        var topMost: UIViewController = root
+        while let next = topMost.presentedViewController, !next.isBeingDismissed {
+            topMost = next
+        }
+        topMost.present(alc, animated: true)
     }
     
 }

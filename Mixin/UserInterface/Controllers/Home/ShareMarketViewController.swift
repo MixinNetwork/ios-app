@@ -1,19 +1,50 @@
 import UIKit
 import LinkPresentation
+import MixinServices
 
 final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMarketAsPictureView> {
     
-    private let symbol: String
-    private let image: UIImage
+    private let market: Market
     
-    private var dismissOnColorAppearanceChange = false
-    
-    init(symbol: String, image: UIImage) {
-        self.symbol = symbol
-        self.image = image
+    init(
+        market: Market,
+        period: PriceHistoryPeriod,
+        points: [ChartView.Point],
+        statistics: MarketStatistics,
+    ) {
+        self.market = market
         let contentView = R.nib.shareMarketAsPictureView(withOwner: nil)!
-        contentView.setImage(image)
-        super.init(contentView: contentView, size: CGSize(width: 295, height: 547))
+        contentView.titleLabel.text = market.symbol
+        contentView.rankLabel.text = market.numberedRank
+        contentView.rankLabel.isHidden = contentView.rankLabel.text == nil
+        contentView.tokenIconView.setIcon(market: market)
+        contentView.priceLabel.text = market.localizedPrice
+        if points.count >= 2 {
+            let base = points[0]
+            let now = points[points.count - 1]
+            let change = (now.value - base.value) / base.value
+            if let changePercentage = NumberFormatter.percentage.string(decimal: change) {
+                contentView.changeLabel.text = changePercentage
+                contentView.changeLabel.alpha = 1
+            } else {
+                contentView.changeLabel.alpha = 0
+            }
+            contentView.changeLabel.marketColor = .byValue(change)
+            contentView.chartView.points = points
+            contentView.hideUnavailableView()
+        } else {
+            contentView.changeLabel.alpha = 0
+            contentView.showUnavailableView()
+        }
+        if let index = PriceHistoryPeriod.allCases.firstIndex(of: period) {
+            contentView.setPeriodSelection(index: index)
+        }
+        contentView.nameLabel.text = market.name
+        contentView.marketCapContentLabel.text = statistics.marketCap
+        contentView.volumeContentLabel.text = statistics.fiatMoneyVolume24H
+        contentView.highContentLabel.text = statistics.high24H
+        contentView.lowContentLabel.text = statistics.low24H
+        super.init(contentView: contentView, size: CGSize(width: 295, height: 690))
     }
     
     required init?(coder: NSCoder) {
@@ -26,27 +57,13 @@ final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMar
         actionButtonTrayView.backgroundColor = R.color.background()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        dismissOnColorAppearanceChange = true
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if dismissOnColorAppearanceChange,
-           traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection)
-        {
-            presentingViewController?.dismiss(animated: false)
-        }
-    }
-    
     override func share(_ sender: Any) {
         guard let presentingViewController else {
             return
         }
         let image = makeImage()
         let item = ActivityItem(
-            title: symbol + " " + R.string.localizable.market(),
+            title: market.symbol + " " + R.string.localizable.market(),
             image: image
         )
         let activity = UIActivityViewController(activityItems: [item], applicationActivities: nil)
@@ -65,14 +82,6 @@ final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMar
         let image = makeImage()
         PhotoLibrary.saveImage(source: .image(image)) { alert in
             self.present(alert, animated: true)
-        }
-    }
-    
-    override func makeImage() -> UIImage {
-        let view: UIView = contentView.screenshotWrapperView
-        let renderer = UIGraphicsImageRenderer(bounds: view.bounds)
-        return renderer.image { context in
-            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         }
     }
     

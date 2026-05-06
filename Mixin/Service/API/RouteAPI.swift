@@ -1016,20 +1016,39 @@ extension RouteAPI {
         return Signature(timestamp: timestamp, signature: signature)
     }
     
-    private enum Config {
-        static let botUserID: String = "61cb8dd4-16b1-4744-ba0c-7b2d2e52fc59"
-        static let host: String = "https://api.route.mixin.one"
+    public struct Config {
+        
+        static let route = Config(
+            botUserID: "61cb8dd4-16b1-4744-ba0c-7b2d2e52fc59",
+            host: "https://api.route.mixin.one"
+        )
+        
+        static let rewards = Config(
+            botUserID: "b35af74d-cca6-400c-a62b-5a7e659de91e",
+            host: "https://api.reward.mixin.one"
+        )
+        
+        let botUserID: String
+        let host: String
+        
     }
     
     private final class RouteSigningInterceptor: RequestInterceptor {
         
         private let method: HTTPMethod
         private let path: String
+        private let config: Config
         private let timeoutInterval: TimeInterval?
         
-        init(method: HTTPMethod, path: String, timeoutInterval: TimeInterval? = nil) {
+        init(
+            method: HTTPMethod,
+            path: String,
+            config: Config,
+            timeoutInterval: TimeInterval? = nil
+        ) {
             self.method = method
             self.path = path
+            self.config = config
             self.timeoutInterval = timeoutInterval
         }
         
@@ -1040,7 +1059,7 @@ extension RouteAPI {
         ) {
             do {
                 let signature = try RouteAPI.sign(
-                    appID: Config.botUserID,
+                    appID: config.botUserID,
                     reloadPublicKey: false, // The bot guarantees for not changing the public key
                     method: method.rawValue,
                     path: path,
@@ -1077,11 +1096,16 @@ extension RouteAPI {
         method: HTTPMethod,
         path: String,
         with parameters: Parameters? = nil,
+        config: Config = .route,
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
-        let url = Config.host + path
-        let interceptor = RouteSigningInterceptor(method: method, path: path)
+        let url = config.host + path
+        let interceptor = RouteSigningInterceptor(
+            method: method,
+            path: path,
+            config: config
+        )
         let dataRequest = AF.request(
             url,
             method: method,
@@ -1093,15 +1117,20 @@ extension RouteAPI {
     }
     
     @discardableResult
-    private static func request<Response>(
+    static func request<Response>(
         method: HTTPMethod,
         path: String,
         with parameters: [String: Any]? = nil,
+        config: Config = .route,
         queue: DispatchQueue = .main,
         completion: @escaping (MixinAPI.Result<Response>) -> Void
     ) -> Request {
-        let url = Config.host + path
-        let interceptor = RouteSigningInterceptor(method: method, path: path)
+        let url = config.host + path
+        let interceptor = RouteSigningInterceptor(
+            method: method,
+            path: path,
+            config: config
+        )
         let dataRequest = AF.request(
             url,
             method: method,
@@ -1112,16 +1141,22 @@ extension RouteAPI {
         return request(dataRequest, queue: queue, completion: completion)
     }
     
-    public static func request<Response>(
+    static func request<Response>(
         method: HTTPMethod,
         path: String,
-        parameters: [String: Any]? = nil
+        parameters: [String: Any]? = nil,
+        config: Config = .route,
     ) -> MixinAPI.Result<Response> {
         var result: MixinAPI.Result<Response> = .failure(.foundNilResult)
         
         let semaphore = DispatchSemaphore(value: 0)
-        let url = Config.host + path
-        let interceptor = RouteSigningInterceptor(method: method, path: path, timeoutInterval: 5)
+        let url = config.host + path
+        let interceptor = RouteSigningInterceptor(
+            method: method,
+            path: path,
+            config: config,
+            timeoutInterval: 5
+        )
         let dataRequest = AF.request(
             url,
             method: method,

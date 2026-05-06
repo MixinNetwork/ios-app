@@ -9,6 +9,12 @@ final class ShareMarketAsPictureView: UIView {
     @IBOutlet weak var screenshotWrapperView: UIView!
     @IBOutlet weak var screenshotImageView: UIImageView!
     @IBOutlet weak var displayImageView: UIImageView!
+    @IBOutlet weak var obiView: ShareObiView!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        obiView.load(content: .installMixin(gradient: true))
+    }
     
     func setImage(_ image: UIImage) {
         let ratio = image.size.width / image.size.height

@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class ShareDepositLinkViewController: ShareViewAsPictureViewController {
+final class ShareDepositLinkViewController: ShareViewAsPictureViewController<ShareObiSurroundedView<DepositLinkView>> {
     
     private let link: DepositLink
     
@@ -9,41 +9,32 @@ final class ShareDepositLinkViewController: ShareViewAsPictureViewController {
     
     init(link: DepositLink) {
         self.link = link
-        super.init()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("Storyboard not supported")
-    }
-    
-    override func loadContentView() {
         let linkView = DepositLinkView()
+        linkView.adjustsFontForContentSizeCategory = false
+        linkView.size = .medium
+        linkView.load(link: link)
         let contentView = switch link.chain {
         case .mixin:
             ShareObiSurroundedView<DepositLinkView>(contentView: linkView, spacing: .normal)
         case .native:
             ShareObiSurroundedView<DepositLinkView>(contentView: linkView, spacing: .compact)
         }
+        let size = contentView.systemLayoutSizeFitting(
+            CGSize(width: 295, height: UIView.layoutFittingExpandedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        )
         self.linkView = linkView
-        self.contentView = contentView
+        super.init(contentView: contentView, size: size)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Storyboard not supported")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         contentView.backgroundColor = R.color.background()
-        layoutWrapperHeightConstraint.isActive = false
-        linkView.adjustsFontForContentSizeCategory = false
-        switch ScreenHeight.current {
-        case .short, .medium:
-            linkView.size = .small
-        case .long, .extraLong:
-            linkView.size = .medium
-        }
-        if case .native = link.chain, ScreenHeight.current <= .long {
-            linkView.subtitleLabel.isHidden = true
-            linkView.contentView.setCustomSpacing(12, after: linkView.titleLabel)
-        }
-        linkView.load(link: link)
         actionButtonBackgroundView.effect = nil
         actionButtonTrayView.backgroundColor = R.color.background()
     }
@@ -80,73 +71,6 @@ final class ShareDepositLinkViewController: ShareViewAsPictureViewController {
         PhotoLibrary.saveImage(source: .image(image)) { alert in
             self.present(alert, animated: true)
         }
-    }
-    
-}
-
-extension ShareDepositLinkViewController {
-    
-    private final class ShareObiSurroundedView<ContentView: UIView>: UIView {
-        
-        enum Spacing {
-            case normal
-            case compact
-        }
-        
-        let contentView: ContentView
-        let obiView = ShareObiView()
-        
-        init(contentView: ContentView, spacing: Spacing) {
-            self.contentView = contentView
-            super.init(frame: .zero)
-            addSubview(contentView)
-            contentView.snp.makeConstraints { make in
-                make.top.equalToSuperview().offset(54)
-                make.leading.equalToSuperview().offset(18)
-                make.trailing.equalToSuperview().offset(-18)
-            }
-            addSubview(obiView)
-            obiView.snp.makeConstraints { make in
-                make.leading.trailing.bottom.equalToSuperview()
-                switch spacing {
-                case .normal:
-                    switch ScreenHeight.current {
-                    case .short:
-                        make.top.equalTo(contentView.snp.bottom).offset(24)
-                    case .medium:
-                        make.top.equalTo(contentView.snp.bottom).offset(32)
-                    default:
-                        make.top.equalTo(contentView.snp.bottom).offset(36)
-                    }
-                case .compact:
-                    switch ScreenHeight.current {
-                    case .short:
-                        make.top.equalTo(contentView.snp.bottom).offset(4)
-                    case .medium:
-                        make.top.equalTo(contentView.snp.bottom).offset(8)
-                    default:
-                        make.top.equalTo(contentView.snp.bottom).offset(36)
-                    }
-                }
-                make.height.equalTo(100)
-            }
-        }
-        
-        required init?(coder: NSCoder) {
-            fatalError("Storyboard/Xib not supported")
-        }
-        
-    }
-    
-    private func makeImage() -> UIImage {
-        let canvas = contentView.bounds
-        let renderer = UIGraphicsImageRenderer(bounds: canvas)
-        contentView.layer.cornerRadius = 0
-        let image = renderer.image { context in
-            contentView.drawHierarchy(in: canvas, afterScreenUpdates: true)
-        }
-        contentView.layer.cornerRadius = contentViewCornerRadius
-        return image
     }
     
 }

@@ -1302,6 +1302,7 @@
 "referral_program_introduction_3" = "Rebate eligibility is valid for life";
 "referral_program_introduction_footer" = "* Referral rewards are available only to paid Mixin One members. ";
 "referral_program_introduction_header" = "Join the referral program and invite friends to earn crypto together:";
+"referral_share_desc" = "Scan to install Mixin, use this referral code for %@ rebate";
 "refresh" = "Refresh";
 "refunded" = "Refunded";
 "reject" = "Reject";

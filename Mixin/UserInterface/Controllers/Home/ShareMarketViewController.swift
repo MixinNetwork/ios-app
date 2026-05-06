@@ -1,27 +1,23 @@
 import UIKit
 import LinkPresentation
 
-final class ShareMarketViewController: ShareViewAsPictureViewController {
+final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMarketAsPictureView> {
     
     private let symbol: String
     private let image: UIImage
-    private let shareMarketContentView = R.nib.shareMarketAsPictureView(withOwner: nil)!
     
     private var dismissOnColorAppearanceChange = false
     
     init(symbol: String, image: UIImage) {
         self.symbol = symbol
         self.image = image
-        super.init()
+        let contentView = R.nib.shareMarketAsPictureView(withOwner: nil)!
+        contentView.setImage(image)
+        super.init(contentView: contentView, size: CGSize(width: 295, height: 547))
     }
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
-    }
-    
-    override func loadContentView() {
-        contentView = shareMarketContentView
-        shareMarketContentView.setImage(image)
     }
     
     override func viewDidLoad() {
@@ -48,7 +44,7 @@ final class ShareMarketViewController: ShareViewAsPictureViewController {
         guard let presentingViewController else {
             return
         }
-        let image = makeSharingImage()
+        let image = makeImage()
         let item = ActivityItem(
             title: symbol + " " + R.string.localizable.market(),
             image: image
@@ -66,14 +62,14 @@ final class ShareMarketViewController: ShareViewAsPictureViewController {
     }
     
     override func savePhoto(_ sender: Any) {
-        let image = makeSharingImage()
+        let image = makeImage()
         PhotoLibrary.saveImage(source: .image(image)) { alert in
             self.present(alert, animated: true)
         }
     }
     
-    private func makeSharingImage() -> UIImage {
-        let view: UIView = shareMarketContentView.screenshotWrapperView
+    override func makeImage() -> UIImage {
+        let view: UIView = contentView.screenshotWrapperView
         let renderer = UIGraphicsImageRenderer(bounds: view.bounds)
         return renderer.image { context in
             view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)

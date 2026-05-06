@@ -725,6 +725,10 @@ final class EVMTransferToAddressOperation: EVMTransferOperation {
     }
     
     @MainActor func load(fee: Fee) {
+        guard fee.selected.gasless else {
+            // Native tx requires `evmFee`
+            return
+        }
         self.fee = fee
         self.state = .ready
     }

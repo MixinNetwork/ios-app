@@ -635,7 +635,7 @@
 "error_withdrawal_memo_format_incorrect" = "錯誤 20131：提現備註格式不正確";
 "error_withdrawal_suspend" = "錯誤 20137：提現暫停";
 "estimated_balance_change" = "餘額變動（預估）";
-"estimated_liquidation_price" = "預估清算價格";
+"estimated_liquidation_price" = "預估強平價格";
 "estimated_price" = "預計價格";
 "estimated_receive" = "預計收到";
 "everybody" = "任何人";
@@ -858,7 +858,7 @@
 "link_desktop_description" = "透過二維碼連結桌面端";
 "link_recognition_failure" = "連結識別失敗";
 "link_shareable_false" = "該連結已被設定為不允許分享";
-"liquidation_price" = "清算價格";
+"liquidation_price" = "強平價格";
 "live" = "直播";
 "live_shareable_false" = "該直播已被設定為不允許轉發";
 "live_stream" = "直播卡片";

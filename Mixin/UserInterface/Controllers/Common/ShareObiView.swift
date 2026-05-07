@@ -62,7 +62,7 @@ final class ShareObiView: UIView, XibDesignable {
             )
             descriptionLabel.attributedText = rebateDescription(rebate: rebate)
             qrCodeView.setContent(
-                "https://mixin.one/referral",
+                URL.bindReferral(code: code),
                 size: qrCodeView.bounds.size,
                 activityIndicator: false
             )

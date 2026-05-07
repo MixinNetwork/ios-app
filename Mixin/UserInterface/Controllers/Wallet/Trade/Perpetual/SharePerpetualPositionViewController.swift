@@ -5,6 +5,8 @@ final class SharePerpetualPositionViewController: ShareViewAsPictureViewControll
     
     private let viewModel: PerpetualPositionViewModel
     
+    private var link = URL.shortMixinMessenger.absoluteString
+    
     private weak var positionView: SharePerpetualPositionView!
     
     init(viewModel: PerpetualPositionViewModel, latestPrice: Decimal?) {
@@ -24,8 +26,15 @@ final class SharePerpetualPositionViewController: ShareViewAsPictureViewControll
         closeButton.overrideUserInterfaceStyle = .light
         actionButtonBackgroundView.effect = nil
         actionButtonTrayView.backgroundColor = R.color.background()
-        loadReferralCode { [weak obiView=contentView.obiView] code, rebate in
-            obiView?.load(gradient: false, content: .referral(code: code, rebate: rebate))
+        loadReferralCode { [weak self] code, rebate in
+            guard let self else {
+                return
+            }
+            self.link = URL.bindReferral(code: code)
+            self.contentView.obiView.load(
+                gradient: true,
+                content: .referral(code: code, rebate: rebate)
+            )
         }
     }
     
@@ -46,7 +55,7 @@ final class SharePerpetualPositionViewController: ShareViewAsPictureViewControll
     }
     
     override func copyLink(_ sender: Any) {
-        UIPasteboard.general.string = URL.shortMixinMessenger.absoluteString
+        UIPasteboard.general.string = link
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
         close(sender)
     }

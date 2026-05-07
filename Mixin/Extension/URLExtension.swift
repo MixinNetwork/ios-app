@@ -35,6 +35,10 @@ extension URL {
     static let importWallet         = URL(string: R.string.localizable.url_import_wallet())!
     static let recoveryKit          = URL(string: R.string.localizable.url_recovery_kit())!
     
+    static func bindReferral(code: String) -> String {
+        "https://mixin.one/referrals/" + code
+    }
+    
     func getKeyVals() -> [String: String] {
         return URLComponents(url: self, resolvingAgainstBaseURL: true)?.getKeyVals() ?? [:]
     }

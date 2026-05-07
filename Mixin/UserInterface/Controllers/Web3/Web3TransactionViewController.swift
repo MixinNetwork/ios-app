@@ -409,7 +409,11 @@ extension Web3TransactionViewController {
             } else {
                 isPendingGaslessTransaction = false
             }
-            if let feeAssetID = transaction.sponsorFeeAssetID, let feeAmount = transaction.sponsorFeeAmount {
+            if let feeAssetID = transaction.sponsorFeeAssetID,
+               !feeAssetID.isEmpty,
+               let feeAmount = transaction.sponsorFeeAmount,
+               !feeAmount.isEmpty
+            {
                 if let feeToken = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: feeAssetID),
                    let decimalFeeAmount = Decimal(string: feeAmount, locale: .enUSPOSIX)
                 {

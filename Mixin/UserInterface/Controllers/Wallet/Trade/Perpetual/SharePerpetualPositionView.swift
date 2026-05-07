@@ -79,11 +79,8 @@ final class SharePerpetualPositionView: UIView {
             priceContentLabel.text = closePrice
         } else if let latestPrice {
             priceTitleLabel.text = R.string.localizable.perps_current_price()
-            priceContentLabel.text = CurrencyFormatter.localizedString(
-                from: latestPrice * Currency.current.decimalRate,
-                format: .fiatMoneyPrice,
-                sign: .never,
-                symbol: .currencySymbol
+            priceContentLabel.text = latestPrice.formatted(
+                PerpsPrice.format(latestPrice)
             )
         } else {
             priceTitleLabel.text = ""

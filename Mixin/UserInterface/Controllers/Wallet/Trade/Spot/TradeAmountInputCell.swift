@@ -65,16 +65,14 @@ final class TradeAmountInputCell: UICollectionViewCell {
     
     func updateSendAmountTextField(amount: Decimal?) {
         if let amount {
-            let precision = amount.numberOfSignificantFractionalDigits
-            let formatted = amount.formatted(
+            sendAmountTextField.text = amount.formatted(
                 Decimal.FormatStyle.number
                     .locale(.current)
                     .grouping(.never)
                     .sign(strategy: .never)
-                    .precision(.fractionLength(0...precision))
+                    .precision(amount.precision)
                     .rounded(rule: .towardZero)
             )
-            sendAmountTextField.text = formatted
         } else {
             sendAmountTextField.text = nil
         }
@@ -82,16 +80,14 @@ final class TradeAmountInputCell: UICollectionViewCell {
     
     func updateReceiveAmountTextField(amount: Decimal?) {
         if let amount {
-            let precision = amount.numberOfSignificantFractionalDigits
-            let formatted = amount.formatted(
+            receiveAmountTextField.text = amount.formatted(
                 Decimal.FormatStyle.number
                     .locale(.current)
                     .grouping(.never)
                     .sign(strategy: .never)
-                    .precision(.fractionLength(0...precision))
+                    .precision(amount.precision)
                     .rounded(rule: .towardZero)
             )
-            receiveAmountTextField.text = formatted
         } else {
             receiveAmountTextField.text = nil
         }

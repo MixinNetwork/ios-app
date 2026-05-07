@@ -870,6 +870,7 @@
 		94386ADB2F7E599200FF1FB9 /* PopupTipRecoveryKitOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94386ADA2F7E598800FF1FB9 /* PopupTipRecoveryKitOptionsView.swift */; };
 		94386B3A2F7E9FC500FF1FB9 /* AccountRecoveryOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94386B392F7E9FC200FF1FB9 /* AccountRecoveryOption.swift */; };
 		9438EDB52FAB8C9C0030C00E /* MarketStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438EDB42FAB8C980030C00E /* MarketStatistics.swift */; };
+		9438EFDB2FAC57BB0030C00E /* PerpsPrice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438EFD72FAC57AF0030C00E /* PerpsPrice.swift */; };
 		94396D4B2CE3597E009DA4E9 /* InputMnemonicsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396D4A2CE3597E009DA4E9 /* InputMnemonicsViewController.swift */; };
 		94396F2629EB11E300A57833 /* DeviceTransferProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2529EB11E300A57833 /* DeviceTransferProtocol.swift */; };
 		94396F2829EB475500A57833 /* NWParameters+DeviceTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */; };
@@ -2747,6 +2748,7 @@
 		94386ADA2F7E598800FF1FB9 /* PopupTipRecoveryKitOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTipRecoveryKitOptionsView.swift; sourceTree = "<group>"; };
 		94386B392F7E9FC200FF1FB9 /* AccountRecoveryOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRecoveryOption.swift; sourceTree = "<group>"; };
 		9438EDB42FAB8C980030C00E /* MarketStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketStatistics.swift; sourceTree = "<group>"; };
+		9438EFD72FAC57AF0030C00E /* PerpsPrice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsPrice.swift; sourceTree = "<group>"; };
 		94396D4A2CE3597E009DA4E9 /* InputMnemonicsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputMnemonicsViewController.swift; sourceTree = "<group>"; };
 		94396F2529EB11E300A57833 /* DeviceTransferProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTransferProtocol.swift; sourceTree = "<group>"; };
 		94396F2729EB475500A57833 /* NWParameters+DeviceTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NWParameters+DeviceTransfer.swift"; sourceTree = "<group>"; };
@@ -5419,6 +5421,7 @@
 		94FB2E6A2F50A50900F85AB4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				9438EFD72FAC57AF0030C00E /* PerpsPrice.swift */,
 				94FB2E6B2F50A50E00F85AB4 /* PerpetualMarketViewModel.swift */,
 				94DC4DB62F51EC3E00D23EB8 /* PerpetualPositionLoader.swift */,
 				94C67FCF2F64250000CB11DC /* PerpetualMarketLoader.swift */,
@@ -8656,6 +8659,7 @@
 				94CEEAC4277E06A9001E7A24 /* Date+Holiday.swift in Sources */,
 				941C764B2F5EFB10005B70A9 /* TradeURL.swift in Sources */,
 				7B5BABE31FB57B0300341FE6 /* AvatarPickerController.swift in Sources */,
+				9438EFDB2FAC57BB0030C00E /* PerpsPrice.swift in Sources */,
 				7B1ABAE021186BF2009FAA6C /* StickerInputViewController.swift in Sources */,
 				94FB2E0A2F504D9200F85AB4 /* PerpetualPlaceholderCell.swift in Sources */,
 				944731522E71866400ACC49B /* HomeNavigationTitleView.swift in Sources */,

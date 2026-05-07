@@ -125,12 +125,7 @@ struct PerpetualPositionViewModel {
             symbol: .custom(position.tokenSymbol)
         )
         self.entryPrice = if let entryPrice {
-            CurrencyFormatter.localizedString(
-                from: entryPrice * Currency.current.decimalRate,
-                format: .fiatMoneyPrice,
-                sign: .never,
-                symbol: .currencySymbol
-            )
+            entryPrice.formatted(PerpsPrice.format(entryPrice))
         } else {
             position.entryPrice
         }
@@ -246,12 +241,7 @@ struct PerpetualPositionViewModel {
             symbol: .custom(history.tokenSymbol)
         )
         self.entryPrice = if let entryPrice {
-            CurrencyFormatter.localizedString(
-                from: entryPrice * Currency.current.decimalRate,
-                format: .fiatMoneyPrice,
-                sign: .never,
-                symbol: .currencySymbol
-            )
+            entryPrice.formatted(PerpsPrice.format(entryPrice))
         } else {
             history.entryPrice
         }
@@ -266,12 +256,7 @@ struct PerpetualPositionViewModel {
         self.estimatedReceiving = nil
         self.liquidationPrice = nil
         self.closePrice = if let closePrice {
-            CurrencyFormatter.localizedString(
-                from: closePrice * Currency.current.decimalRate,
-                format: .fiatMoneyPrice,
-                sign: .never,
-                symbol: .currencySymbol
-            )
+            closePrice.formatted(PerpsPrice.format(closePrice))
         } else {
             history.closePrice
         }

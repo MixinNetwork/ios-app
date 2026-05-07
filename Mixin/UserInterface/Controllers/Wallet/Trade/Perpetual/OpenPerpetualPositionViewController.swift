@@ -541,11 +541,8 @@ final class OpenPerpetualPositionViewController: UIViewController {
             case .short:
                 underlyingAsset.decimalPrice * (1 + 1 / leverageMultiplier)
             }
-            liquidationPriceContentLabel.text = CurrencyFormatter.localizedString(
-                from: liquidationPrice * Currency.current.decimalRate,
-                format: .fiatMoneyPrice,
-                sign: .never,
-                symbol: .currencySymbol
+            liquidationPriceContentLabel.text = liquidationPrice.formatted(
+                PerpsPrice.format(liquidationPrice)
             )
         } else {
             liquidationPriceContentLabel.text = "-"

@@ -29,11 +29,8 @@ struct PerpetualMarketViewModel {
         self.maxLeverageMultiplier = Decimal(m.leverage)
         self.leverage = PerpetualLeverage.stringRepresentation(multiplier: m.leverage)
         self.decimalPrice = decimalPrice
-        self.price = CurrencyFormatter.localizedString(
-            from: decimalPrice * Currency.current.decimalRate,
-            format: .fiatMoneyPrice,
-            sign: .never,
-            symbol: .currencySymbol
+        self.price = decimalPrice.formatted(
+            PerpsPrice.format(decimalPrice)
         )
         self.volume = NamedLargeNumberFormatter.string(
             number: decimalVolume * Currency.current.decimalRate,

@@ -2,7 +2,7 @@ import UIKit
 import LinkPresentation
 import MixinServices
 
-final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMarketAsPictureView> {
+final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMarketContentView> {
     
     private let market: Market
     
@@ -13,7 +13,7 @@ final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMar
         statistics: MarketStatistics,
     ) {
         self.market = market
-        let contentView = R.nib.shareMarketAsPictureView(withOwner: nil)!
+        let contentView = R.nib.shareMarketContentView(withOwner: nil)!
         contentView.titleLabel.text = market.symbol
         contentView.rankLabel.text = market.numberedRank
         contentView.rankLabel.isHidden = contentView.rankLabel.text == nil
@@ -55,6 +55,23 @@ final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMar
         super.viewDidLoad()
         actionButtonBackgroundView.effect = nil
         actionButtonTrayView.backgroundColor = R.color.background()
+        RewardAPI.referral { [weak obiView=contentView.obiView] result in
+            switch result {
+            case let .success(referral):
+                let defaultCode = referral.codes.first { code in
+                    code.isDefault
+                }
+                let ratio = Decimal(
+                    string: referral.tradingCommissionRatio,
+                    locale: .enUSPOSIX
+                )
+                if let code = defaultCode?.code, let ratio {
+                    obiView?.load(content: .referral(code: code, rebate: ratio))
+                }
+            case .failure:
+                break
+            }
+        }
     }
     
     override func share(_ sender: Any) {

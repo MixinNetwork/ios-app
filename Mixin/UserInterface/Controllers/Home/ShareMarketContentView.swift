@@ -1,7 +1,7 @@
 import UIKit
 import MixinServices
 
-final class ShareMarketAsPictureView: UIView {
+final class ShareMarketContentView: UIView {
     
     @IBOutlet weak var chartSectionView: UIView!
     @IBOutlet weak var titleStackView: UIStackView!
@@ -169,7 +169,7 @@ final class ShareMarketAsPictureView: UIView {
     
 }
 
-extension ShareMarketAsPictureView: ChartView.Delegate {
+extension ShareMarketContentView: ChartView.Delegate {
     
     func chartView(_ view: ChartView, extremumAnnotationForPoint point: ChartView.Point) -> String {
         CurrencyFormatter.localizedString(

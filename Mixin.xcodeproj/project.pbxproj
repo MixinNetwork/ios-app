@@ -710,8 +710,8 @@
 		940EB0AC2EB0A3D1009B3DAA /* TradeAmountInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EB0AA2EB0A3D1009B3DAA /* TradeAmountInputCell.xib */; };
 		940EE2982C9DDD24001A52FA /* MarketAlertItemView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EE2972C9DDD24001A52FA /* MarketAlertItemView.xib */; };
 		940EE2992C9DDD24001A52FA /* MarketAlertItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EE2962C9DDD24001A52FA /* MarketAlertItemView.swift */; };
-		940EF8B12C8AE573000AD1C6 /* ShareMarketAsPictureView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */; };
-		940EF8B32C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EF8B22C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift */; };
+		940EF8B12C8AE573000AD1C6 /* ShareMarketContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 940EF8B02C8AE573000AD1C6 /* ShareMarketContentView.xib */; };
+		940EF8B32C8AE67C000AD1C6 /* ShareMarketContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EF8B22C8AE67C000AD1C6 /* ShareMarketContentView.swift */; };
 		940EF8B52C8AE74D000AD1C6 /* ShareMarketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940EF8B42C8AE74D000AD1C6 /* ShareMarketViewController.swift */; };
 		940F93D82F291E6500C631F9 /* UnlockBitcoinNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940F93D72F291E6400C631F9 /* UnlockBitcoinNavigationController.swift */; };
 		940FC4B12F500A8B000C4260 /* PerpetualMarketSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940FC4B02F500A8B000C4260 /* PerpetualMarketSelectorViewController.swift */; };
@@ -2587,8 +2587,8 @@
 		940EB0AA2EB0A3D1009B3DAA /* TradeAmountInputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TradeAmountInputCell.xib; sourceTree = "<group>"; };
 		940EE2962C9DDD24001A52FA /* MarketAlertItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertItemView.swift; sourceTree = "<group>"; };
 		940EE2972C9DDD24001A52FA /* MarketAlertItemView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketAlertItemView.xib; sourceTree = "<group>"; };
-		940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareMarketAsPictureView.xib; sourceTree = "<group>"; };
-		940EF8B22C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMarketAsPictureView.swift; sourceTree = "<group>"; };
+		940EF8B02C8AE573000AD1C6 /* ShareMarketContentView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareMarketContentView.xib; sourceTree = "<group>"; };
+		940EF8B22C8AE67C000AD1C6 /* ShareMarketContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMarketContentView.swift; sourceTree = "<group>"; };
 		940EF8B42C8AE74D000AD1C6 /* ShareMarketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMarketViewController.swift; sourceTree = "<group>"; };
 		940F93D72F291E6400C631F9 /* UnlockBitcoinNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockBitcoinNavigationController.swift; sourceTree = "<group>"; };
 		940FC4B02F500A8B000C4260 /* PerpetualMarketSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpetualMarketSelectorViewController.swift; sourceTree = "<group>"; };
@@ -5938,8 +5938,8 @@
 				944BC2D72C7DAFEA008700A8 /* MarketDashboardViewController.swift */,
 				9447316F2E71A2AD00ACC49B /* SearchMarketView.xib */,
 				944731672E71A17200ACC49B /* SearchMarketViewController.swift */,
-				940EF8B02C8AE573000AD1C6 /* ShareMarketAsPictureView.xib */,
-				940EF8B22C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift */,
+				940EF8B02C8AE573000AD1C6 /* ShareMarketContentView.xib */,
+				940EF8B22C8AE67C000AD1C6 /* ShareMarketContentView.swift */,
 				940EF8B42C8AE74D000AD1C6 /* ShareMarketViewController.swift */,
 				94386ADA2F7E598800FF1FB9 /* PopupTipRecoveryKitOptionsView.swift */,
 				94E66CC12D11542100578F19 /* PopupTipView.xib */,
@@ -6971,7 +6971,7 @@
 				7B595359226749A100D59DB4 /* PeerCell.xib in Resources */,
 				945A72E12E59EE38006A11E9 /* TIPQuizAnswerView.xib in Resources */,
 				948723392C9DF6380034BCB0 /* AddMarketAlertView.xib in Resources */,
-				940EF8B12C8AE573000AD1C6 /* ShareMarketAsPictureView.xib in Resources */,
+				940EF8B12C8AE573000AD1C6 /* ShareMarketContentView.xib in Resources */,
 				94DC24392D08051C006501B3 /* DesktopSessionValidationView.xib in Resources */,
 				7C53049F28FEAD7600567CF6 /* AuthorizationScopeConfirmationView.xib in Resources */,
 				94FE11F62DA7AC830026AB9A /* Web3TransactionCell.xib in Resources */,
@@ -8349,7 +8349,7 @@
 				944D17932F6199C3008BBA92 /* ClosePerpsReceiveCell.swift in Sources */,
 				DF03C88B1FF3A58C00C1ED6B /* GroupInviteCell.swift in Sources */,
 				944731682E71A17A00ACC49B /* SearchMarketViewController.swift in Sources */,
-				940EF8B32C8AE67C000AD1C6 /* ShareMarketAsPictureView.swift in Sources */,
+				940EF8B32C8AE67C000AD1C6 /* ShareMarketContentView.swift in Sources */,
 				94425FE72DD498FB003F46DF /* MaliciousTokenWarningCell.swift in Sources */,
 				7B9F06C620A9858D0095A51B /* VideoMessageViewModel.swift in Sources */,
 				942FB8972C8AE09000C8025C /* ShareInscriptionViewController.swift in Sources */,

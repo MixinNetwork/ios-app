@@ -1303,6 +1303,7 @@
 "referral_program_introduction_footer" = "* 推薦獎勵僅限於付費 Mixin One 會員。";
 "referral_program_introduction_header" = "參與邀請計劃，邀請好友分享賺幣：";
 "referral_share_desc" = "掃描安裝 Mixin，使用此邀請碼可享 %@ 返佣";
+"referral_share_desc_zero" = "掃描安裝 Mixin";
 "refresh" = "重新整理";
 "refunded" = "已退款";
 "reject" = "拒絕";

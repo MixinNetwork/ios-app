@@ -1303,6 +1303,7 @@
 "referral_program_introduction_footer" = "* Referral rewards are available only to paid Mixin One members. ";
 "referral_program_introduction_header" = "Join the referral program and invite friends to earn crypto together:";
 "referral_share_desc" = "Scan to install Mixin, use this referral code for %@ rebate";
+"referral_share_desc_zero" = "Scan to install Mixin";
 "refresh" = "更新";
 "refunded" = "Refunded";
 "reject" = "Reject";

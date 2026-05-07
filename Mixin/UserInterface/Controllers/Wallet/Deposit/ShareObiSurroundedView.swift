@@ -44,7 +44,7 @@ final class ShareObiSurroundedView<ContentView: UIView>: UIView {
             }
             make.height.equalTo(100)
         }
-        obiView.load(content: .installMixin(gradient: true))
+        obiView.load(gradient: true, content: .installMixin)
     }
     
     required init?(coder: NSCoder) {

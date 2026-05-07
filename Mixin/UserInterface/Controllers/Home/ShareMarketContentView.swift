@@ -128,7 +128,7 @@ final class ShareMarketContentView: UIView {
                 weight: .accessiblityBoldTextCounterWeight(.regular)
             )
         }
-        obiView.load(content: .installMixin(gradient: true))
+        obiView.load(gradient: true, content: .installMixin)
     }
     
     func showUnavailableView() {

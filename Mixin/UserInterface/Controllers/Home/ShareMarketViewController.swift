@@ -55,22 +55,8 @@ final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMar
         super.viewDidLoad()
         actionButtonBackgroundView.effect = nil
         actionButtonTrayView.backgroundColor = R.color.background()
-        RewardAPI.referral { [weak obiView=contentView.obiView] result in
-            switch result {
-            case let .success(referral):
-                let defaultCode = referral.codes.first { code in
-                    code.isDefault
-                }
-                let ratio = Decimal(
-                    string: referral.tradingCommissionRatio,
-                    locale: .enUSPOSIX
-                )
-                if let code = defaultCode?.code, let ratio {
-                    obiView?.load(content: .referral(code: code, rebate: ratio))
-                }
-            case .failure:
-                break
-            }
+        loadReferralCode { [weak obiView=contentView.obiView] code, rebate in
+            obiView?.load(gradient: true, content: .referral(code: code, rebate: rebate))
         }
     }
     

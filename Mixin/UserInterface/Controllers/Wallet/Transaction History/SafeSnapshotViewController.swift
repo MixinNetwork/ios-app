@@ -407,7 +407,8 @@ extension SafeSnapshotViewController {
         var rows: [Row] = []
         
         if snapshot.type == SafeSnapshot.SnapshotType.pending.rawValue {
-            if let completed = snapshot.confirmations {
+            if var completed = snapshot.confirmations {
+                completed = min(token.confirmations, completed)
                 let value = R.string.localizable.pending_confirmations(completed, token.confirmations)
                 rows.append(Row(key: .depositProgress, value: value))
             }

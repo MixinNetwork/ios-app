@@ -916,7 +916,10 @@ extension MarketViewController {
                 }
                 let marketCap: String?
                 if let value = Decimal(string: market.marketCap, locale: .enUSPOSIX), !value.isZero {
-                    marketCap = NamedLargeNumberFormatter.string(number: value, currencyPrefix: true)
+                    marketCap = NamedLargeNumberFormatter.string(
+                        number: value * Currency.current.decimalRate,
+                        currencyPrefix: true
+                    )
                 } else {
                     marketCap = .notApplicable
                 }

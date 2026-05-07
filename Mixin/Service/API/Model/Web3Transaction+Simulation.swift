@@ -6,13 +6,30 @@ extension Web3Transaction {
     convenience init(
         rawTransaction: Web3RawTransaction,
         simulation: TransactionSimulation?,
-        fee: Decimal?,
+        fee: Web3DisplayFee?,
         myAddress: String,
     ) {
-        let transactionFee = if let fee {
-            TokenAmountFormatter.string(from: fee)
+        let nativeFee: String
+        let sponsorFeeAssetID: String?
+        let sponsorFeeAmount: String?
+        if let fee {
+            if fee.gasless {
+                nativeFee = ""
+                sponsorFeeAssetID = fee.token.assetID
+                sponsorFeeAmount = fee.amount.formatted(
+                    fee.token.canonicalFormatStyle
+                )
+            } else {
+                nativeFee = fee.amount.formatted(
+                    fee.token.canonicalFormatStyle
+                )
+                sponsorFeeAssetID = nil
+                sponsorFeeAmount = nil
+            }
         } else {
-            ""
+            nativeFee = ""
+            sponsorFeeAssetID = nil
+            sponsorFeeAmount = nil
         }
         
         var receiveChanges: [BalanceChange] = []
@@ -116,7 +133,7 @@ extension Web3Transaction {
             transactionType: .known(type),
             status: .pending,
             blockNumber: -1,
-            fee: transactionFee,
+            fee: nativeFee,
             senders: senders,
             receivers: receivers,
             approvals: approvals,
@@ -126,6 +143,8 @@ extension Web3Transaction {
             createdAt: rawTransaction.createdAt,
             updatedAt: rawTransaction.createdAt,
             level: Web3Reputation.Level.good.rawValue,
+            sponsorFeeAssetID: sponsorFeeAssetID,
+            sponsorFeeAmount: sponsorFeeAmount,
         )
     }
     

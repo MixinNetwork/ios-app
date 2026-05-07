@@ -393,7 +393,7 @@ extension Web3TransactionViewController {
         }
         layoutTableHeaderView()
         
-        let feeToken = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: transaction.chainID)
+        let nativeFeeToken = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: transaction.chainID)
         
         let feeRow: Row?
         switch transaction.transactionType.knownCase {
@@ -409,18 +409,39 @@ extension Web3TransactionViewController {
             } else {
                 isPendingGaslessTransaction = false
             }
-            if isPendingGaslessTransaction {
+            if let feeAssetID = transaction.sponsorFeeAssetID, let feeAmount = transaction.sponsorFeeAmount {
+                if let feeToken = Web3TokenDAO.shared.token(walletID: wallet.walletID, assetID: feeAssetID),
+                   let decimalFeeAmount = Decimal(string: feeAmount, locale: .enUSPOSIX)
+                {
+                    feeRow = .fee(
+                        token: CurrencyFormatter.localizedString(
+                            from: decimalFeeAmount,
+                            format: .precision,
+                            sign: .never,
+                            symbol: .custom(feeToken.symbol)
+                        ),
+                        fiatMoney: CurrencyFormatter.localizedString(
+                            from: decimalFeeAmount * feeToken.decimalUSDPrice * Currency.current.decimalRate,
+                            format: .precision,
+                            sign: .never,
+                            symbol: .currencySymbol
+                        )
+                    )
+                } else {
+                    feeRow = .plain(key: .fee, value: feeAmount)
+                }
+            } else if isPendingGaslessTransaction {
                 feeRow = nil
-            } else if let feeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
+            } else if let nativeFeeToken, let amount = Decimal(string: transaction.fee, locale: .enUSPOSIX) {
                 feeRow = .fee(
                     token: CurrencyFormatter.localizedString(
                         from: amount,
                         format: .precision,
                         sign: .never,
-                        symbol: .custom(feeToken.symbol)
+                        symbol: .custom(nativeFeeToken.symbol)
                     ),
                     fiatMoney: CurrencyFormatter.localizedString(
-                        from: amount * feeToken.decimalUSDPrice * Currency.current.decimalRate,
+                        from: amount * nativeFeeToken.decimalUSDPrice * Currency.current.decimalRate,
                         format: .precision,
                         sign: .never,
                         symbol: .currencySymbol
@@ -492,7 +513,7 @@ extension Web3TransactionViewController {
         
         rows.append(.plain(key: .type, value: transaction.transactionType.localized))
         
-        if let network = feeToken?.depositNetworkName {
+        if let network = nativeFeeToken?.depositNetworkName {
             rows.append(.plain(key: .network, value: network))
         }
         

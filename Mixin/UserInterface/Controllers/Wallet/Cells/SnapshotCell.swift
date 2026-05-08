@@ -53,8 +53,9 @@ final class SnapshotCell: ModernSelectedBackgroundCell {
         case .pending:
             iconImageView.imageView.contentMode = .center
             iconImageView.image = R.image.wallet.snapshot_deposit()
-            if let finished = snapshot.confirmations, let total = snapshot.tokenConfirmations {
-                progress = min(1, CGFloat(finished) / CGFloat(total))
+            if var finished = snapshot.confirmations, let total = snapshot.tokenConfirmations {
+                finished = min(total, finished)
+                progress = CGFloat(finished) / CGFloat(total)
                 let progressLayer: CAGradientLayer
                 if let layer = self.progressLayer {
                     layer.isHidden = false

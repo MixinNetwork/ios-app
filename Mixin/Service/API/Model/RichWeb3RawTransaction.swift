@@ -59,7 +59,7 @@ extension Web3Transaction {
     
     convenience init(
         rawTransaction: RichWeb3RawTransaction,
-        fee: Decimal?,
+        fee: Web3DisplayFee?,
         myAddress: String,
     ) {
         self.init(

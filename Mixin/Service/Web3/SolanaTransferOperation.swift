@@ -69,7 +69,7 @@ class SolanaTransferOperation: Web3TransferOperation {
         )
         let pendingTransaction = Web3Transaction(
             rawTransaction: rawTransaction,
-            fee: fee?.amount,
+            fee: fee,
             myAddress: fromAddress.destination
         )
         Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in

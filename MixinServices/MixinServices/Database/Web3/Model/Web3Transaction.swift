@@ -20,6 +20,8 @@ public class Web3Transaction: Codable, Identifiable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         case level
+        case sponsorFeeAssetID = "sponsor_fee_asset_id"
+        case sponsorFeeAmount = "sponsor_fee_amount"
     }
     
     public let transactionHash: String
@@ -38,6 +40,8 @@ public class Web3Transaction: Codable, Identifiable {
     public let createdAt: String
     public let updatedAt: String
     public let level: Int
+    public let sponsorFeeAssetID: String?
+    public let sponsorFeeAmount: String?
     
     public lazy var compactHash = TextTruncation.truncateMiddle(
         string: transactionHash,
@@ -117,7 +121,7 @@ public class Web3Transaction: Codable, Identifiable {
         senders: [Sender]?, receivers: [Receiver]?, approvals: [Approval]?,
         sendAssetID: String?, receiveAssetID: String?,
         transactionAt: String, createdAt: String, updatedAt: String,
-        level: Int,
+        level: Int, sponsorFeeAssetID: String?, sponsorFeeAmount: String?,
     ) {
         self.transactionHash = transactionHash
         self.chainID = chainID
@@ -135,6 +139,8 @@ public class Web3Transaction: Codable, Identifiable {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.level = level
+        self.sponsorFeeAssetID = sponsorFeeAssetID
+        self.sponsorFeeAmount = sponsorFeeAmount
     }
     
     public func matches(with another: Web3Transaction) -> Bool {

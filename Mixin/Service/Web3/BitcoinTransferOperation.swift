@@ -109,7 +109,7 @@ class BitcoinTransferOperation: Web3TransferOperation {
             Logger.web3.info(category: "BTCTransfer", message: "Tx sent, hash: \(hash)")
             let pendingTransaction = Web3Transaction(
                 rawTransaction: rawTransaction,
-                fee: fee.amount,
+                fee: fee,
                 myAddress: fromAddress.destination,
             )
             Web3TransactionDAO.shared.save(transactions: [pendingTransaction]) { db in
@@ -471,7 +471,7 @@ final class BitcoinCancelOperation: BitcoinRBFOperation {
             Logger.web3.info(category: "BTCCancel", message: "Tx sent, hash: \(rawTransaction.hash)")
             let pendingTransaction = Web3Transaction(
                 rawTransaction: rawTransaction,
-                fee: fee.amount,
+                fee: fee,
                 myAddress: fromAddress.destination
             )
             let now = Date().toUTCString()

@@ -242,6 +242,17 @@ public final class Web3Database: Database {
             """)
         }
         
+        migrator.registerMigration("gasless") { db in
+            let tokenInfos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(transactions)")
+            let tokenColumnNames = tokenInfos.map(\.name)
+            if !tokenColumnNames.contains("sponsor_fee_asset_id") {
+                try db.execute(sql: "ALTER TABLE transactions ADD COLUMN sponsor_fee_asset_id TEXT")
+            }
+            if !tokenColumnNames.contains("sponsor_fee_amount") {
+                try db.execute(sql: "ALTER TABLE transactions ADD COLUMN sponsor_fee_amount TEXT")
+            }
+        }
+        
         return migrator
     }
     

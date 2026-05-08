@@ -23,6 +23,18 @@ final class SharePerpetualPositionView: UIView {
         let layer = layer as! CAGradientLayer
         layer.startPoint = CGPoint(x: 0.5, y: 0)
         layer.endPoint = CGPoint(x: 0.5, y: 1)
+        changeLabel.font = .systemFont(
+            ofSize: 32,
+            weight: .accessiblityBoldTextCounterWeight(.bold)
+        )
+        entryPriceContentLabel.font = .systemFont(
+            ofSize: 16,
+            weight: .accessiblityBoldTextCounterWeight(.semibold)
+        )
+        priceContentLabel.font = .systemFont(
+            ofSize: 16,
+            weight: .accessiblityBoldTextCounterWeight(.semibold)
+        )
         operationLabel.contentInset = UIEdgeInsets(top: 3, left: 6, bottom: 3, right: 6)
         leverageLabel.contentInset = UIEdgeInsets(top: 4, left: 6, bottom: 2, right: 6)
         leverageLabel.font = .condensed(size: 12)

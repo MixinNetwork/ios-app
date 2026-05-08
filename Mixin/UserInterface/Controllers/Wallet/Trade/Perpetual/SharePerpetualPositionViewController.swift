@@ -1,32 +1,36 @@
 import UIKit
+import MixinServices
 
-final class SharePerpetualPositionViewController: ShareViewAsPictureViewController {
+final class SharePerpetualPositionViewController: ShareViewAsPictureViewController<SharePerpetualPositionView> {
     
     private let viewModel: PerpetualPositionViewModel
-    
-    private var latestPrice: Decimal?
+    private let link: String
     
     private weak var positionView: SharePerpetualPositionView!
     
-    init(viewModel: PerpetualPositionViewModel, latestPrice: Decimal?) {
+    init(
+        viewModel: PerpetualPositionViewModel,
+        latestPrice: Decimal?,
+        rebatingCode: Referral.RebatingCode?,
+    ) {
+        let contentView = R.nib.sharePerpetualPositionView(withOwner: nil)!
+        contentView.load(viewModel: viewModel, latestPrice: latestPrice)
+        let link = if let rebatingCode {
+            contentView.obiView.load(gradient: false, content: .referral(rebatingCode))
+        } else {
+            contentView.obiView.load(gradient: false, content: .installMixin)
+        }
         self.viewModel = viewModel
-        self.latestPrice = latestPrice
-        super.init()
+        self.link = link
+        super.init(contentView: contentView, size: CGSize(width: 295, height: 553))
     }
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard not supported")
     }
     
-    override func loadContentView() {
-        let positionView = R.nib.sharePerpetualPositionView(withOwner: nil)
-        self.positionView = positionView
-        self.contentView = positionView
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        positionView.load(viewModel: viewModel, latestPrice: latestPrice)
         closeButton.overrideUserInterfaceStyle = .light
         actionButtonBackgroundView.effect = nil
         actionButtonTrayView.backgroundColor = R.color.background()
@@ -49,7 +53,7 @@ final class SharePerpetualPositionViewController: ShareViewAsPictureViewControll
     }
     
     override func copyLink(_ sender: Any) {
-        UIPasteboard.general.string = URL.shortMixinMessenger.absoluteString
+        UIPasteboard.general.string = link
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
         close(sender)
     }
@@ -59,17 +63,6 @@ final class SharePerpetualPositionViewController: ShareViewAsPictureViewControll
         PhotoLibrary.saveImage(source: .image(image)) { alert in
             self.present(alert, animated: true)
         }
-    }
-    
-    private func makeImage() -> UIImage {
-        let canvas = contentView.bounds
-        let renderer = UIGraphicsImageRenderer(bounds: canvas)
-        contentView.layer.cornerRadius = 0
-        let image = renderer.image { context in
-            contentView.drawHierarchy(in: canvas, afterScreenUpdates: true)
-        }
-        contentView.layer.cornerRadius = contentViewCornerRadius
-        return image
     }
     
 }

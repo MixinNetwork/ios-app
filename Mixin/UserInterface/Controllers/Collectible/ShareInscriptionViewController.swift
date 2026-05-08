@@ -2,31 +2,20 @@ import UIKit
 import LinkPresentation
 import MixinServices
 
-final class ShareInscriptionViewController: ShareViewAsPictureViewController {
+final class ShareInscriptionViewController: ShareViewAsPictureViewController<ShareInscriptionAsPictureView> {
     
     private let inscription: InscriptionItem
-    private let token: MixinTokenItem
     
     init(inscription: InscriptionItem, token: MixinTokenItem) {
         self.inscription = inscription
-        self.token = token
-        super.init()
+        let contentView = R.nib.shareInscriptionAsPictureView(withOwner: nil)!
+        contentView.reloadData(inscription: inscription, token: token)
+        super.init(contentView: contentView, size: CGSize(width: 315, height: 529))
         overrideUserInterfaceStyle = .dark
     }
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
-    }
-    
-    private let shareInscriptionContentView = R.nib.shareInscriptionAsPictureView(withOwner: nil)!
-    
-    override func loadContentView() {
-        contentView = shareInscriptionContentView
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        shareInscriptionContentView.reloadData(inscription: inscription, token: token)
     }
     
     override func share(_ sender: Any) {
@@ -37,7 +26,7 @@ final class ShareInscriptionViewController: ShareViewAsPictureViewController {
         if let url = URL(string: inscription.shareLink) {
             let item = ActivityItem(
                 url: url,
-                image: shareInscriptionContentView.contentImageView.image,
+                image: contentView.contentImageView.image,
                 title: inscription.collectionSequenceRepresentation
             )
             activity = UIActivityViewController(activityItems: [item], applicationActivities: nil)
@@ -56,13 +45,7 @@ final class ShareInscriptionViewController: ShareViewAsPictureViewController {
     }
     
     override func savePhoto(_ sender: Any) {
-        let canvas = contentView.bounds
-        let renderer = UIGraphicsImageRenderer(bounds: canvas)
-        contentView.layer.cornerRadius = 0
-        let image = renderer.image { context in
-            contentView.drawHierarchy(in: canvas, afterScreenUpdates: true)
-        }
-        contentView.layer.cornerRadius = contentViewCornerRadius
+        let image = makeImage()
         PhotoLibrary.saveImage(source: .image(image)) { alert in
             self.present(alert, animated: true)
         }

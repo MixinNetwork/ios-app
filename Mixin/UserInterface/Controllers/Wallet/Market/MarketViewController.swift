@@ -190,52 +190,22 @@ final class MarketViewController: UIViewController {
     }
     
     @objc private func shareMarket(_ sender: Any) {
-        guard let market else {
+        guard let market, let chartPoints, let stats = viewModel.stats else {
             return
         }
-        let snapshotView = tableView.snapshotView(afterScreenUpdates: true)
-        if let snapshotView {
-            view.addSubview(snapshotView)
-            snapshotView.snp.makeConstraints { make in
-                make.edges.equalTo(tableView)
-            }
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        Referral.loadAvailableCode { [weak self, chartPeriod] code in
+            hud.hide()
+            let share = ShareMarketViewController(
+                market: market,
+                period: chartPeriod,
+                points: chartPoints,
+                statistics: stats,
+                rebatingCode: code,
+            )
+            self?.present(share, animated: true)
         }
-        let contentOffset = tableView.contentOffset
-        tableView.showsVerticalScrollIndicator = false
-        tableView.setContentOffset(.zero, animated: false)
-        tableView.layoutIfNeeded()
-        defer {
-            tableView.setContentOffset(contentOffset, animated: false)
-            tableView.showsVerticalScrollIndicator = true
-            snapshotView?.removeFromSuperview()
-        }
-        
-        let statsIndexPath = IndexPath(item: StatsRow.bottomSeparator.rawValue,
-                                       section: Section.stats.rawValue)
-        let lastCell: UITableViewCell
-        if viewModel.stats != nil, let cell = tableView.cellForRow(at: statsIndexPath) {
-            lastCell = cell
-        } else if let cell = tokenPriceChartCell {
-            lastCell = cell
-        } else {
-            return
-        }
-        let height = floor(lastCell.convert(lastCell.bounds, to: tableView).maxY) + 10
-        
-        // `tableView.bounds` must be used as the canvas size.
-        // Using other values will result in corruption on iOS 14.
-        let renderer = UIGraphicsImageRenderer(bounds: tableView.bounds)
-        let image = renderer.image { context in
-            tableView.drawHierarchy(in: tableView.bounds, afterScreenUpdates: true)
-        }
-        
-        let croppingRect = CGRect(x: 0, y: 0, width: tableView.bounds.width * image.scale, height: height * image.scale)
-        guard let cgImage = image.cgImage?.cropping(to: croppingRect) else {
-            return
-        }
-        let croppedImage = UIImage(cgImage: cgImage)
-        let share = ShareMarketViewController(symbol: market.symbol, image: croppedImage)
-        present(share, animated: true)
     }
     
     @objc private func reloadFromLocal() {
@@ -470,7 +440,6 @@ extension MarketViewController: UITableViewDataSource {
                 cell.leftTitleLabel.text = R.string.localizable.market_cap().uppercased()
                 cell.setLeftContent(text: viewModel.stats?.marketCap)
                 cell.rightTitleLabel.text = R.string.localizable.vol_24h().uppercased()
-                
                 cell.setRightContent(text: viewModel.stats?.fiatMoneyVolume24H)
                 return cell
             case .price:
@@ -884,63 +853,6 @@ extension MarketViewController {
             
         }
         
-        struct Stats {
-            
-            let high24H: String?
-            let low24H: String?
-            let marketCap: String?
-            let fiatMoneyVolume24H: String?
-            
-            init(market: Market) {
-                let high24H: String?
-                if let value = Decimal(string: market.high24H, locale: .enUSPOSIX) {
-                    high24H = CurrencyFormatter.localizedString(
-                        from: value * Currency.current.decimalRate,
-                        format: .fiatMoneyPrice,
-                        sign: .never,
-                        symbol: .currencySymbol
-                    )
-                } else {
-                    high24H = nil
-                }
-                let low24H: String?
-                if let value = Decimal(string: market.low24H, locale: .enUSPOSIX) {
-                    low24H = CurrencyFormatter.localizedString(
-                        from: value * Currency.current.decimalRate,
-                        format: .fiatMoneyPrice,
-                        sign: .never,
-                        symbol: .currencySymbol
-                    )
-                } else {
-                    low24H = nil
-                }
-                let marketCap: String?
-                if let value = Decimal(string: market.marketCap, locale: .enUSPOSIX), !value.isZero {
-                    marketCap = NamedLargeNumberFormatter.string(
-                        number: value * Currency.current.decimalRate,
-                        currencyPrefix: true
-                    )
-                } else {
-                    marketCap = .notApplicable
-                }
-                let fiatMoneyVolume24H: String?
-                if let totalVolume = Decimal(string: market.totalVolume, locale: .enUSPOSIX) {
-                    fiatMoneyVolume24H = NamedLargeNumberFormatter.string(
-                        number: totalVolume * Currency.current.decimalRate,
-                        currencyPrefix: true
-                    )
-                } else {
-                    fiatMoneyVolume24H = nil
-                }
-                
-                self.high24H = high24H
-                self.low24H = low24H
-                self.marketCap = marketCap
-                self.fiatMoneyVolume24H = fiatMoneyVolume24H
-            }
-            
-        }
-        
         struct Balance {
             
             enum Color {
@@ -976,7 +888,7 @@ extension MarketViewController {
         
         let symbol: String
         
-        private(set) var stats: Stats?
+        private(set) var stats: MarketStatistics?
         private(set) var balance: Balance?
         private(set) var infos: [Info]
         
@@ -990,7 +902,7 @@ extension MarketViewController {
             ]
             let marketInfos = Info.marketInfos(market: market)
             
-            self.stats = Stats(market: market)
+            self.stats = MarketStatistics(market: market)
             self.balance = nil
             self.infos = basicInfos + marketInfos
             
@@ -1039,7 +951,7 @@ extension MarketViewController {
         }
         
         func update(market: Market, tokens: [MixinTokenItem]) {
-            self.stats = Stats(market: market)
+            self.stats = MarketStatistics(market: market)
             
             self.balance = {
                 let balance: Decimal

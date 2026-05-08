@@ -1302,6 +1302,8 @@
 "referral_program_introduction_3" = "返佣资格终生有效";
 "referral_program_introduction_footer" = "* 推荐奖励仅限于付费 Mixin One 会员。";
 "referral_program_introduction_header" = "参与邀请计划，邀请好友分享赚币：";
+"referral_share_desc" = "扫描安装 Mixin，使用此邀请码可享 %@ 返现";
+"referral_share_desc_zero" = "扫描安装 Mixin";
 "refresh" = "刷新";
 "refunded" = "已退款";
 "reject" = "拒绝";

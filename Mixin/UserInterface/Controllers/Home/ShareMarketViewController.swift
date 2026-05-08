@@ -1,27 +1,63 @@
 import UIKit
 import LinkPresentation
+import MixinServices
 
-final class ShareMarketViewController: ShareViewAsPictureViewController {
+final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMarketContentView> {
     
-    private let symbol: String
-    private let image: UIImage
-    private let shareMarketContentView = R.nib.shareMarketAsPictureView(withOwner: nil)!
+    private let market: Market
+    private let link: String
     
-    private var dismissOnColorAppearanceChange = false
-    
-    init(symbol: String, image: UIImage) {
-        self.symbol = symbol
-        self.image = image
-        super.init()
+    init(
+        market: Market,
+        period: PriceHistoryPeriod,
+        points: [ChartView.Point],
+        statistics: MarketStatistics,
+        rebatingCode: Referral.RebatingCode?,
+    ) {
+        let contentView = R.nib.shareMarketContentView(withOwner: nil)!
+        contentView.titleLabel.text = market.symbol
+        contentView.rankLabel.text = market.numberedRank
+        contentView.rankLabel.isHidden = contentView.rankLabel.text == nil
+        contentView.tokenIconView.setIcon(market: market)
+        contentView.priceLabel.text = market.localizedPrice
+        if points.count >= 2 {
+            let base = points[0]
+            let now = points[points.count - 1]
+            let change = (now.value - base.value) / base.value
+            if let changePercentage = NumberFormatter.percentage.string(decimal: change) {
+                contentView.changeLabel.text = changePercentage
+                contentView.changeLabel.alpha = 1
+            } else {
+                contentView.changeLabel.alpha = 0
+            }
+            contentView.changeLabel.marketColor = .byValue(change)
+            contentView.chartView.points = points
+            contentView.hideUnavailableView()
+        } else {
+            contentView.changeLabel.alpha = 0
+            contentView.showUnavailableView()
+        }
+        if let index = PriceHistoryPeriod.allCases.firstIndex(of: period) {
+            contentView.setPeriodSelection(index: index)
+        }
+        contentView.nameLabel.text = market.name
+        contentView.marketCapContentLabel.text = statistics.marketCap
+        contentView.volumeContentLabel.text = statistics.fiatMoneyVolume24H
+        contentView.highContentLabel.text = statistics.high24H
+        contentView.lowContentLabel.text = statistics.low24H
+        let link = if let rebatingCode {
+            contentView.obiView.load(gradient: true, content: .referral(rebatingCode))
+        } else {
+            contentView.obiView.load(gradient: true, content: .installMixin)
+        }
+        
+        self.market = market
+        self.link = link
+        super.init(contentView: contentView, size: CGSize(width: 295, height: 690))
     }
     
     required init?(coder: NSCoder) {
         fatalError("Storyboard is not supported")
-    }
-    
-    override func loadContentView() {
-        contentView = shareMarketContentView
-        shareMarketContentView.setImage(image)
     }
     
     override func viewDidLoad() {
@@ -30,27 +66,13 @@ final class ShareMarketViewController: ShareViewAsPictureViewController {
         actionButtonTrayView.backgroundColor = R.color.background()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        dismissOnColorAppearanceChange = true
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if dismissOnColorAppearanceChange,
-           traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection)
-        {
-            presentingViewController?.dismiss(animated: false)
-        }
-    }
-    
     override func share(_ sender: Any) {
         guard let presentingViewController else {
             return
         }
-        let image = makeSharingImage()
+        let image = makeImage()
         let item = ActivityItem(
-            title: symbol + " " + R.string.localizable.market(),
+            title: market.symbol + " " + R.string.localizable.market(),
             image: image
         )
         let activity = UIActivityViewController(activityItems: [item], applicationActivities: nil)
@@ -60,23 +82,15 @@ final class ShareMarketViewController: ShareViewAsPictureViewController {
     }
     
     override func copyLink(_ sender: Any) {
-        UIPasteboard.general.string = URL.shortMixinMessenger.absoluteString
+        UIPasteboard.general.string = link
         showAutoHiddenHud(style: .notification, text: R.string.localizable.copied())
         close(sender)
     }
     
     override func savePhoto(_ sender: Any) {
-        let image = makeSharingImage()
+        let image = makeImage()
         PhotoLibrary.saveImage(source: .image(image)) { alert in
             self.present(alert, animated: true)
-        }
-    }
-    
-    private func makeSharingImage() -> UIImage {
-        let view: UIView = shareMarketContentView.screenshotWrapperView
-        let renderer = UIGraphicsImageRenderer(bounds: view.bounds)
-        return renderer.image { context in
-            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         }
     }
     

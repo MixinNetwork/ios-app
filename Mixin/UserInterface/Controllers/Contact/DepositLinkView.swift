@@ -306,19 +306,11 @@ extension DepositLinkView {
     
     private func font(ofSize size: CGFloat, weight: UIFont.Weight = .regular) -> UIFont {
         if adjustsFontForContentSizeCategory {
-            return UIFontMetrics.default.scaledFont(for:
+            UIFontMetrics.default.scaledFont(for:
                     .systemFont(ofSize: size, weight: weight)
             )
         } else {
-            let size = switch ScreenHeight.current {
-            case .short:
-                size * 0.6
-            case .medium:
-                size * 0.75
-            default:
-                size
-            }
-            return .systemFont(ofSize: round(size), weight: weight)
+            .systemFont(ofSize: size, weight: .accessiblityBoldTextCounterWeight(weight))
         }
     }
     

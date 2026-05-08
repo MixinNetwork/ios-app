@@ -531,11 +531,18 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
         guard let positionViewModel = openPositionViewModel else {
             return
         }
-        let share = SharePerpetualPositionViewController(
-            viewModel: positionViewModel,
-            latestPrice: viewModel.decimalPrice
-        )
-        present(share, animated: true)
+        let latestPrice = viewModel.decimalPrice
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        Referral.loadAvailableCode { [weak self] code in
+            hud.hide()
+            let share = SharePerpetualPositionViewController(
+                viewModel: positionViewModel,
+                latestPrice: latestPrice,
+                rebatingCode: code
+            )
+            self?.present(share, animated: true)
+        }
     }
     
 }

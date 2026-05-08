@@ -34,7 +34,7 @@
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oys-cY-VXv">
-                            <rect key="frame" x="269" y="4" width="44" height="44"/>
+                            <rect key="frame" x="265" y="6" width="44" height="44"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o5U-Cc-wet">
                                     <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
@@ -95,7 +95,7 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstItem="oys-cY-VXv" firstAttribute="top" secondItem="dMf-Ii-eQE" secondAttribute="top" constant="4" id="0B0-on-Ekb"/>
+                        <constraint firstItem="oys-cY-VXv" firstAttribute="top" secondItem="dMf-Ii-eQE" secondAttribute="top" constant="6" id="0B0-on-Ekb"/>
                         <constraint firstItem="1H8-wN-h5l" firstAttribute="top" secondItem="SAe-rh-oZu" secondAttribute="bottom" constant="10" id="2Ha-Dj-LQ7"/>
                         <constraint firstAttribute="trailing" secondItem="SAe-rh-oZu" secondAttribute="trailing" id="2dy-zt-QtM"/>
                         <constraint firstAttribute="trailing" secondItem="1H8-wN-h5l" secondAttribute="trailing" id="9za-nr-bGM"/>
@@ -103,7 +103,7 @@
                         <constraint firstItem="SAe-rh-oZu" firstAttribute="leading" secondItem="dMf-Ii-eQE" secondAttribute="leading" id="R83-It-ZDS"/>
                         <constraint firstItem="SAe-rh-oZu" firstAttribute="top" secondItem="dMf-Ii-eQE" secondAttribute="top" id="iOc-ro-IKh"/>
                         <constraint firstItem="1H8-wN-h5l" firstAttribute="leading" secondItem="dMf-Ii-eQE" secondAttribute="leading" id="xsq-rM-giS"/>
-                        <constraint firstAttribute="trailing" secondItem="oys-cY-VXv" secondAttribute="trailing" constant="2" id="yLg-nv-EWt"/>
+                        <constraint firstAttribute="trailing" secondItem="oys-cY-VXv" secondAttribute="trailing" constant="6" id="yLg-nv-EWt"/>
                     </constraints>
                 </view>
             </subviews>

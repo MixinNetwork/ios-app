@@ -39,6 +39,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                 BotUserID.mixinDiscourse,
                 BotUserID.rewards,
                 BotUserID.mixinCard,
+                BotUserID.mixinCash,
             ]
         } else {
             [
@@ -48,6 +49,7 @@ final class CheckSessionEnvironmentViewController: UIViewController {
                 BotUserID.mixinCommunity,
                 BotUserID.rewards,
                 BotUserID.mixinCard,
+                BotUserID.mixinCash,
             ]
         }
     }

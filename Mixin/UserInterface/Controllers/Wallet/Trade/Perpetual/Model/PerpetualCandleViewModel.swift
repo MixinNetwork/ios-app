@@ -26,26 +26,29 @@ extension PerpetualCandleViewModel {
         case .oneDay, .oneWeek:
                 .shortDateOnly
         }
-        let numberFormatter: NumberFormatter = .enUSPOSIXDecimal
-        let currencyRate = Currency.current.decimalRate as NSDecimalNumber
         
         var entries: [PerpetualCandleViewModel] = []
         entries.reserveCapacity(drawingItems.count)
         for item in drawingItems {
             let date = Date(timeIntervalSince1970: TimeInterval(item.timestamp / 1000))
-            let open = numberFormatter.number(from: item.open) as? NSDecimalNumber
-            let close = numberFormatter.number(from: item.close) as? NSDecimalNumber
-            let high = numberFormatter.number(from: item.high) as? NSDecimalNumber
-            let low = numberFormatter.number(from: item.low) as? NSDecimalNumber
+            
+            // Do not use NumberFormatter here
+            // It lose precision like floating point numbers for no reason
+            // Even if `generatesDecimalNumbers` is true
+            let open = Decimal(string: item.open, locale: .enUSPOSIX)
+            let close = Decimal(string: item.close, locale: .enUSPOSIX)
+            let high = Decimal(string: item.high, locale: .enUSPOSIX)
+            let low = Decimal(string: item.low, locale: .enUSPOSIX)
+            
             guard let open, let close, let high, let low else {
                 return nil
             }
             let entry = PerpetualCandleViewModel(
                 time: dateFormatter.string(from: date),
-                open: open.multiplying(by: currencyRate),
-                high: high.multiplying(by: currencyRate),
-                low: low.multiplying(by: currencyRate),
-                close: close.multiplying(by: currencyRate),
+                open: open as NSDecimalNumber,
+                high: high as NSDecimalNumber,
+                low: low as NSDecimalNumber,
+                close: close as NSDecimalNumber,
             )
             entries.append(entry)
         }

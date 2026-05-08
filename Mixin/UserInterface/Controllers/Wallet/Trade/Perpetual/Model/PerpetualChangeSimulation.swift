@@ -56,12 +56,7 @@ enum PerpetualChangeSimulation {
         case .short:
             entryPrice * (1 + liquidationChangePercentage)
         }
-        return CurrencyFormatter.localizedString(
-            from: price * Currency.current.decimalRate,
-            format: .fiatMoneyPrice,
-            sign: .never,
-            symbol: .currencySymbol
-        )
+        return price.formatted(PerpsPrice.format(price))
     }
     
     static func liquidation(

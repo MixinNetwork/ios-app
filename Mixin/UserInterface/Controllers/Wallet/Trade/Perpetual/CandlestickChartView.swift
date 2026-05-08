@@ -9,7 +9,7 @@ final class CandlestickChartView: UIView {
         static let minCandleWidth: CGFloat = 3
         static let maxCandleWidth: CGFloat = 10
         static let candleGap: CGFloat = 2
-        static let priceAreaWidth: CGFloat = 50
+        static let priceAreaWidth: CGFloat = 60
         
         static let gridLineCount: Int = 6
         static let gridLineColor = R.color.grid_line()
@@ -328,11 +328,7 @@ final class CandlestickChartView: UIView {
         
         let priceRange = currentMin - currentMax
         let p = Decimal(location.y) * priceRange / Decimal(bounds.height) + currentMax
-        let price = CurrencyFormatter.localizedString(
-            from: p,
-            format: .fiatMoneyPrice,
-            sign: .never
-        )
+        let price = p.formatted(PerpsPrice.format(currentMax))
         crosshairView.update(
             x: xOnScreen,
             y: location.y,
@@ -364,10 +360,8 @@ final class CandlestickChartView: UIView {
                 let diff = (currentMax - price) as NSDecimalNumber
                 yPos = diff.doubleValue / yRange.doubleValue * bounds.height
             }
-            let price = CurrencyFormatter.localizedString(
-                from: price,
-                format: .fiatMoneyPrice,
-                sign: .never
+            let price = price.formatted(
+                PerpsPrice.format(currentMax)
             )
             latestPriceView.update(
                 y: yPos,
@@ -432,11 +426,8 @@ extension CandlestickChartView {
             let range = maxVal - minVal
             for (i, label) in labels.enumerated() {
                 let fraction = 1 - (Decimal(i) / Decimal(Config.gridLineCount - 1))
-                label.text = CurrencyFormatter.localizedString(
-                    from: minVal + range * fraction,
-                    format: .fiatMoneyPrice,
-                    sign: .never
-                )
+                let price = minVal + range * fraction
+                label.text = price.formatted(PerpsPrice.format(minVal))
             }
         }
         

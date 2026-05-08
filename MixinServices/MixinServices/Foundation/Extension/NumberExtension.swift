@@ -107,6 +107,10 @@ public extension Decimal {
         max(-exponent, 0)
     }
     
+    public var precision: NumberFormatStyleConfiguration.Precision {
+        .fractionLength(0...numberOfSignificantFractionalDigits)
+    }
+    
     public var reportingAssetLevel: String {
         switch self {
         case 0:

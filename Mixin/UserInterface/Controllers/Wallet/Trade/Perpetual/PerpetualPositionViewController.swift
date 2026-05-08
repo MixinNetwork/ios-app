@@ -232,11 +232,17 @@ extension PerpetualPositionViewController: PillActionView.Delegate {
             let preview = ClosePerpetualPositionPreviewViewController(viewModel: viewModel)
             present(preview, animated: true)
         case .share:
-            let share = SharePerpetualPositionViewController(
-                viewModel: viewModel,
-                latestPrice: nil
-            )
-            present(share, animated: true)
+            let hud = Hud()
+            hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+            Referral.loadAvailableCode { [weak self, viewModel] code in
+                hud.hide()
+                let share = SharePerpetualPositionViewController(
+                    viewModel: viewModel,
+                    latestPrice: nil,
+                    rebatingCode: code
+                )
+                self?.present(share, animated: true)
+            }
         }
     }
     

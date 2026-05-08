@@ -5,7 +5,7 @@ final class ShareObiView: UIView, XibDesignable {
     
     enum Content {
         case installMixin
-        case referral(code: String, rebate: Decimal)
+        case referral(Referral.RebatingCode)
     }
     
     @IBOutlet weak var contentView: GradientView!
@@ -24,7 +24,8 @@ final class ShareObiView: UIView, XibDesignable {
         loadSubviews()
     }
     
-    func load(gradient: Bool, content: Content) {
+    // Returns content displayed in QR Code view
+    func load(gradient: Bool, content: Content) -> String {
         if gradient {
             contentView.lightColors = [
                 UIColor(displayP3RgbValue: 0x4B7CDD),
@@ -38,20 +39,17 @@ final class ShareObiView: UIView, XibDesignable {
             contentView.lightColors = nil
             contentView.darkColors = nil
         }
+        let qrCodeContent: String
         switch content {
         case .installMixin:
             textStackView.spacing = 4
             titleLabel.text = .mixin
             descriptionLabel.text = R.string.localizable.install_messenger_desc()
-            qrCodeView.setContent(
-                URL.shortMixinMessenger.absoluteString,
-                size: qrCodeView.bounds.size,
-                activityIndicator: false
-            )
-        case let .referral(code, rebate):
+            qrCodeContent = URL.shortMixinMessenger.absoluteString
+        case let .referral(rebating):
             textStackView.spacing = 10
             titleLabel.attributedText = NSAttributedString(
-                string: code,
+                string: rebating.code,
                 attributes: [
                     .foregroundColor: UIColor.white,
                     .font: UIFont.systemFont(
@@ -60,13 +58,15 @@ final class ShareObiView: UIView, XibDesignable {
                     ),
                 ],
             )
-            descriptionLabel.attributedText = rebateDescription(rebate: rebate)
-            qrCodeView.setContent(
-                URL.bindReferral(code: code),
-                size: qrCodeView.bounds.size,
-                activityIndicator: false
-            )
+            descriptionLabel.attributedText = rebateDescription(rebate: rebating.rebate)
+            qrCodeContent = URL.bindReferral(code: rebating.code)
         }
+        qrCodeView.setContent(
+            qrCodeContent,
+            size: qrCodeView.bounds.size,
+            activityIndicator: false
+        )
+        return qrCodeContent
     }
     
     private func rebateDescription(rebate: Decimal) -> NSAttributedString {

@@ -5,16 +5,15 @@ import MixinServices
 final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMarketContentView> {
     
     private let market: Market
-    
-    private var link = URL.shortMixinMessenger.absoluteString
+    private let link: String
     
     init(
         market: Market,
         period: PriceHistoryPeriod,
         points: [ChartView.Point],
         statistics: MarketStatistics,
+        rebatingCode: Referral.RebatingCode?,
     ) {
-        self.market = market
         let contentView = R.nib.shareMarketContentView(withOwner: nil)!
         contentView.titleLabel.text = market.symbol
         contentView.rankLabel.text = market.numberedRank
@@ -46,6 +45,14 @@ final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMar
         contentView.volumeContentLabel.text = statistics.fiatMoneyVolume24H
         contentView.highContentLabel.text = statistics.high24H
         contentView.lowContentLabel.text = statistics.low24H
+        let link = if let rebatingCode {
+            contentView.obiView.load(gradient: true, content: .referral(rebatingCode))
+        } else {
+            contentView.obiView.load(gradient: true, content: .installMixin)
+        }
+        
+        self.market = market
+        self.link = link
         super.init(contentView: contentView, size: CGSize(width: 295, height: 690))
     }
     
@@ -57,16 +64,6 @@ final class ShareMarketViewController: ShareViewAsPictureViewController<ShareMar
         super.viewDidLoad()
         actionButtonBackgroundView.effect = nil
         actionButtonTrayView.backgroundColor = R.color.background()
-        loadReferralCode { [weak self] code, rebate in
-            guard let self else {
-                return
-            }
-            self.link = URL.bindReferral(code: code)
-            self.contentView.obiView.load(
-                gradient: true,
-                content: .referral(code: code, rebate: rebate)
-            )
-        }
     }
     
     override func share(_ sender: Any) {

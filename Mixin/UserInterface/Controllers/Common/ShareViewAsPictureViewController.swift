@@ -94,40 +94,6 @@ class ShareViewAsPictureViewController<ContentView: UIView>: UIViewController {
         
     }
     
-    func loadReferralCode(onAvailable: @escaping (_ code: String, _ rebate: Decimal) -> Void) {
-        RewardAPI.referral { result in
-            switch result {
-            case let .success(referral):
-                let expiredAt = referral.expiredAt.toUTCDate()
-                guard expiredAt.timeIntervalSinceNow > 0 else {
-                    return
-                }
-                let defaultCode = referral.codes.first { code in
-                    code.isDefault
-                }
-                guard let defaultCode else {
-                    return
-                }
-                let inviterPercent = Decimal(
-                    string: defaultCode.inviterPercent,
-                    locale: .enUSPOSIX
-                )
-                let tradingCommissionRatio = Decimal(
-                    string: referral.tradingCommissionRatio,
-                    locale: .enUSPOSIX
-                )
-                let rebate = if let tradingCommissionRatio, let inviterPercent {
-                    tradingCommissionRatio * max(0, 1 - inviterPercent)
-                } else {
-                    Decimal.zero
-                }
-                onAvailable(defaultCode.code, rebate)
-            case .failure:
-                break
-            }
-        }
-    }
-    
     func makeImage() -> UIImage {
         let canvas = contentView.bounds
         let renderer = UIGraphicsImageRenderer(bounds: canvas)

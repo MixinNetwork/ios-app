@@ -4,16 +4,24 @@ import MixinServices
 final class SharePerpetualPositionViewController: ShareViewAsPictureViewController<SharePerpetualPositionView> {
     
     private let viewModel: PerpetualPositionViewModel
-    
-    private var link = URL.shortMixinMessenger.absoluteString
+    private let link: String
     
     private weak var positionView: SharePerpetualPositionView!
     
-    init(viewModel: PerpetualPositionViewModel, latestPrice: Decimal?) {
-        self.viewModel = viewModel
+    init(
+        viewModel: PerpetualPositionViewModel,
+        latestPrice: Decimal?,
+        rebatingCode: Referral.RebatingCode?,
+    ) {
         let contentView = R.nib.sharePerpetualPositionView(withOwner: nil)!
         contentView.load(viewModel: viewModel, latestPrice: latestPrice)
-        contentView.obiView.load(gradient: false, content: .installMixin)
+        let link = if let rebatingCode {
+            contentView.obiView.load(gradient: false, content: .referral(rebatingCode))
+        } else {
+            contentView.obiView.load(gradient: false, content: .installMixin)
+        }
+        self.viewModel = viewModel
+        self.link = link
         super.init(contentView: contentView, size: CGSize(width: 295, height: 553))
     }
     
@@ -26,16 +34,6 @@ final class SharePerpetualPositionViewController: ShareViewAsPictureViewControll
         closeButton.overrideUserInterfaceStyle = .light
         actionButtonBackgroundView.effect = nil
         actionButtonTrayView.backgroundColor = R.color.background()
-        loadReferralCode { [weak self] code, rebate in
-            guard let self else {
-                return
-            }
-            self.link = URL.bindReferral(code: code)
-            self.contentView.obiView.load(
-                gradient: true,
-                content: .referral(code: code, rebate: rebate)
-            )
-        }
     }
     
     override func share(_ sender: Any) {

@@ -193,13 +193,19 @@ final class MarketViewController: UIViewController {
         guard let market, let chartPoints, let stats = viewModel.stats else {
             return
         }
-        let share = ShareMarketViewController(
-            market: market,
-            period: chartPeriod,
-            points: chartPoints,
-            statistics: stats,
-        )
-        self.present(share, animated: true)
+        let hud = Hud()
+        hud.show(style: .busy, text: "", on: AppDelegate.current.mainWindow)
+        Referral.loadAvailableCode { [weak self, chartPeriod] code in
+            hud.hide()
+            let share = ShareMarketViewController(
+                market: market,
+                period: chartPeriod,
+                points: chartPoints,
+                statistics: stats,
+                rebatingCode: code,
+            )
+            self?.present(share, animated: true)
+        }
     }
     
     @objc private func reloadFromLocal() {

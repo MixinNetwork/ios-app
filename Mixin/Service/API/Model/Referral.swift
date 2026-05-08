@@ -31,3 +31,50 @@ struct Referral: Decodable {
     let hasBeenInvited: Bool
     
 }
+
+extension Referral {
+    
+    struct RebatingCode {
+        let code: String
+        let rebate: Decimal
+    }
+    
+    static func loadAvailableCode(completion: @escaping (RebatingCode?) -> Void) {
+        RewardAPI.referral { result in
+            switch result {
+            case let .success(referral):
+                let expiredAt = referral.expiredAt.toUTCDate()
+                guard expiredAt.timeIntervalSinceNow > 0 else {
+                    fallthrough
+                }
+                let defaultCode = referral.codes.first { code in
+                    code.isDefault
+                }
+                guard let defaultCode else {
+                    fallthrough
+                }
+                let inviterPercent = Decimal(
+                    string: defaultCode.inviterPercent,
+                    locale: .enUSPOSIX
+                )
+                let tradingCommissionRatio = Decimal(
+                    string: referral.tradingCommissionRatio,
+                    locale: .enUSPOSIX
+                )
+                let rebate = if let tradingCommissionRatio, let inviterPercent {
+                    tradingCommissionRatio * max(0, 1 - inviterPercent)
+                } else {
+                    Decimal.zero
+                }
+                let availableCode = RebatingCode(
+                    code: defaultCode.code,
+                    rebate: rebate
+                )
+                completion(availableCode)
+            case .failure:
+                completion(nil)
+            }
+        }
+    }
+    
+}

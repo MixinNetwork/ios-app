@@ -178,6 +178,7 @@
 "authorized" = "許可しました";
 "auto_back_up_hint" = "Wi-Fiの使用時に自動でiCloudにバックアップする";
 "auto_backup" = "チャット履歴の自動バックアップ";
+"auto_close_description" = "Auto-close when target is reached";
 "auto_download_hint" = "メディアを自動ダウンロードする設定に変更する：音声メッセージは常に自動ダウンロードされます";
 "auto_lock" = "自動ロック";
 "automatic" = "自動";
@@ -898,6 +899,8 @@
 "markets" = "Markets";
 "max" = "Max";
 "max_favorite_bots_description" = "You can add a maximum of 5 favorite bots. Please be aware that others can view these bots on your profile.";
+"max_loss" = "Max Loss %@";
+"max_profit" = "Max Profit %@";
 "maximum_deposit" = "Maximum Deposit";
 "media" = "メディア";
 "membership_advance" = "Advance";
@@ -1224,6 +1227,8 @@
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";
 "price_alerts" = "Price Alerts";
 "price_change_24h" = "24h Price Change";
+"price_change_stop_loss" = "Price %1$@ → Max Loss %2$@";
+"price_change_take_profit" = "Price %1$@ → Max Profit %2$@";
 "price_data_unavailable" = "Price data unavailable";
 "price_decrease_invalid" = "The price decrease must be greater than %1$@ and less than %2$@";
 "price_fall_loss" = "Price falls %1$@ → Loss %2$@";
@@ -1234,6 +1239,7 @@
 "price_increase_invalid" = "The price increase must be greater than %1$@ and less than %2$@";
 "price_must_greater_than_current" = "The set price must be greater than the current price";
 "price_must_less_than_current" = "The set price must be less than the current price";
+"price_reaches_dollar" = "Price reaches $";
 "price_rise_loss" = "Price rises %1$@ → Loss %2$@";
 "price_rise_loss_all" = "Price rises %@ → Loss all";
 "price_rise_profit" = "Price rises %1$@ → Gain %2$@";
@@ -1259,6 +1265,7 @@
 "profile_badge_description" = "An exclusive badge next to your name";
 "profile_photo" = "プロフィール画像";
 "profile_share_bot_hint" = "ミニアプリをシェアしたい場合は、まずミニアプリを連絡先に追加してください。";
+"profit_reaches_percent" = "Profit reaches %%";
 "qr_code" = "QRコード";
 "qr_code_not_found" = "QRコードが見つかりません";
 "quote_color" = "Quote Color";
@@ -1600,6 +1607,14 @@
 "stickers_count" = "%d個のスタンプ";
 "stocks" = "Stocks";
 "stop" = "Stop";
+"stop_loss" = "Stop Loss";
+"stop_loss_intro_description" = "Stop loss (SL) limits your losses by closing your position if the price moves against you.";
+"stop_loss_intro_title" = "What’s the Stop Loss?";
+"stop_loss_label" = "SL";
+"stop_loss_price_must_higher" = "The stop-loss trigger price must be higher than %@";
+"stop_loss_price_must_higher_lower" = "The stop-loss trigger price must be higher than %1$@ and lower than %2$@";
+"stop_loss_price_must_lower" = "The stop-loss trigger price must be lower than %@";
+"stop_loss_when" = "Stop Loss When";
 "stop_playing" = "再生を止める";
 "stop_playing_this_list" = "再生を止めて、プレイリストを閉じますか？";
 "storage_usage" = "ストレージ使用率";
@@ -1628,6 +1643,15 @@
 "system_time_is_unusual" = "システム時刻に問題があります";
 "tag" = "タグ";
 "tag_placeholder" = "Enter the Tag. If there isn’t one, enter any non-zero number.";
+"take_profit" = "Take Profit";
+"take_profit_intro_description" = "Take profit (TP) automatically closes your position when you reach your target profit.";
+"take_profit_intro_title" = "What’s the Take Profit?";
+"take_profit_label" = "TP";
+"take_profit_price_must_higher" = "The take-profit trigger price must be higher than %@";
+"take_profit_price_must_higher_lower" = "The take-profit trigger price must be higher than %1$@ and lower than %2$@";
+"take_profit_price_must_lower" = "The take-profit trigger price must be lower than %@";
+"take_profit_stop_loss_label" = "TP/SL";
+"take_profit_when" = "Take Profit When";
 "tap_to_join" = "タップして参加";
 "terms_of_service" = "利用規約";
 "text" = "メッセージ通知の内容表示";
@@ -1785,6 +1809,8 @@
 "url_forget_pin" = "https://support.mixin.one/en/article/how-to-do-if-i-forget-the-pin-g12pmo/";
 "url_import_wallet" = "https://support.mixin.one/en/article/how-to-import-mnemonic-phrases-tjujvv/";
 "url_lightning_address" = "https://support.mixin.one/en/article/what-is-lightning-address-1i8733z/";
+"url_perps_stop_loss" = "https://support.mixin.one/en/article/how-to-set-take-profit-and-stop-loss-1eoepxc/#1-stop-loss";
+"url_perps_take_profit" = "https://support.mixin.one/en/article/how-to-set-take-profit-and-stop-loss-1eoepxc/#1-take-profit";
 "url_privacy_wallet" = "https://support.mixin.one/en/article/what-is-a-privacy-wallet-1ng5j8f/";
 "url_recall_message" = "https://support.mixin.one/en/article/how-to-recall-in-mixin-messenger-n3v3p1/";
 "url_recovery_contact" = "https://support.mixin.one/en/article/how-to-set-up-an-emergency-contact-1kvd6g8/";

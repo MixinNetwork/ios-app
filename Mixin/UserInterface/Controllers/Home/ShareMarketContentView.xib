@@ -34,7 +34,7 @@
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="500" verticalHuggingPriority="251" text="#2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nd4-7j-Lfm" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
                                             <rect key="frame" x="31.333333333333336" y="0.6666666666666714" width="15" height="14.333333333333334"/>
-                                            <color key="backgroundColor" name="background_tag"/>
+                                            <color key="backgroundColor" name="button_background_quaternary"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" name="text_tertiary"/>
                                             <nil key="highlightedColor"/>
@@ -256,7 +256,7 @@
         <namedColor name="background_secondary">
             <color red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
-        <namedColor name="background_tag">
+        <namedColor name="button_background_quaternary">
             <color red="0.89803921568627454" green="0.90980392156862744" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="red">

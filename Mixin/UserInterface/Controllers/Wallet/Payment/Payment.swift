@@ -183,6 +183,8 @@ extension Payment {
         let viewModel: PerpetualMarketViewModel
         let side: PerpetualOrderSide
         let leverageMultiplier: Decimal
+        let takeProfitPrice: Decimal?
+        let stopLossPrice: Decimal?
     }
     
     enum InscriptionError: Error, LocalizedError {

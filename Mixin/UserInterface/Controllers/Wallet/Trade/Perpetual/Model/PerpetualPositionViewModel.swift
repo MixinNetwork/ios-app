@@ -22,6 +22,12 @@ struct PerpetualPositionViewModel {
         
     }
     
+    enum AutoClosing {
+        case takeProfit
+        case stopLoss
+        case both
+    }
+    
     struct EstimatedReceiving {
         let assetID: String
         let receivingAmount: Decimal
@@ -48,6 +54,7 @@ struct PerpetualPositionViewModel {
     let orderValueInToken: String
     let entryPrice: String
     let date: String
+    let autoClosing: AutoClosing?
     
     // Only available for open positions
     let state: PerpetualPosition.State?
@@ -89,7 +96,7 @@ struct PerpetualPositionViewModel {
         self.pnl = localizedPnL
         self.pnlColor = pnl >= 0 ? .rising : .falling
         if let margin, margin != 0 {
-            let roe = max(-1, pnl / margin)
+            let roe = max(-1, pnl / margin) // FIXME: Use `position.roe`
             let roeWithSign = PercentageFormatter.string(
                 from: roe,
                 format: .pretty,
@@ -133,6 +140,16 @@ struct PerpetualPositionViewModel {
             DateFormatter.dateFull.string(from: date)
         } else {
             position.createdAt
+        }
+        self.autoClosing = switch (position.takeProfitPrice, position.stopLossPrice) {
+        case (.some, .none):
+                .takeProfit
+        case (.none, .some):
+                .stopLoss
+        case (.some, .some):
+                .both
+        case (.none, .none):
+                .none
         }
         
         self.state = position.state.knownCase
@@ -250,6 +267,7 @@ struct PerpetualPositionViewModel {
         } else {
             history.closedAt
         }
+        self.autoClosing = nil
         
         self.state = nil
         self.margin = nil

@@ -10,6 +10,8 @@ struct OpenPerpetualOrderRequest: Encodable {
         case leverage = "leverage"
         case walletID = "wallet_id"
         case destination = "destination"
+        case takeProfitPrice = "take_profit_price"
+        case stopLossPrice = "stop_loss_price"
     }
     
     let assetID: String
@@ -19,5 +21,7 @@ struct OpenPerpetualOrderRequest: Encodable {
     let leverage: Int
     let walletID: String
     let destination: String?
+    let takeProfitPrice: String?
+    let stopLossPrice: String?
     
 }

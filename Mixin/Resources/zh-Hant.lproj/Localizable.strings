@@ -178,6 +178,7 @@
 "authorized" = "已授權";
 "auto_back_up_hint" = "只會在 Wi-Fi 下自動備份聊天記錄。";
 "auto_backup" = "自動備份";
+"auto_close_description" = "達到目標時自動平倉";
 "auto_download_hint" = "媒體自動下載設定，所有語音訊息將自動下載。";
 "auto_lock" = "自動鎖定";
 "automatic" = "自動";
@@ -898,6 +899,8 @@
 "markets" = "行情";
 "max" = "最大值";
 "max_favorite_bots_description" = "最多可以新增 5 個喜歡的機器人，注意其他人可以在你的個人資訊彈窗裡檢視這些你喜歡的機器人。";
+"max_loss" = "最多虧損 %@";
+"max_profit" = "最多盈利 %@";
 "maximum_deposit" = "最大充值金額";
 "media" = "媒體";
 "membership_advance" = "進階版";
@@ -1224,6 +1227,8 @@
 "price_alert_notification_permission" = "價格預警需要開啟通知許可權";
 "price_alerts" = "所有價格預警";
 "price_change_24h" = "24 小時價格變化";
+"price_change_stop_loss" = "價格 %1$@ → 最多虧損 %2$@";
+"price_change_take_profit" = "價格 %1$@ → 最多盈利 %2$@";
 "price_data_unavailable" = "暫無價格資料";
 "price_decrease_invalid" = "跌幅需大於 %1$@ 且小於 %2$@";
 "price_fall_loss" = "價格下跌 %1$@ → 虧損 %2$@";
@@ -1234,6 +1239,7 @@
 "price_increase_invalid" = "漲幅需大於 %1$@ 且小於 %2$@";
 "price_must_greater_than_current" = "設定價格需大於現價";
 "price_must_less_than_current" = "設定價格需小於現價";
+"price_reaches_dollar" = "價格達到 $";
 "price_rise_loss" = "價格上漲 %1$@ → 虧損 %2$@";
 "price_rise_loss_all" = "價格上漲 %@ → 虧損全部";
 "price_rise_profit" = "價格上漲 %1$@ → 盈利 %2$@";
@@ -1259,6 +1265,7 @@
 "profile_badge_description" = "您名字旁邊的專屬徽章";
 "profile_photo" = "個人頭像";
 "profile_share_bot_hint" = "如果您希望分享機器人，請先新增聯絡人。";
+"profit_reaches_percent" = "盈利達到 %%";
 "qr_code" = "二維碼";
 "qr_code_not_found" = "未發現二維碼";
 "quote_color" = "漲跌顏色";
@@ -1600,6 +1607,14 @@
 "stickers_count" = "%d 個表情";
 "stocks" = "股票";
 "stop" = "暫停";
+"stop_loss" = "止損";
+"stop_loss_intro_description" = "止損會在價格走勢不利時自動平倉，幫助你控制虧損。";
+"stop_loss_intro_title" = "什麼是止損？";
+"stop_loss_label" = "止損";
+"stop_loss_price_must_higher" = "止損觸發價必須高於 %@";
+"stop_loss_price_must_higher_lower" = "止損觸發價必須高於 %1$@ 且低於 %2$@";
+"stop_loss_price_must_lower" = "止損觸發價必須低於 %@";
+"stop_loss_when" = "止損條件";
 "stop_playing" = "停止播放";
 "stop_playing_this_list" = "確定要停止並關閉播放列表？";
 "storage_usage" = "儲存空間";
@@ -1628,6 +1643,15 @@
 "system_time_is_unusual" = "系統時間異常";
 "tag" = "Tag（標籤）";
 "tag_placeholder" = "輸入數字地址標籤（Tag），如果沒有請輸入任意非 0 數字。";
+"take_profit" = "止盈";
+"take_profit_intro_description" = "止盈會在達到目標收益時自動平倉，幫助你鎖定利潤。";
+"take_profit_intro_title" = "什麼是止盈？";
+"take_profit_label" = "止盈";
+"take_profit_price_must_higher" = "止盈觸發價必須高於 %@";
+"take_profit_price_must_higher_lower" = "止盈觸發價必須高於 %1$@ 且低於 %2$@";
+"take_profit_price_must_lower" = "止盈觸發價必須低於 %@";
+"take_profit_stop_loss_label" = "止盈止損";
+"take_profit_when" = "止盈條件";
 "tap_to_join" = "點選加入";
 "terms_of_service" = "服務條款";
 "text" = "資訊";
@@ -1785,6 +1809,8 @@
 "url_forget_pin" = "https://support.mixin.one/zh/article/pin-1vb2rc7/";
 "url_import_wallet" = "https://support.mixin.one/zh/article/5aac5l2v5a85ywl5yqp6k6w6kn6zkx5yyf77yf-eri489/";
 "url_lightning_address" = "https://support.mixin.one/zh/article/lightning-address-1fzf8s4/";
+"url_perps_stop_loss" = "https://support.mixin.one/zh/article/mixin-1ftc7wn/#1-5q2i5o2f";
+"url_perps_take_profit" = "https://support.mixin.one/zh/article/mixin-1ftc7wn/#1-5q2i55ui";
 "url_privacy_wallet" = "https://support.mixin.one/zh/article/5lua5lmi5piv6zqq56eb6zkx5yyf77yf-1s7o0e2/";
 "url_recall_message" = "https://support.mixin.one/zh/article/mixin-messenger-bjr9re/";
 "url_recovery_contact" = "https://support.mixin.one/zh/article/5aac5l2v6k6572u57sn5ocl6igu57o75lq6-d2nssy/";

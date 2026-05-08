@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -54,8 +54,15 @@
                                         <color key="textColor" name="text_tertiary"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" placeholderIntrinsicWidth="33" placeholderIntrinsicHeight="14" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pta-4b-LiX" customClass="InsetLabel" customModule="Mixin" customModuleProvider="target">
+                                        <rect key="frame" x="54.333333333333343" y="1.6666666666666679" width="33" height="14"/>
+                                        <color key="backgroundColor" name="background_tinted"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="500" text="$88,540.70" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="OSQ-c8-Rcc">
-                                        <rect key="frame" x="54.333333333333357" y="0.0" width="222.66666666666663" height="17"/>
+                                        <rect key="frame" x="91.333333333333357" y="0.0" width="185.66666666666663" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" name="text"/>
                                         <nil key="highlightedColor"/>
@@ -96,6 +103,7 @@
             </collectionViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
+                <outlet property="autoClosingLabel" destination="pta-4b-LiX" id="AsT-FS-k67"/>
                 <outlet property="changeLabel" destination="Jxw-gd-VTq" id="CAO-Sm-kVA"/>
                 <outlet property="iconView" destination="zHn-SI-sHm" id="kPp-Xo-tsB"/>
                 <outlet property="leverageLabel" destination="VkA-Ht-9Mh" id="n5J-NL-1im"/>
@@ -112,6 +120,9 @@
         </namedColor>
         <namedColor name="background_input">
             <color red="0.96078431372549022" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="background_tinted">
+            <color red="0.29411764705882354" green="0.48627450980392156" blue="0.8666666666666667" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="market_green">
             <color red="0.31372549019607843" green="0.74117647058823533" blue="0.36078431372549019" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>

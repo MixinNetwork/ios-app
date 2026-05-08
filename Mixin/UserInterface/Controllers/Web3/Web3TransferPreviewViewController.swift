@@ -131,7 +131,11 @@ final class Web3TransferPreviewViewController: WalletIdentifyingAuthenticationPr
         
         switch proposer {
         case let .dapp(proposer):
-            rows.append(.doubleLineInfo(caption: .from, primary: proposer.name, secondary: proposer.host))
+            rows.append(.doubleLineInfo(
+                caption: .from,
+                primary: proposer.name,
+                secondary: .plain(proposer.host)
+            ))
             rows.append(.address(caption: .wallet, address: operation.fromAddress.destination, label: .wallet(.common(operation.wallet))))
         case let .user(toAddressLabel):
             switch toAddressLabel {

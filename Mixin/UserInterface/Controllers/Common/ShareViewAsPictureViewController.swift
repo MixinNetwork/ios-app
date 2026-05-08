@@ -110,8 +110,9 @@ class ShareViewAsPictureViewController<ContentView: UIView>: UIViewController {
         let scaleY = contentWrapperView.frame.height / contentSize.height
         let scale = min(scaleX, scaleY)
         contentView.transform = CGAffineTransform(scaleX: scale, y: scale)
-        let horizontalMargin = contentWrapperView.frame.width * (1 - min(1, scale))
-        closeButtonWrapperTrailingConstraint.constant = 2 + horizontalMargin / 2
+        let horizontalMargin = contentWrapperView.frame.width - contentSize.width * scale
+        closeButtonWrapperTrailingConstraint.constant = round(2 + horizontalMargin / 2)
+        layoutWrapperView.layoutIfNeeded()
     }
     
     private func addActionButton(icon: UIImage?, text: String, config: (UIButton) -> Void) {

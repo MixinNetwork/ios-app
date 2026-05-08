@@ -29,11 +29,11 @@ final class SharePerpetualPositionView: UIView {
         )
         entryPriceContentLabel.font = .systemFont(
             ofSize: 16,
-            weight: .accessiblityBoldTextCounterWeight(.bold)
+            weight: .accessiblityBoldTextCounterWeight(.semibold)
         )
         priceContentLabel.font = .systemFont(
             ofSize: 16,
-            weight: .accessiblityBoldTextCounterWeight(.bold)
+            weight: .accessiblityBoldTextCounterWeight(.semibold)
         )
         operationLabel.contentInset = UIEdgeInsets(top: 3, left: 6, bottom: 3, right: 6)
         leverageLabel.contentInset = UIEdgeInsets(top: 4, left: 6, bottom: 2, right: 6)

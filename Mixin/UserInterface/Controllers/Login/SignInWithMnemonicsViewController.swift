@@ -94,6 +94,7 @@ final class SignInWithMnemonicsViewController: InputMnemonicsViewController {
     }
     
     func reloadViews(count: MixinMnemonics.PhrasesCount?) {
+        view.endEditing(true)
         self.phrasesCount = count
         let selectedTag = count?.rawValue ?? unavailablePhrasesCountTag
         for button in phraseCountSwitchButtons {

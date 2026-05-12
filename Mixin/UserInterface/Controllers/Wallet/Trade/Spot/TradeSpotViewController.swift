@@ -37,6 +37,10 @@ class TradeSpotViewController: UIViewController {
         pricingModel.sendToken
     }
     
+    var sendTokenPrecision: Int {
+        fatalError("Must override")
+    }
+    
     var receiveToken: BalancedSwapToken? {
         pricingModel.receiveToken
     }
@@ -690,11 +694,7 @@ extension TradeSpotViewController: UITextFieldDelegate {
         case 1:
             true
         case 2:
-            if let precision = sendToken?.decimals {
-                components[1].count <= precision
-            } else {
-                components[1].count <= MixinToken.internalPrecision
-            }
+            components[1].count <= sendTokenPrecision
         default:
             false
         }

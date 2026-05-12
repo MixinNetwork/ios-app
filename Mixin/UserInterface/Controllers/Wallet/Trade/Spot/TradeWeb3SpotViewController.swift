@@ -8,6 +8,10 @@ final class TradeWeb3SpotViewController: TradeSpotViewController {
     private let supportedChainIDs: Set<String>
     private let slippage: Decimal = 0.01
     
+    override var sendTokenPrecision: Int {
+        sendToken?.decimals ?? Int(MixinToken.internalPrecision)
+    }
+    
     override var orderWalletID: String {
         wallet.walletID
     }

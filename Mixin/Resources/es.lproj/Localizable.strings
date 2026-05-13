@@ -543,6 +543,7 @@
 "edit" = "Editar";
 "edit_address" = "Editar dirección de %@";
 "edit_alert" = "Edit Alert";
+"edit_auto_closing_title" = "%1$@ for %2$@ %3$@";
 "edit_biography" = "Editar biografía";
 "edit_circle_name" = "Editar nombre del círculo";
 "edit_conversations" = "Editar conversaciones";

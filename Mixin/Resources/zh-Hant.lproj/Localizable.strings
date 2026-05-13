@@ -543,6 +543,7 @@
 "edit" = "編輯";
 "edit_address" = "修改 %@ 地址";
 "edit_alert" = "編輯價格預警";
+"edit_auto_closing_title" = "%3$@ %2$@%1$@";
 "edit_biography" = "修改簡介";
 "edit_circle_name" = "編輯名稱";
 "edit_conversations" = "管理圈子";

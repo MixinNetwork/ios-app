@@ -78,6 +78,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
             basePrice: viewModel.decimalPrice,
             side: side,
             leverage: leverage,
+            priceScale: viewModel.market.priceScale,
         )
         self.fixedInputs = switch behavior {
         case .takeProfit:
@@ -215,9 +216,19 @@ final class EditPerpClosingConditionViewController: UIViewController {
         )
         confirmButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
+        let localizedSide = switch side {
+        case .long:
+            R.string.localizable.long()
+        case .short:
+            R.string.localizable.short()
+        }
         switch condition.behavior {
         case .takeProfit:
-            titleLabel.text = R.string.localizable.take_profit()
+            titleLabel.text = R.string.localizable.edit_auto_closing_title(
+                R.string.localizable.take_profit(),
+                localizedSide,
+                viewModel.market.tokenSymbol,
+            )
             inputTitleLabel.text = R.string.localizable.take_profit_when()
             if BadgeManager.shared.hasViewed(identifier: .perpsTakeProfit) {
                 introSectionView.isHidden = true
@@ -228,7 +239,11 @@ final class EditPerpClosingConditionViewController: UIViewController {
                 introImageView.image = R.image.take_profit_intro()
             }
         case .stopLoss:
-            titleLabel.text = R.string.localizable.stop_loss()
+            titleLabel.text = R.string.localizable.edit_auto_closing_title(
+                R.string.localizable.stop_loss(),
+                localizedSide,
+                viewModel.market.tokenSymbol,
+            )
             inputTitleLabel.text = R.string.localizable.stop_loss_when()
             if BadgeManager.shared.hasViewed(identifier: .perpsStopLoss) {
                 introSectionView.isHidden = true
@@ -545,7 +560,12 @@ extension EditPerpClosingConditionViewController: UICollectionViewDelegate {
                         return result
                     }
                 }
-                inputTextField.text = price.formatted(userInputSimulationFormat)
+                let roundedPrice = withUnsafePointer(to: price) { price in
+                    var result: Decimal = 0
+                    NSDecimalRound(&result, price, viewModel.market.priceScale, .plain)
+                    return result
+                }
+                inputTextField.text = roundedPrice.formatted(userInputSimulationFormat)
             }
             inputEditingChanged(inputTextField)
         default:

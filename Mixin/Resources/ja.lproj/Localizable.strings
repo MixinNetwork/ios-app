@@ -543,6 +543,7 @@
 "edit" = "編集";
 "edit_address" = "%@アドレスを修正";
 "edit_alert" = "Edit Alert";
+"edit_auto_closing_title" = "%1$@ for %2$@ %3$@";
 "edit_biography" = "自己紹介文を変更";
 "edit_circle_name" = "グループリスト名を編集";
 "edit_conversations" = "チャットルームを編集";

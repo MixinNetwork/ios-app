@@ -18,6 +18,7 @@ final class PerpsAutoClosingCondition {
     let basePrice: Decimal
     let side: PerpetualOrderSide
     let leverage: Decimal
+    let priceScale: Int
     
     // 0 for invalid
     private(set) var percentage: Decimal
@@ -27,12 +28,14 @@ final class PerpsAutoClosingCondition {
         behavior: Behavior,
         basePrice: Decimal,
         side: PerpetualOrderSide,
-        leverage: Decimal
+        leverage: Decimal,
+        priceScale: Int,
     ) {
         self.behavior = behavior
         self.basePrice = basePrice
         self.side = side
         self.leverage = leverage
+        self.priceScale = priceScale
         self.percentage = 0
         self.price = 0
     }
@@ -44,12 +47,13 @@ final class PerpsAutoClosingCondition {
             return
         }
         try check(price: price)
-        self.percentage = switch side {
+        let percentage = switch side {
         case .long:
             (price - basePrice) * leverage / basePrice
         case .short:
             (price - basePrice) * leverage / basePrice * -1
         }
+        self.percentage = percentage
         self.price = price
     }
     
@@ -65,28 +69,41 @@ final class PerpsAutoClosingCondition {
         case .short:
             basePrice * (1 - percentage / leverage)
         }
-        try check(price: price)
+        let roundedPrice = withUnsafePointer(to: price) { price in
+            var result: Decimal = 0
+            NSDecimalRound(&result, price, priceScale, .plain)
+            return result
+        }
+        try check(price: roundedPrice)
         self.percentage = percentage
-        self.price = price
+        self.price = roundedPrice
     }
     
     private func check(price: Decimal) throws(InvalidInputError) {
+        let liquidationPrice = PerpetualChangeSimulation.liquidationPrice(
+            side: side,
+            entryPrice: basePrice,
+            leverageMultiplier: leverage
+        )
         switch (side, behavior) {
         case (.long, .takeProfit):
-            if price <= basePrice {
+            guard price > basePrice else {
                 throw InvalidInputError.mustHigherThan(basePrice)
             }
         case (.long, .stopLoss):
-            if price >= basePrice {
-                throw InvalidInputError.mustLowerThan(basePrice)
+            // Available range: (liquidationPrice, basePrice)
+            guard price > liquidationPrice && price < basePrice else {
+                throw InvalidInputError.mustBetween(lowest: liquidationPrice, highest: basePrice)
             }
         case (.short, .takeProfit):
-            if price >= basePrice {
-                throw InvalidInputError.mustLowerThan(basePrice)
+            // Available range: (0, basePrice)
+            guard price > 0 && price < basePrice else {
+                throw InvalidInputError.mustBetween(lowest: 0, highest: basePrice)
             }
         case (.short, .stopLoss):
-            if price <= basePrice {
-                throw InvalidInputError.mustHigherThan(basePrice)
+            // Available range: (basePrice, liquidationPrice)
+            guard price > basePrice && price < liquidationPrice else {
+                throw InvalidInputError.mustBetween(lowest: basePrice, highest: liquidationPrice)
             }
         }
     }

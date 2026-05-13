@@ -543,6 +543,7 @@
 "edit" = "Редактировать";
 "edit_address" = "Изменить адрес %@";
 "edit_alert" = "Edit Alert";
+"edit_auto_closing_title" = "%1$@ for %2$@ %3$@";
 "edit_biography" = "Редактировать биографию";
 "edit_circle_name" = "Изменить название круга";
 "edit_conversations" = "Редактировать беседы";

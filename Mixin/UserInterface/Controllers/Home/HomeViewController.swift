@@ -311,12 +311,41 @@ final class HomeViewController: UIViewController {
     }
     
     private func startAppsFlyer() {
-        AppsFlyerLib.shared().customerUserID = myUserId
-        if let id = FirebaseAnalytics.Analytics.appInstanceID() {
-            AppsFlyerLib.shared().customData = ["app_instance_id": id]
+        var firebaseInfos: [String: Any] = [:]
+        if let appInstanceID = Analytics.appInstanceID() {
+            firebaseInfos["app_instance_id"] = appInstanceID
+        } else {
+            assertionFailure("Missing app_instance_id")
         }
-        AppsFlyerLib.shared().disableAdvertisingIdentifier = true
-        AppsFlyerLib.shared().start()
+        Task {
+            var retryCount = 0
+            while (true) {
+                do {
+                    let sessionID = try await Analytics.sessionID()
+                    firebaseInfos["ga_session_id"] = sessionID
+                    break
+                } catch {
+                    Logger.general.error(category: "Home", message: "Get ga_session_id: \(error)")
+                    let nsError = error as NSError
+                    if nsError.domain == "com.google.gmp.measurement.ErrorDomain" && nsError.code == 13 {
+                        // Analytics uninitialized
+                        retryCount += 1
+                        if retryCount == 10 {
+                            reporter.report(error: AnalyticError.missingGASessionID)
+                            break
+                        }
+                        try await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
+                    } else {
+                        break
+                    }
+                }
+            }
+            Logger.general.debug(category: "Home", message: "Reporting \(firebaseInfos)")
+            AppsFlyerLib.shared().customData = firebaseInfos
+            AppsFlyerLib.shared().customerUserID = myUserId
+            AppsFlyerLib.shared().disableAdvertisingIdentifier = true
+            try await AppsFlyerLib.shared().start()
+        }
         if let observer = appsFlyerStartingObserver {
             NotificationCenter.default.removeObserver(observer)
         }
@@ -445,6 +474,10 @@ extension HomeViewController: UIScrollViewDelegate {
 }
 
 extension HomeViewController {
+    
+    enum AnalyticError: Error {
+        case missingGASessionID
+    }
     
     private func refreshExternalSchemesIfNeeded() {
         if -AppGroupUserDefaults.User.externalSchemesRefreshDate.timeIntervalSinceNow > .day {

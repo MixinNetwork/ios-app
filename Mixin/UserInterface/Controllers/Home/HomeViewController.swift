@@ -318,6 +318,7 @@ final class HomeViewController: UIViewController {
             assertionFailure("Missing app_instance_id")
         }
         Task {
+            var retryCount = 0
             while (true) {
                 do {
                     let sessionID = try await Analytics.sessionID()
@@ -328,6 +329,11 @@ final class HomeViewController: UIViewController {
                     let nsError = error as NSError
                     if nsError.domain == "com.google.gmp.measurement.ErrorDomain" && nsError.code == 13 {
                         // Analytics uninitialized
+                        retryCount += 1
+                        if retryCount == 10 {
+                            reporter.report(error: AnalyticError.missingGASessionID)
+                            break
+                        }
                         try await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
                     } else {
                         break
@@ -468,6 +474,10 @@ extension HomeViewController: UIScrollViewDelegate {
 }
 
 extension HomeViewController {
+    
+    enum AnalyticError: Error {
+        case missingGASessionID
+    }
     
     private func refreshExternalSchemesIfNeeded() {
         if -AppGroupUserDefaults.User.externalSchemesRefreshDate.timeIntervalSinceNow > .day {

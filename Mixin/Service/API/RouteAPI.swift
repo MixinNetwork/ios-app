@@ -150,6 +150,22 @@ extension RouteAPI {
 // MARK: - Perpetual Futures
 extension RouteAPI {
     
+    enum AutoClosingPrice {
+        
+        case delete
+        case value(String)
+        
+        func asParameter() -> String {
+            switch self {
+            case .delete:
+                ""
+            case .value(let value):
+                value
+            }
+        }
+        
+    }
+    
     static func perpsMarkets(
         queue: DispatchQueue,
         completion: @escaping (MixinAPI.Result<[PerpetualMarket]>) -> Void
@@ -209,6 +225,23 @@ extension RouteAPI {
             method: .post,
             path: "/perps/orders/open",
             with: orderRequest,
+            completion: completion,
+        )
+    }
+    
+    static func updatePerpsTPSL(
+        positionID: String,
+        takeProfitPrice: AutoClosingPrice?,
+        stopLossPrice: AutoClosingPrice?,
+        completion: @escaping (MixinAPI.Result<PerpetualPosition>) -> Void
+    ) {
+        var params = ["position_id": positionID]
+        params["take_profit_price"] = takeProfitPrice?.asParameter()
+        params["stop_loss_price"] = stopLossPrice?.asParameter()
+        request(
+            method: .post,
+            path: "/perps/positions/tpsl",
+            with: params,
             completion: completion,
         )
     }

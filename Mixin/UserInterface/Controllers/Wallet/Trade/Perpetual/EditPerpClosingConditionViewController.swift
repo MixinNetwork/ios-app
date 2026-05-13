@@ -361,7 +361,25 @@ final class EditPerpClosingConditionViewController: UIViewController {
             case .price:
                 try condition.setPrice(input)
             }
-            if let maxChange = condition.maxChange(margin: margin) {
+            if margin == 0 {
+                inputDescriptionLabel.text = R.string.localizable.auto_close_description()
+            } else {
+                var maxChange = CurrencyFormatter.localizedString(
+                    from: margin * condition.percentage * Currency.current.decimalRate,
+                    format: .fiatMoneyPretty,
+                    sign: .always,
+                    symbol: .currencySymbol
+                )
+                switch condition.behavior {
+                case .takeProfit:
+                    maxChange += " (" + PercentageFormatter.string(
+                        from: condition.percentage,
+                        format: .pretty,
+                        sign: .never
+                    ) + ")"
+                case .stopLoss:
+                    break
+                }
                 switch condition.behavior {
                 case .takeProfit:
                     let description = NSMutableAttributedString(
@@ -388,8 +406,6 @@ final class EditPerpClosingConditionViewController: UIViewController {
                     }
                     inputDescriptionLabel.attributedText = description
                 }
-            } else {
-                inputDescriptionLabel.text = R.string.localizable.auto_close_description()
             }
             inputErrorLabel.isHidden = true
             confirmButton.isEnabled = condition.price > 0
@@ -400,35 +416,35 @@ final class EditPerpClosingConditionViewController: UIViewController {
                 switch condition.behavior {
                 case .takeProfit:
                     R.string.localizable.take_profit_price_must_higher(
-                        lowest.formatted(PerpsPrice.format(lowest))
+                        lowest.formatted(viewModel.userDisplayPriceFormatStyle)
                     )
                 case .stopLoss:
                     R.string.localizable.stop_loss_price_must_higher(
-                        lowest.formatted(PerpsPrice.format(lowest))
+                        lowest.formatted(viewModel.userDisplayPriceFormatStyle)
                     )
                 }
             case let .mustLowerThan(highest):
                 switch condition.behavior {
                 case .takeProfit:
                     R.string.localizable.take_profit_price_must_lower(
-                        highest.formatted(PerpsPrice.format(highest))
+                        highest.formatted(viewModel.userDisplayPriceFormatStyle)
                     )
                 case .stopLoss:
                     R.string.localizable.stop_loss_price_must_lower(
-                        highest.formatted(PerpsPrice.format(highest))
+                        highest.formatted(viewModel.userDisplayPriceFormatStyle)
                     )
                 }
             case let .mustBetween(lowest, highest):
                 switch condition.behavior {
                 case .takeProfit:
                     R.string.localizable.take_profit_price_must_higher_lower(
-                        lowest.formatted(PerpsPrice.format(lowest)),
-                        highest.formatted(PerpsPrice.format(highest))
+                        lowest.formatted(viewModel.userDisplayPriceFormatStyle),
+                        highest.formatted(viewModel.userDisplayPriceFormatStyle)
                     )
                 case .stopLoss:
                     R.string.localizable.stop_loss_price_must_higher_lower(
-                        lowest.formatted(PerpsPrice.format(lowest)),
-                        highest.formatted(PerpsPrice.format(highest))
+                        lowest.formatted(viewModel.userDisplayPriceFormatStyle),
+                        highest.formatted(viewModel.userDisplayPriceFormatStyle)
                     )
                 }
             }
@@ -547,7 +563,7 @@ extension EditPerpClosingConditionViewController: UITextFieldDelegate {
         if newText.isEmpty {
             return true
         } else if let value = Decimal(string: newText, locale: .current) {
-            return value.numberOfSignificantFractionalDigits <= PerpsPrice.precision
+            return value.numberOfSignificantFractionalDigits <= viewModel.market.priceScale
         } else {
             return false
         }

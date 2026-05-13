@@ -71,7 +71,7 @@ final class SharePerpetualPositionView: UIView {
             R.image.mascot_loss()
         }
         operationLabel.text = viewModel.directionWithSymbol
-        leverageLabel.text = viewModel.leverageMultiplier
+        leverageLabel.text = viewModel.leverage
         entryPriceTitleLabel.text = R.string.localizable.entry_price()
         entryPriceContentLabel.text = viewModel.entryPrice
         if let closePrice = viewModel.closePrice {
@@ -80,7 +80,7 @@ final class SharePerpetualPositionView: UIView {
         } else if let latestPrice {
             priceTitleLabel.text = R.string.localizable.perps_current_price()
             priceContentLabel.text = latestPrice.formatted(
-                PerpsPrice.format(latestPrice)
+                viewModel.priceFormatStyle
             )
         } else {
             priceTitleLabel.text = ""

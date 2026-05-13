@@ -70,35 +70,6 @@ final class PerpsAutoClosingCondition {
         self.price = price
     }
     
-    func maxChange(margin: Decimal) -> String? {
-        guard margin != 0 else {
-            return nil
-        }
-        let precision = margin.numberOfSignificantFractionalDigits + 1
-        let maxChange = (margin * percentage).formatted(
-            Decimal.FormatStyle.Currency
-                .currency(code: "USD")
-                .presentation(.narrow)
-                .sign(strategy: .always())
-                .precision(
-                    .fractionLength(0...precision)
-                )
-        )
-        switch behavior {
-        case .takeProfit:
-            return maxChange
-            + " ("
-            + PercentageFormatter.string(
-                from: percentage,
-                format: .pretty,
-                sign: .never
-            )
-            + ")"
-        case .stopLoss:
-            return maxChange
-        }
-    }
-    
     private func check(price: Decimal) throws(InvalidInputError) {
         switch (side, behavior) {
         case (.long, .takeProfit):
@@ -123,15 +94,6 @@ final class PerpsAutoClosingCondition {
 }
 
 extension PerpsAutoClosingCondition {
-    
-    static var canonicalFormatStyle: Decimal.FormatStyle {
-        Decimal.FormatStyle.number
-            .locale(.enUSPOSIX)
-            .grouping(.never)
-            .sign(strategy: .never)
-            .rounded(rule: .towardZero)
-            .precision(.fractionLength(0...8))
-    }
     
     static func maxChange(
         margin: Decimal,

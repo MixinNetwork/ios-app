@@ -13,6 +13,7 @@ struct PerpetualMarketViewModel {
     let fundingRate: String
     let change: String
     let changeColor: MarketColor
+    let userDisplayPriceFormatStyle: Decimal.FormatStyle.Currency
     
     init?(market m: PerpetualMarket) {
         guard
@@ -24,14 +25,14 @@ struct PerpetualMarketViewModel {
         else {
             return nil
         }
+        let userDisplayPriceFormatStyle = PerpetualMarket.userDisplayPriceFormatStyle(scale: m.priceScale)
+        
         self.market = m
         self.iconURL = URL(string: m.iconURL)
         self.maxLeverageMultiplier = Decimal(m.leverage)
         self.leverage = PerpetualLeverage.stringRepresentation(multiplier: m.leverage)
         self.decimalPrice = decimalPrice
-        self.price = decimalPrice.formatted(
-            PerpsPrice.format(decimalPrice)
-        )
+        self.price = decimalPrice.formatted(userDisplayPriceFormatStyle)
         self.volume = NamedLargeNumberFormatter.string(
             number: decimalVolume * Currency.current.decimalRate,
             currencyPrefix: true
@@ -43,6 +44,7 @@ struct PerpetualMarketViewModel {
         )
         self.change = changePercentage
         self.changeColor = change >= 0 ? .rising : .falling
+        self.userDisplayPriceFormatStyle = userDisplayPriceFormatStyle
     }
     
 }

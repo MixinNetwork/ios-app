@@ -62,18 +62,18 @@ final class PerpetualMarketCell: UICollectionViewCell {
         case .short:
             leverageLabel.color = .short
         }
-        leverageLabel.text = viewModel.leverageMultiplier
-        switch viewModel.autoClosing {
-        case .takeProfit:
+        leverageLabel.text = viewModel.leverage
+        switch (viewModel.takeProfitPrice, viewModel.stopLossPrice) {
+        case (.some, .none):
             autoClosingLabel.text = R.string.localizable.take_profit_label()
             autoClosingLabel.isHidden = false
-        case .stopLoss:
+        case (.none, .some):
             autoClosingLabel.text = R.string.localizable.stop_loss_label()
             autoClosingLabel.isHidden = false
-        case .both:
+        case (.some, .some):
             autoClosingLabel.text = R.string.localizable.take_profit_stop_loss_label()
             autoClosingLabel.isHidden = false
-        case .none:
+        case (.none, .none):
             autoClosingLabel.isHidden = true
         }
         topRightLabel.text = viewModel.margin

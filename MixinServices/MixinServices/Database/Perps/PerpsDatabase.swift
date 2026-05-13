@@ -115,6 +115,14 @@ public final class PerpsDatabase: Database {
             }
         }
         
+        migrator.registerMigration("price_scale") { db in
+            let infos = try TableInfo.fetchAll(db, sql: "PRAGMA table_info(markets)")
+            let columnNames = infos.map(\.name)
+            if !columnNames.contains("price_scale") {
+                try db.execute(sql: "ALTER TABLE markets ADD COLUMN price_scale INTEGER DEFAULT 2")
+            }
+        }
+        
         return migrator
     }
     

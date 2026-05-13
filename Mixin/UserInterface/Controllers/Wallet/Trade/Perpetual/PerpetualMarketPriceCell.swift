@@ -104,7 +104,7 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
         chartView.currentPrice = viewModel.decimalPrice * Currency.current.decimalRate
     }
     
-    func load(chart: Chart) {
+    func load(chart: Chart, priceFormatStyle: Decimal.FormatStyle.Currency) {
         switch chart {
         case .candles(let candles) where candles.isEmpty:
             fallthrough
@@ -121,7 +121,11 @@ final class PerpetualMarketPriceCell: UICollectionViewCell {
             case .candles:
                 timeFrameJustChanged
             }
-            chartView.setCandles(candles, scrollsToLast: scrollsToLast)
+            chartView.setCandles(
+                candles,
+                priceFormatStyle: priceFormatStyle,
+                scrollsToLast: scrollsToLast
+            )
             hideUnavailableView()
             loadingIndicatorView.stopAnimating()
         }

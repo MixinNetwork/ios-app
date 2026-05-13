@@ -53,6 +53,11 @@ final class CandlestickChartView: UIView {
     
     private var pinchGesture: UIPinchGestureRecognizer?
     private var candles: [PerpetualCandleViewModel] = []
+    private var priceFormatStyle = Decimal.FormatStyle.Currency
+        .currency(code: "USD")
+        .presentation(.narrow)
+        .precision(.fractionLength(0...2))
+        .rounded(rule: .towardZero)
     
     var currentPrice: Decimal? {
         didSet {
@@ -91,8 +96,13 @@ final class CandlestickChartView: UIView {
         updateChart(forceRedraw: true)
     }
     
-    func setCandles(_ candles: [PerpetualCandleViewModel], scrollsToLast: Bool) {
+    func setCandles(
+        _ candles: [PerpetualCandleViewModel],
+        priceFormatStyle: Decimal.FormatStyle.Currency,
+        scrollsToLast: Bool,
+    ) {
         self.candles = candles
+        self.priceFormatStyle = priceFormatStyle
         updateContentSize()
         if scrollsToLast {
             scrollView.setContentOffset(rightMostContentOffset, animated: false)
@@ -272,7 +282,11 @@ final class CandlestickChartView: UIView {
         currentMax = maxVal
         
         redrawPaths()
-        gridBackgroundView.updateLabels(minVal: minVal, maxVal: maxVal)
+        gridBackgroundView.updateLabels(
+            minVal: minVal,
+            maxVal: maxVal,
+            priceFormatStyle: priceFormatStyle
+        )
         updateLatestPrice()
     }
     
@@ -328,7 +342,7 @@ final class CandlestickChartView: UIView {
         
         let priceRange = currentMin - currentMax
         let p = Decimal(location.y) * priceRange / Decimal(bounds.height) + currentMax
-        let price = p.formatted(PerpsPrice.format(currentMax))
+        let price = p.formatted(priceFormatStyle)
         crosshairView.update(
             x: xOnScreen,
             y: location.y,
@@ -360,9 +374,7 @@ final class CandlestickChartView: UIView {
                 let diff = (currentMax - price) as NSDecimalNumber
                 yPos = diff.doubleValue / yRange.doubleValue * bounds.height
             }
-            let price = price.formatted(
-                PerpsPrice.format(currentMax)
-            )
+            let price = price.formatted(priceFormatStyle)
             latestPriceView.update(
                 y: yPos,
                 price: price,
@@ -422,12 +434,16 @@ extension CandlestickChartView {
             fatalError("Storyboard/Xib not supported")
         }
         
-        func updateLabels(minVal: Decimal, maxVal: Decimal) {
+        func updateLabels(
+            minVal: Decimal,
+            maxVal: Decimal,
+            priceFormatStyle: Decimal.FormatStyle.Currency
+        ) {
             let range = maxVal - minVal
             for (i, label) in labels.enumerated() {
                 let fraction = 1 - (Decimal(i) / Decimal(Config.gridLineCount - 1))
                 let price = minVal + range * fraction
-                label.text = price.formatted(PerpsPrice.format(minVal))
+                label.text = price.formatted(priceFormatStyle)
             }
         }
         

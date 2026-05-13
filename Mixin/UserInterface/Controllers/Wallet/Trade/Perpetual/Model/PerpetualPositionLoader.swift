@@ -7,6 +7,8 @@ final class PerpetualPositionLoader {
     
     private weak var timer: Timer?
     
+    private var isRunning = false
+    
     init(walletID: String) {
         self.walletID = walletID
     }
@@ -16,9 +18,11 @@ final class PerpetualPositionLoader {
     }
     
     func start() {
+        assert(Thread.isMainThread)
         guard timer == nil else {
             return
         }
+        isRunning = true
         let timer: Timer = .scheduledTimer(
             withTimeInterval: 3,
             repeats: true
@@ -26,7 +30,11 @@ final class PerpetualPositionLoader {
             RouteAPI.positions(
                 walletID: walletID,
                 queue: .global()
-            ) { result in
+            ) { [weak self] result in
+                let isRunning = self?.isRunning ?? false
+                guard isRunning else {
+                    return
+                }
                 switch result {
                 case .success(let positions):
                     let different = PerpsPositionDAO.shared.replace(positions: positions)
@@ -46,6 +54,8 @@ final class PerpetualPositionLoader {
     }
     
     func stop() {
+        assert(Thread.isMainThread)
+        isRunning = false
         timer?.invalidate()
         timer = nil
     }

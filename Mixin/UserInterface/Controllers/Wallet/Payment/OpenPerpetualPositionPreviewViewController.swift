@@ -71,7 +71,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         
         if let takeProfitPrice = context.takeProfitPrice {
             let price = takeProfitPrice.formatted(
-                PerpsPrice.format(takeProfitPrice)
+                context.viewModel.userDisplayPriceFormatStyle
             )
             let priceChange = (takeProfitPrice - context.viewModel.decimalPrice)
             * context.leverageMultiplier
@@ -113,7 +113,7 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
         
         if let stopLossPrice = context.stopLossPrice {
             let price = stopLossPrice.formatted(
-                PerpsPrice.format(stopLossPrice)
+                context.viewModel.userDisplayPriceFormatStyle
             )
             let priceChange = (stopLossPrice - context.viewModel.decimalPrice)
             * context.leverageMultiplier
@@ -157,6 +157,8 @@ final class OpenPerpetualPositionPreviewViewController: WalletIdentifyingAuthent
             side: context.side,
             entryPrice: context.viewModel.decimalPrice,
             leverageMultiplier: context.leverageMultiplier
+        ).formatted(
+            context.viewModel.userDisplayPriceFormatStyle
         )
         let liquidation = PerpetualChangeSimulation.liquidation(
             side: context.side,

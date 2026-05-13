@@ -115,7 +115,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
         didSet {
             if let takeProfitPrice {
                 takeProfitContentLabel.text = takeProfitPrice.formatted(
-                    PerpsPrice.format(takeProfitPrice)
+                    viewModel.userDisplayPriceFormatStyle
                 )
                 takeProfitContentLabel.textColor = MarketColor.rising.uiColor
             } else {
@@ -129,7 +129,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
         didSet {
             if let stopLossPrice {
                 stopLossContentLabel.text = stopLossPrice.formatted(
-                    PerpsPrice.format(stopLossPrice)
+                    viewModel.userDisplayPriceFormatStyle
                 )
                 stopLossContentLabel.textColor = MarketColor.falling.uiColor
             } else {
@@ -371,10 +371,10 @@ final class OpenPerpetualPositionViewController: UIViewController {
             walletID: wallet.tradingWalletID,
             destination: nil,
             takeProfitPrice: takeProfitPrice?.formatted(
-                PerpsAutoClosingCondition.canonicalFormatStyle
+                viewModel.market.canonicalPriceFormatStyle
             ),
             stopLossPrice: stopLossPrice?.formatted(
-                PerpsAutoClosingCondition.canonicalFormatStyle
+                viewModel.market.canonicalPriceFormatStyle
             ),
         )
         let context = Payment.PerpsContext(
@@ -619,7 +619,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
                 underlyingAsset.decimalPrice * (1 + 1 / leverageMultiplier)
             }
             liquidationPriceContentLabel.text = liquidationPrice.formatted(
-                PerpsPrice.format(liquidationPrice)
+                viewModel.userDisplayPriceFormatStyle
             )
         } else {
             liquidationPriceContentLabel.text = "-"

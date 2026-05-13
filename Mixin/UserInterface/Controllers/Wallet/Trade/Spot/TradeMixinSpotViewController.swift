@@ -9,6 +9,10 @@ final class TradeMixinSpotViewController: TradeSpotViewController {
     
     private weak var depositTokenRequest: Request?
     
+    override var sendTokenPrecision: Int {
+        Int(MixinToken.internalPrecision)
+    }
+    
     override var orderWalletID: String {
         myUserId
     }

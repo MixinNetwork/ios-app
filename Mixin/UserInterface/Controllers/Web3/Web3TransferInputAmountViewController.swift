@@ -447,7 +447,11 @@ extension Web3TransferInputAmountViewController {
     
     private func availableBalance(fee: Web3DisplayFee) -> Decimal {
         if payment.token.assetID == fee.token.assetID {
-            payment.token.decimalBalance - fee.amount
+            if payment.token.decimalBalance > fee.amount {
+                payment.token.decimalBalance - fee.amount
+            } else {
+                0
+            }
         } else {
             payment.token.decimalBalance
         }

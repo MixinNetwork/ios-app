@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="perps_auto_closing_intro" id="crV-e4-l0i" customClass="PerpsAutoClosingIntroCell" customModule="Mixin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="335" height="136"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="N5H-Df-4Eg">
+                <rect key="frame" x="0.0" y="0.0" width="335" height="136"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RQO-o2-i6r">
+                        <rect key="frame" x="16" y="24" width="48" height="48"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="48" id="3Vz-d2-UTo"/>
+                            <constraint firstAttribute="height" constant="48" id="Vm6-ym-pIC"/>
+                        </constraints>
+                    </imageView>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="HEP-A4-x7j">
+                        <rect key="frame" x="78" y="26" width="213" height="57"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" text="Lock in profits" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h5i-Sb-Xz0">
+                                <rect key="frame" x="0.0" y="0.0" width="213" height="19.333333333333332"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                <color key="textColor" name="text"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" text="Auto-close when price hits target to lock profit." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ad7-hM-byj">
+                                <rect key="frame" x="0.0" y="23.333333333333339" width="213" height="33.666666666666657"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" name="text_tertiary"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oJP-ZE-k0t">
+                        <rect key="frame" x="291" y="0.0" width="44" height="44"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="52x-JX-L3y"/>
+                            <constraint firstAttribute="height" constant="44" id="OAJ-vi-bnD"/>
+                        </constraints>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" image="close_compact"/>
+                        <connections>
+                            <action selector="requestDismiss:" destination="crV-e4-l0i" eventType="touchUpInside" id="MIo-0f-01G"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vEU-Wy-1PY">
+                        <rect key="frame" x="62.000000000000007" y="83" width="100.66666666666669" height="45"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" title="Take Profit">
+                            <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                            <directionalEdgeInsets key="contentInsets" top="12" leading="16" bottom="12" trailing="16"/>
+                            <color key="baseForegroundColor" name="theme"/>
+                        </buttonConfiguration>
+                        <connections>
+                            <action selector="performSuggestion:" destination="crV-e4-l0i" eventType="touchUpInside" id="D6G-sS-b3W"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <color key="backgroundColor" name="background"/>
+                <constraints>
+                    <constraint firstItem="oJP-ZE-k0t" firstAttribute="leading" secondItem="HEP-A4-x7j" secondAttribute="trailing" id="1RY-1T-jno"/>
+                    <constraint firstAttribute="trailing" secondItem="oJP-ZE-k0t" secondAttribute="trailing" id="9nf-So-Pvc"/>
+                    <constraint firstItem="vEU-Wy-1PY" firstAttribute="top" secondItem="HEP-A4-x7j" secondAttribute="bottom" id="NbR-6w-vcg"/>
+                    <constraint firstItem="oJP-ZE-k0t" firstAttribute="top" secondItem="N5H-Df-4Eg" secondAttribute="top" id="Wvo-FN-jiE"/>
+                    <constraint firstItem="HEP-A4-x7j" firstAttribute="top" secondItem="N5H-Df-4Eg" secondAttribute="top" constant="26" id="hE8-DA-Qog"/>
+                    <constraint firstItem="HEP-A4-x7j" firstAttribute="leading" secondItem="RQO-o2-i6r" secondAttribute="trailing" constant="14" id="iNG-Lj-nc8"/>
+                    <constraint firstAttribute="bottom" secondItem="vEU-Wy-1PY" secondAttribute="bottom" constant="8" id="kzh-5i-gdy"/>
+                    <constraint firstItem="RQO-o2-i6r" firstAttribute="leading" secondItem="N5H-Df-4Eg" secondAttribute="leading" constant="16" id="mbk-ty-MPV"/>
+                    <constraint firstItem="RQO-o2-i6r" firstAttribute="top" secondItem="N5H-Df-4Eg" secondAttribute="top" constant="24" id="osp-vq-Y5m"/>
+                    <constraint firstItem="vEU-Wy-1PY" firstAttribute="leading" secondItem="HEP-A4-x7j" secondAttribute="leading" constant="-16" id="r8T-fH-9kG"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <connections>
+                <outlet property="descriptionLabel" destination="Ad7-hM-byj" id="GUa-1n-W2h"/>
+                <outlet property="imageView" destination="RQO-o2-i6r" id="Bpb-Xf-aVS"/>
+                <outlet property="performSuggestionButton" destination="vEU-Wy-1PY" id="VTf-gw-Nnq"/>
+                <outlet property="titleLabel" destination="h5i-Sb-Xz0" id="qua-2B-32R"/>
+            </connections>
+            <point key="canvasLocation" x="139" y="153"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="close_compact" width="12" height="12"/>
+        <namedColor name="background">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="text_tertiary">
+            <color red="0.53333333333333333" green="0.53333333333333333" blue="0.53333333333333333" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="theme">
+            <color red="0.23921568627450981" green="0.45882352941176469" blue="0.8901960784313725" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>

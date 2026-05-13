@@ -872,6 +872,8 @@
 "location_distance" = "距離：%@";
 "location_empty" = "\"%@\"の検索結果はありませんでした。\nもう一度検索してください。";
 "location_undetermined" = "位置情報が特定できません。しばらくしてからやり直してください";
+"lock_in_profits" = "Lock in profits";
+"lock_in_profits_description" = "Auto-close when price hits target to lock profit";
 "lock_with_biometric" = "%@を有効にする";
 "log_in" = "ログイン";
 "log_out" = "Log out";
@@ -1223,6 +1225,8 @@
 "preauthorize_amount" = "Pre-authorize Amount";
 "preparing" = "準備中...";
 "preparing_progress" = "準備中...(%@)";
+"prevent_further_loss" = "Prevent further loss";
+"prevent_further_loss_description" = "Auto-close when price falls to target to limit loss";
 "preview" = "Preview";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";

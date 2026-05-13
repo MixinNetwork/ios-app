@@ -872,6 +872,8 @@
 "location_distance" = "距离：%@";
 "location_empty" = "找不到 \"%@\"\n换个名字试试吧";
 "location_undetermined" = "目前无法确定位置，请稍候重试";
+"lock_in_profits" = "锁定收益";
+"lock_in_profits_description" = "价格达到目标时自动平仓，及时锁定利润";
 "lock_with_biometric" = "%@锁定";
 "log_in" = "登录";
 "log_out" = "退出登录";
@@ -1223,6 +1225,8 @@
 "preauthorize_amount" = "预授权额度";
 "preparing" = "正在准备...";
 "preparing_progress" = "备份中...（%@）";
+"prevent_further_loss" = "防止进一步亏损";
+"prevent_further_loss_description" = "价格跌至目标时自动平仓，帮助控制亏损";
 "preview" = "预览";
 "price" = "价格";
 "price_alert_notification_permission" = "价格预警需要开启通知权限";

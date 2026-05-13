@@ -5,6 +5,7 @@ final class PerpetualMarketViewController: UIViewController {
     
     private enum Section {
         case price
+        case autoClosingIntroduction(PerpsAutoClosingCondition.Behavior)
         case openPosition(PerpetualPositionViewModel)
         case info
         case closedPositions([PerpetualPositionViewModel])
@@ -16,6 +17,7 @@ final class PerpetualMarketViewController: UIViewController {
     private let marketLoader: PerpetualMarketLoader
     private let candleLoader: PerpetualCandleLoader
     private let maxItemCount = 3
+    private let autoClosingIntroductionDetectInterval: TimeInterval = 14 * .day
     
     private var viewModel: PerpetualMarketViewModel
     private var sections: [Section] = [.price, .info]
@@ -27,6 +29,7 @@ final class PerpetualMarketViewController: UIViewController {
     private weak var actionView: UIView?
     
     private weak var priceCell: PerpetualMarketPriceCell?
+    private weak var openPositionCell: PerpetualMarketOpenPositionCell?
     
     private var isEditingTakeProfitPrice = false
     private var isEditingStopLossPrice = false
@@ -36,6 +39,18 @@ final class PerpetualMarketViewController: UIViewController {
             switch section {
             case .openPosition(let viewModel):
                 return viewModel
+            default:
+                break
+            }
+        }
+        return nil
+    }
+    
+    private var autoClosingIntroSectionIndex: Int? {
+        for (index, section) in sections.enumerated() {
+            switch section {
+            case .autoClosingIntroduction:
+                return index
             default:
                 break
             }
@@ -111,6 +126,8 @@ final class PerpetualMarketViewController: UIViewController {
                 switch self?.sections[sectionIndex] {
                 case .price, .none:
                     return oneCell(estimatedHeight: 358)
+                case .autoClosingIntroduction:
+                    return oneCell(estimatedHeight: 116)
                 case .openPosition:
                     return oneCell(estimatedHeight: 238)
                 case .info:
@@ -191,6 +208,7 @@ final class PerpetualMarketViewController: UIViewController {
         collectionView.register(R.nib.perpetualMarketPriceCell)
         collectionView.register(R.nib.perpetualMarketInfoCell)
         collectionView.register(R.nib.perpetualIntroductionCell)
+        collectionView.register(R.nib.perpsAutoClosingIntroCell)
         collectionView.register(R.nib.perpetualMarketOpenPositionCell)
         collectionView.register(R.nib.perpetualInactivePositionCell)
         collectionView.dataSource = self
@@ -316,11 +334,27 @@ final class PerpetualMarketViewController: UIViewController {
     ) {
         let actionViewToAdd: UIView?
         if let openPosition, openPosition.state != .opening {
-            sections = [
-                .price,
+            sections = [.price]
+            switch openPosition.pnlColor {
+            case .rising:
+                let dismissalOutdates = userDismissalOutdates(
+                    dismissalDate: AppGroupUserDefaults.Wallet.perpsOpenPositionTakeProfitDismissalDate
+                )
+                if openPosition.takeProfitPrice == nil && dismissalOutdates {
+                    sections.append(.autoClosingIntroduction(.takeProfit))
+                }
+            case .falling:
+                let dismissalOutdates = userDismissalOutdates(
+                    dismissalDate: AppGroupUserDefaults.Wallet.perpsOpenPositionStopLossDismissalDate
+                )
+                if openPosition.stopLossPrice == nil && dismissalOutdates {
+                    sections.append(.autoClosingIntroduction(.stopLoss))
+                }
+            }
+            sections.append(contentsOf:[
                 .openPosition(openPosition),
                 .info,
-            ]
+            ])
             if !closedPositions.isEmpty {
                 sections.append(.closedPositions(closedPositions))
             }
@@ -389,14 +423,16 @@ final class PerpetualMarketViewController: UIViewController {
     }
     
     private func handleTPSLUpdate(result: MixinAPI.Result<PerpetualPosition>) {
-        var openPositionIndexPath: IndexPath?
-        for (index, section) in sections.enumerated() {
-            switch section {
-            case .openPosition:
-                openPositionIndexPath = IndexPath(item: 0, section: index)
-            default:
-                break
+        var openPositionIndexPath: IndexPath? {
+            for (index, section) in sections.enumerated() {
+                switch section {
+                case .openPosition:
+                    return IndexPath(item: 0, section: index)
+                default:
+                    break
+                }
             }
+            return nil
         }
         switch result {
         case let .success(position):
@@ -424,6 +460,86 @@ final class PerpetualMarketViewController: UIViewController {
         }
     }
     
+    private func userDismissalOutdates(dismissalDate: Date) -> Bool {
+        -dismissalDate.timeIntervalSinceNow > autoClosingIntroductionDetectInterval
+    }
+    
+    private func setupTakeProfit(positionViewModel: PerpetualPositionViewModel) {
+        guard let margin = positionViewModel.decimalMargin else {
+            return
+        }
+        let editor = EditPerpClosingConditionViewController(
+            viewModel: viewModel,
+            side: positionViewModel.side,
+            margin: margin,
+            behavior: .takeProfit,
+            leverage: Decimal(positionViewModel.leverageMultiplier)
+        )
+        let priceFormatStyle = viewModel.market.canonicalPriceFormatStyle
+        editor.onSet = { [weak self] condition in
+            if let self {
+                positionsLoader.stop()
+                isEditingTakeProfitPrice = true
+                if let section = autoClosingIntroSectionIndex {
+                    sections.remove(at: section)
+                    collectionView.deleteSections(IndexSet(integer: section))
+                }
+                openPositionCell?.updateTakeProfit(busy: true)
+            }
+            let price = condition.price.formatted(priceFormatStyle)
+            RouteAPI.updatePerpsTPSL(
+                positionID: positionViewModel.positionID,
+                takeProfitPrice: .value(price),
+                stopLossPrice: nil
+            ) { result in
+                guard let self else {
+                    return
+                }
+                self.isEditingTakeProfitPrice = false
+                self.handleTPSLUpdate(result: result)
+            }
+        }
+        present(editor, animated: true)
+    }
+    
+    private func setupStopLoss(positionViewModel: PerpetualPositionViewModel) {
+        guard let margin = positionViewModel.decimalMargin else {
+            return
+        }
+        let editor = EditPerpClosingConditionViewController(
+            viewModel: viewModel,
+            side: positionViewModel.side,
+            margin: margin,
+            behavior: .stopLoss,
+            leverage: Decimal(positionViewModel.leverageMultiplier)
+        )
+        let priceFormatStyle = viewModel.market.canonicalPriceFormatStyle
+        editor.onSet = { [weak self] condition in
+            if let self {
+                positionsLoader.stop()
+                isEditingStopLossPrice = true
+                if let section = autoClosingIntroSectionIndex {
+                    sections.remove(at: section)
+                    collectionView.deleteSections(IndexSet(integer: section))
+                }
+                openPositionCell?.updateStopLoss(busy: true)
+            }
+            let price = condition.price.formatted(priceFormatStyle)
+            RouteAPI.updatePerpsTPSL(
+                positionID: positionViewModel.positionID,
+                takeProfitPrice: nil,
+                stopLossPrice: .value(price)
+            ) { result in
+                guard let self else {
+                    return
+                }
+                self.isEditingStopLossPrice = false
+                self.handleTPSLUpdate(result: result)
+            }
+        }
+        present(editor, animated: true)
+    }
+    
 }
 
 extension PerpetualMarketViewController: HomeNavigationController.NavigationBarStyling {
@@ -443,6 +559,8 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch sections[section] {
         case .price:
+            1
+        case .autoClosingIntroduction:
             1
         case .openPosition:
             1
@@ -468,12 +586,18 @@ extension PerpetualMarketViewController: UICollectionViewDataSource {
             cell.setTimeFrame(frame: selectedTimeFrame)
             priceCell = cell
             return cell
+        case .autoClosingIntroduction(let suggestion):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_auto_closing_intro, for: indexPath)!
+            cell.suggestion = suggestion
+            cell.delegate = self
+            return cell
         case .openPosition(let viewModel):
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_open_position, for: indexPath)!
             cell.load(viewModel: viewModel)
             cell.updateTakeProfit(busy: isEditingTakeProfitPrice)
             cell.updateStopLoss(busy: isEditingStopLossPrice)
             cell.delegate = self
+            openPositionCell = cell
             return cell
         case .info:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: R.reuseIdentifier.perps_market_info, for: indexPath)!
@@ -531,7 +655,7 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         switch sections[indexPath.section] {
-        case .price, .openPosition, .info:
+        case .price, .autoClosingIntroduction, .openPosition, .info:
             false
         case .closedPositions, .introduction:
             true
@@ -540,7 +664,7 @@ extension PerpetualMarketViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch sections[indexPath.section] {
-        case .price, .openPosition, .info:
+        case .price, .autoClosingIntroduction, .openPosition, .info:
             break
         case .closedPositions(let viewModels):
             let viewModel = viewModels[indexPath.item]
@@ -593,40 +717,13 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
     }
     
     func perpetualMarketOpenPositionCellRequestTakeProfit(_ cell: PerpetualMarketOpenPositionCell) {
-        guard
-            let positionViewModel = openPositionViewModel,
-            let margin = positionViewModel.decimalMargin
-        else {
+        guard let positionViewModel = openPositionViewModel else {
             return
         }
-        positionsLoader.stop()
         if positionViewModel.takeProfitPrice == nil {
-            let editor = EditPerpClosingConditionViewController(
-                viewModel: viewModel,
-                side: positionViewModel.side,
-                margin: margin,
-                behavior: .takeProfit,
-                leverage: Decimal(positionViewModel.leverageMultiplier)
-            )
-            let priceFormatStyle = viewModel.market.canonicalPriceFormatStyle
-            editor.onSet = { [weak self, weak cell] condition in
-                self?.isEditingTakeProfitPrice = true
-                cell?.updateTakeProfit(busy: true)
-                let price = condition.price.formatted(priceFormatStyle)
-                RouteAPI.updatePerpsTPSL(
-                    positionID: positionViewModel.positionID,
-                    takeProfitPrice: .value(price),
-                    stopLossPrice: nil
-                ) { result in
-                    guard let self else {
-                        return
-                    }
-                    self.isEditingTakeProfitPrice = false
-                    self.handleTPSLUpdate(result: result)
-                }
-            }
-            present(editor, animated: true)
+            setupTakeProfit(positionViewModel: positionViewModel)
         } else {
+            positionsLoader.stop()
             isEditingTakeProfitPrice = true
             cell.updateTakeProfit(busy: true)
             RouteAPI.updatePerpsTPSL(
@@ -644,40 +741,13 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
     }
     
     func perpetualMarketOpenPositionCellRequestStopLoss(_ cell: PerpetualMarketOpenPositionCell) {
-        guard
-            let positionViewModel = openPositionViewModel,
-            let margin = positionViewModel.decimalMargin
-        else {
+        guard let positionViewModel = openPositionViewModel else {
             return
         }
-        positionsLoader.stop()
         if positionViewModel.stopLossPrice == nil {
-            let editor = EditPerpClosingConditionViewController(
-                viewModel: viewModel,
-                side: positionViewModel.side,
-                margin: margin,
-                behavior: .stopLoss,
-                leverage: Decimal(positionViewModel.leverageMultiplier)
-            )
-            let priceFormatStyle = viewModel.market.canonicalPriceFormatStyle
-            editor.onSet = { [weak self, weak cell] condition in
-                self?.isEditingStopLossPrice = true
-                cell?.updateStopLoss(busy: true)
-                let price = condition.price.formatted(priceFormatStyle)
-                RouteAPI.updatePerpsTPSL(
-                    positionID: positionViewModel.positionID,
-                    takeProfitPrice: nil,
-                    stopLossPrice: .value(price)
-                ) { result in
-                    guard let self else {
-                        return
-                    }
-                    self.isEditingStopLossPrice = false
-                    self.handleTPSLUpdate(result: result)
-                }
-            }
-            present(editor, animated: true)
+            setupStopLoss(positionViewModel: positionViewModel)
         } else {
+            positionsLoader.stop()
             isEditingStopLossPrice = true
             cell.updateStopLoss(busy: true)
             RouteAPI.updatePerpsTPSL(
@@ -714,6 +784,35 @@ extension PerpetualMarketViewController: PerpetualCandleLoader.Delegate {
                 chart: chart,
                 priceFormatStyle: viewModel.userDisplayPriceFormatStyle
             )
+        }
+    }
+    
+}
+
+extension PerpetualMarketViewController: PerpsAutoClosingIntroCell.Delegate {
+    
+    func perpsAutoClosingIntroCell(_ cell: PerpsAutoClosingIntroCell, didRejectSuggestion suggestion: PerpsAutoClosingCondition.Behavior) {
+        switch suggestion {
+        case .takeProfit:
+            AppGroupUserDefaults.Wallet.perpsOpenPositionTakeProfitDismissalDate = Date()
+        case .stopLoss:
+            AppGroupUserDefaults.Wallet.perpsOpenPositionStopLossDismissalDate = Date()
+        }
+        if let section = autoClosingIntroSectionIndex {
+            sections.remove(at: section)
+            collectionView.deleteSections(IndexSet(integer: section))
+        }
+    }
+    
+    func perpsAutoClosingIntroCell(_ cell: PerpsAutoClosingIntroCell, didAcceptSuggestion suggestion: PerpsAutoClosingCondition.Behavior) {
+        guard let positionViewModel = openPositionViewModel else {
+            return
+        }
+        switch suggestion {
+        case .takeProfit:
+            setupTakeProfit(positionViewModel: positionViewModel)
+        case .stopLoss:
+            setupStopLoss(positionViewModel: positionViewModel)
         }
     }
     

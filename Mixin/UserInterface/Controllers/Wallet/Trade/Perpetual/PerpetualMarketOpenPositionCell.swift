@@ -135,6 +135,8 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             takeProfitContentLabel.isHidden = false
             if var config = takeProfitButton.configuration {
                 config.image = R.image.delete_compact()
+                config.imagePadding = 0
+                config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 4, bottom: 10, trailing: 10)
                 config.attributedTitle = nil
                 takeProfitButton.configuration = config
             }
@@ -142,6 +144,8 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             takeProfitContentLabel.isHidden = true
             if var config = takeProfitButton.configuration {
                 config.image = R.image.ic_accessory_disclosure()
+                config.imagePadding = 10
+                config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
                 config.attributedTitle = AttributedString(
                     R.string.localizable.add(),
                     attributes: addAutoClosingAttributes
@@ -154,6 +158,8 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             stopLossContentLabel.isHidden = false
             if var config = stopLossButton.configuration {
                 config.image = R.image.delete_compact()
+                config.imagePadding = 0
+                config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 4, bottom: 10, trailing: 10)
                 config.attributedTitle = nil
                 stopLossButton.configuration = config
             }
@@ -161,6 +167,8 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             stopLossContentLabel.isHidden = true
             if var config = stopLossButton.configuration {
                 config.image = R.image.ic_accessory_disclosure()
+                config.imagePadding = 10
+                config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
                 config.attributedTitle = AttributedString(
                     R.string.localizable.add(),
                     attributes: addAutoClosingAttributes

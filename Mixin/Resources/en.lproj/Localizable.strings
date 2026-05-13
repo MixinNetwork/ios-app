@@ -872,6 +872,8 @@
 "location_distance" = "Distance: %@";
 "location_empty" = "There were no results for \"%@\"\nTry new search";
 "location_undetermined" = "Your location has yet to be determined. Please try again later";
+"lock_in_profits" = "Lock in profits";
+"lock_in_profits_description" = "Auto-close when price hits target to lock profit";
 "lock_with_biometric" = "Lock with %@";
 "log_in" = "Log in";
 "log_out" = "Log out";
@@ -1223,6 +1225,8 @@
 "preauthorize_amount" = "Pre-authorize Amount";
 "preparing" = "Preparing...";
 "preparing_progress" = "Preparing...(%@)";
+"prevent_further_loss" = "Prevent further loss";
+"prevent_further_loss_description" = "Auto-close when price falls to target to limit loss";
 "preview" = "Preview";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";

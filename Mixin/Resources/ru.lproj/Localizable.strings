@@ -872,6 +872,8 @@
 "location_distance" = "Расстояние: %@";
 "location_empty" = "По запросу %@ ничего не найдено. Попробуйте новый поиск.";
 "location_undetermined" = "Ваше местоположение еще не определено. Пожалуйста, попробуйте позже";
+"lock_in_profits" = "Lock in profits";
+"lock_in_profits_description" = "Auto-close when price hits target to lock profit";
 "lock_with_biometric" = "Заблокировать с помощью %@";
 "log_in" = "Авторизоваться";
 "log_out" = "Log out";
@@ -1223,6 +1225,8 @@
 "preauthorize_amount" = "Pre-authorize Amount";
 "preparing" = "Подготовка...";
 "preparing_progress" = "Подготовка...(%@)";
+"prevent_further_loss" = "Prevent further loss";
+"prevent_further_loss_description" = "Auto-close when price falls to target to limit loss";
 "preview" = "Preview";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";

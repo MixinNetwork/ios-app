@@ -872,6 +872,8 @@
 "location_distance" = "Distancia: %@";
 "location_empty" = "No ha habido resultados para %@\nPrueba una nueva búsqueda";
 "location_undetermined" = "Tu ubicación aún no se ha determinado. Por favor, inténtalo de nuevo más tarde";
+"lock_in_profits" = "Lock in profits";
+"lock_in_profits_description" = "Auto-close when price hits target to lock profit";
 "lock_with_biometric" = "Bloquear con %@";
 "log_in" = "Iniciar sesión";
 "log_out" = "Log out";
@@ -1223,6 +1225,8 @@
 "preauthorize_amount" = "Pre-authorize Amount";
 "preparing" = "Preparando...";
 "preparing_progress" = "Preparando...(%@)";
+"prevent_further_loss" = "Prevent further loss";
+"prevent_further_loss_description" = "Auto-close when price falls to target to limit loss";
 "preview" = "Preview";
 "price" = "Price";
 "price_alert_notification_permission" = "Price alerts require notification permission to be enabled.";

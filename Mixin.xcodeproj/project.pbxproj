@@ -1210,6 +1210,8 @@
 		948374822A5D49110011A2CA /* PopupSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948374802A5D49110011A2CA /* PopupSelectorViewController.swift */; };
 		948374832A5D49110011A2CA /* PopupSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948374812A5D49110011A2CA /* PopupSelectorView.xib */; };
 		94838A442C02ADFB005B6A27 /* Solana.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94838A432C02ADFB005B6A27 /* Solana.swift */; };
+		9484BA392FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9484BA372FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.swift */; };
+		9484BA3A2FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9484BA382FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.xib */; };
 		948513592E4313C0008D6FDB /* AddWalletIntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948513582E4313C0008D6FDB /* AddWalletIntroductionViewController.swift */; };
 		948513792E432297008D6FDB /* Web3Wallet+Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948513782E432285008D6FDB /* Web3Wallet+Account.swift */; };
 		948664DD2CF85B490032B9BE /* TokenActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948664DC2CF85B440032B9BE /* TokenActionView.swift */; };
@@ -3110,6 +3112,8 @@
 		948374812A5D49110011A2CA /* PopupSelectorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupSelectorView.xib; sourceTree = "<group>"; };
 		94838A432C02ADFB005B6A27 /* Solana.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solana.swift; sourceTree = "<group>"; };
 		94841CC72797D89500B3593B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9484BA372FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsAutoClosingIntroCell.swift; sourceTree = "<group>"; };
+		9484BA382FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PerpsAutoClosingIntroCell.xib; sourceTree = "<group>"; };
 		948513582E4313C0008D6FDB /* AddWalletIntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWalletIntroductionViewController.swift; sourceTree = "<group>"; };
 		948513782E432285008D6FDB /* Web3Wallet+Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3Wallet+Account.swift"; sourceTree = "<group>"; };
 		948664DC2CF85B440032B9BE /* TokenActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenActionView.swift; sourceTree = "<group>"; };
@@ -4646,6 +4650,8 @@
 				940FC5202F5031D7000C4260 /* PerpetualMarketPriceCell.swift */,
 				940CA18F2F59593500914435 /* PerpetualMarketInfoCell.xib */,
 				940CA18E2F59593500914435 /* PerpetualMarketInfoCell.swift */,
+				9484BA382FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.xib */,
+				9484BA372FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.swift */,
 				94D9DE432F5AB3C600B3B990 /* PerpetualMarketOpenPositionCell.xib */,
 				94D9DE422F5AB3C600B3B990 /* PerpetualMarketOpenPositionCell.swift */,
 				94FB2ED32F51516E00F85AB4 /* OpenPerpetualPositionView.xib */,
@@ -6883,6 +6889,7 @@
 				94D5C0EF2D5C911D0046C20E /* WalletSummaryView.xib in Resources */,
 				94E683202E6194CC003304DF /* DepositInfoCell.xib in Resources */,
 				DF8A7523236301DB00765A82 /* AuthorizationWindow.xib in Resources */,
+				9484BA3A2FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.xib in Resources */,
 				940D10A52C5C91630071E36D /* InsetGroupedTitleCell.xib in Resources */,
 				94E206EF2F4EB61100D65D98 /* PerpetualPositionValueCell.xib in Resources */,
 				944ED8D22646535B00C97215 /* WebContentView.xib in Resources */,
@@ -7806,6 +7813,7 @@
 				9495E57E2CF0D71900124CC7 /* AssetChangeAccountRecoveryChecking.swift in Sources */,
 				944075FB2E2EA5B700591B45 /* WalletWatchingIndicatorView.swift in Sources */,
 				94FB2E402F509FA000F85AB4 /* TradeSectionBackgroundView.swift in Sources */,
+				9484BA392FB4AA00007D4B35 /* PerpsAutoClosingIntroCell.swift in Sources */,
 				948513592E4313C0008D6FDB /* AddWalletIntroductionViewController.swift in Sources */,
 				7B54F95422B23A5600908A9D /* RecoveryContactSelectorViewController.swift in Sources */,
 				94EE1C012B4C647500BE9AD1 /* CodeURL.swift in Sources */,

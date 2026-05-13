@@ -872,6 +872,8 @@
 "location_distance" = "距離：%@";
 "location_empty" = "找不到 \"%@\"\n換個名字試試吧";
 "location_undetermined" = "目前無法確定位置，請稍候重試";
+"lock_in_profits" = "鎖定收益";
+"lock_in_profits_description" = "價格達到目標時自動平倉，及時鎖定利潤";
 "lock_with_biometric" = "%@鎖定";
 "log_in" = "登入";
 "log_out" = "退出登入";
@@ -1223,6 +1225,8 @@
 "preauthorize_amount" = "預授權額度";
 "preparing" = "正在準備...";
 "preparing_progress" = "備份中...（%@）";
+"prevent_further_loss" = "防止進一步虧損";
+"prevent_further_loss_description" = "價格跌至目標時自動平倉，幫助控制虧損";
 "preview" = "預覽";
 "price" = "價格";
 "price_alert_notification_permission" = "價格預警需要開啟通知許可權";

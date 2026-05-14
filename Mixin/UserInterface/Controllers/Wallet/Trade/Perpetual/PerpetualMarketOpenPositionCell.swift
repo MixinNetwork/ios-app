@@ -126,12 +126,18 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             directionSideLabel.backgroundColor = MarketColor.falling.uiColor
         }
         directionLeverageLabel.text = viewModel.leverage
-        orderValueContentLabel.text = viewModel.orderValueInToken
+        orderValueContentLabel.text = {
+            if let orderValueInFiatMoney = viewModel.orderValueInFiatMoney {
+                viewModel.orderValueInToken + " (" + orderValueInFiatMoney + ")"
+            } else {
+                viewModel.orderValueInToken
+            }
+        }()
         marginContentLabel.text = viewModel.margin
         entryPriceContentLabel.text = viewModel.entryPrice
         liquidationPriceContentLabel.text = viewModel.liquidationPrice
         if let takeProfitPrice = viewModel.takeProfitPrice {
-            takeProfitContentLabel.text = takeProfitPrice
+            takeProfitContentLabel.text = takeProfitPrice.formatted(viewModel.priceFormatStyle)
             takeProfitContentLabel.isHidden = false
             if var config = takeProfitButton.configuration {
                 config.image = R.image.delete_compact()
@@ -154,7 +160,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
             }
         }
         if let stopLossPrice = viewModel.stopLossPrice {
-            stopLossContentLabel.text = stopLossPrice
+            stopLossContentLabel.text = stopLossPrice.formatted(viewModel.priceFormatStyle)
             stopLossContentLabel.isHidden = false
             if var config = stopLossButton.configuration {
                 config.image = R.image.delete_compact()

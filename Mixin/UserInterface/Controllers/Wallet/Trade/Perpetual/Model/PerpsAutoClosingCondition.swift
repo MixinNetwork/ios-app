@@ -11,7 +11,6 @@ final class PerpsAutoClosingCondition {
     enum InvalidInputError: Error {
         case mustHigherThan(Decimal)
         case mustLowerThan(Decimal)
-        case mustBetween(lowest: Decimal, highest: Decimal)
     }
     
     let behavior: Behavior
@@ -92,18 +91,27 @@ final class PerpsAutoClosingCondition {
             }
         case (.long, .stopLoss):
             // Available range: (liquidationPrice, basePrice)
-            guard price > liquidationPrice && price < basePrice else {
-                throw InvalidInputError.mustBetween(lowest: liquidationPrice, highest: basePrice)
+            guard price > liquidationPrice else {
+                throw InvalidInputError.mustHigherThan(liquidationPrice)
+            }
+            guard price < basePrice else {
+                throw InvalidInputError.mustLowerThan(basePrice)
             }
         case (.short, .takeProfit):
             // Available range: (0, basePrice)
-            guard price > 0 && price < basePrice else {
-                throw InvalidInputError.mustBetween(lowest: 0, highest: basePrice)
+            guard price > 0 else {
+                throw InvalidInputError.mustHigherThan(0)
+            }
+            guard price < basePrice else {
+                throw InvalidInputError.mustLowerThan(basePrice)
             }
         case (.short, .stopLoss):
             // Available range: (basePrice, liquidationPrice)
-            guard price > basePrice && price < liquidationPrice else {
-                throw InvalidInputError.mustBetween(lowest: basePrice, highest: liquidationPrice)
+            guard price > basePrice else {
+                throw InvalidInputError.mustHigherThan(basePrice)
+            }
+            guard price < liquidationPrice else {
+                throw InvalidInputError.mustLowerThan(liquidationPrice)
             }
         }
     }
@@ -127,20 +135,19 @@ extension PerpsAutoClosingCondition {
         case .short:
             (closingPrice - currentPrice) * leverage / currentPrice * -1
         }
-        let precision = margin.numberOfSignificantFractionalDigits + 1
-        let maxChange = (margin * percentage).formatted(
-            Decimal.FormatStyle.Currency
-                .currency(code: "USD")
-                .presentation(.narrow)
-                .sign(strategy: .always())
-                .precision(
-                    .fractionLength(0...precision)
-                )
+        var marginChange = margin * percentage
+        if behavior == .stopLoss, marginChange < 0 {
+            marginChange = max(-margin, marginChange)
+        }
+        var localizedChange = CurrencyFormatter.localizedString(
+            from: marginChange * Currency.current.decimalRate,
+            format: .fiatMoneyPretty,
+            sign: .always,
+            symbol: .currencySymbol
         )
         switch behavior {
         case .takeProfit:
-            return maxChange
-            + " ("
+            localizedChange += " ("
             + PercentageFormatter.string(
                 from: percentage,
                 format: .pretty,
@@ -148,8 +155,9 @@ extension PerpsAutoClosingCondition {
             )
             + ")"
         case .stopLoss:
-            return maxChange
+            break
         }
+        return localizedChange
     }
     
     func maxChange(margin: Decimal) -> String {

@@ -1616,9 +1616,6 @@
 "stop_loss_intro_description" = "Stop loss (SL) limits your losses by closing your position if the price moves against you.";
 "stop_loss_intro_title" = "What’s the Stop Loss?";
 "stop_loss_label" = "SL";
-"stop_loss_price_must_higher" = "The stop-loss trigger price must be higher than %@";
-"stop_loss_price_must_higher_lower" = "The stop-loss trigger price must be higher than %1$@ and lower than %2$@";
-"stop_loss_price_must_lower" = "The stop-loss trigger price must be lower than %@";
 "stop_loss_when" = "Stop Loss When";
 "stop_playing" = "Dejar de reproducir";
 "stop_playing_this_list" = "¿Dejar de reproducir esta lista?";
@@ -1652,9 +1649,6 @@
 "take_profit_intro_description" = "Take profit (TP) automatically closes your position when you reach your target profit.";
 "take_profit_intro_title" = "What’s the Take Profit?";
 "take_profit_label" = "TP";
-"take_profit_price_must_higher" = "The take-profit trigger price must be higher than %@";
-"take_profit_price_must_higher_lower" = "The take-profit trigger price must be higher than %1$@ and lower than %2$@";
-"take_profit_price_must_lower" = "The take-profit trigger price must be lower than %@";
 "take_profit_stop_loss_label" = "TP/SL";
 "take_profit_when" = "Take Profit When";
 "tap_to_join" = "Toca para unirte";
@@ -1663,6 +1657,8 @@
 "text_confirm_send_code" = "Confirma el número de teléfono %@";
 "text_qr_code" = "CÓDIGO QR DE TEXTO";
 "the_code_is_incorrect" = "El código es incorrecto.";
+"the_price_must_higher_than" = "The price must be higher than %@";
+"the_price_must_lower_than" = "The price must be lower than %@";
 "third_pin_confirm_hint" = "Es raro ver una tercera confirmación en otro lugar, así que recuerda que el PIN es irrecuperable si se pierde.";
 "this_message_was_deleted" = "Este mensaje ha sido eliminado";
 "time" = "Tiempo";

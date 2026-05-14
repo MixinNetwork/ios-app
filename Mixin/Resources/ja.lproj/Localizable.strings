@@ -1616,9 +1616,6 @@
 "stop_loss_intro_description" = "Stop loss (SL) limits your losses by closing your position if the price moves against you.";
 "stop_loss_intro_title" = "What’s the Stop Loss?";
 "stop_loss_label" = "SL";
-"stop_loss_price_must_higher" = "The stop-loss trigger price must be higher than %@";
-"stop_loss_price_must_higher_lower" = "The stop-loss trigger price must be higher than %1$@ and lower than %2$@";
-"stop_loss_price_must_lower" = "The stop-loss trigger price must be lower than %@";
 "stop_loss_when" = "Stop Loss When";
 "stop_playing" = "再生を止める";
 "stop_playing_this_list" = "再生を止めて、プレイリストを閉じますか？";
@@ -1652,9 +1649,6 @@
 "take_profit_intro_description" = "Take profit (TP) automatically closes your position when you reach your target profit.";
 "take_profit_intro_title" = "What’s the Take Profit?";
 "take_profit_label" = "TP";
-"take_profit_price_must_higher" = "The take-profit trigger price must be higher than %@";
-"take_profit_price_must_higher_lower" = "The take-profit trigger price must be higher than %1$@ and lower than %2$@";
-"take_profit_price_must_lower" = "The take-profit trigger price must be lower than %@";
 "take_profit_stop_loss_label" = "TP/SL";
 "take_profit_when" = "Take Profit When";
 "tap_to_join" = "タップして参加";
@@ -1663,6 +1657,8 @@
 "text_confirm_send_code" = "電話番号を確認してください %@";
 "text_qr_code" = "テキストQRコード";
 "the_code_is_incorrect" = "入力したコードは正しくありません。";
+"the_price_must_higher_than" = "The price must be higher than %@";
+"the_price_must_lower_than" = "The price must be lower than %@";
 "third_pin_confirm_hint" = "3回目の確認がされることは稀ですので、PINコードを紛失した場合は復元できないことをご留意ください";
 "this_message_was_deleted" = "このメッセージは削除されています";
 "time" = "日時";

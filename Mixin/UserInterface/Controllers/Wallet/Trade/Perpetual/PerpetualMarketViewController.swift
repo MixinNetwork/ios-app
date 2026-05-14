@@ -473,10 +473,11 @@ final class PerpetualMarketViewController: UIViewController {
             side: positionViewModel.side,
             margin: margin,
             behavior: .takeProfit,
-            leverage: Decimal(positionViewModel.leverageMultiplier)
+            leverage: Decimal(positionViewModel.leverageMultiplier),
+            currentAutoClosingPrice: positionViewModel.takeProfitPrice
         )
         let priceFormatStyle = viewModel.market.canonicalPriceFormatStyle
-        editor.onSet = { [weak self] condition in
+        editor.onSet = { [weak self] price in
             if let self {
                 positionsLoader.stop()
                 isEditingTakeProfitPrice = true
@@ -486,11 +487,15 @@ final class PerpetualMarketViewController: UIViewController {
                 }
                 openPositionCell?.updateTakeProfit(busy: true)
             }
-            let price = condition.price.formatted(priceFormatStyle)
+            let price: RouteAPI.AutoClosingPrice = if let price {
+                .value(price.formatted(priceFormatStyle))
+            } else {
+                .delete
+            }
             RouteAPI.updatePerpsTPSL(
                 positionID: positionViewModel.positionID,
-                takeProfitPrice: .value(price),
-                stopLossPrice: nil
+                takeProfitPrice: price,
+                stopLossPrice: nil,
             ) { result in
                 guard let self else {
                     return
@@ -511,10 +516,11 @@ final class PerpetualMarketViewController: UIViewController {
             side: positionViewModel.side,
             margin: margin,
             behavior: .stopLoss,
-            leverage: Decimal(positionViewModel.leverageMultiplier)
+            leverage: Decimal(positionViewModel.leverageMultiplier),
+            currentAutoClosingPrice: positionViewModel.stopLossPrice,
         )
         let priceFormatStyle = viewModel.market.canonicalPriceFormatStyle
-        editor.onSet = { [weak self] condition in
+        editor.onSet = { [weak self] price in
             if let self {
                 positionsLoader.stop()
                 isEditingStopLossPrice = true
@@ -524,11 +530,15 @@ final class PerpetualMarketViewController: UIViewController {
                 }
                 openPositionCell?.updateStopLoss(busy: true)
             }
-            let price = condition.price.formatted(priceFormatStyle)
+            let price: RouteAPI.AutoClosingPrice = if let price {
+                .value(price.formatted(priceFormatStyle))
+            } else {
+                .delete
+            }
             RouteAPI.updatePerpsTPSL(
                 positionID: positionViewModel.positionID,
                 takeProfitPrice: nil,
-                stopLossPrice: .value(price)
+                stopLossPrice: price,
             ) { result in
                 guard let self else {
                     return

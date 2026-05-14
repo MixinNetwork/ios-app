@@ -484,16 +484,15 @@ extension TradePerpetualViewController {
         
         static func sections(openPositionCount: Int) -> [Section] {
             var sections: [Section] = [
-                .value,
                 .markets(.all),
                 .markets(.stocks),
                 .markets(.commodities),
                 .activity,
             ]
             if openPositionCount == 0 {
-                sections.insert(.introduction, at: 1)
+                sections.insert(.introduction, at: 0)
             } else {
-                sections.insert(.positions, at: 1)
+                sections.insert(contentsOf: [.value, .positions], at: 0)
                 sections.append(.introduction)
             }
             return sections

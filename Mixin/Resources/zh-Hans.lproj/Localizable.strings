@@ -1616,9 +1616,6 @@
 "stop_loss_intro_description" = "止损会在价格走势不利时自动平仓，帮助你控制亏损。";
 "stop_loss_intro_title" = "什么是止损？";
 "stop_loss_label" = "止损";
-"stop_loss_price_must_higher" = "止损触发价必须高于 %@";
-"stop_loss_price_must_higher_lower" = "止损触发价必须高于 %1$@ 且低于 %2$@";
-"stop_loss_price_must_lower" = "止损触发价必须低于 %@";
 "stop_loss_when" = "止损条件";
 "stop_playing" = "停止播放";
 "stop_playing_this_list" = "确定要停止并关闭播放列表？";
@@ -1652,9 +1649,6 @@
 "take_profit_intro_description" = "止盈会在达到目标收益时自动平仓，帮助你锁定利润。";
 "take_profit_intro_title" = "什么是止盈？";
 "take_profit_label" = "止盈";
-"take_profit_price_must_higher" = "止盈触发价必须高于 %@";
-"take_profit_price_must_higher_lower" = "止盈触发价必须高于 %1$@ 且低于 %2$@";
-"take_profit_price_must_lower" = "止盈触发价必须低于 %@";
 "take_profit_stop_loss_label" = "止盈止损";
 "take_profit_when" = "止盈条件";
 "tap_to_join" = "点击加入";
@@ -1663,6 +1657,8 @@
 "text_confirm_send_code" = "确认你的手机号码 %@";
 "text_qr_code" = "文本二维码";
 "the_code_is_incorrect" = "验证码不正确";
+"the_price_must_higher_than" = "触发价必须高于 %@";
+"the_price_must_lower_than" = "触发价必须低于 %@";
 "third_pin_confirm_hint" = "很少看到第三次确认吧！所以请牢记，PIN 丢失是无法找回的。";
 "this_message_was_deleted" = "此消息已撤回";
 "time" = "时间";

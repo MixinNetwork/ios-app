@@ -329,9 +329,10 @@ final class OpenPerpetualPositionViewController: UIViewController {
             margin: marginAmount,
             behavior: .takeProfit,
             leverage: leverageMultiplier,
+            currentAutoClosingPrice: takeProfitPrice,
         )
-        editor.onSet = { [weak self] (condition) in
-            self?.takeProfitPrice = condition.price
+        editor.onSet = { [weak self] (price) in
+            self?.takeProfitPrice = price
         }
         present(editor, animated: true)
     }
@@ -343,9 +344,10 @@ final class OpenPerpetualPositionViewController: UIViewController {
             margin: marginAmount,
             behavior: .stopLoss,
             leverage: leverageMultiplier,
+            currentAutoClosingPrice: stopLossPrice,
         )
-        editor.onSet = { [weak self] (condition) in
-            self?.stopLossPrice = condition.price
+        editor.onSet = { [weak self] (price) in
+            self?.stopLossPrice = price
         }
         present(editor, animated: true)
     }
@@ -605,12 +607,18 @@ final class OpenPerpetualPositionViewController: UIViewController {
             leverageMultiplier: leverageMultiplier,
             priceChangePercent: 0.01
         )
+        let orderValue = marginAmount * leverageMultiplier
         orderValueContentLabel.text = CurrencyFormatter.localizedString(
-            from: marginAmount * leverageMultiplier / underlyingAsset.decimalPrice,
+            from: orderValue / underlyingAsset.decimalPrice,
             format: .precision,
             sign: .never,
             symbol: .custom(underlyingAsset.market.tokenSymbol)
-        )
+        ) + " (" + CurrencyFormatter.localizedString(
+            from: orderValue * Currency.current.decimalRate,
+            format: .fiatMoneyPretty,
+            sign: .never,
+            symbol: .currencySymbol,
+        ) + ")"
         if marginAmount > 0 {
             let liquidationPrice = switch side {
             case .long:

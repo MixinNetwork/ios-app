@@ -124,6 +124,9 @@
                                                         <directionalEdgeInsets key="contentInsets" top="14" leading="8" bottom="14" trailing="8"/>
                                                         <color key="baseForegroundColor" name="theme"/>
                                                     </buttonConfiguration>
+                                                    <connections>
+                                                        <action selector="clearInput:" destination="-1" eventType="touchUpInside" id="noK-De-e04"/>
+                                                    </connections>
                                                 </button>
                                                 <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="500" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Profit reaches %" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HH5-Iv-kBX">
                                                     <rect key="frame" x="16" y="41.000000000000028" width="202" height="34"/>
@@ -151,7 +154,7 @@
                                                         <inset key="sectionInset" minX="16" minY="7" maxX="16" maxY="7"/>
                                                     </collectionViewFlowLayout>
                                                 </collectionView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Auto-close when target is reached" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h7t-1o-1zS">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Auto-close when target is reached" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h7t-1o-1zS">
                                                     <rect key="frame" x="16" y="132.00000000000003" width="321" height="14.333333333333343"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <color key="textColor" name="text_quaternary"/>

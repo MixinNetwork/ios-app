@@ -39,24 +39,25 @@ final class EditPerpClosingConditionViewController: UIViewController {
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var confirmButton: UIButton!
     
-    var onSet: ((PerpsAutoClosingCondition) -> ())?
+    var onSet: ((Decimal?) -> ())?
     
     private let viewModel: PerpetualMarketViewModel
     private let side: PerpetualOrderSide
     private let margin: Decimal
     private let condition: PerpsAutoClosingCondition
     private let fixedInputs: [Decimal]
-    
-    private var inputContentSelectorSizeObserver: NSKeyValueObservation?
-    private var inputPrefixLabel: UILabel!
-    private var inputSuffixLabel: UILabel!
-    private var fixedInputSizeObserver: NSKeyValueObservation?
+    private let previousAutoClosingPrice: Decimal?
     
     private var inputContent: InputContent {
         didSet {
             AppGroupUserDefaults.Wallet.perpsClosingConditionInputContent = inputContent.rawValue
         }
     }
+    
+    private var inputContentSelectorSizeObserver: NSKeyValueObservation?
+    private var inputPrefixLabel: UILabel!
+    private var inputSuffixLabel: UILabel!
+    private var fixedInputSizeObserver: NSKeyValueObservation?
     
     private var userInputSimulationFormat = Decimal.FormatStyle.number
         .locale(.current)
@@ -69,6 +70,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
         margin: Decimal,
         behavior: PerpsAutoClosingCondition.Behavior,
         leverage: Decimal,
+        currentAutoClosingPrice: Decimal?,
     ) {
         self.viewModel = viewModel
         self.side = side
@@ -86,6 +88,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
         case .stopLoss:
             [-0.05, -0.1, -0.25, -0.5]
         }
+        self.previousAutoClosingPrice = currentAutoClosingPrice
         self.inputContent = InputContent(
             rawValue: AppGroupUserDefaults.Wallet.perpsClosingConditionInputContent
         ) ?? .percentage
@@ -100,6 +103,9 @@ final class EditPerpClosingConditionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         presentationController?.delegate = self
+        if let price = previousAutoClosingPrice {
+            try? condition.setPrice(price)
+        }
         
         iconView.setIcon(tokenIconURL: viewModel.iconURL)
         titleLabel.setFont(
@@ -260,6 +266,11 @@ final class EditPerpClosingConditionViewController: UIViewController {
         presentingViewController?.dismiss(animated: true)
     }
     
+    @IBAction func clearInput(_ sender: Any) {
+        inputTextField.text = nil
+        inputEditingChanged(inputTextField)
+    }
+    
     @IBAction func inputEditingChanged(_ textField: UITextField) {
         if let input = textField.text, !input.isEmpty {
             textField.leftViewMode = .always
@@ -279,11 +290,13 @@ final class EditPerpClosingConditionViewController: UIViewController {
             default:
                 take(input: number)
             }
+            clearInputButton.isHidden = false
         } else {
             textField.leftViewMode = .never
             textField.rightViewMode = .never
             inputTextFieldWidthConstraint.constant = UIView.layoutFittingExpandedSize.width
-            take(input: 0)
+            take(input: nil)
+            clearInputButton.isHidden = true
         }
         inputSectionView.layoutIfNeeded()
     }
@@ -310,7 +323,11 @@ final class EditPerpClosingConditionViewController: UIViewController {
     }
     
     @IBAction func confirmSetting(_ sender: Any) {
-        onSet?(condition)
+        if condition.price == 0 {
+            onSet?(nil)
+        } else {
+            onSet?(condition.price)
+        }
         presentingViewController?.dismiss(animated: true)
     }
     
@@ -362,11 +379,27 @@ final class EditPerpClosingConditionViewController: UIViewController {
         inputEditingChanged(inputTextField)
     }
     
-    private func take(input: Decimal) {
+    private func take(input: Decimal?) {
+        guard let input else {
+            inputDescriptionLabel.text = R.string.localizable.auto_close_description()
+            inputErrorLabel.isHidden = true
+            confirmButton.isEnabled = previousAutoClosingPrice != nil
+            do {
+                try condition.setPrice(0)
+            } catch {
+                assertionFailure()
+            }
+            return
+        }
         guard input != 0 else {
             inputDescriptionLabel.text = R.string.localizable.auto_close_description()
             inputErrorLabel.isHidden = true
             confirmButton.isEnabled = false
+            do {
+                try condition.setPrice(0)
+            } catch {
+                assertionFailure()
+            }
             return
         }
         do {
@@ -413,40 +446,13 @@ final class EditPerpClosingConditionViewController: UIViewController {
             inputDescriptionLabel.text = R.string.localizable.auto_close_description()
             inputErrorLabel.text = switch error {
             case let .mustHigherThan(lowest):
-                switch condition.behavior {
-                case .takeProfit:
-                    R.string.localizable.take_profit_price_must_higher(
-                        lowest.formatted(viewModel.userDisplayPriceFormatStyle)
-                    )
-                case .stopLoss:
-                    R.string.localizable.stop_loss_price_must_higher(
-                        lowest.formatted(viewModel.userDisplayPriceFormatStyle)
-                    )
-                }
+                R.string.localizable.the_price_must_higher_than(
+                    lowest.formatted(viewModel.userDisplayPriceFormatStyle)
+                )
             case let .mustLowerThan(highest):
-                switch condition.behavior {
-                case .takeProfit:
-                    R.string.localizable.take_profit_price_must_lower(
-                        highest.formatted(viewModel.userDisplayPriceFormatStyle)
-                    )
-                case .stopLoss:
-                    R.string.localizable.stop_loss_price_must_lower(
-                        highest.formatted(viewModel.userDisplayPriceFormatStyle)
-                    )
-                }
-            case let .mustBetween(lowest, highest):
-                switch condition.behavior {
-                case .takeProfit:
-                    R.string.localizable.take_profit_price_must_higher_lower(
-                        lowest.formatted(viewModel.userDisplayPriceFormatStyle),
-                        highest.formatted(viewModel.userDisplayPriceFormatStyle)
-                    )
-                case .stopLoss:
-                    R.string.localizable.stop_loss_price_must_higher_lower(
-                        lowest.formatted(viewModel.userDisplayPriceFormatStyle),
-                        highest.formatted(viewModel.userDisplayPriceFormatStyle)
-                    )
-                }
+                R.string.localizable.the_price_must_lower_than(
+                    highest.formatted(viewModel.userDisplayPriceFormatStyle)
+                )
             }
             inputErrorLabel.isHidden = false
             confirmButton.isEnabled = false
@@ -524,35 +530,14 @@ extension EditPerpClosingConditionViewController: UICollectionViewDelegate {
             switch inputContent {
             case .percentage:
                 inputTextField.text = (percentage * 100).formatted(userInputSimulationFormat)
+                inputEditingChanged(inputTextField)
             case .price:
-                let priceChange = withUnsafePointer(to: percentage) { percentage in
-                    withUnsafePointer(to: condition.leverage) { leverage in
-                        var result: Decimal = 0
-                        NSDecimalDivide(&result, percentage, leverage, .down)
-                        return result
-                    }
-                }
-                let price = withUnsafePointer(to: viewModel.decimalPrice) { price in
-                    let priceMultipler = switch side {
-                    case .long:
-                        1 + priceChange
-                    case .short:
-                        1 - priceChange
-                    }
-                    return withUnsafePointer(to: priceMultipler) { change in
-                        var result: Decimal = 0
-                        NSDecimalMultiply(&result, price, change, .down)
-                        return result
-                    }
-                }
-                let roundedPrice = withUnsafePointer(to: price) { price in
-                    var result: Decimal = 0
-                    NSDecimalRound(&result, price, viewModel.market.priceScale, .plain)
-                    return result
-                }
-                inputTextField.text = roundedPrice.formatted(userInputSimulationFormat)
+                inputContent = .percentage
+                inputTextField.text = (percentage * 100).formatted(userInputSimulationFormat)
+                inputEditingChanged(inputTextField)
+                inputContent = .price
+                reloadInputSection(content: inputContent)
             }
-            inputEditingChanged(inputTextField)
         default:
             break
         }
@@ -565,7 +550,7 @@ extension EditPerpClosingConditionViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let newText = ((textField.text ?? "") as NSString)
             .replacingCharacters(in: range, with: string)
-        if newText.isEmpty {
+        if newText.isEmpty || inputContent == .percentage {
             return true
         } else if let value = Decimal(string: newText, locale: .current) {
             return value.numberOfSignificantFractionalDigits <= viewModel.market.priceScale

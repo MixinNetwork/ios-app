@@ -57,8 +57,9 @@ struct PerpetualPositionViewModel {
     let margin: String?
     let estimatedReceiving: EstimatedReceiving?
     let liquidationPrice: String?
-    let takeProfitPrice: String?
-    let stopLossPrice: String?
+    let takeProfitPrice: Decimal?
+    let stopLossPrice: Decimal?
+    let orderValueInFiatMoney: String?
     
     // Only available for closed positions
     let closePrice: String?
@@ -111,10 +112,17 @@ struct PerpetualPositionViewModel {
             self.roeWithSign = roeWithSign
             self.roeWithoutSign = roeWithoutSign
             self.pnlWithROE = localizedPnL + " (" + roeWithoutSign + ")"
+            self.orderValueInFiatMoney = CurrencyFormatter.localizedString(
+                from: margin * Decimal(position.leverage) * Currency.current.decimalRate,
+                format: .fiatMoneyPretty,
+                sign: .never,
+                symbol: .currencySymbol,
+            )
         } else {
             self.roeWithSign = nil
             self.roeWithoutSign = nil
             self.pnlWithROE = localizedPnL
+            self.orderValueInFiatMoney = nil
         }
         self.actions = [.close, .share]
         self.displaySymbol = position.displaySymbol
@@ -175,16 +183,12 @@ struct PerpetualPositionViewModel {
             nil
         }
         self.takeProfitPrice = if let price = position.takeProfitPrice, !price.isEmpty {
-            Decimal(string: price, locale: .enUSPOSIX)?
-                .formatted(position.priceFormatStyle)
-            ?? price
+            Decimal(string: price, locale: .enUSPOSIX)
         } else {
             nil
         }
         self.stopLossPrice = if let price = position.stopLossPrice, !price.isEmpty {
-            Decimal(string: price, locale: .enUSPOSIX)?
-                .formatted(position.priceFormatStyle)
-            ?? price
+            Decimal(string: price, locale: .enUSPOSIX)
         } else {
             nil
         }
@@ -284,6 +288,7 @@ struct PerpetualPositionViewModel {
         self.liquidationPrice = nil
         self.takeProfitPrice = nil
         self.stopLossPrice = nil
+        self.orderValueInFiatMoney = nil
         self.closePrice = if let closePrice {
             closePrice.formatted(history.priceFormatStyle)
         } else {

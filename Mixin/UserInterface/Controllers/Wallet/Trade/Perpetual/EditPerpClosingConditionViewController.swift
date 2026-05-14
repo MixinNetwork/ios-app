@@ -334,7 +334,12 @@ final class EditPerpClosingConditionViewController: UIViewController {
     private func reloadInputSection(content: InputContent) {
         switch content {
         case .percentage:
-            inputTextField.placeholder = R.string.localizable.profit_reaches_percent()
+            inputTextField.placeholder = switch condition.behavior {
+            case .takeProfit:
+                R.string.localizable.profit_reaches_percent()
+            case .stopLoss:
+                R.string.localizable.loss_reaches_percent()
+            }
             switch SignPosition.percentage {
             case .left:
                 switch condition.behavior {

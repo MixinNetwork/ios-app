@@ -888,6 +888,7 @@
 "logs" = "ログ";
 "long" = "Long";
 "long_asset" = "Long %@";
+"loss_reaches_percent" = "Loss reaches %%";
 "lost_your_mobile_number" = "電話番号をお忘れですか？";
 "low_24h" = "24H LOW";
 "make_group_admin" = "管理者権限を付与";

@@ -888,6 +888,7 @@
 "logs" = "日志";
 "long" = "做多";
 "long_asset" = "做多 %@";
+"loss_reaches_percent" = "亏损达到 %%";
 "lost_your_mobile_number" = "手机丢失？";
 "low_24h" = "24 小时最低";
 "make_group_admin" = "设定为群组管理员";

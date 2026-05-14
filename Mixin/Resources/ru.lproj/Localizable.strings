@@ -888,6 +888,7 @@
 "logs" = "Журналы";
 "long" = "Long";
 "long_asset" = "Long %@";
+"loss_reaches_percent" = "Loss reaches %%";
 "lost_your_mobile_number" = "Потеряли номер мобильного?";
 "low_24h" = "24H LOW";
 "make_group_admin" = "Сделать администратором группы";

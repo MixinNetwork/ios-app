@@ -888,6 +888,7 @@
 "logs" = "Logs";
 "long" = "Long";
 "long_asset" = "Long %@";
+"loss_reaches_percent" = "Loss reaches %%";
 "lost_your_mobile_number" = "Lost your mobile number?";
 "low_24h" = "24H LOW";
 "make_group_admin" = "Make group admin";

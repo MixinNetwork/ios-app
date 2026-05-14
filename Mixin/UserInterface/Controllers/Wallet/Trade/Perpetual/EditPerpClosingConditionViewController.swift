@@ -379,22 +379,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
             if margin == 0 {
                 inputDescriptionLabel.text = R.string.localizable.auto_close_description()
             } else {
-                var maxChange = CurrencyFormatter.localizedString(
-                    from: margin * condition.percentage * Currency.current.decimalRate,
-                    format: .fiatMoneyPretty,
-                    sign: .always,
-                    symbol: .currencySymbol
-                )
-                switch condition.behavior {
-                case .takeProfit:
-                    maxChange += " (" + PercentageFormatter.string(
-                        from: condition.percentage,
-                        format: .pretty,
-                        sign: .never
-                    ) + ")"
-                case .stopLoss:
-                    break
-                }
+                let maxChange = condition.maxChange(margin: margin)
                 switch condition.behavior {
                 case .takeProfit:
                     let description = NSMutableAttributedString(

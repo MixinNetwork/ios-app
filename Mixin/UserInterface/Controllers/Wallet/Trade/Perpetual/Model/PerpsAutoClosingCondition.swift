@@ -152,4 +152,25 @@ extension PerpsAutoClosingCondition {
         }
     }
     
+    func maxChange(margin: Decimal) -> String {
+        assert(margin != 0, "Only results 0")
+        var maxChange = CurrencyFormatter.localizedString(
+            from: margin * percentage * Currency.current.decimalRate,
+            format: .fiatMoneyPretty,
+            sign: .always,
+            symbol: .currencySymbol
+        )
+        switch behavior {
+        case .takeProfit:
+            maxChange += " (" + PercentageFormatter.string(
+                from: percentage,
+                format: .pretty,
+                sign: .never
+            ) + ")"
+        case .stopLoss:
+            break
+        }
+        return maxChange
+    }
+    
 }

@@ -54,10 +54,10 @@ final class PerpsAutoClosingCondition {
         case .short:
             (price - basePrice) * leverage / basePrice * -1
         }
-        let roundedPercentage = withUnsafePointer(to: percentage) { percentage in
+        let roundedPercentage = withUnsafePointer(to: percentage * 100) { percentage in
             var result: Decimal = 0
             NSDecimalRound(&result, percentage, percentageDerivationScale, .plain)
-            return result
+            return result / 100
         }
         self.percentage = roundedPercentage
         self.price = price

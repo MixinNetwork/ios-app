@@ -30,6 +30,7 @@ final class PerpsAutoClosingIntroCell: UICollectionViewCell {
             scaledFor: .systemFont(ofSize: 14),
             adjustForContentSize: true
         )
+        performSuggestionButton.titleLabel?.adjustsFontForContentSizeCategory = true
     }
     
     @IBAction func requestDismiss(_ sender: Any) {
@@ -49,7 +50,7 @@ final class PerpsAutoClosingIntroCell: UICollectionViewCell {
     private func reload(suggestion: PerpsAutoClosingCondition.Behavior) {
         var buttonAttributes = AttributeContainer()
         buttonAttributes.font = UIFontMetrics.default.scaledFont(
-            for: .systemFont(ofSize: 14)
+            for: .systemFont(ofSize: 14, weight: .medium)
         )
         switch suggestion {
         case .takeProfit:

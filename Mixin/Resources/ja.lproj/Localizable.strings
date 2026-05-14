@@ -179,6 +179,8 @@
 "auto_back_up_hint" = "Wi-Fiの使用時に自動でiCloudにバックアップする";
 "auto_backup" = "チャット履歴の自動バックアップ";
 "auto_close_description" = "Auto-close when target is reached";
+"auto_close_subtitle_after_open" = "Entry %1$@  ·  Current %2$@";
+"auto_close_subtitle_before_open" = "Current %@";
 "auto_download_hint" = "メディアを自動ダウンロードする設定に変更する：音声メッセージは常に自動ダウンロードされます";
 "auto_lock" = "自動ロック";
 "automatic" = "自動";

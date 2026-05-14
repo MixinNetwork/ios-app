@@ -179,6 +179,8 @@
 "auto_back_up_hint" = "Автоматическое резервное копирование в iCloud только через Wi-Fi.";
 "auto_backup" = "Автоматическое резервное копирование";
 "auto_close_description" = "Auto-close when target is reached";
+"auto_close_subtitle_after_open" = "Entry %1$@  ·  Current %2$@";
+"auto_close_subtitle_before_open" = "Current %@";
 "auto_download_hint" = "Измените настройки автоматической загрузки для медиафайлов. Голосовые сообщения всегда загружаются автоматически.";
 "auto_lock" = "Автоматическая блокировка";
 "automatic" = "Автоматический";

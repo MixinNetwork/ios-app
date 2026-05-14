@@ -329,6 +329,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
             margin: marginAmount,
             behavior: .takeProfit,
             leverage: leverageMultiplier,
+            orderState: .draft,
             currentAutoClosingPrice: takeProfitPrice,
         )
         editor.onSet = { [weak self] (price) in
@@ -344,6 +345,7 @@ final class OpenPerpetualPositionViewController: UIViewController {
             margin: marginAmount,
             behavior: .stopLoss,
             leverage: leverageMultiplier,
+            orderState: .draft,
             currentAutoClosingPrice: stopLossPrice,
         )
         editor.onSet = { [weak self] (price) in

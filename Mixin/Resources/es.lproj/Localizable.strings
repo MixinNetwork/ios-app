@@ -179,6 +179,8 @@
 "auto_back_up_hint" = "Realiza una copia de seguridad automática en iCloud solo a través de Wi-Fi.";
 "auto_backup" = "Copia de seguridad automática";
 "auto_close_description" = "Auto-close when target is reached";
+"auto_close_subtitle_after_open" = "Entry %1$@  ·  Current %2$@";
+"auto_close_subtitle_before_open" = "Current %@";
 "auto_download_hint" = "Cambia la configuración de descarga automática para medios. Los mensajes de voz siempre se descargan automáticamente.";
 "auto_lock" = "Bloqueo automático";
 "automatic" = "Automático";

@@ -179,6 +179,8 @@
 "auto_back_up_hint" = "Automatically back up to iCloud only over Wi-Fi.";
 "auto_backup" = "Auto Backup";
 "auto_close_description" = "Auto-close when target is reached";
+"auto_close_subtitle_after_open" = "Entry %1$@  ·  Current %2$@";
+"auto_close_subtitle_before_open" = "Current %@";
 "auto_download_hint" = "Change auto-download settings for media. Voice messages are always downloaded automatically.";
 "auto_lock" = "Auto-Lock";
 "automatic" = "Automatic";

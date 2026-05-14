@@ -179,6 +179,8 @@
 "auto_back_up_hint" = "只会在 Wi-Fi 下自动备份聊天记录。";
 "auto_backup" = "自动备份";
 "auto_close_description" = "达到目标时自动平仓";
+"auto_close_subtitle_after_open" = "开仓 %1$@  ·  当前 %2$@";
+"auto_close_subtitle_before_open" = "当前 %@";
 "auto_download_hint" = "媒体自动下载设定，所有语音消息将自动下载。";
 "auto_lock" = "自动锁定";
 "automatic" = "自动";

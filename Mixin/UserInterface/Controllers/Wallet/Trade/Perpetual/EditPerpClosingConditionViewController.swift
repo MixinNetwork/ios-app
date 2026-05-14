@@ -4,6 +4,11 @@ import MixinServices
 
 final class EditPerpClosingConditionViewController: UIViewController {
     
+    enum OrderState {
+        case draft
+        case open(entryPrice: String)
+    }
+    
     private enum InputContent: Int, CaseIterable {
         case percentage
         case price
@@ -45,6 +50,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
     private let side: PerpetualOrderSide
     private let margin: Decimal
     private let condition: PerpsAutoClosingCondition
+    private let orderState: OrderState
     private let fixedInputs: [Decimal]
     private let previousAutoClosingPrice: Decimal?
     
@@ -70,6 +76,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
         margin: Decimal,
         behavior: PerpsAutoClosingCondition.Behavior,
         leverage: Decimal,
+        orderState: OrderState,
         currentAutoClosingPrice: Decimal?,
     ) {
         self.viewModel = viewModel
@@ -82,6 +89,7 @@ final class EditPerpClosingConditionViewController: UIViewController {
             leverage: leverage,
             priceScale: viewModel.market.priceScale,
         )
+        self.orderState = orderState
         self.fixedInputs = switch behavior {
         case .takeProfit:
             [0.1, 0.25, 0.5, 1]
@@ -112,7 +120,49 @@ final class EditPerpClosingConditionViewController: UIViewController {
             scaledFor: .systemFont(ofSize: 16, weight: .medium),
             adjustForContentSize: true
         )
-        subtitleLabel.text = R.string.localizable.current_price(viewModel.price)
+        switch orderState {
+        case .draft:
+            let price = viewModel.price
+            let text = NSMutableAttributedString(
+                string: R.string.localizable.auto_close_subtitle_before_open(price),
+                attributes: [
+                    .font: UIFont.preferredFont(forTextStyle: .caption1),
+                    .foregroundColor: R.color.text_quaternary()!,
+                ]
+            )
+            if let range = text.string.range(of: price, options: .backwards) {
+                text.setAttributes(
+                    [.foregroundColor: R.color.text_tertiary()!],
+                    range: NSRange(range, in: text.string)
+                )
+            }
+            subtitleLabel.attributedText = text
+        case .open(let entryPrice):
+            let currentPrice = viewModel.price
+            let text = NSMutableAttributedString(
+                string: R.string.localizable.auto_close_subtitle_after_open(
+                    entryPrice,
+                    currentPrice
+                ),
+                attributes: [
+                    .font: UIFont.preferredFont(forTextStyle: .caption1),
+                    .foregroundColor: R.color.text_quaternary()!,
+                ]
+            )
+            if let range = text.string.range(of: entryPrice) {
+                text.setAttributes(
+                    [.foregroundColor: R.color.text_tertiary()!],
+                    range: NSRange(range, in: text.string)
+                )
+            }
+            if let range = text.string.range(of: currentPrice, options: .backwards) {
+                text.setAttributes(
+                    [.foregroundColor: R.color.text_tertiary()!],
+                    range: NSRange(range, in: text.string)
+                )
+            }
+            subtitleLabel.attributedText = text
+        }
         
         inputSectionView.layer.cornerRadius = 8
         inputSectionView.layer.masksToBounds = true

@@ -179,6 +179,8 @@
 "auto_back_up_hint" = "只會在 Wi-Fi 下自動備份聊天記錄。";
 "auto_backup" = "自動備份";
 "auto_close_description" = "達到目標時自動平倉";
+"auto_close_subtitle_after_open" = "開倉 %1$@  ·  當前 %2$@";
+"auto_close_subtitle_before_open" = "當前 %@";
 "auto_download_hint" = "媒體自動下載設定，所有語音訊息將自動下載。";
 "auto_lock" = "自動鎖定";
 "automatic" = "自動";

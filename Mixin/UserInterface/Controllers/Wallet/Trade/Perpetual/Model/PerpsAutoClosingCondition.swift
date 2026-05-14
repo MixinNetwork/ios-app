@@ -23,6 +23,8 @@ final class PerpsAutoClosingCondition {
     private(set) var percentage: Decimal
     private(set) var price: Decimal
     
+    private let percentageDerivationScale = 2
+    
     init(
         behavior: Behavior,
         basePrice: Decimal,
@@ -52,7 +54,12 @@ final class PerpsAutoClosingCondition {
         case .short:
             (price - basePrice) * leverage / basePrice * -1
         }
-        self.percentage = percentage
+        let roundedPercentage = withUnsafePointer(to: percentage) { percentage in
+            var result: Decimal = 0
+            NSDecimalRound(&result, percentage, percentageDerivationScale, .plain)
+            return result
+        }
+        self.percentage = roundedPercentage
         self.price = price
     }
     

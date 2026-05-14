@@ -474,6 +474,7 @@ final class PerpetualMarketViewController: UIViewController {
             margin: margin,
             behavior: .takeProfit,
             leverage: Decimal(positionViewModel.leverageMultiplier),
+            orderState: .open(entryPrice: positionViewModel.entryPrice),
             currentAutoClosingPrice: positionViewModel.takeProfitPrice
         )
         let priceFormatStyle = viewModel.market.canonicalPriceFormatStyle
@@ -517,6 +518,7 @@ final class PerpetualMarketViewController: UIViewController {
             margin: margin,
             behavior: .stopLoss,
             leverage: Decimal(positionViewModel.leverageMultiplier),
+            orderState: .open(entryPrice: positionViewModel.entryPrice),
             currentAutoClosingPrice: positionViewModel.stopLossPrice,
         )
         let priceFormatStyle = viewModel.market.canonicalPriceFormatStyle

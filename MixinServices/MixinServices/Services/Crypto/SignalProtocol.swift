@@ -81,13 +81,11 @@ public class SignalProtocol {
                                                      identityKey: key.getIdentityPublic())
         do {
             try sessionBuilder.process(preKeyBundle: preKeyBundle)
+        } catch SignalError.untrustedIdentity {
+            IdentityDAO.shared.deleteIdentity(address: address.name)
+            try sessionBuilder.process(preKeyBundle: preKeyBundle)
         } catch {
-            if let err = error as? SignalError, err == SignalError.untrustedIdentity {
-                IdentityDAO.shared.deleteIdentity(address: address.name)
-                try sessionBuilder.process(preKeyBundle: preKeyBundle)
-            } else {
-                throw error
-            }
+            throw error
         }
     }
 

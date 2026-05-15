@@ -436,15 +436,19 @@ final class PerpetualMarketViewController: UIViewController {
         }
         switch result {
         case let .success(position):
-            if let item = PerpsPositionDAO.shared.save(position: position),
-               let openPositionIndexPath
-            {
+            let item = PerpsPositionDAO.shared.save(position: position)
+            if let item, let openPositionIndexPath {
                 let viewModel = PerpetualPositionViewModel(wallet: wallet, position: item)
                 self.sections[openPositionIndexPath.section] = .openPosition(viewModel)
                 UIView.performWithoutAnimation {
                     collectionView.reloadItems(at: [openPositionIndexPath])
                 }
             } else {
+                var message = "TPSL: Item: \(item != nil), indexPath: \(openPositionIndexPath != nil)"
+                if let item {
+                    message += ", TP: \(item.takeProfitPrice ?? "null"), SL: \(item.stopLossPrice ?? "null")"
+                }
+                Logger.general.error(category: "PerpsMarket", message: message)
                 reloadPositions()
             }
         case let .failure(error):

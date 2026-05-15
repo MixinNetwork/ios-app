@@ -84,7 +84,6 @@ public class SignalProtocol {
         } catch {
             if let err = error as? SignalError, err == SignalError.untrustedIdentity {
                 IdentityDAO.shared.deleteIdentity(address: address.name)
-                _ = store.sessionStore.deleteSession(for: address)
                 try sessionBuilder.process(preKeyBundle: preKeyBundle)
             } else {
                 throw error

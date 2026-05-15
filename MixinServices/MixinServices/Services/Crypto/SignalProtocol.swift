@@ -79,7 +79,14 @@ public class SignalProtocol {
                                                      signedPreKey: key.getSignedPreKeyPublic(),
                                                      signature: key.getSignedSignature(),
                                                      identityKey: key.getIdentityPublic())
-        try sessionBuilder.process(preKeyBundle: preKeyBundle)
+        do {
+            try sessionBuilder.process(preKeyBundle: preKeyBundle)
+        } catch SignalError.untrustedIdentity {
+            IdentityDAO.shared.deleteIdentity(address: address.name)
+            try sessionBuilder.process(preKeyBundle: preKeyBundle)
+        } catch {
+            throw error
+        }
     }
 
     func getSenderKeyDistribution(groupId: String, senderId: String) throws -> CiphertextMessage {

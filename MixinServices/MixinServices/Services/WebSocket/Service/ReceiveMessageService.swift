@@ -473,7 +473,6 @@ public class ReceiveMessageService: MixinService {
             ]
             Logger.conversation(id: data.conversationId).info(category: "ProcessSignalMessage", message: "Decrypted message: \(data.messageId)", userInfo: info)
             if status == RatchetStatus.REQUESTING.rawValue {
-                RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
                 self.requestResendMessage(conversationId: data.conversationId, userId: data.userId, sessionId: data.sessionId)
             }
         } catch {
@@ -1126,6 +1125,7 @@ public class ReceiveMessageService: MixinService {
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId, sessionId: sessionId)
         let blazeMessage = BlazeMessage(params: params, action: BlazeMessageAction.createMessage.rawValue)
         SendMessageService.shared.sendMessage(conversationId: conversationId, userId: userId, blazeMessage: blazeMessage, action: .REQUEST_RESEND_MESSAGES)
+        RatchetSenderKeyDAO.shared.deleteRatchetSenderKey(groupId: conversationId, senderId: userId, sessionId: sessionId)
     }
     
     private func updateRemoteMessageStatus(messageId: String, status: MessageStatus) {

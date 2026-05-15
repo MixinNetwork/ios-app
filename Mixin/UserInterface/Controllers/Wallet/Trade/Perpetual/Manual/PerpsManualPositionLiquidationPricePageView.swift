@@ -1,15 +1,28 @@
 import SwiftUI
 import MixinServices
 
-struct PerpsManualPositionSizePageView: View {
+struct PerpsManualPositionLiquidationPricePageView: View {
     
-    private let marginStep: Decimal = 100
     private let marginSymbol = "USDT"
     private let assetSymbol = "SOL"
-    private let assetPrice: Decimal = 74.62
+    private let entryPrice: Decimal = 100
     
-    @State private var margin: Decimal = 1000
+    private let priceFormatStyle = Decimal.FormatStyle.Currency
+        .currency(code: "USD")
+        .presentation(.narrow)
+        .precision(.fractionLength(0))
+        .rounded(rule: .towardZero)
+    
+    @State private var side: PerpetualOrderSide = .long
     @State private var leverageMultiplier: Decimal = 10
+    
+    private var liquidationPrice: Decimal {
+        PerpetualChangeSimulation.liquidationPrice(
+            side: side,
+            entryPrice: entryPrice,
+            leverageMultiplier: leverageMultiplier
+        )
+    }
     
     var body: some View {
         ManualScrollView {
@@ -34,12 +47,16 @@ struct PerpsManualPositionSizePageView: View {
                             Text(R.string.localizable.example_direction())
                                 .modifier(ManualText(.caption2))
                             Spacer()
-                            Text(R.string.localizable.long())
-                                .modifier(ScaledFont(size: 12, weight: .medium, relativeTo: .body))
-                                .padding(EdgeInsets(top: 2, leading: 8, bottom: 2, trailing: 8))
-                                .background(Color(MarketColor.rising.uiColor))
-                                .foregroundColor(.white)
-                                .cornerRadius(6)
+                            PerpsManualOrderSideControl(
+                                selection: $side
+                            ) { side in
+                                switch side {
+                                case .long:
+                                    R.string.localizable.long()
+                                case .short:
+                                    R.string.localizable.short()
+                                }
+                            }
                         }
                         HStack {
                             Text(R.string.localizable.example_leverage_multiplier())
@@ -63,56 +80,25 @@ struct PerpsManualPositionSizePageView: View {
                                 }
                             }
                         }
-                        HStack {
-                            Text(R.string.localizable.example_amount())
-                                .modifier(ManualText(.caption2))
-                            Spacer()
-                            HStack(alignment: .center, spacing: 6) {
-                                Button {
-                                    margin -= marginStep
-                                } label: {
-                                    Image(R.image.stepper_decrease)
-                                }
-                                .disabled(margin <= marginStep)
-                                
-                                Text(CurrencyFormatter.localizedString(
-                                    from: margin,
-                                    format: .precision,
-                                    sign: .never,
-                                    symbol: .custom(marginSymbol)
-                                ))
-                                .modifier(ManualText(.subheading(R.color.text()!), monospacedDigit: true))
-                                
-                                Button {
-                                    margin += marginStep
-                                } label: {
-                                    Image(R.image.stepper_increase)
-                                }
-                            }
-                        }
-                        HStack {
-                            Text(R.string.localizable.position_size())
-                                .modifier(ManualText(.caption2))
-                            Spacer()
-                            Text(CurrencyFormatter.localizedString(
-                                from: margin * leverageMultiplier / assetPrice,
-                                format: .precision,
-                                sign: .never,
-                                symbol: .custom(assetSymbol)
-                            ))
-                            .modifier(ManualText(.subheading(R.color.text()!), monospacedDigit: true))
-                        }
                         
                         Rectangle()
                             .fill(Color(R.color.background_quaternary()!))
                             .frame(height: 1)
                         
-                        PerpsManualLongPositionProfitView(
-                            change: 0.1,
-                            marginSymbol: marginSymbol,
-                            margin: $margin,
-                            leverageMultiplier: $leverageMultiplier,
-                        )
+                        HStack {
+                            Text(R.string.localizable.entry_price())
+                                .modifier(ManualText(.caption2))
+                            Spacer()
+                            Text(entryPrice.formatted(priceFormatStyle))
+                                .modifier(ManualText(.subheading(R.color.text()!), monospacedDigit: true))
+                        }
+                        HStack {
+                            Text(R.string.localizable.liquidation_price())
+                                .modifier(ManualText(.caption2))
+                            Spacer()
+                            Text(liquidationPrice.formatted(priceFormatStyle))
+                                .modifier(ManualText(.subheading(R.color.text()!), monospacedDigit: true))
+                        }
                     }
                 }
                 .padding(PerpsManual.cardInsets)
@@ -125,18 +111,19 @@ struct PerpsManualPositionSizePageView: View {
                         .modifier(ManualText(.heading))
                     Spacer()
                         .frame(height: 10)
-                    Text(R.string.localizable.perps_position_size_overview())
+                    Text(R.string.localizable.perps_liquidation_price_overview())
                         .modifier(ManualText(.body))
                     Spacer()
                         .frame(height: 12)
                     
-                    Text(R.string.localizable.pnl())
+                    Text(R.string.localizable.spot_trade_guide_additional_notes())
                         .modifier(ManualText(.subheading(R.color.text()!)))
                     Spacer()
                         .frame(height: 4)
                     BulletinText([
-                        R.string.localizable.perps_position_size_pnl_1(),
-                        R.string.localizable.perps_position_size_pnl_2(),
+                        R.string.localizable.perps_liquidation_price_key_point_1(),
+                        R.string.localizable.perps_liquidation_price_key_point_2(),
+                        R.string.localizable.perps_liquidation_price_key_point_3(),
                     ])
                 }
                 .padding(PerpsManual.cardInsets)

@@ -1163,13 +1163,20 @@
 "perps_leverage_overview" = "槓桿用於放大倉位規模，使交易者可以用較少的資金控制更大的合約頭寸。";
 "perps_leverage_risk_notice_1" = "槓桿越高，爆倉風險越大";
 "perps_leverage_risk_notice_2" = "高槓杆下，小幅價格波動也可能導致較大虧損";
+"perps_liquidation_price_key_point_1" = "強平觸發價格為標記價格";
+"perps_liquidation_price_key_point_2" = "強平不會影響錢包其他資產";
+"perps_liquidation_price_key_point_3" = "高槓杆會增加被強制平倉的風險";
+"perps_liquidation_price_overview" = "強平價格是保證金不足時系統自動平倉的價格。觸發後虧損不超過保證金。";
 "perps_long_overview" = "做多是指在預期價格上漲時建立倉位，價格上漲可獲得盈利，價格下跌則產生虧損。";
 "perps_markets" = "市場";
 "perps_position_size_overview" = "當前合約的倉位規模由「金額 × 槓桿」計算得出，表示本次交易所控制的資產規模。";
 "perps_position_size_pnl_1" = "倉位越大，盈虧金額越大";
 "perps_position_size_pnl_2" = "倉位越小，盈虧金額越小";
 "perps_product" = "合約";
+"perps_scene_sl_triggered" = "觸發止損：控制虧損";
+"perps_scene_tp_triggered" = "觸發止盈：鎖定利潤";
 "perps_short_overview" = "做空是指在預期價格下跌時建立倉位，價格下跌可獲得盈利，價格上漲則產生虧損。";
+"perps_tpsl_overview" = "止盈和止損是預先設定的自動平倉指令，幫助你在不盯盤的情況下管理風險。";
 "phone_as_key_shard" = "手機號將關聯到由您管理的 MPC 錢包的一個金鑰分片";
 "phone_call" = "電話呼叫";
 "phone_contact" = "手機聯絡人";
@@ -1577,6 +1584,7 @@
 "speed_up_failed" = "加速失敗";
 "speed_up_transaction" = "加速交易";
 "speed_up_transaction_description" = "如果交易已接近完成，可能無法加速";
+"spot_trade_guide_additional_notes" = "補充說明";
 "spot_trade_guide_feature_1" = "最優聚合：接入 Uniswap、 1inch、Jupiter、MixPay、BigONE 等 DEX 和 CEX。";
 "spot_trade_guide_feature_2" = "跨鏈交易：支援 Bitcoin、Ethereum、Solana 等多鏈資產交易。";
 "spot_trade_guide_fees" = "費用說明";
@@ -1743,6 +1751,7 @@
 "transfer_to_watch_wallet_warning" = "這是一個觀察錢包。你確定要使用它來接收資產嗎？";
 "transferring_chat_progress" = "傳輸聊天記錄（%@%%）";
 "trending" = "熱門資產";
+"trigger_price" = "觸發價格";
 "try_again" = "請重試";
 "trying_connect_tip_network" = "正在連線 TIP 網路";
 "trying_connect_tip_node" = "正在連線節點...";

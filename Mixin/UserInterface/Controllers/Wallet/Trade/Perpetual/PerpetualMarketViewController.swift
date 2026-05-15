@@ -710,6 +710,11 @@ extension PerpetualMarketViewController: PerpetualMarketOpenPositionCell.Delegat
         present(manual, animated: true)
     }
     
+    func perpetualMarketOpenPositionCellQuestionAboutAutoClosing(_ cell: PerpetualMarketOpenPositionCell) {
+        let manual = PerpsManual.viewController(initialPage: .autoClosing)
+        present(manual, animated: true)
+    }
+    
     func perpetualMarketOpenPositionCellAskToShare(_ cell: PerpetualMarketOpenPositionCell) {
         guard let positionViewModel = openPositionViewModel else {
             return

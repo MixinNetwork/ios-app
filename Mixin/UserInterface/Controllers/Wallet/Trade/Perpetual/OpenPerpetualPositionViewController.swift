@@ -354,7 +354,12 @@ final class OpenPerpetualPositionViewController: UIViewController {
         present(editor, animated: true)
     }
     
-    @IBAction func presentManual(_ sender: Any) {
+    @IBAction func presentAutoClosingManual(_ sender: Any) {
+        let manual = PerpsManual.viewController(initialPage: .autoClosing)
+        present(manual, animated: true)
+    }
+    
+    @IBAction func presentOrderValueManual(_ sender: Any) {
         let manual = PerpsManual.viewController(initialPage: .size)
         present(manual, animated: true)
     }

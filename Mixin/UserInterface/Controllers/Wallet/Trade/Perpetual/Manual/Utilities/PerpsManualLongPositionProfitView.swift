@@ -4,7 +4,6 @@ import MixinServices
 
 struct PerpsManualLongPositionProfitView: View {
     
-    let title: String
     let change: Decimal
     let marginSymbol: String
     
@@ -30,9 +29,7 @@ struct PerpsManualLongPositionProfitView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(title)
-                .modifier(ManualText(.caption1))
+        VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Text(R.string.localizable.example_price_change())
                     .modifier(ManualText(.caption2))

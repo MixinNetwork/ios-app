@@ -1169,6 +1169,8 @@
 		947084C52D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947084C42D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift */; };
 		9470E6C028A0FFBE0054DCCC /* DateFormatter+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */; };
 		9471007D2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9471007C2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift */; };
+		94728C7E2FB6E6C3004F087F /* PerpsManualPositionLiquidationPricePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94728C7D2FB6E6B9004F087F /* PerpsManualPositionLiquidationPricePageView.swift */; };
+		94728C8C2FB6E839004F087F /* PerpsManualOrderSideControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94728C882FB6E828004F087F /* PerpsManualOrderSideControl.swift */; };
 		94735E182E28E8D30001C179 /* ExportPrivateKeyNetworkSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94735E172E28E8D30001C179 /* ExportPrivateKeyNetworkSelectorViewController.swift */; };
 		94735E272E28EBF80001C179 /* ImportedWalletNetworkCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94735E262E28EBF80001C179 /* ImportedWalletNetworkCell.xib */; };
 		94735E282E28EBF80001C179 /* ImportedWalletNetworkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94735E252E28EBF80001C179 /* ImportedWalletNetworkCell.swift */; };
@@ -1245,6 +1247,7 @@
 		948ACAA52AF3950C0057D76B /* SnapshotMessageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */; };
 		948AF9AB2EB9CB140035C9BF /* TradeTokenSelectorStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AF9AA2EB9CB0F0035C9BF /* TradeTokenSelectorStyle.swift */; };
 		948AF9D42EB9EDB10035C9BF /* TradePricingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948AF9D32EB9EDB00035C9BF /* TradePricingModel.swift */; };
+		948B81632FB6142D00D1D167 /* PerpsManualPositionTPSLPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948B81622FB6142800D1D167 /* PerpsManualPositionTPSLPageView.swift */; };
 		948C1CC32FAF3F22005C8653 /* FixedInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948C1CC12FAF3F22005C8653 /* FixedInputCell.swift */; };
 		948C1CC42FAF3F22005C8653 /* FixedInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948C1CC22FAF3F22005C8653 /* FixedInputCell.xib */; };
 		948CFAED2F2CB4C000BC34C3 /* QRCodeDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CFAE92F2CB4B200BC34C3 /* QRCodeDetector.swift */; };
@@ -3072,6 +3075,8 @@
 		947084C42D93FC74007DF965 /* NonAtomicInvoicePaymentOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonAtomicInvoicePaymentOperation.swift; sourceTree = "<group>"; };
 		9470E6BF28A0FFBE0054DCCC /* DateFormatter+General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+General.swift"; sourceTree = "<group>"; };
 		9471007C2EC1D1020001EAC0 /* ApplyReferralCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyReferralCodeViewController.swift; sourceTree = "<group>"; };
+		94728C7D2FB6E6B9004F087F /* PerpsManualPositionLiquidationPricePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualPositionLiquidationPricePageView.swift; sourceTree = "<group>"; };
+		94728C882FB6E828004F087F /* PerpsManualOrderSideControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualOrderSideControl.swift; sourceTree = "<group>"; };
 		94735E172E28E8D30001C179 /* ExportPrivateKeyNetworkSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPrivateKeyNetworkSelectorViewController.swift; sourceTree = "<group>"; };
 		94735E252E28EBF80001C179 /* ImportedWalletNetworkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedWalletNetworkCell.swift; sourceTree = "<group>"; };
 		94735E262E28EBF80001C179 /* ImportedWalletNetworkCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImportedWalletNetworkCell.xib; sourceTree = "<group>"; };
@@ -3144,6 +3149,7 @@
 		948ACAA42AF3950C0057D76B /* SnapshotMessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotMessageContentView.swift; sourceTree = "<group>"; };
 		948AF9AA2EB9CB0F0035C9BF /* TradeTokenSelectorStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeTokenSelectorStyle.swift; sourceTree = "<group>"; };
 		948AF9D32EB9EDB00035C9BF /* TradePricingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradePricingModel.swift; sourceTree = "<group>"; };
+		948B81622FB6142800D1D167 /* PerpsManualPositionTPSLPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerpsManualPositionTPSLPageView.swift; sourceTree = "<group>"; };
 		948C1CC12FAF3F22005C8653 /* FixedInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedInputCell.swift; sourceTree = "<group>"; };
 		948C1CC22FAF3F22005C8653 /* FixedInputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FixedInputCell.xib; sourceTree = "<group>"; };
 		948CFAE92F2CB4B200BC34C3 /* QRCodeDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeDetector.swift; sourceTree = "<group>"; };
@@ -4898,6 +4904,8 @@
 				94BC7AFF2F5D876D009D8970 /* PerpsManualShortPageView.swift */,
 				9404AD4F2F5DA7C5007FC231 /* PerpsManualLeveragePageView.swift */,
 				9404AD862F5DB4EF007FC231 /* PerpsManualPositionSizePageView.swift */,
+				948B81622FB6142800D1D167 /* PerpsManualPositionTPSLPageView.swift */,
+				94728C7D2FB6E6B9004F087F /* PerpsManualPositionLiquidationPricePageView.swift */,
 			);
 			path = Manual;
 			sourceTree = "<group>";
@@ -5232,6 +5240,7 @@
 				9463E8472F5D619F0069CF1B /* PerpsManualCalculatingPnLView.swift */,
 				9404AD5A2F5DAA3F007FC231 /* PerpsManualLongPositionProfitView.swift */,
 				945E18302F62F04A003434AA /* PerpsManualLongPositionLiquidationView.swift */,
+				94728C882FB6E828004F087F /* PerpsManualOrderSideControl.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -7698,6 +7707,7 @@
 				94F267812E12B26000A8A1E0 /* InputBIP39MnemonicsViewController.swift in Sources */,
 				9468E06D2E30E16A00EB79C0 /* CreateWalletResponse.swift in Sources */,
 				DFA063D222B0D0E80031E151 /* PrivacySettingViewController.swift in Sources */,
+				94728C8C2FB6E839004F087F /* PerpsManualOrderSideControl.swift in Sources */,
 				7BEFDC191FB05B3E00F66885 /* NewGroupViewController.swift in Sources */,
 				5260A85F2DDF556500ED9714 /* Web3AddressValidator.swift in Sources */,
 				7C51F3A927E459AD0095B4D6 /* ExpiredMessageManager.swift in Sources */,
@@ -8086,6 +8096,7 @@
 				DF7A4B4A1FCE6EE200F21BCB /* UIViewExtension.swift in Sources */,
 				947C5E5B29B0FE9B00838458 /* WalletConnectSession.swift in Sources */,
 				7BD00F1E2559711A004D8814 /* WalletSearchResultsViewController.swift in Sources */,
+				94728C7E2FB6E6C3004F087F /* PerpsManualPositionLiquidationPricePageView.swift in Sources */,
 				7B8BB592234F37D100991ACB /* SharedMediaAudioCell.swift in Sources */,
 				948922A12D54FC5F00D9BCCB /* IBANAddress.swift in Sources */,
 				7B0BE46021A5630500B91A1E /* CompactAssetCell.swift in Sources */,
@@ -8094,6 +8105,7 @@
 				94C359F628B506D40010F53C /* TIPFullscreenInputViewController.swift in Sources */,
 				E0B53A6923B0C2C9008DA9F1 /* AssetItem+Description.swift in Sources */,
 				941994D22CCAEB9100F5425C /* SignInWithMnemonicsViewController.swift in Sources */,
+				948B81632FB6142D00D1D167 /* PerpsManualPositionTPSLPageView.swift in Sources */,
 				7C9DEA5729F15FA200959D77 /* DeviceTransferApp.swift in Sources */,
 				94D9DD7D2F59D79400B3B990 /* PerpetualPositionProductCell.swift in Sources */,
 				94B0B7462BECD4DE00346AF4 /* CollectibleCell.swift in Sources */,

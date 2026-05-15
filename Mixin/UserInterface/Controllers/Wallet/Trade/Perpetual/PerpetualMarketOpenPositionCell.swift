@@ -4,6 +4,7 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
     
     protocol Delegate: AnyObject {
         func perpetualMarketOpenPositionCellQuestionAboutSize(_ cell: PerpetualMarketOpenPositionCell)
+        func perpetualMarketOpenPositionCellQuestionAboutAutoClosing(_ cell: PerpetualMarketOpenPositionCell)
         func perpetualMarketOpenPositionCellAskToShare(_ cell: PerpetualMarketOpenPositionCell)
         func perpetualMarketOpenPositionCellRequestTakeProfit(_ cell: PerpetualMarketOpenPositionCell)
         func perpetualMarketOpenPositionCellRequestStopLoss(_ cell: PerpetualMarketOpenPositionCell)
@@ -80,7 +81,6 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
         takeProfitTitleLabel.contentInset.left = 10
         takeProfitContentLabel.contentInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 0)
         takeProfitButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        stopLossTitleLabel.contentInset.right = 10
         stopLossContentLabel.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
         stopLossButton.titleLabel?.adjustsFontForContentSizeCategory = true
         
@@ -98,12 +98,16 @@ final class PerpetualMarketOpenPositionCell: UICollectionViewCell {
         stopLossActivityIndicator.style = .custom(diameter: 10, lineWidth: 2)
     }
     
+    @IBAction func requestShare(_ sender: Any) {
+        delegate?.perpetualMarketOpenPositionCellAskToShare(self)
+    }
+    
     @IBAction func questionAboutSize(_ sender: Any) {
         delegate?.perpetualMarketOpenPositionCellQuestionAboutSize(self)
     }
     
-    @IBAction func requestShare(_ sender: Any) {
-        delegate?.perpetualMarketOpenPositionCellAskToShare(self)
+    @IBAction func questionAboutAutoClosing(_ sender: Any) {
+        delegate?.perpetualMarketOpenPositionCellQuestionAboutAutoClosing(self)
     }
     
     @IBAction func takeProfit(_ sender: Any) {

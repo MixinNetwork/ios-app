@@ -1163,13 +1163,20 @@
 "perps_leverage_overview" = "杠杆用于放大仓位规模，使交易者可以用较少的资金控制更大的合约头寸。";
 "perps_leverage_risk_notice_1" = "杠杆越高，爆仓风险越大";
 "perps_leverage_risk_notice_2" = "高杠杆下，小幅价格波动也可能导致较大亏损";
+"perps_liquidation_price_key_point_1" = "强平触发价格为标记价格";
+"perps_liquidation_price_key_point_2" = "强平不会影响钱包其他资产";
+"perps_liquidation_price_key_point_3" = "高杠杆会增加被强制平仓的风险";
+"perps_liquidation_price_overview" = "强平价格是保证金不足时系统自动平仓的价格。触发后亏损不超过保证金。";
 "perps_long_overview" = "做多是指在预期价格上涨时建立仓位，价格上涨可获得盈利，价格下跌则产生亏损。";
 "perps_markets" = "市场";
 "perps_position_size_overview" = "当前合约的仓位规模由「金额 × 杠杆」计算得出，表示本次交易所控制的资产规模。";
 "perps_position_size_pnl_1" = "仓位越大，盈亏金额越大";
 "perps_position_size_pnl_2" = "仓位越小，盈亏金额越小";
 "perps_product" = "合约";
+"perps_scene_sl_triggered" = "触发止损：控制亏损";
+"perps_scene_tp_triggered" = "触发止盈：锁定利润";
 "perps_short_overview" = "做空是指在预期价格下跌时建立仓位，价格下跌可获得盈利，价格上涨则产生亏损。";
+"perps_tpsl_overview" = "止盈和止损是预先设定的自动平仓指令，帮助你在不盯盘的情况下管理风险。";
 "phone_as_key_shard" = "手机号将关联到由您管理的 MPC 钱包的一个密钥分片";
 "phone_call" = "电话呼叫";
 "phone_contact" = "手机联系人";
@@ -1577,6 +1584,7 @@
 "speed_up_failed" = "加速失败";
 "speed_up_transaction" = "加速交易";
 "speed_up_transaction_description" = "如果交易已接近完成，可能无法加速";
+"spot_trade_guide_additional_notes" = "补充说明";
 "spot_trade_guide_feature_1" = "最优聚合：接入 Uniswap、 1inch、Jupiter、MixPay、BigONE 等 DEX 和 CEX。";
 "spot_trade_guide_feature_2" = "跨链交易：支持 Bitcoin、Ethereum、Solana 等多链资产交易。";
 "spot_trade_guide_fees" = "费用说明";
@@ -1743,6 +1751,7 @@
 "transfer_to_watch_wallet_warning" = "这是一个观察钱包。你确定要使用它来接收资产吗？";
 "transferring_chat_progress" = "传输聊天记录（%@%%）";
 "trending" = "热门资产";
+"trigger_price" = "触发价格";
 "try_again" = "请重试";
 "trying_connect_tip_network" = "正在连接 TIP 网络";
 "trying_connect_tip_node" = "正在连接节点...";

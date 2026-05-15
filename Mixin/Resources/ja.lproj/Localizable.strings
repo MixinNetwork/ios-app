@@ -1163,13 +1163,20 @@
 "perps_leverage_overview" = "Leverage allows you to control a larger position with less capital.";
 "perps_leverage_risk_notice_1" = "Higher leverage increases liquidation risk";
 "perps_leverage_risk_notice_2" = "Under high leverage, small price movements can lead to large losses";
+"perps_liquidation_price_key_point_1" = "Liquidation is triggered by mark price";
+"perps_liquidation_price_key_point_2" = "Liquidation does not affect other assets in your wallet";
+"perps_liquidation_price_key_point_3" = "Higher leverage increases the risk of liquidation";
+"perps_liquidation_price_overview" = "Liquidation price is the price at which the system auto-closes your position when margin is insufficient. Losses capped at margin.";
 "perps_long_overview" = "You open a long position when you expect the price to rise. If the price rises, you profit; if the price falls, you incur a loss.";
 "perps_markets" = "Markets";
 "perps_position_size_overview" = "Size represents the total value of your position, calculated as margin × leverage.";
 "perps_position_size_pnl_1" = "Larger size, larger PnL";
 "perps_position_size_pnl_2" = "Smaller size, smaller PnL";
 "perps_product" = "Market";
+"perps_scene_sl_triggered" = "Trigger stop-loss: Control losses";
+"perps_scene_tp_triggered" = "Trigger take-profit: Lock in profits";
 "perps_short_overview" = "You open a short position when you expect the price to fall. If the price falls, you profit; if the price rises, you incur a loss.";
+"perps_tpsl_overview" = "Take-profit and stop-loss are conditional orders that execute automatically when the trigger price is reached.";
 "phone_as_key_shard" = "Your mobile number will be associated with a key shard of the MPC wallet managed by you";
 "phone_call" = "通話";
 "phone_contact" = "連絡帳";
@@ -1577,6 +1584,7 @@
 "speed_up_failed" = "Speed up failed";
 "speed_up_transaction" = "Speed Up Transaction";
 "speed_up_transaction_description" = "If the transaction is too far along this may not be possible";
+"spot_trade_guide_additional_notes" = "Notes";
 "spot_trade_guide_feature_1" = "Liquidity aggregation: access to liquidity from Uniswap, 1inch, Jupiter, MixPay, BigONE, and other DEXs and CEXs.";
 "spot_trade_guide_feature_2" = "Cross-chain trading: supports assets across Bitcoin, Ethereum, Solana, and more.";
 "spot_trade_guide_fees" = "Fees";
@@ -1743,6 +1751,7 @@
 "transfer_to_watch_wallet_warning" = "This is a watch-only wallet. Are you sure you want to use it to receive assets?";
 "transferring_chat_progress" = "Transferring Chat (%@%%)";
 "trending" = "トレンド";
+"trigger_price" = "Trigger Price";
 "try_again" = "もう一度試す";
 "trying_connect_tip_network" = "Connecting the TIP network";
 "trying_connect_tip_node" = "Trying connect TIP node";

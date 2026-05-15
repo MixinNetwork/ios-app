@@ -191,8 +191,8 @@ public class ReceiveMessageService: MixinService {
         }
     }
     
-    public func requestResendKey(conversationId: String, recipientId: String, sessionId: String?) {
-        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.RESEND_KEY.rawValue, messages: nil, ackMessages: nil, content: nil)
+    public func requestResendKey(conversationId: String, recipientId: String, messageId: String?, sessionId: String?) {
+        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.RESEND_KEY.rawValue, messages: nil, messageId: messageId, ackMessages: nil, content: nil)
         let encoded = (try? JSONEncoder.default.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: recipientId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId, sessionId: sessionId)
@@ -524,7 +524,7 @@ public class ReceiveMessageService: MixinService {
                 refreshKeys(conversationId: data.conversationId)
                 let status = RatchetSenderKeyDAO.shared.getRatchetSenderKeyStatus(groupId: data.conversationId, senderId: data.userId, sessionId: data.sessionId)
                 if status == nil {
-                    requestResendKey(conversationId: data.conversationId, recipientId: data.userId, sessionId: data.sessionId)
+                    requestResendKey(conversationId: data.conversationId, recipientId: data.userId, messageId: data.messageId, sessionId: data.sessionId)
                 }
             }
         }
@@ -1119,7 +1119,7 @@ public class ReceiveMessageService: MixinService {
         }
 
         Logger.conversation(id: conversationId).info(category: "ReceiveMessageService", message: "Request resend messages: [\(messages.joined(separator: ","))]")
-        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.RESEND_MESSAGES.rawValue, messages: messages, ackMessages: nil, content: nil)
+        let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.RESEND_MESSAGES.rawValue, messages: messages, messageId: nil, ackMessages: nil, content: nil)
         let encoded = (try? JSONEncoder.default.encode(transferPlainData).base64EncodedString()) ?? ""
         let messageId = UUID().uuidString.lowercased()
         let params = BlazeMessageParam(conversationId: conversationId, recipientId: userId, category: MessageCategory.PLAIN_JSON.rawValue, data: encoded, status: MessageStatus.SENDING.rawValue, messageId: messageId, sessionId: sessionId)

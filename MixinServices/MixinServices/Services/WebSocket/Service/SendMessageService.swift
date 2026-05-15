@@ -139,7 +139,7 @@ public class SendMessageService: MixinService {
             params.messageId = UUID().uuidString.lowercased()
             params.category = MessageCategory.PLAIN_JSON.rawValue
             params.data = {
-                let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.DEVICE_TRANSFER.rawValue, messages: nil, ackMessages: nil, content: content)
+                let transferPlainData = PlainJsonMessagePayload(action: PlainDataAction.DEVICE_TRANSFER.rawValue, messages: nil, messageId: nil, ackMessages: nil, content: content)
                 let encoded = (try? JSONEncoder.default.encode(transferPlainData).base64RawURLEncodedString()) ?? ""
                 return encoded
             }()
